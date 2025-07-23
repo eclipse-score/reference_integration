@@ -1,0 +1,7 @@
+common --registry=https://raw.githubusercontent.com/eclipse-score/bazel_registry/main/
+common --registry=https://bcr.bazel.build
+common --credential_helper=*.qnx.com=/home/q535739/Workspace/score/toolchains_qnx/tools/qnx_credential_helper.py
+
+build:x86_64-qnx --incompatible_strict_action_env
+build:x86_64-qnx --platforms=@score_toolchains_qnx//platforms:x86_64-qnx
+build:x86_64-qnx --sandbox_writable_path=/var/tmp

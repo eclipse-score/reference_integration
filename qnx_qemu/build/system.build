@@ -1,0 +1,192 @@
+# ============================================================================
+# QNX System Build File - Defines system partition contents
+# ============================================================================
+# This file defines the contents of the QNX system partition, including
+# essential utilities, libraries, configuration files, and system services
+# needed for a minimal QNX QEMU environment.
+
+### FILE MANIPULATION UTILITIES ###
+# Core file system utilities - most are provided by toybox (minimal Unix utilities)
+[type=link] /bin/ls=/proc/boot/ls        # Link ls to IFS version for compatibility
+toybox                                   # Minimal Unix utilities collection
+[type=link] cp=toybox                    # Copy files and directories
+[type=link] ls=toybox                    # List directory contents
+[type=link] cat=toybox                   # Display file contents
+[type=link] chmod=toybox                 # Change file permissions
+[type=link] rm=toybox                    # Remove files and directories
+[type=link] dd=toybox                    # Convert and copy files with specified I/O block size
+[type=link] echo=toybox                  # Display text
+[type=link] grep=toybox                  # Search text patterns in files
+
+### SHARED LIBRARIES ###
+# Essential shared libraries for system operation
+libfsnotify.so.1                         # File system notification library
+cam-cdrom.so                             # CAM (Common Access Method) CD-ROM driver
+cam-disk.so                              # CAM disk driver for storage devices
+#devnp-e1000.so                          # Intel E1000 network driver (disabled)
+fs-dos.so                                # DOS file system support
+fs-qnx6.so                               # QNX6 file system support
+io-blk.so                                # Block I/O manager
+libbz2.so.1                              # BZip2 compression library
+#libc++.so.1                             # C++ standard library (disabled)
+libc.so                                  # C standard library (essential)
+libcam.so.2                              # CAM library for device access
+libcatalog.so.1                          # Message catalog support
+#libcrypto.so.2.1                        # OpenSSL crypto library (disabled)
+libfscrypto.so.1                         # File system encryption support
+libgcc_s.so.1                            # GCC runtime support library
+libiconv.so.1                            # Character encoding conversion
+liblzma.so.5                             # LZMA compression library
+libm.so                                  # Math library
+#libpci.so.2.3                           # PCI library v2.3 (disabled, using v3.0)
+libpci.so.3.0                            # PCI library v3.0 for hardware access
+libqcrypto.so.1.0                        # QNX cryptographic library
+libqh.so                                 # QNX helper library
+#libqnxnoexcept.so.1                     # QNX no-exception library (disabled)
+libregex.so.1                            # Regular expression library
+libsecpol.so.1                           # Security policy library
+libslog2parse.so.1                       # System log parsing library
+#libsocket.so.3                          # Socket library (disabled)
+#libssl.so.2.1                           # OpenSSL SSL/TLS library (disabled)
+libtracelog.so.1                         # Trace logging library
+libxml2.so.2                             # XML parsing library
+libz.so                                  # Zlib compression library
+#lsm-pf-v6.so                            # Linux Security Module packet filter (disabled)
+#qcrypto-openssl.so                      # QNX OpenSSL crypto module (disabled)
+
+
+### TOOLS ###
+# System utilities and administration tools
+#/usr/sbin/sleep=sleep                   # Sleep utility (disabled)
+awk                                      # Text processing and pattern scanning
+devb-ram                                 # RAM disk block device manager
+#devb-virtio                             # VirtIO block device manager (disabled)
+devc-pty                                 # Pseudo-terminal device manager
+#env                                     # Environment variable utility (disabled)
+#find                                    # File search utility (disabled)
+fsencrypt                                # File system encryption utility
+fsevmgr                                  # File system event manager
+#gzip                                    # File compression utility (disabled)
+if_up                                    # Network interface configuration
+ifconfig                                 # Network interface configuration tool
+#io-pkt-v6-hc                            # Network packet manager v6 (disabled)
+ln                                       # Create file links
+#mkdir                                   # Create directories (disabled, using toybox)
+mkqnx6fs                                 # Create QNX6 file systems
+mount_ifs                                # Mount Image File System (IFS)
+#mq                                      # Message queue utility (disabled)
+mqueue                                   # POSIX message queue manager
+openssl                                  # SSL/TLS cryptographic toolkit
+pci-server                               # PCI bus server
+pdebug                                   # Process debugger
+pfctl                                    # Packet filter control utility
+pipe                                     # Named pipe manager
+random                                   # Random number generator service
+shutdown                                 # System shutdown utility
+sync                                     # Synchronize file system buffers
+tar                                      # Archive utility
+umount                                   # Unmount file systems
+
+
+### SCRIPTS ###
+# System startup and initialization scripts
+
+[perms=700] /etc/startup.sh = {
+#!/bin/sh
+# *******************************************************************************
+# System Startup Script
+# Executed during system initialization to start essential services
+# *******************************************************************************
+
+echo "Placeholder for startup script"
+pidin                                    # Display process information
+
+}
+
+# ============================================================================
+# CONFIGURATION FILES - System-wide settings and environment
+# ============================================================================
+# This section defines critical configuration files that control system
+# behavior, hardware access, security policies, and user environment setup.
+
+[perms=0444] pci_server.cfg = {
+# PCI Server Configuration
+# Controls PCI bus enumeration and device configuration behavior
+[buscfg]
+DO_BUS_CONFIG=no                         # Disable automatic bus configuration
+
+[envars]
+PCI_DEBUG_MODULE=pci_debug2.so           # Debug module for PCI troubleshooting
+PCI_HW_MODULE=pci_hw-Intel_x86.so        # Hardware-specific PCI module for x86
+PCI_HW_CONFIG_FILE=/proc/boot/pci_hw.cfg # PCI hardware configuration file location
+}
+
+[perms=0444] pci_hw.cfg = {
+# PCI Hardware Configuration
+# Defines interrupt routing for PCI devices in the QEMU environment
+[interrupts]
+# Format: Bus:Device:Function  Pin  IRQ
+B0:D17:F0    A    18                     # PCI device interrupt mapping
+B0:D17:F0    B    19                     # Multiple interrupt pins per device
+B0:D17:F0    C    16
+B0:D17:F0    D    17
+B3:D0:F0     A    18                     # Additional PCI device mappings
+B3:D0:F0     B    19
+B3:D0:F0     C    16
+B3:D0:F0     D    17
+}
+
+# PCI-related shared libraries and modules
+pci/pci_hw-Intel_x86.so                  # Intel x86 PCI hardware support
+pci/pci_slog2.so                         # PCI system logging support
+pci/pci_cap-0x05.so                      # PCI capability handler for MSI
+pci/pci_cap-0x10.so                      # PCI Express capability handler
+pci/pci_cap-0x11.so                      # MSI-X capability handler
+pci/pci_strings.so                       # PCI device string database
+pci/pci_bkwd_compat.so                   # Backward compatibility support
+pci/pci_debug2.so                        # Enhanced PCI debugging support
+
+[uid=0 gid=0 perms=0444] qcrypto.conf = {
+# QNX Cryptographic Configuration
+# Specifies which cryptographic modules to load and their usage tags
+openssl tags=*                           # Use OpenSSL for all cryptographic operations
+}
+
+# System user and group databases
+/etc/passwd = = {
+root:x:0:0:Superuser:/data/home/root:/bin/sh          # Root user (UID 0) - system administrator
+                                                      # 'x' indicates password stored in shadow file
+qnxuser:x:1000:1000:QNX User:/data/home/qnxuser:/bin/sh  # Standard user account (UID 1000)
+                                                         # Non-privileged user for general operations
+}
+
+/etc/group = {
+root::0:root                                           # Root group (GID 0) with root user
+qnxuser::1000:qnxuser                                  # User group (GID 1000) with qnxuser
+}
+
+### SHELL PROFILE CONFIGURATION ###
+# Profile script executed by shell for all users
+# Sets up environment variables, paths, and shell behavior
+etc/profile = {
+# QNX System Profile - Global shell configuration
+# This file is sourced by every interactive shell session
+
+# TERMINAL SETUP: Configure console behavior
+export TERM=qansi                      # QNX ANSI terminal emulation type
+
+# PATH CONFIGURATION: Define where to search for executable programs
+# /proc/boot:     IFS binaries (kernel utilities)  
+# /system/bin:    System partition utilities (this partition)
+# /data/apps:     User applications directory
+export PATH=/proc/boot:/system/bin:/data/apps
+
+# LIBRARY PATH: Define where to search for shared libraries
+# /proc/boot:        IFS libraries (essential runtime)
+# /system/lib:       System partition libraries  
+# /system/lib/dll:   Additional dynamic libraries
+export LD_LIBRARY_PATH=/proc/boot:/system/lib:/system/lib/dll
+
+# USER ENVIRONMENT: Set up home directory and user preferences
+export HOME=/data/home/root            # Root user home directory on data partition
+}
