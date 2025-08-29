@@ -11,6 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
+load("@score_itf//:defs.bzl", "py_itf_test")
 
 
 sh_binary(
@@ -73,5 +74,24 @@ sh_binary(
         "//build:init",
         "@toolchains_qnx_sdp//:host_all",
         "@toolchains_qnx_sdp//:host_dir",
+    ],
+)
+
+py_itf_test(
+    name = "test_ssh_qemu",
+    srcs = [
+        "test/itf/test_ssh.py",
+    ],
+    args = [
+        "--target_config=$(location target_config.json)",
+        "--ecu=s_core_ecu_qemu",
+        "--qemu_image=$(location //build:init)",
+    ],
+    plugins = [
+        "itf.plugins.base.base_plugin",
+    ],
+    data = [
+        "//build:init",
+        "target_config.json",
     ],
 )

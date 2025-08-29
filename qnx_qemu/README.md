@@ -128,6 +128,9 @@ bazel run --config=x86_64-qnx //:test_qemu_bridge
 
 # Run integration tests for port forwarding
 bazel run --config=x86_64-qnx //:test_qemu_portforward
+
+# Run ITF tests for ssh
+bazel test --config=qemu-integration //:test_ssh_qemu --test_output=streamed
 ```
 
 In order to provide credentials for qnx.com pass to bazel command:
