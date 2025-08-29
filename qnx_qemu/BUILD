@@ -10,7 +10,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-
+load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 
 
 sh_binary(
@@ -49,7 +49,7 @@ sh_binary(
         "$(location @toolchains_qnx_sdp//:host_dir)",
         "$(location //build:init)",
         "--timeout=90",
-        "--ssh-port=2222", 
+        "--ssh-port=2222",
         "--boot-wait=15",
     ],
     data = [
@@ -66,7 +66,7 @@ sh_binary(
         "$(location @toolchains_qnx_sdp//:host_dir)",
         "$(location //build:init)",
         "--timeout=90",
-        "--ssh-port=2222", 
+        "--ssh-port=2222",
         "--boot-wait=15",
     ],
     data = [

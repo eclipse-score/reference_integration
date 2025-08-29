@@ -30,5 +30,11 @@ use_repo(toolchains_qnx, "toolchains_qnx_qcc")
 use_repo(toolchains_qnx, "toolchains_qnx_ifs")
 
 register_toolchains("@toolchains_qnx_qcc//:qcc_x86_64")
-
 register_toolchains("@toolchains_qnx_ifs//:ifs_x86_64")
+
+###############################################################################
+#
+# Shell dependency
+#
+###############################################################################
+bazel_dep(name = "rules_shell", version = "0.6.0")
