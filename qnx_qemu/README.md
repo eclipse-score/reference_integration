@@ -83,7 +83,7 @@ qnx_qemu/
 │   ├── run_qemu.sh                    # QEMU launcher with bridge networking
 │   ├── run_qemu_portforward.sh        # QEMU launcher with port forwarding
 │   └── qnx_wireshark.sh               # Wireshark integration for network analysis
-│        
+│
 └── test/                              # Testing framework
    ├── test_qnx_qemu_bridge.sh        # Bridge networking integration tests
    └── test_qnx_qemu_portforward.sh   # Port forwarding integration tests
@@ -128,7 +128,17 @@ bazel run --config=x86_64-qnx //:test_qemu_bridge
 
 # Run integration tests for port forwarding
 bazel run --config=x86_64-qnx //:test_qemu_portforward
+
+# Run ITF tests for ssh
+bazel test --config=qemu-integration //:test_ssh_qemu --test_output=streamed
 ```
+
+In order to provide credentials for qnx.com pass to bazel command:
+```bash
+--credential_helper=*.qnx.com=<path_to_toolchains-qnx>/tools/qnx_credential_helper.py
+```
+See more in [toolchains_qnx README](https://github.com/eclipse-score/toolchains_qnx?tab=readme-ov-file#using-pre-packaged-qnx-80-sdp).
+
 
 ## Running the System
 
@@ -201,7 +211,7 @@ qemu-system-x86_64 \
 
 - **`-smp 2`** - Enable 2 CPU cores for SMP support
 - **`--enable-kvm`** - Use hardware virtualization for better performance
-- **`-cpu Cascadelake-Server-v5`** - Emulate modern Intel CPU features for older Ubuntu Versions change that to -cpu host in case of errors
+- **`-cpu Cascadelake-Server-v5`** - Emulate modern Intel CPU features for older Ubuntu versions change that to `-cpu host` in case of errors
 - **`-m 1G`** - Allocate 1GB of RAM
 - **`-nographic`** - Disable graphical display (console-only)
 - **`-netdev bridge`** - Connect to host bridge network for direct IP access
@@ -236,7 +246,7 @@ To modify the default IP address, edit the network configuration:
    vim configs/network_setup.sh
    ```
 
-2. **Eample on modify the IP configuration line**:
+2. **Example on modify the IP configuration line**:
 
    ```bash
    # Change this line to your desired IP
@@ -279,10 +289,15 @@ echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward
 ```
 
 In case of failed to parse default acl file /etc/qemu/bridge.conf'
-1. Check acl of /etc/qemu/bridge.conf 
+1. Check acl of `/etc/qemu/bridge.conf`
 2. If file does not exist; create that file and add the following line in it
-allow virbr0
+`allow virbr0`
 3. Run qemu with Sudo as debug option in case of failure with acl
+
+In case of error "Operation not permitted" for `qemu-bridge-helper` run
+```bash
+sudo chmod u+s /usr/lib/qemu/qemu-bridge-helper
+```
 
 ## User Accounts and Access
 

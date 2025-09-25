@@ -42,21 +42,22 @@ MAX_RETRIES=10                         # 10 retries * 3 seconds = 30 seconds tot
 while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
     # Get current IP address for vtnet0
     IP_ADDR=$(ifconfig vtnet0 | grep 'inet ' | awk '{print $2}')
-    
+
     if [ -n "$IP_ADDR" ] && [ "$IP_ADDR" != "0.0.0.0" ]; then
         echo "---> DHCP successful! Acquired IP"
         # Get additional network info
         NETMASK=$(ifconfig vtnet0 | grep 'inet ' | awk '{print $4}')
         echo "---> Network configuration:"
-        
+
         # Save basic DHCP status
         echo "DHCP_SUCCESS" > /tmp_ram/dhcp_status
         IP_ADDR=$(ifconfig vtnet0 | grep 'inet ' | awk '{print $2}')
+        echo "IP address set to: $IP_ADDR"
         echo "IP: $IP_ADDR" >> /tmp_ram/dhcp_status
         echo "Date: $(date)" >> /tmp_ram/dhcp_status
         break
     fi
-    
+
     echo "---> Still waiting for DHCP lease... (attempt $((RETRY_COUNT + 1))/$MAX_RETRIES)"
     sleep 3
     RETRY_COUNT=$((RETRY_COUNT + 1))
@@ -70,14 +71,15 @@ if [ -z "$IP_ADDR" ] || [ "$IP_ADDR" = "0.0.0.0" ]; then
     if kill -0 $DHCP_PID 2>/dev/null; then
         kill $DHCP_PID 2>/dev/null
     fi
-    
+
     # Configure static IP as fallback
     echo "---> Configuring static IP fallback: 192.168.122.100"
     ifconfig vtnet0 192.168.122.100 netmask 255.255.255.0
     route add default 192.168.122.1  # Add default gateway
-    
+
     # Save fallback status
     echo "DHCP_FAILED_STATIC_FALLBACK" > /tmp_ram/dhcp_status
+    echo "IP address set to: 192.168.122.100"
     echo "IP: 192.168.122.100" >> /tmp_ram/dhcp_status
     echo "Date: $(date)" >> /tmp_ram/dhcp_status
 else

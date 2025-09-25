@@ -30,5 +30,59 @@ use_repo(toolchains_qnx, "toolchains_qnx_qcc")
 use_repo(toolchains_qnx, "toolchains_qnx_ifs")
 
 register_toolchains("@toolchains_qnx_qcc//:qcc_x86_64")
-
 register_toolchains("@toolchains_qnx_ifs//:ifs_x86_64")
+
+###############################################################################
+#
+# Shell dependency
+#
+###############################################################################
+bazel_dep(name = "rules_shell", version = "0.6.0")
+
+###############################################################################
+#
+# Python version
+#
+###############################################################################
+bazel_dep(name = "rules_python", version = "1.0.0")
+
+PYTHON_VERSION = "3.12"
+
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(
+    configure_coverage_tool = True,
+    is_default = True,
+    python_version = PYTHON_VERSION,
+)
+use_repo(python)
+
+###############################################################################
+#
+# LLVM Toolchains
+#
+###############################################################################
+bazel_dep(name = "toolchains_llvm", version = "1.2.0")
+
+llvm = use_extension("@toolchains_llvm//toolchain/extensions:llvm.bzl", "llvm")
+llvm.toolchain(
+    cxx_standard = {"": "c++17"},
+    llvm_version = "19.1.0",
+)
+use_repo(llvm, "llvm_toolchain")
+use_repo(llvm, "llvm_toolchain_llvm")
+
+register_toolchains("@llvm_toolchain//:all")
+
+###############################################################################
+#
+# C++ rules
+#
+###############################################################################
+bazel_dep(name = "rules_cc", version = "0.1.1")
+
+###############################################################################
+#
+# ITF dependency
+#
+###############################################################################
+bazel_dep(name = "score_itf", version = "0.1.0")
