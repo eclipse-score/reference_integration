@@ -106,7 +106,7 @@ bazel_dep(name="score_docs_as_code", version = "1.3.0")
 
 # TODO: rename to a better suitable name, with score_ prefix
 # TODO: it's not in the registry
-# TODO: this is from qorix??
+# TODO: this is directly from qorix??
 bazel_dep(name = "testing-utils")
 git_override(
     module_name = "testing-utils",
@@ -132,36 +132,25 @@ git_override(
 # System/Basics
 
 ## Python
-bazel_dep(name = "rules_python", version = "1.4.1")
+# bazel_dep(name = "rules_python", version = "1.4.1")
 
-PYTHON_VERSION = "3.12"
+# PYTHON_VERSION = "3.12"
 
-python = use_extension("@rules_python//python/extensions:python.bzl", "python")
-python.toolchain(
-    configure_coverage_tool = True,
-    is_default = True,
-    python_version = PYTHON_VERSION,
-)
-use_repo(python)
+# python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+# python.toolchain(
+#     configure_coverage_tool = True,
+#     is_default = True,
+#     python_version = PYTHON_VERSION,
+# )
+# use_repo(python)
 
-## Sphinx
-pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
-pip.parse(
-    envsubst = ["PIP_INDEX_URL"],
-    extra_pip_args = ["--index-url=${PIP_INDEX_URL:-https://pypi.org/simple/}"],
-    hub_name = "pip_docs",
-    python_version = PYTHON_VERSION,
-    requirements_lock = "//docs:requirements.txt",
-)
-use_repo(pip, "pip_docs")
-
-# PlantUML for docs
-bazel_dep(name = "rules_java", version = "8.15.1")
-
-http_jar = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_jar")
-
-http_jar(
-    name = "plantuml",
-    sha256 = "6f38f70455d08438979451c2257cd5d58647c6460094bb829bc2a12878d47331",
-    url = "https://github.com/plantuml/plantuml/releases/download/v1.2025.0/plantuml-1.2025.0.jar",
-)
+# Once we need python requirements:
+# pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+# pip.parse(
+#     envsubst = ["PIP_INDEX_URL"],
+#     extra_pip_args = ["--index-url=${PIP_INDEX_URL:-https://pypi.org/simple/}"],
+#     hub_name = "pip_docs",
+#     python_version = PYTHON_VERSION,
+#     requirements_lock = "//requirements.txt",
+# )
+# use_repo(pip, "pip_docs")
