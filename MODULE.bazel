@@ -23,13 +23,20 @@ module(
 
 # TODO: rename feo to score_feo
 # TODO: feo does not have a single release yet. It's not in the registry.
+# TODO: need to install
+# TODO: sudo apt-get install protobuf-compiler
+# TODO: sudo apt-get install libclang-dev
 bazel_dep(name = "feo", version = "0.0.0")
-git_override(
+local_path_override(
     module_name = "feo",
-    remote = "https://github.com/eclipse-score/feo.git",
-    # 2025-10-07
-    commit = "086f3c0971805dd72a963bba7b4f99134b19620f",
+    path = "../feo"
 )
+# git_override(
+#     module_name = "feo",
+#     remote = "https://github.com/eclipse-score/feo.git",
+#     # 2025-10-07
+#     commit = "086f3c0971805dd72a963bba7b4f99134b19620f",
+# )
 
 ## --- logging ---
 
@@ -50,43 +57,43 @@ git_override(
 
 # TODO: score_persistency does not have a single release yet. It's not in the registry.
 # TODO: rename repo inc_mw_per to persistency
-bazel_dep(name = "score_persistency", version = "0.1.0")
-git_override(
-    module_name = "score_persistency",
-    remote = "https://github.com/eclipse-score/inc_mw_per.git",
-    # 2025-10-09, PR-140
-    commit = "e5759ddf481e7fb957908dcd077799c85edfe547",
-)
+# bazel_dep(name = "score_persistency", version = "0.1.0")
+# git_override(
+#     module_name = "score_persistency",
+#     remote = "https://github.com/eclipse-score/inc_mw_per.git",
+#     # 2025-10-09, PR-140
+#     commit = "e5759ddf481e7fb957908dcd077799c85edfe547",
+# )
 
 
 ## --- platform ---
 
 # for building documentation, verifying traceability etc.
-bazel_dep(name = "score_platform", version = "0.3.0")
+# bazel_dep(name = "score_platform", version = "0.3.0")
 
 ## -- orchestration ---
 
 # TODO: rename inc_orchestrator to score_orchestrator, introduce semver
 # TODO: inc_orchestrator does not have a single release yet. It's not in the registry.
-bazel_dep(name = "inc_orchestrator")
-git_override(
-    module_name = "inc_orchestrator",
-    remote = "https://github.com/eclipse-score/inc_orchestrator.git",
-    # 2025-10-07
-    commit = "9f8ed482bdf786117eb3c4c1be14a1ee58a120ab",
-)
+# bazel_dep(name = "inc_orchestrator")
+# git_override(
+#     module_name = "inc_orchestrator",
+#     remote = "https://github.com/eclipse-score/inc_orchestrator.git",
+#     # 2025-10-07
+#     commit = "9f8ed482bdf786117eb3c4c1be14a1ee58a120ab",
+# )
 
 ## --- communication ---
 
 # TODO: rename communication to score_communication, introduce semver
 # TODO: communication does not have a single release yet. It's not in the registry.
-bazel_dep(name = "communication")
-git_override(
-    module_name = "communication",
-    remote = "https://github.com/eclipse-score/communication.git",
-    # 2025-10-07
-    commit = "dd17d1229b92fe63a6e7dd7194a8d63ea98a8a4f",
-)
+# bazel_dep(name = "communication")
+# git_override(
+#     module_name = "communication",
+#     remote = "https://github.com/eclipse-score/communication.git",
+#     # 2025-10-07
+#     commit = "dd17d1229b92fe63a6e7dd7194a8d63ea98a8a4f",
+# )
 
 ## --- baselibs ---
 
@@ -99,50 +106,141 @@ git_override(
     # 2025-10-07
     commit = "f02d7f427df1968df8d5f9f9aa85bf68baeb839e",
 )
+bazel_dep(name = "score_bazel_platforms", version = "0.0.2")
 
 # Tooling
+bazel_dep(name = "score_tooling", version = "0.0.0")
+local_path_override(
+    module_name = "score_tooling",
+    path = "../tooling"
+)
+# git_override(
+#     module_name = "score_tooling",
+#     remote = "https://github.com/eclipse-score/tooling.git",
+#     # 2025-10-10
+#     commit = "b8f58954485d8a19856a3aacdc69a6cbdd12972d",
+# )
 
-bazel_dep(name="score_docs_as_code", version = "1.3.0")
+#gcc toolchain for baselibs
+bazel_dep(name = "score_toolchains_gcc", version = "0.4", dev_dependency=False)
+gcc = use_extension("@score_toolchains_gcc//extentions:gcc.bzl", "gcc", dev_dependency=False)
+gcc.toolchain(
+    url = "https://github.com/eclipse-score/toolchains_gcc_packages/releases/download/0.0.1/x86_64-unknown-linux-gnu_gcc12.tar.gz",
+    sha256 = "457f5f20f57528033cb840d708b507050d711ae93e009388847e113b11bf3600",
+    strip_prefix = "x86_64-unknown-linux-gnu",
+)
+gcc.extra_features(
+    features = [
+        "minimal_warnings",
+        "treat_warnings_as_errors",
+    ],
+)
+gcc.warning_flags(
+    minimal_warnings = ["-Wall", "-Wno-error=deprecated-declarations", "-Wno-error=narrowing"],
+    strict_warnings = ["-Wextra", "-Wpedantic"],
+)
+use_repo(gcc, "gcc_toolchain", "gcc_toolchain_gcc")
+
+# LLVM Toolchains
+bazel_dep(name = "toolchains_llvm", version = "1.4.0")
+llvm = use_extension("@toolchains_llvm//toolchain/extensions:llvm.bzl", "llvm")
+llvm.toolchain(
+    cxx_standard = {"": "c++17"},
+    llvm_version = "19.1.0",
+)
+use_repo(llvm, "llvm_toolchain")
+use_repo(llvm, "llvm_toolchain_llvm")
+
+register_toolchains("@llvm_toolchain//:all")
+
+
+# Rust
+
+bazel_dep(name = "rules_rust", version = "0.63.0")
+RUST_EDITION = "2021"
+
+RUST_VERSION = "1.83.0"
+# Expose rust toolchain to downstream repos (feo) by not marking as dev_dependency
+rust = use_extension("@rules_rust//rust:extensions.bzl", "rust", dev_dependency=False)
+rust.toolchain(
+    edition = RUST_EDITION,
+    sha256s = {
+        "rustc-1.83.0-x86_64-unknown-linux-gnu.tar.xz": "6ec40e0405c8cbed3b786a97d374c144b012fc831b7c22b535f8ecb524f495ad",
+        "clippy-1.83.0-x86_64-unknown-linux-gnu.tar.xz": "ef6c05abcfd861ff0bca41d408e126dda195dc966ee35abee57645a12d418f5b",
+        "cargo-1.83.0-x86_64-unknown-linux-gnu.tar.xz": "de834a4062d9cd200f8e0cdca894c0b98afe26f1396d80765df828880a39b98c",
+        "llvm-tools-1.83.0-x86_64-unknown-linux-gnu.tar.xz": "b931673b309c229e234f03271aaa777ea149c3c41f0fb43f3ef13a272540299a",
+        "rust-std-1.83.0-x86_64-unknown-linux-gnu.tar.xz": "c88fe6cb22f9d2721f26430b6bdd291e562da759e8629e2b4c7eb2c7cad705f2",
+    },
+    versions = [RUST_VERSION],
+)
+use_repo(rust, "rust_toolchains")
+
+# Provide crate universe (Cargo deps) globally (needed by @feo)
+crate = use_extension("@rules_rust//crate_universe:extensions.bzl", "crate", dev_dependency=False)
+crate.from_cargo(
+    name = "cargo",
+    cargo_lockfile = "@feo//:Cargo.lock",
+    manifests = [
+        "@feo//:Cargo.toml",
+        "@feo//examples/rust/cycle-benchmark:Cargo.toml",
+        "@feo//examples/rust/mini-adas:Cargo.toml",
+        "@feo//feo:Cargo.toml",
+        "@feo//feo-com:Cargo.toml",
+        "@feo//feo-cpp-build:Cargo.toml",
+        "@feo//feo-cpp-macros:Cargo.toml",
+        "@feo//feo-log:Cargo.toml",
+        "@feo//feo-logger:Cargo.toml",
+        "@feo//feo-time:Cargo.toml",
+        "@feo//feo-tracer:Cargo.toml",
+        "@feo//feo-tracing:Cargo.toml",
+        "@feo//logd:Cargo.toml",
+        "@feo//perfetto-model:Cargo.toml",
+    ],
+)
+use_repo(crate, "cargo")
+#  --------
+
+# bazel_dep(name="score_docs_as_code", version = "1.3.0")
 
 # TODO: rename to a better suitable name, with score_ prefix
 # TODO: it's not in the registry
 # TODO: this is directly from qorix??
-bazel_dep(name = "testing-utils")
-git_override(
-    module_name = "testing-utils",
-    commit = "a847c7464cfa47e000141631d1223b92560d2e58",  # tag v0.2.0
-    remote = "https://github.com/qorix-group/testing_tools.git",
-)
+# bazel_dep(name = "testing-utils")
+# git_override(
+#     module_name = "testing-utils",
+#     commit = "a847c7464cfa47e000141631d1223b92560d2e58",  # tag v0.2.0
+#     remote = "https://github.com/qorix-group/testing_tools.git",
+# )
 
-# TODO: whats that?
-archive_override(
-    module_name = "rules_boost",
-    strip_prefix = "rules_boost-master",
-    urls = ["https://github.com/nelhage/rules_boost/archive/refs/heads/master.tar.gz"],
-)
+# # TODO: whats that?
+# archive_override(
+#     module_name = "rules_boost",
+#     strip_prefix = "rules_boost-master",
+#     urls = ["https://github.com/nelhage/rules_boost/archive/refs/heads/master.tar.gz"],
+# )
 
-# TODO: we cannot use communication without including TRLC here?
-bazel_dep(name = "trlc", version = "0.0.0")
-git_override(
-    module_name = "trlc",
-    remote = "https://github.com/bmw-software-engineering/trlc.git",
-    commit = "650b51a47264a4f232b3341f473527710fc32669",  # trlc-2.0.2 release
-)
+# # TODO: we cannot use communication without including TRLC here?
+# bazel_dep(name = "trlc", version = "0.0.0")
+# git_override(
+#     module_name = "trlc",
+#     remote = "https://github.com/bmw-software-engineering/trlc.git",
+#     commit = "650b51a47264a4f232b3341f473527710fc32669",  # trlc-2.0.2 release
+# )
 
 # System/Basics
 
 ## Python
-# bazel_dep(name = "rules_python", version = "1.4.1")
+bazel_dep(name = "rules_python", version = "1.4.1")
 
-# PYTHON_VERSION = "3.12"
+PYTHON_VERSION = "3.12"
 
-# python = use_extension("@rules_python//python/extensions:python.bzl", "python")
-# python.toolchain(
-#     configure_coverage_tool = True,
-#     is_default = True,
-#     python_version = PYTHON_VERSION,
-# )
-# use_repo(python)
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(
+    configure_coverage_tool = True,
+    is_default = True,
+    python_version = PYTHON_VERSION,
+)
+use_repo(python)
 
 # Once we need python requirements:
 # pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
