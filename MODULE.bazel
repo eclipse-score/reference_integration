@@ -58,11 +58,15 @@ module(
 # TODO: score_persistency does not have a single release yet. It's not in the registry.
 # TODO: rename repo inc_mw_per to persistency
 bazel_dep(name = "score_persistency", version = "0.1.0")
-git_override(
+# git_override(
+#     module_name = "score_persistency",
+#     remote = "https://github.com/eclipse-score/inc_mw_per.git",
+#     # 2025-10-09, PR-140
+#     commit = "e5759ddf481e7fb957908dcd077799c85edfe547",
+# )
+local_path_override(
     module_name = "score_persistency",
-    remote = "https://github.com/eclipse-score/inc_mw_per.git",
-    # 2025-10-09, PR-140
-    commit = "e5759ddf481e7fb957908dcd077799c85edfe547",
+    path = "../inc_mw_per"
 )
 
 
@@ -151,7 +155,7 @@ gcc.warning_flags(
 use_repo(gcc, "gcc_toolchain", "gcc_toolchain_gcc")
 
 # LLVM Toolchains
-bazel_dep(name = "toolchains_llvm", version = "1.4.0")
+bazel_dep(name = "toolchains_llvm", version = "1.2.0") # per is using 1.2.0
 llvm = use_extension("@toolchains_llvm//toolchain/extensions:llvm.bzl", "llvm")
 llvm.toolchain(
     cxx_standard = {"": "c++17"},
@@ -255,4 +259,3 @@ python.toolchain(
     python_version = PYTHON_VERSION,
 )
 use_repo(python)
-
