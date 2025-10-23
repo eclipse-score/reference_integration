@@ -40,14 +40,14 @@ jobs:
         - name: Publish build summary
           if: always()
           run: |
-            if [ -f _logs/build_summary.txt ]; then
+            if [ -f _logs/build_summary.md ]; then
               {
                 echo '## Bazel Build Summary'
                 echo
-                sed 's/^/    /' _logs/build_summary.txt
+                sed 's/^/    /' _logs/build_summary.md
               } >> "$GITHUB_STEP_SUMMARY"
             else
-              echo "No build summary file found (_logs/build_summary.txt)" >> "$GITHUB_STEP_SUMMARY"
+              echo "No build summary file found (_logs/build_summary.md)" >> "$GITHUB_STEP_SUMMARY"
             fi
         - name: Upload logs artifact
           if: always()
