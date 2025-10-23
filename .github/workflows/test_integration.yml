@@ -16,10 +16,17 @@
 
 name: Bazel Build some repositories
 on:
-    workflow_dispatch:
+  workflow_dispatch:
+  push:
+    branches: [ bazel ]
+  pull_request:
+    branches: [ bazel ]
 jobs:
     integration_test:
       runs-on: ubuntu-latest
+      permissions:
+        contents: read
+        actions: read
       steps:
         - name: Checkout repository
           uses: actions/checkout@v4.2.2
