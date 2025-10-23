@@ -12,6 +12,9 @@ bazel build @communication//score/... @communication//third_party/...
 - BUILD files contain "@//third_party instead of "//third_party
 - runtime_test.cpp:get_path is not checking external/communication+/ instead it is checking safe_posix_platform (old module name?)
 
+
+bazel build --config bl-x86_64-linux @communication//score/... @communication//third_party/...
+
 bazel build \
     @score_persistency//src/... \
     @score_persistency//tests/cpp_test_scenarios/... \
@@ -20,7 +23,13 @@ bazel build \
     --copt=-Wno-deprecated-declarations
 # The Python tests cannot be built from the integration workspace due to Bazel's repository visibility design. This is a fundamental limitation, not a configuration issue. The pip extension and Python dependencies must be accessed from within their defining module context. (according to Claude Sonnet 4)
 
+TBD:
+
+bazel test @itf//...
+
 not working:
+
+
 
 bazel build @score_persistency//src/cpp/... --extra_toolchains=@llvm_toolchain//:cc-toolchain-x86_64-linux
 per is using llvm_toolchain 1.2.0 and baselibs 1.4.0
