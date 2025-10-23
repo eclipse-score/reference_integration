@@ -6,7 +6,7 @@ set -euo pipefail
 
 CONFIG=${CONFIG:-bl-x86_64-linux}
 LOG_DIR=${LOG_DIR:-_logs/logs}
-SUMMARY_FILE=${SUMMARY_FILE:-_logs/build_summary.txt}
+SUMMARY_FILE=${SUMMARY_FILE:-_logs/build_summary.md}
 mkdir -p "${LOG_DIR}" || true
 
 declare -A BUILD_TARGET_GROUPS=(
@@ -31,6 +31,14 @@ timestamp() { date '+%Y-%m-%d %H:%M:%S'; }
 
 echo "=== Integration Build Started $(timestamp) ===" | tee "${SUMMARY_FILE}"
 echo "Config: ${CONFIG}" | tee -a "${SUMMARY_FILE}"
+echo "" >> "${SUMMARY_FILE}"
+echo "## Build Groups Summary" >> "${SUMMARY_FILE}"
+echo "" >> "${SUMMARY_FILE}"
+# Markdown table header
+{
+    echo "| Group | Status | Duration (s) | Warnings | Deprecated refs |";
+    echo "|-------|--------|--------------|----------|-----------------|";
+} >> "${SUMMARY_FILE}"
 
 overall_warn_total=0
 overall_depr_total=0
@@ -38,7 +46,8 @@ overall_depr_total=0
 for group in baselibs communication persistency; do
     targets="${BUILD_TARGET_GROUPS[$group]}"
     log_file="${LOG_DIR}/${group}.log"
-    echo "--- Building group: ${group} ---" | tee -a "${SUMMARY_FILE}"
+    # Log build group banner only to stdout/stderr (not into summary table file)
+    echo "--- Building group: ${group} ---"
     # GitHub Actions log grouping start
     echo "::group::Bazel build (${group})"
     start_ts=$(date +%s)
@@ -65,7 +74,13 @@ for group in baselibs communication persistency; do
     d_count=$(depr_count "$log_file")
     overall_warn_total=$(( overall_warn_total + w_count ))
     overall_depr_total=$(( overall_depr_total + d_count ))
-        echo "Group: ${group} | Status: ${build_status} | Duration: ${duration}s | Warnings: ${w_count} | Deprecated refs: ${d_count}" | tee -a "${SUMMARY_FILE}"
+    # Append as a markdown table row (duration without trailing 's')
+    if [[ ${build_status} -eq 0 ]]; then
+        status_symbol="✅"
+    else
+        status_symbol="❌(${build_status})"
+    fi
+    echo "| ${group} | ${status_symbol} | ${duration} | ${w_count} | ${d_count} |" | tee -a "${SUMMARY_FILE}"
 done
 
 # Display the full build summary explicitly at the end
