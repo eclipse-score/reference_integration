@@ -1,49 +1,110 @@
-# reference_integration
-Score project integration repository
+# Reference Integration
 
+Integration workspace for the Eclipse Score project. This repository is used to validate cross-module builds (e.g. baselibs, communication, persistency, feo, etc.) from a single Bazel workspace.
 
+## ✅ Working Build Commands
 
-working:
+### Baselibs
 
-bazel build --config bl-x86_64-linux  @score-baselibs//score/... --verbose_failures
+```bash
+bazel build --config bl-x86_64-linux @score-baselibs//... --verbose_failures
+```
 
-bazel build @communication//score/... @communication//third_party/...
-# score/mw/com/requirements is causing problems when building from a different repo
-- BUILD files contain "@//third_party instead of "//third_party
-- runtime_test.cpp:get_path is not checking external/communication+/ instead it is checking safe_posix_platform (old module name?)
+### Communication
 
+```bash
+bazel build @communication//score/... @communication//third_party/...  --verbose_failures
+bazel build --config bl-x86_64-linux @communication//score/... @communication//third_party/...  --verbose_failures
+```
 
-bazel build --config bl-x86_64-linux @communication//score/... @communication//third_party/...
+### Persistency
 
+```bash
 bazel build \
     @score_persistency//src/... \
     @score_persistency//tests/cpp_test_scenarios/... \
     @score_persistency//tests/rust_test_scenarios/... \
     --extra_toolchains=@llvm_toolchain//:cc-toolchain-x86_64-linux \
-    --copt=-Wno-deprecated-declarations
-# The Python tests cannot be built from the integration workspace due to Bazel's repository visibility design. This is a fundamental limitation, not a configuration issue. The pip extension and Python dependencies must be accessed from within their defining module context. (according to Claude Sonnet 4)
+    --copt=-Wno-deprecated-declarations \
+    --verbose_failures
+```
 
-TBD:
+> Note: Python tests for `@score_persistency` cannot be built from this integration workspace due to Bazel external repository visibility limitations. The pip extension and Python dependencies must be accessed within their defining module.
 
-bazel test @itf//...
+## ⚠️ Observed Issues
 
-not working:
+### score/mw/com/requirements
+Problems when building from a different repo:
+- Some `BUILD` files use `@//third_party` instead of `//third_party` (repository-qualified vs. local label mismatch).
+- `runtime_test.cpp:get_path` is checking `safe_posix_platform` (likely an outdated module name) instead of `external/communication+/`.
+- fixed in feature/build_from_reference_repo https://github.com/etas-contrib/score_communication.git
 
+### Toolchain / Version Drift
+- Persistency uses `llvm_toolchain 1.2.0` while baselibs uses `1.4.0`. Aligning versions may reduce incompatibilities.
 
+## 🚧 Not Yet Working
 
+```bash
 bazel build @score_persistency//src/cpp/... --extra_toolchains=@llvm_toolchain//:cc-toolchain-x86_64-linux
-per is using llvm_toolchain 1.2.0 and baselibs 1.4.0
 
 bazel build @feo//... --verbose_failures
-need to install
-sudo apt-get install protobuf-compiler
-sudo apt-get install libclang-dev
+```
 
-https://github.com/eclipse-score/tooling/blob/main/starpls/starpls.bzl
-uses curl, which does not work with proxy (and is bad for dependency tracking)
-possible workaround in the script:
-    local_path_override(module_name = "score_tooling",path = "../tooling")
-            export "http_proxy=http://127.0.0.1:3128"
-            export "https_proxy=http://127.0.0.1:3128"
-            export "HTTP_PROXY=http://127.0.0.1:3128"
-            export "HTTPS_PROXY=http://127.0.0.1:3128"
+### Missing System Packages (for feo build)
+Install required system dependencies:
+```bash
+sudo apt-get update
+sudo apt-get install -y protobuf-compiler libclang-dev
+```
+
+## 🧪 To Be Done
+
+```bash
+bazel test @itf//...
+```
+
+Add test targets once cross-repo visibility constraints are clarified.
+
+## 🌐 Proxy & Dependency Handling
+
+`starpls.bzl` (see: https://github.com/eclipse-score/tooling/blob/main/starpls/starpls.bzl) uses `curl` directly, which:
+- Bypasses Bazel's fetch/dependency tracking.
+- May fail in a proxy-restricted environment.
+
+### Possible Workaround
+Use a `local_path_override` and set proxy environment variables before invoking the rule:
+
+```bash
+export http_proxy=http://127.0.0.1:3128
+export https_proxy=http://127.0.0.1:3128
+export HTTP_PROXY=http://127.0.0.1:3128
+export HTTPS_PROXY=http://127.0.0.1:3128
+```
+
+Example Bazel module override snippet:
+```python
+local_path_override(module_name = "score_tooling", path = "../tooling")
+```
+
+### Suggested Improvements
+- Replace raw `curl` calls with Bazel `http_archive` or `repository_ctx.download` for reproducibility.
+- Parameterize proxy usage via environment or Bazel config flags.
+
+## 🔍 Next Investigation Targets
+- Normalize third-party label usage (`@//third_party` vs `//third_party`).
+- Update `runtime_test.cpp:get_path` logic for new module layout.
+- Unify LLVM toolchain versions across modules.
+- Introduce integration tests for `@itf` once build succeeds.
+
+## 📌 Quick Reference
+
+| Area | Status | Action |
+|------|--------|--------|
+| baselibs build | ✅ | Keep as baseline |
+| communication build | ✅ | Fix label style inconsistencies |
+| persistency (Python tests) | 🚫 | Not supported cross-repo |
+| feo build | ❌ | Install system deps + inspect failures |
+| itf tests | ⏳ | Add after build stabilization |
+
+## 🗂 Notes
+Keep this file updated as integration issues are resolved. Prefer converting ad-hoc shell steps into Bazel rules or documented scripts under `tools/` for repeatability.
