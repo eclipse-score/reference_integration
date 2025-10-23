@@ -142,10 +142,10 @@ git_override(
 
 # QNX toolchain
 bazel_dep(name = "score_toolchains_qnx", version = "0.0.1")
-# Using local_path_override (patched extension) instead of git_override to avoid duplicate overrides.
-local_path_override(
+git_override(
     module_name = "score_toolchains_qnx",
-    path = "../toolchains_qnx",
+    remote = "https://github.com/eclipse-score/toolchains_qnx.git",
+    commit = "9e2ea88985243231bec59cef023eefb5f6dfd967",
 )
 toolchains_qnx = use_extension("@score_toolchains_qnx//:extensions.bzl", "toolchains_qnx")
 toolchains_qnx.sdp(
