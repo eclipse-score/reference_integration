@@ -26,8 +26,15 @@ jobs:
         - name: Checkout repository
           uses: actions/checkout@v4.2.2
         - name: Setup Bazel
-          uses: bazel-contrib/setup-bazel@0.9.1
-        - name: Bazel build baselibs targets
+          uses: bazel-contrib/setup-bazel@0.15.0
+            with:
+                # Avoid downloading Bazel every time.
+                bazelisk-cache: true
+                # Store build cache per workflow.
+                disk-cache: ${{ github.workflow }}
+                # Share repository cache between workflows.
+                repository-cache: true
+        - name: Bazel build targets
           run: |
             ./integration_test.sh
         - name: Publish build summary

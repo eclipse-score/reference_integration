@@ -13,7 +13,7 @@ bazel build --config bl-x86_64-linux @score-baselibs//... --verbose_failures
 ### Communication
 
 ```bash
-bazel build @communication//score/... @communication//third_party/...  --verbose_failures
+bazel build @communication//score/...  --verbose_failures
 bazel build --config bl-x86_64-linux @communication//score/... @communication//third_party/...  --verbose_failures
 ```
 
@@ -33,11 +33,16 @@ bazel build \
 
 ## ⚠️ Observed Issues
 
-### score/mw/com/requirements
+### communication: score/mw/com/requirements
 Problems when building from a different repo:
 - Some `BUILD` files use `@//third_party` instead of `//third_party` (repository-qualified vs. local label mismatch).
 - `runtime_test.cpp:get_path` is checking `safe_posix_platform` (likely an outdated module name) instead of `external/communication+/`.
 - fixed in feature/build_from_reference_repo https://github.com/etas-contrib/score_communication.git
+
+### communication: get_git_info
+@communication//third_party/... here get_git_info is causing problems because it cannot find github root from e.g.
+/home/runner/.bazel/sandbox/processwrapper-sandbox/1689/execroot/_main/bazel-out/k8-opt-exec-ST-8abfa5a323e1/bin/external/communication+/third_party/traceability/tools/source_code_linker/parsed_source_files_for_source_code_linker.runfiles/communication+/third_party/traceability/tools/source_code_linker/get_git_info.py
+is this needed? should we fix it?
 
 ### Toolchain / Version Drift
 - Persistency uses `llvm_toolchain 1.2.0` while baselibs uses `1.4.0`. Aligning versions may reduce incompatibilities. Also Persistency does not work with `1.4.0`.

@@ -11,7 +11,7 @@ mkdir -p "${LOG_DIR}" || true
 
 declare -A BUILD_TARGET_GROUPS=(
     [baselibs]="@score-baselibs//..."
-    [communication]="@communication//score/... @communication//third_party/..."
+    [communication]="@communication//score/..."
     [persistency]="@score_persistency//src/... @score_persistency//tests/cpp_test_scenarios/... @score_persistency//tests/rust_test_scenarios/..."
 )
 
