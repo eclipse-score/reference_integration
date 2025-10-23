@@ -38,7 +38,9 @@ overall_depr_total=0
 for group in baselibs communication persistency; do
     targets="${BUILD_TARGET_GROUPS[$group]}"
     log_file="${LOG_DIR}/${group}.log"
-        echo "--- Building group: ${group} ---" | tee -a "${SUMMARY_FILE}"
+    echo "--- Building group: ${group} ---" | tee -a "${SUMMARY_FILE}"
+    # GitHub Actions log grouping start
+    echo "::group::Bazel build (${group})"
     start_ts=$(date +%s)
     if [[ "$group" == "persistency" ]]; then
         # Extra flags only for persistency group.
@@ -56,6 +58,7 @@ for group in baselibs communication persistency; do
         build_status=${PIPESTATUS[0]}
         set -e
     fi
+    echo "::endgroup::"  # End Bazel build group
     end_ts=$(date +%s)
     duration=$(( end_ts - start_ts ))
     w_count=$(warn_count "$log_file")
@@ -66,7 +69,9 @@ for group in baselibs communication persistency; do
 done
 
 # Display the full build summary explicitly at the end
+echo '::group::Build Summary'
 echo '=== Build Summary (echo) ==='
 cat "${SUMMARY_FILE}" || echo "(Could not read summary file ${SUMMARY_FILE})"
+echo '::endgroup::'
 
 exit 0

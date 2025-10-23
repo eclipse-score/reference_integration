@@ -19,14 +19,9 @@ on:
   workflow_dispatch:
   push:
     branches: [ bazel ]
-  pull_request:
-    branches: [ bazel ]
 jobs:
     integration_test:
       runs-on: ubuntu-latest
-      permissions:
-        contents: read
-        actions: read
       steps:
         - name: Checkout repository
           uses: actions/checkout@v4.2.2
@@ -35,3 +30,23 @@ jobs:
         - name: Bazel build baselibs targets
           run: |
             ./integration_test.sh
+        - name: Publish build summary
+          if: always()
+          run: |
+            if [ -f _logs/build_summary.txt ]; then
+              {
+                echo '## Bazel Build Summary'
+                echo
+                sed 's/^/    /' _logs/build_summary.txt
+              } >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "No build summary file found (_logs/build_summary.txt)" >> "$GITHUB_STEP_SUMMARY"
+            fi
+        - name: Upload logs artifact
+          if: always()
+          uses: actions/upload-artifact@v4
+          with:
+            name: bazel-build-logs
+            path: _logs/
+            if-no-files-found: warn
+            retention-days: 14
