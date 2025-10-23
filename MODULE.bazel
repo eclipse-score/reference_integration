@@ -58,16 +58,16 @@ module(
 # TODO: score_persistency does not have a single release yet. It's not in the registry.
 # TODO: rename repo inc_mw_per to persistency
 bazel_dep(name = "score_persistency", version = "0.1.0")
-# git_override(
-#     module_name = "score_persistency",
-#     remote = "https://github.com/eclipse-score/inc_mw_per.git",
-#     # 2025-10-09, PR-140
-#     commit = "e5759ddf481e7fb957908dcd077799c85edfe547",
-# )
-local_path_override(
+git_override(
     module_name = "score_persistency",
-    path = "../inc_mw_per"
+    remote = "https://github.com/eclipse-score/inc_mw_per.git",
+    # 2025-10-09, PR-140
+    commit = "e5759ddf481e7fb957908dcd077799c85edfe547",
 )
+# local_path_override(
+#     module_name = "score_persistency",
+#     path = "../inc_mw_per"
+# )
 
 
 ## --- platform ---
@@ -87,8 +87,8 @@ bazel_dep(name = "inc_orchestrator")
 git_override(
     module_name = "inc_orchestrator",
     remote = "https://github.com/eclipse-score/inc_orchestrator.git",
-    # 2025-10-07
     commit = "9f8ed482bdf786117eb3c4c1be14a1ee58a120ab",
+    # 2025-10-07
 )
 
 ## --- communication ---
@@ -110,8 +110,8 @@ bazel_dep(name = "communication")
 git_override(
     module_name = "communication",
     remote = "https://github.com/etas-contrib/score_communication.git",
-    # 2025-10-07
     commit = "1fff37046712f66fed60216fc9e753c8bf57f0ef",
+    # 2025-10-07
 )
 
 ## --- baselibs ---
@@ -122,8 +122,8 @@ bazel_dep(name = "score-baselibs", version = "0.0.0")
 git_override(
     module_name = "score-baselibs",
     remote = "https://github.com/eclipse-score/baselibs.git",
-    # 2025-10-07
     commit = "f02d7f427df1968df8d5f9f9aa85bf68baeb839e",
+    # 2025-10-07
 )
 bazel_dep(name = "score_bazel_platforms", version = "0.0.2")
 
@@ -139,6 +139,22 @@ git_override(
     # 2025-10-10
     commit = "b8f58954485d8a19856a3aacdc69a6cbdd12972d",
 )
+
+# QNX toolchain
+bazel_dep(name = "score_toolchains_qnx", version = "0.0.1")
+# Using local_path_override (patched extension) instead of git_override to avoid duplicate overrides.
+local_path_override(
+    module_name = "score_toolchains_qnx",
+    path = "../toolchains_qnx",
+)
+toolchains_qnx = use_extension("@score_toolchains_qnx//:extensions.bzl", "toolchains_qnx")
+toolchains_qnx.sdp(
+    sha256 = "f2e0cb21c6baddbcb65f6a70610ce498e7685de8ea2e0f1648f01b327f6bac63",
+    strip_prefix = "installation",
+    url = "https://www.qnx.com/download/download/79858/installation.tgz",
+)
+use_repo(toolchains_qnx, "toolchains_qnx_sdp")
+use_repo(toolchains_qnx, "toolchains_qnx_qcc")
 
 #gcc toolchain for baselibs
 bazel_dep(name = "score_toolchains_gcc", version = "0.4", dev_dependency=False)

@@ -11,22 +11,9 @@ build --incompatible_default_to_explicit_init_py
 common --registry=https://raw.githubusercontent.com/eclipse-score/bazel_registry/main/
 common --registry=https://bcr.bazel.build
 
-common --incompatible_disallow_empty_glob
 
-common --@score-baselibs//score/mw/log/detail/flags:KUse_Stub_Implementation_Only=False
-common --@score-baselibs//score/mw/log/flags:KRemote_Logging=False
-common --@score-baselibs//score/json:base_library=nlohmann
-common --@communication//score/mw/com/flags:tracing_library=stub
-common --extra_toolchains=@gcc_toolchain//:host_gcc_12
-build --incompatible_strict_action_env
-test --test_tag_filters=-manual
-build --experimental_retain_test_configuration_across_testonly #https://github.com/bazelbuild/bazel/issues/6842
+try-import %workspace%/baselibs.bazelrc
 
-# unshare /dev/shm and /tmp
-test --sandbox_tmpfs_path=/dev/shm
-test --sandbox_tmpfs_path=/tmp
+try-import %workspace%/communication.bazelrc
 
-try-import %workspace%/.bazelrc.baselibs
-
-try-import %workspace%/.bazelrc.user
-
+try-import %workspace%/user.bazelrc

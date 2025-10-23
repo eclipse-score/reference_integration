@@ -40,7 +40,7 @@ Problems when building from a different repo:
 - fixed in feature/build_from_reference_repo https://github.com/etas-contrib/score_communication.git
 
 ### Toolchain / Version Drift
-- Persistency uses `llvm_toolchain 1.2.0` while baselibs uses `1.4.0`. Aligning versions may reduce incompatibilities.
+- Persistency uses `llvm_toolchain 1.2.0` while baselibs uses `1.4.0`. Aligning versions may reduce incompatibilities. Also Persistency does not work with `1.4.0`.
 
 ## 🚧 Not Yet Working
 
@@ -49,6 +49,12 @@ bazel build @score_persistency//src/cpp/... --extra_toolchains=@llvm_toolchain//
 
 bazel build @feo//... --verbose_failures
 ```
+
+
+```bash
+bazel mod graph
+```
+It is working with latest baselibs (dev_dependecy = True for score_toolchains_qnx), but communication is not building with it.
 
 ### Missing System Packages (for feo build)
 Install required system dependencies:
@@ -64,6 +70,8 @@ bazel test @itf//...
 ```
 
 Add test targets once cross-repo visibility constraints are clarified.
+
+Configuration handling (instead of baseelibs.bazelrc,...)
 
 ## 🌐 Proxy & Dependency Handling
 
