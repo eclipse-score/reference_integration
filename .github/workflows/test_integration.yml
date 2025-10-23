@@ -44,7 +44,8 @@ jobs:
               {
                 echo '## Bazel Build Summary'
                 echo
-                sed 's/^/    /' _logs/build_summary.md
+                # Append the markdown directly so tables render (no leading indentation)
+                cat _logs/build_summary.md
               } >> "$GITHUB_STEP_SUMMARY"
             else
               echo "No build summary file found (_logs/build_summary.md)" >> "$GITHUB_STEP_SUMMARY"
