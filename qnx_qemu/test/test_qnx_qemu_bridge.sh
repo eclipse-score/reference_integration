@@ -279,9 +279,9 @@ detect_qnx_ip() {
     done
     
     # Try to extract IP from DHCP status in logs
-    local ip_pattern="IP: [0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+"
+    local ip_pattern="IP address set to: [0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+"
     if grep -q "$ip_pattern" "$OUTPUT_LOG" 2>/dev/null; then
-        detected_ip=$(grep "$ip_pattern" "$OUTPUT_LOG" | tail -1 | sed 's/.*IP: \([0-9.]*\).*/\1/')
+        detected_ip=$(grep "$ip_pattern" "$OUTPUT_LOG" | tail -1 | sed 's/.*IP address set to: \([0-9.]*\).*/\1/')
         if [ -n "$detected_ip" ] && [ "$detected_ip" != "0.0.0.0" ]; then
             echo "✓ Detected QNX IP address from logs: $detected_ip"
             QNX_IP="$detected_ip"
