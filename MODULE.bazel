@@ -42,15 +42,14 @@ module(
 
 # # TODO: wrong repo??
 # # TODO: name it score_logging
-# bazel_dep(name = "logging... well they don't have a name yet", version = "0.0.0")
+bazel_dep(name = "score-mw-log", version = "0.0.0")
 
-# # TODO: logging does not have a single release yet. It's not in the registry.
-# git_override(
-#     module_name = "logging... well they don't have a name yet",
-#     remote = "https://github.com/eclipse-score/logging.git",
-#     # 2025-10-07
-#     commit = "I93394c8d7e6958d4568e26ffe3fb832c2eb63631",
-# )
+git_override(
+    module_name = "score-mw-log",
+    remote = "https://github.com/eclipse-score/logging.git",
+    # 2025-10-24
+    commit = "fffdb25cd7784c46a4e6d72b46309790f1fcd9ed",
+)
 
 
 ## --- persistency ---
@@ -60,9 +59,9 @@ module(
 bazel_dep(name = "score_persistency", version = "0.1.0")
 git_override(
     module_name = "score_persistency",
-    remote = "https://github.com/eclipse-score/inc_mw_per.git",
+    remote = "https://github.com/eclipse-score/persistency.git",
     # 2025-10-09, PR-140
-    commit = "e5759ddf481e7fb957908dcd077799c85edfe547",
+    commit = "c3b737bb45ba9ddc9db0a3940ab2490c75fc3c02",
 )
 # local_path_override(
 #     module_name = "score_persistency",
@@ -99,20 +98,20 @@ bazel_dep(name = "communication")
 # git_override(
 #     module_name = "communication",
 #     remote = "https://github.com/eclipse-score/communication.git",
-#     # 2025-10-07
-#     commit = "dd17d1229b92fe63a6e7dd7194a8d63ea98a8a4f",
+#     # 2025-10-27 - Updated with tracing enum fixes
+#     commit = "c721401e2129f6cafdd4aaa24b842cd1f83730f1",
 # )
-# local_path_override(
-#     module_name = "communication",
-#     path = "../communication"
-# )
-
-git_override(
+local_path_override(
     module_name = "communication",
-    remote = "https://github.com/etas-contrib/score_communication.git",
-    commit = "748fd452824e378cabe579c019e5dd18387c341e",
-    # 2025-10-07
+    path = "../communication"
 )
+
+# git_override(
+#     module_name = "communication",
+#     remote = "https://github.com/etas-contrib/score_communication.git",
+#     commit = "748fd452824e378cabe579c019e5dd18387c341e",
+#     # 2025-10-07
+# )
 
 ## --- baselibs ---
 
@@ -121,10 +120,16 @@ git_override(
 bazel_dep(name = "score-baselibs", version = "0.0.0")
 git_override(
     module_name = "score-baselibs",
-    remote = "https://github.com/eclipse-score/baselibs.git",
-    commit = "f02d7f427df1968df8d5f9f9aa85bf68baeb839e",
-    # 2025-10-07
+    #remote = "https://github.com/eclipse-score/baselibs.git",
+    #commit = "f02d7f427df1968df8d5f9f9aa85bf68baeb839e", # 2025-10-07
+    #commit = "c2d9b7e872c1e67b69256214a75c937e00d03601", # 2025-10-23
+    remote = "https://github.com/etas-contrib/score_baselibs.git",
+    commit = "5b3a469d80c6480f633ffc789ffb1277ee89fd7f",  # 2025-10-28
 )
+# local_path_override(
+#     module_name = "score-baselibs",
+#     path = "../baselibs"
+# )
 bazel_dep(name = "score_bazel_platforms", version = "0.0.2")
 
 # Tooling
@@ -191,8 +196,8 @@ use_repo(llvm, "llvm_toolchain_llvm")
 register_toolchains("@llvm_toolchain//:all")
 
 
-bazel_dep(name = "rules_rust", version = "0.61.0")
-bazel_dep(name = "score_crates", version = "0.0.2", repo_name = "crate_index")
+#bazel_dep(name = "rules_rust", version = "0.61.0")
+#bazel_dep(name = "score_crates", version = "0.0.2", repo_name = "crate_index")
 
 bazel_dep(name = "boost.program_options", version = "1.87.0")
 

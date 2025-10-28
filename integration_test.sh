@@ -10,9 +10,10 @@ SUMMARY_FILE=${SUMMARY_FILE:-_logs/build_summary.md}
 mkdir -p "${LOG_DIR}" || true
 
 declare -A BUILD_TARGET_GROUPS=(
-    [baselibs]="@score-baselibs//..."
+    [baselibs]="@score-baselibs//score/..."
     [communication]="@communication//score/... @communication//third_party/..."
     [persistency]="@score_persistency//src/... @score_persistency//tests/cpp_test_scenarios/... @score_persistency//tests/rust_test_scenarios/..."
+    [score-mw-log]="@score-mw-log//src/..."
 )
 
 warn_count() {
@@ -43,7 +44,7 @@ echo "" >> "${SUMMARY_FILE}"
 overall_warn_total=0
 overall_depr_total=0
 
-for group in baselibs communication persistency; do
+for group in "${!BUILD_TARGET_GROUPS[@]}"; do
     targets="${BUILD_TARGET_GROUPS[$group]}"
     log_file="${LOG_DIR}/${group}.log"
     # Log build group banner only to stdout/stderr (not into summary table file)
