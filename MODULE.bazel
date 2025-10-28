@@ -101,17 +101,17 @@ bazel_dep(name = "communication")
 #     # 2025-10-27 - Updated with tracing enum fixes
 #     commit = "c721401e2129f6cafdd4aaa24b842cd1f83730f1",
 # )
-local_path_override(
-    module_name = "communication",
-    path = "../communication"
-)
-
-# git_override(
+# local_path_override(
 #     module_name = "communication",
-#     remote = "https://github.com/etas-contrib/score_communication.git",
-#     commit = "748fd452824e378cabe579c019e5dd18387c341e",
-#     # 2025-10-07
+#     path = "../communication"
 # )
+
+git_override(
+    module_name = "communication",
+    remote = "https://github.com/etas-contrib/score_communication.git",
+    commit = "f9db227e7e78be748dbd07090886739da38d004c",
+    # TODO: change to eclipse-score repo and a proper commit
+)
 
 ## --- baselibs ---
 
