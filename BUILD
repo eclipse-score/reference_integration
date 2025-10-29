@@ -26,13 +26,3 @@ filegroup(
     srcs = ["README.md"],
     visibility = ["//visibility:public"],
 )
-
-# Try to build feo rust components using local cargo
-load("@rules_rust//rust:defs.bzl", "rust_library")
-
-# This might work if we can access the feo source directly
-# rust_library(
-#     name = "feo_integration_test", 
-#     srcs = ["@feo//feo:src/lib.rs"],
-#     deps = ["@cargo//:tracing"],
-# )
