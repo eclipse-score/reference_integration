@@ -17,133 +17,11 @@ module(
     compatibility_level = 0,
 )
 
-# Dependencies for integration
-
-## --- feo ---
-
-# TODO: rename feo to score_feo
-# TODO: feo does not have a single release yet. It's not in the registry.
-# TODO: need to install
-# TODO: sudo apt-get install protobuf-compiler
-# TODO: sudo apt-get install libclang-dev
-# bazel_dep(name = "feo", version = "0.0.0")
-# local_path_override(
-#     module_name = "feo",
-#     path = "../feo"
-# )
-# git_override(
-#     module_name = "feo",
-#     remote = "https://github.com/eclipse-score/feo.git",
-#     # 2025-10-07
-#     commit = "086f3c0971805dd72a963bba7b4f99134b19620f",
-# )
-
-## --- logging ---
-
-# # TODO: wrong repo??
-# # TODO: name it score_logging
-bazel_dep(name = "score-mw-log", version = "0.0.0")
-
-git_override(
-    module_name = "score-mw-log",
-    remote = "https://github.com/eclipse-score/logging.git",
-    # 2025-10-24
-    commit = "fffdb25cd7784c46a4e6d72b46309790f1fcd9ed",
-)
-
-
-## --- persistency ---
-
-# TODO: score_persistency does not have a single release yet. It's not in the registry.
-# TODO: rename repo inc_mw_per to persistency
-bazel_dep(name = "score_persistency", version = "0.1.0")
-git_override(
-    module_name = "score_persistency",
-    remote = "https://github.com/eclipse-score/persistency.git",
-    # 2025-10-09, PR-140
-    commit = "c3b737bb45ba9ddc9db0a3940ab2490c75fc3c02",
-)
-# local_path_override(
-#     module_name = "score_persistency",
-#     path = "../inc_mw_per"
-# )
-
-
-## --- platform ---
-bazel_dep(name = "platforms", version = "1.0.0")
-
-bazel_dep(name = "rules_cc", version = "0.2.1")
-bazel_dep(name = "rules_license", version = "1.0.0")
+include("//:git_override.MODULE.bazel")
 
 # for building documentation, verifying traceability etc.
 bazel_dep(name = "score_platform", version = "0.3.0")
-
-## -- orchestration ---
-
-# TODO: rename inc_orchestrator to score_orchestrator, introduce semver
-# TODO: inc_orchestrator does not have a single release yet. It's not in the registry.
-bazel_dep(name = "inc_orchestrator")
-git_override(
-    module_name = "inc_orchestrator",
-    remote = "https://github.com/eclipse-score/inc_orchestrator.git",
-    commit = "9f8ed482bdf786117eb3c4c1be14a1ee58a120ab",
-    # 2025-10-07
-)
-
-## --- communication ---
-
-# TODO: rename communication to score_communication, introduce semver
-# TODO: communication does not have a single release yet. It's not in the registry.
-bazel_dep(name = "communication")
-# git_override(
-#     module_name = "communication",
-#     remote = "https://github.com/eclipse-score/communication.git",
-#     # 2025-10-27 - Updated with tracing enum fixes
-#     commit = "c721401e2129f6cafdd4aaa24b842cd1f83730f1",
-# )
-# local_path_override(
-#     module_name = "communication",
-#     path = "../communication"
-# )
-
-git_override(
-    module_name = "communication",
-    remote = "https://github.com/etas-contrib/score_communication.git",
-    commit = "f9db227e7e78be748dbd07090886739da38d004c",
-    # TODO: change to eclipse-score repo and a proper commit
-)
-
-## --- baselibs ---
-
-# TODO: rename score-baselibs to score_baselibs, use semver
-# TODO: score-baselibs does not have a single release yet. It's not in the registry.
-bazel_dep(name = "score-baselibs", version = "0.0.0")
-git_override(
-    module_name = "score-baselibs",
-    #remote = "https://github.com/eclipse-score/baselibs.git",
-    #commit = "f02d7f427df1968df8d5f9f9aa85bf68baeb839e", # 2025-10-07
-    #commit = "c2d9b7e872c1e67b69256214a75c937e00d03601", # 2025-10-23
-    remote = "https://github.com/etas-contrib/score_baselibs.git",
-    commit = "5b3a469d80c6480f633ffc789ffb1277ee89fd7f",  # 2025-10-28
-)
-# local_path_override(
-#     module_name = "score-baselibs",
-#     path = "../baselibs"
-# )
 bazel_dep(name = "score_bazel_platforms", version = "0.0.2")
-
-# Tooling
-bazel_dep(name = "score_tooling", version = "0.0.0")
-# local_path_override(
-#     module_name = "score_tooling",
-#     path = "../tooling"
-# )
-git_override(
-    module_name = "score_tooling",
-    remote = "https://github.com/eclipse-score/tooling.git",
-    # 2025-10-10
-    commit = "b8f58954485d8a19856a3aacdc69a6cbdd12972d",
-)
 
 # QNX toolchain
 bazel_dep(name = "score_toolchains_qnx", version = "0.0.1")
@@ -195,63 +73,7 @@ use_repo(llvm, "llvm_toolchain_llvm")
 
 register_toolchains("@llvm_toolchain//:all")
 
-
-#bazel_dep(name = "rules_rust", version = "0.61.0")
-#bazel_dep(name = "score_crates", version = "0.0.2", repo_name = "crate_index")
-
-bazel_dep(name = "boost.program_options", version = "1.87.0")
-
-# Rust
-
-# bazel_dep(name = "rules_rust", version = "0.63.0")
-# RUST_EDITION = "2021"
-
-# RUST_VERSION = "1.83.0"
-# # Expose rust toolchain to downstream repos (feo) by not marking as dev_dependency
-# rust = use_extension("@rules_rust//rust:extensions.bzl", "rust", dev_dependency=False)
-# rust.toolchain(
-#     edition = RUST_EDITION,
-#     sha256s = {
-#         "rustc-1.83.0-x86_64-unknown-linux-gnu.tar.xz": "6ec40e0405c8cbed3b786a97d374c144b012fc831b7c22b535f8ecb524f495ad",
-#         "clippy-1.83.0-x86_64-unknown-linux-gnu.tar.xz": "ef6c05abcfd861ff0bca41d408e126dda195dc966ee35abee57645a12d418f5b",
-#         "cargo-1.83.0-x86_64-unknown-linux-gnu.tar.xz": "de834a4062d9cd200f8e0cdca894c0b98afe26f1396d80765df828880a39b98c",
-#         "llvm-tools-1.83.0-x86_64-unknown-linux-gnu.tar.xz": "b931673b309c229e234f03271aaa777ea149c3c41f0fb43f3ef13a272540299a",
-#         "rust-std-1.83.0-x86_64-unknown-linux-gnu.tar.xz": "c88fe6cb22f9d2721f26430b6bdd291e562da759e8629e2b4c7eb2c7cad705f2",
-#     },
-#     versions = [RUST_VERSION],
-# )
-# use_repo(rust, "rust_toolchains")
-
-# # Provide crate universe (Cargo deps) so that @feo's dev-only crate repo becomes available when building its targets from this integration workspace.
-# crate = use_extension("@rules_rust//crate_universe:extensions.bzl", "crate", dev_dependency=False)
-# crate.from_cargo(
-#     name = "cargo",
-#     cargo_lockfile = "@feo//:Cargo.lock",
-#     manifests = [
-#         "@feo//:Cargo.toml",
-#         "@feo//examples/rust/cycle-benchmark:Cargo.toml",
-#         "@feo//examples/rust/mini-adas:Cargo.toml",
-#         "@feo//feo:Cargo.toml",
-#         "@feo//feo-com:Cargo.toml",
-#         "@feo//feo-cpp-build:Cargo.toml",
-#         "@feo//feo-cpp-macros:Cargo.toml",
-#         "@feo//feo-log:Cargo.toml",
-#         "@feo//feo-logger:Cargo.toml",
-#         "@feo//feo-time:Cargo.toml",
-#         "@feo//feo-tracer:Cargo.toml",
-#         "@feo//feo-tracing:Cargo.toml",
-#         "@feo//logd:Cargo.toml",
-#         "@feo//perfetto-model:Cargo.toml",
-#     ],
-# )
-# use_repo(crate, "cargo")
-#  --------
-
-# bazel_dep(name="score_docs_as_code", version = "1.3.0")
-
-# TODO: rename to a better suitable name, with score_ prefix
-# TODO: it's not in the registry
-# TODO: this is directly from qorix??
+## needed additions to build
 bazel_dep(name = "testing-utils")
 git_override(
     module_name = "testing-utils",

@@ -13,7 +13,6 @@ bazel build --config bl-x86_64-linux @score-baselibs//score/... --verbose_failur
 ### Communication
 
 ```bash
-bazel build @communication//score/...  --verbose_failures
 bazel build --config bl-x86_64-linux @communication//score/... @communication//third_party/...  --verbose_failures
 ```
 
