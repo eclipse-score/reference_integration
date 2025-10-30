@@ -56,13 +56,13 @@ gcc.extra_features(
 gcc.warning_flags(
     minimal_warnings = ["-Wall", "-Wno-error=deprecated-declarations", "-Wno-error=narrowing"],
     strict_warnings = ["-Wextra", "-Wpedantic"],
-    treat_warnings_as_errors = ["-Werror"], # needed by com
+    treat_warnings_as_errors = ["-Werror"],
 )
 use_repo(gcc, "gcc_toolchain", "gcc_toolchain_gcc")
 register_toolchains("@gcc_toolchain//:all")
 
 # LLVM Toolchains
-bazel_dep(name = "toolchains_llvm", version = "1.2.0") # per is using 1.2.0
+bazel_dep(name = "toolchains_llvm", version = "1.2.0") # persistency module uses 1.2.0 and does not work with 1.4.0 yet
 llvm = use_extension("@toolchains_llvm//toolchain/extensions:llvm.bzl", "llvm")
 llvm.toolchain(
     cxx_standard = {"": "c++17"},
@@ -81,7 +81,7 @@ git_override(
     remote = "https://github.com/qorix-group/testing_tools.git",
 )
 
-# # TODO: whats that?
+# # TODO: What is this for?
 archive_override(
     module_name = "rules_boost",
     strip_prefix = "rules_boost-master",

@@ -58,7 +58,7 @@ bazel build @feo//... --verbose_failures
 ```bash
 bazel mod graph
 ```
-It is working with latest baselibs (dev_dependecy = True for score_toolchains_qnx), but communication is not building with it.
+It is working with latest baselibs (dev_dependency = True for score_toolchains_qnx), but communication is not building with it.
 
 ### Missing System Packages (for feo build)
 Install required system dependencies:

@@ -56,7 +56,7 @@ for group in "${!BUILD_TARGET_GROUPS[@]}"; do
         # Extra flags only for persistency group.
         set +e
         bazel build --config "${CONFIG}" \
-            ${targets} \
+            "${targets}" \
             --extra_toolchains=@llvm_toolchain//:cc-toolchain-x86_64-linux \
             --copt=-Wno-deprecated-declarations \
             --verbose_failures 2>&1 | tee "$log_file"
@@ -64,7 +64,7 @@ for group in "${!BUILD_TARGET_GROUPS[@]}"; do
         set -e
     else
         set +e
-        bazel build --config "${CONFIG}" ${targets} --verbose_failures 2>&1 | tee "$log_file"
+        bazel build --config "${CONFIG}" "${targets}" --verbose_failures 2>&1 | tee "$log_file"
         build_status=${PIPESTATUS[0]}
         set -e
     fi
