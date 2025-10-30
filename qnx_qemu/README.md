@@ -4,6 +4,260 @@
 
 This project provides a minimal QNX 8.0 image designed to run on x86_64 QEMU virtual machines. It's specifically configured for the Eclipse SCORE (Safety Critical Object-Oriented Real-time Embedded) project, offering a lightweight yet functional QNX environment suitable for development, testing, and demonstration purposes.
 
+## Quick Start Guide
+
+### 1. Prerequisites
+
+Before starting, ensure the following tools are available on your Linux host:
+
+- **Bazel**
+- **QEMU** (with `qemu-bridge-helper` installed at `/usr/lib/qemu/qemu-bridge-helper`)
+- Valid **QNX SDP 8.0 license** from <https://www.qnx.com/>. See this YT video for more info <https://www.youtube.com/watch?v=DtWA5E-cFCo>
+
+### 2. Installation/ Configuration
+
+- **Clone the integration & toolchain repos**
+
+```bash
+git clone https://github.com/eclipse-score/reference_integration.git
+git clone https://github.com/eclipse-score/toolchains_qnx.git
+cd reference_integration/qnx_qemu
+```
+
+Toolchain repo contains the Bazel rules and credential helper used to download and register the QNX SDP toolchain.
+
+- **Provide QNX download credentials**
+
+You can pass credentials via environment variables.
+
+```bash
+export SCORE_QNX_USER="<qnx_username>"
+export SCORE_QNX_PASSWORD="<qnx_password>"
+```
+
+- **Download QNX Software Center for Linux**
+
+**Using GUI:**
+
+Download **QNX Software Center 2.0.4 Build 202501021438 - Linux Hosts** from the [QNX Software Center page](https://www.qnx.com/download/group.html?programid=29178), then install it.
+
+**Using CLI:**
+
+URL to installer must be determined manually:
+
+- Go to [QNX page]<https://blackberry.qnx.com/en> and log in using "SIGN IN".
+
+- Go to [QNX Software Center page]<https://www.qnx.com/download/group.html?programid=29178>.
+
+- Scroll down and click the link labeled `QNX Software Center <VERSION> Build <BUILD_NUMBER> - Linux Hosts`.
+
+- Right-click "Download Now" button and copy the installer URL.
+
+- Verify installer checksum after download!
+
+```bash
+# Create directory.
+mkdir ~/.qnx 
+# Log-in and download installer.
+curl -v --cookie-jar ~/.qnx/myqnxcookies.auth --form "userlogin=$SCORE_QNX_USER" --form "password=$SCORE_QNX_PASSWORD" https://www.qnx.com/account/login.html -o login_response.html
+curl -v -L --cookie ~/.qnx/myqnxcookies.auth installer_URL  > qnx-setup-lin.run
+# Verify checksum.
+sha256sum qnx-setup-lin.run
+# Make the installer executable.
+chmod +x ./qnx-setup-lin.run
+# Run installer.
+~/qnx-setup-lin.run force-override disable-auto-start agree-to-license-terms ~/qnxinstall
+```
+
+- **Download QNX SDP 8.0**
+
+**Using GUI:**
+
+Using **QNX Software Center - Linux Hosts** we previously installed , install **QNX Software Development Platform 8.0**.
+
+**Using CLI:**
+
+```bash
+cd ~/qnxinstall/qnxsoftwarecenter
+./qnxsoftwarecenter_clt -syncLicenseKeys -myqnx.user="$SCORE_QNX_USER" -myqnx.password="$SCORE_QNX_PASSWORD" -addLicenseKey license_key -listLicenseKeys
+./qnxsoftwarecenter_clt -mirrorBaseline="qnx800" -myqnx.user="$SCORE_QNX_USER" -myqnx.password="$SCORE_QNX_PASSWORD"
+./qnxsoftwarecenter_clt -cleanInstall -destination ~/qnx800 -installBaseline com.qnx.qnx800 -myqnx.user="$SCORE_QNX_USER" -myqnx.password="$SCORE_QNX_PASSWORD"
+cd - > /dev/null
+```
+
+This contains the toolchains and `license` folder required for activation.
+check this QNX link for more info <https://www.qnx.com/developers/docs/qsc/com.qnx.doc.qsc.inst_larg_org/topic/create_headless_installation_linux_macos.html>
+
+- **Source SDP environment**
+
+```bash
+source ~/qnx800/qnxsdp-env.sh 
+#The commands below confirm the environment was sourced successfully.
+echo "$QNX_HOST" "$QNX_TARGET"
+```
+
+- **Register QNX license**
+
+```bash
+sudo mkdir -p /opt/score_qnx/license
+sudo cp ~/.qnx/license/licenses /opt/score_qnx/license/licenses
+sudo chmod 644 /opt/score_qnx/license/licenses
+```
+
+OR we can use symbolic linking
+
+```bash
+sudo install -d -m 755 /opt/score_qnx/license
+LIC_SRC="$(readlink -f "$HOME/.qnx/license/licenses")"
+sudo ln -sfn "$LIC_SRC" /opt/score_qnx/license/licenses
+chmod 644 "$LIC_SRC"
+```
+
+- **Configure QEMU networking**
+
+to allow QEMU bridge helper to create TAP devices and to make sure **TUN** is available:
+
+Give qemu-bridge-helper the required capabilities.
+
+Make sure that bridge virbr0 is installed for successful QEMU startup
+
+```bash
+sudo apt update
+sudo apt install -y libvirt-daemon-system qemu-kvm
+sudo systemctl enable --now libvirtd
+sudo virsh net-define /usr/share/libvirt/networks/default.xml || true
+sudo virsh net-autostart default
+sudo virsh net-start default
+```
+
+Create /etc/qemu if it doesn’t exist.
+
+```bash
+sudo install -d -m 755 /etc/qemu
+echo "allow virbr0" | sudo tee /etc/qemu/bridge.conf
+```
+
+On Debian/Ubuntu (most common path):
+
+```bash
+sudo setcap cap_net_admin,cap_net_raw+ep /usr/lib/qemu/qemu-bridge-helper
+```
+
+Verify:
+
+```bash
+getcap /usr/lib/qemu/qemu-bridge-helper
+# or
+getcap /usr/libexec/qemu-bridge-helper
+```
+
+You should see:
+
+```bash
+/usr/lib/qemu/qemu-bridge-helper = cap_net_admin,cap_net_raw+ep
+```
+
+Enable TUN device
+
+Make sure the TUN kernel module is loaded:
+
+```bash
+sudo modprobe tun
+```
+
+Check that the device exists:
+
+```bash
+ls -l /dev/net/tun
+```
+
+If successful, you’ll see:
+
+```bash
+crw-rw-rw- 1 root root 10, 200 ... /dev/net/tun
+```
+
+### 3. Build & run the QNX image on qemu
+
+Run Bazel with the credential helper:
+
+```bash
+bazel build --config=x86_64-qnx \
+  --credential_helper=*.qnx.com=$(pwd)/../toolchains_qnx/tools/qnx_credential_helper.py \
+  //build:init
+```
+
+- First run downloads ~1.6 GiB of QNX SDP
+
+- Resulting IFS: `bazel-bin/build/init.ifs`
+
+at this stage Build shall succeed.
+
+- **Run QNX in QEMU**
+
+verify bridge virbr0 is up and running
+
+```bash
+ip link show virbr0
+```
+
+- QEMU can use KVM for near-native performance. The wrapper below auto-enables **KVM** when available and falls back to **TCG** with a visible warning if /dev/kvm isn’t accessible
+
+```bash
+sudo tee /usr/local/bin/qemu-system-x86_64 >/dev/null <<'EOF'
+#!/usr/bin/env bash
+# Smart QEMU shim: auto-enable KVM when possible; warn & fall back otherwise.
+set -euo pipefail
+REAL="${QEMU_BIN:-/usr/bin/qemu-system-x86_64}"
+
+have_kvm() {
+  [[ -e /dev/kvm && -r /dev/kvm && -w /dev/kvm ]] || return 1
+  [[ -d /sys/module/kvm ]] && { [[ -d /sys/module/kvm_intel || -d /sys/module/kvm_amd ]] ; } || true
+}
+
+args=("$@")
+want_kvm=false
+for a in "${args[@]}"; do
+  [[ "$a" == "--enable-kvm" ]] && want_kvm=true
+done
+
+if have_kvm; then
+  $want_kvm || args+=(--enable-kvm)
+else
+  # Strip any --enable-kvm and warn
+  filtered=()
+  for a in "${args[@]}"; do
+    [[ "$a" == "--enable-kvm" ]] && continue
+    filtered+=("$a")
+  done
+  args=("${filtered[@]}")
+  echo "Warning: KVM not available: /dev/kvm missing or not accessible; using software emulation (TCG)." >&2
+  sleep 2  # fixed 2s pause so the warning is visible
+fi
+
+exec "$REAL" "${args[@]}"
+EOF
+```
+
+make the script executable
+
+```bash
+sudo chmod +x /usr/local/bin/qemu-system-x86_64
+```
+
+Tip: ensure /usr/local/bin comes before /usr/bin so the wrapper is used:
+
+```bash
+export PATH=/usr/local/bin:$PATH
+hash -r
+```
+
+- Run QEMU
+
+```bash
+bazel run --config=x86_64-qnx //:run_qemu
+```
+
 ## Features
 
 ### Core System Components
@@ -134,11 +388,12 @@ bazel test --config=qemu-integration //:test_ssh_qemu --test_output=streamed
 ```
 
 In order to provide credentials for qnx.com pass to bazel command:
+
 ```bash
 --credential_helper=*.qnx.com=<path_to_toolchains-qnx>/tools/qnx_credential_helper.py
 ```
-See more in [toolchains_qnx README](https://github.com/eclipse-score/toolchains_qnx?tab=readme-ov-file#using-pre-packaged-qnx-80-sdp).
 
+See more in [toolchains_qnx README](https://github.com/eclipse-score/toolchains_qnx?tab=readme-ov-file#using-pre-packaged-qnx-80-sdp).
 
 ## Running the System
 
@@ -289,12 +544,14 @@ echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward
 ```
 
 In case of failed to parse default acl file /etc/qemu/bridge.conf'
+
 1. Check acl of `/etc/qemu/bridge.conf`
 2. If file does not exist; create that file and add the following line in it
 `allow virbr0`
 3. Run qemu with Sudo as debug option in case of failure with acl
 
 In case of error "Operation not permitted" for `qemu-bridge-helper` run
+
 ```bash
 sudo chmod u+s /usr/lib/qemu/qemu-bridge-helper
 ```
@@ -626,11 +883,13 @@ The system is configured with port forwarding for network analysis:
 ### Wireshark Analysis Workflow
 
 1. **Start QNX System**:
+
    ```bash
    bazel run --config=x86_64-qnx //:run_qemu_portforward
    ```
 
 2. **Launch Live Capture**:
+
    ```bash
    ./scripts/qnx_wireshark.sh wireshark "tcp"
    ```
