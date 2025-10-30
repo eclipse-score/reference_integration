@@ -75,7 +75,7 @@ bazel test @itf//...
 
 Add test targets once cross-repo visibility constraints are clarified.
 
-Configuration handling (instead of baseelibs.bazelrc,...)
+Configuration handling (instead of baselibs.bazelrc,...)
 
 ## 🌐 Proxy & Dependency Handling
 
