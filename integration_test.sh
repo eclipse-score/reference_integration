@@ -84,6 +84,9 @@ for group in "${!BUILD_TARGET_GROUPS[@]}"; do
     echo "| ${group} | ${status_symbol} | ${duration} | ${w_count} | ${d_count} |" | tee -a "${SUMMARY_FILE}"
 done
 
+# Append aggregate totals row to summary table
+echo "| TOTAL |  |  | ${overall_warn_total} | ${overall_depr_total} |" >> "${SUMMARY_FILE}"
+
 # Display the full build summary explicitly at the end
 echo '::group::Build Summary'
 echo '=== Build Summary (echo) ==='
