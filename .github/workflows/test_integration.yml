@@ -34,9 +34,28 @@ jobs:
             disk-cache: ${{ github.workflow }}
             # Share repository cache between workflows.
             repository-cache: true
+        - name: Show disk space before build
+          run: |
+            echo 'Disk space before build:'
+            df -h
+            echo 'Inode usage before build:'
+            df -i
+            echo 'Largest top-level directories:'
+            du -h -d 1 2>/dev/null | sort -h | tail -n 20 || true
         - name: Bazel build targets
           run: |
+            echo 'Starting Bazel build (disk space snapshot):'
+            df -h | sed 's/^/PRE-BUILD DF /'
             ./integration_test.sh
+        - name: Show disk space after build
+          if: always()
+          run: |
+            echo 'Disk space after build:'
+            df -h
+            echo 'Inode usage after build:'
+            df -i
+            echo 'Largest top-level directories after build:'
+            du -h -d 1 2>/dev/null | sort -h | tail -n 20 || true
         - name: Publish build summary
           if: always()
           run: |
