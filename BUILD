@@ -43,8 +43,10 @@ docs(
 load("//:full_docs.bzl", "all_docs")
 
 all_docs(
+    conf = "full_docs/conf.py",
     subdocs = {
         "@score_platform//:docs_sources": "platform",
+        ":docs_sources": "integration",
         "@score_docs_as_code//:docs_sources": "docs_as_code",
         "@score_process//:docs_sources": "process",
     },

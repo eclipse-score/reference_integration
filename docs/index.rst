@@ -12,12 +12,9 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-All of S-CORE
-=============
+#####################
+Reference Integration
+#####################
 
-.. toctree::
-   :maxdepth: 2
+This is the reference integration of S-CORE.
 
-   docs_as_code/index
-   Platform <platform/index>
-   intro/index

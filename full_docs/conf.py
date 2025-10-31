@@ -20,9 +20,9 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = "S-CORE Reference Integration"
+project = "S-CORE Full Documentation"
 project_url = "https://eclipse-score.github.io/module_template/"
-project_prefix = "INT_"
+project_prefix = "ALL_"
 author = "S-CORE"
 version = "0.1"
 
