@@ -1,0 +1,40 @@
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+#!/bin/bash
+set -e
+
+BOOTSTRAP=${1:-false}
+BOOSTRAP=$(echo "${BOOTSTRAP}" | tr '[:upper:]' '[:lower:]')
+
+if [[ "${BOOTSTRAP}" == "true" ]]; then
+	podman exec -it qm systemctl start lola-ipc-sub.service
+	systemctl start lola-ipc-pub.service
+
+	sleep 60
+fi
+
+# check publisher logs
+journalctl -u  lola-ipc-pub | cat | grep -qE 'Sending sample: [0-9]+'
+if [ "$?" -ne "0" ]; then
+	echo Could not match 'Sending sample: [0-9]+' from lola-ipc-pub.service logs.
+	exit $?
+fi
+
+# check subscriber logs
+podman exec -it qm journalctl -u lola-ipc-sub.service | cat | grep -qE 'Received sample: [0-9]+'
+if [ "$?" -ne "0" ]; then
+	echo Could not match 'Received sample: [0-9]+' from lola-ipc-sub.service logs
+	exit $?
+fi
+
+exit 0

@@ -1,0 +1,85 @@
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+name: Build and Test AutoSD
+
+on:
+  pull_request:
+    paths:
+      - 'autosd/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: build-and-test-autosd
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: autosd/build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.9.1
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y podman curl qemu-system
+      
+      - name: Install AIB Tools
+        run: |
+          curl -o auto-image-builder.sh "https://gitlab.com/CentOS/automotive/src/automotive-image-builder/-/raw/main/auto-image-builder.sh"
+          chmod +x auto-image-builder.sh
+
+          curl -o automotive-image-runner "https://gitlab.com/CentOS/automotive/src/automotive-image-builder/-/raw/main/automotive-image-runner"
+          chmod +x automotive-image-runner
+
+      - name: Build lola-demo.aib.yml
+        run: |
+          sudo ./auto-image-builder.sh build \
+          --distro autosd10 \
+          --mode package \
+          --target qemu \
+          --export qcow2 \
+          --define-file vars.yml \
+          --define-file vars-devel.yml \
+          lola-demo.aib.yml \
+          disk.qcow2
+
+          sudo chown $(id -u) disk.qcow2
+
+          mv disk.qcow2 ../disk.qcow2
+
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+    
+      - name: Test QEMU image
+        run: |
+          sshcmd() {
+            sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 2222 root@localhost $@
+          }
+          ./scripts/run_qemu
+          sshcmd 'cat /etc/os-release'
+          sleep 10
+          sshcmd 'bluechictl start agent-qm lola-ipc-sub.service'
+          sleep 5
+          sshcmd '/usr/local/bin/lola-ipc-test'
+        working-directory: ./autosd
+        env:
+          SSH_PASSWORD: password
