@@ -11,16 +11,6 @@ git_override(
     # TODO: change to eclipse-score repo and a proper commit
 )
 
-## --- feo ---
-# not working yet
-# bazel_dep(name = "feo", version = "0.0.0")
-# git_override(
-#     module_name = "feo",
-#     remote = "https://github.com/eclipse-score/feo.git",
-#     # 2025-10-07
-#     commit = "086f3c0971805dd72a963bba7b4f99134b19620f",
-# )
-
 ## --- logging ---
 bazel_dep(name = "score-mw-log", version = "0.0.0")
 git_override(
@@ -31,7 +21,7 @@ git_override(
 )
 
 ## --- persistency ---
-bazel_dep(name = "score_persistency", version = "0.1.0")
+bazel_dep(name = "score_persistency", version = "0.0.0")
 git_override(
     module_name = "score_persistency",
     remote = "https://github.com/eclipse-score/persistency.git",
@@ -39,7 +29,7 @@ git_override(
 )
 
 ## --- orchestration ---
-bazel_dep(name = "inc_orchestrator")
+bazel_dep(name = "inc_orchestrator", version = "0.0.0")
 git_override(
     module_name = "inc_orchestrator",
     remote = "https://github.com/eclipse-score/inc_orchestrator.git",
@@ -47,7 +37,7 @@ git_override(
 )
 
 ## --- communication ---
-bazel_dep(name = "communication")
+bazel_dep(name = "communication", version = "0.0.0")
 git_override(
     module_name = "communication",
     remote = "https://github.com/etas-contrib/score_communication.git",
@@ -60,6 +50,5 @@ bazel_dep(name = "score_tooling", version = "0.0.0")
 git_override(
     module_name = "score_tooling",
     remote = "https://github.com/eclipse-score/tooling.git",
-    # 2025-10-10
     commit = "b8f58954485d8a19856a3aacdc69a6cbdd12972d",
 )
