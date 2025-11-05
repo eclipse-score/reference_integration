@@ -30,6 +30,18 @@ bazel build \
 
 > Note: Python tests for `@score_persistency` cannot be built from this integration workspace due to Bazel external repository visibility limitations. The pip extension and Python dependencies must be accessed within their defining module.
 
+### Orchestration and `kyron` - async runtime for Rust
+
+```bash
+bazel build @score_orchestrator//src/...
+```
+
+## Feature showcase examples
+The examples that are aiming to showcase features provided by S-CORE are located in `feature_showcase` folder.
+You can run them currently for host platform using `--config bl-x86_64-linux`.
+
+Execute `bazel query //feature_showcase/...` to obtain list of targets that You can run.
+
 ## ⚠️ Observed Issues
 
 ### communication: score/mw/com/requirements

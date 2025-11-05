@@ -56,6 +56,9 @@ jobs:
           bazel test --config=qemu-integration --test_output=streamed --credential_helper=*.qnx.com=${{ github.workspace }}/.github/tools/qnx_credential_helper.py -- \
           //:test_ssh_qemu \
           //:test_scrample_qemu \
+      - name: Bazel execute showcase examples
+        run: |
+          bazel build --config bl-x86_64-linux //feature_showcase:all_examples
   release_verification:
     runs-on: ubuntu-latest
     needs: [test_target]
