@@ -18,22 +18,22 @@ logger = logging.getLogger(__name__)
 
 
 def test_scrample_app_is_deployed(target_fixture):
-    user = "qnxuser"
-    with target_fixture.sut.ssh(username=user) as ssh:
+    with target_fixture.sut.ssh() as ssh:
         exit_code, stdout, stderr = execute_command_output(
             ssh, "test -f scrample"
         )
         assert exit_code == 0, "SSH command failed"
 
 
-# def test_scrample_app_is_running(target_fixture):
-#     user = "qnxuser"
-#     with target_fixture.sut.ssh(username=user) as ssh:
-#         exit_code, stdout, stderr = execute_command_output(
-#             # ssh, "./scrample -n 5 -t 100 -m recv & ./scrample -n 20 -t 100 -m send"
-#             # ssh, "./scrample -n 20 -t 100 -m send"
-#             ssh, "./scrample -n 10 -t 100 -m send",
-#             timeout = 30, max_exec_time = 180,
-#             logger_in = logger, verbose = True,
-#         )
-#         assert exit_code == 0, "SSH command failed"
+def test_scrample_app_is_running(target_fixture):
+    with target_fixture.sut.ssh() as ssh:
+        exit_code, stdout, stderr = execute_command_output(
+            ssh, "./scrample -n 10 -t 100 -m send & ./scrample -n 5 -t 100 -m recv",
+            timeout = 30, max_exec_time = 180,
+            logger_in = logger, verbose = True,
+        )
+
+        logger.info (stdout)
+        logger.info (stderr)
+
+        assert exit_code == 0, "SSH command failed"
