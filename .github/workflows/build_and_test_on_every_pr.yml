@@ -1,0 +1,56 @@
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+name: Test reference integration
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+  merge_group:
+    types: [checks_requested]
+
+permissions:
+  contents: write
+
+jobs:
+    test_reference_integration:
+      runs-on: ubuntu-22.04
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4.2.2
+        - name: Setup Bazel
+          uses: bazel-contrib/setup-bazel@0.9.1
+        - name: Setup QNX License
+          env:
+            SCORE_QNX_LICENSE: ${{ secrets.SCORE_QNX_LICENSE }}
+          run: |
+            mkdir -p /opt/score_qnx/license
+            echo "${SCORE_QNX_LICENSE}" | base64 --decode > /opt/score_qnx/license/licenses
+        - name: Install qemu
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y qemu-system
+        - name: Enable KVM group perms
+          run: |
+            echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+            sudo udevadm control --reload-rules
+            sudo udevadm trigger --name-match=kvm
+        - name: Bazel execute itf qnx_qemu tests
+          env:
+            SCORE_QNX_USER: ${{ secrets.SCORE_QNX_USER }}
+            SCORE_QNX_PASSWORD: ${{ secrets.SCORE_QNX_PASSWORD }}
+          run: |
+            cd qnx_qemu
+            bazel test --config=qemu-integration --test_output=streamed --credential_helper=*.qnx.com=${{ github.workspace }}/.github/tools/qnx_credential_helper.py -- \
+            //:test_ssh_qemu \
+            //:test_scrample_qemu \
+  

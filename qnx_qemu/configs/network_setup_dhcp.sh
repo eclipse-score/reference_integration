@@ -41,13 +41,7 @@ MAX_RETRIES=10                         # 10 retries * 3 seconds = 30 seconds tot
 
 while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
     # Get current IP address for vtnet0
-
-    # It can happen that dhcpcd at the beggining assigns an APIPA address (169.254.x.x)
-    # Wait for the correct IP assignment
-    IP_ADDR_TO_CHECK=$(ifconfig vtnet0 | grep 'inet ' | awk '{print $2}')
-    if ! echo "$IP_ADDR_TO_CHECK" | grep -q "^169\.254"; then
-        IP_ADDR=$IP_ADDR_TO_CHECK
-    fi
+    IP_ADDR=$(ifconfig vtnet0 | grep 'inet ' | awk '{print $2}')
 
     if [ -n "$IP_ADDR" ] && [ "$IP_ADDR" != "0.0.0.0" ]; then
         echo "---> DHCP successful! Acquired IP"
