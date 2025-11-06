@@ -3,52 +3,29 @@
 # Dependencies for integration
 
 ## --- baselibs ---
-bazel_dep(name = "score-baselibs", version = "0.0.0")
-git_override(
-    module_name = "score-baselibs",
-    remote = "https://github.com/etas-contrib/score_baselibs.git",
-    commit = "5b3a469d80c6480f633ffc789ffb1277ee89fd7f",
-    # TODO: change to eclipse-score repo and a proper commit
-)
+bazel_dep(name = "score_baselibs", version = "0.1.3")
 
-## --- logging ---
-bazel_dep(name = "score-mw-log", version = "0.0.0")
-git_override(
-    module_name = "score-mw-log",
-    remote = "https://github.com/eclipse-score/logging.git",
-    # 2025-10-24
-    commit = "fffdb25cd7784c46a4e6d72b46309790f1fcd9ed",
-)
+# ## --- communication ---
+# ERROR: no such package '@@[unknown repo '' requested from @@score_communication
+# bazel_dep(name = "score_communication", version = "0.1.0")
 
-## --- persistency ---
-bazel_dep(name = "score_persistency", version = "0.0.0")
-git_override(
-    module_name = "score_persistency",
-    remote = "https://github.com/eclipse-score/persistency.git",
-    commit = "c3b737bb45ba9ddc9db0a3940ab2490c75fc3c02",
-)
+# ## --- persistency ---
+# Not in bazel_registry yet
+# bazel_dep(name = "score_persistency", version = "0.0.0")
+
 
 ## --- orchestration ---
-bazel_dep(name = "inc_orchestrator", version = "0.0.0")
-git_override(
-    module_name = "inc_orchestrator",
-    remote = "https://github.com/eclipse-score/inc_orchestrator.git",
-    commit = "9f8ed482bdf786117eb3c4c1be14a1ee58a120ab",
-)
+bazel_dep(name = "score_orchestrator", version = "0.0.3")
 
-## --- communication ---
-bazel_dep(name = "communication", version = "0.0.0")
-git_override(
-    module_name = "communication",
-    remote = "https://github.com/etas-contrib/score_communication.git",
-    commit = "f9db227e7e78be748dbd07090886739da38d004c",
-    # TODO: change to eclipse-score repo and a proper commit
-)
+## --- ITF ---
+# Errors in DLT module. Is it buildable with `bl-x86_64-linux` config?
+# bazel_dep(name = "score_itf", version = "0.1.0") 
 
-# Tooling
-bazel_dep(name = "score_tooling", version = "0.0.0")
-git_override(
-    module_name = "score_tooling",
-    remote = "https://github.com/eclipse-score/tooling.git",
-    commit = "b8f58954485d8a19856a3aacdc69a6cbdd12972d",
-)
+## --- test_scenarios ---
+bazel_dep(name = "score_test_scenarios", version = "0.3.0")
+
+## --- test_scenarios ---
+# ERROR: Error computing the main repository mapping: in module dependency chain <root> -> score_scrample@0.1.0: the MODULE.bazel file of score_scrample@0.1.0 declares a different name (scrample)
+# bazel_dep(name = "score_scrample", version = "0.1.0")
+
+

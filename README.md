@@ -7,7 +7,7 @@ Integration workspace for the Eclipse Score project. This repository is used to 
 ### Baselibs
 
 ```bash
-bazel build --config bl-x86_64-linux @score-baselibs//score/... --verbose_failures
+bazel build --config bl-x86_64-linux @score_baselibs//score/... --verbose_failures
 ```
 
 ### Communication
