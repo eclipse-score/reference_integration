@@ -16,9 +16,6 @@ load("@rules_rust//rust:defs.bzl", "rust_binary")
 rust_binary(
     name = "kyron_example",
     srcs = glob(["kyron/**/*.rs"]),
-    tags = [
-        "manual",
-    ],
     deps = [
         "@score_orchestrator//src/kyron:libkyron",
         "@score_orchestrator//src/kyron-foundation:libkyron_foundation",
@@ -30,9 +27,6 @@ rust_binary(
 rust_binary(
     name = "orch_per_example",
     srcs = glob(["orchestration_persistency/**/*.rs"]),
-    tags = [
-        "manual",
-    ],
     deps = [
         "@score_orchestrator//src/kyron:libkyron",
         "@score_orchestrator//src/kyron-foundation:libkyron_foundation",

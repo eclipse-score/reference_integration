@@ -120,6 +120,12 @@ local_path_override(module_name = "score_tooling", path = "../tooling")
 - Unify LLVM toolchain versions across modules.
 - Introduce integration tests for `@itf` once build succeeds.
 
+## IDE support
+
+### Rust
+
+Use `./generate_rust_analyzer_support.sh` to generate rust_analyzer settings that will let VS Code work.
+
 ## 📌 Quick Reference
 
 | Area | Status | Action |
