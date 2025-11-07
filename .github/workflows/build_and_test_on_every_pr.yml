@@ -44,13 +44,11 @@ jobs:
             echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
             sudo udevadm control --reload-rules
             sudo udevadm trigger --name-match=kvm
-        - name: Bazel execute itf qnx_qemu tests
-          env:
-            SCORE_QNX_USER: ${{ secrets.SCORE_QNX_USER }}
-            SCORE_QNX_PASSWORD: ${{ secrets.SCORE_QNX_PASSWORD }}
+        - name: Bazel execute showcase examples
           run: |
-            cd qnx_qemu
-            bazel test --config=qemu-integration --test_output=streamed --credential_helper=*.qnx.com=${{ github.workspace }}/.github/tools/qnx_credential_helper.py -- \
-            //:test_ssh_qemu \
-            //:test_scrample_qemu \
+            set -e
+            bazel build --config bl-x86_64-linux //feature_showcase:all_examples
+            while read -r target; do
+              bazel run --config bl-x86_64-linux "$target"
+            done < ci/showcase_targets_run.txt
   

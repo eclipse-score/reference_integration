@@ -14,6 +14,7 @@ declare -A BUILD_TARGET_GROUPS=(
     [communication]="@communication//score/... @communication//third_party/..."
     [persistency]="@score_persistency//src/... @score_persistency//tests/cpp_test_scenarios/... @score_persistency//tests/rust_test_scenarios/..."
     [score-mw-log]="@score-mw-log//src/..."
+    [score-orchestrator]="@score_orchestrator//src/..."
 )
 
 warn_count() {
