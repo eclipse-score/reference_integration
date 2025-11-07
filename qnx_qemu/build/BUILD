@@ -49,11 +49,11 @@ qnx_ifs(
         "system.build",
         ":scripts",
         ":configs",
-        "@scrample//src:scrample",
+        "@score_scrample//src:scrample",
         "//scrample_integration:etc_configs",
     ],
     ext_repo_maping = {
-        "SCRAMPLE_PATH": "$(location @scrample//src:scrample)",
+        "SCRAMPLE_PATH": "$(location @score_scrample//src:scrample)",
     },
     visibility = [
         "//:__pkg__"
