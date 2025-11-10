@@ -11,7 +11,7 @@ mkdir -p "${LOG_DIR}" || true
 
 declare -A BUILD_TARGET_GROUPS=(
     [baselibs]="@score_baselibs//score/..."
-    [score_communication]="@score_communication//score/..."
+    [score_communication]="@score_communication//score/mw/com:com"
     [persistency]="@score_persistency//src/cpp/src/... @score_persistency//src/rust/..."
     #[score_logging]="@score_logging//src/..."
     [score_orchestrator]="@score_orchestrator//src/..."

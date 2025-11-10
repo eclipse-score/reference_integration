@@ -21,7 +21,7 @@ bazel build --config bl-x86_64-linux @score_baselibs//score/... --verbose_failur
 
 ### Communication
 ```bash
-bazel build --config bl-x86_64-linux @score_communication//score/... --verbose_failures
+bazel build --config bl-x86_64-linux @score_communication//score/mw/com:com --verbose_failures
 ```
 
 ### Persistency
