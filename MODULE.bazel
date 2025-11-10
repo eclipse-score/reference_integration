@@ -18,72 +18,8 @@ module(
 )
 
 include("//:score_modules.MODULE.bazel")
+include("//:score_toolchains.MODULE.bazel")
 
-# for building documentation, verifying traceability etc.
-bazel_dep(name = "score_platform", version = "0.3.0")
-bazel_dep(name = "score_bazel_platforms", version = "0.0.2")
-bazel_dep(name = "score_crates", version = "0.0.3")
-
-# QNX toolchain
-bazel_dep(name = "score_toolchains_qnx", version = "0.0.2")
-toolchains_qnx = use_extension("@score_toolchains_qnx//:extensions.bzl", "toolchains_qnx")
-toolchains_qnx.sdp(
-    sha256 = "f2e0cb21c6baddbcb65f6a70610ce498e7685de8ea2e0f1648f01b327f6bac63",
-    strip_prefix = "installation",
-    url = "https://www.qnx.com/download/download/79858/installation.tgz",
-)
-use_repo(toolchains_qnx, "toolchains_qnx_sdp")
-use_repo(toolchains_qnx, "toolchains_qnx_qcc")
-
-#gcc toolchain for baselibs
-bazel_dep(name = "score_toolchains_gcc", version = "0.5", dev_dependency = False)
-gcc = use_extension("@score_toolchains_gcc//extentions:gcc.bzl", "gcc", dev_dependency = False)
-gcc.toolchain(
-    url = "https://github.com/eclipse-score/toolchains_gcc_packages/releases/download/0.0.1/x86_64-unknown-linux-gnu_gcc12.tar.gz",
-    sha256 = "457f5f20f57528033cb840d708b507050d711ae93e009388847e113b11bf3600",
-    strip_prefix = "x86_64-unknown-linux-gnu",
-)
-gcc.extra_features(
-    features = [
-        "minimal_warnings",
-        "treat_warnings_as_errors",
-    ],
-)
-gcc.warning_flags(
-    minimal_warnings = ["-Wall", "-Wno-error=deprecated-declarations", "-Wno-error=narrowing"],
-    strict_warnings = ["-Wextra", "-Wpedantic"],
-    treat_warnings_as_errors = ["-Werror"],
-)
-use_repo(gcc, "gcc_toolchain", "gcc_toolchain_gcc")
-register_toolchains("@gcc_toolchain//:all")
-
-bazel_dep(name = "score_test_scenarios", version = "0.3.0")
-git_override(
-    module_name = "score_test_scenarios",
-    commit = "a2f9cded3deb636f5dc800bf7a47131487119721",  # tag v0.3.0
-    remote = "https://github.com/eclipse-score/testing_tools.git",
-)
-
-# Needed for feature integration tests
-bazel_dep(name = "rules_rust", version = "0.61.0")
-bazel_dep(name = "score_itf", version = "0.1.0")
-
-# # TODO: What is this for?
-archive_override(
-    module_name = "rules_boost",
-    strip_prefix = "rules_boost-master",
-    urls = ["https://github.com/nelhage/rules_boost/archive/refs/heads/master.tar.gz"],
-)
-
-# # TODO: we cannot use communication without including TRLC here?
-bazel_dep(name = "trlc", version = "0.0.0")
-git_override(
-    module_name = "trlc",
-    remote = "https://github.com/bmw-software-engineering/trlc.git",
-    commit = "650b51a47264a4f232b3341f473527710fc32669",  # trlc-2.0.2 release
-)
-
-# System/Basics
 
 ## Python
 bazel_dep(name = "rules_python", version = "1.4.1")
@@ -97,3 +33,25 @@ python.toolchain(
     python_version = PYTHON_VERSION,
 )
 use_repo(python)
+
+# Special imports for certain modules
+
+# communication module dependencies
+# archive_override are not forwarded by bazel_dep, so we need to redefine it here
+archive_override(
+    module_name = "rules_boost",
+    strip_prefix = "rules_boost-master",
+    urls = ["https://github.com/nelhage/rules_boost/archive/refs/heads/master.tar.gz"],
+)
+
+# git_override are not forwarded by bazel_dep, so we need to redefine it here
+git_override(
+    module_name = "trlc",
+    remote = "https://github.com/bmw-software-engineering/trlc.git",
+    commit = "650b51a47264a4f232b3341f473527710fc32669",  # trlc-2.0.2 release
+)
+
+# imports for the feature showcase module
+bazel_dep(name = "rules_rust", version = "0.61.0")
+bazel_dep(name = "score_itf", version = "0.1.0")
+bazel_dep(name = "score_crates", version = "0.0.3")

@@ -1,31 +1,35 @@
-# Reference Integration
+# Score Reference Integration
 
-Integration workspace for the Eclipse Score project. This repository is used to validate cross-module builds (e.g. baselibs, communication, persistency, feo, etc.) from a single Bazel workspace.
+This workspace integrates multiple Eclipse Score modules (baselibs, communication, persistency, orchestrator, feo, etc.) to validate cross-repository builds and detect integration issues early in the development cycle.
 
-## ✅ Working Build Commands
+## Overview
+
+The reference integration workspace serves as a single Bazel build environment to:
+- Validate cross-module dependency graphs
+- Detect label and repository boundary issues
+- Test toolchain and platform support (Linux, QNX, LLVM/GCC)
+- Prepare for release validation workflows
+
+## Working Builds ✅
+
+The following modules build successfully with the `bl-x86_64-linux` configuration:
 
 ### Baselibs
-
 ```bash
-bazel build --config bl-x86_64-linux @score-baselibs//score/... --verbose_failures
+bazel build --config bl-x86_64-linux @score_baselibs//score/... --verbose_failures
 ```
 
 ### Communication
-
 ```bash
-bazel build --config bl-x86_64-linux @communication//score/... @communication//third_party/...  --verbose_failures
+bazel build --config bl-x86_64-linux @score_communication//score/mw/com:com --verbose_failures
 ```
 
 ### Persistency
-
 ```bash
-bazel build \
-    @score_persistency//src/... \
-    @score_persistency//tests/cpp_test_scenarios/... \
-    @score_persistency//tests/rust_test_scenarios/... \
-    --extra_toolchains=@llvm_toolchain//:cc-toolchain-x86_64-linux \
-    --copt=-Wno-deprecated-declarations \
-    --verbose_failures
+bazel build --config bl-x86_64-linux \
+  @score_persistency//src/cpp/src/... \
+  @score_persistency//src/rust/... \
+  --verbose_failures
 ```
 
 > Note: Python tests for `@score_persistency` cannot be built from this integration workspace due to Bazel external repository visibility limitations. The pip extension and Python dependencies must be accessed within their defining module.
@@ -33,7 +37,7 @@ bazel build \
 ### Orchestration and `kyron` - async runtime for Rust
 
 ```bash
-bazel build @score_orchestrator//src/...
+bazel build --config bl-x86_64-linux @score_orchestrator//src/...
 ```
 
 ## Feature showcase examples
@@ -42,61 +46,81 @@ You can run them currently for host platform using `--config bl-x86_64-linux`.
 
 Execute `bazel query //feature_showcase/...` to obtain list of targets that You can run.
 
-## ⚠️ Observed Issues
-
-### communication: score/mw/com/requirements
-Problems when building from a different repo:
-- Some `BUILD` files use `@//third_party` instead of `//third_party` (repository-qualified vs. local label mismatch).
-- `runtime_test.cpp:get_path` is checking `safe_posix_platform` (likely an outdated module name) instead of `external/communication+/`.
-- fixed in feature/build_from_reference_repo https://github.com/etas-contrib/score_communication.git
-
-### communication: get_git_info
-@communication//third_party/... here get_git_info is causing problems because it cannot find github root from e.g.
-/home/runner/.bazel/sandbox/processwrapper-sandbox/1689/execroot/_main/bazel-out/k8-opt-exec-ST-8abfa5a323e1/bin/external/communication+/third_party/traceability/tools/source_code_linker/parsed_source_files_for_source_code_linker.runfiles/communication+/third_party/traceability/tools/source_code_linker/get_git_info.py
-is this needed? should we fix it?
-
-### Toolchain / Version Drift
-- Persistency uses `llvm_toolchain 1.2.0` while baselibs uses `1.4.0`. Aligning versions may reduce incompatibilities. Also Persistency does not work with `1.4.0`.
-
-## 🚧 Not Yet Working
 
 ```bash
-bazel build @score_persistency//src/cpp/... --extra_toolchains=@llvm_toolchain//:cc-toolchain-x86_64-linux
+bazel build --config bl-x86_64-linux @score_orchestrator//src/... --verbose_failures
+```
 
+## Known Issues ⚠️
+
+### Orchestrator
+**Issue:** Direct toolchain loading at `BUILD:14`
+```
+load("@score_toolchains_qnx//rules/fs:ifs.bzl", "qnx_ifs")
+```
+**Resolution needed:** Refactor to use proper toolchain resolution instead of direct load statements.
+
+**Issue:** clang needs to be installed
+```
+sudo apt install clang
+```
+**Resolution needed:** why is this happening with -extra_toolchains=@gcc_toolchain//:host_gcc_12 ?
+
+### Communication
+**Module:** `score/mw/com/requirements`
+
+**Issues when building from external repository:**
+1. **Label inconsistency:** Some `BUILD` files use `@//third_party` instead of `//third_party` (repository-qualified vs. local label). Should standardize on local labels within the module.
+2. **Outdated path reference:** `runtime_test.cpp:get_path` checks for `safe_posix_platform` (likely obsolete module name) instead of `external/score_communication+/`.
+
+### Persistency
+**Test failures in `src/cpp/tests`:**
+1. **Dependency misconfiguration:** `google_benchmark` should not be a dev-only dependency if required by tests. Consider separating benchmark targets.
+2. **Compiler-specific issue in `test_kvs.cpp`:** Contains GCC-specific self-move handling that is incorrect and fails with GCC (only builds with LLVM). Needs portable fix or removal of undefined behavior.
+
+## Build Blockers 🚧
+
+The following builds are currently failing:
+
+### FEO (Full Build)
+```bash
 bazel build @feo//... --verbose_failures
 ```
 
-
+### Persistency (Full Build)
 ```bash
-bazel mod graph
+bazel build --config bl-x86_64-linux @score_persistency//src/... --verbose_failures
 ```
-It is working with latest baselibs (dev_dependency = True for score_toolchains_qnx), but communication is not building with it.
 
-### Missing System Packages (for feo build)
-Install required system dependencies:
+## System Dependencies
+
+### Required Packages for FEO
+Install the following system packages before building FEO:
 ```bash
 sudo apt-get update
 sudo apt-get install -y protobuf-compiler libclang-dev
 ```
 
-## 🧪 To Be Done
+## Pending Tasks 🧪
 
-```bash
-bazel test @itf//...
-```
+- [ ] Add test targets once cross-repository visibility constraints are clarified
+- [ ] Normalize third-party label usage across all `BUILD` files
+- [ ] Resolve FEO build failures
+- [ ] Fix Persistency full build
+- [ ] Address compiler-specific issues in test suites
 
-Add test targets once cross-repo visibility constraints are clarified.
+## Proxy & External Dependencies 🌐
 
-Configuration handling (instead of baselibs.bazelrc,...)
+### Current Issue
 
-## 🌐 Proxy & Dependency Handling
+The `starpls.bzl` file ([source](https://github.com/eclipse-score/tooling/blob/main/starpls/starpls.bzl)) uses `curl` directly for downloading dependencies, which:
+- Bypasses Bazel's managed fetch lifecycle and dependency tracking
+- Breaks reproducibility and remote caching expectations
+- May fail in corporate proxy-restricted environments
 
-`starpls.bzl` (see: https://github.com/eclipse-score/tooling/blob/main/starpls/starpls.bzl) uses `curl` directly, which:
-- Bypasses Bazel's fetch/dependency tracking.
-- May fail in a proxy-restricted environment.
+### Workaround
 
-### Possible Workaround
-Use a `local_path_override` and set proxy environment variables before invoking the rule:
+Use a `local_path_override` and configure proxy environment variables before building:
 
 ```bash
 export http_proxy=http://127.0.0.1:3128
@@ -105,7 +129,7 @@ export HTTP_PROXY=http://127.0.0.1:3128
 export HTTPS_PROXY=http://127.0.0.1:3128
 ```
 
-Example Bazel module override snippet:
+Add this to your `MODULE.bazel`:
 ```python
 local_path_override(module_name = "score_tooling", path = "../tooling")
 ```
@@ -114,27 +138,11 @@ local_path_override(module_name = "score_tooling", path = "../tooling")
 - Replace raw `curl` calls with Bazel `http_archive` or `repository_ctx.download` for reproducibility.
 - Parameterize proxy usage via environment or Bazel config flags.
 
-## 🔍 Next Investigation Targets
-- Normalize third-party label usage (`@//third_party` vs `//third_party`).
-- Update `runtime_test.cpp:get_path` logic for new module layout.
-- Unify LLVM toolchain versions across modules.
-- Introduce integration tests for `@itf` once build succeeds.
-
 ## IDE support
 
 ### Rust
 
 Use `./generate_rust_analyzer_support.sh` to generate rust_analyzer settings that will let VS Code work.
-
-## 📌 Quick Reference
-
-| Area | Status | Action |
-|------|--------|--------|
-| baselibs build | ✅ | Keep as baseline |
-| communication build | ✅ | Fix label style inconsistencies |
-| persistency (Python tests) | 🚫 | Not supported cross-repo |
-| feo build | ❌ | Install system deps + inspect failures |
-| itf tests | ⏳ | Add after build stabilization |
 
 ## 🗂 Notes
 Keep this file updated as integration issues are resolved. Prefer converting ad-hoc shell steps into Bazel rules or documented scripts under `tools/` for repeatability.
