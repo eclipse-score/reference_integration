@@ -15,6 +15,7 @@ declare -A BUILD_TARGET_GROUPS=(
     [persistency]="@score_persistency//src/cpp/src/... @score_persistency//src/rust/..."
     #[score_logging]="@score_logging//src/..."
     [score_orchestrator]="@score_orchestrator//src/..."
+    [score_test_scenarios]="@score_test_scenarios//..."
 )
 
 warn_count() {
