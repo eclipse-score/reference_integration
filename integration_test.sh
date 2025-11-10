@@ -10,11 +10,11 @@ SUMMARY_FILE=${SUMMARY_FILE:-_logs/build_summary.md}
 mkdir -p "${LOG_DIR}" || true
 
 declare -A BUILD_TARGET_GROUPS=(
-    [baselibs]="@score-baselibs//score/..."
-    [communication]="@communication//score/... @communication//third_party/..."
-    [persistency]="@score_persistency//src/... @score_persistency//tests/cpp_test_scenarios/... @score_persistency//tests/rust_test_scenarios/..."
-    [score-mw-log]="@score-mw-log//src/..."
-    [score-orchestrator]="@score_orchestrator//src/..."
+    [baselibs]="@score_baselibs//score/..."
+    [score_communication]="@score_communication//score/..."
+    [persistency]="@score_persistency//src/cpp/src/... @score_persistency//src/rust/..."
+    #[score_logging]="@score_logging//src/..."
+    [score_orchestrator]="@score_orchestrator//src/..."
 )
 
 warn_count() {
@@ -53,22 +53,10 @@ for group in "${!BUILD_TARGET_GROUPS[@]}"; do
     # GitHub Actions log grouping start
     echo "::group::Bazel build (${group})"
     start_ts=$(date +%s)
-    if [[ "$group" == "persistency" ]]; then
-        # Extra flags only for persistency group.
-        set +e
-        bazel build --config "${CONFIG}" \
-            ${targets} \
-            --extra_toolchains=@llvm_toolchain//:cc-toolchain-x86_64-linux \
-            --copt=-Wno-deprecated-declarations \
-            --verbose_failures 2>&1 | tee "$log_file"
-        build_status=${PIPESTATUS[0]}
-        set -e
-    else
-        set +e
-        bazel build --config "${CONFIG}" ${targets} --verbose_failures 2>&1 | tee "$log_file"
-        build_status=${PIPESTATUS[0]}
-        set -e
-    fi
+    set +e
+    bazel build --config "${CONFIG}" ${targets} --verbose_failures 2>&1 | tee "$log_file"
+    build_status=${PIPESTATUS[0]}
+    set -e
     echo "::endgroup::"  # End Bazel build group
     end_ts=$(date +%s)
     duration=$(( end_ts - start_ts ))

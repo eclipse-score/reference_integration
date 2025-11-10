@@ -15,12 +15,12 @@ common --registry=https://raw.githubusercontent.com/eclipse-score/bazel_registry
 common --registry=https://bcr.bazel.build
 
 
-# Flags needed by score-baselibs and communication modules.
+# Flags needed by score_baselibs and communication modules.
 # Do not add more!
-build --@score-baselibs//score/mw/log/detail/flags:KUse_Stub_Implementation_Only=False
-build --@score-baselibs//score/mw/log/flags:KRemote_Logging=False
-build --@score-baselibs//score/json:base_library=nlohmann
-build --@communication//score/mw/com/flags:tracing_library=stub
+build --@score_baselibs//score/mw/log/detail/flags:KUse_Stub_Implementation_Only=False
+build --@score_baselibs//score/mw/log/flags:KRemote_Logging=False
+build --@score_baselibs//score/json:base_library=nlohmann
+build --@score_communication//score/mw/com/flags:tracing_library=stub
 
 # stop legacy behavior of creating __init__.py files
 build --incompatible_default_to_explicit_init_py

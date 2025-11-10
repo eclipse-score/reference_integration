@@ -18,10 +18,28 @@ name: Bazel Build some repositories
 on:
   workflow_dispatch:
   push:
+  pull_request:
 jobs:
     integration_test:
       runs-on: ubuntu-latest
       steps:
+        - name: Show disk space before build
+          run: |
+            echo 'Disk space before build:'
+            df -h
+        - name: Removing unneeded software
+          run: |
+            echo "Removing unneeded software... "
+            if [ -d /usr/share/dotnet ]; then echo "Removing dotnet..."; start=$(date +%s); sudo rm -rf /usr/share/dotnet; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+            #if [ -d /usr/local/lib/android ]; then echo "Removing android..."; start=$(date +%s); sudo rm -rf /usr/local/lib/android; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+            if [ -d /opt/ghc ]; then echo "Removing haskell (ghc)..."; start=$(date +%s); sudo rm -rf /opt/ghc; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+            if [ -d /usr/local/.ghcup ]; then echo "Removing haskell (ghcup)..."; start=$(date +%s); sudo rm -rf /usr/local/.ghcup; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+            if [ -d /usr/share/swift ]; then echo "Removing swift..."; start=$(date +%s); sudo rm -rf /usr/share/swift; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+            if [ -d /usr/local/share/chromium ]; then echo "Removing chromium..."; start=$(date +%s); sudo rm -rf /usr/local/share/chromium; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+        - name: Show disk space after cleanup
+          run: |
+            echo 'Disk space after cleanup:'
+            df -h
         - name: Checkout repository
           uses: actions/checkout@v4.2.2
         - name: Setup Bazel
@@ -33,28 +51,14 @@ jobs:
             disk-cache: ${{ github.workflow }}
             # Share repository cache between workflows.
             repository-cache: true
-        - name: Show disk space before build
-          run: |
-            echo 'Disk space before build:'
-            df -h
-            echo 'Inode usage before build:'
-            df -i
-            echo 'Largest top-level directories:'
-            du -h -d 1 2>/dev/null | sort -h | tail -n 20 || true
         - name: Bazel build targets
           run: |
-            echo 'Starting Bazel build (disk space snapshot):'
-            df -h | sed 's/^/PRE-BUILD DF /'
             ./integration_test.sh
         - name: Show disk space after build
           if: always()
           run: |
             echo 'Disk space after build:'
             df -h
-            echo 'Inode usage after build:'
-            df -i
-            echo 'Largest top-level directories after build:'
-            du -h -d 1 2>/dev/null | sort -h | tail -n 20 || true
         - name: Publish build summary
           if: always()
           run: |
