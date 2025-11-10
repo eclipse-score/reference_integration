@@ -54,4 +54,9 @@ git_override(
 # imports for the feature showcase module
 bazel_dep(name = "rules_rust", version = "0.61.0")
 bazel_dep(name = "score_itf", version = "0.1.0")
-bazel_dep(name = "score_crates", version = "0.0.3")
+bazel_dep(name = "score_crates", version = "0.0.4")
+git_override(
+    module_name = "score_crates",
+    remote = "https://github.com/eclipse-score/score-crates.git",
+    commit = "a4d1c484327141083819a08a7ddaa24754307db8",
+)
