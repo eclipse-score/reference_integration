@@ -14,7 +14,7 @@ load("@score_baselibs//score/language/safecpp:toolchain_features.bzl", "COMPILER
 
 genrule(
     name = "ipc_bridge_cpp_sil",
-    srcs = ["//example/ipc_bridge:ipc_bridge_cpp"],
+    srcs = ["@score_scrample//src:scrample"],
     outs = ["ipc_bridge_cpp_sil"],
     cmd = "cp $(SRCS) $@ && \
      chmod ugo+w $@ && \
@@ -44,7 +44,7 @@ cc_binary(
     ],
     features = COMPILER_WARNING_FEATURES,
     deps = [
-        "//example/ipc_bridge:ipc_bridge_cpp",
+        "@score_scrample//src:scrample",
     ],
 )
 
@@ -69,7 +69,7 @@ genrule(
     name = "upload",
     srcs = [
         ":ipc_bridge_cpp_sil",
-        "//example/ipc_bridge:ipc_bridge_cpp",
+        "@score_scrample//src:scrample",
         ":hi_app",
         ":fastdev-image",
         "mw_com_config.json",
@@ -82,7 +82,7 @@ genrule(
         $(location run_qemu.sh) $(RULEDIR)/deb-qemuarm64-modified -pidfile $(RULEDIR)/qemu.pid > $(RULEDIR)/qemu_upload.log &\
         sleep 30 ; \
         sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location :ipc_bridge_cpp_sil) root@localhost:/usr/bin &&\
-        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location //example/ipc_bridge:ipc_bridge_cpp) root@localhost:/usr/bin &&\
+        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location @score_scrample//src:scrample) root@localhost:/usr/bin &&\
         sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location :hi_app) root@localhost:/usr/bin &&\
         sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location mw_com_config.json) root@localhost:/etc/ &&\
         sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location logging.json) root@localhost:/etc/ &&\
@@ -107,7 +107,7 @@ genrule(
     cmd = " \
         $(location run_qemu.sh) $(RULEDIR)/deb-qemuarm64-modified -pidfile $(RULEDIR)/qemu.pid > $(RULEDIR)/qemu_run.log &\
         sleep 10 ; \
-        sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost ipc_bridge_cpp -n 10 -m send -t 200 -s /etc/mw_com_config.json > $(RULEDIR)/ssh_run.log && \
+        sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost scrample -n 10 -m send -t 200 -s /etc/mw_com_config.json > $(RULEDIR)/ssh_run.log && \
         sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost crinit-ctl poweroff || true \
         sleep 5 \
     ",
