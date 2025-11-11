@@ -15,13 +15,13 @@
 Reference Integration Documentation
 ===================================
 
-Included Modules:
-
 .. if-collection:: score_platform
 
+   Included S-CORE Modules:
+
    .. toctree::
-      :maxdepth: 2
+      :maxdepth: 1
       :titlesonly:
 
+      S-CORE Platform <_collections/score_platform/docs/index>
       _collections/score_process/process/index
-      _collections/score_platform/docs/index
