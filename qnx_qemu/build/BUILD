@@ -51,9 +51,11 @@ qnx_ifs(
         ":configs",
         "@score_scrample//src:scrample",
         "//scrample_integration:etc_configs",
+        "@score_persistency//tests/cpp_test_scenarios:cpp_test_scenarios",        
     ],
     ext_repo_maping = {
         "SCRAMPLE_PATH": "$(location @score_scrample//src:scrample)",
+        "CPP_TEST_SCENARIOS_PATH": "$(location @score_persistency//tests/cpp_test_scenarios:cpp_test_scenarios)",
     },
     visibility = [
         "//:__pkg__"
