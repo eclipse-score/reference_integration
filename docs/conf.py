@@ -11,20 +11,16 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-load("@score_docs_as_code//:docs.bzl", "docs")
+# Configuration file for the Sphinx documentation builder.
 
-docs(
-    data = [
-        "@score_platform//:needs_json",
-        "@score_process//:needs_json",
-        "@score_persistency//:needs_json",
-    ],
-    source_dir = "docs",
-)
+project = "REF_INT"
+project_url = "https://eclipse-score.github.io/reference_integration"
+version = "0.1"
 
-# Simple filegroup target to demonstrate the build system works
-filegroup(
-    name = "readme",
-    srcs = ["README.md"],
-    visibility = ["//visibility:public"],
-)
+extensions = [
+    # TODO: remove plantuml here once
+    # https://github.com/useblocks/sphinx-needs/pull/1508 is merged and docs-as-code
+    # is updated with new sphinx-needs version
+    "sphinxcontrib.plantuml",
+    "score_sphinx_bundle",
+]
