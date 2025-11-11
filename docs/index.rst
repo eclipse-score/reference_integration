@@ -18,10 +18,10 @@ Reference Integration Documentation
 Included Modules:
 
 .. if-collection:: score_platform
-      .. toctree::
-         :maxdepth: 2
-         :titlesonly:
 
-        _collections/score_process/process/index
-        _collections/score_platform/docs/index
-        _collections/score_persistency/docs/index
+   .. toctree::
+      :maxdepth: 2
+      :titlesonly:
+
+      _collections/score_process/process/index
+      _collections/score_platform/docs/index
