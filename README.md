@@ -10,6 +10,12 @@ The reference integration workspace serves as a single Bazel build environment t
 - Test toolchain and platform support (Linux, QNX, LLVM/GCC)
 - Prepare for release validation workflows
 
+## Docs
+
+To generate a full documentation of all integrated modules, run:
+```bash
+bazel run //:docs_combo_experimental
+```
 ## Working Builds ✅
 
 The following modules build successfully with the `bl-x86_64-linux` configuration:
