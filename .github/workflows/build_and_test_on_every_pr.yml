@@ -51,4 +51,6 @@ jobs:
             while read -r target; do
               bazel run --config bl-x86_64-linux "$target"
             done < ci/showcase_targets_run.txt
-  
+        - name: Feature Integration Tests
+          run: |
+            bazel run --config bl-x86_64-linux //feature_integration_tests/python_test_cases:fit
