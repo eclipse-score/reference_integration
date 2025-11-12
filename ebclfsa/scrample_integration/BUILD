@@ -13,9 +13,9 @@
 load("@score_baselibs//score/language/safecpp:toolchain_features.bzl", "COMPILER_WARNING_FEATURES")
 
 genrule(
-    name = "ipc_bridge_cpp_sil",
-    srcs = ["//example/ipc_bridge:ipc_bridge_cpp"],
-    outs = ["ipc_bridge_cpp_sil"],
+    name = "scrample_sil",
+    srcs = ["@score_scrample//src:scrample"],
+    outs = ["scrample_sil"],
     cmd = "cp $(SRCS) $@ && \
      chmod ugo+w $@ && \
      $(execpath @gcc_toolchain_gcc//:elf-enabler) $@ && \
@@ -26,11 +26,11 @@ genrule(
 genrule(
     name = "hi_app",
     srcs = [
-        ":ipc_bridge_hi_wrapper",
-        ":ipc_bridge_cpp_sil"
+        ":scrample_sil_wrapper",
+        ":scrample_sil"
         ],
     outs = ["hi_app"],
-    cmd = "cp $(location :ipc_bridge_hi_wrapper) $@ && \
+    cmd = "cp $(location :scrample_sil_wrapper) $@ && \
      chmod ugo+w $@ && \
      $(execpath @gcc_toolchain_gcc//:elf-enabler) $@ && \
      chmod ugo-w $@",
@@ -38,13 +38,13 @@ genrule(
 )
 
 cc_binary(
-    name = "ipc_bridge_hi_wrapper",
+    name = "scrample_sil_wrapper",
     srcs = [
-        "main.cc",
+        "src/main.cc",
     ],
     features = COMPILER_WARNING_FEATURES,
     deps = [
-        "//example/ipc_bridge:ipc_bridge_cpp",
+        "@score_scrample//src:scrample",
     ],
 )
 
@@ -68,24 +68,24 @@ genrule(
 genrule(
     name = "upload",
     srcs = [
-        ":ipc_bridge_cpp_sil",
-        "//example/ipc_bridge:ipc_bridge_cpp",
+        "@score_scrample//src:scrample",
+        ":scrample_sil",
         ":hi_app",
         ":fastdev-image",
-        "mw_com_config.json",
+        "etc/mw_com_config.json",
+        "etc/logging.json",
         "run_qemu.sh",
-        "logging.json"
     ],
     cmd = " \
         mkdir -p $(RULEDIR)/deb-qemuarm64-modified &&\
         cp $(RULEDIR)/deb-qemuarm64/* $(RULEDIR)/deb-qemuarm64-modified/ &&\
         $(location run_qemu.sh) $(RULEDIR)/deb-qemuarm64-modified -pidfile $(RULEDIR)/qemu.pid > $(RULEDIR)/qemu_upload.log &\
         sleep 30 ; \
-        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location :ipc_bridge_cpp_sil) root@localhost:/usr/bin &&\
-        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location //example/ipc_bridge:ipc_bridge_cpp) root@localhost:/usr/bin &&\
+        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location :scrample_sil) root@localhost:/usr/bin &&\
+        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location @score_scrample//src:scrample) root@localhost:/usr/bin &&\
         sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location :hi_app) root@localhost:/usr/bin &&\
-        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location mw_com_config.json) root@localhost:/etc/ &&\
-        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location logging.json) root@localhost:/etc/ &&\
+        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location etc/mw_com_config.json) root@localhost:/etc/ &&\
+        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location etc/logging.json) root@localhost:/etc/ &&\
         sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost sync &&\
         sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost crinit-ctl poweroff || true \
         sleep 5  \
@@ -98,7 +98,7 @@ genrule(
 )
 
 genrule(
-    name = "run_example",
+    name = "run",
     srcs = [
         "deb-qemuarm64-modified/fastdev-ubuntu-ebcl-deb-qemuarm64.wic",
         "deb-qemuarm64-modified/fastdev-ubuntu-ebcl-deb-qemuarm64-vmlinux",
@@ -107,7 +107,7 @@ genrule(
     cmd = " \
         $(location run_qemu.sh) $(RULEDIR)/deb-qemuarm64-modified -pidfile $(RULEDIR)/qemu.pid > $(RULEDIR)/qemu_run.log &\
         sleep 10 ; \
-        sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost ipc_bridge_cpp -n 10 -m send -t 200 -s /etc/mw_com_config.json > $(RULEDIR)/ssh_run.log && \
+        sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost scrample -n 10 -m send -t 200 -s /etc/mw_com_config.json > $(RULEDIR)/ssh_run.log && \
         sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost crinit-ctl poweroff || true \
         sleep 5 \
     ",

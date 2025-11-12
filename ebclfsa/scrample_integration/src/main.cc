@@ -10,4 +10,29 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-#include "datatype.h"
+#include <cstring>
+#include <iostream>
+#include <unistd.h>
+
+int main() {
+    std::cout << "HI_App: Starting scrample_sil" << std::endl;
+
+    const char *c_args[] = {
+        "/usr/bin/scrample_sil",
+        "-n", "10",
+        "-m", "recv",
+        "-t", "200",
+        "-s", "/etc/mw_com_config.json",
+        nullptr
+    };
+
+    execve("/usr/bin/scrample_sil", const_cast<char* const*>(c_args), nullptr);
+
+    std::cerr << "execve failed, sleeping... Reason: " << strerror(errno)
+              << std::endl;
+    while (true) {
+      sleep(10);
+    }
+    return 0;
+}
+
