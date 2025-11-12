@@ -1,17 +1,17 @@
 # Eclipse S-CORE on Elektrobit corbos Linux for Safety Applications
 
 This directory shows the integration of Eclipse S-CORE on Elektrobit corbos Linux for Safety Applications.
-It builds an [example](example/) based on the Eclipse S-CORE communication framework as demo/test application.
-This application is then integrated into the so-called "fast-dev" variant of EB corbos Linux for Safety Applications (EBcLfSA).
+It builds an [example based on the Eclipse S-CORE communication framework](https://github.com/eclipse-score/scrample) as demo/test application.
+This application is then [integrated](scrample_integration/) into the so-called "fast-dev" variant of EB corbos Linux for Safety Applications (EBcLfSA).
 This is an `aarch64`-based, pre-built image, capable of demonstraing the execution of high integrity applications in regular Linux user-space.
 The example can be executed using QEMU.
 In the [related CI workflow](../.github/workflows/build_and_test_ebclfsa.yml), all these steps are performed, and the resulting log files are stored and made available for download.
 
-
 > [!TIP]
 > **Quick Start**
 >
-> The fastest way to run the integration interactively is to use [GitHub Codespaces](https://github.com/features/codespaces), a cloud based development environment.
+> The steps performed in continuous integration can be also run interactively.
+> The fastest way to achieve this is to use [GitHub Codespaces](https://github.com/features/codespaces), a cloud based development environment.
 > You need a GitHub.com account for this to work.
 There is a free tier of this commercial service, which is sufficient.
 However, please understand that we cannot advise you about possible costs in your specific case.
@@ -24,7 +24,7 @@ However, please understand that we cannot advise you about possible costs in you
 > - Copy and paste the following command into the terminal and hit "Enter":
 >
 > ```bash
-> cd ./ebclfsa && bazel build --config=aarch64 --spawn_strategy=local //example/ipc_bridge_hi_wrapper:run_example
+> cd ./ebclfsa && bazel build --config=aarch64 --spawn_strategy=local //scrample_integration:run
 > ```
 >
 > This will build and run the example.
@@ -35,9 +35,9 @@ However, please understand that we cannot advise you about possible costs in you
 >
 > ```console
 > [...]
-> Target //example/ipc_bridge_hi_wrapper:run_example up-to-date:
->  bazel-bin/example/ipc_bridge_hi_wrapper/qemu_run.log
->  bazel-bin/example/ipc_bridge_hi_wrapper/ssh_run.log
+> Target //scrample_integration:run up-to-date:
+>  bazel-bin/scrample_integration/qemu_run.log
+>  bazel-bin/scrample_integration/ssh_run.log
 >INFO: Elapsed time: 361.273s, Critical Path: 91.92s
 >INFO: 836 processes: 10 internal, 826 local.
 >INFO: Build completed successfully, 836 total actions
@@ -173,7 +173,7 @@ This is used primarily for development and user experience by providing componen
 > If you are using the Codespace as described in the Quick Start, this is the case.
 > The dev-container contains all required dependencies, like `qemu-system-aarch64` and `sshpass`.
 
-This section shows how you can use the above described SDK with the [example application](example/).
+This section shows how you can use the above described SDK with the example application.
 You will see how you can create a low integrity and a high integrity application, build them with the S-CORE toolchain and run them finally on Linux for Safety Applications.
 
 The first three subsections explain the build and runtime setup.
@@ -181,11 +181,11 @@ They help you to understand the integration.
 You can apply the approach on other S-CORE apps, too.
 
 - Application Setup:
-  The two application setup of the `ipc_bridge` example and how to make one of them an HI application.
+  The two application setup of the example and how to make one of them an HI application.
 - S-CORE Toolchain in Linux for Safety Applications:
   The general integration of the required tools into S-CORE's Bazel toolchain.
   This should work for other applications, too.
-- Bazel Rules for the Example Applications: The specific Bazel ruleset for the `ipc_bridge` example
+- Bazel Rules for the Example Applications: The specific Bazel ruleset for the example
 
 The next three sections guide you through the concrete steps of applying these rules
 to build and deploy the example.
@@ -199,11 +199,11 @@ You find them at the end of this section.
 
 ### Application Setup
 
-The application setup is constructed of two instances of the `ipc_bridge` application, a high integrity (HI) instance acting as receiver and a low integrity (LI) instance acting as sender.
+The application setup is constructed of two instances of the `scrample` application, a high integrity (HI) instance acting as receiver and a low integrity (LI) instance acting as sender.
 The HI instance is started automatically by `cflinit` and listens in background.
 You start the LI instance manually in a terminal to run the demo.
 Even though both instances rely on the same source code, they do not use the same application binary.
-The HI application instance uses a binary located at `/usr/bin/ipc_bridge_cpp_sil` with a marked ELF-header, while the unmodified binary for the LI application is located at `/usr/bin/ipc_bridge_cpp`.
+The HI application instance uses a binary located at `/usr/bin/scrample_sil` with a marked ELF-header, while the unmodified binary for the LI application is located at `/usr/bin/scrample`.
 
 The application instances are called with the following arguments:
 
@@ -214,13 +214,13 @@ The application instances are called with the following arguments:
 Feel free to adjust them as needed.
 
 In order to have those arguments changeable, the HI arguments are not hardcoded into `cflinit`.
-Instead, `cflinit` calls a small wrapper binary `/usr/bin/hi_app` which is based on the implementation in `example/ipc_bridge_hi_wrapper/main.cc`.
-When `hi_app` is executed by `cflinit`, it simply calls `execve` on `/usr/bin/ipc_bridge_cpp_sil` with the correct set of arguments.
-This way `cflinit` keeps its static entrypoint for the Eclipse S-CORE example app, while the user is still able to specify the used arguments for the HI `ipc_bridge` instance.
+Instead, `cflinit` calls a small wrapper binary `/usr/bin/hi_app` which is based on the implementation in `scrample_integration/src/main.cc`.
+When `hi_app` is executed by `cflinit`, it simply calls `execve` on `/usr/bin/scrample_sil` with the correct set of arguments.
+This way `cflinit` keeps its static entrypoint for the Eclipse S-CORE example app, while the user is still able to specify the used arguments for the HI `scrample` instance.
 
 ### S-CORE Toolchain in Linux for Safety Applications
 
-The demo SDK integrates the [S-CORE toolchain with two extensions](https://github.com/Elektrobit/eclipse-score_toolchains_gcc/tree/ebclfsa_integration_demo):
+The demo SDK integrates the [S-CORE toolchain with two extensions](https://github.com/Elektrobit/eclipse-score_toolchains_gcc/releases/tag/0.5.0-alpha):
 
 - Additional tooling for AArch64 cross-building.
 - Additional tool `lisa-elf-enabler`: It marks an ELF header of an application in a way that Linux for Safety Applications detects it as an HI application.
@@ -228,32 +228,32 @@ The demo SDK integrates the [S-CORE toolchain with two extensions](https://githu
 
 ### Bazel Rules for the Example Applications
 
-The [example](example/) extends the original `ipc_brige` example of the [communication module](https://github.com/eclipse-score/communication) with the application setup and the toolchain extensions described above.
-With those changes, the toolchain can be used via `bazel build  --config=aarch64 --spawn_strategy=local <target>`.
+The example extends the [`scrample` example](https://github.com/eclipse-score/scrample) of S-CORE with the application setup and the toolchain extensions described above.
+With those changes, the toolchain can be used via `bazel build  --config=aarch64 --spawn_strategy=local //scrample_integration:<target>`.
 
 > [!IMPORTANT]
 > Building inside a sandbox is currently not possible.
 
-For building and running the example setup, the following Bazel rules have been created in `example/ipc_bridge_hi_wrapper/BUILD`:
+For building and running the example setup, the following Bazel rules have been created in `scrample_integration/BUILD`:
 
 | Target | Dependencies | Description |
 | ------ | ------------ | ----------- |
-| `ipc_bridge_cpp_sil` | `//example/ipc_bridge:ipc_bridge_cpp` | Create copy of `ipc_bridge_cpp` at `ipc_bridge_cpp_sil` and add CRC checksum to ELF-header |
-| `ipc_bridge_hi_wrapper` | | Build intermediate `ipc_bridge_hi_wrapper` |
-| `hi_app` | `:ipc_bridge_hi_wrapper` `:ipc_bridge_cpp_sil` | Create copy of `ipc_bridge_hi_wrapper` at `hi_app` and add CRC checksum to ELF-header. |
+| `scrample_sil` | `@score_scrample//src:scrample` | Create copy of `scrample` at `scrample_sil` and add CRC checksum to ELF-header |
+| `scrample_sil_wrapper` | | Build intermediate `scrample_sil_wrapper` |
+| `hi_app` | `:scrample_sil_wrapper` `:scrample_sil` | Create copy of `scrample_sil_wrapper` at `hi_app` and add CRC checksum to ELF-header. |
 | `fetch-fastdev-archive` | | Download fast-dev image archive |
 | `fastdev-image` | `:fetch-fastdev-archive` | Extract fast-dev image archive |
 | `upload` | `:hi_app` `:fastdev-image` | Upload application binaries to fast-dev image |
-| `run_example` | `:upload`| Run Eclipse S-CORE example application |
+| `run` | `:upload`| Run Eclipse S-CORE example application |
 
 The following sections introduce some of the rules mentioned above.
 
 ### Full Run of the Example Application
 
-The `run_example` target provides an easy entry point, to build, post-process, deploy, run and stop the example:
+The `run` target provides an easy entry point, to build, post-process, deploy, run and stop the example:
 
 ```bash
-bazel build --config=aarch64 --spawn_strategy=local //example/ipc_bridge_hi_wrapper:run_example
+bazel build --config=aarch64 --spawn_strategy=local //scrample_integration:run
 ```
 
 This command will take a while to finish, since it performs some downloads and starts the fast-dev image.
@@ -282,25 +282,32 @@ Stop offering service...and terminating, bye bye
 cflinit: INFO: Starting application HI App
 ```
 
-2. `hi_app` starting `ipc_bridge_cpp_sil` as HI application:
+2. `hi_app` starting `scrample_sil` as HI application:
 
 ```console
-HI_App: Starting ipc_bridge_cpp_sil
+HI_App: Starting scrample_sil
 ```
 
-3. The logs from `ipc_bridge_cpp_sil` as receiver itself
+3. The logs from `scrample_sil` as receiver itself
 
 ```console
-1970/01/01 00:00:02.2898 29129 000 ECU1 IPBR lola log debug verbose 2 LoLa SD: find service for /tmp/mw_com_lola/service_discovery/6432/1
+1970/01/01 00:00:01.1905 19125 000 ECU1 IPBR lola log info verbose 2 No explicit applicationID configured. Falling back to using process UID.  Ensure unique UIDs for applications using mw::com. 
 ...
-1970/01/01 00:00:11.11349 113498 000 ECU1 IPBR lola log debug verbose 3 LoLa SD: Synchronous call to handler for FindServiceHandle 0 finished
-xpad/cp60/MapApiLanesStamped: Subscribing to service
-xpad/cp60/MapApiLanesStamped: Received sample: 2
-xpad/cp60/MapApiLanesStamped: Received sample: 3
+1970/01/01 00:00:10.10215 102158 000 ECU1 IPBR lola log info verbose 2 Successfully created offer path /tmp/mw_com_lola/service_discovery/6432/1 
+score/MapApiLanesStamped: Subscribing to service
+score/MapApiLanesStamped: Received sample: 0
+score/MapApiLanesStamped: Received sample: 1
+score/MapApiLanesStamped: Proxy received valid data
+score/MapApiLanesStamped: Cycle duration 225ms
+score/MapApiLanesStamped: Received sample: 2
+score/MapApiLanesStamped: Proxy received valid data
+score/MapApiLanesStamped: Cycle duration 206ms
 ...
-xpad/cp60/MapApiLanesStamped: Cycle duration 204ms
-1970/01/01 00:00:12.12851 128518 000 ECU1 IPBR lola log debug verbose 3 LoLa SD: Asynchronous call to handler for FindServiceHandle 0 finished
-...
+score/MapApiLanesStamped: Received sample: 9
+score/MapApiLanesStamped: Proxy received valid data
+score/MapApiLanesStamped: Cycle duration 202ms
+score/MapApiLanesStamped: Unsubscribing...
+score/MapApiLanesStamped: and terminating, bye bye
 ```
 
 4. Kernel logs indicating that some performed system calls would not be allowed on a production system.
@@ -315,27 +322,27 @@ SDK:handler_do_el0_svc_pre: syscall __NR_clone3 (435) is not allowed
 Building all components of the example application can be performed with the `hi_app` rule.
 
 ```bash
-bazel build --config=aarch64 --spawn_strategy=local //example/ipc_bridge_hi_wrapper:hi_app
+bazel build --config=aarch64 --spawn_strategy=local //scrample_integration:hi_app
 ```
 
-Due the dependencies towards `:ipc_bridge_cpp_sil` and `:ipc_bridge_hi_wrapper` this will build all required binaries.
-Including the LI `ipc_bridge_cpp` binary, a temporary `ipc_bridge_hi_wrapper` binary as well as the post-processed `ipc_bridge_cpp_sil` and `hi_app` binaries.
+Due the dependencies towards `:scrample_sil` and `:scrample_sil_wrapper` this will build all required binaries.
+Including the LI `scrample` binary, a temporary `scrample_sil_wrapper` binary as well as the post-processed `scrample_sil` and `hi_app` binaries.
 
 ### Using the fast-dev Image
 
 The easiest way to setup the fast-dev image, is to use the `fastdev-image` rule.
 
 ```bash
-bazel build --config=aarch64 --spawn_strategy=local //example/ipc_bridge_hi_wrapper:fastdev-image
+bazel build --config=aarch64 --spawn_strategy=local //scrample_integration:fastdev-image
 ```
 
 This will first download the image via the `fetch-fastdev-archive` rule and cache the archive.
-Afterwards, the `fastdev-image` rule extracts the archive (containing a disk image and a kernel) to `bazel-bin/example/ipc_bridge_hi_wrapper/deb-qemuarm64/`.
+Afterwards, the `fastdev-image` rule extracts the archive (containing a disk image and a kernel) to `bazel-bin/scrample_integration/deb-qemuarm64/`.
 
 To start the unmodified base image (without the Eclipse S-CORE example application) manually, the included `run_qemu.sh` script can be used.
 
 ```bash
-./run_qemu.sh bazel-bin/example/ipc_bridge_hi_wrapper/deb-qemuarm64/
+./scrample_integration/run_qemu.sh bazel-bin/scrample_integration/deb-qemuarm64/
 ```
 
 This is of course optional, and only needed if a deeper manual look into the image is wished.
@@ -350,27 +357,29 @@ ssh -p 2222 root@localhost
 > [!NOTE]
 > Be aware, that running the image via qemu, will change the stored disk image.
 > Bazel will detect this change and overwrite the disk image with the original one from the downloaded archive.
-> If it is planned to have persistent changes on the image, copy the content of `bazel-bin/example/ipc_bridge_hi_wrapper/deb-qemuarm64/` to a location outside of `bazel-bin` and adapt the command line argument in the above `./run_qemu.sh` call accordingly.
+> If it is planned to have persistent changes on the image, copy the content of `bazel-bin/scrample_integration/deb-qemuarm64/` to a location outside of `bazel-bin` and adapt the command line argument in the above `run_qemu.sh` call accordingly.
 
-For deploying the example application to the image, the `upload` rule is available, which will start the image based on the content of `bazel-bin/example/ipc_bridge_hi_wrapper/deb-qemuarm64/` and deploy all needed files via `scp`.
+For deploying the example application to the image, the `upload` rule is available, which will start the image based on the content of `bazel-bin/scrample_integration/deb-qemuarm64/` and deploy all needed files via `scp`.
 
 ```bash
-bazel build --config=aarch64 --spawn_strategy=local //example/ipc_bridge_hi_wrapper:upload
+bazel build --config=aarch64 --spawn_strategy=local //scrample_integration:upload
 ```
 
-Since the deployment step will change the stored disk image, the `upload` rule stores its output in `bazel-bin/example/ipc_bridge_hi_wrapper/deb-qemuarm64-modified/`.
+Since the deployment step will change the stored disk image, the `upload` rule stores its output in `bazel-bin/scrample_integration/deb-qemuarm64-modified/`.
 Running the image with the deployed example applications works the same way as before, just with a different folder for the used image and kernel:
 
 ```bash
-./run_qemu.sh bazel-bin/example/ipc_bridge_hi_wrapper/deb-qemuarm64-modified/
+./scrample_integration/run_qemu.sh bazel-bin/scrample_integration/deb-qemuarm64-modified/
 ```
 
 Like before you can interact with the image via the serial console or ssh.
 To trigger the LI Eclipse S-CORE example app, simply call:
 
 ```bash
-ipc_bridge_cpp -n 10 -m send -t 200 -s /etc/mw_com_config.json
+scrample -n 10 -m send -t 200 -s /etc/mw_com_config.json
 ```
+
+Note that due to the nature of the `scrample_sil` application, which shuts down after having received the defined amount of samples, this command works only once per boot-cycle.
 
 To reboot or power-off the running image, `crinit-ctl` with the command line argument `reboot` or `poweroff` can be used.
 
