@@ -52,7 +52,7 @@ genrule(
     name = "fetch-fastdev-archive",
     srcs = [],
     outs = ["fastdev-archive.tgz"],
-    cmd = "wget -O $@ https://linux.elektrobit.com/tmp/score/fastdev-ubuntu-ebcl-deb-qemu-arm64.tgz"
+    cmd = "wget -O $@ https://github.com/Elektrobit/eclipse-score_toolchains_gcc/releases/download/0.5.0-alpha/fastdev-ubuntu-ebcl-deb-qemu-arm64.tgz"
 )
 
 genrule(

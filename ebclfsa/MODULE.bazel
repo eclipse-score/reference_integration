@@ -25,11 +25,11 @@ bazel_dep(name = "score_toolchains_gcc", dev_dependency=True)
 git_override( # Elektrobit corbos Linux for Safety Applications needs a specific toolchain
    module_name = "score_toolchains_gcc",
    remote = "https://github.com/Elektrobit/eclipse-score_toolchains_gcc.git",
-   commit = "fb009e490b9b8f28805d587f50d0bf6d885f3414",
+   tag = "0.5.0-alpha", # commit sha: fb009e490b9b8f28805d587f50d0bf6d885f3414
 )
 gcc = use_extension("@score_toolchains_gcc//extentions:gcc.bzl", "gcc", dev_dependency=True)
 gcc.toolchain(
-    url = "https://linux.elektrobit.com/tmp/score/fastdev-sdk-ubuntu-ebcl-deb-qemu-arm64.tar.xz",
+    url = "https://github.com/Elektrobit/eclipse-score_toolchains_gcc/releases/download/0.5.0-alpha/fastdev-sdk-ubuntu-ebcl-deb-qemu-arm64.tar.xz",
     sha256 = "cf8d277a2b95bbdad3e177c488fa77d01723510690a911218ef33747574d78fe",
     strip_prefix = "fastdev-sdk-ubuntu-ebcl-deb-qemuarm64",
 )
