@@ -53,6 +53,14 @@ jobs:
             repository-cache: true
         - name: Bazel build targets
           run: |
+            echo "::group::get latest commits from main branches"
+            python3 tools/update_module_latest.py --output known_good.updated.json
+            cat known_good.updated.json
+            echo "::endgroup::"
+            echo "::group::update score_modules.MODULE.bazel"
+            python3 tools/update_module_from_known_good.py --known known_good.updated.json
+            cat score_modules.MODULE.bazel
+            echo "::endgroup::"
             ./integration_test.sh
         - name: Show disk space after build
           if: always()
