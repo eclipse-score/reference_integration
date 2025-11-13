@@ -24,7 +24,7 @@ However, please understand that we cannot advise you about possible costs in you
 > - Copy and paste the following command into the terminal and hit "Enter":
 >
 > ```bash
-> cd ./ebclfsa && bazel build --config=aarch64 --spawn_strategy=local //scrample_integration:run
+> cd ./ebclfsa && bazel build --config=aarch64-ebclfsa //scrample_integration:run
 > ```
 >
 > This will build and run the example.
@@ -229,7 +229,7 @@ The demo SDK integrates the [S-CORE toolchain with two extensions](https://githu
 ### Bazel Rules for the Example Applications
 
 The example extends the [`scrample` example](https://github.com/eclipse-score/scrample) of S-CORE with the application setup and the toolchain extensions described above.
-With those changes, the toolchain can be used via `bazel build  --config=aarch64 --spawn_strategy=local //scrample_integration:<target>`.
+With those changes, the toolchain can be used via `bazel build  --config=aarch64-ebclfsa //scrample_integration:<target>`.
 
 > [!IMPORTANT]
 > Building inside a sandbox is currently not possible.
@@ -253,7 +253,7 @@ The following sections introduce some of the rules mentioned above.
 The `run` target provides an easy entry point, to build, post-process, deploy, run and stop the example:
 
 ```bash
-bazel build --config=aarch64 --spawn_strategy=local //scrample_integration:run
+bazel build --config=aarch64-ebclfsa //scrample_integration:run
 ```
 
 This command will take a while to finish, since it performs some downloads and starts the fast-dev image.
@@ -322,7 +322,7 @@ SDK:handler_do_el0_svc_pre: syscall __NR_clone3 (435) is not allowed
 Building all components of the example application can be performed with the `hi_app` rule.
 
 ```bash
-bazel build --config=aarch64 --spawn_strategy=local //scrample_integration:hi_app
+bazel build --config=aarch64-ebclfsa //scrample_integration:hi_app
 ```
 
 Due the dependencies towards `:scrample_sil` and `:scrample_sil_wrapper` this will build all required binaries.
@@ -333,7 +333,7 @@ Including the LI `scrample` binary, a temporary `scrample_sil_wrapper` binary as
 The easiest way to setup the fast-dev image, is to use the `fastdev-image` rule.
 
 ```bash
-bazel build --config=aarch64 --spawn_strategy=local //scrample_integration:fastdev-image
+bazel build --config=aarch64-ebclfsa //scrample_integration:fastdev-image
 ```
 
 This will first download the image via the `fetch-fastdev-archive` rule and cache the archive.
@@ -362,7 +362,7 @@ ssh -p 2222 root@localhost
 For deploying the example application to the image, the `upload` rule is available, which will start the image based on the content of `bazel-bin/scrample_integration/deb-qemuarm64/` and deploy all needed files via `scp`.
 
 ```bash
-bazel build --config=aarch64 --spawn_strategy=local //scrample_integration:upload
+bazel build --config=aarch64-ebclfsa //scrample_integration:upload
 ```
 
 Since the deployment step will change the stored disk image, the `upload` rule stores its output in `bazel-bin/scrample_integration/deb-qemuarm64-modified/`.
@@ -392,4 +392,7 @@ crinit-ctl poweroff
 
 ## Further notes
 
-The toolchain and librares are provided for demonstration and prototyping purposes without further qualification.
+* The toolchain and librares are provided for demonstration and prototyping purposes without further qualification.
+* A second test case for S-CORE persistency is also integrated. You can run it via
+  `bazel build --config=aarch64-ebclfsa //persistency_integration:run`
+  However, this is not integrated as HI application to avoid the additional complexity of the required wrapper.

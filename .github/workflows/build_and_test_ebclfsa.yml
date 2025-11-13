@@ -31,11 +31,15 @@ jobs:
         uses: actions/checkout@v4
     
       - name: Build for EB corbos Linux for Safety Applications and run tests
-        run: bazel build --config=aarch64 --spawn_strategy=local //scrample_integration:run
+        run: |
+          bazel build --config=aarch64-ebclfsa //scrample_integration:run
+          bazel build --config=aarch64-ebclfsa //persistency_integration:run
         working-directory: ./ebclfsa
 
       - name: Upload test logs
         uses: actions/upload-artifact@v5
         with:
           name: test-logs
-          path: ebclfsa/bazel-bin/scrample_integration/*.log
+          path: |
+            ebclfsa/bazel-bin/scrample_integration/*.log
+            ebclfsa/bazel-bin/persistency_integration/*.log

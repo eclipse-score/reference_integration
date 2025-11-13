@@ -13,46 +13,10 @@
 load("@score_baselibs//score/language/safecpp:toolchain_features.bzl", "COMPILER_WARNING_FEATURES")
 
 genrule(
-    name = "scrample_sil",
-    srcs = ["@score_scrample//src:scrample"],
-    outs = ["scrample_sil"],
-    cmd = "cp $(SRCS) $@ && \
-     chmod ugo+w $@ && \
-     $(execpath @gcc_toolchain_gcc//:elf-enabler) $@ && \
-     chmod ugo-w $@",
-    tools = ["@gcc_toolchain_gcc//:elf-enabler"],
-)
-
-genrule(
-    name = "hi_app",
-    srcs = [
-        ":scrample_sil_wrapper",
-        ":scrample_sil"
-        ],
-    outs = ["hi_app"],
-    cmd = "cp $(location :scrample_sil_wrapper) $@ && \
-     chmod ugo+w $@ && \
-     $(execpath @gcc_toolchain_gcc//:elf-enabler) $@ && \
-     chmod ugo-w $@",
-    tools = ["@gcc_toolchain_gcc//:elf-enabler"],
-)
-
-cc_binary(
-    name = "scrample_sil_wrapper",
-    srcs = [
-        "src/main.cc",
-    ],
-    features = COMPILER_WARNING_FEATURES,
-    deps = [
-        "@score_scrample//src:scrample",
-    ],
-)
-
-genrule(
     name = "fetch-fastdev-archive",
     srcs = [],
     outs = ["fastdev-archive.tgz"],
-    cmd = "wget -O $@ https://github.com/elektrobit-contrib/eclipse-score_toolchains_gcc/releases/download/0.5.0-alpha/fastdev-ubuntu-ebcl-deb-qemu-arm64.tgz"
+    cmd = "wget -O $@ https://github.com/Elektrobit/eclipse-score_toolchains_gcc/releases/download/0.5.0-alpha/fastdev-ubuntu-ebcl-deb-qemu-arm64.tgz"
 )
 
 genrule(
@@ -68,12 +32,9 @@ genrule(
 genrule(
     name = "upload",
     srcs = [
-        "@score_scrample//src:scrample",
-        ":scrample_sil",
-        ":hi_app",
+        "@score_persistency//tests/cpp_test_scenarios:cpp_test_scenarios",
         ":fastdev-image",
-        "etc/mw_com_config.json",
-        "etc/logging.json",
+        "scripts/cpp_tests_persistency.sh",
         "run_qemu.sh",
     ],
     cmd = " \
@@ -81,11 +42,8 @@ genrule(
         cp $(RULEDIR)/deb-qemuarm64/* $(RULEDIR)/deb-qemuarm64-modified/ &&\
         $(location run_qemu.sh) $(RULEDIR)/deb-qemuarm64-modified -pidfile $(RULEDIR)/qemu.pid > $(RULEDIR)/qemu_upload.log &\
         sleep 30 ; \
-        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location :scrample_sil) root@localhost:/usr/bin &&\
-        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location @score_scrample//src:scrample) root@localhost:/usr/bin &&\
-        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location :hi_app) root@localhost:/usr/bin &&\
-        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location etc/mw_com_config.json) root@localhost:/etc/ &&\
-        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location etc/logging.json) root@localhost:/etc/ &&\
+        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location @score_persistency//tests/cpp_test_scenarios:cpp_test_scenarios) root@localhost:/usr/bin/cpp_tests_persistency &&\
+        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location scripts/cpp_tests_persistency.sh) root@localhost:/usr/bin/cpp_tests_persistency.sh &&\
         sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost sync &&\
         sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost crinit-ctl poweroff || true \
         sleep 5  \
@@ -107,12 +65,12 @@ genrule(
     cmd = " \
         $(location run_qemu.sh) $(RULEDIR)/deb-qemuarm64-modified -pidfile $(RULEDIR)/qemu.pid > $(RULEDIR)/qemu_run.log &\
         sleep 10 ; \
-        sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost scrample -n 10 -m send -t 200 -s /etc/mw_com_config.json > $(RULEDIR)/ssh_scrample_run.log && \
+        sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost cpp_tests_persistency.sh > $(RULEDIR)/ssh_persistency_test_scenarios_run.log && \
         sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost crinit-ctl poweroff || true \
         sleep 5 \
     ",
     outs = [
         "qemu_run.log",
-        "ssh_scrample_run.log",
+        "ssh_persistency_test_scenarios_run.log",
     ],
 )
