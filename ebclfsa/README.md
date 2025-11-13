@@ -220,7 +220,7 @@ This way `cflinit` keeps its static entrypoint for the Eclipse S-CORE example ap
 
 ### S-CORE Toolchain in Linux for Safety Applications
 
-The demo SDK integrates the [S-CORE toolchain with two extensions](https://github.com/Elektrobit/eclipse-score_toolchains_gcc/releases/tag/0.5.0-alpha):
+The demo SDK integrates the [S-CORE toolchain with two extensions](https://github.com/elektrobit-contrib/eclipse-score_toolchains_gcc/releases/tag/0.5.0-alpha):
 
 - Additional tooling for AArch64 cross-building.
 - Additional tool `lisa-elf-enabler`: It marks an ELF header of an application in a way that Linux for Safety Applications detects it as an HI application.
