@@ -51,7 +51,7 @@ jobs:
             disk-cache: ${{ github.workflow }}
             # Share repository cache between workflows.
             repository-cache: true
-        - name: Bazel build targets
+        - name: Update known good commits
           run: |
             echo "::group::get latest commits from main branches"
             python3 tools/update_module_latest.py --output known_good.updated.json
@@ -61,6 +61,10 @@ jobs:
             python3 tools/update_module_from_known_good.py --known known_good.updated.json
             cat score_modules.MODULE.bazel
             echo "::endgroup::"
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        - name: Bazel build targets
+          run: |
             ./integration_test.sh
         - name: Show disk space after build
           if: always()

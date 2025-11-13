@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euox pipefail
+set -euo pipefail
 
 # Integration build script.
 # Captures warning counts for regression tracking.
@@ -52,9 +52,10 @@ for group in "${!BUILD_TARGET_GROUPS[@]}"; do
     log_file="${LOG_DIR}/${group}.log"
     # Log build group banner only to stdout/stderr (not into summary table file)
     echo "--- Building group: ${group} ---"
+    start_ts=$(date +%s)
+    echo "bazel build --config "${CONFIG}" ${targets} --verbose_failures"
     # GitHub Actions log grouping start
     echo "::group::Bazel build (${group})"
-    start_ts=$(date +%s)
     set +e
     bazel build --config "${CONFIG}" ${targets} --verbose_failures 2>&1 | tee "$log_file"
     build_status=${PIPESTATUS[0]}
