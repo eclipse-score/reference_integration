@@ -25,7 +25,8 @@ bazel_dep(name = "score_toolchains_gcc", dev_dependency=True)
 git_override( # Elektrobit corbos Linux for Safety Applications needs a specific toolchain
    module_name = "score_toolchains_gcc",
    remote = "https://github.com/elektrobit-contrib/eclipse-score_toolchains_gcc.git",
-   tag = "0.5.0-alpha", # commit sha: fb009e490b9b8f28805d587f50d0bf6d885f3414
+   #tag = "0.5.0-alpha", # commit sha: fb009e490b9b8f28805d587f50d0bf6d885f3414
+    commit = "605020d7a95b7fb128944495e45449eb07fedc01",
 )
 gcc = use_extension("@score_toolchains_gcc//extentions:gcc.bzl", "gcc", dev_dependency=True)
 gcc.toolchain(
@@ -49,6 +50,12 @@ gcc.warning_flags(
 
 use_repo(gcc, "gcc_toolchain", "gcc_toolchain_gcc")
 
+bazel_dep(name = "score_docs_as_code", version = "2.0.1") # part of 0.5.0-alpha release
+single_version_override(
+    module_name = "score_docs_as_code",
+    version = "2.0.1",
+)
+
 bazel_dep(name = "score_baselibs")
 single_version_override(
     module_name = "score_baselibs",
@@ -60,6 +67,7 @@ single_version_override(
 )
 bazel_dep(name = "score_communication", version = "0.1.1") # part of 0.5.0-alpha release
 bazel_dep(name = "score_scrample", version = "0.1.0") # part of 0.5.0-alpha release
+bazel_dep(name = "score_persistency", version = "0.2.1") # part of 0.5.0-alpha release
 
 # git_override is not forwarded by bazel_dep, so we need to redefine it here
 git_override(

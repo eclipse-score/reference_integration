@@ -10,7 +10,7 @@ BASEFOLDER=$1
 IMAGE="${BASEFOLDER}/fastdev-ubuntu-ebcl-deb-qemuarm64.wic"
 KERNEL="${BASEFOLDER}/fastdev-ubuntu-ebcl-deb-qemuarm64-vmlinux"
 if [ ! -d "${BASEFOLDER}" ] || [ ! -f "${IMAGE}" ] || [ ! -f "${KERNEL}" ] ; then
-    echo "Run \"bazel build --config=aarch64-ebclfsa //scrample_integration:fastdev-image\" first to fetch the image"
+    echo "Run \"bazel build --config=aarch64-ebclfsa //persistency_integration:fastdev-image\" first to fetch the image"
 fi
 
 MACHINE="virt,virtualization=true,gic-version=3"
