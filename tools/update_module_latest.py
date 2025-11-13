@@ -49,6 +49,7 @@ class Module:
 	hash: str
 	repo: str
 	version: str | None = None
+	patches: list[str] | None = None
 
 	@property
 	def owner_repo(self) -> str:
@@ -121,6 +122,8 @@ def write_known_good(path: str, original: dict, modules: list[Module]) -> None:
 	out["modules"] = []
 	for m in modules:
 		mod_dict = {"name": m.name, "repo": m.repo, "hash": m.hash}
+		if m.patches:
+			mod_dict["patches"] = m.patches
 		out["modules"].append(mod_dict)
 	with open(path, "w", encoding="utf-8") as f:
 		json.dump(out, f, indent=2, sort_keys=False)
@@ -158,11 +161,13 @@ def main(argv: list[str]) -> int:
 		try:
 			version = m.get("version")
 			hash_val = m.get("hash", "")
+			patches = m.get("patches")
 			modules.append(Module(
 				name=m["name"],
 				hash=hash_val,
 				repo=m["repo"],
-				version=version
+				version=version,
+				patches=patches
 			))
 		except KeyError as e:
 			print(f"WARNING: skipping module missing key {e}: {m}", file=sys.stderr)
@@ -193,7 +198,7 @@ def main(argv: list[str]) -> int:
 				latest = fetch_latest_commit_gh(mod.owner_repo, args.branch)
 			else:
 				latest = fetch_latest_commit(mod.owner_repo, args.branch, token)
-			updated.append(Module(name=mod.name, hash=latest, repo=mod.repo, version=mod.version))
+			updated.append(Module(name=mod.name, hash=latest, repo=mod.repo, version=mod.version, patches=mod.patches))
 			
 			# Display format: if version exists, show "version -> hash", otherwise "hash -> hash"
 			if mod.version:
