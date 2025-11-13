@@ -23,26 +23,22 @@ def load_known_good(path):
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
     
-    # Expect a single JSON object containing a "modules" list; do not support legacy list format.
-    if isinstance(data, dict) and isinstance(data.get("modules"), list):
+    # Expect a single JSON object containing a "modules" dict/object
+    if isinstance(data, dict) and isinstance(data.get("modules"), dict):
         return data
     raise SystemExit(
-        f"Invalid known_good.json at {path} (expected object with 'modules' list)"
+        f"Invalid known_good.json at {path} (expected object with 'modules' dict)"
     )
 
 
-def generate_git_override_blocks(modules, repo_commit_dict):
+def generate_git_override_blocks(modules_dict, repo_commit_dict):
     """Generate bazel_dep and git_override blocks for each module."""
     blocks = []
     
-    for module in modules:
-        name = module.get("name")
+    for name, module in modules_dict.items():
         repo = module.get("repo")
         commit = module.get("hash") or module.get("commit")
         patches = module.get("patches", [])
-        if not name:
-            logging.warning("Skipping module with missing name: %s", module)
-            continue
         
         # Allow overriding specific repos via command line
         if repo in repo_commit_dict:
@@ -176,7 +172,7 @@ def main():
     
     # Load known_good.json
     data = load_known_good(known_path)
-    modules = data.get("modules")  or []
+    modules = data.get("modules") or {}
     
     if not modules:
         raise SystemExit("No modules found in known_good.json")

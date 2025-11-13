@@ -119,14 +119,14 @@ def load_known_good(path: str) -> dict:
 def write_known_good(path: str, original: dict, modules: list[Module]) -> None:
 	out = dict(original)  # shallow copy
 	out["timestamp"] = dt.datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
-	out["modules"] = []
+	out["modules"] = {}
 	for m in modules:
-		mod_dict = {"name": m.name, "repo": m.repo, "hash": m.hash}
+		mod_dict = {"repo": m.repo, "hash": m.hash}
 		if m.patches:
 			mod_dict["patches"] = m.patches
-		out["modules"].append(mod_dict)
+		out["modules"][m.name] = mod_dict
 	with open(path, "w", encoding="utf-8") as f:
-		json.dump(out, f, indent=2, sort_keys=False)
+		json.dump(out, f, indent=4, sort_keys=False)
 		f.write("\n")
 
 
@@ -155,22 +155,26 @@ def main(argv: list[str]) -> int:
 		print(f"ERROR: Invalid JSON: {e}", file=sys.stderr)
 		return 3
 
-	modules_raw = data.get("modules", [])
+	modules_raw = data.get("modules", {})
 	modules: list[Module] = []
-	for m in modules_raw:
+	for name, m in modules_raw.items():
 		try:
 			version = m.get("version")
 			hash_val = m.get("hash", "")
 			patches = m.get("patches")
+			repo = m.get("repo")
+			if not repo:
+				print(f"WARNING: skipping module {name} with missing repo", file=sys.stderr)
+				continue
 			modules.append(Module(
-				name=m["name"],
+				name=name,
 				hash=hash_val,
-				repo=m["repo"],
+				repo=repo,
 				version=version,
 				patches=patches
 			))
 		except KeyError as e:
-			print(f"WARNING: skipping module missing key {e}: {m}", file=sys.stderr)
+			print(f"WARNING: skipping module {name} missing key {e}: {m}", file=sys.stderr)
 	if not modules:
 		print("ERROR: No modules found to update.", file=sys.stderr)
 		return 3

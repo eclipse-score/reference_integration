@@ -3,16 +3,70 @@ set -euo pipefail
 
 # Integration build script.
 # Captures warning counts for regression tracking.
+#
+# Usage: ./integration_test.sh [--known-good <path>]
+#   --known-good: Optional path to known_good.json file
 
 CONFIG=${CONFIG:-bl-x86_64-linux}
 LOG_DIR=${LOG_DIR:-_logs/logs}
 SUMMARY_FILE=${SUMMARY_FILE:-_logs/build_summary.md}
+KNOWN_GOOD_FILE=""
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --known-good)
+            KNOWN_GOOD_FILE="$2"
+            shift 2
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Usage: $0 [--known-good <path>]"
+            exit 1
+            ;;
+    esac
+done
+
 mkdir -p "${LOG_DIR}" || true
 
+# Function to extract commit hash from known_good.json
+get_commit_hash() {
+    local module_name=$1
+    local known_good_file=$2
+    
+    if [[ -z "${known_good_file}" ]] || [[ ! -f "${known_good_file}" ]]; then
+        echo "N/A"
+        return
+    fi
+    
+    # Get the script directory
+    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    
+    # Use the Python script to extract module info
+    python3 "${script_dir}/tools/get_module_info.py" "${known_good_file}" "${module_name}" "hash" 2>/dev/null || echo "N/A"
+}
+
+# Function to extract repo URL from known_good.json
+get_module_repo() {
+    local module_name=$1
+    local known_good_file=$2
+    
+    if [[ -z "${known_good_file}" ]] || [[ ! -f "${known_good_file}" ]]; then
+        echo "N/A"
+        return
+    fi
+    
+    # Get the script directory
+    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    
+    # Use the Python script to extract module repo
+    python3 "${script_dir}/tools/get_module_info.py" "${known_good_file}" "${module_name}" "repo" 2>/dev/null || echo "N/A"
+}
+
 declare -A BUILD_TARGET_GROUPS=(
-    [baselibs]="@score_baselibs//score/..."
+    [score_baselibs]="@score_baselibs//score/..."
     [communication]="@communication//score/mw/com:com"
-    [persistency]="@score_persistency//src/cpp/src/... @score_persistency//src/rust/..."
+    [score_persistency]="@score_persistency//src/cpp/src/... @score_persistency//src/rust/..."
     #[score_logging]="@score_logging//src/..."
     [score_orchestrator]="@score_orchestrator//src/..."
     [score_test_scenarios]="@score_test_scenarios//..."
@@ -35,13 +89,16 @@ timestamp() { date '+%Y-%m-%d %H:%M:%S'; }
 
 echo "=== Integration Build Started $(timestamp) ===" | tee "${SUMMARY_FILE}"
 echo "Config: ${CONFIG}" | tee -a "${SUMMARY_FILE}"
+if [[ -n "${KNOWN_GOOD_FILE}" ]]; then
+    echo "Known Good File: ${KNOWN_GOOD_FILE}" | tee -a "${SUMMARY_FILE}"
+fi
 echo "" >> "${SUMMARY_FILE}"
 echo "## Build Groups Summary" >> "${SUMMARY_FILE}"
 echo "" >> "${SUMMARY_FILE}"
 # Markdown table header
 {
-    echo "| Group | Status | Duration (s) | Warnings | Deprecated refs |";
-    echo "|-------|--------|--------------|----------|-----------------|";
+    echo "| Group | Status | Duration (s) | Warnings | Deprecated refs | Commit/Version |";
+    echo "|-------|--------|--------------|----------|-----------------|----------------|";
 } >> "${SUMMARY_FILE}"
 
 overall_warn_total=0
@@ -50,6 +107,7 @@ overall_depr_total=0
 for group in "${!BUILD_TARGET_GROUPS[@]}"; do
     targets="${BUILD_TARGET_GROUPS[$group]}"
     log_file="${LOG_DIR}/${group}.log"
+    
     # Log build group banner only to stdout/stderr (not into summary table file)
     echo "--- Building group: ${group} ---"
     start_ts=$(date +%s)
@@ -73,16 +131,24 @@ for group in "${!BUILD_TARGET_GROUPS[@]}"; do
     else
         status_symbol="❌(${build_status})"
     fi
-    echo "| ${group} | ${status_symbol} | ${duration} | ${w_count} | ${d_count} |" | tee -a "${SUMMARY_FILE}"
+    
+    # Get commit hash/version for this group (group name is the module name)
+    commit_hash=$(get_commit_hash "${group}" "${KNOWN_GOOD_FILE}")
+    repo=$(get_module_repo "${group}" "${KNOWN_GOOD_FILE}")
+    
+    # Truncate commit hash for display (first 8 chars)
+    if [[ "${commit_hash}" != "N/A" ]] && [[ ${#commit_hash} -gt 8 ]]; then
+        commit_hash_display="${commit_hash:0:8}"
+    else
+        commit_hash_display="${commit_hash}"
+    fi
+    
+    echo "| ${group} | ${status_symbol} | ${duration} | ${w_count} | ${d_count} |  [${commit_hash_display}](${repo}/tree/${commit_hash}) |" | tee -a "${SUMMARY_FILE}"
 done
 
 # Append aggregate totals row to summary table
-echo "| TOTAL |  |  | ${overall_warn_total} | ${overall_depr_total} |" >> "${SUMMARY_FILE}"
-
-# Display the full build summary explicitly at the end
+echo "| TOTAL |  |  | ${overall_warn_total} | ${overall_depr_total} |  |" >> "${SUMMARY_FILE}"# Display the full build summary explicitly at the end
 echo '::group::Build Summary'
 echo '=== Build Summary (echo) ==='
 cat "${SUMMARY_FILE}" || echo "(Could not read summary file ${SUMMARY_FILE})"
 echo '::endgroup::'
-
-exit 0
