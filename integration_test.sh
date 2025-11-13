@@ -143,7 +143,14 @@ for group in "${!BUILD_TARGET_GROUPS[@]}"; do
         commit_hash_display="${commit_hash}"
     fi
     
-    echo "| ${group} | ${status_symbol} | ${duration} | ${w_count} | ${d_count} |  [${commit_hash_display}](${repo}/tree/${commit_hash}) |" | tee -a "${SUMMARY_FILE}"
+    # Only add link if KNOWN_GOOD_FILE is set
+    if [[ -n "${KNOWN_GOOD_FILE}" ]]; then
+        commit_version_cell="[${commit_hash_display}](${repo}/tree/${commit_hash})"
+    else
+        commit_version_cell="${commit_hash_display}"
+    fi
+    
+    echo "| ${group} | ${status_symbol} | ${duration} | ${w_count} | ${d_count} | ${commit_version_cell} |" | tee -a "${SUMMARY_FILE}"
 done
 
 # Append aggregate totals row to summary table
