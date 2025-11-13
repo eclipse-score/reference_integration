@@ -392,4 +392,7 @@ crinit-ctl poweroff
 
 ## Further notes
 
-The toolchain and librares are provided for demonstration and prototyping purposes without further qualification.
+* The toolchain and librares are provided for demonstration and prototyping purposes without further qualification.
+* A second test case for S-CORE persistency is also integrated. You can run it via
+  `bazel build --config=aarch64-ebclfsa //persistency_integration:run`
+  However, this is not integrated as HI application to avoid the additional complexity of the required wrapper.
