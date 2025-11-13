@@ -34,7 +34,13 @@ import sys
 from dataclasses import dataclass
 from urllib.parse import urlparse
 
-from github import Github, GithubException
+try:
+	from github import Github, GithubException
+	HAS_PYGITHUB = True
+except ImportError:
+	HAS_PYGITHUB = False
+	Github = None
+	GithubException = None
 
 
 @dataclass
@@ -66,6 +72,8 @@ class Module:
 
 def fetch_latest_commit(owner_repo: str, branch: str, token: str | None) -> str:
 	"""Fetch latest commit sha for given owner_repo & branch using PyGithub."""
+	if not HAS_PYGITHUB:
+		raise RuntimeError("PyGithub not installed. Install it with: pip install PyGithub")
 	try:
 		gh = Github(token) if token else Github()
 		repo = gh.get_repo(owner_repo)
@@ -167,6 +175,13 @@ def main(argv: list[str]) -> int:
 	updated: list[Module] = []
 	# Default: use gh if available unless --no-gh specified
 	use_gh = (not args.no_gh) and shutil.which("gh") is not None
+	
+	# If PyGithub is not available and gh CLI is not available, error out
+	if not use_gh and not HAS_PYGITHUB:
+		print("ERROR: Neither 'gh' CLI nor PyGithub library found.", file=sys.stderr)
+		print("Please install PyGithub (pip install PyGithub) or install GitHub CLI.", file=sys.stderr)
+		return 3
+	
 	if not args.no_gh and not use_gh:
 		print("INFO: 'gh' CLI not found; using direct GitHub API", file=sys.stderr)
 	if args.no_gh and shutil.which("gh") is not None:
