@@ -39,6 +39,7 @@ def generate_git_override_blocks(modules, repo_commit_dict):
         name = module.get("name")
         repo = module.get("repo")
         commit = module.get("hash") or module.get("commit")
+        patches = module.get("patches", [])
         if not name:
             logging.warning("Skipping module with missing name: %s", module)
             continue
@@ -49,6 +50,12 @@ def generate_git_override_blocks(modules, repo_commit_dict):
         
         # Check if module has a version, use different logic
         version = module.get("version")
+        patches_lines = ""
+        if patches:
+            patches_lines = "    patches = [\n"
+            for patch in patches:
+                patches_lines += f'        "{patch}",\n'
+            patches_lines += "    ],\n    patch_strip = 1,\n"
         
         if version:
             # If version is provided, use bazel_dep with single_version_override
@@ -57,6 +64,7 @@ def generate_git_override_blocks(modules, repo_commit_dict):
                 'single_version_override(\n'
                 f'    module_name = "{name}",\n'
                 f'    version = "{version}",\n'
+                f'{patches_lines}'
                 ')\n'
             )
         else:
@@ -68,13 +76,16 @@ def generate_git_override_blocks(modules, repo_commit_dict):
             if not re.match(r'^[a-fA-F0-9]{7,40}$', commit):
                 logging.warning("Skipping module %s with invalid commit hash: %s", name, commit)
                 continue
+            
             # If no version, use bazel_dep with git_override
+            
             block = (
                 f'bazel_dep(name = "{name}")\n'
                 'git_override(\n'
                 f'    module_name = "{name}",\n'
                 f'    remote = "{repo}",\n'
                 f'    commit = "{commit}",\n'
+                f'{patches_lines}'
                 ')\n'
             )
         

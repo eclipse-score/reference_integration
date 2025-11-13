@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Generated from known_good.json at 2025-11-12T10:20:19Z
+# Generated from known_good.json at 2025-11-13T08:26:11Z
 # Do not edit manually - use tools/update_module_from_known_good.py
 
 bazel_dep(name = "score_baselibs")
@@ -19,11 +19,15 @@ git_override(
     module_name = "score_baselibs",
     remote = "https://github.com/eclipse-score/baselibs.git",
     commit = "edc4f8841c2210d11ef310049a78644ff3d039a3",
+    patches = [
+        "//:wait_free_stack_fix.patch",
+    ],
+    patch_strip = 1,
 )
 
-bazel_dep(name = "score_communication")
+bazel_dep(name = "communication")
 git_override(
-    module_name = "score_communication",
+    module_name = "communication",
     remote = "https://github.com/eclipse-score/communication.git",
     commit = "ff40e5f1e90ce406b71c664cc6c8e902ab465305",
 )
@@ -46,7 +50,7 @@ bazel_dep(name = "score_tooling")
 git_override(
     module_name = "score_tooling",
     remote = "https://github.com/eclipse-score/tooling.git",
-    commit = "b3a120a36c7a0e1b82d151732961af3330922e20",
+    commit = "f36904e8c3d06c0ee761b14877ce7e5f6d3d9edb",
 )
 
 bazel_dep(name = "score_platform")
@@ -73,7 +77,7 @@ bazel_dep(name = "score_docs_as_code")
 git_override(
     module_name = "score_docs_as_code",
     remote = "https://github.com/eclipse-score/docs-as-code.git",
-    commit = "bb52c96dd98799bdce68c166ad3b826f017f7cf6",
+    commit = "1067fb67782389b50827f8637a74b1027ece52ee",
 )
 
 bazel_dep(name = "score_process")
