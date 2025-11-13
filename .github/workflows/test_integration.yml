@@ -65,7 +65,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         - name: Bazel build targets
           run: |
-            ./integration_test.sh
+            ./integration_test.sh --known-good known_good.updated.json
         - name: Show disk space after build
           if: always()
           run: |
