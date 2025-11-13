@@ -7,6 +7,12 @@ from fit_scenario import FitScenario, temp_dir_common
 from testing_utils import LogContainer
 
 
+@pytest.mark.PartiallyVerifies(["feat_req__persistency__persistency"])
+@pytest.mark.Description(
+    "Verifies Persistency stores data persistently across multiple orchestration runs."
+)
+@pytest.mark.TestType("requirements-based")
+@pytest.mark.DerivationTechnique("requirements-based")
 class TestOrchWithPersistency(FitScenario):
     """
     Tests orchestration with persistency scenario.
