@@ -16,6 +16,7 @@ declare -A BUILD_TARGET_GROUPS=(
     #[score_logging]="@score_logging//src/..."
     [score_orchestrator]="@score_orchestrator//src/..."
     [score_test_scenarios]="@score_test_scenarios//..."
+    [score_feo]="@score_feo//..."
 )
 
 warn_count() {
