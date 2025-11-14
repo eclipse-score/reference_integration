@@ -15,9 +15,12 @@
 Reference Integration Documentation
 ===================================
 
+Release Notes: :need:`doc__score_v05_alpha_release_note`
+
+
 .. if-collection:: score_platform
 
-   Included S-CORE Modules:
+   Documentation:
 
    .. toctree::
       :maxdepth: 1
