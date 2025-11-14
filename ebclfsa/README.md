@@ -37,7 +37,7 @@ However, please understand that we cannot advise you about possible costs in you
 > [...]
 > Target //scrample_integration:run up-to-date:
 >  bazel-bin/scrample_integration/qemu_run.log
->  bazel-bin/scrample_integration/ssh_run.log
+>  bazel-bin/scrample_integration/ssh_scrample_run.log
 >INFO: Elapsed time: 361.273s, Critical Path: 91.92s
 >INFO: 836 processes: 10 internal, 826 local.
 >INFO: Build completed successfully, 836 total actions
