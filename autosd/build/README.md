@@ -40,6 +40,7 @@ Build a qemu image by running:
 
 ```
 sudo ./auto-image-builder.sh build \
+--define-file vars.yml \
 --define-file vars-devel.yml \
 --target qemu \
 --export qcow2 \
