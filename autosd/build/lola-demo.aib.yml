@@ -79,10 +79,10 @@ content:
     - path: /etc/systemd/system/lola-ipc-pub.service
       source_path: files/lola-ipc-pub.service
     # lola test script
-    - path: /usr/local/bin/lola-ipc-test
+    - path: /usr/bin/lola-ipc-test
       source_path: files/lola-ipc-test
   chmod_files:
-    - path: /usr/local/bin/lola-ipc-test
+    - path: /usr/bin/lola-ipc-test
       mode: "0755"
 
   # Required for testing the image only:
@@ -94,6 +94,9 @@ content:
       - bluechi-agent.service
 
 qm:
+  memory_limit:
+    max: infinity
+    high: infinity
   content:
     enable_repos:
       - devel
