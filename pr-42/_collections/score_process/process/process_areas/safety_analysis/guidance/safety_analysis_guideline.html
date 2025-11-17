@@ -1,0 +1,802 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Safety Analysis Guidelines &#8212; REF_INT  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score.css?v=6e51530f" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score_needs.css?v=e97392eb" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score_design.css?v=d9fd870c" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/modern.css?v=803738c0" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../../../../../_static/sphinx-data-viewer/jsonview.bundle.js?v=18cd53c5"></script>
+    <script src="../../../../../../_static/sphinx-data-viewer/jsonview_loader.js?v=f7ff7e7d"></script>
+    <script src="../../../../../../_static/sphinx-needs/libs/html/datatables.min.js?v=8a4aee21"></script>
+    <script src="../../../../../../_static/sphinx-needs/libs/html/datatables_loader.js?v=a2cae175"></script>
+    <script src="../../../../../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js?v=dca66431"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_collections/score_process/process/process_areas/safety_analysis/guidance/safety_analysis_guideline';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-score.github.io/reference_integration/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" />
+    <link rel="next" title="Safety Analysis Process Requirements" href="safety_analysis_process_reqs.html" />
+    <link rel="prev" title="Safety Analysis Checklist" href="safety_analysis_checklist.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Eclipse S-CORE</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../score_platform/docs/index.html">
+    S-CORE Platform
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../../index.html">
+    Process description
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../score_platform/docs/index.html">
+    S-CORE Platform
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../../index.html">
+    Process description
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../general_concepts/index.html">General concepts</a></li>
+</ul>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">Process Areas</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../architecture_design/index.html">Architecture Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../change_management/index.html">Change Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../configuration_management/index.html">Configuration Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../documentation_management/index.html">Documentation Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../implementation/index.html">Implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../platform_management/index.html">Platform Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../problem_resolution/index.html">Problem Resolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../process_management/index.html">Process Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quality_management/index.html">Quality Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../release_management/index.html">Release Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../requirements_engineering/index.html">Requirements Engineering</a></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">Safety Analysis</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../safety_analysis_getstrt.html">Getting Started</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../safety_analysis_concept.html">Concept Description</a></li>
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="index.html">Guidance</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="dfa_failure_initiators.html">DFA failure initiators</a></li>
+
+<li class="toctree-l4"><a class="reference internal" href="dfa_templates.html">DFA Templates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fault_models_guideline.html">FMEA Fault Models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fmea_templates.html">FMEA Templates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="safety_analysis_checklist.html">Safety Analysis Checklist</a></li>
+<li class="toctree-l4 current active"><a class="current reference internal" href="#">Safety Analysis Guidelines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="safety_analysis_process_reqs.html">Safety Analysis Process Requirements</a></li>
+
+
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../safety_analysis_roles.html">Roles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../safety_analysis_workflow.html">Workflow Safety Analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../safety_analysis_workproducts.html">Workproducts Safety Analysis</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../safety_management/index.html">Safety Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../security_management/index.html">Security Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tool_management/index.html">Tool Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../verification/index.html">Verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../process_reqs_list/index.html">Process Requirements List</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../roles/index.html">Roles</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../workproducts/index.html">Work products</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows/index.html">Workflows</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../standards/index.html">Standards</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../trustable/index.html">Trustable</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../folder_templates/index.html">Folder Templates</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Process description</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Process Areas</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Safety Analysis</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Guidance</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Safety Analysis Guidelines</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="safety-analysis-guidelines">
+<h1>Safety Analysis Guidelines<a class="headerlink" href="#safety-analysis-guidelines" title="Link to this heading">#</a></h1>
+<div class="need_container docutils container" id="SNCB-8574a0dc">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_guidl table" id="gd_guidl__safety_analysis">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Safety Analysis (DFA and FMEA) Guideline</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">safety_analysis</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_841" title="gd_guidl__safety_analysis">std_req__iso26262__analysis_841</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_842" title="gd_guidl__safety_analysis">std_req__iso26262__analysis_842</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_843" title="gd_guidl__safety_analysis">std_req__iso26262__analysis_843</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_844" title="gd_guidl__safety_analysis">std_req__iso26262__analysis_844</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_847" title="gd_guidl__safety_analysis">std_req__iso26262__analysis_847</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_848" title="gd_guidl__safety_analysis">std_req__iso26262__analysis_848</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_849" title="gd_guidl__safety_analysis">std_req__iso26262__analysis_849</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_8410" title="gd_guidl__safety_analysis">std_req__iso26262__analysis_8410</a>, <a class="reference internal" href="../../../standards/isopas8926/isopas8926.html#std_req__isopas8926__44431" title="gd_guidl__safety_analysis">std_req__isopas8926__44431</a>, <a class="reference internal" href="../../../standards/isopas8926/isopas8926.html#std_req__isopas8926__44432" title="gd_guidl__safety_analysis">std_req__isopas8926__44432</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#gd_guidl__safety_analysis" title="gd_guidl__safety_analysis">gd_guidl__safety_analysis</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Process Guideline</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>This document describes the general guidances for Safety Analysis (DFA and FMEA) based on the concept which is defined <a class="reference internal" href="../safety_analysis_concept.html#doc_concept__safety_analysis" title="doc_concept__safety_analysis"><em class="xref need">Safety Analysis Concept (doc_concept__safety_analysis)</em></a>.
+Use the platform DFA as an input so that general safety mechanisms are only defined once and not in every single safety analysis.</p>
+<section id="workflow-for-safety-analysis">
+<h2>Workflow for Safety Analysis<a class="headerlink" href="#workflow-for-safety-analysis" title="Link to this heading">#</a></h2>
+<p>The workflow of the safety analysis are described in <a class="reference internal" href="../safety_analysis_workflow.html#workflow-safety-analysis"><span class="std std-ref">Workflow Safety Analysis</span></a>. The single steps in these workflows are described in detail in the following sections.</p>
+<section id="step-by-step-approach-fmea">
+<h3>Step-by-Step-approach FMEA:<a class="headerlink" href="#step-by-step-approach-fmea" title="Link to this heading">#</a></h3>
+<p>The analysis is done by using the template <a class="reference internal" href="fmea_templates.html#fmea-templates"><span class="std std-ref">FMEA Templates</span></a> on the feature or component architectural diagrams. By using the fault models &lt;<a class="reference internal" href="fault_models_guideline.html#gd_guidl__fault_models" title="gd_guidl__fault_models"><em class="xref need">FMEA Fault Models (gd_guidl__fault_models)</em></a>&gt;
+it can be ensured that the analysis is done in a structured way.
+Apply the fault model to the diagram and document the results in the template. Use the content of the document <a class="reference internal" href="../../../folder_templates/features/feature_name/safety_analysis/fmea.html#doc__feature_name_fmea" title="doc__feature_name_fmea"><em class="xref need">[Your Feature Name] FMEA (doc__feature_name_fmea)</em></a>, <a class="reference internal" href="../../../folder_templates/modules/module_name/component_name/docs/safety_analysis/fmea.html#doc__component_name_fmea" title="doc__component_name_fmea"><em class="xref need">[Your Component Name] FMEA (doc__component_name_fmea)</em></a>
+to describe e.g. why a fault model is not applicable for the diagram. If a FMEA can’t be applied, the reason has to be documented in the
+content of the document, so it can be recognized.</p>
+<p>The attributes of the template are described in <a class="reference internal" href="safety_analysis_process_reqs.html#process-requirements-safety-analysis-attributes"><span class="std std-ref">Process Safety Analysis Attributes</span></a>.</p>
+<p><strong>Steps:</strong></p>
+<ol class="arabic simple">
+<li><p>For each of the safety functions realized by an architecture element check if a fault from the fault model <a class="reference internal" href="fault_models_guideline.html#gd_guidl__fault_models" title="gd_guidl__fault_models"><em class="xref need">FMEA Fault Models (gd_guidl__fault_models)</em></a> applies.</p></li>
+<li><p>If a fault model applies, use the template <a class="reference internal" href="fmea_templates.html#gd_temp__feat_saf_fmea" title="gd_temp__feat_saf_fmea"><em class="xref need">Feature FMEA Template (gd_temp__feat_saf_fmea)</em></a> or <a class="reference internal" href="fmea_templates.html#gd_temp__comp_saf_fmea" title="gd_temp__comp_saf_fmea"><em class="xref need">Component FMEA Template (gd_temp__comp_saf_fmea)</em></a> to perform the analysis.</p></li>
+<li><p>The title of the analysis should be easily recognizable e.g. “Component xy unintended triggered”.</p></li>
+<li><p>Link the violated architecture with the “violates” attribute.</p></li>
+<li><p>Replace the placeholders in the “id” attribute with the name of the feature or component and a short description of the element so that it can be easily identified.</p></li>
+<li><p>Document the fault ID from the fault model <a class="reference internal" href="fault_models_guideline.html#gd_guidl__fault_models" title="gd_guidl__fault_models"><em class="xref need">FMEA Fault Models (gd_guidl__fault_models)</em></a> that applies to the element in the “fault_id” attribute.</p></li>
+<li><p>Describe the failure effect of the fault model on the element in the “failure_effect” attribute. Use the failure mode description and enlarge the if it’s applicable to the considered element.</p></li>
+<li><p>Document the safety mitigation. This can be a detection, prevention or mitigation of the fault.</p></li>
+<li><p>If there is no mitigation or existing mitigation is not sufficient a mitigation issue has to be created in the Issue Tracking system and linked in the “mitigation_issue” attribute.</p></li>
+<li><p>The analysis is finished, if for each identified fault a sufficient mitigation exists.</p></li>
+<li><p>Unless the attribute sufficient is yes, mitigation and argument attribute can be still empty.</p></li>
+<li><p>Continue the analysis until all applicable fault models are checked.</p></li>
+<li><p>The verification is done by applying the checklist <a class="reference internal" href="safety_analysis_checklist.html#gd_chklst__safety_analysis" title="gd_chklst__safety_analysis"><em class="xref need">Safety Analysis Checklist T... (gd_chklst__safety_analysis)</em></a>.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If there are changes they have to be analysed with a impact analysis <a class="reference internal" href="../../change_management/guidance/change_management_impact_analysis_template.html#gd_temp__change_impact_analysis" title="gd_temp__change_impact_analysis"><em class="xref need">Impact Analysis Template (gd_temp__change_impact_analysis)</em></a>. If needed the safety analysis (DFA or FMEA) has to be updated accordingly. Therefore all necessary steps have to be repeated.</p>
+</div>
+</section>
+<section id="step-by-step-approach-dfa">
+<h3>Step-by-Step-approach DFA:<a class="headerlink" href="#step-by-step-approach-dfa" title="Link to this heading">#</a></h3>
+<p>The analysis is done by using the template <a class="reference internal" href="dfa_templates.html#dfa-templates"><span class="std std-ref">DFA Templates</span></a> on the feature or component architectural diagrams using a list of DFA failure initiators &lt;<a class="reference internal" href="dfa_failure_initiators.html#gd_guidl__dfa_failure_initiators" title="gd_guidl__dfa_failure_initiators"><em class="xref need">DFA failure initiators (gd_guidl__dfa_failure_initiators)</em></a>&gt;.
+Use the content of the document <a class="reference internal" href="../../../folder_templates/features/feature_name/safety_analysis/dfa.html#doc__feature_name_dfa" title="doc__feature_name_dfa"><em class="xref need">[Your Feature Name] DFA (doc__feature_name_dfa)</em></a>, <a class="reference internal" href="../../../folder_templates/modules/module_name/component_name/docs/safety_analysis/dfa.html#doc__component_name_dfa" title="doc__component_name_dfa"><em class="xref need">[Your Component Name] DFA (doc__component_name_dfa)</em></a> to describe e.g. why
+a failure initiator is not applicable for the diagram. If a DFA can’t be applied, the reason has to be documented in the content of the document, so it
+can be recognized.</p>
+<p>The attributes of the template are described in <a class="reference internal" href="safety_analysis_process_reqs.html#process-requirements-safety-analysis-attributes"><span class="std std-ref">Process Safety Analysis Attributes</span></a>.</p>
+<p><strong>Steps:</strong></p>
+<ol class="arabic simple">
+<li><p>For each architectural element check if a failure from the failure initiators <a class="reference internal" href="dfa_failure_initiators.html#gd_guidl__dfa_failure_initiators" title="gd_guidl__dfa_failure_initiators"><em class="xref need">DFA failure initiators (gd_guidl__dfa_failure_initiators)</em></a> applies.</p></li>
+<li><p>If a failure initiator applies, use the template <a class="reference internal" href="dfa_templates.html#gd_temp__feat_saf_dfa" title="gd_temp__feat_saf_dfa"><em class="xref need">Feature DFA Templates (gd_temp__feat_saf_dfa)</em></a> or <a class="reference internal" href="dfa_templates.html#gd_temp__comp_saf_dfa" title="gd_temp__comp_saf_dfa"><em class="xref need">Component DFA Templates (gd_temp__comp_saf_dfa)</em></a> to perform the analysis.</p></li>
+<li><p>The title of the analysis should be easily recognizable e.g. “Component xy unintended triggered”.</p></li>
+<li><p>Link the violated architecture with the “violates” attribute.</p></li>
+<li><p>Replace the placeholders in the “id” attribute with the name of the feature or component and a short description of the element so that it can be easily identified.</p></li>
+<li><p>Document the failure ID from the failure initiator <a class="reference internal" href="dfa_failure_initiators.html#gd_guidl__dfa_failure_initiators" title="gd_guidl__dfa_failure_initiators"><em class="xref need">DFA failure initiators (gd_guidl__dfa_failure_initiators)</em></a> that applies to the element in the “failure_id” attribute.</p></li>
+<li><p>Describe the failure effect of the failure initiator on the element in the “failure_effect” attribute. Use the violation cause description and enlarge the if it’s applicable to the considered element.</p></li>
+<li><p>Document the safety mitigation. This can be a detection, prevention or mitigation of the fault.</p></li>
+<li><p>If there is no mitigation or the mitigation is not sufficient a mitigation issue has to be created in the Issue Tracking system and linked in the “mitigation_issue” attribute.</p></li>
+<li><p>The analysis is finished, if for each identified fault a sufficient mitigation exists.</p></li>
+<li><p>Unless the attribute sufficient is yes, mitigation and argument attribute can be still empty.</p></li>
+<li><p>Continue the analysis until all applicable failure initiators are checked.</p></li>
+<li><p>The verification is done by applying the checklist <a class="reference internal" href="safety_analysis_checklist.html#gd_chklst__safety_analysis" title="gd_chklst__safety_analysis"><em class="xref need">Safety Analysis Checklist T... (gd_chklst__safety_analysis)</em></a>.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If there are changes they have to be analysed with a impact analysis <a class="reference internal" href="../../change_management/guidance/change_management_impact_analysis_template.html#gd_temp__change_impact_analysis" title="gd_temp__change_impact_analysis"><em class="xref need">Impact Analysis Template (gd_temp__change_impact_analysis)</em></a>. If needed the safety analysis (DFA or FMEA) has to be updated accordingly. Therefore all necessary steps have to be repeated.</p>
+</div>
+</section>
+</section>
+<section id="examples-for-fmea-and-dfa-at-feature-level">
+<span id="examples-fmea-dfa"></span><h2>Examples for FMEA and DFA at feature level<a class="headerlink" href="#examples-for-fmea-and-dfa-at-feature-level" title="Link to this heading">#</a></h2>
+<p>For the examples the architectural diagrams <a class="reference internal" href="../safety_analysis_concept.html#safety-analysis-feature-example"><span class="std std-ref">Feature Architecture</span></a> are used.</p>
+<p><strong>FMEA:</strong></p>
+<p>In the dynamic view of the example the “flow component 1” to the user realizes a safety requirement. If we apply the fault model we may
+find possible failures. Therefore we need a mitigation.</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">feat_saf_fmea</span><span class="p">::</span> Component 1 Call message not received
+   <span class="nc">:violates:</span> feat_arc_dyn__mab__dynamic
+   <span class="nc">:id:</span> feat_saf_fmea__mab__comp1_call_nreceived
+   <span class="nc">:fault_id:</span> MF_01_01
+   <span class="nc">:failure_effect:</span> Message is not received. This leads to a unavailability of a safety related functionality of the feature.
+   <span class="nc">:mitigated_by:</span> aou_req__mab__call_not_received
+   <span class="nc">:mitigation_issue:</span>
+   <span class="nc">:sufficient:</span> yes
+   <span class="nc">:status:</span> valid
+
+ If the message is not received by the feature it will be unavailable for the user. This has to be detected by the User because
+ the feature can&#39;t detect if it&#39;s not called. This requirement is addressed by the AoU requirement aou_req__Mab__func_call_not_received.
+</pre></div>
+</div>
+<p>For all fault models that are not applicable, the reason has to be documented in the content of the document, so it can be recognized. An example could be that</p>
+<ul class="simple">
+<li><p>Fault model FM_01_07 “Message is unintended sent. Component 1 will be unintended triggered.” is not applicable, because the component is ASIL B developed, non complex and sufficiently tested.</p></li>
+<li><p>Fault model FX_01_04 “loss of execution” is not applicable, because feature is completely deterministic. Other failures like HW failures are not considered in this analysis because it’s developed as a SEooC.</p></li>
+</ul>
+<p><strong>DFA:</strong></p>
+<p>In the static view of the example could be seen that component 1 uses component 2. If we apply the failure initiators we may find the possible failures.</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">feat_saf_dfa</span><span class="p">::</span> Mab data corruption
+   <span class="nc">:violates:</span> feat_arc_sta__mab__static
+   <span class="nc">:id:</span> feat_saf_dfa__mab__data_corruption
+   <span class="nc">:failure_id:</span> CO_01_02
+   <span class="nc">:failure_effect:</span> Data or message corruption will lead to a corruption of the data or message that could violate a safety functionality.
+   <span class="nc">:mitigated_by:</span> feat_req__mab_integritiy_check
+   <span class="nc">:mitigation_issue:</span>
+   <span class="nc">:sufficient:</span> yes
+   <span class="nc">:status:</span> valid
+
+ The feature shall detect and report data corruption.
+
+ The shall be possible to detect and report data corruption.
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Failure initiator SR_01_01 “reused software modules” is not applicable, no software modules are reused in the feature.</p></li>
+<li><p>Failure initiator SI_01_03 “constants, or variables, being global to the two software functions” is not applicable, because it’s not possible to create constants or variables that being global to the two software functions in Rust.</p></li>
+</ul>
+</section>
+<section id="examples-for-fmea-and-dfa-at-component-level">
+<h2>Examples for FMEA and DFA at component level<a class="headerlink" href="#examples-for-fmea-and-dfa-at-component-level" title="Link to this heading">#</a></h2>
+<p>For the examples the architectural diagrams <a class="reference internal" href="../safety_analysis_concept.html#safety-analysis-feature-example"><span class="std std-ref">Feature Architecture</span></a> are used.</p>
+<p><strong>FMEA:</strong></p>
+<p>There is no need to do a FMEA on component 3 as it offers the same as component 1 (which we already analyzed in the feature analysis). So we can skip this component.
+But please note it in the content of the document.</p>
+<p>It has to be considered if a FMEA has to be done on component 4 or if it’s covered by the DFA.</p>
+<p><strong>DFA:</strong></p>
+<p>In the dynamic view we see that Component 4 is returning a message to component 3. If we apply the failure initiators we may find the possible
+failure: “message corruption” of “flow component 3” - but we find out that this is a flow which is not contributing to the safety function.
+Additionally in the static view we see Component 4 is a library used by Component 3. Therefore we have to apply the failure initiators again.</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">comp_saf_dfa</span><span class="p">::</span> Allocated memory
+   <span class="nc">:violates:</span> comp_arc_sta__mab__static
+   <span class="nc">:id:</span> comp_saf_dfa__component4__allocated_memory
+   <span class="nc">:failure_id:</span> SR_01_10
+   <span class="nc">:failure_effect:</span> Component 4 is using allocated memory of Component 3
+   <span class="nc">:mitigated_by:</span> comp_req__memory_management
+   <span class="nc">:mitigation_issue:</span>
+   <span class="nc">:sufficient:</span> yes
+   <span class="nc">:status:</span> valid
+
+   The allocation of the memory of Component 4 is managed by the memory management.
+</pre></div>
+</div>
+<p>For all failure initiators that are not applicable, the reason has to be documented in the content of the document, so it can be recognized. An example could be that</p>
+<ul class="simple">
+<li><p>Failure initiator CO_01_02 “Data or message corruption” of “flow component 3” is not applicable, this flow is not contributing to the safety function.</p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="safety_analysis_checklist.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Safety Analysis Checklist</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="safety_analysis_process_reqs.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Safety Analysis Process Requirements</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-for-safety-analysis">Workflow for Safety Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-by-step-approach-fmea">Step-by-Step-approach FMEA:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-by-step-approach-dfa">Step-by-Step-approach DFA:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-for-fmea-and-dfa-at-feature-level">Examples for FMEA and DFA at feature level</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-for-fmea-and-dfa-at-component-level">Examples for FMEA and DFA at component level</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  
+  <div class="tocsection editthispage">
+    <a href="https://github.com/eclipse-score/reference_integration/edit/main/docs/_collections/score_process/process/process_areas/safety_analysis/guidance/safety_analysis_guideline.rst">
+      <i class="fa-solid fa-pencil"></i>
+      
+      
+        
+          Edit on GitHub
+        
+      
+    </a>
+  </div>
+</div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../../../_sources/_collections/score_process/process/process_areas/safety_analysis/guidance/safety_analysis_guideline.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
