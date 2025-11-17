@@ -104,6 +104,9 @@ echo "" >> "${SUMMARY_FILE}"
 overall_warn_total=0
 overall_depr_total=0
 
+# Track if any build group failed
+any_failed=0
+
 for group in "${!BUILD_TARGET_GROUPS[@]}"; do
     targets="${BUILD_TARGET_GROUPS[$group]}"
     log_file="${LOG_DIR}/${group}.log"
@@ -117,6 +120,10 @@ for group in "${!BUILD_TARGET_GROUPS[@]}"; do
     set +e
     bazel build --config "${CONFIG}" ${targets} --verbose_failures 2>&1 | tee "$log_file"
     build_status=${PIPESTATUS[0]}
+    # Track if any build group failed
+    if [[ ${build_status} -ne 0 ]]; then
+        any_failed=1
+    fi
     set -e
     echo "::endgroup::"  # End Bazel build group
     end_ts=$(date +%s)
@@ -159,3 +166,8 @@ echo '::group::Build Summary'
 echo '=== Build Summary (echo) ==='
 cat "${SUMMARY_FILE}" || echo "(Could not read summary file ${SUMMARY_FILE})"
 echo '::endgroup::'
+
+# Report to GitHub Actions if any build group failed
+if [[ ${any_failed} -eq 1 ]]; then
+    echo "::error::One or more build groups failed. See summary above."
+fi

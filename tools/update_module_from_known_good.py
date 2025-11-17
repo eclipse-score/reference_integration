@@ -16,9 +16,10 @@ import os
 import re
 from datetime import datetime
 import logging
+from typing import Dict, List, Any, Optional
 
 
-def load_known_good(path):
+def load_known_good(path: str) -> Dict[str, Any]:
     """Load and parse the known_good.json file."""
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
@@ -31,7 +32,7 @@ def load_known_good(path):
     )
 
 
-def generate_git_override_blocks(modules_dict, repo_commit_dict):
+def generate_git_override_blocks(modules_dict: Dict[str, Any], repo_commit_dict: Dict[str, str]) -> List[str]:
     """Generate bazel_dep and git_override blocks for each module."""
     blocks = []
     
@@ -90,7 +91,7 @@ def generate_git_override_blocks(modules_dict, repo_commit_dict):
     return blocks
 
 
-def generate_file_content(modules, repo_commit_dict, timestamp=None):
+def generate_file_content(modules: Dict[str, Any], repo_commit_dict: Dict[str, str], timestamp: Optional[str] = None) -> str:
     """Generate the complete content for score_modules.MODULE.bazel."""
     # License header assembled with parenthesis grouping (no indentation preserved in output).
     header = (
@@ -124,7 +125,7 @@ def generate_file_content(modules, repo_commit_dict, timestamp=None):
     return header + "\n".join(blocks)
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="Generate score_modules.MODULE.bazel from known_good.json"
     )

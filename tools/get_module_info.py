@@ -3,9 +3,10 @@
 
 import json
 import sys
+from typing import Dict, Any
 
 
-def load_module_data(known_good_file, module_name):
+def load_module_data(known_good_file: str, module_name: str) -> Dict[str, Any]:
     """
     Load module data from known_good.json.
     
@@ -25,7 +26,7 @@ def load_module_data(known_good_file, module_name):
         return {}
 
 
-def get_module_field(module_data, field='hash'):
+def get_module_field(module_data: Dict[str, Any], field: str = 'hash') -> str:
     """
     Extract a specific field from module data.
     
