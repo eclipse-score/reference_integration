@@ -11,52 +11,49 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Generated from known_good.json at 2025-11-13T08:26:11Z
+# Generated from known_good.json at 2025-11-25T12:05:14Z
 # Do not edit manually - use tools/update_module_from_known_good.py
 
 bazel_dep(name = "score_baselibs")
 git_override(
     module_name = "score_baselibs",
     remote = "https://github.com/eclipse-score/baselibs.git",
-    commit = "edc4f8841c2210d11ef310049a78644ff3d039a3",
-    patches = [
-        "//:wait_free_stack_fix.patch",
-    ],
-    patch_strip = 1,
+    commit = "9457533471c8f0d4a1bb9435e91ff12c62d19c7c",
 )
 
-bazel_dep(name = "communication")
+bazel_dep(name = "score_communication")
 git_override(
-    module_name = "communication",
+    module_name = "score_communication",
     remote = "https://github.com/eclipse-score/communication.git",
-    commit = "ff40e5f1e90ce406b71c664cc6c8e902ab465305",
+    commit = "24d6e8916b89dbb405eae0b082348645d190dc18",
 )
 
 bazel_dep(name = "score_persistency")
 git_override(
     module_name = "score_persistency",
     remote = "https://github.com/eclipse-score/persistency.git",
-    commit = "7548876ed3e40ec3f3053c57634de68129287e05",
+    commit = "6f20545e0bbe90fcc36a0c6783e91a4fd867b110",
 )
 
 bazel_dep(name = "score_orchestrator")
 git_override(
     module_name = "score_orchestrator",
     remote = "https://github.com/eclipse-score/orchestrator.git",
-    commit = "7bb94ebae08805ea0a83dcc14f7c17da5ab927e6",
+    commit = "acd3cb614d2f97c2e140c776923c8c6623969691",
 )
 
 bazel_dep(name = "score_tooling")
 git_override(
     module_name = "score_tooling",
     remote = "https://github.com/eclipse-score/tooling.git",
-    commit = "f36904e8c3d06c0ee761b14877ce7e5f6d3d9edb",
+    commit = "8f025ef11f5ad3ea5b02fdff338a75cbac655ec4",
 )
 
 bazel_dep(name = "score_platform")
-single_version_override(
+git_override(
     module_name = "score_platform",
-    version = "0.4.2",
+    remote = "https://github.com/eclipse-score/score.git",
+    commit = "0d5e37a60ac63a8f2265660f917f7184a6763a48",
 )
 
 bazel_dep(name = "score_bazel_platforms")
@@ -77,19 +74,19 @@ bazel_dep(name = "score_docs_as_code")
 git_override(
     module_name = "score_docs_as_code",
     remote = "https://github.com/eclipse-score/docs-as-code.git",
-    commit = "1067fb67782389b50827f8637a74b1027ece52ee",
+    commit = "7e747c91521417c56289eb33b55c33dd1f8e9c77",
 )
 
 bazel_dep(name = "score_process")
 git_override(
     module_name = "score_process",
     remote = "https://github.com/eclipse-score/process_description.git",
-    commit = "ea78e6d616adf1f13236c31479a31db813086a77",
+    commit = "3bafefc8e81febdaf8e0468716ec2f81d3c12717",
 )
 
-bazel_dep(name = "score_feo", version = "1.0.2")
-single_version_override(
+bazel_dep(name = "score_feo")
+git_override(
     module_name = "score_feo",
-    version = "1.0.2",
+    remote = "https://github.com/eclipse-score/feo.git",
+    commit = "4841281ab81aad114cfc86a19a69c029a274f28d",
 )
-

@@ -12,6 +12,17 @@ LOG_DIR=${LOG_DIR:-_logs/logs}
 SUMMARY_FILE=${SUMMARY_FILE:-_logs/build_summary.md}
 KNOWN_GOOD_FILE=""
 
+# maybe move this to known_good.json or a config file later
+declare -A BUILD_TARGET_GROUPS=(
+    [score_baselibs]="@score_baselibs//score/..."
+    [score_communication]="@score_communication//score/mw/com:com"
+    [score_persistency]="@score_persistency//src/cpp/src/... @score_persistency//src/rust/..."
+    #[score_logging]="@score_logging//src/..."
+    [score_orchestrator]="@score_orchestrator//src/..."
+    [score_test_scenarios]="@score_test_scenarios//..."
+    [score_feo]="@score_feo//..."
+)
+
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -62,16 +73,6 @@ get_module_repo() {
     # Use the Python script to extract module repo
     python3 "${script_dir}/tools/get_module_info.py" "${known_good_file}" "${module_name}" "repo" 2>/dev/null || echo "N/A"
 }
-
-declare -A BUILD_TARGET_GROUPS=(
-    [score_baselibs]="@score_baselibs//score/..."
-    [communication]="@communication//score/mw/com:com"
-    [score_persistency]="@score_persistency//src/cpp/src/... @score_persistency//src/rust/..."
-    #[score_logging]="@score_logging//src/..."
-    [score_orchestrator]="@score_orchestrator//src/..."
-    [score_test_scenarios]="@score_test_scenarios//..."
-    [score_feo]="@score_feo//..."
-)
 
 warn_count() {
     # Grep typical compiler and Bazel warnings; adjust patterns as needed.

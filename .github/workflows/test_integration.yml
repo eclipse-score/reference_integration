@@ -17,8 +17,9 @@
 name: build latest mains
 on:
   workflow_dispatch:
-  push:
   pull_request:
+  schedule:
+    - cron: '30 2 * * *'  # Every night at 02:30 UTC on main branch
 jobs:
     integration_test:
       runs-on: ubuntu-latest
@@ -53,7 +54,7 @@ jobs:
             repository-cache: true
         - name: Update known good commits
           run: |
-            echo "::group::get latest commits from main branches"
+            echo "::group::get latest commits from module branches"
             python3 tools/update_module_latest.py --output known_good.updated.json
             cat known_good.updated.json
             echo "::endgroup::"

@@ -50,6 +50,7 @@ class Module:
 	repo: str
 	version: str | None = None
 	patches: list[str] | None = None
+	branch: str = "main"
 
 	@property
 	def owner_repo(self) -> str:
@@ -124,6 +125,8 @@ def write_known_good(path: str, original: dict, modules: list[Module]) -> None:
 		mod_dict = {"repo": m.repo, "hash": m.hash}
 		if m.patches:
 			mod_dict["patches"] = m.patches
+		if m.branch:
+			mod_dict["branch"] = m.branch
 		out["modules"][m.name] = mod_dict
 	with open(path, "w", encoding="utf-8") as f:
 		json.dump(out, f, indent=4, sort_keys=False)
@@ -163,6 +166,7 @@ def main(argv: list[str]) -> int:
 			hash_val = m.get("hash", "")
 			patches = m.get("patches")
 			repo = m.get("repo")
+			branch = m.get("branch")
 			if not repo:
 				print(f"WARNING: skipping module {name} with missing repo", file=sys.stderr)
 				continue
@@ -171,7 +175,8 @@ def main(argv: list[str]) -> int:
 				hash=hash_val,
 				repo=repo,
 				version=version,
-				patches=patches
+				patches=patches,
+				branch=branch
 			))
 		except KeyError as e:
 			print(f"WARNING: skipping module {name} missing key {e}: {m}", file=sys.stderr)
@@ -198,17 +203,19 @@ def main(argv: list[str]) -> int:
 
 	for mod in modules:
 		try:
+			# Use module-specific branch if available, otherwise use command-line branch
+			branch = mod.branch if mod.branch else args.branch
 			if use_gh:
-				latest = fetch_latest_commit_gh(mod.owner_repo, args.branch)
+				latest = fetch_latest_commit_gh(mod.owner_repo, branch)
 			else:
-				latest = fetch_latest_commit(mod.owner_repo, args.branch, token)
-			updated.append(Module(name=mod.name, hash=latest, repo=mod.repo, version=mod.version, patches=mod.patches))
+				latest = fetch_latest_commit(mod.owner_repo, branch, token)
+			updated.append(Module(name=mod.name, hash=latest, repo=mod.repo, version=mod.version, patches=mod.patches, branch=mod.branch))
 			
 			# Display format: if version exists, show "version -> hash", otherwise "hash -> hash"
 			if mod.version:
-				print(f"{mod.name}: {mod.version} -> {latest[:8]} (branch {args.branch})")
+				print(f"{mod.name}: {mod.version} -> {latest[:8]} (branch {branch})")
 			else:
-				print(f"{mod.name}: {mod.hash[:8]} -> {latest[:8]} (branch {args.branch})")
+				print(f"{mod.name}: {mod.hash[:8]} -> {latest[:8]} (branch {branch})")
 		except Exception as e:  # noqa: BLE001
 			failures += 1
 			print(f"ERROR {mod.name}: {e}", file=sys.stderr)
