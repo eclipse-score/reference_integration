@@ -162,7 +162,7 @@ for group in "${!BUILD_TARGET_GROUPS[@]}"; do
 done
 
 # Append aggregate totals row to summary table
-echo "| TOTAL |  |  | ${overall_warn_total} | ${overall_depr_total} |  |" >> "${SUMMARY_FILE}"# Display the full build summary explicitly at the end
+echo "| TOTAL |  |  | ${overall_warn_total} | ${overall_depr_total} |  |" >> "${SUMMARY_FILE}"
 echo '::group::Build Summary'
 echo '=== Build Summary (echo) ==='
 cat "${SUMMARY_FILE}" || echo "(Could not read summary file ${SUMMARY_FILE})"
@@ -171,4 +171,5 @@ echo '::endgroup::'
 # Report to GitHub Actions if any build group failed
 if [[ ${any_failed} -eq 1 ]]; then
     echo "::error::One or more build groups failed. See summary above."
+    exit 1
 fi
