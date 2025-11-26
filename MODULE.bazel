@@ -47,6 +47,7 @@ use_repo(pip, "pip_score_venv_test")
 
 # communication module dependencies
 # archive_override are not forwarded by bazel_dep, so we need to redefine it here
+bazel_dep(name = "rules_boost", repo_name = "com_github_nelhage_rules_boost")
 archive_override(
     module_name = "rules_boost",
     strip_prefix = "rules_boost-master",
@@ -54,6 +55,7 @@ archive_override(
 )
 
 # git_override are not forwarded by bazel_dep, so we need to redefine it here
+bazel_dep(name = "trlc")
 git_override(
     module_name = "trlc",
     remote = "https://github.com/bmw-software-engineering/trlc.git",
