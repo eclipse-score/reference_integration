@@ -20,11 +20,21 @@ Release Notes: :need:`doc__score_v05_alpha_release_note`
 
 .. if-collection:: score_platform
 
-   Documentation:
+   .. toctree::
+      :maxdepth: 1
+      :titlesonly:
+      :caption: Platform and Modules
+
+      S-CORE Platform <_collections/score_platform/docs/index>
+      place_holder/persistency
+      place_holder/orchestrator
+      place_holder/communication
+      FEO <_collections/score_feo/docs/index>
 
    .. toctree::
       :maxdepth: 1
       :titlesonly:
+      :caption: Process, Methods, and Tools
 
-      S-CORE Platform <_collections/score_platform/docs/index>
       _collections/score_process/process/index
+      _collections/score_docs_as_code/docs/index

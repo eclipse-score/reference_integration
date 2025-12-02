@@ -60,9 +60,10 @@ single_version_override(
 )
 
 bazel_dep(name = "score_docs_as_code", version = "2.0.1")
-single_version_override(
+git_override( # until 2.0.3 or higher is released
     module_name = "score_docs_as_code",
-    version = "2.0.1",
+    remote = "https://github.com/eclipse-score/docs-as-code",
+    commit = "7e747c91521417c56289eb33b55c33dd1f8e9c77",
 )
 
 
