@@ -154,11 +154,13 @@ for group in "${!BUILD_TARGET_GROUPS[@]}"; do
 
     db_path="${CODEQL_DATABASES_DIR}/${group}_db"
     sarif_output="${CODEQL_SARIF_DIR}/${group}.sarif"
-    
+    current_bazel_output_base="/tmp/codeql_bazel_output_${group}_$(date +%s%N)" # Add timestamp for extra uniqueness
+
+
     # 1. Clean Bazel to ensure a fresh build for CodeQL tracing
     echo "Running 'bazel clean --expunge' and 'bazel shutdown'..."
-    bazel clean --expunge || { echo "Bazel clean failed for ${group}"; exit 1; }
-    bazel shutdown || { echo "Bazel shutdown failed for ${group}"; exit 1; }
+    bazel clean --expunge --output_base="${current_bazel_output_base}" || { echo "Bazel clean failed for ${group}"; exit 1; }
+    bazel shutdown --output_base="${current_bazel_output_base}" || { echo "Bazel shutdown failed for ${group}"; exit 1; }
 
     # Log build group banner only to stdout/stderr (not into summary table file)
     echo "--- Building group: ${group} ---"
@@ -169,6 +171,7 @@ for group in "${!BUILD_TARGET_GROUPS[@]}"; do
     set +e
     
     build_command="bazel build \
+      --output_base=\\\"${current_bazel_output_base}\\\" \  
       --config '${CONFIG}' \
       ${targets} \
       --verbose_failures \
