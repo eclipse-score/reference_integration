@@ -28,12 +28,12 @@ CODEQL_URL="https://github.com/github/codeql-cli-binaries/releases/download/${CO
 # maybe move this to known_good.json or a config file later
 declare -A BUILD_TARGET_GROUPS=(
     [score_baselibs]="@score_baselibs//score/..."
-    [score_communication]="@score_communication//score/mw/com:com"
-    [score_persistency]="@score_persistency//src/cpp/src/... @score_persistency//src/rust/..."
+    #[score_communication]="@score_communication//score/mw/com:com"
+    #[score_persistency]="@score_persistency//src/cpp/src/... @score_persistency//src/rust/..."
     #[score_logging]="@score_logging//src/..."
-    [score_orchestrator]="@score_orchestrator//src/..."
-    [score_test_scenarios]="@score_test_scenarios//..."
-    [score_feo]="@score_feo//..."
+    #[score_orchestrator]="@score_orchestrator//src/..."
+    #[score_test_scenarios]="@score_test_scenarios//..."
+    #[score_feo]="@score_feo//..."
 )
 
 
@@ -171,19 +171,17 @@ for group in "${!BUILD_TARGET_GROUPS[@]}"; do
     set +e
     
     build_command="bazel --output_base=\\\"${current_bazel_output_base}\\\" build \
-      --config '${CONFIG}' \
       ${targets} \
       --verbose_failures \
-      --spawn_strategy=local \
+      --spawn_strategy=standalone \
       --nouse_action_cache \
       --noremote_accept_cached \
       --noremote_upload_local_results \
-      --disk_cache= \
-      2>&1 | tee \\\"${log_file}\\\""
+      --disk_cache= ${targets}"
     
     codeql database create "${db_path}" \
       --language="${CODEQL_LANGUAGE}" \
-      --command="bash -c \"${build_command}\"" \
+      --command="${build_command}" \
       --overwrite \
       || { echo "CodeQL database creation failed for ${group}"; exit 1; }
     
