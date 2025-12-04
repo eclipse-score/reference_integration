@@ -17,8 +17,12 @@ GITA_PROJECT_HOME=$(pwd)/.gita
 mkdir -p "$GITA_PROJECT_HOME"
 export GITA_PROJECT_HOME
 
-# Generate .gita-workspace.csv from known_good.json
-python3 tools/known_good_to_gita_workspace.py known_good.json .gita-workspace.csv
+# Generate a few workspace metadata files from known_good.json:
+# - .gita-workspace.csv
+# - .gitmodules
+python3 tools/known_good_to_workspace_metadata.py --known-good known_good.json --gita-workspace .gita-workspace.csv --git-submodules .gitmodules
+
+# Replace git_overrides with local_path_overrides for Bazel
 python3 tools/update_module_from_known_good.py --override-type local_path
 
 # Automagically clone repositories listed in .gita-workspace.csv
