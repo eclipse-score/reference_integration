@@ -17,6 +17,6 @@ GITA_PROJECT_HOME=$(pwd)/.gita
 mkdir -p "$GITA_PROJECT_HOME"
 export GITA_PROJECT_HOME
 
-# Generate a few workspace metadata files from known_good.json:
+# Generate workspace metadata files from known_good.json:
 # - .gita-workspace.csv
 python3 tools/known_good_to_workspace_metadata.py --known-good known_good.json --gita-workspace .gita-workspace.csv

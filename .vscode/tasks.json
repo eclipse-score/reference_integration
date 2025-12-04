@@ -1,0 +1,47 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Update workspace metadata from known good",
+      "type": "shell",
+      "command": "python3",
+      "args": [
+        "tools/known_good_to_workspace_metadata.py"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Switch Bazel modules to local_path_overrides",
+      "type": "shell",
+      "command": "python3",
+      "args": [
+        "tools/update_module_from_known_good.py",
+        "--override-type",
+        "local_path"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Switch Bazel modules to git_overrides",
+      "type": "shell",
+      "command": "python3",
+      "args": [
+        "tools/update_module_from_known_good.py",
+        "--override-type",
+        "git"
+      ]
+    },
+    {
+      "label": "Gita: Generate workspace",
+      "type": "shell",
+      "command": "gita",
+      "args": [
+        "clone",
+        "--preserve-path",
+        "--from-file",
+        ".gita-workspace.csv"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}
