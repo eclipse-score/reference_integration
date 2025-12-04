@@ -17,7 +17,6 @@ def main():
 
     parser.add_argument("--known-good", dest="known_good", default="known_good.json", help="Path to known_good.json")
     parser.add_argument("--gita-workspace", dest="gita_workspace", default=".gita-workspace.csv", help="File to output gita workspace metadata")
-    parser.add_argument("--git-submodules",  dest="git_submodules", default=".gitmodules", help="File to output git submodules metadata")
     args = parser.parse_args()
 
     with open(args.known_good, "r") as f:
@@ -48,16 +47,6 @@ def main():
         writer = csv.writer(f)
         for row in gita_metadata:
             writer.writerow(row)
-
-    with open(args.git_submodules, "w") as f:
-        for name, info in modules.items():
-            repo_url = info.get("repo", "")
-            branch = info.get("branch", "main")
-            workspace_path = name
-            f.write(f"[submodule \"{name}\"]\n")
-            f.write(f"\tpath = {workspace_path}\n")
-            f.write(f"\turl = {repo_url}\n")
-            f.write(f"\tbranch = {branch}\n")
 
 if __name__ == "__main__":
     main()

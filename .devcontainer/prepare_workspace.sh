@@ -19,8 +19,7 @@ export GITA_PROJECT_HOME
 
 # Generate a few workspace metadata files from known_good.json:
 # - .gita-workspace.csv
-# - .gitmodules
-python3 tools/known_good_to_workspace_metadata.py --known-good known_good.json --gita-workspace .gita-workspace.csv --git-submodules .gitmodules
+python3 tools/known_good_to_workspace_metadata.py --known-good known_good.json --gita-workspace .gita-workspace.csv
 
 # Replace git_overrides with local_path_overrides for Bazel
 python3 tools/update_module_from_known_good.py --override-type local_path
