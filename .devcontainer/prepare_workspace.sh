@@ -20,13 +20,3 @@ export GITA_PROJECT_HOME
 # Generate a few workspace metadata files from known_good.json:
 # - .gita-workspace.csv
 python3 tools/known_good_to_workspace_metadata.py --known-good known_good.json --gita-workspace .gita-workspace.csv
-
-# Replace git_overrides with local_path_overrides for Bazel
-python3 tools/update_module_from_known_good.py --override-type local_path
-
-# Automagically clone repositories listed in .gita-workspace.csv
-echo "Cloning repositories listed in .gita-workspace.csv..."
-gita clone --preserve-path --from-file .gita-workspace.csv
-# Output the status of all cloned repositories
-echo "Status of all cloned repositories:"
-gita ll
