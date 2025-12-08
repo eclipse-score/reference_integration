@@ -17,14 +17,25 @@ Reference Integration Documentation
 
 Release Notes: :need:`doc__score_v05_alpha_release_note`
 
+Documentation:
+-------------- 
 
-.. if-collection:: score_platform
+.. toctree::
+   :maxdepth: 1
+   :titlesonly:
 
-   Documentation:
+   modules/score_process+/process/index
+   modules/score_platform+/docs/index
 
-   .. toctree::
-      :maxdepth: 1
-      :titlesonly:
 
-      S-CORE Platform <_collections/score_platform/docs/index>
-      _collections/score_process/process/index
+Modules
+-------
+
+
+.. toctree::
+   :maxdepth: 1
+   :titlesonly:
+
+   modules/score_baselibs+/docs/index
+..
+      modules/score_persistency+/docs/index
