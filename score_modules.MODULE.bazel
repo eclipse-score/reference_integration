@@ -12,9 +12,10 @@
 # *******************************************************************************
 
 bazel_dep(name = "score_baselibs")
-single_version_override(
+git_override(
     module_name = "score_baselibs",
-    version = "0.1.3",
+    commit = "826955b4d7dc2f326e3deabc06895318922cca1f",
+    remote = "https://github.com/eclipse-score/baselibs.git",
 )
 
 bazel_dep(name = "score_communication")
@@ -60,9 +61,15 @@ single_version_override(
 )
 
 bazel_dep(name = "score_docs_as_code", version = "2.0.1")
-single_version_override(
+# single_version_override(
+#     module_name = "score_docs_as_code",
+#     version = "2.0.1",
+# )
+
+git_override(
     module_name = "score_docs_as_code",
-    version = "2.0.1",
+    commit = "c27915a2c5222a2e7111ba8db0cd468110b70178",
+    remote = "https://github.com/eclipse-score/docs-as-code.git",
 )
 
 
