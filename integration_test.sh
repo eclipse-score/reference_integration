@@ -181,7 +181,7 @@ for group in "${!BUILD_TARGET_GROUPS[@]}"; do
     
     codeql database create "${db_path}" \
       --language="${CODEQL_LANGUAGE}" \
-      --build-mode=none
+      --build-mode=none \
       #--command="${build_command}" \
       --overwrite \
       || { echo "CodeQL database creation failed for ${group}"; exit 1; }
