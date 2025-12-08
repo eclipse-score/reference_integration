@@ -28,12 +28,12 @@ CODEQL_URL="https://github.com/github/codeql-cli-binaries/releases/download/${CO
 # maybe move this to known_good.json or a config file later
 declare -A BUILD_TARGET_GROUPS=(
     [score_baselibs]="@score_baselibs//score/..."
-    #[score_communication]="@score_communication//score/mw/com:com"
-    #[score_persistency]="@score_persistency//src/cpp/src/... @score_persistency//src/rust/..."
-    #[score_logging]="@score_logging//src/..."
-    #[score_orchestrator]="@score_orchestrator//src/..."
-    #[score_test_scenarios]="@score_test_scenarios//..."
-    #[score_feo]="@score_feo//..."
+    [score_communication]="@score_communication//score/mw/com:com"
+    [score_persistency]="@score_persistency//src/cpp/src/... @score_persistency//src/rust/..."
+    [score_logging]="@score_logging//src/..."
+    [score_orchestrator]="@score_orchestrator//src/..."
+    [score_test_scenarios]="@score_test_scenarios//..."
+    [score_feo]="@score_feo//..."
 )
 
 
@@ -181,7 +181,8 @@ for group in "${!BUILD_TARGET_GROUPS[@]}"; do
     
     codeql database create "${db_path}" \
       --language="${CODEQL_LANGUAGE}" \
-      --command="${build_command}" \
+      --build-mode=none
+      #--command="${build_command}" \
       --overwrite \
       || { echo "CodeQL database creation failed for ${group}"; exit 1; }
     
