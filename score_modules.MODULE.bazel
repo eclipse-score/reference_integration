@@ -30,9 +30,17 @@ single_version_override(
 )
 
 bazel_dep(name = "score_orchestrator")
-single_version_override(
+git_override(
     module_name = "score_orchestrator",
-    version = "0.0.3",
+    remote = "https://github.com/eclipse-score/orchestrator.git",
+    commit = "df64cda1e129aa259d8be7bbb8af50f852748301",
+)
+
+bazel_dep(name = "score_kyron")
+git_override(
+    module_name = "score_kyron",
+    remote = "https://github.com/eclipse-score/kyron.git",
+    commit = "b835cbb7d5e724b6c2b892997b6319766aff84b2",
 )
 
 bazel_dep(name = "score_tooling")
@@ -75,11 +83,4 @@ bazel_dep(name = "score_feo", version = "1.0.2")
 single_version_override(
     module_name = "score_feo",
     version = "1.0.2",
-)
-
-bazel_dep(name = "score_kyron")
-git_override(
-    module_name = "score_kyron",
-    remote = "https://github.com/eclipse-score/kyron.git",
-    commit = "c5837ac6612a5ebf91cd016775f2d3ee85ed6892",
 )
