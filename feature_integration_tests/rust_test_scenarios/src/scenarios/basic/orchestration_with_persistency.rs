@@ -87,7 +87,7 @@ async fn kvs_save_cycle_number(path: String) -> Result<(), UserErrValue> {
 
     // Simple set/get.
     let key = "run_cycle_number";
-    let last_cycle_number: u32 = kvs.get_value_as::<u32>(key).unwrap_or_else(|_| 0_u32);
+    let last_cycle_number: u32 = kvs.get_value_as::<u32>(key).unwrap_or(0_u32);
 
     kvs.set_value(key, last_cycle_number + 1)
         .expect("Failed to set value");

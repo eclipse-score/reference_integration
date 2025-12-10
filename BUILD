@@ -12,6 +12,7 @@
 # *******************************************************************************
 
 load("@score_docs_as_code//:docs.bzl", "docs")
+load("@rules_rust//rust:defs.bzl", "rust_clippy")
 
 docs(
     data = [
@@ -29,4 +30,16 @@ filegroup(
     name = "readme",
     srcs = ["README.md"],
     visibility = ["//visibility:public"],
+)
+
+rust_clippy(
+    name = "clippy",
+    testonly = True,
+    tags = ["manual"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//feature_integration_tests/rust_test_scenarios:rust_test_scenarios",
+        "//feature_showcase/rust:kyron_example",
+        "//feature_showcase/rust:orch_per_example",
+    ],
 )
