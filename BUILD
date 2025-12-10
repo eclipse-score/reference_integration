@@ -17,10 +17,12 @@ load("@rules_rust//rust:defs.bzl", "rust_clippy")
 docs(
     data = [
         "@score_platform//:needs_json",
+        #"@score_persistency//:needs_json",  # cannot be included, as it does not contain any needs?
+        #"@score_orchestrator//:needs_json",  # some issue about score_toolchains_qnx?
+        #"@score_communication//:needs_json",  # no docs yet?
+        "@score_feo//:needs_json",
+        "@score_docs_as_code//:needs_json",
         "@score_process//:needs_json",
-        # Persistency cannot be included, as it does not contain any needs.
-        # -> sphinx-needs bug?
-        # "@score_persistency//:needs_json",
     ],
     source_dir = "docs",
 )
