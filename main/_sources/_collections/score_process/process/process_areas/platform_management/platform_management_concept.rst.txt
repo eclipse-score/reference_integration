@@ -44,13 +44,9 @@ Inputs
 Stakeholders for the Platform Management Plan
 *********************************************
 
-#. :need:`Technical Lead <rl__technical_lead>`
+#. :need:`Project Lead <rl__project_lead>`
 
-   * Plans, Develops, Controls and Adjust all platform project activities
-
-#. :need:`Module Lead <rl__module_lead>`
-
-   * Plans, Develops, Controls and Adjust all module project activities
+   * Plans, Develops, Controls and Adjust all platform, module project activities
 
 #. :need:`Committer <rl__committer>`
 #. :need:`Contributor <rl__contributor>`
@@ -78,12 +74,12 @@ Activities for the Platform Management Plan
 Create/Maintain Platform Management Plan
 ========================================
 
-The platform management is created and maintained by the :need:`Technical Lead <rl__technical_lead>`.
+The platform management is created and maintained by the :need:`Project Lead <rl__project_lead>`.
 As it is a container, this activity is valid for all addressed plan documents.
 
 Monitor/Improve Platform Management Plan
 ========================================
 
-:need:`Technical Lead <rl__technical_lead>` is responsible for the monitoring of the
+:need:`Project Lead <rl__project_lead>` is responsible for the monitoring of the
 work products and activities against the platform management plan. If deviations are detected,
 the plan must be adjusted.

@@ -17,6 +17,11 @@
 Lifecycle concept
 -----------------
 
+.. doc_concept:: Lifecycle Concept
+   :id: doc_concept__general_lifecycle
+   :status: valid
+   :tags: process_management
+
 Contributions to the project are driven by feature/component requests.
 
 As features and components are the main structuring elements of the project, new

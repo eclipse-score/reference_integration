@@ -12,8 +12,8 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-Verification Guideline
-======================
+Guideline
+=========
 .. gd_guidl:: Verification Guideline
    :id: gd_guidl__verification_guide
    :status: valid
@@ -21,7 +21,7 @@ Verification Guideline
 
    This guideline outlines the responsibilities and procedures for developers performing
    verification activities (testcase creation, inspection, and review) for documentation,
-   Rust and C/C++ elements of the platform and its tooling.
+   code (like Rust and C/C++) elements of the project/platform and its tooling.
 
    Note that rust, python and gTest are used for test case creation.
 
@@ -36,8 +36,8 @@ General Principles
 * **Independence:** Where possible, verification activities should be performed by someone other than the original author of the code or documentation.
 * **Documentation:** All verification activities and their results must be documented appropriately.
 
-More details on the test strategy and execution can be found in the :need:`wp__verification_plan` implemented by
-`REPLACE_doc__verification_plan`.
+More details on the test strategy and execution can be found in the verification plan implemented by
+:need:`wp__verification_plan` of the project.
 
 
 Test Case Description
@@ -71,7 +71,7 @@ Simplified in a nutshell:
 #. Implement test case
 #. Link test case to requirements and specify metatags
 #. Confirm requirement test coverage by creating linkage document
-#. Set requirement attribute [testcovered=YES] during Sphinx build
+#. Set requirement attribute [testcovered=YES] during software build
 
 More information on the concept of requirements verification can be found in :ref:`requirement_verification_workflow`
 
@@ -105,7 +105,7 @@ Reporting of failing test cases
 
 Any failing test case requires an ISSUE.
 The passing rate of safety-critical test cases need to be 100% in order to release the affected component.
-In case of a lower pass rate than 100% for QM level tests, the :need:`rl__technical_lead` and
+In case of a lower pass rate than 100% for QM level tests, the :need:`rl__project_lead` and
 :need:`rl__project_lead` can decide, if the platform is in a releasable state. The accepted minimal
 path rate is defined in the :need:`wp__verification_plan`. Due to the high degree of automation, a
 it is recommended that a path rate lower 95% is not acceptable.

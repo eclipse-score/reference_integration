@@ -21,6 +21,7 @@ Safety Manual
    :id: doc__module_name_safety_manual
    :status: draft
    :safety: ASIL_B
+   :security: NO
    :realizes: wp__module_safety_manual
    :tags: template
 

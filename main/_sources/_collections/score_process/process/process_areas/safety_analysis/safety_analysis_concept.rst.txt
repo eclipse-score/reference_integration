@@ -20,11 +20,11 @@ Concept Description
    :status: valid
    :tags: safety_analysis
 
-This section discusses a concept for safety analysis. As methods for safety analysis are used DFA (Dependent Failure Analysis)
+This section discusses a concept for Safety Analysis. As methods for Safety Analysis are used DFA (Dependent Failure Analysis)
 and FMEA (Failure Mode and Effects Analysis). Inputs for this concept are the requirements of ISO26262 Part 6 Chapter 7 and Part 9 Chapter 7 and 8.
 
 The objective of the **DFA** is to show the absence of dependent failures. Dependent failures are split into common cause failures and cascading failures.
-How to perform a safety analysis is described in :need:`gd_guidl__safety_analysis`.
+How to perform a Safety Analysis is described in :need:`gd_guidl__safety_analysis`.
 To have a structured DFA the failure initiators have to be applied :need:`gd_guidl__dfa_failure_initiators`. These are separated into the following categories:
 
  | - Shared resources: Shared resources are resources that are used by two or more elements. If one element fails, it could lead to a failure in another element.
@@ -45,7 +45,7 @@ In this case please document this in the content of the document.
 Inputs
 ******
 
-#. Stakeholders for the safety analysis (DFA and FMEA)?
+#. Stakeholders for the Safety Analysis (DFA and FMEA)?
 #. Who needs which information?
 #. How to analyse existing safety mitigation?
 #. How to add new safety mitigations?
@@ -94,7 +94,7 @@ Also requirements of standards need to be taken into consideration:
 How to analyse?
 ===============
 
-The safety analysis (DFA and FMEA) are done on the feature and component architecture. The safety analysis (DFA and FMEA) shall be done accompanying to the development.
+The Safety Analysis are done on the platform (DFA only), feature and component architecture. The Safety Analysis (DFA and FMEA) shall be done accompanying to the development.
 So the results can directly be used for the development of the feature and component. With a iterative approach it is needed to proof
 the evidence of the functional safety of the functions.
 
@@ -110,7 +110,7 @@ The analysis were applied at static and dynamic architecture diagrams. The follo
    Feature Architecture
 
 With the diagrams the dependencies and signal flows are shown. The analysis is done by applying the fault models :need:`gd_guidl__fault_models` in the above example's dynamic view the "flow component 1" to the user realizes a safety requirement. If we apply the fault model we may find the possible failure: "the message is not sent which leads to the user not being able to ..." - this could be mitigated by telling the user in an AoU: "the feature can not guarantee that the message is sent"
-DFA: Here we see in the static view that component 1 uses component 2. If we apply the failure initiators we may find the possible failure: "Component 2 is using up all execution time available to Component 1" which could be avoided by a OS which is reserving time for every component or by running these Components on different processors.
+DFA: Here we see in the static view that component 1 uses component 2. If we apply the failure initiators we may find the possible failure: "Component 2 is using up all execution time available to Component 1" which could be avoided by a OS which is reserving time for every component or by running these components on different processors.
 for FMEA and the failure initiators :need:`gd_guidl__dfa_failure_initiators` for DFA. Some fault models and failure initiators may not be applicable
 for one safety function. In this case the reason shall be documented in the FMEA/DFA documents. So it can be shown that the analysis is completely done.
 
@@ -140,7 +140,7 @@ additional safety mitigation is needed.
 What analysis shall be done in which level?
 ===========================================
 
-The safety analysis (DFA and FMEA) shall consider the architectural elements on different levels.
+The Safety Analysis (DFA and FMEA) shall consider the architectural elements on different levels.
 
 1. **Platform Level**: At this level, the focus is on the overall feature architecture to analyse if there are failures that effects more than one feature.
 

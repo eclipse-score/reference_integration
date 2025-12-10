@@ -55,9 +55,7 @@ Process Requirements
    :complies: std_req__iso26262__software_942
 
    For each component a dependency tree view shall be created to support design inspection and Safety Analysis.
-   It shall show the libraries used by the component (i.e. which libraries are linked to the component, defined as Bazel target) up to the leaves of the tree.
-
-   Note: This may be realized by using Bazel query mechanism.
+   It shall show the libraries used by the component (i.e. which libraries are linked to the component, defined as CI build tool target) up to the leaves of the tree.
 
 .. needextend:: docname is not None and "process_areas/implementation" in docname
    :+tags: implementation

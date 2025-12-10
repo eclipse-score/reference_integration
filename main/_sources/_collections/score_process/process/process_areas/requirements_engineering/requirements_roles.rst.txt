@@ -21,6 +21,7 @@ Contributing Roles:
 
    * :need:`Contributor <rl__contributor>`
    * :need:`Committer <rl__committer>`
+   * :need:`Project Lead <rl__project_lead>`
    * :need:`Safety Manager <rl__safety_manager>`
    * :need:`Security Manager <rl__security_manager>`
 
