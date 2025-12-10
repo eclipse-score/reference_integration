@@ -33,3 +33,6 @@ With focus on testability, requirements getting reviewed by:
 The tool verification and qualification is handled by:
 
    * :need:`rl__infrastructure_tooling_community`.
+
+Approval is handled by:
+   * :need:`Project Lead <rl__project_lead>`

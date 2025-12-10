@@ -23,7 +23,7 @@ Getting Started
 In case you are appointed as a :need:`Security Manager <rl__security_manager>` by the
 :need:`rl__project_lead` in the development project:
 
-* Contact the :need:`Technical Lead <rl__technical_lead>` (TL) for your Component OoC (Out-of-Context) to establish planning and reporting
+* Contact the :need:`Project Lead <rl__project_lead>` (TL) for your Component OoC (Out-of-Context) to establish planning and reporting
 * Create your security plan according to :need:`wf__cr_mt_security_plan`
 * Make familiar with your role description and the other workflows of security management (see :doc:`security_management_roles` or :doc:`security_management_workflow`)
 * Make familiar with the concept :need:`doc_concept__security_management_process` and the :need:`wp__platform_security_plan`

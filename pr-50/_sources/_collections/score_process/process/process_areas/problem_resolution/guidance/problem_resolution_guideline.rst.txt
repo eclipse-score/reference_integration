@@ -83,7 +83,7 @@ This section describes in detail which steps need to be performed for a Problem 
    * - :ref:`4. <prm_monitor_problem_resolution>`
      - Close Problem Resolution
      - :need:`[[title]] <rl__committer>`
-     - :need:`[[title]] <rl__technical_lead>`, :need:`[[title]] <rl__module_lead>`
+     - :need:`[[title]] <rl__project_lead>`
 
 .. _prm_create_problem_report:
 
@@ -237,8 +237,8 @@ When ready to implement, the author sets the status to "in implementation" manua
   | * The automatically created branch name reflects the issue UID and the title as
   | * **126-bug-stkh_req__archdes_example_req-has-no-content**
 
-During the resolution the responsible lead :need:`[[title]] <rl__technical_lead>` or
-:need:`[[title]] <rl__module_lead>` reports regularly the status to the affected
+During the resolution the responsible lead :need:`[[title]] <rl__project_lead>`
+reports regularly the status to the affected
 projects teams.
 
 Escalations topics should be documented in the description, if possible.

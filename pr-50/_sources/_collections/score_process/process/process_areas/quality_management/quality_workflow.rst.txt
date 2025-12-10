@@ -113,7 +113,7 @@ Workflows
    | The :need:`rl__quality_manager` is responsible to adjust the quality management plan, if deviations are detected.
 
 
-.. needextend:: "process_areas/quality_management" in docname
+.. needextend:: docname is not None and "process_areas/quality_management" in docname
    :+tags: quality_management
 
 RAS(IC) for Safety Analysis

@@ -19,6 +19,7 @@ Requirements
    :id: doc__component_name_requirements
    :status: draft
    :safety: ASIL_B
+   :security: NO
    :realizes: wp__requirements_comp
    :tags: template
 

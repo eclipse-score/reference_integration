@@ -20,8 +20,7 @@ For tool management no additional roles need to be defined.
 Contributing Roles:
 
    * :need:`Infrastructure, Tooling Community <rl__infrastructure_tooling_community>`
-   * :need:`Technical Lead  <rl__technical_lead>`
-   * :need:`Module Project Lead <rl__module_lead>`
+   * :need:`Project Lead <rl__project_lead>`
    * :need:`Safety Manager <rl__safety_manager>`
    * :need:`Security Manager <rl__security_manager>`
 

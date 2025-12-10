@@ -60,7 +60,7 @@ Work Products Change Management
    |
    | Change Request for a new component or a modification of an existing component,
    | which changes the scope of the component.
-   | Software Modules are also Components (top-level component).
+   | Software Modules are also components (top-level component).
 
 .. needextend:: docname is not None and "process_areas/change_management" in docname
    :+tags: change_management
