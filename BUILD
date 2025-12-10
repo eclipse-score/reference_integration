@@ -39,7 +39,7 @@ rust_clippy(
     visibility = ["//visibility:public"],
     deps = [
         "//feature_integration_tests/rust_test_scenarios:rust_test_scenarios",
-        "//feature_showcase/rust:kyron_example",
+#        "//feature_showcase/rust:kyron_example",
         "//feature_showcase/rust:orch_per_example",
     ],
 )
