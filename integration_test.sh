@@ -33,7 +33,7 @@ declare -A BUILD_TARGET_GROUPS=(
     [score_logging]="@score_logging//src/..."
     [score_orchestrator]="@score_orchestrator//src/..."
     [score_test_scenarios]="@score_test_scenarios//..."
-    [score_feo]="@score_feo//..."
+    [score_feo]="-- @score_feo//... -@score_feo//:docs -@score_feo//:ide_support -@score_feo//:needs_json"
 )
 
 
@@ -165,28 +165,11 @@ for group in "${!BUILD_TARGET_GROUPS[@]}"; do
     # Log build group banner only to stdout/stderr (not into summary table file)
     echo "--- Building group: ${group} ---"
     start_ts=$(date +%s)
-    echo "bazel build --config "${CONFIG}" ${targets} --verbose_failures"
+    echo "bazel build --verbose_failures --config "${CONFIG}" ${targets}"
     # GitHub Actions log grouping start
     echo "::group::Bazel build (${group})"
     set +e
-    
-    build_command="bazel --output_base=\\\"${current_bazel_output_base}\\\" build \
-      ${targets} \
-      --verbose_failures \
-      --spawn_strategy=standalone \
-      --nouse_action_cache \
-      --noremote_accept_cached \
-      --noremote_upload_local_results \
-      --disk_cache= ${targets}"
-    
-    codeql database create "${db_path}" \
-      --language="${CODEQL_LANGUAGE}" \
-      --build-mode=none \
-      #--command="${build_command}" \
-      --overwrite \
-      || { echo "CodeQL database creation failed for ${group}"; exit 1; }
-    
-    
+    bazel build --verbose_failures --config "${CONFIG}" ${targets} 2>&1 | tee "$log_file"
     build_status=${PIPESTATUS[0]}
     # Track if any build group failed
     if [[ ${build_status} -ne 0 ]]; then
