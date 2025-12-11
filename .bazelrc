@@ -15,6 +15,11 @@ common --registry=https://raw.githubusercontent.com/eclipse-score/bazel_registry
 common --registry=https://bcr.bazel.build
 
 
+# Clippy linting (enabled by default)
+build --aspects=@rules_rust//rust:defs.bzl%rust_clippy_aspect
+build --output_groups=+clippy_checks
+build --@rules_rust//rust/settings:clippy.toml=@score_rust_policies//clippy/strict:clippy.toml
+
 # Flags needed by score_baselibs and communication modules.
 # Do not add more!
 build --@score_baselibs//score/mw/log/detail/flags:KUse_Stub_Implementation_Only=False
