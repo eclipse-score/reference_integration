@@ -53,7 +53,7 @@ jobs:
         jq '[.modules | to_entries[] | {
           name: .key, 
           url: .value.repo, 
-          version: (.value.branch // .value.version // .value.hash), 
+          version: (.value.branch // .value.hash // .value.version),
           path: ("repos/" + .key)
         }]' "$JSON_FILE" > repos.json
         
