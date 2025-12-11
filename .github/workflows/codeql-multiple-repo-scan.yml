@@ -34,23 +34,38 @@ jobs:
     - name: Checkout central repository
       uses: actions/checkout@v4
 
-    - name: Parse pinned repository versions
+    - name: Parse known_good.json and create repos.json
       id: parse-repos
       run: |
-        
         sudo apt-get update && sudo apt-get install -y jq
         JSON_FILE="./known_good.json" 
 
         # Check if the file exists
         if [ ! -f "$JSON_FILE" ]; then
-          echo "Fehler: Die Datei '$JSON_FILE' wurde nicht gefunden."
+          echo "Error file not found '$JSON_FILE' "
+          ls -la .
           exit 1
         fi
 
-    
+        # Create repos.json from known_good.json
+        # This jq command transforms the 'modules' object into an array of repository objects
+        # with 'name', 'url', 'version' (branch/tag/hash), and 'path'.
+        jq '[.modules | to_entries[] | {
+          name: .key, 
+          url: .value.repo, 
+          version: (.value.branch // .value.version // .value.hash), 
+          path: ("repos/" + .key)
+        }]' "$JSON_FILE" > repos.json
+        
+        echo "Generated repos.json:"
+        cat repos.json
+        echo "" # Add a newline for better readability
+
+        # The following GITHUB_OUTPUT variables are set for each module.
+        # These might be useful for other steps, but are not directly used by the 'checkout-repos' step
+        # which now reads 'repos.json' directly.
         echo "MODULE_COUNT=$(jq '.modules | length' "$JSON_FILE")" >> $GITHUB_OUTPUT
 
-    
         jq -c '.modules | to_entries[]' "$JSON_FILE" | while read -r module_entry; do
           module_name=$(echo "$module_entry" | jq -r '.key')
           repo_url=$(echo "$module_entry" | jq -r '.value.repo // empty')
@@ -76,30 +91,47 @@ jobs:
     - name: Checkout all pinned repositories
       id: checkout-repos
       run: |
-        # Install jq for JSON parsing
-        sudo apt-get install -y jq
+        # jq is already installed by the previous step.
         
-        # Read repositories from JSON file
+        # Read repositories from the repos.json file created by the previous step
         repos=$(cat repos.json)
-        repo_count=$(echo $repos | jq length)
+        repo_count=$(echo "$repos" | jq length)
         
+        # Initialize an empty string for paths to be outputted
+        repo_paths_output=""
+
         for i in $(seq 0 $((repo_count-1))); do
-          name=$(echo $repos | jq -r ".[$i].name")
-          url=$(echo $repos | jq -r ".[$i].url")
-          version=$(echo $repos | jq -r ".[$i].version")
-          path=$(echo $repos | jq -r ".[$i].path")
+          name=$(echo "$repos" | jq -r ".[$i].name")
+          url=$(echo "$repos" | jq -r ".[$i].url")
+          ref=$(echo "$repos" | jq -r ".[$i].version") # This can be a branch, tag, or commit hash
+          path=$(echo "$repos" | jq -r ".[$i].path") # e.g., "repos/score_baselibs"
           
-          echo "Checking out $name ($version) to $path"
+          echo "Checking out $name ($ref) to $path"
           
-          # Checkout the specific version/branch
-          git clone --depth 1 --branch $version $url $path
+          # Create the parent directory if it doesn't exist
+          mkdir -p "$(dirname "$path")"
+
+          # Check if 'ref' looks like a commit hash (e.g., 40 hex characters)
+          # This is a heuristic; a more robust check might involve fetching refs first.
+          if [[ "$ref" =~ ^[0-9a-fA-F]{40}$ ]]; then
+            echo "  Detected commit hash. Cloning and then checking out."
+            git clone "$url" "$path"
+            (cd "$path" && git checkout "$ref")
+          else
+            echo "  Detected branch/tag. Cloning with --branch."
+            git clone --depth 1 --branch "$ref" "$url" "$path"
+          fi
           
-          # Store paths for later use
-          echo "$path" >> repo-paths.txt
+          # Append the path to the list, separated by commas
+          if [ -z "$repo_paths_output" ]; then
+            repo_paths_output="$path"
+          else
+            repo_paths_output="$repo_paths_output,$path"
+          fi
         done
         
         # Output all paths as a single variable
-        echo "repo_paths=$(cat repo-paths.txt | tr '\n' ',')" >> $GITHUB_OUTPUT
+        echo "repo_paths=$repo_paths_output" >> $GITHUB_OUTPUT
 
     - name: Initialize CodeQL for all repositories
       uses: github/codeql-action/init@v4
