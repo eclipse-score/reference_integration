@@ -1,0 +1,132 @@
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+name: "CodeQL - Multi-Repo Source Scan"
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+  merge_group:
+    types: [checks_requested]
+
+permissions:
+  contents: write
+
+jobs:
+  analyze-repos:
+    name: Analyze Multiple Repositories
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+    - name: Checkout central repository
+      uses: actions/checkout@v4
+      with:
+        path: central-repo
+
+    - name: Parse pinned repository versions
+      id: parse-repos
+      run: |
+        
+        sudo apt-get update && sudo apt-get install -y jq
+        JSON_FILE="known_good.json" 
+
+        # Check if the file exists
+        if [ ! -f "$JSON_FILE" ]; then
+          echo "Fehler: Die Datei '$JSON_FILE' wurde nicht gefunden."
+          exit 1
+        fi
+
+    
+        echo "MODULE_COUNT=$(jq '.modules | length' "$JSON_FILE")" >> $GITHUB_OUTPUT
+
+    
+        jq -c '.modules | to_entries[]' "$JSON_FILE" | while read -r module_entry; do
+          module_name=$(echo "$module_entry" | jq -r '.key')
+          repo_url=$(echo "$module_entry" | jq -r '.value.repo // empty')
+          version=$(echo "$module_entry" | jq -r '.value.version // empty')
+          branch=$(echo "$module_entry" | jq -r '.value.branch // empty')
+          hash=$(echo "$module_entry" | jq -r '.value.hash // empty')
+
+          echo "${module_name}_url=$repo_url" >> $GITHUB_OUTPUT
+      
+          if [ -n "$version" ]; then
+           echo "${module_name}_version=$version" >> $GITHUB_OUTPUT
+          fi
+      
+          if [ -n "$branch" ]; then
+            echo "${module_name}_branch=$branch" >> $GITHUB_OUTPUT
+          fi
+      
+          if [ -n "$hash" ]; then
+            echo "${module_name}_hash=$hash" >> $GITHUB_OUTPUT
+          fi
+        done
+      
+    - name: Checkout all pinned repositories
+      id: checkout-repos
+      run: |
+        # Install jq for JSON parsing
+        sudo apt-get install -y jq
+        
+        # Read repositories from JSON file
+        repos=$(cat repos.json)
+        repo_count=$(echo $repos | jq length)
+        
+        for i in $(seq 0 $((repo_count-1))); do
+          name=$(echo $repos | jq -r ".[$i].name")
+          url=$(echo $repos | jq -r ".[$i].url")
+          version=$(echo $repos | jq -r ".[$i].version")
+          path=$(echo $repos | jq -r ".[$i].path")
+          
+          echo "Checking out $name ($version) to $path"
+          
+          # Checkout the specific version/branch
+          git clone --depth 1 --branch $version $url $path
+          
+          # Store paths for later use
+          echo "$path" >> repo-paths.txt
+        done
+        
+        # Output all paths as a single variable
+        echo "repo_paths=$(cat repo-paths.txt | tr '\n' ',')" >> $GITHUB_OUTPUT
+
+    - name: Initialize CodeQL for all repositories
+      uses: github/codeql-action/init@v4
+      with:
+        languages: cpp, python, javascript
+        build-mode: none
+        # Configure which paths to analyze
+        config: |
+          paths:
+            - 'repos/**' # Analyze all repositories in repos/ directory
+          paths-ignore:
+            - '**/third_party/**'
+            - '**/tests/**'
+            - '**/*.test.*'
+            - 'central-repo/**' # Don't analyze the central repo itself
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v4
+      with:
+        upload-database: false # Don't upload databases for each repo
+        output: sarif-results/
+        category: "multi-repo-scan"
+
+    - name: Upload SARIF results as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: codeql-sarif-results
+        path: sarif-results/

@@ -12,16 +12,31 @@ LOG_DIR=${LOG_DIR:-_logs/logs}
 SUMMARY_FILE=${SUMMARY_FILE:-_logs/build_summary.md}
 KNOWN_GOOD_FILE=""
 
+# Codeql
+
+CODEQL_WORK_DIR="./codeql_analysis_results"
+CODEQL_DATABASES_DIR="${CODEQL_WORK_DIR}/databases"
+CODEQL_SARIF_DIR="${CODEQL_WORK_DIR}/sarif"
+CODEQL_LANGUAGE="cpp"
+CODEQL_QUERY_PACKS="codeql/cpp-queries,codeql/misra-cpp-coding-standards" # Add more packs as needed
+CODEQL_CLI_VERSION="v2.23.6" # Use the latest stable version
+CODEQL_PLATFORM="linux64" # e.g., linux64, macos, win64
+CODEQL_BUNDLE="codeql-${CODEQL_PLATFORM}.zip"
+CODEQL_URL="https://github.com/github/codeql-cli-binaries/releases/download/${CODEQL_CLI_VERSION}/${CODEQL_BUNDLE}"
+#https://github.com/github/codeql-cli-binaries/releases/download/v2.23.6/codeql-linux64.zip
+
 # maybe move this to known_good.json or a config file later
 declare -A BUILD_TARGET_GROUPS=(
     [score_baselibs]="@score_baselibs//score/..."
     [score_communication]="@score_communication//score/mw/com:com"
     [score_persistency]="@score_persistency//src/cpp/src/... @score_persistency//src/rust/..."
-    #[score_logging]="@score_logging//src/..."
+    [score_logging]="@score_logging//src/..."
     [score_orchestrator]="@score_orchestrator//src/..."
     [score_test_scenarios]="@score_test_scenarios//..."
     [score_feo]="@score_feo//..."
 )
+
+
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
@@ -107,11 +122,46 @@ overall_depr_total=0
 
 # Track if any build group failed
 any_failed=0
+binary_path="${CODEQL_WORK_DIR}/codeql-cli/codeql/codeql"
+
+if [ -x "${binary_path}" ]; then
+    echo "Local CodeQL CLI found at ${binary_path}. Adding to PATH."
+    export PATH="$(pwd)/${CODEQL_WORK_DIR}/codeql-cli/codeql:${PATH}"
+else    
+    echo "CodeQL CLI not found. Downloading..."
+    mkdir -p "${CODEQL_WORK_DIR}/codeql-cli"
+    curl -L "${CODEQL_URL}" -o "${CODEQL_WORK_DIR}/${CODEQL_BUNDLE}"
+    unzip "${CODEQL_WORK_DIR}/${CODEQL_BUNDLE}" -d "${CODEQL_WORK_DIR}/codeql-cli"
+    export PATH="$(pwd)/${CODEQL_WORK_DIR}/codeql-cli/codeql:${PATH}"
+    echo "CodeQL CLI downloaded and added to PATH."
+fi
+
+# Verify CodeQL CLI is now available
+if ! command -v codeql &> /dev/null; then
+    echo "Error: CodeQL CLI could not be set up. Exiting."
+    exit 1
+else
+    echo "codeql found in path"    
+fi  
+
+
+mkdir -p "${CODEQL_DATABASES_DIR}"
+mkdir -p "${CODEQL_SARIF_DIR}"
 
 for group in "${!BUILD_TARGET_GROUPS[@]}"; do
     targets="${BUILD_TARGET_GROUPS[$group]}"
     log_file="${LOG_DIR}/${group}.log"
-    
+
+    db_path="${CODEQL_DATABASES_DIR}/${group}_db"
+    sarif_output="${CODEQL_SARIF_DIR}/${group}.sarif"
+    current_bazel_output_base="/tmp/codeql_bazel_output_${group}_$(date +%s%N)" # Add timestamp for extra uniqueness
+
+
+    # 1. Clean Bazel to ensure a fresh build for CodeQL tracing
+    echo "Running 'bazel clean --expunge' and 'bazel shutdown'..."
+    bazel --output_base="${current_bazel_output_base}" clean --expunge  || { echo "Bazel clean failed for ${group}"; exit 1; }
+    bazel --output_base="${current_bazel_output_base}" shutdown  || { echo "Bazel shutdown failed for ${group}"; exit 1; }
+
     # Log build group banner only to stdout/stderr (not into summary table file)
     echo "--- Building group: ${group} ---"
     start_ts=$(date +%s)
@@ -119,7 +169,24 @@ for group in "${!BUILD_TARGET_GROUPS[@]}"; do
     # GitHub Actions log grouping start
     echo "::group::Bazel build (${group})"
     set +e
-    bazel build --config "${CONFIG}" ${targets} --verbose_failures 2>&1 | tee "$log_file"
+    
+    build_command="bazel --output_base=\\\"${current_bazel_output_base}\\\" build \
+      ${targets} \
+      --verbose_failures \
+      --spawn_strategy=standalone \
+      --nouse_action_cache \
+      --noremote_accept_cached \
+      --noremote_upload_local_results \
+      --disk_cache= ${targets}"
+    
+    codeql database create "${db_path}" \
+      --language="${CODEQL_LANGUAGE}" \
+      --build-mode=none \
+      #--command="${build_command}" \
+      --overwrite \
+      || { echo "CodeQL database creation failed for ${group}"; exit 1; }
+    
+    
     build_status=${PIPESTATUS[0]}
     # Track if any build group failed
     if [[ ${build_status} -ne 0 ]]; then
@@ -133,6 +200,24 @@ for group in "${!BUILD_TARGET_GROUPS[@]}"; do
     d_count=$(depr_count "$log_file")
     overall_warn_total=$(( overall_warn_total + w_count ))
     overall_depr_total=$(( overall_depr_total + d_count ))
+
+     # Shutdown Bazel again after the traced build
+    echo "Running 'bazel shutdown' after CodeQL database creation..."
+    bazel shutdown || { echo "Bazel shutdown failed after tracing for ${group}"; exit 1; }
+
+    # 4. Analyze the created database
+    echo "Analyzing CodeQL database for ${group}..."
+    codeql database analyze "${DB_PATH}" \
+      --format=sarifv2.1.0 \
+      --output="${SARIF_OUTPUT}" \
+      --sarif-category="${group}-${CODEQL_LANGUAGE}" \
+      --packs "${CODEQL_QUERY_PACKS}" \
+      || { echo "CodeQL analysis failed for ${group}"; exit 1; }
+
+    echo "CodeQL analysis for ${group} complete. Results saved to: ${SARIF_OUTPUT}"
+    echo ""
+
+
     # Append as a markdown table row (duration without trailing 's')
     if [[ ${build_status} -eq 0 ]]; then
         status_symbol="✅"
