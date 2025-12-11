@@ -45,21 +45,24 @@ applicable to software provided as open source.
 
 Practical approaches are:
 
-  - **Conditional Fault Injection with Macros**
+- **Conditional Fault Injection with Macros**
 
-    Use preprocessor macros and conditional compilation to enable or disable fault injection code.
-    This makes it easy to turn fault injection on during testing and off during normal operation.
-  - **Function wrapping**
+  Use preprocessor macros and conditional compilation to enable or disable fault injection code.
+  This makes it easy to turn fault injection on during testing and off during normal operation.
 
-    Create wrapper functions around critical functions to inject faults before or after the original
-    function call.
-  - **Instrumentation with Error Code Injection**
+- **Function wrapping**
 
-    Modify the code to explicitly return error codes under certain conditions to simulate failures.
-    This is especially useful if the components use a standardized error handling mechanism.
-  - **Data Corruption**
+  Create wrapper functions around critical functions to inject faults before or after the original
+  function call.
 
-    Introduce code to corrupt data structures or variables in memory.
+- **Instrumentation with Error Code Injection**
+
+  Modify the code to explicitly return error codes under certain conditions to simulate failures.
+  This is especially useful if the components use a standardized error handling mechanism.
+
+- **Data Corruption**
+
+  Introduce code to corrupt data structures or variables in memory.
 
 .. _ver_interface:
 
@@ -77,31 +80,37 @@ on unit level. External interfaces work best on component integration and featur
 
 Types of ``interface-test`` are:
 
-  - **Parameter Passing Tests**
+- **Parameter Passing Tests**
 
-    Verify that parameters are passed correctly between components (data types, ranges, units).
-  - **Data Format Tests**
+  Verify that parameters are passed correctly between components (data types, ranges, units).
 
-    Ensure that data is formatted correctly according to the interface specification
-    (e.g., byte order, data alignment, encoding).
-  - **Protocol Tests**
+- **Data Format Tests**
 
-    Verify that the communication protocol is implemented correctly (e.g., message sequencing,
-    checksums, error handling).
-  - **Error Handling Tests**
+  Ensure that data is formatted correctly according to the interface specification
+  (e.g., byte order, data alignment, encoding).
 
-    Test how the software handles communication errors (e.g., lost messages, corrupted data, timeouts).
-  - **Stress Tests**
+- **Protocol Tests**
 
-    Stress the interfaces to see how they behave under heavy load (e.g., sending a large number of
-    messages simultaneously).
-  - **Security Tests:** (Relevant for code interacting with security critical parts)
+  Verify that the communication protocol is implemented correctly (e.g., message sequencing,
+  checksums, error handling).
 
-    Verify that the interfaces are protected against unauthorized access and data breaches.
-  - **Timing and Performance Tests** (Relevant for realtime constraints)
+- **Error Handling Tests**
 
-    Measure the latency and throughput of the interfaces. This is mainly on integration level and is
-    hard to have reasonable testing in the reference implementation
+  Test how the software handles communication errors (e.g., lost messages, corrupted data, timeouts).
+
+- **Stress Tests**
+
+  Stress the interfaces to see how they behave under heavy load (e.g., sending a large number of
+  messages simultaneously).
+
+- **Security Tests:** (Relevant for code interacting with security critical parts)
+
+  Verify that the interfaces are protected against unauthorized access and data breaches.
+
+- **Timing and Performance Tests** (Relevant for realtime constraints)
+
+  Measure the latency and throughput of the interfaces. This is mainly on integration level and is
+  hard to have reasonable testing in the reference implementation
 
 .. _ver_structural:
 
@@ -121,7 +130,7 @@ In S-CORE we do both:
 S-CORE evaluates this coverage using the compiler selected for the target reference platform.
 
 If a sufficient structural coverage is not reached then additional test cases are added.
-What is sufficient and how to determine the coverage is defined in the `REPLACE_doc__verification_plan`.
+What is sufficient and how to determine the coverage is defined in the :need:`wp__verification_plan` of the project.
 
 
 Derivation Techniques
@@ -151,76 +160,83 @@ internal code structure.
 
 Examples to derive the scope of middleware layers following ``boundary-values``
 
-   - **Sensor Ranges**
+- **Sensor Ranges**
 
-      For example temperature, pressure, and acceleration sensors have minimum and maximum values they can report.
-   - **Control Signals**
+  For example temperature, pressure, and acceleration sensors have minimum and maximum values they can report.
 
-      PWM duty cycles, motor speeds, valve positions have upper and lower limits.
-   - **Communication Protocols**
+- **Control Signals**
 
-      For example CAN message IDs, data lengths, signal values have boundaries defined by the protocol specification.
-   - **Memory Allocation**
+  PWM duty cycles, motor speeds, valve positions have upper and lower limits.
 
-      Buffer sizes, data structures have defined limits.
+- **Communication Protocols**
+
+  For example CAN message IDs, data lengths, signal values have boundaries defined by the protocol specification.
+
+- **Memory Allocation**
+
+  Buffer sizes, data structures have defined limits.
 
 How to perform the analysis:
 
-   **1. Identify Input Variables**
+  **1. Identify Input Variables**
 
-   List all the input variables (parameters) of the component or function you want to test.
+  List all the input variables (parameters) of the component or function you want to test.
 
-   This includes:
+  This includes:
 
-   - Input parameters of functions
-   - Data received from sensors
-   - Data received from other ECUs (via CAN, Ethernet, etc.)
-   - Configuration parameters
+  - Input parameters of functions
+  - Data received from sensors
+  - Data received from other ECUs (via CAN, Ethernet, etc.)
+  - Configuration parameters
 
-   **2. Determine Boundaries**
+  **2. Determine Boundaries**
 
-   For each input variable, identify its boundaries:
+  For each input variable, identify its boundaries:
 
-   - **Minimum Value**
+  - **Minimum Value**
 
-      The smallest possible value.
-   - **Maximum Value**
+    The smallest possible value.
 
-      The largest possible value.
-   - **Nominal/Typical Value**
+  - **Maximum Value**
 
-      A representative value within the normal operating range. This is *not* strictly required
-      for BVA but can be helpful for context.
-   - **Consider Data Types**
+    The largest possible value.
 
-      Use appropriate data types to define the variables and boundaries.
-      ``int8_t`` (signed 8-bit integer), ``uint16_t`` (unsigned 16-bit integer), ``float``, ``double``, etc.
+  - **Nominal/Typical Value**
 
-   **3. Define Test Values**
+    A representative value within the normal operating range. This is *not* strictly required
+    for BVA but can be helpful for context.
 
-   For each input variable, create test values using the following:
+  - **Consider Data Types**
 
-   - **Minimum Value**
-   - **Maximum Value**
-   - **Just Above the Minimum Value** (Minimum + 1 or next representable value)
-   - **Just Below the Maximum Value** (Maximum - 1 or previous representable value)
-   - **A Value Within the Nominal Range** (Although not strictly *boundary* it provides a basis for comparison).
+    Use appropriate data types to define the variables and boundaries.
+    ``int8_t`` (signed 8-bit integer), ``uint16_t`` (unsigned 16-bit integer), ``float``, ``double``, etc.
 
-   **4. Design Test Cases**
+  **3. Define Test Values**
 
-   Create test cases that combine the test values for all input variables.
+  For each input variable, create test values using the following:
 
-   Follow these guidelines:
+  - **Minimum Value**
+  - **Maximum Value**
+  - **Just Above the Minimum Value** (Minimum + 1 or next representable value)
+  - **Just Below the Maximum Value** (Maximum - 1 or previous representable value)
+  - **A Value Within the Nominal Range** (Although not strictly *boundary* it provides a basis for comparison).
 
-   - **Single Variable Variation:**
+  **4. Design Test Cases**
 
-      Vary one input variable at a time, keeping other variables at their nominal values.
-      This helps isolate the impact of each variable.
-   - **Combination Tests**
+  Create test cases that combine the test values for all input variables.
 
-      In some cases, you may want to create test cases that combine boundary values for multiple
-      input variables simultaneously. This is especially important if there are dependencies
-      between the variables.
+  Follow these guidelines:
+
+  - **Single Variable Variation:**
+
+    Vary one input variable at a time, keeping other variables at their nominal values.
+    This helps isolate the impact of each variable.
+
+  - **Combination Tests**
+
+    In some cases, you may want to create test cases that combine boundary values for multiple
+    input variables simultaneously. This is especially important if there are dependencies
+    between the variables.
 
 .. _ver_equivalence:
 
@@ -238,20 +254,20 @@ The following perspectives are included in ``equivalence-classes``:
 
 - **Reduce Test Case Volume**
 
-   Components may have complex input domains. EP allows you to focus testing efforts on
-   representative values within each partition, drastically reducing the number of test cases needed.
+  Components may have complex input domains. EP allows you to focus testing efforts on
+  representative values within each partition, drastically reducing the number of test cases needed.
 - **Improve Test Coverage**
 
-   By testing at least one value from each partition, you ensure that you've covered all the
-   different behaviors of the software.
+  By testing at least one value from each partition, you ensure that you've covered all the
+  different behaviors of the software.
 - **Address Different Input Types**
 
-   EP is applicable to various input types, including numerical ranges, enumerated values,
-   boolean flags, and more.
+  EP is applicable to various input types, including numerical ranges, enumerated values,
+  boolean flags, and more.
 - **Find Different Types of Errors**
 
-   While BVA focuses on boundary-related errors, EP helps find errors related to how the software
-   processes different categories of inputs.
+  While BVA focuses on boundary-related errors, EP helps find errors related to how the software
+  processes different categories of inputs.
 
 How to perform the analysis:
 
@@ -274,14 +290,14 @@ How to perform the analysis:
 
    - **Valid Input Classes**
 
-      Classes that contain valid input values according to the specifications.
+     Classes that contain valid input values according to the specifications.
    - **Invalid Input Classes**
 
-      Classes that contain invalid input values (out of range, incorrect data type, etc.).
+     Classes that contain invalid input values (out of range, incorrect data type, etc.).
    - **Special Cases**
 
-      Classes representing specific or unusual input values that might trigger special behavior
-      in the software.
+     Classes representing specific or unusual input values that might trigger special behavior
+     in the software.
 
    **3. Define Test Values**
 

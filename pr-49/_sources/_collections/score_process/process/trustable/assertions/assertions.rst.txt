@@ -42,7 +42,7 @@ Assertions
    experience with the suppliers' people and processes.
 
    Keep in mind that even if repositories with source code for a particular
-   component or tool are available, not all of it may be stored in Git as
+   component or tool are available, not all of it may be stored in version control system as
    plaintext. A deeper analysis is required in TA-INPUTS to assess the impact of any
    binaries present within the repositories of the components and tools used.
 

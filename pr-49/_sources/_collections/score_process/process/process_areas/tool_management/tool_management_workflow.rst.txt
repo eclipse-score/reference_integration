@@ -76,7 +76,7 @@ Workflow Tool Management
    :id: wf__tool_approve_tool_verification_report
    :status: valid
    :responsible: rl__safety_manager, rl__security_manager
-   :approved_by: rl__technical_lead, rl__module_lead
+   :approved_by: rl__project_lead
    :supported_by: rl__infrastructure_tooling_community
    :input: wp__tool_verification_report
    :output: wp__tool_verification_report

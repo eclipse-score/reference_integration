@@ -21,6 +21,7 @@ Component Classification
    :id: doc__component_name_comp_class
    :status: draft
    :safety: ASIL_B
+   :security: NO
    :realizes: wp__sw_component_class
    :tags: template
 

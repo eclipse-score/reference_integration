@@ -19,7 +19,7 @@ Workflows
    :id: wf__cr_mt_safety_plan
    :status: valid
    :responsible: rl__safety_manager
-   :approved_by: rl__technical_lead
+   :approved_by: rl__project_lead
    :input: wp__platform_mgmt, wp__issue_track_system, wp__sw_component_class, wp__tailoring
    :output: wp__module_safety_plan, wp__platform_safety_plan
    :contains: gd_guidl__saf_plan_definitions, gd_temp__feature_safety_wp, gd_temp__module_safety_plan
@@ -104,7 +104,7 @@ Workflows
    :id: wf__mr_vy_safety
    :status: valid
    :responsible: rl__safety_manager
-   :approved_by: rl__technical_lead
+   :approved_by: rl__project_lead
    :input: wp__module_safety_plan, wp__platform_safety_plan, wp__module_safety_package, wp__platform_safety_package, wp__audit_report, wp__fdr_reports
    :output: wp__issue_track_system, wp__module_sw_release_note, wp__platform_sw_release_note
    :contains: gd_guidl__saf_plan_definitions

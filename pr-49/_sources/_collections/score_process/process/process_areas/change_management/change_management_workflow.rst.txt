@@ -23,7 +23,7 @@ Workflow Change Management
    :tags: change_management
    :responsible: rl__contributor
    :approved_by: rl__committer
-   :supported_by: rl__technical_lead, rl__module_lead, rl__safety_manager, rl__security_manager, rl__quality_manager
+   :supported_by: rl__project_lead, rl__safety_manager, rl__security_manager, rl__quality_manager
    :input: wp__policies, wp__issue_track_system, wp__feat_request, wp__cmpt_request
    :output: wp__issue_track_system, wp__feat_request, wp__cmpt_request
    :contains: gd_guidl__change_change_request, gd_temp__change_feature_request, gd_temp__change_component_request, gd_temp__change_impact_analysis, gd_temp__component_classification, gd_temp__change_decision_record
@@ -41,7 +41,7 @@ Workflow Change Management
    :status: valid
    :tags: change_management
    :responsible: rl__contributor
-   :approved_by: rl__technical_lead, rl__module_lead
+   :approved_by: rl__project_lead
    :supported_by: rl__committer, rl__safety_manager, rl__security_manager, rl__quality_manager
    :input: wp__policies, wp__issue_track_system, wp__feat_request, wp__cmpt_request
    :output: wp__issue_track_system, wp__feat_request, wp__cmpt_request
@@ -64,7 +64,7 @@ Workflow Change Management
    :tags: change_management
    :responsible: rl__contributor
    :approved_by:  rl__committer
-   :supported_by: rl__technical_lead, rl__module_lead, rl__safety_manager, rl__security_manager, rl__quality_manager
+   :supported_by: rl__project_lead, rl__safety_manager, rl__security_manager, rl__quality_manager
    :input: wp__issue_track_system, wp__feat_request, wp__cmpt_request
    :output: wp__issue_track_system, wp__feat_request, wp__cmpt_request
    :contains: gd_guidl__change_change_request, gd_temp__change_feature_request, gd_temp__change_component_request, gd_temp__change_impact_analysis, gd_temp__component_classification, gd_temp__change_decision_record
@@ -89,7 +89,7 @@ Workflow Change Management
    :status: valid
    :tags: change_management
    :responsible: rl__committer
-   :approved_by: rl__technical_lead, rl__module_lead
+   :approved_by: rl__project_lead
    :supported_by: rl__safety_manager, rl__security_manager, rl__quality_manager
    :input: wp__issue_track_system, wp__feat_request, wp__cmpt_request
    :output: wp__issue_track_system, wp__feat_request, wp__cmpt_request

@@ -20,6 +20,7 @@ DFA (Dependent Failure Analysis)
    :id: doc__feature_name_dfa
    :status: draft
    :safety: ASIL_B
+   :security: NO
    :realizes: wp__feature_dfa
    :tags: template
 
