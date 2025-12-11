@@ -110,22 +110,6 @@ Work Products Security Management
 
    This is on module level. One manual per each module.
 
-.. workproduct:: Feature Security Analysis
-   :id: wp__feature_security_analysis
-   :status: draft
-   :complies: std_wp__isosae21434__development_1055, std_wp__isosae21434__assessment_15631, std_wp__isosae21434__assessment_15731, std_wp__isosae21434__assessment_15831, std_wp__isosae21434__assessment_15931
-
-   Bottom-Up Security Analysis with e.g. FMEA method, verifies the feature architecture (as part of SW Security Concept)
-   - Detection and prevention mitigations linked to Software Feature Requirements or Assumptions of Use
-
-.. workproduct:: Component Security Analysis
-   :id: wp__sw_component_security_analysis
-   :status: draft
-   :complies: std_wp__isosae21434__development_1055, std_wp__isosae21434__assessment_15631, std_wp__isosae21434__assessment_15731, std_wp__isosae21434__assessment_15831, std_wp__isosae21434__assessment_15931
-
-   Bottom-Up Security Analysis with e.g. FMEA method, verifies the component architecture (as part of SW Security Concept)
-   - Detection and prevention mitigations linked to Software Component Requirements or Assumptions of Use
-
 .. workproduct:: Platform Software Bill of Material (SBOM)
    :id: wp__sw_platform_sbom
    :status: draft

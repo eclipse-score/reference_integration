@@ -164,7 +164,7 @@ Component Architecure File(s)
 .. comp_arc_sta:: Component 3
    :id: comp_arc_sta__example_feature__archdes_component_3
    :status: valid
-   :safety: ASIL_B
+   :safety: QM
    :security: NO
    :implements: logic_arc_int__example_feature__archdes_logical_interface_3
    :fulfils: comp_req__example_feature__archdes_example_req

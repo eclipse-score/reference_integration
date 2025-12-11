@@ -75,7 +75,7 @@ The purpose of this security plan review checklist is to report status of the re
           - <Rationale for result>
 
         * - 9
-          - Is a security manager and a technical/module lead appointed for the project?
+          - Is a security manager and a project lead appointed for the project?
           - [YES | NO ]
           - <Rationale for result>
 

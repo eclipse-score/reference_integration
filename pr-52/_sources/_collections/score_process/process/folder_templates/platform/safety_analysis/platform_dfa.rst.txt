@@ -20,6 +20,7 @@ Platform DFA (Dependent Failure Analysis)
    :id: doc__platform_dfa
    :status: draft
    :safety: ASIL_B
+   :security: NO
    :realizes: wp__platform_dfa
    :tags: template
 

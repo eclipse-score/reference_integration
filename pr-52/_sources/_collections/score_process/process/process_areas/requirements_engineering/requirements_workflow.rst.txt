@@ -21,7 +21,7 @@ Workflow Requirements Engineering
    :status: valid
    :tags: requirements_engineering
    :responsible: rl__contributor
-   :approved_by: rl__technical_lead
+   :approved_by: rl__project_lead
    :supported_by: rl__safety_manager
    :input: wp__policies, wp__issue_track_system
    :output: wp__requirements_stkh, wp__requirements_sw_platform_aou
@@ -36,21 +36,21 @@ Workflow Requirements Engineering
    :status: valid
    :tags: requirements_engineering
    :responsible: rl__contributor
-   :approved_by: rl__technical_lead
+   :approved_by: rl__project_lead
    :supported_by: rl__safety_manager, rl__security_manager
    :input: wp__requirements_stkh, wp__issue_track_system
    :output: wp__requirements_feat
    :contains: gd_temp__req_feat_req, gd_temp__req_formulation
    :has: doc_concept__req_process, doc_getstrt__req_process
 
-   Depending on the stakeholder requirements feature requirements can be derived. This can be done by any contributor and will be approved by a technical lead. If needed safety and security managers can provide support.
+   Depending on the stakeholder requirements feature requirements can be derived. This can be done by any contributor and will be approved by a project lead. If needed safety and security managers can provide support.
 
 .. workflow:: Create/Maintain Feature AoUs
    :id: wf__req_feat_aou
    :status: valid
    :tags: requirements_engineering
    :responsible: rl__contributor
-   :approved_by: rl__technical_lead
+   :approved_by: rl__project_lead
    :supported_by: rl__safety_manager, rl__security_manager
    :input: wp__requirements_feat, wp__feature_arch, wp__issue_track_system
    :output: wp__requirements_feat_aou, wp__platform_safety_manual

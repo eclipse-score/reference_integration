@@ -18,7 +18,7 @@
 Workflow Safety Analysis
 ########################
 
-Safety analysis is used as a umbrella term for the methods FMEA (Failure Modes and Effects Analysis) and DFA (Dependent Failure Analysis).
+Safety Analysis is used as a umbrella term for the methods FMEA (Failure Modes and Effects Analysis) and DFA (Dependent Failure Analysis).
 
 .. workflow:: Analyze Platform Feature Architecture
    :id: wf__analyse_platform_featarch
@@ -32,7 +32,7 @@ Safety analysis is used as a umbrella term for the methods FMEA (Failure Modes a
    :contains: gd_guidl__dfa_failure_initiators, gd_temp__plat_saf_dfa
    :has: doc_concept__safety_analysis, doc_getstrt__safety_analysis
 
-   | With a platform DFA the potential common usage of modules shall be analysed. It shall be used as an input for all other DFA's.
+   | With a platform DFA the potential common usage of features shall be analysed. It shall be used as an input for all other DFA's.
    | There will be only one platform DFA.
 
 .. workflow:: Analyse Feature Architecture

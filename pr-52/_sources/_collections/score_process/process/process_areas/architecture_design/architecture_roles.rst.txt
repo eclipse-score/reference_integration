@@ -19,10 +19,10 @@ For architecture design no additional roles need to be defined.
 
 Contributing Roles:
 
-   * :need:`Contributor <rl__contributor>`
-   * :need:`Committer <rl__committer>`
-   * :need:`Safety Manager <rl__safety_manager>`
-   * :need:`Security Manager <rl__security_manager>`
+* :need:`Contributor <rl__contributor>`
+* :need:`Committer <rl__committer>`
+* :need:`Safety Manager <rl__safety_manager>`
+* :need:`Security Manager <rl__security_manager>`
 
 A detailed overview of the responsibility for the steps of the architecture design process is listed here:
 

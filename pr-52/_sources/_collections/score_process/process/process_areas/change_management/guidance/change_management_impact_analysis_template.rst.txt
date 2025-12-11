@@ -53,7 +53,7 @@ Estimates for realization
 [Describe here which stakeholder and which roles of the stakeholder are involved to execute the Change Request]
 
    .. note::
-      Typically the :need:`Technical Project Leads <rl__technical_lead>` or :need:`Module Leads <rl__module_lead>` are involved
+      Typically the :need:`Project Leads <rl__project_lead>` are involved
       for planning and approval activities. As well as :need:`Safety Manager <rl__safety_manager>` or :need:`Security Manager <rl__security_manager>`
       are responsible for Change Request which has impact on functional safety or security.
 

@@ -17,6 +17,11 @@
 Introduction
 ============
 
+.. doc_concept:: Process Meta Model
+   :id: doc_concept__process_meta_model
+   :status: valid
+   :tags: process_management
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:

@@ -27,8 +27,9 @@ Releases can be done in every repository, mainly:
 * Platform (Main project/Integration) repository
 * Module (platform's components) repositories
 
-For this a templates :need:`gd_temp__rel_plat_rel_note` & :need:`gd_temp__rel_mod_rel_note`, guidelines
-:need:`gd_guidl__rel_management` and a :need:`doc_concept__rel_process`
+For this are available: templates :need:`gd_temp__rel_plat_rel_note` & :need:`gd_temp__rel_mod_rel_note`
+or `Combined Release Template <https://github.com/eclipse-score/process_description/blob/main/.github/RELEASE_TEMPLATE.md>`_,
+guidelines :need:`gd_guidl__rel_management` and a :need:`doc_concept__rel_process`
 are available.
 
 General Workflow

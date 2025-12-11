@@ -106,8 +106,8 @@ Tracking and Communication
 2. **Communication**:
 
    * Regularly update all stakeholders on the release status as part of the project lead circle.
-   * Hold periodic meetings to discuss progress, issues, and dependencies within the tech lead circle.
-   * meeting definition and schedule is defined in the projects's platform managemnt plan, as defined in :need:`gd_guidl__platform_mgmt_plan`.
+   * Hold periodic meetings to discuss progress, issues, and dependencies within the project lead circle.
+   * meeting definition and schedule is defined in the projects's platform management plan, as defined in :need:`gd_guidl__platform_mgmt_plan`.
 
 
 Templates
