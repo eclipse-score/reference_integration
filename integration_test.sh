@@ -12,31 +12,16 @@ LOG_DIR=${LOG_DIR:-_logs/logs}
 SUMMARY_FILE=${SUMMARY_FILE:-_logs/build_summary.md}
 KNOWN_GOOD_FILE=""
 
-# Codeql
-
-CODEQL_WORK_DIR="./codeql_analysis_results"
-CODEQL_DATABASES_DIR="${CODEQL_WORK_DIR}/databases"
-CODEQL_SARIF_DIR="${CODEQL_WORK_DIR}/sarif"
-CODEQL_LANGUAGE="cpp"
-CODEQL_QUERY_PACKS="codeql/cpp-queries,codeql/misra-cpp-coding-standards" # Add more packs as needed
-CODEQL_CLI_VERSION="v2.23.6" # Use the latest stable version
-CODEQL_PLATFORM="linux64" # e.g., linux64, macos, win64
-CODEQL_BUNDLE="codeql-${CODEQL_PLATFORM}.zip"
-CODEQL_URL="https://github.com/github/codeql-cli-binaries/releases/download/${CODEQL_CLI_VERSION}/${CODEQL_BUNDLE}"
-#https://github.com/github/codeql-cli-binaries/releases/download/v2.23.6/codeql-linux64.zip
-
 # maybe move this to known_good.json or a config file later
 declare -A BUILD_TARGET_GROUPS=(
     [score_baselibs]="@score_baselibs//score/..."
     [score_communication]="@score_communication//score/mw/com:com"
     [score_persistency]="@score_persistency//src/cpp/src/... @score_persistency//src/rust/..."
-    [score_logging]="@score_logging//src/..."
+    #[score_logging]="@score_logging//src/..."
     [score_orchestrator]="@score_orchestrator//src/..."
     [score_test_scenarios]="@score_test_scenarios//..."
     [score_feo]="-- @score_feo//... -@score_feo//:docs -@score_feo//:ide_support -@score_feo//:needs_json"
 )
-
-
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do

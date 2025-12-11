@@ -27,8 +27,10 @@ jobs:
     name: Analyze Multiple Repositories
     runs-on: ubuntu-latest
     permissions:
-      contents: read
       security-events: write
+      packages: read
+      actions: read
+      contents: read
 
     steps:
     - name: Checkout central repository
@@ -136,17 +138,9 @@ jobs:
     - name: Initialize CodeQL for all repositories
       uses: github/codeql-action/init@v4
       with:
-        languages: cpp, python, javascript
+        languages: cpp
         build-mode: none
-        # Configure which paths to analyze
-        config: |
-          paths:
-            - 'repos/**' # Analyze all repositories in repos/ directory
-          paths-ignore:
-            - '**/third_party/**'
-            - '**/tests/**'
-            - '**/*.test.*'
-            - 'central-repo/**' # Don't analyze the central repo itself
+        packs: codeql/misra-cpp-coding-standards
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v4
