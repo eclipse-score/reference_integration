@@ -21,7 +21,6 @@ Module Safety Plan
    :id: doc__module_name_safety_plan
    :status: draft
    :safety: ASIL_B
-   :security: NO
    :realizes: wp__module_safety_plan
    :tags: template
 
@@ -37,7 +36,7 @@ Module Safety Plan
 Functional Safety Management Context
 ====================================
 
-This Safety Plan adds to the project's :need:`wp__platform_safety_plan` all the module development relevant work products needed for ISO 26262 conformity.
+This Safety Plan adds to the :ref:`process_safety_management` all the module development relevant work products needed for ISO 26262 conformity.
 
 Functional Safety Management Scope
 ==================================
@@ -48,26 +47,19 @@ The module consists of one or more SW components and will be qualified as a SEoo
 Functional Safety Management Roles
 ==================================
 
-.. list-table:: Module roles
-        :header-rows: 1
-
-        * - Role
-          - Assignee
-
-        * - Safety Manager
-          - <link to Module's Safety Manager assignment or name>
-
-        * - Module Project Manager
-          - <link to Module's Project Manager assignment or name>
++---------------------------+--------------------------------------------------------+
+| Safety Manager            | <link to Module's Safety Manager assignment or name>   |
++---------------------------+--------------------------------------------------------+
+| Project Manager           | <link to Module's Project Manager assignment or name>  |
++---------------------------+--------------------------------------------------------+
 
 Tailoring
 =========
 
-Additional to the tailoring in the SW platform project as defined in the project's :need:`wp__platform_safety_plan` we define here the additional tailoring on module level.
+Additional to the tailoring in the SW platform project as defined in the :ref:`process_safety_management` we define here the additional tailoring on module level.
 
 - Excluded for this module are additionally the following work products (and their related requirements):
-
-  - <work product/requirement> - <Argumentation why it is not needed or replaced by another work product or activity.>
+  - <ISO 26262 reference>: <work product/requirement> - <Argumentation why it is not needed or replaced by another work product or activity.>
 
 Functional Safety Module Work products
 ======================================
@@ -187,9 +179,9 @@ Component <name> Work products List
         * - :need:`wp__requirements_inspect`
           - :need:`gd_chklst__req_inspection`
           - :ndf:`copy('status', need_id='gd_chklst__req_inspection')`
-          - <link to issue>
-          - :need:`doc__component_name_req_inspection`
-          - :ndf:`copy('status', need_id='doc__component_name_req_inspection')`
+          - n/a
+          - Checklist used in Pull Request Review
+          - n/a
 
         * - :need:`wp__component_arch`
           - :need:`gd_temp__arch_comp`
@@ -201,9 +193,9 @@ Component <name> Work products List
         * - :need:`wp__sw_arch_verification`
           - :need:`gd_chklst__arch_inspection_checklist`
           - :ndf:`copy('status', need_id='gd_chklst__arch_inspection_checklist')`
-          - <link to issue>
-          - :need:`doc__component_name_arc_inspection`
-          - :ndf:`copy('status', need_id='doc__component_name_arc_inspection')`
+          - n/a
+          - Checklist used in Pull Request Review
+          - n/a
 
         * - :need:`wp__sw_component_fmea`
           - :need:`gd_temp__comp_saf_fmea`
@@ -236,9 +228,9 @@ Component <name> Work products List
         * - :need:`wp__sw_implementation_inspection`
           - :need:`gd_chklst__impl_inspection_checklist`
           - :ndf:`copy('status', need_id='gd_chklst__impl_inspection_checklist')`
-          - <Link to issue>
-          - <Link to WP>
-          - <automated>
+          - n/a
+          - Checklist used in Pull Request Review
+          - n/a
 
         * - :need:`wp__verification_comp_int_test`
           - :need:`gd_guidl__verification_guide`
@@ -348,7 +340,7 @@ Component Architecture Status
 -----------------------------
 
 .. needtable::
-   :filter: "component_name" in docname and "architecture" in docname and docname is not None
+   :filter: "component_name" in docname and "requirements" in docname and docname is not None
    :style: table
    :types: comp_arc_sta; comp_arc_dyn
    :tags: component_name

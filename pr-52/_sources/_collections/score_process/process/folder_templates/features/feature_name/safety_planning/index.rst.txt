@@ -14,14 +14,13 @@
 
 .. _feature_safety_wp_template:
 
-Safety Planning
-###############
+Feature Safety Planning
+=======================
 
 .. document:: [Your Feature Name] Safety WPs
    :id: doc__feature_name_safety_wp
    :status: draft
    :safety: ASIL_B
-   :security: NO
    :realizes: wp__platform_safety_plan
    :tags: template
 
@@ -32,19 +31,6 @@ Safety Planning
     - Modify ``id`` to be your Module Name in upper snake case preceded by ``doc__`` and succeeded by ``_safety_wp``
     - Adjust ``status`` to be ``valid``
     - Adjust ``safety`` and ``tags`` according to your needs
-
-Tailoring
-=========
-
-Additional to the tailoring in the SW platform project as defined in the project's :need:`wp__platform_safety_plan` we define here the additional tailoring on feature level.
-
-- Excluded for this feature are additionally the following work products (and their related requirements):
-
-  - <work product/requirement> - <Argumentation why it is not needed or replaced by another work product or activity.>
-
-
-Safety Work products List
-=========================
 
 .. list-table:: Feature <feature_name> Work products
     :header-rows: 1
@@ -68,14 +54,14 @@ Safety Work products List
       - :ndf:`copy('status', need_id='gd_temp__req_feat_req')`
       - <link to issue>
       - :need:`doc__feature_name_requirements`
-      - doc :ndf:`copy('status', need_id='doc__feature_name_requirements')` & WP below
+      - doc :ndf:`copy('status', need_id='doc__feature_name')` & WP below
 
     * - :need:`wp__requirements_feat_aou`
       - :need:`gd_temp__req_aou_req`
       - :ndf:`copy('status', need_id='gd_temp__req_aou_req')`
       - <link to issue>
       - :need:`doc__feature_name_requirements`
-      - doc :ndf:`copy('status', need_id='doc__feature_name_requirements')` & WP below
+      - doc :ndf:`copy('status', need_id='doc__feature_name')` & WP below
 
     * - :need:`wp__feature_arch`
       - :need:`gd_temp__arch_feature`
@@ -101,16 +87,16 @@ Safety Work products List
     * - :need:`wp__requirements_inspect`
       - :need:`gd_chklst__req_inspection`
       - :ndf:`copy('status', need_id='gd_chklst__req_inspection')`
-      - <link to issue>
-      - :need:`doc__feature_name_req_inspection`
-      - :ndf:`copy('status', need_id='doc__feature_name_req_inspection')`
+      - n/a
+      - Checklist used in Pull Request Review
+      - n/a
 
     * - :need:`wp__sw_arch_verification`
       - :need:`gd_chklst__arch_inspection_checklist`
       - :ndf:`copy('status', need_id='gd_chklst__arch_inspection_checklist')`
-      - <link to issue>
-      - :need:`doc__feature_name_arc_inspection`
-      - :ndf:`copy('status', need_id='doc__feature_name_arc_inspection')`
+      - n/a
+      - Checklist used in Pull Request Review
+      - n/a
 
     * - :need:`wp__verification_feat_int_test`
       - :need:`gd_guidl__verification_guide`
