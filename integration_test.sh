@@ -19,7 +19,7 @@ declare -A BUILD_TARGET_GROUPS=(
     [score_persistency]="@score_persistency//src/cpp/src/... @score_persistency//src/rust/..."
     [score_kyron]="@score_kyron//src/..."
     [score_orchestrator]="@score_orchestrator//src/..."
-    [score_test_scenarios]="@score_test_scenarios//..."
+    [score_test_scenarios]="@score_test_scenarios//test_scenarios_rust:test_scenarios_rust @score_test_scenarios//test_scenarios_cpp:test_scenarios_cpp"
     [score_feo]="-- @score_feo//... -@score_feo//:docs -@score_feo//:ide_support -@score_feo//:needs_json"
 )
 
