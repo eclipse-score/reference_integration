@@ -24,9 +24,10 @@ single_version_override(
 )
 
 bazel_dep(name = "score_persistency")
-single_version_override(
+git_override(
     module_name = "score_persistency",
-    version = "0.2.1",
+    remote = "https://github.com/qorix-group/persistency.git",
+    commit = "06e3a5ae37822f9cbaa5b3ce1d1ccdc40df2e6e5",
 )
 
 bazel_dep(name = "score_orchestrator")
@@ -50,9 +51,10 @@ single_version_override(
 )
 
 bazel_dep(name = "score_platform")
-single_version_override(
+git_override(
     module_name = "score_platform",
-    version = "0.5.0",
+    remote = "https://github.com/qorix-group/score.git",
+    commit = "e7707ffe06f4cc870ec8ce7bd82a3ab9af78368e",
 )
 
 bazel_dep(name = "score_bazel_platforms")
