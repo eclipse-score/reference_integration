@@ -36,6 +36,19 @@ jobs:
     - name: Checkout central repository
       uses: actions/checkout@v4
 
+    - name: Checkout CodeQL Coding Standards scripts
+      uses: actions/checkout@v4
+      with:
+        repository: github/codeql-coding-standards
+        path: codeql-coding-standards-repo # Klonen in diesen Ordner
+        ref: main # Oder eine spezifische Release-Version, z.B. 'v2.53.0-dev'
+
+    # Add coding standard packages and dependencies
+    - name: Install Python dependencies for Coding Standards scripts
+      run: |
+        python3 -m pip install --upgrade pip
+        pip3 install pyyaml jsonpath-ng jsonschema jsonpatch jsonpointer pytest
+
     - name: Parse known_good.json and create repos.json
       id: parse-repos
       run: |
@@ -141,6 +154,7 @@ jobs:
         languages: cpp
         build-mode: none
         packs: codeql/misra-cpp-coding-standards
+        config-file: ./.github/codeql/codeql-config.yml
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v4
@@ -148,6 +162,22 @@ jobs:
         upload-database: false # Don't upload databases for each repo
         output: sarif-results/
         category: "multi-repo-scan"
+
+    - name: Recategorize Guidelines
+      if: always()
+      run: | 
+        RECATEGORIZE_SCRIPT="codeql-coding-standards-repo/scripts/guideline_recategorization/recategorize.py"
+        CODING_STANDARDS_CONFIG="./.github/codeql/coding-standards.yml"
+        mkdir -p sarif-results-recategorized
+        for sarif_file in sarif-results/*.sarif; do
+           echo "Processing $sarif_file for recategorization..."
+          python3.9 "$RECATEGORIZE_SCRIPT" \
+            coding_standards_config_file "$CODING_STANDARDS_CONFIG" \
+            sarif_in "$sarif_file" \
+            sarif_out "sarif-results-recategorized/$(basename "$sarif_file")"
+        done
+        rm -rf sarif-results/*
+        mv sarif-results-recategorized/* sarif-results/
 
     - name: Upload SARIF results as artifact
       uses: actions/upload-artifact@v4
