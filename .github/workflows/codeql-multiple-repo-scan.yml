@@ -49,6 +49,14 @@ jobs:
         python3 -m pip install --upgrade pip
         pip3 install pyyaml jsonpath-ng jsonschema jsonpatch jsonpointer pytest
 
+    - name: Setup Node.js for sarif-tools
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install sarif-tools
+      run: npm install -g sarif-tools
+
     - name: Parse known_good.json and create repos.json
       id: parse-repos
       run: |
@@ -170,10 +178,16 @@ jobs:
         RECATEGORIZE_SCRIPT="codeql-coding-standards-repo/scripts/guideline_recategorization/recategorize.py"
         CODING_STANDARDS_CONFIG="./.github/codeql/coding-standards.yml"
 
+        # Pfade zu den Schema-Dateien im geklonten Repository
+        CODING_STANDARDS_SCHEMA="codeql-coding-standards-repo/schemas/coding-standards-schema-1.0.0.json"
+        SARIF_SCHEMA="codeql-coding-standards-repo/schemas/sarif-schema-2.1.0.json"
+
         mkdir -p sarif-results-recategorized
         for sarif_file in sarif-results/*.sarif; do
           echo "Processing $sarif_file for recategorization..."
           python3 "$RECATEGORIZE_SCRIPT" \
+            --coding-standards-schema-file "$CODING_STANDARDS_SCHEMA" \
+            --sarif-schema-file "$SARIF_SCHEMA" \
             "$CODING_STANDARDS_CONFIG" \
             "$sarif_file" \
             "sarif-results-recategorized/$(basename "$sarif_file")"
@@ -181,8 +195,19 @@ jobs:
         rm -rf sarif-results/*
         mv sarif-results-recategorized/* sarif-results/
 
+    - name: Generate HTML Report from SARIF
+      run: |
+        sarif-tools convert sarif-results/*.sarif -o codeql-report.html
+
     - name: Upload SARIF results as artifact
       uses: actions/upload-artifact@v4
       with:
         name: codeql-sarif-results
         path: sarif-results/
+
+
+    - name: Upload HTML Report as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: codeql-html-report
+        path: codeql-report.html
