@@ -107,45 +107,10 @@ overall_depr_total=0
 
 # Track if any build group failed
 any_failed=0
-binary_path="${CODEQL_WORK_DIR}/codeql-cli/codeql/codeql"
-
-if [ -x "${binary_path}" ]; then
-    echo "Local CodeQL CLI found at ${binary_path}. Adding to PATH."
-    export PATH="$(pwd)/${CODEQL_WORK_DIR}/codeql-cli/codeql:${PATH}"
-else    
-    echo "CodeQL CLI not found. Downloading..."
-    mkdir -p "${CODEQL_WORK_DIR}/codeql-cli"
-    curl -L "${CODEQL_URL}" -o "${CODEQL_WORK_DIR}/${CODEQL_BUNDLE}"
-    unzip "${CODEQL_WORK_DIR}/${CODEQL_BUNDLE}" -d "${CODEQL_WORK_DIR}/codeql-cli"
-    export PATH="$(pwd)/${CODEQL_WORK_DIR}/codeql-cli/codeql:${PATH}"
-    echo "CodeQL CLI downloaded and added to PATH."
-fi
-
-# Verify CodeQL CLI is now available
-if ! command -v codeql &> /dev/null; then
-    echo "Error: CodeQL CLI could not be set up. Exiting."
-    exit 1
-else
-    echo "codeql found in path"    
-fi  
-
-
-mkdir -p "${CODEQL_DATABASES_DIR}"
-mkdir -p "${CODEQL_SARIF_DIR}"
 
 for group in "${!BUILD_TARGET_GROUPS[@]}"; do
     targets="${BUILD_TARGET_GROUPS[$group]}"
     log_file="${LOG_DIR}/${group}.log"
-
-    db_path="${CODEQL_DATABASES_DIR}/${group}_db"
-    sarif_output="${CODEQL_SARIF_DIR}/${group}.sarif"
-    current_bazel_output_base="/tmp/codeql_bazel_output_${group}_$(date +%s%N)" # Add timestamp for extra uniqueness
-
-
-    # 1. Clean Bazel to ensure a fresh build for CodeQL tracing
-    echo "Running 'bazel clean --expunge' and 'bazel shutdown'..."
-    bazel --output_base="${current_bazel_output_base}" clean --expunge  || { echo "Bazel clean failed for ${group}"; exit 1; }
-    bazel --output_base="${current_bazel_output_base}" shutdown  || { echo "Bazel shutdown failed for ${group}"; exit 1; }
 
     # Log build group banner only to stdout/stderr (not into summary table file)
     echo "--- Building group: ${group} ---"
@@ -168,24 +133,6 @@ for group in "${!BUILD_TARGET_GROUPS[@]}"; do
     d_count=$(depr_count "$log_file")
     overall_warn_total=$(( overall_warn_total + w_count ))
     overall_depr_total=$(( overall_depr_total + d_count ))
-
-     # Shutdown Bazel again after the traced build
-    echo "Running 'bazel shutdown' after CodeQL database creation..."
-    bazel shutdown || { echo "Bazel shutdown failed after tracing for ${group}"; exit 1; }
-
-    # 4. Analyze the created database
-    echo "Analyzing CodeQL database for ${group}..."
-    codeql database analyze "${DB_PATH}" \
-      --format=sarifv2.1.0 \
-      --output="${SARIF_OUTPUT}" \
-      --sarif-category="${group}-${CODEQL_LANGUAGE}" \
-      --packs "${CODEQL_QUERY_PACKS}" \
-      || { echo "CodeQL analysis failed for ${group}"; exit 1; }
-
-    echo "CodeQL analysis for ${group} complete. Results saved to: ${SARIF_OUTPUT}"
-    echo ""
-
-
     # Append as a markdown table row (duration without trailing 's')
     if [[ ${build_status} -eq 0 ]]; then
         status_symbol="✅"

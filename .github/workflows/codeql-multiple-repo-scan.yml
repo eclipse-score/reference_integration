@@ -171,7 +171,7 @@ jobs:
         mkdir -p sarif-results-recategorized
         for sarif_file in sarif-results/*.sarif; do
            echo "Processing $sarif_file for recategorization..."
-          python3.9 "$RECATEGORIZE_SCRIPT" \
+          python3 "$RECATEGORIZE_SCRIPT" \
             coding_standards_config_file "$CODING_STANDARDS_CONFIG" \
             sarif_in "$sarif_file" \
             sarif_out "sarif-results-recategorized/$(basename "$sarif_file")"
