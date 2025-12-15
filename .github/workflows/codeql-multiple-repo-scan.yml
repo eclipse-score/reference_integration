@@ -189,7 +189,7 @@ jobs:
 
     - name: Generate HTML Report from SARIF
       run: |
-        sarif html sarif-results/*.sarif > codeql-report.html
+        sarif html combined.sarif --output codeql-report.html
 
     - name: Upload SARIF results as artifact
       uses: actions/upload-artifact@v4
