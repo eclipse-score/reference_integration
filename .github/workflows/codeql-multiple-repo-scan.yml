@@ -163,18 +163,20 @@ jobs:
         output: sarif-results/
         category: "multi-repo-scan"
 
+      # Post-Processing für Guideline Re-categorization
     - name: Recategorize Guidelines
       if: always()
-      run: | 
+      run: |
         RECATEGORIZE_SCRIPT="codeql-coding-standards-repo/scripts/guideline_recategorization/recategorize.py"
         CODING_STANDARDS_CONFIG="./.github/codeql/coding-standards.yml"
+
         mkdir -p sarif-results-recategorized
         for sarif_file in sarif-results/*.sarif; do
-           echo "Processing $sarif_file for recategorization..."
+          echo "Processing $sarif_file for recategorization..."
           python3 "$RECATEGORIZE_SCRIPT" \
-            coding_standards_config_file "$CODING_STANDARDS_CONFIG" \
-            sarif_in "$sarif_file" \
-            sarif_out "sarif-results-recategorized/$(basename "$sarif_file")"
+            "$CODING_STANDARDS_CONFIG" \
+            "$sarif_file" \
+            "sarif-results-recategorized/$(basename "$sarif_file")"
         done
         rm -rf sarif-results/*
         mv sarif-results-recategorized/* sarif-results/
