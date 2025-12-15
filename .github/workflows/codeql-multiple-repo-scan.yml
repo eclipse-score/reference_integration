@@ -167,29 +167,38 @@ jobs:
     - name: Recategorize Guidelines
       if: always()
       run: |
-        RECATEGORIZE_SCRIPT="codeql-coding-standards-repo/scripts/guideline_recategorization/recategorize.py"
-        CODING_STANDARDS_CONFIG="./.github/codeql/coding-standards.yml"
-
-        # Pfade zu den Schema-Dateien im geklonten Repository
+         RECATEGORIZE_SCRIPT="codeql-coding-standards-repo/scripts/guideline_recategorization/recategorize.py"
+         CODING_STANDARDS_CONFIG="./.github/codeql/coding-standards.yml"
+          
         CODING_STANDARDS_SCHEMA="codeql-coding-standards-repo/schemas/coding-standards-schema-1.0.0.json"
         SARIF_SCHEMA="codeql-coding-standards-repo/schemas/sarif-schema-2.1.0.json"
-
+          
+          
+        SARIF_FILE="sarif-results/cpp.sarif" 
+          
         mkdir -p sarif-results-recategorized
-        for sarif_file in sarif-results/*.sarif; do
-          echo "Processing $sarif_file for recategorization..."
-          python3 "$RECATEGORIZE_SCRIPT" \
-            --coding-standards-schema-file "$CODING_STANDARDS_SCHEMA" \
-            --sarif-schema-file "$SARIF_SCHEMA" \
-            "$CODING_STANDARDS_CONFIG" \
-            "$sarif_file" \
-            "sarif-results-recategorized/$(basename "$sarif_file")"
-        done
-        rm -rf sarif-results/*
-        mv sarif-results-recategorized/* sarif-results/
+        echo "Processing $SARIF_FILE for recategorization..."
+        python3 "$RECATEGORIZE_SCRIPT" \
+          --coding-standards-schema-file "$CODING_STANDARDS_SCHEMA" \
+          --sarif-schema-file "$SARIF_SCHEMA" \
+          "$CODING_STANDARDS_CONFIG" \
+          "$SARIF_FILE" \
+          "sarif-results-recategorized/$(basename "$SARIF_FILE")"
+          
+          rm "$SARIF_FILE"
+          mv "sarif-results-recategorized/$(basename "$SARIF_FILE")" "$SARIF_FILE"
 
     - name: Generate HTML Report from SARIF
       run: |
-        sarif html combined.sarif --output codeql-report.html
+        SARIF_FILE="sarif-results/cpp.sarif"
+        sarif html "$SARIF_FILE" --output codeql-report.html
+
+    - name: HTML Preview in Job Summary
+      id: html_preview
+      uses: pavi2410/html-preview-action@v4
+      with:
+        html_file: 'codeql-report.html' # Dieser Pfad ist korrekt, da die Datei im Root erstellt wird
+        job_summary: true
 
     - name: Upload SARIF results as artifact
       uses: actions/upload-artifact@v4
