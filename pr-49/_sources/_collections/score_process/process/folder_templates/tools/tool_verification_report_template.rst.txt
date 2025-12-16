@@ -42,7 +42,7 @@ Tool Verification Report Template
 
 .. note::
    An example of a Tool Verification Report can be found here:
-   `Example Tool Verification Report <https://eclipse-score.github.io/score/main/score_tools/doc_as_code.html#doc_tool__doc_as_code>`_
+   `Example Tool Verification Report <https://eclipse-score.github.io/score/main/score_tools/gtest.html#doc_tool__gtest>`_
 
 
 [Your Tool Name] Verification Report
@@ -56,13 +56,16 @@ Scope and purpose
 ~~~~~~~~~~~~~~~~~
 [Describe the scope and purpose of the tool]
 
-May add general use cases, scenarios, etc.
+.. tip::
+   May add general use cases, scenarios, etc.
+
 
 Inputs and outputs
 ~~~~~~~~~~~~~~~~~~
 [Describe here the inputs and outputs of the tool]
 
-May add a figure, if appropriate
+.. tip::
+   May add a figure, if appropriate
 
 .. note::
    | .. figure:: _assets/[Your Tool Name].drawio.svg
@@ -77,14 +80,15 @@ Available information
 ~~~~~~~~~~~~~~~~~~~~~
 [Describe here the available information for the tool]
 
-May also add some general information about the tool
+.. tip::
+   May also add some general information about the tool
 
-May add links to the public available information, if applicable,
-e.g. tools documentation, tracking of tool bugs, user manual, guidelines, etc.
+   May add links to the public available information, if applicable,
+   e.g. tools documentation, tracking of tool bugs, user manual, guidelines, etc.
 
-May add some comments to get started or usage information or integration manual
+   May add some comments to get started or usage information or integration manual
 
-May add tool usage constraints/limitations
+   May add tool usage constraints/limitations
 
 
 Installation and integration
@@ -94,79 +98,162 @@ Installation
 ~~~~~~~~~~~~
 [Describe here how to install the tool]
 
-May add where is the tool located?
+.. tip::
+   May add where is the tool located
 
-May add how the tool is configured in order to be used in safe/secure way?
+   May add how the tool is configured in order to be used in safe/secure way
 
-May add access/usage protection required?, execution authority required?
+   May add access/usage protection required, execution authority required
 
 Integration
 ~~~~~~~~~~~
 [Describe here how to integrate the tool in existing toolchain]
 
-May add how the tool works together with other tools?
+.. tip::
+   May add how the tool works together with other tools
 
 Environment
 ~~~~~~~~~~~
 [Describe environment and its constraints/limitations]
 
 
-Evaluation
-----------
-[Describe here detailed information about the tool evaluation]
+Safety evaluation
+-----------------
+[Describe here detailed information about the tool safety evaluation]
 
-Determine the use case for the tool in the project and for each use case
+.. tip::
+   Determine the use case for the tool in the project and for each use case
 
-Determine the malfunctions/threats
+   Determine the malfunctions
 
-Determine the tool impact based on the malfunctions/threats
+   Determine the tool impact based on the malfunctions
 
-Determine the available safety/security measures
+   Determine the available safety measures
 
-Determine if the impact detection based on safety/security measures are sufficient and
-add additional ones, if required
+   Determine if the impact detection based on safety measures are sufficient and
+   add additional ones, if required
 
-Determine the tool confidence based on tool impact and tool impact detection
+   Determine the tool confidence based on tool impact and tool impact detection
 
-Use the table below to document all uses cases and their evaluation. The table has an
-example included.
+   Use the table below to document all uses cases and their evaluation, the example table provided below
 
-The final Confidence shall be judged on the maximum confidence level of each use case.
+   The final confidence shall be judged on the maximum confidence level of each use case
 
 
 .. list-table:: [Your tool name] evaluation
    :header-rows: 1
+   :widths: 1 2 8 2 6 4 2 2
 
-   * - Use case Identification
-     - Use case Description
+   * - Malfunction identification
+     - Use case description
      - Malfunctions
      - Impact on safety?
      - Impact safety measures available?
      - Impact safety detection sufficient?
+     - Further additional safety measure required?
+     - Confidence (automatic calculation)
+   * - 1
+     - Use case description example
+     - | Malfunction X (with safety impact and available measures)
+       |
+       | Detailed description of malfunction X shall be added here, if applicable.
+     - yes
+     - Reviews
+     - yes
+     - no
+     - high
+   * - 2
+     - Use case description example
+     - | Malfunction Y (with safety impact and no available measures)
+       |
+       | Detailed description of malfunction Y shall be added here, if applicable.
+     - yes
+     - no
+     - no
+     - yes (qualification)
+     - low
+   * - 3
+     - Use case description example
+     - | Malfunction Z (without safety impact)
+       |
+       | Detailed description of malfunction Z shall be added here, if applicable.
+     - no
+     - no
+     - yes
+     - no
+     - high
+
+
+Security evaluation
+-------------------
+[Describe here detailed information about the tool security evaluation]
+
+.. tip::
+   Determine the use case for the tool in the project and for each use case
+
+   Determine the threats
+
+   Determine the tool impact based on the threats
+
+   Determine the available security measures
+
+   Determine if the impact detection based on security measures are sufficient and
+   add additional ones, if required
+
+   Use the table below to document all uses cases and their security evaluation, the example table provided below
+
+   The final confidence shall be judged on the maximum confidence level of each use case
+
+.. list-table:: [Your tool name] security evaluation
+   :header-rows: 1
+   :widths: 1 2 8 2 6 4 2
+
+   * - Threat identification
+     - Use case description
      - Threats
      - Impact on security?
      - Impact security measures available?
      - Impact security detection sufficient?
-     - Further additional safety measure required?
-     - Confidence (automatic calculation)
+     - Further additional security measure required?
    * - 1
-     - Generate element (requirements, architecture, safety analysis, ...)
-     - Wrong or missed element may lead to an wrong implementation with any potential error
+     - Use case description example
+     - | Threat A (with security impact and available measures)
+       |
+       | Detailed description of threat A shall be added here, if applicable.
      - yes
-     - Reviews
+     - (Example) Usage of SSH/GPG keys to access to the source code repository
+     - yes
      - no
-     - Gain access to modify or run manipulated Doc-as-code or to to modify input files
+   * - 2
+     - Use case description example
+     - | Threat B (with security impact and no available measures)
+       |
+       | Detailed description of threat B shall be added here, if applicable.
      - yes
-     - Access control, roles in Github
+     - no
+     - no
+     - yes (qualification)
+   * - 3
+     - Use case description example
+     - | Threat C (without security impact)
+       |
+       | Detailed description of threat C shall be added here, if applicable.
+     - no
+     - no
      - yes
-     - Compare generated text in documentation with original text (#PR)
-     - low
+     - no
 
 
 Result
 ~~~~~~
-Add here final statement, if tool qualification is required or not.
+.. tip::
+   Add here final statement, if tool qualification is required or not.
 
+[Your tool name] requires qualification for use in safety-related software development according to ISO 26262.
+
+or
+
+[Your tool name] does not require qualification for use in safety-related software development according to ISO 26262.
 
 **Optional Section for Tool Qualification**
 -------------------------------------------
@@ -177,21 +264,23 @@ Requirements and testing aspects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 [Describe here requirements and their tests from user point of view]
 
-Where are tool requirements defined?
+.. tip::
+   Where are tool requirements defined
 
-Where are the test cases for the requirements defined?
+   Where are the test cases for the requirements defined
 
-Where are the requirements coverage documented?
+   Where are the requirements coverage documented
 
 
 Analysis perspective
 ~~~~~~~~~~~~~~~~~~~~
 [Describe analysis perspective]
 
-Optional:
+.. tip::
+   Optional:
 
-Where is the architectural design of the tool defined?
+   Where is the architectural design of the tool defined
 
-Where is the safety analysis for the tool defined?
+   Where is the safety analysis for the tool defined
 
-Where is the security analysis for the tool defined?
+   Where is the security analysis for the tool defined

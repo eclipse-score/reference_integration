@@ -14,8 +14,10 @@
 
 .. _problem_workflows:
 
-Workflow Problem Resolution
-###########################
+Problem Resolution Workflows
+############################
+
+For a detailed explanation of workflows and their role within the process model, please refer to the :ref:`processes_introduction`.
 
 .. workflow:: Create Problem Report
    :id: wf__problem_create_pr

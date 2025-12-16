@@ -46,6 +46,7 @@ Concept Document: :need:`doc_concept__imp_concept` provides a high-level overvie
 Implementation Guideline: :need:`gd_guidl__implementation` Details on the implemenation.
 
 SW Development Plan: :need:`gd_temp__software_development_plan` Process description of SW development including
+
   - selection of design and programming language
   - design guideline
   - coding guideline (e.g. MISRA, can also include style guide or naming convention)
@@ -58,5 +59,5 @@ SW Development Plan: :need:`gd_temp__software_development_plan` Process descript
 Developer Experience
 ====================
 
-There are some tests forseen to check e.g. format which are described in
+There are some tests intended to check e.g. format which are described in
 https://github.com/eclipse-score/score?tab=readme-ov-file#score-platform.

@@ -14,8 +14,10 @@
 
 .. _workflow_platform_management:
 
-Workflow Platform Management
-############################
+Platform Management Workflows
+#############################
+
+For a detailed explanation of workflows and their role within the process model, please refer to the :ref:`processes_introduction`.
 
 .. workflow:: Create/Maintain Platform Management Plan
    :id: wf__platform_cr_mt_platform_mgmt_plan

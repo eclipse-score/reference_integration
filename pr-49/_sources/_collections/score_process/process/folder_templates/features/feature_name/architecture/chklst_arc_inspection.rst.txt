@@ -59,7 +59,7 @@ Checklist
       - Is the traceability from software architectural elements to requirements, and other level architectural
         elements (e.g. component to interface) established according to the "Relations between the architectural elements" as described in :need:`doc_concept__arch_process`?
       - automated
-      - Trace should be checked by Sphinx. Will be removed from checklist once requirement is implemented.
+      - Trace should be checked automatically by tool support in the future. It will be removed from the checklist once the requirement (:need:`Correlations of the architectural building blocks <gd_req__arch_build_blocks_corr>`) is implemented. Refer to `Tool Requirements <https://eclipse-score.github.io/docs-as-code/main/internals/requirements/requirements.html>`_ for the current status.
       -
       -
       -
@@ -74,8 +74,8 @@ Checklist
     * - ARC_01_03
       - Is the architectural element traceable to the lower level artifacts as defined by the workproduct traceability?
       - automated
-      - Will be removed from checklist once requirement is implemented by automated tool check.
-        Details of possible linking can be depicted from `traceability concept <https://eclipse-score.github.io/process_description/main/general_concepts/score_traceability_concept.html>`_
+      - Will be removed from checklist once the requirement (:need:`Correlations of the architectural building blocks <gd_req__arch_build_blocks_corr>`) is implemented by automated tool check. See `Tool Requirements <https://eclipse-score.github.io/docs-as-code/main/internals/requirements/requirements.html>`_.
+        Details of possible linking can be depicted from :ref:`traceability concept <general_concepts_traceability>`.
       -
       -
       -

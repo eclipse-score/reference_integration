@@ -14,8 +14,8 @@
 
 .. _arch_workproducts:
 
-Architecture Workproducts
-=========================
+Architecture Work Products
+##########################
 
 .. workproduct:: Feature Architecture
    :id: wp__feature_arch

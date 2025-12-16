@@ -129,7 +129,7 @@ Module Work products List
           - <Link to WP>
           - <WP status (manual)>
 
-        * - :need:`wp__module_sw_build_config`
+        * - :need:`wp__module_sw_release_note`
           - :need:`gd_temp__software_development_plan`
           - `copy('status', need_id='gd_temp__software_development_plan')`
           - <Link to issue>

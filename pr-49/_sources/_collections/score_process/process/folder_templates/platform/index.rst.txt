@@ -21,3 +21,4 @@ Platform
    :hidden:
 
    safety_analysis/platform_dfa.rst
+   safety_planning/index.rst

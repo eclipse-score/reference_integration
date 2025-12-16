@@ -12,7 +12,7 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-Work Products Platform Management
+Platform Management Work Products
 #################################
 
 .. workproduct:: Platform Management Plan
