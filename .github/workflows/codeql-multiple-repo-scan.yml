@@ -192,13 +192,6 @@ jobs:
         SARIF_FILE="sarif-results/cpp.sarif"
         sarif html "$SARIF_FILE" --output codeql-report.html
 
-    - name: HTML Preview in Job Summary
-      id: html_preview
-      uses: pavi2410/html-preview-action@v4
-      with:
-        html_file: 'codeql-report.html' # Dieser Pfad ist korrekt, da die Datei im Root erstellt wird
-        job_summary: true
-
     - name: Upload SARIF results as artifact
       uses: actions/upload-artifact@v4
       with:
