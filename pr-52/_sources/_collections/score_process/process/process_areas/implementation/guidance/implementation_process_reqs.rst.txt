@@ -20,7 +20,7 @@ Process Requirements
    :status: valid
    :tags: manual_prio_1, mandatory
    :satisfies: wf__sw_detailed_design
-   :complies: std_req__iso26262__software_843
+   :complies: std_req__iso26262__software_843, std_req__aspice_40__SWE-3-BP1
 
    The static diagram shall represent the unit and their relationships using UML notations.
 
@@ -29,7 +29,7 @@ Process Requirements
    :status: valid
    :tags: manual_prio_2, mandatory
    :satisfies: wf__sw_detailed_design
-   :complies: std_req__iso26262__software_843
+   :complies: std_req__iso26262__software_843, std_req__aspice_40__SWE-3-BP2
 
    The dynamic diagram shall represent the unit and their relationships using UML notations.
 
@@ -38,7 +38,7 @@ Process Requirements
    :status: valid
    :tags: prio_1_automation, mandatory
    :satisfies: wf__sw_detailed_design
-   :complies: std_req__iso26262__software_843
+   :complies: std_req__iso26262__software_843, std_req__aspice_40__SWE-3-BP3, std_req__aspice_40__SWE-3-BP4
 
    The detailed design (units and interfaces in DD document) shall be linked
    to the source code which implements the units and interfaces in the DD.

@@ -21,3 +21,7 @@ Contributing Roles:
 
    * :need:`Contributor <rl__contributor>`
    * :need:`Committer <rl__committer>`
+
+A detailed overview of the responsibility for the steps of the requirement process is listed here:
+
+:ref:`workflow_implementation`

@@ -12,8 +12,8 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-Workproducts Safety Analysis
-############################
+Safety Analysis Work Products
+#############################
 
 .. workproduct:: Platform DFA
    :id: wp__platform_dfa
@@ -45,7 +45,7 @@ Workproducts Safety Analysis
 .. workproduct:: Component FMEA
    :id: wp__sw_component_fmea
    :status: valid
-   :complies: std_wp__iso26262__analysis_751, std_wp__iso26262__analysis_851, std_wp__isopas8926__4524
+   :complies: std_wp__iso26262__analysis_751, std_wp__iso26262__analysis_851, std_wp__isopas8926__4524, std_wp__iso26262__software_752
 
    FMEA, verifies the component architecture (as part of SW Safety Concept)
 
@@ -54,7 +54,7 @@ Workproducts Safety Analysis
 .. workproduct:: Component DFA
    :id: wp__sw_component_dfa
    :status: valid
-   :complies: std_wp__iso26262__analysis_751, std_wp__iso26262__software_753, std_wp__isopas8926__4524
+   :complies: std_wp__iso26262__analysis_751, std_wp__iso26262__software_753, std_wp__isopas8926__4524, std_wp__iso26262__software_752
 
    Dependent Failure Analysis on component/module level.
 

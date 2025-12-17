@@ -12,7 +12,7 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-Work Products Problem Resolution
+Problem Resolution Work Products
 ################################
 
 .. workproduct:: Platform Problem Resolution Plan

@@ -12,8 +12,12 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
+.. _workflows:
+
 Workflows
 =========
+
+A workflow is a structured sequence of activities designed to achieve specific objectives within a project or process area. It serves as the central organizing element of the process model, defining the steps required to complete a particular task or produce specific outcomes.
 
 There are no general workflows.
 

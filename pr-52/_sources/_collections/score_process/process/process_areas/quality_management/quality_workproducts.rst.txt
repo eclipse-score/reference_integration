@@ -12,8 +12,8 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-Workproducts
-############
+Quality Management Work Products
+################################
 
 .. workproduct:: Quality Management Plan
    :id: wp__qms_plan

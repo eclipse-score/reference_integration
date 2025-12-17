@@ -12,7 +12,7 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-Work Products Change Management
+Change Management Work Products
 ###############################
 
 .. workproduct:: Platform Change Management Plan
@@ -38,6 +38,7 @@ Work Products Change Management
    | Safety anomaly: Conditions that deviate from expectations and that can lead to harm.
    | The documentation of a change request shall contain the list of changed work products,
    | the details of the change and the planned date of deployment of the change.
+   | In case a anomaly cannot be closed it shall be escalated to the :need:`Project Lead <rl__project_lead>`.
 
 .. workproduct:: Feature Request
    :id: wp__feat_request
