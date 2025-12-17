@@ -17,9 +17,9 @@ rust_binary(
     name = "kyron_example",
     srcs = glob(["kyron/**/*.rs"]),
     deps = [
-        "@score_orchestrator//src/kyron:libkyron",
-        "@score_orchestrator//src/kyron-foundation:libkyron_foundation",
-        "@score_crates//:tracing",
+        "@score_kyron//src/kyron:libkyron",
+        "@score_kyron//src/kyron-foundation:libkyron_foundation",
+        "@score_crates//:tracing_subscriber",
     ],
     visibility = ["//visibility:public"],
 )
@@ -28,11 +28,10 @@ rust_binary(
     name = "orch_per_example",
     srcs = glob(["orchestration_persistency/**/*.rs"]),
     deps = [
-        "@score_orchestrator//src/kyron:libkyron",
-        "@score_orchestrator//src/kyron-foundation:libkyron_foundation",
+        "@score_kyron//src/kyron:libkyron",
+        "@score_kyron//src/kyron-foundation:libkyron_foundation",
         "@score_orchestrator//src/orchestration:liborchestration",
-        "@score_orchestrator//src/logging_tracing:liblogging_tracing",
-        "@score_crates//:tracing",
+        "@score_kyron//src/logging_tracing:liblogging_tracing",
         "@score_persistency//src/rust/rust_kvs:rust_kvs",
     ],
     visibility = ["//visibility:public"],
