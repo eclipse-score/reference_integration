@@ -24,5 +24,8 @@ Verification
    verification_concept
    guidance/index
    verification_roles
-   workflows
-   workproducts
+   verification_workflows
+   verification_workproducts
+
+.. needextend:: docname is not None and "process_areas/verification" in docname
+   :+tags: verification_process

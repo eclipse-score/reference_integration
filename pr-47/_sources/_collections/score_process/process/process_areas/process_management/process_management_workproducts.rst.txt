@@ -12,7 +12,7 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-Work Products Process Management
+Process Management Work Products
 ################################
 
 .. workproduct:: Process Management Strategy

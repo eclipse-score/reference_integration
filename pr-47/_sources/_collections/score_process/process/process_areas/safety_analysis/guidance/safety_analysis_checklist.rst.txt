@@ -22,7 +22,7 @@ Safety Analysis Checklist
    :tags: safety_analysis
 
    **Purpose**
-   The purpose of this safety analysis (DFA and FMEA) checklist template is to collect the topics to be checked during verification of the safety analysis.
+   The purpose of this Safety Analysis (DFA and FMEA) checklist template is to collect the topics to be checked during verification of the Safety Analysis.
 
    **Checklist**
 
@@ -73,8 +73,8 @@ Safety Analysis Checklist
         - <yes|no>
         -
       * - REQ_01_08
-        - Is the overall result of the safety analysis described in the report?
-        - It shall be shown in the report if the safety analysis are finished and if all artifacts are "valid" and "sufficient".
-        - The results of the safety analysis are described in the report. The report is available :need:`wp__verification_platform_ver_report`.
+        - Is the overall result of the Safety Analysis described in the report?
+        - It shall be shown in the report if the Safety Analysis are finished and if all artifacts are "valid" and "sufficient".
+        - The results of the Safety Analysis are described in the report. The report is available :need:`wp__verification_platform_ver_report`.
         - <yes|no>
         -

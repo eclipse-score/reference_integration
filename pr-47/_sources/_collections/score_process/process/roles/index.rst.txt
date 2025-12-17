@@ -12,6 +12,8 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
+.. _roles:
+
 Roles
 =====
 
@@ -23,7 +25,8 @@ Project Management Roles
    :status: valid
    :tags: process_management
 
-   The Project Leads decide about strategy, addition of modules and election of all other roles.
+   The Project Leads decide about strategy, approve feature requests and perform the
+   project management of the <Project>.
 
    Required skills
 
@@ -40,16 +43,18 @@ Project Management Roles
 
    * Decisions about strategical topics
    * Filling the Project Lead role according to the `Eclipse Foundation Project Handbook <https://www.eclipse.org/projects/handbook>`_
-   * Election of all roles in the project, including the :need:`Safety Manager <rl__safety_manager>` on SW platform and module level
-   * Approval of release planning and releases
+   * Review and approval of contributions, e.g. Feature Requests, which add or modify features
+   * Project management of the <Project> development - i.e. filling the project management role as defined by ISO26262
+   * High-level project control and coordination between multiple software modules
+   * Escalation instance
+   * Planning and Approval the releases of the <Project>
 
    Authority
 
    * Ultimate decisions on escalated topics
-   * Election and replacement of all role's personnel
    * Decide on addition/removal of modules repositories or split-off of projects
 
-Project Process roles
+Project Process Roles
 ---------------------
 
 .. role:: Process Community Member
@@ -59,9 +64,9 @@ Project Process roles
    :contains: rl__committer
 
    The process community members are responsible for the definition of the process architecture of the project integrated management system and how they processes interact.
-   The approval and release of the process is done by the safety, quality and security managers and the technical leads (for the parts which affect them).
+   The approval and release of the process is done by the safety, quality and security managers and the project leads (for the parts which affect them).
 
-Project Development roles
+Project Development Roles
 -------------------------
 
 .. role:: Infrastructure Tooling Community Member
@@ -70,7 +75,7 @@ Project Development roles
    :tags: development
    :contains: rl__committer
 
-   The infrastructure and tooling community members are responsible for the infrastructure and tooling setup for development namely github, bazel, sphinx-needs, but also the rest of the tool chain.
+   The infrastructure and tooling community members are responsible for the infrastructure and tooling setup for development, but also the rest of the tool chain.
 
 .. role:: Contributor
    :id: rl__contributor
@@ -108,19 +113,19 @@ Project Development roles
    :id: rl__security_team
    :status: valid
    :tags: verification, security_analysis
-   :contains: rl__committer
+   :contains: rl__committer, rl__security_engineer
 
    (Eclipse) Open Source Role, person(s) who is(are) responsible for coordinating the resolution of Vulnerabilities within the Project.
    By default, the project Security Team includes all Committers. However, the Project may choose a different arrangement and establish specific criteria for team nominations.
 
-Project Feature teams
+Project Feature Teams
 ---------------------
 
 .. role:: Platform Team
    :id: rl__platform_team
    :status: valid
    :tags: cross_functional
-   :contains: rl__technical_lead, rl__safety_manager, rl__quality_manager, rl__security_manager, rl__contributor, rl__committer, rl__infrastructure_tooling_community, rl__process_community
+   :contains: rl__project_lead, rl__safety_manager, rl__quality_manager, rl__security_manager, rl__contributor, rl__committer, rl__infrastructure_tooling_community, rl__process_community
 
    The platform team is responsible for all artifacts within the platform SEooC. Additionally it is also responsible for the overall process including its support by tooling.
 
@@ -128,11 +133,12 @@ Project Feature teams
    :id: rl__module_team
    :status: valid
    :tags: cross_functional
-   :contains: rl__module_lead, rl__safety_manager, rl__quality_manager, rl__security_manager, rl__contributor, rl__committer
+   :contains: rl__safety_manager, rl__quality_manager, rl__security_manager, rl__contributor, rl__committer
 
    The module team is responsible for all artifacts within the module SEooCs. Each module has only one responsible team but a team may also be responsible for several (small) modules.
+   One of the committers in the team acts as the "Module Project Manager" and is responsible for planning and reporting.
 
-Project Roles list
+Project Roles List
 ------------------
 
 .. needtable::

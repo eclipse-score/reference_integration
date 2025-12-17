@@ -13,8 +13,8 @@
    # *******************************************************************************
 .. _external_standards:
 
-Standards
-=========
+Standards & Requirements
+########################
 
 .. toctree::
    :maxdepth: 1
@@ -24,6 +24,10 @@ Standards
    isopas8926/isopas8926
    aspice_40/index
    isosae21434/isosae21434
+   process_reqs_list/index
+
+Standards Coverage statistics
+=============================
 
 The graphs below presents statistics on:
 

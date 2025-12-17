@@ -14,8 +14,8 @@
 
 .. _external_tsf:
 
-Trustable
-=========
+Trustable Software Framework
+============================
 
 .. note::
    The copyright check ignores all files in trustable and its subdirectories.

@@ -21,8 +21,7 @@ Guidance
 
    guideline_safety_management.rst
    guideline_component_classification.rst
-   template_feature_safety_wp.rst
-   template_module_safety_plan.rst
+   templates_safety_plan.rst
    template_component_classification.rst
    template_safety_manual.rst
    checklist_safety_plan.rst

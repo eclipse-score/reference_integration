@@ -21,6 +21,7 @@ Detailed Design
    :id: doc__component_name_detailed_design
    :status: draft
    :safety: ASIL_B
+   :security: NO
    :realizes: wp__sw_implementation
    :tags: template
 

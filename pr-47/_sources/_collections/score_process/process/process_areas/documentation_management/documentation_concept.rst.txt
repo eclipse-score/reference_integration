@@ -51,7 +51,7 @@ Stakeholders
 
    * planning and status reporting of work products and their documentation for the platform
 
-#. :need:`Module Lead <rl__module_lead>`
+#. :need:`Module Lead <rl__project_lead>`
 
    * planning and status reporting of work products and their documentation for modules
 

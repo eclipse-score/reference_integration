@@ -79,4 +79,4 @@ or in a continuous manner. Only 100% compliant work products / releases will be 
 Every person who contributes shall be trained according to Quality aspects. The committers will help to ensure the Quality
 by following the workflows which are defined in the different process areas. The Quality Manager is responsible for the
 Quality related workflows. The Quality Manager shall be independent from the development organization with a escalation
-to the Project Lead Circle and the Technical Lead Circle.
+to the Project Lead Circle.
