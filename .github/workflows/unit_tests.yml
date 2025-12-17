@@ -1,0 +1,93 @@
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+name: Execute Unit Tests
+on:
+  workflow_dispatch:
+  pull_request:
+  release:
+    types: [created]
+  schedule:
+    - cron: '30 3 * * *'  # Every night at 03:30 UTC on main branch
+jobs:
+    integration_test:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Show disk space before build
+          run: |
+            echo 'Disk space before build:'
+            df -h
+
+        - name: Removing unneeded software
+          run: |
+            echo "Removing unneeded software... "
+            if [ -d /usr/share/dotnet ]; then echo "Removing dotnet..."; start=$(date +%s); sudo rm -rf /usr/share/dotnet; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+            #if [ -d /usr/local/lib/android ]; then echo "Removing android..."; start=$(date +%s); sudo rm -rf /usr/local/lib/android; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+            if [ -d /opt/ghc ]; then echo "Removing haskell (ghc)..."; start=$(date +%s); sudo rm -rf /opt/ghc; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+            if [ -d /usr/local/.ghcup ]; then echo "Removing haskell (ghcup)..."; start=$(date +%s); sudo rm -rf /usr/local/.ghcup; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+            if [ -d /usr/share/swift ]; then echo "Removing swift..."; start=$(date +%s); sudo rm -rf /usr/share/swift; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+            if [ -d /usr/local/share/chromium ]; then echo "Removing chromium..."; start=$(date +%s); sudo rm -rf /usr/local/share/chromium; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+
+        - name: Show disk space after cleanup
+          run: |
+            echo 'Disk space after cleanup:'
+            df -h
+
+        - name: Checkout repository
+          uses: actions/checkout@v4.2.2
+
+        - name: Setup Bazel
+          uses: bazel-contrib/setup-bazel@0.15.0
+          with:
+            bazelisk-cache: true
+            disk-cache: ${{ github.workflow }}
+            repository-cache: true
+
+        - name: Bazel build targets
+          run: |
+            scripts/run_unit_tests.sh
+            cat _logs/ut_summary.md
+
+        - name: Publish build summary
+          if: always()
+          run: |
+            if [ -f _logs/ut_summary.md ]; then
+              cat _logs/ut_summary.md >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "No build summary file found (_logs/ut_summary.md)" >> "$GITHUB_STEP_SUMMARY"
+            fi
+
+        - name: Upload logs artifact
+          if: always()
+          uses: actions/upload-artifact@v4
+          with:
+            name: bazel-build-logs
+            path: _logs/
+            if-no-files-found: warn
+            retention-days: 14
+
+        - name: Create archive of test reports
+          if: github.ref_type == 'tag'
+          run: |
+            mkdir -p artifacts
+            find bazel-testlogs/external -name 'test.xml' -print0 | xargs -0 -I{} cp --parents {} artifacts/
+            zip -r ${{ github.event.repository.name }}_test_reports.zip artifacts/
+          shell: bash
+
+        - name: Upload release asset (attach ZIP to GitHub Release)
+          uses: softprops/action-gh-release@v2.5.0
+          if: github.ref_type == 'tag'
+          with:
+            files: ${{ github.event.repository.name }}_test_reports.zip
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
