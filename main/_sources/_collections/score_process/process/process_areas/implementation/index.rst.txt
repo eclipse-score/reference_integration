@@ -23,7 +23,7 @@ Implementation
    implementation_getstrt
    implementation_concept
    guidance/index
+   implementation_roles
    implementation_workflow
    implementation_workproducts
-   implementation_roles
    _assets/detailed_design_example.rst

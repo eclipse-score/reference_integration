@@ -100,7 +100,7 @@ Requirement Inspection Checklist
         -
         -
       * - REQ_03_02
-        - For feature/component requirements: Is the *linkage to the parent requirement* correct?
+        - Is the *linkage to the parent requirement* correct?
         - Linkage to correct levels and ASIL attributes is checked automatically, but it needs checking if the child requirement implements (at least) a part of the parent requirement.
         -
         -
@@ -131,7 +131,7 @@ Requirement Inspection Checklist
         -
       * - REQ_07_02
         - Is the attribute *security* set correctly?
-        - Stakeholder requirements security attribute should be set based on Threat Analysis and Risk Assessment (TARA) (process is TBD). For feature/component requirements this checklist item is supported by automated check: "Every requirement which satisfies a requirement with security attribute set to YES inherits this". But the feature/component requirements/architecture may additionally also be subject to a Software Security Criticality Analysis (process is TBD).
+        - For feature requirements this checklist item is supported by automated check: "Every requirement which satisfies a stakeholder requirement with security attribute set to YES inherits this". But the feature requirements/architecture may additionally also be subject to a :ref:`Software Security Analysis <security_analysis>`.
         -
         -
         -
@@ -143,12 +143,12 @@ Requirement Inspection Checklist
         -
       * - REQ_09_01
         - For stakeholder requirements: Do those cover assumed safety mechanisms needed by the hardware and system?
-        - Note that stakeholder requirements covering safety mechanisms come from rationales, whereas feature/component requirements are covering safety mechanisms coming from :need:`gd_chklst__safety_analysis`
+        - Note that stakeholder requirements covering safety mechanisms come from rationales, whereas feature requirements are covering safety mechanisms coming from :need:`gd_chklst__safety_analysis`
         -
         -
         -
       * - REQ_09_02
-        - For feature/component requirements: Do the requirements defining a safety mechanism contain the error reaction leading to a safe state?
+        - Do the feature requirements defining a safety mechanism contain the error reaction leading to a safe state?
         - Alternatively to the safe state there could also be "repair" mechanisms. Also do not forget to consider REQ_05_01 for these.
         -
         -

@@ -14,8 +14,11 @@
 
 .. _quality_workflows:
 
-Workflows
----------
+Quality Management Workflows
+############################
+
+For a detailed explanation of workflows and their role within the process model, please refer to the :ref:`processes_introduction`.
+
 
 .. workflow:: Create/Maintain Quality Management Plan
    :id: wf__cr_mt_qlm_plan

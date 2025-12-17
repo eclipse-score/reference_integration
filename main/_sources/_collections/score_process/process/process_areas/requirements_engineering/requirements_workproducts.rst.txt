@@ -12,8 +12,8 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-Workproducts Requirements Engineering
-#####################################
+Requirements Engineering Work Products
+######################################
 
 .. workproduct:: Stakeholder Requirements
    :id: wp__requirements_stkh

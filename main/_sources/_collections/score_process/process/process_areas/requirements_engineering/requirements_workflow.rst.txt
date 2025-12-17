@@ -13,8 +13,11 @@
    # *******************************************************************************
 
 
-Workflow Requirements Engineering
-#################################
+Requirements Engineering Workflows
+##################################
+
+For a detailed explanation of workflows and their role within the process model, please refer to the :ref:`processes_introduction`.
+
 
 .. workflow:: Create/Maintain Stakeholder requirements and SW-Platform AoU
    :id: wf__req_stkh_req

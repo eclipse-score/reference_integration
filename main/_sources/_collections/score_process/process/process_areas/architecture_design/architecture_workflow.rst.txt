@@ -14,8 +14,10 @@
 
 .. _arch_workflow:
 
-Architecture Workflow
-=====================
+Architecture Workflows
+######################
+
+For a detailed explanation of workflows and their role within the process model, please refer to the :ref:`processes_introduction`.
 
 .. workflow:: Create/Maintain Feature architecture
    :id: wf__cr_mt_featarch

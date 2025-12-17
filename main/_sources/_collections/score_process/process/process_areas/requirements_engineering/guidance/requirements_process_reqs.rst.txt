@@ -192,7 +192,7 @@ Process Requirement Linkage
 .. gd_req:: Requirement Traceability
    :id: gd_req__req_traceability
    :status: valid
-   :tags: prio_1_automation, attribute
+   :tags: done_automation, attribute
    :complies: std_req__iso26262__support_6432
    :satisfies: wf__req_stkh_req, wf__req_feat_req, wf__req_comp_req, wf__req_proc_tool
 
@@ -268,7 +268,7 @@ Process Requirements Checks
 .. gd_req:: Requirements mandatory attributes provided
    :id: gd_req__req_check_mandatory
    :status: valid
-   :tags: prio_1_automation, check
+   :tags: done_automation, check
    :satisfies: wf__req_stkh_req, wf__req_feat_req, wf__req_comp_req, wf__req_proc_tool, wf__req_feat_aou, wf__req_comp_aou
 
    It shall be checked if all mandatory attributes for each requirement is provided by the user. For all requirements following attributes shall be mandatory:
@@ -278,6 +278,8 @@ Process Requirements Checks
       :style: table
       :columns: title
       :colwidths: 30
+
+   There is one exception from the above: "rationale" attribute is mandatory only for stakeholder requirements.
 
 .. gd_req:: Requirements no weak words
    :id: gd_req__req_desc_weak
@@ -334,7 +336,7 @@ Process Requirements Checks
 .. gd_req:: Requirements linkage safety
    :id: gd_req__req_linkage_safety
    :status: valid
-   :tags: prio_1_automation, check
+   :tags: done_automation, check
    :satisfies: wf__req_stkh_req, wf__req_feat_req, wf__req_comp_req
    :complies: std_req__iso26262__support_6422
 

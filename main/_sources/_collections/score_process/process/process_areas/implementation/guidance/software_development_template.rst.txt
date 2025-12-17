@@ -26,8 +26,8 @@ Purpose
 The main purpose of the software development plan is to define several software development related conditions:
 
 * selection of design and programming language
-* design guideline
-* coding guideline (e.g. MISRA, can also include style guide or naming convention)
+* design guideline (e.g. Enforcement of low complexity, Use of naming conventions, etc)
+* coding guideline (e.g. MISRA, can also include style guide or naming convention; Furthermore the coding guideline should respect the usual topics like Use of language subsets, Use of style guides, etc.)
 * SW configuration guideline
 * development tools
 
