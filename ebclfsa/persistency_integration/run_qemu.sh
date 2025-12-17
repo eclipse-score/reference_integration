@@ -7,8 +7,8 @@ if [ -z "$1" ]; then
     exit 1
 fi
 BASEFOLDER=$1
-IMAGE="${BASEFOLDER}/fastdev-ubuntu-ebcl-deb-qemuarm64.wic"
-KERNEL="${BASEFOLDER}/fastdev-ubuntu-ebcl-deb-qemuarm64-vmlinux"
+IMAGE="${BASEFOLDER}/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64.wic"
+KERNEL="${BASEFOLDER}/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64-vmlinux"
 if [ ! -d "${BASEFOLDER}" ] || [ ! -f "${IMAGE}" ] || [ ! -f "${KERNEL}" ] ; then
     echo "Run \"bazel build --config=aarch64-ebclfsa //persistency_integration:fastdev-image\" first to fetch the image"
 fi
