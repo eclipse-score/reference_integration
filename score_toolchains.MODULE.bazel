@@ -50,3 +50,21 @@ gcc.warning_flags(
 )
 use_repo(gcc, "gcc_toolchain", "gcc_toolchain_gcc")
 register_toolchains("@gcc_toolchain//:all")
+
+# AutoSD Toolchain
+bazel_dep(name = "os_autosd_toolchain", version = "0.0.1")
+git_override(
+    module_name = "os_autosd_toolchain",
+    remote = "https://github.com/odra/inc_os_autosd.git",
+    branch = "repo-new-structure",
+    strip_prefix = "toolchain"
+)
+
+autosd_10_gcc = use_extension("@os_autosd_toolchain//autosd_10_gcc:extensions.bzl", "autosd_10_gcc_extension")
+use_repo(autosd_10_gcc, "autosd_10_gcc_repo")
+register_toolchains("@autosd_10_gcc_repo//:gcc_toolchain_linux_x86_64")
+
+# Register the RPM toolchain
+rpm_toolchain = use_extension("@rules_rpm//toolchains:extensions.bzl", "rpm_toolchain")
+use_repo(rpm_toolchain, "rpm_toolchain")
+register_toolchains("@rules_rpm//toolchains:linux_x86_64")
