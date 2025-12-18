@@ -22,6 +22,9 @@ declare -A UT_TARGET_GROUPS=(
 # Markdown table header
 echo -e "Status\tPassed\tFailed\tSkipped\tTotal\tGroup\tDuration(s)" >> "${SUMMARY_FILE}"
 
+# Track if any test failed
+any_failed=0
+
 for group in "${!UT_TARGET_GROUPS[@]}"; do
     targets="${UT_TARGET_GROUPS[$group]}"
     command="bazel test --config="${CONFIG}" ${targets}"
@@ -44,13 +47,20 @@ for group in "${!UT_TARGET_GROUPS[@]}"; do
         status_symbol="✅"
     else
         status_symbol="❌"
+        any_failed=1
     fi
     
     # Append as a markdown table row
-    echo -e "${status_symbol}\t${tests_passed}\t${tests_failed}\t${tests_skipped}\t${tests_executed}\t${group}\t${duration}s" >> "${SUMMARY_FILE}"
+    echo -e "${status_symbol}\t${tests_passed}\t${tests_failed}\t${tests_skipped}\t${tests_executed}\t${group}\t${duration}s" | tee -a "${SUMMARY_FILE}"
     echo "==========================================="
     echo -e "\n\n"
 done
 
 # Align the summary table columns
 column -t -s $'\t' "${SUMMARY_FILE}" > "${SUMMARY_FILE}.tmp" && mv "${SUMMARY_FILE}.tmp" "${SUMMARY_FILE}"
+
+# Final check: exit with non-zero if any test failed
+if [[ $any_failed -ne 0 ]]; then
+    echo "Some unit test groups failed. Exiting with non-zero status."
+    exit 1
+fi
