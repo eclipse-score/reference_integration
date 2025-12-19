@@ -1,0 +1,94 @@
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+bazel_dep(name = "score_baselibs")
+single_version_override(
+    module_name = "score_baselibs",
+    version = "0.1.3",
+    patches = [
+        "//patches/baselibs:0001-RH-exception-header.patch",
+        "//patches/baselibs:0002-RH-algorithm-header.patch",
+    ],
+    patch_strip = 1,
+)
+
+bazel_dep(name = "score_communication")
+single_version_override(
+    module_name = "score_communication",
+    version = "0.1.0",
+    patches = [
+        "patches/communication/0001-example-visibility.patch",
+    ],
+    patch_strip = 1
+)
+
+bazel_dep(name = "score_persistency")
+single_version_override(
+    module_name = "score_persistency",
+    version = "0.2.1",
+)
+
+bazel_dep(name = "score_orchestrator")
+single_version_override(
+    module_name = "score_orchestrator",
+    version = "0.0.3",
+)
+
+bazel_dep(name = "score_tooling")
+single_version_override(
+    module_name = "score_tooling",
+    version = "1.0.2",
+)
+
+bazel_dep(name = "score_platform")
+single_version_override(
+    module_name = "score_platform",
+    version = "0.5.0",
+)
+
+bazel_dep(name = "score_bazel_platforms")
+single_version_override(
+    module_name = "score_bazel_platforms",
+    version = "0.0.2",
+)
+
+bazel_dep(name = "score_test_scenarios")
+single_version_override(
+    module_name = "score_test_scenarios",
+    version = "0.3.0",
+)
+
+bazel_dep(name = "score_docs_as_code")
+single_version_override(
+    module_name = "score_docs_as_code",
+    version = "2.2.0",
+)
+
+bazel_dep(name = "score_process")
+single_version_override(
+    module_name = "score_process",
+    version = "1.3.2",
+)
+
+bazel_dep(name = "score_feo", version = "1.0.2")
+single_version_override(
+    module_name = "score_feo",
+    version = "1.0.2",
+)
+
+bazel_dep(name = "score_kyron")
+git_override(
+    module_name = "score_kyron",
+    remote = "https://github.com/eclipse-score/kyron.git",
+    commit = "c5837ac6612a5ebf91cd016775f2d3ee85ed6892",
+)
