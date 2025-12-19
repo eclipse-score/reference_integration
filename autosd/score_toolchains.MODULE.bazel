@@ -1,0 +1,33 @@
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+bazel_dep(name = "os_autosd_toolchain", version = "0.0.1")
+# override with git
+git_override(
+    module_name = "os_autosd_toolchain",
+    remote = "https://github.com/odra/inc_os_autosd.git",
+    branch = "repo-new-structure",
+    strip_prefix = "toolchain"
+
+)
+autosd_10_gcc = use_extension("@os_autosd_toolchain//autosd_10_gcc:extensions.bzl", "autosd_10_gcc_extension")
+use_repo(autosd_10_gcc, "autosd_10_gcc_repo")
+register_toolchains("@autosd_10_gcc_repo//:gcc_toolchain_linux_x86_64")
+
+autosd_9_gcc = use_extension("@os_autosd_toolchain//autosd_9_gcc:extensions.bzl", "autosd_9_gcc_extension")
+use_repo(autosd_9_gcc, "autosd_9_gcc_repo")
+register_toolchains("@autosd_9_gcc_repo//:gcc_toolchain_linux_x86_64")
+
+# Register the RPM toolchain
+rpm_toolchain = use_extension("@rules_rpm//toolchains:extensions.bzl", "rpm_toolchain")
+use_repo(rpm_toolchain, "rpm_toolchain")
+register_toolchains("@rules_rpm//toolchains:linux_x86_64")

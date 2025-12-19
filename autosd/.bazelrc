@@ -43,8 +43,8 @@ build:bl-x86_64-qnx --platforms=@score_bazel_platforms//:x86_64-qnx
 build:bl-x86_64-qnx --extra_toolchains=@toolchains_qnx_qcc//:qcc_x86_64
 
 # This config is for internal module usage ONLY.
+# build --incompatible_enable_cc_toolchain_resolution
 build:bl-x86_64-linux-autosd --config=_bl_common
-build:bl-x86_64-linux-autosd --define=score_sw_platform=autosd
 build:bl-x86_64-linux-autosd --platforms=@score_bazel_platforms//:x86_64-linux
 build:bl-x86_64-linux-autosd --extra_toolchains=@autosd_10_gcc_repo//:gcc_toolchain_linux_x86_64
 build:bl-x86_64-linux-autosd --force_pic
