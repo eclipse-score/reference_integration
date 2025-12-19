@@ -111,7 +111,7 @@ any_failed=0
 for group in "${!BUILD_TARGET_GROUPS[@]}"; do
     targets="${BUILD_TARGET_GROUPS[$group]}"
     log_file="${LOG_DIR}/${group}.log"
-    
+
     # Log build group banner only to stdout/stderr (not into summary table file)
     echo "--- Building group: ${group} ---"
     start_ts=$(date +%s)
