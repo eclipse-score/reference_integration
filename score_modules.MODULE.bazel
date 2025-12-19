@@ -18,13 +18,14 @@ bazel_dep(name = "score_baselibs")
 git_override(
     module_name = "score_baselibs",
     remote = "https://github.com/eclipse-score/baselibs.git",
-    commit = "dd32543e546e09161a3e469a695565b8e2b38581",
+    commit = "3c65b223e9f516f95935bb4cd2e83d6088ca016f",
 )
 
 bazel_dep(name = "score_communication")
-single_version_override(
+git_override(
     module_name = "score_communication",
-    version = "0.1.1",
+    remote = "https://github.com/eclipse-score/communication.git",
+    commit = "9761836735d2efeb895092bb976f09fd67260633",
 )
 
 bazel_dep(name = "score_persistency")
