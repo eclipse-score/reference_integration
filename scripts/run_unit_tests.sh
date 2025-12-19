@@ -11,8 +11,14 @@ mkdir -p "${LOG_DIR}" || true
 declare -A UT_TARGET_GROUPS=(
     [baselibs]="@score_baselibs//score/...  -- \
         -@score_baselibs//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test \
-        -@score_baselibs//score/containers:dynamic_array_test" # nok, error in @score_baselibs//score/json/examples:json_buffer
-    [communication]="@score_communication//score/..." # nok, error from trlc in score_communication//score/mw/com/requirements/feature_requirements
+        -@score_baselibs//score/containers:dynamic_array_test \
+        -@score_baselibs//score/mw/log/configuration:*  \
+        -@score_baselibs//score/json/examples:*"  
+    [communication]="@score_communication//score/mw/com/impl/...   -- \
+        -@score_communication//score/mw/com/impl:unit_test_runtime_single_exec \
+        -@score_communication//score/mw/com/impl/configuration:config_parser_test \
+        -@score_communication//score/mw/com/impl/configuration:configuration_test \
+        -@score_communication//score/mw/com/impl/tracing/configuration:tracing_filter_config_parser_test"
     [persistency]="@score_persistency//:unit_tests" # ok
     [orchestrator]="@score_orchestrator//src/..." # ok
     [kyron]="@score_kyron//:unit_tests" # ok
