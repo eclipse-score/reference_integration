@@ -15,17 +15,15 @@
 # Do not edit manually - use tools/update_module_from_known_good.py
 
 bazel_dep(name = "score_baselibs")
-git_override(
+single_version_override(
     module_name = "score_baselibs",
-    remote = "https://github.com/eclipse-score/baselibs.git",
-    commit = "3c65b223e9f516f95935bb4cd2e83d6088ca016f",
+    version = "0.2.2",
 )
 
 bazel_dep(name = "score_communication")
-git_override(
+single_version_override(
     module_name = "score_communication",
-    remote = "https://github.com/eclipse-score/communication.git",
-    commit = "9761836735d2efeb895092bb976f09fd67260633",
+    version = "0.1.2",
 )
 
 bazel_dep(name = "score_persistency")
