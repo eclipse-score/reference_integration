@@ -21,6 +21,15 @@ declare -A BUILD_TARGET_GROUPS=(
     [score_orchestrator]="@score_orchestrator//src/..."
     [score_test_scenarios]="@score_test_scenarios//test_scenarios_rust:test_scenarios_rust @score_test_scenarios//test_scenarios_cpp:test_scenarios_cpp"
     [score_feo]="-- @score_feo//... -@score_feo//:docs -@score_feo//:ide_support -@score_feo//:needs_json"
+    [score_logging]="@score_logging//score/...  \
+        --@score_baselibs//score/memory/shared/flags:use_typedshmd=False \
+        --@score_baselibs//score/json:base_library=nlohmann \
+        --@score_logging//score/datarouter/build_configuration_flags:persistent_logging=False \
+        --@score_logging//score/datarouter/build_configuration_flags:persistent_config_feature_enabled=False \
+        --@score_logging//score/datarouter/build_configuration_flags:enable_nonverbose_dlt=False \
+        --@score_logging//score/datarouter/build_configuration_flags:enable_dynamic_configuration_in_datarouter=False \
+        --@score_logging//score/datarouter/build_configuration_flags:dlt_file_transfer_feature=False \
+        --@score_logging//score/datarouter/build_configuration_flags:use_local_vlan=True "
 )
 
 # Parse command line arguments
