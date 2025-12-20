@@ -16,6 +16,7 @@ KNOWN_GOOD_FILE=""
 declare -A BUILD_TARGET_GROUPS=(
     [score_baselibs]="@score_baselibs//score/..."
     [score_communication]="@score_communication//score/mw/com:com"
+    [score_logging]="@score_logging//score/..."
     [score_persistency]="@score_persistency//src/cpp/src/... @score_persistency//src/rust/..."
     [score_kyron]="@score_kyron//src/..."
     [score_orchestrator]="@score_orchestrator//src/..."

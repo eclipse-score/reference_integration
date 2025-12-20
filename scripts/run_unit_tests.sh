@@ -19,6 +19,7 @@ declare -A UT_TARGET_GROUPS=(
         -@score_communication//score/mw/com/impl/configuration:config_parser_test \
         -@score_communication//score/mw/com/impl/configuration:configuration_test \
         -@score_communication//score/mw/com/impl/tracing/configuration:tracing_filter_config_parser_test"
+    [logging]="@score_logging//score/..."
     [persistency]="@score_persistency//:unit_tests" # ok
     [orchestrator]="@score_orchestrator//src/..." # ok
     [kyron]="@score_kyron//:unit_tests" # ok
