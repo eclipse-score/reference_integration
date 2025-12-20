@@ -23,6 +23,20 @@ declare -A UT_TARGET_GROUPS=(
     [orchestrator]="@score_orchestrator//src/..." # ok
     [kyron]="@score_kyron//:unit_tests" # ok
     [feo]="@score_feo//... --build_tests_only" # ok (flag required or error from docs)
+    [logging]="@score_logging//score/... \
+        --@score_baselibs//score/memory/shared/flags:use_typedshmd=False \
+        --@score_baselibs//score/json:base_library=nlohmann \
+        --@score_logging//score/datarouter/build_configuration_flags:persistent_logging=False \
+        --@score_logging//score/datarouter/build_configuration_flags:persistent_config_feature_enabled=False \
+        --@score_logging//score/datarouter/build_configuration_flags:enable_nonverbose_dlt=False \
+        --@score_logging//score/datarouter/build_configuration_flags:enable_dynamic_configuration_in_datarouter=False \
+        --@score_logging//score/datarouter/build_configuration_flags:dlt_file_transfer_feature=False \
+        --@score_logging//score/datarouter/build_configuration_flags:use_local_vlan=True \
+        --test_tag_filters=-manual \
+        -- -@score_logging//score/datarouter/test/ut/ut_logging:dltprotocolUT \
+        -@score_logging//score/datarouter/test/ut/ut_logging:persistentLogConfigUT \
+        -@score_logging//score/datarouter/test/ut/ut_logging:socketserverConfigUT \
+        -@score_logging//score/mw/log/legacy_non_verbose_api:unit_test "
 )
 
 # Markdown table header
