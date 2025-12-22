@@ -12,7 +12,7 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-Work Products Documentation Management
+Documentation Management Work Products
 ######################################
 
 .. workproduct:: Documentation Management Plan

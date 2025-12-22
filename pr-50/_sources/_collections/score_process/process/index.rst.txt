@@ -44,7 +44,7 @@ Workflow activities are supported by guidances.
 General Concepts
 ~~~~~~~~~~~~~~~~
 
-General concepts like traceability of work products, life cycle model, building blocks can be found here:
+The general concepts like traceability of work products, life cycle model, building blocks can be found here:
 
 .. toctree::
    :maxdepth: 1
@@ -64,7 +64,7 @@ The process description for the project (e.g. requirements, architecture, safety
 Process Role definition
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-General roles not part of any process area.
+The general roles that are not part of any process area and the project roles list can be found here:
 
 .. toctree::
    :maxdepth: 1
@@ -74,7 +74,7 @@ General roles not part of any process area.
 Work Products
 ~~~~~~~~~~~~~
 
-General work products not part of any process area and work product overview list.
+The general work products that are not part of any process area and the work product overview list can be found here:
 
 .. toctree::
    :maxdepth: 1
@@ -84,7 +84,7 @@ General work products not part of any process area and work product overview lis
 Workflows
 ~~~~~~~~~
 
-General workflows not part of any process area and workflow overview list.
+The general workflows that are not part of any process area and workflow overview list can be found here:
 
 .. toctree::
    :maxdepth: 1
@@ -94,7 +94,7 @@ General workflows not part of any process area and workflow overview list.
 Standards
 ---------
 
-The the standard references the project's processes are derived from can be found here:
+The standard references the project's processes are derived from and the coverage of the requirements and the work products from the standards can be found here:
 
 .. toctree::
    :maxdepth: 1

@@ -14,8 +14,10 @@
 
 .. _chm_change_workflows:
 
-Workflow Change Management
-##########################
+Change Management Workflows
+###########################
+
+For a detailed explanation of workflows and their role within the process model, please refer to the :ref:`processes_introduction`.
 
 .. workflow:: Create Change Request
    :id: wf__change_create_cr

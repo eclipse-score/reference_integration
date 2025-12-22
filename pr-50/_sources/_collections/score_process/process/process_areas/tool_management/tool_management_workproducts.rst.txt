@@ -12,7 +12,7 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-Work Products Tool Management
+Tool Management Work Products
 #############################
 
 .. workproduct:: Platform Tool Management Plan

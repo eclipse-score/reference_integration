@@ -13,8 +13,10 @@
    # *******************************************************************************
 
 
-Workflow Security Management
-############################
+Security Management Workflows
+#############################
+
+For a detailed explanation of workflows and their role within the process model, please refer to the :ref:`processes_introduction`.
 
 .. workflow:: Create/Maintain Security Plan
    :id: wf__cr_mt_security_plan

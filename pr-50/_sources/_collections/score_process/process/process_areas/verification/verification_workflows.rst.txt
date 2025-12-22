@@ -14,8 +14,10 @@
 
 .. _verification_workflows:
 
-Workflow Verification
-#####################
+Verification Workflows
+######################
+
+For a detailed explanation of workflows and their role within the process model, please refer to the :ref:`processes_introduction`.
 
 .. workflow:: Create/Perform Unit Test
    :id: wf__verification_unit_test

@@ -102,7 +102,7 @@ Module Security Plan Template
           - <Link to WP>
           - <WP status (manual)>
 
-        * - :need:`wp__module_sw_build_config`
+        * - :need:`wp__module_sw_release_note`
           - :need:`Software Development Plan Template <gd_temp__software_development_plan>`
           - <automated>
           - <Link to issue>

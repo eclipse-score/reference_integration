@@ -127,7 +127,7 @@ Attributes of Architectural Elements
    :id: gd_req__arch_attr_safety
    :status: valid
    :tags: manual_prio_1, attribute, mandatory
-   :complies: std_req__iso26262__support_6421, std_req__iso26262__support_6425
+   :complies: std_req__iso26262__support_6421, std_req__iso26262__support_6425, std_req__iso26262__software_746
    :satisfies: wf__cr_mt_featarch, wf__cr_mt_comparch
 
    Each architectural element shall have a automotive safety integrity level (ASIL) identifier:

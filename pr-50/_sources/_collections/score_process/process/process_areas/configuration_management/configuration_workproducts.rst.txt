@@ -12,7 +12,7 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-Work Products Configuration Management
+Configuration Management Work Products
 ######################################
 
 .. workproduct:: Platform Configuration Management Plan

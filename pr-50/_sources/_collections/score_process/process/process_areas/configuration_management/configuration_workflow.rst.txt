@@ -13,8 +13,10 @@
    # *******************************************************************************
 
 
-Workflows Configuration Management
+Configuration Management Workflows
 ##################################
+
+For a detailed explanation of workflows and their role within the process model, please refer to the :ref:`processes_introduction`.
 
 The main work product is the configuration management plan, which is a part of the platform management plan.
 Thus the work flow :need:`wf__platform_cr_mt_platform_mgmt_plan` applies.
