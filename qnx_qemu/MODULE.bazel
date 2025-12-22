@@ -68,7 +68,7 @@ use_repo(gcc, "gcc_toolchain", "gcc_toolchain_gcc")
 register_toolchains("@gcc_toolchain//:all")
 
 # Configure target toolchain for QNX build.
-bazel_dep(name = "score_toolchains_qnx", version = "0.0.3")
+bazel_dep(name = "score_toolchains_qnx", version = "0.0.6")
 toolchains_qnx = use_extension("@score_toolchains_qnx//:extensions.bzl", "toolchains_qnx")
 toolchains_qnx.sdp(
     sha256 = "f2e0cb21c6baddbcb65f6a70610ce498e7685de8ea2e0f1648f01b327f6bac63",
@@ -89,13 +89,13 @@ register_toolchains("@toolchains_qnx_ifs//:ifs_x86_64")
 ###############################################################################
 bazel_dep(name = "rules_cc", version = "0.1.1")
 bazel_dep(name = "score_itf", version = "0.1.0")
-bazel_dep(name = "score_baselibs", version = "0.1.3")
+bazel_dep(name = "score_baselibs", version = "0.2.2")
 
-bazel_dep(name = "score_communication", version = "0.1.1")
+bazel_dep(name = "score_communication", version = "0.1.2")
 
 bazel_dep(name = "score_scrample", version = "0.1.0")
 
-bazel_dep(name = "score_persistency", version = "0.2.1")
+bazel_dep(name = "score_persistency", version = "0.2.2")
 
 bazel_dep(name = "rules_boost", repo_name = "com_github_nelhage_rules_boost")
 archive_override(
