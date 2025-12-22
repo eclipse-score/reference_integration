@@ -35,10 +35,10 @@ gcc.toolchain(
 )
 use_repo(gcc, "gcc_toolchain", "gcc_toolchain_gcc")
 
-bazel_dep(name = "score_docs_as_code", version = "2.0.1") # part of 0.5.0-alpha release
+bazel_dep(name = "score_docs_as_code", version = "2.2.0") # part of 0.5.0-beta release
 single_version_override(
     module_name = "score_docs_as_code",
-    version = "2.0.1",
+    version = "2.2.0",
 )
 
 bazel_dep(name = "score_baselibs")
@@ -51,8 +51,8 @@ single_version_override(
     ],
 )
 bazel_dep(name = "score_communication", version = "0.1.2") # part of 0.5.0-beta release
-bazel_dep(name = "score_scrample", version = "0.1.0") # part of 0.5.0-alpha release
-bazel_dep(name = "score_persistency", version = "0.2.1") # part of 0.5.0-alpha release
+bazel_dep(name = "score_scrample", version = "0.1.0") # part of 0.5.0-beta release
+bazel_dep(name = "score_persistency", version = "0.2.2") # part of 0.5.0-beta release
 
 # git_override is not forwarded by bazel_dep, so we need to redefine it here
 git_override(
