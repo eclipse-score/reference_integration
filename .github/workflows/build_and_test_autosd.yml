@@ -23,9 +23,6 @@ jobs:
   build:
     name: build-and-test-autosd
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: autosd/build
 
     steps:
       - name: Checkout repository
@@ -37,31 +34,46 @@ jobs:
       - name: Install System Dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y podman curl qemu-system
+          sudo apt-get install -y podman curl qemu-system createrepo-c
+
+      - name: Build Lola Demo
+        run: |
+          bazel build --config=bl-x86_64-linux-autosd //:lola-demo
+        working-directory: ./autosd
+
+      - name: Copy RPMs
+        run: |
+          set -e
+          mkdir -p ./build/rpms
+          cp bazel-out/k8-fastbuild/bin/lola-demo-1.0.0-1.x86_64.rpm ./build/rpms
+          cp bazel-out/k8-fastbuild/bin/lola-demo-1.0.0-1.src.rpm ./build/rpms
+          createrepo_c ./build/rpms/
+          ls -l ./build/rpms/
+        working-directory: ./autosd
       
       - name: Install AIB Tools
         run: |
-          curl -o auto-image-builder.sh "https://gitlab.com/CentOS/automotive/src/automotive-image-builder/-/raw/main/auto-image-builder.sh"
+          curl -o auto-image-builder.sh "https://gitlab.com/lrossett/automotive-image-builder/-/raw/script-fix/auto-image-builder.sh?ref_type=heads"
           chmod +x auto-image-builder.sh
 
           curl -o automotive-image-runner "https://gitlab.com/CentOS/automotive/src/automotive-image-builder/-/raw/main/automotive-image-runner"
           chmod +x automotive-image-runner
+        working-directory: ./autosd/build
 
       - name: Build lola-demo.aib.yml
         run: |
-          sudo ./auto-image-builder.sh build \
+          sudo ./auto-image-builder.sh build-deprecated \
           --distro autosd10 \
           --mode package \
           --target qemu \
           --export qcow2 \
           --define-file vars.yml \
           --define-file vars-devel.yml \
-          lola-demo.aib.yml \
+          image.aib.yml \
           disk.qcow2
 
           sudo chown $(id -u) disk.qcow2
-
-          mv disk.qcow2 ../disk.qcow2
+        working-directory: ./autosd/build
 
       - name: Enable KVM group perms
         run: |
@@ -80,6 +92,12 @@ jobs:
           sshcmd 'bluechictl start agent-qm lola-ipc-sub.service'
           sleep 5
           sshcmd '/usr/bin/lola-ipc-test'
-        working-directory: ./autosd
+        working-directory: ./autosd/build
         env:
           SSH_PASSWORD: password
+      
+      - name: Archive QEMU disk image
+        uses: actions/upload-artifact@v4
+        with:
+          name: autosd10-score-reference_integration-x86_64.qcow2
+          path: autosd/build/disk.qcow2

@@ -16,7 +16,7 @@ Description=LoLa IPC Subscriber
 After=network.target
 
 [Service]
-WorkingDirectory=/usr/share/score-communication/examples/ipc_bridge/etc/
+WorkingDirectory=/usr/share/lola/examples
 ExecStart=/usr/bin/ipc_bridge_cpp --mode proxy --num-cycles 5 --cycle-time 1000 --service_instance_manifest mw_com_config.json
 Restart=on-failure
 RestartSec=5

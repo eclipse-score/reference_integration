@@ -24,8 +24,8 @@ rust_binary(
         "manual",
     ],
     deps = [
-        "@score_orchestrator//src/kyron:libkyron",
-        "@score_orchestrator//src/kyron-foundation:libkyron_foundation",
+        "@score_kyron//src/kyron:libkyron",
+        "@score_kyron//src/kyron-foundation:libkyron_foundation",
         "@score_orchestrator//src/orchestration:liborchestration",
         "@score_persistency//src/rust/rust_kvs:rust_kvs",
         "@score_test_scenarios//test_scenarios_rust:test_scenarios_rust",

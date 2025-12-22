@@ -119,7 +119,7 @@ def load_known_good(path: str) -> dict:
 
 def write_known_good(path: str, original: dict, modules: list[Module]) -> None:
 	out = dict(original)  # shallow copy
-	out["timestamp"] = dt.datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
+	out["timestamp"] = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat() + "Z"
 	out["modules"] = {}
 	for m in modules:
 		mod_dict = {"repo": m.repo, "hash": m.hash}

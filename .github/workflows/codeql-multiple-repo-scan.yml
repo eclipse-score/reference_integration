@@ -1,0 +1,206 @@
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+name: "CodeQL - Multi-Repo Source Scan"
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+  merge_group:
+    types: [checks_requested]
+
+permissions:
+  contents: write
+
+jobs:
+  analyze-repos:
+    name: Analyze Multiple Repositories
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+      contents: read
+
+    steps:
+    - name: Checkout central repository
+      uses: actions/checkout@v4
+
+    - name: Checkout CodeQL Coding Standards scripts
+      uses: actions/checkout@v4
+      with:
+        repository: github/codeql-coding-standards
+        path: codeql-coding-standards-repo # Klonen in diesen Ordner
+        ref: main # Oder eine spezifische Release-Version, z.B. 'v2.53.0-dev'
+
+    # Add coding standard packages and dependencies
+    - name: Install Python dependencies for Coding Standards scripts
+      run: |
+        python3 -m pip install --upgrade pip
+        pip3 install pyyaml jsonpath-ng jsonschema jsonpatch jsonpointer pytest sarif-tools
+
+    - name: Parse known_good.json and create repos.json
+      id: parse-repos
+      run: |
+        sudo apt-get update && sudo apt-get install -y jq
+        JSON_FILE="./known_good.json" 
+
+        # Check if the file exists
+        if [ ! -f "$JSON_FILE" ]; then
+          echo "Error file not found '$JSON_FILE' "
+          ls -la .
+          exit 1
+        fi
+
+        # Create repos.json from known_good.json
+        # This jq command transforms the 'modules' object into an array of repository objects
+        # with 'name', 'url', 'version' (branch/tag/hash), and 'path'.
+        jq '[.modules | to_entries[] | {
+          name: .key, 
+          url: .value.repo, 
+          version: (.value.branch // .value.hash // .value.version),
+          path: ("repos/" + .key)
+        }]' "$JSON_FILE" > repos.json
+        
+        echo "Generated repos.json:"
+        cat repos.json
+        echo "" # Add a newline for better readability
+
+        # The following GITHUB_OUTPUT variables are set for each module.
+        # These might be useful for other steps, but are not directly used by the 'checkout-repos' step
+        # which now reads 'repos.json' directly.
+        echo "MODULE_COUNT=$(jq '.modules | length' "$JSON_FILE")" >> $GITHUB_OUTPUT
+
+        jq -c '.modules | to_entries[]' "$JSON_FILE" | while read -r module_entry; do
+          module_name=$(echo "$module_entry" | jq -r '.key')
+          repo_url=$(echo "$module_entry" | jq -r '.value.repo // empty')
+          version=$(echo "$module_entry" | jq -r '.value.version // empty')
+          branch=$(echo "$module_entry" | jq -r '.value.branch // empty')
+          hash=$(echo "$module_entry" | jq -r '.value.hash // empty')
+
+          echo "${module_name}_url=$repo_url" >> $GITHUB_OUTPUT
+      
+          if [ -n "$version" ]; then
+           echo "${module_name}_version=$version" >> $GITHUB_OUTPUT
+          fi
+      
+          if [ -n "$branch" ]; then
+            echo "${module_name}_branch=$branch" >> $GITHUB_OUTPUT
+          fi
+      
+          if [ -n "$hash" ]; then
+            echo "${module_name}_hash=$hash" >> $GITHUB_OUTPUT
+          fi
+        done
+      
+    - name: Checkout all pinned repositories
+      id: checkout-repos
+      run: |
+        # jq is already installed by the previous step.
+        
+        # Read repositories from the repos.json file created by the previous step
+        repos=$(cat repos.json)
+        repo_count=$(echo "$repos" | jq length)
+        
+        # Initialize an empty string for paths to be outputted
+        repo_paths_output=""
+
+        for i in $(seq 0 $((repo_count-1))); do
+          name=$(echo "$repos" | jq -r ".[$i].name")
+          url=$(echo "$repos" | jq -r ".[$i].url")
+          ref=$(echo "$repos" | jq -r ".[$i].version") # This can be a branch, tag, or commit hash
+          path=$(echo "$repos" | jq -r ".[$i].path") # e.g., "repos/score_baselibs"
+          
+          echo "Checking out $name ($ref) to $path"
+          
+          # Create the parent directory if it doesn't exist
+          mkdir -p "$(dirname "$path")"
+
+          # Check if 'ref' looks like a commit hash (e.g., 40 hex characters)
+          # This is a heuristic; a more robust check might involve fetching refs first.
+          if [[ "$ref" =~ ^[0-9a-fA-F]{40}$ ]]; then
+            echo "  Detected commit hash. Cloning and then checking out."
+            git clone "$url" "$path"
+            (cd "$path" && git checkout "$ref")
+          else
+            echo "  Detected branch/tag. Cloning with --branch."
+            git clone --depth 1 --branch "$ref" "$url" "$path"
+          fi
+          
+          # Append the path to the list, separated by commas
+          if [ -z "$repo_paths_output" ]; then
+            repo_paths_output="$path"
+          else
+            repo_paths_output="$repo_paths_output,$path"
+          fi
+        done
+        
+        # Output all paths as a single variable
+        echo "repo_paths=$repo_paths_output" >> $GITHUB_OUTPUT
+
+    - name: Initialize CodeQL for all repositories
+      uses: github/codeql-action/init@v4
+      with:
+        languages: cpp
+        build-mode: none
+        packs: codeql/misra-cpp-coding-standards
+        config-file: ./.github/codeql/codeql-config.yml
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v4
+      with:
+        upload-database: false # Don't upload databases for each repo
+        output: sarif-results/
+        category: "multi-repo-scan"
+
+    - name: Recategorize Guidelines
+      if: always()
+      run: |
+        RECATEGORIZE_SCRIPT="codeql-coding-standards-repo/scripts/guideline_recategorization/recategorize.py"
+        CODING_STANDARDS_CONFIG="./.github/codeql/coding-standards.yml"
+          
+        CODING_STANDARDS_SCHEMA="codeql-coding-standards-repo/schemas/coding-standards-schema-1.0.0.json"
+        SARIF_SCHEMA="codeql-coding-standards-repo/schemas/sarif-schema-2.1.0.json"
+          
+          
+        SARIF_FILE="sarif-results/cpp.sarif" 
+          
+        mkdir -p sarif-results-recategorized
+        echo "Processing $SARIF_FILE for recategorization..."
+        python3 "$RECATEGORIZE_SCRIPT" \
+          --coding-standards-schema-file "$CODING_STANDARDS_SCHEMA" \
+          --sarif-schema-file "$SARIF_SCHEMA" \
+          "$CODING_STANDARDS_CONFIG" \
+          "$SARIF_FILE" \
+          "sarif-results-recategorized/$(basename "$SARIF_FILE")"
+          
+          rm "$SARIF_FILE"
+          mv "sarif-results-recategorized/$(basename "$SARIF_FILE")" "$SARIF_FILE"
+
+    - name: Generate HTML Report from SARIF
+      run: |
+        SARIF_FILE="sarif-results/cpp.sarif"
+        sarif html "$SARIF_FILE" --output codeql-report.html
+
+    - name: Upload SARIF results as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: codeql-sarif-results
+        path: sarif-results/
+
+
+    - name: Upload HTML Report as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: codeql-html-report
+        path: codeql-report.html

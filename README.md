@@ -63,6 +63,47 @@ Execute `bazel query //feature_showcase/...` to obtain list of targets that You 
 bazel build --config bl-x86_64-linux @score_orchestrator//src/... --verbose_failures
 ```
 
+## Workspace support
+
+You can obtain a complete S-CORE workspace, i.e. a git checkout of all modules from `known_good.json`, on the specific branches / commits, integrated into one Bazel build.
+This helps with cross-module development, debugging, and generally "trying out things".
+
+> [!NOTE]
+> The startup of the [S-CORE devcontainer](https://github.com/eclipse-score/devcontainer) [integrated in this repository](.devcontainer/) already installs supported workspace managers and generates the required metadata.
+> You can do this manually as well, of course (e.g. if you do not use the devcontainer).
+> Take a look at `.devcontainer/prepare_workspace.sh`, which contains the setup script.
+
+> [!NOTE]
+> Not all Bazel targets are supported yet.
+> Running `./scripts/integration_test.sh` will work, though.
+> Take a look at the [Known Issues](#known-issues-️) below to see which Bazel targets are available and working.
+
+The supported workspace managers are:
+
+| Name | Description |
+|------|-------------|
+| [Gita](https://github.com/nosarthur/gita) | "a command-line tool to manage multiple git repos" |
+
+A description of how to use these workspace managers, together with their advantages and drawbacks, is beyond the scope of this document.
+In case of doubt, choose the first.
+
+### Initialization of the workspace
+
+> [!WARNING]
+> This will change the file `score_modules.MODULE.bazel`.
+> Do **not** commit these changes!
+
+1. Switch to local path overrides, using the VSCode Task (`Terminal`->`Run Task...`) "Switch Bazel modules to `local_path_overrides`".
+   Note that you can switch back to `git_overrides` (the default) using the task "Switch Bazel modules to `git_overrides`"
+   
+2. Run VSCode Task "&lt;Name&gt;: Generate workspace", e.g. "Gita: Generate workspace".
+   This will clone all modules using the chosen workspace manager.
+   The modules will be in sub-directories starting with `score_`.
+   Note that the usage of different workspace managers is mutually exclusive.
+
+When you now run Bazel, it will use the local working copies of all modules and not download them from git remotes.
+You can make local changes to each module, which will be directly reflected in the next Bazel run.
+
 ## Known Issues ⚠️
 
 ### Orchestrator
@@ -154,7 +195,7 @@ local_path_override(module_name = "score_tooling", path = "../tooling")
 
 ### Rust
 
-Use `./generate_rust_analyzer_support.sh` to generate rust_analyzer settings that will let VS Code work.
+Use `scripts/generate_rust_analyzer_support.sh` to generate rust_analyzer settings that will let VS Code work.
 
 ## 🗂 Notes
 Keep this file updated as integration issues are resolved. Prefer converting ad-hoc shell steps into Bazel rules or documented scripts under `tools/` for repeatability.

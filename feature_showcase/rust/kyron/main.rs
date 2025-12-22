@@ -23,7 +23,10 @@ use kyron_foundation::prelude::*;
 /// For more visit https://github.com/eclipse-score/orchestrator
 #[kyron::main]
 async fn main() {
-    tracing_subscriber::fmt().with_target(false).with_max_level(Level::INFO).init();
+    tracing_subscriber::fmt()
+        .with_target(false)
+        .with_max_level(Level::INFO)
+        .init();
 
     let (sender, mut receiver) = create_channel_default::<u32>();
 
