@@ -90,8 +90,24 @@ def generate_git_override_blocks(modules_dict: Dict[str, Any], repo_commit_dict:
     
     return blocks
 
+def generate_local_override_blocks(modules_dict: Dict[str, Any]) -> List[str]:
+    """Generate bazel_dep and local_path_override blocks for each module."""
+    blocks = []
+    
+    for name, module in modules_dict.items():
+        block = (
+            f'bazel_dep(name = "{name}")\n'
+            'local_path_override(\n'
+            f'    module_name = "{name}",\n'
+            f'    path = "{name}",\n'
+            ')\n'
+        )
+        
+        blocks.append(block)
+    
+    return blocks
 
-def generate_file_content(modules: Dict[str, Any], repo_commit_dict: Dict[str, str], timestamp: Optional[str] = None) -> str:
+def generate_file_content(args: argparse.Namespace, modules: Dict[str, Any], repo_commit_dict: Dict[str, str], timestamp: Optional[str] = None) -> str:
     """Generate the complete content for score_modules.MODULE.bazel."""
     # License header assembled with parenthesis grouping (no indentation preserved in output).
     header = (
@@ -117,7 +133,15 @@ def generate_file_content(modules: Dict[str, Any], repo_commit_dict: Dict[str, s
             "\n"
         )
     
-    blocks = generate_git_override_blocks(modules, repo_commit_dict)
+    if args.override_type == "git":
+        blocks = generate_git_override_blocks(modules, repo_commit_dict)
+    else:
+        header += (
+            "# Note: This file uses local_path overrides. Ensure that local paths are set up correctly.\n"
+            "\n"
+        )
+        blocks = generate_local_override_blocks(modules)
+
     
     if not blocks:
         raise SystemExit("No valid modules to generate git_override blocks")
@@ -148,6 +172,12 @@ def main() -> None:
         "--repo-override",
         action="append",
         help="Override commit for a specific repo (format: <REPO_URL>@<COMMIT_SHA>)"
+    )
+    parser.add_argument(
+        "--override-type",
+        choices=["local_path", "git"],
+        default="git",
+        help="Type of override to use (default: git)"
     )
     
     args = parser.parse_args()
@@ -180,7 +210,7 @@ def main() -> None:
     
     # Generate file content
     timestamp = data.get("timestamp") or datetime.now().isoformat()
-    content = generate_file_content(modules, repo_commit_dict, timestamp)
+    content = generate_file_content(args, modules, repo_commit_dict, timestamp)
     
     if args.dry_run:
         print(f"Dry run: would write to {output_path}\n")
@@ -191,7 +221,7 @@ def main() -> None:
     else:
         with open(output_path, "w", encoding="utf-8") as f:
             f.write(content)
-        print(f"Generated {output_path} with {len(modules)} git_override entries")
+        print(f"Generated {output_path} with {len(modules)} {args.override_type}_override entries")
 
 
 if __name__ == "__main__":
