@@ -57,6 +57,16 @@ Execute `bazel query //feature_showcase/...` to obtain list of targets that You 
 bazel build --config bl-x86_64-linux @score_orchestrator//src/... --verbose_failures
 ```
 
+## Operating system integrations
+
+> [!NOTE]
+> Integrations of Eclipse S-CORE into reference operating systems are currently realized as **independent Bazel projects**.
+> Please refer to the README documents in the respective sub-directories for details about the specific integration.
+
+* [QNX](./qnx_qemu/README.md)
+* [Red Hat AutoSD](./autosd/build/README.md)
+* [Elektrobit corbos Linux for Safety Applications](./ebclfsa/README.md)
+
 ## Workspace support
 
 You can obtain a complete S-CORE workspace, i.e. a git checkout of all modules from `known_good.json`, on the specific branches / commits, integrated into one Bazel build.
