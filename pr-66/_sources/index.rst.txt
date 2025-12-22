@@ -15,7 +15,7 @@
 Reference Integration Documentation
 ===================================
 
-Release Notes: :need:`doc__score_v05_alpha_release_note`
+Newest Release Notes: :need:`doc__score_v05_beta_release_note`
 
 
 .. if-collection:: score_platform

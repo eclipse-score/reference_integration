@@ -438,8 +438,9 @@
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">Features</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../ai_platform/index.html">AI Platform</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../analysis-infra/index.html">Analysis Infrastructure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../baselibs/index.html">Base Libraries (v0.5 alpha)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../communication/index.html">Communication (v0.5 alpha)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../baselibs/index.html">Base Libraries (v0.5 beta)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../code_generation/index.html">Code Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../communication/index.html">Communication (v0.5 beta)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../configuration/index.html">Configuration</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">Diagnostic and Fault Management</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">Requirements</a></li>
@@ -449,8 +450,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../../infrastructure/index.html">Infrastructure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../integration/index.html">Integration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../lifecycle/index.html">Lifecycle</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../orchestration/index.html">Orchestration (v0.5 alpha)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../persistency/index.html">Persistency (v0.5 alpha)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../orchestration/index.html">Orchestration (v0.5 beta)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../persistency/index.html">Persistency (v0.5 beta)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../security_crypto/index.html">Security &amp; Cryptography</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../time/index.html">Time</a></li>
 </ul>
@@ -537,7 +538,7 @@
 <span id="diagnostics-requirements"></span><h1>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h1>
 <section id="diagnostic-and-fault-management">
 <h2>Diagnostic and Fault Management<a class="headerlink" href="#diagnostic-and-fault-management" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-9e6a34e0">
+<div class="need_container docutils container" id="SNCB-3316bdb9">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_req table" id="feat_req__diagnostics__sovd_std">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -557,6 +558,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_valid_from"><span class="needs_label">valid_from: </span><span class="needs_data">v1.0.0</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__via_sovd" title="feat_req__diagnostics__sovd_std">stkh_req__diagnostics__via_sovd</a></span></span></div>
 </span></div>
@@ -580,7 +582,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-5d482d48">
+<div class="need_container docutils container" id="SNCB-02a467d6">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_req table" id="feat_req__diagnostics__sovd_server">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -600,6 +602,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_valid_from"><span class="needs_label">valid_from: </span><span class="needs_data">v1.0.0</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__via_sovd" title="feat_req__diagnostics__sovd_server">stkh_req__diagnostics__via_sovd</a>, <a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__secure_access" title="feat_req__diagnostics__sovd_server">stkh_req__diagnostics__secure_access</a></span></span></div>
 </span></div>
@@ -607,7 +610,7 @@
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p>The diagnostic system shall include a central SOVD server that exposes diagnostic functionality via a standard REST interface, dispatches incoming requests to backend services, and enforces authentication and access control.</p></td>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The diagnostic system shall include a central SOVD server that exposes diagnostic functionality via a standard REST interface.</p></td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
 <div class="line"><span><span class="needs-id"><a class="reference internal" href="#feat_req__diagnostics__sovd_server" title="feat_req__diagnostics__sovd_server">feat_req__diagnostics__sovd_server</a></span></span></div>
@@ -623,7 +626,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-b710a642">
+<div class="need_container docutils container" id="SNCB-dd8b85d8">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_req table" id="feat_req__diagnostics__sovd_config">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -643,6 +646,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_valid_from"><span class="needs_label">valid_from: </span><span class="needs_data">v1.5.0</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__via_sovd" title="feat_req__diagnostics__sovd_config">stkh_req__diagnostics__via_sovd</a></span></span></div>
 </span></div>
@@ -666,7 +670,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-18b6fe01">
+<div class="need_container docutils container" id="SNCB-f2960a36">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_req table" id="feat_req__diagnostics__sovd_config_mgr">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -686,6 +690,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_valid_from"><span class="needs_label">valid_from: </span><span class="needs_data">v1.5.0</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__via_sovd" title="feat_req__diagnostics__sovd_config_mgr">stkh_req__diagnostics__via_sovd</a></span></span></div>
 </span></div>
@@ -709,7 +714,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-f35fa78e">
+<div class="need_container docutils container" id="SNCB-6b98c0a9">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_req table" id="feat_req__diagnostics__sovd_auth_mgr">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -729,6 +734,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_valid_from"><span class="needs_label">valid_from: </span><span class="needs_data">v1.5.0</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__secure_access" title="feat_req__diagnostics__sovd_auth_mgr">stkh_req__diagnostics__secure_access</a></span></span></div>
 </span></div>
@@ -736,7 +742,7 @@
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p>The SOVD server shall integrate with the S-CORE Authentication Manager to enforce access control and validate client credentials.</p></td>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The SOVD server shall enforce access control and validate client credentials.</p></td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
 <div class="line"><span><span class="needs-id"><a class="reference internal" href="#feat_req__diagnostics__sovd_auth_mgr" title="feat_req__diagnostics__sovd_auth_mgr">feat_req__diagnostics__sovd_auth_mgr</a></span></span></div>
@@ -752,7 +758,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-d313330b">
+<div class="need_container docutils container" id="SNCB-b7088cf5">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_req table" id="feat_req__diagnostics__sovd_gateway">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -772,6 +778,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_valid_from"><span class="needs_label">valid_from: </span><span class="needs_data">v1.0.0</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__distributed_support" title="feat_req__diagnostics__sovd_gateway">stkh_req__diagnostics__distributed_support</a></span></span></div>
 </span></div>
@@ -795,7 +802,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-bd813f75">
+<div class="need_container docutils container" id="SNCB-d93412aa">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_req table" id="feat_req__diagnostics__sovd_client">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -815,6 +822,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_valid_from"><span class="needs_label">valid_from: </span><span class="needs_data">v1.0.0</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__via_sovd" title="feat_req__diagnostics__sovd_client">stkh_req__diagnostics__via_sovd</a>, <a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__secure_access" title="feat_req__diagnostics__sovd_client">stkh_req__diagnostics__secure_access</a></span></span></div>
 </span></div>
@@ -838,7 +846,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-898d3716">
+<div class="need_container docutils container" id="SNCB-70464966">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_req table" id="feat_req__diagnostics__sovd_client_core">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -858,6 +866,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_valid_from"><span class="needs_label">valid_from: </span><span class="needs_data">v1.0.0</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__via_sovd" title="feat_req__diagnostics__sovd_client_core">stkh_req__diagnostics__via_sovd</a></span></span></div>
 </span></div>
@@ -881,7 +890,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-6d9242d4">
+<div class="need_container docutils container" id="SNCB-e3dc9fa2">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_req table" id="feat_req__diagnostics__service_app">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -901,6 +910,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_valid_from"><span class="needs_label">valid_from: </span><span class="needs_data">v1.0.0</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__custom_services" title="feat_req__diagnostics__service_app">stkh_req__diagnostics__custom_services</a></span></span></div>
 </span></div>
@@ -908,7 +918,7 @@
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p>The diagnostic system shall include a base service application (AKA routine) that is triggered from the SOVD Server and used to derive custom service applications.</p></td>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The diagnostic system shall include a base service application (AKA routine) that is triggered by the SOVD Server and used to derive custom service applications.</p></td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
 <div class="line"><span><span class="needs-id"><a class="reference internal" href="#feat_req__diagnostics__service_app" title="feat_req__diagnostics__service_app">feat_req__diagnostics__service_app</a></span></span></div>
@@ -924,7 +934,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-f38a0ef7">
+<div class="need_container docutils container" id="SNCB-5d1846fe">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_req table" id="feat_req__diagnostics__oem_plugin">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -944,6 +954,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_valid_from"><span class="needs_label">valid_from: </span><span class="needs_data">v1.5.0</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__custom_services" title="feat_req__diagnostics__oem_plugin">stkh_req__diagnostics__custom_services</a></span></span></div>
 </span></div>
@@ -967,7 +978,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-108e4619">
+<div class="need_container docutils container" id="SNCB-db9fc941">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_req table" id="feat_req__diagnostics__fault_lib">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -987,6 +998,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_valid_from"><span class="needs_label">valid_from: </span><span class="needs_data">v1.0.0</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__fault_reporting" title="feat_req__diagnostics__fault_lib">stkh_req__diagnostics__fault_reporting</a></span></span></div>
 </span></div>
@@ -994,7 +1006,7 @@
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p>The system shall include a fault reporting library that provides an IPC-based interface for applications and platform components to report diagnostic faults, including metadata.</p></td>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The system shall include a fault reporting library that provides an interface for applications and platform components to report diagnostic faults including metadata.</p></td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
 <div class="line"><span><span class="needs-id"><a class="reference internal" href="#feat_req__diagnostics__fault_lib" title="feat_req__diagnostics__fault_lib">feat_req__diagnostics__fault_lib</a></span></span></div>
@@ -1010,7 +1022,51 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-19c4e7a1">
+<div class="need_container docutils container" id="SNCB-0fccd826">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_req table" id="feat_req__diagnostics__fault_lib_catalog">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Fault Library Catalog</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">YES</span></span></span></div>
+<div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">QM</span></span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_valid_from"><span class="needs_label">valid_from: </span><span class="needs_data">v1.0.0</span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__fault_reporting" title="feat_req__diagnostics__fault_lib_catalog">stkh_req__diagnostics__fault_reporting</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The fault library shall provide the ability to define faults via a component fault catalog for the scope of the respective parent component.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#feat_req__diagnostics__fault_lib_catalog" title="feat_req__diagnostics__fault_lib_catalog">feat_req__diagnostics__fault_lib_catalog</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Feature Requirement</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-f3063951">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_req table" id="feat_req__diagnostics__fault_lib_debounce">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1030,6 +1086,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_valid_from"><span class="needs_label">valid_from: </span><span class="needs_data">v1.5.0</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__fault_reporting" title="feat_req__diagnostics__fault_lib_debounce">stkh_req__diagnostics__fault_reporting</a></span></span></div>
 </span></div>
@@ -1053,7 +1110,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-db2f660a">
+<div class="need_container docutils container" id="SNCB-ab91056d">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_req table" id="feat_req__diagnostics__fault_manager">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1073,6 +1130,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_valid_from"><span class="needs_label">valid_from: </span><span class="needs_data">v1.0.0</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__fault_reporting" title="feat_req__diagnostics__fault_manager">stkh_req__diagnostics__fault_reporting</a>, <a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__dtc_read_sovd" title="feat_req__diagnostics__fault_manager">stkh_req__diagnostics__dtc_read_sovd</a></span></span></div>
 </span></div>
@@ -1080,7 +1138,7 @@
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p>The system shall include a central diagnostic fault manager that aggregates data from fault libraries, provides fault status to the SOVD server, and interfaces with a persistent diagnostic database.</p></td>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The system shall include a central diagnostic fault manager that aggregates data from fault libraries, provides DTC status to the SOVD server, and interfaces with a persistent diagnostic database.</p></td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
 <div class="line"><span><span class="needs-id"><a class="reference internal" href="#feat_req__diagnostics__fault_manager" title="feat_req__diagnostics__fault_manager">feat_req__diagnostics__fault_manager</a></span></span></div>
@@ -1096,7 +1154,51 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-184fbb51">
+<div class="need_container docutils container" id="SNCB-c9e4cb35">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_req table" id="feat_req__diagnostics__fault_catalog_agg">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Fault Catalog Aggregation</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">YES</span></span></span></div>
+<div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">QM</span></span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_valid_from"><span class="needs_label">valid_from: </span><span class="needs_data">v1.0.0</span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__fault_reporting" title="feat_req__diagnostics__fault_catalog_agg">stkh_req__diagnostics__fault_reporting</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The Diagnostic Fault Manager shall be configureable via the aggregated fault catalog derived from all fault libraries in the system.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#feat_req__diagnostics__fault_catalog_agg" title="feat_req__diagnostics__fault_catalog_agg">feat_req__diagnostics__fault_catalog_agg</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Feature Requirement</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-eb9eda59">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_req table" id="feat_req__diagnostics__db">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1116,6 +1218,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_valid_from"><span class="needs_label">valid_from: </span><span class="needs_data">v1.0.0</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__fault_reporting" title="feat_req__diagnostics__db">stkh_req__diagnostics__fault_reporting</a>, <a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__dtc_read_sovd" title="feat_req__diagnostics__db">stkh_req__diagnostics__dtc_read_sovd</a></span></span></div>
 </span></div>
@@ -1123,7 +1226,7 @@
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p>The system shall include a diagnostic database using the S-CORE::Persistency module to store DTCs, occurrence counts, and associated metadata for fault events.</p></td>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The system shall include a diagnostic database to store DTCs, occurrence counts, and associated metadata for fault events.</p></td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
 <div class="line"><span><span class="needs-id"><a class="reference internal" href="#feat_req__diagnostics__db" title="feat_req__diagnostics__db">feat_req__diagnostics__db</a></span></span></div>
@@ -1139,7 +1242,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-9afbd241">
+<div class="need_container docutils container" id="SNCB-e4e8bf5c">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_req table" id="feat_req__diagnostics__db_persistence">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1159,6 +1262,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_valid_from"><span class="needs_label">valid_from: </span><span class="needs_data">v1.0.0</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__fault_reporting" title="feat_req__diagnostics__db_persistence">stkh_req__diagnostics__fault_reporting</a></span></span></div>
 </span></div>
@@ -1166,7 +1270,7 @@
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p>The diagnostic database shall store all diagnostic data persistently using the S-CORE::Persistency infrastructure.</p></td>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The diagnostic database shall store all diagnostic data persistently.</p></td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
 <div class="line"><span><span class="needs-id"><a class="reference internal" href="#feat_req__diagnostics__db_persistence" title="feat_req__diagnostics__db_persistence">feat_req__diagnostics__db_persistence</a></span></span></div>
@@ -1182,7 +1286,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-fa55cd6d">
+<div class="need_container docutils container" id="SNCB-0ba0982b">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_req table" id="feat_req__diagnostics__classic_adapter">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1202,6 +1306,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_valid_from"><span class="needs_label">valid_from: </span><span class="needs_data">v1.0.0</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__uds_ecus" title="feat_req__diagnostics__classic_adapter">stkh_req__diagnostics__uds_ecus</a></span></span></div>
 </span></div>
@@ -1225,7 +1330,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-8f4d25b3">
+<div class="need_container docutils container" id="SNCB-7a9da7ac">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_req table" id="feat_req__diagnostics__classic_adapter_odx">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1245,6 +1350,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_valid_from"><span class="needs_label">valid_from: </span><span class="needs_data">v1.0.0</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__uds_ecus" title="feat_req__diagnostics__classic_adapter_odx">stkh_req__diagnostics__uds_ecus</a></span></span></div>
 </span></div>
@@ -1268,7 +1374,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-37dcbe13">
+<div class="need_container docutils container" id="SNCB-2c6f2f6a">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_req table" id="feat_req__diagnostics__uds2sovd_proxy">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1288,6 +1394,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_valid_from"><span class="needs_label">valid_from: </span><span class="needs_data">v1.5.0</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__uds_tester_compat" title="feat_req__diagnostics__uds2sovd_proxy">stkh_req__diagnostics__uds_tester_compat</a></span></span></div>
 </span></div>
@@ -1311,7 +1418,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-c3293d20">
+<div class="need_container docutils container" id="SNCB-ef976f4a">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_req table" id="feat_req__diagnostics__uds2sovd_odx">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1331,6 +1438,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_valid_from"><span class="needs_label">valid_from: </span><span class="needs_data">v1.5.0</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__uds_tester_compat" title="feat_req__diagnostics__uds2sovd_odx">stkh_req__diagnostics__uds_tester_compat</a></span></span></div>
 </span></div>
@@ -1354,7 +1462,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-a4513a29">
+<div class="need_container docutils container" id="SNCB-b499e47c">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_req table" id="feat_req__diagnostics__internal_com">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1374,6 +1482,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_valid_from"><span class="needs_label">valid_from: </span><span class="needs_data">v1.0.0</span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__via_sovd" title="feat_req__diagnostics__internal_com">stkh_req__diagnostics__via_sovd</a>, <a class="reference internal" href="../../../requirements/stakeholder/index.html#stkh_req__diagnostics__dtc_read_sovd" title="feat_req__diagnostics__internal_com">stkh_req__diagnostics__dtc_read_sovd</a></span></span></div>
 </span></div>
