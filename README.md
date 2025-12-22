@@ -43,7 +43,7 @@ bazel build --config bl-x86_64-linux \
 ### Orchestration and `kyron` - async runtime for Rust
 
 ```bash
-bazel build --config bl-x86_64-linux @score_orchestrator//src/...
+bazel build --config bl-x86_64-linux @score_kyron//src/...
 ```
 
 ## Feature showcase examples
