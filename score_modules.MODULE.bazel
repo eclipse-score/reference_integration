@@ -11,10 +11,13 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
+# Generated from known_good.json at 2025-08-13T12:55:10Z
+# Do not edit manually - use tools/update_module_from_known_good.py
+
 bazel_dep(name = "score_baselibs")
 single_version_override(
     module_name = "score_baselibs",
-    version = "0.2.2" 
+    version = "0.2.2",
 )
 
 bazel_dep(name = "score_communication")
@@ -30,10 +33,9 @@ single_version_override(
 )
 
 bazel_dep(name = "score_persistency")
-git_override(
+single_version_override(
     module_name = "score_persistency",
-    remote = "https://github.com/qorix-group/persistency.git",
-    commit = "49089f1ac9d232f09eb65ca086b92f67e75aaff8",
+    version = "0.2.2",
 )
 
 bazel_dep(name = "score_orchestrator")
@@ -48,17 +50,22 @@ single_version_override(
     version = "0.0.3",
 )
 
-bazel_dep(name = "score_tooling")
+bazel_dep(name = "score_feo")
 single_version_override(
-    module_name = "score_tooling",
+    module_name = "score_feo",
     version = "1.0.2",
 )
 
+bazel_dep(name = "score_tooling")
+single_version_override(
+    module_name = "score_tooling",
+    version = "1.0.4",
+)
+
 bazel_dep(name = "score_platform")
-git_override(
+single_version_override(
     module_name = "score_platform",
-    remote = "https://github.com/eclipse-score/score.git",
-    commit = "45faa6781b5c7d292d885d4e2ad95eaf21c925c5",
+    version = "0.5.2",
 )
 
 bazel_dep(name = "score_bazel_platforms")
@@ -84,11 +91,3 @@ single_version_override(
     module_name = "score_process",
     version = "1.4.0",
 )
-
-bazel_dep(name = "score_feo", version = "1.0.2")
-single_version_override(
-    module_name = "score_feo",
-    version = "1.0.2",
-)
-
-bazel_dep(name = "nlohmann_json", version = "3.11.3")
