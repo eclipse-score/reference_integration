@@ -22,6 +22,9 @@ on:
 jobs:
     integration_test:
       runs-on: ubuntu-latest
+      permissions:
+        contents: write # required to upload release assets
+
       steps:
         - name: Show disk space before build
           run: |
