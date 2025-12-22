@@ -61,7 +61,16 @@ bazel build --config bl-x86_64-linux @score_orchestrator//src/... --verbose_fail
 
 You can obtain a complete S-CORE workspace, i.e. a git checkout of all modules from `known_good.json`, on the specific branches / commits, integrated into one Bazel build.
 This helps with cross-module development, debugging, and generally "trying out things".
-The startup of the supplied devcontainer already generates the required metadata.
+
+> [!NOTE]
+> The startup of the [S-CORE devcontainer](https://github.com/eclipse-score/devcontainer) [integrated in this repository](.devcontainer/) already installs supported workspace managers and generates the required metadata.
+> You can do this manually as well, of course (e.g. if you do not use the devcontainer).
+> Take a look at `.devcontainer/prepare_workspace.sh`, which contains the setup script.
+
+> [!NOTE]
+> Not all Bazel targets are supported yet.
+> Running `./scripts/integration_test.sh` will work, though.
+> Take a look at the [Known Issues](#known-issues-️) below to see which Bazel targets are available and working.
 
 The supported workspace managers are:
 
