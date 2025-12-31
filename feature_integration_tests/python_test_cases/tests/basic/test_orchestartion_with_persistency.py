@@ -1,22 +1,11 @@
 import json
+from collections.abc import Generator
 from pathlib import Path
-from typing import Any, Generator
+from typing import Any
 
 import pytest
-
-try:
-    from attribute_plugin import add_test_properties  # type: ignore[import-untyped]
-except ImportError:
-    # Define no-op decorator if attribute_plugin is not available (outside bazel)
-    # Keeps IDE debugging functionality
-    def add_test_properties(*args, **kwargs):
-        def decorator(func):
-            return func  # No-op decorator
-
-        return decorator
-
-
 from fit_scenario import FitScenario, temp_dir_common
+from test_properties import add_test_properties
 from testing_utils import LogContainer
 
 

@@ -12,6 +12,17 @@ from testing_utils import (
 )
 
 
+class ResultCode:
+    """
+    Test scenario exit codes.
+    """
+
+    SUCCESS = 0
+    PANIC = 101
+    SIGKILL = -9
+    SIGABRT = -6
+
+
 def temp_dir_common(
     tmp_path_factory: pytest.TempPathFactory, base_name: str, *args: str
 ) -> Generator[Path, None, None]:
@@ -63,7 +74,7 @@ class FitScenario(Scenario):
         **kwargs,
     ) -> ScenarioResult:
         result = self._run_command(command, execution_timeout, args, kwargs)
-        success = result.return_code == 0 and not result.hang
+        success = result.return_code == ResultCode.SUCCESS and not result.hang
         if self.expect_command_failure() and success:
             raise RuntimeError(f"Command execution succeeded unexpectedly: {result=}")
         if not self.expect_command_failure() and not success:
