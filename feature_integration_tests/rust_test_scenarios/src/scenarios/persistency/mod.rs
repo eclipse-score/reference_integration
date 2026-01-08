@@ -1,4 +1,3 @@
-//
 // Copyright (c) 2025 Contributors to the Eclipse Foundation
 //
 // See the NOTICE file(s) distributed with this work for additional
@@ -10,5 +9,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 //
-pub mod kyron;
-pub mod persistency;
+mod multiple_kvs_per_app;
+
+use multiple_kvs_per_app::MultipleKvsPerApp;
+use test_scenarios_rust::scenario::{ScenarioGroup, ScenarioGroupImpl};
+
+pub fn persistency_group() -> Box<dyn ScenarioGroup> {
+    Box::new(ScenarioGroupImpl::new(
+        "persistency",
+        vec![Box::new(MultipleKvsPerApp)],
+        vec![],
+    ))
+}

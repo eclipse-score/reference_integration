@@ -10,7 +10,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 //
-use crate::internals::runtime_helper::Runtime;
+use crate::internals::kyron::runtime_helper::Runtime;
 use kyron_foundation::containers::Vector;
 use kyron_foundation::prelude::CommonErrors;
 use orchestration::prelude::*;

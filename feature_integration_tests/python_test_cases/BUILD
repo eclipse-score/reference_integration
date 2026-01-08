@@ -28,7 +28,7 @@ score_virtualenv(
 # Tests targets
 score_py_pytest(
     name = "fit",
-    srcs = glob(["tests/**/*.py"]) + ["conftest.py", "fit_scenario.py"],
+    srcs = glob(["tests/**/*.py"]) + ["conftest.py", "fit_scenario.py", "test_properties.py"],
     args = [
         "--traces=all",
         "--rust-target-path=$(rootpath //feature_integration_tests/rust_test_scenarios)",
