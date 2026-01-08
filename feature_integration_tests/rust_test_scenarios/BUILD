@@ -16,7 +16,10 @@ load("@rules_rust//rust:defs.bzl", "rust_binary")
 rust_binary(
     name = "rust_test_scenarios",
     srcs = glob(["src/**/*.rs"]),
-    visibility = ["//feature_integration_tests/python_test_cases:__pkg__"],
+    visibility = [
+        "//feature_integration_tests/python_test_cases:__pkg__",
+        "//visibility:public",
+    ],
     tags = [
         "manual",
     ],

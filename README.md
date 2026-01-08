@@ -46,6 +46,12 @@ bazel build --config bl-x86_64-linux \
 bazel build --config bl-x86_64-linux @score_orchestrator//src/...
 ```
 
+## Clippy
+
+- Clippy runs by default via `.bazelrc` on all Rust targets (Rust tests may be tagged `no-clippy`).
+- Use `bazel build //:clippy` if you want an explicit lint-only target, or build the Rust targets normally to see Clippy diagnostics.
+- The Clippy config comes from `@score_rust_policies//clippy/strict:clippy.toml`.
+
 ## Feature showcase examples
 The examples that are aiming to showcase features provided by S-CORE are located in `feature_showcase` folder.
 You can run them currently for host platform using `--config bl-x86_64-linux`.
