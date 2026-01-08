@@ -64,20 +64,3 @@ def pytest_sessionstart(session):
 
     except Exception as e:
         pytest.exit(str(e), returncode=1)
-
-
-def pytest_collection_modifyitems(items: list[pytest.Function]):
-    markers_to_process = (
-        "PartiallyVerifies",
-        "FullyVerifies",
-        "Description",
-        "TestType",
-        "DerivationTechnique",
-    )
-    for item in items:
-        # Add custom markers info to XML report
-        for marker in item.iter_markers():
-            if marker.name not in markers_to_process:
-                continue
-
-            item.user_properties.append((marker.name, marker.args[0]))
