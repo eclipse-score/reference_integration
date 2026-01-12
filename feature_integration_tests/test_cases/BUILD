@@ -31,11 +31,11 @@ score_py_pytest(
     srcs = glob(["tests/**/*.py"]) + ["conftest.py", "fit_scenario.py", "test_properties.py"],
     args = [
         "--traces=all",
-        "--rust-target-path=$(rootpath //feature_integration_tests/rust_test_scenarios)",
+        "--rust-target-path=$(rootpath //feature_integration_tests/test_scenarios/rust:rust_test_scenarios)",
     ],
     data = [
         ":python_tc_venv",
-        "//feature_integration_tests/rust_test_scenarios",
+        "//feature_integration_tests/test_scenarios/rust:rust_test_scenarios",
     ],
     env = {
         "RUST_BACKTRACE": "1",

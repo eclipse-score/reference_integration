@@ -138,11 +138,10 @@ fn detect_object_component_design() -> Result<Design, CommonErrors> {
 
 fn main() {
     // Setup any logging framework you want to use.
-    let logger = LogAndTraceBuilder::new()
+    let _logger = LogAndTraceBuilder::new()
         .global_log_level(logging_tracing::Level::INFO)
         .enable_logging(true)
         .build();
-    // logger.init_log_trace();
 
     // Create runtime
     let (builder, _engine_id) = kyron::runtime::RuntimeBuilder::new().with_engine(
