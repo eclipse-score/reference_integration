@@ -1,0 +1,104 @@
+name: Module Integration Build
+
+on:
+  workflow_call:
+    secrets:
+      REPO_READ_TOKEN:
+        description: 'GitHub token with read access to the score modules. Defaults to github.token'
+        required: false
+    inputs:
+      module_name:
+        description: 'Name of the module to override (e.g., score_baselibs). If not provided, uses repository URL.'
+        required: true
+        type: string
+      known_good:
+        description: 'Content of the known_good.json file to use for the integration test.'
+        required: true
+        type: string
+      config:
+        description: 'Optional configuration for the integration test.'
+        required: false
+        type: string
+        default: 'bl-x86_64-linux'
+      ref_int_ref:
+        description: 'Reference Integration repository ref to checkout.'
+        required: false
+        type: string
+        default: 'main'
+      ref_int_repo:
+        description: 'Reference Integration repository repo to checkout.'
+        required: false
+        type: string
+        default: 'eclipse-score/reference_integration'
+
+jobs:
+  integration-test:
+    name: Integration Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show disk space before build
+        run: |
+          echo 'Disk space before build:'
+          df -h
+      - name: Removing unneeded software
+        run: |
+          echo "Removing unneeded software... "
+          if [ -d /usr/share/dotnet ]; then echo "Removing dotnet..."; start=$(date +%s); sudo rm -rf /usr/share/dotnet; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+          #if [ -d /usr/local/lib/android ]; then echo "Removing android..."; start=$(date +%s); sudo rm -rf /usr/local/lib/android; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+          if [ -d /opt/ghc ]; then echo "Removing haskell (ghc)..."; start=$(date +%s); sudo rm -rf /opt/ghc; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+          if [ -d /usr/local/.ghcup ]; then echo "Removing haskell (ghcup)..."; start=$(date +%s); sudo rm -rf /usr/local/.ghcup; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+          if [ -d /usr/share/swift ]; then echo "Removing swift..."; start=$(date +%s); sudo rm -rf /usr/share/swift; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+          if [ -d /usr/local/share/chromium ]; then echo "Removing chromium..."; start=$(date +%s); sudo rm -rf /usr/local/share/chromium; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+      - name: Show disk space after cleanup
+        run: |
+          echo 'Disk space after cleanup:'
+          df -h
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+        with:
+          repository: ${{ inputs.ref_int_repo || 'eclipse-score/reference_integration' }}
+          ref: ${{ inputs.ref_int_ref || 'main' }}
+          token: ${{ secrets.REPO_READ_TOKEN != '' && secrets.REPO_READ_TOKEN || github.token }}
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.15.0
+        with:
+          # Avoid downloading Bazel every time.
+          bazelisk-cache: true
+          # Store build cache per workflow.
+          disk-cache: ${{ github.workflow }}
+          # Share repository cache between workflows.
+          repository-cache: true
+      - name: Update known good commits
+        run: |
+          echo "::group::write known_good.json from input"
+          # write the known_good.json from input
+          cat > known_good.updated.json <<'EOF'
+          ${{ inputs.known_good }}
+          EOF
+          cat known_good.updated.json
+          echo "::endgroup::"
+          
+          echo "::group::update score_modules.MODULE.bazel"
+          python3 tools/update_module_from_known_good.py --known known_good.updated.json
+          cat score_modules.MODULE.bazel
+          echo "::endgroup::"
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_READ_TOKEN != '' && secrets.REPO_READ_TOKEN || github.token }}
+      - name: Bazel build targets
+        run: |
+          CONFIG="${{ inputs.config }}" scripts/integration_test.sh --known-good known_good.updated.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_READ_TOKEN != '' && secrets.REPO_READ_TOKEN || github.token }}
+      - name: Show disk space after build
+        if: always()
+        run: |
+          echo 'Disk space after build:'
+          df -h
+      - name: Upload logs artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bazel-build-logs-${{ inputs.config }}
+          path: _logs/
+          if-no-files-found: warn
+          retention-days: 14

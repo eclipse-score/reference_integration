@@ -22,7 +22,9 @@ def load_module_data(known_good_file: str, module_name: str) -> Dict[str, Any]:
             data = json.load(f)
         modules = data.get('modules', {})
         return modules.get(module_name, {})
-    except Exception:
+    except Exception as e:
+        # Log error to stderr for debugging
+        print(f"Error loading {known_good_file}: {e}", file=sys.stderr)
         return {}
 
 

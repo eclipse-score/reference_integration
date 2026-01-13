@@ -123,6 +123,8 @@ def write_known_good(path: str, original: dict, modules: list[Module]) -> None:
 	out["modules"] = {}
 	for m in modules:
 		mod_dict = {"repo": m.repo, "hash": m.hash}
+		if m.version:
+			mod_dict["version"] = m.version
 		if m.patches:
 			mod_dict["patches"] = m.patches
 		if m.branch:
@@ -209,7 +211,10 @@ def main(argv: list[str]) -> int:
 				latest = fetch_latest_commit_gh(mod.owner_repo, branch)
 			else:
 				latest = fetch_latest_commit(mod.owner_repo, branch, token)
-			updated.append(Module(name=mod.name, hash=latest, repo=mod.repo, version=mod.version, patches=mod.patches, branch=mod.branch))
+			
+			# Only reuse version if hash did not change
+			version_to_use = mod.version if latest == mod.hash else None
+			updated.append(Module(name=mod.name, hash=latest, repo=mod.repo, version=version_to_use, patches=mod.patches, branch=mod.branch))
 			
 			# Display format: if version exists, show "version -> hash", otherwise "hash -> hash"
 			if mod.version:
