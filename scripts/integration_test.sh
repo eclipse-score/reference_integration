@@ -217,7 +217,7 @@ for group in "${!BUILD_TARGET_GROUPS[@]}"; do
     # GitHub Actions log grouping start
     echo "::group::Bazel build (${group})"
     set +e
-    # bazel build --verbose_failures --config "${CONFIG}" ${targets} 2>&1 | tee "$log_file" # ToDo: enable this line before PR
+    bazel build --verbose_failures --config "${CONFIG}" ${targets} 2>&1 | tee "$log_file"
     build_status=${PIPESTATUS[0]}
     # Track if any build group failed
     if [[ ${build_status} -ne 0 ]]; then
