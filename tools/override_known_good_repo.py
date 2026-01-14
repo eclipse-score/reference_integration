@@ -52,6 +52,7 @@ def parse_and_apply_overrides(modules: Dict[str, Any], repo_overrides: List[str]
     
     # Parse and validate overrides
     for entry in repo_overrides:
+        logging.info(f"Override registered: {entry}")
         parts = entry.split("@")
         
         if len(parts) == 2:
@@ -71,7 +72,7 @@ def parse_and_apply_overrides(modules: Dict[str, Any], repo_overrides: List[str]
                     f"Available modules: {', '.join(sorted(modules.keys()))}"
                 )
             old_value = modules[module_name].get("hash") or modules[module_name].get("commit") or modules[module_name].get("version")
-            if modules[module_name]["hash"] == old_value:
+            if commit_hash == old_value:
                 logging.info(
                     f"Module '{module_name}' already at specified commit {commit_hash}, no change needed"
                 )
@@ -119,9 +120,6 @@ def parse_and_apply_overrides(modules: Dict[str, Any], repo_overrides: List[str]
                 "  1. module_name@commit_hash\n"
                 "  2. module_name@repo_url@commit_hash\n"
             )
-        
-        logging.info(f"Override registered: {entry}")
-    
     
     return overrides_applied
 
@@ -191,7 +189,7 @@ Examples:
         "--repo-override",
         action="append",
         required=True,
-        help="Override commit for a repo. Formats: module_name@hash | module_name@repo_url@hash | repo_url@hash. Can be specified multiple times."
+        help="Override commit for a repo. Formats: module_name@hash | module_name@repo_url@hash. Can be specified multiple times."
     )
     parser.add_argument(
         "--dry-run",
