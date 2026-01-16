@@ -7,14 +7,14 @@
 # What it does:
 #   - Checks out the reference integration repository
 #   - Updates score_modules.MODULE.bazel from the provided known_good.json
-#   - Builds all referenced modules (via scripts/integration_test.sh and Bazel)
+#   - Builds all referenced modules (via scripts/integration_test.py and Bazel)
 #   - Runs integration tests
 #   - Uploads logs from _logs/ as artifact: bazel-build-logs-${{ inputs.config }}
 #
 # Inputs:
 #   - known_good (string, required): JSON content used to pin module SHAs.
-#   - config (string, optional, default: bl-x86_64-linux): Bazel config passed as
-#     CONFIG to scripts/integration_test.sh.
+#   - config (string, optional, default: bl-x86_64-linux): Bazel config passed to
+#     scripts/integration_test.py.
 #   - repo_runner_labels (string, optional): Runner label(s). Accepts either a
 #     single label string (e.g., ubuntu-latest) or a JSON string representing a
 #     label or an array of labels (e.g., "\"ubuntu-latest\"" or
@@ -134,7 +134,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.REPO_READ_TOKEN != '' && secrets.REPO_READ_TOKEN || github.token }}
       - name: Bazel build targets
         run: |
-          CONFIG="${{ inputs.config }}" scripts/integration_test.sh --known-good known_good.updated.json
+          python3 scripts/integration_test.py --known-good known_good.updated.json --config "${{ inputs.config }}"
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_READ_TOKEN != '' && secrets.REPO_READ_TOKEN || github.token }}
       - name: Show disk space after build
