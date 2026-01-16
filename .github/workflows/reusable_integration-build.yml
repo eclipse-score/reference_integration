@@ -80,7 +80,7 @@ on:
 jobs:
   integration-test:
     name: Integration Test
-    runs-on: ${{ inputs.repo_runner_labels && fromJSON(inputs.repo_runner_labels) || 'ubuntu-latest' }}
+    runs-on: ${{ (inputs.repo_runner_labels && startsWith(inputs.repo_runner_labels, '[') && fromJSON(inputs.repo_runner_labels)) || inputs.repo_runner_labels || (vars.REPO_RUNNER_LABELS && fromJSON(vars.REPO_RUNNER_LABELS)) || 'ubuntu-latest' }}
     steps:
       - name: Show disk space before build
         run: |
