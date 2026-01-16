@@ -19,14 +19,18 @@
 #     single label string (e.g., ubuntu-latest) or a JSON string representing a
 #     label or an array of labels (e.g., "\"ubuntu-latest\"" or
 #     "[\"self-hosted\",\"linux\",\"x64\"]").
-#   - ref_int_repo (string, optional, default: eclipse-score/reference_integration):
-#     Reference Integration repository to checkout.
-#   - ref_int_ref (string, optional, default: main): Ref/branch to checkout.
+#   - target_branch (string, optional, default: main): Ref/branch to checkout.
+#
+# Repository Variables:
+#   - reference_integration_repo (optional): Repository to checkout (owner/repo).
+#     Default: eclipse-score/reference_integration
+#
+# Secrets:
 #   - REPO_READ_TOKEN (secret, optional): Token for private module access; falls
 #     back to github.token when not provided.
 #
 # Runner selection:
-#   - Priority: `inputs.repo_runner_labels` > `vars.REPO_RUNNER_LABELS` > 'ubuntu-latest'.
+#   - Priority: `inputs.repo_runner_labels` > 'ubuntu-latest'.
 #   - `repo_runner_labels` can be provided as a single label string or as JSON
 #     (string or array). When JSON is used, it is parsed via fromJSON().
 #
@@ -40,7 +44,7 @@
 #           known_good: |
 #             { "modules": [] }
 #           config: bl-x86_64-linux
-#           repo_runner_labels: '"ubuntu-latest"'
+#           repo_runner_labels: 'ubuntu-latest'
 #         secrets:
 #           REPO_READ_TOKEN: ${{ secrets.REPO_READ_TOKEN }}
 #
@@ -66,21 +70,19 @@ on:
         description: 'Runner label(s) for the job; single label or JSON string/array.'
         required: false
         type: string
-      ref_int_ref:
+      target_branch:
         description: 'Reference Integration repository ref to checkout.'
         required: false
         type: string
         default: 'main'
-      ref_int_repo:
-        description: 'Reference Integration repository repo to checkout.'
-        required: false
-        type: string
-        default: 'eclipse-score/reference_integration'
+
+env:
+  REFERENCE_INTEGRATION_REPO: ${{ vars.reference_integration_repo != '' && vars.reference_integration_repo || 'eclipse-score/reference_integration' }}
 
 jobs:
   integration-test:
     name: Integration Test
-    runs-on: ${{ (inputs.repo_runner_labels && startsWith(inputs.repo_runner_labels, '[') && fromJSON(inputs.repo_runner_labels)) || inputs.repo_runner_labels || (vars.REPO_RUNNER_LABELS && fromJSON(vars.REPO_RUNNER_LABELS)) || 'ubuntu-latest' }}
+    runs-on: ${{ inputs.repo_runner_labels != '' && (startsWith(inputs.repo_runner_labels, '[') && fromJSON(inputs.repo_runner_labels) || inputs.repo_runner_labels) || 'ubuntu-latest' }}
     steps:
       - name: Show disk space before build
         run: |
@@ -102,8 +104,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
         with:
-          repository: ${{ inputs.ref_int_repo || 'eclipse-score/reference_integration' }}
-          ref: ${{ inputs.ref_int_ref || 'main' }}
+          repository: ${{ env.REFERENCE_INTEGRATION_REPO }}
+          ref: ${{ inputs.target_branch || 'main' }}
           token: ${{ secrets.REPO_READ_TOKEN != '' && secrets.REPO_READ_TOKEN || github.token }}
       - name: Setup Bazel
         uses: bazel-contrib/setup-bazel@0.15.0

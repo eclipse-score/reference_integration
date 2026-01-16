@@ -59,7 +59,7 @@ def generate_git_override_blocks(modules: List[Module], repo_commit_dict: Dict[s
                 patches_lines += f'        "{patch}",\n'
             patches_lines += "    ],\n    patch_strip = 1,\n"
         
-        if module.version and not commit:
+        if module.version:
             # If version is provided, use bazel_dep with single_version_override
             block = (
                 f'bazel_dep(name = "{module.name}")\n'

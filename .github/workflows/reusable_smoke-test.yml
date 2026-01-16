@@ -17,14 +17,15 @@
 # Inputs:
 #   - repo_runner_labels (string, required, default: ubuntu-latest): Runner label.
 #   - module_name (string, required): Module to override (e.g., score_baselibs).
-#   - ref_int_repo (string, optional, default: eclipse-score/reference_integration):
-#     The repository that provides the reusable integration workflows and tools.
-#     Use your private fork/org if you mirror this repo (e.g., my-org/reference_integration).
-#     Format: owner/repo
-#   - ref_int_ref (string, required, default: main):
-#     The ref on ref_int_repo to checkout via actions/checkout — can be a branch
-#     name, tag, or commit SHA. This ensures the workflow uses the exact version
-#     of the integration files you intend.
+#   - target_branch (string, required, default: main):
+#     The ref to checkout via actions/checkout — can be a branch name, tag, or
+#     commit SHA. This ensures the workflow uses the exact version of the
+#     integration files you intend.
+#
+# Repository Variables:
+#   - reference_integration_repo (optional): Repository providing integration
+#     workflows and tools (format: owner/repo). Supports private forks.
+#     Default: eclipse-score/reference_integration
 #
 # Secrets:
 #   - REPO_READ_TOKEN (optional): Token for reading private repos; falls back to
@@ -39,10 +40,12 @@
 #         with:
 #           repo_runner_labels: ubuntu-latest
 #           module_name: score_baselibs
-#           ref_int_ref: main
-#           ref_int_repo: eclipse-score/reference_integration
+#           target_branch: main
 #         secrets:
 #           REPO_READ_TOKEN: ${{ secrets.REPO_READ_TOKEN }}
+#
+#   Note: Set the 'reference_integration_repo' repository variable to use a
+#   private fork (e.g., my-org/reference_integration).
 #
 # Notes:
 #   - Extend the matrix in `integration-test` to cover additional configs.
@@ -61,20 +64,18 @@ on:
         description: 'Name of the module to override (e.g., score_baselibs).'
         required: true
         type: string
-      ref_int_ref:
-        description: 'Ref on ref_int_repo to checkout (branch, tag, or commit SHA).'
+      target_branch:
+        description: 'Ref to checkout (branch, tag, or commit SHA).'
         required: true
         type: string
         default: 'main'
-      ref_int_repo:
-        description: 'Repository providing integration workflows (owner/repo). Supports private forks.'
-        required: false
-        type: string
-        default: 'eclipse-score/reference_integration'
     secrets:
       REPO_READ_TOKEN:
         description: 'Token for reading repositories'
         required: false
+
+env:
+  REFERENCE_INTEGRATION_REPO: ${{ vars.reference_integration_repo != '' && vars.reference_integration_repo || 'eclipse-score/reference_integration' }}
 
 jobs:
   preparation:
@@ -86,13 +87,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
         with:
-          repository: ${{ inputs.ref_int_repo }}
-          ref: ${{ inputs.ref_int_ref }}
+          repository: ${{ env.REFERENCE_INTEGRATION_REPO }}
+          ref: ${{ inputs.target_branch }}
           token: ${{ secrets.REPO_READ_TOKEN != '' && secrets.REPO_READ_TOKEN || github.token }}
       - name: Create updated known_good.json with PR commit
         id: set_known_good
         run: |
-          if [ "${{ github.repository }}" != "${{ inputs.ref_int_repo }}" ]; then
+          if [ "${{ github.repository }}" != "${{ env.REFERENCE_INTEGRATION_REPO }}" ]; then
             echo "Overriding ${{ inputs.module_name }} with current PR"
             python3 tools/override_known_good_repo.py \
               --known known_good.json \
@@ -148,8 +149,7 @@ jobs:
       known_good: ${{ needs.preparation.outputs.known_good_updated }}
       config: ${{ matrix.config }}
       repo_runner_labels: ${{ inputs.repo_runner_labels }}
-      ref_int_ref: ${{ inputs.ref_int_ref }}
-      ref_int_repo: ${{ inputs.ref_int_repo }}
+      target_branch: ${{ inputs.target_branch }}
 
   summary:
     name: Publish Summary

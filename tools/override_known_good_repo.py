@@ -16,7 +16,7 @@ import argparse
 import json
 import os
 import re
-from datetime import datetime
+import datetime as dt
 from typing import Dict, Any, List
 import logging
 
@@ -159,7 +159,7 @@ def apply_overrides(data: Dict[str, Any], repo_overrides: List[str]) -> Dict[str
     data["modules"] = {name: module.to_dict() for name, module in modules.items()}
     
     # Update timestamp
-    data["timestamp"] = datetime.now().isoformat() + "Z"
+    data["timestamp"] = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat() + "Z"
     
     return data
 
