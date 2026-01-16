@@ -18,81 +18,14 @@ name: build latest mains
 on:
   workflow_dispatch:
   pull_request:
-  release:
-    types: [created]
   push:
-    branches:
-      - main 
+  # schedule:
+  #   - cron: '30 2 * * *'  # Every night at 02:30 UTC on main branch
 jobs:
-    integration_test:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Show disk space before build
-          run: |
-            echo 'Disk space before build:'
-            df -h
-        - name: Removing unneeded software
-          run: |
-            echo "Removing unneeded software... "
-            if [ -d /usr/share/dotnet ]; then echo "Removing dotnet..."; start=$(date +%s); sudo rm -rf /usr/share/dotnet; end=$(date +%s); echo "Duration: $((end-start))s"; fi
-            #if [ -d /usr/local/lib/android ]; then echo "Removing android..."; start=$(date +%s); sudo rm -rf /usr/local/lib/android; end=$(date +%s); echo "Duration: $((end-start))s"; fi
-            if [ -d /opt/ghc ]; then echo "Removing haskell (ghc)..."; start=$(date +%s); sudo rm -rf /opt/ghc; end=$(date +%s); echo "Duration: $((end-start))s"; fi
-            if [ -d /usr/local/.ghcup ]; then echo "Removing haskell (ghcup)..."; start=$(date +%s); sudo rm -rf /usr/local/.ghcup; end=$(date +%s); echo "Duration: $((end-start))s"; fi
-            if [ -d /usr/share/swift ]; then echo "Removing swift..."; start=$(date +%s); sudo rm -rf /usr/share/swift; end=$(date +%s); echo "Duration: $((end-start))s"; fi
-            if [ -d /usr/local/share/chromium ]; then echo "Removing chromium..."; start=$(date +%s); sudo rm -rf /usr/local/share/chromium; end=$(date +%s); echo "Duration: $((end-start))s"; fi
-        - name: Show disk space after cleanup
-          run: |
-            echo 'Disk space after cleanup:'
-            df -h
-        - name: Checkout repository
-          uses: actions/checkout@v4.2.2
-        - name: Setup Bazel
-          uses: bazel-contrib/setup-bazel@0.15.0
-          with:
-            # Avoid downloading Bazel every time.
-            bazelisk-cache: true
-            # Store build cache per workflow.
-            disk-cache: ${{ github.workflow }}
-            # Share repository cache between workflows.
-            repository-cache: true
-        - name: Update known good commits
-          run: |
-            echo "::group::get latest commits from module branches"
-            python3 tools/update_module_latest.py --output known_good.updated.json
-            cat known_good.updated.json
-            echo "::endgroup::"
-            echo "::group::update score_modules.MODULE.bazel"
-            python3 tools/update_module_from_known_good.py --known known_good.updated.json
-            cat score_modules.MODULE.bazel
-            echo "::endgroup::"
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        - name: Bazel build targets
-          run: |
-            scripts/integration_test.sh --known-good known_good.updated.json
-        - name: Show disk space after build
-          if: always()
-          run: |
-            echo 'Disk space after build:'
-            df -h
-        - name: Publish build summary
-          if: always()
-          run: |
-            if [ -f _logs/build_summary.md ]; then
-              {
-                echo '## Bazel Build Summary'
-                echo
-                # Append the markdown directly so tables render (no leading indentation)
-                cat _logs/build_summary.md
-              } >> "$GITHUB_STEP_SUMMARY"
-            else
-              echo "No build summary file found (_logs/build_summary.md)" >> "$GITHUB_STEP_SUMMARY"
-            fi
-        - name: Upload logs artifact
-          if: always()
-          uses: actions/upload-artifact@v4
-          with:
-            name: bazel-build-logs
-            path: _logs/
-            if-no-files-found: warn
-            retention-days: 14
+  integration_test:
+    uses: ./.github/workflows/reusable_smoke-test.yml
+    secrets: inherit
+    with:
+      repo_runner_labels: 'ubuntu-latest'
+      module_name: 'reference_integration'
+      target_branch: ${{ github.ref }}

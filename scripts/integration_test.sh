@@ -11,6 +11,14 @@ CONFIG=${CONFIG:-bl-x86_64-linux}
 LOG_DIR=${LOG_DIR:-_logs/logs}
 SUMMARY_FILE=${SUMMARY_FILE:-_logs/build_summary.md}
 KNOWN_GOOD_FILE=""
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Go up one level to get the repository root since this script is in scripts/ directory
+repo_root="$(cd "${script_dir}/.." && pwd)"
+
+# Set default known_good.json if it exists
+if [[ -z "${KNOWN_GOOD_FILE}" ]] && [[ -f "known_good.json" ]]; then
+    KNOWN_GOOD_FILE="known_good.json"
+fi
 
 # maybe move this to known_good.json or a config file later
 declare -A BUILD_TARGET_GROUPS=(
@@ -59,11 +67,14 @@ get_commit_hash() {
         return
     fi
     
-    # Get the script directory
-    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    
     # Use the Python script to extract module info
-    python3 "${script_dir}/tools/get_module_info.py" "${known_good_file}" "${module_name}" "hash" 2>/dev/null || echo "N/A"
+    local result
+    result=$(python3 "${repo_root}/tools/get_module_info.py" "${known_good_file}" "${module_name}" "hash" 2>&1)
+    if [[ $? -eq 0 ]] && [[ -n "${result}" ]] && [[ "${result}" != "N/A" ]]; then
+        echo "${result}"
+    else
+        echo "N/A"
+    fi
 }
 
 # Function to extract repo URL from known_good.json
@@ -76,11 +87,89 @@ get_module_repo() {
         return
     fi
     
-    # Get the script directory
-    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    
     # Use the Python script to extract module repo
-    python3 "${script_dir}/tools/get_module_info.py" "${known_good_file}" "${module_name}" "repo" 2>/dev/null || echo "N/A"
+    local result
+    result=$(python3 "${repo_root}/tools/get_module_info.py" "${known_good_file}" "${module_name}" "repo" 2>&1)
+    if [[ $? -eq 0 ]] && [[ -n "${result}" ]] && [[ "${result}" != "N/A" ]]; then
+        echo "${result}"
+    else
+        echo "N/A"
+    fi
+}
+
+# Function to extract version from known_good.json
+get_module_version() {
+    local module_name=$1
+    local known_good_file=$2
+    
+    if [[ -z "${known_good_file}" ]] || [[ ! -f "${known_good_file}" ]]; then
+        echo "N/A"
+        return
+    fi
+    
+    # Use the Python script to extract module version
+    local result
+    result=$(python3 "${repo_root}/tools/get_module_info.py" "${known_good_file}" "${module_name}" "version" 2>&1)
+    if [[ $? -eq 0 ]] && [[ -n "${result}" ]] && [[ "${result}" != "N/A" ]]; then
+        echo "${result}"
+    else
+        echo "N/A"
+    fi
+}
+
+get_module_version_gh() {
+    local module_name=$1
+    local known_good_file=$2
+    local repo_url=$3
+    local commit_hash=$4
+    
+    if [[ -z "${known_good_file}" ]] || [[ ! -f "${known_good_file}" ]]; then
+        echo "::warning::get_module_version_gh: known_good_file not found or empty" >&2
+        echo "N/A"
+        return
+    fi
+    
+    # Check if gh CLI is installed
+    if ! command -v gh &> /dev/null; then
+        echo "::warning::gh CLI not found. Install it to resolve commit hashes to tags." >&2
+        echo "N/A"
+        return
+    fi
+    
+    echo "::debug::get_module_version_gh: module=${module_name}, repo=${repo_url}, hash=${commit_hash}" >&2
+    
+    # Extract owner/repo from GitHub URL
+    if [[ "${repo_url}" =~ github\.com[/:]([^/]+)/([^/.]+)(\.git)?$ ]]; then
+        local owner="${BASH_REMATCH[1]}"
+        local repo="${BASH_REMATCH[2]}"
+        
+        echo "::debug::Querying GitHub API: repos/${owner}/${repo}/tags for commit ${commit_hash}" >&2
+        
+        # Query GitHub API for tags and find matching commit
+        local tag_name
+        tag_name=$(gh api "repos/${owner}/${repo}/tags" --jq ".[] | select(.commit.sha == \"${commit_hash}\") | .name" 2>/dev/null | head -n1)
+        
+        if [[ -n "${tag_name}" ]]; then
+            echo "::debug::Found tag: ${tag_name}" >&2
+            echo "${tag_name}"
+        else
+            echo "::debug::No tag found for commit ${commit_hash}" >&2
+            echo "N/A"
+        fi
+    else
+        echo "::warning::Invalid repo URL format: ${repo_url}" >&2
+        echo "N/A"
+    fi
+}
+
+# Helper function to truncate hash
+truncate_hash() {
+    local hash=$1
+    if [[ ${#hash} -gt 8 ]]; then
+        echo "${hash:0:8}"
+    else
+        echo "${hash}"
+    fi
 }
 
 warn_count() {
@@ -151,20 +240,103 @@ for group in "${!BUILD_TARGET_GROUPS[@]}"; do
     
     # Get commit hash/version for this group (group name is the module name)
     commit_hash=$(get_commit_hash "${group}" "${KNOWN_GOOD_FILE}")
+    commit_hash_old=$(get_commit_hash "${group}" "known_good.json")
+    version=$(get_module_version "${group}" "${KNOWN_GOOD_FILE}")
     repo=$(get_module_repo "${group}" "${KNOWN_GOOD_FILE}")
     
-    # Truncate commit hash for display (first 8 chars)
-    if [[ "${commit_hash}" != "N/A" ]] && [[ ${#commit_hash} -gt 8 ]]; then
-        commit_hash_display="${commit_hash:0:8}"
-    else
-        commit_hash_display="${commit_hash}"
+    # Debug output
+    echo "::debug::Module=${group}, version=${version}, hash=${commit_hash}, hash_old=${commit_hash_old}, repo=${repo}" >&2
+    
+    # Determine what to display and link to
+    # Step 1: Determine old version/hash identifier
+    old_identifier="N/A"
+    old_link=""
+    if [[ "${commit_hash_old}" != "N/A" ]]; then
+        echo "::debug::Step 1: Getting old version for ${group}" >&2
+        version_old=$(get_module_version "${group}" "known_good.json")
+        echo "::debug::version_old from JSON: ${version_old}" >&2
+        if [[ "${version_old}" == "N/A" ]]; then
+            # Try to get version from GitHub API
+            echo "::debug::Trying to resolve version_old from GitHub for ${group}" >&2
+            version_old=$(get_module_version_gh "${group}" "known_good.json" "${repo}" "${commit_hash_old}")
+            echo "::debug::version_old from GitHub: ${version_old}" >&2
+        fi
+        
+        # Prefer version over hash
+        if [[ "${version_old}" != "N/A" ]]; then
+            old_identifier="${version_old}"
+            if [[ "${repo}" != "N/A" ]]; then
+                old_link="${repo}/releases/tag/${version_old}"
+            fi
+        else
+            old_identifier=$(truncate_hash "${commit_hash_old}")
+            if [[ "${repo}" != "N/A" ]]; then
+                old_link="${repo}/tree/${commit_hash_old}"
+            fi
+        fi
+        echo "::debug::old_identifier=${old_identifier}" >&2
     fi
     
-    # Only add link if KNOWN_GOOD_FILE is set
-    if [[ -n "${KNOWN_GOOD_FILE}" ]]; then
-        commit_version_cell="[${commit_hash_display}](${repo}/tree/${commit_hash})"
+    # Step 2: Determine if hash changed
+    hash_changed=0
+    if [[ "${commit_hash_old}" != "N/A" ]] && [[ "${commit_hash}" != "N/A" ]] && [[ "${commit_hash}" != "${commit_hash_old}" ]]; then
+        hash_changed=1
+    fi
+    echo "::debug::hash_changed=${hash_changed}" >&2
+    
+    # Step 3: Determine new version/hash identifier (only if hash changed)
+    new_identifier="N/A"
+    new_link=""
+    if [[ ${hash_changed} -eq 1 ]] && [[ "${commit_hash}" != "N/A" ]]; then
+        echo "::debug::Step 3: Hash changed, getting new version for ${group}" >&2
+        # Try to get version from known_good file first, then GitHub API
+        if [[ "${version}" == "N/A" ]]; then
+            echo "::debug::Trying to resolve new version from GitHub for ${group}" >&2
+            version=$(get_module_version_gh "${group}" "${KNOWN_GOOD_FILE}" "${repo}" "${commit_hash}")
+            echo "::debug::new version from GitHub: ${version}" >&2
+        fi
+        
+        # Prefer version over hash
+        if [[ "${version}" != "N/A" ]]; then
+            new_identifier="${version}"
+            if [[ "${repo}" != "N/A" ]]; then
+                new_link="${repo}/releases/tag/${version}"
+            fi
+        else
+            new_identifier=$(truncate_hash "${commit_hash}")
+            if [[ "${repo}" != "N/A" ]]; then
+                new_link="${repo}/tree/${commit_hash}"
+            fi
+        fi
+        echo "::debug::new_identifier=${new_identifier}" >&2
+    fi
+    
+    # Step 4: Format output based on whether hash changed
+    echo "::debug::Formatting output: hash_changed=${hash_changed}, old=${old_identifier}, new=${new_identifier}" >&2
+    if [[ ${hash_changed} -eq 1 ]]; then
+        # Hash changed - show old -> new
+        if [[ "${repo}" != "N/A" ]] && [[ -n "${old_link}" ]] && [[ -n "${new_link}" ]]; then
+            commit_version_cell="[${old_identifier}](${old_link}) → [${new_identifier}](${new_link}) ([diff](${repo}/compare/${commit_hash_old}...${commit_hash}))"
+        else
+            commit_version_cell="${old_identifier} → ${new_identifier}"
+        fi
+    elif [[ "${old_identifier}" != "N/A" ]]; then
+        # Hash not changed - show only old
+        if [[ "${repo}" != "N/A" ]] && [[ -n "${old_link}" ]]; then
+            commit_version_cell="[${old_identifier}](${old_link})"
+        else
+            commit_version_cell="${old_identifier}"
+        fi
+    elif [[ "${new_identifier}" != "N/A" ]]; then
+        # No old available - show new
+        if [[ "${repo}" != "N/A" ]] && [[ -n "${new_link}" ]]; then
+            commit_version_cell="[${new_identifier}](${new_link})"
+        else
+            commit_version_cell="${new_identifier}"
+        fi
     else
-        commit_version_cell="${commit_hash_display}"
+        # Nothing available
+        commit_version_cell="N/A"
     fi
     
     echo "| ${group} | ${status_symbol} | ${duration} | ${w_count} | ${d_count} | ${commit_version_cell} |" | tee -a "${SUMMARY_FILE}"

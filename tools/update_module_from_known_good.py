@@ -9,6 +9,9 @@ Usage:
       --output score_modules.MODULE.bazel
 
 The generated score_modules.MODULE.bazel file is included by MODULE.bazel.
+
+Note: To override repository commits before generating the MODULE.bazel file,
+use tools/override_known_good_repo.py first to create an updated known_good.json.
 """
 import argparse
 import json
@@ -17,6 +20,11 @@ import re
 from datetime import datetime
 import logging
 from typing import Dict, List, Any, Optional
+
+from models import Module
+
+# Configure logging
+logging.basicConfig(level=logging.WARNING, format='%(levelname)s: %(message)s')
 
 
 def load_known_good(path: str) -> Dict[str, Any]:
@@ -32,55 +40,52 @@ def load_known_good(path: str) -> Dict[str, Any]:
     )
 
 
-def generate_git_override_blocks(modules_dict: Dict[str, Any], repo_commit_dict: Dict[str, str]) -> List[str]:
+def generate_git_override_blocks(modules: List[Module], repo_commit_dict: Dict[str, str]) -> List[str]:
     """Generate bazel_dep and git_override blocks for each module."""
     blocks = []
     
-    for name, module in modules_dict.items():
-        repo = module.get("repo")
-        commit = module.get("hash") or module.get("commit")
-        patches = module.get("patches", [])
+    for module in modules:
+        commit = module.hash
         
         # Allow overriding specific repos via command line
-        if repo in repo_commit_dict:
-            commit = repo_commit_dict[repo]
+        if module.repo in repo_commit_dict:
+            commit = repo_commit_dict[module.repo]
         
-        # Check if module has a version, use different logic
-        version = module.get("version")
+        # Generate patches lines if patches exist
         patches_lines = ""
-        if patches:
+        if module.patches:
             patches_lines = "    patches = [\n"
-            for patch in patches:
+            for patch in module.patches:
                 patches_lines += f'        "{patch}",\n'
             patches_lines += "    ],\n    patch_strip = 1,\n"
         
-        if version:
+        if module.version:
             # If version is provided, use bazel_dep with single_version_override
             block = (
-                f'bazel_dep(name = "{name}")\n'
+                f'bazel_dep(name = "{module.name}")\n'
                 'single_version_override(\n'
-                f'    module_name = "{name}",\n'
-                f'    version = "{version}",\n'
+                f'    module_name = "{module.name}",\n'
+                f'    version = "{module.version}",\n'
                 f'{patches_lines}'
                 ')\n'
             )
         else:
-            if not repo or not commit:
-                logging.warning("Skipping module %s with missing repo or commit: repo=%s, commit=%s", name, repo, commit)
+            if not module.repo or not commit:
+                logging.warning("Skipping module %s with missing repo or commit: repo=%s, commit=%s", 
+                              module.name, module.repo, commit)
                 continue
 
             # Validate commit hash format (7-40 hex characters)
             if not re.match(r'^[a-fA-F0-9]{7,40}$', commit):
-                logging.warning("Skipping module %s with invalid commit hash: %s", name, commit)
+                logging.warning("Skipping module %s with invalid commit hash: %s", module.name, commit)
                 continue
             
             # If no version, use bazel_dep with git_override
-            
             block = (
-                f'bazel_dep(name = "{name}")\n'
+                f'bazel_dep(name = "{module.name}")\n'
                 'git_override(\n'
-                f'    module_name = "{name}",\n'
-                f'    remote = "{repo}",\n'
+                f'    module_name = "{module.name}",\n'
+                f'    remote = "{module.repo}",\n'
                 f'    commit = "{commit}",\n'
                 f'{patches_lines}'
                 ')\n'
@@ -90,16 +95,16 @@ def generate_git_override_blocks(modules_dict: Dict[str, Any], repo_commit_dict:
     
     return blocks
 
-def generate_local_override_blocks(modules_dict: Dict[str, Any]) -> List[str]:
+def generate_local_override_blocks(modules: List[Module]) -> List[str]:
     """Generate bazel_dep and local_path_override blocks for each module."""
     blocks = []
     
-    for name, module in modules_dict.items():
+    for module in modules:
         block = (
-            f'bazel_dep(name = "{name}")\n'
+            f'bazel_dep(name = "{module.name}")\n'
             'local_path_override(\n'
-            f'    module_name = "{name}",\n'
-            f'    path = "{name}",\n'
+            f'    module_name = "{module.name}",\n'
+            f'    path = "{module.name}",\n'
             ')\n'
         )
         
@@ -107,9 +112,9 @@ def generate_local_override_blocks(modules_dict: Dict[str, Any]) -> List[str]:
     
     return blocks
 
-def generate_file_content(args: argparse.Namespace, modules: Dict[str, Any], repo_commit_dict: Dict[str, str], timestamp: Optional[str] = None) -> str:
+def generate_file_content(args: argparse.Namespace, modules: List[Module], repo_commit_dict: Dict[str, str], timestamp: Optional[str] = None) -> str:
     """Generate the complete content for score_modules.MODULE.bazel."""
-    # License header assembled with parenthesis grouping (no indentation preserved in output).
+    # License header
     header = (
         "# *******************************************************************************\n"
         "# Copyright (c) 2025 Contributors to the Eclipse Foundation\n"
@@ -151,7 +156,23 @@ def generate_file_content(args: argparse.Namespace, modules: Dict[str, Any], rep
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Generate score_modules.MODULE.bazel from known_good.json"
+        description="Generate score_modules.MODULE.bazel from known_good.json",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  # Generate MODULE.bazel from known_good.json
+  python3 tools/update_module_from_known_good.py
+
+  # Use a custom input and output file
+  python3 tools/update_module_from_known_good.py \\
+      --known custom_known_good.json \\
+      --output custom_modules.MODULE.bazel
+
+  # Preview without writing
+  python3 tools/update_module_from_known_good.py --dry-run
+
+Note: To override repository commits, use tools/override_known_good_repo.py first.
+        """
     )
     parser.add_argument(
         "--known",
@@ -169,6 +190,11 @@ def main() -> None:
         help="Print generated content instead of writing to file"
     )
     parser.add_argument(
+        "-v", "--verbose",
+        action="store_true",
+        help="Enable verbose logging"
+    )
+    parser.add_argument(
         "--repo-override",
         action="append",
         help="Override commit for a specific repo (format: <REPO_URL>@<COMMIT_SHA>)"
@@ -181,6 +207,9 @@ def main() -> None:
     )
     
     args = parser.parse_args()
+    
+    if args.verbose:
+        logging.getLogger().setLevel(logging.INFO)
     
     known_path = os.path.abspath(args.known)
     output_path = os.path.abspath(args.output)
@@ -203,10 +232,14 @@ def main() -> None:
     
     # Load known_good.json
     data = load_known_good(known_path)
-    modules = data.get("modules") or {}
-    
-    if not modules:
+    modules_dict = data.get("modules") or {}
+    if not modules_dict:
         raise SystemExit("No modules found in known_good.json")
+    
+    # Parse modules into Module dataclass instances
+    modules = Module.parse_modules(modules_dict)
+    if not modules:
+        raise SystemExit("No valid modules to process")
     
     # Generate file content
     timestamp = data.get("timestamp") or datetime.now().isoformat()

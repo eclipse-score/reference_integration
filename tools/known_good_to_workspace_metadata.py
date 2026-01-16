@@ -3,6 +3,8 @@ import argparse
 import json
 import csv
 
+from models import Module
+
 MODULES_CSV_HEADER = [
     "repo_url",
     "name",
@@ -22,25 +24,24 @@ def main():
     with open(args.known_good, "r") as f:
         data = json.load(f)
 
-    modules = data.get("modules", {})
+    modules_dict = data.get("modules", {})
+    
+    # Parse modules using Module dataclass
+    modules = Module.parse_modules(modules_dict)
     
     gita_metadata = []
-    for name, info in modules.items():
-        repo_url = info.get("repo", "")
-        if not repo_url:
-            raise RuntimeError("repo must not be empty")
-        
-        # default branch: main
-        branch = info.get("branch", "main")
+    for module in modules:
+        if not module.repo:
+            raise RuntimeError(f"Module {module.name}: repo must not be empty")
         
         # if no hash is given, use branch
-        hash_ = info.get("hash", branch)
+        hash_value = module.hash if module.hash else module.branch
         
         # workspace_path is not available in known_good.json, default to name of repository
-        workspace_path = name
+        workspace_path = module.name
         
         # gita format: {url},{name},{path},{prop['type']},{repo_flags},{branch}
-        row = [repo_url, name, workspace_path, "", "", hash_]
+        row = [module.repo, module.name, workspace_path, "", "", hash_value]
         gita_metadata.append(row)
 
     with open(args.gita_workspace, "w", newline="") as f:

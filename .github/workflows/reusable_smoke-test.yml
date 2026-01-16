@@ -1,0 +1,206 @@
+# Module Smoke Test Workflow
+#
+# Summary:
+#   Orchestrates a fast validation of a single module by producing an
+#   updated known_good.json (optionally overriding one module to the current PR)
+#   and then invoking the integration build workflow to compile and test.
+#
+# What it does:
+#   - Checks out the reference integration repository
+#   - Generates known_good.updated.json:
+#       * If testing an external module PR: overrides `module_name` to the PR SHA
+#       * If testing this repo: updates modules to latest branches
+#   - Uploads known_good.updated.json as an artifact
+#   - Calls the Module Integration Build workflow with a matrix of configs
+#   - Publishes a summary to the GitHub Step Summary
+#
+# Inputs:
+#   - repo_runner_labels (string, required, default: ubuntu-latest): Runner label.
+#   - module_name (string, required): Module to override (e.g., score_baselibs).
+#   - target_branch (string, required, default: main):
+#     The ref to checkout via actions/checkout — can be a branch name, tag, or
+#     commit SHA. This ensures the workflow uses the exact version of the
+#     integration files you intend.
+#
+# Repository Variables:
+#   - reference_integration_repo (optional): Repository providing integration
+#     workflows and tools (format: owner/repo). Supports private forks.
+#     Default: eclipse-score/reference_integration
+#
+# Secrets:
+#   - REPO_READ_TOKEN (optional): Token for reading private repos; falls back to
+#     github.token when not provided.
+#
+# Usage:
+#   This workflow is reusable and triggered via workflow_call from other workflows.
+#   Example:
+#     jobs:
+#       smoke:
+#         uses: eclipse-score/reference_integration/.github/workflows/module-smoke-test.yml@main
+#         with:
+#           repo_runner_labels: ubuntu-latest
+#           module_name: score_baselibs
+#           target_branch: main
+#         secrets:
+#           REPO_READ_TOKEN: ${{ secrets.REPO_READ_TOKEN }}
+#
+#   Note: Set the 'reference_integration_repo' repository variable to use a
+#   private fork (e.g., my-org/reference_integration).
+#
+# Notes:
+#   - Extend the matrix in `integration-test` to cover additional configs.
+
+name: Module Smoke Test
+
+on:
+  workflow_call:
+    inputs:
+      repo_runner_labels:
+        description: 'The runner tag to use for the job'
+        required: true
+        type: string
+        default: 'ubuntu-latest'
+      module_name:
+        description: 'Name of the module to override (e.g., score_baselibs).'
+        required: true
+        type: string
+      target_branch:
+        description: 'Ref to checkout (branch, tag, or commit SHA).'
+        required: true
+        type: string
+        default: 'main'
+    secrets:
+      REPO_READ_TOKEN:
+        description: 'Token for reading repositories'
+        required: false
+
+env:
+  REFERENCE_INTEGRATION_REPO: ${{ vars.reference_integration_repo != '' && vars.reference_integration_repo || 'eclipse-score/reference_integration' }}
+
+jobs:
+  preparation:
+    name: Preparation
+    runs-on: ubuntu-latest
+    outputs:
+      known_good_updated: ${{ steps.set_known_good.outputs.known_good_updated }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+        with:
+          repository: ${{ env.REFERENCE_INTEGRATION_REPO }}
+          ref: ${{ inputs.target_branch }}
+          token: ${{ secrets.REPO_READ_TOKEN != '' && secrets.REPO_READ_TOKEN || github.token }}
+      - name: Create updated known_good.json with PR commit
+        id: set_known_good
+        run: |
+          if [ "${{ github.repository }}" != "${{ env.REFERENCE_INTEGRATION_REPO }}" ]; then
+            echo "Overriding ${{ inputs.module_name }} with current PR"
+            python3 tools/override_known_good_repo.py \
+              --known known_good.json \
+              --output known_good.updated.json \
+              --module-override ${{ inputs.module_name }}@${{ github.event.repository.clone_url }}@${{ github.sha }}
+          else
+            echo "Testing reference integration repository itself - updating to latest commits"
+            echo "::group::get latest commits from module branches"
+            python3 tools/update_module_latest.py --output known_good.updated.json
+            cat known_good.updated.json
+            echo "::endgroup::"
+          fi
+          
+          # Output the content as a JSON string
+          echo "known_good_updated<<EOF" >> $GITHUB_OUTPUT
+          cat known_good.updated.json >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_READ_TOKEN != '' && secrets.REPO_READ_TOKEN || github.token }}
+      - name: Show updated known_good.json
+        run: |
+          echo "Updated known_good.json:"
+          cat known_good.updated.json
+      - name: Upload updated known_good.json artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: known_good.updated.json
+          path: known_good.updated.json
+
+  docs:
+    name: Generate Documentation
+    runs-on: ubuntu-latest
+    needs: preparation
+    steps:
+      - name: not implemented
+        run: echo "Documentation generation not yet implemented here."
+
+  integration-test:
+    name: Integration Testing (${{ matrix.config }})
+    needs: preparation
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - bl-x86_64-linux
+          # Add more configs here as needed
+          # - bl-aarch64-linux
+          # - bl-x86_64-qnx
+    uses: ./.github/workflows/reusable_integration-build.yml
+    secrets:
+      REPO_READ_TOKEN: ${{ secrets.REPO_READ_TOKEN != '' && secrets.REPO_READ_TOKEN || github.token }}
+    with:
+      known_good: ${{ needs.preparation.outputs.known_good_updated }}
+      config: ${{ matrix.config }}
+      repo_runner_labels: ${{ inputs.repo_runner_labels }}
+      target_branch: ${{ inputs.target_branch }}
+
+  summary:
+    name: Publish Summary
+    runs-on: ubuntu-latest
+    needs: [integration-test, docs]
+    if: always()
+    steps:
+      # get all artefacts from integration-test job with name bazel-build-logs-*
+      - name: Download Integration Test Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: bazel-build-logs-*
+          path: _logs/integration_test_logs
+          merge-multiple: true
+      - name: Publish Integration Test Summary
+        run: |
+          {
+            echo '## Overall Status'
+            echo
+            if [ "${{ needs.integration-test.result }}" == "success" ]; then
+              echo '- Integration Test: ✅ **SUCCESS**'
+            else
+              echo '- Integration Test: ❌ **FAILURE**'
+            fi
+            
+            if [ "${{ needs.docs.result }}" == "success" ]; then
+              echo '- Documentation Generation: ✅ **SUCCESS**'
+            else
+              echo '- Documentation Generation: ❌ **FAILURE**'
+            fi
+            
+            echo
+            echo '---'
+            echo
+            echo '## Integration Test Summary'
+            echo
+            
+            # Process each build_summary.md file from different configs
+            for summary_file in _logs/integration_test_logs/*/build_summary.md; do
+              if [ -f "$summary_file" ]; then
+                config_name=$(basename $(dirname "$summary_file"))
+                echo "### Configuration: $config_name"
+                echo
+                cat "$summary_file"
+                echo
+              fi
+            done
+            
+            # If no summary files found, check direct path
+            if [ -f _logs/integration_test_logs/build_summary.md ]; then
+              cat _logs/integration_test_logs/build_summary.md
+              echo
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
