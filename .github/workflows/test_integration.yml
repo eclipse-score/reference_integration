@@ -26,7 +26,7 @@ jobs:
     uses: ./.github/workflows/reusable_smoke-test.yml
     secrets: inherit
     with:
-      runner_tag: 'ubuntu-latest'
+      repo_runner_labels: 'ubuntu-latest'
       module_name: 'reference_integration'
       ref_int_ref: ${{ github.ref }}
       ref_int_repo: ${{ github.repository }}
