@@ -3,61 +3,66 @@
 
 import json
 import sys
-from typing import Dict, Any
+from typing import Optional
+
+from models import Module
 
 
-def load_module_data(known_good_file: str, module_name: str) -> Dict[str, Any]:
+def load_module(known_good_file: str, module_name: str) -> Optional[Module]:
     """
-    Load module data from known_good.json.
+    Load module from known_good.json.
     
     Args:
         known_good_file: Path to the known_good.json file
         module_name: Name of the module to look up
         
     Returns:
-        Dictionary with module data, or empty dict if not found
+        Module instance, or None if not found
     """
     try:
         with open(known_good_file, 'r') as f:
             data = json.load(f)
-        modules = data.get('modules', {})
-        return modules.get(module_name, {})
+        modules_dict = data.get('modules', {})
+        module_data = modules_dict.get(module_name)
+        
+        if not module_data:
+            return None
+        
+        return Module.from_dict(module_name, module_data)
     except Exception as e:
         # Log error to stderr for debugging
         print(f"Error loading {known_good_file}: {e}", file=sys.stderr)
-        return {}
+        return None
 
 
-def get_module_field(module_data: Dict[str, Any], field: str = 'hash') -> str:
+def get_module_field(module: Optional[Module], field: str = 'hash') -> str:
     """
-    Extract a specific field from module data.
+    Extract a specific field from module.
     
     Args:
-        module_data: Dictionary with module information
+        module: Module instance
         field: Field to extract ('hash', 'version', 'repo', or 'all')
         
     Returns:
         Requested field value, or 'N/A' if not found
-        For 'hash': truncated to 8 chars if longer
+        For 'hash': returns the hash value
         For 'all': returns hash/version (prefers hash, falls back to version)
     """
-    if not module_data:
+    if not module:
         return 'N/A'
     
     if field == 'repo':
-        repo = module_data.get('repo', 'N/A')
+        repo = module.repo or 'N/A'
         # Remove .git suffix if present
         if repo.endswith('.git'):
             repo = repo[:-4]
         return repo
     elif field == 'version':
-        return module_data.get('version', 'N/A')
+        return module.version or 'N/A'
     elif field == 'hash':
-        hash_val = module_data.get('hash', 'N/A')
-        return hash_val
+        return module.hash or 'N/A'
     else:  # field == 'all' or default
-        hash_val = module_data.get('hash', module_data.get('version', 'N/A'))
-        return hash_val
+        return module.hash or module.version or 'N/A'
 
 
 if __name__ == '__main__':
@@ -71,6 +76,6 @@ if __name__ == '__main__':
     module_name = sys.argv[2]
     field = sys.argv[3] if len(sys.argv) == 4 else 'all'
     
-    module_data = load_module_data(known_good_file, module_name)
-    result = get_module_field(module_data, field)
+    module = load_module(known_good_file, module_name)
+    result = get_module_field(module, field)
     print(result)

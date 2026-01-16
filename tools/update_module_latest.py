@@ -31,8 +31,8 @@ import datetime as dt
 import json
 import os
 import sys
-from dataclasses import dataclass
-from urllib.parse import urlparse
+
+from models import Module
 
 try:
 	from github import Github, GithubException
@@ -41,35 +41,6 @@ except ImportError:
 	HAS_PYGITHUB = False
 	Github = None
 	GithubException = None
-
-
-@dataclass
-class Module:
-	name: str
-	hash: str
-	repo: str
-	version: str | None = None
-	patches: list[str] | None = None
-	branch: str = "main"
-
-	@property
-	def owner_repo(self) -> str:
-		"""Return owner/repo part extracted from HTTPS GitHub URL."""
-		# Examples:
-		# https://github.com/eclipse-score/logging.git -> eclipse-score/logging
-		parsed = urlparse(self.repo)
-		if parsed.netloc != "github.com":
-			raise ValueError(f"Not a GitHub URL: {self.repo}")
-		
-		# Extract path, remove leading slash and .git suffix
-		path = parsed.path.lstrip("/").removesuffix(".git")
-		
-		# Split and validate owner/repo format
-		parts = path.split("/", 2)  # Split max 2 times to get owner and repo
-		if len(parts) < 2 or not parts[0] or not parts[1]:
-			raise ValueError(f"Cannot parse owner/repo from: {self.repo}")
-		
-		return f"{parts[0]}/{parts[1]}"
 
 
 def fetch_latest_commit(owner_repo: str, branch: str, token: str | None) -> str:

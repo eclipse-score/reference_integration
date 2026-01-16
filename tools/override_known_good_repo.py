@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-Update a known_good.json file by overriding specific repository commits.
+Update a known_good.json file by pinning modules to specific commits.
 
 Usage:
-  python3 tools/override_known_good_repo.py \
-      --known known_good.json \
-      --output known_good.updated.json \
-      --repo-override https://github.com/org/repo.git@abc123def
+    python3 tools/override_known_good_repo.py \
+            --known known_good.json \
+            --output known_good.updated.json \
+            --module-override https://github.com/org/repo.git@abc123def
 
 This script reads a known_good.json file and produces a new one with specified
-repository commits overridden. The output can then be used with 
+module commit pins. The output can then be used with 
 update_module_from_known_good.py to generate the MODULE.bazel file.
 """
 import argparse
@@ -19,6 +19,8 @@ import re
 from datetime import datetime
 from typing import Dict, Any, List
 import logging
+
+from models import Module
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
@@ -36,15 +38,20 @@ def load_known_good(path: str) -> Dict[str, Any]:
     )
 
 
-def parse_and_apply_overrides(modules: Dict[str, Any], repo_overrides: List[str]) -> int:
+def parse_and_apply_overrides(modules: Dict[str, Module], repo_overrides: List[str]) -> int:
     """
     Parse repo override arguments and apply them to modules.
     
-    Supports three formats:
+    Supports two formats:
     1. module_name@hash                                  (find repo from module)
     2. module_name@repo_url@hash                         (explicit repo with module validation)
     
-    Returns the number of overrides applied.
+    Args:
+        modules: Dictionary mapping module names to Module instances
+        repo_overrides: List of override strings
+    
+    Returns:
+        The number of overrides applied.
     """
     repo_url_pattern = re.compile(r'^https://[a-zA-Z0-9.-]+/[a-zA-Z0-9._/-]+\.git$')
     hash_pattern = re.compile(r'^[a-fA-F0-9]{7,40}$')
@@ -65,20 +72,24 @@ def parse_and_apply_overrides(modules: Dict[str, Any], repo_overrides: List[str]
                     "Expected 7-40 hex characters"
                 )
             
-            # Validate module exists and matches repo (only if module is in known_good.json)
+            # Validate module exists
             if module_name not in modules:
                 logging.warning(
                     f"Module '{module_name}' not found in known_good.json\n"
                     f"Available modules: {', '.join(sorted(modules.keys()))}"
                 )
-            old_value = modules[module_name].get("hash") or modules[module_name].get("commit") or modules[module_name].get("version")
-            if commit_hash == old_value:
+                continue
+            
+            module = modules[module_name]
+            old_value = module.version or module.hash
+            
+            if commit_hash == module.hash:
                 logging.info(
                     f"Module '{module_name}' already at specified commit {commit_hash}, no change needed"
                 )
             else:
-                modules[module_name]["hash"] = commit_hash
-                modules[module_name].pop("version", None)
+                module.hash = commit_hash
+                module.version = None  # Clear version when overriding hash
                 logging.info(f"Applied override to {module_name}: {old_value} -> {commit_hash}")
                 overrides_applied += 1
         
@@ -98,24 +109,28 @@ def parse_and_apply_overrides(modules: Dict[str, Any], repo_overrides: List[str]
                     "Expected format: https://github.com/org/repo.git"
                 )
             
-            # Validate module exists and matches repo (only if module is in known_good.json)
+            # Validate module exists
             if module_name not in modules:
                 logging.warning(
                     f"Module '{module_name}' not found in known_good.json\n"
                     f"Available modules: {', '.join(sorted(modules.keys()))}"
                 )
                 continue
-            old_value = modules[module_name].get("hash") or modules[module_name].get("commit") or modules[module_name].get("version")
-            if not old_value == commit_hash:
-                modules[module_name]["hash"] = commit_hash
-                modules[module_name].pop("version", None)
-            modules[module_name]["repo"] = repo_url
-            logging.info(f"Applied override to {module_name}: {old_value} -> {commit_hash}")
+            
+            module = modules[module_name]
+            old_value = module.version or module.hash
+            
+            if module.hash != commit_hash:
+                module.hash = commit_hash
+                module.version = None  # Clear version when overriding hash
+            
+            module.repo = repo_url
+            logging.info(f"Applied override to {module_name}: {old_value} -> {commit_hash} (repo: {repo_url})")
             overrides_applied += 1
         
         else:
             raise SystemExit(
-                f"Invalid --override format: {entry}\n"
+                f"Invalid override spec: {entry}\n"
                 "Supported formats:\n"
                 "  1. module_name@commit_hash\n"
                 "  2. module_name@repo_url@commit_hash\n"
@@ -124,9 +139,13 @@ def parse_and_apply_overrides(modules: Dict[str, Any], repo_overrides: List[str]
     return overrides_applied
 
 
-def override_repo_commits(data: Dict[str, Any], repo_overrides: List[str]) -> Dict[str, Any]:
+def apply_overrides(data: Dict[str, Any], repo_overrides: List[str]) -> Dict[str, Any]:
     """Apply repository commit overrides to the known_good data."""
-    modules = data.get("modules", {})
+    modules_dict = data.get("modules", {})
+    
+    # Parse modules into Module instances (skip validation since we're just overriding)
+    modules_list = [Module.from_dict(name, mod_data) for name, mod_data in modules_dict.items()]
+    modules = {m.name: m for m in modules_list}
     
     # Parse and apply overrides
     overrides_applied = parse_and_apply_overrides(modules, repo_overrides)
@@ -136,10 +155,28 @@ def override_repo_commits(data: Dict[str, Any], repo_overrides: List[str]) -> Di
     else:
         logging.info(f"Successfully applied {overrides_applied} override(s)")
     
+    # Convert modules back to dict format
+    data["modules"] = {name: module.to_dict() for name, module in modules.items()}
+    
     # Update timestamp
     data["timestamp"] = datetime.now().isoformat() + "Z"
     
     return data
+
+
+def write_known_good(data: Dict[str, Any], output_path: str, dry_run: bool = False) -> None:
+    """Write known_good data to file or print for dry-run."""
+    output_json = json.dumps(data, indent=4, sort_keys=False) + "\n"
+    
+    if dry_run:
+        print(f"\nDry run: would write to {output_path}\n")
+        print("---- BEGIN UPDATED JSON ----")
+        print(output_json, end="")
+        print("---- END UPDATED JSON ----")
+    else:
+        with open(output_path, "w", encoding="utf-8") as f:
+            f.write(output_json)
+        logging.info(f"Successfully wrote updated known_good.json to {output_path}")
 
 
 def main() -> None:
@@ -148,30 +185,24 @@ def main() -> None:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Override by module name (simplest - looks up repo automatically)
-  python3 tools/override_known_good_repo.py \\
-      --known known_good.json \\
-      --output known_good.updated.json \\
-      --repo-override score_baselibs@abc123def
+  # Pin by module name (simplest - looks up repo automatically)
+  python3 tools/override_known_good_repo.py \
+      --known known_good.json \
+      --output known_good.updated.json \
+      --module-override score_baselibs@abc123def
 
-  # Override with explicit repo URL
-  python3 tools/override_known_good_repo.py \\
-      --known known_good.json \\
-      --output known_good.updated.json \\
-      --repo-override https://github.com/eclipse-score/baselibs.git@abc123def
+  # Pin with module name and explicit repo URL
+  python3 tools/override_known_good_repo.py \
+      --known known_good.json \
+      --output known_good.updated.json \
+      --module-override score_baselibs@https://github.com/eclipse-score/baselibs.git@abc123
 
-  # Override with module name and repo (validates module exists and repo matches)
-  python3 tools/override_known_good_repo.py \\
-      --known known_good.json \\
-      --output known_good.updated.json \\
-      --repo-override score_baselibs@https://github.com/eclipse-score/baselibs.git@abc123
-
-  # Override multiple repositories
-  python3 tools/override_known_good_repo.py \\
-      --known known_good.json \\
-      --output known_good.updated.json \\
-      --repo-override score_baselibs@abc123 \\
-      --repo-override score_communication@def456
+  # Pin multiple modules
+  python3 tools/override_known_good_repo.py \
+      --known known_good.json \
+      --output known_good.updated.json \
+      --module-override score_baselibs@abc123 \
+      --module-override score_communication@def456
         """
     )
     
@@ -186,10 +217,14 @@ Examples:
         help="Path to output JSON file (default: known_good.updated.json)"
     )
     parser.add_argument(
-        "--repo-override",
+        "--module-override",
+        dest="module_overrides",
         action="append",
-        required=True,
-        help="Override commit for a repo. Formats: module_name@hash | module_name@repo_url@hash. Can be specified multiple times."
+        required=False,
+        help=(
+            "Override a module to a commit. Formats: module_name@hash | "
+            "module_name@repo_url@hash. Can be specified multiple times."
+        ),
     )
     parser.add_argument(
         "--dry-run",
@@ -216,18 +251,14 @@ Examples:
     # Load, update, and output
     logging.info(f"Loading {known_path}")
     data = load_known_good(known_path)
-    updated_data = override_repo_commits(data, args.repo_override)
-    output_json = json.dumps(updated_data, indent=4, sort_keys=False) + "\n"
     
-    if args.dry_run:
-        print(f"\nDry run: would write to {output_path}\n")
-        print("---- BEGIN UPDATED JSON ----")
-        print(output_json, end="")
-        print("---- END UPDATED JSON ----")
-    else:
-        with open(output_path, "w", encoding="utf-8") as f:
-            f.write(output_json)
-        logging.info(f"Successfully wrote updated known_good.json to {output_path}")
+    if not args.module_overrides:
+        parser.error("at least one --module-override is required")
+
+    overrides = args.module_overrides
+
+    updated_data = apply_overrides(data, overrides)
+    write_known_good(updated_data, output_path, args.dry_run)
 
 
 if __name__ == "__main__":

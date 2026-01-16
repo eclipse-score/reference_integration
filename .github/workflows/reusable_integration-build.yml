@@ -1,3 +1,49 @@
+# Module Integration Build Workflow
+#
+# Summary:
+#   Builds all modules referenced in known_good.json with Bazel and runs the
+#   integration test script to validate module interoperability.
+#
+# What it does:
+#   - Checks out the reference integration repository
+#   - Updates score_modules.MODULE.bazel from the provided known_good.json
+#   - Builds all referenced modules (via scripts/integration_test.sh and Bazel)
+#   - Runs integration tests
+#   - Uploads logs from _logs/ as artifact: bazel-build-logs-${{ inputs.config }}
+#
+# Inputs:
+#   - known_good (string, required): JSON content used to pin module SHAs.
+#   - config (string, optional, default: bl-x86_64-linux): Bazel config passed as
+#     CONFIG to scripts/integration_test.sh.
+#   - repo_runner_labels (string, optional): Runner label(s). Accepts either a
+#     single label string (e.g., ubuntu-latest) or a JSON string representing a
+#     label or an array of labels (e.g., "\"ubuntu-latest\"" or
+#     "[\"self-hosted\",\"linux\",\"x64\"]").
+#   - ref_int_repo (string, optional, default: eclipse-score/reference_integration):
+#     Reference Integration repository to checkout.
+#   - ref_int_ref (string, optional, default: main): Ref/branch to checkout.
+#   - REPO_READ_TOKEN (secret, optional): Token for private module access; falls
+#     back to github.token when not provided.
+#
+# Runner selection:
+#   - Priority: `inputs.repo_runner_labels` > `vars.REPO_RUNNER_LABELS` > 'ubuntu-latest'.
+#   - `repo_runner_labels` can be provided as a single label string or as JSON
+#     (string or array). When JSON is used, it is parsed via fromJSON().
+#
+# Usage:
+#   This workflow is reusable and triggered via workflow_call from other workflows.
+#   Example:
+#     jobs:
+#       integration:
+#         uses: eclipse-score/reference_integration/.github/workflows/module-integration-build.yml@main
+#         with:
+#           known_good: |
+#             { "modules": [] }
+#           config: bl-x86_64-linux
+#           repo_runner_labels: '"ubuntu-latest"'
+#         secrets:
+#           REPO_READ_TOKEN: ${{ secrets.REPO_READ_TOKEN }}
+#
 name: Module Integration Build
 
 on:
@@ -7,10 +53,6 @@ on:
         description: 'GitHub token with read access to the score modules. Defaults to github.token'
         required: false
     inputs:
-      module_name:
-        description: 'Name of the module to override (e.g., score_baselibs). If not provided, uses repository URL.'
-        required: true
-        type: string
       known_good:
         description: 'Content of the known_good.json file to use for the integration test.'
         required: true
@@ -20,6 +62,10 @@ on:
         required: false
         type: string
         default: 'bl-x86_64-linux'
+      repo_runner_labels:
+        description: 'Runner label(s) for the job; single label or JSON string/array.'
+        required: false
+        type: string
       ref_int_ref:
         description: 'Reference Integration repository ref to checkout.'
         required: false
@@ -34,7 +80,7 @@ on:
 jobs:
   integration-test:
     name: Integration Test
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.repo_runner_labels && fromJSON(inputs.repo_runner_labels) || 'ubuntu-latest' }}
     steps:
       - name: Show disk space before build
         run: |
