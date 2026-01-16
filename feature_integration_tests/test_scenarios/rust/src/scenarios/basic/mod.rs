@@ -11,13 +11,16 @@
 //
 mod orchestration_with_persistency;
 
-use orchestration_with_persistency::OrchestrationWithPersistency;
 use test_scenarios_rust::scenario::{ScenarioGroup, ScenarioGroupImpl};
 
 pub fn basic_scenario_group() -> Box<dyn ScenarioGroup> {
     Box::new(ScenarioGroupImpl::new(
         "basic",
-        vec![Box::new(OrchestrationWithPersistency)],
+        vec![
+            Box::new(orchestration_with_persistency::OrchestrationWithPersistency),
+            Box::new(orchestration_with_persistency::ConcurrentKvsOrchestrationWithPersistency),
+            Box::new(orchestration_with_persistency::MultipleKvsOrchestrationWithPersistency),
+        ],
         vec![],
     ))
 }
