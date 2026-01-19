@@ -101,8 +101,11 @@ def main(argv: list[str]) -> int:
 	args = parse_args(argv)
 	try:
 		known_good = load_known_good(Path(args.known_good))
-	except (OSError, SystemExit) as e:
-		print(f"ERROR: Cannot read or parse known_good file: {e}", file=sys.stderr)
+	except FileNotFoundError as e:
+		print(f"ERROR: {e}", file=sys.stderr)
+		return 3
+	except ValueError as e:
+		print(f"ERROR: {e}", file=sys.stderr)
 		return 3
 	except json.JSONDecodeError as e:
 		print(f"ERROR: Invalid JSON syntax: {e}", file=sys.stderr)

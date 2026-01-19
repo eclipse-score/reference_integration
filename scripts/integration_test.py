@@ -160,6 +160,10 @@ def build_group(group_name: str, targets: str, config: str, log_file: Path) -> T
     
     # Run build and capture output
     with open(log_file, 'w') as f:
+        # Write command to log file
+        f.write(f"Command: {' '.join(cmd)}\n")
+        f.write("-" * 80 + "\n\n")
+        
         process = subprocess.Popen(
             cmd,
             stdout=subprocess.PIPE,
@@ -288,8 +292,15 @@ def main():
     summary_file.parent.mkdir(parents=True, exist_ok=True)
     
     # Load modules from known_good files
-    old_modules = load_known_good(Path('known_good.json')).modules if Path('known_good.json').exists() else {}
-    new_modules = load_known_good(known_good_file).modules if known_good_file else {}
+    try:
+        old_modules = load_known_good(Path('known_good.json')).modules if Path('known_good.json').exists() else {}
+    except FileNotFoundError:
+        old_modules = {}
+    
+    try:
+        new_modules = load_known_good(known_good_file).modules if known_good_file else {}
+    except FileNotFoundError as e:
+        raise SystemExit(f"ERROR: {e}")
     
     # Start summary
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')

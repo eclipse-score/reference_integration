@@ -78,11 +78,12 @@ def load_known_good(path: Path) -> KnownGood:
 	Returns:
 		KnownGood instance with parsed modules
 	"""
+	
 	with open(path, "r", encoding="utf-8") as f:
 		data = json.load(f)
 	
 	if not isinstance(data, dict) or not isinstance(data.get("modules"), dict):
-		raise SystemExit(
+		raise ValueError(
 			f"Invalid known_good.json at {path} (expected object with 'modules' dict)"
 		)
 	
