@@ -152,7 +152,6 @@ def build_group(group_name: str, targets: str, config: str, log_file: Path) -> T
     
     # Build command
     cmd = ['bazel', 'build', '--verbose_failures', f'--config={config}'] + targets.split()
-    cmd = ['ls']
 
     print(f"bazel build --verbose_failures --config {config} {targets}")
     print(f"::group::Bazel build ({group_name})")
