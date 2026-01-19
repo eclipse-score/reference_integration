@@ -27,12 +27,12 @@ from __future__ import annotations
 import argparse
 import shutil
 import subprocess
-import datetime as dt
 import json
 import os
 import sys
+from pathlib import Path
 
-from models import Module
+from models.known_good import load_known_good
 
 try:
 	from github import Github, GithubException
@@ -83,29 +83,6 @@ def fetch_latest_commit_gh(owner_repo: str, branch: str) -> str:
 	return sha
 
 
-def load_known_good(path: str) -> dict:
-	with open(path, "r", encoding="utf-8") as f:
-		return json.load(f)
-
-
-def write_known_good(path: str, original: dict, modules: list[Module]) -> None:
-	out = dict(original)  # shallow copy
-	out["timestamp"] = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat() + "Z"
-	out["modules"] = {}
-	for m in modules:
-		mod_dict = {"repo": m.repo, "hash": m.hash}
-		if m.version:
-			mod_dict["version"] = m.version
-		if m.patches:
-			mod_dict["patches"] = m.patches
-		if m.branch:
-			mod_dict["branch"] = m.branch
-		out["modules"][m.name] = mod_dict
-	with open(path, "w", encoding="utf-8") as f:
-		json.dump(out, f, indent=4, sort_keys=False)
-		f.write("\n")
-
-
 def parse_args(argv: list[str]) -> argparse.Namespace:
 	p = argparse.ArgumentParser(description="Update module hashes to latest commit on branch")
 	p.add_argument(
@@ -123,43 +100,20 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 def main(argv: list[str]) -> int:
 	args = parse_args(argv)
 	try:
-		data = load_known_good(args.known_good)
-	except OSError as e:
-		print(f"ERROR: Cannot read known_good file: {e}", file=sys.stderr)
+		known_good = load_known_good(Path(args.known_good))
+	except (OSError, SystemExit) as e:
+		print(f"ERROR: Cannot read or parse known_good file: {e}", file=sys.stderr)
 		return 3
 	except json.JSONDecodeError as e:
-		print(f"ERROR: Invalid JSON: {e}", file=sys.stderr)
+		print(f"ERROR: Invalid JSON syntax: {e}", file=sys.stderr)
 		return 3
 
-	modules_raw = data.get("modules", {})
-	modules: list[Module] = []
-	for name, m in modules_raw.items():
-		try:
-			version = m.get("version")
-			hash_val = m.get("hash", "")
-			patches = m.get("patches")
-			repo = m.get("repo")
-			branch = m.get("branch")
-			if not repo:
-				print(f"WARNING: skipping module {name} with missing repo", file=sys.stderr)
-				continue
-			modules.append(Module(
-				name=name,
-				hash=hash_val,
-				repo=repo,
-				version=version,
-				patches=patches,
-				branch=branch
-			))
-		except KeyError as e:
-			print(f"WARNING: skipping module {name} missing key {e}: {m}", file=sys.stderr)
-	if not modules:
+	if not known_good.modules:
 		print("ERROR: No modules found to update.", file=sys.stderr)
 		return 3
 
 	token = os.environ.get("GITHUB_TOKEN")
 	failures = 0
-	updated: list[Module] = []
 	# Default: use gh if available unless --no-gh specified
 	use_gh = (not args.no_gh) and shutil.which("gh") is not None
 	
@@ -174,7 +128,7 @@ def main(argv: list[str]) -> int:
 	if args.no_gh and shutil.which("gh") is not None:
 		print("INFO: --no-gh specified; ignoring installed 'gh' CLI", file=sys.stderr)
 
-	for mod in modules:
+	for mod in known_good.modules.values():
 		try:
 			# Use module-specific branch if available, otherwise use command-line branch
 			branch = mod.branch if mod.branch else args.branch
@@ -184,25 +138,25 @@ def main(argv: list[str]) -> int:
 				latest = fetch_latest_commit(mod.owner_repo, branch, token)
 			
 			# Only reuse version if hash did not change
-			version_to_use = mod.version if latest == mod.hash else None
-			updated.append(Module(name=mod.name, hash=latest, repo=mod.repo, version=version_to_use, patches=mod.patches, branch=mod.branch))
+			if latest != mod.hash:
+				mod.hash = latest
+				mod.version = None  # Clear version when hash changes
 			
 			# Display format: if version exists, show "version -> hash", otherwise "hash -> hash"
 			if mod.version:
 				print(f"{mod.name}: {mod.version} -> {latest[:8]} (branch {branch})")
 			else:
-				print(f"{mod.name}: {mod.hash[:8]} -> {latest[:8]} (branch {branch})")
+				old_hash = known_good.modules[mod.name].hash
+				print(f"{mod.name}: {old_hash[:8]} -> {latest[:8]} (branch {branch})")
 		except Exception as e:  # noqa: BLE001
 			failures += 1
 			print(f"ERROR {mod.name}: {e}", file=sys.stderr)
 			if args.fail_fast:
 				break
-			# Preserve old hash if continuing
-			updated.append(mod)
 
-	if args.output and updated:
+	if args.output:
 		try:
-			write_known_good(args.output, data, updated)
+			known_good.write(Path(args.output))
 			print(f"Updated JSON written to {args.output}")
 		except OSError as e:
 			print(f"ERROR: Failed writing output file: {e}", file=sys.stderr)

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 import argparse
-import json
 import csv
+from pathlib import Path
 
-from models import Module
+from models.known_good import load_known_good
 
 MODULES_CSV_HEADER = [
     "repo_url",
@@ -21,13 +21,9 @@ def main():
     parser.add_argument("--gita-workspace", dest="gita_workspace", default=".gita-workspace.csv", help="File to output gita workspace metadata")
     args = parser.parse_args()
 
-    with open(args.known_good, "r") as f:
-        data = json.load(f)
-
-    modules_dict = data.get("modules", {})
-    
-    # Parse modules using Module dataclass
-    modules = Module.parse_modules(modules_dict)
+    # Load known_good using KnownGood dataclass
+    known_good = load_known_good(Path(args.known_good))
+    modules = list(known_good.modules.values())
     
     gita_metadata = []
     for module in modules:

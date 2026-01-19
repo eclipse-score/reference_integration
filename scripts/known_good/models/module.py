@@ -97,7 +97,7 @@ class Module:
 		Returns:
 			Dictionary with module configuration
 		"""
-		result = {
+		result: Dict[str, Any] = {
 			"repo": self.repo,
 			"hash": self.hash
 		}

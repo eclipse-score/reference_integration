@@ -95,14 +95,14 @@ jobs:
         run: |
           if [ "${{ github.repository }}" != "${{ env.REFERENCE_INTEGRATION_REPO }}" ]; then
             echo "Overriding ${{ inputs.module_name }} with current PR"
-            python3 tools/override_known_good_repo.py \
+            python3 scripts/known_good/override_known_good_repo.py \
               --known known_good.json \
               --output known_good.updated.json \
               --module-override ${{ inputs.module_name }}@${{ github.event.repository.clone_url }}@${{ github.sha }}
           else
             echo "Testing reference integration repository itself - updating to latest commits"
             echo "::group::get latest commits from module branches"
-            python3 tools/update_module_latest.py --output known_good.updated.json
+            python3 scripts/known_good/update_module_latest.py --output known_good.updated.json
             cat known_good.updated.json
             echo "::endgroup::"
           fi
