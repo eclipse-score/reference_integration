@@ -15,55 +15,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, Optional, Tuple
 
-# Add tools directory to path to import Module
-script_dir = Path(__file__).parent
-repo_root = script_dir.parent
-sys.path.insert(0, str(repo_root / "tools"))
+from models.build_config import BuildModuleConfig, load_build_config
+from known_good.models import Module
+from known_good.models.known_good import load_known_good
 
-from models import Module
-
-
-
-# Build target groups - maps module names to their Bazel targets
-BUILD_TARGET_GROUPS = {
-    "score_baselibs": "@score_baselibs//score/...",
-    "score_communication": "@score_communication//score/mw/com:com",
-    "score_persistency": "@score_persistency//src/cpp/src/... @score_persistency//src/rust/...",
-    "score_kyron": "@score_kyron//src/...",
-    "score_orchestrator": "@score_orchestrator//src/...",
-    "score_test_scenarios": "@score_test_scenarios//test_scenarios_rust:test_scenarios_rust @score_test_scenarios//test_scenarios_cpp:test_scenarios_cpp",
-    "score_feo": "-- @score_feo//... -@score_feo//:docs -@score_feo//:ide_support -@score_feo//:needs_json",
-    "score_logging": """@score_logging//score/...
-        --@score_baselibs//score/memory/shared/flags:use_typedshmd=False
-        --@score_baselibs//score/json:base_library=nlohmann
-        --@score_logging//score/datarouter/build_configuration_flags:persistent_logging=False
-        --@score_logging//score/datarouter/build_configuration_flags:persistent_config_feature_enabled=False
-        --@score_logging//score/datarouter/build_configuration_flags:enable_nonverbose_dlt=False
-        --@score_logging//score/datarouter/build_configuration_flags:enable_dynamic_configuration_in_datarouter=False
-        --@score_logging//score/datarouter/build_configuration_flags:dlt_file_transfer_feature=False
-        --@score_logging//score/datarouter/build_configuration_flags:use_local_vlan=True""",
-}
-
-
-def load_modules(known_good_path: Path) -> Dict[str, Module]:
-    """Load modules from known_good.json file.
-    
-    Args:
-        known_good_path: Path to known_good.json file
-        
-    Returns:
-        Dictionary mapping module names to Module instances
-    """
-    if not known_good_path.exists():
-        return {}
-    
-    with open(known_good_path, 'r') as f:
-        data = json.load(f)
-    
-    modules_dict = data.get('modules', {})
-    modules = Module.parse_modules(modules_dict)
-    
-    return {m.name: m for m in modules}
+repo_root = Path(__file__).parent.parent
 
 
 def get_module_version_gh(repo_url: str, commit_hash: str) -> Optional[str]:
@@ -196,7 +152,7 @@ def build_group(group_name: str, targets: str, config: str, log_file: Path) -> T
     
     # Build command
     cmd = ['bazel', 'build', '--verbose_failures', f'--config={config}'] + targets.split()
-    #cmd = ['ls'] # for testing purposes only, remove on PR
+    cmd = ['ls']
 
     print(f"bazel build --verbose_failures --config {config} {targets}")
     print(f"::group::Bazel build ({group_name})")
@@ -295,7 +251,14 @@ def main():
     parser.add_argument(
         '--known-good',
         type=Path,
-        help='Path to known_good.json file'
+        default=None,
+        help='Path to known_good.json file (default: known_good.json in repo root)'
+    )
+    parser.add_argument(
+        '--build-config',
+        type=Path,
+        default=None,
+        help='Path to build_config.json file (default: build_config.json in repo root)'
     )
     parser.add_argument(
         '--config',
@@ -311,16 +274,23 @@ def main():
     summary_file = Path(os.environ.get('SUMMARY_FILE', '_logs/build_summary.md'))
     
     known_good_file = args.known_good
-    if not known_good_file and Path('known_good.json').exists():
-        known_good_file = Path('known_good.json')
+    if not known_good_file:
+        known_good_file = repo_root / 'known_good.json'
+    
+    build_config_file = args.build_config
+    if not build_config_file:
+        build_config_file = repo_root / 'build_config.json'
+    
+    # Load build configuration
+    BUILD_TARGET_GROUPS = load_build_config(build_config_file)
     
     # Create log directory
     log_dir.mkdir(parents=True, exist_ok=True)
     summary_file.parent.mkdir(parents=True, exist_ok=True)
     
     # Load modules from known_good files
-    old_modules = load_modules(Path('known_good.json')) if Path('known_good.json').exists() else {}
-    new_modules = load_modules(known_good_file) if known_good_file else {}
+    old_modules = load_known_good(Path('known_good.json')).modules if Path('known_good.json').exists() else {}
+    new_modules = load_known_good(known_good_file).modules if known_good_file else {}
     
     # Start summary
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -345,10 +315,10 @@ def main():
     any_failed = False
     
     # Build each group
-    for group_name, targets in BUILD_TARGET_GROUPS.items():
+    for group_name, module_config in BUILD_TARGET_GROUPS.items():
         log_file = log_dir / f"{group_name}.log"
         
-        exit_code, duration = build_group(group_name, targets, config, log_file)
+        exit_code, duration = build_group(group_name, module_config.build_targets, config, log_file)
         
         if exit_code != 0:
             any_failed = True

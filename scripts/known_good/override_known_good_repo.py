@@ -13,29 +13,18 @@ module commit pins. The output can then be used with
 update_module_from_known_good.py to generate the MODULE.bazel file.
 """
 import argparse
-import json
 import os
 import re
 import datetime as dt
-from typing import Dict, Any, List
+from pathlib import Path
+from typing import Dict, List
 import logging
 
 from models import Module
+from models.known_good import KnownGood, load_known_good
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
-
-
-def load_known_good(path: str) -> Dict[str, Any]:
-    """Load and parse the known_good.json file."""
-    with open(path, "r", encoding="utf-8") as f:
-        data = json.load(f)
-    
-    if isinstance(data, dict) and isinstance(data.get("modules"), dict):
-        return data
-    raise SystemExit(
-        f"Invalid known_good.json at {path} (expected object with 'modules' dict)"
-    )
 
 
 def parse_and_apply_overrides(modules: Dict[str, Module], repo_overrides: List[str]) -> int:
@@ -139,44 +128,28 @@ def parse_and_apply_overrides(modules: Dict[str, Module], repo_overrides: List[s
     return overrides_applied
 
 
-def apply_overrides(data: Dict[str, Any], repo_overrides: List[str]) -> Dict[str, Any]:
-    """Apply repository commit overrides to the known_good data."""
-    modules_dict = data.get("modules", {})
+def apply_overrides(known_good: KnownGood, repo_overrides: List[str]) -> KnownGood:
+    """Apply repository commit overrides to the known_good data.
     
-    # Parse modules into Module instances (skip validation since we're just overriding)
-    modules_list = [Module.from_dict(name, mod_data) for name, mod_data in modules_dict.items()]
-    modules = {m.name: m for m in modules_list}
-    
+    Args:
+        known_good: KnownGood instance to modify
+        repo_overrides: List of override strings
+        
+    Returns:
+        Updated KnownGood instance
+    """
     # Parse and apply overrides
-    overrides_applied = parse_and_apply_overrides(modules, repo_overrides)
+    overrides_applied = parse_and_apply_overrides(known_good.modules, repo_overrides)
     
     if overrides_applied == 0:
         logging.warning("No overrides were applied to any modules")
     else:
         logging.info(f"Successfully applied {overrides_applied} override(s)")
     
-    # Convert modules back to dict format
-    data["modules"] = {name: module.to_dict() for name, module in modules.items()}
-    
     # Update timestamp
-    data["timestamp"] = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat() + "Z"
+    known_good.timestamp = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat() + "Z"
     
-    return data
-
-
-def write_known_good(data: Dict[str, Any], output_path: str, dry_run: bool = False) -> None:
-    """Write known_good data to file or print for dry-run."""
-    output_json = json.dumps(data, indent=4, sort_keys=False) + "\n"
-    
-    if dry_run:
-        print(f"\nDry run: would write to {output_path}\n")
-        print("---- BEGIN UPDATED JSON ----")
-        print(output_json, end="")
-        print("---- END UPDATED JSON ----")
-    else:
-        with open(output_path, "w", encoding="utf-8") as f:
-            f.write(output_json)
-        logging.info(f"Successfully wrote updated known_good.json to {output_path}")
+    return known_good
 
 
 def main() -> None:
@@ -250,15 +223,15 @@ Examples:
     
     # Load, update, and output
     logging.info(f"Loading {known_path}")
-    data = load_known_good(known_path)
+    known_good = load_known_good(known_path)
     
     if not args.module_overrides:
         parser.error("at least one --module-override is required")
 
     overrides = args.module_overrides
 
-    updated_data = apply_overrides(data, overrides)
-    write_known_good(updated_data, output_path, args.dry_run)
+    updated_known_good = apply_overrides(known_good, overrides)
+    updated_known_good.write(Path(output_path), args.dry_run)
 
 
 if __name__ == "__main__":

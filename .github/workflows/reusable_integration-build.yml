@@ -77,7 +77,7 @@ on:
         default: 'main'
 
 env:
-  REFERENCE_INTEGRATION_REPO: ${{ vars.reference_integration_repo != '' && vars.reference_integration_repo || 'eclipse-score/reference_integration' }}
+  REFERENCE_INTEGRATION_REPO: ${{ vars.REFERENCE_INTEGRATION_REPO != '' && vars.REFERENCE_INTEGRATION_REPO || 'eclipse-score/reference_integration' }}
 
 jobs:
   integration-test:
@@ -127,7 +127,7 @@ jobs:
           echo "::endgroup::"
           
           echo "::group::update score_modules.MODULE.bazel"
-          python3 tools/update_module_from_known_good.py --known known_good.updated.json
+          python3 scripts/known_good/update_module_from_known_good.py --known known_good.updated.json
           cat score_modules.MODULE.bazel
           echo "::endgroup::"
         env:

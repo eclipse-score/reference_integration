@@ -4,40 +4,27 @@ Read a known_good.json file and generate a score_modules.MODULE.bazel file
 with `bazel_dep` and `git_override` calls for each module in the JSON.
 
 Usage:
-  python3 tools/update_module_from_known_good.py \
+  python3 scripts/known_good/update_module_from_known_good.py \
       --known known_good.json \
       --output score_modules.MODULE.bazel
 
 The generated score_modules.MODULE.bazel file is included by MODULE.bazel.
 
 Note: To override repository commits before generating the MODULE.bazel file,
-use tools/override_known_good_repo.py first to create an updated known_good.json.
+use scripts/known_good/override_known_good_repo.py first to create an updated known_good.json.
 """
 import argparse
-import json
 import os
 import re
-from datetime import datetime
 import logging
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Optional
+from pathlib import Path
 
 from models import Module
+from models.known_good import load_known_good
 
 # Configure logging
 logging.basicConfig(level=logging.WARNING, format='%(levelname)s: %(message)s')
-
-
-def load_known_good(path: str) -> Dict[str, Any]:
-    """Load and parse the known_good.json file."""
-    with open(path, "r", encoding="utf-8") as f:
-        data = json.load(f)
-    
-    # Expect a single JSON object containing a "modules" dict/object
-    if isinstance(data, dict) and isinstance(data.get("modules"), dict):
-        return data
-    raise SystemExit(
-        f"Invalid known_good.json at {path} (expected object with 'modules' dict)"
-    )
 
 
 def generate_git_override_blocks(modules: List[Module], repo_commit_dict: Dict[str, str]) -> List[str]:
@@ -134,7 +121,7 @@ def generate_file_content(args: argparse.Namespace, modules: List[Module], repo_
     if timestamp:
         header += (
             f"# Generated from known_good.json at {timestamp}\n"
-            "# Do not edit manually - use tools/update_module_from_known_good.py\n"
+            "# Do not edit manually - use scripts/known_good/update_module_from_known_good.py\n"
             "\n"
         )
     
@@ -161,17 +148,17 @@ def main() -> None:
         epilog="""
 Examples:
   # Generate MODULE.bazel from known_good.json
-  python3 tools/update_module_from_known_good.py
+  python3 scripts/known_good/update_module_from_known_good.py
 
   # Use a custom input and output file
-  python3 tools/update_module_from_known_good.py \\
+  python3 scripts/known_good/update_module_from_known_good.py \\
       --known custom_known_good.json \\
       --output custom_modules.MODULE.bazel
 
   # Preview without writing
-  python3 tools/update_module_from_known_good.py --dry-run
+  python3 scripts/known_good/update_module_from_known_good.py --dry-run
 
-Note: To override repository commits, use tools/override_known_good_repo.py first.
+Note: To override repository commits, use scripts/known_good/override_known_good_repo.py first.
         """
     )
     parser.add_argument(
@@ -231,19 +218,15 @@ Note: To override repository commits, use tools/override_known_good_repo.py firs
             repo_commit_dict[repo_url] = commit_hash
     
     # Load known_good.json
-    data = load_known_good(known_path)
-    modules_dict = data.get("modules") or {}
-    if not modules_dict:
+    known_good = load_known_good(Path(known_path))
+    if not known_good.modules:
         raise SystemExit("No modules found in known_good.json")
     
-    # Parse modules into Module dataclass instances
-    modules = Module.parse_modules(modules_dict)
-    if not modules:
-        raise SystemExit("No valid modules to process")
+    # Get modules list
+    modules = list(known_good.modules.values())
     
     # Generate file content
-    timestamp = data.get("timestamp") or datetime.now().isoformat()
-    content = generate_file_content(args, modules, repo_commit_dict, timestamp)
+    content = generate_file_content(args, modules, repo_commit_dict, known_good.timestamp)
     
     if args.dry_run:
         print(f"Dry run: would write to {output_path}\n")
