@@ -85,7 +85,8 @@ jobs:
     runs-on: ${{ inputs.repo_runner_labels != '' && (startsWith(inputs.repo_runner_labels, '[') && fromJSON(inputs.repo_runner_labels) || inputs.repo_runner_labels) || 'ubuntu-latest' }}
     steps:
       - name: Clean disk space
-          uses: eclipse-score/more-disk-space@v1
+        uses: eclipse-score/more-disk-space@v1
+
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
         with:
