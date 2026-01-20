@@ -84,23 +84,8 @@ jobs:
     name: Integration Test
     runs-on: ${{ inputs.repo_runner_labels != '' && (startsWith(inputs.repo_runner_labels, '[') && fromJSON(inputs.repo_runner_labels) || inputs.repo_runner_labels) || 'ubuntu-latest' }}
     steps:
-      - name: Show disk space before build
-        run: |
-          echo 'Disk space before build:'
-          df -h
-      - name: Removing unneeded software
-        run: |
-          echo "Removing unneeded software... "
-          if [ -d /usr/share/dotnet ]; then echo "Removing dotnet..."; start=$(date +%s); sudo rm -rf /usr/share/dotnet; end=$(date +%s); echo "Duration: $((end-start))s"; fi
-          #if [ -d /usr/local/lib/android ]; then echo "Removing android..."; start=$(date +%s); sudo rm -rf /usr/local/lib/android; end=$(date +%s); echo "Duration: $((end-start))s"; fi
-          if [ -d /opt/ghc ]; then echo "Removing haskell (ghc)..."; start=$(date +%s); sudo rm -rf /opt/ghc; end=$(date +%s); echo "Duration: $((end-start))s"; fi
-          if [ -d /usr/local/.ghcup ]; then echo "Removing haskell (ghcup)..."; start=$(date +%s); sudo rm -rf /usr/local/.ghcup; end=$(date +%s); echo "Duration: $((end-start))s"; fi
-          if [ -d /usr/share/swift ]; then echo "Removing swift..."; start=$(date +%s); sudo rm -rf /usr/share/swift; end=$(date +%s); echo "Duration: $((end-start))s"; fi
-          if [ -d /usr/local/share/chromium ]; then echo "Removing chromium..."; start=$(date +%s); sudo rm -rf /usr/local/share/chromium; end=$(date +%s); echo "Duration: $((end-start))s"; fi
-      - name: Show disk space after cleanup
-        run: |
-          echo 'Disk space after cleanup:'
-          df -h
+      - name: Clean disk space
+          uses: eclipse-score/more-disk-space@v1
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
         with:
@@ -113,7 +98,7 @@ jobs:
           # Avoid downloading Bazel every time.
           bazelisk-cache: true
           # Store build cache per workflow.
-          disk-cache: ${{ github.workflow }}
+          disk-cache: ${{ inputs.config }}
           # Share repository cache between workflows.
           repository-cache: true
       - name: Update known good commits
@@ -137,11 +122,6 @@ jobs:
           python3 scripts/integration_test.py --known-good known_good.updated.json --config "${{ inputs.config }}"
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_READ_TOKEN != '' && secrets.REPO_READ_TOKEN || github.token }}
-      - name: Show disk space after build
-        if: always()
-        run: |
-          echo 'Disk space after build:'
-          df -h
       - name: Upload logs artifact
         if: always()
         uses: actions/upload-artifact@v4
