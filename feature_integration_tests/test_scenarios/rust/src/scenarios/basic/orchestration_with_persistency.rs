@@ -19,9 +19,9 @@ use orchestration::{
     common::DesignConfig,
 };
 
+use rust_kvs::json_backend::JsonBackendBuilder;
 use rust_kvs::kvs_api::KvsApi;
-use rust_kvs::Kvs;
-use rust_kvs::KvsBuilder;
+use rust_kvs::prelude::{Kvs, KvsBuilder};
 use serde_json::Value;
 
 use test_scenarios_rust::scenario::Scenario;
@@ -76,10 +76,19 @@ async fn kvs_save_cycle_number(path: String) -> Result<(), UserErrValue> {
         builder = builder.kvs_load(flag);
     }
     if let Some(dir) = params.dir {
-        builder = builder.dir(dir.to_string_lossy().to_string());
-    }
-    if let Some(max_count) = params.snapshot_max_count {
-        builder = builder.snapshot_max_count(max_count);
+        // Use JsonBackendBuilder to configure directory (dir() method not available in Rust KvsBuilder)
+        // change back to dir, if https://github.com/eclipse-score/persistency/issues/222 is resolved.
+        let backend = JsonBackendBuilder::new()
+            .working_dir(dir)
+            .snapshot_max_count(params.snapshot_max_count.unwrap_or(1))
+            .build();
+        builder = builder.backend(Box::new(backend));
+    } else if let Some(max_count) = params.snapshot_max_count {
+        // Configure snapshot_max_count via backend even without custom dir
+        let backend = JsonBackendBuilder::new()
+            .snapshot_max_count(max_count)
+            .build();
+        builder = builder.backend(Box::new(backend));
     }
 
     // Create KVS.

@@ -24,8 +24,3 @@ extensions = [
     "sphinxcontrib.plantuml",
     "score_sphinx_bundle",
 ]
-
-# Suppress known broken cross-references in external documentation modules
-suppress_warnings = [
-    "needs.link_outgoing",  # Suppress broken links in score_docs_as_code module
-]

@@ -60,6 +60,7 @@ async fn on_shutdown() -> InvokeResult {
     let instance_id = InstanceId(0);
     
     // Configure backend with directory path (workaround: KvsBuilder::dir() not available in Rust)
+    // change back to dir, if https://github.com/eclipse-score/persistency/issues/222 is resolved.
     let backend = JsonBackendBuilder::new()
         .working_dir(PathBuf::from("./"))
         .build();
