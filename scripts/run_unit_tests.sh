@@ -41,7 +41,8 @@ declare -A UT_TARGET_GROUPS=(
         -- -@score_logging//score/datarouter/test/ut/ut_logging:dltprotocolUT \
         -@score_logging//score/datarouter/test/ut/ut_logging:persistentLogConfigUT \
         -@score_logging//score/datarouter/test/ut/ut_logging:socketserverConfigUT \
-        -@score_logging//score/mw/log/legacy_non_verbose_api:unit_test "
+        -@score_logging//score/mw/log/legacy_non_verbose_api:unit_test  \
+        -@score_logging//score/datarouter/test/ut/ut_logging:socketserverUT "
 )
 
 # Markdown table header
