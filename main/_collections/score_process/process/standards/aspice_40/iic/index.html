@@ -53,7 +53,7 @@
 
     <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
     <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-    <script src="../../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../../_static/documentation_options.js?v=7f41d439"></script>
     <script src="../../../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../../_static/design-tabs.js?v=f930bc37"></script>
@@ -461,10 +461,15 @@
 <li class="toctree-l3"><a class="reference internal" href="../swe/swe.4.html">SWE.4 Software Unit Verification</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../swe/swe.5.html">SWE.5 Software Component Verification and Integration Verification</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../swe/swe.6.html">SWE.6 Software Verification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mle/mle.1.html">MLE.1 Machine Learning Requirements Analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mle/mle.2.html">MLE.2 Machine Learning Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mle/mle.3.html">MLE.3 Machine Learning Training</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mle/mle.4.html">MLE.4 Machine Learning Model Testing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sup/sup.1.html">SUP.1 Quality Assurance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sup/sup.8.html">SUP.8 Configuration Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sup/sup.9.html">SUP.9 Problem Resolution Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sup/sup.10.html">SUP.10 Change Request Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sup/sup.11.html">SUP.11 Machine Learning Data Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../spl/spl.2.html">SPL.2 Product Release</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../reu/reu.2.html">REU.2 Management of Products for Reuse</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../pim/pim.3.html">PIM.3 Process Improvement</a></li>
@@ -647,6 +652,23 @@ the assessed organization.</p>
 - The name of work products and an associated reference (to file, to tool artifact)
 - Configuration item attributes and properties</p></td>
 </tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-01.html#std_req__aspice_40__iic-01-53">std_req__aspice_40__iic-01-53</a></p></td>
+<td class="needs_title"><p>01-53 Trained ML model</p></td>
+<td class="needs_status"><p>valid</p></td>
+<td class="needs_content"><p>- The trained ML model is the output of the training process. It consists of the software representing the ML architecture, the set of weights which were optimized during the training, and the final set of hyperparameters.</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-01.html#std_req__aspice_40__iic-01-54">std_req__aspice_40__iic-01-54</a></p></td>
+<td class="needs_title"><p>01-54 Hyperparameter</p></td>
+<td class="needs_status"><p>valid</p></td>
+<td class="needs_content"><p>- Hyperparameters are used to control the ML model which has to be trained, e.g.:
+     - Learn rate of training
+     - Scaling of network (number of layers or neurons per layer)
+     - Loss function
+- Minimum characteristics:
+     - Description
+     - Initial value
+     - Final value upon communicating the results of the ML training</p></td>
+</tr>
 <tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-02.html#std_req__aspice_40__iic-02-01">std_req__aspice_40__iic-02-01</a></p></td>
 <td class="needs_title"><p>02-01 Commitment / agreement</p></td>
 <td class="needs_status"><p>valid</p></td>
@@ -702,6 +724,21 @@ the assessed organization.</p>
    - simulations: protocol
    - reviews such as optical inspections à findings record
    - analyses: values</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-03.html#std_req__aspice_40__iic-03-51">std_req__aspice_40__iic-03-51</a></p></td>
+<td class="needs_title"><p>03-51 ML data set</p></td>
+<td class="needs_status"><p>valid</p></td>
+<td class="needs_content"><p>- Selection of ML Data for e.g., ML model training (ML Training and Validation Data Set) or test of the trained and deployed ML model (ML Test Data Set).</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-03.html#std_req__aspice_40__iic-03-53">std_req__aspice_40__iic-03-53</a></p></td>
+<td class="needs_title"><p>03-53 ML data</p></td>
+<td class="needs_status"><p>valid</p></td>
+<td class="needs_content"><p>- Datum to be used for Machine Learning. The datum has to be attributed by metadata, e.g., unique ID and data characteristics. Examples:
+   - Visual data like a photo or videos (but a video could also be considered as sequence of photos depending on the intended use)
+   - Audio recording
+   - Sensor data
+   - Data created by an algorithm
+   - Data might be processed to create additional data. E.g., processing could add noise, change colors or merge pictures.</p></td>
 </tr>
 <tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-04.html#std_req__aspice_40__iic-04-02">std_req__aspice_40__iic-04-02</a></p></td>
 <td class="needs_title"><p>04-02 Domain architecture</p></td>
@@ -761,7 +798,20 @@ the assessed organization.</p>
   - semi-formal languages (e.g, UML, SysML)
   - formal languages (e.g, model-based approach)</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-06.html#std_req__aspice_40__iic-06-04">std_req__aspice_40__iic-06-04</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-04.html#std_req__aspice_40__iic-04-51">std_req__aspice_40__iic-04-51</a></p></td>
+<td class="needs_title"><p>04-51 ML architecture</p></td>
+<td class="needs_status"><p>valid</p></td>
+<td class="needs_content"><p>- An ML architecture is basically a special part of a software architecture (see 04-04). Additionally
+
+  - ML architecture describes the overall structure of the ML-based software element
+  - ML architecture specifies ML architectural elements including an ML model and other ML architectural elements, provided to train, deploy, and test the ML model.
+  - describes interfaces within the ML-based software element and to other software elements
+  - ML architecture describes details of the ML model like used layers, activation functions, loss function, and backpropagation
+  - ML architecture contains defined hyperparameter ranges and initial values for training start
+  - resource consumption objectives are defined
+  - ML architecture contains allocated ML requirements</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-06.html#std_req__aspice_40__iic-06-04">std_req__aspice_40__iic-06-04</a></p></td>
 <td class="needs_title"><p>06-04 Training material</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Training material may have the following characteristics:
@@ -770,7 +820,7 @@ the assessed organization.</p>
 - Coverage of system, application, operations, maintenance as appropriate to the application
 - Course listings and availability</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-06.html#std_req__aspice_40__iic-06-50">std_req__aspice_40__iic-06-50</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-06.html#std_req__aspice_40__iic-06-50">std_req__aspice_40__iic-06-50</a></p></td>
 <td class="needs_title"><p>06-50 Integration Sequence Instruction</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Integration Sequence Instruction may have the following characteristics:
@@ -782,7 +832,7 @@ the assessed organization.</p>
 - necessary sequence or ordering of integration
 - preconditions for starting system integration</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-06.html#std_req__aspice_40__iic-06-51">std_req__aspice_40__iic-06-51</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-06.html#std_req__aspice_40__iic-06-51">std_req__aspice_40__iic-06-51</a></p></td>
 <td class="needs_title"><p>06-51 Tailoring guideline</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Tailoring guideline may have the following characteristics:
@@ -793,7 +843,7 @@ the assessed organization.</p>
 - Requirements for the defined process to ensure integrity and consistency of the defined process
 - Subset of process assets that is essential for the defined process</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-06.html#std_req__aspice_40__iic-06-52">std_req__aspice_40__iic-06-52</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-06.html#std_req__aspice_40__iic-06-52">std_req__aspice_40__iic-06-52</a></p></td>
 <td class="needs_title"><p>06-52 Backup and recovery mechanism information</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Backup and recovery mechanism information may have the following characteristics:
@@ -801,7 +851,7 @@ the assessed organization.</p>
 - Description / confirmation of existing backup and recovery mechanisms
 - References to corresponding procedures or regulations</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-07.html#std_req__aspice_40__iic-07-04">std_req__aspice_40__iic-07-04</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-07.html#std_req__aspice_40__iic-07-04">std_req__aspice_40__iic-07-04</a></p></td>
 <td class="needs_title"><p>07-04 Process metric</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Process metric may have the following characteristics:
@@ -814,7 +864,7 @@ the assessed organization.</p>
 - Measures the impact of process change
 - Measures the efficiency of the process</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-07.html#std_req__aspice_40__iic-07-05">std_req__aspice_40__iic-07-05</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-07.html#std_req__aspice_40__iic-07-05">std_req__aspice_40__iic-07-05</a></p></td>
 <td class="needs_title"><p>07-05 Project metric</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Project metric may have the following characteristics:
@@ -831,7 +881,7 @@ the assessed organization.</p>
     - product's development is within the resource commitments allocated
 - References any goals established</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-07.html#std_req__aspice_40__iic-07-06">std_req__aspice_40__iic-07-06</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-07.html#std_req__aspice_40__iic-07-06">std_req__aspice_40__iic-07-06</a></p></td>
 <td class="needs_title"><p>07-06 Quality metric</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Quality metric may have the following characteristics:
@@ -849,7 +899,7 @@ the assessed organization.</p>
 
    Refer ISO/IEC 25010 for detailed information on measurement of product quality.</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-07.html#std_req__aspice_40__iic-07-08">std_req__aspice_40__iic-07-08</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-07.html#std_req__aspice_40__iic-07-08">std_req__aspice_40__iic-07-08</a></p></td>
 <td class="needs_title"><p>07-08 Service level metric</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Service level metric may have the following characteristics:
@@ -864,7 +914,7 @@ the assessed organization.</p>
     - up time
     - job run time</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-07.html#std_req__aspice_40__iic-07-51">std_req__aspice_40__iic-07-51</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-07.html#std_req__aspice_40__iic-07-51">std_req__aspice_40__iic-07-51</a></p></td>
 <td class="needs_title"><p>07-51 Measurement result</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Measurement result may have the following characteristics:
@@ -902,7 +952,7 @@ Result of gathering qualitative or quantitative data, e.g.,
 - Benchmarking data
 - Customer satisfaction survey</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-07.html#std_req__aspice_40__iic-07-61">std_req__aspice_40__iic-07-61</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-07.html#std_req__aspice_40__iic-07-61">std_req__aspice_40__iic-07-61</a></p></td>
 <td class="needs_title"><p>07-61 Quantitative process metric</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Quantitative process metric may have the following characteristics:
@@ -913,7 +963,7 @@ Result of gathering qualitative or quantitative data, e.g.,
 - Process measurement metrics for the calculation of the quantitatively measurable indicators,
   sbased on data from related process elements, repositories, or tools</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-07.html#std_req__aspice_40__iic-07-62">std_req__aspice_40__iic-07-62</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-07.html#std_req__aspice_40__iic-07-62">std_req__aspice_40__iic-07-62</a></p></td>
 <td class="needs_title"><p>07-62 Process analysis technique</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Process analysis technique may have the following characteristics:
@@ -921,14 +971,14 @@ Result of gathering qualitative or quantitative data, e.g.,
 - Methods for statistical analysis of process data
 - Frequency of data collection.</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-07.html#std_req__aspice_40__iic-07-63">std_req__aspice_40__iic-07-63</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-07.html#std_req__aspice_40__iic-07-63">std_req__aspice_40__iic-07-63</a></p></td>
 <td class="needs_title"><p>07-63 Process control limits</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Process control limits may have the following characteristics:
 
 - Quantitative control limits for the quantitative process metrics</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-07.html#std_req__aspice_40__iic-07-64">std_req__aspice_40__iic-07-64</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-07.html#std_req__aspice_40__iic-07-64">std_req__aspice_40__iic-07-64</a></p></td>
 <td class="needs_title"><p>07-64 Process measurement data</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Process measurement data may have the following characteristics:
@@ -939,7 +989,7 @@ Result of gathering qualitative or quantitative data, e.g.,
 - Storage and retrieval
 - Effective controls over access</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-08.html#std_req__aspice_40__iic-08-53">std_req__aspice_40__iic-08-53</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-08.html#std_req__aspice_40__iic-08-53">std_req__aspice_40__iic-08-53</a></p></td>
 <td class="needs_title"><p>08-53 Scope of work</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Scope of work may have the following characteristics:
@@ -954,7 +1004,7 @@ Result of gathering qualitative or quantitative data, e.g.,
 - Reuse options
 - Integration of third party deliveries</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-08.html#std_req__aspice_40__iic-08-54">std_req__aspice_40__iic-08-54</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-08.html#std_req__aspice_40__iic-08-54">std_req__aspice_40__iic-08-54</a></p></td>
 <td class="needs_title"><p>08-54 Feasibility analysis</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Feasibility analysis may have the following characteristics:
@@ -962,7 +1012,7 @@ Result of gathering qualitative or quantitative data, e.g.,
 - Statement about the ability of the project to achieve
   the project objectives with available resources</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-08.html#std_req__aspice_40__iic-08-55">std_req__aspice_40__iic-08-55</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-08.html#std_req__aspice_40__iic-08-55">std_req__aspice_40__iic-08-55</a></p></td>
 <td class="needs_title"><p>08-55 Risk measure</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Risk measure may have the following characteristics:
@@ -980,7 +1030,7 @@ Result of gathering qualitative or quantitative data, e.g.,
     - recommended alternative(s)
     - justifications</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-08.html#std_req__aspice_40__iic-08-56">std_req__aspice_40__iic-08-56</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-08.html#std_req__aspice_40__iic-08-56">std_req__aspice_40__iic-08-56</a></p></td>
 <td class="needs_title"><p>08-56 Schedule</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Schedule may have the following characteristics:
@@ -995,7 +1045,7 @@ Result of gathering qualitative or quantitative data, e.g.,
 
    A schedule is consistent with the defined work packages, see 14-10</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-08.html#std_req__aspice_40__iic-08-58">std_req__aspice_40__iic-08-58</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-08.html#std_req__aspice_40__iic-08-58">std_req__aspice_40__iic-08-58</a></p></td>
 <td class="needs_title"><p>08-58 Verification Measure Selection Set</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Verification Measure Selection Set may have the following characteristics:
@@ -1003,7 +1053,7 @@ Result of gathering qualitative or quantitative data, e.g.,
 - Include criteria for re-verification in the case of changes (regression).
 - Identification of verification measures, also for regression testing.</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-08.html#std_req__aspice_40__iic-08-60">std_req__aspice_40__iic-08-60</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-08.html#std_req__aspice_40__iic-08-60">std_req__aspice_40__iic-08-60</a></p></td>
 <td class="needs_title"><p>08-60 Verification Measure</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Verification Measure may have the following characteristics:
@@ -1021,7 +1071,7 @@ Result of gathering qualitative or quantitative data, e.g.,
 - Necessary verification environment &amp; infrastructure
 - Necessary sequence or ordering</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-08.html#std_req__aspice_40__iic-08-61">std_req__aspice_40__iic-08-61</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-08.html#std_req__aspice_40__iic-08-61">std_req__aspice_40__iic-08-61</a></p></td>
 <td class="needs_title"><p>08-61 Resource allocation</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Resource allocation may have the following characteristics:
@@ -1041,7 +1091,7 @@ Result of gathering qualitative or quantitative data, e.g.,
 
    Resources to be allocated are e.g., personnel/human resources for project roles and physical and material resources such as (special/limited) equipment, tool, licenses, test hardware, test vehicle, climate chambers etc.</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-08.html#std_req__aspice_40__iic-08-62">std_req__aspice_40__iic-08-62</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-08.html#std_req__aspice_40__iic-08-62">std_req__aspice_40__iic-08-62</a></p></td>
 <td class="needs_title"><p>08-62 Communication matrix</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Communication matrix may have the following characteristics:
@@ -1053,7 +1103,7 @@ Result of gathering qualitative or quantitative data, e.g.,
 - Communication means and frequency
 - Documentation needs of the communication (e.g., type of communication record)</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-08.html#std_req__aspice_40__iic-08-63">std_req__aspice_40__iic-08-63</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-08.html#std_req__aspice_40__iic-08-63">std_req__aspice_40__iic-08-63</a></p></td>
 <td class="needs_title"><p>08-63 Process Monitoring Method</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Process Monitoring Method may have the following characteristics:
@@ -1061,7 +1111,32 @@ Result of gathering qualitative or quantitative data, e.g.,
 - Measures including criteria for monitoring effectiveness, suitability, and adequacy of the standard process
 - Method for collecting and analyzing the monitoring measures</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-08.html#std_req__aspice_40__iic-08-66">std_req__aspice_40__iic-08-66</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-08.html#std_req__aspice_40__iic-08-64">std_req__aspice_40__iic-08-64</a></p></td>
+<td class="needs_title"><p>08-64 ML test approach</p></td>
+<td class="needs_status"><p>valid</p></td>
+<td class="needs_content"><p>- The ML test approach describes
+     - ML test scenarios with distribution of data characteristics (e.g., gender, weather conditions, street conditions within the ODD) defined by ML requirements
+     - quantity of each ML test scenario inside the test data set
+     - expected test result per test datum
+     - pass/fail criteria for the ML testing
+     - entry and exit criteria for the ML testing
+     - the required ML testing infrastructure and environment configuration</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-08.html#std_req__aspice_40__iic-08-65">std_req__aspice_40__iic-08-65</a></p></td>
+<td class="needs_title"><p>08-65 ML training and validation approach</p></td>
+<td class="needs_status"><p>valid</p></td>
+<td class="needs_content"><p>Process Monitoring Method may have the following characteristics:
+
+- ML Training and Validation approach describes at least:
+      - entry and exit criteria of the ML training
+      - approaches for hyperparameter tuning / optimization to be used in the training
+      - approach for data set creation and modification
+      - training environment, including required training hardware (e.g., GPU, or supercomputer to be used)
+      - interface adapter for provision of input data and storage of output data
+      - if required, actions to organize the data set and training environment
+- The ML training and validation approach may additionally include robustification methods like random dropout</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-08.html#std_req__aspice_40__iic-08-66">std_req__aspice_40__iic-08-66</a></p></td>
 <td class="needs_title"><p>08-66 Measures against deviations in quantitative process analysis</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Measures against deviations in quantitative process analysis may have the following characteristics:
@@ -1070,7 +1145,7 @@ Result of gathering qualitative or quantitative data, e.g.,
   or common causes of variation
 - Effective implementation of these counter measures</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-10.html#std_req__aspice_40__iic-10-00">std_req__aspice_40__iic-10-00</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-10.html#std_req__aspice_40__iic-10-00">std_req__aspice_40__iic-10-00</a></p></td>
 <td class="needs_title"><p>10-00 Process description</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Process description may have the following characteristics:
@@ -1084,7 +1159,7 @@ Result of gathering qualitative or quantitative data, e.g.,
     - templates
     - specific methods/work instructions</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-10.html#std_req__aspice_40__iic-10-50">std_req__aspice_40__iic-10-50</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-10.html#std_req__aspice_40__iic-10-50">std_req__aspice_40__iic-10-50</a></p></td>
 <td class="needs_title"><p>10-50 Role description</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Role description may have the following characteristics:
@@ -1094,7 +1169,7 @@ Result of gathering qualitative or quantitative data, e.g.,
 - Responsibilities and authorities
 - Required competencies, skills, and experience</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-10.html#std_req__aspice_40__iic-10-51">std_req__aspice_40__iic-10-51</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-10.html#std_req__aspice_40__iic-10-51">std_req__aspice_40__iic-10-51</a></p></td>
 <td class="needs_title"><p>10-51 Qualification method description</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Qualification method description may have the following characteristics:
@@ -1104,7 +1179,7 @@ Result of gathering qualitative or quantitative data, e.g.,
 - Mentoring/coaching concepts
 - Self-learning material</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-10.html#std_req__aspice_40__iic-10-52">std_req__aspice_40__iic-10-52</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-10.html#std_req__aspice_40__iic-10-52">std_req__aspice_40__iic-10-52</a></p></td>
 <td class="needs_title"><p>10-52 Process resource and infrastructure description</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Process resource and infrastructure description may have the following characteristics:
@@ -1115,7 +1190,7 @@ Result of gathering qualitative or quantitative data, e.g.,
 - Required services
 - Required samples</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-11.html#std_req__aspice_40__iic-11-03">std_req__aspice_40__iic-11-03</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-11.html#std_req__aspice_40__iic-11-03">std_req__aspice_40__iic-11-03</a></p></td>
 <td class="needs_title"><p>11-03 Release note</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Release note may have the following characteristics:
@@ -1142,7 +1217,7 @@ Result of gathering qualitative or quantitative data, e.g.,
 - The release note may include an introduction, the environmental requirements, installation procedures, product invocation,
   new feature identification and a list of defect resolutions, known defects and workarounds</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-11.html#std_req__aspice_40__iic-11-04">std_req__aspice_40__iic-11-04</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-11.html#std_req__aspice_40__iic-11-04">std_req__aspice_40__iic-11-04</a></p></td>
 <td class="needs_title"><p>11-04 Product release package</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Product release package may have the following characteristics:
@@ -1156,7 +1231,7 @@ Result of gathering qualitative or quantitative data, e.g.,
     - installation instructions
     - release letter</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-11.html#std_req__aspice_40__iic-11-05">std_req__aspice_40__iic-11-05</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-11.html#std_req__aspice_40__iic-11-05">std_req__aspice_40__iic-11-05</a></p></td>
 <td class="needs_title"><p>11-05 Software Unit</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Software Unit may have the following characteristics:
@@ -1167,6 +1242,12 @@ Result of gathering qualitative or quantitative data, e.g.,
 - a representation of a software unit under verification such as
   commented source code, auto-code, an object file, a library, an
   executable, or an executable model as input to verification</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-11.html#std_req__aspice_40__iic-11-50">std_req__aspice_40__iic-11-50</a></p></td>
+<td class="needs_title"><p>11-50 Deployed ML model</p></td>
+<td class="needs_status"><p>valid</p></td>
+<td class="needs_content"><p>-  It is derived from the trained ML model (see 01-53) and is to be integrated into the target system.
+- It may differ from the trained ML model which often requires powerful hardware and uses interpretative languages.</p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-12.html#std_req__aspice_40__iic-12-03">std_req__aspice_40__iic-12-03</a></p></td>
 <td class="needs_title"><p>12-03 Reuse candidate</p></td>
@@ -1322,7 +1403,17 @@ Record of any deviations from planned activities and reason why</p></td>
 - Information about the verification execution (date, “object-under-verification”, etc.)
 - Abstraction or summary of verification results</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-13.html#std_req__aspice_40__iic-13-51">std_req__aspice_40__iic-13-51</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-13.html#std_req__aspice_40__iic-13-50">std_req__aspice_40__iic-13-50</a></p></td>
+<td class="needs_title"><p>13-50 ML test results</p></td>
+<td class="needs_status"><p>valid</p></td>
+<td class="needs_content"><p>- Test data and logs
+- Test data with correct results
+- Test data with incorrect results
+- Test data not executed, and a rationale
+- Information about the test execution (date, participants, model version etc.)
+- Abstraction or summary of ML test results</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-13.html#std_req__aspice_40__iic-13-51">std_req__aspice_40__iic-13-51</a></p></td>
 <td class="needs_title"><p>13-51 Consistency Evidence</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Consistency Evidence may have the following characteristics:
@@ -1349,7 +1440,7 @@ Record of any deviations from planned activities and reason why</p></td>
    This evidence can be accompanied by e.g., Definition of Done
    (DoD) approaches.</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-13.html#std_req__aspice_40__iic-13-52">std_req__aspice_40__iic-13-52</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-13.html#std_req__aspice_40__iic-13-52">std_req__aspice_40__iic-13-52</a></p></td>
 <td class="needs_title"><p>13-52 Communication Evidence</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Communication Evidence may have the following characteristics:
@@ -1367,12 +1458,12 @@ Record of any deviations from planned activities and reason why</p></td>
   - wikis
   - photo protocol</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-13.html#std_req__aspice_40__iic-13-53">std_req__aspice_40__iic-13-53</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-13.html#std_req__aspice_40__iic-13-53">std_req__aspice_40__iic-13-53</a></p></td>
 <td class="needs_title"><p>13-53 Qualification evidence</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Definition not available yet in PAM4.0 document.</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-13.html#std_req__aspice_40__iic-13-55">std_req__aspice_40__iic-13-55</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-13.html#std_req__aspice_40__iic-13-55">std_req__aspice_40__iic-13-55</a></p></td>
 <td class="needs_title"><p>13-55 Process resource and infrastructure documentation</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Process resource and infrastructure documentation may have the following characteristics:
@@ -1385,7 +1476,7 @@ Record of any deviations from planned activities and reason why</p></td>
     - Samples
 - for non-standard and critical resources and infrastructure.</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-14.html#std_req__aspice_40__iic-14-01">std_req__aspice_40__iic-14-01</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-14.html#std_req__aspice_40__iic-14-01">std_req__aspice_40__iic-14-01</a></p></td>
 <td class="needs_title"><p>14-01 Change history</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Change history may have the following characteristics:
@@ -1397,7 +1488,7 @@ Record of any deviations from planned activities and reason why</p></td>
     - change requester information
     - change control record information</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-14.html#std_req__aspice_40__iic-14-02">std_req__aspice_40__iic-14-02</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-14.html#std_req__aspice_40__iic-14-02">std_req__aspice_40__iic-14-02</a></p></td>
 <td class="needs_title"><p>14-02 Corrective action</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Corrective action may have the following characteristics:
@@ -1409,7 +1500,7 @@ Record of any deviations from planned activities and reason why</p></td>
 - Contains a status indicator
 - Indicates follow up audit actions</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-14.html#std_req__aspice_40__iic-14-10">std_req__aspice_40__iic-14-10</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-14.html#std_req__aspice_40__iic-14-10">std_req__aspice_40__iic-14-10</a></p></td>
 <td class="needs_title"><p>14-10 Work package</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Work package may have the following characteristics:
@@ -1426,7 +1517,7 @@ Record of any deviations from planned activities and reason why</p></td>
 
    The work package descriptions may be integrated into the/be a part of a schedule, see 08-56</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-14.html#std_req__aspice_40__iic-14-50">std_req__aspice_40__iic-14-50</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-14.html#std_req__aspice_40__iic-14-50">std_req__aspice_40__iic-14-50</a></p></td>
 <td class="needs_title"><p>14-50 Stakeholder groups list</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Stakeholder groups list may have the following characteristics:
@@ -1437,7 +1528,7 @@ Identifies:
 - representative(s) for each stakeholder group
 - information needs of each stakeholder group</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-14.html#std_req__aspice_40__iic-14-53">std_req__aspice_40__iic-14-53</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-14.html#std_req__aspice_40__iic-14-53">std_req__aspice_40__iic-14-53</a></p></td>
 <td class="needs_title"><p>14-53 Role Assignment</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Role Assignment may have the following characteristics:
@@ -1447,7 +1538,7 @@ Identifies:
     - required skills vs existing skills
     - required experience and trainings based on identified competencies / skills gap</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-14.html#std_req__aspice_40__iic-14-55">std_req__aspice_40__iic-14-55</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-14.html#std_req__aspice_40__iic-14-55">std_req__aspice_40__iic-14-55</a></p></td>
 <td class="needs_title"><p>14-55 Software Bill of materials</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Software Bill of materials may have the following characteristics:
@@ -1455,7 +1546,7 @@ Identifies:
 - Uniquely identifies type, supplier, and
   amount of the complete set of all software parts of the software</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-06">std_req__aspice_40__iic-15-06</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-06">std_req__aspice_40__iic-15-06</a></p></td>
 <td class="needs_title"><p>15-06 Project status</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Project status may have the following characteristics:
@@ -1468,7 +1559,7 @@ Identifies:
 - issues which may affect the ability of the project to achieve its goals
 - contingency actions</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-07">std_req__aspice_40__iic-15-07</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-07">std_req__aspice_40__iic-15-07</a></p></td>
 <td class="needs_title"><p>15-07 Reuse analysis evidence</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Reuse analysis evidence may have the following characteristics:
@@ -1479,7 +1570,7 @@ Identifies:
 - Identification of reuse infrastructure
 - Identification of known defects</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-09">std_req__aspice_40__iic-15-09</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-09">std_req__aspice_40__iic-15-09</a></p></td>
 <td class="needs_title"><p>15-09 Risk status</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Risk status may have the following characteristics:
@@ -1491,7 +1582,7 @@ Identifies:
     - categories and risk thresholds, e.g., for prioritization or setting a status
     - risk treatment activities in progress</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-12">std_req__aspice_40__iic-15-12</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-12">std_req__aspice_40__iic-15-12</a></p></td>
 <td class="needs_title"><p>15-12 Problem status</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Problem status may have the following characteristics:
@@ -1501,7 +1592,7 @@ Identifies:
     - by problem categories/classification
     - by problem resolution stage</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-13">std_req__aspice_40__iic-15-13</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-13">std_req__aspice_40__iic-15-13</a></p></td>
 <td class="needs_title"><p>15-13 Assessment/audit report</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Assessment/audit report may have the following characteristics:
@@ -1522,7 +1613,7 @@ Identifies:
 -- Data
 -- identifies the gaps, potentials, weaknesses or non-conformances that require corrective actions</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-16">std_req__aspice_40__iic-15-16</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-16">std_req__aspice_40__iic-15-16</a></p></td>
 <td class="needs_title"><p>15-16 Improvement opportunity</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Improvement opportunity may have the following characteristics:
@@ -1533,7 +1624,7 @@ Identifies:
 - Identifies the value (expected benefit) in performing the improvement
 - Identifies the penalty for not making the improvement</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-51">std_req__aspice_40__iic-15-51</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-51">std_req__aspice_40__iic-15-51</a></p></td>
 <td class="needs_title"><p>15-51 Analysis Results</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Analysis Results may have the following characteristics:
@@ -1560,7 +1651,7 @@ Identifies:
   - feasibility
   - validity</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-52">std_req__aspice_40__iic-15-52</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-52">std_req__aspice_40__iic-15-52</a></p></td>
 <td class="needs_title"><p>15-52 Verification Results</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Verification Results may have the following characteristics:
@@ -1572,7 +1663,7 @@ Identifies:
 - Information about the test execution (date, tester name etc.)
 - Abstraction or summary of verification results</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-54">std_req__aspice_40__iic-15-54</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-54">std_req__aspice_40__iic-15-54</a></p></td>
 <td class="needs_title"><p>15-54 Tailoring documentation</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Tailoring documentation results may have the following characteristics:
@@ -1581,7 +1672,7 @@ Identifies:
 - Evidence that the defined process is tailored from the standard process according
   to the defined criteria</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-55">std_req__aspice_40__iic-15-55</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-55">std_req__aspice_40__iic-15-55</a></p></td>
 <td class="needs_title"><p>15-55 Problem analysis evidence</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Problem analysis evidence may have the following characteristics:
@@ -1595,7 +1686,7 @@ Identifies:
     - Affected parties
     - Potential solution (if known)</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-56">std_req__aspice_40__iic-15-56</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-56">std_req__aspice_40__iic-15-56</a></p></td>
 <td class="needs_title"><p>15-56 Configuration status</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Configuration status may have the following characteristics:
@@ -1604,7 +1695,7 @@ Identifies:
 - Analysis of the configuration management overall state
 - Identification of baselines made</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-57">std_req__aspice_40__iic-15-57</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-57">std_req__aspice_40__iic-15-57</a></p></td>
 <td class="needs_title"><p>15-57 Quantitative process analysis results</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Quantitative process analysis results may have the following characteristics:
@@ -1612,7 +1703,7 @@ Identifies:
 - Deviations, and distributions, of the quantitative performance of individual process instances performance
   from the established quantitative control limits (special causes of variations)</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-58">std_req__aspice_40__iic-15-58</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-15.html#std_req__aspice_40__iic-15-58">std_req__aspice_40__iic-15-58</a></p></td>
 <td class="needs_title"><p>15-58 Common cause of variation analysis results</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Common cause of variation analysis results may have the following characteristics:
@@ -1623,7 +1714,7 @@ Identifies:
     - distributions of the quantitative performance of all process instances
       within established quantitative control limits</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-16.html#std_req__aspice_40__iic-16-00">std_req__aspice_40__iic-16-00</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-16.html#std_req__aspice_40__iic-16-00">std_req__aspice_40__iic-16-00</a></p></td>
 <td class="needs_title"><p>16-00 Repository</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Repository may have the following characteristics:
@@ -1634,7 +1725,7 @@ Often a table of contents is also stored, along with metadata.
 A software repository is typically managed by source or version control, or repository managers.
 Package managers allow automatically installing and updating repositories, sometimes called &quot;packages&quot;.</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-16.html#std_req__aspice_40__iic-16-03">std_req__aspice_40__iic-16-03</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-16.html#std_req__aspice_40__iic-16-03">std_req__aspice_40__iic-16-03</a></p></td>
 <td class="needs_title"><p>16-03 Configuration management system</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Configuration management system may have the following characteristics:
@@ -1645,7 +1736,7 @@ Package managers allow automatically installing and updating repositories, somet
 - Ability to report configuration status
 - Has to cover all relevant tools</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-16.html#std_req__aspice_40__iic-16-06">std_req__aspice_40__iic-16-06</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-16.html#std_req__aspice_40__iic-16-06">std_req__aspice_40__iic-16-06</a></p></td>
 <td class="needs_title"><p>16-06 Process repository</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Process repository may have the following characteristics:
@@ -1653,13 +1744,21 @@ Package managers allow automatically installing and updating repositories, somet
 - Contains process descriptions
 - Supports multiple presentations of process assets</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-16.html#std_req__aspice_40__iic-16-50">std_req__aspice_40__iic-16-50</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-16.html#std_req__aspice_40__iic-16-50">std_req__aspice_40__iic-16-50</a></p></td>
 <td class="needs_title"><p>16-50 Organizational structure</p></td>
 <td class="needs_status"><p>valid</p></td>
 <td class="needs_content"><p>Organizational structure may have the following characteristics:
 
 - Disciplinary reporting line
 - Organizational units and sub-units, if applicable</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="iic-16.html#std_req__aspice_40__iic-16-52">std_req__aspice_40__iic-16-52</a></p></td>
+<td class="needs_title"><p>16-52 ML data management system</p></td>
+<td class="needs_status"><p>valid</p></td>
+<td class="needs_content"><p>- The ML data management system is part of the configuration management system (see 16-03) and
+- Supports data management activities like data collection, description, ingestion, exploration, profiling, labeling/annotation, selection, structuring and cleansing
+- Provides the data for different purposes, e.g., training, testing
+- Supports the relevant sources of ML data</p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-17.html#std_req__aspice_40__iic-17-00">std_req__aspice_40__iic-17-00</a></p></td>
 <td class="needs_title"><p>17-00 Requirement</p></td>
@@ -1892,6 +1991,14 @@ Package managers allow automatically installing and updating repositories, somet
     - disciplines (e.g., different configuration management approaches for software and hardware, or combined approaches)
     - options due to socio-cultural differences</p></td>
 </tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="iic-19.html#std_req__aspice_40__iic-19-50">std_req__aspice_40__iic-19-50</a></p></td>
+<td class="needs_title"><p>19-50 ML data quality approach</p></td>
+<td class="needs_status"><p>valid</p></td>
+<td class="needs_content"><p>- The ML data quality approach
+- Defines Quality criteria (see 18-07) e.g., the relevant data sources, reliability and consistency of labelling, completeness against ML data requirements
+- Describes analysis activities of the data
+- Describes activities to ensure the quality of the data to avoid issues e.g., data bias, bad labeling</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -1953,7 +2060,7 @@ Package managers allow automatically installing and updating repositories, somet
 
   
   <div class="tocsection editthispage">
-    <a href="https://github.com/eclipse-score/reference_integration/edit/main/'docs'/_collections/score_process/process/standards/aspice_40/iic/index.rst">
+    <a href="https://github.com/eclipse-score/reference_integration/edit/main/docs/_collections/score_process/process/standards/aspice_40/iic/index.rst">
       <i class="fa-solid fa-pencil"></i>
       
       
@@ -1964,15 +2071,6 @@ Package managers allow automatically installing and updating repositories, somet
     </a>
   </div>
 </div>
-
-  <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../../../../../_sources/_collections/score_process/process/standards/aspice_40/iic/index.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
 
 </div></div>
               

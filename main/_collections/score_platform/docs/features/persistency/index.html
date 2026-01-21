@@ -53,7 +53,7 @@
 
     <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
     <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-    <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../_static/documentation_options.js?v=7f41d439"></script>
     <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../_static/design-tabs.js?v=f930bc37"></script>
@@ -456,7 +456,10 @@
 <li class="toctree-l3"><a class="reference internal" href="requirements/chklst_req_inspection.html">Persistency Requirements Inspection Checklist</a></li>
 <li class="toctree-l3"><a class="reference internal" href="safety_analysis/fmea.html">FMEA (Failure Modes and Effects Analysis)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="safety_analysis/dfa.html">DFA (Dependent Failure Analysis)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="safety_analysis/safety_analysis_fdr.html">Safety Analysis Checklist</a></li>
 <li class="toctree-l3"><a class="reference internal" href="safety_planning/index.html">Feature Safety Work Products List</a></li>
+<li class="toctree-l3"><a class="reference internal" href="security_planning/index.html">Feature Security Planning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="security_analysis/stride.html">Persistency STRIDE</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2"><a class="reference internal" href="../security_crypto/index.html">Security &amp; Cryptography</a></li>
@@ -540,7 +543,7 @@
                   
   <section id="persistency-v0-5-beta">
 <h1>Persistency (v0.5 beta)<a class="headerlink" href="#persistency-v0-5-beta" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-db5637b1">
+<div class="need_container docutils container" id="SNCB-347ac049">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__persistency">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -607,12 +610,21 @@
 <li class="toctree-l1"><a class="reference internal" href="requirements/chklst_req_inspection.html">Persistency Requirements Inspection Checklist</a></li>
 <li class="toctree-l1"><a class="reference internal" href="safety_analysis/fmea.html">FMEA (Failure Modes and Effects Analysis)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="safety_analysis/dfa.html">DFA (Dependent Failure Analysis)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="safety_analysis/safety_analysis_fdr.html">Safety Analysis Checklist</a></li>
 <li class="toctree-l1"><a class="reference internal" href="safety_planning/index.html">Feature Safety Work Products List</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="safety_planning/index.html#feature-requirements-status">Feature Requirements Status</a></li>
-<li class="toctree-l2"><a class="reference internal" href="safety_planning/index.html#feature-aou-status">Feature AoU Status</a></li>
-<li class="toctree-l2"><a class="reference internal" href="safety_planning/index.html#feature-architecture-status">Feature Architecture Status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="safety_planning/index.html#tailoring">Tailoring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="safety_planning/index.html#safety-work-products-list">Safety Work products List</a></li>
+<li class="toctree-l2"><a class="reference internal" href="safety_planning/index.html#feature-safety-package">Feature Safety Package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="safety_planning/index.html#feature-documents-status">Feature Documents Status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="safety_planning/index.html#feature-requirements-status">Feature Requirements Status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="safety_planning/index.html#feature-aou-status">Feature AoU Status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="safety_planning/index.html#feature-architecture-status">Feature Architecture Status</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="security_planning/index.html">Feature Security Planning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security_analysis/stride.html">Persistency STRIDE</a></li>
 </ul>
 </div>
 <section id="feature-flag">
@@ -717,9 +729,7 @@ of safety management and safety analysis. In the safety analysis we will
 analyze the impact of the feature.</p>
 <p><a class="reference internal" href="safety_analysis/fmea.html#doc__persistency_fmea" title="doc__persistency_fmea"><em class="xref need">Persistency FMEA (doc__persistency_fmea)</em></a></p>
 <p>We use an iterative development process and apply results from the next steps
-back to the feature request. For TinyJSON we will perform a software component
-classification.</p>
-<p><a class="reference internal" href="../../modules/persistency/json/docs/component_classification.html#doc__persistency_component_classification" title="doc__persistency_component_classification"><em class="xref need">Persistency Component Class... (doc__persistency_component_classification)</em></a></p>
+back to the feature request.</p>
 <p>To ensure the freedom of interference the feature key-value storage should not
 be used within different processes.</p>
 </section>
@@ -795,7 +805,7 @@ used libraries are need to be checked.</p>
 
   
   <div class="tocsection editthispage">
-    <a href="https://github.com/eclipse-score/reference_integration/edit/main/'docs'/_collections/score_platform/docs/features/persistency/index.rst">
+    <a href="https://github.com/eclipse-score/reference_integration/edit/main/docs/_collections/score_platform/docs/features/persistency/index.rst">
       <i class="fa-solid fa-pencil"></i>
       
       
@@ -806,15 +816,6 @@ used libraries are need to be checked.</p>
     </a>
   </div>
 </div>
-
-  <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../../../../_sources/_collections/score_platform/docs/features/persistency/index.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
 
 </div></div>
               

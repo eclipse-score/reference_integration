@@ -53,7 +53,7 @@
 
     <script src="../../../../../../../_static/jquery.js?v=5d32c60e"></script>
     <script src="../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-    <script src="../../../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../../../_static/documentation_options.js?v=7f41d439"></script>
     <script src="../../../../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../../../_static/design-tabs.js?v=f930bc37"></script>
@@ -464,7 +464,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../requirements/chklst_req_inspection.html">Requirement Inspection Checklist</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../safety_analysis/fmea.html">FMEA (Failure Modes and Effects Analysis)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../safety_analysis/dfa.html">DFA (Dependent Failure Analysis)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../safety_planning/index.html">Safety Planning</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../safety_planning/index.html">Feature Safety Work Products List</a></li>
 </ul>
 </details></li>
 </ul>
@@ -543,7 +543,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <div class="need_container docutils container" id="SNCB-6c409d26">
+  <div class="need_container docutils container" id="SNCB-35c5fbdf">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__feature_name_arc_inspection">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -609,8 +609,9 @@ communication and documentation of architectural decisions to stakeholders.</p>
 </section>
 <section id="checklist">
 <h2>Checklist<a class="headerlink" href="#checklist" title="Link to this heading">#</a></h2>
+<p>Please note that it is mandatory to fill in the “passed” column with “yes” or “no” for each checklist item and additional to add in the remarks why it is passed or not passed. In case of “no” an issue link to the issue tracking system has to be added in the last column. See also <a class="reference internal" href="../../../../general_concepts/score_review_concept.html#review-concept"><span class="std std-ref">Review and Inspection Concept</span></a> for further information about reviews in general and inspection in particular.</p>
 <div class="pst-scrollable-table-container"><table class="table" id="id2">
-<caption><span class="caption-number">Table 149 </span><span class="caption-text">Architecture Design Review Checklist</span><a class="headerlink" href="#id2" title="Link to this table">#</a></caption>
+<caption><span class="caption-number">Table 143 </span><span class="caption-text">Architecture Design Review Checklist</span><a class="headerlink" href="#id2" title="Link to this table">#</a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>Review Id</p></th>
 <th class="head"><p>Acceptance criteria</p></th>
@@ -660,7 +661,7 @@ Details of possible linking can be depicted from <a class="reference internal" h
 <tr class="row-even"><td><p>ARC_02_02</p></td>
 <td><p>Is appropriate and comprehensible operation/interface naming present in the architectural design?</p></td>
 <td><p>manual</p></td>
-<td><p>Check <a class="reference internal" href="../../../../process_areas/architecture_design/guidance/architecture_guideline.html#gd_guidl__arch_design" title="gd_guidl__arch_design"><em class="xref need">Architectural Design (gd_guidl__arch_design)</em></a></p></td>
+<td><p>Check <a class="reference internal" href="../../../../process_areas/architecture_design/guidance/architecture_guideline.html#gd_guidl__arch_design" title="gd_guidl__arch_design"><em class="xref need">Architectural Design Guideline (gd_guidl__arch_design)</em></a></p></td>
 <td></td>
 <td></td>
 <td></td>
@@ -728,7 +729,7 @@ decision records, use of established design patterns.</p></td>
 <td><p>Indicators for complexity are: number of use cases (corresponding to dynamic diagrams)
 allocated to single design element, number of interfaces and operations in an interface,
 function parameters, global variables, complex types, limited comprehensibility.</p>
-<p>Note: If the “number” above exceeds “3” a design rationale is mandatory (for all types)</p>
+<p>Note: If the “number” above exceeds “3” a design rationale is mandatory (for all types).</p>
 </td>
 <td></td>
 <td></td>
@@ -738,6 +739,40 @@ function parameters, global variables, complex types, limited comprehensibility.
 <td><p>Is the software architecture design following best practices and design principles?</p></td>
 <td><p>manual</p></td>
 <td><p>Refer to architectural guidelines and recommendations within the project documentation.</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>ARC_04_01</p></td>
+<td><p>If software partitioning (different operating system processes) is used to implement freedom from interference between the processes with different rating (QM/ASIL), is effectiveness evidence generated during integration and verification tests?</p>
+<p>Note: see <a class="reference internal" href="../../../../standards/iso26262/iso26262.html#std_req__iso26262__software_749" title="std_req__iso26262__software_749"><em class="xref need">software_749 (std_req__iso26262__software_749)</em></a> and Annex D for partitioning</p>
+</td>
+<td><p>manual</p></td>
+<td><ol class="loweralpha simple">
+<li><p>the usage of shared resources (cpu time, shared memory, …) are checked in a way that freedom from interference between the processes is ensured,</p></li>
+<li><p>check if the operating system supports freedom from interference between the processes</p></li>
+</ol>
+</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>ARC_04_02</p></td>
+<td><p>Is an upper estimation of the required resources (RAM, ROM, non volatile memory, communication) available and documented?</p>
+<p>Note: see <a class="reference internal" href="../../../../standards/iso26262/iso26262.html#std_req__iso26262__software_7411" title="std_req__iso26262__software_7411"><em class="xref need">software_7411 (std_req__iso26262__software_7411)</em></a></p>
+</td>
+<td><p>manual</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>ARC_04_03</p></td>
+<td><p>Are the the scheduling properties for the component defined and documented?</p>
+<p>Note: see <a class="reference internal" href="../../../../standards/iso26262/iso26262.html#std_req__iso26262__software_743" title="std_req__iso26262__software_743"><em class="xref need">software_743 (std_req__iso26262__software_743)</em></a></p>
+</td>
+<td><p>manual</p></td>
+<td></td>
 <td></td>
 <td></td>
 <td></td>
@@ -804,7 +839,7 @@ function parameters, global variables, complex types, limited comprehensibility.
 
   
   <div class="tocsection editthispage">
-    <a href="https://github.com/eclipse-score/reference_integration/edit/main/'docs'/_collections/score_process/process/folder_templates/features/feature_name/architecture/chklst_arc_inspection.rst">
+    <a href="https://github.com/eclipse-score/reference_integration/edit/main/docs/_collections/score_process/process/folder_templates/features/feature_name/architecture/chklst_arc_inspection.rst">
       <i class="fa-solid fa-pencil"></i>
       
       
@@ -815,15 +850,6 @@ function parameters, global variables, complex types, limited comprehensibility.
     </a>
   </div>
 </div>
-
-  <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../../../../../../_sources/_collections/score_process/process/folder_templates/features/feature_name/architecture/chklst_arc_inspection.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
 
 </div></div>
               

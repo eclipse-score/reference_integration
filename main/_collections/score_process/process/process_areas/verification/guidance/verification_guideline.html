@@ -53,7 +53,7 @@
 
     <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
     <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-    <script src="../../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../../_static/documentation_options.js?v=7f41d439"></script>
     <script src="../../../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../../_static/design-tabs.js?v=f930bc37"></script>
@@ -459,6 +459,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../verification_concept.html">Concept Description</a></li>
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="index.html">Guidance</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l4 current active"><a class="current reference internal" href="#">Guideline</a></li>
+
 <li class="toctree-l4"><a class="reference internal" href="verification_specification.html">Test Specification Guideline</a></li>
 <li class="toctree-l4"><a class="reference internal" href="verification_methods.html">Verification methods and derivation techniques</a></li>
 <li class="toctree-l4"><a class="reference internal" href="verification_templates.html">Verification Templates</a></li>
@@ -563,7 +564,7 @@
                   
   <section id="guideline">
 <h1>Guideline<a class="headerlink" href="#guideline" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-d99763a3">
+<div class="need_container docutils container" id="SNCB-eb808f1f">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_guidl table" id="gd_guidl__verification_guide">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -582,7 +583,7 @@
 </td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
-<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">verification_process</span></span></span></div>
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">verification</span></span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">contained by: <span class="contains"><span><a class="reference internal" href="../verification_workflows.html#wf__verification_plan" title="gd_guidl__verification_guide">wf__verification_plan</a>, <a class="reference internal" href="../verification_workflows.html#wf__verification_plan_maintain" title="gd_guidl__verification_guide">wf__verification_plan_maintain</a></span></span></div>
 <div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/isopas8926/isopas8926.html#std_req__isopas8926__445" title="gd_guidl__verification_guide">std_req__isopas8926__445</a></span></span></div>
@@ -672,9 +673,16 @@ The analysis of the test results needs to be performed by the contributor.</p>
 <p>In order to check the test results for the impact of a change or addition, it is recommended to
 execute affected test cases locally upfront using the execution framework of the build tooling
 following basically the steps the CI does locally.</p>
+<p>Automated tests can also be executed locally, as the sources and binaries are available for re-execution.
+Failing test cases during re-execution can be reported following the guide <a class="reference internal" href="../../problem_resolution/guidance/problem_resolution_template.html#gd_temp__problem_template" title="gd_temp__problem_template"><em class="xref need">Problem Template (gd_temp__problem_template)</em></a>.</p>
+<section id="execution-of-manual-test-cases">
+<h3>Execution of manual test cases<a class="headerlink" href="#execution-of-manual-test-cases" title="Link to this heading">#</a></h3>
 <p>There may be the need for limited number of manually executed test cases.
 These manually executed test cases are execution script driven, where a script guides through the
-test cases and reports the result in the same logging format as automated tests do.</p>
+test cases and reports the result in the same logging format as automated tests do.
+This enables parsable execution logs which can be used in automated test result collection.
+Failing test cases during manual execution are reported by following the guide <a class="reference internal" href="../../problem_resolution/guidance/problem_resolution_template.html#gd_temp__problem_template" title="gd_temp__problem_template"><em class="xref need">Problem Template (gd_temp__problem_template)</em></a>.</p>
+</section>
 </section>
 <section id="reporting-of-failing-test-cases">
 <h2>Reporting of failing test cases<a class="headerlink" href="#reporting-of-failing-test-cases" title="Link to this heading">#</a></h2>
@@ -706,6 +714,64 @@ derivation techniques in <a class="reference internal" href="verification_method
 helps to get an understanding what the different methods and derivation techniques mean and how to
 create test cases using the same.</p>
 </section>
+</section>
+<section id="tailoring">
+<h1>Tailoring<a class="headerlink" href="#tailoring" title="Link to this heading">#</a></h1>
+<div class="need_container docutils container" id="SNCB-49e23a45">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_guidl table" id="gd_guidl__verification_req_tailored">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Verification Requirements Tailored</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">verification</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__software_945" title="gd_guidl__verification_req_tailored">std_req__iso26262__software_945</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__software_1045" title="gd_guidl__verification_req_tailored">std_req__iso26262__software_1045</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__software_1046" title="gd_guidl__verification_req_tailored">std_req__iso26262__software_1046</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__software_1047" title="gd_guidl__verification_req_tailored">std_req__iso26262__software_1047</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__software_1141" title="gd_guidl__verification_req_tailored">std_req__iso26262__software_1141</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__software_1142" title="gd_guidl__verification_req_tailored">std_req__iso26262__software_1142</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__software_1143" title="gd_guidl__verification_req_tailored">std_req__iso26262__software_1143</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__software_1144" title="gd_guidl__verification_req_tailored">std_req__iso26262__software_1144</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>This part of the guideline links to all the requirements which are not fulfilled by the
+verification process. Make sure these are tailored out in the safety/security/quality plans
+for your project (documented in the PMP). Reasoning given below must be confirmed there.</p>
+<p>The reasoning is:</p>
+<ul class="simple">
+<li><p>For SW requirement 945 &amp; 1047 tests are executed in target environment regarding code and hardware architecture.
+An integrator of the software can re-execute them on source or unmodified binary in the product environment.</p></li>
+<li><p>For SW requirement 1045 “Function and call coverage” are not considered explicitly due to lower target safety integrity level (ASIL_B).</p></li>
+<li><p>For SW requirement 1046 the software is not a production release, but work for the system integrator or distributor with a production release.</p></li>
+<li><p>For SW requirement 1141, 1143, 1144 the SW only points to AoUs, but will not be executed on the final product environment as part of the project scope.</p></li>
+<li><p>For SW requirement 1142 there will be <a class="reference internal" href="../verification_workproducts.html#wp__verification_platform_int_test" title="wp__verification_platform_int_test"><em class="xref need">Platform Integration Test (wp__verification_platform_int_test)</em></a> available for re-use, but they are not supposed to deliver full coverage.</p></li>
+</ul>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#gd_guidl__verification_req_tailored" title="gd_guidl__verification_req_tailored">gd_guidl__verification_req_tailored</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Process Guideline</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </section>
 
 
@@ -755,24 +821,32 @@ create test cases using the same.</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Guideline</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#general-principles">General Principles</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-case-description">Test Case Description</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structuring-of-the-test-case">Structuring of the Test Case</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#verify-requirements-execution-work-flow">Verify Requirements Execution Work Flow</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-case-execution">Test case execution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-case-execution">Test case execution</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#execution-of-manual-test-cases">Execution of manual test cases</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reporting-of-failing-test-cases">Reporting of failing test cases</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reuse-of-existing-test-cases">Reuse of existing test cases</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#verification-types-and-methods">Verification types and methods</a></li>
 </ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#tailoring">Tailoring</a></li>
+</ul>
+
   </nav></div>
 
   <div class="sidebar-secondary-item">
 
   
   <div class="tocsection editthispage">
-    <a href="https://github.com/eclipse-score/reference_integration/edit/main/'docs'/_collections/score_process/process/process_areas/verification/guidance/verification_guideline.rst">
+    <a href="https://github.com/eclipse-score/reference_integration/edit/main/docs/_collections/score_process/process/process_areas/verification/guidance/verification_guideline.rst">
       <i class="fa-solid fa-pencil"></i>
       
       
@@ -783,15 +857,6 @@ create test cases using the same.</p>
     </a>
   </div>
 </div>
-
-  <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../../../../../_sources/_collections/score_process/process/process_areas/verification/guidance/verification_guideline.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
 
 </div></div>
               

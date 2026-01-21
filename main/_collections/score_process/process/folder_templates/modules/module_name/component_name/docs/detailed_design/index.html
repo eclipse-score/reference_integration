@@ -53,7 +53,7 @@
 
     <script src="../../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
     <script src="../../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-    <script src="../../../../../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../../../../../_static/documentation_options.js?v=7f41d439"></script>
     <script src="../../../../../../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../../../../../_static/design-tabs.js?v=f930bc37"></script>
@@ -72,7 +72,7 @@
         </script>
     <link rel="index" title="Index" href="../../../../../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../../../../../search.html" />
-    <link rel="next" title="Requirements" href="../requirements/index.html" />
+    <link rel="next" title="Implementation Inspection Checklist" href="chklst_impl_inspection.html" />
     <link rel="prev" title="Component Classification" href="../component_classification.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -464,6 +464,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../architecture/chklst_arc_inspection.html">Architecture Inspection Checklist</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../component_classification.html">Component Classification</a></li>
 <li class="toctree-l4 current active"><a class="current reference internal" href="#">Detailed Design</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chklst_impl_inspection.html">Implementation Inspection Checklist</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../requirements/index.html">Requirements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../requirements/chklst_req_inspection.html">Requirement Inspection Checklist</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../safety_analysis/fmea.html">FMEA (Failure Modes and Effects Analysis)</a></li>
@@ -547,7 +548,7 @@
                   
   <section id="detailed-design">
 <span id="component-detailed-design-template"></span><h1>Detailed Design<a class="headerlink" href="#detailed-design" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-29e3a0a9">
+<div class="need_container docutils container" id="SNCB-191baf1f">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__component_name_detailed_design">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -624,28 +625,99 @@
 <section id="static-diagrams-for-unit-interactions">
 <h3>Static Diagrams for Unit Interactions<a class="headerlink" href="#static-diagrams-for-unit-interactions" title="Link to this heading">#</a></h3>
 <div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">dd_sta</span><span class="p">::</span> <span class="nt">&lt;Title&gt;</span>
-   <span class="nc">:id:</span> dd_sta__&lt;Feature&gt;__&lt;Title&gt;
+   <span class="nc">:id:</span> dd_sta__&lt;Component&gt;__&lt;Title&gt;
    <span class="nc">:security:</span> <span class="nt">&lt;YES|NO&gt;</span>
    <span class="nc">:safety:</span> <span class="nt">&lt;QM|ASIL_B&gt;</span>
    <span class="nc">:status:</span> <span class="nt">&lt;valid|invalid&gt;</span>
    <span class="nc">:implements:</span> <span class="nt">&lt;link to component requirement id&gt;</span>
    <span class="nc">:satisfies:</span> <span class="nt">&lt;link to component architecture id&gt;</span>
+   <span class="nc">:belongs_to:</span> <span class="nt">&lt;link to component id&gt;</span>
+   <span class="nc">:includes:</span> <span class="nt">&lt;link to sw_unit id&gt;</span>, &lt;link to sw_unit interface id&gt;
 
-<span class="p">     ..</span> <span class="ow">image</span><span class="p">::</span> <span class="nt">&lt;link to drawio image&gt;</span> or .. uml:: &lt;link to plantuml&gt;
+<span class="p">   ..</span> <span class="ow">needarch</span><span class="p">::</span> or .. image:: &lt;link to drawio image&gt;
 </pre></div>
 </div>
 </section>
 <section id="dynamic-diagrams-for-unit-interactions">
 <h3>Dynamic Diagrams for Unit Interactions<a class="headerlink" href="#dynamic-diagrams-for-unit-interactions" title="Link to this heading">#</a></h3>
 <div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">dd_dyn</span><span class="p">::</span> <span class="nt">&lt;Title&gt;</span>
-   <span class="nc">:id:</span> dd_dyn__&lt;Feature&gt;__&lt;Title&gt;
+   <span class="nc">:id:</span> dd_dyn__&lt;Component&gt;__&lt;Title&gt;
    <span class="nc">:security:</span> <span class="nt">&lt;YES|NO&gt;</span>
    <span class="nc">:safety:</span> <span class="nt">&lt;QM|ASIL_B&gt;</span>
    <span class="nc">:status:</span> <span class="nt">&lt;valid|invalid&gt;</span>
    <span class="nc">:implements:</span> <span class="nt">&lt;link to component requirement id&gt;</span>
    <span class="nc">:satisfies:</span> <span class="nt">&lt;link to component architecture id&gt;</span>
+   <span class="nc">:belongs_to:</span> <span class="nt">&lt;link to component id&gt;</span>
+   <span class="nc">:includes:</span> <span class="nt">&lt;link to sw_unit id&gt;</span>, &lt;link to sw_unit interface id&gt;
 
-<span class="p">     ..</span> <span class="ow">image</span><span class="p">::</span> <span class="nt">&lt;link to drawio image&gt;</span> or .. uml:: &lt;link to plantuml&gt;
+<span class="p">   ..</span> <span class="ow">needarch</span><span class="p">::</span> or .. image:: &lt;link to drawio image&gt;
+</pre></div>
+</div>
+</section>
+<section id="units-within-the-component">
+<h3>Units within the Component<a class="headerlink" href="#units-within-the-component" title="Link to this heading">#</a></h3>
+<p>In your rst file:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">sw_unit</span><span class="p">::</span> cpp unit
+   <span class="nc">:id:</span> sw_unit__&lt;Component&gt;__&lt;title&gt;
+   <span class="nc">:belongs_to:</span> <span class="nt">&lt;link to component id&gt;</span>
+
+   This implements the ....
+</pre></div>
+</div>
+<p>In your source file, any programming language, here with C++:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp"># need-Id: sw_unit__&lt;Component&gt;__&lt;title&gt;</span>
+<span class="k">class</span><span class="w"> </span><span class="o">&lt;</span><span class="k">class</span><span class="w"> </span><span class="nc">name</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="k">public</span><span class="o">:</span>
+
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="interface-view">
+<h3>Interface View<a class="headerlink" href="#interface-view" title="Link to this heading">#</a></h3>
+<p>In your rst file:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">sw_unit_int</span><span class="p">::</span> <span class="nt">&lt;here InterfaceDemo - change it&gt;</span>
+   <span class="nc">:id:</span> sw_unit_int__&lt;Component&gt;__&lt;title&gt;
+   <span class="nc">:belongs_to:</span> <span class="nt">&lt;link to sw_unit id&gt;</span>
+   <span class="nc">:implements:</span> <span class="nt">&lt;real_arc_int, real_arc_int_op&gt;</span>
+
+   This implements the ....
+</pre></div>
+</div>
+<p>In your source file, any programming language, here with C++:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp"># need-Id: sw_unit__&lt;Component&gt;__&lt;title&gt;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">InterfaceDemo</span>
+<span class="p">{</span>
+<span class="w">   </span><span class="k">public</span><span class="o">:</span>
+<span class="w">      </span><span class="k">virtual</span><span class="w"> </span><span class="o">~</span><span class="n">InterfaceDemo</span><span class="p">()</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">      </span><span class="k">virtual</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">OverrideMe</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>For cpp using doxygen comments</p></li>
+</ul>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm">   * @rst</span>
+<span class="cm">   * .. sw_unit_int:: cpp unit</span>
+<span class="cm">   *    :id: sw_unit_int__&lt;Component&gt;__&lt;title&gt;</span>
+<span class="cm">   *    :belongs_to: &lt;link to sw_unit id&gt;</span>
+<span class="cm">   *    :implements: &lt;real_arc_int, real_arc_int_op&gt;</span>
+<span class="cm">   *</span>
+<span class="cm">   *    This implements the ....</span>
+<span class="cm">   * @endrst</span>
+<span class="cm">*/</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>For rust</p></li>
+</ul>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="sd">//! .. sw_unit_int:: rust unit</span>
+<span class="sd">//!     :id: sw_unit_int__&lt;Component&gt;__&lt;title&gt;</span>
+<span class="sd">//!     :belongs_to: &lt;link to sw_unit id&gt;</span>
+<span class="sd">//!     :implements: &lt;real_arc_int, real_arc_int_op&gt;</span>
+<span class="sd">//!</span>
+<span class="sd">//!     This implements the ....</span>
 </pre></div>
 </div>
 </section>
@@ -672,11 +744,11 @@
       </div>
     </a>
     <a class="right-next"
-       href="../requirements/index.html"
+       href="chklst_impl_inspection.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Requirements</p>
+        <p class="prev-next-title">Implementation Inspection Checklist</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -706,6 +778,8 @@
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#static-diagrams-for-unit-interactions">Static Diagrams for Unit Interactions</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dynamic-diagrams-for-unit-interactions">Dynamic Diagrams for Unit Interactions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#units-within-the-component">Units within the Component</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interface-view">Interface View</a></li>
 </ul>
 </li>
 </ul>
@@ -715,7 +789,7 @@
 
   
   <div class="tocsection editthispage">
-    <a href="https://github.com/eclipse-score/reference_integration/edit/main/'docs'/_collections/score_process/process/folder_templates/modules/module_name/component_name/docs/detailed_design/index.rst">
+    <a href="https://github.com/eclipse-score/reference_integration/edit/main/docs/_collections/score_process/process/folder_templates/modules/module_name/component_name/docs/detailed_design/index.rst">
       <i class="fa-solid fa-pencil"></i>
       
       
@@ -726,15 +800,6 @@
     </a>
   </div>
 </div>
-
-  <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../../../../../../../../_sources/_collections/score_process/process/folder_templates/modules/module_name/component_name/docs/detailed_design/index.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
 
 </div></div>
               

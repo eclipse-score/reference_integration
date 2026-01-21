@@ -53,7 +53,7 @@
 
     <script src="../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
     <script src="../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-    <script src="../../../../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../../../../_static/documentation_options.js?v=7f41d439"></script>
     <script src="../../../../../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../../../../_static/design-tabs.js?v=f930bc37"></script>
@@ -464,6 +464,7 @@
 <li class="toctree-l4"><a class="reference internal" href="architecture/chklst_arc_inspection.html">Architecture Inspection Checklist</a></li>
 <li class="toctree-l4"><a class="reference internal" href="component_classification.html">Component Classification</a></li>
 <li class="toctree-l4"><a class="reference internal" href="detailed_design/index.html">Detailed Design</a></li>
+<li class="toctree-l4"><a class="reference internal" href="detailed_design/chklst_impl_inspection.html">Implementation Inspection Checklist</a></li>
 <li class="toctree-l4"><a class="reference internal" href="requirements/index.html">Requirements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="requirements/chklst_req_inspection.html">Requirement Inspection Checklist</a></li>
 <li class="toctree-l4"><a class="reference internal" href="safety_analysis/fmea.html">FMEA (Failure Modes and Effects Analysis)</a></li>
@@ -548,7 +549,7 @@
 <p class="admonition-title">Note</p>
 <p>Document header</p>
 </div>
-<div class="need_container docutils container" id="SNCB-8dd10dd4">
+<div class="need_container docutils container" id="SNCB-1018acd2">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__component_name">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -608,38 +609,32 @@
 <section id="motivation">
 <h2>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
 <p>[Clearly explain why the existing platform/project solution is inadequate to address the topic that the CR solves.]</p>
-<blockquote>
-<div><div class="admonition note">
+<div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The motivation is critical for CRs that want to change the existing components.
 It should clearly explain why the existing solution is inadequate to address the topic that the CR solves.
 Motivation may based on criteria as resource requirements, scheduling issues, risks, benefits, etc.
 CRs submissions without sufficient motivation may be rejected.</p>
 </div>
-</div></blockquote>
 </section>
 <section id="rationale">
 <h2>Rationale<a class="headerlink" href="#rationale" title="Link to this heading">#</a></h2>
 <p>[Describe why particular design decisions were made.]</p>
-<blockquote>
-<div><div class="admonition note">
+<div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The rationale should provide evidence of consensus within the community and discuss important objections or concerns raised during discussion.
 For the documentation of the decision the <a class="reference internal" href="../../../../../process_areas/change_management/guidance/change_management_decision_record_template.html#gd_temp__change_decision_record" title="gd_temp__change_decision_record"><em class="xref need">Decision Record Template (gd_temp__change_decision_record)</em></a> can be used.</p>
 </div>
-</div></blockquote>
 </section>
 <section id="specification">
 <h2>Specification<a class="headerlink" href="#specification" title="Link to this heading">#</a></h2>
 <p>[Describe the requirements, architecture of any new component.] or
 [Describe the change to requirements, architecture, implementation, documentation of any change request.]</p>
-<blockquote>
-<div><div class="admonition note">
+<div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>A CR shall specify the component requirements as part of our platform/project.
 Thereby the <a class="reference internal" href="../../../../../roles/index.html#rl__project_lead" title="rl__project_lead"><em class="xref need">Project Lead (rl__project_lead)</em></a> will approve these requirements as part of accepting the CR (e.g. merging the PR with the CR).</p>
 </div>
-</div></blockquote>
 </section>
 <section id="backwards-compatibility">
 <h2>Backwards Compatibility<a class="headerlink" href="#backwards-compatibility" title="Link to this heading">#</a></h2>
@@ -648,53 +643,43 @@ Thereby the <a class="reference internal" href="../../../../../roles/index.html#
 <section id="security-impact">
 <h2>Security Impact<a class="headerlink" href="#security-impact" title="Link to this heading">#</a></h2>
 <p>[How could a malicious user take advantage of this new/modified component?]</p>
-<blockquote>
-<div><div class="admonition note">
+<div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If there are security concerns in relation to the CR, those concerns should be explicitly written out to make sure reviewers of the CR are aware of them.</p>
 </div>
-</div></blockquote>
 <p>Which security requirements are affected or has to be changed?
 Could the new/modified component enable new threat scenarios?
 Could the new/modified component enable new attack paths?
 Could the new/modified component impact functional safety?
 If applicable, which additional security measures must be implemented to mitigate the risk?</p>
-<blockquote>
-<div><div class="admonition note">
+<div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Use Security Software Critically Analysis, Vulnerability Analysis.
 [Methods will be defined later in Process area Security Analysis]</p>
 </div>
-</div></blockquote>
 </section>
 <section id="safety-impact">
 <h2>Safety Impact<a class="headerlink" href="#safety-impact" title="Link to this heading">#</a></h2>
 <p>[How could the safety be impacted by the new/modified component?]</p>
-<blockquote>
-<div><div class="admonition note">
+<div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If there are safety concerns in relation to the CR, those concerns should be explicitly written out to make sure reviewers of the CR are aware of them.</p>
 </div>
-</div></blockquote>
 <p>Which safety requirements are affected or has to be changed?
 Could the new/modified component be a potential common cause or cascading failure initiator?
 If applicable, which additional safety measures must be implemented to mitigate the risk?</p>
-<blockquote>
-<div><div class="admonition note">
+<div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Use Dependency Failure Analysis and/or Safety Software Critically Analysis.
 [Methods will be defined later in Process area Safety Analysis]</p>
 </div>
-</div></blockquote>
 <p>For new feature/component contributions:</p>
 <p>[What is the expected ASIL level?]
 [What is the expected classification of the contribution?]</p>
-<blockquote>
-<div><div class="admonition note">
+<div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Use the component classification method here to classify your component, if it shall to be used in a safety context: <a class="reference internal" href="../../../../../process_areas/safety_management/guidance/template_component_classification.html#gd_temp__component_classification" title="gd_temp__component_classification"><em class="xref need">Component Classification Te... (gd_temp__component_classification)</em></a>.</p>
 </div>
-</div></blockquote>
 </section>
 <section id="license-impact">
 <h2>License Impact<a class="headerlink" href="#license-impact" title="Link to this heading">#</a></h2>
@@ -703,37 +688,31 @@ If applicable, which additional safety measures must be implemented to mitigate 
 <section id="how-to-teach-this">
 <h2>How to Teach This<a class="headerlink" href="#how-to-teach-this" title="Link to this heading">#</a></h2>
 <p>[How to teach users, new and experienced, how to apply the CR to their work.]</p>
-<blockquote>
-<div><div class="admonition note">
+<div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>For a CR that adds new functionality or changes behavior, it is helpful to include a section on how to teach users, new and experienced, how to apply the CR to their work.</p>
 </div>
-</div></blockquote>
 </section>
 <section id="rejected-ideas">
 <h2>Rejected Ideas<a class="headerlink" href="#rejected-ideas" title="Link to this heading">#</a></h2>
 <p>[Why certain ideas that were brought while discussing this CR were not ultimately pursued.]</p>
-<blockquote>
-<div><div class="admonition note">
+<div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Throughout the discussion of a CR, various ideas will be proposed which are not accepted.
 Those rejected ideas should be recorded along with the reasoning as to why they were rejected.
 This both helps record the thought process behind the final version of the CR as well as preventing people from bringing up the same rejected idea again in subsequent discussions.
 In a way this section can be thought of as a breakout section of the Rationale section that is focused specifically on why certain ideas were not ultimately pursued.</p>
 </div>
-</div></blockquote>
 </section>
 <section id="open-issues">
 <h2>Open Issues<a class="headerlink" href="#open-issues" title="Link to this heading">#</a></h2>
 <p>[Any points that are still being decided/discussed.]</p>
-<blockquote>
-<div><div class="admonition note">
+<div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>While a CR is in draft, ideas can come up which warrant further discussion.
 Those ideas should be recorded so people know that they are being thought about but do not have a concrete resolution.
 This helps make sure all issues required for the CR to be ready for consideration are complete and reduces people duplicating prior discussion.</p>
 </div>
-</div></blockquote>
 </section>
 <section id="footnotes">
 <h2>Footnotes<a class="headerlink" href="#footnotes" title="Link to this heading">#</a></h2>
@@ -809,7 +788,7 @@ This helps make sure all issues required for the CR to be ready for consideratio
 
   
   <div class="tocsection editthispage">
-    <a href="https://github.com/eclipse-score/reference_integration/edit/main/'docs'/_collections/score_process/process/folder_templates/modules/module_name/component_name/docs/index.rst">
+    <a href="https://github.com/eclipse-score/reference_integration/edit/main/docs/_collections/score_process/process/folder_templates/modules/module_name/component_name/docs/index.rst">
       <i class="fa-solid fa-pencil"></i>
       
       
@@ -820,15 +799,6 @@ This helps make sure all issues required for the CR to be ready for consideratio
     </a>
   </div>
 </div>
-
-  <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../../../../../../../_sources/_collections/score_process/process/folder_templates/modules/module_name/component_name/docs/index.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
 
 </div></div>
               

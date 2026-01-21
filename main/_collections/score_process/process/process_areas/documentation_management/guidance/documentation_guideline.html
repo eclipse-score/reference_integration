@@ -53,7 +53,7 @@
 
     <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
     <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-    <script src="../../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../../_static/documentation_options.js?v=7f41d439"></script>
     <script src="../../../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../../_static/design-tabs.js?v=f930bc37"></script>
@@ -560,7 +560,7 @@
                   
   <section id="guideline">
 <h1>Guideline<a class="headerlink" href="#guideline" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-de599ab5">
+<div class="need_container docutils container" id="SNCB-e5917b7c">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_guidl table" id="gd_guidl__documentation">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -579,7 +579,7 @@
 </td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
-<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">doc_mgt</span></span></span></div>
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">documentation_management</span></span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">contained by: <span class="contains"><span><a class="reference internal" href="../../platform_management/platform_management_workflow.html#wf__platform_cr_mt_platform_mgmt_plan" title="gd_guidl__documentation">wf__platform_cr_mt_platform_mgmt_plan</a>, <a class="reference internal" href="../../platform_management/platform_management_workflow.html#wf__platform_mr_im_platform_mgmt_plan" title="gd_guidl__documentation">wf__platform_mr_im_platform_mgmt_plan</a></span></span></div>
 <div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__support_1041" title="gd_guidl__documentation">std_req__iso26262__support_1041</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__support_1042" title="gd_guidl__documentation">std_req__iso26262__support_1042</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__support_1043" title="gd_guidl__documentation">std_req__iso26262__support_1043</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__support_1044" title="gd_guidl__documentation">std_req__iso26262__support_1044</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__support_1045" title="gd_guidl__documentation">std_req__iso26262__support_1045</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__support_1046" title="gd_guidl__documentation">std_req__iso26262__support_1046</a></span></span></div>
@@ -611,6 +611,56 @@ as well as additional artifacts as defined in <a class="reference internal" href
 <a class="reference internal" href="documentation_checklist.html#gd_chklst__documentation_review" title="gd_chklst__documentation_review"><em class="xref need">Documentation Review Checklist (gd_chklst__documentation_review)</em></a> may used.</p>
 <p>The review of each document is done as defined for this type of work product in the respective
 process description.</p>
+<section id="document-lifecycle-models">
+<h2>Document lifecycle models<a class="headerlink" href="#document-lifecycle-models" title="Link to this heading">#</a></h2>
+<p>Each released document shall have the status: “VALID”.</p>
+<p>Depending on the document assigned lifecycle Model, as defined here
+<a class="reference internal" href="../../../workproducts/index.html#work-products-overview-list"><span class="std std-ref">Project Work product list</span></a>, the document can either reach this state directly,
+or some prior states are required.</p>
+<p>Thus different document lifecycle models exists (as defined in
+<a class="reference internal" href="documentation_process_reqs.html#gd_req__doc_attr_status" title="gd_req__doc_attr_status"><em class="xref need">Document attribute: status (gd_req__doc_attr_status)</em></a>):</p>
+<ul class="simple">
+<li><p>Model1: “VALID”</p></li>
+<li><p>Model2: “DRAFT” -&gt; “VALID”</p></li>
+<li><p>Model3: “DRAFT” -&gt; “VALID” -&gt; “VALID(INSPECTED)”</p></li>
+</ul>
+<p><strong>Guidance for lifecycle model 1:</strong></p>
+<p>Example: <a class="reference internal" href="../../change_management/change_management_workproducts.html#wp__issue_track_system" title="wp__issue_track_system"><em class="xref need">Issue tracking system (wp__issue_track_system)</em></a></p>
+<p>The document has the state “VALID” after creation.</p>
+<p>Recommendation: Author should do a self verification for the correctness and completeness
+of the content and th fulfillment of required formal aspects.</p>
+<p><strong>Guidance for lifecycle model 2:</strong></p>
+<p>Example: <a class="reference internal" href="../../change_management/change_management_workproducts.html#wp__feat_request" title="wp__feat_request"><em class="xref need">Feature Request (wp__feat_request)</em></a></p>
+<p>The document has the state “VALID” after creation and a reviewer as confirmed
+the correctness and completeness of the content and th fulfillment of required formal
+aspects.</p>
+<p>The figure below shows an overview of the review workflow for lifecycle model 2 (Simple
+Workflow) based on Pull Requests.</p>
+<p>Nevertheless, it is still recommended for author to do a self verification for the
+correctness and completeness of the content and the fulfillment of required formal
+aspects before asking for a review.</p>
+<p>In case of any discussions are needed between author and reviewer, or still some ambiguities
+exists, the document can also be published first with the status “DRAFT”.</p>
+<p>This indicates, that the document is created, may have no mature structure yet, content
+is not complete and correct or formal aspects are not considered.</p>
+<p>The figure below shows an overview of the review workflow for lifecycle model 2
+(Extended Workflow) based on Pull Requests.</p>
+<p>After some iterations between author and reviewer, the document can be set to status
+“VALID”, when all issues are resolved.</p>
+<p>Due to updates, findings, other issues or change request, the document status may set
+back from “VALID” to “DRAFT”. This triggers a new review cycle.</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="../../../../../../_images/review_workflow.drawio.svg"><img alt="Overview review lifecycle model 2" src="../../../../../../_images/review_workflow.drawio.svg" style="width: 100%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 39 </span><span class="caption-text">Overview review lifecycle model 2 for PRs</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p><strong>Guidance for lifecycle model 3:</strong></p>
+<p>In principle same as lifecycle model 2, but an additional inspection step is required,
+as described here: <a class="reference internal" href="../../../general_concepts/score_review_concept.html#review-concept"><span class="std std-ref">Review and Inspection Concept</span></a>.</p>
+<p>Example: <a class="reference internal" href="../../requirements_engineering/requirements_workproducts.html#wp__requirements_stkh" title="wp__requirements_stkh"><em class="xref need">Stakeholder Requirements (wp__requirements_stkh)</em></a></p>
+</section>
 </section>
 
 
@@ -653,10 +703,22 @@ process description.</p>
 
 
   <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#document-lifecycle-models">Document lifecycle models</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
 
   
   <div class="tocsection editthispage">
-    <a href="https://github.com/eclipse-score/reference_integration/edit/main/'docs'/_collections/score_process/process/process_areas/documentation_management/guidance/documentation_guideline.rst">
+    <a href="https://github.com/eclipse-score/reference_integration/edit/main/docs/_collections/score_process/process/process_areas/documentation_management/guidance/documentation_guideline.rst">
       <i class="fa-solid fa-pencil"></i>
       
       
@@ -667,15 +729,6 @@ process description.</p>
     </a>
   </div>
 </div>
-
-  <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../../../../../_sources/_collections/score_process/process/process_areas/documentation_management/guidance/documentation_guideline.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
 
 </div></div>
               

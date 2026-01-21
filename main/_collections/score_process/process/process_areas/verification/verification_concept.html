@@ -53,7 +53,7 @@
 
     <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
     <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-    <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../_static/documentation_options.js?v=7f41d439"></script>
     <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../_static/design-tabs.js?v=f930bc37"></script>
@@ -551,7 +551,7 @@
                   
   <section id="concept-description">
 <h1>Concept Description<a class="headerlink" href="#concept-description" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-1e2397c2">
+<div class="need_container docutils container" id="SNCB-5d86981a">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_doc_concept table" id="doc_concept__verification_process">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -570,7 +570,7 @@
 </td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
-<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">requirements_engineering</span><span class="needs_spacer">, </span><span class="needs_data">verification_process</span></span></span></div>
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">requirements_engineering</span><span class="needs_spacer">, </span><span class="needs_data">verification</span></span></span></div>
 </span></span></div>
 <div class="line"><span><div class="line">relates to: <span class="has"><span><a class="reference internal" href="verification_workflows.html#wf__verification_unit_test" title="doc_concept__verification_process">wf__verification_unit_test</a>, <a class="reference internal" href="verification_workflows.html#wf__verification_comp_int_test" title="doc_concept__verification_process">wf__verification_comp_int_test</a>, <a class="reference internal" href="verification_workflows.html#wf__verification_feat_int_test" title="doc_concept__verification_process">wf__verification_feat_int_test</a>, <a class="reference internal" href="verification_workflows.html#wf__verification_platform_int_test" title="doc_concept__verification_process">wf__verification_platform_int_test</a>, <a class="reference internal" href="verification_workflows.html#wf__verification_plan" title="doc_concept__verification_process">wf__verification_plan</a>, <a class="reference internal" href="verification_workflows.html#wf__verification_plan_maintain" title="doc_concept__verification_process">wf__verification_plan_maintain</a>, <a class="reference internal" href="verification_workflows.html#wf__verification_mod_ver_report" title="doc_concept__verification_process">wf__verification_mod_ver_report</a>, <a class="reference internal" href="verification_workflows.html#wf__verification_platform_ver_report" title="doc_concept__verification_process">wf__verification_platform_ver_report</a></span></span></div>
 </span></div>
@@ -707,7 +707,7 @@ applicable are:</p>
 <p>Usually the defined methods are not applied on each verification level between unit and platform level.
 Also their execution may differ whether it is a QM or ASIL rated test case.
 The rigor is described in the implementation of <a class="reference internal" href="verification_workproducts.html#wp__verification_plan" title="wp__verification_plan"><em class="xref need">Verification Plan (wp__verification_plan)</em></a>.</p>
-<p>Automated test cases should contain further information about which methods have been applied.
+<p>Automated test cases (as well as manual, where applicable) shall contain further information about which methods have been applied.
 The corresponding guidance is given here: <a class="reference internal" href="guidance/verification_guideline.html#gd_guidl__verification_guide" title="gd_guidl__verification_guide"><em class="xref need">Verification Guideline (gd_guidl__verification_guide)</em></a>.
 The identifier of the respective method is to be used as meta data (<em>TestType</em> and <em>DerivationTechnique</em>).</p>
 </section>
@@ -745,8 +745,8 @@ feature requirements and architecture as features describe the integrated behavi
 stakeholder requirements as stakeholder requirements describe the platform behavior.</p>
 <p>Note that all the above tests shall only link to requirements of type “Functional” and “Interface”.
 The verification of requirements of types “Process” and “Non-Functional” will be done via Analysis,
-which is a verification method still to be defined. <code class="docutils literal notranslate"><span class="pre">[TODO:</span> <span class="pre">Link</span> <span class="pre">to</span> <span class="pre">Analysis</span> <span class="pre">process</span> <span class="pre">once</span> <span class="pre">available.</span> <span class="pre">See</span> <span class="pre">ticket</span> <span class="pre">#577]</span></code></p>
-<p>Requirements always include Assumptions Of Use.</p>
+which is part of the requirement inspection <a class="reference internal" href="../../folder_templates/features/feature_name/requirements/chklst_req_inspection.html#doc__feature_name_req_inspection" title="doc__feature_name_req_inspection"><em class="xref need">[Your Feature Name] Require... (doc__feature_name_req_inspection)</em></a> and <a class="reference internal" href="../../folder_templates/modules/module_name/component_name/docs/requirements/chklst_req_inspection.html#doc__component_name_req_inspection" title="doc__component_name_req_inspection"><em class="xref need">[Your Component Name] Requi... (doc__component_name_req_inspection)</em></a>.
+Requirements always include Assumptions Of Use.</p>
 <p>A more detailed description of how to link code to requirements is available here: <a class="reference internal" href="guidance/verification_process_reqs.html#gd_req__verification_link_tests" title="gd_req__verification_link_tests"><em class="xref need">Linking Requirements to Tests (gd_req__verification_link_tests)</em></a></p>
 <section id="workflow-for-verification-guidance">
 <h3>Workflow for Verification Guidance<a class="headerlink" href="#workflow-for-verification-guidance" title="Link to this heading">#</a></h3>
@@ -754,7 +754,7 @@ which is a verification method still to be defined. <code class="docutils litera
 <span id="requirement-verification-workflow"></span><a class="reference internal image-reference" href="../../../../../_images/requirements_workflow_verification.drawio.svg"><img alt="Requirements Versioning" src="../../../../../_images/requirements_workflow_verification.drawio.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 43 </span><span class="caption-text">Requirements Workflow</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 45 </span><span class="caption-text">Requirements Workflow</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>The <a class="reference internal" href="#requirement-verification-workflow"><span class="std std-ref">Requirements Workflow</span></a> above displays the whole workflow including the traceability concept for the
@@ -847,7 +847,7 @@ in the <a class="reference external" href="https://gitlab.eclipse.org/eclipsefdn
 
   
   <div class="tocsection editthispage">
-    <a href="https://github.com/eclipse-score/reference_integration/edit/main/'docs'/_collections/score_process/process/process_areas/verification/verification_concept.rst">
+    <a href="https://github.com/eclipse-score/reference_integration/edit/main/docs/_collections/score_process/process/process_areas/verification/verification_concept.rst">
       <i class="fa-solid fa-pencil"></i>
       
       
@@ -858,15 +858,6 @@ in the <a class="reference external" href="https://gitlab.eclipse.org/eclipsefdn
     </a>
   </div>
 </div>
-
-  <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../../../../_sources/_collections/score_process/process/process_areas/verification/verification_concept.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
 
 </div></div>
               

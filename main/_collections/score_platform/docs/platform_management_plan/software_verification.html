@@ -53,7 +53,7 @@
 
     <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
     <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-    <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../_static/documentation_options.js?v=7f41d439"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
@@ -527,7 +527,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <div class="need_container docutils container" id="SNCB-25748f10">
+  <div class="need_container docutils container" id="SNCB-023f8f9b">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__verification_plan">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -642,6 +642,15 @@ automated software build at any time.</p>
 <li><p><strong>Changes</strong> get integrated based on the <a class="reference internal" href="../../../score_process/process/process_areas/change_management/change_management_workflow.html#wf__change_create_cr" title="wf__change_create_cr"><em class="xref need">Create Change Request (wf__change_create_cr)</em></a> and will follow
 the <a class="reference internal" href="../contribute/contribution_request/index.html#doc__pull_request_guideline" title="doc__pull_request_guideline"><em class="xref need">Pull Request Guideline (doc__pull_request_guideline)</em></a> as any other artifact.</p></li>
 </ol>
+<p>The test methods and techniques shall be selected based on the characteristics and specified behavior
+of the software element under test. This shall ensure proper testing from unit level to feature integration level.
+Specific recommendations for each test level are provided in the following sections of this verification plan.</p>
+<p>The following examples serve as illustration and inspiration for test selection:
+Resource Usage Evaluation is selected when requirements address resource management or when data
+corruption may occur. Interface Testing is applied when requirements target external API behavior.
+Boundary Value Analysis is used for buffers where overflow is deemed possible or when requirements specify
+input ranges and boundaries covering incorrect input values. This list is not complete, and additional tests
+may be selected based on the specific requirements of each software element.</p>
 </section>
 <section id="levels-of-integration-and-verification">
 <h3>Levels of integration and verification<a class="headerlink" href="#levels-of-integration-and-verification" title="Link to this heading">#</a></h3>
@@ -673,9 +682,9 @@ The specific tailoring is described in the <a class="reference internal" href="s
 The full Platform Integration Testing will be executed by the integrator. S-CORE project only executes tests on reference hardware.
 These tests serve as an optional base for the integrator and will also be part of the
 <a class="reference internal" href="../../../score_process/process/process_areas/verification/verification_workproducts.html#wp__verification_platform_ver_report" title="wp__verification_platform_ver_report"><em class="xref need">Platform Verification Report (wp__verification_platform_ver_report)</em></a>, but more on an informative character. The full scope
-of clause 11 is tailored out accordingly for S-CORE. Practically, this means S-CORE will implement
-Platform Integration Test of stakeholder requirements for demonstration, but these are not intended to completely
-covering all stakeholder requirements.</p>
+of clause 11 is tailored out accordingly for S-CORE (see: <a class="reference internal" href="../../../score_process/process/process_areas/verification/guidance/verification_guideline.html#gd_guidl__verification_req_tailored" title="gd_guidl__verification_req_tailored"><em class="xref need">Verification Requirements T... (gd_guidl__verification_req_tailored)</em></a>).
+Practically, this means S-CORE will implement Platform Integration Tests for stakeholder requirements for demonstration,
+but these are not intended to completely covering all stakeholder requirements.</p>
 </div></blockquote>
 </section>
 <section id="verification-methods">
@@ -689,7 +698,7 @@ QM or ASIL B relevant.</p>
 guidance is given here: <a class="reference internal" href="../../../score_process/process/process_areas/verification/guidance/verification_guideline.html#gd_guidl__verification_guide" title="gd_guidl__verification_guide"><em class="xref need">Verification Guideline (gd_guidl__verification_guide)</em></a>. The identifier of the respective
 method is to be used as meta data (<em>TestType</em> and <em>DerivationTechnique</em>).</p>
 <div class="pst-scrollable-table-container"><table class="table table-center" id="id1">
-<caption><span class="caption-number">Table 86 </span><span class="caption-text">Software verification methods (TestType)</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
+<caption><span class="caption-number">Table 82 </span><span class="caption-text">Software verification methods (TestType)</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>Methods</p></th>
 <th class="head"><p>Identifier</p></th>
@@ -773,7 +782,7 @@ at higher levels:</p>
 <section id="test-derivation-methods">
 <h4>Test Derivation Methods<a class="headerlink" href="#test-derivation-methods" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table table-center" id="id2">
-<caption><span class="caption-number">Table 87 </span><span class="caption-text">Test case derivation methods (DerivationTechnique)</span><a class="headerlink" href="#id2" title="Link to this table">#</a></caption>
+<caption><span class="caption-number">Table 83 </span><span class="caption-text">Test case derivation methods (DerivationTechnique)</span><a class="headerlink" href="#id2" title="Link to this table">#</a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>Methods</p></th>
 <th class="head"><p>Identifier</p></th>
@@ -828,7 +837,7 @@ indicated by <code class="docutils literal notranslate"><span class="pre">explor
 <p>The quality criteria of the software verification activities are defined at the following table. The defined goals are
 to be reached with every contribution.</p>
 <div class="pst-scrollable-table-container"><table class="table table-center" id="id3">
-<caption><span class="caption-number">Table 88 </span><span class="caption-text">Quality criteria and respective goals</span><a class="headerlink" href="#id3" title="Link to this table">#</a></caption>
+<caption><span class="caption-number">Table 84 </span><span class="caption-text">Quality criteria and respective goals</span><a class="headerlink" href="#id3" title="Link to this table">#</a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>#</p></th>
 <th class="head"><p>Criterion</p></th>
@@ -868,14 +877,26 @@ to be reached with every contribution.</p>
 <td><p>100%</p></td>
 </tr>
 <tr class="row-even"><td><p>7</p></td>
-<td><p>Relative amount of failed tests</p></td>
-<td><p>0%</p></td>
-<td><p>0%</p></td>
+<td><p>Relative amount of passed tests</p></td>
+<td><p>100%</p></td>
+<td><p>100%</p></td>
+</tr>
+<tr class="row-odd"><td><p>8</p></td>
+<td><p>Compliance with rules for static code analysis</p></td>
+<td><p>only minor violation based on tool rating</p></td>
+<td><p>100%</p></td>
+</tr>
+<tr class="row-even"><td><p>9</p></td>
+<td><p>Freedom from compiler warnings &amp; errors</p></td>
+<td><p>100%</p></td>
+<td><p>100%</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <p>Further quality goals are defined in section <a class="reference internal" href="quality_management.html"><span class="doc">Quality Management / Platform Quality Management Plan</span></a>.</p>
+<p>The confirmation or any deviation of the coverage percentage value is documented in this section.
+This shall also be part of the module documenation with a reasoning when percentage numbers deviate for an official release.</p>
 <section id="coverage-of-detailed-design">
 <h4>Coverage of detailed design<a class="headerlink" href="#coverage-of-detailed-design" title="Link to this heading">#</a></h4>
 <p>Beside <a class="reference internal" href="../../../score_process/process/process_areas/verification/verification_workproducts.html#wp__verification_comp_int_test" title="wp__verification_comp_int_test"><em class="xref need">Component Integration test (wp__verification_comp_int_test)</em></a> and <a class="reference internal" href="../../../score_process/process/process_areas/verification/verification_workproducts.html#wp__verification_sw_unit_test" title="wp__verification_sw_unit_test"><em class="xref need">Unit test (wp__verification_sw_unit_test)</em></a> the
@@ -895,8 +916,8 @@ following aspects define the coverage of the architectural design.</p>
 <li><p><a class="reference internal" href="../../../score_process/process/process_areas/safety_analysis/safety_analysis_workproducts.html#wp__sw_component_fmea" title="wp__sw_component_fmea"><em class="xref need">Component FMEA (wp__sw_component_fmea)</em></a> and <a class="reference internal" href="../../../score_process/process/process_areas/safety_analysis/safety_analysis_workproducts.html#wp__sw_component_dfa" title="wp__sw_component_dfa"><em class="xref need">Component DFA (wp__sw_component_dfa)</em></a> for safety-critical parts</p></li>
 <li><p><a class="reference internal" href="../../../score_process/process/process_areas/safety_analysis/safety_analysis_workproducts.html#wp__feature_fmea" title="wp__feature_fmea"><em class="xref need">Feature FMEA (wp__feature_fmea)</em></a> and <a class="reference internal" href="../../../score_process/process/process_areas/safety_analysis/safety_analysis_workproducts.html#wp__feature_dfa" title="wp__feature_dfa"><em class="xref need">Feature DFA (wp__feature_dfa)</em></a> for safety-critical parts</p></li>
 </ul>
-<p>Each architectural element has at least one test case linked with attribute “fully verified” or
-multiple test cases with attribute “partially verified”.</p>
+<p>Each architectural element has at least one test case linked with attribute <code class="docutils literal notranslate"><span class="pre">FullyVerified</span></code> or
+multiple test cases with attribute <code class="docutils literal notranslate"><span class="pre">PartiallyVerified</span></code>.</p>
 </section>
 <section id="coverage-of-software-requirements-specifications">
 <h4>Coverage of software requirements specifications<a class="headerlink" href="#coverage-of-software-requirements-specifications" title="Link to this heading">#</a></h4>
@@ -920,7 +941,22 @@ to follow the <a class="reference internal" href="../../../score_process/process
 <section id="test-execution-and-result-analysis">
 <h3>Test execution and result analysis<a class="headerlink" href="#test-execution-and-result-analysis" title="Link to this heading">#</a></h3>
 <p>The execution of the tests is based on a full automation defined by build pipelines. The analysis of the test results
-needs to be performed by the contributor.</p>
+needs to be performed by the <a class="reference internal" href="../../../score_process/process/roles/index.html#rl__contributor" title="rl__contributor"><em class="xref need">Contributor (rl__contributor)</em></a>.</p>
+<section id="manual-test-execution">
+<h4>Manual test execution<a class="headerlink" href="#manual-test-execution" title="Link to this heading">#</a></h4>
+<p>The automation rate for test case execution is expected to be above 99%.</p>
+<p>Automated tests can be executed locally by the contributor before pushing code to the repository.
+To support local test execution respective <cite>bazel test …</cite> commands are provided as part of the module and feature documentation.</p>
+<p>When a manual test is considered to verify a requirement or architectural element, the respective links need to be established as for any other automated test case.
+The script for manual testing uses the same templates as any other automated test including the Record Properties.
+Therefore, these test cases require a script to be provided which describes how to execute the test case manually step by step.
+The script and its execution will be part of the test reporting and traceability and need to be reviewed in the PR as part of the verification activities.
+Within the review an approver confirms that automation is not feasible for the specific test case.</p>
+<p>In contrast to automated result comparison of an automated test case, the feedback from the test executor is logged for manual tests.
+The script will wait for the user input to proceed to the next step and describe the expected result after each step.
+The user input can be judged as confirmation that the expected result is achieved.
+The final result will be <cite>PASSED</cite> or <cite>FAILED</cite>, based on the test executors confirmation.</p>
+</section>
 </section>
 <section id="test-selection-and-regression-testing">
 <h3>Test selection and regression testing<a class="headerlink" href="#test-selection-and-regression-testing" title="Link to this heading">#</a></h3>
@@ -948,7 +984,7 @@ document:</p>
 <ol class="arabic simple">
 <li><p>The <a class="reference internal" href="../../../score_process/process/roles/index.html#rl__contributor" title="rl__contributor"><em class="xref need">Contributor (rl__contributor)</em></a> needs to make sure that the objectives of the software integration and verification are
 fulfilled when contributing to the project.</p></li>
-<li><p>The <a class="reference internal" href="../../../score_process/process/roles/index.html#rl__committer" title="rl__committer"><em class="xref need">Committer (rl__committer)</em></a> needs to verify that the contributor has fulfilled the expected objectives.</p></li>
+<li><p>The <a class="reference internal" href="../../../score_process/process/roles/index.html#rl__committer" title="rl__committer"><em class="xref need">Committer (rl__committer)</em></a> needs to verify that the <a class="reference internal" href="../../../score_process/process/roles/index.html#rl__contributor" title="rl__contributor"><em class="xref need">Contributor (rl__contributor)</em></a> has fulfilled the expected objectives.</p></li>
 </ol>
 <p>In this way roles are followed as defined in <a class="reference internal" href="../../../score_process/process/process_areas/verification/verification_concept.html#doc_concept__verification_process" title="doc_concept__verification_process"><em class="xref need">Verification Concept (doc_concept__verification_process)</em></a>.</p>
 <section id="independence-of-verification">
@@ -1023,8 +1059,8 @@ section above). Driven by that the following test setups can be derived:</p>
 <section id="test-execution-environment-and-reference-hardware">
 <h3>Test execution environment and reference hardware<a class="headerlink" href="#test-execution-environment-and-reference-hardware" title="Link to this heading">#</a></h3>
 <p>The platform is consisting solely on features that are considered as “middleware” as the layer
-above the hardware abstraction layer. The platform itself doe not require to be running on
-a specific hardware. It integrates with an Posix Operating System which is the first level of
+above the hardware abstraction layer. The platform itself does not require to be running on
+a specific hardware. It integrates with an POSIX Operating System which is the first level of
 abstraction to the physical hardware.</p>
 <p>The simulation environment will be based on x86 and arm64 architecture, to be close to later
 target hardware.</p>
@@ -1115,7 +1151,10 @@ This includes physical maintenance as well as virtual access.</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pre-existing-test-cases">Pre-existing test cases</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-execution-and-result-analysis">Test execution and result analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-execution-and-result-analysis">Test execution and result analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-test-execution">Manual test execution</a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-selection-and-regression-testing">Test selection and regression testing</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#work-products-and-traceability">Work products and traceability</a></li>
 </ul>
@@ -1140,7 +1179,7 @@ This includes physical maintenance as well as virtual access.</p>
 
   
   <div class="tocsection editthispage">
-    <a href="https://github.com/eclipse-score/reference_integration/edit/main/'docs'/_collections/score_platform/docs/platform_management_plan/software_verification.rst">
+    <a href="https://github.com/eclipse-score/reference_integration/edit/main/docs/_collections/score_platform/docs/platform_management_plan/software_verification.rst">
       <i class="fa-solid fa-pencil"></i>
       
       
@@ -1151,15 +1190,6 @@ This includes physical maintenance as well as virtual access.</p>
     </a>
   </div>
 </div>
-
-  <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../../../_sources/_collections/score_platform/docs/platform_management_plan/software_verification.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
 
 </div></div>
               
