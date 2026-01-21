@@ -218,7 +218,13 @@ Note: To override repository commits, use scripts/known_good/override_known_good
             repo_commit_dict[repo_url] = commit_hash
     
     # Load known_good.json
-    known_good = load_known_good(Path(known_path))
+    try:
+        known_good = load_known_good(Path(known_path))
+    except FileNotFoundError as e:
+        raise SystemExit(f"ERROR: {e}")
+    except ValueError as e:
+        raise SystemExit(f"ERROR: {e}")
+    
     if not known_good.modules:
         raise SystemExit("No modules found in known_good.json")
     

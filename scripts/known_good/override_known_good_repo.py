@@ -218,12 +218,14 @@ Examples:
     known_path = os.path.abspath(args.known)
     output_path = os.path.abspath(args.output)
     
-    if not os.path.exists(known_path):
-        raise SystemExit(f"Input file not found: {known_path}")
-    
     # Load, update, and output
     logging.info(f"Loading {known_path}")
-    known_good = load_known_good(known_path)
+    try:
+        known_good = load_known_good(known_path)
+    except FileNotFoundError as e:
+        raise SystemExit(f"ERROR: {e}")
+    except ValueError as e:
+        raise SystemExit(f"ERROR: {e}")
     
     if not args.module_overrides:
         parser.error("at least one --module-override is required")

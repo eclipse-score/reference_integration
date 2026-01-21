@@ -11,6 +11,7 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 
+use std::path::PathBuf;
 use std::time::Duration;
 
 use kyron::runtime::*;
@@ -25,6 +26,7 @@ use orchestration::{
     prelude::InvokeResult,
 };
 
+use rust_kvs::json_backend::JsonBackendBuilder;
 use rust_kvs::prelude::*;
 
 // Example Summary:
@@ -56,8 +58,15 @@ async fn on_shutdown() -> InvokeResult {
 
     // Instance ID for KVS object instances.
     let instance_id = InstanceId(0);
+    
+    // Configure backend with directory path (workaround: KvsBuilder::dir() not available in Rust)
+    // change back to dir, if https://github.com/eclipse-score/persistency/issues/222 is resolved.
+    let backend = JsonBackendBuilder::new()
+        .working_dir(PathBuf::from("./"))
+        .build();
+    
     let builder = KvsBuilder::new(instance_id)
-        .dir("./")
+        .backend(Box::new(backend))
         .kvs_load(KvsLoad::Optional);
     let kvs = builder.build().unwrap();
 
