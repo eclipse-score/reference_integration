@@ -1,0 +1,71 @@
+{
+    "channels": {
+        "3491": {
+            "address": "0.0.0.0",
+            "channelThreshold": "kError",
+            "dstAddress": "239.255.42.99",
+            "dstPort": 3490,
+            "ecu": "SCPP",
+            "port": 3491
+        },
+        "3492": {
+            "address": "0.0.0.0",
+            "channelThreshold": "kInfo",
+            "dstAddress": "239.255.42.99",
+            "dstPort": 3490,
+            "ecu": "SCPP",
+            "port": 3492
+        },
+        "3493": {
+            "address": "0.0.0.0",
+            "channelThreshold": "kVerbose",
+            "dstAddress": "239.255.42.99",
+            "dstPort": 3490,
+            "ecu": "SCPP",
+            "port": 3493
+        }
+    },
+    "channelAssignments": {
+        "DR": {
+            "": [
+                "3492"
+            ],
+            "CTX1": [
+                "3492",
+                "3493"
+            ],
+            "STAT": [
+                "3492"
+            ]
+        },
+        "IPBR": {
+            "": [
+                "3492",
+                "3493"
+            ]
+        },
+        "-NI-": {
+            "": [
+                "3491"
+            ]
+        }
+    },
+    "defaultChannel": "3493",
+    "defaultThresold": "kVerbose",
+    "messageThresholds": {
+        "": {
+            "vcip": "kInfo"
+        },
+        "DR": {
+            "": "kVerbose",
+            "CTX1": "kVerbose",
+            "STAT": "kDebug"
+        },
+        "IPBR": {
+            "": "kVerbose"
+        },
+        "-NI-": {
+            "": "kVerbose"
+        }
+    }
+}

@@ -82,3 +82,11 @@ mkdir -p /tmp_ram/tmp_discovery
 ln -sP  /tmp_ram/tmp_discovery /tmp_discovery
 
 /proc/boot/sshd -f /var/ssh/sshd_config # Start SSH daemon with specified configuration file
+
+echo "---> Starting datarouter"
+cd /usr/bin
+sleep 2                                 # Brief delay to allow system services to be setup (needed for QNX QEMU timing)
+# start datarouter as nonroot user with pathspace ability
+# pathspace ability provides the datarouter access to the `procnto`
+# pathname prefix space required for mw/com message passing with mw::log frontend
+on -A nonroot,allow,pathspace -u 1051:1091 ./datarouter --no_adaptive_runtime &
