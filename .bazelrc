@@ -29,12 +29,15 @@ build --experimental_retain_test_configuration_across_testonly #https://github.c
 test --test_tag_filters=-manual
 test --test_output=errors
 
-build:_bl_common --host_platform=@score_bazel_platforms//:x86_64-linux
+build:shared --sandbox_writable_path=/var/tmp
+build:shared --host_platform=@score_bazel_platforms//:x86_64-linux
 
-# This config is for internal module usage ONLY.
-build:bl-x86_64-linux --config=_bl_common
-build:bl-x86_64-linux --platforms=@score_bazel_platforms//:x86_64-linux
-build:bl-x86_64-linux --extra_toolchains=@gcc_toolchain//:host_gcc_12
+build:x86_64-linux --config=shared
+build:x86_64-linux --platforms=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
+build:x86_64-linux --features=-treat_warnings_as_errors # due to baselibs deprecations
+
+# this is deprecated, use build:x86_64-linux instead
+build:_bl_common --host_platform=@score_bazel_platforms//:x86_64-linux
 
 # This config is for internal module usage ONLY.
 build:bl-x86_64-qnx --config=_bl_common

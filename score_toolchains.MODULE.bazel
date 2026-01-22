@@ -11,42 +11,22 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# QNX toolchain
-bazel_dep(name = "score_toolchains_qnx", version = "0.0.6")
-toolchains_qnx = use_extension("@score_toolchains_qnx//:extensions.bzl", "toolchains_qnx")
-toolchains_qnx.sdp(
-    sha256 = "f2e0cb21c6baddbcb65f6a70610ce498e7685de8ea2e0f1648f01b327f6bac63",
-    strip_prefix = "installation",
-    url = "https://www.qnx.com/download/download/79858/installation.tgz",
-)
-use_repo(toolchains_qnx, "toolchains_qnx_sdp")
-use_repo(toolchains_qnx, "toolchains_qnx_qcc")
-use_repo(toolchains_qnx, "toolchains_qnx_ifs")
-register_toolchains(
-    "@toolchains_qnx_ifs//:ifs_x86_64",
-    "@toolchains_qnx_ifs//:ifs_aarch64",
-    dev_dependency = True,
+
+bazel_dep(name = "score_bazel_cpp_toolchains", version = "0.2.0")
+gcc = use_extension("@score_bazel_cpp_toolchains//extensions:gcc.bzl", "gcc", dev_dependency = True)
+
+# *******************************************************************************
+# Setting default GCC (CPU:x86_64|OS:Linux|V:12.2.0|ES:posix)
+# *******************************************************************************
+gcc.toolchain(
+    name = "score_gcc_toolchain",
+    target_cpu = "x86_64",
+    target_os = "linux",
+    version = "12.2.0",
+    use_default_package = True,
 )
 
-#gcc toolchain for baselibs
-bazel_dep(name = "score_toolchains_gcc", version = "0.5", dev_dependency = False)
-gcc = use_extension("@score_toolchains_gcc//extentions:gcc.bzl", "gcc", dev_dependency = False)
-# Align toolchain archive with persistency module (v0.0.3) so its labels (e.g. host_gcc_12) are present.
-gcc.toolchain(
-    url = "https://github.com/eclipse-score/toolchains_gcc_packages/releases/download/v0.0.3/x86_64-unknown-linux-gnu_gcc12.tar.gz",
-    sha256 = "8fa85c2a93a6bef1cf866fa658495a2416dfeec692e4246063b791abf18da083",
-    strip_prefix = "x86_64-unknown-linux-gnu",
+use_repo(
+    gcc,
+    "score_gcc_toolchain",
 )
-gcc.extra_features(
-    features = [
-        "minimal_warnings",
-        "treat_warnings_as_errors",
-    ],
-)
-gcc.warning_flags(
-    minimal_warnings = ["-Wall", "-Wno-error=deprecated-declarations", "-Wno-error=narrowing"],
-    strict_warnings = ["-Wextra", "-Wpedantic"],
-    treat_warnings_as_errors = ["-Werror"],
-)
-use_repo(gcc, "gcc_toolchain", "gcc_toolchain_gcc")
-register_toolchains("@gcc_toolchain//:all")

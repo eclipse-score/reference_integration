@@ -265,8 +265,8 @@ def main():
     )
     parser.add_argument(
         '--config',
-        default=os.environ.get('CONFIG', 'bl-x86_64-linux'),
-        help='Bazel config to use (default: bl-x86_64-linux, or from CONFIG env var)'
+        default=os.environ.get('CONFIG', 'x86_64-linux'),
+        help='Bazel config to use (default: x86_64-linux, or from CONFIG env var)'
     )
     
     args = parser.parse_args()
