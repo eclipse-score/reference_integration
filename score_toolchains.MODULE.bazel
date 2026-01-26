@@ -32,13 +32,9 @@ use_repo(
 )
 
 
-RUST_EDITION = "2021"
-
-RUST_VERSION = "1.83.0"
-
 rust = use_extension("@rules_rust//rust:extensions.bzl", "rust")
 rust.toolchain(
-    edition = RUST_EDITION,
-    versions = [RUST_VERSION],
+    edition = "2021",
+    versions = ["1.93.0"],
 )
 use_repo(rust, "rust_toolchains")
