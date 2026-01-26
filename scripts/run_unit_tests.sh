@@ -23,8 +23,7 @@ declare -A UT_TARGET_GROUPS=(
     #     -@score_communication//score/mw/com/impl/configuration:config_parser_test \
     #     -@score_communication//score/mw/com/impl/configuration:configuration_test \
     #     -@score_communication//score/mw/com/impl/tracing/configuration:tracing_filter_config_parser_test"
-    [persistency]="@score_persistency//:unit_tests -- \
-        -@score_persistency//src/cpp/tests:test_kvs_cpp" # C++ test has linker issues with logging library
+    [persistency]="@score_persistency//src/rust/rust_kvs:tests" # C++ test has linker issues with logging library
     [orchestrator]="@score_orchestrator//src/..." # ok
     [kyron]="@score_kyron//:unit_tests" # ok
     [feo]="@score_feo//... --build_tests_only" # ok (flag required or error from docs)
