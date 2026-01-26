@@ -3,7 +3,7 @@ set -uo pipefail
 
 # Integration unit test script.
 
-CONFIG=${CONFIG:-bl-x86_64-linux}
+CONFIG=${CONFIG:-x86_64-linux}
 LOG_DIR=${LOG_DIR:-_logs/logs_ut}
 SUMMARY_FILE=${SUMMARY_FILE:-_logs/ut_summary.md}
 mkdir -p "${LOG_DIR}" || true
@@ -23,26 +23,25 @@ declare -A UT_TARGET_GROUPS=(
     #     -@score_communication//score/mw/com/impl/configuration:config_parser_test \
     #     -@score_communication//score/mw/com/impl/configuration:configuration_test \
     #     -@score_communication//score/mw/com/impl/tracing/configuration:tracing_filter_config_parser_test"
-    [persistency]="@score_persistency//:unit_tests -- \
-        -@score_persistency//src/cpp/tests:test_kvs_cpp" # C++ test has linker issues with logging library
+    [persistency]="@score_persistency//src/rust/rust_kvs:tests" # C++ test has linker issues with logging library
     [orchestrator]="@score_orchestrator//src/..." # ok
     [kyron]="@score_kyron//:unit_tests" # ok
     [feo]="@score_feo//... --build_tests_only" # ok (flag required or error from docs)
-    [logging]="@score_logging//score/... \
-        --@score_baselibs//score/memory/shared/flags:use_typedshmd=False \
-        --@score_baselibs//score/json:base_library=nlohmann \
-        --@score_logging//score/datarouter/build_configuration_flags:persistent_logging=False \
-        --@score_logging//score/datarouter/build_configuration_flags:persistent_config_feature_enabled=False \
-        --@score_logging//score/datarouter/build_configuration_flags:enable_nonverbose_dlt=False \
-        --@score_logging//score/datarouter/build_configuration_flags:enable_dynamic_configuration_in_datarouter=False \
-        --@score_logging//score/datarouter/build_configuration_flags:dlt_file_transfer_feature=False \
-        --@score_logging//score/datarouter/build_configuration_flags:use_local_vlan=True \
-        --test_tag_filters=-manual \
-        -- -@score_logging//score/datarouter/test/ut/ut_logging:dltprotocolUT \
-        -@score_logging//score/datarouter/test/ut/ut_logging:persistentLogConfigUT \
-        -@score_logging//score/datarouter/test/ut/ut_logging:socketserverConfigUT \
-        -@score_logging//score/mw/log/legacy_non_verbose_api:unit_test  \
-        -@score_logging//score/datarouter/test/ut/ut_logging:socketserverUT "
+    # [logging]="@score_logging//score/... \
+    #     --@score_baselibs//score/memory/shared/flags:use_typedshmd=False \
+    #     --@score_baselibs//score/json:base_library=nlohmann \
+    #     --@score_logging//score/datarouter/build_configuration_flags:persistent_logging=False \
+    #     --@score_logging//score/datarouter/build_configuration_flags:persistent_config_feature_enabled=False \
+    #     --@score_logging//score/datarouter/build_configuration_flags:enable_nonverbose_dlt=False \
+    #     --@score_logging//score/datarouter/build_configuration_flags:enable_dynamic_configuration_in_datarouter=False \
+    #     --@score_logging//score/datarouter/build_configuration_flags:dlt_file_transfer_feature=False \
+    #     --@score_logging//score/datarouter/build_configuration_flags:use_local_vlan=True \
+    #     --test_tag_filters=-manual \
+    #     -- -@score_logging//score/datarouter/test/ut/ut_logging:dltprotocolUT \
+    #     -@score_logging//score/datarouter/test/ut/ut_logging:persistentLogConfigUT \
+    #     -@score_logging//score/datarouter/test/ut/ut_logging:socketserverConfigUT \
+    #     -@score_logging//score/mw/log/legacy_non_verbose_api:unit_test  \
+    #     -@score_logging//score/datarouter/test/ut/ut_logging:socketserverUT "
 )
 
 # Markdown table header

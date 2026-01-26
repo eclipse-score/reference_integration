@@ -18,21 +18,22 @@ bazel run //:docs_combo_experimental
 ```
 ## Working Builds ✅
 
-The following modules build successfully with the `bl-x86_64-linux` configuration:
+The following modules build successfully with the `x86_64-linux` configuration:
 
 ### Baselibs
 ```bash
-bazel build --config bl-x86_64-linux @score_baselibs//score/... --verbose_failures
+bazel build --config x86_64-linux @score_baselibs//score/... --verbose_failures
+bazel build --config x86_64-linux @score_baselibs//score/... --verbose_failures
 ```
 
 ### Communication
 ```bash
-bazel build --config bl-x86_64-linux @score_communication//score/mw/com:com --verbose_failures
+bazel build --config x86_64-linux @score_communication//score/mw/com:com --verbose_failures
 ```
 
 ### Persistency
 ```bash
-bazel build --config bl-x86_64-linux \
+bazel build --config x86_64-linux \
   @score_persistency//src/cpp/src/... \
   @score_persistency//src/rust/... \
   --verbose_failures
@@ -43,18 +44,18 @@ bazel build --config bl-x86_64-linux \
 ### Orchestration and `kyron` - async runtime for Rust
 
 ```bash
-bazel build --config bl-x86_64-linux @score_orchestrator//src/...
+bazel build --config x86_64-linux @score_orchestrator//src/...
 ```
 
 ## Feature showcase examples
 The examples that are aiming to showcase features provided by S-CORE are located in `feature_showcase` folder.
-You can run them currently for host platform using `--config bl-x86_64-linux`.
+You can run them currently for host platform using `--config x86_64-linux`.
 
 Execute `bazel query //feature_showcase/...` to obtain list of targets that You can run.
 
 
 ```bash
-bazel build --config bl-x86_64-linux @score_orchestrator//src/... --verbose_failures
+bazel build --config x86_64-linux @score_orchestrator//src/... --verbose_failures
 ```
 
 ## Operating system integrations
@@ -146,7 +147,7 @@ bazel build @feo//... --verbose_failures
 
 ### Persistency (Full Build)
 ```bash
-bazel build --config bl-x86_64-linux @score_persistency//src/... --verbose_failures
+bazel build --config x86_64-linux @score_persistency//src/... --verbose_failures
 ```
 
 ## System Dependencies

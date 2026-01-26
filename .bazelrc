@@ -17,9 +17,18 @@ common --registry=https://bcr.bazel.build
 
 # Flags needed by score_baselibs and communication modules.
 # Do not add more!
-build --@score_baselibs//score/mw/log/flags:KRemote_Logging=False
-build --@score_baselibs//score/json:base_library=nlohmann
-build --@score_communication//score/mw/com/flags:tracing_library=stub
+common --@score_baselibs//score/mw/log/flags:KRemote_Logging=False
+common --@score_baselibs//score/json:base_library=nlohmann
+common --@score_communication//score/mw/com/flags:tracing_library=stub
+common --@score_baselibs//score/memory/shared/flags:use_typedshmd=False
+common --@score_logging//score/datarouter/build_configuration_flags:persistent_logging=False
+common --@score_logging//score/datarouter/build_configuration_flags:persistent_config_feature_enabled=False
+common --@score_logging//score/datarouter/build_configuration_flags:enable_nonverbose_dlt=False
+common --@score_logging//score/datarouter/build_configuration_flags:enable_dynamic_configuration_in_datarouter=False
+common --@score_logging//score/datarouter/build_configuration_flags:dlt_file_transfer_feature=False
+common --@score_logging//score/datarouter/build_configuration_flags:use_local_vlan=True
+common --@score_logging//score/mw/log/detail/flags:KUse_Stub_Implementation_Only=False
+common --@score_logging//score/mw/log/flags:KRemote_Logging=False
 
 # stop legacy behavior of creating __init__.py files
 build --incompatible_default_to_explicit_init_py
@@ -29,12 +38,15 @@ build --experimental_retain_test_configuration_across_testonly #https://github.c
 test --test_tag_filters=-manual
 test --test_output=errors
 
-build:_bl_common --host_platform=@score_bazel_platforms//:x86_64-linux
+build:shared --sandbox_writable_path=/var/tmp
+build:shared --host_platform=@score_bazel_platforms//:x86_64-linux
 
-# This config is for internal module usage ONLY.
-build:bl-x86_64-linux --config=_bl_common
-build:bl-x86_64-linux --platforms=@score_bazel_platforms//:x86_64-linux
-build:bl-x86_64-linux --extra_toolchains=@gcc_toolchain//:host_gcc_12
+build:x86_64-linux --config=shared
+build:x86_64-linux --platforms=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
+build:x86_64-linux --features=-treat_warnings_as_errors # due to baselibs deprecations
+
+# this is deprecated, use build:x86_64-linux instead
+build:_bl_common --host_platform=@score_bazel_platforms//:x86_64-linux
 
 # This config is for internal module usage ONLY.
 build:bl-x86_64-qnx --config=_bl_common
