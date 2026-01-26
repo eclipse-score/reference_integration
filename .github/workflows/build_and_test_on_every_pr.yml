@@ -47,10 +47,10 @@ jobs:
         - name: Bazel execute showcase examples
           run: |
             set -e
-            bazel build --config bl-x86_64-linux //feature_showcase:all_examples
+            bazel build --config x86_64-linux //feature_showcase:all_examples
             while read -r target; do
-              bazel run --config bl-x86_64-linux "$target"
+              bazel run --config x86_64-linux "$target"
             done < ci/showcase_targets_run.txt
         - name: Feature Integration Tests
           run: |
-            bazel test --config bl-x86_64-linux //feature_integration_tests/test_cases:fit
+            bazel test --config x86_64-linux //feature_integration_tests/test_cases:fit
