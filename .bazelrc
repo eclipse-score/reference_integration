@@ -17,9 +17,18 @@ common --registry=https://bcr.bazel.build
 
 # Flags needed by score_baselibs and communication modules.
 # Do not add more!
-build --@score_baselibs//score/mw/log/flags:KRemote_Logging=False
-build --@score_baselibs//score/json:base_library=nlohmann
-build --@score_communication//score/mw/com/flags:tracing_library=stub
+common --@score_baselibs//score/mw/log/flags:KRemote_Logging=False
+common --@score_baselibs//score/json:base_library=nlohmann
+common --@score_communication//score/mw/com/flags:tracing_library=stub
+common --@score_baselibs//score/memory/shared/flags:use_typedshmd=False
+common --@score_logging//score/datarouter/build_configuration_flags:persistent_logging=False
+common --@score_logging//score/datarouter/build_configuration_flags:persistent_config_feature_enabled=False
+common --@score_logging//score/datarouter/build_configuration_flags:enable_nonverbose_dlt=False
+common --@score_logging//score/datarouter/build_configuration_flags:enable_dynamic_configuration_in_datarouter=False
+common --@score_logging//score/datarouter/build_configuration_flags:dlt_file_transfer_feature=False
+common --@score_logging//score/datarouter/build_configuration_flags:use_local_vlan=True
+common --@score_logging//score/mw/log/detail/flags:KUse_Stub_Implementation_Only=False
+common --@score_logging//score/mw/log/flags:KRemote_Logging=False
 
 # stop legacy behavior of creating __init__.py files
 build --incompatible_default_to_explicit_init_py

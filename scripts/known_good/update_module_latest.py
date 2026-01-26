@@ -133,24 +133,22 @@ def main(argv: list[str]) -> int:
 
 	for mod in known_good.modules.values():
 		try:
-			# Use module-specific branch if available, otherwise use command-line branch
 			branch = mod.branch if mod.branch else args.branch
 			if use_gh:
 				latest = fetch_latest_commit_gh(mod.owner_repo, branch)
 			else:
 				latest = fetch_latest_commit(mod.owner_repo, branch, token)
-			
-			# Only reuse version if hash did not change
-			if latest != mod.hash:
+
+			old_hash = mod.hash
+			if latest != old_hash:
 				mod.hash = latest
 				mod.version = None  # Clear version when hash changes
-			
-			# Display format: if version exists, show "version -> hash", otherwise "hash -> hash"
-			if mod.version:
-				print(f"{mod.name}: {mod.version} -> {latest[:8]} (branch {branch})")
+				if mod.version:
+					print(f"{mod.name}: {mod.version} -> {latest[:8]} (branch {branch})")
+				else:
+					print(f"{mod.name}: {old_hash[:8]} -> {latest[:8]} (branch {branch})")
 			else:
-				old_hash = known_good.modules[mod.name].hash
-				print(f"{mod.name}: {old_hash[:8]} -> {latest[:8]} (branch {branch})")
+				print(f"{mod.name}: {old_hash[:8]} (no update)")
 		except Exception as e:  # noqa: BLE001
 			failures += 1
 			print(f"ERROR {mod.name}: {e}", file=sys.stderr)
