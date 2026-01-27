@@ -16,12 +16,12 @@ name: Build for and Test on EB corbos Linux for Safety Applications
 on:
   pull_request:
     paths:
-      - 'ebclfsa/**'
+      - "ebclfsa/**"
   push:
     branches:
       - main
   release:
-    types: [created] 
+    types: [created]
   workflow_dispatch:
 
 jobs:
@@ -29,12 +29,12 @@ jobs:
     name: build-and-test-ebclfsa
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/eclipse-score/devcontainer:0.1.0
+      image: ghcr.io/eclipse-score/devcontainer:v1.1.0
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-    
+
       - name: Build for EB corbos Linux for Safety Applications and run tests
         run: |
           bazel build --config=aarch64-ebclfsa //scrample_integration:run
