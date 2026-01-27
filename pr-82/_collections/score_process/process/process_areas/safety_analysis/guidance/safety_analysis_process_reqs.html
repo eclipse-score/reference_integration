@@ -1,0 +1,1717 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Safety Analysis Process Requirements &#8212; REF_INT  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score.css?v=6e51530f" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score_needs.css?v=e97392eb" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score_design.css?v=d9fd870c" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/modern.css?v=803738c0" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../../../../../_static/documentation_options.js?v=7f41d439"></script>
+    <script src="../../../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../../../../../_static/sphinx-data-viewer/jsonview.bundle.js?v=18cd53c5"></script>
+    <script src="../../../../../../_static/sphinx-data-viewer/jsonview_loader.js?v=f7ff7e7d"></script>
+    <script src="../../../../../../_static/sphinx-needs/libs/html/datatables.min.js?v=8a4aee21"></script>
+    <script src="../../../../../../_static/sphinx-needs/libs/html/datatables_loader.js?v=a2cae175"></script>
+    <script src="../../../../../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js?v=dca66431"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_collections/score_process/process/process_areas/safety_analysis/guidance/safety_analysis_process_reqs';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-score.github.io/reference_integration/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" />
+    <link rel="next" title="Roles" href="../safety_analysis_roles.html" />
+    <link rel="prev" title="Safety Analysis Guidelines" href="safety_analysis_guideline.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Eclipse S-CORE</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../score_platform/docs/index.html">
+    S-CORE Platform
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../place_holder/persistency.html">
+    Persistency
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../place_holder/orchestrator.html">
+    Orchestrator
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../place_holder/communication.html">
+    Communication
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../score_feo/docs/index.html">
+    FEO
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" current active">
+  <a class="nav-link dropdown-item nav-internal" href="../../../index.html">
+    Process description
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../score_docs_as_code/docs/index.html">
+    Docs-As-Code
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../score_platform/docs/index.html">
+    S-CORE Platform
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../place_holder/persistency.html">
+    Persistency
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../place_holder/orchestrator.html">
+    Orchestrator
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../place_holder/communication.html">
+    Communication
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../score_feo/docs/index.html">
+    FEO
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../../index.html">
+    Process description
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../score_docs_as_code/docs/index.html">
+    Docs-As-Code
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../general_concepts/index.html">General concepts</a></li>
+</ul>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">Process areas</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../architecture_design/index.html">Architecture Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../change_management/index.html">Change Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../configuration_management/index.html">Configuration Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../documentation_management/index.html">Documentation Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../implementation/index.html">Implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../platform_management/index.html">Platform Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../problem_resolution/index.html">Problem Resolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../process_management/index.html">Process Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quality_management/index.html">Quality Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../release_management/index.html">Release Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../requirements_engineering/index.html">Requirements Engineering</a></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">Safety Analysis</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../safety_analysis_getstrt.html">Getting Started</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../safety_analysis_concept.html">Concept Description</a></li>
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="index.html">Guidance</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="dfa_failure_initiators.html">DFA failure initiators</a></li>
+
+<li class="toctree-l4"><a class="reference internal" href="dfa_templates.html">DFA Templates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fault_models_guideline.html">FMEA Fault Models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fmea_templates.html">FMEA Templates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="safety_analysis_checklist.html">Safety Analysis Checklist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="safety_analysis_guideline.html">Safety Analysis Guidelines</a></li>
+<li class="toctree-l4 current active"><a class="current reference internal" href="#">Safety Analysis Process Requirements</a></li>
+
+
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../safety_analysis_roles.html">Roles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../safety_analysis_workflow.html">Safety Analysis Workflows</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../safety_analysis_workproducts.html">Safety Analysis Work Products</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../safety_management/index.html">Safety Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../security_analysis/index.html">Security Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../security_management/index.html">Security Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tool_management/index.html">Tool Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../verification/index.html">Verification</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../roles/index.html">Roles</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../workproducts/index.html">Work products</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows/index.html">Workflows</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../standards/index.html">Standards &amp; Requirements</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../trustable/index.html">Trustable Software Framework</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../folder_templates/index.html">Folder Templates</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Process description</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Process areas</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Safety Analysis</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Guidance</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Safety Analysis Process Requirements</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="safety-analysis-process-requirements">
+<span id="process-requirements-safety-analysis"></span><h1>Safety Analysis Process Requirements<a class="headerlink" href="#safety-analysis-process-requirements" title="Link to this heading">#</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Safety Analysis is used as a umbrella term for the methods DFA (Dependent Failure Analysis) and FMEA (Failure Mode and Effects Analysis).</p>
+</div>
+<div class="need_container docutils container" id="SNCB-cf6a5b8b">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_req table" id="gd_req__saf_structure">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Safety Analysis Structure</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">done_automation</span><span class="needs_spacer">, </span><span class="needs_data">safety_analysis</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__support_6432" title="gd_req__saf_structure">std_req__iso26262__support_6432</a></span></span></div>
+<div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_platform_featarch" title="gd_req__saf_structure">wf__analyse_platform_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_featarch" title="gd_req__saf_structure">wf__analyse_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_comparch" title="gd_req__saf_structure">wf__analyse_comparch</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfies"><span><a class="reference internal" href="../../../../../score_docs_as_code/docs/internals/requirements/requirements.html#tool_req__docs_saf_types" title="gd_req__saf_structure">tool_req__docs_saf_types</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Safety Analysis (FMEA and DFA) shall be hierarchically grouped into different levels.</p>
+<p>Following levels are defined:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Platform DFA</p></li>
+<li><p>Feature DFA/FMEA</p></li>
+<li><p>Component DFA/FMEA</p></li>
+</ul>
+</div></blockquote>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#gd_req__saf_structure" title="gd_req__saf_structure">gd_req__saf_structure</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Process Requirements</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<section id="process-safety-analysis-attributes">
+<span id="process-requirements-safety-analysis-attributes"></span><h2>Process Safety Analysis Attributes<a class="headerlink" href="#process-safety-analysis-attributes" title="Link to this heading">#</a></h2>
+<div class="need_container docutils container" id="SNCB-5a2cad64">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_req table" id="gd_req__saf_attr_uid">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Safety Analysis attribute: UID</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">done_automation</span><span class="needs_spacer">, </span><span class="needs_data">attribute</span><span class="needs_spacer">, </span><span class="needs_data">mandatory</span><span class="needs_spacer">, </span><span class="needs_data">safety_analysis</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__support_6425" title="gd_req__saf_attr_uid">std_req__iso26262__support_6425</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__support_6432" title="gd_req__saf_attr_uid">std_req__iso26262__support_6432</a></span></span></div>
+<div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_platform_featarch" title="gd_req__saf_attr_uid">wf__analyse_platform_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_featarch" title="gd_req__saf_attr_uid">wf__analyse_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_comparch" title="gd_req__saf_attr_uid">wf__analyse_comparch</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfies"><span><a class="reference internal" href="../../../../../score_docs_as_code/docs/internals/requirements/requirements.html#tool_req__docs_common_attr_id" title="gd_req__saf_attr_uid">tool_req__docs_common_attr_id</a>, <a class="reference internal" href="../../../../../score_docs_as_code/docs/internals/requirements/requirements.html#tool_req__docs_common_attr_id_scheme" title="gd_req__saf_attr_uid">tool_req__docs_common_attr_id_scheme</a>, <a class="reference internal" href="../../../../../score_docs_as_code/docs/internals/requirements/requirements.html#tool_req__docs_saf_types" title="gd_req__saf_attr_uid">tool_req__docs_saf_types</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Each Safety Analysis shall have a unique ID. It shall be in a format which is also human readable and consists of</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Type of Safety Analysis (DFA or FMEA)</p></li>
+<li><p>Name of analysed structural element (e.g. Persistency, FEO, etc.)</p></li>
+<li><p>Element descriptor (e.g. KVS__Open KVS or KVS__GetKeyValue)</p></li>
+</ul>
+</div></blockquote>
+<p>The naming convention shall be defined in the project and shall be used consistently.</p>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#gd_req__saf_attr_uid" title="gd_req__saf_attr_uid">gd_req__saf_attr_uid</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Process Requirements</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-e03a864e">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_req table" id="gd_req__saf_attr_title">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Safety Analysis attribute: title</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">done_automation</span><span class="needs_spacer">, </span><span class="needs_data">attribute</span><span class="needs_spacer">, </span><span class="needs_data">mandatory</span><span class="needs_spacer">, </span><span class="needs_data">safety_analysis</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__support_6424" title="gd_req__saf_attr_title">std_req__iso26262__support_6424</a></span></span></div>
+<div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_platform_featarch" title="gd_req__saf_attr_title">wf__analyse_platform_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_featarch" title="gd_req__saf_attr_title">wf__analyse_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_comparch" title="gd_req__saf_attr_title">wf__analyse_comparch</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfies"><span><a class="reference internal" href="../../../../../score_docs_as_code/docs/internals/requirements/requirements.html#tool_req__docs_common_attr_title" title="gd_req__saf_attr_title">tool_req__docs_common_attr_title</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The title of the Safety Analysis shall provide a short summary of the description</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#gd_req__saf_attr_title" title="gd_req__saf_attr_title">gd_req__saf_attr_title</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Process Requirements</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-1d8044ab">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_req table" id="gd_req__saf_attr_mitigated_by">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Safety Analysis attribute: mitigated by</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">done_automation</span><span class="needs_spacer">, </span><span class="needs_data">attribute</span><span class="needs_spacer">, </span><span class="needs_data">optional</span><span class="needs_spacer">, </span><span class="needs_data">safety_analysis</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_844" title="gd_req__saf_attr_mitigated_by">std_req__iso26262__analysis_844</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_746" title="gd_req__saf_attr_mitigated_by">std_req__iso26262__analysis_746</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_747" title="gd_req__saf_attr_mitigated_by">std_req__iso26262__analysis_747</a></span></span></div>
+<div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_platform_featarch" title="gd_req__saf_attr_mitigated_by">wf__analyse_platform_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_featarch" title="gd_req__saf_attr_mitigated_by">wf__analyse_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_comparch" title="gd_req__saf_attr_mitigated_by">wf__analyse_comparch</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfies"><span><a class="reference internal" href="../../../../../score_docs_as_code/docs/internals/requirements/requirements.html#tool_req__docs_saf_attrs_mitigated_by" title="gd_req__saf_attr_mitigated_by">tool_req__docs_saf_attrs_mitigated_by</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Each violation shall have an associated mitigation (e.g. prevention, detection or mitigation) or AoU.
+If mitigation has not yet been implemented, do not use this option.
+If status == valid then mitigated_by is mandatory.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#gd_req__saf_attr_mitigated_by" title="gd_req__saf_attr_mitigated_by">gd_req__saf_attr_mitigated_by</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Process Requirements</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-b673c336">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_req table" id="gd_req__saf_attr_mitigation_issue">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Safety Analysis attribute: mitigation issue</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">done_automation</span><span class="needs_spacer">, </span><span class="needs_data">attribute</span><span class="needs_spacer">, </span><span class="needs_data">optional</span><span class="needs_spacer">, </span><span class="needs_data">safety_analysis</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_844" title="gd_req__saf_attr_mitigation_issue">std_req__iso26262__analysis_844</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_746" title="gd_req__saf_attr_mitigation_issue">std_req__iso26262__analysis_746</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_747" title="gd_req__saf_attr_mitigation_issue">std_req__iso26262__analysis_747</a></span></span></div>
+<div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_platform_featarch" title="gd_req__saf_attr_mitigation_issue">wf__analyse_platform_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_featarch" title="gd_req__saf_attr_mitigation_issue">wf__analyse_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_comparch" title="gd_req__saf_attr_mitigation_issue">wf__analyse_comparch</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfies"><span><a class="reference internal" href="../../../../../score_docs_as_code/docs/internals/requirements/requirements.html#tool_req__docs_saf_attrs_mitigation_issue" title="gd_req__saf_attr_mitigation_issue">tool_req__docs_saf_attrs_mitigation_issue</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>If a new mitigation (e.g. prevention, detection or mitigation) is needed link to the issue and keep status invalid until mitigation is sufficient.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#gd_req__saf_attr_mitigation_issue" title="gd_req__saf_attr_mitigation_issue">gd_req__saf_attr_mitigation_issue</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Process Requirements</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-264bb72f">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_req table" id="gd_req__saf_attr_sufficient">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Safety Analysis attribute: sufficient</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">done_automation</span><span class="needs_spacer">, </span><span class="needs_data">attribute</span><span class="needs_spacer">, </span><span class="needs_data">mandatory</span><span class="needs_spacer">, </span><span class="needs_data">safety_analysis</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_848" title="gd_req__saf_attr_sufficient">std_req__iso26262__analysis_848</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_749" title="gd_req__saf_attr_sufficient">std_req__iso26262__analysis_749</a>, <a class="reference internal" href="../../../standards/isopas8926/isopas8926.html#std_req__isopas8926__44431" title="gd_req__saf_attr_sufficient">std_req__isopas8926__44431</a>, <a class="reference internal" href="../../../standards/isopas8926/isopas8926.html#std_req__isopas8926__44432" title="gd_req__saf_attr_sufficient">std_req__isopas8926__44432</a></span></span></div>
+<div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_platform_featarch" title="gd_req__saf_attr_sufficient">wf__analyse_platform_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_featarch" title="gd_req__saf_attr_sufficient">wf__analyse_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_comparch" title="gd_req__saf_attr_sufficient">wf__analyse_comparch</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfies"><span><a class="reference internal" href="../../../../../score_docs_as_code/docs/internals/requirements/requirements.html#tool_req__docs_saf_attrs_sufficient" title="gd_req__saf_attr_sufficient">tool_req__docs_saf_attrs_sufficient</a>, <a class="reference internal" href="../../../../../score_docs_as_code/docs/internals/requirements/requirements.html#tool_req__docs_saf_attrs_sufficient_check" title="gd_req__saf_attr_sufficient">tool_req__docs_saf_attrs_sufficient_check</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The mitigation(s) (e.g. prevention, detection or mitigation) shall be rated as sufficient with &lt;yes&gt; or &lt;no&gt;.
+A mitigation can only be sufficient if a mitigation is linked via the attribute mitigation.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#gd_req__saf_attr_sufficient" title="gd_req__saf_attr_sufficient">gd_req__saf_attr_sufficient</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Process Requirements</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-6eee18f0">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_req table" id="gd_req__saf_argument">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Safety Analysis content: argument</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">done_automation</span><span class="needs_spacer">, </span><span class="needs_data">attribute</span><span class="needs_spacer">, </span><span class="needs_data">mandatory</span><span class="needs_spacer">, </span><span class="needs_data">safety_analysis</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_848" title="gd_req__saf_argument">std_req__iso26262__analysis_848</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_749" title="gd_req__saf_argument">std_req__iso26262__analysis_749</a>, <a class="reference internal" href="../../../standards/isopas8926/isopas8926.html#std_req__isopas8926__44433" title="gd_req__saf_argument">std_req__isopas8926__44433</a></span></span></div>
+<div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_platform_featarch" title="gd_req__saf_argument">wf__analyse_platform_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_featarch" title="gd_req__saf_argument">wf__analyse_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_comparch" title="gd_req__saf_argument">wf__analyse_comparch</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfies"><span><a class="reference internal" href="../../../../../score_docs_as_code/docs/internals/requirements/requirements.html#tool_req__docs_saf_attrs_content" title="gd_req__saf_argument">tool_req__docs_saf_attrs_content</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The argument shall describe why the mitigation (e.g. prevention, detection or mitigation) is sufficient or not. If it is not sufficient, the argument shall describe how the mitigation
+can be improved to achieve sufficiency. The argument shall be written in the content.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#gd_req__saf_argument" title="gd_req__saf_argument">gd_req__saf_argument</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Process Requirements</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-58844219">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_req table" id="gd_req__saf_attr_status">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Safety Analysis attribute: status</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">done_automation</span><span class="needs_spacer">, </span><span class="needs_data">attribute</span><span class="needs_spacer">, </span><span class="needs_data">mandatory</span><span class="needs_spacer">, </span><span class="needs_data">safety_analysis</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_848" title="gd_req__saf_attr_status">std_req__iso26262__analysis_848</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_749" title="gd_req__saf_attr_status">std_req__iso26262__analysis_749</a>, <a class="reference internal" href="../../../standards/isopas8926/isopas8926.html#std_req__isopas8926__44431" title="gd_req__saf_attr_status">std_req__isopas8926__44431</a>, <a class="reference internal" href="../../../standards/isopas8926/isopas8926.html#std_req__isopas8926__44432" title="gd_req__saf_attr_status">std_req__isopas8926__44432</a></span></span></div>
+<div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_platform_featarch" title="gd_req__saf_attr_status">wf__analyse_platform_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_featarch" title="gd_req__saf_attr_status">wf__analyse_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_comparch" title="gd_req__saf_attr_status">wf__analyse_comparch</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfies"><span><a class="reference internal" href="../../../../../score_docs_as_code/docs/internals/requirements/requirements.html#tool_req__docs_common_attr_status" title="gd_req__saf_attr_status">tool_req__docs_common_attr_status</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Each Safety Analysis shall have the status invalid until the analysis is finished. The status shall be set to valid if the analysis is finished and all issues are closed.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#gd_req__saf_attr_status" title="gd_req__saf_attr_status">gd_req__saf_attr_status</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Process Requirements</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-41d1f48d">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_req table" id="gd_req__saf_attr_feffect">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Safety Analysis attribute: failure effect</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">done_automation</span><span class="needs_spacer">, </span><span class="needs_data">attribute</span><span class="needs_spacer">, </span><span class="needs_data">mandatory</span><span class="needs_spacer">, </span><span class="needs_data">safety_analysis</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_742" title="gd_req__saf_attr_feffect">std_req__iso26262__analysis_742</a></span></span></div>
+<div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_platform_featarch" title="gd_req__saf_attr_feffect">wf__analyse_platform_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_featarch" title="gd_req__saf_attr_feffect">wf__analyse_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_comparch" title="gd_req__saf_attr_feffect">wf__analyse_comparch</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfies"><span><a class="reference internal" href="../../../../../score_docs_as_code/docs/internals/requirements/requirements.html#tool_req__docs_saf_attr_fmea_failure_effect" title="gd_req__saf_attr_feffect">tool_req__docs_saf_attr_fmea_failure_effect</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Every Safety Analysis shall have a short description of the failure effect (e.g. failure lead to an unintended actuation of the analysed element)</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#gd_req__saf_attr_feffect" title="gd_req__saf_attr_feffect">gd_req__saf_attr_feffect</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Process Requirements</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<section id="safety-analysis-linkage">
+<span id="process-requirements-safety-analysis-linkage"></span><h3>Safety Analysis Linkage<a class="headerlink" href="#safety-analysis-linkage" title="Link to this heading">#</a></h3>
+<div class="need_container docutils container" id="SNCB-767f83c0">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_req table" id="gd_req__saf_linkage_check">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Safety Analysis Linkage check</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">done_automation</span><span class="needs_spacer">, </span><span class="needs_data">attribute</span><span class="needs_spacer">, </span><span class="needs_data">automated</span><span class="needs_spacer">, </span><span class="needs_data">safety_analysis</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_842" title="gd_req__saf_linkage_check">std_req__iso26262__analysis_842</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__software_7410" title="gd_req__saf_linkage_check">std_req__iso26262__software_7410</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__software_7411" title="gd_req__saf_linkage_check">std_req__iso26262__software_7411</a></span></span></div>
+<div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_platform_featarch" title="gd_req__saf_linkage_check">wf__analyse_platform_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_featarch" title="gd_req__saf_linkage_check">wf__analyse_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_comparch" title="gd_req__saf_linkage_check">wf__analyse_comparch</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfies"><span><a class="reference internal" href="../../../../../score_docs_as_code/docs/internals/requirements/requirements.html#tool_req__docs_saf_attrs_violates" title="gd_req__saf_linkage_check">tool_req__docs_saf_attrs_violates</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Safety Analysis shall be linked to the architecture view on the corresponding level via the attribute violates.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#gd_req__saf_linkage_check" title="gd_req__saf_linkage_check">gd_req__saf_linkage_check</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Process Requirements</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-8d39183b">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_req table" id="gd_req__saf_linkage">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Safety Analysis Linkage</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">prio_2_automation</span><span class="needs_spacer">, </span><span class="needs_data">attribute</span><span class="needs_spacer">, </span><span class="needs_data">automated</span><span class="needs_spacer">, </span><span class="needs_data">safety_analysis</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_842" title="gd_req__saf_linkage">std_req__iso26262__analysis_842</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__software_7410" title="gd_req__saf_linkage">std_req__iso26262__software_7410</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__software_7411" title="gd_req__saf_linkage">std_req__iso26262__software_7411</a></span></span></div>
+<div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_platform_featarch" title="gd_req__saf_linkage">wf__analyse_platform_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_featarch" title="gd_req__saf_linkage">wf__analyse_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_comparch" title="gd_req__saf_linkage">wf__analyse_comparch</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfies"><span><a class="reference internal" href="../../../../../score_docs_as_code/docs/internals/requirements/requirements.html#tool_req__docs_saf_attrs_violates" title="gd_req__saf_linkage">tool_req__docs_saf_attrs_violates</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Each Safety Analysis shall be automatically linked (inverse direction) to the corresponding architecture view via the “violates by” linkage.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#gd_req__saf_linkage" title="gd_req__saf_linkage">gd_req__saf_linkage</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Process Requirements</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-0f7e5cea">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_req table" id="gd_req__saf_attr_requirements_check">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Safety Analysis attribute: check Requirements linkage</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">done_automation</span><span class="needs_spacer">, </span><span class="needs_data">attribute</span><span class="needs_spacer">, </span><span class="needs_data">automated</span><span class="needs_spacer">, </span><span class="needs_data">safety_analysis</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_842" title="gd_req__saf_attr_requirements_check">std_req__iso26262__analysis_842</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__software_7410" title="gd_req__saf_attr_requirements_check">std_req__iso26262__software_7410</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__software_7411" title="gd_req__saf_attr_requirements_check">std_req__iso26262__software_7411</a></span></span></div>
+<div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_platform_featarch" title="gd_req__saf_attr_requirements_check">wf__analyse_platform_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_featarch" title="gd_req__saf_attr_requirements_check">wf__analyse_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_comparch" title="gd_req__saf_attr_requirements_check">wf__analyse_comparch</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfies"><span><a class="reference internal" href="../../../../../score_docs_as_code/docs/internals/requirements/requirements.html#tool_req__docs_saf_attrs_mitigated_by" title="gd_req__saf_attr_requirements_check">tool_req__docs_saf_attrs_mitigated_by</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Safety Analysis shall be linked to a requirement on the corresponding level via the attribute “mitigated by”.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#gd_req__saf_attr_requirements_check" title="gd_req__saf_attr_requirements_check">gd_req__saf_attr_requirements_check</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Process Requirements</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-27faa95c">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_req table" id="gd_req__saf_attr_requirements">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Safety Analysis attribute: Requirements linkage</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">prio_2_automation</span><span class="needs_spacer">, </span><span class="needs_data">attribute</span><span class="needs_spacer">, </span><span class="needs_data">automated</span><span class="needs_spacer">, </span><span class="needs_data">safety_analysis</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_842" title="gd_req__saf_attr_requirements">std_req__iso26262__analysis_842</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__software_7410" title="gd_req__saf_attr_requirements">std_req__iso26262__software_7410</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__software_7411" title="gd_req__saf_attr_requirements">std_req__iso26262__software_7411</a></span></span></div>
+<div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_platform_featarch" title="gd_req__saf_attr_requirements">wf__analyse_platform_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_featarch" title="gd_req__saf_attr_requirements">wf__analyse_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_comparch" title="gd_req__saf_attr_requirements">wf__analyse_comparch</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfies"><span><a class="reference internal" href="../../../../../score_docs_as_code/docs/internals/requirements/requirements.html#tool_req__docs_saf_attrs_mitigated_by" title="gd_req__saf_attr_requirements">tool_req__docs_saf_attrs_mitigated_by</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Each Safety Analysis shall be automatically linked to the corresponding Safety Requirement via the mitigates linkage.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#gd_req__saf_attr_requirements" title="gd_req__saf_attr_requirements">gd_req__saf_attr_requirements</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Process Requirements</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-a9c429bc">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_req table" id="gd_req__saf_attr_aou">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Safety Analysis attribute: link to Aou</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">done_automation</span><span class="needs_spacer">, </span><span class="needs_data">attribute</span><span class="needs_spacer">, </span><span class="needs_data">automated</span><span class="needs_spacer">, </span><span class="needs_data">safety_analysis</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_845" title="gd_req__saf_attr_aou">std_req__iso26262__analysis_845</a></span></span></div>
+<div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_platform_featarch" title="gd_req__saf_attr_aou">wf__analyse_platform_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_featarch" title="gd_req__saf_attr_aou">wf__analyse_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_comparch" title="gd_req__saf_attr_aou">wf__analyse_comparch</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfies"><span><a class="reference internal" href="../../../../../score_docs_as_code/docs/internals/requirements/requirements.html#tool_req__docs_saf_attrs_mitigated_by" title="gd_req__saf_attr_aou">tool_req__docs_saf_attrs_mitigated_by</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>It shall be possible to link Aou.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#gd_req__saf_attr_aou" title="gd_req__saf_attr_aou">gd_req__saf_attr_aou</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Process Requirements</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-c39aa226">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_req table" id="gd_req__saf_attr_ver">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Safety Analysis attribute: versioning</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">prio_2_automation</span><span class="needs_spacer">, </span><span class="needs_data">attribute</span><span class="needs_spacer">, </span><span class="needs_data">automated</span><span class="needs_spacer">, </span><span class="needs_data">safety_analysis</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__support_6425" title="gd_req__saf_attr_ver">std_req__iso26262__support_6425</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__support_6434" title="gd_req__saf_attr_ver">std_req__iso26262__support_6434</a></span></span></div>
+<div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_platform_featarch" title="gd_req__saf_attr_ver">wf__analyse_platform_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_featarch" title="gd_req__saf_attr_ver">wf__analyse_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_comparch" title="gd_req__saf_attr_ver">wf__analyse_comparch</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>It shall be possible to detect any differences in mandatory attributes compared to the versioning: <a class="reference internal" href="#gd_req__saf_attr_mandatory" title="gd_req__saf_attr_mandatory"><em class="xref need">Safety Analysis mandatory a... (gd_req__saf_attr_mandatory)</em></a></p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#gd_req__saf_attr_ver" title="gd_req__saf_attr_ver">gd_req__saf_attr_ver</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Process Requirements</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-79aa9262">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_req table" id="gd_req__saf_linkage_status_check">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Safety Analysis Linkage status check</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">prio_3_automation</span><span class="needs_spacer">, </span><span class="needs_data">attribute</span><span class="needs_spacer">, </span><span class="needs_data">automated</span><span class="needs_spacer">, </span><span class="needs_data">safety_analysis</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_842" title="gd_req__saf_linkage_status_check">std_req__iso26262__analysis_842</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__software_7410" title="gd_req__saf_linkage_status_check">std_req__iso26262__software_7410</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__software_7411" title="gd_req__saf_linkage_status_check">std_req__iso26262__software_7411</a></span></span></div>
+<div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_platform_featarch" title="gd_req__saf_linkage_status_check">wf__analyse_platform_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_featarch" title="gd_req__saf_linkage_status_check">wf__analyse_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_comparch" title="gd_req__saf_linkage_status_check">wf__analyse_comparch</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>It shall be checked that Safety Analysis can only be linked against valid safety elements (architecture view, requirement, AoU). A valid safety element has the attribute ‘status == valid’ and safety != QM.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#gd_req__saf_linkage_status_check" title="gd_req__saf_linkage_status_check">gd_req__saf_linkage_status_check</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Process Requirements</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="safety-analysis-checks">
+<span id="process-requirements-safety-analysis-checks"></span><h3>Safety Analysis Checks<a class="headerlink" href="#safety-analysis-checks" title="Link to this heading">#</a></h3>
+<div class="need_container docutils container" id="SNCB-5fd137b5">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_req table" id="gd_req__saf_attr_mandatory">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Safety Analysis mandatory attributes provided</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">done_automation</span><span class="needs_spacer">, </span><span class="needs_data">attribute</span><span class="needs_spacer">, </span><span class="needs_data">check</span><span class="needs_spacer">, </span><span class="needs_data">safety_analysis</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_848" title="gd_req__saf_attr_mandatory">std_req__iso26262__analysis_848</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_749" title="gd_req__saf_attr_mandatory">std_req__iso26262__analysis_749</a></span></span></div>
+<div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_platform_featarch" title="gd_req__saf_attr_mandatory">wf__analyse_platform_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_featarch" title="gd_req__saf_attr_mandatory">wf__analyse_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_comparch" title="gd_req__saf_attr_mandatory">wf__analyse_comparch</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfies"><span><a class="reference internal" href="../../../../../score_docs_as_code/docs/internals/requirements/requirements.html#tool_req__docs_saf_attrs_mandatory" title="gd_req__saf_attr_mandatory">tool_req__docs_saf_attrs_mandatory</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>It shall be checked if all mandatory attributes for each Safety Analysis are provided by the user. For all Safety Analysis following attributes shall be mandatory:</p>
+<div class="needstable_wrapper docutils container" id="needtable-_collections/score_process/process/process_areas/safety_analysis/guidance/safety_analysis_process_reqs-0">
+<div class="pst-scrollable-table-container"><table class="NEEDS_TABLE table" id="needtable-_collections/score_process/process/process_areas/safety_analysis/guidance/safety_analysis_process_reqs-0-table_node">
+<caption><span class="caption-text">Overview mandatory Safety Analysis attributes</span><a class="headerlink" href="#needtable-_collections/score_process/process/process_areas/safety_analysis/guidance/safety_analysis_process_reqs-0-table_node" title="Link to this table">#</a></caption>
+<colgroup>
+<col style="width: 100.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Title</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="need row-even"><td class="needs_title"><p>Safety Analysis content: argument</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>DFA attribute: failure ID</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>FMEA attribute: fault ID</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Safety Analysis attribute: failure effect</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Safety Analysis attribute: status</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Safety Analysis attribute: sufficient</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Safety Analysis attribute: title</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Safety Analysis attribute: UID</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#gd_req__saf_attr_mandatory" title="gd_req__saf_attr_mandatory">gd_req__saf_attr_mandatory</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Process Requirements</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-4bf22f3d">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_req table" id="gd_req__saf_linkage_safety">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Safety Analysis linkage safety</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">prio_2_automation</span><span class="needs_spacer">, </span><span class="needs_data">attribute</span><span class="needs_spacer">, </span><span class="needs_data">check</span><span class="needs_spacer">, </span><span class="needs_data">safety_analysis</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_848" title="gd_req__saf_linkage_safety">std_req__iso26262__analysis_848</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_749" title="gd_req__saf_linkage_safety">std_req__iso26262__analysis_749</a></span></span></div>
+<div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_platform_featarch" title="gd_req__saf_linkage_safety">wf__analyse_platform_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_featarch" title="gd_req__saf_linkage_safety">wf__analyse_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_comparch" title="gd_req__saf_linkage_safety">wf__analyse_comparch</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfies"><span><a class="reference internal" href="../../../../../score_docs_as_code/docs/internals/requirements/requirements.html#tool_req__docs_saf_attrs_mitigated_by" title="gd_req__saf_linkage_safety">tool_req__docs_saf_attrs_mitigated_by</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>It shall be checked that Safety Analysis (DFA and FMEA) can only be linked via mitigate_by against
+&lt;Feature | Component | AoU&gt; Requirements with at least one Requirement with the same ASIL or with a higher ASIL
+as the corresponding ASIL of the Feature or Component that is analysed and linked via violates.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#gd_req__saf_linkage_safety" title="gd_req__saf_linkage_safety">gd_req__saf_linkage_safety</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Process Requirements</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-d5b1d09e">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_req table" id="gd_req__saf_finalization_check">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Safety Analysis finalization check</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">prio_2_automation</span><span class="needs_spacer">, </span><span class="needs_data">attribute</span><span class="needs_spacer">, </span><span class="needs_data">automated</span><span class="needs_spacer">, </span><span class="needs_data">safety_analysis</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_848" title="gd_req__saf_finalization_check">std_req__iso26262__analysis_848</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_749" title="gd_req__saf_finalization_check">std_req__iso26262__analysis_749</a>, <a class="reference internal" href="../../../standards/isopas8926/isopas8926.html#std_req__isopas8926__44431" title="gd_req__saf_finalization_check">std_req__isopas8926__44431</a>, <a class="reference internal" href="../../../standards/isopas8926/isopas8926.html#std_req__isopas8926__44432" title="gd_req__saf_finalization_check">std_req__isopas8926__44432</a></span></span></div>
+<div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_platform_featarch" title="gd_req__saf_finalization_check">wf__analyse_platform_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_featarch" title="gd_req__saf_finalization_check">wf__analyse_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_comparch" title="gd_req__saf_finalization_check">wf__analyse_comparch</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><blockquote>
+<div><p>It shall be checked if all artifacts of the analysis are “valid” and “sufficient”.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#gd_req__saf_finalization_check" title="gd_req__saf_finalization_check">gd_req__saf_finalization_check</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Process Requirements</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="dfa-process-requirements">
+<h1>DFA Process Requirements<a class="headerlink" href="#dfa-process-requirements" title="Link to this heading">#</a></h1>
+<div class="need_container docutils container" id="SNCB-052b2944">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_req table" id="gd_req__saf_attr_failure_id">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">DFA attribute: failure ID</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">done_automation</span><span class="needs_spacer">, </span><span class="needs_data">attribute</span><span class="needs_spacer">, </span><span class="needs_data">mandatory</span><span class="needs_spacer">, </span><span class="needs_data">safety_analysis</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__support_6425" title="gd_req__saf_attr_failure_id">std_req__iso26262__support_6425</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__support_6432" title="gd_req__saf_attr_failure_id">std_req__iso26262__support_6432</a></span></span></div>
+<div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_platform_featarch" title="gd_req__saf_attr_failure_id">wf__analyse_platform_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_featarch" title="gd_req__saf_attr_failure_id">wf__analyse_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_comparch" title="gd_req__saf_attr_failure_id">wf__analyse_comparch</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfies"><span><a class="reference internal" href="../../../../../score_docs_as_code/docs/internals/requirements/requirements.html#tool_req__docs_saf_attr_dfa_failure_id" title="gd_req__saf_attr_failure_id">tool_req__docs_saf_attr_dfa_failure_id</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Each DFA shall have a failure ID. The failure ID is used to identify the related fault &lt;<a class="reference internal" href="dfa_failure_initiators.html#gd_guidl__dfa_failure_initiators" title="gd_guidl__dfa_failure_initiators"><em class="xref need">DFA failure initiators (gd_guidl__dfa_failure_initiators)</em></a>&gt;.
+The failure ID links to the corresponding failure initiator which describes how a potential violation can occur.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#gd_req__saf_attr_failure_id" title="gd_req__saf_attr_failure_id">gd_req__saf_attr_failure_id</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Process Requirements</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="fmea-process-requirements">
+<h1>FMEA Process Requirements<a class="headerlink" href="#fmea-process-requirements" title="Link to this heading">#</a></h1>
+<div class="need_container docutils container" id="SNCB-082cdd17">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_req table" id="gd_req__saf_attr_fault_id">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">FMEA attribute: fault ID</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">done_automation</span><span class="needs_spacer">, </span><span class="needs_data">attribute</span><span class="needs_spacer">, </span><span class="needs_data">mandatory</span><span class="needs_spacer">, </span><span class="needs_data">safety_analysis</span></span></span></div>
+</span></span></div>
+<div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__analysis_848" title="gd_req__saf_attr_fault_id">std_req__iso26262__analysis_848</a></span></span></div>
+<div class="line">satisfies: <span class="satisfies"><span><a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_featarch" title="gd_req__saf_attr_fault_id">wf__analyse_featarch</a>, <a class="reference internal" href="../safety_analysis_workflow.html#wf__analyse_comparch" title="gd_req__saf_attr_fault_id">wf__analyse_comparch</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfies"><span><a class="reference internal" href="../../../../../score_docs_as_code/docs/internals/requirements/requirements.html#tool_req__docs_saf_attr_fmea_fault_id" title="gd_req__saf_attr_fault_id">tool_req__docs_saf_attr_fmea_fault_id</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Each FMEA shall have a fault ID. The fault ID is used to identify the related fault &lt;<a class="reference internal" href="fault_models_guideline.html#gd_guidl__fault_models" title="gd_guidl__fault_models"><em class="xref need">FMEA Fault Models (gd_guidl__fault_models)</em></a>&gt;.
+The fault ID links to the corresponding fault which describes how a potential violation can occur.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#gd_req__saf_attr_fault_id" title="gd_req__saf_attr_fault_id">gd_req__saf_attr_fault_id</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Process Requirements</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="safety_analysis_guideline.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Safety Analysis Guidelines</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../safety_analysis_roles.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Roles</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Safety Analysis Process Requirements</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#process-safety-analysis-attributes">Process Safety Analysis Attributes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#safety-analysis-linkage">Safety Analysis Linkage</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#safety-analysis-checks">Safety Analysis Checks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#dfa-process-requirements">DFA Process Requirements</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#fmea-process-requirements">FMEA Process Requirements</a></li>
+</ul>
+
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  
+  <div class="tocsection editthispage">
+    <a href="https://github.com/eclipse-score/reference_integration/edit/main/docs/_collections/score_process/process/process_areas/safety_analysis/guidance/safety_analysis_process_reqs.rst">
+      <i class="fa-solid fa-pencil"></i>
+      
+      
+        
+          Edit on GitHub
+        
+      
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
