@@ -14,6 +14,6 @@ load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 
 alias(
     name = "image",
-    actual = "//showcases/standalone",
+    actual = "//showcases:showcases_all",
     visibility = ["//visibility:public"],
 )

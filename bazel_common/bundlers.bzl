@@ -1,11 +1,11 @@
 load("@rules_pkg//pkg:pkg.bzl", "pkg_tar")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
 
-def pkg_bundle(name, bins, package_dir):
+def pkg_bundle(name, bins, package_dir, other_package_files = []):
     """Creates a reusable bundle: pkg_files → pkg_tar → untar"""
 
-    all_files_name = name + "_all_files"
-    bundle_name = name + "_tar"
+    all_files_name = name + "_pkg_files"
+    bundle_name = name + "_pkg_tar"
     untar_name = name
 
     rename_bin_dict = {}
@@ -20,12 +20,13 @@ def pkg_bundle(name, bins, package_dir):
         name = all_files_name,
         srcs = bins,
         renames = rename_bin_dict,
+        visibility = ["//visibility:public"],
     )
 
     # Step 2: pkg_tar
     pkg_tar(
         name = bundle_name,
-        srcs = [":" + all_files_name],
+        srcs = [":" + all_files_name] + other_package_files,
         strip_prefix = "/",
         package_dir = package_dir,
         visibility = ["//visibility:public"],
