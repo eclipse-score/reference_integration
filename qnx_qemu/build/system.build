@@ -66,7 +66,7 @@ libpam.so.2                              # Pluggable Authentication Modules libr
 # Note: /bin/sh symlink already defined in init.build as /proc/boot/ksh
 toybox                                   # Minimal Unix utilities collection (replaces many GNU tools)
 [type=link] cp=toybox                    # Copy files and directories
-[type=link] ls=toybox                    # List directory contents  
+[type=link] ls=toybox                    # List directory contents
 [type=link] cat=toybox                   # Display file contents
 [type=link] chmod=toybox                 # Change file permissions
 [type=link] rm=toybox                    # Remove files and directories
@@ -255,7 +255,7 @@ pci/pci_debug2.so                        # Enhanced PCI debugging support
 [perms=0444] pci_hw.cfg = configs/pci_hw.cfg              # PCI hardware configuration
 [perms=0444] qcrypto.conf = configs/qcrypto.conf          # QNX cryptographic library configuration
 
-# System hostname configuration  
+# System hostname configuration
 /etc/hostname = configs/hostname         # System hostname definition file
 /etc/profile = configs/profile
 
@@ -281,3 +281,13 @@ pci/pci_debug2.so                        # Enhanced PCI debugging support
 
 [perms=777] /scrample = ${SCRAMPLE_PATH}
 [perms=777] /cpp_tests_persistency = ${CPP_TEST_SCENARIOS_PATH}
+
+
+#############################################
+### Datarouter ###
+#############################################
+[perms=777] /usr/bin/datarouter = ${DATAROUTER_PATH}
+
+# Datarouter configuration files (relative to binary: ./etc/)
+[perms=644] /usr/bin/etc/logging.json = datarouter_integration/etc/logging.json
+[perms=644] /usr/bin/etc/log-channels.json = datarouter_integration/etc/log-channels.json
