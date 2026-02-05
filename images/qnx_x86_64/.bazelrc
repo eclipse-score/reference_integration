@@ -16,3 +16,9 @@ build:x86_64-qnx --incompatible_strict_action_env
 build:x86_64-qnx --platforms=@score_toolchains_qnx//platforms:x86_64-qnx
 build:x86_64-qnx --sandbox_writable_path=/var/tmp
 
+
+build:itf --config=x86_64-qnx
+build:itf --run_under=@score_itf//scripts:run_under_qemu
+build:itf --test_arg="--qemu"
+build:itf --test_arg="--os=qnx"
+
