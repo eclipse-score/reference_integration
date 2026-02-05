@@ -198,6 +198,7 @@ hostname                                                                        
 route
 dhcpcd                                                                          # DHCP client daemon for automatic network configuration
 tcpdump                                                                         # Network packet capture tool for Wireshark analysis
+slay                                                                            # Send signals to processes by process name
 /usr/lib/ssh/sftp-server=${QNX_TARGET}/${PROCESSOR}/usr/libexec/sftp-server     # File transfer server to enable scp
 
 #############################################
@@ -281,3 +282,11 @@ pci/pci_debug2.so                        # Enhanced PCI debugging support
 
 [perms=777] /scrample = ${SCRAMPLE_PATH}
 [perms=777] /cpp_tests_persistency = ${CPP_TEST_SCENARIOS_PATH}
+[perms=777] /lifecycle/launch_manager/launch_manager = ${LIFECYCLE_LAUNCH_MANAGER_EXE}
+[perms=777] /lifecycle/launch_manager/etc/lm_demo.bin = ${LIFECYCLE_LAUNCH_MANAGER_LM_CONFIG}
+[perms=777] /lifecycle/launch_manager/etc/hm_demo.bin = ${LIFECYCLE_LAUNCH_MANAGER_HM_CONFIG}
+[perms=777] /lifecycle/cpp_supervised_app/cpp_supervised_app = ${LIFECYCLE_CPP_SUPERVISED_APP_EXE}
+[perms=777] /lifecycle/cpp_supervised_app/etc/supervised_app_demo.bin = ${LIFECYCLE_CPP_SUPERVISED_APP_CONFIG}
+[perms=777] /lifecycle/control_daemon/control_daemon = ${LIFECYCLE_STATE_MANAGER_EXE}
+[perms=777] /lifecycle/control_daemon/lmcontrol = ${LIFECYCLE_STATE_MANAGER_CONTROL}
+[perms=777] /lifecycle/start.sh = ${LIFECYCLE_DEMO_START}

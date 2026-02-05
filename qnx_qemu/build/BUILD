@@ -42,6 +42,14 @@ filegroup(
     visibility = ["//visibility:private"],
 )
 
+filegroup(
+    name = "lifecycle_launch_manager",
+    srcs = [
+        "@score_lifecycle_health//src/launch_manager_daemon:launch_manager",
+    ],
+    visibility = ["//visibility:public"],
+)
+
 qnx_ifs(
     name = "init",
     build_file = "init.build",
@@ -51,11 +59,27 @@ qnx_ifs(
         ":configs",
         "@score_scrample//src:scrample",
         "//scrample_integration:etc_configs",
-        "@score_persistency//tests/cpp_test_scenarios:cpp_test_scenarios",        
+        "@score_persistency//tests/cpp_test_scenarios:cpp_test_scenarios",
+        "@score_lifecycle_health//src/launch_manager_daemon:launch_manager",
+        "@score_lifecycle_health//examples/cpp_supervised_app",
+        "@score_lifecycle_health//examples/control_application:control_daemon",
+        "//lifecycle_integration:generate_launch_manager_config",
+        "//lifecycle_integration:generate_launch_manager_health_config",
+        "//lifecycle_integration:generate_supervised_app_health_config",
+        "@score_lifecycle_health//examples/control_application:lmcontrol",
+        "//lifecycle_integration:lifecycle_start"
     ],
     ext_repo_maping = {
         "SCRAMPLE_PATH": "$(location @score_scrample//src:scrample)",
         "CPP_TEST_SCENARIOS_PATH": "$(location @score_persistency//tests/cpp_test_scenarios:cpp_test_scenarios)",
+        "LIFECYCLE_LAUNCH_MANAGER_EXE": "$(location @score_lifecycle_health//src/launch_manager_daemon:launch_manager)",
+        "LIFECYCLE_LAUNCH_MANAGER_LM_CONFIG": "$(location //lifecycle_integration:generate_launch_manager_config)",
+        "LIFECYCLE_LAUNCH_MANAGER_HM_CONFIG": "$(location //lifecycle_integration:generate_launch_manager_health_config)",
+        "LIFECYCLE_CPP_SUPERVISED_APP_EXE": "$(location @score_lifecycle_health//examples/cpp_supervised_app)",
+        "LIFECYCLE_CPP_SUPERVISED_APP_CONFIG": "$(location //lifecycle_integration:generate_supervised_app_health_config)",
+        "LIFECYCLE_STATE_MANAGER_EXE": "$(location @score_lifecycle_health//examples/control_application:control_daemon)",
+        "LIFECYCLE_STATE_MANAGER_CONTROL" : "$(location @score_lifecycle_health//examples/control_application:lmcontrol)",
+        "LIFECYCLE_DEMO_START": "$(location //lifecycle_integration:lifecycle_start)"
     },
     visibility = [
         "//:__pkg__"

@@ -133,3 +133,22 @@ py_itf_test(
         "target_config.json",
     ],
 )
+
+py_itf_test(
+    name = "test_lifecycle_qemu",
+    srcs = [
+        "test/itf/test_lifecycle.py",
+    ],
+    args = [
+        "--target_config=$(location target_config.json)",
+        "--ecu=s_core_ecu_qemu",
+        "--qemu_image=$(location //build:init)",
+    ],
+    plugins = [
+        "itf.plugins.base.base_plugin",
+    ],
+    data = [
+        "//build:init",
+        "target_config.json",
+    ],
+)
