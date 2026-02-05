@@ -50,13 +50,14 @@ qnx_ifs(
         ":system_dir",
         ":scripts",
         ":configs",
-        "@score_scrample//src:scrample",
-        "//scrample_integration:etc_configs",
-        "@score_persistency//tests/cpp_test_scenarios:cpp_test_scenarios",        
+        "//showcases/standalone",
+        # "//scrample_integration:etc_configs",
+        # "@score_persistency//tests/cpp_test_scenarios:cpp_test_scenarios",        
     ],
     ext_repo_maping = {
-        "SCRAMPLE_PATH": "$(location @score_scrample//src:scrample)",
-        "CPP_TEST_SCENARIOS_PATH": "$(location @score_persistency//tests/cpp_test_scenarios:cpp_test_scenarios)",
+        # "SCRAMPLE_PATH": "$(location @score_scrample//src:scrample)",
+        # "CPP_TEST_SCENARIOS_PATH": "$(location @score_persistency//tests/cpp_test_scenarios:cpp_test_scenarios)",
+        "BUNDLE_PATH": "$(location //showcases/standalone)"
     },
     visibility = [
         "//visibility:public",

@@ -1,0 +1,49 @@
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+module(
+    name = "score_ref_int_x86_64_linux",
+    version = "0.0.1",
+    compatibility_level = 0,
+)
+
+# Include common modules
+include("//bazel_common:score_basic_tools.MODULE.bazel")
+
+# GCC toolchains
+include ("//bazel_common:score_gcc_toolchains.MODULE.bazel")
+
+# Python support
+include("//bazel_common:score_python.MODULE.bazel")
+
+# Score modules
+include("//bazel_common:score_modules.MODULE.bazel")
+
+
+# Image specific dependencies
+
+bazel_dep(name = "rules_boost", repo_name = "com_github_nelhage_rules_boost")
+archive_override(
+    module_name = "rules_boost",
+    urls = ["https://github.com/nelhage/rules_boost/archive/refs/heads/master.tar.gz"],
+    strip_prefix = "rules_boost-master",
+)
+
+
+# TRLC dependency for requirements traceability
+bazel_dep(name = "trlc", version = "0.0.0")
+git_override(
+    module_name = "trlc",
+    commit = "650b51a47264a4f232b3341f473527710fc32669",  # trlc-2.0.2 release
+    remote = "https://github.com/bmw-software-engineering/trlc.git",
+)
+
