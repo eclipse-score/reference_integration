@@ -82,3 +82,4 @@ mkdir -p /tmp_ram/tmp_discovery
 ln -sP  /tmp_ram/tmp_discovery /tmp_discovery
 
 /proc/boot/sshd -f /var/ssh/sshd_config # Start SSH daemon with specified configuration file
+/showcases/bin/cli                     # Start the CLI application from the mounted showcases directory
