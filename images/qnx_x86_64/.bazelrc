@@ -15,7 +15,7 @@ build --incompatible_enable_cc_toolchain_resolution
 build --incompatible_strict_action_env
 build --platforms=@score_bazel_platforms//:x86_64-qnx-sdp_8.0.0-posix
 build --sandbox_writable_path=/var/tmp
-
+build --host_platform=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
 
 build:itf --config=x86_64-qnx
 build:itf --run_under=@score_itf//scripts:run_under_qemu
