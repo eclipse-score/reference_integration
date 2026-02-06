@@ -59,21 +59,21 @@ py_itf_test(
     ],
 )
 
-# py_itf_test(
-#     name = "test_persistency",
-#     srcs = [
-#         "feature_integration_tests/itf/test_persistency.py",
-#     ],
-#     args = [
-#         "--target_config=$(location target_config.json)",
-#         "--ecu=s_core_ecu_qemu",
-#         "--qemu_image=$(location :image)",
-#     ],
-#     plugins = [
-#         "itf.plugins.base.base_plugin",
-#     ],
-#     data = [
-#         ":image",
-#         "target_config.json",
-#     ],
-# )
+py_itf_test(
+    name = "test_persistency",
+    srcs = [
+        "//feature_integration_tests/itf:test_persistency.py",
+    ],
+    args = [
+        "--target_config=$(location //feature_integration_tests/configs:qemu_target_config.json)",
+        "--ecu=s_core_ecu_qemu",
+        "--qemu_image=$(location :image)",
+    ],
+    plugins = [
+        "itf.plugins.base.base_plugin",
+    ],
+    data = [
+        ":image",
+        "//feature_integration_tests/configs:qemu_target_config.json",
+    ],
+)

@@ -276,12 +276,14 @@ pci/pci_debug2.so                        # Enhanced PCI debugging support
 # DHCP client configuration
 [perms=644] /etc/dhcpcd.conf = ${MAIN_BUILD_FILE_DIR}/../configs/dhcpcd.conf                                     # DHCP client configuration file
 
-[perms=777] /etc/logging.json = ${MAIN_BUILD_FILE_DIR}/../feature_integration_tests/configs/etc/logging.json                                     # DHCP client configuration file
-[perms=777] /etc/mw_com_config.json = ${MAIN_BUILD_FILE_DIR}/../feature_integration_tests/configs/etc/mw_com_config.json                                     # DHCP client configuration file
+# Communication configuration files
+[perms=777] /etc/logging.json = ${MAIN_BUILD_FILE_DIR}/../feature_integration_tests/configs/etc/logging.json
+[perms=777] /etc/mw_com_config.json = ${MAIN_BUILD_FILE_DIR}/../feature_integration_tests/configs/etc/mw_com_config.json
 
+# Executable files from external repositories
 [perms=777] /scrample = ${SCRAMPLE_PATH}
-# [perms=777] /cpp_tests_persistency = ${CPP_TEST_SCENARIOS_PATH}
+[perms=777] /cpp_tests_persistency = ${CPP_TEST_SCENARIOS_PATH}
 
-
+# Common showcases bundle
 [perms=777] /showcases = ${BUNDLE_PATH}
 
