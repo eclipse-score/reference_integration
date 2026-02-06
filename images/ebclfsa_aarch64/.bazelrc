@@ -1,0 +1,14 @@
+common --registry=https://raw.githubusercontent.com/eclipse-score/bazel_registry/main/
+common --registry=https://bcr.bazel.build
+
+build:_common --@score_baselibs//score/mw/log/detail/flags:KUse_Stub_Implementation_Only=False
+build:_common --@score_baselibs//score/mw/log/flags:KRemote_Logging=False
+build:_common --@score_baselibs//score/json:base_library=nlohmann
+build:_common --@score_baselibs//score/memory/shared/flags:use_typedshmd=False
+build:_common --@score_communication//score/mw/com/flags:tracing_library=stub
+build:_common --cxxopt=-Wno-error=mismatched-new-delete
+
+build --config=_common
+build --extra_toolchains=@gcc_toolchain//:aarch64_gcc_13
+build --platforms=@score_toolchains_gcc//platforms:aarch64-linux
+build --spawn_strategy=local

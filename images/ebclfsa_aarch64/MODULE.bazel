@@ -1,0 +1,70 @@
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0 
+# *******************************************************************************
+
+"EB corbos Linux for Safety Applications - S-CORE Reference Integration"
+
+module(
+    name = "score_ref_int_ebclfsa",
+    version = "0.1.0",
+    compatibility_level = 0,
+)
+
+# Include common modules
+include("//bazel_common:score_basic_tools.MODULE.bazel")
+
+# GCC toolchains
+include ("//bazel_common:score_rust_toolchains.MODULE.bazel")
+
+# Python support
+include("//bazel_common:score_python.MODULE.bazel")
+
+# Score modules
+include("//bazel_common:score_modules.MODULE.bazel")
+
+bazel_dep(name = "score_toolchains_gcc", dev_dependency=True)
+git_override( # Elektrobit corbos Linux for Safety Applications needs a specific toolchain
+   module_name = "score_toolchains_gcc",
+   remote = "https://github.com/elektrobit-contrib/eclipse-score_toolchains_gcc.git",
+   tag = "0.5.0-beta" # corresponds to git sha 158921ffd9aabef41a2a03bca5baeaa9f4aa9d33
+)
+gcc = use_extension("@score_toolchains_gcc//extensions:gcc.bzl", "gcc", dev_dependency=True)
+gcc.toolchain(
+    url = "https://github.com/elektrobit-contrib/eclipse-score_toolchains_gcc/releases/download/0.5.0-beta/fastdev-sdk-ubuntu-ebclfsa-ebcl-qemuarm64.tar.gz",
+    sha256 = "05b57bbc8d99d46df6b57f774c39a5a2664964ea7eb94147cbece08508c1f121",
+    strip_prefix = "fastdev-sdk-ubuntu-ebclfsa-ebcl-qemuarm64",
+)
+use_repo(gcc, "gcc_toolchain", "gcc_toolchain_gcc")
+
+
+single_version_override(
+    module_name = "score_baselibs",
+    version = "0.2.2", # part of 0.5.0-beta release
+    patch_strip = 1,
+    patches = [
+        "//patches:fix_hard_coded_amd64.patch",
+    ],
+)
+
+# git_override is not forwarded by bazel_dep, so we need to redefine it here
+git_override(
+    module_name = "trlc",
+    remote = "https://github.com/bmw-software-engineering/trlc.git",
+    commit = "650b51a47264a4f232b3341f473527710fc32669",  # trlc-2.0.2 release
+)
+
+# archive_override is not forwarded by bazel_dep, so we need to redefine it here
+archive_override(
+    module_name = "rules_boost",
+    urls = ["https://github.com/nelhage/rules_boost/archive/refs/heads/master.tar.gz"],
+    strip_prefix = "rules_boost-master",
+)
