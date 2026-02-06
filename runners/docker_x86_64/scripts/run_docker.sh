@@ -21,4 +21,4 @@ echo "Starting docker with overlay image: ${OVERLAY_ABS_PATH}"
 docker run --rm -it \
     -v "${OVERLAY_ABS_PATH}:/showcases" \
     ubuntu:22.04 \
-    /bin/bash
+    /showcases/bin/cli

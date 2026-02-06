@@ -2,25 +2,31 @@ load("@rules_pkg//pkg:pkg.bzl", "pkg_tar")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
 
 
-def score_pkg_bundle(name, bins, package_dir = None, other_package_files = []):
+def score_pkg_bundle(name, bins, config_data= None, package_dir = None, other_package_files = []):
     """Creates a reusable bundle: pkg_files → pkg_tar → untar"""
 
     all_files_name = name + "_pkg_files"
     bundle_name = name + "_pkg_tar"
+    all_cfg = name + "_configs"
     untar_name = name
 
-    rename_bin_dict = {}
+    rename_dict = {}
     for s in bins:
-        # Extract last path component of label as filename
-        # e.g. @score_scrample//src:scrample → scrample
-        target_name = s.split(":")[-1]
-        rename_bin_dict[s] = "bin/" + target_name
+        rename_dict[s] = "bin/" + Label(s).name
+
+    if config_data != None:
+        for s in config_data:
+            rename_dict[s] = "configs/" + Label(s).name
+
+    config_data_arr = []
+    if config_data != None:
+        config_data_arr = config_data
 
     # Step 1: pkg_files
     pkg_files(
         name = all_files_name,
-        srcs = bins,
-        renames = rename_bin_dict,
+        srcs = bins + config_data_arr,
+        renames = rename_dict,
         visibility = ["//visibility:public"],
     )
 

@@ -8,13 +8,13 @@ build:_common --@score_baselibs//score/memory/shared/flags:use_typedshmd=False
 build:_common --@score_communication//score/mw/com/flags:tracing_library=stub
 build:_common --cxxopt=-Wno-error=mismatched-new-delete
 
-build:x86_64-qnx --config=_common
-build:x86_64-qnx --noexperimental_merged_skyframe_analysis_execution
-build:x86_64-qnx --action_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
-build:x86_64-qnx --incompatible_enable_cc_toolchain_resolution
-build:x86_64-qnx --incompatible_strict_action_env
-build:x86_64-qnx --platforms=@score_toolchains_qnx//platforms:x86_64-qnx
-build:x86_64-qnx --sandbox_writable_path=/var/tmp
+build --config=_common
+build --noexperimental_merged_skyframe_analysis_execution
+build --action_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
+build --incompatible_enable_cc_toolchain_resolution
+build --incompatible_strict_action_env
+build --platforms=@score_toolchains_qnx//platforms:x86_64-qnx
+build --sandbox_writable_path=/var/tmp
 
 
 build:itf --config=x86_64-qnx
