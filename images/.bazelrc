@@ -1,0 +1,34 @@
+common --registry=https://raw.githubusercontent.com/eclipse-score/bazel_registry/main/
+common --registry=https://bcr.bazel.build
+
+build:_common --@score_baselibs//score/mw/log/detail/flags:KUse_Stub_Implementation_Only=False
+build:_common --@score_baselibs//score/mw/log/flags:KRemote_Logging=False
+build:_common --@score_baselibs//score/json:base_library=nlohmann
+build:_common --@score_baselibs//score/memory/shared/flags:use_typedshmd=False
+build:_common --@score_communication//score/mw/com/flags:tracing_library=stub
+build:_common --cxxopt=-Wno-error=mismatched-new-delete
+build:_common --host_platform=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
+build:_common --extra_toolchains=@score_toolchains_rust//toolchains/ferrocene:ferrocene_x86_64_unknown_linux_gnu
+build:_common --extra_toolchains=@score_gcc_x86_64_toolchain//:x86_64-linux-gcc_12.2.0-posix
+
+build:qnx-x86_64 --config=_common
+build:qnx-x86_64 --noexperimental_merged_skyframe_analysis_execution
+build:qnx-x86_64 --action_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
+build:qnx-x86_64 --incompatible_enable_cc_toolchain_resolution
+build:qnx-x86_64 --incompatible_strict_action_env
+build:qnx-x86_64 --sandbox_writable_path=/var/tmp
+build:qnx-x86_64 --platforms=@score_bazel_platforms//:x86_64-qnx-sdp_8.0.0-posix
+build:qnx-x86_64 --extra_toolchains=@score_qcc_x86_64_toolchain//:x86_64-qnx-sdp_8.0.0-posix
+build:qnx-x86_64 --extra_toolchains=@toolchains_qnx_ifs//:ifs_x86_64
+build:qnx-x86_64 --extra_toolchains=@score_toolchains_rust//toolchains/ferrocene:ferrocene_x86_64_pc_nto_qnx800
+
+build:itf-qnx-x86_64 --config=qnx-x86_64
+build:itf-qnx-x86_64 --run_under=@score_itf//scripts:run_under_qemu
+build:itf-qnx-x86_64 --test_arg="--qemu"
+build:itf-qnx-x86_64 --test_arg="--os=qnx"
+
+
+build:linux-x86_64 --config=_common
+build:linux-x86_64 --extra_toolchains=@score_gcc_x86_64_toolchain//:x86_64-linux-gcc_12.2.0-posix
+build:linux-x86_64 --platforms=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
+

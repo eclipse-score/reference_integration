@@ -17,3 +17,14 @@ alias(
     actual = "//showcases:showcases_all",
     visibility = ["//visibility:public"],
 )
+
+sh_binary(
+    name = "run",
+    srcs = ["//runners/docker_x86_64/scripts:run_docker.sh"],
+    args = [
+        "$(location :image)",
+    ],
+    data = [
+        ":image",
+    ],
+)

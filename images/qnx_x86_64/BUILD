@@ -15,8 +15,22 @@ load("@score_itf//:defs.bzl", "py_itf_test")
 
 alias(
     name = "image",
-    actual = "//build:init",
+    actual = "//qnx_x86_64/build:init",
     visibility = ["//visibility:public"],
+)
+
+sh_binary(
+    name = "run",
+    srcs = ["//runners/qemu_x86_64/scripts:run_qemu.sh"],
+    args = [
+        "$(location @toolchains_qnx_sdp//:host_dir)",
+        "$(location :image)",
+    ],
+    data = [
+        ":image",
+        "@toolchains_qnx_sdp//:host_all",
+        "@toolchains_qnx_sdp//:host_dir",
+    ],
 )
 
 # For now we keep this not in /feature_integration_tests but locally within images

@@ -14,16 +14,16 @@ load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 load("@score_itf//:defs.bzl", "py_itf_test")
 
 
-sh_binary(
-    name = "qemu_x86_64",
-    srcs = ["scripts/run_qemu.sh"],
-    args = [
-        "$(location @toolchains_qnx_sdp//:host_dir)",
-        "$(location //:image)",
-    ],
-    data = [
-        "//:image",
-        "@toolchains_qnx_sdp//:host_all",
-        "@toolchains_qnx_sdp//:host_dir",
-    ],
-)
+# sh_binary(
+#     name = "qemu_x86_64",
+#     srcs = ["scripts/run_qemu.sh"],
+#     args = [
+#         "$(location @toolchains_qnx_sdp//:host_dir)",
+#         "$(location //:image)",
+#     ],
+#     data = [
+#         "//:image",
+#         "@toolchains_qnx_sdp//:host_all",
+#         "@toolchains_qnx_sdp//:host_dir",
+#     ],
+# )
