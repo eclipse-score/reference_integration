@@ -12,11 +12,11 @@
 # *******************************************************************************
 
 load("@rules_rust//rust:defs.bzl", "rust_binary")
-load("//bazel_common:bundlers.bzl", "pkg_bundle")
+load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
 
-pkg_bundle(
+score_pkg_bundle(
     name = "showcases_all",
-    package_dir = "showcases",
+    # package_dir = "",
     bins = [":kyron_example", ":orch_per_example", ],
     other_package_files = ["//showcases/standalone:standalone_pkg_files"]
 )

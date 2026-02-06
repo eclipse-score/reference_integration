@@ -1,7 +1,8 @@
 load("@rules_pkg//pkg:pkg.bzl", "pkg_tar")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
 
-def pkg_bundle(name, bins, package_dir, other_package_files = []):
+
+def score_pkg_bundle(name, bins, package_dir = None, other_package_files = []):
     """Creates a reusable bundle: pkg_files → pkg_tar → untar"""
 
     all_files_name = name + "_pkg_files"
