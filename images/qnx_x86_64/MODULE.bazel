@@ -25,6 +25,9 @@ include ("//bazel_common:score_gcc_toolchains.MODULE.bazel") # WIP: Not used yet
 # GCC toolchains
 include ("//bazel_common:score_qnx_toolchains.MODULE.bazel") # WIP: Not used yet as have problems with IFS toolchain
 
+# Rust toolchains
+include ("//bazel_common:score_rust_toolchains.MODULE.bazel")
+
 # Python support
 include("//bazel_common:score_python.MODULE.bazel")
 
@@ -82,10 +85,12 @@ toolchains_qnx.sdp(
     url = "https://www.qnx.com/download/download/79858/installation.tgz",
 )
 use_repo(toolchains_qnx, "toolchains_qnx_sdp")
-use_repo(toolchains_qnx, "toolchains_qnx_qcc")
+# use_repo(toolchains_qnx, "toolchains_qnx_qcc")
 use_repo(toolchains_qnx, "toolchains_qnx_ifs")
 
 # register_toolchains("@gcc_toolchain//:all")
-register_toolchains("@toolchains_qnx_qcc//:qcc_x86_64")
+register_toolchains("@score_qcc_x86_64_toolchain//:x86_64-qnx-sdp_8.0.0-posix")
 register_toolchains("@toolchains_qnx_ifs//:ifs_x86_64")
 register_toolchains("@gcc_toolchain//:all")
+register_toolchains("@score_toolchains_rust//toolchains/ferrocene:ferrocene_x86_64_pc_nto_qnx800")
+register_toolchains("@score_toolchains_rust//toolchains/ferrocene:ferrocene_x86_64_unknown_linux_gnu")

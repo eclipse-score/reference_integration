@@ -17,7 +17,7 @@ rust_binary(
     name = "cli",
     srcs = ["main.rs"],
     deps = [
-        "@score_crates//:inquire",
+        "@score_crates//:cliclack",
         "@score_crates//:serde",
         "@score_crates//:serde_json",
         "@score_crates//:anyhow",
