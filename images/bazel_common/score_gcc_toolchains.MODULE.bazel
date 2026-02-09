@@ -56,9 +56,30 @@ eb.toolchain(
     strip_prefix = "fastdev-sdk-ubuntu-ebclfsa-ebcl-qemuarm64",
 )
 
+
+bazel_dep(name = "os_autosd_toolchain", version = "0.0.1")
+# override with git
+git_override(
+    module_name = "os_autosd_toolchain",
+    remote = "https://github.com/odra/inc_os_autosd.git",
+    branch = "repo-new-structure",
+    strip_prefix = "toolchain"
+
+)
+autosd_10_gcc = use_extension("@os_autosd_toolchain//autosd_10_gcc:extensions.bzl", "autosd_10_gcc_extension")
+use_repo(autosd_10_gcc, "autosd_10_gcc_repo")
+
+
+autosd_9_gcc = use_extension("@os_autosd_toolchain//autosd_9_gcc:extensions.bzl", "autosd_9_gcc_extension")
+use_repo(autosd_9_gcc, "autosd_9_gcc_repo")
+
+
+# Register the RPM toolchain
+rpm_toolchain = use_extension("@rules_rpm//toolchains:extensions.bzl", "rpm_toolchain")
+use_repo(rpm_toolchain, "rpm_toolchain")
+
+
 use_repo(eb, "gcc_toolchain", "gcc_toolchain_gcc")
-
-
 use_repo(
     gcc,
     "score_gcc_x86_64_toolchain",

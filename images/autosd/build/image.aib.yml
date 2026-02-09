@@ -1,0 +1,120 @@
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+#
+name: score-autosd
+
+image:
+  selinux_mode: permissive
+content:
+  enable_repos:
+    - devel
+  repos:
+    - id: epel
+      baseurl: https://dl.fedoraproject.org/pub/epel/10/Everything/$arch/
+    - id: score
+      baseurl: file:///host/rpms
+  rpms:
+    - vim-enhanced
+    - gdb
+    - strace
+    - boost-devel
+    - tree
+    - dnf
+    # For testing the image only:
+    - openssh-server
+    - openssh-clients
+    # bluechi packages
+    - bluechi-selinux
+    - bluechi-controller
+    - bluechi-agent
+    - bluechi-ctl
+    # score
+    - lola-demo
+
+  make_dirs:
+    - path: /etc/containers/systemd/qm.container.d
+      mode: 0755
+      parents: true
+      exist_ok: true
+
+  # Configure shared socket directory via tmpfiles
+  add_files:
+    - path: /usr/lib/tmpfiles.d/lola_disc.conf
+      text: |
+        # Lola service discovery folder
+        D! /tmp/mw_com_lola 0755 root root
+    - path: /etc/containers/systemd/qm.container.d/10-lola-ipc.conf
+      text: |
+        # Mount shared IPC directory for lola
+        [Container]
+        Volume=/dev/shm:/dev/shm
+        Volume=/tmp/mw_com_lola:/tmp/mw_com_lola
+    - path: /etc/containers/systemd/qm.container.d/11-bluechi-socket.conf
+      text: |
+        [Container]
+        Volume=/run/bluechi:/run/bluechi
+    # bluechi files
+    - path: /etc/bluechi/controller.conf.d/0-main.conf
+      source_path: files/bluechi-controller.conf
+    - path: /etc/bluechi/agent.conf.d/0-main.conf
+      source_path: files/bluechi-agent-main.conf
+    # lola service files
+    - path: /etc/systemd/system/lola-ipc-pub.service
+      source_path: files/lola-ipc-pub.service
+    # lola test script
+    - path: /usr/bin/lola-ipc-test
+      source_path: files/lola-ipc-test
+  chmod_files:
+    - path: /usr/bin/lola-ipc-test
+      mode: "0755"
+
+  # Required for testing the image only:
+  systemd:
+    enabled_services:
+      # Enable ssh daemon
+      - sshd.service
+      - bluechi-controller.service
+      - bluechi-agent.service
+
+qm:
+  memory_limit:
+    max: infinity
+    high: infinity
+  content:
+    enable_repos:
+      - devel
+    repos:
+      - id: epel
+        baseurl: https://dl.fedoraproject.org/pub/epel/10/Everything/$arch/
+      - id: score
+        baseurl: file:///host/rpms
+    rpms:
+      - boost-devel
+      - bluechi-agent
+      - lola-demo
+    add_files:
+      # lola service files
+      - path: /etc/systemd/system/lola-ipc-sub.service
+        source_path: files/lola-ipc-sub.service
+      # bluechi files
+      - path: /etc/bluechi/agent.conf.d/0-qm.conf
+        source_path: files/bluechi-agent-qm.conf
+    systemd:
+      enabled_services:
+        - bluechi-agent
+
+auth:
+  # Required for testing the image only:
+  sshd_config:
+    PasswordAuthentication: true
+    PermitRootLogin: true

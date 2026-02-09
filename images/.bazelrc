@@ -36,3 +36,10 @@ build:eb-aarch64 --config=_common
 build:eb-aarch64 --extra_toolchains=@gcc_toolchain//:aarch64_gcc_13
 build:eb-aarch64 --platforms=@score_toolchains_gcc//platforms:aarch64-linux
 build:eb-aarch64 --spawn_strategy=local
+
+
+build:autosd-x86_64 --config=_common
+build:autosd-x86_64 --platforms=@score_bazel_platforms//:x86_64-linux
+build:autosd-x86_64 --force_pic
+build:autosd-x86_64 --extra_toolchains=@autosd_10_gcc_repo//:gcc_toolchain_linux_x86_64
+build:autosd-x86_64 --extra_toolchains=@rules_rpm//toolchains:linux_x86_64

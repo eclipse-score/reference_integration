@@ -1,0 +1,55 @@
+diff --git a/score/mw/com/example/ipc_bridge/BUILD b/score/mw/com/example/ipc_bridge/BUILD
+index 2c364e1..f797762 100644
+--- a/score/mw/com/example/ipc_bridge/BUILD
++++ b/score/mw/com/example/ipc_bridge/BUILD
+@@ -29,6 +29,7 @@ cc_binary(
+         "@score_baselibs//score/language/futurecpp",
+         "@score_baselibs//score/mw/log",
+     ],
++    visibility = ["//visibility:public"]
+ )
+ 
+ cc_library(
+@@ -45,6 +46,7 @@ cc_library(
+         "//score/mw/com",
+         "@score_baselibs//score/mw/log",
+     ],
++    visibility = ["//visibility:public"]
+ )
+ 
+ cc_library(
+@@ -60,6 +62,7 @@ cc_library(
+         "//score/mw/com",
+         "@score_baselibs//score/language/futurecpp",
+     ],
++    visibility = ["//visibility:public"]
+ )
+ 
+ rust_library(
+@@ -70,6 +73,7 @@ rust_library(
+         "//score/mw/com/impl/rust:mw_com",
+         "@crate_index//:libc",
+     ],
++    visibility = ["//visibility:public"]
+ )
+ 
+ rust_binary(
+@@ -84,6 +88,7 @@ rust_binary(
+         "@crate_index//:clap",
+         "@crate_index//:futures",
+     ],
++    visibility = ["//visibility:public"]
+ )
+ 
+ cc_library(
+@@ -94,4 +99,10 @@ cc_library(
+         ":datatype",
+         "//score/mw/com/impl/rust:bridge_macros",
+     ],
++    visibility = ["//visibility:public"]
++)
++
++exports_files(
++    ["etc/mw_com_config.json", "etc/logging.json"],
++    visibility = ["//visibility:public"]
+ )

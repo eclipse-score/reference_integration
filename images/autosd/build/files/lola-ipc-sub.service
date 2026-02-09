@@ -1,0 +1,26 @@
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+[Unit]
+Requires=bluechi-proxy@agent-main_lola-ipc-pub.service
+Description=LoLa IPC Subscriber
+After=network.target
+
+[Service]
+WorkingDirectory=/usr/share/lola/examples
+ExecStart=/usr/bin/ipc_bridge_cpp --mode proxy --num-cycles 5 --cycle-time 1000 --service_instance_manifest mw_com_config.json
+Restart=on-failure
+RestartSec=5
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
