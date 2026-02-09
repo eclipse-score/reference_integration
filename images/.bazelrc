@@ -32,3 +32,7 @@ build:linux-x86_64 --config=_common
 build:linux-x86_64 --extra_toolchains=@score_gcc_x86_64_toolchain//:x86_64-linux-gcc_12.2.0-posix
 build:linux-x86_64 --platforms=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
 
+build:eb-aarch64 --config=_common
+build:eb-aarch64 --extra_toolchains=@gcc_toolchain//:aarch64_gcc_13
+build:eb-aarch64 --platforms=@score_toolchains_gcc//platforms:aarch64-linux
+build:eb-aarch64 --spawn_strategy=local

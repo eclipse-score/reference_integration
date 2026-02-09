@@ -5,6 +5,7 @@
 mEntries=(
   "Run QNX x86_64 QEMU | bazel run --config qnx-x86_64 //qnx_x86_64:run"
   "Run Linux x86_64 Docker | bazel run --config linux-x86_64 //linux_x86_64:run"
+  "Run Elektrobit Corbos aarch64 QEMU | bazel build --config eb-aarch64 //ebclfsa_aarch64/scrample_integration:run"
   "Exit|exit 0"
 )
 

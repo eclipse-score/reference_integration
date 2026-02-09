@@ -23,6 +23,42 @@ gcc.toolchain(
     version = "12.2.0",
 )
 
+# This is how new gcc more or less shall be registered: TBD by EB
+# gcc.sdp(
+#     name = "fastdev_sdk",
+#     url = "https://github.com/elektrobit-contrib/eclipse-score_toolchains_gcc/releases/download/0.5.0-beta/fastdev-sdk-ubuntu-ebclfsa-ebcl-qemuarm64.tar.gz",
+#     strip_prefix = "fastdev-sdk-ubuntu-ebclfsa-ebcl-qemuarm64",
+#     sha256 = "05b57bbc8d99d46df6b57f774c39a5a2664964ea7eb94147cbece08508c1f121",
+#     build_file = "//ebclfsa_aarch64/toolchain:gcc.BUILD",
+# )
+# gcc.toolchain(
+#     name = "score_ebclfsa_aarch64_toolchain",
+#     sdp_to_link = "fastdev_sdk",
+#     target_os = "linux",
+#     target_cpu = "aarch64",
+#     version = "12.2.0",
+#     extra_link_flags = [
+#         "-lpthread",
+#     ]
+# )
+
+# Workaround until above is fixed
+bazel_dep(name = "score_toolchains_gcc", dev_dependency=True)
+git_override( # Elektrobit corbos Linux for Safety Applications needs a specific toolchain
+   module_name = "score_toolchains_gcc",
+   remote = "https://github.com/elektrobit-contrib/eclipse-score_toolchains_gcc.git",
+   tag = "0.5.0-beta" # corresponds to git sha 158921ffd9aabef41a2a03bca5baeaa9f4aa9d33
+)
+eb = use_extension("@score_toolchains_gcc//extensions:gcc.bzl", "gcc", dev_dependency=True)
+eb.toolchain(
+    url = "https://github.com/elektrobit-contrib/eclipse-score_toolchains_gcc/releases/download/0.5.0-beta/fastdev-sdk-ubuntu-ebclfsa-ebcl-qemuarm64.tar.gz",
+    sha256 = "05b57bbc8d99d46df6b57f774c39a5a2664964ea7eb94147cbece08508c1f121",
+    strip_prefix = "fastdev-sdk-ubuntu-ebclfsa-ebcl-qemuarm64",
+)
+
+use_repo(eb, "gcc_toolchain", "gcc_toolchain_gcc")
+
+
 use_repo(
     gcc,
     "score_gcc_x86_64_toolchain",

@@ -13,7 +13,7 @@
 load("@score_baselibs//score/language/safecpp:toolchain_features.bzl", "COMPILER_WARNING_FEATURES")
 
 genrule(
-    name = "scrample_sil",
+    name = "scrample_sil_r",
     srcs = ["@score_scrample//src:scrample"],
     outs = ["scrample_sil"],
     cmd = "cp $(SRCS) $@ && \
@@ -27,7 +27,7 @@ genrule(
     name = "hi_app",
     srcs = [
         ":scrample_sil_wrapper",
-        ":scrample_sil"
+        ":scrample_sil_r"
         ],
     outs = ["hi_app"],
     cmd = "cp $(location :scrample_sil_wrapper) $@ && \

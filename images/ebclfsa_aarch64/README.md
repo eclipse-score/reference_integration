@@ -224,7 +224,7 @@ The demo SDK integrates the [S-CORE toolchain with two extensions](https://githu
 
 - Additional tooling for AArch64 cross-building.
 - Additional tool `lisa-elf-enabler`: It marks an ELF header of an application in a way that Linux for Safety Applications detects it as an HI application.
-  The tool is available to Bazel via `@gcc_toolchain_gcc//:elf-enabler`.
+  The tool is available to Bazel via `@eb_toolchain_gcc//:elf-enabler`.
 
 ### Bazel Rules for the Example Applications
 
