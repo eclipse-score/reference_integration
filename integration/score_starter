@@ -4,15 +4,18 @@ import sys
 import termios
 import tty
 import subprocess
+import argparse
 
 # ================== CONFIG ==================
-# Each entry: (description, command)
+# Each entry: (description, command, name)
 mEntries = [
-    ("Run QNX x86_64 QEMU", "bazel run --config qnx-x86_64 //images/qnx_x86_64:run"),
-    ("Run Linux x86_64 Docker", "bazel run --config linux-x86_64 //images/linux_x86_64:run"),
+    ("Run QNX x86_64 QEMU", "bazel run --config qnx-x86_64 //images/qnx_x86_64:run", "qnx-x86_64"),
+    ("Run Linux x86_64 Docker", "bazel run --config linux-x86_64 //images/linux_x86_64:run", "linux-x86_64"),
     ("Run Elektrobit Corbos aarch64 QEMU",
-     "bazel build --config eb-aarch64 //images/ebclfsa_aarch64/scrample_integration:run"),
-    ("Exit", "exit 0"),
+     "bazel build --config eb-aarch64 //images/ebclfsa_aarch64/scrample_integration:run", "eb-aarch64"),
+    ("Build Autosd x86_64 RPM",
+     "bazel build --config autosd-x86_64 //images/autosd_x86_64:lola-demo", "autosd-x86_64"),
+    ("Exit", "exit 0", "exit"),
 ]
 
 # ================== INTERNAL ==================
@@ -27,7 +30,7 @@ def clear():
 def draw_menu():
     clear()
     print("Use ↑ ↓ to navigate, Enter to run, q to quit\n")
-    for i, (desc, _) in enumerate(mEntries):
+    for i, (desc, _, _) in enumerate(mEntries):
         if i == mSelected:
             # inverse video
             print(f"  \033[7m {desc} \033[0m")
@@ -35,9 +38,9 @@ def draw_menu():
             print(f"    {desc}")
 
 
-def run_selected():
+def run_entry(entry):
+    desc, cmd, _ = entry
     clear()
-    desc, cmd = mEntries[mSelected]
     print(f"▶ {desc}\n")
 
     if cmd.startswith("exit"):
@@ -63,16 +66,46 @@ def read_key():
         termios.tcsetattr(fd, termios.TCSADRAIN, old)
 
 
-# ================== LOOP ==================
-while True:
-    draw_menu()
-    key = read_key()
+def interactive_loop():
+    global mSelected
+    while True:
+        draw_menu()
+        key = read_key()
 
-    if key == "\x1b[A":        # Up
-        mSelected = (mSelected - 1) % mCount
-    elif key == "\x1b[B":      # Down
-        mSelected = (mSelected + 1) % mCount
-    elif key in ("\r", "\n"):  # Enter
-        run_selected()
-    elif key == "q":
-        sys.exit(0)
+        if key == "\x1b[A":        # Up
+            mSelected = (mSelected - 1) % mCount
+        elif key == "\x1b[B":      # Down
+            mSelected = (mSelected + 1) % mCount
+        elif key in ("\r", "\n"):  # Enter
+            run_entry(mEntries[mSelected])
+        elif key == "q":
+            sys.exit(0)
+
+
+# ================== MAIN ==================
+def main():
+    parser = argparse.ArgumentParser(
+        description="Interactive build/run menu script",
+        epilog="Use -r NAME to run a specific entry directly."
+    )
+    parser.add_argument(
+        "-r", "--run",
+        help="Run a specific menu entry by name",
+        choices=[name for _, _, name in mEntries]
+    )
+
+    args = parser.parse_args()
+
+    if args.run:
+        # Find the entry by name and run it
+        entry = next((e for e in mEntries if e[2] == args.run), None)
+        if entry is None:
+            print(f"Unknown entry: {args.run}")
+            sys.exit(1)
+        run_entry(entry)
+    else:
+        interactive_loop()
+
+
+if __name__ == "__main__":
+    main()

@@ -11,27 +11,9 @@ The reference integration workspace serves as a single Bazel build environment t
 - Prepare for release validation workflows
 
 
-## Structure
+## Structure of integration folder
 
-Repository structure
-
-```
-- bazel_common
-- showcases
-- images
-   - image1
-      - showcases (symlink to ../../showcases)
-      - bazel_common (symlink to ../../bazel_common)
-      - runners
-         - runner1 (symlink to ../../../runners/runner1)
-   - image2
-      ...
-- runners
-   - runner1
-   - runner2
-```
-
-The basic idea is that we use `symlinks` to share all common functionalities to achieve `DRY` rule.
+Intention for each folder is described below
 
 ### bazel_common
 Used to keep a common bazel functionalities for `images` like:
@@ -46,14 +28,16 @@ Used to keep `S-CORE` wide **showcases** implementation to showcase S-CORE in ce
 - proxy target bundling all `standalone` examples from all `S-CORE` repos to deploy then as single bazel target into image
 - implementation of certain **showcases** that shall be deployed into images
 
+#### cli
+
+Contains a CLI tool to be used on runner that is showcasing the S-CORE functionality. It will provide superior user experience and will guide user to run examples. 
+How to use it in Your image, look [here](./integration/showcases/cli/README.md)
 
 ### images
 Used to keep concrete `images` for given target platform as bazel modules. Each platform shall have it's own folder with name `{platform}_{arch}` ie. `qnx_aarch64`.
 
 This `images` shall:
- - symlink other shared folders (`bazel_common`, `showcases`) to receive common functionality.
- - symlink supported `runner` (if any)
- - deploy all `usecases` into image so they can be run inside
+ - deploy all `showcases` into image so they can be run inside
  - other specific code for given `image`
 
 ### runners

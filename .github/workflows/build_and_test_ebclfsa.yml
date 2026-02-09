@@ -38,9 +38,9 @@ jobs:
 
       - name: Build for EB corbos Linux for Safety Applications and run tests
         run: |
-          bazel build --config=aarch64-ebclfsa //scrample_integration:run
-          bazel build --config=aarch64-ebclfsa //persistency_integration:run
-        working-directory: ./ebclfsa
+          bazel build --config=eb-aarch64 //images/ebclfsa_aarch64/scrample_integration:run
+          bazel build --config=eb-aarch64 //images/ebclfsa_aarch64/persistency_integration:run
+        working-directory: ./integration
 
       - name: Upload test logs
         uses: actions/upload-artifact@v5

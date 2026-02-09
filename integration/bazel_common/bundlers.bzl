@@ -3,7 +3,22 @@ load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
 
 
 def score_pkg_bundle(name, bins, config_data= None, package_dir = None, other_package_files = []):
-    """Creates a reusable bundle: pkg_files → pkg_tar → untar"""
+    """
+    Creates a reusable bundle by chaining Bazel packaging rules:
+      - Collects binaries and config files into a pkg_files target, renaming them into subdirectories.
+      - Packs them into a tar archive using pkg_tar, optionally with additional package files and a custom package directory.
+      - Extracts the tar archive using a custom untar rule.
+    Why:
+       - Group related binaries and config files into a single package for distribution or deployment.
+       - Group files from multiple targets into one package so deploying them into image is easy, consistent and same for each image.
+    Args:
+        name: Base name for all generated targets.
+        bins: List of binary file labels to include in the bundle (placed in 'bin/').
+        config_data: Optional list of config file labels to include (placed in 'configs/').
+        package_dir: Optional directory path for the package root inside the tar archive.
+        other_package_files: Optional list of additional `NAME_pkg_files` to include in the tar archive that was created by other `score_pkg_bundle` targets.
+
+    """
 
     all_files_name = name + "_pkg_files"
     bundle_name = name + "_pkg_tar"

@@ -44,8 +44,8 @@ jobs:
 
       - name: Build Lola Demo
         run: |
-          bazel build --config=bl-x86_64-linux-autosd //:lola-demo
-        working-directory: ./autosd
+          bazel build --config=autosd-x86_64 //images/autosd_x86_64:lola-demo
+        working-directory: ./integration
 
       - name: Copy RPMs
         run: |
