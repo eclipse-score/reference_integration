@@ -1,0 +1,65 @@
+From 37a6329193e94d93fef91fc184e95e9a8b67a98b Mon Sep 17 00:00:00 2001
+From: Pawel Rutka <pawel.rutka.ext@qorix.ai>
+Date: Mon, 9 Feb 2026 14:51:53 +0100
+Subject: [PATCH] T
+
+Signed-off-by: Pawel Rutka <pawel.rutka.ext@qorix.ai>
+---
+ MODULE.bazel              | 7 +++++++
+ third_party/acl/BUILD     | 6 +++++-
+ third_party/acl/acl.BUILD | 7 ++++---
+ 3 files changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/MODULE.bazel b/MODULE.bazel
+index f7991cb..b78d618 100644
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -64,6 +64,13 @@ deb(
+     visibility = ["//visibility:public"],
+ )
+ 
++deb(
++    name = "acl-deb-aarch64",
++    build = "//third_party/acl:acl.BUILD",
++    urls = ["https://launchpadlibrarian.net/581258948/libacl1-dev_2.3.1-1_arm64.deb"],
++    visibility = ["//visibility:public"],
++)
++
+ deb(
+     name = "valgrind-deb",
+     build = "//third_party/valgrind:valgrind.BUILD",
+diff --git a/third_party/acl/BUILD b/third_party/acl/BUILD
+index dfcac1e..c76bee3 100644
+--- a/third_party/acl/BUILD
++++ b/third_party/acl/BUILD
+@@ -1,5 +1,9 @@
+ alias(
+     name = "acl",
+-    actual = "@acl-deb//:acl",
++    actual = select({
++        "@platforms//cpu:aarch64": "@acl-deb-aarch64//:acl",
++        "//conditions:default": "@acl-deb//:acl",
++    }),
+     visibility = ["//visibility:public"], 
+ )
++
+diff --git a/third_party/acl/acl.BUILD b/third_party/acl/acl.BUILD
+index 2163068..d86c7f7 100644
+--- a/third_party/acl/acl.BUILD
++++ b/third_party/acl/acl.BUILD
+@@ -1,8 +1,9 @@
+ cc_library(
+     name = "acl",
+-    srcs = [
+-        "usr/lib/libacl.a",
+-    ],
++    srcs = select({
++        "@platforms//cpu:aarch64": ["usr/lib/aarch64-linux-gnu/libacl.a"],
++        "//conditions:default": ["usr/lib/libacl.a"],
++    }),
+     hdrs = [
+         "usr/include/acl/libacl.h",
+         "usr/include/sys/acl.h",
+-- 
+2.43.0
+
