@@ -1,0 +1,78 @@
+#!/usr/bin/env python3
+import os
+import sys
+import termios
+import tty
+import subprocess
+
+# ================== CONFIG ==================
+# Each entry: (description, command)
+mEntries = [
+    ("Run QNX x86_64 QEMU", "bazel run --config qnx-x86_64 //images/qnx_x86_64:run"),
+    ("Run Linux x86_64 Docker", "bazel run --config linux-x86_64 //images/linux_x86_64:run"),
+    ("Run Elektrobit Corbos aarch64 QEMU",
+     "bazel build --config eb-aarch64 //images/ebclfsa_aarch64/scrample_integration:run"),
+    ("Exit", "exit 0"),
+]
+
+# ================== INTERNAL ==================
+mSelected = 0
+mCount = len(mEntries)
+
+
+def clear():
+    os.system("clear")
+
+
+def draw_menu():
+    clear()
+    print("Use ↑ ↓ to navigate, Enter to run, q to quit\n")
+    for i, (desc, _) in enumerate(mEntries):
+        if i == mSelected:
+            # inverse video
+            print(f"  \033[7m {desc} \033[0m")
+        else:
+            print(f"    {desc}")
+
+
+def run_selected():
+    clear()
+    desc, cmd = mEntries[mSelected]
+    print(f"▶ {desc}\n")
+
+    if cmd.startswith("exit"):
+        sys.exit(0)
+
+    # Run command in user's shell
+    result = subprocess.call(cmd, shell=True)
+    sys.exit(result)
+
+
+def read_key():
+    fd = sys.stdin.fileno()
+    old = termios.tcgetattr(fd)
+    try:
+        tty.setraw(fd)
+        ch1 = sys.stdin.read(1)
+        if ch1 == "\x1b":
+            ch2 = sys.stdin.read(1)
+            ch3 = sys.stdin.read(1)
+            return ch1 + ch2 + ch3
+        return ch1
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old)
+
+
+# ================== LOOP ==================
+while True:
+    draw_menu()
+    key = read_key()
+
+    if key == "\x1b[A":        # Up
+        mSelected = (mSelected - 1) % mCount
+    elif key == "\x1b[B":      # Down
+        mSelected = (mSelected + 1) % mCount
+    elif key in ("\r", "\n"):  # Enter
+        run_selected()
+    elif key == "q":
+        sys.exit(0)

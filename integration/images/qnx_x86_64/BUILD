@@ -15,7 +15,7 @@ load("@score_itf//:defs.bzl", "py_itf_test")
 
 alias(
     name = "image",
-    actual = "//qnx_x86_64/build:init",
+    actual = "//images/qnx_x86_64/build:init",
     visibility = ["//visibility:public"],
 )
 

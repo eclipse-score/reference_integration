@@ -16,7 +16,7 @@ load("@score_toolchains_qnx//rules/fs:ifs.bzl", "qnx_ifs")
 filegroup(
     name = "scripts",
     srcs = [
-        "//qnx_x86_64/configs:startup.sh",
+        "//images/qnx_x86_64/configs:startup.sh",
     ],
     visibility = ["//visibility:private"],
 )
@@ -24,20 +24,20 @@ filegroup(
 filegroup(
     name = "configs",
     srcs = [
-        "//qnx_x86_64/configs:pci_server.cfg",
-        "//qnx_x86_64/configs:pci_hw.cfg",
-        "//qnx_x86_64/configs:qcrypto.conf",
-        "//qnx_x86_64/configs:passwd",
-        "//qnx_x86_64/configs:group",
-        "//qnx_x86_64/configs:sshd_config",
-        "//qnx_x86_64/configs:ssh_host_rsa_key",
-        "//qnx_x86_64/configs:ssh_host_rsa_key.pub",
-        "//qnx_x86_64/configs:hostname",
-        "//qnx_x86_64/configs:network_setup.sh",
-        "//qnx_x86_64/configs:network_capture.sh",
-        "//qnx_x86_64/configs:profile",
-        "//qnx_x86_64/configs:dhcpcd.conf",
-        "//qnx_x86_64/configs:network_setup_dhcp.sh",
+        "//images/qnx_x86_64/configs:pci_server.cfg",
+        "//images/qnx_x86_64/configs:pci_hw.cfg",
+        "//images/qnx_x86_64/configs:qcrypto.conf",
+        "//images/qnx_x86_64/configs:passwd",
+        "//images/qnx_x86_64/configs:group",
+        "//images/qnx_x86_64/configs:sshd_config",
+        "//images/qnx_x86_64/configs:ssh_host_rsa_key",
+        "//images/qnx_x86_64/configs:ssh_host_rsa_key.pub",
+        "//images/qnx_x86_64/configs:hostname",
+        "//images/qnx_x86_64/configs:network_setup.sh",
+        "//images/qnx_x86_64/configs:network_capture.sh",
+        "//images/qnx_x86_64/configs:profile",
+        "//images/qnx_x86_64/configs:dhcpcd.conf",
+        "//images/qnx_x86_64/configs:network_setup_dhcp.sh",
     ],
     visibility = ["//visibility:private"],
 )
