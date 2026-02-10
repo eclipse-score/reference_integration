@@ -13,6 +13,9 @@ The reference integration workspace serves as a single Bazel build environment t
 
 ## Structure of integration folder
 
+> [!NOTE]
+> For more details about the integration folder structure and deployment showcases, see [integration/README.md](integration/README.md).
+
 Intention for each folder is described below
 
 ### bazel_common
