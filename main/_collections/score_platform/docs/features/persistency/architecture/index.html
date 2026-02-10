@@ -444,8 +444,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../configuration/index.html">Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../diagnostics/index.html">Diagnostic and Fault Management</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../frameworks/index.html">Frameworks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../infrastructure/index.html">Infrastructure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../integration/index.html">Integration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../lifecycle/index.html">Lifecycle</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../orchestration/index.html">Orchestration (v0.5 beta)</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">Persistency (v0.5 beta)</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -546,7 +544,7 @@
                   
   <section id="architecture">
 <span id="feature-architecture-persistency"></span><h1>Architecture<a class="headerlink" href="#architecture" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-508e4972">
+<div class="need_container docutils container" id="SNCB-52c97466">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__persistency_architecture">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -589,11 +587,96 @@
 </table>
 </div>
 </div>
-<section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<div class="need_container docutils container" id="SNCB-0c9bcd16">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat table" id="feat__persistency">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Persistency</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">YES</span></span></span></div>
+<div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">ASIL_B</span></span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span></span></span></div>
+<div class="line"><span><div class="line">consists of: <span class="consists_of"><span><a class="reference internal" href="#comp__persistency_kvs" title="feat__persistency">comp__persistency_kvs</a></span></span></div>
+<div class="line">has: <span class="belongs_to"><span><a class="reference internal" href="#feat_arc_sta__persistency__static" title="feat__persistency">feat_arc_sta__persistency__static</a>, <a class="reference internal" href="#feat_arc_dyn__persistency__check_key_default" title="feat__persistency">feat_arc_dyn__persistency__check_key_default</a>, <a class="reference internal" href="#feat_arc_dyn__persistency__delete_key" title="feat__persistency">feat_arc_dyn__persistency__delete_key</a>, <a class="reference internal" href="#feat_arc_dyn__persistency__flush" title="feat__persistency">feat_arc_dyn__persistency__flush</a>, <a class="reference internal" href="#feat_arc_dyn__persistency__read_key" title="feat__persistency">feat_arc_dyn__persistency__read_key</a>, <a class="reference internal" href="#feat_arc_dyn__persistency__read_from_storage" title="feat__persistency">feat_arc_dyn__persistency__read_from_storage</a>, <a class="reference internal" href="#feat_arc_dyn__persistency__write_key" title="feat__persistency">feat_arc_dyn__persistency__write_key</a>, <a class="reference internal" href="#feat_arc_dyn__persistency__snapshot_restore" title="feat__persistency">feat_arc_dyn__persistency__snapshot_restore</a></span></span></div>
+<div class="line">includes: <span class="includes"><span><a class="reference internal" href="#logic_arc_int__persistency__interface" title="feat__persistency">logic_arc_int__persistency__interface</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#feat__persistency" title="feat__persistency">feat__persistency</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Feature</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-be189192">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp table" id="comp__persistency_kvs">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">persistency::kvs</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">YES</span></span></span></div>
+<div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">ASIL_B</span></span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span></span></span></div>
+<div class="line"><span><div class="line">forms part of: <span class="consists_of"><span><a class="reference internal" href="#feat__persistency" title="comp__persistency_kvs">feat__persistency</a></span></span></div>
+<div class="line">implements: <span class="implements"><span><a class="reference internal" href="#logic_arc_int__persistency__interface" title="comp__persistency_kvs">logic_arc_int__persistency__interface</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#comp__persistency_kvs" title="comp__persistency_kvs">comp__persistency_kvs</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Component</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<hr class="docutils" />
 <p>The Key-Value-Storage (kvs) provides the capability to efficiently store,
 retrieve, and manage key-value pairs in a persistent storage system.</p>
-</section>
 <section id="description">
 <h2>Description<a class="headerlink" href="#description" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -620,7 +703,7 @@ functionality call or receives a callback.</p></li>
 </section>
 <section id="static-architecture">
 <h2>Static Architecture<a class="headerlink" href="#static-architecture" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-4cb2bebc">
+<div class="need_container docutils container" id="SNCB-7599d277">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_sta table" id="feat_arc_sta__persistency__static">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -640,7 +723,8 @@ functionality call or receives a callback.</p></li>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span></span></span></div>
-<div class="line"><span><div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#feat_req__persistency__default_value_get" title="feat_arc_sta__persistency__static">feat_req__persistency__default_value_get</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__default_values" title="feat_arc_sta__persistency__static">feat_req__persistency__default_values</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__async_completion" title="feat_arc_sta__persistency__static">feat_req__persistency__async_completion</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__integrity_check" title="feat_arc_sta__persistency__static">feat_req__persistency__integrity_check</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__store_data" title="feat_arc_sta__persistency__static">feat_req__persistency__store_data</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__load_data" title="feat_arc_sta__persistency__static">feat_req__persistency__load_data</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__snapshot_create" title="feat_arc_sta__persistency__static">feat_req__persistency__snapshot_create</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__support_datatype_keys" title="feat_arc_sta__persistency__static">feat_req__persistency__support_datatype_keys</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__support_datatype_value" title="feat_arc_sta__persistency__static">feat_req__persistency__support_datatype_value</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__variant_management" title="feat_arc_sta__persistency__static">feat_req__persistency__variant_management</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__default_value_file" title="feat_arc_sta__persistency__static">feat_req__persistency__default_value_file</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__cfg" title="feat_arc_sta__persistency__static">feat_req__persistency__cfg</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__async_api" title="feat_arc_sta__persistency__static">feat_req__persistency__async_api</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__access_control" title="feat_arc_sta__persistency__static">feat_req__persistency__access_control</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__concurrency" title="feat_arc_sta__persistency__static">feat_req__persistency__concurrency</a></span></span></div>
+<div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="#feat__persistency" title="feat_arc_sta__persistency__static">feat__persistency</a></span></span></div>
+<div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#feat_req__persistency__default_value_get" title="feat_arc_sta__persistency__static">feat_req__persistency__default_value_get</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__default_values" title="feat_arc_sta__persistency__static">feat_req__persistency__default_values</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__async_completion" title="feat_arc_sta__persistency__static">feat_req__persistency__async_completion</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__integrity_check" title="feat_arc_sta__persistency__static">feat_req__persistency__integrity_check</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__store_data" title="feat_arc_sta__persistency__static">feat_req__persistency__store_data</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__load_data" title="feat_arc_sta__persistency__static">feat_req__persistency__load_data</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__snapshot_create" title="feat_arc_sta__persistency__static">feat_req__persistency__snapshot_create</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__support_datatype_keys" title="feat_arc_sta__persistency__static">feat_req__persistency__support_datatype_keys</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__support_datatype_value" title="feat_arc_sta__persistency__static">feat_req__persistency__support_datatype_value</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__variant_management" title="feat_arc_sta__persistency__static">feat_req__persistency__variant_management</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__default_value_file" title="feat_arc_sta__persistency__static">feat_req__persistency__default_value_file</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__cfg" title="feat_arc_sta__persistency__static">feat_req__persistency__cfg</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__async_api" title="feat_arc_sta__persistency__static">feat_req__persistency__async_api</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__access_control" title="feat_arc_sta__persistency__static">feat_req__persistency__access_control</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__concurrency" title="feat_arc_sta__persistency__static">feat_req__persistency__concurrency</a></span></span></div>
 <div class="line">includes: <span class="includes"><span><a class="reference internal" href="#logic_arc_int__persistency__interface" title="feat_arc_sta__persistency__static">logic_arc_int__persistency__interface</a></span></span></div>
 <div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/dfa.html#feat_saf_dfa__persistency__execution_blocking" title="feat_arc_sta__persistency__static">feat_saf_dfa__persistency__execution_blocking</a></span></span></div>
 </span></div>
@@ -649,7 +733,7 @@ functionality call or receives a callback.</p></li>
 <td class="meta" colspan="3"></td>
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml">
-<object data="../../../../../../_images/plantuml-f1632bc3da2e1f3af83bfa5fd9b2fbab36fc8406.svg" type="image/svg+xml" style="width:534px;height:533px;background:#FFFFFF;"></object></p>
+<object data="../../../../../../_images/plantuml-cc502890244376f3de934d5699387041687c9428.svg" type="image/svg+xml" style="width:534px;height:533px;background:#FFFFFF;"></object></p>
 </td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
@@ -669,7 +753,7 @@ functionality call or receives a callback.</p></li>
 </section>
 <section id="dynamic-architecture">
 <h2>Dynamic Architecture<a class="headerlink" href="#dynamic-architecture" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-d0bc8f94">
+<div class="need_container docutils container" id="SNCB-4179bcd6">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_dyn table" id="feat_arc_dyn__persistency__check_key_default">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -689,7 +773,8 @@ functionality call or receives a callback.</p></li>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span></span></span></div>
-<div class="line"><span><div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#feat_req__persistency__default_values" title="feat_arc_dyn__persistency__check_key_default">feat_req__persistency__default_values</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__default_value_get" title="feat_arc_dyn__persistency__check_key_default">feat_req__persistency__default_value_get</a></span></span></div>
+<div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="#feat__persistency" title="feat_arc_dyn__persistency__check_key_default">feat__persistency</a></span></span></div>
+<div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#feat_req__persistency__default_values" title="feat_arc_dyn__persistency__check_key_default">feat_req__persistency__default_values</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__default_value_get" title="feat_arc_dyn__persistency__check_key_default">feat_req__persistency__default_value_get</a></span></span></div>
 <div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__message_nreived" title="feat_arc_dyn__persistency__check_key_default">feat_saf_fmea__persistency__message_nreived</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__late_message" title="feat_arc_dyn__persistency__check_key_default">feat_saf_fmea__persistency__late_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__corrupted_message" title="feat_arc_dyn__persistency__check_key_default">feat_saf_fmea__persistency__corrupted_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__not_sent" title="feat_arc_dyn__persistency__check_key_default">feat_saf_fmea__persistency__not_sent</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__err_handl" title="feat_arc_dyn__persistency__check_key_default">feat_saf_fmea__persistency__err_handl</a></span></span></div>
 </span></div>
 </div>
@@ -697,7 +782,7 @@ functionality call or receives a callback.</p></li>
 <td class="meta" colspan="3"></td>
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml">
-<object data="../../../../../../_images/plantuml-41b19ec89e7e54a228f72b42c153eb30dbf3a461.svg" type="image/svg+xml" style="width:468px;height:412px;background:#FFFFFF;"></object></p>
+<object data="../../../../../../_images/plantuml-8ab083db3f63630af2b16c0a10c61d9af1a978b7.svg" type="image/svg+xml" style="width:468px;height:412px;background:#FFFFFF;"></object></p>
 </td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
@@ -714,7 +799,7 @@ functionality call or receives a callback.</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-3ecde3be">
+<div class="need_container docutils container" id="SNCB-20cda3e9">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_dyn table" id="feat_arc_dyn__persistency__delete_key">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -734,7 +819,8 @@ functionality call or receives a callback.</p></li>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span></span></span></div>
-<div class="line"><span><div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#feat_req__persistency__support_datatype_keys" title="feat_arc_dyn__persistency__delete_key">feat_req__persistency__support_datatype_keys</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__support_datatype_value" title="feat_arc_dyn__persistency__delete_key">feat_req__persistency__support_datatype_value</a></span></span></div>
+<div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="#feat__persistency" title="feat_arc_dyn__persistency__delete_key">feat__persistency</a></span></span></div>
+<div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#feat_req__persistency__support_datatype_keys" title="feat_arc_dyn__persistency__delete_key">feat_req__persistency__support_datatype_keys</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__support_datatype_value" title="feat_arc_dyn__persistency__delete_key">feat_req__persistency__support_datatype_value</a></span></span></div>
 <div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__message_nreived" title="feat_arc_dyn__persistency__delete_key">feat_saf_fmea__persistency__message_nreived</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__late_message" title="feat_arc_dyn__persistency__delete_key">feat_saf_fmea__persistency__late_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__corrupted_message" title="feat_arc_dyn__persistency__delete_key">feat_saf_fmea__persistency__corrupted_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__not_sent" title="feat_arc_dyn__persistency__delete_key">feat_saf_fmea__persistency__not_sent</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__err_handl" title="feat_arc_dyn__persistency__delete_key">feat_saf_fmea__persistency__err_handl</a></span></span></div>
 </span></div>
 </div>
@@ -742,7 +828,7 @@ functionality call or receives a callback.</p></li>
 <td class="meta" colspan="3"></td>
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml">
-<object data="../../../../../../_images/plantuml-bb0c4fb1ceafcdce7705237452ccca9d02920cc0.svg" type="image/svg+xml" style="width:423px;height:262px;background:#FFFFFF;"></object></p>
+<object data="../../../../../../_images/plantuml-3ce03421e9bfd482906bfd07846613717dac662e.svg" type="image/svg+xml" style="width:423px;height:262px;background:#FFFFFF;"></object></p>
 </td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
@@ -759,7 +845,7 @@ functionality call or receives a callback.</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-5302c246">
+<div class="need_container docutils container" id="SNCB-48286dc3">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_dyn table" id="feat_arc_dyn__persistency__flush">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -779,7 +865,8 @@ functionality call or receives a callback.</p></li>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span></span></span></div>
-<div class="line"><span><div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#feat_req__persistency__store_data" title="feat_arc_dyn__persistency__flush">feat_req__persistency__store_data</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__snapshot_create" title="feat_arc_dyn__persistency__flush">feat_req__persistency__snapshot_create</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__integrity_check" title="feat_arc_dyn__persistency__flush">feat_req__persistency__integrity_check</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__snapshot_restore" title="feat_arc_dyn__persistency__flush">feat_req__persistency__snapshot_restore</a></span></span></div>
+<div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="#feat__persistency" title="feat_arc_dyn__persistency__flush">feat__persistency</a></span></span></div>
+<div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#feat_req__persistency__store_data" title="feat_arc_dyn__persistency__flush">feat_req__persistency__store_data</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__snapshot_create" title="feat_arc_dyn__persistency__flush">feat_req__persistency__snapshot_create</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__integrity_check" title="feat_arc_dyn__persistency__flush">feat_req__persistency__integrity_check</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__snapshot_restore" title="feat_arc_dyn__persistency__flush">feat_req__persistency__snapshot_restore</a></span></span></div>
 <div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__message_nreived" title="feat_arc_dyn__persistency__flush">feat_saf_fmea__persistency__message_nreived</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__late_message" title="feat_arc_dyn__persistency__flush">feat_saf_fmea__persistency__late_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__corrupted_message" title="feat_arc_dyn__persistency__flush">feat_saf_fmea__persistency__corrupted_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__not_sent" title="feat_arc_dyn__persistency__flush">feat_saf_fmea__persistency__not_sent</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__err_handl" title="feat_arc_dyn__persistency__flush">feat_saf_fmea__persistency__err_handl</a></span></span></div>
 </span></div>
 </div>
@@ -787,7 +874,7 @@ functionality call or receives a callback.</p></li>
 <td class="meta" colspan="3"></td>
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml">
-<object data="../../../../../../_images/plantuml-82aa56b679325a99f1f90cf4404887500e6c137f.svg" type="image/svg+xml" style="width:740px;height:993px;background:#FFFFFF;"></object></p>
+<object data="../../../../../../_images/plantuml-754e6da3e2d16342c42eeee2f5e853dc73002230.svg" type="image/svg+xml" style="width:740px;height:993px;background:#FFFFFF;"></object></p>
 </td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
@@ -804,7 +891,7 @@ functionality call or receives a callback.</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-edbf1f7d">
+<div class="need_container docutils container" id="SNCB-4bcb170d">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_dyn table" id="feat_arc_dyn__persistency__read_key">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -824,7 +911,8 @@ functionality call or receives a callback.</p></li>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span></span></span></div>
-<div class="line"><span><div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#feat_req__persistency__support_datatype_keys" title="feat_arc_dyn__persistency__read_key">feat_req__persistency__support_datatype_keys</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__support_datatype_value" title="feat_arc_dyn__persistency__read_key">feat_req__persistency__support_datatype_value</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__default_values" title="feat_arc_dyn__persistency__read_key">feat_req__persistency__default_values</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__default_value_get" title="feat_arc_dyn__persistency__read_key">feat_req__persistency__default_value_get</a></span></span></div>
+<div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="#feat__persistency" title="feat_arc_dyn__persistency__read_key">feat__persistency</a></span></span></div>
+<div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#feat_req__persistency__support_datatype_keys" title="feat_arc_dyn__persistency__read_key">feat_req__persistency__support_datatype_keys</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__support_datatype_value" title="feat_arc_dyn__persistency__read_key">feat_req__persistency__support_datatype_value</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__default_values" title="feat_arc_dyn__persistency__read_key">feat_req__persistency__default_values</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__default_value_get" title="feat_arc_dyn__persistency__read_key">feat_req__persistency__default_value_get</a></span></span></div>
 <div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__message_nreived" title="feat_arc_dyn__persistency__read_key">feat_saf_fmea__persistency__message_nreived</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__late_message" title="feat_arc_dyn__persistency__read_key">feat_saf_fmea__persistency__late_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__corrupted_message" title="feat_arc_dyn__persistency__read_key">feat_saf_fmea__persistency__corrupted_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__not_sent" title="feat_arc_dyn__persistency__read_key">feat_saf_fmea__persistency__not_sent</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__err_handl" title="feat_arc_dyn__persistency__read_key">feat_saf_fmea__persistency__err_handl</a></span></span></div>
 </span></div>
 </div>
@@ -832,7 +920,7 @@ functionality call or receives a callback.</p></li>
 <td class="meta" colspan="3"></td>
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml">
-<object data="../../../../../../_images/plantuml-ada297b1139a3ea70461aac01a69557deba9602b.svg" type="image/svg+xml" style="width:412px;height:337px;background:#FFFFFF;"></object></p>
+<object data="../../../../../../_images/plantuml-7b590d471727ecc305f9420685c069972645ab83.svg" type="image/svg+xml" style="width:412px;height:337px;background:#FFFFFF;"></object></p>
 </td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
@@ -849,7 +937,7 @@ functionality call or receives a callback.</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-e69879b3">
+<div class="need_container docutils container" id="SNCB-dff3e63b">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_dyn table" id="feat_arc_dyn__persistency__read_from_storage">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -869,7 +957,8 @@ functionality call or receives a callback.</p></li>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span></span></span></div>
-<div class="line"><span><div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#feat_req__persistency__load_data" title="feat_arc_dyn__persistency__read_from_storage">feat_req__persistency__load_data</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__integrity_check" title="feat_arc_dyn__persistency__read_from_storage">feat_req__persistency__integrity_check</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__snapshot_restore" title="feat_arc_dyn__persistency__read_from_storage">feat_req__persistency__snapshot_restore</a></span></span></div>
+<div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="#feat__persistency" title="feat_arc_dyn__persistency__read_from_storage">feat__persistency</a></span></span></div>
+<div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#feat_req__persistency__load_data" title="feat_arc_dyn__persistency__read_from_storage">feat_req__persistency__load_data</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__integrity_check" title="feat_arc_dyn__persistency__read_from_storage">feat_req__persistency__integrity_check</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__snapshot_restore" title="feat_arc_dyn__persistency__read_from_storage">feat_req__persistency__snapshot_restore</a></span></span></div>
 <div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__message_nreived" title="feat_arc_dyn__persistency__read_from_storage">feat_saf_fmea__persistency__message_nreived</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__late_message" title="feat_arc_dyn__persistency__read_from_storage">feat_saf_fmea__persistency__late_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__corrupted_message" title="feat_arc_dyn__persistency__read_from_storage">feat_saf_fmea__persistency__corrupted_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__not_sent" title="feat_arc_dyn__persistency__read_from_storage">feat_saf_fmea__persistency__not_sent</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__err_handl" title="feat_arc_dyn__persistency__read_from_storage">feat_saf_fmea__persistency__err_handl</a></span></span></div>
 </span></div>
 </div>
@@ -877,7 +966,7 @@ functionality call or receives a callback.</p></li>
 <td class="meta" colspan="3"></td>
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml">
-<object data="../../../../../../_images/plantuml-66ae71e47dc004c97ecee69d953ba56eabf8cd22.svg" type="image/svg+xml" style="width:576px;height:791px;background:#FFFFFF;"></object></p>
+<object data="../../../../../../_images/plantuml-ad548575ae2ac6b85a2d877ed5f5e3594d216dea.svg" type="image/svg+xml" style="width:576px;height:791px;background:#FFFFFF;"></object></p>
 </td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
@@ -894,7 +983,7 @@ functionality call or receives a callback.</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-f32cf242">
+<div class="need_container docutils container" id="SNCB-8e9520b5">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_dyn table" id="feat_arc_dyn__persistency__write_key">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -914,7 +1003,8 @@ functionality call or receives a callback.</p></li>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span></span></span></div>
-<div class="line"><span><div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#feat_req__persistency__support_datatype_keys" title="feat_arc_dyn__persistency__write_key">feat_req__persistency__support_datatype_keys</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__support_datatype_value" title="feat_arc_dyn__persistency__write_key">feat_req__persistency__support_datatype_value</a></span></span></div>
+<div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="#feat__persistency" title="feat_arc_dyn__persistency__write_key">feat__persistency</a></span></span></div>
+<div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#feat_req__persistency__support_datatype_keys" title="feat_arc_dyn__persistency__write_key">feat_req__persistency__support_datatype_keys</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__support_datatype_value" title="feat_arc_dyn__persistency__write_key">feat_req__persistency__support_datatype_value</a></span></span></div>
 <div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__message_nreived" title="feat_arc_dyn__persistency__write_key">feat_saf_fmea__persistency__message_nreived</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__late_message" title="feat_arc_dyn__persistency__write_key">feat_saf_fmea__persistency__late_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__corrupted_message" title="feat_arc_dyn__persistency__write_key">feat_saf_fmea__persistency__corrupted_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__not_sent" title="feat_arc_dyn__persistency__write_key">feat_saf_fmea__persistency__not_sent</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__err_handl" title="feat_arc_dyn__persistency__write_key">feat_saf_fmea__persistency__err_handl</a></span></span></div>
 </span></div>
 </div>
@@ -922,7 +1012,7 @@ functionality call or receives a callback.</p></li>
 <td class="meta" colspan="3"></td>
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml">
-<object data="../../../../../../_images/plantuml-6ac3eef2fb4168345089c98d204db27fcdc298b7.svg" type="image/svg+xml" style="width:394px;height:187px;background:#FFFFFF;"></object></p>
+<object data="../../../../../../_images/plantuml-d296f577369343f575bf354fbaa4e1851b811204.svg" type="image/svg+xml" style="width:394px;height:187px;background:#FFFFFF;"></object></p>
 </td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
@@ -939,7 +1029,7 @@ functionality call or receives a callback.</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-4c60ab0f">
+<div class="need_container docutils container" id="SNCB-20febe13">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_dyn table" id="feat_arc_dyn__persistency__snapshot_restore">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -959,7 +1049,8 @@ functionality call or receives a callback.</p></li>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span></span></span></div>
-<div class="line"><span><div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#feat_req__persistency__snapshot_restore" title="feat_arc_dyn__persistency__snapshot_restore">feat_req__persistency__snapshot_restore</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__store_data" title="feat_arc_dyn__persistency__snapshot_restore">feat_req__persistency__store_data</a></span></span></div>
+<div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="#feat__persistency" title="feat_arc_dyn__persistency__snapshot_restore">feat__persistency</a></span></span></div>
+<div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#feat_req__persistency__snapshot_restore" title="feat_arc_dyn__persistency__snapshot_restore">feat_req__persistency__snapshot_restore</a>, <a class="reference internal" href="../requirements/index.html#feat_req__persistency__store_data" title="feat_arc_dyn__persistency__snapshot_restore">feat_req__persistency__store_data</a></span></span></div>
 <div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__message_nreived" title="feat_arc_dyn__persistency__snapshot_restore">feat_saf_fmea__persistency__message_nreived</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__late_message" title="feat_arc_dyn__persistency__snapshot_restore">feat_saf_fmea__persistency__late_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__corrupted_message" title="feat_arc_dyn__persistency__snapshot_restore">feat_saf_fmea__persistency__corrupted_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__not_sent" title="feat_arc_dyn__persistency__snapshot_restore">feat_saf_fmea__persistency__not_sent</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__err_handl" title="feat_arc_dyn__persistency__snapshot_restore">feat_saf_fmea__persistency__err_handl</a></span></span></div>
 </span></div>
 </div>
@@ -967,7 +1058,7 @@ functionality call or receives a callback.</p></li>
 <td class="meta" colspan="3"></td>
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml">
-<object data="../../../../../../_images/plantuml-6d45825ad24feab42ba4b08b8a70325a4ed99c0b.svg" type="image/svg+xml" style="width:357px;height:262px;background:#FFFFFF;"></object></p>
+<object data="../../../../../../_images/plantuml-23103ca3ebcb1d02909e3f0afc20118ce0cc375b.svg" type="image/svg+xml" style="width:357px;height:262px;background:#FFFFFF;"></object></p>
 </td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
@@ -987,7 +1078,7 @@ functionality call or receives a callback.</p></li>
 </section>
 <section id="logical-interfaces">
 <h2>Logical Interfaces<a class="headerlink" href="#logical-interfaces" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-da4d2e66">
+<div class="need_container docutils container" id="SNCB-3bbfdf50">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int table" id="logic_arc_int__persistency__interface">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1008,14 +1099,15 @@ functionality call or receives a callback.</p></li>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span></span></span></div>
 <div class="line"><span><div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#feat_req__persistency__async_api" title="logic_arc_int__persistency__interface">feat_req__persistency__async_api</a></span></span></div>
-<div class="line">included by: <span class="includes"><span><a class="reference internal" href="#feat_arc_sta__persistency__static" title="logic_arc_int__persistency__interface">feat_arc_sta__persistency__static</a></span></span></div>
+<div class="line">implemented by: <span class="implements"><span><a class="reference internal" href="#comp__persistency_kvs" title="logic_arc_int__persistency__interface">comp__persistency_kvs</a></span></span></div>
+<div class="line">included by: <span class="includes"><span><a class="reference internal" href="#feat__persistency" title="logic_arc_int__persistency__interface">feat__persistency</a>, <a class="reference internal" href="#feat_arc_sta__persistency__static" title="logic_arc_int__persistency__interface">feat_arc_sta__persistency__static</a></span></span></div>
 </span></div>
 </div>
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml">
-<object data="../../../../../../_images/plantuml-240c7ad0a51ab7a21b453b227b7f3814ead4839e.svg" type="image/svg+xml" style="width:180px;height:313px;background:#FFFFFF;"></object></p>
+<object data="../../../../../../_images/plantuml-1dd8dfe4617716e83c49ab0fc1e3a5aa8be2f36d.svg" type="image/svg+xml" style="width:180px;height:313px;background:#FFFFFF;"></object></p>
 </td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
@@ -1082,7 +1174,6 @@ functionality call or receives a callback.</p></li>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#description">Description</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rationale-behind-architecture-decomposition">Rationale Behind Architecture Decomposition</a></li>
 </ul>
