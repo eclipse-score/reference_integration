@@ -11,16 +11,20 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-name: QNX8 Build
+name: QNX8 - Build & Test
 on:
   pull_request:
     types: [opened, reopened, synchronize]
+    paths:
+      - 'integration/**'
   merge_group:
     types: [checks_requested]
+    paths:
+      - 'integration/**'
 
 jobs:
   qnx-build-x86_64:
-    name: Build QNX target
+    name: x86_64
     runs-on: ${{ vars.REPO_RUNNER_LABELS && fromJSON(vars.REPO_RUNNER_LABELS) || 'ubuntu-latest' }}
     environment: ${{ inputs.environment-name }}
     permissions:
@@ -44,7 +48,7 @@ jobs:
 
       - name: Prepare QNX license
         env:
-          SCORE_QNX_LICENSE: ${{ secrets.score-qnx-license }}
+          SCORE_QNX_LICENSE: ${{ secrets.SCORE_QNX_LICENSE }}
         run: |
           set -euo pipefail
 
@@ -54,12 +58,10 @@ jobs:
 
       - name: Build with QNX toolchain
         env:
-          SCORE_QNX_USER: ${{ secrets.score-qnx-user }}
-          SCORE_QNX_PASSWORD: ${{ secrets.score-qnx-password }}
+          SCORE_QNX_USER: ${{ secrets.SCORE_QNX_USER }}
+          SCORE_QNX_PASSWORD: ${{ secrets.SCORE_QNX_PASSWORD }}
         run: |
-          set -euo pipefail
-
-          bazel run --config qnx-x86_64 //images/qnx_x86_64:image
+          bazel build --config qnx-x86_64 //images/qnx_x86_64:image
         working-directory: ./integration
 
       - name: Cleanup QNX license
