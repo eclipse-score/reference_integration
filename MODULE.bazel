@@ -56,3 +56,29 @@ git_override(
 bazel_dep(name = "rules_rust", version = "0.67.0")
 bazel_dep(name = "score_itf", version = "0.1.0")
 bazel_dep(name = "score_crates", version = "0.0.6")
+local_path_override(
+    module_name = "score_crates",
+    path = "../score-crates",
+)
+
+# ============================================================================
+# SBOM Metadata Collection
+# ============================================================================
+# Enable SBOM metadata collection from all modules in the dependency graph
+sbom_ext = use_extension(
+    "@score_tooling//sbom:extensions.bzl",
+    "sbom_metadata",
+)
+
+# Track score dependency modules for automatic version extraction from their MODULE.bazel
+sbom_ext.track_module(name = "score_baselibs")
+sbom_ext.track_module(name = "score_communication")
+sbom_ext.track_module(name = "score_orchestrator")
+sbom_ext.track_module(name = "score_logging")
+sbom_ext.track_module(name = "score_persistency")
+sbom_ext.track_module(name = "score_kyron")
+sbom_ext.track_module(name = "score_feo")
+sbom_ext.track_module(name = "score_test_scenarios")
+sbom_ext.track_module(name = "score_tooling")
+
+use_repo(sbom_ext, "sbom_metadata")
