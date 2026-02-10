@@ -10,6 +10,43 @@ The reference integration workspace serves as a single Bazel build environment t
 - Test toolchain and platform support (Linux, QNX, LLVM/GCC)
 - Prepare for release validation workflows
 
+
+## Structure of integration folder
+
+Intention for each folder is described below
+
+### bazel_common
+Used to keep a common bazel functionalities for `images` like:
+- toolchain setups
+- common tooling deps
+- common S-CORE modules deps
+- common `.bzl` extensions needed to streamline images
+
+
+### showcases
+Used to keep `S-CORE` wide **showcases** implementation to showcase S-CORE in certain deployments (images). Contains:
+- proxy target bundling all `standalone` examples from all `S-CORE` repos to deploy then as single bazel target into image
+- implementation of certain **showcases** that shall be deployed into images
+
+#### cli
+
+Contains a CLI tool to be used on runner that is showcasing the S-CORE functionality. It will provide superior user experience and will guide user to run examples. 
+How to use it in Your image, look [here](./integration/showcases/cli/README.md)
+
+### images
+Used to keep concrete `images` for given target platform as bazel modules. Each platform shall have it's own folder with name `{platform}_{arch}` ie. `qnx_aarch64`.
+
+This `images` shall:
+ - deploy all `showcases` into image so they can be run inside
+ - other specific code for given `image`
+
+### runners
+Used to keep thin logic ro reuse `runners` between images, like docker runner etc.
+
+
+
+
+
 ## Docs
 
 To generate a full documentation of all integrated modules, run:

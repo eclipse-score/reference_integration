@@ -1,0 +1,70 @@
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+module(
+    name = "score_ref_int_qnx_x86_64",
+    version = "0.0.1",
+    compatibility_level = 0,
+)
+
+# Include common modules
+include("//bazel_common:score_basic_tools.MODULE.bazel")
+
+# GCC toolchains
+include ("//bazel_common:score_gcc_toolchains.MODULE.bazel") # WIP: Not used yet as have problems with IFS toolchain
+
+# GCC toolchains
+include ("//bazel_common:score_qnx_toolchains.MODULE.bazel") # WIP: Not used yet as have problems with IFS toolchain
+
+# Rust toolchains
+include ("//bazel_common:score_rust_toolchains.MODULE.bazel")
+
+# Python support
+include("//bazel_common:score_python.MODULE.bazel")
+
+# Score modules
+include("//bazel_common:score_modules.MODULE.bazel")
+
+bazel_dep(name = "score_itf", version = "0.1.0")
+
+bazel_dep(name = "rules_boost", repo_name = "com_github_nelhage_rules_boost")
+archive_override(
+    module_name = "rules_boost",
+    urls = ["https://github.com/nelhage/rules_boost/archive/refs/heads/master.tar.gz"],
+    strip_prefix = "rules_boost-master",
+)
+
+# TRLC dependency for requirements traceability
+bazel_dep(name = "trlc", version = "0.0.0")
+git_override(
+    module_name = "trlc",
+    commit = "650b51a47264a4f232b3341f473527710fc32669",  # trlc-2.0.2 release
+    remote = "https://github.com/bmw-software-engineering/trlc.git",
+)
+
+git_override(
+    module_name = "score_toolchains_qnx",
+    commit = "aa94b4fb566b989d1a00395c810df2cf254a0cec",
+    remote = "https://github.com/qorix-group/toolchains_qnx.git",
+)
+
+
+# Currently required for ifs tooling
+bazel_dep(name = "score_toolchains_qnx", version = "0.0.3")
+toolchains_qnx = use_extension("@score_toolchains_qnx//:extensions.bzl", "toolchains_qnx", dev_dependency=True)
+toolchains_qnx.sdp(
+    sha256 = "f2e0cb21c6baddbcb65f6a70610ce498e7685de8ea2e0f1648f01b327f6bac63",
+    strip_prefix = "installation",
+    url = "https://www.qnx.com/download/download/79858/installation.tgz",
+)
+use_repo(toolchains_qnx, "toolchains_qnx_sdp")
+use_repo(toolchains_qnx, "toolchains_qnx_ifs")
