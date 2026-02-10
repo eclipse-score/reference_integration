@@ -71,7 +71,7 @@ def main() -> int:
                     summaries.append(os.path.join(root, name))
 
     if not summaries:
-        out.write("No build_summary.md files found.\n\n")
+        out.write(f"No build_summary-*.md files found in '{logs_dir}'.\n\n")
         return 0
     for summary_file in sorted(summaries):
         filename = os.path.basename(summary_file)

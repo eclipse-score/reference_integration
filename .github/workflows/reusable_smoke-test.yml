@@ -172,7 +172,7 @@ jobs:
           merge-multiple: true
       - name: Publish Integration Test Summary
         run: |
-          ls -l _logs/integration_test_logs
+          ls -l _logs/integration_test_logs || true
           python3 scripts/publish_integration_summary.py \
             --integration-result "${{ needs.integration-test.result }}" \
             --docs-result "${{ needs.docs.result }}" \
