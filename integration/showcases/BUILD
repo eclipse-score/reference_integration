@@ -16,7 +16,7 @@ score_pkg_bundle(
     name = "showcases_all",
     # package_dir = "",
     bins = ["//showcases/cli" ],
-    other_package_files = ["//showcases/standalone:standalone_pkg_files", "//showcases/kyron:kyron_pkg_files", "//showcases/orchestration_persistency:orch_per_pkg_files"],
+    other_package_files = ["//showcases/kyron:kyron_pkg_files", "//showcases/orchestration_persistency:orch_per_pkg_files"],
  
 )
 
