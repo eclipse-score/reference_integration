@@ -139,12 +139,12 @@ jobs:
       matrix:
         config:
           - x86_64-linux
+          # - arm64-linux
           # Add more configs here as needed
-          # - bl-aarch64-linux
-          # - bl-x86_64-qnx
+          # - arm64-qnx8_0
+          # - x86_64-qnx8_0
     uses: ./.github/workflows/reusable_integration-build.yml
-    secrets:
-      REPO_READ_TOKEN: ${{ secrets.REPO_READ_TOKEN != '' && secrets.REPO_READ_TOKEN || github.token }}
+    secrets: inherit
     with:
       known_good: ${{ needs.preparation.outputs.known_good_updated }}
       config: ${{ matrix.config }}
@@ -157,6 +157,12 @@ jobs:
     needs: [integration-test, docs]
     if: always()
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+        with:
+          repository: ${{ env.REFERENCE_INTEGRATION_REPO }}
+          ref: ${{ inputs.target_branch }}
+          token: ${{ secrets.REPO_READ_TOKEN != '' && secrets.REPO_READ_TOKEN || github.token }}
       # get all artefacts from integration-test job with name bazel-build-logs-*
       - name: Download Integration Test Artifacts
         uses: actions/download-artifact@v4
@@ -166,41 +172,9 @@ jobs:
           merge-multiple: true
       - name: Publish Integration Test Summary
         run: |
-          {
-            echo '## Overall Status'
-            echo
-            if [ "${{ needs.integration-test.result }}" == "success" ]; then
-              echo '- Integration Test: ✅ **SUCCESS**'
-            else
-              echo '- Integration Test: ❌ **FAILURE**'
-            fi
-            
-            if [ "${{ needs.docs.result }}" == "success" ]; then
-              echo '- Documentation Generation: ✅ **SUCCESS**'
-            else
-              echo '- Documentation Generation: ❌ **FAILURE**'
-            fi
-            
-            echo
-            echo '---'
-            echo
-            echo '## Integration Test Summary'
-            echo
-            
-            # Process each build_summary.md file from different configs
-            for summary_file in _logs/integration_test_logs/*/build_summary.md; do
-              if [ -f "$summary_file" ]; then
-                config_name=$(basename $(dirname "$summary_file"))
-                echo "### Configuration: $config_name"
-                echo
-                cat "$summary_file"
-                echo
-              fi
-            done
-            
-            # If no summary files found, check direct path
-            if [ -f _logs/integration_test_logs/build_summary.md ]; then
-              cat _logs/integration_test_logs/build_summary.md
-              echo
-            fi
-          } >> "$GITHUB_STEP_SUMMARY"
+          ls -l _logs/integration_test_logs || true
+          python3 scripts/publish_integration_summary.py \
+            --integration-result "${{ needs.integration-test.result }}" \
+            --docs-result "${{ needs.docs.result }}" \
+            --logs-dir "_logs/integration_test_logs" \
+            >> "$GITHUB_STEP_SUMMARY"

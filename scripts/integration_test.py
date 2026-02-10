@@ -274,7 +274,7 @@ def main():
     # Configuration
     config = args.config
     log_dir = Path(os.environ.get('LOG_DIR', '_logs/logs'))
-    summary_file = Path(os.environ.get('SUMMARY_FILE', '_logs/build_summary.md'))
+    summary_file = Path(os.environ.get('SUMMARY_FILE', f'_logs/build_summary-{config}.md'))
     
     known_good_file = args.known_good
     if not known_good_file:
@@ -326,7 +326,7 @@ def main():
     
     # Build each group
     for group_name, module_config in BUILD_TARGET_GROUPS.items():
-        log_file = log_dir / f"{group_name}.log"
+        log_file = log_dir / f"{group_name}-{config}.log"
         
         exit_code, duration = build_group(group_name, module_config.build_targets, config, log_file)
         

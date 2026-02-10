@@ -13,6 +13,9 @@ The reference integration workspace serves as a single Bazel build environment t
 
 ## Structure of integration folder
 
+> [!NOTE]
+> For more details about the integration folder structure and deployment showcases, see [integration/README.md](integration/README.md).
+
 Intention for each folder is described below
 
 ### bazel_common
@@ -145,10 +148,28 @@ In case of doubt, choose the first.
 1. Switch to local path overrides, using the VSCode Task (`Terminal`->`Run Task...`) "Switch Bazel modules to `local_path_overrides`".
    Note that you can switch back to `git_overrides` (the default) using the task "Switch Bazel modules to `git_overrides`"
    
-2. Run VSCode Task "&lt;Name&gt;: Generate workspace", e.g. "Gita: Generate workspace".
+   **Command line:**
+   ```bash
+   python3 scripts/known_good/update_module_from_known_good.py --override-type local_path
+   ```
+   
+2. Update workspace metadata from known good, using the VSCode Task "Update workspace metadata from known good".
+   This will generate the `.gita-workspace.csv` file based on `known_good.json`.
+   
+   **Command line:**
+   ```bash
+   python3 scripts/known_good/known_good_to_workspace_metadata.py
+   ```
+   
+3. Run VSCode Task "&lt;Name&gt;: Generate workspace", e.g. "Gita: Generate workspace".
    This will clone all modules using the chosen workspace manager.
    The modules will be in sub-directories starting with `score_`.
    Note that the usage of different workspace managers is mutually exclusive.
+   
+   **Command line:**
+   ```bash
+   gita clone --preserve-path --from-file .gita-workspace.csv
+   ```
 
 When you now run Bazel, it will use the local working copies of all modules and not download them from git remotes.
 You can make local changes to each module, which will be directly reflected in the next Bazel run.
