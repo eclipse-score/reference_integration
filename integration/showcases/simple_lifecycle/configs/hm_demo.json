@@ -1,0 +1,103 @@
+{
+    "versionMajor": 8,
+    "versionMinor": 0,
+    "process": [
+        {
+            "index": 0,
+            "shortName": "demo_application0",
+            "identifier": "demo_app0_MainPG",
+            "processType": "REGULAR_PROCESS",
+            "refProcessGroupStates": [
+                {
+                    "identifier": "MainPG/Startup"
+                }
+            ],
+            "processExecutionErrors": [
+                {
+                    "processExecutionError": 1
+                }
+            ]
+        }
+    ],
+    "hmMonitorInterface": [
+        {
+            "instanceSpecifier": "demo/demo_application0/Port1",
+            "processShortName": "demo_application0",
+            "portPrototype": "Port1",
+            "interfacePath": "demo_application_0_MainPG",
+            "refProcessIndex": 0,
+            "permittedUid": 0
+        }
+    ],
+    "hmSupervisionCheckpoint": [
+        {
+            "shortName": "Checkpoint0_1",
+            "checkpointId": 1,
+            "refInterfaceIndex": 0
+        }
+    ],
+    "hmAliveSupervision": [
+        {
+            "ruleContextKey": "AliveSupervision0",
+            "refCheckPointIndex": 0,
+            "aliveReferenceCycle": 100.0,
+            "minAliveIndications": 1,
+            "maxAliveIndications": 3,
+            "isMinCheckDisabled": false,
+            "isMaxCheckDisabled": false,
+            "failedSupervisionCyclesTolerance": 1,
+            "refProcessIndex": 0,
+            "refProcessGroupStates": [
+                {
+                    "identifier": "MainPG/Startup"
+                }
+            ]
+        }
+    ],
+    "hmDeadlineSupervision": [],
+    "hmLogicalSupervision": [],
+    "hmLocalSupervision": [
+        {
+            "ruleContextKey": "LocalSupervision0",
+            "infoRefInterfacePath": "demo_application_0",
+            "hmRefAliveSupervision": [
+                {
+                    "refAliveSupervisionIdx": 0
+                }
+            ],
+            "hmRefDeadlineSupervision": [],
+            "hmRefLogicalSupervision": []
+        }
+    ],
+    "hmGlobalSupervision": [
+        {
+            "ruleContextKey": "GlobalSupervision_MainPG",
+            "isSeverityCritical": false,
+            "localSupervision": [
+                {
+                    "refLocalSupervisionIndex": 0
+                }
+            ],
+            "refProcesses": [
+                {
+                    "index": 0
+                }
+            ],
+            "refProcessGroupStates": [
+                {
+                    "identifier": "MainPG/Startup"
+                }
+            ]
+        }
+    ],
+    "hmRecoveryNotification": [
+        {
+            "shortName": "RecoveryNotification_MainPG",
+            "recoveryNotificationTimeout": 4000.0,
+            "processGroupMetaModelIdentifier": "MainPG/Recovery",
+            "refGlobalSupervisionIndex": 0,
+            "instanceSpecifier": "",
+            "shouldFireWatchdog": false
+        }
+    ]
+}
