@@ -25,9 +25,7 @@ common --@score_logging//score/datarouter/build_configuration_flags:persistent_l
 common --@score_logging//score/datarouter/build_configuration_flags:persistent_config_feature_enabled=False
 common --@score_logging//score/datarouter/build_configuration_flags:enable_nonverbose_dlt=False
 common --@score_logging//score/datarouter/build_configuration_flags:enable_dynamic_configuration_in_datarouter=False
-common --@score_logging//score/datarouter/build_configuration_flags:dlt_file_transfer_feature=False
 common --@score_logging//score/datarouter/build_configuration_flags:use_local_vlan=True
-common --@score_logging//score/mw/log/detail/flags:KUse_Stub_Implementation_Only=False
 common --@score_logging//score/mw/log/flags:KRemote_Logging=False
 
 # stop legacy behavior of creating __init__.py files
@@ -43,6 +41,7 @@ build:shared --host_platform=@score_bazel_platforms//:x86_64-linux
 
 build:x86_64-linux --config=shared
 build:x86_64-linux --platforms=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
+build:x86_64-linux --extra_toolchains=@score_toolchains_rust//toolchains/ferrocene:ferrocene_x86_64_unknown_linux_gnu
 build:x86_64-linux --features=-treat_warnings_as_errors # due to baselibs deprecations
 
 # this is deprecated, use build:x86_64-linux instead

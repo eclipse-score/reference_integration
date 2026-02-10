@@ -3,6 +3,9 @@
     "score_baselibs": {
       "build_targets": "@score_baselibs//score/..."
     },
+    "score_baselibs_rust": {
+      "build_targets": "@score_baselibs_rust//src/..."
+    },
     "score_communication": {
       "build_targets": "@score_communication//score/mw/com:com"
     },
@@ -19,7 +22,7 @@
       "build_targets": "@score_test_scenarios//test_scenarios_rust:test_scenarios_rust @score_test_scenarios//test_scenarios_cpp:test_scenarios_cpp"
     },
     "score_feo": {
-      "build_targets": "-- @score_feo//... -@score_feo//:docs -@score_feo//:ide_support -@score_feo//:needs_json"
+      "build_targets": "-- @score_feo//feo/... @score_feo//feo-com/... @score_feo//feo-cpp-build/... @score_feo//feo-cpp-macros/... -@score_feo//feo:libfeo_rust -@score_feo//feo:libfeo_recording_rust -@score_feo//feo-com:libfeo_com_rust -@score_feo//examples/rust/..."
     },
     "score_logging": {
       "build_targets": "@score_logging//score/mw/log"
