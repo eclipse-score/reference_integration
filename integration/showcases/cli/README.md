@@ -13,14 +13,25 @@ To make this work each example shall deploy configuration file `name.score.json`
 {
     "name": "Name of example",
     "description": "Extensive description",
-    "path": "exec_path",
-    "args": [
-        // args to be used when running
-    ],
-    "env": {
-        // env to be used when running
-    }
+    "apps": [
+        {
+            "path": "exec_path",
+            "args": [
+                // args to be used when running
+            ],
+            "env": {
+                // env to be used when running
+            },
+            "delay": "number" // Optional delay between two consecutive apps 
+        },
+        {
+            // ...
+        }
+    ]
+
 }
+
+Each example can run multiple executables, providing additional `apps` configs. This will be started one after another but not blocking each-other.
 
 ```
 
