@@ -8,15 +8,23 @@ use std::{
 };
 
 use cliclack::{clear_screen, intro, multiselect, outro, confirm};
+use std::thread;
+use std::time::Duration;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
+struct AppConfig {
+    path: String,
+    dir: Option<String>,
+    args: Vec<String>,
+    env: HashMap<String, String>,
+    delay: Option<u64>, // delay in seconds before running the next app
+}
+
+#[derive(Debug, Deserialize, Clone)]
 struct ScoreConfig {
     name: String,
     description: String,
-    path: String,
-    args: Vec<String>,
-    env: HashMap<String, String>,
-    dir: Option<String>, // Optional working directory
+    apps: Vec<AppConfig>,
 }
 
 fn print_banner() {
@@ -119,28 +127,59 @@ fn is_score_file(path: &Path) -> bool {
 }
 
 fn run_score(config: &ScoreConfig) -> Result<()> {
-    println!("▶ Running: {}", config.name);
+    println!("▶ Running example: {}", config.name);
 
-    let mut cmd = Command::new(&config.path);
-    cmd.args(&config.args);
-    cmd.envs(&config.env);
-    if let Some(ref dir) = config.dir {
-        cmd.current_dir(dir);
+    let mut handles = Vec::new();
+    let config = config.clone(); // Clone the config for use in threads
+    for (i, app) in config.apps.iter().enumerate() {
+        let app = app.clone(); // Make a copy for the thread
+        let handle = std::thread::spawn(move || -> Result<()> {
+            if let Some(delay_secs) = app.delay {
+                if delay_secs > 0 {
+                    println!("App {}: waiting {} seconds before start...", i + 1, delay_secs);
+                    std::thread::sleep(Duration::from_secs(delay_secs));
+                }
+            }
+
+            println!("App {}: starting {}", i + 1, app.path);
+
+            let mut cmd = std::process::Command::new(&app.path);
+            cmd.args(&app.args);
+            cmd.envs(&app.env);
+            if let Some(ref dir) = app.dir {
+                cmd.current_dir(dir);
+            }
+
+            println!("App {}: running command {:?}", i + 1, cmd);
+
+            let status = cmd
+                .status()
+                .with_context(|| format!("Failed to execute {}", app.path))?;
+
+            if !status.success() {
+                anyhow::bail!(
+                    "App {}: command `{}` exited with status {}",
+                    i + 1,
+                    app.path,
+                    status
+                );
+            }
+
+            println!("App {}: finished {}", i + 1, app.path);
+            Ok(())
+        });
+
+        handles.push(handle);
     }
 
-    println!("Running Command: {:?}", cmd);
-
-    let status = cmd
-        .status()
-        .with_context(|| format!("Failed to execute {}", config.path))?;
-
-    if !status.success() {
-        anyhow::bail!(
-            "Command `{}` exited with status {}",
-            config.path,
-            status
-        );
+    // Wait for all apps to finish
+    for handle in handles {
+        handle
+            .join()
+            .expect("Thread panicked")
+            .with_context(|| "An app thread failed")?;
     }
 
+    println!("✅ Example '{}' finished successfully.", config.name);
     Ok(())
 }
