@@ -66,7 +66,7 @@ fn main() -> Result<()> {
         .map(|(i, c)| (i, c.name.clone(), c.description.clone()))
         .collect();
 
-    let selected: Vec<usize> = multiselect("Select examples to run:")
+    let selected: Vec<usize> = multiselect("Select examples to run (use space to select (multiselect supported), enter to run examples):")
         .items(&options)
         .interact()?;
 
