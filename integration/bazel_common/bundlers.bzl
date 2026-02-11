@@ -17,7 +17,7 @@ def score_pkg_bundle(name, bins, config_data= None, package_dir = None, other_pa
         config_data: Optional list of config file labels to include (placed in 'configs/').
         package_dir: Optional directory path for the package root inside the tar archive.
         other_package_files: Optional list of additional `NAME_pkg_files` to include in the tar archive that was created by other `score_pkg_bundle` targets.
-        custom_layout: Optional dict mapping labels -> destination path inside the package.
+        custom_layout: Optional dict mapping labels -> destination path inside the package. All destination will be prefixed with "data/NAME/".
             Example:
                 custom_layout = {
                     "//app:data.txt": "resources/data.txt",

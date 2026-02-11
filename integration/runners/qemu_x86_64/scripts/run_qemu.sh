@@ -30,7 +30,6 @@ qemu-system-x86_64 \
                 -chardev stdio,id=char0,signal=on,mux=on \
                 -mon chardev=char0,mode=readline \
                 -serial chardev:char0 \
-                -rtc base="2026-02-11T12:00:00",clock=host,driftfix=slew \
                 -object rng-random,filename=/dev/urandom,id=rng0 \
                 -netdev bridge,id=net0,br=virbr0 -device virtio-net-pci,netdev=net0 \
                 -device virtio-rng-pci,rng=rng0
