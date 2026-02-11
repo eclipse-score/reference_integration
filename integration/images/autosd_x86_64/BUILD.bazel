@@ -40,7 +40,9 @@ rpm_package(
 sh_binary(
     name = "run",
     srcs = ["//runners/docker_x86_64/scripts:run_docker.sh"],
-    env= ["OCI_IMAGE=quay.io/centos/centos:stream10"],
+    env={
+    	"OCI_IMAGE": "quay.io/centos/centos:stream10"
+    },
     args = [
         "$(location :image)",
     ],
