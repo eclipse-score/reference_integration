@@ -56,19 +56,18 @@ jobs:
       
       - name: Install AIB Tools
         run: |
-          curl -o auto-image-builder.sh "https://gitlab.com/lrossett/automotive-image-builder/-/raw/script-fix/auto-image-builder.sh?ref_type=heads"
+          curl -o auto-image-builder.sh "https://gitlab.com/CentOS/automotive/src/automotive-image-builder/-/raw/main/auto-image-builder.sh?ref_type=heads"
           chmod +x auto-image-builder.sh
-
-          curl -o automotive-image-runner "https://gitlab.com/CentOS/automotive/src/automotive-image-builder/-/raw/main/automotive-image-runner"
-          chmod +x automotive-image-runner
         working-directory: ./integration/images/autosd_x86_64/build
  
       - name: Build AutoSD QEMU (x86_64)
         run: |
+          export AIB_LOCAL_CONTAINER_STORAGE=$PWD/_build/containers-storage
+
           mkdir -p _build/containers-storage
-          sudo ./auto-image-builder.sh build-builder --distro=autosd10-sig 
+          sudo -E ./auto-image-builder.sh build-builder --distro=autosd10-sig
           
-          sudo ./auto-image-builder.sh build \
+          sudo -E ./auto-image-builder.sh build \
           --distro=autosd10-sig  \
           --target=qemu \
           --define-file vars.yml \
@@ -76,11 +75,9 @@ jobs:
           image.aib.yml \
           localhost/score:latest
 
-          sudo /auto-image-builder.sh to-disk-image localhost/score:latest _build/disk.qcow2
+          sudo -E ./auto-image-builder.sh to-disk-image localhost/score:latest _build/disk.qcow2
 
           sudo chown $(id -u):$(id -u) _build/disk.qcow2
-        env:
-          AIB_LOCAL_CONTAINER_STORAGE: ${{ github.workspace }}/integration/images/autosd_x86_64/build/_build/containers-storage
         working-directory: ./integration/images/autosd_x86_64/build
 
       - name: Enable KVM group perms
