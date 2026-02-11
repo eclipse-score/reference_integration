@@ -65,7 +65,7 @@ jobs:
  
       - name: Build AutoSD QEMU (x86_64)
         run: |
-          mkidr -p _build/containers-storage
+          mkdir -p _build/containers-storage
           sudo ./auto-image-builder.sh build-builder --distro=autosd10-sig 
           
           sudo ./auto-image-builder.sh build \
