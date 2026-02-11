@@ -1,0 +1,24 @@
+{
+    "name": "Simple Health and lifecycle management example",
+    "description": "Example runs two applications and monitors if they are healthy. When some application is malfunctioning, this will be recorded. Examples takes ~15s",
+    "apps": [
+        {
+            "path": "/showcases/bin/launch_manager",
+            "dir": "/showcases/data/simple_lifecycle",
+            "args": [],
+            "env": {}
+        },
+        {
+            "path": "pkill",
+            "args": ["-f", "cpp_supervised_app", "-SIGUSR1"],
+            "env": {},
+            "delay": 5
+        },
+        {
+            "path": "pkill",
+            "args": ["-f", "launch_manager"],
+            "env": {},
+            "delay": 2
+        }
+    ]
+}

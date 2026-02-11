@@ -20,13 +20,16 @@ QNX_HOST=$1
 IFS_IMAGE=$2
 echo "Starting QEMU with IFS image: ${IFS_IMAGE}"
 qemu-system-x86_64 \
+                -enable-kvm \
                 -smp 2 \
-                -cpu Cascadelake-Server-v5 \
+                -cpu host\
                 -m 1G \
                 -pidfile /tmp/qemu.pid \
                 -nographic \
                 -kernel "${IFS_IMAGE}" \
-                -serial mon:stdio \
+                -chardev stdio,id=char0,signal=on,mux=on \
+                -mon chardev=char0,mode=readline \
+                -serial chardev:char0 \
                 -object rng-random,filename=/dev/urandom,id=rng0 \
                 -netdev bridge,id=net0,br=virbr0 -device virtio-net-pci,netdev=net0 \
-                -device virtio-rng-pci,rng=rng0 
+                -device virtio-rng-pci,rng=rng0

@@ -34,3 +34,10 @@ single_version_override(
         "//patches/baselibs:0002-RH-algorithm-header.patch",
     ],
 )
+
+bazel_dep(name = "score_lifecycle_health")
+git_override(
+    module_name = "score_lifecycle_health",
+    commit = "84303c2e48c7e8e2481752170efe82d0afd45f1e",
+    remote = "https://github.com/eclipse-score/lifecycle.git",
+)

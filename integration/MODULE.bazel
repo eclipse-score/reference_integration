@@ -49,15 +49,8 @@ git_override(
     remote = "https://github.com/bmw-software-engineering/trlc.git",
 )
 
-git_override(
-    module_name = "score_toolchains_qnx",
-    commit = "aa94b4fb566b989d1a00395c810df2cf254a0cec",
-    remote = "https://github.com/qorix-group/toolchains_qnx.git",
-)
-
-
 # Currently required for ifs tooling
-bazel_dep(name = "score_toolchains_qnx", version = "0.0.3")
+bazel_dep(name = "score_toolchains_qnx", version = "0.0.7")
 toolchains_qnx = use_extension("@score_toolchains_qnx//:extensions.bzl", "toolchains_qnx", dev_dependency=True)
 toolchains_qnx.sdp(
     sha256 = "f2e0cb21c6baddbcb65f6a70610ce498e7685de8ea2e0f1648f01b327f6bac63",

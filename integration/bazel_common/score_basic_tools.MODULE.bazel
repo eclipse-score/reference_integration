@@ -16,3 +16,10 @@ git_override(
     branch = "main",
     remote = "https://github.com/bilelmoussaoui/bazel-rpm.git",
 )
+
+bazel_dep(name = "flatbuffers", version = "25.9.23")
+git_override(
+    module_name = "flatbuffers",
+    commit = "187240970746d00bbd26b0f5873ed54d2477f9f3",
+    remote = "https://github.com/google/flatbuffers.git",
+)
