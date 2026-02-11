@@ -61,7 +61,8 @@ jobs:
           SCORE_QNX_USER: ${{ secrets.SCORE_QNX_USER }}
           SCORE_QNX_PASSWORD: ${{ secrets.SCORE_QNX_PASSWORD }}
         run: |
-          bazel build --config qnx-x86_64 //images/qnx_x86_64:image
+        
+          ./scripts/qnx_credential_helper.py
         working-directory: ./integration
 
       - name: Cleanup QNX license

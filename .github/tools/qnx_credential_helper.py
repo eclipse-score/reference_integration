@@ -27,7 +27,7 @@ def eprint(*args, **kwargs):
 
 
 if __name__ == "__main__":
-    data = json.load(sys.stdin)
+    data = {"uri": "https://www.qnx.com/download/download/79858/installation.tgz"}
 
     if "qnx.com" not in data["uri"]:
         eprint("Unsupported domain")
@@ -63,6 +63,17 @@ if __name__ == "__main__":
     if r.status != 200:
         eprint("Failed to login to QNX")
         sys.exit(1)
+
+    mBody = r.read()          # bytes
+    print(mBody.decode("utf-8"))      # str
+
+    for mCookie in cookie_jar:
+        print("Name:", mCookie.name)
+        print("Value:", mCookie.value)
+        print("Domain:", mCookie.domain)
+        print("Path:", mCookie.path)
+        print("Expires:", mCookie.expires)
+        print("---")
 
     cookies = {c.name: c.value for c in list(cookie_jar)}
     if not "myQNX" in cookies:
