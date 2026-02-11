@@ -49,7 +49,7 @@ jobs:
         run: |
           set -e
           mkdir -p ./images/autosd_x86_64/build/rpms
-          cp bazel-out/k8-fastbuild/bin/images/autosd_x86_64/lola-demo-1.0.0-1.x86_64.rpm ./images/autosd_x86_64/build/rpms
+          cp bazel-bin/images/autosd_x86_64/score-reference-integration-0.6.0-1.x86_64.rpm ./images/autosd_x86_64/build/rpms
           createrepo_c ./images/autosd_x86_64/build/rpms/
           ls -l ./images/autosd_x86_64/build/rpms/
         working-directory: ./integration
