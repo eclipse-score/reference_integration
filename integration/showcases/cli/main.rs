@@ -16,6 +16,7 @@ struct ScoreConfig {
     path: String,
     args: Vec<String>,
     env: HashMap<String, String>,
+    dir: Option<String>, // Optional working directory
 }
 
 fn print_banner() {
@@ -119,15 +120,20 @@ fn is_score_file(path: &Path) -> bool {
 
 fn run_score(config: &ScoreConfig) -> Result<()> {
     println!("▶ Running: {}", config.name);
-    
+
     let mut cmd = Command::new(&config.path);
     cmd.args(&config.args);
     cmd.envs(&config.env);
-    
+    if let Some(ref dir) = config.dir {
+        cmd.current_dir(dir);
+    }
+
+    println!("Running Command: {:?}", cmd);
+
     let status = cmd
         .status()
         .with_context(|| format!("Failed to execute {}", config.path))?;
-    
+
     if !status.success() {
         anyhow::bail!(
             "Command `{}` exited with status {}",
@@ -135,6 +141,6 @@ fn run_score(config: &ScoreConfig) -> Result<()> {
             status
         );
     }
-    
+
     Ok(())
 }

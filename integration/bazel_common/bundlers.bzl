@@ -2,7 +2,7 @@ load("@rules_pkg//pkg:pkg.bzl", "pkg_tar")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files")
 
 
-def score_pkg_bundle(name, bins, config_data= None, package_dir = None, other_package_files = []):
+def score_pkg_bundle(name, bins, config_data= None, package_dir = None, other_package_files = [], custom_layout = {}):
     """
     Creates a reusable bundle by chaining Bazel packaging rules:
       - Collects binaries and config files into a pkg_files target, renaming them into subdirectories.
@@ -17,7 +17,12 @@ def score_pkg_bundle(name, bins, config_data= None, package_dir = None, other_pa
         config_data: Optional list of config file labels to include (placed in 'configs/').
         package_dir: Optional directory path for the package root inside the tar archive.
         other_package_files: Optional list of additional `NAME_pkg_files` to include in the tar archive that was created by other `score_pkg_bundle` targets.
-
+        custom_layout: Optional dict mapping labels -> destination path inside the package.
+            Example:
+                custom_layout = {
+                    "//app:data.txt": "resources/data.txt",
+                    "//lib:helper.sh": "scripts/helper.sh",
+                }
     """
 
     all_files_name = name + "_pkg_files"
@@ -37,10 +42,17 @@ def score_pkg_bundle(name, bins, config_data= None, package_dir = None, other_pa
     if config_data != None:
         config_data_arr = config_data
 
+
+    if custom_layout == None:
+        custom_layout = {}
+
+    for label, dst in custom_layout.items():
+        rename_dict[label] = "data/" + name + "/" + dst
+    
     # Step 1: pkg_files
     pkg_files(
         name = all_files_name,
-        srcs = bins + config_data_arr,
+        srcs = bins + config_data_arr  + list(custom_layout.keys()),
         renames = rename_dict,
         visibility = ["//visibility:public"],
     )

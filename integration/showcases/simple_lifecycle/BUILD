@@ -9,11 +9,14 @@ score_pkg_bundle(
         "@score_lifecycle_health//examples/control_application:control_daemon",
     ],
     config_data = [
-        ":lm_demo.bin",
-        ":hm_demo.bin",
-        ":supervised_app_demo.bin",
         "//showcases/simple_lifecycle:simple_lifecycle.score.json",
     ],
+
+    custom_layout = {
+        ":lm_demo.bin": "etc/lm_demo.bin",
+        ":hm_demo.bin": "etc/hm_demo.bin",
+        ":supervised_app_demo.bin": "etc/supervised_app_demo.bin",
+    },
 )
 
 genrule(
