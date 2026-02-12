@@ -1,6 +1,8 @@
 load("@rules_rust//rust:defs.bzl", "rust_binary")
 load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
 
+exports_files(["kyron.score.json"])
+
 rust_binary(
     name = "kyron_example",
     srcs = ["main.rs"],

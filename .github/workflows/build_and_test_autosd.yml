@@ -23,7 +23,6 @@ on:
     paths:
       - 'integration/**'
 
-
 jobs:
   build:
     name: x86_64
@@ -41,43 +40,44 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y podman curl qemu-system createrepo-c
 
-      - name: Build Lola Demo
+      - name: Build Showcases RPMs
         run: |
-          bazel build --config=autosd-x86_64 //images/autosd_x86_64:lola-demo
-        working-directory: ./integration
+          bazel build --config autosd-x86_64 //images/autosd_x86_64:score-reference-integration
+        working-directory: ./integration/images/autosd_x86_64
 
       - name: Copy RPMs
         run: |
           set -e
           mkdir -p ./images/autosd_x86_64/build/rpms
-          cp bazel-out/k8-fastbuild/bin/images/autosd_x86_64/lola-demo-1.0.0-1.x86_64.rpm ./images/autosd_x86_64/build/rpms
-          cp bazel-out/k8-fastbuild/bin/images/autosd_x86_64/lola-demo-1.0.0-1.src.rpm ./images/autosd_x86_64/build/rpms
+          cp bazel-bin/images/autosd_x86_64/score-reference-integration-0.6.0-1.x86_64.rpm ./images/autosd_x86_64/build/rpms
           createrepo_c ./images/autosd_x86_64/build/rpms/
           ls -l ./images/autosd_x86_64/build/rpms/
         working-directory: ./integration
       
       - name: Install AIB Tools
         run: |
-          curl -o auto-image-builder.sh "https://gitlab.com/lrossett/automotive-image-builder/-/raw/script-fix/auto-image-builder.sh?ref_type=heads"
+          curl -o auto-image-builder.sh "https://gitlab.com/CentOS/automotive/src/automotive-image-builder/-/raw/main/auto-image-builder.sh?ref_type=heads"
           chmod +x auto-image-builder.sh
-
-          curl -o automotive-image-runner "https://gitlab.com/CentOS/automotive/src/automotive-image-builder/-/raw/main/automotive-image-runner"
-          chmod +x automotive-image-runner
         working-directory: ./integration/images/autosd_x86_64/build
-
-      - name: Build lola-demo.aib.yml
+ 
+      - name: Build AutoSD QEMU (x86_64)
         run: |
-          sudo ./auto-image-builder.sh build-deprecated \
-          --distro autosd10 \
-          --mode package \
-          --target qemu \
-          --export qcow2 \
+          export AIB_LOCAL_CONTAINER_STORAGE=$PWD/_build/containers-storage
+
+          mkdir -p _build/containers-storage
+          sudo -E ./auto-image-builder.sh build-builder --distro=autosd10-sig
+          
+          sudo -E ./auto-image-builder.sh build \
+          --distro=autosd10-sig  \
+          --target=qemu \
           --define-file vars.yml \
           --define-file vars-devel.yml \
           image.aib.yml \
-          disk.qcow2
+          localhost/score:latest
 
-          sudo chown $(id -u) disk.qcow2
+          sudo -E ./auto-image-builder.sh to-disk-image localhost/score:latest _build/disk.qcow2
+
+          sudo chown $(id -u):$(id -u) _build/disk.qcow2
         working-directory: ./integration/images/autosd_x86_64/build
 
       - name: Enable KVM group perms
@@ -91,18 +91,16 @@ jobs:
           sshcmd() {
             sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 2222 root@localhost $@
           }
+          
           ./scripts/run_qemu
+          
           sshcmd 'cat /etc/os-release'
-          sleep 10
-          sshcmd 'bluechictl start agent-qm lola-ipc-sub.service'
-          sleep 5
-          # sshcmd '/usr/bin/lola-ipc-test' Disabled until correct exmaples deployed
         working-directory: ./integration/images/autosd_x86_64/build
         env:
           SSH_PASSWORD: password
       
-      - name: Archive QEMU disk image
+      - name: Archive QEMU disk image (x86_64)
         uses: actions/upload-artifact@v4
         with:
           name: autosd10-score-reference_integration-x86_64.qcow2
-          path: integration/images/autosd_x86_64/build/disk.qcow2
+          path: integration/images/autosd_x86_64/build/_build/disk.qcow2

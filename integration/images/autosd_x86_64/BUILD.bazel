@@ -12,23 +12,41 @@
 # *******************************************************************************
 load("@rules_rpm//rpm:defs.bzl", "rpm_package")
 
-# TODO: Shall use targets from use-cases
-# Bring back files once we cleanup scrample integration soon
+alias(
+    name = "image",
+    actual = "//showcases:showcases_all",
+    visibility = ["//visibility:public"],
+)
+
 rpm_package(
-    name = "lola-demo",
+    name = "score-reference-integration",
+    description = "Eclipse S-CORE Reference Integration",
+    summary = "Eclipse S-CORE Reference Integration",
+    version = "0.6.0",
     binaries = [
-        "@score_scrample//src:scrample",
+        "//showcases/cli:cli",
+	"//showcases/kyron:kyron_example",
+	"//showcases/orchestration_persistency:orch_per_example",
+	"@score_scrample//src:scrample"
     ],
-    config_dir = "/etc/lola",
-    # data = [
-    #     "@score_communication//score/mw/com/example/ipc_bridge:etc/mw_com_config.json",
-    # ],
-    data_dir = "/usr/share/lola/examples",
-    description = "LOLA middleware communication libraries for development including core communication, configuration components, and example client/server binaries for testing",
-    # libraries = [
-    #     "@score_communication//score/mw/com:com",
-    #     "@score_communication//score/mw/com:config_schema",
-    # ],
-    summary = "LOLA Demo",
-    version = "1.0.0",
+    config_dir = "/etc/score",
+    data = [
+        "//showcases/kyron:kyron.score.json",
+	"//showcases/orchestration_persistency:orch_per.score.json"
+    ],
+    data_dir = "/usr/share/score/examples", 
+)
+
+sh_binary(
+    name = "run",
+    srcs = ["//runners/docker_x86_64/scripts:run_docker.sh"],
+    env={
+    	"OCI_IMAGE": "quay.io/centos/centos:stream10"
+    },
+    args = [
+        "$(location :image)",
+    ],
+    data = [
+        ":image",
+    ],
 )

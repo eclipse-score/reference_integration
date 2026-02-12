@@ -14,6 +14,8 @@
 load("@rules_rust//rust:defs.bzl", "rust_binary")
 load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
 
+exports_files(["orch_per.score.json"])
+
 rust_binary(
     name = "orch_per_example",
     srcs = ["main.rs"],

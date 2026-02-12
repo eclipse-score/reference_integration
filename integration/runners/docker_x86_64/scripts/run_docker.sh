@@ -17,8 +17,11 @@ set -euo pipefail
 
 OVERLAY_TREE=$1
 OVERLAY_ABS_PATH=$(realpath ${OVERLAY_TREE})
+OCI_IMAGE=${OCI_IMAGE:=ubuntu:22.04}
+
 echo "Starting docker with overlay image: ${OVERLAY_ABS_PATH}"
+
 docker run --rm -it \
     -v "${OVERLAY_ABS_PATH}:/showcases" \
-    ubuntu:22.04 \
+    ${OCI_IMAGE} \
     bash -c "/showcases/bin/cli; exec bash"
