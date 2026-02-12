@@ -9,16 +9,16 @@
             "env": {}
         },
         {
-            "path": "pkill",
-            "args": ["-f", "cpp_supervised_app", "-SIGUSR1"],
-            "env": {},
-            "delay": 5
-        },
-        {
-            "path": "pkill",
-            "args": ["-f", "launch_manager"],
+            "path": "/showcases/bin/lifecycle_signal.sh",
+            "args": ["cpp_supervised_app", "SIGUSR1"],
             "env": {},
             "delay": 2
+        },
+        {
+            "path": "/showcases/bin/lifecycle_signal.sh",
+            "args": ["launch_manager", "SIGTERM"],
+            "env": {},
+            "delay": 6
         }
     ]
 }

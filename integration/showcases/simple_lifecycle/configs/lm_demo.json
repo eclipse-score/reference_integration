@@ -46,7 +46,7 @@
       ]
     },
     {
-      "identifier": "demo_app0_MainPG",
+      "identifier": "cpp_supervised_app",
       "uid": 0,
       "gid": 0,
       "path": "/showcases/bin/cpp_supervised_app",
@@ -59,15 +59,10 @@
           "schedulingPolicy": "SCHED_OTHER",
           "schedulingPriority": "1",
           "identifier": "demo_app_startup_config_0",
-          "enterTimeoutValue": 2000,
-          "exitTimeoutValue": 2000,
+          "enterTimeoutValue": 1000,
+          "exitTimeoutValue": 1000,
           "terminationBehavior": "ProcessIsNotSelfTerminating",
-          "executionDependency": [
-            {
-              "stateName": "Running",
-              "targetProcess_identifier": "/healthmonitorApp/healthmonitor"
-            }
-          ],
+          "executionDependency": [],
           "processGroupStateDependency": [
             {
               "stateMachine_name": "MainPG",
@@ -81,20 +76,70 @@
             },
             {
               "key": "PROCESSIDENTIFIER",
-              "value": "MainPG_app0"
+              "value": "cpp_supervised_app"
             },
             {
               "key": "CONFIG_PATH",
-              "value": "/showcases/data/simple_lifecycle/etc/supervised_app_demo.bin"
+              "value": "/showcases/data/simple_lifecycle/etc/cpp_supervised_app_demo.bin"
             },
             {
               "key": "IDENTIFIER",
-              "value": "demo/demo_application0/Port1"
+              "value": "cpp_supervised_app"
             }
           ],
           "processArgument": [
             {
-              "argument": "-sdemo/demo_application0/Port1"
+              "argument": "-scpp_supervised_app"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "identifier": "rust_supervised_app",
+      "uid": 0,
+      "gid": 0,
+      "path": "/showcases/bin/rust_supervised_app",
+      "numberOfRestartAttempts": 0,
+      "executable_reportingBehavior": "ReportsExecutionState",
+      "sgids": [],
+      "startupConfig": [
+        {
+          "executionError": "1",
+          "schedulingPolicy": "SCHED_OTHER",
+          "schedulingPriority": "1",
+          "identifier": "demo_app_startup_config_1",
+          "enterTimeoutValue": 1000,
+          "exitTimeoutValue": 1000,
+          "terminationBehavior": "ProcessIsNotSelfTerminating",
+          "executionDependency": [],
+          "processGroupStateDependency": [
+            {
+              "stateMachine_name": "MainPG",
+              "stateName": "MainPG/Startup"
+            }
+          ],
+          "environmentVariable": [
+            {
+              "key": "LD_LIBRARY_PATH",
+              "value": "/usr/lib"
+            },
+            {
+              "key": "PROCESSIDENTIFIER",
+              "value": "rust_supervised_app"
+            },
+            {
+              "key": "CONFIG_PATH",
+              "value": "/showcases/data/simple_lifecycle/etc/rust_supervised_app_demo.bin"
+            },
+            {
+              "key": "IDENTIFIER",
+              "value": "rust_supervised_app"
+            }
+          ],
+          "processArgument": [
+            {
+              "argument": "-d50"
             }
           ]
         }

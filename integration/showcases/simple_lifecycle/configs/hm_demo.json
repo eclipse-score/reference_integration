@@ -4,8 +4,24 @@
     "process": [
         {
             "index": 0,
-            "shortName": "demo_application0",
-            "identifier": "demo_app0_MainPG",
+            "shortName": "cpp_supervised_app",
+            "identifier": "cpp_supervised_app",
+            "processType": "REGULAR_PROCESS",
+            "refProcessGroupStates": [
+                {
+                    "identifier": "MainPG/Startup"
+                }
+            ],
+            "processExecutionErrors": [
+                {
+                    "processExecutionError": 1
+                }
+            ]
+        },
+        {
+            "index": 1,
+            "shortName": "rust_supervised_app",
+            "identifier": "rust_supervised_app",
             "processType": "REGULAR_PROCESS",
             "refProcessGroupStates": [
                 {
@@ -21,24 +37,37 @@
     ],
     "hmMonitorInterface": [
         {
-            "instanceSpecifier": "demo/demo_application0/Port1",
-            "processShortName": "demo_application0",
-            "portPrototype": "Port1",
-            "interfacePath": "demo_application_0_MainPG",
+            "instanceSpecifier": "cpp_supervised_app",
+            "processShortName": "cpp_supervised_app",
+            "portPrototype": "Port",
+            "interfacePath": "lifecycle_cpp_supervised_app",
             "refProcessIndex": 0,
+            "permittedUid": 0
+        },
+        {
+            "instanceSpecifier": "rust_supervised_app",
+            "processShortName": "rust_supervised_app",
+            "portPrototype": "Port",
+            "interfacePath": "lifecycle_rust_supervised_app",
+            "refProcessIndex": 1,
             "permittedUid": 0
         }
     ],
     "hmSupervisionCheckpoint": [
         {
-            "shortName": "Checkpoint0_1",
+            "shortName": "checkpoint_cpp_supervised_app",
             "checkpointId": 1,
             "refInterfaceIndex": 0
+        },
+        {
+            "shortName": "checkpoint_rust_supervised_app",
+            "checkpointId": 1,
+            "refInterfaceIndex": 1
         }
     ],
     "hmAliveSupervision": [
         {
-            "ruleContextKey": "AliveSupervision0",
+            "ruleContextKey": "AliveSupervision_cpp_supervised_app",
             "refCheckPointIndex": 0,
             "aliveReferenceCycle": 200.0,
             "minAliveIndications": 1,
@@ -52,17 +81,44 @@
                     "identifier": "MainPG/Startup"
                 }
             ]
-        }
+        },
+        {
+            "ruleContextKey": "AliveSupervision_rust_supervised_app",
+            "refCheckPointIndex": 1,
+            "aliveReferenceCycle": 100.0,
+            "minAliveIndications": 1,
+            "maxAliveIndications": 3,
+            "isMinCheckDisabled": false,
+            "isMaxCheckDisabled": false,
+            "failedSupervisionCyclesTolerance": 1,
+            "refProcessIndex": 1,
+            "refProcessGroupStates": [
+                {
+                    "identifier": "MainPG/Startup"
+                }
+            ]
+        },
     ],
     "hmDeadlineSupervision": [],
     "hmLogicalSupervision": [],
     "hmLocalSupervision": [
         {
-            "ruleContextKey": "LocalSupervision0",
-            "infoRefInterfacePath": "demo_application_0",
+            "ruleContextKey": "LocalSupervision_cpp_supervised_app",
+            "infoRefInterfacePath": "cpp_supervised_app",
             "hmRefAliveSupervision": [
                 {
                     "refAliveSupervisionIdx": 0
+                }
+            ],
+            "hmRefDeadlineSupervision": [],
+            "hmRefLogicalSupervision": []
+        },
+        {
+            "ruleContextKey": "LocalSupervision_rust_supervised_app",
+            "infoRefInterfacePath": "rust_supervised_app",
+            "hmRefAliveSupervision": [
+                {
+                    "refAliveSupervisionIdx": 1
                 }
             ],
             "hmRefDeadlineSupervision": [],
@@ -76,11 +132,17 @@
             "localSupervision": [
                 {
                     "refLocalSupervisionIndex": 0
+                },
+                {
+                    "refLocalSupervisionIndex": 1
                 }
             ],
             "refProcesses": [
                 {
                     "index": 0
+                },
+                {
+                    "index": 1
                 }
             ],
             "refProcessGroupStates": [
