@@ -17,6 +17,7 @@ common --registry=https://bcr.bazel.build
 
 # Flags needed by score_baselibs and communication modules.
 # Do not add more!
+common --@score_baselibs//score/mw/log/flags:KRemote_Logging=False
 common --@score_baselibs//score/json:base_library=nlohmann
 common --@score_communication//score/mw/com/flags:tracing_library=stub
 common --@score_baselibs//score/memory/shared/flags:use_typedshmd=False
