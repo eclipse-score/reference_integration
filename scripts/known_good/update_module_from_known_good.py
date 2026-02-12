@@ -38,11 +38,11 @@ def generate_git_override_blocks(modules: List[Module], repo_commit_dict: Dict[s
         if module.repo in repo_commit_dict:
             commit = repo_commit_dict[module.repo]
         
-        # Generate patches lines if patches exist
+        # Generate patches lines if bazel_patches exist
         patches_lines = ""
-        if module.patches:
+        if module.bazel_patches:
             patches_lines = "    patches = [\n"
-            for patch in module.patches:
+            for patch in module.bazel_patches:
                 patches_lines += f'        "{patch}",\n'
             patches_lines += "    ],\n    patch_strip = 1,\n"
         

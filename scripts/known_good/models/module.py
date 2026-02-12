@@ -14,22 +14,25 @@ class Module:
 	hash: str
 	repo: str
 	version: str | None = None
-	patches: list[str] | None = None
+	bazel_patches: list[str] | None = None
+	impl_path: Dict[str, Dict[str, Any]] | None = None
 	branch: str = "main"
 
 	@classmethod
 	def from_dict(cls, name: str, module_data: Dict[str, Any]) -> Module:
 		"""Create a Module instance from a dictionary representation.
-		
+
 		Args:
 			name: The module name
 			module_data: Dictionary containing module configuration with keys:
 				- repo (str): Repository URL
 				- hash or commit (str): Commit hash
-				- version (str, optional): Module version
-				- patches (list[str], optional): List of patch files
+				- version (str, optional): Module version (when present, hash is ignored)
+				- bazel_patches (list[str], optional): List of patch files for Bazel
+				- impl_path (dict, optional): Language-specific implementation paths
+					Example: {"rust": {"code_root_path": "src", "exclude_test_targets": [""]}}
 				- branch (str, optional): Git branch name (default: main)
-		
+
 		Returns:
 			Module instance
 		"""
@@ -37,15 +40,18 @@ class Module:
 		# Support both 'hash' and 'commit' keys
 		commit_hash = module_data.get("hash") or module_data.get("commit", "")
 		version = module_data.get("version")
-		patches = module_data.get("patches", [])
+		# Support both 'bazel_patches' and legacy 'patches' keys
+		bazel_patches = module_data.get("bazel_patches") or module_data.get("patches", [])
+		impl_path = module_data.get("impl_path")
 		branch = module_data.get("branch", "main")
-		
+
 		return cls(
 			name=name,
 			hash=commit_hash,
 			repo=repo,
 			version=version,
-			patches=patches if patches else None,
+			bazel_patches=bazel_patches if bazel_patches else None,
+			impl_path=impl_path,
 			branch=branch
 		)
 
@@ -93,7 +99,7 @@ class Module:
 
 	def to_dict(self) -> Dict[str, Any]:
 		"""Convert Module instance to dictionary representation for JSON output.
-		
+
 		Returns:
 			Dictionary with module configuration
 		"""
@@ -103,8 +109,10 @@ class Module:
 		}
 		if self.version:
 			result["version"] = self.version
-		if self.patches:
-			result["patches"] = self.patches
+		if self.impl_path:
+			result["impl_path"] = self.impl_path
+		if self.bazel_patches:
+			result["bazel_patches"] = self.bazel_patches
 		if self.branch and self.branch != "main":
 			result["branch"] = self.branch
 		return result
