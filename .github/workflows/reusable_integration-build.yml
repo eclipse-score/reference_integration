@@ -56,6 +56,15 @@ on:
       REPO_READ_TOKEN:
         description: 'GitHub token with read access to the score modules. Defaults to github.token'
         required: false
+      SCORE_QNX_LICENSE:
+        description: 'Base64-encoded QNX license file for QNX builds.'
+        required: false
+      SCORE_QNX_USER:
+        description: 'Username for QNX license server authentication.'
+        required: false
+      SCORE_QNX_PASSWORD:
+        description: 'Password for QNX license server authentication.'
+        required: false
     inputs:
       known_good:
         description: 'Content of the known_good.json file to use for the integration test.'
@@ -81,7 +90,7 @@ env:
 
 jobs:
   integration-test:
-    name: Integration Test
+    name: Integration Test ${{ inputs.config }}
     runs-on: ${{ inputs.repo_runner_labels != '' && (startsWith(inputs.repo_runner_labels, '[') && fromJSON(inputs.repo_runner_labels) || inputs.repo_runner_labels) || 'ubuntu-latest' }}
     steps:
       - name: Clean disk space
@@ -102,6 +111,30 @@ jobs:
           disk-cache: ${{ inputs.config }}
           # Share repository cache between workflows.
           repository-cache: true
+      - name: Prepare QNX license
+        if: contains(inputs.config, 'qnx')
+        env:
+          SCORE_QNX_LICENSE: ${{ secrets.SCORE_QNX_LICENSE }}
+          SCORE_QNX_USER: ${{ secrets.SCORE_QNX_USER }}
+          SCORE_QNX_PASSWORD: ${{ secrets.SCORE_QNX_PASSWORD }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SCORE_QNX_LICENSE}" ]; then
+            echo "SCORE_QNX_LICENSE secret is not set. QNX builds will fail without a valid license."
+            exit 1
+          fi
+          if [ -z "${SCORE_QNX_USER}" ]; then
+            echo "SCORE_QNX_USER secret is not set. QNX builds will fail without authentication."
+            exit 1
+          fi
+          if [ -z "${SCORE_QNX_PASSWORD}" ]; then
+            echo "SCORE_QNX_PASSWORD secret is not set. QNX builds will fail without authentication."
+            exit 1
+          fi
+
+          LICENSE_DIR="/opt/score_qnx/license"
+          sudo mkdir -p "${LICENSE_DIR}"
+          echo "${SCORE_QNX_LICENSE}" | base64 --decode | sudo tee "${LICENSE_DIR}/licenses" >/dev/null
       - name: Update known good commits
         run: |
           echo "::group::write known_good.json from input"
@@ -123,6 +156,8 @@ jobs:
           python3 scripts/integration_test.py --known-good known_good.updated.json --config "${{ inputs.config }}"
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_READ_TOKEN != '' && secrets.REPO_READ_TOKEN || github.token }}
+          SCORE_QNX_USER: ${{ secrets.SCORE_QNX_USER }}
+          SCORE_QNX_PASSWORD: ${{ secrets.SCORE_QNX_PASSWORD }}
       - name: Upload logs artifact
         if: always()
         uses: actions/upload-artifact@v4

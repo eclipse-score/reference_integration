@@ -13,6 +13,7 @@
 
 common --registry=https://raw.githubusercontent.com/eclipse-score/bazel_registry/main/
 common --registry=https://bcr.bazel.build
+common --credential_helper=*.qnx.com=%workspace%/integration/scripts/qnx_credential_helper.py
 
 
 # Flags needed by score_baselibs and communication modules.
@@ -43,6 +44,26 @@ build:x86_64-linux --config=shared
 build:x86_64-linux --platforms=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
 build:x86_64-linux --extra_toolchains=@score_toolchains_rust//toolchains/ferrocene:ferrocene_x86_64_unknown_linux_gnu
 build:x86_64-linux --features=-treat_warnings_as_errors # due to baselibs deprecations
+
+build:arm64-linux --config=shared
+build:arm64-linux --platforms=@score_bazel_platforms//:aarch64-linux-gcc_12.2.0-posix
+build:arm64-linux --features=-treat_warnings_as_errors # due to baselibs deprecations
+
+build:x86_64-qnx8_0 --sandbox_writable_path=/var/tmp
+build:x86_64-qnx8_0 --config=shared
+build:x86_64-qnx8_0 --platforms=@score_bazel_platforms//:x86_64-qnx8_0
+build:x86_64-qnx8_0 --extra_toolchains=@score_qcc_x86_64_toolchain//:x86_64-qnx-sdp_8.0.0-posix
+build:x86_64-qnx8_0 --extra_toolchains=@score_toolchains_rust//toolchains/ferrocene:ferrocene_x86_64_pc_nto_qnx800
+build:x86_64-qnx8_0 --define=config=build_qnx8 # for lifecycle
+
+
+build:arm64-qnx8_0 --sandbox_writable_path=/var/tmp
+build:arm64-qnx8_0 --config=shared
+build:arm64-qnx8_0 --platforms=@score_bazel_platforms//:arm64-qnx8_0
+build:arm64-qnx8_0 --extra_toolchains=@score_qcc_aarch64_toolchain//:aarch64-qnx-sdp_8.0.0-posix
+build:arm64-qnx8_0 --extra_toolchains=@score_toolchains_rust//toolchains/ferrocene:ferrocene_aarch64_unknown_nto_qnx800
+build:arm64-qnx8_0 --extra_toolchains=@score_toolchains_rust//toolchains/ferrocene:ferrocene_x86_64_unknown_linux_gnu
+build:arm64-qnx8_0 --define=config=build_qnx8 # for lifecycle
 
 # this is deprecated, use build:x86_64-linux instead
 build:_bl_common --host_platform=@score_bazel_platforms//:x86_64-linux
