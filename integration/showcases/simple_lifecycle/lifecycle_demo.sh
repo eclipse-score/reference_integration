@@ -19,7 +19,7 @@ else
     pkill -SIGUSR1 -f cpp_supervised_app
 fi
 
-sleep 5
+sleep 6
 
 echo "\nStep 3: Shutdown Launch Manager\n"
 
