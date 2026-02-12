@@ -13,8 +13,8 @@ mEntries = [
     ("Run Linux x86_64 Docker", "bazel --output_user_root=build/linux-x86_64 run --config linux-x86_64  //images/linux_x86_64:run", "linux-x86_64"),
     ("Run Elektrobit Corbos aarch64 QEMU",
      "bazel --output_user_root=build/eb-aarch64 build --config eb-aarch64  //images/ebclfsa_aarch64/scrample_integration:run", "eb-aarch64"),
-    ("Run Autosd x86_64 Docker",
-     "bazel build --config autosd-x86_64 //images/autosd_x86_64:run", "autosd-x86_64"),
+    ("Run Autosd x86_64 QEMU",
+     "bazel --output_user_root=build/autosd-x86_64 build --config autosd-x86_64  //images/autosd_x86_64:image", "autosd-x86_64"),
     ("Exit", "exit 0", "exit"),
 ]
 
