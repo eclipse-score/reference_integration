@@ -112,7 +112,7 @@ jobs:
           # Share repository cache between workflows.
           repository-cache: true
       - name: Prepare QNX license
-        if: inputs.config == 'arm64-qnx8_0' || inputs.config == 'x86_64-qnx8_0'
+        if: contains(inputs.config, 'qnx')
         env:
           SCORE_QNX_LICENSE: ${{ secrets.SCORE_QNX_LICENSE }}
           SCORE_QNX_USER: ${{ secrets.SCORE_QNX_USER }}

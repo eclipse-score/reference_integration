@@ -155,7 +155,7 @@ jobs:
     uses: ./.github/workflows/reusable_integration-build.yml
     secrets: inherit
     # Skip QNX builds if secrets aren't available (e.g., from fork PRs)
-    if: ${{ !contains(matrix.config, 'qnx') || secrets.SCORE_QNX_LICENSE != '' }}
+    if: ${{ !contains(matrix.config, 'qnx') || (secrets.SCORE_QNX_LICENSE != '' && secrets.SCORE_QNX_USER != '' && secrets.SCORE_QNX_PASSWORD != '') }}
     with:
       known_good: ${{ needs.preparation.outputs.known_good_updated }}
       config: ${{ matrix.config }}
