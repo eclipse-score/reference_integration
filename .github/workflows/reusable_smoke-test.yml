@@ -73,6 +73,15 @@ on:
       REPO_READ_TOKEN:
         description: 'Token for reading repositories'
         required: false
+      SCORE_QNX_LICENSE:
+        description: 'Base64-encoded QNX license file for QNX builds.'
+        required: false
+      SCORE_QNX_USER:
+        description: 'Username for QNX license server authentication.'
+        required: false
+      SCORE_QNX_PASSWORD:
+        description: 'Password for QNX license server authentication.'
+        required: false
 
 env:
   REFERENCE_INTEGRATION_REPO: ${{ vars.reference_integration_repo != '' && vars.reference_integration_repo || 'eclipse-score/reference_integration' }}
@@ -141,10 +150,12 @@ jobs:
           - x86_64-linux
           # - arm64-linux
           # Add more configs here as needed
-          # - arm64-qnx8_0
+          - arm64-qnx8_0
           # - x86_64-qnx8_0
     uses: ./.github/workflows/reusable_integration-build.yml
     secrets: inherit
+    # Skip QNX builds if secrets aren't available (e.g., from fork PRs)
+    if: ${{ !contains(matrix.config, 'qnx') || secrets.SCORE_QNX_LICENSE != '' }}
     with:
       known_good: ${{ needs.preparation.outputs.known_good_updated }}
       config: ${{ matrix.config }}
