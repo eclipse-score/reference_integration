@@ -7,6 +7,7 @@ score_pkg_bundle(
         "@score_lifecycle_health//src/launch_manager_daemon:launch_manager",
         "@score_lifecycle_health//examples/cpp_supervised_app",
         "@score_lifecycle_health//examples/control_application:control_daemon",
+        ":lifecycle_demo.sh"
     ],
     config_data = [
         "//showcases/simple_lifecycle:simple_lifecycle.score.json",
@@ -15,7 +16,7 @@ score_pkg_bundle(
     custom_layout = {
         ":lm_demo.bin": "etc/lm_demo.bin",
         ":hm_demo.bin": "etc/hm_demo.bin",
-        ":supervised_app_demo.bin": "etc/supervised_app_demo.bin",
+        ":supervised_cpp_app_demo.bin": "etc/supervised_cpp_app_demo.bin",
     },
 )
 
@@ -38,11 +39,11 @@ genrule(
 )
 
 genrule(
-    name = "supervised_app_demo.bin",
-    srcs = ["@score_lifecycle_health//src/launch_manager_daemon/health_monitor_lib:hm_flatcfg_fbs", "//showcases/simple_lifecycle/configs:supervised_app_demo.json"],
-    outs = ["supervised_app_demo.bin"],
+    name = "supervised_cpp_app_demo.bin",
+    srcs = ["@score_lifecycle_health//src/launch_manager_daemon/health_monitor_lib:hm_flatcfg_fbs", "//showcases/simple_lifecycle/configs:supervised_cpp_app_demo.json"],
+    outs = ["supervised_cpp_app_demo.bin"],
     tools = ["@flatbuffers//:flatc"],
-    cmd = "$(location @flatbuffers//:flatc) --binary $(SRCS) && mv supervised_app_demo.bin $(location supervised_app_demo.bin)",
+    cmd = "$(location @flatbuffers//:flatc) --binary $(SRCS) && mv supervised_cpp_app_demo.bin $(location supervised_cpp_app_demo.bin)",
     visibility = ["//visibility:public"],
 )
 
