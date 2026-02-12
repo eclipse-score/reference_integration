@@ -1,12 +1,24 @@
 {
     "name": "Simple Health and lifecycle management example",
-    "description": "Example runs launch_manager which is spawning two applications and monitors if they are healthy. When some application is malfunctioning, launch_manager will switch to a Recovery state and terminate both applications. Examples takes ~15s",
+    "description": "Example runs two applications and monitors if they are healthy. When some application is malfunctioning, this will be recorded. Examples takes ~15s",
     "apps": [
         {
-            "path": "/showcases/bin/lifecycle_demo.sh",
-            "dir": "/",
+            "path": "/showcases/bin/launch_manager",
+            "dir": "/showcases/data/simple_lifecycle",
             "args": [],
             "env": {}
+        },
+        {
+            "path": "/showcases/bin/lifecycle_signal.sh",
+            "args": ["cpp_supervised_app", "SIGUSR1"],
+            "env": {},
+            "delay": 2
+        },
+        {
+            "path": "/showcases/bin/lifecycle_signal.sh",
+            "args": ["launch_manager", "SIGTERM"],
+            "env": {},
+            "delay": 6
         }
     ]
 }

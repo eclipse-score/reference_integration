@@ -8,7 +8,7 @@ score_pkg_bundle(
         "@score_lifecycle_health//examples/cpp_supervised_app",
         "@score_lifecycle_health//examples/rust_supervised_app",
         "@score_lifecycle_health//examples/control_application:control_daemon",
-        ":lifecycle_demo.sh"
+        ":lifecycle_signal.sh"
     ],
     config_data = [
         "//showcases/simple_lifecycle:simple_lifecycle.score.json",
