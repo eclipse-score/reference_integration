@@ -17,7 +17,7 @@ module(
 )
 
 # Include common modules
-include("//bazel_common:score_basic_tools.MODULE.bazel")
+include("//bazel_common:score_basic_bazel.MODULE.bazel")
 
 # GCC toolchains
 include ("//bazel_common:score_gcc_toolchains.MODULE.bazel") # WIP: Not used yet as have problems with IFS toolchain
@@ -31,8 +31,11 @@ include ("//bazel_common:score_rust_toolchains.MODULE.bazel")
 # Python support
 include("//bazel_common:score_python.MODULE.bazel")
 
+# Score modules tools
+include("//bazel_common:score_modules_tooling.MODULE.bazel")
+
 # Score modules
-include("//bazel_common:score_modules.MODULE.bazel")
+include("//bazel_common:score_modules_target_sw.MODULE.bazel")
 
 bazel_dep(name = "rules_boost", repo_name = "com_github_nelhage_rules_boost")
 archive_override(
