@@ -23,7 +23,7 @@ score_pkg_bundle(
 )
 
 genrule(
-    name = "lm_demo.bin",
+    name = "gen_lm_demo.bin",
     srcs = ["@score_lifecycle_health//src/launch_manager_daemon:lm_flatcfg_fbs", "//showcases/simple_lifecycle/configs:lm_demo.json"],
     outs = ["lm_demo.bin"],
     tools = ["@flatbuffers//:flatc"],
@@ -32,7 +32,7 @@ genrule(
 )
 
 genrule(
-    name = "hm_demo.bin",
+    name = "gen_hm_demo.bin",
     srcs = ["@score_lifecycle_health//src/launch_manager_daemon/health_monitor_lib:hm_flatcfg_fbs", "//showcases/simple_lifecycle/configs:hm_demo.json"],
     outs = ["hm_demo.bin"],
     tools = ["@flatbuffers//:flatc"],
@@ -41,7 +41,7 @@ genrule(
 )
 
 genrule(
-    name = "cpp_supervised_app_demo.bin",
+    name = "gen_cpp_supervised_app_demo.bin",
     srcs = ["@score_lifecycle_health//src/launch_manager_daemon/health_monitor_lib:hm_flatcfg_fbs", "//showcases/simple_lifecycle/configs:cpp_supervised_app_demo.json"],
     outs = ["cpp_supervised_app_demo.bin"],
     tools = ["@flatbuffers//:flatc"],
@@ -50,7 +50,7 @@ genrule(
 )
 
 genrule(
-    name = "rust_supervised_app_demo.bin",
+    name = "gen_rust_supervised_app_demo.bin",
     srcs = ["@score_lifecycle_health//src/launch_manager_daemon/health_monitor_lib:hm_flatcfg_fbs", "//showcases/simple_lifecycle/configs:rust_supervised_app_demo.json"],
     outs = ["rust_supervised_app_demo.bin"],
     tools = ["@flatbuffers//:flatc"],
