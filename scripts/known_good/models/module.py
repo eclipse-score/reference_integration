@@ -2,10 +2,52 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from urllib.parse import urlparse
 from typing import Any, Dict, List
 import logging
+
+
+@dataclass
+class Metadata:
+	"""Metadata configuration for a module.
+
+	Attributes:
+		code_root_path: Root path to the code directory
+		exclude_test_targets: List of test targets to exclude
+		langs: List of languages supported (e.g., ["cpp", "rust"])
+	"""
+	code_root_path: str = "//score/..."
+	exclude_test_targets: list[str] = field(default_factory=lambda: [""])
+	langs: list[str] = field(default_factory=lambda: ["cpp", "rust"])
+
+	@classmethod
+	def from_dict(cls, data: Dict[str, Any]) -> Metadata:
+		"""Create a Metadata instance from a dictionary.
+
+		Args:
+			data: Dictionary containing metadata configuration
+
+		Returns:
+			Metadata instance
+		"""
+		return cls(
+			code_root_path=data.get("code_root_path", "//score/..."),
+			exclude_test_targets=data.get("exclude_test_targets", [""]),
+			langs=data.get("langs", ["cpp", "rust"])
+		)
+
+	def to_dict(self) -> Dict[str, Any]:
+		"""Convert Metadata instance to dictionary representation.
+
+		Returns:
+			Dictionary with metadata configuration
+		"""
+		return {
+			"code_root_path": self.code_root_path,
+			"exclude_test_targets": self.exclude_test_targets,
+			"langs": self.langs
+		}
 
 
 @dataclass
@@ -15,7 +57,7 @@ class Module:
 	repo: str
 	version: str | None = None
 	bazel_patches: list[str] | None = None
-	impl_path: Dict[str, Dict[str, Any]] | None = None
+	metadata: Metadata = field(default_factory=Metadata)
 	branch: str = "main"
 
 	@classmethod
@@ -29,8 +71,13 @@ class Module:
 				- hash or commit (str): Commit hash
 				- version (str, optional): Module version (when present, hash is ignored)
 				- bazel_patches (list[str], optional): List of patch files for Bazel
-				- impl_path (dict, optional): Language-specific implementation paths
-					Example: {"rust": {"code_root_path": "src", "exclude_test_targets": [""]}}
+				- metadata (dict, optional): Metadata configuration
+					Example: {
+						"code_root_path": "path/to/code/root",
+						"exclude_test_targets": [""],
+						"langs": ["cpp", "rust"]
+					}
+					If not present, uses default Metadata values.
 				- branch (str, optional): Git branch name (default: main)
 
 		Returns:
@@ -42,7 +89,15 @@ class Module:
 		version = module_data.get("version")
 		# Support both 'bazel_patches' and legacy 'patches' keys
 		bazel_patches = module_data.get("bazel_patches") or module_data.get("patches", [])
-		impl_path = module_data.get("impl_path")
+
+		# Parse metadata - if not present or is None/empty dict, use defaults
+		metadata_data = module_data.get("metadata")
+		if metadata_data is not None:
+			metadata = Metadata.from_dict(metadata_data)
+		else:
+			# If metadata key is missing, create with defaults
+			metadata = Metadata()
+
 		branch = module_data.get("branch", "main")
 
 		return cls(
@@ -51,7 +106,7 @@ class Module:
 			repo=repo,
 			version=version,
 			bazel_patches=bazel_patches if bazel_patches else None,
-			impl_path=impl_path,
+			metadata=metadata,
 			branch=branch
 		)
 
@@ -105,12 +160,11 @@ class Module:
 		"""
 		result: Dict[str, Any] = {
 			"repo": self.repo,
-			"hash": self.hash
+			"hash": self.hash,
+			"metadata": self.metadata.to_dict()
 		}
 		if self.version:
 			result["version"] = self.version
-		if self.impl_path:
-			result["impl_path"] = self.impl_path
 		if self.bazel_patches:
 			result["bazel_patches"] = self.bazel_patches
 		if self.branch and self.branch != "main":

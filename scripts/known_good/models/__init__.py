@@ -1,5 +1,5 @@
 """Models for score reference integration tools."""
 
-from .module import Module
+from .module import Module, Metadata
 
-__all__ = ["Module"]
+__all__ = ["Module", "Metadata"]
