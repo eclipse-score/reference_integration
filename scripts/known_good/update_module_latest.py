@@ -132,6 +132,10 @@ def main(argv: list[str]) -> int:
 		print("INFO: --no-gh specified; ignoring installed 'gh' CLI", file=sys.stderr)
 
 	for mod in known_good.modules.values():
+		if mod.pin_version:
+			print(f"{mod.name}: pinned, skipping")
+			continue
+
 		try:
 			branch = mod.branch if mod.branch else args.branch
 			if use_gh:

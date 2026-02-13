@@ -16,12 +16,9 @@ name: AutoSD - Build & Test
 on:
   pull_request:
     types: [opened, reopened, synchronize]
-    paths:
-      - 'integration/**'
+
   merge_group:
     types: [checks_requested]
-    paths:
-      - 'integration/**'
 
 jobs:
   build:
@@ -43,7 +40,7 @@ jobs:
       - name: Build Showcases RPMs
         run: |
           bazel build --config autosd-x86_64 //images/autosd_x86_64:score-reference-integration
-        working-directory: ./integration/images/autosd_x86_64
+        working-directory: ./images/autosd_x86_64
 
       - name: Copy RPMs
         run: |
@@ -52,13 +49,12 @@ jobs:
           cp bazel-bin/images/autosd_x86_64/score-reference-integration-0.6.0-1.x86_64.rpm ./images/autosd_x86_64/build/rpms
           createrepo_c ./images/autosd_x86_64/build/rpms/
           ls -l ./images/autosd_x86_64/build/rpms/
-        working-directory: ./integration
       
       - name: Install AIB Tools
         run: |
           curl -o auto-image-builder.sh "https://gitlab.com/CentOS/automotive/src/automotive-image-builder/-/raw/main/auto-image-builder.sh?ref_type=heads"
           chmod +x auto-image-builder.sh
-        working-directory: ./integration/images/autosd_x86_64/build
+        working-directory: ./images/autosd_x86_64/build
  
       - name: Build AutoSD QEMU (x86_64)
         run: |
@@ -78,7 +74,7 @@ jobs:
           sudo -E ./auto-image-builder.sh to-disk-image localhost/score:latest _build/disk.qcow2
 
           sudo chown $(id -u):$(id -u) _build/disk.qcow2
-        working-directory: ./integration/images/autosd_x86_64/build
+        working-directory: ./images/autosd_x86_64/build
 
       - name: Enable KVM group perms
         run: |
@@ -95,7 +91,7 @@ jobs:
           ./scripts/run_qemu
           
           sshcmd 'cat /etc/os-release'
-        working-directory: ./integration/images/autosd_x86_64/build
+        working-directory: ./images/autosd_x86_64/build
         env:
           SSH_PASSWORD: password
       
@@ -103,4 +99,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: autosd10-score-reference_integration-x86_64.qcow2
-          path: integration/images/autosd_x86_64/build/_build/disk.qcow2
+          path: images/autosd_x86_64/build/_build/disk.qcow2

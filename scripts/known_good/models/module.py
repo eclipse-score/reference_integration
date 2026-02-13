@@ -60,6 +60,7 @@ class Module:
     bazel_patches: list[str] | None = None
     metadata: Metadata = field(default_factory=Metadata)
     branch: str = "main"
+    pin_version: bool = False
 
     @classmethod
     def from_dict(cls, name: str, module_data: Dict[str, Any]) -> Module:
@@ -80,6 +81,8 @@ class Module:
                                 }
                                 If not present, uses default Metadata values.
                         - branch (str, optional): Git branch name (default: main)
+                        - pin_version (bool, optional): If true, module hash is not updated
+				            to latest HEAD by update scripts (default: false)
 
         Returns:
                 Module instance
@@ -107,6 +110,7 @@ class Module:
             metadata = Metadata()
 
         branch = module_data.get("branch", "main")
+        pin_version = module_data.get("pin_version", False)
 
         return cls(
             name=name,
@@ -116,6 +120,7 @@ class Module:
             bazel_patches=bazel_patches if bazel_patches else None,
             metadata=metadata,
             branch=branch,
+            pin_version=pin_version,
         )
 
     @classmethod
@@ -177,4 +182,6 @@ class Module:
             result["bazel_patches"] = self.bazel_patches
         if self.branch and self.branch != "main":
             result["branch"] = self.branch
+        if self.pin_version:
+            result["pin_version"] = True
         return result

@@ -57,9 +57,13 @@ jobs:
             disk-cache: ${{ github.workflow }}
             repository-cache: true
 
-        - name: Bazel build targets
+        - name: Build image
           run: |
-            cd integration && python3 ../scripts/quality_runners.py --unit-tests
+            bazel build --config=linux-x86_64 //images/linux_x86_64:image
+
+        - name: Execute Unit Tests
+          run: |
+            python3 ./scripts/quality_runners.py --unit-tests
 
         - name: Publish build summary
           if: always()

@@ -32,7 +32,7 @@ jobs:
       - name: Check
         run: |
           ls -la 
-          scripts/known_good/update_module_from_known_good.py --known known_good_next.json --output-dir integration/bazel_common
+          scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir integration/bazel_common
           if git diff --quiet; then
               echo "No changes"
           else

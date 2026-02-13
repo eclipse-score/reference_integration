@@ -15,12 +15,9 @@ name: QNX8 - Build & Test
 on:
   pull_request_target:
     types: [opened, reopened, synchronize]
-    paths:
-      - 'integration/**'
+
   merge_group:
     types: [checks_requested]
-    paths:
-      - 'integration/**'
 
 jobs:
   qnx-build-x86_64:
@@ -62,7 +59,6 @@ jobs:
           SCORE_QNX_PASSWORD: ${{ secrets.SCORE_QNX_PASSWORD }}
         run: |
           bazel build --config qnx-x86_64 //images/qnx_x86_64:image
-        working-directory: ./integration
 
       - name: Cleanup QNX license
         if: always()
