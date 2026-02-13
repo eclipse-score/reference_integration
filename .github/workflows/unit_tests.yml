@@ -59,16 +59,15 @@ jobs:
 
         - name: Bazel build targets
           run: |
-            scripts/run_unit_tests.sh
-            cat _logs/ut_summary.md
+            cd integration && python3 ../scripts/quality_runners.py --unit-tests
 
         - name: Publish build summary
           if: always()
           run: |
-            if [ -f _logs/ut_summary.md ]; then
-              cat _logs/ut_summary.md >> "$GITHUB_STEP_SUMMARY"
+            if [ -f docs/verification/unit_test_summary.md ]; then
+              cat docs/verification/unit_test_summary.md >> "$GITHUB_STEP_SUMMARY"
             else
-              echo "No build summary file found (_logs/ut_summary.md)" >> "$GITHUB_STEP_SUMMARY"
+              echo "No build summary file found (docs/verification/unit_test_summary.md)" >> "$GITHUB_STEP_SUMMARY"
             fi
 
         - name: Upload logs artifact

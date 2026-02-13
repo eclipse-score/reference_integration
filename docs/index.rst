@@ -17,6 +17,11 @@ Reference Integration Documentation
 
 Newest Release Notes: :need:`doc__score_v05_beta_release_note`
 
+Verification Reports Summaries
+------------------------------
+
+.. toctree::
+   verification/verification
 
 .. if-collection:: score_platform
 

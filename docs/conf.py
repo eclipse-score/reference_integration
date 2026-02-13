@@ -24,3 +24,9 @@ extensions = [
     "sphinxcontrib.plantuml",
     "score_sphinx_bundle",
 ]
+
+# Enable markdown rendering
+source_suffix = {
+    ".rst": "restructuredtext",
+    ".md": "markdown",
+}
