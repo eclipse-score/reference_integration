@@ -19,3 +19,4 @@ Verification Reports Summaries
    :titlesonly:
 
    Unit Tests Summary <unit_test_summary>
+   Coverage Analysis Summary <coverage_summary>

@@ -56,6 +56,9 @@ build:autosd-x86_64 --extra_toolchains=@rules_rpm//toolchains:linux_x86_64
 
 test:unit-tests --config=linux-x86_64
 
+# Coverage configuration for C++
+coverage --features=coverage
+coverage --combined_report=lcov
 
 # user specific overrides (like proxy settings)
 try-import %workspace%/user.bazelrc

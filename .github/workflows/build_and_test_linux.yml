@@ -57,13 +57,18 @@ jobs:
             disk-cache: ${{ github.workflow }}
             repository-cache: true
 
+        - name: Install lcov
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y lcov
+
         - name: Build image
           run: |
             bazel build --config=linux-x86_64 //images/linux_x86_64:image
 
-        - name: Execute Unit Tests
+        - name: Execute Unit Tests with Coverage Analysis
           run: |
-            python3 ./scripts/quality_runners.py --unit-tests
+            python3 ./scripts/quality_runners.py
 
         - name: Publish build summary
           if: always()
@@ -72,6 +77,12 @@ jobs:
               cat docs/verification/unit_test_summary.md >> "$GITHUB_STEP_SUMMARY"
             else
               echo "No build summary file found (docs/verification/unit_test_summary.md)" >> "$GITHUB_STEP_SUMMARY"
+            fi
+            echo "" >> "$GITHUB_STEP_SUMMARY" # Add a newline for better formatting
+            if [ -f docs/verification/coverage_summary.md ]; then
+              cat docs/verification/coverage_summary.md >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "No coverage summary file found (docs/verification/coverage_summary.md)" >> "$GITHUB_STEP_SUMMARY"
             fi
 
         - name: Upload logs artifact
