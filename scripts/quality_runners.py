@@ -185,7 +185,7 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         "--known-good-path",
         type=Path,
-        default=Path(__file__).parent / "known_good.json",
+        default="known_good.json",
         help="Path to the known good JSON file",
     )
     parser.add_argument(

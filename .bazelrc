@@ -3,6 +3,12 @@ common --registry=https://bcr.bazel.build
 common --credential_helper=*.qnx.com=%workspace%/scripts/qnx_credential_helper.py
 common --credential_helper_timeout="60s"
 
+# Java
+build --java_language_version=17
+build --tool_java_language_version=17
+build --java_runtime_version=remotejdk_17
+build --tool_java_runtime_version=remotejdk_17
+
 build:_common --@score_baselibs//score/mw/log/detail/flags:KUse_Stub_Implementation_Only=False
 build:_common --@score_baselibs//score/mw/log/flags:KRemote_Logging=False
 build:_common --@score_baselibs//score/json:base_library=nlohmann
@@ -49,3 +55,7 @@ build:autosd-x86_64 --extra_toolchains=@rules_rpm//toolchains:linux_x86_64
 
 
 test:unit-tests --config=linux-x86_64
+
+
+# user specific overrides (like proxy settings)
+try-import %workspace%/user.bazelrc
