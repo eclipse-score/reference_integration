@@ -10,53 +10,55 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-
 module(
-    name = "score_reference_integration",
-    version = "0.5.0-beta",
+    name = "score_ref_int_qnx_x86_64",
+    version = "0.0.1",
     compatibility_level = 0,
 )
 
-include("//:score_modules.MODULE.bazel")
-include("//:score_toolchains.MODULE.bazel")
+# Include common modules
+include("//bazel_common:score_basic_bazel.MODULE.bazel")
 
-## Python
-bazel_dep(name = "rules_python", version = "1.8.3")
+# GCC toolchains
+include ("//bazel_common:score_gcc_toolchains.MODULE.bazel") # WIP: Not used yet as have problems with IFS toolchain
 
-PYTHON_VERSION = "3.12"
+# GCC toolchains
+include ("//bazel_common:score_qnx_toolchains.MODULE.bazel") # WIP: Not used yet as have problems with IFS toolchain
 
-python = use_extension("@rules_python//python/extensions:python.bzl", "python")
-python.toolchain(
-    configure_coverage_tool = True,
-    is_default = True,
-    python_version = PYTHON_VERSION,
-)
-use_repo(python)
+# Rust toolchains
+include ("//bazel_common:score_rust_toolchains.MODULE.bazel")
 
-# Special imports for certain modules
+# Python support
+include("//bazel_common:score_python.MODULE.bazel")
 
-# communication module dependencies
-# archive_override are not forwarded by bazel_dep, so we need to redefine it here
+# Score modules tools
+include("//bazel_common:score_modules_tooling.MODULE.bazel")
+
+# Score modules
+include("//bazel_common:score_modules_target_sw.MODULE.bazel")
+
 bazel_dep(name = "rules_boost", repo_name = "com_github_nelhage_rules_boost")
 archive_override(
     module_name = "rules_boost",
-    strip_prefix = "rules_boost-master",
     urls = ["https://github.com/nelhage/rules_boost/archive/refs/heads/master.tar.gz"],
+    strip_prefix = "rules_boost-master",
 )
 
-# git_override are not forwarded by bazel_dep, so we need to redefine it here
-bazel_dep(name = "trlc")
+# TRLC dependency for requirements traceability
+bazel_dep(name = "trlc", version = "0.0.0")
 git_override(
     module_name = "trlc",
-    remote = "https://github.com/bmw-software-engineering/trlc.git",
     commit = "650b51a47264a4f232b3341f473527710fc32669",  # trlc-2.0.2 release
+    remote = "https://github.com/bmw-software-engineering/trlc.git",
 )
 
-# imports for the feature showcase module
-bazel_dep(name = "rules_rust", version = "0.67.0")
-bazel_dep(name = "score_itf", version = "0.1.0")
-bazel_dep(name = "score_crates", version = "0.0.6")
-single_version_override(
-    module_name = "score_crates",
-    version = "0.0.6",
+# Currently required for ifs tooling
+bazel_dep(name = "score_toolchains_qnx", version = "0.0.7")
+toolchains_qnx = use_extension("@score_toolchains_qnx//:extensions.bzl", "toolchains_qnx", dev_dependency=True)
+toolchains_qnx.sdp(
+    sha256 = "f2e0cb21c6baddbcb65f6a70610ce498e7685de8ea2e0f1648f01b327f6bac63",
+    strip_prefix = "installation",
+    url = "https://www.qnx.com/download/download/79858/installation.tgz",
 )
+use_repo(toolchains_qnx, "toolchains_qnx_sdp")
+use_repo(toolchains_qnx, "toolchains_qnx_ifs")
