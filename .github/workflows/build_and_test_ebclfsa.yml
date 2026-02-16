@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-name: EB Corbos Linux for Safety Applications - Build & Test
+name: EB Corbos Linux for Safety - Build & Integration Test
 
 on:
   pull_request:
@@ -19,6 +19,9 @@ on:
   merge_group:
     types: [checks_requested]
 
+  push:
+    branches:
+      - main
 jobs:
   build:
     name: aarch64
@@ -29,6 +32,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.15.0
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}
+          repository-cache: true
+          cache-save: ${{ github.event_name == 'push' }}
 
       - name: Build for EB corbos Linux for Safety Applications and run tests
         run: |
