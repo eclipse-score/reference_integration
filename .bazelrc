@@ -20,7 +20,7 @@ build:_common --@score_communication//score/mw/com/flags:tracing_library=stub
 build:_common --cxxopt=-Wno-error=mismatched-new-delete
 build:_common --host_platform=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
 build:_common --extra_toolchains=@score_toolchains_rust//toolchains/ferrocene:ferrocene_x86_64_unknown_linux_gnu
-build:_common --extra_toolchains=@score_gcc_x86_64_toolchain//:x86_64-linux-gcc_12.2.0-posix
+build:_common --extra_toolchains=@score_gcc_x86_64_toolchain//:x86_64-linux-gcc_12.2.0
 
 build:qnx-x86_64 --config=_common
 build:qnx-x86_64 --noexperimental_merged_skyframe_analysis_execution
@@ -40,12 +40,13 @@ build:itf-qnx-x86_64 --test_arg="--os=qnx"
 
 
 build:linux-x86_64 --config=_common
-build:linux-x86_64 --extra_toolchains=@score_gcc_x86_64_toolchain//:x86_64-linux-gcc_12.2.0-posix
+build:linux-x86_64 --extra_toolchains=@score_gcc_x86_64_toolchain//:x86_64-linux-gcc_12.2.0
 build:linux-x86_64 --platforms=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
 
 build:eb-aarch64 --config=_common
-build:eb-aarch64 --extra_toolchains=@gcc_toolchain//:aarch64_gcc_13
-build:eb-aarch64 --platforms=@score_toolchains_gcc//platforms:aarch64-linux
+build:eb-aarch64 --extra_toolchains=@score_ebclfsa_toolchain//:aarch64-linux-sdk_0.1.0-ebclfsa
+build:eb-aarch64 --extra_toolchains=@score_toolchains_rust//toolchains/ferrocene:ferrocene_aarch64_unknown_linux_gnu
+build:eb-aarch64 --platforms=@score_bazel_platforms//:aarch64-linux-sdk_0.1.0-ebclfsa
 build:eb-aarch64 --spawn_strategy=local
 
 
