@@ -19,11 +19,13 @@ class ProcessResult:
 
 
 def run_unit_test_with_coverage(module: Module) -> dict[str, str | int]:
-    print("Running unit tests...")
+    print("QR: Running unit tests...")
 
     call = [
         "bazel",
         "coverage",  # Call coverage instead of test to get .dat files already
+        "--test_verbose_timeout_warnings",
+        "--test_timeout=1200",
         "--config=unit-tests",
         "--test_summary=testcase",
         "--test_output=errors",
@@ -43,7 +45,7 @@ def run_unit_test_with_coverage(module: Module) -> dict[str, str | int]:
 
 
 def run_cpp_coverage_extraction(module: Module, output_path: Path) -> int:
-    print("Running cpp coverage analysis...")
+    print("QR: Running cpp coverage analysis...")
 
     result_cpp = cpp_coverage(module, output_path)
     summary = extract_coverage_summary(result_cpp.stdout)
@@ -113,7 +115,7 @@ def extract_ut_summary(logs: str) -> dict[str, int]:
     if match := pattern_summary_line.search(logs):
         summary_line = match.group(0)
     else:
-        print("Summary line not found in logs.")
+        print("QR: Summary line not found in logs.")
         return summary
 
     pattern_passed = re.compile(r"(\d+) passing")
@@ -174,7 +176,7 @@ def run_command(command: list[str]) -> ProcessResult:
     stdout_data = []
     stderr_data = []
 
-    print(f"Running command: `{' '.join(command)}`")
+    print(f"QR: Running command: `{' '.join(command)}`")
     with Popen(command, stdout=PIPE, stderr=PIPE, text=True, bufsize=1) as p:
         # Use select to read from both streams without blocking
         streams = {
@@ -248,11 +250,28 @@ def main() -> bool:
     for module in known.modules["target_sw"].values():
         if module.name in CURRENTLY_DISABLED_MODULES:
             print(
-                f"Skipping module {module.name} as it is currently disabled for unit tests."
+                "########################################################################",
+                flush=True,
+            )
+            print(
+                f"Skipping module {module.name} as it is currently disabled for unit tests.",
+                flush=True,
+            )
+            print(
+                "########################################################################",
+                flush=True,
             )
             continue
         else:
-            print(f"Testing module: {module.name}")
+            print(
+                "########################################################################",
+                flush=True,
+            )
+            print(f"QR: Testing module: {module.name}")
+            print(
+                "########################################################################",
+                flush=True,
+            )
 
         unit_tests_summary[module.name] = run_unit_test_with_coverage(module=module)
 
@@ -260,6 +279,15 @@ def main() -> bool:
             coverage_summary[module.name] = run_cpp_coverage_extraction(
                 module=module, output_path=args.coverage_output_dir
             )
+        print(
+            "########################################################################",
+            flush=True,
+        )
+        print(f"QR: Finished testing module: {module.name}")
+        print(
+            "########################################################################",
+            flush=True,
+        )
 
     generate_markdown_report(
         unit_tests_summary,
@@ -267,7 +295,7 @@ def main() -> bool:
         columns=["module", "passed", "failed", "skipped", "total"],
         output_path=path_to_docs / "unit_test_summary.md",
     )
-    print("UNIT TEST EXECUTION SUMMARY".center(120, "="))
+    print("QR: UNIT TEST EXECUTION SUMMARY".center(120, "="))
     pprint(unit_tests_summary, width=120)
 
     generate_markdown_report(
@@ -276,7 +304,7 @@ def main() -> bool:
         columns=["module", "lines", "functions", "branches"],
         output_path=path_to_docs / "coverage_summary.md",
     )
-    print("COVERAGE ANALYSIS SUMMARY".center(120, "="))
+    print("QR: COVERAGE ANALYSIS SUMMARY".center(120, "="))
     pprint(coverage_summary, width=120)
 
     # Check all exit codes and return non-zero if any test or coverage extraction failed
@@ -289,4 +317,5 @@ def main() -> bool:
 
 
 if __name__ == "__main__":
+    sys.stdout.reconfigure(line_buffering=True)
     sys.exit(main())

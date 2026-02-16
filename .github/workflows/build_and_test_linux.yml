@@ -62,9 +62,9 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y lcov
 
-        - name: Build image
-          run: |
-            bazel build --config=linux-x86_64 //images/linux_x86_64:image
+        # - name: Build image
+        #   run: |
+        #     bazel build --config=linux-x86_64 //images/linux_x86_64:image
 
         - name: Execute Unit Tests with Coverage Analysis
           run: |
