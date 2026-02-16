@@ -1,0 +1,218 @@
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+name: Code Quality & Documentation
+
+permissions:
+  contents: write
+  pages: write
+  pull-requests: write
+  id-token: write
+
+on:
+  pull_request_target: # Allows forks to trigger the docs build
+    types: [opened, reopened, synchronize]
+  push:
+    branches:
+      - main
+  merge_group:
+    types: [checks_requested]
+  release:
+    types: [created]
+
+jobs:
+  test_and_docs:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write # required to upload release assets
+      pull-requests: write
+
+    steps:
+      - name: Cleanup disk space
+        run: |
+          echo "Removing unneeded software... "
+          if [ -d /usr/share/dotnet ]; then echo "Removing dotnet..."; start=$(date +%s); sudo rm -rf /usr/share/dotnet; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+          #if [ -d /usr/local/lib/android ]; then echo "Removing android..."; start=$(date +%s); sudo rm -rf /usr/local/lib/android; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+          if [ -d /opt/ghc ]; then echo "Removing haskell (ghc)..."; start=$(date +%s); sudo rm -rf /opt/ghc; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+          if [ -d /usr/local/.ghcup ]; then echo "Removing haskell (ghcup)..."; start=$(date +%s); sudo rm -rf /usr/local/.ghcup; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+          if [ -d /usr/share/swift ]; then echo "Removing swift..."; start=$(date +%s); sudo rm -rf /usr/share/swift; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+          if [ -d /usr/local/share/chromium ]; then echo "Removing chromium..."; start=$(date +%s); sudo rm -rf /usr/local/share/chromium; end=$(date +%s); echo "Duration: $((end-start))s"; fi
+
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.15.0
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}
+          repository-cache: true
+
+      - name: Set up Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install lcov
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lcov
+
+      - name: Checkout repository (pull_request_target via workflow_call)
+        if: ${{ github.event_name == 'pull_request_target' }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+      
+      - name: Checkout repository
+        if: ${{ github.event_name != 'pull_request_target' }}
+        uses: actions/checkout@v4
+
+      - name: Execute Unit Tests with Coverage Analysis
+        run: |
+          python ./scripts/quality_runners.py
+
+      - name: Publish build summary
+        if: always()
+        run: |
+          if [ -f docs/verification/unit_test_summary.md ]; then
+            cat docs/verification/unit_test_summary.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No build summary file found (docs/verification/unit_test_summary.md)" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo "" >> "$GITHUB_STEP_SUMMARY" # Add a newline for better formatting
+          if [ -f docs/verification/coverage_summary.md ]; then
+            cat docs/verification/coverage_summary.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No coverage summary file found (docs/verification/coverage_summary.md)" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Create archive of test reports
+        if: github.ref_type == 'tag'
+        run: |
+          mkdir -p artifacts
+          find bazel-testlogs/external -name 'test.xml' -print0 | xargs -0 -I{} cp --parents {} artifacts/
+          zip -r ${{ github.event.repository.name }}_test_reports.zip artifacts/
+        shell: bash
+
+      - name: Upload release asset (attach ZIP to GitHub Release)
+        uses: softprops/action-gh-release@v2.5.0
+        if: github.ref_type == 'tag'
+        with:
+          files: ${{ github.event.repository.name }}_test_reports.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Graphviz
+        uses: eclipse-score/apt-install@main
+        with:
+          packages: graphviz
+          cache: false
+
+      - name: Build documentation
+        run: |
+          bazel --output_base="/home/runner/.cache/bazel/output_base" run \
+            --repo_contents_cache="/home/runner/.cache/bazel/repo_contents" \
+            --repository_cache="/home/runner/.cache/bazel/repo" \
+            --disk_cache="/home/runner/.cache/bazel/disk" \
+              //:docs_combo_experimental -- \
+              --github_user=${{ github.repository_owner }} \
+              --github_repo=${{ github.event.repository.name }}
+
+          tar -cf github-pages.tar _build
+
+      - name: Upload documentation artifact
+        uses: actions/upload-artifact@v4.4.0
+        with:
+          name: github-pages-${{ github.event.pull_request.head.sha || github.sha }}
+          path: github-pages.tar
+          retention-days: 3
+          if-no-files-found: error
+
+  docs-deploy:
+    name: Deploy Documentation to GitHub Pages
+    runs-on: ${{ vars.REPO_RUNNER_LABELS && fromJSON(vars.REPO_RUNNER_LABELS) || 'ubuntu-latest' }}
+    needs: test_and_docs
+    permissions:
+      pages: write
+      id-token: write
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Ensure gh-pages branch exists with initial files
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -e
+          if ! git ls-remote --exit-code --heads "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git" gh-pages; then
+            echo "gh-pages branch does not exist. Creating it..."
+            git clone --depth=1 "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git" repo
+            cd repo
+            git fetch origin main --depth=1
+            AUTHOR_NAME=$(git log origin/main -1 --pretty=format:'%an')
+            AUTHOR_EMAIL=$(git log origin/main -1 --pretty=format:'%ae')
+            git config user.name "$AUTHOR_NAME"
+            git config user.email "$AUTHOR_EMAIL"
+            echo "Using commit identity: $AUTHOR_NAME <$AUTHOR_EMAIL>"
+
+            git checkout --orphan gh-pages
+            git rm -rf . || true
+            REPO_NAME=$(basename "${REPO}")
+            OWNER_NAME="${REPO%%/*}"
+
+            touch versions.json
+            echo "[" > versions.json
+            echo "  {" >> versions.json
+            echo "    \"version\": \"main\"," >> versions.json
+            echo "    \"url\": \"https://${OWNER_NAME}.github.io/${REPO_NAME}/main/\"" >> versions.json
+            echo "  }" >> versions.json
+            echo "]" >> versions.json
+
+            touch index.html
+            echo '<!DOCTYPE html>' > index.html
+            echo '<html lang="en">' >> index.html
+            echo '<head>' >> index.html
+            echo '    <meta charset="UTF-8">' >> index.html
+            echo '    <meta http-equiv="refresh" content="0; URL=main/">' >> index.html
+            echo '    <title>Redirecting...</title>' >> index.html
+            echo '</head>' >> index.html
+            echo '<body>' >> index.html
+            echo '    <p>If you are not redirected, <a href="main/">click here</a>.</p>' >> index.html
+            echo '</body>' >> index.html
+            echo '</html>' >> index.html
+
+            touch .nojekyll
+            git add versions.json index.html .nojekyll
+            git commit -m "Initialize gh-pages branch with versions.json and index.html"
+            git push origin gh-pages
+            cd ..
+            rm -rf repo
+          else
+            echo "gh-pages branch exists. Skipping creation."
+          fi
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Download documentation artifact
+        uses: actions/download-artifact@v4.1.8
+        with:
+          name: github-pages-${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Untar documentation artifact
+        run: mkdir -p extracted_docs && tar -xf github-pages.tar -C extracted_docs
+
+      - name: Deploy 🚀
+        id: pages-deployment
+        uses: eclipse-score/cicd-workflows/.github/actions/deploy-versioned-pages@main
+        with:
+          source_folder: extracted_docs/_build
+          deployment_type: ${{ inputs.deployment_type }}
