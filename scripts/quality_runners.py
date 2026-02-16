@@ -72,14 +72,14 @@ def cpp_coverage(module: Module, artifact_dir: Path) -> ProcessResult:
         "genhtml",
         f"{bazel_coverage_output_directory}/_coverage/_coverage_report.dat",
         f"--output-directory={output_dir}",
-        f"--source-directory={bazel_source_directory}",
-        "--synthesize-missing",
+        # f"--source-directory={bazel_source_directory}",
+        # "--synthesize-missing",
         "--show-details",
         "--legend",
         "--function-coverage",
         "--branch-coverage",
     ]
-    genhtml_result = run_command(genhtml_call)
+    genhtml_result = run_command(genhtml_call, cwd=bazel_source_directory)
 
     return genhtml_result
 
@@ -162,7 +162,7 @@ def extract_coverage_summary(logs: str) -> dict[str, str]:
     return summary
 
 
-def run_command(command: list[str]) -> ProcessResult:
+def run_command(command: list[str], **kwargs) -> ProcessResult:
     """
     Run a command and print output live while storing it.
 
@@ -177,7 +177,7 @@ def run_command(command: list[str]) -> ProcessResult:
     stderr_data = []
 
     print(f"QR: Running command: `{' '.join(command)}`")
-    with Popen(command, stdout=PIPE, stderr=PIPE, text=True, bufsize=1) as p:
+    with Popen(command, stdout=PIPE, stderr=PIPE, text=True, bufsize=1, **kwargs) as p:
         # Use select to read from both streams without blocking
         streams = {
             p.stdout: (stdout_data, sys.stdout),
