@@ -1,0 +1,2091 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Assertions &#8212; REF_INT  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/css/score.css?v=6e51530f" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/css/score_needs.css?v=e97392eb" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/css/score_design.css?v=d9fd870c" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-needs/modern.css?v=803738c0" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../../../../_static/documentation_options.js?v=7f41d439"></script>
+    <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../../../../_static/sphinx-data-viewer/jsonview.bundle.js?v=18cd53c5"></script>
+    <script src="../../../../../_static/sphinx-data-viewer/jsonview_loader.js?v=f7ff7e7d"></script>
+    <script src="../../../../../_static/sphinx-needs/libs/html/datatables.min.js?v=8a4aee21"></script>
+    <script src="../../../../../_static/sphinx-needs/libs/html/datatables_loader.js?v=a2cae175"></script>
+    <script src="../../../../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js?v=dca66431"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_collections/score_process/process/trustable/assertions/assertions';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-score.github.io/reference_integration/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="Folder Templates" href="../../folder_templates/index.html" />
+    <link rel="prev" title="Tenets" href="../tenets/tenets.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Eclipse S-CORE</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../score_platform/docs/index.html">
+    S-CORE Platform
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../place_holder/persistency.html">
+    Persistency
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../place_holder/orchestrator.html">
+    Orchestrator
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../place_holder/communication.html">
+    Communication
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../score_feo/docs/index.html">
+    FEO
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" current active">
+  <a class="nav-link dropdown-item nav-internal" href="../../index.html">
+    Process description
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../score_docs_as_code/docs/index.html">
+    Docs-As-Code
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../score_platform/docs/index.html">
+    S-CORE Platform
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../place_holder/persistency.html">
+    Persistency
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../place_holder/orchestrator.html">
+    Orchestrator
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../place_holder/communication.html">
+    Communication
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../score_feo/docs/index.html">
+    FEO
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../index.html">
+    Process description
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../score_docs_as_code/docs/index.html">
+    Docs-As-Code
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../general_concepts/index.html">General concepts</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../process_areas/index.html">Process areas</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../roles/index.html">Roles</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../workproducts/index.html">Work products</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../workflows/index.html">Workflows</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../standards/index.html">Standards &amp; Requirements</a></li>
+</ul>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Trustable Software Framework</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../tenets/tenets.html">Tenets</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Assertions</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../folder_templates/index.html">Folder Templates</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../glossary/index.html">Glossary</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Process description</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Trustable Software Framework</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Assertions</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="assertions">
+<span id="tsf-assertions"></span><h1>Assertions<a class="headerlink" href="#assertions" title="Link to this heading">#</a></h1>
+<div class="need_container docutils container" id="SNCB-79884a29">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_assertion table" id="assertion__trust__ta-supply-chain">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">TA-SUPPLY-CHAIN</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span></span></span></div>
+<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="../tenets/tenets.html#tenet__trust__tt-provenance" title="assertion__trust__ta-supply-chain">tenet__trust__tt-provenance</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>All sources for XYZ and tools are mirrored in our controlled environment</p>
+<p><strong>Guidance</strong></p>
+<p>This assertion is satisfied to the extent that we have traced and captured
+source code for XYZ and all of its dependencies (including transitive
+dependencies, all the way down), and for all of the tools used to construct
+XYZ from source, and have mirrored versions of these inputs under our control.</p>
+<p>‘Mirrored’ in this context means that we have a version of the upstream project
+that we keep up-to-date with additions and changes to the upstream project,
+but which is protected from changes that would delete the project, or remove
+parts of its history.</p>
+<p>Clearly this is not possible for components or tools are provided only in
+binary form, or accessed via online services - in these circumstances we can
+only assess confidence based on attestations made by the suppliers, and on our
+experience with the suppliers’ people and processes.</p>
+<p>Keep in mind that even if repositories with source code for a particular
+component or tool are available, not all of it may be stored in version control system as
+plaintext. A deeper analysis is required in TA-INPUTS to assess the impact of any
+binaries present within the repositories of the components and tools used.</p>
+<p><strong>Evidence</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>list of all XYZ components including</dt><dd><ul>
+<li><p>URL of mirrored projects in controlled environment</p></li>
+<li><p>URL of upstream projects</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>successful build of XYZ from source</dt><dd><ul>
+<li><p>without access to external source projects</p></li>
+<li><p>without access to cached data</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>update logs for mirrored projects</p></li>
+<li><p>mirrors reject history rewrites</p></li>
+<li><p>mirroring is configured via infrastructure under direct control</p></li>
+</ul>
+<p><strong>Confidence scoring</strong></p>
+<p>Confidence scoring for TA-SUPPLY_CHAIN is based on confidence that all inputs and
+dependencies are identified and mirrored, and that mirrored projects cannot be
+compromised.</p>
+<p><strong>Checklist</strong></p>
+<ul class="simple">
+<li><p>Could there be other components, missed from the list?</p></li>
+<li><p>Does the list include all toolchain components?</p></li>
+<li><p>Does the toolchain include a bootstrap?</p></li>
+<li><p>Could the content of a mirrored project be compromised by an upstream change?</p></li>
+<li><p>Are mirrored projects up to date with the upstream project?</p></li>
+</ul>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#assertion__trust__ta-supply-chain" title="assertion__trust__ta-supply-chain">assertion__trust__ta-supply-chain</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Assertion</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-ca595dfc">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_assertion table" id="assertion__trust__ta-inputs">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">TA-INPUTS</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span></span></span></div>
+<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="../tenets/tenets.html#tenet__trust__tt-provenance" title="assertion__trust__ta-inputs">tenet__trust__tt-provenance</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Components and tools used to construct and verify XYZ are assessed, to identify
+potential risks and issues</p>
+<p><strong>Guidance</strong></p>
+<p>To satisfy this assertion, the components and tools used to construct and verify
+XYZ releases need to be identified and assessed, to identify available sources
+of evidence about these dependencies.</p>
+<p>For components, we need to consider how their potential misbehaviours might
+impact our expectations for XYZ, identify sources of information (e.g. bug
+databases, published CVEs) that can be used to identify known risks or issues,
+and tests that can be used to identify these. These provide the inputs to
+TA-FIXES.</p>
+<p>For the tools we use to construct and verify XYZ, we need to consider how
+their misbehaviour might lead to an unintended change in XYZ, or fail to detect
+misbehaviours of XYZ during testing, or produce incorrect or incomplete data
+that we use when verifying an XYZ release.</p>
+<p>Where impacts are identified, we need to consider both how serious they might be
+(severity) and whether they would be detected by another tool, test or manual
+check (detectability).</p>
+<p>For impacts with a high severity and/or low detectability, additional analysis
+should be done to check whether existing tests are effective at detecting the
+misbehaviours or resulting impacts, and new tests or Expectations should be added
+to prevent or detect misbehaviours or impacts that are not currently addressed.</p>
+<p><strong>Evidence</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>List of components used in construction of XYZ including</dt><dd><ul>
+<li><p>Indication of whether content is provided as source or binary</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Record of component assessment:</dt><dd><ul>
+<li><p>Originating project and version</p></li>
+<li><p>Date of assessments and identity of assessors</p></li>
+<li><p>Role of component in XYZ</p></li>
+<li><p>Sources of bug and risk data for the component</p></li>
+<li><p>Potential misbehaviours and risks identified and assessed</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>List of tools used in construction and verification</p></li>
+<li><dl class="simple">
+<dt>Record of tool impact assessments:</dt><dd><ul>
+<li><p>Originating project and version of tool</p></li>
+<li><p>Date of assessments and identity of assessors</p></li>
+<li><p>Roles of tool in production of XYZ releases</p></li>
+<li><p>Potential tool misbehaviours and impacts</p></li>
+<li><p>Detectability and severity of impacts</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Record of tool qualification reviews</dt><dd><ul>
+<li><p>For high impact tools only (low detectability and/or high severity)</p></li>
+<li><p>Link to impact assessment</p></li>
+<li><p>Date of reviews and identity of reviewers</p></li>
+<li><p>Analysis of impacts and misbehaviours</p></li>
+<li><p>Existing tests or measures (e.g. manual reviews) to address these</p></li>
+<li><p>Additional tests and/or Expectations required</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>Confidence scoring</strong></p>
+<p>Confidence scoring for TA-INPUTS is based on the set of components and tools
+identified, how many of (and how often) these have been assessed for their risk
+and impact for XYZ, and the sources of risk and issue data identified.</p>
+<p><strong>Checklist</strong></p>
+<ul class="simple">
+<li><p>Are there components that are not on the list?</p></li>
+<li><p>Are there assessments for all components?</p></li>
+<li><p>Has an assessment been done for the current version of the component?</p></li>
+<li><p>Have sources of bug and/or vulnerability data been identified?</p></li>
+<li><p>Have additional tests and/or Expectations been documented and linked to component assessment?</p></li>
+<li><p>Are component tests run when integrating new versions of components?</p></li>
+<li><p>Are there tools that are not on the list?</p></li>
+<li><p>Are there impact assessments for all tools?</p></li>
+<li><p>Have tools with high impact been qualified?</p></li>
+<li><p>Were assessments or reviews done for the current tool versions?</p></li>
+<li><p>Have additional tests and/or Expectations been documented and linked to tool assessments?</p></li>
+<li><p>Are tool tests run when integrating new versions of tools?</p></li>
+<li><p>Are tool and component tests included in release preparation?</p></li>
+<li><p>Can patches be applied, and then upstreamed for long-term maintenance?</p></li>
+</ul>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#assertion__trust__ta-inputs" title="assertion__trust__ta-inputs">assertion__trust__ta-inputs</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Assertion</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-a750f4d7">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_assertion table" id="assertion__trust__ta-tests">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">TA-TESTS</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span></span></span></div>
+<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="../tenets/tenets.html#tenet__trust__tt-construction" title="assertion__trust__ta-tests">tenet__trust__tt-construction</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>All tests for XYZ, and its build and test environments, are constructed from
+controlled/mirrored sources and are reproducible, with any exceptions documented</p>
+<p><strong>Guidance</strong></p>
+<p>This assertion is satisfied to the extent that we</p>
+<ul class="simple">
+<li><p>have implemented all of the tests specified in TA-BEHAVIOURS</p></li>
+<li><p>have implemented fault inductions specified in TA-MISBEHAVIOURS</p></li>
+<li><p>have implemented or integrated test tooling and environments for these</p></li>
+<li><dl class="simple">
+<dt>can demonstrate that all of these are constructed from:</dt><dd><ul>
+<li><p>change-managed sources (see TA-UPDATES)</p></li>
+<li><p>mirrored sources (see TA-SUPPLY_CHAIN)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>All of the above must ensure that test results are retroactively reproducible,
+which is easily achieved through automated end-to-end test execution alongside
+necessary environment setups. Note that with non-deterministic software, exact
+results may not be reproducible, but high-level takeaways and exact setup should
+still be possible.</p>
+<p><strong>Evidence</strong></p>
+<ul class="simple">
+<li><p>list of tests</p></li>
+<li><p>list of fault inductions</p></li>
+<li><p>list of test environments</p></li>
+<li><p>construction configuration and results</p></li>
+</ul>
+<p><strong>Confidence scoring</strong></p>
+<p>Confidence scoring for TA-TESTS is based on the presence of tests and our
+confidence in their implementation and construction.</p>
+<p><strong>Checklist</strong></p>
+<ul class="simple">
+<li><p>How confident are we that we’ve implemented all of the specified tests?</p></li>
+<li><p>How confident are we that we’ve implemented all of the specified fault
+inductions?</p></li>
+<li><p>How confident are we that we have test tooling and environments enabling us
+to execute these tests and fault inductions?</p></li>
+<li><p>How confident are we that all test components are taken from within our
+controlled environment?</p></li>
+<li><p>How confident are we that all of the test environments we are using are also
+under our control?</p></li>
+</ul>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#assertion__trust__ta-tests" title="assertion__trust__ta-tests">assertion__trust__ta-tests</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Assertion</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-220e9237">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_assertion table" id="assertion__trust__ta-releases">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">TA-RELEASES</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span></span></span></div>
+<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="../tenets/tenets.html#tenet__trust__tt-construction" title="assertion__trust__ta-releases">tenet__trust__tt-construction</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Construction of XYZ releases is fully repeatable and the results are fully
+reproducible, with any exceptions documented and justified.</p>
+<p><strong>Guidance</strong></p>
+<p>This assertion is satisfied if the construction of a given iteration of XYZ is
+both <em>repeatable</em>, demonstrating that all of the required inputs are controlled,
+and <em>reproducible</em>, demonstrating that the construction toolchain and build
+environment(s) are controlled (as described by TA-TESTS).</p>
+<p>This assertion can be most effectively satisfied in a Continuous Integration
+environment with mirrored projects (see TA-SUPPLY_CHAIN), using build servers that have
+no internet access. The aim is to show that all build tools, XYZ components and
+dependencies are built from inputs that we control, that rebuilding leads to
+precisely the same binary fileset, and that builds can be repeated on any
+suitably configured server.</p>
+<p>Again this will not be achievable for components/tools provided in binary form,
+or accessed via an external service - we must consider our confidence in
+attestations made by/for the supply chain.</p>
+<p>All non-reproducible elements, such as timestamps or embedded random values from
+build metadata, are clearly identified and considered when evaluating
+reproducibility.</p>
+<p><strong>Evidence</strong></p>
+<ul class="simple">
+<li><p>list of reproducible SHAs</p></li>
+<li><dl class="simple">
+<dt>list of non-reproducible elements with:</dt><dd><ul>
+<li><p>explanation and justification</p></li>
+<li><p>details of what is not reproducible</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>evidence of configuration management for build instructions and infrastructure</p></li>
+<li><p>evidence of repeatable builds</p></li>
+</ul>
+<p><strong>Confidence scoring</strong></p>
+<p>Calculate:</p>
+<p>R = number of reproducible components (including sources which have no build stage)
+N = number of non-reproducible
+B = number of binaries
+M = number of mirrored
+X = number of things not mirrored</p>
+<p>Confidence scoring for TA-RELEASES could possibly be calculated as
+R / (R + N + B + M / (M + X))</p>
+<p><strong>Checklist</strong></p>
+<ul class="simple">
+<li><p>How confident are we that all components are taken from within our
+controlled environment?</p></li>
+<li><p>How confident are we that all of the tools we are using are also under our
+control?</p></li>
+<li><p>Are our builds repeatable on a different server, or in a different context?</p></li>
+<li><p>How sure are we that our builds don’t access the internet?</p></li>
+<li><p>How many of our components are non-reproducible?</p></li>
+<li><p>How confident are we that our reproducibility check is correct?</p></li>
+</ul>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#assertion__trust__ta-releases" title="assertion__trust__ta-releases">assertion__trust__ta-releases</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Assertion</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-0a060aa1">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_assertion table" id="assertion__trust__ta-iterations">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">TA-ITERATIONS</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span></span></span></div>
+<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="../tenets/tenets.html#tenet__trust__tt-construction" title="assertion__trust__ta-iterations">tenet__trust__tt-construction</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>All constructed iterations of XYZ include source code, build instructions,
+tests, results and attestations.</p>
+<p><strong>Guidance</strong></p>
+<p>This assertion is best satisfied by checking generated documentation to confirm
+that:</p>
+<ul class="simple">
+<li><p>all components, dependencies and tools are identified in a manifest</p></li>
+<li><p>the manifest includes links to source code</p></li>
+<li><p>where source is unavailable, the supplier is identified</p></li>
+</ul>
+<p><strong>Evidence</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>list of components with source</dt><dd><ul>
+<li><p>source code</p></li>
+<li><p>build instructions</p></li>
+<li><p>test code</p></li>
+<li><p>test results summary</p></li>
+<li><p>attestations</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>list of components where source code is not available</dt><dd><ul>
+<li><p>risk analysis</p></li>
+<li><p>attestations</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>Confidence scoring</strong></p>
+<p>Confidence scoring for TA-ITERATIONS based on</p>
+<ul class="simple">
+<li><p>number and importance of source components</p></li>
+<li><p>number and importance of non-source components</p></li>
+<li><p>assessment of attestations</p></li>
+</ul>
+<p><strong>Checklist</strong></p>
+<ul class="simple">
+<li><p>How much of the software is provided as binary only, expressed as a fraction of the BoM list?</p></li>
+<li><p>How much is binary, expressed as a fraction of the total storage footprint?</p></li>
+<li><p>For binaries, what claims are being made and how confident are we in the people/organisations making the claims?</p></li>
+<li><p>For third-party source code, what claims are we making, and how confident are we about these claims?</p></li>
+<li><p>For software developed by us, what claims are we making, and how confident are we about these claims?</p></li>
+</ul>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#assertion__trust__ta-iterations" title="assertion__trust__ta-iterations">assertion__trust__ta-iterations</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Assertion</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-9a25d0a7">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_assertion table" id="assertion__trust__ta-fixes">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">TA-FIXES</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span></span></span></div>
+<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="../tenets/tenets.html#tenet__trust__tt-changes" title="assertion__trust__ta-fixes">tenet__trust__tt-changes</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Known bugs or misbehaviours are analysed and triaged, and critical fixes or
+mitigations are implemented or applied.</p>
+<p><strong>Guidance</strong></p>
+<p>This assertion is satisfied to the extent that we have identified, triaged
+and applied fixes and/or mitigations to the faults identified in XYZ and the
+bugs and CVEs identified by upstream component projects.</p>
+<p>We can increase confidence by assessing known faults, bugs and vulnerabilities,
+to establish their relevance and impact for XYZ.</p>
+<p>In principle this should involve not just the code in XYZ, but also its
+dependencies (all the way down), and the tools used to construct the release.
+However we need to weigh the cost/benefit of this work, taking into account</p>
+<ul class="simple">
+<li><p>the volume and quality of available bug and CVE reports</p></li>
+<li><p>likelihood that our build/configuration/usecase is actually affected</p></li>
+</ul>
+<p><strong>Evidence</strong></p>
+<ul class="simple">
+<li><p>List of known bugs fixed since last release</p></li>
+<li><p>List of outstanding bugs still not fixed, with triage/prioritisation based on severity/relevance/impact</p></li>
+<li><p>List of known CVEs fixed since last release</p></li>
+<li><p>List of outstanding CVEs still not fixed, with triage/prioritisation based on severity/relevance/impact</p></li>
+<li><p>List of XYZ component versions, showing where a newer version exists upstream</p></li>
+<li><p>List of component version updates since last release</p></li>
+<li><p>List of fixes applied to developed code since last release</p></li>
+<li><p>List of fixes for developed code that are outstanding, not applied yet</p></li>
+<li><p>List of XYZ faults outstanding (O)</p></li>
+<li><p>List of XYZ faults fixed since last release (F)</p></li>
+<li><p>List of XYZ faults mitigated since last release (M)</p></li>
+</ul>
+<p><strong>Confidence scoring</strong></p>
+<p>Confidence scoring for TA-FIXES can be based on</p>
+<ul class="simple">
+<li><p>some function of [O, F, M] for XYZ</p></li>
+<li><p>number of outstanding relevant bugs from components</p></li>
+<li><p>bug triage results, accounting for undiscovered bugs</p></li>
+<li><p>number of outstanding CVEs</p></li>
+<li><p>CVE triage results, accounting for undiscovered bugs CVEs</p></li>
+<li><p>confidence that known fixes have been applied</p></li>
+<li><p>confidence that known mitigations have been applied</p></li>
+<li><p>previous confidence score for TA-FIXES</p></li>
+</ul>
+<p>Each iteration, we should improve the algorithm based on measurements</p>
+<p><strong>Checklist</strong></p>
+<ul class="simple">
+<li><p>How many faults have we identified in XYZ?</p></li>
+<li><p>How many unknown faults remain to be found, based on the number that have been processed so far?</p></li>
+<li><p>Is there any possibility that people could be motivated to manipulate the lists (e.g. bug bonus or pressure to close).</p></li>
+<li><p>How many faults may be unrecorded (or incorrectly closed, or downplayed)?</p></li>
+<li><p>How do we collect lists of bugs and CVEs from components?</p></li>
+<li><p>How (and how often) do we check these lists for relevant bugs and CVEs?</p></li>
+<li><p>How confident can we be that the lists are honestly maintained?</p></li>
+<li><p>Could some participants have incentives to manipulate information?</p></li>
+<li><p>How confident are we that the lists are comprehensive?</p></li>
+<li><p>Could there be whole categories of bugs/CVEs still undiscovered?</p></li>
+<li><p>How effective is our triage/prioritisation?</p></li>
+<li><p>How many components have never been updated?</p></li>
+<li><p>How confident are we that we could update them?</p></li>
+<li><p>How confident are we that outstanding fixes do not impact our expectations?</p></li>
+<li><p>How confident are we that outstanding fixes do not address misbehaviours?</p></li>
+</ul>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#assertion__trust__ta-fixes" title="assertion__trust__ta-fixes">assertion__trust__ta-fixes</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Assertion</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-d5fa6ed0">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_assertion table" id="assertion__trust__ta-updates">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">TA-UPDATES</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span></span></span></div>
+<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="../tenets/tenets.html#tenet__trust__tt-changes" title="assertion__trust__ta-updates">tenet__trust__tt-changes</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>XYZ components, configurations and tools are updated under specified change and
+configuration management controls.</p>
+<p><strong>Guidance</strong></p>
+<p>This assertion requires that that we have control over all changes to XYZ,
+including changes to the configurations, components and tools we use to build
+it, and the versions of dependencies that we use.</p>
+<p>This means, the trustable controlled process is the only path to production for constructed target
+software.</p>
+<p><strong>Evidence</strong></p>
+<ul class="simple">
+<li><p>change management process and configuration artifacts</p></li>
+</ul>
+<p><strong>Confidence scoring</strong></p>
+<p>Confidence scoring for TA-UPDATES is based on confidence that we have
+control over the changes that we make to XYZ, including its configuration and
+dependencies.</p>
+<p><strong>Checklist</strong></p>
+<ul class="simple">
+<li><p>Where are the change and configuration management controls specified?</p></li>
+<li><p>Are these controls enforced for all of components, tools and configurations?</p></li>
+<li><p>Are there any ways in which these controls can be subverted, and have we mitigated them?</p></li>
+</ul>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#assertion__trust__ta-updates" title="assertion__trust__ta-updates">assertion__trust__ta-updates</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Assertion</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-874c7986">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_assertion table" id="assertion__trust__ta-behaviours">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">TA-BEHAVIOURS</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span></span></span></div>
+<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="../tenets/tenets.html#tenet__trust__tt-expectations" title="assertion__trust__ta-behaviours">tenet__trust__tt-expectations</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Expected or required behaviours for XYZ are identified, specified, verified and
+validated based on analysis.</p>
+<p>Although it is practically impossible to specify all of the necessary behaviours
+and required properties for complex software, we must clearly specify the most
+important of these (e.g. where harm could result if given criteria are not met),
+and verify that these are correctly provided by XYZ.</p>
+<p><strong>Guidance</strong></p>
+<p>This assertion is satisfied to the extent that we have:</p>
+<ul class="simple">
+<li><p>Determined which Behaviours are critical for consumers of XYZ and recorded them as Expectations.</p></li>
+<li><p>Verified these Behaviours are achieved.</p></li>
+</ul>
+<p>Expectations could be verified by:</p>
+<ul class="simple">
+<li><p>Functional testing for the system.</p></li>
+<li><p>Functional soak testing for the system.</p></li>
+<li><p>Specifying architecture and verifying its implementation with pre-merge integration testing for components.</p></li>
+<li><p>Specifying components and verifying their implementation using pre-merge unit testing.</p></li>
+</ul>
+<p>The number and combination of the above verification strategies will depend on
+the scale of the project. For example, unit testing is more suitable for the
+development of a small library than of an OS.</p>
+<p><strong>Evidence</strong></p>
+<ul class="simple">
+<li><p>List of expectations</p></li>
+</ul>
+<p><strong>Confidence scoring</strong></p>
+<p>Confidence scoring for TA-BEHAVIOURS is based on our confidence that the list of
+Expectations is accurate and complete, that Expectations are verified by tests,
+and that the effectiveness of these tests is validated by appropriate
+strategies.</p>
+<p><strong>Checklist</strong></p>
+<ul class="simple">
+<li><p>How has the list of expectations varied over time?</p></li>
+<li><p>How confident can we be that this list is comprehensive?</p></li>
+<li><p>Could some participants have incentives to manipulate information?</p></li>
+<li><p>Could there be whole categories of expectations still undiscovered?</p></li>
+<li><p>Can we identify expectations that have been understood but not specified?</p></li>
+<li><p>Can we identify some new expectations, right now?</p></li>
+<li><p>How confident can we be that this list covers all critical requirements?</p></li>
+<li><p>How comprehensive is the list of tests?</p></li>
+<li><p>Is every Expectation covered by at least one implemented test?</p></li>
+<li><p>Are there any Expectations where we believe more coverage would help?</p></li>
+</ul>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#assertion__trust__ta-behaviours" title="assertion__trust__ta-behaviours">assertion__trust__ta-behaviours</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Assertion</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-f7d71cf5">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_assertion table" id="assertion__trust__ta-misbehaviours">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">TA-MISBEHAVIOURS</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span></span></span></div>
+<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="../tenets/tenets.html#tenet__trust__tt-expectations" title="assertion__trust__ta-misbehaviours">tenet__trust__tt-expectations</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Prohibited misbehaviours for XYZ are identified, and mitigations are specified,
+verified and validated based on analysis.</p>
+<p>The goal of TA-MISBEHAVIOURS is to force engineers to think critically about their work.
+This means understanding and mitigating as many of the situations that cause the
+software to deviate from Expected Behaviours as possible. This is not limited to
+the contents of the final binary.</p>
+<p><strong>Guidance</strong></p>
+<p>This assertion is satisfied to the extent that we can:</p>
+<ul class="simple">
+<li><p>Show we have identified all of the ways in which XYZ could deviate from its Expected Behaviours.</p></li>
+<li><p>Demonstrate that mitigations have been specified, verified and validated for all Misbehaviours.</p></li>
+</ul>
+<p>Once Expected Behaviours have been identified in TA-BEHAVIOURS, there are at
+least four classes of Misbehaviour that can be identified:</p>
+<ul class="simple">
+<li><p>Reachable vulnerable system states that cause deviations from Expected
+Behaviour. These can be identified by stress testing, failures in functional
+and soak testing in TA-BEHAVIOURS and reporting in TA-FIXES. Long run trends
+in both test and production data should also be used to identify these states.</p></li>
+<li><p>Potentially unreachable vulnerable system states that could lead to deviations
+from Expected Behaviour. These can be identified using risk/hazard analysis
+techniques including HAZOP, FMEDA and STPA.</p></li>
+<li><p>Vulnerabilities in the development process that could lead to deviations from
+Expected Behaviour. This includes those that occur as a result of misuse,
+negligence or malintent. These can be identified by incident investigation,
+random sampling of process artifacts and STPA of processes.</p></li>
+<li><p>Configurations in integrating projects (including the computer or embedded
+system that is the final product) that could lead to deviations from Expected
+Behaviour.</p></li>
+</ul>
+<p>Identified Misbehaviours must be mitigated. Mitigations include patching,
+re-designing components, re-designing architectures, removing components,
+testing, static analysis etc. They explicitly <em>do not</em> include the use of AWIs
+to return to a known-good state. These are treated specifically and in detail in
+TA-INDICATORS.</p>
+<p>Mitigations could be verified by:</p>
+<ul class="simple">
+<li><p>Specifying and repeatedly executing false negative tests to confirm that
+functional tests detect known classes of misbehaviour.</p></li>
+<li><p>Specifying fault induction tests or stress tests to demonstrate that the
+system continues providing the Expected Behaviour after entering a vulnerable
+system state.</p></li>
+<li><p>Performing statistical analysis of test data, including using statistical path
+coverage to demonstrate that the vulnerable system state is never reached.</p></li>
+<li><p>Conducting fault injections in development processes to demonstrate that
+vulnerabilities cannot be exploited (knowingly or otherwise) to affect either
+output binaries or our analysis of it, whether this is by manipulating the
+source code, build environment, test cases or any other means.</p></li>
+<li><p>Stress testing of assumptions of use. That is, confirming assumptions of use
+are actually consistent with the system and its Expected Behaviours by
+intentionally misinterpreting or liberally interpreting them in a test
+environment. For example, we could consider testing XYZ on different pieces of
+hardware that satisfy its assumptions of use.</p></li>
+</ul>
+<p>Remember that a Misbehaviour is <em>anything</em> that could lead to a deviation from
+Expected Behaviour. The specific technologies in and applications of XYZ should
+always be considered in addition to the guidance above.</p>
+<p><strong>Suggested evidence</strong></p>
+<ul class="simple">
+<li><p>List of identified Misbehaviours</p></li>
+<li><p>List of Expectations for mitigations addressing identified Misbehaviours</p></li>
+<li><p>Risk analysis</p></li>
+<li><dl class="simple">
+<dt>Test analysis, including:</dt><dd><ul>
+<li><p>False negative tests</p></li>
+<li><p>Exception handling tests</p></li>
+<li><p>Stress tests</p></li>
+<li><p>Soak tests</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>Confidence scoring</strong></p>
+<p>Confidence scoring for TA-MISBEHAVIOURS is based on confidence that
+identification and coverage of misbehaviours by tests is complete when
+considered against the list of Expectations.</p>
+<p><strong>Checklist</strong></p>
+<ul class="simple">
+<li><p>How has the list of misbehaviours varied over time?</p></li>
+<li><p>How confident can we be that this list is comprehensive?</p></li>
+<li><p>How well do the misbehaviours map to the expectations?</p></li>
+<li><p>Could some participants have incentives to manipulate information?</p></li>
+<li><p>Could there be whole categories of misbehaviours still undiscovered?</p></li>
+<li><p>Can we identify misbehaviours that have been understood but not specified?</p></li>
+<li><p>Can we identify some new misbehaviours, right now?</p></li>
+<li><p>Is every misbehaviour represented by at least one fault induction test?</p></li>
+<li><p>Are fault inductions used to demonstrate that tests which usually pass can
+and do fail appropriately?</p></li>
+<li><p>Are all the fault induction results actually collected?</p></li>
+<li><p>Are the results evaluated?</p></li>
+</ul>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#assertion__trust__ta-misbehaviours" title="assertion__trust__ta-misbehaviours">assertion__trust__ta-misbehaviours</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Assertion</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-bc63a004">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_assertion table" id="assertion__trust__ta-indicators">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">TA-INDICATORS</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span></span></span></div>
+<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="../tenets/tenets.html#tenet__trust__tt-expectations" title="assertion__trust__ta-indicators">tenet__trust__tt-expectations</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Advance warning indicators for misbehaviours are identified, and monitoring
+mechanisms are specified, verified and validated based on analysis.</p>
+<p>Not all deviations from Expected Behaviour can be associated with a specific
+condition. Therefore, we must have a strategy for managing deviations that
+arise from unknown system states, process vulnerabilities or configurations.</p>
+<p>This is the role of <em>Advanced Warning Indicators (AWI)</em>. These are specific
+metrics which correlate with deviations from Expected Behaviour and can be
+monitored in real time. The system should return to a defined known-good
+state when AWIs exceed defined tolerances.</p>
+<p><strong>Guidance</strong></p>
+<p>This assertion is met to the extent that:</p>
+<ul class="simple">
+<li><p>We have identified indicators that are strongly correlated with observed
+deviations from Expected Behaviour in testing and/or production.</p></li>
+<li><p>The system returns to a defined known-good state when AWIs exceed
+defined tolerances.</p></li>
+<li><p>The mechanism for returning to the known-good state is verified.</p></li>
+<li><p>The selection of Advance Warning Indicators is validated against the set of
+possible deviations from Expected behaviour.</p></li>
+</ul>
+<p>Note, the set of possible deviations from Expected behaviour <em>is not</em> the same
+as the set of Misbehaviours identified in TA-MISBEHAVIOURS, as it includes
+deviations due to unknown causes.</p>
+<p>Deviations are easily determined by negating recorded Expectations. Potential
+AWIs could be identified using source code analysis, risk analysis or incident
+reports. A set of AWIs to be used in production should be identified by
+monitoring candidate signals in all tests (functional, soak, stress) and
+measuring correlation with deviations.</p>
+<p>The known-good state should be chosen with regard to the system’s intended
+consumers and/or context. Canonical examples are mechanisms like reboots,
+resets, relaunches and restarts. The mechanism for returning to a known-good
+state can be verified using fault induction tests. Incidences of AWIs triggering
+a return to the known-good state in either testing or production should be
+considered as a Misbehaviour in TA-MISBEHAVIOURS. Relying on AWIs alone is not
+an acceptable mitigation strategy. TA-MISBEHAVIOURS and TA-INDICATORS are
+treated separately for this reason.</p>
+<p>The selection of AWIs can be validated by analysing failure data. For instance,
+a high number of instances of deviations with all AWIs in tolerance implies the
+set of AWIs is incorrect, or the tolerance is too lax.</p>
+<p><strong>Evidence</strong></p>
+<ul class="simple">
+<li><p>Risk analyses</p></li>
+<li><p>List of advance warning indicators</p></li>
+<li><p>List of Expectations for monitoring mechanisms</p></li>
+<li><p>List of implemented monitoring mechanisms</p></li>
+<li><p>List of identified misbehaviours without advance warning indicators</p></li>
+<li><p>List of advance warning indicators without implemented monitoring mechanisms</p></li>
+<li><p>Advance warning signal data as time series (see TA-DATA)</p></li>
+</ul>
+<p><strong>Confidence scoring</strong></p>
+<p>Confidence scoring for TA-INDICATORS is based on confidence that the list of
+indicators is comprehensive / complete, that the indicators are useful, and that
+monitoring mechanisms have been implemented to collect the required data.</p>
+<p><strong>Checklist</strong></p>
+<ul class="simple">
+<li><p>How appropriate/thorough are the analyses that led to the indicators?</p></li>
+<li><p>How confident can we be that the list of indicators is comprehensive?</p></li>
+<li><p>Could there be whole categories of warning indicators still missing?</p></li>
+<li><p>How has the list of advance warning indicators varied over time?</p></li>
+<li><p>How confident are we that the indicators are leading/predictive?</p></li>
+<li><p>Are there misbehaviours that have no advance warning indicators?</p></li>
+<li><p>Can we collect data for all indicators?</p></li>
+<li><p>Are the monitoring mechanisms used included in our Trustable scope?</p></li>
+<li><p>Are there gaps or trends in the data?</p></li>
+<li><p>If there are gaps or trends, are they analysed and addressed?</p></li>
+<li><p>Is the data actually predictive/useful?</p></li>
+</ul>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#assertion__trust__ta-indicators" title="assertion__trust__ta-indicators">assertion__trust__ta-indicators</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Assertion</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-cbf6648f">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_assertion table" id="assertion__trust__ta-constraints">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">TA-CONSTRAINTS</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span></span></span></div>
+<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="../tenets/tenets.html#tenet__trust__tt-expectations" title="assertion__trust__ta-constraints">tenet__trust__tt-expectations</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Constraints on adaptation and deployment of XYZ are specified.</p>
+<p><strong>Guidance</strong></p>
+<p>Constraints on reuse, reconfiguration, modification, and deployment are
+specified to enhance the trustability of outputs. To ensure clarity,
+scoping boundaries regarding what the output cannot do - especially where common
+assumptions from applied domains may not hold - must be explicitly documented.
+These constraints are distinct from measures that mitigate misbehaviours; rather,
+they define the boundaries within which the system is designed to operate.
+This upfront documentation clarifies the intended use of specified Statements,
+highlights known limitations, and prevents misinterpretation.</p>
+<p>These constraints - categorized into explicit limitations and assumptions of
+use - serve as a guide for both stakeholders and users. They define the intended
+scope and provide a clear interface for how upstream and downstream systems can
+integrate, modify, install, reuse, or reconfigure to achieve the desired output.
+Additionally, the documentation explicitly defines the contexts in which the
+integrity of existing Statements is preserved and whether any reimplementation
+is necessary.</p>
+<p>Crucially, these limitations are not unresolved defects resulting from triage
+decisions but deliberate exclusions based on design choices. Each omission
+should be accompanied by a clear rationale, ensuring transparency for future
+scope expansion and guiding both upstream and downstream modifications.</p>
+<p><strong>Suggested evidence</strong></p>
+<ul class="simple">
+<li><p>Installation manuals with worked examples</p></li>
+<li><p>Configuration manuals with worked examples</p></li>
+<li><p>Specification documentation with a clearly defined scope</p></li>
+<li><p>User guides detailing limitations in interfaces designed for expandability or
+modularity</p></li>
+<li><p>Documented strategies used by external users to address constraints and
+work with existing Statements</p></li>
+</ul>
+<p><strong>Confidence scoring</strong></p>
+<p>The reliability of these constraints should be assessed based on the absence of
+contradictions and obvious pitfalls within the defined Statements.</p>
+<p><strong>Checklist</strong></p>
+<ul class="simple">
+<li><p>Are the constraints grounded in realistic expectations, backed by real-world
+examples?</p></li>
+<li><p>Do they effectively guide downstreams in expanding upon existing Statements?</p></li>
+<li><p>Do they provide clear guidance for upstreams on reusing components with
+well-defined claims?</p></li>
+<li><p>Are any Statements explicitly designated as not reusable or adaptable?</p></li>
+<li><p>Are there worked examples from downstream or upstream users demonstrating
+these constraints in practice?</p></li>
+<li><p>Have there been any documented misunderstandings from users, and are these
+visibly resolved?</p></li>
+<li><p>Do external users actively keep up with updates, and are they properly
+notified of any changes?</p></li>
+</ul>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#assertion__trust__ta-constraints" title="assertion__trust__ta-constraints">assertion__trust__ta-constraints</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Assertion</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-aab4fbc4">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_assertion table" id="assertion__trust__ta-validation">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">TA-VALIDATION</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span></span></span></div>
+<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="../tenets/tenets.html#tenet__trust__tt-results" title="assertion__trust__ta-validation">tenet__trust__tt-results</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>All specified tests are executed repeatedly, under defined conditions in
+controlled environments, according to specified objectives.</p>
+<p><strong>Guidance</strong></p>
+<p>This assertion is satisfied to the extent that all of the tests specified in
+TA-BEHAVIOURS and constructed in TA-TESTS are correctly executed in a controlled
+environment on a defined cadence (e.g. daily) or for each proposed change, and
+on all candidate release builds for XYZ.</p>
+<p>Note that correct behaviour of tests may be confirmed using fault induction
+(e.g. by introducing an error or misconfiguration into XYZ).</p>
+<p><strong>Evidence</strong></p>
+<ul class="simple">
+<li><p>Test results from per-change tests</p></li>
+<li><p>Test results from scheduled tests as time series</p></li>
+</ul>
+<p><strong>Confidence scoring</strong></p>
+<p>Confidence scoring for TA-VALIDATION is based on verification that we have
+results for all tests (both pass / fail and performance)</p>
+<p><strong>Checklist</strong></p>
+<ul class="simple">
+<li><p>How confident are we that all test results are being captured?</p></li>
+<li><p>Can we look at any individual test result, and establish what it relates to?</p></li>
+<li><p>Can we trace from any test result to the expectation it relates to?</p></li>
+<li><p>Can we identify precisely which environment (software and hardware) were used?</p></li>
+<li><p>How many pass/fail results would be expected, based on the scheduled tests?</p></li>
+<li><p>Do we have all of the expected results</p></li>
+<li><p>Do we have time-series data for all of those results?</p></li>
+<li><p>If there are any gaps, do we understand why?</p></li>
+<li><p>Are the test validation strategies credible and appropriate?</p></li>
+<li><p>What proportion of the implemented tests are validated?</p></li>
+</ul>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#assertion__trust__ta-validation" title="assertion__trust__ta-validation">assertion__trust__ta-validation</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Assertion</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-9750482d">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_assertion table" id="assertion__trust__ta-data">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">TA-DATA</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span></span></span></div>
+<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="../tenets/tenets.html#tenet__trust__tt-results" title="assertion__trust__ta-data">tenet__trust__tt-results</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Data is collected from tests, and from monitoring of deployed software,
+according to specified objectives.</p>
+<p><strong>Guidance</strong></p>
+<p>This assertion is satisfied if results from all tests and monitored deployments are captured accurately, ensuring:</p>
+<ul class="simple">
+<li><p>Sufficient precision for meaningful analysis</p></li>
+<li><p>Enough contextual information to reproduce the test setup, though not necessarily the exact results (e.g., runner ID, software version SHA)</p></li>
+</ul>
+<p>To prevent misinterpretation, all data storage mechanisms and locations must be documented, along with long-term storage strategies, ensuring historical analyses can be reliably replicated.</p>
+<p><strong>Evidence</strong></p>
+<ul class="simple">
+<li><p>Time-series results for each test.</p></li>
+<li><p>List of monitored indicators.</p></li>
+<li><p>Time-series test data for each indicator.</p></li>
+<li><p>Time-series production data for each indicator.</p></li>
+</ul>
+<p><strong>Confidence scoring</strong></p>
+<p>Confidence scoring for TA-DATA is based on comparison of actual failure
+rates with targets, and analysis of spikes and trends</p>
+<p><strong>Checklist</strong></p>
+<ul class="simple">
+<li><p>Is all test data stored with long-term accessibility?</p></li>
+<li><p>Is all monitoring data stored with long-term accessibility?</p></li>
+<li><p>Are extensible data models implemented?</p></li>
+<li><p>Is sensitive data handled correctly (broadcasted, stored, discarded, or anonymised) with appropriate encryption and redundancy?</p></li>
+<li><p>Are proper backup mechanisms in place?</p></li>
+<li><p>Are storage and backup limits tested?</p></li>
+<li><p>Are all data changes traceable?</p></li>
+<li><p>Are concurrent changes correctly managed and resolved?</p></li>
+<li><p>Is data accessible only to intended parties?</p></li>
+<li><p>Are any subsets of our data being published?</p></li>
+</ul>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#assertion__trust__ta-data" title="assertion__trust__ta-data">assertion__trust__ta-data</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Assertion</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-360b847b">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_assertion table" id="assertion__trust__ta-analysis">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">TA-ANALYSIS</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span></span></span></div>
+<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="../tenets/tenets.html#tenet__trust__tt-results" title="assertion__trust__ta-analysis">tenet__trust__tt-results</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Collected data from tests and monitoring of deployed software is analysed
+according to specified objectives.</p>
+<p><strong>Guidance</strong></p>
+<p>This assertion is satisfied to the extent that test data, and data collected
+from monitoring of deployed versions of XYZ, has been analysed, and the results
+used to inform the refinement of expectations and risk analysis.</p>
+<p>The extent of the analysis is with sufficient precision to confirm that:</p>
+<ul class="simple">
+<li><p>all expectations (TA-BEHAVIOURS) are met</p></li>
+<li><p>all misbehaviours (TA-MISBEHAVIOURS) are detected or mitigated</p></li>
+<li><p>all advance warning indicators (TA-INDICATORS) are monitored</p></li>
+<li><p>misbehaviour/failure rates (calculated directly or inferred by statistics) are
+within acceptable tolerance</p></li>
+</ul>
+<p>Where test results expose misbehaviours not identified in our analysis (TA-ANALYSIS),
+we add the new misbehaviours to our Expectations (TA-BEHAVIOURS and TA-MISBEHAVIOURS). Where
+necessary, as informed by our ongoing confidence evaluation (TA-CONFIDENCE), we improve
+and repeat the analysis (TA-ANALYSIS).</p>
+<p><strong>Evidence</strong></p>
+<ul class="simple">
+<li><p>Analysis of test data vs thresholds</p></li>
+<li><p>Analysis of failures</p></li>
+<li><p>Analysis of spikes and trends</p></li>
+</ul>
+<p><strong>Confidence scoring</strong></p>
+<p>Confidence scoring for TA-ANALYSIS is based on Key Performance Indicators (KPIs)
+that may indicate problems in development, test, or production</p>
+<p><strong>Checklist</strong></p>
+<ul class="simple">
+<li><p>What fraction of expectations are covered by the test data?</p></li>
+<li><p>What fraction of misbehaviours are covered by the monitored indicator data?</p></li>
+<li><p>How confident are we that the indicator data are accurate and timely?</p></li>
+<li><p>How reliable is the monitoring process?</p></li>
+<li><p>How well does the production data correlate with our test data?</p></li>
+<li><p>Are we publishing our data analysis?</p></li>
+<li><p>Are we comparing and analysing production data vs test?</p></li>
+<li><p>Are our results getting better, or worse?</p></li>
+<li><p>Are we addressing spikes/regressions?</p></li>
+<li><p>Do we have sensible/appropriate target failure rates?</p></li>
+<li><p>Do we need to check the targets?</p></li>
+<li><p>Are we achieving the targets?</p></li>
+</ul>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#assertion__trust__ta-analysis" title="assertion__trust__ta-analysis">assertion__trust__ta-analysis</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Assertion</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-589a871b">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_assertion table" id="assertion__trust__ta-methodologies">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">TA-METHODOLOGIES</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span></span></span></div>
+<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="../tenets/tenets.html#tenet__trust__tt-confidence" title="assertion__trust__ta-methodologies">tenet__trust__tt-confidence</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Manual methodologies applied for XYZ by contributors, and their results, are
+managed according to specified objectives.</p>
+<p><strong>Guidance</strong></p>
+<p>To satisfy this assertion, the manual processes applied in the verification of
+XYZ must be documented, together with the methodologies used, the results of
+applying these processes to specific aspects and iterations of XYZ or its
+components, and evidence that they have been reviewed using documented criteria.</p>
+<p>Any data analysis for TA-ANALYSIS should ideally be mostly automated to establish
+continuous feedback mechanisms. However, specifically, manual processes - such
+as those used for quality control assurances and the appropriate assignment of
+responsibilities - must be documented as evidence for TA-METHODOLOGIES.</p>
+<p><strong>Evidence</strong></p>
+<ul class="simple">
+<li><p>Manual process documentation</p></li>
+<li><p>References to methodologies applied as part of these processes</p></li>
+<li><p>Results of applying the processes</p></li>
+<li><p>Criteria used to confirm that the processes were applied correctly</p></li>
+<li><p>Review records for results</p></li>
+</ul>
+<p><strong>Confidence scoring</strong></p>
+<p>Confidence scoring for TA-METHODOLOGIES is based on identifying areas of need for
+manual processes, assessing the clarity of proposed processes, analysing the
+results of their implementation, and evaluating the evidence of effectiveness
+in comparison to the analysed results</p>
+<p><strong>Checklist</strong></p>
+<ul class="simple">
+<li><p>Are the identified gaps documented clearly to justify using a manual process?</p></li>
+<li><p>Are the goals for each process clearly defined?</p></li>
+<li><p>Is the sequence of procedures documented in an unambiguous manner?</p></li>
+<li><p>Can improvements to the processes be suggested and implemented?</p></li>
+<li><p>How frequently are processes changed?</p></li>
+<li><p>How are changes to manual processes communicated?</p></li>
+<li><p>Are there any exceptions to the processes?</p></li>
+<li><p>How is evidence of process adherence recorded?</p></li>
+<li><p>How is the effectiveness of the process evaluated?</p></li>
+<li><p>Is ongoing training required to follow these processes?</p></li>
+</ul>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#assertion__trust__ta-methodologies" title="assertion__trust__ta-methodologies">assertion__trust__ta-methodologies</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Assertion</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-275aa8f0">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_assertion table" id="assertion__trust__ta-confidence">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">TA-CONFIDENCE</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span></span></span></div>
+<div class="line"><span><div class="line">links incoming: <span class="links"><span><a class="reference internal" href="../tenets/tenets.html#tenet__trust__tt-confidence" title="assertion__trust__ta-confidence">tenet__trust__tt-confidence</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Confidence in XYZ is measured based on results of analysis</p>
+<p><strong>Guidance</strong></p>
+<p>To quantify confidence, either a subjective assessment or a statistical argument must be presented for each statement and then systematically and repeatably aggregated to assess whether the final deliverable is fit for purpose.</p>
+<p>To improve the accuracy of confidence evaluations in reflecting reality, the following steps are necessary:</p>
+<ul class="simple">
+<li><p>Breaking down high-level claims into smaller, recursive requests.</p></li>
+<li><p>Providing automated evaluations whenever possible, and using subjective assessments from appropriate parties when automation is not feasible.</p></li>
+<li><p>Aggregating confidence scores from evidence nodes.</p></li>
+<li><p>Continuously adjusting previous confidence measures based on new evidence, using previously established confidence values.</p></li>
+</ul>
+<p>As subjective assessments are progressively replaced with statistical arguments and past confidence evaluations are refined against new evidence, the accuracy of evaluations improves over time. When project circumstances inevitably change, existing statements are repurposed, with their associated confidence scores eventually offering insights into the systematic capability of the project to deliver according to set objectives. This process should itself be analysed to determine the maturity of any given confidence score. A suitable meta-analysis can assess long-term trends in score sourcing, score accumulation, and weighting mechanisms.</p>
+<p><strong>Evidence</strong></p>
+<ul class="simple">
+<li><p>Confidence scores from other TA items</p></li>
+</ul>
+<p><strong>Confidence scoring</strong></p>
+<p>Confidence scoring for TA-CONFIDENCE is based on quality of the confidence
+scores given to Statements</p>
+<p><strong>Checklist</strong></p>
+<ul class="simple">
+<li><p>What is the algorithm for combining/comparing the scores?</p></li>
+<li><p>How confident are we that this algorithm is fit for purpose?</p></li>
+<li><p>What are the trends for each score?</p></li>
+<li><p>How well do our scores correlate with external feedback signals?</p></li>
+</ul>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#assertion__trust__ta-confidence" title="assertion__trust__ta-confidence">assertion__trust__ta-confidence</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Assertion</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../tenets/tenets.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Tenets</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../../folder_templates/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Folder Templates</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+
+  
+  <div class="tocsection editthispage">
+    <a href="https://github.com/eclipse-score/reference_integration/edit/main/docs/_collections/score_process/process/trustable/assertions/assertions.rst">
+      <i class="fa-solid fa-pencil"></i>
+      
+      
+        
+          Edit on GitHub
+        
+      
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
