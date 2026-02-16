@@ -11,32 +11,19 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-name: Documentation
+name: Documentation Cleanup
 
 permissions:
   contents: write
   pages: write
-  pull-requests: write
   id-token: write
 
 on:
-  pull_request_target: # Allows forks to trigger the docs build
-    types: [opened, reopened, synchronize]
-  push:
-    branches:
-      - main
-  merge_group:
-    types: [checks_requested]
+  schedule:
+    - cron: '0 0 * * *' # Runs every day at midnight UTC
 
 jobs:
-  build-docs:
-    uses: eclipse-score/cicd-workflows/.github/workflows/docs.yml@main
-    permissions:
-      contents: write
-      pages: write
-      pull-requests: write
-      id-token: write
-
-    with:
-      bazel-target: "//:docs_combo_experimental -- --github_user=${{ github.repository_owner }} --github_repo=${{ github.event.repository.name }}"
-      retention-days: 3
+  docs-cleanup:
+    uses: eclipse-score/cicd-workflows/.github/workflows/docs-cleanup.yml@main
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
