@@ -34,7 +34,6 @@ Verification Reports Summaries
       place_holder/persistency
       place_holder/orchestrator
       place_holder/communication
-      .. FEO <_collections/score_feo/docs/index>
 
    .. toctree::
       :maxdepth: 1

@@ -71,7 +71,7 @@ jobs:
         # Create repos.json from known_good.json
         # This jq command transforms the 'modules' object into an array of repository objects
         # with 'name', 'url', 'version' (branch/tag/hash), and 'path'.
-        jq '[.modules | to_entries[] | {
+        jq '[.modules.target_sw | to_entries[] | {
           name: .key, 
           url: .value.repo, 
           version: (.value.branch // .value.hash // .value.version),
@@ -85,9 +85,9 @@ jobs:
         # The following GITHUB_OUTPUT variables are set for each module.
         # These might be useful for other steps, but are not directly used by the 'checkout-repos' step
         # which now reads 'repos.json' directly.
-        echo "MODULE_COUNT=$(jq '.modules | length' "$JSON_FILE")" >> $GITHUB_OUTPUT
+        echo "MODULE_COUNT=$(jq '.modules.target_sw | length' "$JSON_FILE")" >> $GITHUB_OUTPUT
 
-        jq -c '.modules | to_entries[]' "$JSON_FILE" | while read -r module_entry; do
+        jq -c '.modules.target_sw | to_entries[]' "$JSON_FILE" | while read -r module_entry; do
           module_name=$(echo "$module_entry" | jq -r '.key')
           repo_url=$(echo "$module_entry" | jq -r '.value.repo // empty')
           version=$(echo "$module_entry" | jq -r '.value.version // empty')
