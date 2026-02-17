@@ -1,20 +1,8 @@
-From 37a6329193e94d93fef91fc184e95e9a8b67a98b Mon Sep 17 00:00:00 2001
-From: Pawel Rutka <pawel.rutka.ext@qorix.ai>
-Date: Mon, 9 Feb 2026 14:51:53 +0100
-Subject: [PATCH] T
-
-Signed-off-by: Pawel Rutka <pawel.rutka.ext@qorix.ai>
----
- MODULE.bazel              | 7 +++++++
- third_party/acl/BUILD     | 6 +++++-
- third_party/acl/acl.BUILD | 7 ++++---
- 3 files changed, 16 insertions(+), 4 deletions(-)
-
 diff --git a/MODULE.bazel b/MODULE.bazel
-index f7991cb..b78d618 100644
+index 7b6f319..efa7b1c 100644
 --- a/MODULE.bazel
 +++ b/MODULE.bazel
-@@ -64,6 +64,13 @@ deb(
+@@ -98,6 +98,13 @@ deb(
      visibility = ["//visibility:public"],
  )
  
@@ -29,10 +17,10 @@ index f7991cb..b78d618 100644
      name = "valgrind-deb",
      build = "//third_party/valgrind:valgrind.BUILD",
 diff --git a/third_party/acl/BUILD b/third_party/acl/BUILD
-index dfcac1e..c76bee3 100644
+index b71d5df..da07995 100644
 --- a/third_party/acl/BUILD
 +++ b/third_party/acl/BUILD
-@@ -1,5 +1,9 @@
+@@ -1,5 +1,8 @@
  alias(
      name = "acl",
 -    actual = "@acl-deb//:acl",
@@ -40,11 +28,10 @@ index dfcac1e..c76bee3 100644
 +        "@platforms//cpu:aarch64": "@acl-deb-aarch64//:acl",
 +        "//conditions:default": "@acl-deb//:acl",
 +    }),
-     visibility = ["//visibility:public"], 
+     visibility = ["//visibility:public"],
  )
-+
 diff --git a/third_party/acl/acl.BUILD b/third_party/acl/acl.BUILD
-index 2163068..d86c7f7 100644
+index 718726c..b695a6a 100644
 --- a/third_party/acl/acl.BUILD
 +++ b/third_party/acl/acl.BUILD
 @@ -1,8 +1,9 @@
@@ -60,6 +47,3 @@ index 2163068..d86c7f7 100644
      hdrs = [
          "usr/include/acl/libacl.h",
          "usr/include/sys/acl.h",
--- 
-2.43.0
-

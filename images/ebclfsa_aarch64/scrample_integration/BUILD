@@ -12,9 +12,10 @@
 # *******************************************************************************
 load("@score_baselibs//score/language/safecpp:toolchain_features.bzl", "COMPILER_WARNING_FEATURES")
 
+# TODO: Port image to CLI and all showcases as for other images
 genrule(
     name = "scrample_sil_r",
-    srcs = ["@score_scrample//src:scrample"],
+    srcs = ["@score_communication//score/mw/com/example/ipc_bridge:ipc_bridge_cpp"],
     outs = ["scrample_sil"],
     cmd = "cp $(SRCS) $@ && \
      chmod ugo+w $@ && \
@@ -44,7 +45,6 @@ cc_binary(
     ],
     features = COMPILER_WARNING_FEATURES,
     deps = [
-        "@score_scrample//src:scrample",
     ],
 )
 
@@ -72,7 +72,7 @@ genrule(
         ":scrample_sil",
         ":hi_app",
         ":fastdev-image",
-        "etc/mw_com_config.json",
+        "@score_communication//score/mw/com/example/ipc_bridge:etc/mw_com_config.json",
         "etc/logging.json",
         "run_qemu.sh",
     ],

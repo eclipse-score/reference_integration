@@ -18,7 +18,7 @@ int main() {
     std::cout << "HI_App: Starting scrample_sil" << std::endl;
 
     const char *c_args[] = {
-        "/usr/bin/scrample_sil",
+        "/usr/bin/ipc_bridge_cpp",
         "-n", "10",
         "-m", "recv",
         "-t", "200",
@@ -26,7 +26,7 @@ int main() {
         nullptr
     };
 
-    execve("/usr/bin/scrample_sil", const_cast<char* const*>(c_args), nullptr);
+    execve("/usr/bin/ipc_bridge_cpp", const_cast<char* const*>(c_args), nullptr);
 
     std::cerr << "execve failed, sleeping... Reason: " << strerror(errno)
               << std::endl;
