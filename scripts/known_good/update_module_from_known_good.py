@@ -6,9 +6,9 @@ with `bazel_dep` and `git_override` calls for each module in the JSON.
 Usage:
   python3 scripts/known_good/update_module_from_known_good.py \
       --known known_good.json \
-      --output score_modules.MODULE.bazel
+      --output-dir bazel_common
 
-The generated score_modules.MODULE.bazel file is included by MODULE.bazel.
+The generated score_modules_NAME_.MODULE.bazel file is included by MODULE.bazel.
 
 Note: To override repository commits before generating the MODULE.bazel file,
 use scripts/known_good/override_known_good_repo.py first to create an updated known_good.json.

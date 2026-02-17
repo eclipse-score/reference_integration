@@ -106,6 +106,7 @@ class Module:
         metadata_data = module_data.get("metadata")
         if metadata_data is not None:
             metadata = Metadata.from_dict(metadata_data)
+            # Enable once we are able to remove '*' in known_good.json
             # if any("*" in target for target in metadata.exclude_test_targets):
             #     raise Exception(
             #         f"Module {name} has wildcard '*' in exclude_test_targets, which is not allowed. "

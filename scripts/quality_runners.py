@@ -72,8 +72,6 @@ def cpp_coverage(module: Module, artifact_dir: Path) -> ProcessResult:
         "genhtml",
         f"{bazel_coverage_output_directory}/_coverage/_coverage_report.dat",
         f"--output-directory={output_dir}",
-        # f"--source-directory={bazel_source_directory}",
-        # "--synthesize-missing",
         "--show-details",
         "--legend",
         "--function-coverage",
