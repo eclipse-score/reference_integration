@@ -13,35 +13,50 @@ from .module import Module
 
 @dataclass
 class KnownGood:
-	"""Known good configuration with modules and metadata."""
-	modules: Dict[str, Module]
+	"""Known good configuration with modules and metadata.
+
+	Module structure: modules = {"group1": {"module1": Module}, "group2": {"module2": Module}}
+	"""
+	modules: Dict[str, Dict[str, Module]]
 	timestamp: str
-	
+
 	@classmethod
 	def from_dict(cls, data: Dict[str, Any]) -> KnownGood:
 		"""Create a KnownGood instance from a dictionary.
-		
+
+		Expected structure:
+		{"modules": {"group1": {"score_baselibs": {...}}, "group2": {"score_logging": {...}}}}
+
 		Args:
 			data: Dictionary containing known_good.json data
-			
+
 		Returns:
 			KnownGood instance
 		"""
 		modules_dict = data.get('modules', {})
-		modules_list = Module.parse_modules(modules_dict)
-		modules = {m.name: m for m in modules_list}
 		timestamp = data.get('timestamp', '')
-		
-		return cls(modules=modules, timestamp=timestamp)
-	
+
+		parsed_modules: Dict[str, Dict[str, Module]] = {}
+		for group_name, group_modules in modules_dict.items():
+			if isinstance(group_modules, dict):
+				modules_list = Module.parse_modules(group_modules)
+				parsed_modules[group_name] = {m.name: m for m in modules_list}
+
+		return cls(modules=parsed_modules, timestamp=timestamp)
+
 	def to_dict(self) -> Dict[str, Any]:
 		"""Convert KnownGood instance to dictionary for JSON output.
-		
+
 		Returns:
 			Dictionary with known_good configuration
 		"""
+		modules_output = {
+			group_name: {name: module.to_dict() for name, module in group_modules.items()}
+			for group_name, group_modules in self.modules.items()
+		}
+
 		return {
-			"modules": {name: module.to_dict() for name, module in self.modules.items()},
+			"modules": modules_output,
 			"timestamp": self.timestamp
 		}
 	

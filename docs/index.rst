@@ -17,6 +17,11 @@ Reference Integration Documentation
 
 Newest Release Notes: :need:`doc__score_v05_beta_release_note`
 
+Verification Reports Summaries
+------------------------------
+
+.. toctree::
+   verification/verification
 
 .. if-collection:: score_platform
 
@@ -29,7 +34,6 @@ Newest Release Notes: :need:`doc__score_v05_beta_release_note`
       place_holder/persistency
       place_holder/orchestrator
       place_holder/communication
-      FEO <_collections/score_feo/docs/index>
 
    .. toctree::
       :maxdepth: 1

@@ -1,0 +1,67 @@
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+# Generated from known_good.json at 2026-02-10T21:12:42+00:00Z
+# Do not edit manually - use scripts/known_good/update_module_from_known_good.py
+
+bazel_dep(name = "score_crates")
+single_version_override(
+    module_name = "score_crates",
+    version = "0.0.7",
+)
+
+bazel_dep(name = "score_itf")
+single_version_override(
+    module_name = "score_itf",
+    version = "0.1.0",
+)
+
+bazel_dep(name = "score_tooling")
+git_override(
+    module_name = "score_tooling",
+    remote = "https://github.com/eclipse-score/tooling.git",
+    commit = "17671026150db4b4cc1b35e48af81b97e13685e5",
+)
+
+bazel_dep(name = "score_platform")
+git_override(
+    module_name = "score_platform",
+    remote = "https://github.com/eclipse-score/score.git",
+    commit = "22aed6f3bb7339fa50cc7e004de3c5af3d2eab6e",
+)
+
+bazel_dep(name = "score_bazel_platforms")
+single_version_override(
+    module_name = "score_bazel_platforms",
+    version = "0.0.4",
+)
+
+bazel_dep(name = "score_test_scenarios")
+git_override(
+    module_name = "score_test_scenarios",
+    remote = "https://github.com/eclipse-score/testing_tools.git",
+    commit = "6b5e85863e8fb5687251c19f5bb81e0a3afdf581",
+)
+
+bazel_dep(name = "score_docs_as_code")
+single_version_override(
+    module_name = "score_docs_as_code",
+    version = "3.0.1",
+)
+
+bazel_dep(name = "score_process")
+git_override(
+    module_name = "score_process",
+    remote = "https://github.com/eclipse-score/process_description.git",
+    commit = "6c772cf05a493218a5ac6071361bf0b66c5427b2",
+)

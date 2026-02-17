@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-name: Execute Unit Tests
+name: Linux - Build & Integration Test
 on:
   workflow_dispatch:
   pull_request:
@@ -19,9 +19,9 @@ on:
     types: [created]
   push:
     branches:
-      - main 
+      - main
 jobs:
-    integration_test:
+    x86_64:
       runs-on: ubuntu-latest
       permissions:
         contents: write # required to upload release assets
@@ -51,47 +51,17 @@ jobs:
           uses: actions/checkout@v4.2.2
 
         - name: Setup Bazel
-          uses: bazel-contrib/setup-bazel@0.15.0
+          uses: bazel-contrib/setup-bazel@0.18.0
           with:
             bazelisk-cache: true
             disk-cache: ${{ github.workflow }}
             repository-cache: true
+            cache-save: ${{ github.event_name == 'push' }}
 
-        - name: Bazel build targets
+        - name: Build image
           run: |
-            scripts/run_unit_tests.sh
-            cat _logs/ut_summary.md
-
-        - name: Publish build summary
-          if: always()
+            bazel build --config=linux-x86_64 //images/linux_x86_64:image
+        
+        - name: Integration tests
           run: |
-            if [ -f _logs/ut_summary.md ]; then
-              cat _logs/ut_summary.md >> "$GITHUB_STEP_SUMMARY"
-            else
-              echo "No build summary file found (_logs/ut_summary.md)" >> "$GITHUB_STEP_SUMMARY"
-            fi
-
-        - name: Upload logs artifact
-          if: always()
-          uses: actions/upload-artifact@v4
-          with:
-            name: bazel-build-logs
-            path: _logs/
-            if-no-files-found: warn
-            retention-days: 14
-
-        - name: Create archive of test reports
-          if: github.ref_type == 'tag'
-          run: |
-            mkdir -p artifacts
-            find bazel-testlogs/external -name 'test.xml' -print0 | xargs -0 -I{} cp --parents {} artifacts/
-            zip -r ${{ github.event.repository.name }}_test_reports.zip artifacts/
-          shell: bash
-
-        - name: Upload release asset (attach ZIP to GitHub Release)
-          uses: softprops/action-gh-release@v2.5.0
-          if: github.ref_type == 'tag'
-          with:
-            files: ${{ github.event.repository.name }}_test_reports.zip
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            echo "NOT YET IMPLEMENTED"

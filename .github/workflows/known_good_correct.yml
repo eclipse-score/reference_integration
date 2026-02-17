@@ -1,0 +1,42 @@
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+name: Known Good Matches Bazel
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+  merge_group:
+    types: [checks_requested]
+
+permissions:
+  contents: write
+
+jobs:
+  check-known-good-matches-bazel:
+    name: Check Known Good Matches with Bazel
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+      - name: Check
+        run: |
+          ls -la 
+          scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir integration/bazel_common
+          if git diff --quiet; then
+              echo "No changes"
+          else
+              echo "You have committed not aligned known_good.json to the code. Please run scripts/known_good/update_module_from_known_good.py and commit the changes to the code. Here are the differences:"
+              git diff
+              exit 1
+          fi

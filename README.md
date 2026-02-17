@@ -11,10 +11,11 @@ The reference integration workspace serves as a single Bazel build environment t
 - Prepare for release validation workflows
 
 
-## Structure of integration folder
+## Get started
 
-> [!NOTE]
-> For more details about the integration folder structure and deployment showcases, see [integration/README.md](integration/README.md).
+Simply run `./score_starter` and select which integration You want to run. Once running, You will be guided by our welcome cli to run selected examples.
+
+## Structure of repo
 
 Intention for each folder is described below
 
@@ -34,7 +35,7 @@ Used to keep `S-CORE` wide **showcases** implementation to showcase S-CORE in ce
 #### cli
 
 Contains a CLI tool to be used on runner that is showcasing the S-CORE functionality. It will provide superior user experience and will guide user to run examples. 
-How to use it in Your image, look [here](./integration/showcases/cli/README.md)
+How to use it in Your image, look [here](./showcases/cli/README.md)
 
 ### images
 Used to keep concrete `images` for given target platform as bazel modules. Each platform shall have it's own folder with name `{platform}_{arch}` ie. `qnx_aarch64`.
@@ -46,74 +47,21 @@ This `images` shall:
 ### runners
 Used to keep thin logic ro reuse `runners` between images, like docker runner etc.
 
-
-
-
-
 ## Docs
 
 To generate a full documentation of all integrated modules, run:
 ```bash
 bazel run //:docs_combo_experimental
 ```
-## Working Builds ✅
-
-The following modules build successfully with the `x86_64-linux` configuration:
-
-### Baselibs
-```bash
-bazel build --config x86_64-linux @score_baselibs//score/... --verbose_failures
-bazel build --config x86_64-linux @score_baselibs//score/... --verbose_failures
-```
-
-### Communication
-```bash
-bazel build --config x86_64-linux @score_communication//score/mw/com:com --verbose_failures
-```
-
-### Persistency
-```bash
-bazel build --config x86_64-linux \
-  @score_persistency//src/cpp/src/... \
-  @score_persistency//src/rust/... \
-  --verbose_failures
-```
-
-> Note: Python tests for `@score_persistency` cannot be built from this integration workspace due to Bazel external repository visibility limitations. The pip extension and Python dependencies must be accessed within their defining module.
-
-### Orchestration and `kyron` - async runtime for Rust
-
-```bash
-bazel build --config x86_64-linux @score_orchestrator//src/...
-```
-
-### Lifecycle
-
-```bash
-bazel build --config x86_64-linux @score_lifecycle_health//src/... --verbose_failures
-```
-
-
-## Feature showcase examples
-The examples that are aiming to showcase features provided by S-CORE are located in `feature_showcase` folder.
-You can run them currently for host platform using `--config x86_64-linux`.
-
-Execute `bazel query //feature_showcase/...` to obtain list of targets that You can run.
-
-
-```bash
-bazel build --config x86_64-linux @score_orchestrator//src/... --verbose_failures
-```
-
 ## Operating system integrations
 
 > [!NOTE]
-> Integrations of Eclipse S-CORE into reference operating systems are currently realized as **independent Bazel projects**.
 > Please refer to the README documents in the respective sub-directories for details about the specific integration.
 
-* [QNX](./qnx_qemu/README.md)
-* [Red Hat AutoSD](./autosd/build/README.md)
-* [Elektrobit corbos Linux for Safety Applications](./ebclfsa/README.md)
+* [QNX](./images/qnx_x86_64//README.md)
+* [Red Hat AutoSD](./images/autosd_x86_64/build/README.md)
+* [Elektrobit corbos Linux for Safety Applications](./images/ebclfsa_aarch64/README.md)
+* [Linux x86_64]()
 
 ## Workspace support
 

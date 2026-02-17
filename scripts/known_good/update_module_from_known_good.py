@@ -38,11 +38,11 @@ def generate_git_override_blocks(modules: List[Module], repo_commit_dict: Dict[s
         if module.repo in repo_commit_dict:
             commit = repo_commit_dict[module.repo]
         
-        # Generate patches lines if patches exist
+        # Generate patches lines if bazel_patches exist
         patches_lines = ""
-        if module.patches:
+        if module.bazel_patches:
             patches_lines = "    patches = [\n"
-            for patch in module.patches:
+            for patch in module.bazel_patches:
                 patches_lines += f'        "{patch}",\n'
             patches_lines += "    ],\n    patch_strip = 1,\n"
         
@@ -143,22 +143,27 @@ def generate_file_content(args: argparse.Namespace, modules: List[Module], repo_
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Generate score_modules.MODULE.bazel from known_good.json",
+        description="Generate score_modules.MODULE.bazel file(s) from known_good.json",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
   # Generate MODULE.bazel from known_good.json
   python3 scripts/known_good/update_module_from_known_good.py
 
-  # Use a custom input and output file
+  # Use a custom input file (generates score_modules_{group}.MODULE.bazel for each group)
   python3 scripts/known_good/update_module_from_known_good.py \\
-      --known custom_known_good.json \\
-      --output custom_modules.MODULE.bazel
+      --known custom_known_good.json
+
+  # Specify output directory for grouped modules
+  python3 scripts/known_good/update_module_from_known_good.py \\
+      --output-dir ./bazel_modules
 
   # Preview without writing
   python3 scripts/known_good/update_module_from_known_good.py --dry-run
 
-Note: To override repository commits, use scripts/known_good/override_known_good_repo.py first.
+Note:
+  - Generates score_modules_{group}.MODULE.bazel for each group
+  - To override repository commits, use scripts/known_good/override_known_good_repo.py first.
         """
     )
     parser.add_argument(
@@ -167,9 +172,9 @@ Note: To override repository commits, use scripts/known_good/override_known_good
         help="Path to known_good.json (default: known_good.json)"
     )
     parser.add_argument(
-        "--output",
-        default="score_modules.MODULE.bazel",
-        help="Output file path (default: score_modules.MODULE.bazel)"
+        "--output-dir",
+        default=".",
+        help="Output directory for grouped structure files (default: current directory)"
     )
     parser.add_argument(
         "--dry-run",
@@ -192,18 +197,17 @@ Note: To override repository commits, use scripts/known_good/override_known_good
         default="git",
         help="Type of override to use (default: git)"
     )
-    
+
     args = parser.parse_args()
-    
+
     if args.verbose:
         logging.getLogger().setLevel(logging.INFO)
-    
+
     known_path = os.path.abspath(args.known)
-    output_path = os.path.abspath(args.output)
-    
+
     if not os.path.exists(known_path):
         raise SystemExit(f"known_good.json not found at {known_path}")
-    
+
     # Parse repo overrides
     repo_commit_dict = {}
     if args.repo_override:
@@ -216,7 +220,7 @@ Note: To override repository commits, use scripts/known_good/override_known_good
                 )
             repo_url, commit_hash = entry.split("@", 1)
             repo_commit_dict[repo_url] = commit_hash
-    
+
     # Load known_good.json
     try:
         known_good = load_known_good(Path(known_path))
@@ -224,26 +228,47 @@ Note: To override repository commits, use scripts/known_good/override_known_good
         raise SystemExit(f"ERROR: {e}")
     except ValueError as e:
         raise SystemExit(f"ERROR: {e}")
-    
+
     if not known_good.modules:
         raise SystemExit("No modules found in known_good.json")
-    
-    # Get modules list
-    modules = list(known_good.modules.values())
-    
-    # Generate file content
-    content = generate_file_content(args, modules, repo_commit_dict, known_good.timestamp)
-    
-    if args.dry_run:
-        print(f"Dry run: would write to {output_path}\n")
-        print("---- BEGIN GENERATED CONTENT ----")
-        print(content)
-        print("---- END GENERATED CONTENT ----")
-        print(f"\nGenerated {len(modules)} git_override entries")
-    else:
-        with open(output_path, "w", encoding="utf-8") as f:
-            f.write(content)
-        print(f"Generated {output_path} with {len(modules)} {args.override_type}_override entries")
+
+    # Generate files based on structure (flat vs grouped)
+    output_dir = os.path.abspath(args.output_dir)
+    os.makedirs(output_dir, exist_ok=True)
+
+    generated_files = []
+    total_module_count = 0
+
+    for group_name, group_modules in known_good.modules.items():
+        modules = list(group_modules.values())
+
+        if not modules:
+            logging.warning(f"Skipping empty group: {group_name}")
+            continue
+
+        # Determine output filename: score_modules_{group}.MODULE.bazel
+        output_filename = f"score_modules_{group_name}.MODULE.bazel"
+
+        output_path = os.path.join(output_dir, output_filename)
+
+        # Generate file content
+        content = generate_file_content(args, modules, repo_commit_dict, known_good.timestamp)
+
+        if args.dry_run:
+            print(f"\nDry run: would write to {output_path}\n")
+            print("---- BEGIN GENERATED CONTENT ----")
+            print(content)
+            print("---- END GENERATED CONTENT ----")
+            print(f"\nGenerated {len(modules)} {args.override_type}_override entries for group '{group_name}'")
+        else:
+            with open(output_path, "w", encoding="utf-8") as f:
+                f.write(content)
+            generated_files.append(output_path)
+            total_module_count += len(modules)
+            print(f"Generated {output_path} with {len(modules)} {args.override_type}_override entries")
+
+    if not args.dry_run and generated_files:
+        print(f"\nSuccessfully generated {len(generated_files)} file(s) with {total_module_count} total modules")
 
 
 if __name__ == "__main__":

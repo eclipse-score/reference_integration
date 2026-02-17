@@ -11,16 +11,17 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-name: QNX8 - Build & Test
+name: QNX8 - Build & Integration Test
 on:
   pull_request_target:
     types: [opened, reopened, synchronize]
-    paths:
-      - 'integration/**'
+
   merge_group:
     types: [checks_requested]
-    paths:
-      - 'integration/**'
+
+  push:
+    branches:
+      - main
 
 jobs:
   qnx-build-x86_64:
@@ -41,7 +42,7 @@ jobs:
       - name: Setup Bazel with shared caching
         uses: bazel-contrib/setup-bazel@0.18.0
         with:
-          disk-cache: ${{ inputs.bazel-disk-cache }}
+          disk-cache: ${{ github.workflow }}
           repository-cache: true
           bazelisk-cache: true
           cache-save: ${{ github.event_name == 'push' }}
@@ -62,7 +63,6 @@ jobs:
           SCORE_QNX_PASSWORD: ${{ secrets.SCORE_QNX_PASSWORD }}
         run: |
           bazel build --config qnx-x86_64 //images/qnx_x86_64:image
-        working-directory: ./integration
 
       - name: Cleanup QNX license
         if: always()
