@@ -49,11 +49,12 @@ jobs:
           if [ -d /usr/local/share/chromium ]; then echo "Removing chromium..."; start=$(date +%s); sudo rm -rf /usr/local/share/chromium; end=$(date +%s); echo "Duration: $((end-start))s"; fi
 
       - name: Setup Bazel
-        uses: bazel-contrib/setup-bazel@0.15.0
+        uses: bazel-contrib/setup-bazel@0.18.0
         with:
           bazelisk-cache: true
           disk-cache: ${{ github.workflow }}
           repository-cache: true
+          cache-save: ${{ github.event_name == 'push' }}
 
       - name: Set up Python 3
         uses: actions/setup-python@v5
