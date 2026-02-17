@@ -91,6 +91,12 @@ class Module:
         # Support both 'hash' and 'commit' keys
         commit_hash = module_data.get("hash") or module_data.get("commit", "")
         version = module_data.get("version")
+
+        if commit_hash and version:
+            raise ValueError(
+                f"Module '{name}' has both 'hash' and 'version' set. "
+                "Use either 'hash' (git_override) or 'version' (single_version_override), not both."
+            )
         # Support both 'bazel_patches' and legacy 'patches' keys
         bazel_patches = module_data.get("bazel_patches") or module_data.get(
             "patches", []
@@ -171,13 +177,12 @@ class Module:
         Returns:
                 Dictionary with module configuration
         """
-        result: Dict[str, Any] = {
-            "repo": self.repo,
-            "hash": self.hash,
-            "metadata": self.metadata.to_dict(),
-        }
+        result: Dict[str, Any] = {"repo": self.repo}
         if self.version:
             result["version"] = self.version
+        else:
+            result["hash"] = self.hash
+        result["metadata"] = self.metadata.to_dict()
         if self.bazel_patches:
             result["bazel_patches"] = self.bazel_patches
         if self.branch and self.branch != "main":
