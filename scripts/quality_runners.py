@@ -18,26 +18,34 @@ class ProcessResult:
     exit_code: int
 
 
-def run_unit_test_with_coverage(module: Module) -> dict[str, str | int]:
-    print("QR: Running unit tests...")
+def print_centered(message: str, width: int = 120, fillchar: str = "-") -> None:
+    print(message.center(width, fillchar))
 
-    call = [
-        "bazel",
-        "coverage",  # Call coverage instead of test to get .dat files already
-        "--test_verbose_timeout_warnings",
-        "--test_timeout=1200",
-        "--config=unit-tests",
-        "--test_summary=testcase",
-        "--test_output=errors",
-        "--nocache_test_results",
-        f"--instrumentation_filter=@{module.name}",
-        f"@{module.name}{module.metadata.code_root_path}",
-        "--",
-    ] + [
-        # Exclude test targets specified in module metadata, if any
-        f"-@{module.name}{target}"
-        for target in module.metadata.exclude_test_targets
-    ]
+
+def run_unit_test_with_coverage(module: Module) -> dict[str, str | int]:
+    print_centered("QR: Running unit tests")
+
+    call = (
+        [
+            "bazel",
+            "coverage",  # Call coverage instead of test to get .dat files already
+            "--test_verbose_timeout_warnings",
+            "--test_timeout=1200",
+            "--config=unit-tests",
+            "--test_summary=testcase",
+            "--test_output=errors",
+            "--nocache_test_results",
+            f"--instrumentation_filter=@{module.name}",
+            f"@{module.name}{module.metadata.code_root_path}",
+        ]
+        + [f"--@{module.name}{target}" for target in module.metadata.extra_test_config]
+        + ["--"]
+        + [
+            # Exclude test targets specified in module metadata, if any
+            f"-@{module.name}{target}"
+            for target in module.metadata.exclude_test_targets
+        ]
+    )
 
     result = run_command(call)
     summary = extract_ut_summary(result.stdout)
@@ -45,7 +53,7 @@ def run_unit_test_with_coverage(module: Module) -> dict[str, str | int]:
 
 
 def run_cpp_coverage_extraction(module: Module, output_path: Path) -> int:
-    print("QR: Running cpp coverage analysis...")
+    print_centered("QR: Running cpp coverage analysis")
 
     result_cpp = cpp_coverage(module, output_path)
     summary = extract_coverage_summary(result_cpp.stdout)
@@ -113,7 +121,7 @@ def extract_ut_summary(logs: str) -> dict[str, int]:
     if match := pattern_summary_line.search(logs):
         summary_line = match.group(0)
     else:
-        print("QR: Summary line not found in logs.")
+        print_centered("QR: Summary line not found in logs")
         return summary
 
     pattern_passed = re.compile(r"(\d+) passing")
@@ -174,7 +182,9 @@ def run_command(command: list[str], **kwargs) -> ProcessResult:
     stdout_data = []
     stderr_data = []
 
-    print(f"QR: Running command: `{' '.join(command)}`")
+    print_centered("QR: Running command:")
+    print(f"{' '.join(command)}")
+
     with Popen(command, stdout=PIPE, stderr=PIPE, text=True, bufsize=1, **kwargs) as p:
         # Use select to read from both streams without blocking
         streams = {
@@ -240,36 +250,18 @@ def main() -> bool:
     CURRENTLY_DISABLED_MODULES = [
         "score_communication",
         "score_scrample",
-        "score_logging",
         "score_lifecycle_health",
         "score_feo",
     ]
 
     for module in known.modules["target_sw"].values():
         if module.name in CURRENTLY_DISABLED_MODULES:
-            print(
-                "########################################################################",
-                flush=True,
-            )
-            print(
-                f"Skipping module {module.name} as it is currently disabled for unit tests.",
-                flush=True,
-            )
-            print(
-                "########################################################################",
-                flush=True,
+            print_centered(
+                f"QR: Skipping module {module.name} as it is currently disabled for unit tests"
             )
             continue
         else:
-            print(
-                "########################################################################",
-                flush=True,
-            )
-            print(f"QR: Testing module: {module.name}")
-            print(
-                "########################################################################",
-                flush=True,
-            )
+            print_centered(f"QR: Testing module: {module.name}")
 
         unit_tests_summary[module.name] = run_unit_test_with_coverage(module=module)
 
@@ -277,15 +269,8 @@ def main() -> bool:
             coverage_summary[module.name] = run_cpp_coverage_extraction(
                 module=module, output_path=args.coverage_output_dir
             )
-        print(
-            "########################################################################",
-            flush=True,
-        )
-        print(f"QR: Finished testing module: {module.name}")
-        print(
-            "########################################################################",
-            flush=True,
-        )
+
+        print_centered(f"QR: Finished testing module: {module.name}")
 
     generate_markdown_report(
         unit_tests_summary,
@@ -293,7 +278,7 @@ def main() -> bool:
         columns=["module", "passed", "failed", "skipped", "total"],
         output_path=path_to_docs / "unit_test_summary.md",
     )
-    print("QR: UNIT TEST EXECUTION SUMMARY".center(120, "="))
+    print_centered("QR: UNIT TEST EXECUTION SUMMARY", fillchar="=")
     pprint(unit_tests_summary, width=120)
 
     generate_markdown_report(
@@ -302,7 +287,7 @@ def main() -> bool:
         columns=["module", "lines", "functions", "branches"],
         output_path=path_to_docs / "coverage_summary.md",
     )
-    print("QR: COVERAGE ANALYSIS SUMMARY".center(120, "="))
+    print_centered("QR: COVERAGE ANALYSIS SUMMARY", fillchar="=")
     pprint(coverage_summary, width=120)
 
     # Check all exit codes and return non-zero if any test or coverage extraction failed

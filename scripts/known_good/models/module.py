@@ -14,11 +14,13 @@ class Metadata:
 
     Attributes:
             code_root_path: Root path to the code directory
+            extra_test_config: List of extra test configuration flags
             exclude_test_targets: List of test targets to exclude
             langs: List of languages supported (e.g., ["cpp", "rust"])
     """
 
     code_root_path: str = "//score/..."
+    extra_test_config: list[str] = field(default_factory=lambda: [])
     exclude_test_targets: list[str] = field(default_factory=lambda: [])
     langs: list[str] = field(default_factory=lambda: ["cpp", "rust"])
 
@@ -34,6 +36,7 @@ class Metadata:
         """
         return cls(
             code_root_path=data.get("code_root_path", "//score/..."),
+            extra_test_config=data.get("extra_test_config", []),
             exclude_test_targets=data.get("exclude_test_targets", []),
             langs=data.get("langs", ["cpp", "rust"]),
         )
@@ -46,6 +49,7 @@ class Metadata:
         """
         return {
             "code_root_path": self.code_root_path,
+            "extra_test_config": self.extra_test_config,
             "exclude_test_targets": self.exclude_test_targets,
             "langs": self.langs,
         }
@@ -76,13 +80,14 @@ class Module:
                         - metadata (dict, optional): Metadata configuration
                                 Example: {
                                         "code_root_path": "path/to/code/root",
+                                        "extra_test_config": [""],
                                         "exclude_test_targets": [""],
                                         "langs": ["cpp", "rust"]
                                 }
                                 If not present, uses default Metadata values.
                         - branch (str, optional): Git branch name (default: main)
                         - pin_version (bool, optional): If true, module hash is not updated
-				            to latest HEAD by update scripts (default: false)
+                                            to latest HEAD by update scripts (default: false)
 
         Returns:
                 Module instance

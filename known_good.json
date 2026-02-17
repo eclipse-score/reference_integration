@@ -72,7 +72,24 @@
             },
             "score_logging": {
                 "repo": "https://github.com/qorix-group/logging.git",
-                "hash": "3718923aafc273531b1d0b3a240d821db24afbbc"
+                "hash": "3718923aafc273531b1d0b3a240d821db24afbbc",
+                "metadata": {
+                    "extra_test_config": [
+                        "//score/datarouter/build_configuration_flags:persistent_logging=False",
+                        "//score/datarouter/build_configuration_flags:persistent_config_feature_enabled=False",
+                        "//score/datarouter/build_configuration_flags:enable_nonverbose_dlt=False",
+                        "//score/datarouter/build_configuration_flags:enable_dynamic_configuration_in_datarouter=False",
+                        "//score/datarouter/build_configuration_flags:file_transfer=False",
+                        "//score/datarouter/build_configuration_flags:use_local_vlan=True"
+                    ],
+                    "exclude_test_targets": [
+                        "//score/datarouter/test/ut/ut_logging:dltprotocolUT",
+                        "//score/datarouter/test/ut/ut_logging:persistentLogConfigUT",
+                        "//score/datarouter/test/ut/ut_logging:socketserverConfigUT",
+                        "//score/datarouter/test/ut/ut_logging:socketserverUT",
+                        "//score/mw/log/legacy_non_verbose_api:unit_test"
+                    ]
+                }
             }
         },
         "tooling": {
