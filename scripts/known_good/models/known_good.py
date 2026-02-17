@@ -15,21 +15,17 @@ from .module import Module
 class KnownGood:
 	"""Known good configuration with modules and metadata.
 
-	Supports both flat and grouped module structures:
-	- Flat: modules = {"default": {"module1": Module, "module2": Module}}
-	- Grouped: modules = {"group1": {"module1": Module}, "group2": {"module2": Module}}
+	Module structure: modules = {"group1": {"module1": Module}, "group2": {"module2": Module}}
 	"""
 	modules: Dict[str, Dict[str, Module]]
 	timestamp: str
-	is_grouped: bool = False
 
 	@classmethod
 	def from_dict(cls, data: Dict[str, Any]) -> KnownGood:
 		"""Create a KnownGood instance from a dictionary.
 
-		Automatically detects flat vs grouped structure:
-		- Flat: {"modules": {"score_baselibs": {...}, "score_logging": {...}}}
-		- Grouped: {"modules": {"code": {"score_baselibs": {...}}, "abc": {"score_logging": {...}}}}
+		Expected structure:
+		{"modules": {"group1": {"score_baselibs": {...}}, "group2": {"score_logging": {...}}}}
 
 		Args:
 			data: Dictionary containing known_good.json data
@@ -40,53 +36,24 @@ class KnownGood:
 		modules_dict = data.get('modules', {})
 		timestamp = data.get('timestamp', '')
 
-		# Detect if structure is grouped or flat
-		# Grouped structure: values are dicts containing module configs
-		# Flat structure: values are module configs directly (have 'repo' or 'version' keys)
-		is_grouped = False
 		parsed_modules: Dict[str, Dict[str, Module]] = {}
+		for group_name, group_modules in modules_dict.items():
+			if isinstance(group_modules, dict):
+				modules_list = Module.parse_modules(group_modules)
+				parsed_modules[group_name] = {m.name: m for m in modules_list}
 
-		if modules_dict:
-			# Check first entry to determine structure
-			first_key = next(iter(modules_dict))
-			first_value = modules_dict[first_key]
-
-			# If first value is a dict without 'repo' or 'version', it's likely a group
-			if isinstance(first_value, dict) and not ('repo' in first_value or 'version' in first_value):
-				# Grouped structure
-				is_grouped = True
-				for group_name, group_modules in modules_dict.items():
-					if isinstance(group_modules, dict):
-						modules_list = Module.parse_modules(group_modules)
-						parsed_modules[group_name] = {m.name: m for m in modules_list}
-			else:
-				# Flat structure - use "default" as group name
-				is_grouped = False
-				modules_list = Module.parse_modules(modules_dict)
-				parsed_modules["default"] = {m.name: m for m in modules_list}
-
-		return cls(modules=parsed_modules, timestamp=timestamp, is_grouped=is_grouped)
+		return cls(modules=parsed_modules, timestamp=timestamp)
 
 	def to_dict(self) -> Dict[str, Any]:
 		"""Convert KnownGood instance to dictionary for JSON output.
 
-		Preserves the original structure (flat vs grouped).
-
 		Returns:
 			Dictionary with known_good configuration
 		"""
-		if self.is_grouped:
-			# Grouped structure
-			modules_output = {
-				group_name: {name: module.to_dict() for name, module in group_modules.items()}
-				for group_name, group_modules in self.modules.items()
-			}
-		else:
-			# Flat structure - extract from "default" group
-			modules_output = {
-				name: module.to_dict()
-				for name, module in self.modules.get("default", {}).items()
-			}
+		modules_output = {
+			group_name: {name: module.to_dict() for name, module in group_modules.items()}
+			for group_name, group_modules in self.modules.items()
+		}
 
 		return {
 			"modules": modules_output,

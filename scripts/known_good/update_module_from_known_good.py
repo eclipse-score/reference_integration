@@ -162,8 +162,7 @@ Examples:
   python3 scripts/known_good/update_module_from_known_good.py --dry-run
 
 Note:
-  - For grouped structure, generates score_modules_{group}.MODULE.bazel for each group
-  - For flat structure, generates score_modules.MODULE.bazel
+  - Generates score_modules_{group}.MODULE.bazel for each group
   - To override repository commits, use scripts/known_good/override_known_good_repo.py first.
         """
     )
@@ -171,11 +170,6 @@ Note:
         "--known",
         default="known_good.json",
         help="Path to known_good.json (default: known_good.json)"
-    )
-    parser.add_argument(
-        "--output",
-        default=None,
-        help="Output file path (only for flat structure, default: score_modules.MODULE.bazel)"
     )
     parser.add_argument(
         "--output-dir",
@@ -252,13 +246,8 @@ Note:
             logging.warning(f"Skipping empty group: {group_name}")
             continue
 
-        # Determine output filename
-        if known_good.is_grouped:
-            # Grouped structure: score_modules_{group}.MODULE.bazel
-            output_filename = f"score_modules_{group_name}.MODULE.bazel"
-        else:
-            # Flat structure: use --output or default
-            output_filename = args.output if args.output else "score_modules.MODULE.bazel"
+        # Determine output filename: score_modules_{group}.MODULE.bazel
+        output_filename = f"score_modules_{group_name}.MODULE.bazel"
 
         output_path = os.path.join(output_dir, output_filename)
 

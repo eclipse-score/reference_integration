@@ -67,6 +67,7 @@ jobs:
  
       - name: Build AutoSD QEMU (x86_64)
         run: |
+          export AIB_PODMAN_OPTIONS="--tmpfs /var/tmp"
           export AIB_LOCAL_CONTAINER_STORAGE=$PWD/_build/containers-storage
 
           mkdir -p _build/containers-storage
