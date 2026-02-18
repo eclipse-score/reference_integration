@@ -62,7 +62,7 @@ async fn on_shutdown() -> InvokeResult {
     // Configure backend with directory path (workaround: KvsBuilder::dir() not available in Rust)
     // change back to dir, if https://github.com/eclipse-score/persistency/issues/222 is resolved.
     let backend = JsonBackendBuilder::new()
-        .working_dir(PathBuf::from("./"))
+        .working_dir(PathBuf::from("/tmp"))
         .build();
     
     let builder = KvsBuilder::new(instance_id)
@@ -74,6 +74,19 @@ async fn on_shutdown() -> InvokeResult {
     kvs.set_value("bool", true).unwrap();
 
     kvs.flush().unwrap();
+
+    let instance_id = kvs.parameters().instance_id;
+    let snapshot_id = SnapshotId(0);
+    match kvs.parameters().backend.as_any().downcast_ref(){
+        Some(backend ) => {
+            let backend = backend as &JsonBackend;
+            let filename = backend.kvs_file_path(instance_id, snapshot_id);
+            info!("KVS snapshot saved to file: {:?}", filename);
+        },
+        None => {
+           
+        },
+    };
 
     Ok(())
 }

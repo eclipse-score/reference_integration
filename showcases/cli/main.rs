@@ -111,9 +111,17 @@ fn visit_dir(dir: &Path, configs: &mut Vec<ScoreConfig>) -> Result<()> {
         if is_score_file(&path) {
             let content = fs::read_to_string(&path)
                 .with_context(|| format!("Failed reading {:?}", path))?;
-            let config: ScoreConfig = serde_json::from_str(&content)
+            let value: serde_json::Value = serde_json::from_str(&content)
                 .with_context(|| format!("Invalid JSON in {:?}", path))?;
-            configs.push(config);
+            if value.is_array() {
+                let found: Vec<ScoreConfig> = serde_json::from_value(value)
+                    .with_context(|| format!("Invalid JSON array in {:?}", path))?;
+                configs.extend(found);
+            } else {
+                let config: ScoreConfig = serde_json::from_value(value)
+                    .with_context(|| format!("Invalid JSON in {:?}", path))?;
+                configs.push(config);
+            }
         }
     }
     Ok(())
