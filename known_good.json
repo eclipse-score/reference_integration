@@ -8,13 +8,19 @@
                     "//patches/baselibs:003-acl-fixes-for-aarch64.patch"
                 ],
                 "metadata": {
+                    "extra_test_config": [
+                        "//score/json:base_library=nlohmann",
+                        "//score/memory/shared/flags:use_typedshmd=False"
+                    ],
                     "exclude_test_targets": [
                         "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test",
                         "//score/containers:dynamic_array_test",
                         "//score/mw/log/configuration:*",
                         "//score/json/examples:*"
                     ],
-                    "langs": ["cpp"]
+                    "langs": [
+                        "cpp"
+                    ]
                 }
             },
             "score_baselibs_rust": {
@@ -22,7 +28,9 @@
                 "hash": "9f781acfb6d1a8fa06012ce772b0befb304acf31",
                 "metadata": {
                     "code_root_path": "//src/...",
-                    "langs": ["rust"]
+                    "langs": [
+                        "rust"
+                    ]
                 }
             },
             "score_communication": {
@@ -52,7 +60,9 @@
                 "hash": "675007a2baa226fad1e2979ed732360dc111d056",
                 "metadata": {
                     "code_root_path": "//src/...",
-                    "langs": ["rust"]
+                    "langs": [
+                        "rust"
+                    ]
                 }
             },
             "score_kyron": {
@@ -60,7 +70,9 @@
                 "hash": "d4d0afc1dd733a0c8a4aba9cc2b2b3a58d38ebf6",
                 "metadata": {
                     "code_root_path": "//src/...",
-                    "langs": ["rust"]
+                    "langs": [
+                        "rust"
+                    ]
                 }
             },
             "score_lifecycle_health": {
@@ -126,8 +138,6 @@
                 "hash": "6c772cf05a493218a5ac6071361bf0b66c5427b2"
             }
         }
-        
-       
     },
     "timestamp": "2026-02-10T21:12:42+00:00Z"
 }
