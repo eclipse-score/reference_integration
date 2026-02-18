@@ -113,8 +113,8 @@ jobs:
           echo "::endgroup::"
           
           echo "::group::update score_modules.MODULE.bazel"
-          python3 scripts/known_good/update_module_from_known_good.py --known known_good.updated.json
-          cat score_modules.MODULE.bazel
+          python3 scripts/known_good/update_module_from_known_good.py --known known_good.updated.json --output-dir bazel_common/
+          cat bazel_common/score_modules.MODULE.bazel
           echo "::endgroup::"
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_READ_TOKEN != '' && secrets.REPO_READ_TOKEN || github.token }}
