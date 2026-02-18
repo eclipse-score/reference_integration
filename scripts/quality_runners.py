@@ -235,6 +235,12 @@ def parse_arguments() -> argparse.Namespace:
         default=Path(__file__).parent.parent / "artifacts/coverage",
         help="Path to the directory for coverage output files",
     )
+    parser.add_argument(
+        "--modules-to-test",
+        type=lambda modules: modules.split(","),
+        default=[],
+        help="List of modules to test",
+    )
     return parser.parse_args()
 
 
@@ -247,22 +253,17 @@ def main() -> bool:
 
     unit_tests_summary, coverage_summary = {}, {}
 
-    CURRENTLY_DISABLED_MODULES = [
-        "score_communication",
-        "score_scrample",
-        "score_lifecycle_health",
-        "score_feo",
-    ]
+    if args.modules_to_test:
+        print_centered(
+            f"QR: User requested tests only for specified modules: {', '.join(args.modules_to_test)}"
+        )
 
     for module in known.modules["target_sw"].values():
-        if module.name in CURRENTLY_DISABLED_MODULES:
-            print_centered(
-                f"QR: Skipping module {module.name} as it is currently disabled for unit tests"
-            )
+        if args.modules_to_test and module.name not in args.modules_to_test:
+            print_centered(f"QR: Skipping module {module.name}")
             continue
-        else:
-            print_centered(f"QR: Testing module: {module.name}")
 
+        print_centered(f"QR: Testing module: {module.name}")
         unit_tests_summary[module.name] = run_unit_test_with_coverage(module=module)
 
         if "cpp" in module.metadata.langs:
