@@ -32,6 +32,7 @@ def run_unit_test_with_coverage(module: Module) -> dict[str, str | int]:
             "--test_verbose_timeout_warnings",
             "--test_timeout=1200",
             "--config=unit-tests",
+            "--config=ferrocene-coverage",
             "--test_summary=testcase",
             "--test_output=errors",
             "--nocache_test_results",
@@ -61,6 +62,15 @@ def run_cpp_coverage_extraction(module: Module, output_path: Path) -> int:
     return {**summary, "exit_code": result_cpp.exit_code}
 
 
+def run_rust_coverage_extraction(module: Module, output_path: Path) -> int:
+    print_centered("QR: Running rust coverage analysis")
+
+    result_rust = rust_coverage(module, output_path)
+    summary = extract_coverage_summary(result_rust.stdout)
+
+    return {**summary, "exit_code": result_rust.exit_code}
+
+
 def cpp_coverage(module: Module, artifact_dir: Path) -> ProcessResult:
     # .dat files are already generated in UT step
 
@@ -88,6 +98,24 @@ def cpp_coverage(module: Module, artifact_dir: Path) -> ProcessResult:
     genhtml_result = run_command(genhtml_call, cwd=bazel_source_directory)
 
     return genhtml_result
+
+
+def rust_coverage(module: Module, artifact_dir: Path) -> ProcessResult:
+    # .profraw files are already generated in UT step
+
+    # Run bazel covverage target
+    # Create dedicated output directory for this module's coverage reports
+    output_dir = artifact_dir / "rust" / module.name
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    bazel_call = [
+        "bazel",
+        "run",
+        f"//:rust_coverage_{module.name}",
+    ]
+    bazel_result = run_command(bazel_call)
+
+    return bazel_result
 
 
 def generate_markdown_report(
@@ -142,10 +170,10 @@ def extract_ut_summary(logs: str) -> dict[str, int]:
 
 def extract_coverage_summary(logs: str) -> dict[str, str]:
     """
-    Extract coverage summary from genhtml output.
+    Extract coverage summary from coverage output (genhtml / rust_coverage_report).
 
     Args:
-        logs: Output from genhtml command
+        logs: Output from coverage command
 
     Returns:
         Dictionary with coverage percentages for lines, functions, and branches
@@ -154,16 +182,20 @@ def extract_coverage_summary(logs: str) -> dict[str, str]:
 
     # Pattern to match coverage percentages in genhtml output
     # Example: "  lines......: 93.0% (1234 of 1327 lines)"
-    pattern_lines = re.compile(r"lines\.+:\s+([\d.]+%)")
-    pattern_functions = re.compile(r"functions\.+:\s+([\d.]+%)")
-    pattern_branches = re.compile(r"branches\.+:\s+([\d.]+%)")
-
-    if match := pattern_lines.search(logs):
+    pattern_cpp_lines = re.compile(r"lines\.+:\s+([\d.]+%)")
+    pattern_cpp_functions = re.compile(r"functions\.+:\s+([\d.]+%)")
+    pattern_cpp_branches = re.compile(r"branches\.+:\s+([\d.]+%)")
+    if match := pattern_cpp_lines.search(logs):
         summary["lines"] = match.group(1)
-    if match := pattern_functions.search(logs):
+    if match := pattern_cpp_functions.search(logs):
         summary["functions"] = match.group(1)
-    if match := pattern_branches.search(logs):
+    if match := pattern_cpp_branches.search(logs):
         summary["branches"] = match.group(1)
+
+    # Rust coverage currently returns only line coverage
+    pattern_rust_lines = re.compile(r"line coverage:\s+([\d.]+%)")
+    if match := pattern_rust_lines.search(logs):
+        summary["lines"] = match.group(1)
 
     return summary
 
@@ -267,7 +299,22 @@ def main() -> bool:
         unit_tests_summary[module.name] = run_unit_test_with_coverage(module=module)
 
         if "cpp" in module.metadata.langs:
-            coverage_summary[module.name] = run_cpp_coverage_extraction(
+            coverage_summary[f"{module.name}_cpp"] = run_cpp_coverage_extraction(
+                module=module, output_path=args.coverage_output_dir
+            )
+
+        if "rust" in module.metadata.langs:
+            DISABLED_RUST_COVERAGE = [
+                "score_communication",
+                "score_orchestrator",
+                "score_baselibs_rust",
+            ]  # Known issues with coverage extraction for these modules, mostly proc_macro
+            if module.name in DISABLED_RUST_COVERAGE:
+                print_centered(
+                    f"QR: Skipping rust coverage extraction for module {module.name} due to known issues"
+                )
+                continue
+            coverage_summary[f"{module.name}_rust"] = run_rust_coverage_extraction(
                 module=module, output_path=args.coverage_output_dir
             )
 
