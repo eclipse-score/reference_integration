@@ -12,9 +12,10 @@
 # *******************************************************************************
 load("@score_baselibs//score/language/safecpp:toolchain_features.bzl", "COMPILER_WARNING_FEATURES")
 
+# TODO: Port image to CLI and all showcases as for other images
 genrule(
     name = "scrample_sil_r",
-    srcs = ["@score_scrample//src:scrample"],
+    srcs = ["@score_communication//score/mw/com/example/ipc_bridge:ipc_bridge_cpp"],
     outs = ["scrample_sil"],
     cmd = "cp $(SRCS) $@ && \
      chmod ugo+w $@ && \
@@ -44,7 +45,6 @@ cc_binary(
     ],
     features = COMPILER_WARNING_FEATURES,
     deps = [
-        "@score_scrample//src:scrample",
     ],
 )
 
@@ -68,11 +68,11 @@ genrule(
 genrule(
     name = "upload",
     srcs = [
-        "@score_scrample//src:scrample",
+        "@score_communication//score/mw/com/example/ipc_bridge:ipc_bridge_cpp",
         ":scrample_sil",
         ":hi_app",
         ":fastdev-image",
-        "etc/mw_com_config.json",
+        "@score_communication//score/mw/com/example/ipc_bridge:etc/mw_com_config.json",
         "etc/logging.json",
         "run_qemu.sh",
     ],
@@ -82,9 +82,9 @@ genrule(
         $(location run_qemu.sh) $(RULEDIR)/ebcl-qemuarm64-modified -pidfile $(RULEDIR)/qemu.pid > $(RULEDIR)/qemu_upload.log &\
         sleep 30 ; \
         sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location :scrample_sil) root@localhost:/usr/bin &&\
-        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location @score_scrample//src:scrample) root@localhost:/usr/bin &&\
+        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location @score_communication//score/mw/com/example/ipc_bridge:ipc_bridge_cpp) root@localhost:/usr/bin &&\
         sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location :hi_app) root@localhost:/usr/bin &&\
-        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location etc/mw_com_config.json) root@localhost:/etc/ &&\
+        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location @score_communication//score/mw/com/example/ipc_bridge:etc/mw_com_config.json) root@localhost:/etc/ &&\
         sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location etc/logging.json) root@localhost:/etc/ &&\
         sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost sync &&\
         sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost crinit-ctl poweroff || true \

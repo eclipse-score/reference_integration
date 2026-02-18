@@ -1,0 +1,24 @@
+{
+    "name": "Communication Sender Receiver Example",
+    "description": "Example for running communication sender and receiver",
+    "apps":[
+        {
+            "path": "/showcases/bin/ipc_bridge_cpp",
+            "args": [
+                "-n", "10", "-t", "100", "-m", "send"
+            ],
+            "env": {
+            },
+            "dir": "/showcases/data/comm"
+        },
+        {
+            "path": "/showcases/bin/ipc_bridge_cpp",
+            "args": [
+                "-n", "5", "-t", "100", "-m", "recv"
+            ],
+            "env": {
+            },
+            "dir": "/showcases/data/comm"
+        }
+    ]
+}

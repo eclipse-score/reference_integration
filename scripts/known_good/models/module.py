@@ -14,11 +14,13 @@ class Metadata:
 
     Attributes:
             code_root_path: Root path to the code directory
+            extra_test_config: List of extra test configuration flags
             exclude_test_targets: List of test targets to exclude
             langs: List of languages supported (e.g., ["cpp", "rust"])
     """
 
     code_root_path: str = "//score/..."
+    extra_test_config: list[str] = field(default_factory=lambda: [])
     exclude_test_targets: list[str] = field(default_factory=lambda: [])
     langs: list[str] = field(default_factory=lambda: ["cpp", "rust"])
 
@@ -34,6 +36,7 @@ class Metadata:
         """
         return cls(
             code_root_path=data.get("code_root_path", "//score/..."),
+            extra_test_config=data.get("extra_test_config", []),
             exclude_test_targets=data.get("exclude_test_targets", []),
             langs=data.get("langs", ["cpp", "rust"]),
         )
@@ -46,6 +49,7 @@ class Metadata:
         """
         return {
             "code_root_path": self.code_root_path,
+            "extra_test_config": self.extra_test_config,
             "exclude_test_targets": self.exclude_test_targets,
             "langs": self.langs,
         }
@@ -76,13 +80,14 @@ class Module:
                         - metadata (dict, optional): Metadata configuration
                                 Example: {
                                         "code_root_path": "path/to/code/root",
+                                        "extra_test_config": [""],
                                         "exclude_test_targets": [""],
                                         "langs": ["cpp", "rust"]
                                 }
                                 If not present, uses default Metadata values.
                         - branch (str, optional): Git branch name (default: main)
                         - pin_version (bool, optional): If true, module hash is not updated
-				            to latest HEAD by update scripts (default: false)
+                                            to latest HEAD by update scripts (default: false)
 
         Returns:
                 Module instance
@@ -91,6 +96,12 @@ class Module:
         # Support both 'hash' and 'commit' keys
         commit_hash = module_data.get("hash") or module_data.get("commit", "")
         version = module_data.get("version")
+
+        if commit_hash and version:
+            raise ValueError(
+                f"Module '{name}' has both 'hash' and 'version' set. "
+                "Use either 'hash' (git_override) or 'version' (single_version_override), not both."
+            )
         # Support both 'bazel_patches' and legacy 'patches' keys
         bazel_patches = module_data.get("bazel_patches") or module_data.get(
             "patches", []
@@ -100,6 +111,7 @@ class Module:
         metadata_data = module_data.get("metadata")
         if metadata_data is not None:
             metadata = Metadata.from_dict(metadata_data)
+            # Enable once we are able to remove '*' in known_good.json
             # if any("*" in target for target in metadata.exclude_test_targets):
             #     raise Exception(
             #         f"Module {name} has wildcard '*' in exclude_test_targets, which is not allowed. "
@@ -160,7 +172,7 @@ class Module:
 
         # Split and validate owner/repo format
         parts = path.split("/", 2)  # Split max 2 times to get owner and repo
-        if len(parts) < 2 or not parts[0] or not parts[1]:
+        if len(parts) != 2:
             raise ValueError(f"Cannot parse owner/repo from: {self.repo}")
 
         return f"{parts[0]}/{parts[1]}"
@@ -171,13 +183,12 @@ class Module:
         Returns:
                 Dictionary with module configuration
         """
-        result: Dict[str, Any] = {
-            "repo": self.repo,
-            "hash": self.hash,
-            "metadata": self.metadata.to_dict(),
-        }
+        result: Dict[str, Any] = {"repo": self.repo}
         if self.version:
             result["version"] = self.version
+        else:
+            result["hash"] = self.hash
+        result["metadata"] = self.metadata.to_dict()
         if self.bazel_patches:
             result["bazel_patches"] = self.bazel_patches
         if self.branch and self.branch != "main":
