@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-load("@score_toolchains_qnx//rules/fs:ifs.bzl", "qnx_ifs")
+load("@score_rules_imagefs//rules/qnx:ifs.bzl", "qnx_ifs")
 
 filegroup(
     name = "scripts",
