@@ -172,7 +172,7 @@ class Module:
 
         # Split and validate owner/repo format
         parts = path.split("/", 2)  # Split max 2 times to get owner and repo
-        if len(parts) < 2 or not parts[0] or not parts[1]:
+        if len(parts) != 2:
             raise ValueError(f"Cannot parse owner/repo from: {self.repo}")
 
         return f"{parts[0]}/{parts[1]}"
