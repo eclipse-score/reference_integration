@@ -1,5 +1,7 @@
 # Score Reference Integration
 
+Is cache working?
+
 This workspace integrates multiple Eclipse Score modules (baselibs, communication, persistency, orchestrator, feo, etc.) to validate cross-repository builds and detect integration issues early in the development cycle.
 
 ## Overview
