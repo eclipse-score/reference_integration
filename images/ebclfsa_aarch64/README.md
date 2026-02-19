@@ -24,7 +24,7 @@ However, please understand that we cannot advise you about possible costs in you
 > - Copy and paste the following command into the terminal and hit "Enter":
 >
 > ```bash
-> cd ./ebclfsa && bazel build --config=aarch64-ebclfsa //scrample_integration:run
+> bazel build --config=eb-aarch64 //images/ebclfsa_aarch64/scrample_integration:run
 > ```
 >
 > This will build and run the example.
@@ -35,12 +35,12 @@ However, please understand that we cannot advise you about possible costs in you
 >
 > ```console
 > [...]
-> Target //scrample_integration:run up-to-date:
->  bazel-bin/scrample_integration/qemu_run.log
->  bazel-bin/scrample_integration/ssh_scrample_run.log
->INFO: Elapsed time: 361.273s, Critical Path: 91.92s
->INFO: 836 processes: 10 internal, 826 local.
->INFO: Build completed successfully, 836 total actions
+> Target //images/ebclfsa_aarch64/scrample_integration:run up-to-date:
+>  bazel-bin/images/ebclfsa_aarch64/scrample_integration/qemu_run.log
+>  bazel-bin/images/ebclfsa_aarch64/scrample_integration/ssh_scrample_run.log
+> INFO: Elapsed time: 217.949s, Critical Path: 100.88s
+> INFO: 932 processes: 9 action cache hit, 1 internal, 931 local.
+> INFO: Build completed successfully, 932 total actions
 > ```
 >
 > The two log files mentioned in this output are the main results of the test execution.
@@ -220,16 +220,15 @@ This way `cflinit` keeps its static entrypoint for the Eclipse S-CORE example ap
 
 ### S-CORE Toolchain in Linux for Safety Applications
 
-The demo SDK integrates the [S-CORE toolchain with two extensions](https://github.com/elektrobit-contrib/eclipse-score_toolchains_gcc/releases/tag/0.5.0-alpha):
+The demo SDK integrates the [S-CORE toolchain with two extensions](https://github.com/elektrobit-contrib/eclipse-score_toolchains_gcc/releases/tag/0.5.0-beta):
 
 - Additional tooling for AArch64 cross-building.
 - Additional tool `lisa-elf-enabler`: It marks an ELF header of an application in a way that Linux for Safety Applications detects it as an HI application.
-  The tool is available to Bazel via `@eb_toolchain_gcc//:elf-enabler`.
 
 ### Bazel Rules for the Example Applications
 
 The example extends the [`scrample` example](https://github.com/eclipse-score/scrample) of S-CORE with the application setup and the toolchain extensions described above.
-With those changes, the toolchain can be used via `bazel build  --config=aarch64-ebclfsa //scrample_integration:<target>`.
+With those changes, the toolchain can be used via `bazel build --config=eb-aarch64 //images/ebclfsa_aarch64/scrample_integration:<target>`.
 
 > [!IMPORTANT]
 > Building inside a sandbox is currently not possible.
@@ -253,7 +252,7 @@ The following sections introduce some of the rules mentioned above.
 The `run` target provides an easy entry point, to build, post-process, deploy, run and stop the example:
 
 ```bash
-bazel build --config=aarch64-ebclfsa //scrample_integration:run
+bazel build --config=eb-aarch64 //images/ebclfsa_aarch64/scrample_integration:run
 ```
 
 This command will take a while to finish, since it performs some downloads and starts the fast-dev image.
@@ -322,7 +321,7 @@ SDK:handler_do_el0_svc_pre: syscall __NR_clone3 (435) is not allowed
 Building all components of the example application can be performed with the `hi_app` rule.
 
 ```bash
-bazel build --config=aarch64-ebclfsa //scrample_integration:hi_app
+bazel build --config=eb-aarch64 //images/ebclfsa_aarch64/scrample_integration:hi_app
 ```
 
 Due the dependencies towards `:scrample_sil` and `:scrample_sil_wrapper` this will build all required binaries.
@@ -333,16 +332,16 @@ Including the LI `scrample` binary, a temporary `scrample_sil_wrapper` binary as
 The easiest way to setup the fast-dev image, is to use the `fastdev-image` rule.
 
 ```bash
-bazel build --config=aarch64-ebclfsa //scrample_integration:fastdev-image
+bazel build --config=eb-aarch64 //images/ebclfsa_aarch64/scrample_integration:fastdev-image
 ```
 
 This will first download the image via the `fetch-fastdev-archive` rule and cache the archive.
-Afterwards, the `fastdev-image` rule extracts the archive (containing a disk image and a kernel) to `bazel-bin/scrample_integration/deb-qemuarm64/`.
+Afterwards, the `fastdev-image` rule extracts the archive (containing a disk image and a kernel) to `bazel-bin/images/ebclfsa_aarch64/scrample_integration/ebcl-qemuarm64/`.
 
 To start the unmodified base image (without the Eclipse S-CORE example application) manually, the included `run_qemu.sh` script can be used.
 
 ```bash
-./scrample_integration/run_qemu.sh bazel-bin/scrample_integration/deb-qemuarm64/
+./images/ebclfsa_aarch64/scrample_integration/run_qemu.sh bazel-bin/images/ebclfsa_aarch64/scrample_integration/ebcl-qemuarm64/
 ```
 
 This is of course optional, and only needed if a deeper manual look into the image is wished.
@@ -357,19 +356,19 @@ ssh -p 2222 root@localhost
 > [!NOTE]
 > Be aware, that running the image via qemu, will change the stored disk image.
 > Bazel will detect this change and overwrite the disk image with the original one from the downloaded archive.
-> If it is planned to have persistent changes on the image, copy the content of `bazel-bin/scrample_integration/deb-qemuarm64/` to a location outside of `bazel-bin` and adapt the command line argument in the above `run_qemu.sh` call accordingly.
+> If it is planned to have persistent changes on the image, copy the content of `bazel-bin/images/ebclfsa_aarch64/scrample_integration/ebcl-qemuarm64/` to a location outside of `bazel-bin` and adapt the command line argument in the above `run_qemu.sh` call accordingly.
 
 For deploying the example application to the image, the `upload` rule is available, which will start the image based on the content of `bazel-bin/scrample_integration/deb-qemuarm64/` and deploy all needed files via `scp`.
 
 ```bash
-bazel build --config=aarch64-ebclfsa //scrample_integration:upload
+bazel build --config=eb-aarch64 //images/ebclfsa_aarch64/scrample_integration:upload
 ```
 
-Since the deployment step will change the stored disk image, the `upload` rule stores its output in `bazel-bin/scrample_integration/deb-qemuarm64-modified/`.
+Since the deployment step will change the stored disk image, the `upload` rule stores its output in `bazel-bin/images/ebclfsa_aarch64/scrample_integration/ebcl-qemuarm64-modified/`.
 Running the image with the deployed example applications works the same way as before, just with a different folder for the used image and kernel:
 
 ```bash
-./scrample_integration/run_qemu.sh bazel-bin/scrample_integration/deb-qemuarm64-modified/
+./images/ebclfsa_aarch64/scrample_integration/run_qemu.sh bazel-bin/images/ebclfsa_aarch64/scrample_integration/ebcl-qemuarm64-modified/
 ```
 
 Like before you can interact with the image via the serial console or ssh.
@@ -394,5 +393,5 @@ crinit-ctl poweroff
 
 * The toolchain and librares are provided for demonstration and prototyping purposes without further qualification.
 * A second test case for S-CORE persistency is also integrated. You can run it via
-  `bazel build --config=aarch64-ebclfsa //persistency_integration:run`
+  `bazel build --config=eb-aarch64 //images/ebclfsa_aarch64/persistency_integration:run`
   However, this is not integrated as HI application to avoid the additional complexity of the required wrapper.
