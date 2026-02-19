@@ -10,7 +10,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-load("@rules_rpm//rpm:defs.bzl", "rpm_package")
+load("@rules_rpm//:defs.bzl", "rpm_package")
 
 alias(
     name = "image",
@@ -19,17 +19,12 @@ alias(
 )
 
 rpm_package(
-    name = "score-reference-integration",
-    description = "Eclipse S-CORE Reference Integration",
-    summary = "Eclipse S-CORE Reference Integration",
+    name = "score-showcases",
+    description = "Eclipse S-CORE Reference Integration Showcases",
+    summary = "Eclipse S-CORE Reference Integration Showcases",
     version = "0.6.0",
-    binaries = [
-        "//showcases/cli:cli",
-	    "//showcases/orchestration_persistency:orch_per_example",
-    ],
-    config_dir = "/etc/score",
     data = [
-	    "//showcases/orchestration_persistency:orch_per.score.json"
+        "//showcases:showcases_all"
     ],
     data_dir = "/usr/share/score/examples", 
 )
