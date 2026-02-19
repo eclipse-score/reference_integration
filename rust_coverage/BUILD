@@ -24,7 +24,7 @@ rust_coverage_report(
         "linux-x86_64",
         "ferrocene-coverage",
     ],
-    query = 'kind("rust_test", @score_baselibs_rust//src/...) except @score_baselibs_rust//src/log/score_log_fmt_macro:tests',
+    query = 'kind("rust_test", @score_baselibs_rust//src/...) -@score_baselibs_rust//src/log/score_log_fmt_macro:tests',
     visibility = ["//visibility:public"],
 )
             
@@ -35,7 +35,7 @@ rust_coverage_report(
         "linux-x86_64",
         "ferrocene-coverage",
     ],
-    query = 'kind("rust_test", @score_communication//score/mw/com/impl/...) except @score_communication//score/mw/com/impl:unit_test_runtime_single_exec @score_communication//score/mw/com/impl/configuration:config_parser_test @score_communication//score/mw/com/impl/configuration:configuration_test @score_communication//score/mw/com/impl/tracing/configuration:tracing_filter_config_parser_test',
+    query = 'kind("rust_test", @score_communication//score/mw/com/impl/...) -@score_communication//score/mw/com/impl:unit_test_runtime_single_exec -@score_communication//score/mw/com/impl/configuration:config_parser_test -@score_communication//score/mw/com/impl/configuration:configuration_test -@score_communication//score/mw/com/impl/tracing/configuration:tracing_filter_config_parser_test',
     visibility = ["//visibility:public"],
 )
             
@@ -46,7 +46,7 @@ rust_coverage_report(
         "linux-x86_64",
         "ferrocene-coverage",
     ],
-    query = 'kind("rust_test", @score_persistency//src/...) except @score_persistency//src/cpp/tests:bm_kvs_cpp',
+    query = 'kind("rust_test", @score_persistency//src/...) -@score_persistency//src/cpp/tests:bm_kvs_cpp',
     visibility = ["//visibility:public"],
 )
             
@@ -90,7 +90,7 @@ rust_coverage_report(
         "linux-x86_64",
         "ferrocene-coverage",
     ],
-    query = 'kind("rust_test", @score_logging//score/...) except @score_logging//score/datarouter/test/ut/ut_logging:dltprotocolUT @score_logging//score/datarouter/test/ut/ut_logging:persistentLogConfigUT @score_logging//score/datarouter/test/ut/ut_logging:socketserverConfigUT @score_logging//score/datarouter/test/ut/ut_logging:socketserverUT @score_logging//score/mw/log/legacy_non_verbose_api:unit_test',
+    query = 'kind("rust_test", @score_logging//score/...) -@score_logging//score/datarouter/test/ut/ut_logging:dltprotocolUT -@score_logging//score/datarouter/test/ut/ut_logging:persistentLogConfigUT -@score_logging//score/datarouter/test/ut/ut_logging:socketserverConfigUT -@score_logging//score/datarouter/test/ut/ut_logging:socketserverUT -@score_logging//score/mw/log/legacy_non_verbose_api:unit_test',
     visibility = ["//visibility:public"],
 )
             
