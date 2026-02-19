@@ -94,6 +94,7 @@ jobs:
         run: |
           mkdir -p artifacts
           find bazel-testlogs/external -name 'test.xml' -print0 | xargs -0 -I{} cp --parents {} artifacts/
+          cp -r "$(bazel info bazel-bin)/coverage/rust-tests" artifacts/rust
           zip -r ${{ github.event.repository.name }}_test_reports.zip artifacts/
         shell: bash
 
