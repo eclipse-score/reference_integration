@@ -111,7 +111,7 @@ def rust_coverage(module: Module, artifact_dir: Path) -> ProcessResult:
     bazel_call = [
         "bazel",
         "run",
-        f"//:rust_coverage_{module.name}",
+        f"//rust_coverage:rust_coverage_{module.name}",
     ]
     bazel_result = run_command(bazel_call)
 
@@ -307,7 +307,6 @@ def main() -> bool:
             DISABLED_RUST_COVERAGE = [
                 "score_communication",
                 "score_orchestrator",
-                "score_baselibs_rust",
             ]  # Known issues with coverage extraction for these modules, mostly proc_macro
             if module.name in DISABLED_RUST_COVERAGE:
                 print_centered(
