@@ -123,7 +123,7 @@ def generate_coverage_blocks(modules: List[Module]) -> List[str]:
             continue
 
         if module.metadata.exclude_test_targets:
-            excluded_tests = f" except {' '.join([f'@{module.name}{target}' for target in module.metadata.exclude_test_targets])}"
+            excluded_tests = f" {' '.join([f'-@{module.name}{target}' for target in module.metadata.exclude_test_targets])}"
         else:
             excluded_tests = ""
 
