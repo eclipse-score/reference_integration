@@ -32,7 +32,7 @@ genrule(
 genrule(
     name = "upload",
     srcs = [
-        "@score_persistency//tests/cpp_test_scenarios:cpp_test_scenarios",
+        "@score_persistency//tests/test_scenarios/cpp:test_scenarios",
         ":fastdev-image",
         "scripts/cpp_tests_persistency.sh",
         "run_qemu.sh",
@@ -42,7 +42,7 @@ genrule(
         cp $(RULEDIR)/ebcl-qemuarm64/* $(RULEDIR)/ebcl-qemuarm64-modified/ &&\
         $(location run_qemu.sh) $(RULEDIR)/ebcl-qemuarm64-modified -pidfile $(RULEDIR)/qemu.pid > $(RULEDIR)/qemu_upload.log &\
         sleep 30 ; \
-        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location @score_persistency//tests/cpp_test_scenarios:cpp_test_scenarios) root@localhost:/usr/bin/cpp_tests_persistency &&\
+        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location @score_persistency//tests/test_scenarios/cpp:test_scenarios) root@localhost:/usr/bin/cpp_tests_persistency &&\
         sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location scripts/cpp_tests_persistency.sh) root@localhost:/usr/bin/cpp_tests_persistency.sh &&\
         sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost sync &&\
         sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost crinit-ctl poweroff || true \
