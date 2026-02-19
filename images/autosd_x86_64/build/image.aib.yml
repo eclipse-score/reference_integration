@@ -21,15 +21,10 @@ content:
   repos:
     - id: epel
       baseurl: https://dl.fedoraproject.org/pub/epel/10/Everything/$arch/
-    - id: score
-      baseurl: file:///host/rpms
+    # removing it for now because the image is relying on copying globs
+    #- id: score
+    #  baseurl: file:///host/rpms
   rpms:
-    - vim-enhanced
-    - gdb
-    - strace
-    - boost-devel
-    - tree
-    - dnf
     # For testing the image only:
     - openssh-server
     - openssh-clients
@@ -38,8 +33,6 @@ content:
     - bluechi-controller
     - bluechi-agent
     - bluechi-ctl
-    # score
-    - score-reference-integration
 
   make_dirs:
     - path: /etc/containers/systemd/qm.container.d
@@ -74,15 +67,55 @@ content:
     # lola test script
     - path: /usr/bin/lola-ipc-test
       source_path: files/lola-ipc-test
+    # showcases
+    - path: /usr/share/score/examples/showcases_all
+      source_glob: "files/showcases_all/**/*"
+      preserve_path: true
+      max_files: 50
+
   chmod_files:
     - path: /usr/bin/lola-ipc-test
       mode: "0755"
+    # the following is a workaround because copied files lost their permissions
+    - path: /usr/share/score/examples/showcases_all/bin/cli
+      mode: "0755"
+      recursive: true
+
+    - path: /usr/share/score/examples/showcases_all/bin/control_daemon
+      mode: "0755"
+      recursive: true
+    
+    - path: /usr/share/score/examples/showcases_all/bin/cpp_supervised_app
+      mode: "0755"
+      recursive: true
+    
+    - path: /usr/share/score/examples/showcases_all/bin/ipc_bridge_cpp
+      mode: "0755"
+      recursive: true
+    
+    - path: /usr/share/score/examples/showcases_all/bin/launch_manager
+      mode: "0755"
+      recursive: true
+    
+    - path: /usr/share/score/examples/showcases_all/bin/lifecycle_signal.sh
+      mode: "0755"
+      recursive: true
+    
+    - path: /usr/share/score/examples/showcases_all/bin/orch_per_example
+      mode: "0755"
+      recursive: true
+    
+    - path: /usr/share/score/examples/showcases_all/bin/rust_supervised_app
+      mode: "0755"
+      recursive: true
+
 
   # Required for testing the image only:
   systemd:
     enabled_services:
       # Enable ssh daemon
       - sshd.service
+      # bluechi services
       - bluechi-controller.service
       - bluechi-agent.service
 
@@ -96,12 +129,8 @@ qm:
     repos:
       - id: epel
         baseurl: https://dl.fedoraproject.org/pub/epel/10/Everything/$arch/
-      - id: score
-        baseurl: file:///host/rpms
     rpms:
-      - boost-devel
       - bluechi-agent
-      - score-reference-integration
     add_files:
       # lola service files
       - path: /etc/systemd/system/lola-ipc-sub.service

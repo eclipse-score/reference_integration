@@ -1,11 +1,13 @@
 bazel_dep(name = "rules_shell", version = "0.6.0")
 bazel_dep(name = "rules_cc", version = "0.1.1")
 bazel_dep(name = "rules_pkg", version = "1.2.0")
+
 bazel_dep(name = "rules_rpm", version = "0.1.0")
 git_override(
     module_name = "rules_rpm",
+    remote = "https://github.com/eclipse-score/inc_os_autosd.git",
     branch = "main",
-    remote = "https://github.com/bilelmoussaoui/bazel-rpm.git",
+    strip_prefix = "rpm"
 )
 
 bazel_dep(name = "flatbuffers", version = "25.9.23")

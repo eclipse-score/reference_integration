@@ -49,18 +49,16 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y podman curl qemu-system createrepo-c
 
-      - name: Build Showcases RPMs
+      - name: Build Showcases
         run: |
-          bazel build --config autosd-x86_64 //images/autosd_x86_64:score-reference-integration
+          bazel build --config autosd-x86_64 //images/autosd_x86_64:image
         working-directory: ./images/autosd_x86_64
 
-      - name: Copy RPMs
+      - name: Copy showcases_all folder
         run: |
           set -e
           mkdir -p ./images/autosd_x86_64/build/rpms
-          cp bazel-bin/images/autosd_x86_64/score-reference-integration-0.6.0-1.x86_64.rpm ./images/autosd_x86_64/build/rpms
-          createrepo_c ./images/autosd_x86_64/build/rpms/
-          ls -l ./images/autosd_x86_64/build/rpms/
+          cp -R bazel-bin/showcases/showcases_all ./images/autosd_x86_64/build/files/
       
       - name: Install AIB Tools
         run: |
@@ -70,7 +68,6 @@ jobs:
  
       - name: Build AutoSD QEMU (x86_64)
         run: |
-          export AIB_PODMAN_OPTIONS="--tmpfs /var/tmp"
           export AIB_LOCAL_CONTAINER_STORAGE=$PWD/_build/containers-storage
 
           mkdir -p _build/containers-storage
