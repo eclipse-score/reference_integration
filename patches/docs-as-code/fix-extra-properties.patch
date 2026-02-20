@@ -1,0 +1,23 @@
+diff --git a/src/extensions/score_source_code_linker/testlink.py b/src/extensions/score_source_code_linker/testlink.py
+index 50066fe3..51311f3e 100644
+--- a/src/extensions/score_source_code_linker/testlink.py
++++ b/src/extensions/score_source_code_linker/testlink.py
+@@ -93,7 +93,17 @@ class DataOfTestCase:
+ 
+     @classmethod
+     def from_dict(cls, data: dict[str, Any]):  # type-ignore
+-        return cls(**data)  # type-ignore
++        return cls(
++            name=data.get("name", ""),
++            file=data.get("file", ""),
++            line=data.get("line", ""),
++            result=data.get("result", ""),
++            TestType=data.get("TestType", ""),
++            DerivationTechnique=data.get("DerivationTechnique", ""),
++            result_text=data.get("result_text", ""),
++            PartiallyVerifies=data.get("PartiallyVerifies", ""),
++            FullyVerifies=data.get("FullyVerifies", ""),
++        )
+ 
+     @classmethod
+     def clean_text(cls, text: str):

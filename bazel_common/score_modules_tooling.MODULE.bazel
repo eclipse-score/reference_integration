@@ -56,6 +56,10 @@ bazel_dep(name = "score_docs_as_code")
 single_version_override(
     module_name = "score_docs_as_code",
     version = "3.0.1",
+    patches = [
+        "//patches/docs-as-code:fix-extra-properties.patch",
+    ],
+    patch_strip = 1,
 )
 
 bazel_dep(name = "score_process")
