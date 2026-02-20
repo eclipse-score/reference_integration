@@ -5,3 +5,35 @@ git_override(
     remote = "https://github.com/pawelrutkaq/rules_rust.git", # To be fixed once rule_rust is in score bazel registry
     commit = "293337fd6402ec3dfbeb8f2d589f38ad9124dadd",
 )
+
+
+ferrocene = use_extension(
+    "@score_toolchains_rust//extensions:ferrocene_toolchain_ext.bzl",
+    "ferrocene_toolchain_ext",
+)
+
+ferrocene.toolchain(
+    name = "ferrocene_aarch64_ebclfsa",
+    url = "https://github.com/eclipse-score/ferrocene_toolchain_builder/releases/download/1.0.1/ferrocene-779fbed05ae9e9fe2a04137929d99cc9b3d516fd-aarch64-unknown-linux-gnu.tar.gz",
+    sha256 = "b1f1eb1146bf595fe1f4a65d5793b7039b37d2cb6d395d1c3100fa7d0377b6c9",
+    coverage_tools_url = "https://github.com/eclipse-score/ferrocene_toolchain_builder/releases/download/1.0.1/coverage-tools-779fbed05ae9e9fe2a04137929d99cc9b3d516fd-x86_64-unknown-linux-gnu.tar.gz",
+    coverage_tools_sha256 = "497958e925bc94833ea226d68f6d5ba38bd890f571c73e230141d2923e30dd94",
+    coverage_tools_strip_prefix = "779fbed05ae9e9fe2a04137929d99cc9b3d516fd/x86_64-unknown-linux-gnu",
+    target_triple = "aarch64-unknown-linux-gnu",
+    exec_triple = "x86_64-unknown-linux-gnu",
+    extra_rustc_flags = [
+        "-Clink-arg=-Wl,--no-as-needed",
+        "-Clink-arg=-lstdc++",
+        "-Clink-arg=-lm",
+        "-Clink-arg=-lc",
+    ],
+    target_compatible_with = [
+        "@platforms//cpu:aarch64",
+        "@platforms//os:linux",
+    ],
+)
+
+use_repo(
+    ferrocene,
+    "ferrocene_aarch64_ebclfsa",
+)
