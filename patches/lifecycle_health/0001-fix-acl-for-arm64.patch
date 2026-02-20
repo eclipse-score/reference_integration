@@ -1,0 +1,63 @@
+From b46b18e88c8a7687135a9a5c1eb434d153664490 Mon Sep 17 00:00:00 2001
+From: Oliver Pajonk <oliver.pajonk@elektrobit.com>
+Date: Fri, 20 Feb 2026 10:26:42 +0100
+Subject: [PATCH] fix acl for arm64
+
+---
+ MODULE.bazel            | 7 +++++++
+ externals/acl/BUILD     | 5 ++++-
+ externals/acl/acl.BUILD | 7 ++++---
+ 3 files changed, 15 insertions(+), 4 deletions(-)
+
+diff --git a/MODULE.bazel b/MODULE.bazel
+index 6c09448..a9bf113 100644
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -104,6 +104,13 @@ deb(
+     visibility = ["//visibility:public"],
+ )
+ 
++deb(
++    name = "acl-deb-aarch64",
++    build = "//externals/acl:acl.BUILD",
++    urls = ["https://launchpadlibrarian.net/581258948/libacl1-dev_2.3.1-1_arm64.deb"],
++    visibility = ["//visibility:public"],
++)
++
+ PYTHON_VERSION = "3.12"
+ 
+ python = use_extension("@rules_python//python/extensions:python.bzl", "python", dev_dependency = True)
+diff --git a/externals/acl/BUILD b/externals/acl/BUILD
+index b71d5df..da07995 100644
+--- a/externals/acl/BUILD
++++ b/externals/acl/BUILD
+@@ -1,5 +1,8 @@
+ alias(
+     name = "acl",
+-    actual = "@acl-deb//:acl",
++    actual = select({
++        "@platforms//cpu:aarch64": "@acl-deb-aarch64//:acl",
++        "//conditions:default": "@acl-deb//:acl",
++    }),
+     visibility = ["//visibility:public"],
+ )
+diff --git a/externals/acl/acl.BUILD b/externals/acl/acl.BUILD
+index 718726c..b695a6a 100644
+--- a/externals/acl/acl.BUILD
++++ b/externals/acl/acl.BUILD
+@@ -1,8 +1,9 @@
+ cc_library(
+     name = "acl",
+-    srcs = [
+-        "usr/lib/libacl.a",
+-    ],
++    srcs = select({
++        "@platforms//cpu:aarch64": ["usr/lib/aarch64-linux-gnu/libacl.a"],
++        "//conditions:default": ["usr/lib/libacl.a"],
++    }),
+     hdrs = [
+         "usr/include/acl/libacl.h",
+         "usr/include/sys/acl.h",
+-- 
+2.43.0
+
