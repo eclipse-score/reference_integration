@@ -15,9 +15,10 @@
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py
 
 bazel_dep(name = "score_crates")
-single_version_override(
+git_override(
     module_name = "score_crates",
-    version = "0.0.7",
+    remote = "https://github.com/eclipse-score/score-crates.git",
+    commit = "492e701cb6414d8ac318c32884addd761bb6dbd4", # https://github.com/eclipse-score/score-crates/pull/25
 )
 
 bazel_dep(name = "score_itf")
@@ -42,7 +43,7 @@ git_override(
 bazel_dep(name = "score_bazel_platforms")
 single_version_override(
     module_name = "score_bazel_platforms",
-    version = "0.0.4",
+    version = "0.1.1",
 )
 
 bazel_dep(name = "score_test_scenarios")
