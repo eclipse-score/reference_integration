@@ -82,7 +82,7 @@ jobs:
     name: Preparation
     runs-on: ubuntu-latest
     outputs:
-      known_good_updated: ${{ steps.set_known_good.outputs.known_good_updated }}
+      known_good_artifact: ${{ steps.set_known_good.outputs.known_good_artifact }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
@@ -107,10 +107,8 @@ jobs:
             echo "::endgroup::"
           fi
           
-          # Output the content as a JSON string
-          echo "known_good_updated<<EOF" >> $GITHUB_OUTPUT
-          cat known_good.updated.json >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          # Output only the artifact name for downstream jobs
+          echo "known_good_artifact=known_good.updated.json" >> $GITHUB_OUTPUT
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_READ_TOKEN != '' && secrets.REPO_READ_TOKEN || github.token }}
       - name: Show updated known_good.json
@@ -146,7 +144,7 @@ jobs:
     uses: ./.github/workflows/reusable_integration-build.yml
     secrets: inherit
     with:
-      known_good: ${{ needs.preparation.outputs.known_good_updated }}
+      known_good_artifact: ${{ needs.preparation.outputs.known_good_artifact }}
       config: ${{ matrix.config }}
       repo_runner_labels: ${{ inputs.repo_runner_labels }}
       target_branch: ${{ inputs.target_branch }}

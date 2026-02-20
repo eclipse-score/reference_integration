@@ -1,0 +1,135 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+name: update known_good to the latest HEAD
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 1 * * *'  # Every night at 01:30 UTC on main branch
+
+jobs:
+  preparation:
+    name: Preparation
+    runs-on: ubuntu-latest
+    outputs:
+      known_good_artifact: ${{ steps.set_known_good.outputs.known_good_artifact }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+      - name: Create updated known_good.json with PR commit
+        id: set_known_good
+        run: |
+          echo "Testing reference integration repository itself - updating to latest commits"
+          echo "::group::get latest commits from module branches"
+          python3 scripts/known_good/update_module_latest.py --output known_good.updated.json
+          cat known_good.updated.json
+          echo "::endgroup::"
+          
+          # Output only the artifact name for downstream jobs
+          echo "known_good_artifact=known_good.updated.json" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_READ_TOKEN != '' && secrets.REPO_READ_TOKEN || github.token }}
+      - name: Show updated known_good.json
+        run: |
+          echo "Updated known_good.json:"
+          cat known_good.updated.json
+      - name: Upload updated known_good.json artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: known_good.updated.json
+          path: known_good.updated.json
+          
+  docs:
+    name: Generate Documentation
+    runs-on: ubuntu-latest
+    needs: preparation
+    steps:
+      - name: not implemented
+        run: echo "Documentation generation not yet implemented here."
+
+  integration-test:
+    name: Integration Testing (${{ matrix.config }})
+    needs: preparation
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - x86_64-linux
+          # - arm64-linux
+          # Add more configs here as needed
+          # - arm64-qnx8_0
+          # - x86_64-qnx8_0
+    uses: ./.github/workflows/reusable_integration-build.yml
+    secrets: inherit
+    with:
+      known_good_artifact: ${{ needs.preparation.outputs.known_good_artifact }}
+      config: ${{ matrix.config }}
+      repo_runner_labels: ${{ vars.REPO_RUNNER_LABELS != '' && vars.REPO_RUNNER_LABELS || 'ubuntu-latest' }}
+      target_branch: ${{ github.ref }}
+
+  summary:
+    name: Publish Summary
+    runs-on: ubuntu-latest
+    needs: [integration-test, docs]
+    if: always()
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+      # get all artefacts from integration-test job with name bazel-build-logs-*
+      - name: Download Integration Test Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: bazel-build-logs-*
+          path: _logs/integration_test_logs
+          merge-multiple: true
+      - name: Publish Integration Test Summary
+        run: |
+          ls -l _logs/integration_test_logs || true
+          python3 scripts/publish_integration_summary.py \
+            --integration-result "${{ needs.integration-test.result }}" \
+            --docs-result "${{ needs.docs.result }}" \
+            --logs-dir "_logs/integration_test_logs" \
+            >> "$GITHUB_STEP_SUMMARY"
+      
+  update_known_good:
+    name: Update Known Good
+    needs: [summary, preparation, docs, integration-test]
+    #only in all previous steps succeeded, otherwise we might update to a known_good that is not actually good
+    if: needs.preparation.result == 'success' && needs.docs.result == 'success' && needs.integration-test.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+      - name: Download known_good artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.preparation.outputs.known_good_artifact }}
+      - name: update known_good.json
+        run: cp "${{ needs.preparation.outputs.known_good_artifact }}" known_good.json
+      - name: Show updated known_good.json
+        run: |
+          echo "Updated known_good.json to be committed:"
+          cat known_good.json
+      - name: update score_modules.MODULE.bazel
+        run: |
+          python3 scripts/known_good/update_module_from_known_good.py --known known_good.json
+          cat score_modules.MODULE.bazel
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_READ_TOKEN != '' && secrets.REPO_READ_TOKEN || github.token }}
+      - name: Commit and push known_good.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add known_good.json score_modules.MODULE.bazel
+          git commit -m "Update known_good.json" || echo "No changes to commit"
+          git push origin HEAD:${{ github.ref }}
