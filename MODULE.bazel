@@ -53,12 +53,31 @@ git_override(
 )
 
 # Currently required for ifs tooling
-bazel_dep(name = "score_toolchains_qnx", version = "0.0.7")
-toolchains_qnx = use_extension("@score_toolchains_qnx//:extensions.bzl", "toolchains_qnx", dev_dependency=True)
-toolchains_qnx.sdp(
-    sha256 = "f2e0cb21c6baddbcb65f6a70610ce498e7685de8ea2e0f1648f01b327f6bac63",
-    strip_prefix = "installation",
-    url = "https://www.qnx.com/download/download/79858/installation.tgz",
+# bazel_dep(name = "score_toolchains_qnx", version = "0.0.7")
+# toolchains_qnx = use_extension("@score_toolchains_qnx//:extensions.bzl", "toolchains_qnx", dev_dependency=True)
+# toolchains_qnx.sdp(
+#     sha256 = "f2e0cb21c6baddbcb65f6a70610ce498e7685de8ea2e0f1648f01b327f6bac63",
+#     strip_prefix = "installation",
+#     url = "https://www.qnx.com/download/download/79858/installation.tgz",
+# )
+# use_repo(toolchains_qnx, "toolchains_qnx_sdp")
+# use_repo(toolchains_qnx, "toolchains_qnx_ifs")
+bazel_dep(name = "score_rules_imagefs", version = "0.0.1")
+git_override(
+    module_name = "score_rules_imagefs",
+    remote = "https://github.com/eclipse-score/rules_imagefs.git",
+    commit = "9507e5bb2bc247e570014fc713c512f10d5f87cc",
 )
-use_repo(toolchains_qnx, "toolchains_qnx_sdp")
-use_repo(toolchains_qnx, "toolchains_qnx_ifs")
+imagefs = use_extension("@score_rules_imagefs//extensions:imagefs.bzl", "imagefs", dev_dependency=True)
+imagefs.toolchain(
+    name = "score_qnx_x86_64_ifs_toolchain",
+    target_os = "qnx",
+    target_cpu = "x86_64",
+    sdp_version = "8.0.0",
+    sdp_to_import = "@score_qcc_x86_64_toolchain_pkg",
+    type = "ifs",
+)
+use_repo(
+    imagefs,
+    "score_qnx_x86_64_ifs_toolchain",
+)
