@@ -51,14 +51,9 @@ genrule(
 genrule(
     name = "fastdev-image",
     srcs = [
-        #"@score_scrample//src:scrample",
         "//showcases:showcases_all",
-        "@score_persistency//tests/test_scenarios/cpp:test_scenarios",
         "//feature_integration_tests/configs:etc_configs",
         ":extract-fastdev-image",
-        "cpp_tests_persistency.sh",
-        "etc/mw_com_config.json",
-        "etc/logging.json",
         "run_qemu.sh",
     ],
     cmd = " \
@@ -66,9 +61,7 @@ genrule(
         cp $(RULEDIR)/ebcl-qemuarm64/* $(RULEDIR)/ebcl-qemuarm64-deployed/ &&\
         $(location run_qemu.sh) $(RULEDIR)/ebcl-qemuarm64-deployed -pidfile $(RULEDIR)/qemu.pid > $(RULEDIR)/qemu_deployment.log &\
         sleep 30 ; \
-        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location cpp_tests_persistency.sh) root@localhost:/usr/bin/ &&\
-        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location etc/mw_com_config.json) root@localhost:/etc/ &&\
-        sshpass -p linux scp -o StrictHostKeyChecking=no -P 2222 $(location etc/logging.json) root@localhost:/etc/ &&\
+        sshpass -p linux scp -rp -o StrictHostKeyChecking=no -P 2222 $(location //showcases:showcases_all) root@localhost:/showcases &&\
         sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost sync &&\
         sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost crinit-ctl poweroff || true \
         sleep 5  \

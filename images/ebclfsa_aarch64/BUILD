@@ -20,7 +20,10 @@ alias(
 
 sh_binary(
     name = "run",
-    srcs = ["//runners/qemu_ebclfsa_aarch64/scripts:run_qemu.sh"],
+    srcs = [
+            "//runners/qemu_ebclfsa_aarch64/scripts:run_qemu.sh"
+        ],
+    
     env = {"RUNFILES_LIB_DEBUG": "1"},
     args = [
         "$(locations :image)",
