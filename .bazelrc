@@ -66,6 +66,9 @@ build:ferrocene-coverage --@rules_rust//rust/settings:extra_exec_rustc_flag=-Cco
 build:ferrocene-coverage --@rules_rust//rust/settings:extra_exec_rustc_flag=-Cdebuginfo=2
 test:ferrocene-coverage --run_under=@score_tooling//coverage:llvm_profile_wrapper
 
+# Coverage needs to have all intermediate .rlibs to be able to proceed
+build:ferrocene-coverage --remote_download_all
+
 test:unit-tests --config=linux-x86_64
 test:unit-tests --build_tests_only
 test:unit-tests --test_tag_filters=-manual
@@ -76,3 +79,6 @@ coverage --combined_report=lcov
 
 # user specific overrides (like proxy settings)
 try-import %workspace%/user.bazelrc
+
+# Try import setting from home (CI setup-bazel action for caching uses this to provide proper args like --disk-cache)
+try-import ~/.bazelrc
