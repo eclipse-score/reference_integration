@@ -3,7 +3,7 @@
         "target_sw": {
             "score_baselibs": {
                 "repo": "https://github.com/eclipse-score/baselibs.git",
-                "hash": "158fe6a7b791c58f6eac5f7e4662b8db0cf9ac6e",
+                "version": "0.2.4",
                 "bazel_patches": [
                     "//patches/baselibs:003-acl-fixes-for-aarch64.patch"
                 ],
@@ -25,7 +25,7 @@
             },
             "score_baselibs_rust": {
                 "repo": "https://github.com/eclipse-score/baselibs_rust.git",
-                "hash": "9f781acfb6d1a8fa06012ce772b0befb304acf31",
+                "version": "0.1.0",
                 "metadata": {
                     "code_root_path": "//src/...",
                     "exclude_test_targets": [
@@ -54,9 +54,10 @@
             },
             "score_persistency": {
                 "repo": "https://github.com/eclipse-score/persistency.git",
-                "hash": "9692dadab51c677183262e8870c5425ab1797c4f",
+                "version": "0.3.0",
                 "bazel_patches": [
-                    "//patches/persistency:fix-duplicated-needs-name.patch"
+                    "//patches/persistency:fix-duplicated-needs-name.patch",
+                    "//patches/persistency:fix-bazel-dev-dep.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//src/...",
@@ -67,7 +68,7 @@
             },
             "score_orchestrator": {
                 "repo": "https://github.com/eclipse-score/orchestrator.git",
-                "hash": "675007a2baa226fad1e2979ed732360dc111d056",
+                "version": "0.1.0",
                 "metadata": {
                     "code_root_path": "//src/...",
                     "langs": [
@@ -77,7 +78,7 @@
             },
             "score_kyron": {
                 "repo": "https://github.com/eclipse-score/kyron.git",
-                "hash": "d4d0afc1dd733a0c8a4aba9cc2b2b3a58d38ebf6",
+                "version": "0.1.1",
                 "metadata": {
                     "code_root_path": "//src/...",
                     "langs": [
@@ -87,20 +88,20 @@
             },
             "score_lifecycle_health": {
                 "repo": "https://github.com/eclipse-score/lifecycle.git",
-                "hash": "14ee704eeac03e03ca10bece5de8b694d3c5e2dd",
+                "version": "0.1.0",
                 "metadata": {
                     "code_root_path": "//src/..."
                 }
             },
             "score_logging": {
                 "repo": "https://github.com/qorix-group/logging.git",
-                "hash": "3718923aafc273531b1d0b3a240d821db24afbbc",
+                "version": "0.1.0",
                 "metadata": {
                     "extra_test_config": [
                         "//score/datarouter/build_configuration_flags:persistent_logging=False",
                         "//score/datarouter/build_configuration_flags:persistent_config_feature_enabled=False",
                         "//score/datarouter/build_configuration_flags:enable_nonverbose_dlt=False",
-                        "//score/datarouter/build_configuration_flags:enable_dynamic_configuration_in_datarouter=False",
+                        "//score/datarouter/build_configuration_flags:enable_dynamic_configuration=False",
                         "//score/datarouter/build_configuration_flags:file_transfer=False",
                         "//score/datarouter/build_configuration_flags:use_local_vlan=True"
                     ],
@@ -137,7 +138,7 @@
             },
             "score_test_scenarios": {
                 "repo": "https://github.com/eclipse-score/testing_tools.git",
-                "hash": "6b5e85863e8fb5687251c19f5bb81e0a3afdf581"
+                "version": "0.4.0"
             },
             "score_docs_as_code": {
                 "repo": "https://github.com/eclipse-score/docs-as-code.git",
@@ -148,7 +149,7 @@
             },
             "score_process": {
                 "repo": "https://github.com/eclipse-score/process_description.git",
-                "hash": "6c772cf05a493218a5ac6071361bf0b66c5427b2"
+                "version": "1.4.3"
             }
         }
     },

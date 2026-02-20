@@ -15,10 +15,9 @@
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py
 
 bazel_dep(name = "score_baselibs")
-git_override(
+single_version_override(
     module_name = "score_baselibs",
-    remote = "https://github.com/eclipse-score/baselibs.git",
-    commit = "158fe6a7b791c58f6eac5f7e4662b8db0cf9ac6e",
+    version = "0.2.4",
     patches = [
         "//patches/baselibs:003-acl-fixes-for-aarch64.patch",
     ],
@@ -26,10 +25,9 @@ git_override(
 )
 
 bazel_dep(name = "score_baselibs_rust")
-git_override(
+single_version_override(
     module_name = "score_baselibs_rust",
-    remote = "https://github.com/eclipse-score/baselibs_rust.git",
-    commit = "9f781acfb6d1a8fa06012ce772b0befb304acf31",
+    version = "0.1.0",
 )
 
 bazel_dep(name = "score_communication")
@@ -44,40 +42,36 @@ git_override(
 )
 
 bazel_dep(name = "score_persistency")
-git_override(
+single_version_override(
     module_name = "score_persistency",
-    remote = "https://github.com/eclipse-score/persistency.git",
-    commit = "9692dadab51c677183262e8870c5425ab1797c4f",
+    version = "0.3.0",
     patches = [
         "//patches/persistency:fix-duplicated-needs-name.patch",
+        "//patches/persistency:fix-bazel-dev-dep.patch",
     ],
     patch_strip = 1,
 )
 
 bazel_dep(name = "score_orchestrator")
-git_override(
+single_version_override(
     module_name = "score_orchestrator",
-    remote = "https://github.com/eclipse-score/orchestrator.git",
-    commit = "675007a2baa226fad1e2979ed732360dc111d056",
+    version = "0.1.0",
 )
 
 bazel_dep(name = "score_kyron")
-git_override(
+single_version_override(
     module_name = "score_kyron",
-    remote = "https://github.com/eclipse-score/kyron.git",
-    commit = "d4d0afc1dd733a0c8a4aba9cc2b2b3a58d38ebf6",
+    version = "0.1.1",
 )
 
 bazel_dep(name = "score_lifecycle_health")
-git_override(
+single_version_override(
     module_name = "score_lifecycle_health",
-    remote = "https://github.com/eclipse-score/lifecycle.git",
-    commit = "14ee704eeac03e03ca10bece5de8b694d3c5e2dd",
+    version = "0.1.0",
 )
 
 bazel_dep(name = "score_logging")
-git_override(
+single_version_override(
     module_name = "score_logging",
-    remote = "https://github.com/qorix-group/logging.git",
-    commit = "3718923aafc273531b1d0b3a240d821db24afbbc",
+    version = "0.1.0",
 )
