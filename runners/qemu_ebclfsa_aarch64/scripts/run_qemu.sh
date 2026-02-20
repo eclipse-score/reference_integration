@@ -56,6 +56,16 @@ fi
 
 echo "pwd=$(pwd)"
 
-qemu-system-aarch64 -m "${MEM}" -machine "${MACHINE}" -cpu "${CPU}" \
-    -smp "${SMP}" -kernel "${KERNEL}" "${KERNEL_ARGS[@]}" ${DISK_ARGS} \
-    ${NETWORK_ARGS} -nographic -pidfile qemu.pid > qemu_upload.log < /dev/null
+qemu-system-aarch64  \
+    -m "${MEM}" \
+    -machine "${MACHINE}" \
+    -cpu "${CPU}" \
+    -smp "${SMP}" \
+    -kernel "${KERNEL}" \
+    "${KERNEL_ARGS[@]}" \
+    ${DISK_ARGS} \
+    ${NETWORK_ARGS} \
+    -nographic \
+    -chardev stdio,id=char0,signal=on,mux=on \
+    -mon chardev=char0,mode=readline \
+    -serial chardev:char0
