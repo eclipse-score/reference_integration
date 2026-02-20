@@ -28,7 +28,7 @@ def run_unit_test_with_coverage(module: Module) -> dict[str, str | int]:
     call = (
         [
             "bazel",
-            "coverage",  # Call coverage instead of test to get .dat files already
+            "test",  # Call coverage instead of test to get .dat files already
             "--test_verbose_timeout_warnings",
             "--test_timeout=1200",
             "--config=unit-tests",

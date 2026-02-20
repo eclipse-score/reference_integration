@@ -6,7 +6,7 @@ common --registry=https://raw.githubusercontent.com/eclipse-score/bazel_registry
 common --registry=https://bcr.bazel.build
 common --credential_helper=*.qnx.com=%workspace%/.github/tools/qnx_credential_helper.py
 common --credential_helper_timeout="60s"
-
+common --disk_cache=~/.cache/bazel-disk
 # Java
 build --java_language_version=17
 build --tool_java_language_version=17
@@ -67,7 +67,7 @@ build:ferrocene-coverage --@rules_rust//rust/settings:extra_exec_rustc_flag=-Cde
 test:ferrocene-coverage --run_under=@score_tooling//coverage:llvm_profile_wrapper
 
 test:unit-tests --config=linux-x86_64
-test:unit-tests --build_tests_only
+# test:unit-tests --nobuild_tests_only
 test:unit-tests --test_tag_filters=-manual
 
 # Coverage configuration for C++

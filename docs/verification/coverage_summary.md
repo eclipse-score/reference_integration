@@ -1,3 +1,6 @@
 # Coverage Analysis Summary
 
-## Template for a table with Coverage execution summary
+| module | lines | functions | branches |
+| --- | --- | --- | --- |
+| score_logging_cpp |  |  |  |
+| score_logging_rust |  |  |  |

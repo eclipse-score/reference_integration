@@ -1,0 +1,118 @@
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+name: Pawel Testing
+
+permissions:
+  contents: write
+  pages: write
+  pull-requests: write
+  id-token: write
+
+on:
+  pull_request: # Allows forks to trigger the docs build
+    types: [opened, reopened, synchronize]
+
+jobs:
+  test_and_docs:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write # required to upload release assets
+      pull-requests: write
+
+    steps:
+      - name: Clean disk space
+        uses: eclipse-score/more-disk-space@v1
+      - name: Install lcov
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lcov
+          sudo apt-get install -y tree
+
+      - name: Inspector1
+        run: |
+          pwd
+          ls -la
+
+      - name: Inspect Bazel caches
+        if: always()
+        run: |
+          for cache in ~/.cache/bazelisk ~/.cache/bazel-disk-cache ~/.cache/bazel-repo-cache; do
+            echo "=== $cache ==="
+            du -sh "$cache" 2>/dev/null && find "$cache" -maxdepth 2 | head -20 || echo "MISSING"
+          done
+
+          ls -la /home/runner/.bazel/external || true
+
+
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.18.0
+        with:
+          bazelisk-cache: true
+          disk-cache: tracing-cache-do-not-use
+          repository-cache: true
+          cache-save: true
+          external-cache: true
+      - name: Inspect Bazel caches
+        if: always()
+        run: |
+          echo $(pwd)
+          for cache in ~/.cache/bazelisk ~/.cache/bazel-disk-cache ~/.cache/bazel-repo-cache; do
+            echo "=== $cache ==="
+            du -sh "$cache" 2>/dev/null && find "$cache" -maxdepth 2 | head -20 || echo "MISSING"
+          done
+
+          ls -la /home/runner/.bazel/external || true
+
+      - name: Set up Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Checkout repository (pull_request_target via workflow_call)
+        if: ${{ github.event_name == 'pull_request_target' }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+      
+      - name: Checkout repository
+        if: ${{ github.event_name != 'pull_request_target' }}
+        uses: actions/checkout@v4
+
+      - name: Inspector3
+        run: |
+          ls -la
+
+      - name: Execute Unit Tests with Coverage Analysis
+        run: |
+
+          cat ~/.bazelrc || echo "No bazelrc found"
+          
+          echo "BEFORE INGO"
+          ls -la /home/runner/.bazel/external || true
+          bazel info
+          OUTPUT_BASE=$(bazel info output_base 2>/dev/null)
+          echo "=== external ($OUTPUT_BASE/external) ==="
+          # tree $OUTPUT_BASE/external
+
+          python ./scripts/quality_runners.py --modules-to-test score_logging
+
+          # echo "tree after run"
+          tree bazel-out/k8-fastbuild/bin/external/
+
+
+
+   
+
+ 
