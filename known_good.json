@@ -55,6 +55,9 @@
             "score_persistency": {
                 "repo": "https://github.com/eclipse-score/persistency.git",
                 "hash": "9692dadab51c677183262e8870c5425ab1797c4f",
+                "bazel_patches": [
+                    "//patches/persistency:fix-duplicated-needs-name.patch"
+                ],
                 "metadata": {
                     "code_root_path": "//src/...",
                     "exclude_test_targets": [
@@ -138,7 +141,10 @@
             },
             "score_docs_as_code": {
                 "repo": "https://github.com/eclipse-score/docs-as-code.git",
-                "version": "3.0.1"
+                "version": "3.0.1",
+                "bazel_patches": [
+                    "//patches/docs-as-code:fix-extra-properties.patch"
+                ]
             },
             "score_process": {
                 "repo": "https://github.com/eclipse-score/process_description.git",

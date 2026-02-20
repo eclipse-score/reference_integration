@@ -17,28 +17,38 @@ Reference Integration Documentation
 
 Newest Release Notes: :need:`doc__score_v05_beta_release_note`
 
-Verification Reports Summaries
-------------------------------
 
 .. toctree::
+   :caption: Software Components
+   :titlesonly:
+   :maxdepth: 1
+
+
+   _collections/score_persistency/docs/index
+   _collections/score_orchestrator/docs/index
+   _collections/score_kyron/docs/index
+   _collections/score_baselibs/docs/index
+   _collections/score_baselibs_rust/docs/index
+   _collections/score_logging/docs/index
+
+.. toctree::
+   :caption: Process, Methods, and Tools
+   :titlesonly:
+   :maxdepth: 1
+
+   _collections/score_platform/docs/index
+   _collections/score_process/process/index
+   _collections/score_docs_as_code/docs/index
+
+.. toctree::
+   :caption: Code Quality
+   :titlesonly:
+   :glob:
+
    verification/verification
 
-.. if-collection:: score_platform
+.. toctree::
+   :hidden:
+   :glob:
 
-   .. toctree::
-      :maxdepth: 1
-      :titlesonly:
-      :caption: Platform and Modules
-
-      S-CORE Platform <_collections/score_platform/docs/index>
-      place_holder/persistency
-      place_holder/orchestrator
-      place_holder/communication
-
-   .. toctree::
-      :maxdepth: 1
-      :titlesonly:
-      :caption: Process, Methods, and Tools
-
-      _collections/score_process/process/index
-      _collections/score_docs_as_code/docs/index
+   verification/*

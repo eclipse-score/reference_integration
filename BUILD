@@ -15,13 +15,21 @@ load("@score_docs_as_code//:docs.bzl", "docs")
 
 docs(
     data = [
-        "@score_platform//:needs_json",
-        #"@score_persistency//:needs_json",  # cannot be included, as it does not contain any needs?
-        #"@score_orchestrator//:needs_json",  # some issue about score_toolchains_qnx?
-        #"@score_communication//:needs_json",  # no docs yet?
+        # Software components
+        "@score_persistency//:needs_json",
+        "@score_orchestrator//:needs_json",
+        "@score_kyron//:needs_json",
+        "@score_baselibs//:needs_json",
+        "@score_baselibs_rust//:needs_json",
+        # "@score_communication//:needs_json",  # no docs_sources
+        # "@score_lifecycle_health//:needs_json",  # unreadable images - relative paths issue
+        # "@score_logging//:needs_json",  # duplicated labels
+        "@score_logging//:needs_json",
         # "@score_feo//:needs_json",
-        "@score_docs_as_code//:needs_json",
+        # Tools
+        "@score_platform//:needs_json",
         "@score_process//:needs_json",
+        "@score_docs_as_code//:needs_json",
     ],
     source_dir = "docs",
 )

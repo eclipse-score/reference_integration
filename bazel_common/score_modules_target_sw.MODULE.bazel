@@ -48,6 +48,10 @@ git_override(
     module_name = "score_persistency",
     remote = "https://github.com/eclipse-score/persistency.git",
     commit = "9692dadab51c677183262e8870c5425ab1797c4f",
+    patches = [
+        "//patches/persistency:fix-duplicated-needs-name.patch",
+    ],
+    patch_strip = 1,
 )
 
 bazel_dep(name = "score_orchestrator")
