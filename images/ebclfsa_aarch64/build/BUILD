@@ -37,6 +37,7 @@ genrule(
         "//showcases:showcases_all",
         "//feature_integration_tests/configs:etc_configs",
         ":extract-fastdev-image",
+        ":config-overlay",
         "run_qemu.sh",
     ],
     cmd = " \
@@ -45,6 +46,7 @@ genrule(
         $(location run_qemu.sh) $(RULEDIR)/ebcl-qemuarm64-deployed -pidfile $(RULEDIR)/qemu.pid > $(RULEDIR)/qemu_deployment.log &\
         sleep 30 ; \
         sshpass -p linux scp -rp -o StrictHostKeyChecking=no -P 2222 $(location //showcases:showcases_all) root@localhost:/showcases &&\
+        sshpass -p linux scp -rp -o StrictHostKeyChecking=no -P 2222 $(location :config-overlay)/* root@localhost:/ &&\
         sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost sync &&\
         sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost crinit-ctl poweroff || true \
         sleep 5  \
