@@ -11,23 +11,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-filegroup(
-    name = "scripts",
-    srcs = [
-        "//integration/images/ebclfsa_aarch64/persistency_integration/scripts:startup.sh",
-    ],
-    visibility = ["//visibility:private"],
-)
-
-filegroup(
-    name = "configs",
-    srcs = [
-        "//integration/images/ebclfsa_aarch64/scrample_integration/etc:logging.json",
-        "//integration/images/ebclfsa_aarch64/scrample_integration/etc:mw_com_config.json",
-    ],
-    visibility = ["//visibility:private"],
-)
-
 genrule(
     name = "fetch-fastdev-archive",
     srcs = [],
