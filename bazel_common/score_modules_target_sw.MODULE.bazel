@@ -73,6 +73,10 @@ git_override(
     module_name = "score_lifecycle_health",
     remote = "https://github.com/eclipse-score/lifecycle.git",
     commit = "14ee704eeac03e03ca10bece5de8b694d3c5e2dd",
+    patches = [
+        "//patches/lifecycle_health:0001-fix-acl-for-arm64.patch",
+    ],
+    patch_strip = 1,
 )
 
 bazel_dep(name = "score_logging")

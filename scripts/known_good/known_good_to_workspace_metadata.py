@@ -29,18 +29,33 @@ def main():
     except ValueError as e:
         raise SystemExit(f"ERROR: {e}")
     
-    modules = list(known_good.modules.values())
+    target_sw = list(known_good.modules["target_sw"].values())
+    tooling = list(known_good.modules["tooling"].values())
     
     gita_metadata = []
-    for module in modules:
-        if not module.repo:
+    for module in target_sw:
+        if not hasattr(module, 'repo') or not module.repo:
             raise RuntimeError(f"Module {module.name}: repo must not be empty")
         
         # if no hash is given, use branch
         hash_value = module.hash if module.hash else module.branch
         
         # workspace_path is not available in known_good.json, default to name of repository
-        workspace_path = module.name
+        workspace_path = f"modules/{module.name}"
+        
+        # gita format: {url},{name},{path},{prop['type']},{repo_flags},{branch}
+        row = [module.repo, module.name, workspace_path, "", "", hash_value]
+        gita_metadata.append(row)
+    
+    for module in tooling:
+        if not hasattr(module, 'repo') or not module.repo:
+            raise RuntimeError(f"Module {module.name}: repo must not be empty")
+        
+        # if no hash is given, use branch
+        hash_value = module.hash if module.hash else module.branch
+        
+        # workspace_path is not available in known_good.json, default to name of repository
+        workspace_path = f"tooling/{module.name}"
         
         # gita format: {url},{name},{path},{prop['type']},{repo_flags},{branch}
         row = [module.repo, module.name, workspace_path, "", "", hash_value]
