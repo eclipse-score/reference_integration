@@ -36,6 +36,10 @@ bazel_dep(name = "score_platform")
 single_version_override(
     module_name = "score_platform",
     version = "0.5.4",
+    patches = [
+        "//patches/score_platform:fix-communication-link.patch",
+    ],
+    patch_strip = 1,
 )
 
 bazel_dep(name = "score_bazel_platforms")
