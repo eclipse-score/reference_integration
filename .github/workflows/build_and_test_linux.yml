@@ -43,6 +43,7 @@ jobs:
 
         - name: Build image
           run: |
+            bazel test --config=linux-x86_64 //images/linux_x86_64:image --announce_rc
             bazel build --config=linux-x86_64 //images/linux_x86_64:image
         
         - name: Integration tests
