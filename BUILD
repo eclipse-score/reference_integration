@@ -25,7 +25,6 @@ docs(
         # "@score_lifecycle_health//:needs_json",  # unreadable images - relative paths issue
         # "@score_logging//:needs_json",  # duplicated labels
         "@score_logging//:needs_json",
-        # "@score_feo//:needs_json",
         # Tools
         "@score_platform//:needs_json",
         "@score_process//:needs_json",

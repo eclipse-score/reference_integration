@@ -140,7 +140,7 @@ jobs:
             (cd "$path" && git checkout "$ref")
           else
             echo "  Detected branch/tag. Cloning with --branch."
-            git clone --depth 1 --branch "$ref" "$url" "$path"
+            git clone --depth 1 --branch v"$ref" "$url" "$path"
           fi
           
           # Append the path to the list, separated by commas

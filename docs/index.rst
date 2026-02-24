@@ -15,7 +15,7 @@
 Reference Integration Documentation
 ===================================
 
-Newest Release Notes: :need:`doc__score_v05_beta_release_note`
+Newest Release Notes: :need:`doc__score_v06_release_note`
 
 
 .. toctree::

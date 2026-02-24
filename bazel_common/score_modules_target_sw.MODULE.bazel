@@ -29,7 +29,7 @@ bazel_dep(name = "score_baselibs_rust")
 git_override(
     module_name = "score_baselibs_rust",
     remote = "https://github.com/eclipse-score/baselibs_rust.git",
-    commit = "9f781acfb6d1a8fa06012ce772b0befb304acf31",
+    commit = "0eba2934fa8b0e1a343ec6bf6f7ff00cec27d81c",
 )
 
 bazel_dep(name = "score_communication")
@@ -47,11 +47,7 @@ bazel_dep(name = "score_persistency")
 git_override(
     module_name = "score_persistency",
     remote = "https://github.com/eclipse-score/persistency.git",
-    commit = "9692dadab51c677183262e8870c5425ab1797c4f",
-    patches = [
-        "//patches/persistency:fix-duplicated-needs-name.patch",
-    ],
-    patch_strip = 1,
+    commit = "438bf9b5c447fd41ad43b321679dd3d1b3a6c737",
 )
 
 bazel_dep(name = "score_orchestrator")
@@ -78,6 +74,6 @@ git_override(
 bazel_dep(name = "score_logging")
 git_override(
     module_name = "score_logging",
-    remote = "https://github.com/qorix-group/logging.git",
-    commit = "3718923aafc273531b1d0b3a240d821db24afbbc",
+    remote = "https://github.com/eclipse-score/logging.git",
+    commit = "80feaae8ffaa2448c3872011b724e1668ad2930e",
 )
