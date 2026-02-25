@@ -59,7 +59,7 @@ devb-eide cam user=20:20 blk cache=64M,auto=partition,vnode=2000,ncache=2000,com
 waitfor /dev/hd0                        # Wait for first hard disk to be detected
 
 echo "---> Configuring network"
-# /etc/network_setup.sh # fixed IP setup --> commented out as dhcp is now in use
+/etc/network_setup.sh # fixed IP setup
 mkdir -p /tmp_ram/var/run/dhcpcd
 mkdir -p /tmp_ram/var/db
 ln -sP /tmp_ram/var/db /var/db

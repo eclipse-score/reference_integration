@@ -12,7 +12,7 @@
 # *******************************************************************************
 exports_files(
     [
-        "qemu_target_config.json",
+        "qemu_bridge_config.json",
     ],
 )
 

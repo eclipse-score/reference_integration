@@ -33,12 +33,6 @@ build:qnx-x86_64 --extra_toolchains=@score_qcc_x86_64_toolchain//:x86_64-qnx-sdp
 build:qnx-x86_64 --extra_toolchains=@toolchains_qnx_ifs//:ifs_x86_64
 build:qnx-x86_64 --extra_toolchains=@score_toolchains_rust//toolchains/ferrocene:ferrocene_x86_64_pc_nto_qnx800
 
-build:itf-qnx-x86_64 --config=qnx-x86_64
-build:itf-qnx-x86_64 --run_under=@score_itf//scripts:run_under_qemu
-build:itf-qnx-x86_64 --test_arg="--qemu"
-build:itf-qnx-x86_64 --test_arg="--os=qnx"
-
-
 build:linux-x86_64 --config=_common
 build:linux-x86_64 --extra_toolchains=@score_gcc_x86_64_toolchain//:x86_64-linux-gcc_12.2.0-posix
 build:linux-x86_64 --platforms=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
@@ -68,6 +62,10 @@ test:ferrocene-coverage --run_under=@score_tooling//coverage:llvm_profile_wrappe
 
 # Coverage needs to have all intermediate .rlibs to be able to proceed
 build:ferrocene-coverage --remote_download_all
+
+test:itf-qnx-x86_64 --config=qnx-x86_64
+test:itf-qnx-x86_64 --run_under=@score_itf//scripts:run_under_qemu
+test:itf-qnx-x86_64 --test_output=errors
 
 test:unit-tests --config=linux-x86_64
 test:unit-tests --build_tests_only

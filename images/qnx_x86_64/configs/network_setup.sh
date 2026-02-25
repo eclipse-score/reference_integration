@@ -26,7 +26,8 @@ waitfor /dev/socket                    # Wait for socket device to become availa
 echo "---> Configuring network interface"
 # Bring up the interface and configure with bridge-accessible IP for direct ping
 if_up -p vtnet0                        # Bring up the vtnet0 network interface in promiscuous mode
-ifconfig vtnet0 10.0.2.15 netmask 255.255.255.0  # Configure IP address and subnet mask for vtnet0
+ifconfig vtnet0 10.0.2.15 netmask 255.255.255.0         # Configure IP address and subnet mask for vtnet0
+ifconfig vtnet0 169.254.158.190 netmask 255.255.0.0     # Configure IP address and subnet mask for vtnet0
 
 # Configure system network settings
 sysctl -w net.inet.icmp.bmcastecho=1 > /dev/null        # Enable ICMP broadcast echo (responds to broadcast pings)

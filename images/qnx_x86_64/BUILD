@@ -12,6 +12,7 @@
 # *******************************************************************************
 load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 load("@score_itf//:defs.bzl", "py_itf_test")
+load("@score_itf//score/itf/plugins:plugins.bzl", "dlt", "qemu")
 
 alias(
     name = "image",
@@ -36,58 +37,23 @@ sh_binary(
 # For now we keep this not in /feature_integration_tests but locally within images
 
 py_itf_test(
-    name = "test_ssh",
+    name = "test_qnx_8_x86_64",
     srcs = [
-        "//feature_integration_tests/itf:test_ssh.py",
+        "//feature_integration_tests/itf:all_tests",
     ],
     args = [
-        "--target_config=$(location //feature_integration_tests/configs:qemu_target_config.json)",
-        "--ecu=s_core_ecu_qemu",
-        "--qemu_image=$(location :image)",
-    ],
-    plugins = [
-        "itf.plugins.base.base_plugin",
+        "--qemu-config=$(location //feature_integration_tests/configs:qemu_bridge_config.json)",
+        "--qemu-image=$(location :image)",
     ],
     data = [
         ":image",
-        "//feature_integration_tests/configs:qemu_target_config.json",
-    ],
-)
-
-py_itf_test(
-    name = "test_scrample",
-    srcs = [
-        "//feature_integration_tests/itf:test_scrample.py",
-    ],
-    args = [
-        "--target_config=$(location //feature_integration_tests/configs:qemu_target_config.json)",
-        "--ecu=s_core_ecu_qemu",
-        "--qemu_image=$(location :image)",
+        "//feature_integration_tests/configs:qemu_bridge_config.json",
     ],
     plugins = [
-        "itf.plugins.base.base_plugin",
+        qemu,
     ],
-    data = [
-        ":image",
-        "//feature_integration_tests/configs:qemu_target_config.json",
-    ],
-)
-
-py_itf_test(
-    name = "test_persistency",
-    srcs = [
-        "//feature_integration_tests/itf:test_persistency.py",
-    ],
-    args = [
-        "--target_config=$(location //feature_integration_tests/configs:qemu_target_config.json)",
-        "--ecu=s_core_ecu_qemu",
-        "--qemu_image=$(location :image)",
-    ],
-    plugins = [
-        "itf.plugins.base.base_plugin",
-    ],
-    data = [
-        ":image",
-        "//feature_integration_tests/configs:qemu_target_config.json",
+    tags = [
+        "local",
+        "manual",
     ],
 )

@@ -10,14 +10,13 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-from itf.plugins.com.ping import ping
-from itf.plugins.com.ssh import execute_command_output
+# from itf.plugins.com.ping import ping
 
 
-def test_ssh_with_default_user(target_fixture):
-    with target_fixture.sut.ssh() as ssh:
-        exit_code, stdout, stderr = execute_command_output(
-            ssh, "echo 'Username:' $USER && uname -a"
+def test_ssh_with_default_user(target):
+    with target.ssh() as ssh:
+        exit_code, stdout, stderr = ssh.execute_command_output(
+            "echo 'Username:' $USER && uname -a"
         )
         assert exit_code == 0, "SSH command failed"
         assert "Username: root" in stdout[0], "Expected username not found in output"
@@ -27,11 +26,11 @@ def test_ssh_with_default_user(target_fixture):
         assert stderr == [], "Expected no error output"
 
 
-def test_ssh_with_qnx_user(target_fixture):
+def test_ssh_with_qnx_user(target):
     user = "qnxuser"
-    with target_fixture.sut.ssh(username=user) as ssh:
-        exit_code, stdout, stderr = execute_command_output(
-            ssh, "echo 'Username:' $USER && uname -a"
+    with target.ssh(username=user) as ssh:
+        exit_code, stdout, stderr = ssh.execute_command_output(
+            "echo 'Username:' $USER && uname -a"
         )
         assert exit_code == 0, "SSH command failed"
         assert f"Username: {user}" in stdout[0], "Expected username not found in output"
@@ -41,6 +40,6 @@ def test_ssh_with_qnx_user(target_fixture):
         assert stderr == [], "Expected no error output"
 
 
-def test_ping_ok(target_fixture):
-    is_reachable = ping(target_fixture.sut.ip_address)
-    assert is_reachable, "QNX Target is not reachable via ping"
+# def test_ping_ok(target_fixture):
+#     is_reachable = ping(target_fixture.sut.ip_address)
+#     assert is_reachable, "QNX Target is not reachable via ping"

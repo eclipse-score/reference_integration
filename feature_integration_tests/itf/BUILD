@@ -1,7 +1,10 @@
-exports_files(
-    [
+filegroup(
+    name = "all_tests",
+    srcs = [
+        "test_showcases.py",
         "test_ssh.py",
-        "test_scrample.py",
-        "test_persistency.py",
+    ],
+    visibility = [
+        "//images/qnx_x86_64:__pkg__",
     ],
 )
