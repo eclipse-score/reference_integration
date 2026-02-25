@@ -1,15 +1,11 @@
 use anyhow::{Context, Result};
 use serde::Deserialize;
-use std::{
-    collections::HashMap,
-    env, fs,
-    path::Path,
-};
+use std::{collections::HashMap, env, fs, path::Path};
 
-use cliclack::{clear_screen, intro, multiselect, outro, confirm};
-use std::time::Duration;
-use std::process::Command;
+use cliclack::{clear_screen, confirm, intro, multiselect, outro};
 use std::process::Child;
+use std::process::Command;
+use std::time::Duration;
 
 #[derive(Debug, Deserialize, Clone)]
 struct AppConfig {
@@ -30,7 +26,7 @@ struct ScoreConfig {
 fn print_banner() {
     let color_code = "\x1b[38;5;99m";
     let reset_code = "\x1b[0m";
-    
+
     let banner = r#"
    ███████╗       ██████╗ ██████╗ ██████╗ ███████╗
    ██╔════╝      ██╔════╝██╔═══██╗██╔══██╗██╔════╝
@@ -39,14 +35,18 @@ fn print_banner() {
    ███████║      ╚██████╗╚██████╔╝██║  ██║███████╗
    ╚══════╝       ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝
 "#;
-    
+
     println!("{}{}{}", color_code, banner, reset_code);
 }
 
 fn pause_for_enter() -> Result<()> {
-    confirm("Press Enter to select examples to run...")
+    let result = confirm("Do you want to select examples to run?")
         .initial_value(true)
         .interact()?;
+    if !result {
+        outro("Falling back to the console. Goodbye!")?;
+        std::process::exit(0);
+    }
     Ok(())
 }
 
@@ -57,8 +57,7 @@ fn main() -> Result<()> {
 
     clear_screen()?;
 
-    let root_dir = env::var("SCORE_CLI_INIT_DIR")
-        .unwrap_or_else(|_| "/showcases".to_string());
+    let root_dir = env::var("SCORE_CLI_INIT_DIR").unwrap_or_else(|_| "/showcases".to_string());
 
     let mut configs = Vec::new();
     visit_dir(Path::new(&root_dir), &mut configs)?;
@@ -88,29 +87,27 @@ fn main() -> Result<()> {
     }
 
     outro("All done!")?;
-    
+
     Ok(())
 }
 
 fn visit_dir(dir: &Path, configs: &mut Vec<ScoreConfig>) -> Result<()> {
-    for entry in fs::read_dir(dir)
-        .with_context(|| format!("Failed to read directory {:?}", dir))?
-    {
+    for entry in fs::read_dir(dir).with_context(|| format!("Failed to read directory {:?}", dir))? {
         let entry = entry?;
         let path = entry.path();
-        
+
         if path.is_symlink() {
             continue;
         }
-        
+
         if path.is_dir() {
             visit_dir(&path, configs)?;
             continue;
         }
-        
+
         if is_score_file(&path) {
-            let content = fs::read_to_string(&path)
-                .with_context(|| format!("Failed reading {:?}", path))?;
+            let content =
+                fs::read_to_string(&path).with_context(|| format!("Failed reading {:?}", path))?;
             let value: serde_json::Value = serde_json::from_str(&content)
                 .with_context(|| format!("Invalid JSON in {:?}", path))?;
             if value.is_array() {
@@ -146,7 +143,12 @@ fn run_score(config: &ScoreConfig) -> Result<()> {
 
         if let Some(delay_secs) = app.delay {
             if delay_secs > 0 {
-                println!("{:?}  App {}: waiting {} seconds before start...", now.elapsed(), i + 1, delay_secs);
+                println!(
+                    "{:?}  App {}: waiting {} seconds before start...",
+                    now.elapsed(),
+                    i + 1,
+                    delay_secs
+                );
                 std::thread::sleep(Duration::from_secs(delay_secs));
             }
         }
