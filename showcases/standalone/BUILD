@@ -16,7 +16,7 @@ score_pkg_bundle(
 score_pkg_bundle(
     name = "kyron",
     package_dir = "standalone",
-    bins = ["@score_kyron//src/kyron:select", "@score_kyron//src/kyron:safety_task", "@score_kyron//src/kyron:main_macro"], # TODO: kyron shall have public examples in examples folder
+    bins = ["@score_kyron//examples:select", "@score_kyron//examples:safety_task", "@score_kyron//examples:main_macro"],
 
     config_data = [
         "//showcases/standalone:kyron.score.json",
