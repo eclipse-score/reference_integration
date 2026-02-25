@@ -15,9 +15,23 @@
 Reference Integration Documentation
 ===================================
 
-Newest Release Notes: :need:`doc__score_v06_release_note`
+Newest Release Notes
+--------------------
 
+.. needlist::
+   import re
 
+   all_release_notes = []
+
+   for need in needs:
+      if "wp__platform_sw_release_note" in need["realizes"]:
+         all_release_notes.append(need)
+
+   newest_release_note = max(all_release_notes, key=lambda s: int(re.search(r'v(\d+)', s["id"]).group(1)))
+   results = [newest_release_note]
+
+Explore the documentation
+-------------------------
 .. toctree::
    :caption: Software Components
    :titlesonly:
