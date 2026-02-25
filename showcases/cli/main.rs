@@ -1,4 +1,5 @@
 use anyhow::{Context, Result};
+use clap::Parser;
 use serde::Deserialize;
 use std::{collections::HashMap, env, fs, path::Path};
 
@@ -6,6 +7,15 @@ use cliclack::{clear_screen, confirm, intro, multiselect, outro};
 use std::process::Child;
 use std::process::Command;
 use std::time::Duration;
+
+#[derive(Parser)]
+#[command(name = "SCORE CLI")]
+#[command(about = "SCORE CLI showcase entrypoint", long_about = None)]
+struct Args {
+    /// Examples to run (comma-separated names, or "all" to run all examples, skips interactive selection)
+    #[arg(long)]
+    examples: Option<String>,
+}
 
 #[derive(Debug, Deserialize, Clone)]
 struct AppConfig {
@@ -51,11 +61,7 @@ fn pause_for_enter() -> Result<()> {
 }
 
 fn main() -> Result<()> {
-    print_banner();
-    intro("WELCOME TO SHOWCASE ENTRYPOINT")?;
-    pause_for_enter()?;
-
-    clear_screen()?;
+    let args = Args::parse();
 
     let root_dir = env::var("SCORE_CLI_INIT_DIR").unwrap_or_else(|_| "/showcases".to_string());
 
@@ -66,21 +72,66 @@ fn main() -> Result<()> {
         anyhow::bail!("No *.score.json files found under {}", root_dir);
     }
 
-    // Create options for multiselect
-    let options: Vec<(usize, String, String)> = configs
-        .iter()
-        .enumerate()
-        .map(|(i, c)| (i, c.name.clone(), c.description.clone()))
-        .collect();
+    let selected = if let Some(examples_str) = args.examples {
+        // Non-interactive mode: use provided examples
+        let mut selected_indices = Vec::new();
 
-    let selected: Vec<usize> = multiselect("Select examples to run (use space to select (multiselect supported), enter to run examples):")
-        .items(&options)
-        .interact()?;
+        if examples_str.to_lowercase() == "all" {
+            // Select all available examples
+            selected_indices = (0..configs.len()).collect();
+            println!("Running all {} examples", configs.len());
+        } else {
+            // Match specific examples
+            let requested_examples: Vec<&str> = examples_str.split(',').map(|s| s.trim()).collect();
 
-    if selected.is_empty() {
-        outro("No examples selected. Goodbye!")?;
-        return Ok(());
-    }
+            for (i, config) in configs.iter().enumerate() {
+                if requested_examples.contains(&config.name.as_str()) {
+                    selected_indices.push(i);
+                }
+            }
+
+            if selected_indices.is_empty() {
+                anyhow::bail!(
+                    "No examples found matching: {}. Available examples: {}",
+                    examples_str,
+                    configs
+                        .iter()
+                        .map(|c| c.name.as_str())
+                        .collect::<Vec<_>>()
+                        .join(", ")
+                );
+            }
+
+            println!("Running examples: {}", examples_str);
+        }
+
+        selected_indices
+    } else {
+        // Interactive mode
+        print_banner();
+        intro("WELCOME TO SHOWCASE ENTRYPOINT")?;
+        pause_for_enter()?;
+
+        clear_screen()?;
+
+        // Create options for multiselect
+        let options: Vec<(usize, String, String)> = configs
+            .iter()
+            .enumerate()
+            .map(|(i, c)| (i, c.name.clone(), c.description.clone()))
+            .collect();
+
+        let selected: Vec<usize> = multiselect("Select examples to run (use space to select (multiselect supported), enter to run examples):")
+            .items(&options)
+            .interact()?;
+
+        if selected.is_empty() {
+            outro("No examples selected. Goodbye!")?;
+            return Ok(());
+        }
+
+        selected
+    };
 
     for index in selected {
         run_score(&configs[index])?;
