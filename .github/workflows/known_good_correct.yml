@@ -31,7 +31,6 @@ jobs:
         uses: actions/checkout@v4.2.2
       - name: Check
         run: |
-          ls -la 
           scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir-modules bazel_common
           if git diff --quiet; then
               echo "No changes"

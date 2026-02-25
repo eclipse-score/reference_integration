@@ -95,8 +95,24 @@ def load_known_good(path: Path) -> KnownGood:
 	"""
 	
 	with open(path, "r", encoding="utf-8") as f:
-		data = json.load(f)
-	
+		text = f.read()
+		try:
+			data = json.loads(text)
+		except json.JSONDecodeError as e:
+			lines = text.splitlines()
+			line = lines[e.lineno - 1] if 0 <= e.lineno - 1 < len(lines) else ""
+			pointer = " " * (e.colno - 1) + "^"
+
+			hint = ""
+			if "Expecting value" in e.msg:
+				hint = "Possible causes: trailing comma, missing value, or extra comma."
+
+			raise ValueError(
+				f"Invalid JSON at line {e.lineno}, column {e.colno}\n"
+				f"{line}\n{pointer}\n"
+				f"{e.msg}. {hint}"
+			) from None
+
 	if not isinstance(data, dict) or not isinstance(data.get("modules"), dict):
 		raise ValueError(
 			f"Invalid known_good.json at {path} (expected object with 'modules' dict)"
