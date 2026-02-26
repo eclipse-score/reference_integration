@@ -1,5 +1,5 @@
 load("@score_itf//:defs.bzl", "py_itf_test")
-load("@score_itf//score/itf/plugins:plugins.bzl", "docker")
+load("@score_itf//score/itf/plugins:plugins.bzl", "docker", "qemu")
 
 
 filegroup(
@@ -27,5 +27,29 @@ py_itf_test(
     ],
     plugins = [
         docker,
+    ],
+    tags = [
+        "manual",
+    ],
+)
+
+py_itf_test(
+    name = "qnx_x86_64",
+    srcs = [
+        ":all_tests",
+    ],
+    args = [
+        "--qemu-config=$(location //feature_integration_tests/configs:qemu_bridge_config.json)",
+        "--qemu-image=$(location //images/qnx_x86_64:image)",
+    ],
+    data = [
+        "//feature_integration_tests/configs:qemu_bridge_config.json",
+        "//images/qnx_x86_64:image",
+    ],
+    plugins = [
+        qemu,
+    ],
+    tags = [
+        "manual",
     ],
 )
