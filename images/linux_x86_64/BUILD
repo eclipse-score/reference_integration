@@ -11,6 +11,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
+load("@rules_oci//oci:defs.bzl", "oci_image", "oci_tarball")
+load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 
 alias(
     name = "image",
@@ -28,3 +30,31 @@ sh_binary(
         ":image",
     ],
 )
+
+pkg_tar(
+    name = "showcases_archive",
+    srcs = [
+        "//showcases:showcases_all",
+    ],
+    symlinks = {
+        "showcases": "showcases_all",
+    }
+)
+
+oci_image(
+    name = "docker_image",
+    base = "@ubuntu_22_04",
+    tars = [
+        ":showcases_archive",
+    ],
+)
+
+oci_tarball(
+    name = "docker_image_tarball",
+    image = ":docker_image",
+    repo_tags = ["score_showcases:latest"],
+    visibility = [
+        "//feature_integration_tests/itf:__pkg__",
+    ],
+)
+

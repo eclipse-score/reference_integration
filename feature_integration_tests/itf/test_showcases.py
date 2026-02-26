@@ -13,26 +13,26 @@
 
 import logging
 
+
 logger = logging.getLogger(__name__)
 
 
-def test_showcase_app_is_deployed(target):
-    with target.ssh() as ssh:
-        exit_code, stdout, stderr = ssh.execute_command_output("test -f /showcases/bin/ipc_bridge_cpp")
-        assert exit_code == 0, "SSH command failed"
+def test_ipc_bridge_cpp_app_is_deployed(target):
+    exit_code, out = target.execute("test -f /showcases/bin/ipc_bridge_cpp")
+    assert exit_code == 0
 
 
-def test_showcase_app_is_running(target):
-    with target.ssh() as ssh:
-        exit_code, stdout, stderr = ssh.execute_command_output(
-            "cd /showcases/data/comm; /showcases/bin/ipc_bridge_cpp -n 10 -t 100 -m send & /showcases/bin/ipc_bridge_cpp -n 5 -t 100 -m recv",
-            timeout=30,
-            max_exec_time=180,
-            logger_in=logger,
-            verbose=True,
-        )
+def test_ipc_bridge_cpp_app_is_running(target):
+    exit_code, out = target.execute(
+        "cd /showcases/data/comm; /showcases/bin/ipc_bridge_cpp -n 10 -t 100 -m send & /showcases/bin/ipc_bridge_cpp -n 5 -t 100 -m recv"
+    )
+    logger.info(out)
+    assert exit_code == 0
 
-        logger.info(stdout)
-        logger.info(stderr)
 
-        assert exit_code == 0, "SSH command failed"
+def test_run_all_showcases(target):
+    exit_code, out = target.execute(
+        "/showcases/bin/cli --examples=all"
+    )
+    logger.info(out)
+    assert exit_code == 0

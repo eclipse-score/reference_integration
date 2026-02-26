@@ -10,9 +10,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-# from itf.plugins.com.ping import ping
+
+import score.itf
 
 
+@score.itf.plugins.core.requires_capabilities("ssh")
 def test_ssh_with_default_user(target):
     with target.ssh() as ssh:
         exit_code, stdout, stderr = ssh.execute_command_output(
@@ -26,6 +28,7 @@ def test_ssh_with_default_user(target):
         assert stderr == [], "Expected no error output"
 
 
+@score.itf.plugins.core.requires_capabilities("ssh")
 def test_ssh_with_qnx_user(target):
     user = "qnxuser"
     with target.ssh(username=user) as ssh:
@@ -38,8 +41,3 @@ def test_ssh_with_qnx_user(target):
             "Expected QNX kernel information not found in output"
         )
         assert stderr == [], "Expected no error output"
-
-
-# def test_ping_ok(target_fixture):
-#     is_reachable = ping(target_fixture.sut.ip_address)
-#     assert is_reachable, "QNX Target is not reachable via ping"

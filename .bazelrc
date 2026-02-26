@@ -63,9 +63,11 @@ test:ferrocene-coverage --run_under=@score_tooling//coverage:llvm_profile_wrappe
 # Coverage needs to have all intermediate .rlibs to be able to proceed
 build:ferrocene-coverage --remote_download_all
 
+# Output only failed test logs
+test --test_output=errors
+
 test:itf-qnx-x86_64 --config=qnx-x86_64
 test:itf-qnx-x86_64 --run_under=@score_itf//scripts:run_under_qemu
-test:itf-qnx-x86_64 --test_output=errors
 
 test:unit-tests --config=linux-x86_64
 test:unit-tests --build_tests_only
