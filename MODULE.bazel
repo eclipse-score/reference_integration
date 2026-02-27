@@ -44,6 +44,11 @@ archive_override(
     strip_prefix = "rules_boost-master",
 )
 
+# Implicit dependencies for score_tooling
+bazel_dep(name = "aspect_rules_lint", version = "2.0.0")
+bazel_dep(name = "buildifier_prebuilt", version = "8.2.0.2")
+bazel_dep(name = "score_rust_policies", version = "0.0.3")
+
 # TRLC dependency for requirements traceability
 bazel_dep(name = "trlc")
 git_override(
