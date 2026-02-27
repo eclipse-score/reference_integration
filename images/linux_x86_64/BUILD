@@ -10,9 +10,9 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 load("@rules_oci//oci:defs.bzl", "oci_image", "oci_tarball")
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
+load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 
 alias(
     name = "image",
@@ -38,7 +38,7 @@ pkg_tar(
     ],
     symlinks = {
         "showcases": "showcases_all",
-    }
+    },
 )
 
 oci_image(
@@ -57,4 +57,3 @@ oci_tarball(
         "//feature_integration_tests/itf:__pkg__",
     ],
 )
-

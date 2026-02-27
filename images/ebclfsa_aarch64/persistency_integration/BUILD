@@ -16,7 +16,7 @@ genrule(
     name = "fetch-fastdev-archive",
     srcs = [],
     outs = ["fastdev-archive.tgz"],
-    cmd = "wget -O $@ https://github.com/elektrobit-contrib/eclipse-score_toolchains_gcc/releases/download/0.5.0-beta/fastdev-ubuntu-ebcl-deb-qemu-arm64.tgz"
+    cmd = "wget -O $@ https://github.com/elektrobit-contrib/eclipse-score_toolchains_gcc/releases/download/0.5.0-beta/fastdev-ubuntu-ebcl-deb-qemu-arm64.tgz",
 )
 
 genrule(
@@ -24,7 +24,7 @@ genrule(
     srcs = [":fetch-fastdev-archive"],
     outs = [
         "ebcl-qemuarm64/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64.wic",
-        "ebcl-qemuarm64/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64-vmlinux"
+        "ebcl-qemuarm64/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64-vmlinux",
     ],
     cmd = "tar xzf $(location :fetch-fastdev-archive) -C $(RULEDIR)",
 )
@@ -37,6 +37,11 @@ genrule(
         "scripts/cpp_tests_persistency.sh",
         "run_qemu.sh",
     ],
+    outs = [
+        "qemu_upload.log",
+        "ebcl-qemuarm64-modified/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64.wic",
+        "ebcl-qemuarm64-modified/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64-vmlinux",
+    ],
     cmd = " \
         mkdir -p $(RULEDIR)/ebcl-qemuarm64-modified &&\
         cp $(RULEDIR)/ebcl-qemuarm64/* $(RULEDIR)/ebcl-qemuarm64-modified/ &&\
@@ -48,11 +53,6 @@ genrule(
         sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost crinit-ctl poweroff || true \
         sleep 5  \
     ",
-    outs = [
-        "qemu_upload.log",
-        "ebcl-qemuarm64-modified/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64.wic",
-        "ebcl-qemuarm64-modified/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64-vmlinux"
-    ],
 )
 
 genrule(
@@ -60,7 +60,11 @@ genrule(
     srcs = [
         "ebcl-qemuarm64-modified/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64.wic",
         "ebcl-qemuarm64-modified/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64-vmlinux",
-        "run_qemu.sh"
+        "run_qemu.sh",
+    ],
+    outs = [
+        "qemu_run.log",
+        "ssh_persistency_test_scenarios_run.log",
     ],
     cmd = " \
         $(location run_qemu.sh) $(RULEDIR)/ebcl-qemuarm64-modified -pidfile $(RULEDIR)/qemu.pid > $(RULEDIR)/qemu_run.log &\
@@ -69,8 +73,4 @@ genrule(
         sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost crinit-ctl poweroff || true \
         sleep 5 \
     ",
-    outs = [
-        "qemu_run.log",
-        "ssh_persistency_test_scenarios_run.log",
-    ],
 )

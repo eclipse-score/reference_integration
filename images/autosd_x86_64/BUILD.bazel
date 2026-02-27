@@ -20,25 +20,25 @@ alias(
 
 rpm_package(
     name = "score-showcases",
+    data = [
+        "//showcases:showcases_all",
+    ],
+    data_dir = "/usr/share/score/examples",
     description = "Eclipse S-CORE Reference Integration Showcases",
     summary = "Eclipse S-CORE Reference Integration Showcases",
     version = "0.6.0",
-    data = [
-        "//showcases:showcases_all"
-    ],
-    data_dir = "/usr/share/score/examples", 
 )
 
 sh_binary(
     name = "run",
     srcs = ["//runners/docker_x86_64/scripts:run_docker.sh"],
-    env={
-    	"OCI_IMAGE": "quay.io/centos/centos:stream10"
-    },
     args = [
         "$(location :image)",
     ],
     data = [
         ":image",
     ],
+    env = {
+        "OCI_IMAGE": "quay.io/centos/centos:stream10",
+    },
 )

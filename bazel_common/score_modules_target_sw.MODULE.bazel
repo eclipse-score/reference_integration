@@ -17,63 +17,63 @@
 bazel_dep(name = "score_baselibs")
 git_override(
     module_name = "score_baselibs",
-    remote = "https://github.com/eclipse-score/baselibs.git",
     commit = "158fe6a7b791c58f6eac5f7e4662b8db0cf9ac6e",
+    patch_strip = 1,
     patches = [
         "//patches/baselibs:003-acl-fixes-for-aarch64.patch",
     ],
-    patch_strip = 1,
+    remote = "https://github.com/eclipse-score/baselibs.git",
 )
 
 bazel_dep(name = "score_baselibs_rust")
 git_override(
     module_name = "score_baselibs_rust",
-    remote = "https://github.com/eclipse-score/baselibs_rust.git",
     commit = "0eba2934fa8b0e1a343ec6bf6f7ff00cec27d81c",
+    remote = "https://github.com/eclipse-score/baselibs_rust.git",
 )
 
 bazel_dep(name = "score_communication")
 git_override(
     module_name = "score_communication",
-    remote = "https://github.com/eclipse-score/communication.git",
     commit = "56448a5589a5f7d3921b873e8127b824a8c1ca95",
+    patch_strip = 1,
     patches = [
         "//patches/communication:001-expose-comm-examples.patch",
     ],
-    patch_strip = 1,
+    remote = "https://github.com/eclipse-score/communication.git",
 )
 
 bazel_dep(name = "score_persistency")
 git_override(
     module_name = "score_persistency",
-    remote = "https://github.com/eclipse-score/persistency.git",
     commit = "438bf9b5c447fd41ad43b321679dd3d1b3a6c737",
+    remote = "https://github.com/eclipse-score/persistency.git",
 )
 
 bazel_dep(name = "score_orchestrator")
 git_override(
     module_name = "score_orchestrator",
-    remote = "https://github.com/eclipse-score/orchestrator.git",
     commit = "600fdd8186305ffbf495e4fc788195c077de79ac",
+    remote = "https://github.com/eclipse-score/orchestrator.git",
 )
 
 bazel_dep(name = "score_kyron")
 git_override(
     module_name = "score_kyron",
-    remote = "https://github.com/eclipse-score/kyron.git",
     commit = "5acfb1a593ec65cf4f64424f581c6ddd04813ee7",
+    remote = "https://github.com/eclipse-score/kyron.git",
 )
 
 bazel_dep(name = "score_lifecycle_health")
 git_override(
     module_name = "score_lifecycle_health",
-    remote = "https://github.com/eclipse-score/lifecycle.git",
     commit = "14ee704eeac03e03ca10bece5de8b694d3c5e2dd",
+    remote = "https://github.com/eclipse-score/lifecycle.git",
 )
 
 bazel_dep(name = "score_logging")
 git_override(
     module_name = "score_logging",
-    remote = "https://github.com/eclipse-score/logging.git",
     commit = "80feaae8ffaa2448c3872011b724e1668ad2930e",
+    remote = "https://github.com/eclipse-score/logging.git",
 )

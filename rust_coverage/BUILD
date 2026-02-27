@@ -16,8 +16,6 @@
 
 load("@score_tooling//:defs.bzl", "rust_coverage_report")
 
-
-
 rust_coverage_report(
     name = "rust_coverage_score_baselibs_rust",
     bazel_configs = [
@@ -27,7 +25,6 @@ rust_coverage_report(
     query = 'kind("rust_test", @score_baselibs_rust//src/...) -@score_baselibs_rust//src/log/score_log_fmt_macro:tests',
     visibility = ["//visibility:public"],
 )
-            
 
 rust_coverage_report(
     name = "rust_coverage_score_communication",
@@ -38,7 +35,6 @@ rust_coverage_report(
     query = 'kind("rust_test", @score_communication//score/mw/com/impl/...) -@score_communication//score/mw/com/impl:unit_test_runtime_single_exec -@score_communication//score/mw/com/impl/configuration:config_parser_test -@score_communication//score/mw/com/impl/configuration:configuration_test -@score_communication//score/mw/com/impl/tracing/configuration:tracing_filter_config_parser_test',
     visibility = ["//visibility:public"],
 )
-            
 
 rust_coverage_report(
     name = "rust_coverage_score_persistency",
@@ -49,7 +45,6 @@ rust_coverage_report(
     query = 'kind("rust_test", @score_persistency//src/...) -@score_persistency//src/cpp/tests:bm_kvs_cpp',
     visibility = ["//visibility:public"],
 )
-            
 
 rust_coverage_report(
     name = "rust_coverage_score_orchestrator",
@@ -60,7 +55,6 @@ rust_coverage_report(
     query = 'kind("rust_test", @score_orchestrator//src/...)',
     visibility = ["//visibility:public"],
 )
-            
 
 rust_coverage_report(
     name = "rust_coverage_score_kyron",
@@ -71,7 +65,6 @@ rust_coverage_report(
     query = 'kind("rust_test", @score_kyron//src/...)',
     visibility = ["//visibility:public"],
 )
-            
 
 rust_coverage_report(
     name = "rust_coverage_score_lifecycle_health",
@@ -82,7 +75,6 @@ rust_coverage_report(
     query = 'kind("rust_test", @score_lifecycle_health//src/...)',
     visibility = ["//visibility:public"],
 )
-            
 
 rust_coverage_report(
     name = "rust_coverage_score_logging",
@@ -93,4 +85,3 @@ rust_coverage_report(
     query = 'kind("rust_test", @score_logging//score/...) -@score_logging//score/datarouter/test/ut/ut_logging:dltprotocolUT -@score_logging//score/datarouter/test/ut/ut_logging:persistentLogConfigUT -@score_logging//score/datarouter/test/ut/ut_logging:socketserverConfigUT -@score_logging//score/datarouter/test/ut/ut_logging:socketserverUT -@score_logging//score/mw/log/legacy_non_verbose_api:unit_test',
     visibility = ["//visibility:public"],
 )
-            

@@ -14,7 +14,6 @@
 load("@score_docs_as_code//:docs.bzl", "docs")
 load("@score_tooling//:defs.bzl", "copyright_checker", "setup_starpls", "use_format_targets")
 
-
 # Docs-as-code
 docs(
     data = [
@@ -49,13 +48,13 @@ copyright_checker(
         ".github",
         "bazel_common",
         "docs",
-        "scripts",
-        "tests",
         "feature_integration_tests",
         "images",
         "runners",
         "rust_coverage",
+        "scripts",
         "showcases",
+        "tests",
         "//:BUILD",
         "//:MODULE.bazel",
     ],

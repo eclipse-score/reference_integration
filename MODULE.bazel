@@ -20,13 +20,13 @@ module(
 include("//bazel_common:score_basic_bazel.MODULE.bazel")
 
 # GCC toolchains
-include ("//bazel_common:score_gcc_toolchains.MODULE.bazel") # WIP: Not used yet as have problems with IFS toolchain
+include("//bazel_common:score_gcc_toolchains.MODULE.bazel")  # WIP: Not used yet as have problems with IFS toolchain
 
 # GCC toolchains
-include ("//bazel_common:score_qnx_toolchains.MODULE.bazel") # WIP: Not used yet as have problems with IFS toolchain
+include("//bazel_common:score_qnx_toolchains.MODULE.bazel")  # WIP: Not used yet as have problems with IFS toolchain
 
 # Rust toolchains
-include ("//bazel_common:score_rust_toolchains.MODULE.bazel")
+include("//bazel_common:score_rust_toolchains.MODULE.bazel")
 
 # Python support
 include("//bazel_common:score_python.MODULE.bazel")
@@ -40,8 +40,8 @@ include("//bazel_common:score_modules_target_sw.MODULE.bazel")
 bazel_dep(name = "rules_boost", repo_name = "com_github_nelhage_rules_boost")
 archive_override(
     module_name = "rules_boost",
-    urls = ["https://github.com/nelhage/rules_boost/archive/refs/heads/master.tar.gz"],
     strip_prefix = "rules_boost-master",
+    urls = ["https://github.com/nelhage/rules_boost/archive/refs/heads/master.tar.gz"],
 )
 
 # Implicit dependencies for score_tooling
@@ -59,7 +59,8 @@ git_override(
 
 # Currently required for ifs tooling
 bazel_dep(name = "score_toolchains_qnx", version = "0.0.7")
-toolchains_qnx = use_extension("@score_toolchains_qnx//:extensions.bzl", "toolchains_qnx", dev_dependency=True)
+
+toolchains_qnx = use_extension("@score_toolchains_qnx//:extensions.bzl", "toolchains_qnx", dev_dependency = True)
 toolchains_qnx.sdp(
     sha256 = "f2e0cb21c6baddbcb65f6a70610ce498e7685de8ea2e0f1648f01b327f6bac63",
     strip_prefix = "installation",
@@ -68,11 +69,9 @@ toolchains_qnx.sdp(
 use_repo(toolchains_qnx, "toolchains_qnx_sdp")
 use_repo(toolchains_qnx, "toolchains_qnx_ifs")
 
-
 bazel_dep(name = "rules_oci", version = "1.8.0")
 
 oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
-
 oci.pull(
     name = "ubuntu_22_04",
     digest = "sha256:3ba65aa20f86a0fad9df2b2c259c613df006b2e6d0bfcc8a146afb8c525a9751",
@@ -80,5 +79,4 @@ oci.pull(
     platforms = ["linux/amd64"],
     tag = "22.04",
 )
-
 use_repo(oci, "ubuntu_22_04")

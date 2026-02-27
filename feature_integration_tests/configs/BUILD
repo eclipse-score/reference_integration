@@ -25,7 +25,7 @@ filegroup(
     name = "etc_configs",
     srcs = [
         "etc/logging.json",
-        "etc/mw_com_config.json",        
+        "etc/mw_com_config.json",
     ],
     visibility = ["//visibility:public"],
 )

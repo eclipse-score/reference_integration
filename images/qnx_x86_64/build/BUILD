@@ -24,38 +24,38 @@ filegroup(
 filegroup(
     name = "configs",
     srcs = [
-        "//images/qnx_x86_64/configs:pci_server.cfg",
-        "//images/qnx_x86_64/configs:pci_hw.cfg",
-        "//images/qnx_x86_64/configs:qcrypto.conf",
-        "//images/qnx_x86_64/configs:passwd",
+        "//images/qnx_x86_64/configs:dhcpcd.conf",
         "//images/qnx_x86_64/configs:group",
-        "//images/qnx_x86_64/configs:sshd_config",
+        "//images/qnx_x86_64/configs:hostname",
+        "//images/qnx_x86_64/configs:network_capture.sh",
+        "//images/qnx_x86_64/configs:network_setup.sh",
+        "//images/qnx_x86_64/configs:network_setup_dhcp.sh",
+        "//images/qnx_x86_64/configs:passwd",
+        "//images/qnx_x86_64/configs:pci_hw.cfg",
+        "//images/qnx_x86_64/configs:pci_server.cfg",
+        "//images/qnx_x86_64/configs:profile",
+        "//images/qnx_x86_64/configs:qcrypto.conf",
         "//images/qnx_x86_64/configs:ssh_host_rsa_key",
         "//images/qnx_x86_64/configs:ssh_host_rsa_key.pub",
-        "//images/qnx_x86_64/configs:hostname",
-        "//images/qnx_x86_64/configs:network_setup.sh",
-        "//images/qnx_x86_64/configs:network_capture.sh",
-        "//images/qnx_x86_64/configs:profile",
-        "//images/qnx_x86_64/configs:dhcpcd.conf",
-        "//images/qnx_x86_64/configs:network_setup_dhcp.sh",
+        "//images/qnx_x86_64/configs:sshd_config",
     ],
     visibility = ["//visibility:private"],
 )
 
 qnx_ifs(
     name = "init",
-    build_file = "init.build",
     srcs = [
+        ":configs",
+        ":scripts",
         ":system.build",
         ":system_dir",
-        ":scripts",
-        ":configs",
-        "//showcases:showcases_all",
         "//feature_integration_tests/configs:etc_configs",
-        "@score_persistency//tests/test_scenarios/cpp:test_scenarios",        
+        "//showcases:showcases_all",
+        "@score_persistency//tests/test_scenarios/cpp:test_scenarios",
     ],
+    build_file = "init.build",
     ext_repo_maping = {
-        "BUNDLE_PATH": "$(location //showcases:showcases_all)"
+        "BUNDLE_PATH": "$(location //showcases:showcases_all)",
     },
     visibility = [
         "//visibility:public",
@@ -65,8 +65,7 @@ qnx_ifs(
 filegroup(
     name = "system_dir",
     srcs = [
-        "system.build",
         "init.build",
+        "system.build",
     ],
 )
-

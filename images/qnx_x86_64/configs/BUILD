@@ -11,7 +11,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-
 exports_files([
     "startup.sh",
     "network_setup.sh",
@@ -27,5 +26,5 @@ exports_files([
     "ssh_host_rsa_key.pub",
     "hostname",
     "profile",
-    "network_capture.sh"
+    "network_capture.sh",
 ])

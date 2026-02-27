@@ -1,7 +1,6 @@
 load("@score_itf//:defs.bzl", "py_itf_test")
 load("@score_itf//score/itf/plugins:plugins.bzl", "docker", "qemu")
 
-
 filegroup(
     name = "all_tests",
     srcs = [

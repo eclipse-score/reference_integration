@@ -19,14 +19,14 @@ exports_files(["orch_per.score.json"])
 rust_binary(
     name = "orch_per_example",
     srcs = ["main.rs"],
+    visibility = ["//visibility:public"],
     deps = [
         "@score_kyron//src/kyron:libkyron",
         "@score_kyron//src/kyron-foundation:libkyron_foundation",
-        "@score_orchestrator//src/orchestration:liborchestration",
         "@score_kyron//src/logging_tracing:liblogging_tracing",
-        "@score_persistency//src/rust/rust_kvs:rust_kvs",
+        "@score_orchestrator//src/orchestration:liborchestration",
+        "@score_persistency//src/rust/rust_kvs",
     ],
-    visibility = ["//visibility:public"],
 )
 
 score_pkg_bundle(
@@ -34,4 +34,3 @@ score_pkg_bundle(
     bins = [":orch_per_example"],
     config_data = ["//showcases/orchestration_persistency:orch_per.score.json"],
 )
-

@@ -17,59 +17,59 @@
 bazel_dep(name = "score_crates")
 git_override(
     module_name = "score_crates",
-    remote = "https://github.com/eclipse-score/score-crates.git",
     commit = "372438042bafe21146899dc1f89771a031d12ed0",
+    remote = "https://github.com/eclipse-score/score-crates.git",
 )
 
 bazel_dep(name = "score_itf")
 git_override(
     module_name = "score_itf",
-    remote = "https://github.com/eclipse-score/itf.git",
     commit = "e1243f3818fd78b72f79741082016fd3d7c85329",
+    remote = "https://github.com/eclipse-score/itf.git",
 )
 
 bazel_dep(name = "score_tooling")
 git_override(
     module_name = "score_tooling",
-    remote = "https://github.com/eclipse-score/tooling.git",
     commit = "1159dcf9d35981ac4877265eff7a1e7a24452161",
+    remote = "https://github.com/eclipse-score/tooling.git",
 )
 
 bazel_dep(name = "score_platform")
 git_override(
     module_name = "score_platform",
-    remote = "https://github.com/eclipse-score/score.git",
     commit = "bf8502071d750cb70d88f1cb5cfbf5e5e7407f27",
+    remote = "https://github.com/eclipse-score/score.git",
 )
 
 bazel_dep(name = "score_bazel_platforms")
 git_override(
     module_name = "score_bazel_platforms",
-    remote = "https://github.com/eclipse-score/bazel_platforms.git",
     commit = "2286de89c35d5660ad183906a6f010b33fcac8db",
+    remote = "https://github.com/eclipse-score/bazel_platforms.git",
 )
 
 bazel_dep(name = "score_test_scenarios")
 git_override(
     module_name = "score_test_scenarios",
-    remote = "https://github.com/eclipse-score/testing_tools.git",
     commit = "c3d385c8e5562b594a409e92a8f493207b53b49d",
+    remote = "https://github.com/eclipse-score/testing_tools.git",
 )
 
 bazel_dep(name = "score_docs_as_code")
 git_override(
     module_name = "score_docs_as_code",
-    remote = "https://github.com/eclipse-score/docs-as-code.git",
     commit = "7349eb22430febb367765ced3fbabfc0ef2988d0",
+    patch_strip = 1,
     patches = [
         "//patches/docs-as-code:fix-extra-properties.patch",
     ],
-    patch_strip = 1,
+    remote = "https://github.com/eclipse-score/docs-as-code.git",
 )
 
 bazel_dep(name = "score_process")
 git_override(
     module_name = "score_process",
-    remote = "https://github.com/eclipse-score/process_description.git",
     commit = "fbe68f10041eb34fb791f08e31006afce8c9564a",
+    remote = "https://github.com/eclipse-score/process_description.git",
 )

@@ -16,19 +16,19 @@ load("@rules_rust//rust:defs.bzl", "rust_binary")
 rust_binary(
     name = "rust_test_scenarios",
     srcs = glob(["src/**/*.rs"]),
-    visibility = ["//feature_integration_tests/test_cases:__pkg__"],
     tags = [
         "manual",
     ],
+    visibility = ["//feature_integration_tests/test_cases:__pkg__"],
     deps = [
+        "@score_crates//:serde",
+        "@score_crates//:serde_json",
+        "@score_crates//:tracing",
+        "@score_crates//:tracing_subscriber",
         "@score_kyron//src/kyron:libkyron",
         "@score_kyron//src/kyron-foundation:libkyron_foundation",
         "@score_orchestrator//src/orchestration:liborchestration",
-        "@score_persistency//src/rust/rust_kvs:rust_kvs",
-        "@score_test_scenarios//test_scenarios_rust:test_scenarios_rust",
-        "@score_crates//:tracing",
-        "@score_crates//:tracing_subscriber",
-        "@score_crates//:serde",
-        "@score_crates//:serde_json",
+        "@score_persistency//src/rust/rust_kvs",
+        "@score_test_scenarios//test_scenarios_rust",
     ],
 )
