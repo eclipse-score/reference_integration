@@ -65,36 +65,36 @@ content:
     - path: /usr/bin/lola-ipc-test
       source_path: files/lola-ipc-test
     # showcases
-    - path: /usr/share/score/examples/showcases_all
-      source_glob: "files/showcases_all/**/*"
+    - path: /usr/share/score/examples/
+      source_glob: "files/showcases/**/*"
       preserve_path: true
       max_files: 50
   chmod_files:
     - path: /usr/bin/lola-ipc-test
       mode: "0755"
     # the following is a workaround because copied files lost their permissions
-    - path: /usr/share/score/examples/showcases_all/bin/cli
+    - path: /usr/share/score/examples/showcases/showcases/bin/cli
       mode: "0755"
       recursive: true
-    - path: /usr/share/score/examples/showcases_all/bin/control_daemon
+    - path: /usr/share/score/examples/showcases/showcases/bin/control_daemon
       mode: "0755"
       recursive: true
-    - path: /usr/share/score/examples/showcases_all/bin/cpp_supervised_app
+    - path: /usr/share/score/examples/showcases/showcases/bin/cpp_supervised_app
       mode: "0755"
       recursive: true
-    - path: /usr/share/score/examples/showcases_all/bin/ipc_bridge_cpp
+    - path: /usr/share/score/examples/showcases/showcases/bin/ipc_bridge_cpp
       mode: "0755"
       recursive: true
-    - path: /usr/share/score/examples/showcases_all/bin/launch_manager
+    - path: /usr/share/score/examples/showcases/showcases/bin/launch_manager
       mode: "0755"
       recursive: true
-    - path: /usr/share/score/examples/showcases_all/bin/lifecycle_signal.sh
+    - path: /usr/share/score/examples/showcases/showcases/bin/lifecycle_signal.sh
       mode: "0755"
       recursive: true
-    - path: /usr/share/score/examples/showcases_all/bin/orch_per_example
+    - path: /usr/share/score/examples/showcases/showcases/bin/orch_per_example
       mode: "0755"
       recursive: true
-    - path: /usr/share/score/examples/showcases_all/bin/rust_supervised_app
+    - path: /usr/share/score/examples/showcases/showcases/bin/rust_supervised_app
       mode: "0755"
       recursive: true
   # Required for testing the image only:

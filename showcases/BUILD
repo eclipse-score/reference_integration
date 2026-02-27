@@ -13,7 +13,7 @@
 load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
 
 score_pkg_bundle(
-    name = "showcases_all",
+    name = "showcases",
     bins = ["//showcases/cli"],
     other_package_files = [
         "//showcases/standalone:comm_pkg_files",
@@ -21,4 +21,5 @@ score_pkg_bundle(
         "//showcases/orchestration_persistency:orch_per_pkg_files",
         "//showcases/simple_lifecycle:simple_lifecycle_pkg_files",
     ],
+    package_dir = "showcases",
 )

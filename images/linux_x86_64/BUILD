@@ -14,44 +14,31 @@ load("@rules_oci//oci:defs.bzl", "oci_image", "oci_tarball")
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 
-alias(
-    name = "image",
-    actual = "//showcases:showcases_all",
-    visibility = ["//visibility:public"],
-)
-
 sh_binary(
     name = "run",
     srcs = ["//runners/docker_x86_64/scripts:run_docker.sh"],
     args = [
-        "$(location :image)",
+        "$(location :image_tarball)",
     ],
     data = [
-        ":image",
+        ":image_tarball",
     ],
-)
-
-pkg_tar(
-    name = "showcases_archive",
-    srcs = [
-        "//showcases:showcases_all",
-    ],
-    symlinks = {
-        "showcases": "showcases_all",
+    env = {
+        "OCI_IMAGE": "score_showcases:latest",
     },
 )
 
 oci_image(
-    name = "docker_image",
+    name = "image",
     base = "@ubuntu_22_04",
     tars = [
-        ":showcases_archive",
+        "//showcases:showcases_pkg_tar",
     ],
 )
 
 oci_tarball(
-    name = "docker_image_tarball",
-    image = ":docker_image",
+    name = "image_tarball",
+    image = ":image",
     repo_tags = ["score_showcases:latest"],
     visibility = [
         "//feature_integration_tests/itf:__pkg__",
