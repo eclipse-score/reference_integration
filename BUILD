@@ -54,7 +54,6 @@ copyright_checker(
         "rust_coverage",
         "scripts",
         "showcases",
-        "tests",
         "//:BUILD",
         "//:MODULE.bazel",
     ],
