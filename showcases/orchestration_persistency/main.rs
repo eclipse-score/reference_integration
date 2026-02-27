@@ -18,9 +18,7 @@ use kyron::runtime::*;
 use kyron_foundation::prelude::*;
 use logging_tracing::LogAndTraceBuilder;
 use orchestration::{
-    actions::{
-        invoke::Invoke, sequence::SequenceBuilder, sync::SyncBuilder, trigger::TriggerBuilder,
-    },
+    actions::{invoke::Invoke, sequence::SequenceBuilder, sync::SyncBuilder, trigger::TriggerBuilder},
     api::{design::Design, Orchestration},
     common::DesignConfig,
     prelude::InvokeResult,
@@ -58,13 +56,11 @@ async fn on_shutdown() -> InvokeResult {
 
     // Instance ID for KVS object instances.
     let instance_id = InstanceId(0);
-    
+
     // Configure backend with directory path (workaround: KvsBuilder::dir() not available in Rust)
     // change back to dir, if https://github.com/eclipse-score/persistency/issues/222 is resolved.
-    let backend = JsonBackendBuilder::new()
-        .working_dir(PathBuf::from("/tmp"))
-        .build();
-    
+    let backend = JsonBackendBuilder::new().working_dir(PathBuf::from("/tmp")).build();
+
     let builder = KvsBuilder::new(instance_id)
         .backend(Box::new(backend))
         .kvs_load(KvsLoad::Optional);
@@ -77,15 +73,13 @@ async fn on_shutdown() -> InvokeResult {
 
     let instance_id = kvs.parameters().instance_id;
     let snapshot_id = SnapshotId(0);
-    match kvs.parameters().backend.as_any().downcast_ref(){
-        Some(backend ) => {
+    match kvs.parameters().backend.as_any().downcast_ref() {
+        Some(backend) => {
             let backend = backend as &JsonBackend;
             let filename = backend.kvs_file_path(instance_id, snapshot_id);
             info!("KVS snapshot saved to file: {:?}", filename);
         },
-        None => {
-           
-        },
+        None => {},
     };
 
     Ok(())
@@ -101,25 +95,16 @@ fn camera_processing_component_design() -> Result<Design, CommonErrors> {
         design.register_invoke_async("on_camera_image_ready".into(), on_camera_image_ready)?;
 
     // Create a program describing task chain
-    design.add_program(
-        "CameraProcessingProgram",
-        move |design_instance, builder| {
-            builder.with_run_action(
-                SequenceBuilder::new()
-                    .with_step(SyncBuilder::from_design(CAMERA_IMG_READY, design_instance))
-                    .with_step(Invoke::from_tag(
-                        &on_camera_image_ready_tag,
-                        design_instance.config(),
-                    ))
-                    .with_step(TriggerBuilder::from_design(
-                        CAMERA_IMG_PROCESSED,
-                        design_instance,
-                    ))
-                    .build(),
-            );
-            Ok(())
-        },
-    );
+    design.add_program("CameraProcessingProgram", move |design_instance, builder| {
+        builder.with_run_action(
+            SequenceBuilder::new()
+                .with_step(SyncBuilder::from_design(CAMERA_IMG_READY, design_instance))
+                .with_step(Invoke::from_tag(&on_camera_image_ready_tag, design_instance.config()))
+                .with_step(TriggerBuilder::from_design(CAMERA_IMG_PROCESSED, design_instance))
+                .build(),
+        );
+        Ok(())
+    });
 
     Ok(design)
 }
@@ -129,8 +114,7 @@ fn detect_object_component_design() -> Result<Design, CommonErrors> {
 
     // Register events and invoke actions in design so it knows how to build task chains
     design.register_event(CAMERA_IMG_PROCESSED.into())?;
-    let detect_objects_tag =
-        design.register_invoke_async("detect_objects".into(), detect_objects)?;
+    let detect_objects_tag = design.register_invoke_async("detect_objects".into(), detect_objects)?;
     let on_shutdown_tag = design.register_invoke_async("on_shutdown".into(), on_shutdown)?;
 
     // Create a program describing task chain
@@ -138,14 +122,8 @@ fn detect_object_component_design() -> Result<Design, CommonErrors> {
         builder
             .with_run_action(
                 SequenceBuilder::new()
-                    .with_step(SyncBuilder::from_design(
-                        CAMERA_IMG_PROCESSED,
-                        design_instance,
-                    ))
-                    .with_step(Invoke::from_tag(
-                        &detect_objects_tag,
-                        design_instance.config(),
-                    ))
+                    .with_step(SyncBuilder::from_design(CAMERA_IMG_PROCESSED, design_instance))
+                    .with_step(Invoke::from_tag(&detect_objects_tag, design_instance.config()))
                     .build(),
             )
             .with_stop_action(
@@ -166,23 +144,14 @@ fn main() {
         .build();
 
     // Create runtime
-    let (builder, _engine_id) = kyron::runtime::RuntimeBuilder::new().with_engine(
-        ExecutionEngineBuilder::new()
-            .task_queue_size(256)
-            .workers(2),
-    );
+    let (builder, _engine_id) = kyron::runtime::RuntimeBuilder::new()
+        .with_engine(ExecutionEngineBuilder::new().task_queue_size(256).workers(2));
     let mut runtime = builder.build().unwrap();
 
     // Build Orchestration
     let mut orch = Orchestration::new()
-        .add_design(
-            camera_processing_component_design()
-                .expect("Failed to create camera_processing_component_design"),
-        )
-        .add_design(
-            detect_object_component_design()
-                .expect("Failed to create detect_object_component_design"),
-        )
+        .add_design(camera_processing_component_design().expect("Failed to create camera_processing_component_design"))
+        .add_design(detect_object_component_design().expect("Failed to create detect_object_component_design"))
         .design_done();
 
     // Specify deployment information, ie. which event is local, which timer etc

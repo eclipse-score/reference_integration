@@ -28,9 +28,7 @@ pub fn kvs_instance(kvs_parameters: KvsParameters) -> Result<Kvs, ErrorCode> {
     } else if let Some(snapshot_max_count) = kvs_parameters.snapshot_max_count {
         // Configure snapshot_max_count via backend
         // change back to snapshot_max_count, if https://github.com/eclipse-score/persistency/issues/222 is resolved.
-        let backend = JsonBackendBuilder::new()
-            .snapshot_max_count(snapshot_max_count)
-            .build();
+        let backend = JsonBackendBuilder::new().snapshot_max_count(snapshot_max_count).build();
         builder = builder.backend(Box::new(backend));
     }
 

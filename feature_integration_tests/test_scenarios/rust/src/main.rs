@@ -26,9 +26,7 @@ struct NumericUnixTime;
 
 impl FormatTime for NumericUnixTime {
     fn format_time(&self, w: &mut tracing_subscriber::fmt::format::Writer<'_>) -> std::fmt::Result {
-        let now = SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .unwrap_or_default();
+        let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap_or_default();
         write!(w, "{}", now.as_secs())
     }
 }
@@ -41,8 +39,7 @@ fn init_tracing_subscriber() {
         .json()
         .finish();
 
-    tracing::subscriber::set_global_default(subscriber)
-        .expect("Setting default subscriber failed!");
+    tracing::subscriber::set_global_default(subscriber).expect("Setting default subscriber failed!");
 }
 
 fn main() -> Result<(), String> {

@@ -85,9 +85,7 @@ async fn kvs_save_cycle_number(path: String) -> Result<(), UserErrValue> {
         builder = builder.backend(Box::new(backend));
     } else if let Some(max_count) = params.snapshot_max_count {
         // Configure snapshot_max_count via backend even without custom dir
-        let backend = JsonBackendBuilder::new()
-            .snapshot_max_count(max_count)
-            .build();
+        let backend = JsonBackendBuilder::new().snapshot_max_count(max_count).build();
         builder = builder.backend(Box::new(backend));
     }
 
@@ -98,8 +96,7 @@ async fn kvs_save_cycle_number(path: String) -> Result<(), UserErrValue> {
     let key = "run_cycle_number";
     let last_cycle_number: u32 = kvs.get_value_as::<u32>(key).unwrap_or_else(|_| 0_u32);
 
-    kvs.set_value(key, last_cycle_number + 1)
-        .expect("Failed to set value");
+    kvs.set_value(key, last_cycle_number + 1).expect("Failed to set value");
     let value_read = kvs.get_value_as::<u32>(key).expect("Failed to read value");
 
     kvs.flush().expect("Failed to flush KVS");
@@ -111,8 +108,7 @@ async fn kvs_save_cycle_number(path: String) -> Result<(), UserErrValue> {
 
 fn single_sequence_design(kvs_path: String) -> Result<Design, CommonErrors> {
     let mut design = Design::new("SingleSequence".into(), DesignConfig::default());
-    let kvs_cycle_tag =
-        design.register_invoke_async("KVS save cycle".into(), persistency_task!(kvs_path))?;
+    let kvs_cycle_tag = design.register_invoke_async("KVS save cycle".into(), persistency_task!(kvs_path))?;
 
     // Create a program with actions
     design.add_program(file!(), move |_design_instance, builder| {
@@ -143,9 +139,7 @@ impl Scenario for OrchestrationWithPersistency {
             .add_design(single_sequence_design(logic.kvs_path).expect("Failed to create design"))
             .design_done();
 
-        let mut program_manager = orch
-            .into_program_manager()
-            .expect("Failed to create programs");
+        let mut program_manager = orch.into_program_manager().expect("Failed to create programs");
         let mut programs = program_manager.get_programs();
 
         rt.block_on(async move {

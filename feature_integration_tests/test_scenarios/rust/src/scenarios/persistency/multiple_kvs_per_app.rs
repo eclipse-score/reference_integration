@@ -31,10 +31,8 @@ impl Scenario for MultipleKvsPerApp {
     fn run(&self, input: &str) -> Result<(), String> {
         // Parameters.
         let v: Value = serde_json::from_str(input).expect("Failed to parse input string");
-        let params1 =
-            KvsParameters::from_value(&v["kvs_parameters_1"]).expect("Failed to parse parameters");
-        let params2 =
-            KvsParameters::from_value(&v["kvs_parameters_2"]).expect("Failed to parse parameters");
+        let params1 = KvsParameters::from_value(&v["kvs_parameters_1"]).expect("Failed to parse parameters");
+        let params2 = KvsParameters::from_value(&v["kvs_parameters_2"]).expect("Failed to parse parameters");
         let logic = TestInput::from_json(input).expect("Failed to parse input string");
         {
             // Create first KVS instance.
@@ -59,17 +57,13 @@ impl Scenario for MultipleKvsPerApp {
             let kvs1 = kvs_instance(params1).expect("Failed to create KVS1 instance");
             let kvs2 = kvs_instance(params2).expect("Failed to create KVS2 instance");
 
-            let value1 = kvs1
-                .get_value_as::<f64>(&logic.key)
-                .expect("Failed to read kvs1 value");
+            let value1 = kvs1.get_value_as::<f64>(&logic.key).expect("Failed to read kvs1 value");
             info!(
                 instance = field::debug(kvs1.parameters().instance_id),
                 key = logic.key,
                 value = value1
             );
-            let value2 = kvs2
-                .get_value_as::<f64>(&logic.key)
-                .expect("Failed to read kvs2 value");
+            let value2 = kvs2.get_value_as::<f64>(&logic.key).expect("Failed to read kvs2 value");
             info!(
                 instance = field::debug(kvs2.parameters().instance_id),
                 key = logic.key,
