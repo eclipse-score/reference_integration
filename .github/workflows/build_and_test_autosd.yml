@@ -10,32 +10,24 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-
 name: AutoSD - Build & Integration Test
-
 on:
   pull_request:
     types: [opened, reopened, synchronize]
-
   merge_group:
     types: [checks_requested]
-
   push:
     branches:
       - main
-
 jobs:
   build:
     name: x86_64
     runs-on: ubuntu-latest
-
     steps:
       - name: Clean disk space
         uses: eclipse-score/more-disk-space@v1
-
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Setup Bazel
         uses: bazel-contrib/setup-bazel@0.18.0
         with:
@@ -43,36 +35,31 @@ jobs:
           disk-cache: ${{ github.workflow }}
           repository-cache: true
           cache-save: ${{ github.event_name == 'push' }}
-
       - name: Install System Dependencies
         run: |
           sudo apt-get update -y
           sudo apt-get install -y podman curl qemu-system createrepo-c
-
       - name: Build Showcases
         run: |
           bazel build --config autosd-x86_64 //images/autosd_x86_64:image
         working-directory: ./images/autosd_x86_64
-
       - name: Copy showcases_all folder
         run: |
           set -e
           mkdir -p ./images/autosd_x86_64/build/rpms
           cp -R bazel-bin/showcases/showcases_all ./images/autosd_x86_64/build/files/
-      
       - name: Install AIB Tools
         run: |
           curl -o auto-image-builder.sh "https://gitlab.com/CentOS/automotive/src/automotive-image-builder/-/raw/main/auto-image-builder.sh?ref_type=heads"
           chmod +x auto-image-builder.sh
         working-directory: ./images/autosd_x86_64/build
- 
       - name: Build AutoSD QEMU (x86_64)
         run: |
           export AIB_LOCAL_CONTAINER_STORAGE=$PWD/_build/containers-storage
 
           mkdir -p _build/containers-storage
           sudo -E ./auto-image-builder.sh build-builder --distro=autosd10-sig
-          
+
           sudo -E ./auto-image-builder.sh build \
           --distro=autosd10-sig  \
           --target=qemu \
@@ -85,26 +72,23 @@ jobs:
 
           sudo chown $(id -u):$(id -u) _build/disk.qcow2
         working-directory: ./images/autosd_x86_64/build
-
       - name: Enable KVM group perms
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
-    
       - name: Test QEMU image
         run: |
           sshcmd() {
             sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 2222 root@localhost $@
           }
-          
+
           ./scripts/run_qemu
-          
+
           sshcmd 'cat /etc/os-release'
         working-directory: ./images/autosd_x86_64/build
         env:
           SSH_PASSWORD: password
-      
       - name: Archive QEMU disk image (x86_64)
         uses: actions/upload-artifact@v4
         with:

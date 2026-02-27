@@ -10,18 +10,14 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-
 name: Documentation Cleanup
-
 permissions:
   contents: write
   pages: write
   id-token: write
-
 on:
   schedule:
     - cron: '0 0 * * *' # Runs every day at midnight UTC
-
 jobs:
   docs-cleanup:
     uses: eclipse-score/cicd-workflows/.github/workflows/docs-cleanup.yml@main

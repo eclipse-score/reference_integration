@@ -49,7 +49,6 @@
 #           REPO_READ_TOKEN: ${{ secrets.REPO_READ_TOKEN }}
 #
 name: Module Integration Build
-
 on:
   workflow_call:
     secrets:
@@ -75,10 +74,8 @@ on:
         required: false
         type: string
         default: 'main'
-
 env:
   REFERENCE_INTEGRATION_REPO: ${{ vars.REFERENCE_INTEGRATION_REPO != '' && vars.REFERENCE_INTEGRATION_REPO || 'eclipse-score/reference_integration' }}
-
 jobs:
   integration-test:
     name: Integration Test
@@ -86,7 +83,6 @@ jobs:
     steps:
       - name: Clean disk space
         uses: eclipse-score/more-disk-space@v1
-
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
         with:
@@ -111,7 +107,7 @@ jobs:
           EOF
           cat known_good.updated.json
           echo "::endgroup::"
-          
+
           echo "::group::update score_modules.MODULE.bazel"
           python3 scripts/known_good/update_module_from_known_good.py --known known_good.updated.json --output-dir bazel_common/
           cat bazel_common/score_modules.MODULE.bazel

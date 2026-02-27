@@ -12,7 +12,6 @@
 # *******************************************************************************
 #
 name: score-autosd
-
 image:
   selinux_mode: permissive
 content:
@@ -21,9 +20,9 @@ content:
   repos:
     - id: epel
       baseurl: https://dl.fedoraproject.org/pub/epel/10/Everything/$arch/
-    # removing it for now because the image is relying on copying globs
-    #- id: score
-    #  baseurl: file:///host/rpms
+      # removing it for now because the image is relying on copying globs
+      #- id: score
+      #  baseurl: file:///host/rpms
   rpms:
     # For testing the image only:
     - openssh-server
@@ -33,13 +32,11 @@ content:
     - bluechi-controller
     - bluechi-agent
     - bluechi-ctl
-
   make_dirs:
     - path: /etc/containers/systemd/qm.container.d
       mode: 0755
       parents: true
       exist_ok: true
-
   # Configure shared socket directory via tmpfiles
   add_files:
     - path: /usr/lib/tmpfiles.d/lola_disc.conf
@@ -72,7 +69,6 @@ content:
       source_glob: "files/showcases_all/**/*"
       preserve_path: true
       max_files: 50
-
   chmod_files:
     - path: /usr/bin/lola-ipc-test
       mode: "0755"
@@ -80,36 +76,27 @@ content:
     - path: /usr/share/score/examples/showcases_all/bin/cli
       mode: "0755"
       recursive: true
-
     - path: /usr/share/score/examples/showcases_all/bin/control_daemon
       mode: "0755"
       recursive: true
-    
     - path: /usr/share/score/examples/showcases_all/bin/cpp_supervised_app
       mode: "0755"
       recursive: true
-    
     - path: /usr/share/score/examples/showcases_all/bin/ipc_bridge_cpp
       mode: "0755"
       recursive: true
-    
     - path: /usr/share/score/examples/showcases_all/bin/launch_manager
       mode: "0755"
       recursive: true
-    
     - path: /usr/share/score/examples/showcases_all/bin/lifecycle_signal.sh
       mode: "0755"
       recursive: true
-    
     - path: /usr/share/score/examples/showcases_all/bin/orch_per_example
       mode: "0755"
       recursive: true
-    
     - path: /usr/share/score/examples/showcases_all/bin/rust_supervised_app
       mode: "0755"
       recursive: true
-
-
   # Required for testing the image only:
   systemd:
     enabled_services:
@@ -118,7 +105,6 @@ content:
       # bluechi services
       - bluechi-controller.service
       - bluechi-agent.service
-
 qm:
   memory_limit:
     max: infinity
@@ -141,7 +127,6 @@ qm:
     systemd:
       enabled_services:
         - bluechi-agent
-
 auth:
   # Required for testing the image only:
   sshd_config:

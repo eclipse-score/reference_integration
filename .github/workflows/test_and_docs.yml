@@ -10,15 +10,12 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-
 name: Code Quality & Documentation
-
 permissions:
   contents: write
   pages: write
   pull-requests: write
   id-token: write
-
 on:
   pull_request_target: # Allows forks to trigger the docs build
     types: [opened, reopened, synchronize]
@@ -29,18 +26,15 @@ on:
     types: [checks_requested]
   release:
     types: [created]
-
 jobs:
   test_and_docs:
     runs-on: ubuntu-22.04
     permissions:
       contents: write # required to upload release assets
       pull-requests: write
-
     steps:
       - name: Clean disk space
         uses: eclipse-score/more-disk-space@v1
-
       - name: Setup Bazel
         uses: bazel-contrib/setup-bazel@0.18.0
         with:
@@ -48,32 +42,26 @@ jobs:
           disk-cache: ${{ github.workflow }}
           repository-cache: true
           cache-save: ${{ github.event_name == 'push' }}
-
       - name: Set up Python 3
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
       - name: Install lcov
         run: |
           sudo apt-get update
           sudo apt-get install -y lcov
-
       - name: Checkout repository (pull_request_target via workflow_call)
         if: ${{ github.event_name == 'pull_request_target' }}
         uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
-      
       - name: Checkout repository
         if: ${{ github.event_name != 'pull_request_target' }}
         uses: actions/checkout@v4
-
       - name: Execute Unit Tests with Coverage Analysis
         run: |
           python ./scripts/quality_runners.py
-
       - name: Publish build summary
         if: always()
         run: |
@@ -88,7 +76,6 @@ jobs:
           else
             echo "No coverage summary file found (docs/verification/coverage_summary.md)" >> "$GITHUB_STEP_SUMMARY"
           fi
-
       - name: Create archive of test reports
         if: github.ref_type == 'tag'
         run: |
@@ -97,7 +84,6 @@ jobs:
           cp -r "$(bazel info bazel-bin)/coverage/rust-tests" artifacts/rust
           zip -r ${{ github.event.repository.name }}_test_reports.zip artifacts/
         shell: bash
-
       - name: Upload release asset (attach ZIP to GitHub Release)
         uses: softprops/action-gh-release@v2.5.0
         if: github.ref_type == 'tag'
@@ -105,13 +91,11 @@ jobs:
           files: ${{ github.event.repository.name }}_test_reports.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Install Graphviz
         uses: eclipse-score/apt-install@main
         with:
           packages: graphviz
           cache: false
-
       - name: Build documentation
         run: |
           bazel --output_base="/home/runner/.cache/bazel/output_base" run \
@@ -123,7 +107,6 @@ jobs:
               --github_repo=${{ github.event.repository.name }}
 
           tar -cf github-pages.tar _build
-
       - name: Upload documentation artifact
         uses: actions/upload-artifact@v4.4.0
         with:
@@ -131,7 +114,6 @@ jobs:
           path: github-pages.tar
           retention-days: 3
           if-no-files-found: error
-
   docs-deploy:
     name: Deploy Documentation to GitHub Pages
     runs-on: ${{ vars.REPO_RUNNER_LABELS && fromJSON(vars.REPO_RUNNER_LABELS) || 'ubuntu-latest' }}
@@ -196,15 +178,12 @@ jobs:
           fi
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
-
       - name: Download documentation artifact
         uses: actions/download-artifact@v4.1.8
         with:
           name: github-pages-${{ github.event.pull_request.head.sha || github.sha }}
-
       - name: Untar documentation artifact
         run: mkdir -p extracted_docs && tar -xf github-pages.tar -C extracted_docs
-
       - name: Deploy 🚀
         id: pages-deployment
         uses: eclipse-score/cicd-workflows/.github/actions/deploy-versioned-pages@main
