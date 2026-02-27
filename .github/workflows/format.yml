@@ -18,21 +18,4 @@ on:
     types: [checks_requested]
 jobs:
   formatting-check:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4.2.2
-      - name: Cache Bazel
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/bazel
-          key: ${{ runner.os }}-format-${{ hashFiles('**/*.bazel', '**/BUILD', '**/*.bzl') }}
-      - name: Setup Bazel with cache
-        uses: bazel-contrib/setup-bazel@0.15.0
-        with:
-          disk-cache: true
-          repository-cache: true
-          bazelisk-cache: true
-      - name: Run formatting checks
-        run: |
-          bazel test //:format.check
+    uses: eclipse-score/cicd-workflows/.github/workflows/format.yml@main
