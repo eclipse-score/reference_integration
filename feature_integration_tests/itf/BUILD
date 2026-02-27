@@ -8,9 +8,6 @@ filegroup(
         "test_showcases.py",
         "test_ssh.py",
     ],
-    visibility = [
-        "//images/qnx_x86_64:__pkg__",
-    ],
 )
 
 py_itf_test(

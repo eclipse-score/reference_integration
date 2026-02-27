@@ -11,8 +11,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
-load("@score_itf//:defs.bzl", "py_itf_test")
-load("@score_itf//score/itf/plugins:plugins.bzl", "dlt", "qemu")
 
 alias(
     name = "image",
@@ -31,29 +29,5 @@ sh_binary(
         ":image",
         "@toolchains_qnx_sdp//:host_all",
         "@toolchains_qnx_sdp//:host_dir",
-    ],
-)
-
-# For now we keep this not in /feature_integration_tests but locally within images
-
-py_itf_test(
-    name = "test_qnx_8_x86_64",
-    srcs = [
-        "//feature_integration_tests/itf:all_tests",
-    ],
-    args = [
-        "--qemu-config=$(location //feature_integration_tests/configs:qemu_bridge_config.json)",
-        "--qemu-image=$(location :image)",
-    ],
-    data = [
-        ":image",
-        "//feature_integration_tests/configs:qemu_bridge_config.json",
-    ],
-    plugins = [
-        qemu,
-    ],
-    tags = [
-        "local",
-        "manual",
     ],
 )
