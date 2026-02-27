@@ -31,8 +31,6 @@ def test_ipc_bridge_cpp_app_is_running(target):
 
 
 def test_run_all_showcases(target):
-    exit_code, out = target.execute(
-        "/showcases/bin/cli --examples=all"
-    )
+    exit_code, out = target.execute("/showcases/bin/cli --examples=all")
     logger.info(out)
     assert exit_code == 0

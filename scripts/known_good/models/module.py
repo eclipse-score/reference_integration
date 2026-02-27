@@ -103,9 +103,7 @@ class Module:
                 "Use either 'hash' (git_override) or 'version' (single_version_override), not both."
             )
         # Support both 'bazel_patches' and legacy 'patches' keys
-        bazel_patches = module_data.get("bazel_patches") or module_data.get(
-            "patches", []
-        )
+        bazel_patches = module_data.get("bazel_patches") or module_data.get("patches", [])
 
         # Parse metadata - if not present or is None/empty dict, use defaults
         metadata_data = module_data.get("metadata")

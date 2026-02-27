@@ -24,43 +24,48 @@ repo_root = Path(__file__).parent.parent
 
 def get_module_version_gh(repo_url: str, commit_hash: str) -> Optional[str]:
     """Get version tag from GitHub API for a commit hash.
-    
+
     Args:
         repo_url: GitHub repository URL
         commit_hash: Commit hash to look up
-        
+
     Returns:
         Tag name if found, None otherwise
     """
     # Check if gh CLI is installed
-    if not subprocess.run(['which', 'gh'], capture_output=True).returncode == 0:
+    if not subprocess.run(["which", "gh"], capture_output=True).returncode == 0:
         print("::warning::gh CLI not found. Install it to resolve commit hashes to tags.")
         return None
-    
+
     # Extract owner/repo from GitHub URL
-    match = re.search(r'github\.com[/:]([^/]+)/([^/.]+)(\.git)?$', repo_url)
+    match = re.search(r"github\.com[/:]([^/]+)/([^/.]+)(\.git)?$", repo_url)
     if not match:
         print(f"::warning::Invalid repo URL format: {repo_url}")
         return None
-    
+
     owner, repo = match.group(1), match.group(2)
-    
+
     print(f"::debug::Querying GitHub API: repos/{owner}/{repo}/tags for commit {commit_hash}")
-    
+
     try:
         result = subprocess.run(
-            ['gh', 'api', f'repos/{owner}/{repo}/tags', '--jq', 
-             f'.[] | select(.commit.sha == "{commit_hash}") | .name'],
+            [
+                "gh",
+                "api",
+                f"repos/{owner}/{repo}/tags",
+                "--jq",
+                f'.[] | select(.commit.sha == "{commit_hash}") | .name',
+            ],
             capture_output=True,
             text=True,
-            timeout=10
+            timeout=10,
         )
-        
+
         if result.returncode == 0 and result.stdout.strip():
-            tag = result.stdout.strip().split('\n')[0]
+            tag = result.stdout.strip().split("\n")[0]
             print(f"::debug::Found tag: {tag}")
             return tag
-        
+
         print(f"::debug::No tag found for commit {commit_hash}")
         return None
     except Exception as e:
@@ -70,11 +75,11 @@ def get_module_version_gh(repo_url: str, commit_hash: str) -> Optional[str]:
 
 def truncate_hash(hash_str: str, length: int = 8) -> str:
     """Truncate hash to specified length.
-    
+
     Args:
         hash_str: Full hash string
         length: Maximum length
-        
+
     Returns:
         Truncated hash
     """
@@ -85,19 +90,19 @@ def truncate_hash(hash_str: str, length: int = 8) -> str:
 
 def count_pattern(log_file: Path, pattern: str) -> int:
     """Count lines matching pattern in log file.
-    
+
     Args:
         log_file: Path to log file
         pattern: Pattern to search for (case-insensitive)
-        
+
     Returns:
         Number of matching lines found
     """
     if not log_file.exists():
         return 0
-    
+
     count = 0
-    with open(log_file, 'r') as f:
+    with open(log_file, "r") as f:
         for line in f:
             if pattern in line.lower():
                 count += 1
@@ -106,16 +111,16 @@ def count_pattern(log_file: Path, pattern: str) -> int:
 
 def get_identifier_and_link(module: Optional[Module]) -> Tuple[Optional[str], str]:
     """Get display identifier and link for a module.
-    
+
     Args:
         module: Module instance or None
-        
+
     Returns:
         Tuple of (identifier, link_url)
     """
     if not module or not module.hash:
         return None, ""
-    
+
     if module.version:
         identifier = module.version
         link = f"{module.repo}/releases/tag/{module.version}" if module.repo else ""
@@ -132,98 +137,91 @@ def get_identifier_and_link(module: Optional[Module]) -> Tuple[Optional[str], st
         else:
             identifier = truncate_hash(module.hash)
             link = ""
-    
+
     return identifier, link
 
 
 def build_group(group_name: str, targets: str, config: str, log_file: Path) -> Tuple[int, int]:
     """Build a group of Bazel targets.
-    
+
     Args:
         group_name: Name of the build group
         targets: Bazel targets to build
         config: Bazel config to use
         log_file: Path to log file
-        
+
     Returns:
         Tuple of (exit_code, duration_seconds)
     """
     print(f"--- Building group: {group_name} ---")
-    
+
     # Build command
-    cmd = ['bazel', 'build', '--verbose_failures', f'--config={config}'] + targets.split()
+    cmd = ["bazel", "build", "--verbose_failures", f"--config={config}"] + targets.split()
 
     print(f"bazel build --verbose_failures --config {config} {targets}")
     print(f"::group::Bazel build ({group_name})")
-    
+
     start_time = time.time()
-    
+
     # Run build and capture output
-    with open(log_file, 'w') as f:
+    with open(log_file, "w") as f:
         # Write command to log file
         f.write(f"Command: {' '.join(cmd)}\n")
         f.write("-" * 80 + "\n\n")
-        
-        process = subprocess.Popen(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True
-        )
-        
+
+        process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+
         # Stream output to both terminal and file
         if process.stdout:
             for line in process.stdout:
-                print(line, end='')
+                print(line, end="")
                 f.write(line)
-        
+
         process.wait()
-    
+
     end_time = time.time()
     duration = int(end_time - start_time)
-    
+
     print("::endgroup::")
-    
+
     return process.returncode, duration
 
 
-def format_commit_version_cell(
-    group_name: str,
-    old_modules: Dict[str, Module],
-    new_modules: Dict[str, Module]
-) -> str:
+def format_commit_version_cell(group_name: str, old_modules: Dict[str, Module], new_modules: Dict[str, Module]) -> str:
     """Format the commit/version cell for the summary table.
-    
+
     Args:
         group_name: Name of the module group
         old_modules: Modules from old known_good.json
         new_modules: Modules from new known_good.json
-        
+
     Returns:
         Formatted markdown cell content
     """
     # Get module info or defaults
     old_module = old_modules.get(group_name)
     new_module = new_modules.get(group_name)
-    
+
     if new_module is None or new_module.hash is None:
         return "N/A"
-    
-    print(f"::debug::Module={group_name}, old_version={old_module.version if old_module else 'None'}, "
-          f"old_hash={old_module.hash if old_module else 'None'}, "
-          f"new_version={new_module.version}, "
-          f"new_hash={new_module.hash}, "
-          f"repo={new_module.repo}")
-    
+
+    print(
+        f"::debug::Module={group_name}, old_version={old_module.version if old_module else 'None'}, "
+        f"old_hash={old_module.hash if old_module else 'None'}, "
+        f"new_version={new_module.version}, "
+        f"new_hash={new_module.hash}, "
+        f"repo={new_module.repo}"
+    )
+
     # Get identifiers and links
     old_identifier, old_link = get_identifier_and_link(old_module)
-    
+
     # Check if hash changed
     hash_changed = old_module is None or old_module.hash != new_module.hash
-    
+
     # Determine new identifier only if hash changed
     new_identifier, new_link = (None, "") if not hash_changed else get_identifier_and_link(new_module)
-    
+
     # Format output
     if hash_changed:
         # Hash changed - show old -> new
@@ -248,63 +246,62 @@ def format_commit_version_cell(
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
-        description='Integration build script for SCORE modules',
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        description="Integration build script for SCORE modules", formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument(
-        '--known-good',
+        "--known-good",
         type=Path,
         default=None,
-        help='Path to known_good.json file (default: known_good.json in repo root)'
+        help="Path to known_good.json file (default: known_good.json in repo root)",
     )
     parser.add_argument(
-        '--build-config',
+        "--build-config",
         type=Path,
         default=None,
-        help='Path to build_config.json file (default: build_config.json in repo root)'
+        help="Path to build_config.json file (default: build_config.json in repo root)",
     )
     parser.add_argument(
-        '--config',
-        default=os.environ.get('CONFIG', 'x86_64-linux'),
-        help='Bazel config to use (default: x86_64-linux, or from CONFIG env var)'
+        "--config",
+        default=os.environ.get("CONFIG", "x86_64-linux"),
+        help="Bazel config to use (default: x86_64-linux, or from CONFIG env var)",
     )
-    
+
     args = parser.parse_args()
-    
+
     # Configuration
     config = args.config
-    log_dir = Path(os.environ.get('LOG_DIR', '_logs/logs'))
-    summary_file = Path(os.environ.get('SUMMARY_FILE', f'_logs/build_summary-{config}.md'))
-    
+    log_dir = Path(os.environ.get("LOG_DIR", "_logs/logs"))
+    summary_file = Path(os.environ.get("SUMMARY_FILE", f"_logs/build_summary-{config}.md"))
+
     known_good_file = args.known_good
     if not known_good_file:
-        known_good_file = repo_root / 'known_good.json'
-    
+        known_good_file = repo_root / "known_good.json"
+
     build_config_file = args.build_config
     if not build_config_file:
-        build_config_file = repo_root / 'build_config.json'
-    
+        build_config_file = repo_root / "build_config.json"
+
     # Load build configuration
     BUILD_TARGET_GROUPS = load_build_config(build_config_file)
-    
+
     # Create log directory
     log_dir.mkdir(parents=True, exist_ok=True)
     summary_file.parent.mkdir(parents=True, exist_ok=True)
-    
+
     # Load modules from known_good files
     try:
-        old_modules = load_known_good(Path('known_good.json')).modules if Path('known_good.json').exists() else {}
+        old_modules = load_known_good(Path("known_good.json")).modules if Path("known_good.json").exists() else {}
     except FileNotFoundError:
         old_modules = {}
-    
+
     try:
         new_modules = load_known_good(known_good_file).modules if known_good_file else {}
     except FileNotFoundError as e:
         raise SystemExit(f"ERROR: {e}")
-    
+
     # Start summary
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    with open(summary_file, 'w') as f:
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(summary_file, "w") as f:
         f.write(f"=== Integration Build Started {timestamp} ===\n")
         f.write(f"Config: {config}\n")
         if known_good_file:
@@ -314,60 +311,60 @@ def main():
         f.write("\n")
         f.write("| Group | Status | Duration (s) | Warnings | Deprecated refs | Commit/Version |\n")
         f.write("|-------|--------|--------------|----------|-----------------|----------------|\n")
-    
+
     print(f"=== Integration Build Started {timestamp} ===")
     print(f"Config: {config}")
     if known_good_file:
         print(f"Known Good File: {known_good_file}")
-    
+
     overall_warn_total = 0
     overall_depr_total = 0
     any_failed = False
-    
+
     # Build each group
     for group_name, module_config in BUILD_TARGET_GROUPS.items():
         log_file = log_dir / f"{group_name}-{config}.log"
-        
+
         exit_code, duration = build_group(group_name, module_config.build_targets, config, log_file)
-        
+
         if exit_code != 0:
             any_failed = True
-        
+
         # Count warnings and deprecated
-        warn_count = count_pattern(log_file, 'warning:')
-        depr_count = count_pattern(log_file, 'deprecated')
+        warn_count = count_pattern(log_file, "warning:")
+        depr_count = count_pattern(log_file, "deprecated")
         overall_warn_total += warn_count
         overall_depr_total += depr_count
-        
+
         # Format status
         status_symbol = "✅" if exit_code == 0 else f"❌({exit_code})"
-        
+
         # Format commit/version cell
         commit_version_cell = format_commit_version_cell(group_name, old_modules, new_modules)
-        
+
         # Append row to summary
         row = f"| {group_name} | {status_symbol} | {duration} | {warn_count} | {depr_count} | {commit_version_cell} |\n"
-        with open(summary_file, 'a') as f:
+        with open(summary_file, "a") as f:
             f.write(row)
         print(row.strip())
-    
+
     # Append totals
-    with open(summary_file, 'a') as f:
+    with open(summary_file, "a") as f:
         f.write(f"| TOTAL |  |  | {overall_warn_total} | {overall_depr_total} |  |\n")
-    
+
     # Print summary
-    print('::group::Build Summary')
-    print('=== Build Summary ===')
-    with open(summary_file, 'r') as f:
+    print("::group::Build Summary")
+    print("=== Build Summary ===")
+    with open(summary_file, "r") as f:
         for line in f:
-            print(line, end='')
-    print('::endgroup::')
-    
+            print(line, end="")
+    print("::endgroup::")
+
     # Exit with error if any build failed
     if any_failed:
         print("::error::One or more build groups failed. See summary above.")
         sys.exit(1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

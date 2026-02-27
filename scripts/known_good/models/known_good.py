@@ -2,120 +2,114 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any, Dict
-from pathlib import Path
-import json
 import datetime as dt
+import json
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Dict
 
 from .module import Module
 
 
 @dataclass
 class KnownGood:
-	"""Known good configuration with modules and metadata.
+    """Known good configuration with modules and metadata.
 
-	Module structure: modules = {"group1": {"module1": Module}, "group2": {"module2": Module}}
-	"""
-	modules: Dict[str, Dict[str, Module]]
-	timestamp: str
+    Module structure: modules = {"group1": {"module1": Module}, "group2": {"module2": Module}}
+    """
 
-	@classmethod
-	def from_dict(cls, data: Dict[str, Any]) -> KnownGood:
-		"""Create a KnownGood instance from a dictionary.
+    modules: Dict[str, Dict[str, Module]]
+    timestamp: str
 
-		Expected structure:
-		{"modules": {"group1": {"score_baselibs": {...}}, "group2": {"score_logging": {...}}}}
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> KnownGood:
+        """Create a KnownGood instance from a dictionary.
 
-		Args:
-			data: Dictionary containing known_good.json data
+        Expected structure:
+        {"modules": {"group1": {"score_baselibs": {...}}, "group2": {"score_logging": {...}}}}
 
-		Returns:
-			KnownGood instance
-		"""
-		modules_dict = data.get('modules', {})
-		timestamp = data.get('timestamp', '')
+        Args:
+                data: Dictionary containing known_good.json data
 
-		parsed_modules: Dict[str, Dict[str, Module]] = {}
-		for group_name, group_modules in modules_dict.items():
-			if isinstance(group_modules, dict):
-				modules_list = Module.parse_modules(group_modules)
-				parsed_modules[group_name] = {m.name: m for m in modules_list}
+        Returns:
+                KnownGood instance
+        """
+        modules_dict = data.get("modules", {})
+        timestamp = data.get("timestamp", "")
 
-		return cls(modules=parsed_modules, timestamp=timestamp)
+        parsed_modules: Dict[str, Dict[str, Module]] = {}
+        for group_name, group_modules in modules_dict.items():
+            if isinstance(group_modules, dict):
+                modules_list = Module.parse_modules(group_modules)
+                parsed_modules[group_name] = {m.name: m for m in modules_list}
 
-	def to_dict(self) -> Dict[str, Any]:
-		"""Convert KnownGood instance to dictionary for JSON output.
+        return cls(modules=parsed_modules, timestamp=timestamp)
 
-		Returns:
-			Dictionary with known_good configuration
-		"""
-		modules_output = {
-			group_name: {name: module.to_dict() for name, module in group_modules.items()}
-			for group_name, group_modules in self.modules.items()
-		}
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert KnownGood instance to dictionary for JSON output.
 
-		return {
-			"modules": modules_output,
-			"timestamp": self.timestamp
-		}
-	
-	def write(self, output_path: Path, dry_run: bool = False) -> None:
-		"""Write known_good data to file or print for dry-run.
-		
-		Args:
-			output_path: Path to output file
-			dry_run: If True, print instead of writing
-		"""
-		
-		# Update timestamp before writing
-		self.timestamp = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat() + "Z"
-		
-		output_json = json.dumps(self.to_dict(), indent=4, sort_keys=False) + "\n"
-		
-		if dry_run:
-			print(f"\nDry run: would write to {output_path}\n")
-			print("---- BEGIN UPDATED JSON ----")
-			print(output_json, end="")
-			print("---- END UPDATED JSON ----")
-		else:
-			with open(output_path, "w", encoding="utf-8") as f:
-				f.write(output_json)
-			print(f"Successfully wrote updated known_good.json to {output_path}")
+        Returns:
+                Dictionary with known_good configuration
+        """
+        modules_output = {
+            group_name: {name: module.to_dict() for name, module in group_modules.items()}
+            for group_name, group_modules in self.modules.items()
+        }
+
+        return {"modules": modules_output, "timestamp": self.timestamp}
+
+    def write(self, output_path: Path, dry_run: bool = False) -> None:
+        """Write known_good data to file or print for dry-run.
+
+        Args:
+                output_path: Path to output file
+                dry_run: If True, print instead of writing
+        """
+
+        # Update timestamp before writing
+        self.timestamp = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat() + "Z"
+
+        output_json = json.dumps(self.to_dict(), indent=4, sort_keys=False) + "\n"
+
+        if dry_run:
+            print(f"\nDry run: would write to {output_path}\n")
+            print("---- BEGIN UPDATED JSON ----")
+            print(output_json, end="")
+            print("---- END UPDATED JSON ----")
+        else:
+            with open(output_path, "w", encoding="utf-8") as f:
+                f.write(output_json)
+            print(f"Successfully wrote updated known_good.json to {output_path}")
 
 
 def load_known_good(path: Path) -> KnownGood:
-	"""Load and parse the known_good.json file.
-	
-	Args:
-		path: Path to known_good.json file
-		
-	Returns:
-		KnownGood instance with parsed modules
-	"""
-	
-	with open(path, "r", encoding="utf-8") as f:
-		text = f.read()
-		try:
-			data = json.loads(text)
-		except json.JSONDecodeError as e:
-			lines = text.splitlines()
-			line = lines[e.lineno - 1] if 0 <= e.lineno - 1 < len(lines) else ""
-			pointer = " " * (e.colno - 1) + "^"
+    """Load and parse the known_good.json file.
 
-			hint = ""
-			if "Expecting value" in e.msg:
-				hint = "Possible causes: trailing comma, missing value, or extra comma."
+    Args:
+            path: Path to known_good.json file
 
-			raise ValueError(
-				f"Invalid JSON at line {e.lineno}, column {e.colno}\n"
-				f"{line}\n{pointer}\n"
-				f"{e.msg}. {hint}"
-			) from None
+    Returns:
+            KnownGood instance with parsed modules
+    """
 
-	if not isinstance(data, dict) or not isinstance(data.get("modules"), dict):
-		raise ValueError(
-			f"Invalid known_good.json at {path} (expected object with 'modules' dict)"
-		)
-	
-	return KnownGood.from_dict(data)
+    with open(path, "r", encoding="utf-8") as f:
+        text = f.read()
+        try:
+            data = json.loads(text)
+        except json.JSONDecodeError as e:
+            lines = text.splitlines()
+            line = lines[e.lineno - 1] if 0 <= e.lineno - 1 < len(lines) else ""
+            pointer = " " * (e.colno - 1) + "^"
+
+            hint = ""
+            if "Expecting value" in e.msg:
+                hint = "Possible causes: trailing comma, missing value, or extra comma."
+
+            raise ValueError(
+                f"Invalid JSON at line {e.lineno}, column {e.colno}\n{line}\n{pointer}\n{e.msg}. {hint}"
+            ) from None
+
+    if not isinstance(data, dict) or not isinstance(data.get("modules"), dict):
+        raise ValueError(f"Invalid known_good.json at {path} (expected object with 'modules' dict)")
+
+    return KnownGood.from_dict(data)

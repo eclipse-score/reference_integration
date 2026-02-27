@@ -30,9 +30,7 @@ from models.known_good import load_known_good
 logging.basicConfig(level=logging.WARNING, format="%(levelname)s: %(message)s")
 
 
-def generate_git_override_blocks(
-    modules: List[Module], repo_commit_dict: Dict[str, str]
-) -> List[str]:
+def generate_git_override_blocks(modules: List[Module], repo_commit_dict: Dict[str, str]) -> List[str]:
     """Generate bazel_dep and git_override blocks for each module."""
     blocks = []
 
@@ -123,7 +121,9 @@ def generate_coverage_blocks(modules: List[Module]) -> List[str]:
             continue
 
         if module.metadata.exclude_test_targets:
-            excluded_tests = f" {' '.join([f'-@{module.name}{target}' for target in module.metadata.exclude_test_targets])}"
+            excluded_tests = (
+                f" {' '.join([f'-@{module.name}{target}' for target in module.metadata.exclude_test_targets])}"
+            )
         else:
             excluded_tests = ""
 
@@ -179,10 +179,7 @@ def generate_file_content(
         if args.override_type == "git":
             blocks = generate_git_override_blocks(modules, repo_commit_dict)
         else:
-            header += (
-                "# Note: This file uses local_path overrides. Ensure that local paths are set up correctly.\n"
-                "\n"
-            )
+            header += "# Note: This file uses local_path overrides. Ensure that local paths are set up correctly.\n\n"
             blocks = generate_local_override_blocks(modules)
     elif file_type == "build":
         blocks = generate_coverage_blocks(modules)
@@ -240,9 +237,7 @@ Note:
         action="store_true",
         help="Print generated content instead of writing to file",
     )
-    parser.add_argument(
-        "-v", "--verbose", action="store_true", help="Enable verbose logging"
-    )
+    parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose logging")
     parser.add_argument(
         "--repo-override",
         action="append",
@@ -268,9 +263,7 @@ Note:
     # Parse repo overrides
     repo_commit_dict = {}
     if args.repo_override:
-        repo_pattern = re.compile(
-            r"https://[a-zA-Z0-9.-]+/[a-zA-Z0-9._/-]+\.git@[a-fA-F0-9]{7,40}$"
-        )
+        repo_pattern = re.compile(r"https://[a-zA-Z0-9.-]+/[a-zA-Z0-9._/-]+\.git@[a-fA-F0-9]{7,40}$")
         for entry in args.repo_override:
             if not repo_pattern.match(entry):
                 raise SystemExit(
@@ -321,34 +314,26 @@ Note:
             print("---- BEGIN GENERATED CONTENT FOR MODULE ----")
             print(content_module)
             print("---- END GENERATED CONTENT FOR MODULE ----")
-            print(
-                f"\nGenerated {len(modules)} {args.override_type}_override entries for group '{group_name}'"
-            )
+            print(f"\nGenerated {len(modules)} {args.override_type}_override entries for group '{group_name}'")
         else:
             with open(output_path_modules, "w", encoding="utf-8") as f:
                 f.write(content_module)
             generated_files.append(output_path_modules)
             total_module_count += len(modules)
-            print(
-                f"Generated {output_path_modules} with {len(modules)} {args.override_type}_override entries"
-            )
+            print(f"Generated {output_path_modules} with {len(modules)} {args.override_type}_override entries")
 
         # Generate file content of BUILD coverage files
         if "target_sw" not in group_name:
             continue  # Only generate coverage for software modules
 
-        content_build = generate_file_content(
-            args, modules, repo_commit_dict, known_good.timestamp, file_type="build"
-        )
+        content_build = generate_file_content(args, modules, repo_commit_dict, known_good.timestamp, file_type="build")
 
         if args.dry_run:
             print(f"\nDry run: would write to {output_path_coverage}\n")
             print("---- BEGIN GENERATED CONTENT FOR BUILD ----")
             print(content_build)
             print("---- END GENERATED CONTENT FOR BUILD ----")
-            print(
-                f"\nGenerated {len(modules)} {args.override_type}_override entries for group '{group_name}'"
-            )
+            print(f"\nGenerated {len(modules)} {args.override_type}_override entries for group '{group_name}'")
         else:
             with open(output_path_coverage, "w", encoding="utf-8") as f:
                 f.write(content_build)
@@ -356,9 +341,7 @@ Note:
             print(f"Generated {output_path_coverage}")
 
     if not args.dry_run and generated_files:
-        print(
-            f"\nSuccessfully generated {len(generated_files)} file(s) with {total_module_count} total modules"
-        )
+        print(f"\nSuccessfully generated {len(generated_files)} file(s) with {total_module_count} total modules")
 
 
 if __name__ == "__main__":

@@ -79,12 +79,8 @@ def cpp_coverage(module: Module, artifact_dir: Path) -> ProcessResult:
     output_dir = artifact_dir / "cpp" / module.name
     output_dir.mkdir(parents=True, exist_ok=True)
     # Find input locations
-    bazel_coverage_output_directory = run_command(
-        ["bazel", "info", "output_path"]
-    ).stdout.strip()
-    bazel_source_directory = run_command(
-        ["bazel", "info", "output_base"]
-    ).stdout.strip()
+    bazel_coverage_output_directory = run_command(["bazel", "info", "output_path"]).stdout.strip()
+    bazel_source_directory = run_command(["bazel", "info", "output_base"]).stdout.strip()
 
     genhtml_call = [
         "genhtml",
@@ -132,11 +128,7 @@ def generate_markdown_report(
     # Build rows
     rows = []
     for name, stats in data.items():
-        rows.append(
-            "| "
-            + " | ".join([name] + [str(stats.get(col, "")) for col in columns[1:]])
-            + " |"
-        )
+        rows.append("| " + " | ".join([name] + [str(stats.get(col, "")) for col in columns[1:]]) + " |")
 
     md = "\n".join([title, header, separator] + rows + [""])
     output_path.write_text(md)
@@ -246,9 +238,7 @@ def run_command(command: list[str], **kwargs) -> ProcessResult:
             p.wait()
             raise
 
-    return ProcessResult(
-        stdout="".join(stdout_data), stderr="".join(stderr_data), exit_code=exit_code
-    )
+    return ProcessResult(stdout="".join(stdout_data), stderr="".join(stderr_data), exit_code=exit_code)
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -286,9 +276,7 @@ def main() -> bool:
     unit_tests_summary, coverage_summary = {}, {}
 
     if args.modules_to_test:
-        print_centered(
-            f"QR: User requested tests only for specified modules: {', '.join(args.modules_to_test)}"
-        )
+        print_centered(f"QR: User requested tests only for specified modules: {', '.join(args.modules_to_test)}")
 
     for module in known.modules["target_sw"].values():
         if args.modules_to_test and module.name not in args.modules_to_test:
@@ -309,9 +297,7 @@ def main() -> bool:
                 "score_orchestrator",
             ]  # Known issues with coverage extraction for these modules, mostly proc_macro
             if module.name in DISABLED_RUST_COVERAGE:
-                print_centered(
-                    f"QR: Skipping rust coverage extraction for module {module.name} due to known issues"
-                )
+                print_centered(f"QR: Skipping rust coverage extraction for module {module.name} due to known issues")
                 continue
             coverage_summary[f"{module.name}_rust"] = run_rust_coverage_extraction(
                 module=module, output_path=args.coverage_output_dir
@@ -340,9 +326,7 @@ def main() -> bool:
     # Check all exit codes and return non-zero if any test or coverage extraction failed
     return any(
         result_ut["exit_code"] != 0 or result_cov["exit_code"] != 0
-        for result_ut, result_cov in zip(
-            unit_tests_summary.values(), coverage_summary.values()
-        )
+        for result_ut, result_cov in zip(unit_tests_summary.values(), coverage_summary.values())
     )
 
 
