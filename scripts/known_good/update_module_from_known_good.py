@@ -287,7 +287,6 @@ Note:
         raise SystemExit(f"ERROR: {e}")
     except ValueError as e:
         raise SystemExit(f"ERROR: {e}")
-
     if not known_good.modules:
         raise SystemExit("No modules found in known_good.json")
 

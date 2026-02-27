@@ -131,38 +131,44 @@ def main(argv: list[str]) -> int:
 	if args.no_gh and shutil.which("gh") is not None:
 		print("INFO: --no-gh specified; ignoring installed 'gh' CLI", file=sys.stderr)
 
-	for mod in known_good.modules.values():
-		if mod.pin_version:
-			print(f"{mod.name}: pinned, skipping")
-			continue
+	for group_name, group_modules in known_good.modules.items():
+		for mod in group_modules.values():
+			if not mod.branch is None:
+				print(f"{mod.name}: pinned, skipping")
+				continue
 
-		try:
-			branch = mod.branch if mod.branch else args.branch
-			if use_gh:
-				latest = fetch_latest_commit_gh(mod.owner_repo, branch)
-			else:
-				latest = fetch_latest_commit(mod.owner_repo, branch, token)
+			# Skip modules without a repo URL
+			if not mod.repo:
+				print(f"{mod.name}: no repo URL, skipping")
+				continue
 
-			old_hash = mod.hash
-			if latest != old_hash:
-				mod.hash = latest
-				mod.version = None  # Clear version when hash changes
-				if mod.version:
-					print(f"{mod.name}: {mod.version} -> {latest[:8]} (branch {branch})")
+			try:
+				branch = mod.branch if mod.branch else args.branch
+				if use_gh:
+					latest = fetch_latest_commit_gh(mod.owner_repo, branch)
 				else:
-					print(f"{mod.name}: {old_hash[:8]} -> {latest[:8]} (branch {branch})")
-			else:
-				print(f"{mod.name}: {old_hash[:8]} (no update)")
-		except Exception as e:  # noqa: BLE001
-			failures += 1
-			print(f"ERROR {mod.name}: {e}", file=sys.stderr)
-			if args.fail_fast:
-				break
+					latest = fetch_latest_commit(mod.owner_repo, branch, token)
+
+				old_hash = mod.hash
+				if latest != old_hash:
+					old_version = mod.version
+					mod.hash = latest
+					mod.version = None  # Clear version when hash changes
+					if old_version:
+						print(f"{mod.name}: {old_version} -> {latest[:8]} (branch {branch})")
+					else:
+						print(f"{mod.name}: {old_hash[:8]} -> {latest[:8]} (branch {branch})")
+				else:
+					print(f"{mod.name}: {old_hash[:8]} (no update)")
+			except Exception as e:  # noqa: BLE001
+				failures += 1
+				print(f"ERROR {mod.name}: {e}", file=sys.stderr)
+				if args.fail_fast:
+					break
 
 	if args.output:
 		try:
 			known_good.write(Path(args.output))
-			print(f"Updated JSON written to {args.output}")
 		except OSError as e:
 			print(f"ERROR: Failed writing output file: {e}", file=sys.stderr)
 			return 3

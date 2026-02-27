@@ -138,8 +138,13 @@ def apply_overrides(known_good: KnownGood, repo_overrides: List[str]) -> KnownGo
     Returns:
         Updated KnownGood instance
     """
+    # Flatten grouped modules into a single dict for override lookup
+    flat_modules: Dict[str, Module] = {}
+    for group_modules in known_good.modules.values():
+        flat_modules.update(group_modules)
+
     # Parse and apply overrides
-    overrides_applied = parse_and_apply_overrides(known_good.modules, repo_overrides)
+    overrides_applied = parse_and_apply_overrides(flat_modules, repo_overrides)
     
     if overrides_applied == 0:
         logging.warning("No overrides were applied to any modules")
