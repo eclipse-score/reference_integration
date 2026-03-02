@@ -66,3 +66,4 @@ Explore the documentation
    :glob:
 
    verification/*
+   how_to_release
