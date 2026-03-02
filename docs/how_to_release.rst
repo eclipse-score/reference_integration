@@ -42,7 +42,7 @@ An automated verification process of the release begins, and once successful, th
 Fallbacks
 ---------
 
-Module Codeowners may decide that their Module will not be released with a new major version for the S-CORE Product Increment.
+Module Codeowners may decide that their Module will not be released with a new version for the S-CORE Product Increment.
 However, they must ensure that the Module remains compatible with the S-CORE release and does not fail any workflows.
 
 If any S-CORE community member discovers a showstopper for the upcoming release, they must communicate it promptly to the Project Manager and other community members.
