@@ -40,7 +40,7 @@ jobs:
           cache-save: ${{ github.event_name == 'push' }}
       - name: Build image
         run: |
-          bazel build --config=linux-x86_64 //images/linux_x86_64:image
+          bazel build --lockfile_mode=error --config=linux-x86_64 //images/linux_x86_64:image
       - name: Integration tests
         run: |
-          bazel test --config=linux-x86_64 //feature_integration_tests/itf:linux_x86_64
+          bazel test --lockfile_mode=error --config=linux-x86_64 //feature_integration_tests/itf:linux_x86_64
