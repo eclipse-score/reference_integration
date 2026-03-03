@@ -27,11 +27,11 @@ py_itf_test(
         ":all_tests",
     ],
     args = [
-        "--docker-image-bootstrap=$(location //images/linux_x86_64:docker_image_tarball)",
+        "--docker-image-bootstrap=$(location //images/linux_x86_64:image_tarball)",
         "--docker-image=score_showcases:latest",
     ],
     data = [
-        "//images/linux_x86_64:docker_image_tarball",
+        "//images/linux_x86_64:image_tarball",
     ],
     plugins = [
         docker,

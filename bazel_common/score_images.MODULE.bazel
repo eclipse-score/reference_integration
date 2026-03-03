@@ -1,0 +1,18 @@
+bazel_dep(name = "rules_oci", version = "1.8.0")
+
+oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
+oci.pull(
+    name = "ubuntu_22_04",
+    digest = "sha256:3ba65aa20f86a0fad9df2b2c259c613df006b2e6d0bfcc8a146afb8c525a9751",
+    image = "ubuntu",
+    platforms = ["linux/amd64"],
+    tag = "22.04",
+)
+oci.pull(
+    name = "centos_stream10",
+    digest = "sha256:01858c09da8f130c718c37673b83aaaf65c6493e66f4c674caffcffe9ed4c225",
+    image = "quay.io/centos/centos",
+    platforms = ["linux/amd64"],
+    tag = "stream10",
+)
+use_repo(oci, "centos_stream10", "ubuntu_22_04")

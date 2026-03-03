@@ -16,13 +16,18 @@
 set -euo pipefail
 
 QNX_HOST=$1
-
 IFS_IMAGE=$2
+
+# Set KVM options based on QEMU_NO_KVM if user does not have kvm - like nested VMs
+if [ -z "${QEMU_NO_KVM:-}" ]; then
+    QEMU_KVM_OPTS="-enable-kvm -smp 2 -cpu host"
+else
+    QEMU_KVM_OPTS="-smp 2 -cpu Cascadelake-Server-v5"
+fi
+
 echo "Starting QEMU with IFS image: ${IFS_IMAGE}"
 qemu-system-x86_64 \
-                -enable-kvm \
-                -smp 2 \
-                -cpu host\
+                ${QEMU_KVM_OPTS} \
                 -m 1G \
                 -pidfile /tmp/qemu.pid \
                 -nographic \

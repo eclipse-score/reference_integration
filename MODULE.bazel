@@ -37,6 +37,9 @@ include("//bazel_common:score_modules_tooling.MODULE.bazel")
 # Score modules
 include("//bazel_common:score_modules_target_sw.MODULE.bazel")
 
+# Score test images
+include("//bazel_common:score_images.MODULE.bazel")
+
 bazel_dep(name = "rules_boost", repo_name = "com_github_nelhage_rules_boost")
 archive_override(
     module_name = "rules_boost",
@@ -68,15 +71,3 @@ toolchains_qnx.sdp(
 )
 use_repo(toolchains_qnx, "toolchains_qnx_sdp")
 use_repo(toolchains_qnx, "toolchains_qnx_ifs")
-
-bazel_dep(name = "rules_oci", version = "1.8.0")
-
-oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
-oci.pull(
-    name = "ubuntu_22_04",
-    digest = "sha256:3ba65aa20f86a0fad9df2b2c259c613df006b2e6d0bfcc8a146afb8c525a9751",
-    image = "ubuntu",
-    platforms = ["linux/amd64"],
-    tag = "22.04",
-)
-use_repo(oci, "ubuntu_22_04")

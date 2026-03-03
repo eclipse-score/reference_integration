@@ -1,3 +1,5 @@
+load("@rules_oci//oci:defs.bzl", "oci_image", "oci_tarball")
+
 # *******************************************************************************
 # Copyright (c) 2024 Contributors to the Eclipse Foundation
 #
@@ -12,16 +14,10 @@
 # *******************************************************************************
 load("@rules_rpm//:defs.bzl", "rpm_package")
 
-alias(
-    name = "image",
-    actual = "//showcases:showcases_all",
-    visibility = ["//visibility:public"],
-)
-
 rpm_package(
     name = "score-showcases",
     data = [
-        "//showcases:showcases_all",
+        "//showcases",
     ],
     data_dir = "/usr/share/score/examples",
     description = "Eclipse S-CORE Reference Integration Showcases",
@@ -33,12 +29,29 @@ sh_binary(
     name = "run",
     srcs = ["//runners/docker_x86_64/scripts:run_docker.sh"],
     args = [
-        "$(location :image)",
+        "$(location :image_tarball)",
     ],
     data = [
-        ":image",
+        ":image_tarball",
     ],
     env = {
-        "OCI_IMAGE": "quay.io/centos/centos:stream10",
+        "OCI_IMAGE": "score_showcases_autosd:latest",
     },
+)
+
+oci_image(
+    name = "image",
+    base = "@centos_stream10",
+    tars = [
+        "//showcases:showcases_pkg_tar",
+    ],
+)
+
+oci_tarball(
+    name = "image_tarball",
+    image = ":image",
+    repo_tags = ["score_showcases_autosd:latest"],
+    visibility = [
+        "//feature_integration_tests/itf:__pkg__",
+    ],
 )

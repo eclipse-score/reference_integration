@@ -15,13 +15,22 @@
 
 set -euo pipefail
 
-OVERLAY_TREE=$1
-OVERLAY_ABS_PATH=$(realpath ${OVERLAY_TREE})
-OCI_IMAGE=${OCI_IMAGE:=ubuntu:22.04}
+OCI_TARBALL_IMAGE_SCRIPT=$1
+OCI_TARBALL_IMAGE_SCRIPT_ABS_PATH=$(realpath ${OCI_TARBALL_IMAGE_SCRIPT})
 
-echo "Starting docker with overlay image: ${OVERLAY_ABS_PATH}"
+if [ -z "${OCI_IMAGE:-}" ]; then
+  echo "Error: OCI_IMAGE environment variable is not set."
+  exit 1
+fi
 
+OCI_IMAGE=${OCI_IMAGE:=score_showcases:latest}
+
+
+echo "Starting docker with OCI image tarball at: ${OCI_TARBALL_IMAGE_SCRIPT_ABS_PATH}"
+
+${OCI_TARBALL_IMAGE_SCRIPT_ABS_PATH}
+
+echo "Running docker with image: ${OCI_IMAGE}"
 docker run --rm -it \
-    -v "${OVERLAY_ABS_PATH}:/showcases" \
     ${OCI_IMAGE} \
     bash -c "/showcases/bin/cli; exec bash"
