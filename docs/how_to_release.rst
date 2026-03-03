@@ -5,48 +5,152 @@ How to create a release of S-CORE
 Definitions
 -----------
 
-==========================  ==================================
+==========================  ====================================================
 Role                        Description
-==========================  ==================================
+==========================  ====================================================
 Reference Integration Team  Prepare integration process
 Module Codeowners           Prepare Module's release candidate
-Project Manager             Approves S-CORE release
-==========================  ==================================
+Project Manager             Guides the release process and leads decision making
+==========================  ====================================================
 
 Process overview
 ----------------
+
 Release interval between S-CORE Product Increments can be divided into two phases:
 
-* development (4 weeks) 
-* integration (2 weeks) 
+**Development phase (4 weeks) :**
 
-At the beginning, the overall scope and general requirements for the Modules are discussed and agreed upon within the S-CORE community,
-providing clear goals for what must be achieved.
+#. Common release requirements definition
+#. Features' implemntations and improvements
+#. Tooling release
+#. Code freeze
 
-During the development phase, work on new features and improvements to the Modules takes place. At the end of this period, each Module
-must provide a hash of the commit that represents a *code freeze* and serves as a candidate for integration. The hash can be from the **main** or **dedicated release** branch.
+**Integration phase (2 weeks) :**
 
-The integration phase begins with the creation of a **release branch** in the ``reference_integration`` repository.
-Module Codeowners prepare a Pull Request to that branch with updates to the ``known_good.json`` file, pointing to the hash of their *code freeze*.
-They may update other JSON fields for their Module as needed. Automated workflows will build and test to provide clear feedback directly in the PR.
-If there are any issues, Module Codeowners can either push fixes to their **dedicated release** branch and update the hash in the PR accordingly,
-or provide patches (see :ref:`ref_int_patching-label`). 
+#. Release branch creation
+#. Integration of the Modules
+#. Release candidate
+#. Release creation
+
+Common release requirements definition
+--------------------------------------
+
+At the beginning, the overall scope and general requirements for the Modules are discussed and 
+agreed upon within the S-CORE community, providing clear goals for what must be achieved.
+The scope should define requirements such as:
+
+* Tooling versions
+* Used toolchains
+* Supported platforms
+
+rather than specific features' implementation scopes.
+
+.. note:: 
+
+    Performed by: Project Manager and S-CORE community
+
+Features' implemntations and improvements
+-----------------------------------------
+
+During the development phase, the community works on new features and improvements to the Modules. 
+Changes are reviewed by Commiters and Module Codeowners.
+
+.. note:: 
+
+    Performed by: S-CORE community and Module Codeowners
+
+Tooling release
+---------------
+
+S-CORE tools, toolchains and other dependencies are released at the end of the development phase the latest.
+During the integration phase, no changes other than necessary bug fixes are allowed to give time to the Modules to rebase 
+their dependencies and prepare their *code freeze*.
+
+.. note:: 
+
+    Performed by: Module Codeowners
+
+Code freeze
+-----------
+At the end of development phase, each Module must provide a hash of the commit that represents a *code freeze*
+and serves as a candidate for integration. The hash can be from the **main** or **dedicated release** branch.
+
+.. note:: 
+
+    Performed by: Module Codeowners
+
+Release branch creation
+-----------------------
+
+The integration phase begins with the creation of a **release branch** in the ``reference_integration`` repository 
+originating from current **main**.
+
+.. note:: 
+
+    Performed by: Reference Integration Team
+
+Integration of the Modules
+--------------------------
+
+Module Codeowners prepare a Pull Request to that branch with updates to the ``known_good.json`` file, 
+pointing to the hash of their *code freeze*. They may update other JSON fields for their Module as needed. 
+Automated workflows will build and test to provide clear feedback directly in the PR.
+If there are any issues, Module Codeowners can either push fixes to their **dedicated release** branch 
+and update the hash in the PR accordingly, or provide patches (see :ref:`ref_int_patching-label`).
+
+.. note:: 
+
+    Performed by: Module Codeowners
+
+Release candidate
+-----------------
 
 Once all Modules are merged with their *code freeze*, Module Codeowners create a tag on that exact hash following the S-CORE release process,
-provide release notes to the ``score_platform`` team, and ensure that the new release is present in S-CORE's ``bazel_registry``.
+provide release notes to the ``score_platform`` repository, and ensure that the new release is present in S-CORE's ``bazel_registry``.
 The Reference Integration Team prepares a final Pull Request and replaces all hashes with the dedicated release versions.
-The Project Manager approves the PR, and the Reference Integration Team creates the new S-CORE release.
 
-An automated verification process of the release begins, and once successful, the release and its downloadable assets are ready for distribution.
+This pull request has additional workflow checking that every Codeowner has approved the PR signing off their Module's release candidate. 
+There is an additional ``.rst`` file listing every Module and GitHub ID of the Codeowner responsible. 
+.. note:: 
 
-Fallbacks
----------
+    Performed by: Reference Integration Team and Module Codeowners
+
+Release creation
+----------------
+
+Once all previous steps are completed Reference Integration Team triggers the release creation workflow in ``release_integration``. 
+An automated verification process of the release begins which includes building, testing, deploying documentation and checking that 
+every Module has been correctly signed-off by its Codeowner. If any issue is found, the release creation process is stopped.
+When successfully completed the release and its downloadable assets are ready for distribution.
+
+.. note:: 
+
+    Performed by: Reference Integration Team 
+
+
+Opting out of a release
+-----------------------
 
 Module Codeowners may decide that their Module will not be released with a new version for the S-CORE Product Increment.
-However, they must ensure that the Module remains compatible with the S-CORE release and does not fail any workflows.
+However, they must still ensure that the Module remains compatible with the S-CORE release and does not fail any workflows.
 
-If any S-CORE community member discovers a showstopper for the upcoming release, they must communicate it promptly to the Project Manager and other community members.
-Following discussion and impact analysis, a decision is made regarding whether to postpone or skip the S-CORE release, and the planning is updated accordingly.
+If Module Codeowners cannot adapt to the newest release requirements or any S-CORE community member discovers a showstopper 
+for the upcoming release, they must communicate it promptly to the Project Manager and other community members.
+Following discussion and impact analysis, a decision is made regarding whether to postpone or skip the S-CORE release,
+and the planning is updated accordingly.
+
+
+Removing Module from Reference Integration
+------------------------------------------
+
+Currently following modules can be removed without an impact on the S-CORE release:
+
+* ``score_feo``
+* ``score_orchestrator``
+
+Once excluded from the release and integration issue persists also on a ``reference_integration`` **main** branch, 
+Reference Integration Team will remove the Module completely.
+It is up to Module Codeowners to fix and integrate the Module back into the main branch and later releases.
 
 
 .. _ref_int_patching-label:
