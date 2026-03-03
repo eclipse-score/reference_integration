@@ -601,7 +601,7 @@
 <td><p>Prepare Module’s release candidate</p></td>
 </tr>
 <tr class="row-even"><td><p>Project Manager</p></td>
-<td><p>Approves S-CORE release</p></td>
+<td><p>Guides the release process and leads decision making</p></td>
 </tr>
 </tbody>
 </table>
@@ -610,31 +610,128 @@
 <section id="process-overview">
 <h2>Process overview<a class="headerlink" href="#process-overview" title="Link to this heading">#</a></h2>
 <p>Release interval between S-CORE Product Increments can be divided into two phases:</p>
-<ul class="simple">
-<li><p>development (4 weeks)</p></li>
-<li><p>integration (2 weeks)</p></li>
-</ul>
-<p>At the beginning, the overall scope and general requirements for the Modules are discussed and agreed upon within the S-CORE community,
-providing clear goals for what must be achieved.</p>
-<p>During the development phase, work on new features and improvements to the Modules takes place. At the end of this period, each Module
-must provide a hash of the commit that represents a <em>code freeze</em> and serves as a candidate for integration. The hash can be from the <strong>main</strong> or <strong>dedicated release</strong> branch.</p>
-<p>The integration phase begins with the creation of a <strong>release branch</strong> in the <code class="docutils literal notranslate"><span class="pre">reference_integration</span></code> repository.
-Module Codeowners prepare a Pull Request to that branch with updates to the <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> file, pointing to the hash of their <em>code freeze</em>.
-They may update other JSON fields for their Module as needed. Automated workflows will build and test to provide clear feedback directly in the PR.
-If there are any issues, Module Codeowners can either push fixes to their <strong>dedicated release</strong> branch and update the hash in the PR accordingly,
-or provide patches (see <a class="reference internal" href="#ref-int-patching-label"><span class="std std-ref">Patching Module</span></a>).</p>
-<p>Once all Modules are merged with their <em>code freeze</em>, Module Codeowners create a tag on that exact hash following the S-CORE release process,
-provide release notes to the <code class="docutils literal notranslate"><span class="pre">score_platform</span></code> team, and ensure that the new release is present in S-CORE’s <code class="docutils literal notranslate"><span class="pre">bazel_registry</span></code>.
-The Reference Integration Team prepares a final Pull Request and replaces all hashes with the dedicated release versions.
-The Project Manager approves the PR, and the Reference Integration Team creates the new S-CORE release.</p>
-<p>An automated verification process of the release begins, and once successful, the release and its downloadable assets are ready for distribution.</p>
+<p><strong>Development phase (4 weeks) :</strong></p>
+<ol class="arabic simple">
+<li><p>Common release requirements definition</p></li>
+<li><p>Features’ implemntations and improvements</p></li>
+<li><p>Tooling release</p></li>
+<li><p>Code freeze</p></li>
+</ol>
+<p><strong>Integration phase (2 weeks) :</strong></p>
+<ol class="arabic simple">
+<li><p>Release branch creation</p></li>
+<li><p>Integration of the Modules</p></li>
+<li><p>Release candidate</p></li>
+<li><p>Release creation</p></li>
+</ol>
 </section>
-<section id="fallbacks">
-<h2>Fallbacks<a class="headerlink" href="#fallbacks" title="Link to this heading">#</a></h2>
+<section id="common-release-requirements-definition">
+<h2>Common release requirements definition<a class="headerlink" href="#common-release-requirements-definition" title="Link to this heading">#</a></h2>
+<p>At the beginning, the overall scope and general requirements for the Modules are discussed and
+agreed upon within the S-CORE community, providing clear goals for what must be achieved.
+The scope should define requirements such as:</p>
+<ul class="simple">
+<li><p>Tooling versions</p></li>
+<li><p>Used toolchains</p></li>
+<li><p>Supported platforms</p></li>
+</ul>
+<p>rather than specific features’ implementation scopes.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Performed by: Project Manager and S-CORE community</p>
+</div>
+</section>
+<section id="features-implemntations-and-improvements">
+<h2>Features’ implemntations and improvements<a class="headerlink" href="#features-implemntations-and-improvements" title="Link to this heading">#</a></h2>
+<p>During the development phase, the community works on new features and improvements to the Modules.
+Changes are reviewed by Commiters and Module Codeowners.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Performed by: S-CORE community and Module Codeowners</p>
+</div>
+</section>
+<section id="tooling-release">
+<h2>Tooling release<a class="headerlink" href="#tooling-release" title="Link to this heading">#</a></h2>
+<p>S-CORE tools, toolchains and other dependencies are released at the end of the development phase the latest.
+During the integration phase, no changes other than necessary bug fixes are allowed to give time to the Modules to rebase
+their dependencies and prepare their <em>code freeze</em>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Performed by: Module Codeowners</p>
+</div>
+</section>
+<section id="code-freeze">
+<h2>Code freeze<a class="headerlink" href="#code-freeze" title="Link to this heading">#</a></h2>
+<p>At the end of development phase, each Module must provide a hash of the commit that represents a <em>code freeze</em>
+and serves as a candidate for integration. The hash can be from the <strong>main</strong> or <strong>dedicated release</strong> branch.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Performed by: Module Codeowners</p>
+</div>
+</section>
+<section id="release-branch-creation">
+<h2>Release branch creation<a class="headerlink" href="#release-branch-creation" title="Link to this heading">#</a></h2>
+<p>The integration phase begins with the creation of a <strong>release branch</strong> in the <code class="docutils literal notranslate"><span class="pre">reference_integration</span></code> repository
+originating from current <strong>main</strong>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Performed by: Reference Integration Team</p>
+</div>
+</section>
+<section id="integration-of-the-modules">
+<h2>Integration of the Modules<a class="headerlink" href="#integration-of-the-modules" title="Link to this heading">#</a></h2>
+<p>Module Codeowners prepare a Pull Request to that branch with updates to the <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> file,
+pointing to the hash of their <em>code freeze</em>. They may update other JSON fields for their Module as needed.
+Automated workflows will build and test to provide clear feedback directly in the PR.
+If there are any issues, Module Codeowners can either push fixes to their <strong>dedicated release</strong> branch
+and update the hash in the PR accordingly, or provide patches (see <a class="reference internal" href="#ref-int-patching-label"><span class="std std-ref">Patching Module</span></a>).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Performed by: Module Codeowners</p>
+</div>
+</section>
+<section id="release-candidate">
+<h2>Release candidate<a class="headerlink" href="#release-candidate" title="Link to this heading">#</a></h2>
+<p>Once all Modules are merged with their <em>code freeze</em>, Module Codeowners create a tag on that exact hash following the S-CORE release process,
+provide release notes to the <code class="docutils literal notranslate"><span class="pre">score_platform</span></code> repository, and ensure that the new release is present in S-CORE’s <code class="docutils literal notranslate"><span class="pre">bazel_registry</span></code>.
+The Reference Integration Team prepares a final Pull Request and replaces all hashes with the dedicated release versions.</p>
+<p>This pull request has additional workflow checking that every Codeowner has approved the PR signing off their Module’s release candidate.
+There is an additional <code class="docutils literal notranslate"><span class="pre">.rst</span></code> file listing every Module and GitHub ID of the Codeowner responsible.
+.. note:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Performed</span> <span class="n">by</span><span class="p">:</span> <span class="n">Reference</span> <span class="n">Integration</span> <span class="n">Team</span> <span class="ow">and</span> <span class="n">Module</span> <span class="n">Codeowners</span>
+</pre></div>
+</div>
+</section>
+<section id="release-creation">
+<h2>Release creation<a class="headerlink" href="#release-creation" title="Link to this heading">#</a></h2>
+<p>Once all previous steps are completed Reference Integration Team triggers the release creation workflow in <code class="docutils literal notranslate"><span class="pre">release_integration</span></code>.
+An automated verification process of the release begins which includes building, testing, deploying documentation and checking that
+every Module has been correctly signed-off by its Codeowner. If any issue is found, the release creation process is stopped.
+When successfully completed the release and its downloadable assets are ready for distribution.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Performed by: Reference Integration Team</p>
+</div>
+</section>
+<section id="opting-out-of-a-release">
+<h2>Opting out of a release<a class="headerlink" href="#opting-out-of-a-release" title="Link to this heading">#</a></h2>
 <p>Module Codeowners may decide that their Module will not be released with a new version for the S-CORE Product Increment.
-However, they must ensure that the Module remains compatible with the S-CORE release and does not fail any workflows.</p>
-<p>If any S-CORE community member discovers a showstopper for the upcoming release, they must communicate it promptly to the Project Manager and other community members.
-Following discussion and impact analysis, a decision is made regarding whether to postpone or skip the S-CORE release, and the planning is updated accordingly.</p>
+However, they must still ensure that the Module remains compatible with the S-CORE release and does not fail any workflows.</p>
+<p>If Module Codeowners cannot adapt to the newest release requirements or any S-CORE community member discovers a showstopper
+for the upcoming release, they must communicate it promptly to the Project Manager and other community members.
+Following discussion and impact analysis, a decision is made regarding whether to postpone or skip the S-CORE release,
+and the planning is updated accordingly.</p>
+</section>
+<section id="removing-module-from-reference-integration">
+<h2>Removing Module from Reference Integration<a class="headerlink" href="#removing-module-from-reference-integration" title="Link to this heading">#</a></h2>
+<p>Currently following modules can be removed without an impact on the S-CORE release:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">score_feo</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">score_orchestrator</span></code></p></li>
+</ul>
+<p>Once excluded from the release and integration issue persists also on a <code class="docutils literal notranslate"><span class="pre">reference_integration</span></code> <strong>main</strong> branch,
+Reference Integration Team will remove the Module completely.
+It is up to Module Codeowners to fix and integrate the Module back into the main branch and later releases.</p>
 </section>
 <section id="patching-module">
 <span id="ref-int-patching-label"></span><h2>Patching Module<a class="headerlink" href="#patching-module" title="Link to this heading">#</a></h2>
@@ -685,7 +782,16 @@ An empty Bazel <code class="docutils literal notranslate"><span class="pre">BUIL
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#process-overview">Process overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fallbacks">Fallbacks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-release-requirements-definition">Common release requirements definition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#features-implemntations-and-improvements">Features’ implemntations and improvements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tooling-release">Tooling release</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#code-freeze">Code freeze</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#release-branch-creation">Release branch creation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-of-the-modules">Integration of the Modules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#release-candidate">Release candidate</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#release-creation">Release creation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#opting-out-of-a-release">Opting out of a release</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#removing-module-from-reference-integration">Removing Module from Reference Integration</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#patching-module">Patching Module</a></li>
 </ul>
   </nav></div>
