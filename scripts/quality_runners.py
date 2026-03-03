@@ -92,7 +92,9 @@ def cpp_coverage(module: Module, artifact_dir: Path) -> ProcessResult:
     output_dir = artifact_dir / "cpp" / module.name
     output_dir.mkdir(parents=True, exist_ok=True)
     # Find input locations
-    bazel_coverage_output_directory = run_command(["bazel", "info", "--lockfile_mode=error", "output_path"]).stdout.strip()
+    bazel_coverage_output_directory = run_command(
+        ["bazel", "info", "--lockfile_mode=error", "output_path"]
+    ).stdout.strip()
     bazel_source_directory = run_command(["bazel", "info", "--lockfile_mode=error", "output_base"]).stdout.strip()
 
     genhtml_call = [
