@@ -20,9 +20,6 @@ content:
   repos:
     - id: epel
       baseurl: https://dl.fedoraproject.org/pub/epel/10/Everything/$arch/
-      # removing it for now because the image is relying on copying globs
-      #- id: score
-      #  baseurl: file:///host/rpms
   rpms:
     # For testing the image only:
     - openssh-server
@@ -34,6 +31,10 @@ content:
     - bluechi-ctl
   make_dirs:
     - path: /etc/containers/systemd/qm.container.d
+      mode: 0755
+      parents: true
+      exist_ok: true
+    - path: /usr/share/score/examples
       mode: 0755
       parents: true
       exist_ok: true
@@ -65,8 +66,8 @@ content:
     - path: /usr/bin/lola-ipc-test
       source_path: files/lola-ipc-test
     # showcases
-    - path: /usr/share/score/examples/
-      source_glob: "files/**/*"
+    - path: /usr/share/score/examples
+      source_glob: "files/reference_integration/**/*"
       preserve_path: true
       max_files: 50
   chmod_files:
