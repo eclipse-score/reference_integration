@@ -168,9 +168,9 @@ def build_group(group_name: str, targets: str, config: str, log_file: Path) -> T
     print(f"--- Building group: {group_name} ---")
 
     # Build command
-    cmd = ["bazel", "build", "--verbose_failures", f"--config={config}"] + targets.split()
+    cmd = ["bazel", "build", "--lockfile_mode=error", "--verbose_failures", f"--config={config}"] + targets.split()
 
-    print(f"bazel build --verbose_failures --config {config} {targets}")
+    print(f"bazel build --lockfile_mode=error --verbose_failures --config {config} {targets}")
     print(f"::group::Bazel build ({group_name})")
 
     start_time = time.time()
