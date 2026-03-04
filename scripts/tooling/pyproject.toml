@@ -1,0 +1,16 @@
+[project]
+name = "tooling"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["jinja2>=3"]
+
+[project.scripts]
+tooling = "cli.main:main"
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
