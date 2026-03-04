@@ -19,10 +19,16 @@ on:
   push:
     branches:
       - main
+# Do not flood CI with unneeded previous runs in PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: ${{ github.ref_name != 'main' && !startsWith(github.ref_name, 'release/') }}
 jobs:
   build:
     name: x86_64
     runs-on: ubuntu-latest
+    env:
+      AIB_CONTAINER_IMAGE: quay.io/centos-sig-automotive/automotive-image-builder:1.1.11
     steps:
       - name: Clean disk space
         uses: eclipse-score/more-disk-space@v1
@@ -49,7 +55,7 @@ jobs:
           cp -R ./bazel-bin/showcases/showcases/showcases ./images/autosd_x86_64/build/files/reference_integration/
       - name: Install AIB Tools
         run: |
-          curl -o auto-image-builder.sh "https://gitlab.com/CentOS/automotive/src/automotive-image-builder/-/raw/main/auto-image-builder.sh?ref_type=heads"
+          curl -o auto-image-builder.sh "https://gitlab.com/CentOS/automotive/src/automotive-image-builder/-/raw/1.1.11/auto-image-builder.sh?ref_type=tag"
           chmod +x auto-image-builder.sh
         working-directory: ./images/autosd_x86_64/build
       - name: Build AutoSD QEMU (x86_64)
@@ -57,9 +63,9 @@ jobs:
           export AIB_LOCAL_CONTAINER_STORAGE=$PWD/_build/containers-storage
 
           mkdir -p _build/containers-storage
-          sudo -E ./auto-image-builder.sh build-builder --distro=autosd10-sig
+          sudo -E ./auto-image-builder.sh -c $AIB_CONTAINER_IMAGE build-builder --distro=autosd10-sig
 
-          sudo -E ./auto-image-builder.sh build \
+          sudo -E ./auto-image-builder.sh -c $AIB_CONTAINER_IMAGE build \
           --distro=autosd10-sig  \
           --target=qemu \
           --define-file vars.yml \
@@ -67,7 +73,7 @@ jobs:
           image.aib.yml \
           localhost/score:latest
 
-          sudo -E ./auto-image-builder.sh to-disk-image localhost/score:latest _build/disk.qcow2
+          sudo -E ./auto-image-builder.sh -c $AIB_CONTAINER_IMAGE to-disk-image localhost/score:latest _build/disk.qcow2
 
           sudo chown $(id -u):$(id -u) _build/disk.qcow2
         working-directory: ./images/autosd_x86_64/build

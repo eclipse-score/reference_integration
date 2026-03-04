@@ -24,6 +24,10 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+# Do not flood CI with unneeded previous runs in PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: ${{ github.ref_name != 'main' && !startsWith(github.ref_name, 'release/') }}
 jobs:
   analyze-repos:
     name: Analyze Multiple Repositories
