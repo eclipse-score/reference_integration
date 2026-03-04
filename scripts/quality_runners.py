@@ -41,7 +41,6 @@ def run_unit_test_with_coverage(module: Module) -> dict[str, str | int]:
         [
             "bazel",
             "coverage",  # Call coverage instead of test to get .dat files already
-            "--lockfile_mode=error",
             "--test_verbose_timeout_warnings",
             "--test_timeout=1200",
             "--config=unit-tests",
@@ -92,10 +91,8 @@ def cpp_coverage(module: Module, artifact_dir: Path) -> ProcessResult:
     output_dir = artifact_dir / "cpp" / module.name
     output_dir.mkdir(parents=True, exist_ok=True)
     # Find input locations
-    bazel_coverage_output_directory = run_command(
-        ["bazel", "info", "--lockfile_mode=error", "output_path"]
-    ).stdout.strip()
-    bazel_source_directory = run_command(["bazel", "info", "--lockfile_mode=error", "output_base"]).stdout.strip()
+    bazel_coverage_output_directory = run_command(["bazel", "info", "output_path"]).stdout.strip()
+    bazel_source_directory = run_command(["bazel", "info", "output_base"]).stdout.strip()
 
     genhtml_call = [
         "genhtml",
@@ -122,7 +119,6 @@ def rust_coverage(module: Module, artifact_dir: Path) -> ProcessResult:
     bazel_call = [
         "bazel",
         "run",
-        "--lockfile_mode=error",
         f"//rust_coverage:rust_coverage_{module.name}",
     ]
     bazel_result = run_command(bazel_call)
