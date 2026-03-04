@@ -111,6 +111,7 @@ jobs:
               --github_user=${{ github.repository_owner }} \
               --github_repo=${{ github.event.repository.name }}
 
+          cd scripts/tooling && uv run python -m cli.main misc html_report --output _build/integration_status.html
           tar -cf github-pages.tar _build
       - name: Upload documentation artifact
         uses: actions/upload-artifact@v4.4.0
