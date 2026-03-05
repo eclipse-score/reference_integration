@@ -85,7 +85,7 @@ jobs:
         run: |
           mkdir -p artifacts
           find bazel-testlogs/external -name 'test.xml' -print0 | xargs -0 -I{} cp --parents {} artifacts/
-          cp -r "$(bazel info bazel-bin)/coverage/rust-tests" artifacts/rust
+          cp -r "$(bazel info --lockfile_mode=error bazel-bin)/coverage/rust-tests" artifacts/rust
           zip -r ${{ github.event.repository.name }}_test_reports.zip artifacts/
         shell: bash
       - name: Upload release asset (attach ZIP to GitHub Release)
@@ -103,6 +103,7 @@ jobs:
       - name: Build documentation
         run: |
           bazel --output_base="/home/runner/.cache/bazel/output_base" run \
+            --lockfile_mode=error \
             --repo_contents_cache="/home/runner/.cache/bazel/repo_contents" \
             --repository_cache="/home/runner/.cache/bazel/repo" \
             --disk_cache="/home/runner/.cache/bazel/disk" \
