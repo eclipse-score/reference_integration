@@ -28,7 +28,8 @@ jobs:
     name: x86_64
     runs-on: ubuntu-latest
     env:
-      AIB_CONTAINER_IMAGE: quay.io/centos-sig-automotive/automotive-image-builder:1.1.11
+      AIB_SCRIPT_URL: https://gitlab.com/CentOS/automotive/src/automotive-image-builder/-/raw/main/auto-image-builder.sh?ref_type=heads
+      AIB_CONTAINER_IMAGE: quay.io/centos-sig-automotive/automotive-image-builder:latest
     steps:
       - name: Clean disk space
         uses: eclipse-score/more-disk-space@v1
@@ -55,7 +56,7 @@ jobs:
           cp -R ./bazel-bin/showcases/showcases/showcases ./images/autosd_x86_64/build/files/reference_integration/
       - name: Install AIB Tools
         run: |
-          curl -o auto-image-builder.sh "https://gitlab.com/CentOS/automotive/src/automotive-image-builder/-/raw/1.1.11/auto-image-builder.sh?ref_type=tag"
+          curl -o auto-image-builder.sh "$AIB_SCRIPT_URL"
           chmod +x auto-image-builder.sh
         working-directory: ./images/autosd_x86_64/build
       - name: Build AutoSD QEMU (x86_64)
@@ -65,7 +66,7 @@ jobs:
           mkdir -p _build/containers-storage
           sudo -E ./auto-image-builder.sh -c $AIB_CONTAINER_IMAGE build-builder --distro=autosd10-sig
 
-          sudo -E ./auto-image-builder.sh -c $AIB_CONTAINER_IMAGE build \
+          sudo -E ./auto-image-builder.sh -c $AIB_CONTAINER_IMAGE --verbose build \
           --distro=autosd10-sig  \
           --target=qemu \
           --define-file vars.yml \
@@ -73,7 +74,7 @@ jobs:
           image.aib.yml \
           localhost/score:latest
 
-          sudo -E ./auto-image-builder.sh -c $AIB_CONTAINER_IMAGE to-disk-image localhost/score:latest _build/disk.qcow2
+          sudo -E ./auto-image-builder.sh -c $AIB_CONTAINER_IMAGE --verbose to-disk-image localhost/score:latest _build/disk.qcow2
 
           sudo chown $(id -u):$(id -u) _build/disk.qcow2
         working-directory: ./images/autosd_x86_64/build
