@@ -8,6 +8,7 @@ def main() -> None:
     subparsers.required = True
 
     from scripts.tooling.cli.misc import register as _register_misc
+
     _register_misc(subparsers)
 
     args = parser.parse_args()

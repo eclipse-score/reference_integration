@@ -7,4 +7,5 @@ def register(subparsers: argparse._SubParsersAction) -> None:
     misc_sub.required = True
 
     from scripts.tooling.cli.misc.html_report import register as _register_html_report
+
     _register_html_report(misc_sub)

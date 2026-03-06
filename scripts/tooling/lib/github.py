@@ -84,7 +84,11 @@ def fetch_compare(
     except urllib.error.HTTPError as exc:
         _LOG.debug(
             "GitHub compare HTTP %s for %s %s...%s: %s",
-            exc.code, owner_repo, base_hash[:10], branch, exc.reason,
+            exc.code,
+            owner_repo,
+            base_hash[:10],
+            branch,
+            exc.reason,
         )
     except OSError as exc:
         _LOG.debug("GitHub compare network error for %s: %s", owner_repo, exc)
