@@ -26,12 +26,6 @@ from .known_good import KnownGood
 
 _LOG = logging.getLogger(__name__)
 
-_TEMPLATE_DIR = Path(__file__).parent / "assets"
-_ENV = Environment(
-    loader=FileSystemLoader(_TEMPLATE_DIR),
-    autoescape=select_autoescape(["html"]),
-)
-
 
 def _collect_entries(known_good: KnownGood) -> list[dict[str, Any]]:
     entries = []
@@ -77,22 +71,29 @@ def _enrich_with_compare_data(
             )
 
 
-def generate_report(known_good: KnownGood, token: Optional[str] = None) -> str:
+def generate_report(
+    known_good: KnownGood,
+    template_dir: Path,
+    token: Optional[str] = None,
+) -> str:
     """Return a self-contained HTML report string for *known_good*.
 
-    When *token* is provided (e.g. from the ``GITHUB_TOKEN`` environment
-    variable), the compare API is called at generation time for each module.
-    The report then shows exact commit-behind counts and current HEAD hashes
-    with no PAT required from the viewer.  Adding a PAT in the browser
-    triggers a live re-check.
-
-    Without *token* the report still renders; each card shows
-    "unavailable — requires PAT" until the viewer enters their own token.
+    Args:
+        known_good: Parsed known_good.json data.
+        template_dir: Directory containing ``report_template.html``.
+        token: Optional GitHub PAT / ``GITHUB_TOKEN``.  When provided the
+               compare API is called at generation time, embedding exact
+               commit-behind counts and current HEAD hashes so the viewer
+               needs no PAT.
     """
     entries = _collect_entries(known_good)
     if token:
         _enrich_with_compare_data(entries, token)
-    tmpl = _ENV.get_template("report_template.html")
+    env = Environment(
+        loader=FileSystemLoader(template_dir),
+        autoescape=select_autoescape(["html"]),
+    )
+    tmpl = env.get_template("report_template.html")
     return tmpl.render(
         modules_json=json.dumps(entries, indent=2),
         timestamp=known_good.timestamp,
@@ -102,7 +103,8 @@ def generate_report(known_good: KnownGood, token: Optional[str] = None) -> str:
 def write_report(
     known_good: KnownGood,
     output_path: Path,
+    template_dir: Path,
     token: Optional[str] = None,
 ) -> None:
     """Write the HTML report to *output_path*."""
-    Path(output_path).write_text(generate_report(known_good, token), encoding="utf-8")
+    Path(output_path).write_text(generate_report(known_good, template_dir, token), encoding="utf-8")

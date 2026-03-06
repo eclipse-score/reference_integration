@@ -46,7 +46,7 @@ py_binary(
         "cli/**/*.py",
     ]),
     data = [
-        "lib/assets/report_template.html",
+        "cli/misc/assets/report_template.html",
     ],
     main = "cli/main.py",
     visibility = ["//visibility:public"],
@@ -58,7 +58,7 @@ score_py_pytest(
     name = "tooling_tests",
     srcs = glob(["tests/**/*.py"]),
     data = [
-        ":lib/assets/report_template.html",
+        ":cli/misc/assets/report_template.html",
     ],
     pytest_config = "//:pyproject.toml",
     deps = [
