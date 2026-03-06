@@ -13,7 +13,7 @@ bazel run //scripts/tooling -- misc --help
 ## Creating HTML report
 
 ```bash
-bazel run //scripts/tooling -- misc html_report --output /home/pawel/score/repos/reference_integration/report.html
+bazel run //scripts/tooling -- misc html_report
 ```
 
 ## Running tests

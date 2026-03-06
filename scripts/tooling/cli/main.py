@@ -1,6 +1,20 @@
 import argparse
+import os
 import sys
 from pathlib import Path
+
+
+def _resolve_path_from_bazel(path: Path) -> Path:
+    """Resolve path relative to user's working directory when running via bazel run.
+
+    Bazel sets BUILD_WORKING_DIRECTORY to the directory where bazel was invoked.
+    """
+    if not path.is_absolute():
+        # When running via 'bazel run', resolve relative paths against the user's cwd
+        build_working_dir = os.environ.get("BUILD_WORKING_DIRECTORY")
+        if build_working_dir:
+            return (Path(build_working_dir) / path).resolve()
+    return path.resolve()
 
 
 def _find_repo_root() -> Path:
@@ -23,8 +37,7 @@ def _cmd_html_report(args: argparse.Namespace) -> int:
         print(f"error: {exc}", file=sys.stderr)
         return 1
 
-    output = Path(args.output) if args.output else Path("report.html")
-    output = output.resolve()
+    output = _resolve_path_from_bazel(Path(args.output))
     write_report(known_good, output)
     print(f"Report written to {output}")
     return 0
