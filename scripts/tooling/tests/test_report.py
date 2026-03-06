@@ -16,10 +16,9 @@ from pathlib import Path
 
 import pytest
 
-from cli.misc.html_report import TEMPLATE_DIR
+from cli.misc.html_report import TEMPLATE_DIR, generate_report, write_report
 from lib.known_good import KnownGood, load_known_good
 from lib.known_good.module import Metadata, Module
-from lib.html_report import generate_report, write_report
 
 
 # ---------------------------------------------------------------------------
