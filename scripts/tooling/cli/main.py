@@ -37,9 +37,13 @@ def _cmd_html_report(args: argparse.Namespace) -> int:
         print(f"error: {exc}", file=sys.stderr)
         return 1
 
+    token = os.environ.get("GITHUB_TOKEN")
     output = _resolve_path_from_bazel(Path(args.output))
-    write_report(known_good, output)
-    print(f"Report written to {output}")
+    write_report(known_good, output, token=token)
+    if token:
+        print(f"Report written to {output} (current hashes fetched from GitHub)")
+    else:
+        print(f"Report written to {output} (set GITHUB_TOKEN to embed current hashes)")
     return 0
 
 
