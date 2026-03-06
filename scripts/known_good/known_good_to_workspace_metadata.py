@@ -38,9 +38,9 @@ def main():
     try:
         known_good = load_known_good(Path(args.known_good))
     except FileNotFoundError as e:
-        raise SystemExit(f"ERROR: {e}")
+        raise SystemExit(f"ERROR: {e}") from e
     except ValueError as e:
-        raise SystemExit(f"ERROR: {e}")
+        raise SystemExit(f"ERROR: {e}") from e
 
     modules = list(known_good.modules.values())
 

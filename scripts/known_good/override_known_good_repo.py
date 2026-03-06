@@ -26,12 +26,10 @@ update_module_from_known_good.py to generate the MODULE.bazel file.
 """
 
 import argparse
-import os
-import re
 import datetime as dt
-from pathlib import Path
-from typing import Dict, List
 import logging
+import re
+from pathlib import Path
 
 from models import Module
 from models.known_good import KnownGood, load_known_good
@@ -40,7 +38,7 @@ from models.known_good import KnownGood, load_known_good
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
 
-def parse_and_apply_overrides(modules: Dict[str, Module], repo_overrides: List[str]) -> int:
+def parse_and_apply_overrides(modules: dict[str, Module], repo_overrides: list[str]) -> int:
     """
     Parse repo override arguments and apply them to modules.
 
@@ -132,7 +130,7 @@ def parse_and_apply_overrides(modules: Dict[str, Module], repo_overrides: List[s
     return overrides_applied
 
 
-def apply_overrides(known_good: KnownGood, repo_overrides: List[str]) -> KnownGood:
+def apply_overrides(known_good: KnownGood, repo_overrides: list[str]) -> KnownGood:
     """Apply repository commit overrides to the known_good data.
 
     Args:
@@ -209,17 +207,17 @@ Examples:
     if args.verbose:
         logging.getLogger().setLevel(logging.DEBUG)
 
-    known_path = os.path.abspath(args.known)
-    output_path = os.path.abspath(args.output)
+    known_path = Path(args.known).resolve()
+    output_path = Path(args.output).resolve()
 
     # Load, update, and output
     logging.info(f"Loading {known_path}")
     try:
         known_good = load_known_good(known_path)
     except FileNotFoundError as e:
-        raise SystemExit(f"ERROR: {e}")
+        raise SystemExit(f"ERROR: {e}") from e
     except ValueError as e:
-        raise SystemExit(f"ERROR: {e}")
+        raise SystemExit(f"ERROR: {e}") from e
 
     if not args.module_overrides:
         parser.error("at least one --module-override is required")
@@ -227,7 +225,7 @@ Examples:
     overrides = args.module_overrides
 
     updated_known_good = apply_overrides(known_good, overrides)
-    updated_known_good.write(Path(output_path), args.dry_run)
+    updated_known_good.write(Path(output_path), dry_run=args.dry_run)
 
 
 if __name__ == "__main__":
