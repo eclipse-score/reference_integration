@@ -50,14 +50,20 @@ def minimal_known_good() -> KnownGood:
 
 @pytest.fixture
 def multi_group_known_good() -> KnownGood:
-    m1 = Module.from_dict("score_baselibs", {
-        "repo": "https://github.com/eclipse-score/baselibs.git",
-        "hash": "aaa",
-    })
-    m2 = Module.from_dict("score_crates", {
-        "repo": "https://github.com/eclipse-score/score-crates.git",
-        "hash": "bbb",
-    })
+    m1 = Module.from_dict(
+        "score_baselibs",
+        {
+            "repo": "https://github.com/eclipse-score/baselibs.git",
+            "hash": "aaa",
+        },
+    )
+    m2 = Module.from_dict(
+        "score_crates",
+        {
+            "repo": "https://github.com/eclipse-score/score-crates.git",
+            "hash": "bbb",
+        },
+    )
     return KnownGood(
         modules={
             "target_sw": {"score_baselibs": m1},
@@ -217,10 +223,13 @@ class TestGenerateReportMultiGroup:
 
 class TestGenerateReportEdgeCases:
     def test_module_with_no_metadata(self):
-        module = Module.from_dict("score_crates", {
-            "repo": "https://github.com/eclipse-score/score-crates.git",
-            "hash": "deadbeef",
-        })
+        module = Module.from_dict(
+            "score_crates",
+            {
+                "repo": "https://github.com/eclipse-score/score-crates.git",
+                "hash": "deadbeef",
+            },
+        )
         kg = KnownGood(modules={"tooling": {"score_crates": module}}, timestamp="")
         html = generate_report(kg, TEMPLATE_DIR)
         match = re.search(r"const MODULES\s*=\s*(\[.*?\]);", html, re.DOTALL)
@@ -228,10 +237,13 @@ class TestGenerateReportEdgeCases:
         assert entry["owner_repo"] == "eclipse-score/score-crates"
 
     def test_non_github_repo_owner_repo_is_none(self):
-        module = Module.from_dict("custom_mod", {
-            "repo": "https://gitlab.com/some/repo.git",
-            "hash": "abc",
-        })
+        module = Module.from_dict(
+            "custom_mod",
+            {
+                "repo": "https://gitlab.com/some/repo.git",
+                "hash": "abc",
+            },
+        )
         kg = KnownGood(modules={"g": {"custom_mod": module}}, timestamp="")
         html = generate_report(kg, TEMPLATE_DIR)
         match = re.search(r"const MODULES\s*=\s*(\[.*?\]);", html, re.DOTALL)

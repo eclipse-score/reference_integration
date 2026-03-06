@@ -66,9 +66,7 @@ def _enrich_with_compare_data(
             entry["behind_by"] = result.ahead_by
             entry["compare_status"] = result.status
         else:
-            _LOG.warning(
-                "Could not fetch compare data for %s@%s", entry["owner_repo"], entry["branch"]
-            )
+            _LOG.warning("Could not fetch compare data for %s@%s", entry["owner_repo"], entry["branch"])
 
 
 def generate_report(

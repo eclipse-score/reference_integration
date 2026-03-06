@@ -23,9 +23,7 @@ def _resolve_path_from_bazel(path: Path) -> Path:
 
 
 def register(subparsers: argparse._SubParsersAction) -> None:
-    parser = subparsers.add_parser(
-        "html_report", help="Generate an HTML status report from known_good.json"
-    )
+    parser = subparsers.add_parser("html_report", help="Generate an HTML status report from known_good.json")
     parser.add_argument(
         "--known_good",
         metavar="PATH",

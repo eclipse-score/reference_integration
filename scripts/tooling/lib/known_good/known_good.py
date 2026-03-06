@@ -61,18 +61,12 @@ def load_known_good(path: Path) -> KnownGood:
         lines = text.splitlines()
         line = lines[e.lineno - 1] if 0 <= e.lineno - 1 < len(lines) else ""
         pointer = " " * (e.colno - 1) + "^"
-        hint = (
-            "Possible causes: trailing comma, missing value, or extra comma."
-            if "Expecting value" in e.msg
-            else ""
-        )
+        hint = "Possible causes: trailing comma, missing value, or extra comma." if "Expecting value" in e.msg else ""
         raise ValueError(
             f"Invalid JSON at line {e.lineno}, column {e.colno}\n{line}\n{pointer}\n{e.msg}. {hint}"
         ) from None
 
     if not isinstance(data, dict) or not isinstance(data.get("modules"), dict):
-        raise ValueError(
-            f"Invalid known_good.json at {path}: expected object with 'modules' dict"
-        )
+        raise ValueError(f"Invalid known_good.json at {path}: expected object with 'modules' dict")
 
     return KnownGood.from_dict(data)
