@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import Any, Dict, List
+from typing import Any
 from urllib.parse import urlparse
 
 
@@ -37,7 +37,7 @@ class Metadata:
     langs: list[str] = field(default_factory=lambda: ["cpp", "rust"])
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> Metadata:
+    def from_dict(cls, data: dict[str, Any]) -> Metadata:
         """Create a Metadata instance from a dictionary.
 
         Args:
@@ -53,7 +53,7 @@ class Metadata:
             langs=data.get("langs", ["cpp", "rust"]),
         )
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert Metadata instance to dictionary representation.
 
         Returns:
@@ -79,30 +79,30 @@ class Module:
     pin_version: bool = False
 
     @classmethod
-    def from_dict(cls, name: str, module_data: Dict[str, Any]) -> Module:
+    def from_dict(cls, name: str, module_data: dict[str, Any]) -> Module:
         """Create a Module instance from a dictionary representation.
 
         Args:
-                name: The module name
-                module_data: Dictionary containing module configuration with keys:
-                        - repo (str): Repository URL
-                        - hash or commit (str): Commit hash
-                        - version (str, optional): Module version (when present, hash is ignored)
-                        - bazel_patches (list[str], optional): List of patch files for Bazel
-                        - metadata (dict, optional): Metadata configuration
-                                Example: {
-                                        "code_root_path": "path/to/code/root",
-                                        "extra_test_config": [""],
-                                        "exclude_test_targets": [""],
-                                        "langs": ["cpp", "rust"]
-                                }
-                                If not present, uses default Metadata values.
-                        - branch (str, optional): Git branch name (default: main)
-                        - pin_version (bool, optional): If true, module hash is not updated
-                                            to latest HEAD by update scripts (default: false)
+            name: The module name
+            module_data: Dictionary containing module configuration with keys:
+                - repo (str): Repository URL
+                - hash or commit (str): Commit hash
+                - version (str, optional): Module version (when present, hash is ignored)
+                - bazel_patches (list[str], optional): List of patch files for Bazel
+                - metadata (dict, optional): Metadata configuration
+                    Example: {
+                            "code_root_path": "path/to/code/root",
+                            "extra_test_config": [""],
+                            "exclude_test_targets": [""],
+                            "langs": ["cpp", "rust"]
+                    }
+                    If not present, uses default Metadata values.
+                - branch (str, optional): Git branch name (default: main)
+                - pin_version (bool, optional): If true, module hash is not updated
+                    to latest HEAD by update scripts (default: false)
 
         Returns:
-                Module instance
+            Module instance
         """
         repo = module_data.get("repo", "")
         # Support both 'hash' and 'commit' keys
@@ -119,17 +119,14 @@ class Module:
 
         # Parse metadata - if not present or is None/empty dict, use defaults
         metadata_data = module_data.get("metadata")
-        if metadata_data is not None:
-            metadata = Metadata.from_dict(metadata_data)
-            # Enable once we are able to remove '*' in known_good.json
-            # if any("*" in target for target in metadata.exclude_test_targets):
-            #     raise Exception(
-            #         f"Module {name} has wildcard '*' in exclude_test_targets, which is not allowed. "
-            #         "Please specify explicit test targets to exclude or remove the key if no exclusions are needed."
-            #     )
-        else:
-            # If metadata key is missing, create with defaults
-            metadata = Metadata()
+        metadata = Metadata.from_dict(metadata_data) if metadata_data is not None else Metadata()
+
+        # Enable once we are able to remove '*' in known_good.json
+        # if any("*" in target for target in metadata.exclude_test_targets):
+        #     raise Exception(
+        #         f"Module {name} has wildcard '*' in exclude_test_targets, which is not allowed. "
+        #         "Please specify explicit test targets to exclude or remove the key if no exclusions are needed."
+        #     )
 
         branch = module_data.get("branch", "main")
         pin_version = module_data.get("pin_version", False)
@@ -146,7 +143,7 @@ class Module:
         )
 
     @classmethod
-    def parse_modules(cls, modules_dict: Dict[str, Any]) -> List[Module]:
+    def parse_modules(cls, modules_dict: dict[str, Any]) -> list[Module]:
         """Parse modules dictionary into Module dataclass instances.
 
         Args:
@@ -187,13 +184,13 @@ class Module:
 
         return f"{parts[0]}/{parts[1]}"
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert Module instance to dictionary representation for JSON output.
 
         Returns:
                 Dictionary with module configuration
         """
-        result: Dict[str, Any] = {"repo": self.repo}
+        result: dict[str, Any] = {"repo": self.repo}
         if self.version:
             result["version"] = self.version
         else:

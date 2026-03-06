@@ -12,6 +12,6 @@
 # *******************************************************************************
 """Models for score reference integration tools."""
 
-from .module import Module, Metadata
+from .module import Metadata, Module
 
 __all__ = ["Module", "Metadata"]

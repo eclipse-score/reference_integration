@@ -18,7 +18,7 @@ import datetime as dt
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 from .module import Module
 
@@ -30,18 +30,18 @@ class KnownGood:
     Module structure: modules = {"group1": {"module1": Module}, "group2": {"module2": Module}}
     """
 
-    modules: Dict[str, Dict[str, Module]]
+    modules: dict[str, dict[str, Module]]
     timestamp: str
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> KnownGood:
+    def from_dict(cls, data: dict[str, Any]) -> KnownGood:
         """Create a KnownGood instance from a dictionary.
 
         Expected structure:
         {"modules": {"group1": {"score_baselibs": {...}}, "group2": {"score_logging": {...}}}}
 
         Args:
-                data: Dictionary containing known_good.json data
+                data: dictionary containing known_good.json data
 
         Returns:
                 KnownGood instance
@@ -49,7 +49,7 @@ class KnownGood:
         modules_dict = data.get("modules", {})
         timestamp = data.get("timestamp", "")
 
-        parsed_modules: Dict[str, Dict[str, Module]] = {}
+        parsed_modules: dict[str, dict[str, Module]] = {}
         for group_name, group_modules in modules_dict.items():
             if isinstance(group_modules, dict):
                 modules_list = Module.parse_modules(group_modules)
@@ -57,7 +57,7 @@ class KnownGood:
 
         return cls(modules=parsed_modules, timestamp=timestamp)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert KnownGood instance to dictionary for JSON output.
 
         Returns:
@@ -70,7 +70,7 @@ class KnownGood:
 
         return {"modules": modules_output, "timestamp": self.timestamp}
 
-    def write(self, output_path: Path, dry_run: bool = False) -> None:
+    def write(self, output_path: Path, *, dry_run: bool = False) -> None:
         """Write known_good data to file or print for dry-run.
 
         Args:
@@ -89,8 +89,7 @@ class KnownGood:
             print(output_json, end="")
             print("---- END UPDATED JSON ----")
         else:
-            with open(output_path, "w", encoding="utf-8") as f:
-                f.write(output_json)
+            output_path.write_text(output_json, encoding="utf-8")
             print(f"Successfully wrote updated known_good.json to {output_path}")
 
 
@@ -104,22 +103,21 @@ def load_known_good(path: Path) -> KnownGood:
             KnownGood instance with parsed modules
     """
 
-    with open(path, "r", encoding="utf-8") as f:
-        text = f.read()
-        try:
-            data = json.loads(text)
-        except json.JSONDecodeError as e:
-            lines = text.splitlines()
-            line = lines[e.lineno - 1] if 0 <= e.lineno - 1 < len(lines) else ""
-            pointer = " " * (e.colno - 1) + "^"
+    try:
+        text = path.read_text(encoding="utf-8")
+        data = json.loads(text)
+    except json.JSONDecodeError as e:
+        lines = text.splitlines()
+        line = lines[e.lineno - 1] if 0 <= e.lineno - 1 < len(lines) else ""
+        pointer = " " * (e.colno - 1) + "^"
 
-            hint = ""
-            if "Expecting value" in e.msg:
-                hint = "Possible causes: trailing comma, missing value, or extra comma."
+        hint = ""
+        if "Expecting value" in e.msg:
+            hint = "Possible causes: trailing comma, missing value, or extra comma."
 
-            raise ValueError(
-                f"Invalid JSON at line {e.lineno}, column {e.colno}\n{line}\n{pointer}\n{e.msg}. {hint}"
-            ) from None
+        raise ValueError(
+            f"Invalid JSON at line {e.lineno}, column {e.colno}\n{line}\n{pointer}\n{e.msg}. {hint}"
+        ) from None
 
     if not isinstance(data, dict) or not isinstance(data.get("modules"), dict):
         raise ValueError(f"Invalid known_good.json at {path} (expected object with 'modules' dict)")
