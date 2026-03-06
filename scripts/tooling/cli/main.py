@@ -24,6 +24,7 @@ def _cmd_html_report(args: argparse.Namespace) -> int:
         return 1
 
     output = Path(args.output) if args.output else Path("report.html")
+    output = output.resolve()
     write_report(known_good, output)
     print(f"Report written to {output}")
     return 0
