@@ -59,7 +59,8 @@
     "https://bcr.bazel.build/modules/aspect_rules_lint/2.0.0/source.json": "3c3a55b5b424100feca2fd656dcdcd8a0c9fd3304ce609ce71a4d6d46d00a03c",
     "https://bcr.bazel.build/modules/aspect_rules_py/1.0.0/MODULE.bazel": "8eb29876512d3242af50a424300bec5c5f8957b455963df5f618cb7fd4e8ae19",
     "https://bcr.bazel.build/modules/aspect_rules_py/1.4.0/MODULE.bazel": "6fd29b93207a31445d5d3ab9d9882fd5511e43c95e8e82e7492872663720fd44",
-    "https://bcr.bazel.build/modules/aspect_rules_py/1.4.0/source.json": "fb1ba946478fb6dbb26d49307d756b0fd2ff88be339af23c39c0397d59143d2c",
+    "https://bcr.bazel.build/modules/aspect_rules_py/1.5.2/MODULE.bazel": "7e34964847c5ddf391a927a765d8b26147df5b25242f2da4fa3c4a77671383bb",
+    "https://bcr.bazel.build/modules/aspect_rules_py/1.5.2/source.json": "020d2bd6b07210cee97226ee2215d80c4cf91e455a6702c9af1e5788d072e673",
     "https://bcr.bazel.build/modules/aspect_rules_ts/3.6.0/MODULE.bazel": "d0045b5eabb012be550a609589b3e5e47eba682344b19cfd9365d4d896ed07df",
     "https://bcr.bazel.build/modules/aspect_rules_ts/3.6.0/source.json": "5593e3f1cd0dd5147f7748e163307fd5c2e1077913d6945b58739ad8d770a290",
     "https://bcr.bazel.build/modules/aspect_tools_telemetry/0.2.5/MODULE.bazel": "5a3c8013c3ba9ebc0a65efda40e4376b869e1260873c98020504feed55244ce8",
@@ -586,6 +587,7 @@
     "https://raw.githubusercontent.com/eclipse-score/bazel_registry/main/modules/aspect_rules_lint/2.0.0/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/eclipse-score/bazel_registry/main/modules/aspect_rules_py/1.0.0/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/eclipse-score/bazel_registry/main/modules/aspect_rules_py/1.4.0/MODULE.bazel": "not found",
+    "https://raw.githubusercontent.com/eclipse-score/bazel_registry/main/modules/aspect_rules_py/1.5.2/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/eclipse-score/bazel_registry/main/modules/aspect_rules_ts/3.6.0/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/eclipse-score/bazel_registry/main/modules/aspect_tools_telemetry/0.2.5/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/eclipse-score/bazel_registry/main/modules/aspect_tools_telemetry/0.2.8/MODULE.bazel": "not found",
@@ -1148,8 +1150,8 @@
     },
     "@@aspect_rules_py+//py:extensions.bzl%py_tools": {
       "general": {
-        "bzlTransitiveDigest": "dAWBz6nfg2GIP7kchPavcBdWoHNQ67aXhXo4MPJJqNk=",
-        "usagesDigest": "NC1b49l5tenTBVWEUGzzC0j5Kg1GH+l5lBw5JRCldIU=",
+        "bzlTransitiveDigest": "i1RUlZ7o0KqC5rka4jpWVnev/OpAD7TaATTPe15qmRw=",
+        "usagesDigest": "NF8rrFAtM0OxyfflUbQNlgnkIH3YSHU4jCm3dhvpGY4=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -1197,25 +1199,25 @@
             }
           },
           "rules_py_tools.darwin_amd64": {
-            "repoRuleId": "@@aspect_rules_py+//py/private/toolchain:tools.bzl%prebuilt_tool_repo",
+            "repoRuleId": "@@aspect_rules_py+//py/private/toolchain:repo.bzl%prebuilt_tool_repo",
             "attributes": {
               "platform": "darwin_amd64"
             }
           },
           "rules_py_tools.darwin_arm64": {
-            "repoRuleId": "@@aspect_rules_py+//py/private/toolchain:tools.bzl%prebuilt_tool_repo",
+            "repoRuleId": "@@aspect_rules_py+//py/private/toolchain:repo.bzl%prebuilt_tool_repo",
             "attributes": {
               "platform": "darwin_arm64"
             }
           },
           "rules_py_tools.linux_amd64": {
-            "repoRuleId": "@@aspect_rules_py+//py/private/toolchain:tools.bzl%prebuilt_tool_repo",
+            "repoRuleId": "@@aspect_rules_py+//py/private/toolchain:repo.bzl%prebuilt_tool_repo",
             "attributes": {
               "platform": "linux_amd64"
             }
           },
           "rules_py_tools.linux_arm64": {
-            "repoRuleId": "@@aspect_rules_py+//py/private/toolchain:tools.bzl%prebuilt_tool_repo",
+            "repoRuleId": "@@aspect_rules_py+//py/private/toolchain:repo.bzl%prebuilt_tool_repo",
             "attributes": {
               "platform": "linux_arm64"
             }
@@ -1247,6 +1249,11 @@
             "aspect_rules_py+",
             "aspect_bazel_lib",
             "aspect_bazel_lib+"
+          ],
+          [
+            "aspect_rules_py+",
+            "bazel_skylib",
+            "bazel_skylib+"
           ],
           [
             "aspect_rules_py+",

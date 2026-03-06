@@ -30,6 +30,11 @@ Newest Release Notes
    newest_release_note = max(all_release_notes, key=lambda s: int(re.search(r'v(\d+)', s["id"]).group(1)))
    results = [newest_release_note]
 
+Current Integration Status Overview
+-----------------------------------
+
+`View dashboard (points always to main for now) <https://eclipse-score.github.io/reference_integration/main/status_report.html>`_
+
 Explore the documentation
 -------------------------
 .. toctree::
