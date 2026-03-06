@@ -1,4 +1,4 @@
-load("@rules_oci//oci:defs.bzl", "oci_image", "oci_tarball")
+load("@rules_oci//oci:defs.bzl", "oci_image", "oci_load")
 
 # *******************************************************************************
 # Copyright (c) 2024 Contributors to the Eclipse Foundation
@@ -29,10 +29,10 @@ sh_binary(
     name = "run",
     srcs = ["//runners/docker_x86_64/scripts:run_docker.sh"],
     args = [
-        "$(location :image_tarball)",
+        "$(location :image_load)",
     ],
     data = [
-        ":image_tarball",
+        ":image_load",
     ],
     env = {
         "OCI_IMAGE": "score_showcases_autosd:latest",
@@ -41,14 +41,14 @@ sh_binary(
 
 oci_image(
     name = "image",
-    base = "@centos_stream10",
+    base = "@centos_stream10_linux_amd64",
     tars = [
         "//showcases:showcases_pkg_tar",
     ],
 )
 
-oci_tarball(
-    name = "image_tarball",
+oci_load(
+    name = "image_load",
     image = ":image",
     repo_tags = ["score_showcases_autosd:latest"],
     visibility = [

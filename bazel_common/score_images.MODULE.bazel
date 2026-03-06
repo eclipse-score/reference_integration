@@ -1,4 +1,4 @@
-bazel_dep(name = "rules_oci", version = "1.8.0")
+bazel_dep(name = "rules_oci", version = "2.2.7")
 
 oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
 oci.pull(
@@ -15,4 +15,5 @@ oci.pull(
     platforms = ["linux/amd64"],
     tag = "stream10",
 )
-use_repo(oci, "centos_stream10", "ubuntu_22_04")
+use_repo(oci, "centos_stream10", "centos_stream10_linux_amd64")
+use_repo(oci, "ubuntu_22_04", "ubuntu_22_04_linux_amd64")
