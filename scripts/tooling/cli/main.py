@@ -13,8 +13,8 @@ def _find_repo_root() -> Path:
 
 
 def _cmd_html_report(args: argparse.Namespace) -> int:
-    from lib.html_report import write_report
-    from lib.known_good.known_good import load_known_good
+    from scripts.tooling.lib.html_report import write_report
+    from scripts.tooling.lib.known_good import load_known_good
 
     known_good_path = Path(args.known_good) / "known_good.json"
     try:
@@ -39,9 +39,7 @@ def main() -> None:
     misc_sub = misc_parser.add_subparsers(dest="command", metavar="COMMAND")
     misc_sub.required = True
 
-    html_parser = misc_sub.add_parser(
-        "html_report", help="Generate an HTML status report from known_good.json"
-    )
+    html_parser = misc_sub.add_parser("html_report", help="Generate an HTML status report from known_good.json")
     html_parser.add_argument(
         "--known_good",
         metavar="PATH",
