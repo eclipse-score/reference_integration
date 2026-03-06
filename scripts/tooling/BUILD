@@ -57,7 +57,7 @@ score_py_pytest(
     data = [
         ":lib/assets/report_template.html",
     ],
-    pytest_config = ":pyproject.toml",
+    pytest_config = "//:pyproject.toml",
     deps = [
         ":lib",
     ] + all_requirements,
