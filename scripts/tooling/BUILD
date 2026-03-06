@@ -39,18 +39,23 @@ py_library(
     visibility = ["//visibility:public"],
 )
 
+# CLI library target (shared between binary and tests)
+py_library(
+    name = "cli",
+    srcs = glob(["cli/**/*.py"]),
+    data = [
+        ":cli/misc/assets/report_template.html",
+    ],
+    deps = [":lib"] + all_requirements,
+)
+
 # CLI binary target
 py_binary(
     name = "tooling",
-    srcs = glob([
-        "cli/**/*.py",
-    ]),
-    data = [
-        "cli/misc/assets/report_template.html",
-    ],
+    srcs = ["cli/main.py"],
     main = "cli/main.py",
     visibility = ["//visibility:public"],
-    deps = [":lib"] + all_requirements,
+    deps = [":cli"],
 )
 
 # Tests target
@@ -62,6 +67,7 @@ score_py_pytest(
     ],
     pytest_config = "//:pyproject.toml",
     deps = [
+        ":cli",
         ":lib",
     ] + all_requirements,
 )
