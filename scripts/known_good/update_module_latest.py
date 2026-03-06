@@ -22,8 +22,8 @@ summary. Optionally writes out an updated JSON file with refreshed hashes.
 
 Usage:
   python tools/update_module_latest.py \
-    --known-good score_reference_integration/known_good.json \
-    [--branch main] [--output updated_known_good.json]
+	  --known-good score_reference_integration/known_good.json \
+	  [--branch main] [--output updated_known_good.json]
 
 Environment:
   Optionally set GITHUB_TOKEN to increase rate limits / access private repos.
@@ -37,10 +37,10 @@ Exit codes:
 from __future__ import annotations
 
 import argparse
-import json
-import os
 import shutil
 import subprocess
+import json
+import os
 import sys
 from pathlib import Path
 
@@ -102,18 +102,16 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Update module hashes to latest commit on branch")
     p.add_argument(
         "--known-good",
-        default=Path(__file__).parents[2] / "known_good.json",
-        type=Path,
+        default="known_good.json",
         help="Path to known_good.json file (default: known_good.json in CWD)",
     )
     p.add_argument("--branch", default="main", help="Git branch to fetch latest commits from (default: main)")
-    p.add_argument("--output", type=Path, help="Optional output path to write updated JSON")
+    p.add_argument("--output", help="Optional output path to write updated JSON")
     p.add_argument("--fail-fast", action="store_true", help="Stop on first failure instead of continuing")
     p.add_argument(
         "--no-gh",
         action="store_true",
-        help="Disable GitHub CLI usage even if installed; fall back to HTTP API; "
-        "GITHUB_TOKEN has to be known in the environment",
+        help="Disable GitHub CLI usage even if installed; fall back to HTTP API; GITHUB_TOKEN has to be known in the environment",
     )
     return p.parse_args(argv)
 
@@ -121,7 +119,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 def main(argv: list[str]) -> int:
     args = parse_args(argv)
     try:
-        known_good = load_known_good(Path(args.known_good).resolve())
+        known_good = load_known_good(Path(args.known_good))
     except FileNotFoundError as e:
         print(f"ERROR: {e}", file=sys.stderr)
         return 3

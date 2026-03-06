@@ -33,7 +33,7 @@ import logging
 import os
 import re
 from pathlib import Path
-from typing import Optional
+from typing import Dict, List, Optional
 
 from models import Module
 from models.known_good import load_known_good
@@ -42,7 +42,7 @@ from models.known_good import load_known_good
 logging.basicConfig(level=logging.WARNING, format="%(levelname)s: %(message)s")
 
 
-def generate_git_override_blocks(modules: list[Module], repo_commit_dict: dict[str, str]) -> list[str]:
+def generate_git_override_blocks(modules: List[Module], repo_commit_dict: Dict[str, str]) -> List[str]:
     """Generate bazel_dep and git_override blocks for each module."""
     blocks = []
 
@@ -109,7 +109,7 @@ def generate_git_override_blocks(modules: list[Module], repo_commit_dict: dict[s
     return blocks
 
 
-def generate_local_override_blocks(modules: list[Module]) -> list[str]:
+def generate_local_override_blocks(modules: List[Module]) -> List[str]:
     """Generate bazel_dep and local_path_override blocks for each module."""
     blocks = []
 
@@ -127,7 +127,7 @@ def generate_local_override_blocks(modules: list[Module]) -> list[str]:
     return blocks
 
 
-def generate_coverage_blocks(modules: list[Module]) -> list[str]:
+def generate_coverage_blocks(modules: List[Module]) -> List[str]:
     """Generate rust_coverage_report  blocks for each module with rust impl."""
     blocks = ["""load("@score_tooling//:defs.bzl", "rust_coverage_report")"""]
 
@@ -160,8 +160,8 @@ rust_coverage_report(
 
 def generate_file_content(
     args: argparse.Namespace,
-    modules: list[Module],
-    repo_commit_dict: dict[str, str],
+    modules: List[Module],
+    repo_commit_dict: Dict[str, str],
     timestamp: Optional[str] = None,
     file_type: str = "module",
 ) -> str:
@@ -206,20 +206,6 @@ def generate_file_content(
     return header + "\n".join(blocks)
 
 
-def parse_repo_commit_overrides(repo_overrides: list[str]) -> dict[str, str]:
-    repo_commit_dict = {}
-    repo_pattern = re.compile(r"https://[a-zA-Z0-9.-]+/[a-zA-Z0-9._/-]+\.git@[a-fA-F0-9]{7,40}$")
-    for entry in repo_overrides:
-        if not repo_pattern.match(entry):
-            raise SystemExit(
-                f"Invalid --repo-override format: {entry}\n"
-                "Expected format: https://github.com/org/repo.git@<commit_sha>"
-            )
-        repo_url, commit_hash = entry.split("@", 1)
-        repo_commit_dict[repo_url] = commit_hash
-    return repo_commit_dict
-
-
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Generate score_modules.MODULE.bazel file(s) from known_good.json",
@@ -248,19 +234,16 @@ Note:
     parser.add_argument(
         "--known",
         default=Path(__file__).parents[2] / "known_good.json",
-        type=Path,
         help="Path to known_good.json (default: known_good.json in repo root)",
     )
     parser.add_argument(
         "--output-dir-modules",
         default=Path(__file__).parents[2] / "bazel_common",
-        type=Path,
         help="Output directory for grouped structure files (default: bazel_common in repo root)",
     )
     parser.add_argument(
         "--output-dir-coverage",
         default=Path(__file__).parents[2] / "rust_coverage",
-        type=Path,
         help="Output directory for BUILD coverage file (default: rust_coverage in repo root)",
     )
     parser.add_argument(
@@ -286,28 +269,38 @@ Note:
     if args.verbose:
         logging.getLogger().setLevel(logging.INFO)
 
-    known_path = (args.known).resolve()
+    known_path = os.path.abspath(args.known)
 
-    if not known_path.exists():
+    if not os.path.exists(known_path):
         raise SystemExit(f"known_good.json not found at {known_path}")
 
     # Parse repo overrides
-    repo_commit_dict = parse_repo_commit_overrides(args.repo_override) if args.repo_override else {}
+    repo_commit_dict = {}
+    if args.repo_override:
+        repo_pattern = re.compile(r"https://[a-zA-Z0-9.-]+/[a-zA-Z0-9._/-]+\.git@[a-fA-F0-9]{7,40}$")
+        for entry in args.repo_override:
+            if not repo_pattern.match(entry):
+                raise SystemExit(
+                    f"Invalid --repo-override format: {entry}\n"
+                    "Expected format: https://github.com/org/repo.git@<commit_sha>"
+                )
+            repo_url, commit_hash = entry.split("@", 1)
+            repo_commit_dict[repo_url] = commit_hash
 
     # Load known_good.json
     try:
-        known_good = load_known_good(known_path)
+        known_good = load_known_good(Path(known_path))
     except FileNotFoundError as e:
-        raise SystemExit(f"ERROR: {e}") from e
+        raise SystemExit(f"ERROR: {e}")
     except ValueError as e:
-        raise SystemExit(f"ERROR: {e}") from e
+        raise SystemExit(f"ERROR: {e}")
 
     if not known_good.modules:
         raise SystemExit("No modules found in known_good.json")
 
     # Generate files based on structure (flat vs grouped)
-    output_dir_modules = args.output_dir_modules.resolve()
-    output_dir_modules.mkdir(parents=True, exist_ok=True)
+    output_dir_modules = os.path.abspath(args.output_dir_modules)
+    os.makedirs(output_dir_modules, exist_ok=True)
 
     generated_files = []
     total_module_count = 0
@@ -322,7 +315,7 @@ Note:
         # Determine output filename: score_modules_{group}.MODULE.bazel
         output_filename = f"score_modules_{group_name}.MODULE.bazel"
 
-        output_path_modules = output_dir_modules / output_filename
+        output_path_modules = os.path.join(output_dir_modules, output_filename)
         output_path_coverage = args.output_dir_coverage / "BUILD"
 
         # Generate file content of MODULE files
@@ -337,7 +330,8 @@ Note:
             print("---- END GENERATED CONTENT FOR MODULE ----")
             print(f"\nGenerated {len(modules)} {args.override_type}_override entries for group '{group_name}'")
         else:
-            output_path_modules.write_text(content_module, encoding="utf-8")
+            with open(output_path_modules, "w", encoding="utf-8") as f:
+                f.write(content_module)
             generated_files.append(output_path_modules)
             total_module_count += len(modules)
             print(f"Generated {output_path_modules} with {len(modules)} {args.override_type}_override entries")
@@ -355,7 +349,8 @@ Note:
             print("---- END GENERATED CONTENT FOR BUILD ----")
             print(f"\nGenerated {len(modules)} {args.override_type}_override entries for group '{group_name}'")
         else:
-            output_path_coverage.write_text(content_build, encoding="utf-8")
+            with open(output_path_coverage, "w", encoding="utf-8") as f:
+                f.write(content_build)
             generated_files.append(output_path_coverage)
             print(f"Generated {output_path_coverage}")
 

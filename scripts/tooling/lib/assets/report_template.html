@@ -273,10 +273,11 @@
   </header>
 
   <div class="pat-notice">
-    <span>&#128274; A <strong>GitHub personal access token (PAT)</strong> is required to fetch latest modules status.
+    <span>&#128274; Add a <strong>GitHub personal access token (PAT)</strong> for <em>live</em> status — exact commit counts fetched directly from GitHub.
     Enter it in the token field above, or
     <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">create one here</a>.
-    Without a token, cards are shown but status is unavailable.<strong>Your PAT is not send anywhere, it's only keept in local cache of this page</strong></span>
+    Without a token, up-to-date / behind status is still shown from data embedded at report generation time.
+    <strong>Your PAT is not sent anywhere — it is only kept in the local cache of this page.</strong></span>
   </div>
 
   <div id="filters"></div>
@@ -499,9 +500,28 @@
       const statusEl = document.getElementById(`status-${mod.name}`);
 
       if (!getToken()) {
-        statusEl.className   = 'status pin';
-        statusEl.textContent = '⊘ unavailable — requires PAT';
-        counters.error++;
+        // Use pre-baked compare data from generation time (if available)
+        if (mod.current_hash !== null && mod.behind_by !== null) {
+          const latestRow    = document.getElementById(`latest-${mod.name}`);
+          const latestHashEl = document.getElementById(`latest-hash-${mod.name}`);
+          const shortLatest  = mod.current_hash.slice(0, 10);
+          const latestUrl    = mod.owner_repo
+            ? `https://github.com/${mod.owner_repo}/commit/${mod.current_hash}`
+            : '#';
+          latestHashEl.innerHTML = `<a class="hash-link" href="${latestUrl}" target="_blank" rel="noopener">${shortLatest}</a>`;
+          latestRow.classList.add('visible');
+
+          const behind = mod.behind_by;
+          statusEl.className   = `status ${statusClass(behind)}`;
+          statusEl.textContent = statusLabel(behind, mod.compare_status);
+          if (behind === 0)    counters.ok++;
+          else if (behind > 20) counters.danger++;
+          else                 counters.behind++;
+        } else {
+          statusEl.className   = 'status pin';
+          statusEl.textContent = '⊘ unavailable — requires PAT';
+          counters.error++;
+        }
         updateSummary();
         return;
       }
