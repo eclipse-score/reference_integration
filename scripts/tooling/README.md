@@ -6,6 +6,22 @@
 bazel run //scripts/tooling -- --help
 ```
 
+```bash
+bazel run //scripts/tooling -- misc --help
+```
+
+## Creating HTML report
+
+```bash
+bazel run //scripts/tooling -- misc html_report --output /home/pawel/score/repos/reference_integration/report.html
+```
+
+## Running tests
+
+```bash
+bazel test //scripts/tooling_tests
+```
+
 ## Updating dependencies
 
 Update a list of requirements in [requirements.in](requirements.in) file and then

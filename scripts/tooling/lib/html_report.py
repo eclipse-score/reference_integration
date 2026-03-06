@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -29,7 +29,7 @@ _ENV = Environment(
 )
 
 
-def _collect_entries(known_good: KnownGood) -> List[Dict[str, Any]]:
+def _collect_entries(known_good: KnownGood) -> list[dict[str, Any]]:
     entries = []
     for group_name, group_modules in known_good.modules.items():
         for module in group_modules.values():
