@@ -10,7 +10,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-load("@pip_score_venv_test//:requirements.bzl", "all_requirements")
+load("@ref_int_scripts_env//:requirements.bzl", "all_requirements")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 load("@score_tooling//python_basics:defs.bzl", "score_py_pytest")
@@ -45,9 +45,12 @@ py_binary(
     srcs = glob([
         "cli/**/*.py",
     ]),
+    data = [
+        "lib/assets/report_template.html",
+    ],
     main = "cli/main.py",
     visibility = ["//visibility:public"],
-    deps = [":lib"],
+    deps = [":lib"] + all_requirements,
 )
 
 # Tests target
