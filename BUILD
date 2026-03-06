@@ -67,4 +67,5 @@ use_format_targets()
 
 exports_files([
     "MODULE.bazel",
+    "pyproject.toml",
 ])
