@@ -10,15 +10,3 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
-
-# sh_binary(
-#     name = "docker_x86_64",
-#     srcs = ["scripts/run_docker.sh"],
-#     args = [
-#         "$(location //linux_x86_64:image)",
-#     ],
-#     data = [
-#         "//linux_x86_64:image",
-#     ],
-# )

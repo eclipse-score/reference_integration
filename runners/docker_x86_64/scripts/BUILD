@@ -10,4 +10,15 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-exports_files(["run_docker.sh"])
+
+load("@rules_shell//shell:sh_library.bzl", "sh_library")
+
+sh_library(
+    name = "run_docker",
+    srcs = ["run_docker.sh"],
+    visibility = [
+        "//images/auto_x86_64:__pkg__",
+        "//images/linux_x86_64:__pkg__",
+    ],
+    deps = ["@rules_shell//shell/runfiles"],
+)

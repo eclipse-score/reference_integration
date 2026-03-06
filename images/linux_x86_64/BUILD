@@ -10,18 +10,20 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-load("@rules_oci//oci:defs.bzl", "oci_image", "oci_tarball")
+load("@rules_oci//oci:defs.bzl", "oci_image", "oci_load")
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 
 sh_binary(
     name = "run",
-    srcs = ["//runners/docker_x86_64/scripts:run_docker.sh"],
+    srcs = [
+        "//runners/docker_x86_64/scripts:run_docker",
+    ],
     args = [
-        "$(location :image_tarball)",
+        "$(location :image_load)",
     ],
     data = [
-        ":image_tarball",
+        ":image_load",
     ],
     env = {
         "OCI_IMAGE": "score_showcases:latest",
@@ -47,7 +49,7 @@ pkg_tar(
 
 oci_image(
     name = "image",
-    base = "@ubuntu_22_04",
+    base = "@ubuntu_22_04_linux_amd64",
     tars = [
         "//showcases:showcases_pkg_tar",
         ":datarouter_bin_tar",
@@ -55,8 +57,8 @@ oci_image(
     ],
 )
 
-oci_tarball(
-    name = "image_tarball",
+oci_load(
+    name = "image_load",
     image = ":image",
     repo_tags = ["score_showcases:latest"],
     visibility = [
