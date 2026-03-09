@@ -16,6 +16,7 @@ load("@score_itf//score/itf/plugins:plugins.bzl", "dlt", "docker", "qemu")
 filegroup(
     name = "all_tests",
     srcs = [
+        "test_remote_logging.py",
         "test_showcases.py",
         "test_ssh.py",
     ],
