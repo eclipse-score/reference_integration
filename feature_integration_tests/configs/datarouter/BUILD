@@ -1,5 +1,5 @@
 # *******************************************************************************
-# Copyright (c) 2025 Contributors to the Eclipse Foundation
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -10,24 +10,17 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-exports_files(
-    [
-        "dlt_config_qnx_x86_64.json",
-        "dlt_config_x86_64.json",
-        "qemu_bridge_config.json",
-    ],
-)
 
 exports_files([
     "etc/logging.json",
-    "etc/mw_com_config.json",
+    "etc/log-channels.json",
 ])
 
 filegroup(
     name = "etc_configs",
     srcs = [
+        "etc/log-channels.json",
         "etc/logging.json",
-        "etc/mw_com_config.json",
     ],
     visibility = ["//visibility:public"],
 )
