@@ -73,7 +73,7 @@ jobs:
           bazel build --lockfile_mode=error --config qnx-x86_64 //images/qnx_x86_64:image
       - name: Run integration tests
         run: |
-          bazel test --lockfile_mode=error --config=itf-qnx-x86_64 //feature_integration_tests/itf:qnx_x86_64
+          bazel test --lockfile_mode=error --config=itf-qnx-x86_64 //feature_integration_tests/itf
       - name: Cleanup QNX license
         if: always()
         run: sudo rm -rf /opt/score_qnx

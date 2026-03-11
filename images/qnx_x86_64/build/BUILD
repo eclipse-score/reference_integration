@@ -50,12 +50,15 @@ qnx_ifs(
         ":system.build",
         ":system_dir",
         "//feature_integration_tests/configs:etc_configs",
+        "//feature_integration_tests/configs/datarouter:etc_configs",
         "//showcases",
+        "@score_logging//score/datarouter",
         "@score_persistency//tests/test_scenarios/cpp:test_scenarios",
     ],
     build_file = "init.build",
     ext_repo_maping = {
         "BUNDLE_PATH": "$(location //showcases:showcases)",
+        "DATAROUTER_PATH": "$(location @score_logging//score/datarouter:datarouter)",
     },
     visibility = [
         "//visibility:public",

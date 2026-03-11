@@ -89,4 +89,12 @@ fi
 # Configure system network settings
 sysctl -w net.inet.icmp.bmcastecho=1 > /dev/null        # Enable ICMP broadcast echo (responds to broadcast pings)
 
+# The datarouter sends DLT messages via UDP multicast to
+# '239.255.42.99:3490' (configured in log-channels.json).
+# Adding multicast route via vtnet0 interface directs all
+# multicast traffic ('224.0.0.0/4') out the guest network
+# interface so it reaches the host via the QEMU TAP device.
+echo "Adding multicast route"
+route add -net 224.0.0.0 -netmask 240.0.0.0 -interface vtnet0
+
 echo "---> Network configuration completed"

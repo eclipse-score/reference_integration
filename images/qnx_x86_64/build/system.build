@@ -66,7 +66,7 @@ libpam.so.2                              # Pluggable Authentication Modules libr
 # Note: /bin/sh symlink already defined in init.build as /proc/boot/ksh
 toybox                                   # Minimal Unix utilities collection (replaces many GNU tools)
 [type=link] cp=toybox                    # Copy files and directories
-[type=link] ls=toybox                    # List directory contents  
+[type=link] ls=toybox                    # List directory contents
 [type=link] cat=toybox                   # Display file contents
 [type=link] chmod=toybox                 # Change file permissions
 [type=link] rm=toybox                    # Remove files and directories
@@ -197,7 +197,7 @@ hostname                                                                        
 route
 dhcpcd                                                                          # DHCP client daemon for automatic network configuration
 tcpdump                                                                         # Network packet capture tool for Wireshark analysis
-slay                                                                            
+slay
 /usr/lib/ssh/sftp-server=${QNX_TARGET}/${PROCESSOR}/usr/libexec/sftp-server     # File transfer server to enable scp
 
 #############################################
@@ -283,6 +283,10 @@ pci/pci_debug2.so                        # Enhanced PCI debugging support
 # Executable files from external repositories
 [perms=777] /scrample = ${SCRAMPLE_PATH}
 [perms=777] /cpp_tests_persistency = ${CPP_TEST_SCENARIOS_PATH}
+
+[perms=777] /usr/bin/datarouter/datarouter = ${DATAROUTER_PATH}
+[perms=644] /usr/bin/datarouter/etc/logging.json = ${MAIN_BUILD_FILE_DIR}/../../../feature_integration_tests/configs/datarouter/etc/logging.json
+[perms=644] /usr/bin/datarouter/etc/log-channels.json = ${MAIN_BUILD_FILE_DIR}/../../../feature_integration_tests/configs/datarouter/etc/log-channels.json
 
 # Common showcases bundle
 [perms=777] / = ${BUNDLE_PATH}
