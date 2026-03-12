@@ -35,7 +35,7 @@ rust_coverage_report(
         "linux-x86_64",
         "ferrocene-coverage",
     ],
-    query = 'kind("rust_test", @score_communication//score/mw/com/impl/...) -@score_communication//score/mw/com/impl:unit_test_runtime_single_exec -@score_communication//score/mw/com/impl/configuration:config_parser_test -@score_communication//score/mw/com/impl/configuration:configuration_test -@score_communication//score/mw/com/impl/tracing/configuration:tracing_filter_config_parser_test',
+    query = 'kind("rust_test", @score_communication//score/mw/com/impl/...) -@score_communication//score/mw/com/impl:unit_test_runtime_single_exec -@score_communication//score/mw/com/impl/configuration:config_parser_test -@score_communication//score/mw/com/impl/configuration:configuration_test -@score_communication//score/mw/com/impl/tracing/configuration:tracing_filter_config_parser_test -@score_communication//score/mw/com/impl/bindings/lola:transaction_log_rollback_executor_test',
     visibility = ["//visibility:public"],
 )
             
