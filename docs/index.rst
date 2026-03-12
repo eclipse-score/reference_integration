@@ -33,7 +33,7 @@ Newest Release Notes
 Current Integration Status Overview
 -----------------------------------
 
-`View dashboard (points always to main for now) <https://eclipse-score.github.io/reference_integration/main/status_report.html>`_
+`View dashboard (points always to main for now) <https://eclipse-score.github.io/reference_integration/main/status_dashboard.html>`_
 
 Explore the documentation
 -------------------------
