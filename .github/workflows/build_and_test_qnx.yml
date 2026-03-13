@@ -32,6 +32,8 @@ jobs:
       contents: read
       pull-requests: read
     steps:
+      - name: Clean disk space
+        uses: eclipse-score/more-disk-space@v1
       - name: Checkout repository (Handle all events)
         uses: actions/checkout@v4.2.2
         with:
