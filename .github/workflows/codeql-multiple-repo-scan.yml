@@ -59,6 +59,10 @@ jobs:
         id: checkout-repos
         run: |
           scripts/workflow/checkout_repos.sh
+      - name: List files in repos directory (debug)
+        run: |
+          echo "Listing all files in repos directory before CodeQL analysis:"
+          find repos || echo "repos directory not found"
       - name: Initialize CodeQL for all repositories
         uses: github/codeql-action/init@v4
         with:
