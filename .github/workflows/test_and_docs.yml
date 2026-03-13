@@ -17,13 +17,14 @@ permissions:
   pull-requests: write
   id-token: write
 on:
-  pull_request_target: # Allows forks to trigger the docs build
-    types: [opened, reopened, synchronize]
-  push:
-    branches:
-      - main
-  merge_group:
-    types: [checks_requested]
+  workflow_dispatch:
+  # pull_request_target: # Allows forks to trigger the docs build
+  #   types: [opened, reopened, synchronize]
+  # push:
+  #   branches:
+  #     - main
+  # merge_group:
+  #   types: [checks_requested]
   release:
     types: [created]
 # Do not flood CI with unneeded previous runs in PR

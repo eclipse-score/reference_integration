@@ -42,7 +42,9 @@ from models.known_good import load_known_good
 logging.basicConfig(level=logging.WARNING, format="%(levelname)s: %(message)s")
 
 
-def generate_git_override_blocks(modules: List[Module], repo_commit_dict: Dict[str, str]) -> List[str]:
+def generate_git_override_blocks(
+    modules: List[Module], repo_commit_dict: Dict[str, str]
+) -> List[str]:
     """Generate bazel_dep and git_override blocks for each module."""
     blocks = []
 
@@ -59,8 +61,7 @@ def generate_git_override_blocks(modules: List[Module], repo_commit_dict: Dict[s
             patches_lines = "    patches = [\n"
             for patch in module.bazel_patches:
                 patches_lines += f'        "{patch}",\n'
-            patches_lines += "    ],\n"
-        patch_strip_line = "    patch_strip = 1,\n" if patches_lines else ""
+            patches_lines += "    ],\n    patch_strip = 1,\n"
 
         if module.version:
             # If version is provided, use bazel_dep with single_version_override
@@ -68,9 +69,8 @@ def generate_git_override_blocks(modules: List[Module], repo_commit_dict: Dict[s
                 f'bazel_dep(name = "{module.name}")\n'
                 "single_version_override(\n"
                 f'    module_name = "{module.name}",\n'
-                f"{patch_strip_line}"
-                f"{patches_lines}"
                 f'    version = "{module.version}",\n'
+                f"{patches_lines}"
                 ")\n"
             )
         else:
@@ -93,17 +93,16 @@ def generate_git_override_blocks(modules: List[Module], repo_commit_dict: Dict[s
                 continue
 
             # If no version, use bazel_dep with git_override
-            # Only include patch_strip if there are patches to apply
             block = (
                 f'bazel_dep(name = "{module.name}")\n'
                 "git_override(\n"
                 f'    module_name = "{module.name}",\n'
-                f'    commit = "{commit}",\n'
-                f"{patch_strip_line}"
-                f"{patches_lines}"
                 f'    remote = "{module.repo}",\n'
+                f'    commit = "{commit}",\n'
+                f"{patches_lines}"
                 ")\n"
             )
+
         blocks.append(block)
 
     return blocks
@@ -129,7 +128,7 @@ def generate_local_override_blocks(modules: List[Module]) -> List[str]:
 
 def generate_coverage_blocks(modules: List[Module]) -> List[str]:
     """Generate rust_coverage_report  blocks for each module with rust impl."""
-    blocks = ["""load("@score_tooling//:defs.bzl", "rust_coverage_report")"""]
+    blocks = ["""load("@score_tooling//:defs.bzl", "rust_coverage_report")\n\n"""]
 
     for module in modules:
         if "rust" not in module.metadata.langs:
@@ -251,7 +250,11 @@ Note:
         action="store_true",
         help="Print generated content instead of writing to file",
     )
-    parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose logging")
+    parser.add_argument(
+        "-v", "--verbose",
+        action="store_true",
+        help="Enable verbose logging"
+    )
     parser.add_argument(
         "--repo-override",
         action="append",
@@ -277,7 +280,9 @@ Note:
     # Parse repo overrides
     repo_commit_dict = {}
     if args.repo_override:
-        repo_pattern = re.compile(r"https://[a-zA-Z0-9.-]+/[a-zA-Z0-9._/-]+\.git@[a-fA-F0-9]{7,40}$")
+        repo_pattern = re.compile(
+            r"https://[a-zA-Z0-9.-]+/[a-zA-Z0-9._/-]+\.git@[a-fA-F0-9]{7,40}$"
+        )
         for entry in args.repo_override:
             if not repo_pattern.match(entry):
                 raise SystemExit(

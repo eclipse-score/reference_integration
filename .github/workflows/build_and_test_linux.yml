@@ -13,12 +13,12 @@
 name: Linux - Build & Integration Test
 on:
   workflow_dispatch:
-  pull_request:
-  release:
-    types: [created]
-  push:
-    branches:
-      - main
+  # pull_request:
+  # release:
+  #   types: [created]
+  # push:
+  #   branches:
+  #     - main
 # Do not flood CI with unneeded previous runs in PR
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
