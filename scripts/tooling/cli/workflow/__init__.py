@@ -10,20 +10,3 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-name: "Custom CodeQL Configuration for MISRA"
-paths:
-  - repos
-paths-ignore:
-  - "**/*test*"
-  - "**/*mock*"
-  - "**/test/**"
-  - "**/mock/**"
-  - "**/codeql-coding-standards-repo/**"
-  - "**/examples/**"
-  - "**/docs/**"
-  - "**/target/**"
-  - "**/bazel-*/**"
-  - "**/.git/**"
-  - "**/node_modules/**"
-  - "**/build/**"
-  - "**/dist/**"
