@@ -21,5 +21,26 @@
 # https://www.apache.org/licenses/LICENSE-2.0
 #
 # SPDX-License-Identifier: Apache-2.0
-
 # *******************************************************************************
+load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
+
+alias(
+    name = "image",
+    actual = "//images/ebclfsa_aarch64/build:fastdev-image",
+    visibility = ["//visibility:public"],
+)
+
+sh_binary(
+    name = "run",
+    srcs = [
+        "//runners/qemu_ebclfsa_aarch64/scripts:run_qemu.sh",
+    ],
+    args = [
+        "$(locations :image)",
+    ],
+    data = [
+        ":image",
+    ],
+    env = {"RUNFILES_LIB_DEBUG": "1"},
+    use_bash_launcher = True,
+)
