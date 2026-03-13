@@ -1,5 +1,5 @@
 # *******************************************************************************
-# Copyright (c) 2025 Contributors to the Eclipse Foundation
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -10,21 +10,19 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-# Workflow configuration for S-CORE CI - Bazel Build & Test baselibs
-# This workflow runs Bazel build and test when triggered by specific pull request events.
 
-name: Integration Tests (PR)
+# Nightly / manual integration tests: updates all modules to latest HEAD on their branch.
+
+name: Integration Tests (Nightly)
 on:
   workflow_dispatch:
-  pull_request_target:
-    types: [opened, reopened, synchronize]
-  push:
-    # branches:
-    #   - main-etas
+  schedule:
+    - cron: '30 2 * * *'  # Every night at 02:30 UTC on main-etas branch
 jobs:
   integration_test:
     uses: ./.github/workflows/reusable_smoke-test.yml
     secrets: inherit
     with:
       repo_runner_labels: 'standard'
+      update_to_latest: true
       target_branch: '${{ github.ref }}'

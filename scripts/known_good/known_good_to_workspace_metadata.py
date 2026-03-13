@@ -42,10 +42,13 @@ def main():
     except ValueError as e:
         raise SystemExit(f"ERROR: {e}")
 
-    modules = list(known_good.modules.values())
+     # Flatten modules from all groups
+    all_modules = []
+    for group_modules in known_good.modules.values():
+        all_modules.extend(group_modules.values())
 
     gita_metadata = []
-    for module in modules:
+    for module in all_modules:
         if not module.repo:
             raise RuntimeError(f"Module {module.name}: repo must not be empty")
 

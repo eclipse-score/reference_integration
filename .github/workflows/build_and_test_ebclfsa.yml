@@ -12,13 +12,14 @@
 # *******************************************************************************
 name: EB corbos Linux for Safety Applications - Build & Integration Test
 on:
-  pull_request:
-    types: [opened, reopened, synchronize]
-  merge_group:
-    types: [checks_requested]
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+  # pull_request:
+  #   types: [opened, reopened, synchronize]
+  # merge_group:
+  #   types: [checks_requested]
+  # push:
+  #   branches:
+  #     - main
 # Do not flood CI with unneeded previous runs in PR
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
