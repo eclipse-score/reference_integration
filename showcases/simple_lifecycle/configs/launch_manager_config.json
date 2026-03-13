@@ -1,0 +1,120 @@
+{
+    "schema_version": 1,
+    "defaults": {
+        "deployment_config": {
+            "bin_dir": "/showcases/bin/",
+            "ready_recovery_action": {
+                "restart": {
+                    "number_of_attempts": 1,
+                    "delay_before_restart": 0.5
+                }
+            },
+            "sandbox": {
+                "uid": 0,
+                "gid": 0,
+                "supplementary_group_ids": [],
+                "scheduling_policy": "SCHED_OTHER",
+                "scheduling_priority": 1
+            }
+        },
+        "component_properties": {
+            "application_profile": {
+                "application_type": "Reporting",
+                "is_self_terminating": false,
+                "alive_supervision": {
+                    "reporting_cycle": 0.1,
+                    "min_indications": 1,
+                    "max_indications": 3,
+                    "failed_cycles_tolerance": 1
+                }
+            },
+            "depends_on": [],
+            "process_arguments": [],
+            "ready_condition": {
+                "process_state": "Running"
+            }
+        },
+        "run_target": {
+            "transition_timeout": 5,
+            "recovery_action": {
+                "switch_run_target": {
+                    "run_target": "fallback_run_target"
+                }
+            }
+        },
+        "alive_supervision" : {
+            "evaluation_cycle": 0.5
+        }
+    },
+    "components": {
+        "state_manager": {
+            "description": "State Manager application",
+            "component_properties": {
+                "binary_name": "control_daemon",
+                "application_profile": {
+                    "application_type": "State_Manager",
+                    "alive_supervision": {
+                        "min_indications": 0
+                    }
+                },
+                "depends_on": []
+            }
+        },
+        "cpp_supervised_app": {
+            "component_properties": {
+                "binary_name": "cpp_supervised_app",
+                "application_profile": {
+                    "application_type": "Reporting_And_Supervised"
+                },
+                "process_arguments": [
+                    "-d50"
+                ]
+            },
+            "deployment_config": {
+                "environmental_variables": {
+                    "PROCESSIDENTIFIER": "cpp_supervised_app",
+                    "CONFIG_PATH": "/showcases/data/simple_lifecycle/etc/hmproc_cpp_supervised_app.bin",
+                    "IDENTIFIER": "cpp_supervised_app"
+                }
+            }
+        },
+        "rust_supervised_app": {
+            "component_properties": {
+                "binary_name": "rust_supervised_app",
+                "application_profile": {
+                    "application_type": "Reporting_And_Supervised"
+                },
+                "process_arguments": [
+                    "-d50"
+                ]
+            },
+            "deployment_config": {
+                "environmental_variables": {
+                    "PROCESSIDENTIFIER": "rust_supervised_app",
+                    "CONFIG_PATH": "/showcases/data/simple_lifecycle/etc/hmproc_rust_supervised_app.bin",
+                    "IDENTIFIER": "rust_supervised_app"
+                }
+            }
+        }
+    },
+    "run_targets": {
+        "Startup": {
+            "description": "Minimal functionality of the system",
+            "depends_on": ["cpp_supervised_app", "rust_supervised_app", "state_manager"],
+            "recovery_action": {
+                "switch_run_target": {
+                    "run_target": "fallback_run_target"
+                }
+            }
+        }
+    },
+    "initial_run_target": "Startup",
+    "fallback_run_target": {
+        "description": "Switching off everything",
+        "depends_on": ["state_manager"],
+        "transition_timeout": 1.5
+    },
+    "alive_supervision" : {
+        "evaluation_cycle": 0.5
+    }
+}
