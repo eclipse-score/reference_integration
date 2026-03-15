@@ -1,0 +1,97 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+# SBOM Generation Workflow
+#
+# Summary:
+#   Generates a Software Bill of Materials (SPDX 2.3 + CycloneDX 1.6) for the
+#   core showcase Bazel targets and stores the results as a GitHub Actions
+#   artifact. Optionally submits the SPDX snapshot to the GitHub Dependency
+#   Submission API to enable Dependabot vulnerability alerts.
+#
+# Triggers:
+#   - workflow_dispatch (on-demand only)
+#
+# Outputs:
+#   - Artifact "sbom-<sha>": reference_integration_sbom.spdx.json +
+#     reference_integration_sbom.cdx.json (retained 90 days)
+#   - GitHub Dependency Graph snapshot (enables Dependabot alerts per commit)
+#
+# Covered targets:
+#   - //showcases/cli:cli
+#   - //showcases/orchestration_persistency:orch_per_example
+name: Generate SBOM
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sbom:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # required for GitHub Dependency Submission API
+
+    steps:
+      - name: Clean disk space
+        uses: eclipse-score/more-disk-space@v1
+
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.18.0
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}
+          repository-cache: true
+          cache-save: true
+
+      - name: Install prerequisites (uv + Java for Rust crate metadata)
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          sudo apt-get install -y --no-install-recommends openjdk-11-jre-headless
+
+      - name: Build SBOM
+        run: bazel build --lockfile_mode=error //:reference_integration_sbom
+
+      - name: Upload SBOM artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{ github.sha }}
+          path: |
+            bazel-bin/reference_integration_sbom.spdx.json
+            bazel-bin/reference_integration_sbom.cdx.json
+          retention-days: 90
+
+      - name: Convert SPDX to GitHub Dependency snapshot
+        run: |
+          # Use the script from the already-fetched @score_sbom external repo
+          SBOM_SCRIPTS="$(bazel info output_base)/external/score_sbom+/scripts"
+          python3 "${SBOM_SCRIPTS}/spdx_to_github_snapshot.py" \
+            --input bazel-bin/reference_integration_sbom.spdx.json \
+            --output snapshot.json \
+            --sha "${{ github.sha }}" \
+            --ref "${{ github.ref }}" \
+            --job-correlator "generate-sbom" \
+            --job-id "${{ github.run_id }}"
+
+      - name: Submit to GitHub Dependency Submission API
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const snapshot = JSON.parse(fs.readFileSync('snapshot.json', 'utf8'));
+            await github.rest.dependencyGraph.createRepositorySnapshot({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ...snapshot,
+            });

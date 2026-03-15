@@ -12,6 +12,7 @@
 # *******************************************************************************
 
 load("@score_docs_as_code//:docs.bzl", "docs")
+load("@score_sbom//:defs.bzl", "sbom")
 load("@score_tooling//:defs.bzl", "copyright_checker", "setup_starpls", "use_format_targets")
 
 # Docs-as-code
@@ -69,3 +70,15 @@ exports_files([
     "MODULE.bazel",
     "pyproject.toml",
 ])
+
+# SBOM for core showcase targets
+sbom(
+    name = "reference_integration_sbom",
+    targets = [
+        "//showcases/cli:cli",
+        "//showcases/orchestration_persistency:orch_per_example",
+    ],
+    component_name = "score_reference_integration",
+    module_lockfiles = [":MODULE.bazel.lock"],
+    auto_crates_cache = True,
+)
