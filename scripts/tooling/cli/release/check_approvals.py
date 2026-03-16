@@ -25,8 +25,39 @@ from urllib.error import URLError
 from urllib.request import urlopen
 
 from github import Auth, Github  # type: ignore[import-untyped]
+from jinja2 import Template
 
 from scripts.tooling.lib.known_good import load_known_good
+
+# Jinja2 templates for markdown generation
+MODULE_STATUS_TEMPLATE = Template(
+    """{% if status == 'disapproved' -%}
+- 🚫 **{{ module_name }}**: Changes requested by {{ disapproved_usernames|join(', ') }}
+{%- if approved_usernames %} (approved by {{ approved_usernames|join(', ') }}){% endif %}
+{% elif status == 'approved' -%}
+- ✅ **{{ module_name }}**: Approved by {{ approved_usernames|join(', ') }}
+{% else -%}
+- ❌ **{{ module_name }}**: Awaiting approval (requires one of: {{ required_approvers|join(', ') }})
+{% endif -%}
+"""
+)
+
+SUMMARY_TEMPLATE = Template(
+    """### Release Approval Check Results
+
+**Target Branch:** {{ base_branch }}
+
+{% if all_approved -%}
+✅ **Status:** All modules have required approvals
+{% else -%}
+❌ **Status:** Some modules are missing required approvals
+{% endif %}
+#### Modules:
+{% for module in modules -%}
+{{ module }}
+{% endfor -%}
+"""
+)
 
 
 @dataclass
@@ -264,6 +295,106 @@ def check_pr_reviews(
     }
 
 
+def _format_module_status(module_name: str, result: dict[str, Any]) -> str:
+    """Format a single module's approval status as markdown.
+
+    Args:
+        module_name: Name of the module
+        result: Module result dictionary containing status and approver information
+
+    Returns:
+        Markdown-formatted status line
+    """
+    required_approvers = [m["github"] if isinstance(m, dict) else str(m) for m in result["maintainers"]]
+
+    return MODULE_STATUS_TEMPLATE.render(
+        module_name=module_name,
+        status=result["status"],
+        approved_usernames=result["approvedUsernames"],
+        disapproved_usernames=result["disapprovedUsernames"],
+        required_approvers=required_approvers,
+    )
+
+
+def _write_github_actions_summary(summary: str) -> None:
+    """Write summary to GitHub Actions step summary if available.
+
+    Args:
+        summary: Markdown-formatted summary text
+    """
+    if "GITHUB_STEP_SUMMARY" in os.environ:
+        with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
+            f.write(summary)
+            f.write("\n")
+
+
+def _post_pr_comment(
+    summary: str,
+    repo_owner: str,
+    repo_name: str,
+    pr_number: int,
+    github_token: str,
+) -> None:
+    """Post or update PR comment with approval summary.
+
+    Args:
+        summary: Markdown-formatted summary text
+        repo_owner: Repository owner
+        repo_name: Repository name
+        pr_number: Pull request number
+        github_token: GitHub authentication token
+    """
+    try:
+        auth = Auth.Token(github_token)
+        github = Github(auth=auth)
+        repo = github.get_repo(f"{repo_owner}/{repo_name}")
+        pr = repo.get_pull(pr_number)
+
+        comment_marker = "<!-- release-approval-check -->"
+        full_comment = f"{comment_marker}\n{summary}"
+
+        # Find existing comment from this workflow
+        existing_comment = None
+        for comment in pr.get_issue_comments():
+            if comment_marker in comment.body:
+                existing_comment = comment
+                break
+
+        # Update existing or create new comment
+        if existing_comment:
+            existing_comment.edit(full_comment)
+            print("Updated existing PR comment", file=sys.stderr)
+        else:
+            pr.create_issue_comment(full_comment)
+            print("Created new PR comment", file=sys.stderr)
+    except Exception as e:
+        print(f"Warning: Failed to post PR comment: {e}", file=sys.stderr)
+
+
+def _build_summary_markdown(
+    module_results: dict[str, dict[str, Any]],
+    all_approved: bool,
+    base_branch: str,
+) -> str:
+    """Build the markdown summary text.
+
+    Args:
+        module_results: Dictionary of module approval results
+        all_approved: Whether all modules are approved
+        base_branch: Target branch of the PR
+
+    Returns:
+        Markdown-formatted summary string
+    """
+    modules = [_format_module_status(module_name, result) for module_name, result in module_results.items()]
+
+    return SUMMARY_TEMPLATE.render(
+        base_branch=base_branch,
+        all_approved=all_approved,
+        modules=modules,
+    )
+
+
 def generate_summary(
     module_results: dict[str, dict[str, Any]],
     all_approved: bool,
@@ -287,65 +418,12 @@ def generate_summary(
     Returns:
         Markdown-formatted summary string
     """
-    summary = "### Release Approval Check Results\n\n"
-    summary += f"**Target Branch:** {base_branch}\n\n"
+    summary = _build_summary_markdown(module_results, all_approved, base_branch)
 
-    if all_approved:
-        summary += "✅ **Status:** All modules have required approvals\n\n"
-    else:
-        summary += "❌ **Status:** Some modules are missing required approvals\n\n"
+    _write_github_actions_summary(summary)
 
-    summary += "#### Modules:\n"
-
-    for module_name, result in module_results.items():
-        if result["status"] == "disapproved":
-            disapprovers = ", ".join(result["disapprovedUsernames"])
-            approvers_text = ""
-            if result["approvedUsernames"]:
-                approvers_text = f" (approved by {', '.join(result['approvedUsernames'])})"
-            summary += f"- 🚫 **{module_name}**: Changes requested by {disapprovers}{approvers_text}\n"
-        elif result["status"] == "approved":
-            approvers = ", ".join(result["approvedUsernames"])
-            summary += f"- ✅ **{module_name}**: Approved by {approvers}\n"
-        else:  # pending
-            required_approvers = ", ".join(
-                [m["github"] if isinstance(m, dict) else str(m) for m in result["maintainers"]]
-            )
-            summary += f"- ❌ **{module_name}**: Awaiting approval (requires one of: {required_approvers})\n"
-
-    # Write to GitHub Actions step summary if available
-    if "GITHUB_STEP_SUMMARY" in os.environ:
-        with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
-            f.write(summary)
-            f.write("\n")
-
-    # Post as PR comment if credentials provided
     if all([repo_owner, repo_name, pr_number, github_token]):
-        try:
-            auth = Auth.Token(github_token)
-            github = Github(auth=auth)
-            repo = github.get_repo(f"{repo_owner}/{repo_name}")
-            pr = repo.get_pull(pr_number)
-
-            # Check if there's already a comment from this workflow
-            comment_marker = "<!-- release-approval-check -->"
-            existing_comment = None
-
-            for comment in pr.get_issue_comments():
-                if comment_marker in comment.body:
-                    existing_comment = comment
-                    break
-
-            full_comment = f"{comment_marker}\n{summary}"
-
-            if existing_comment:
-                existing_comment.edit(full_comment)
-                print("Updated existing PR comment", file=sys.stderr)
-            else:
-                pr.create_issue_comment(full_comment)
-                print("Created new PR comment", file=sys.stderr)
-        except Exception as e:
-            print(f"Warning: Failed to post PR comment: {e}", file=sys.stderr)
+        _post_pr_comment(summary, repo_owner, repo_name, pr_number, github_token)
 
     return summary
 
