@@ -25,15 +25,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.18.0
         with:
-          python-version: '3.12'
-          cache: 'pip'
-          cache-dependency-path: 'scripts/tooling/requirements.txt'
-      - name: Install dependencies
-        run: |
-          pip install -r scripts/tooling/requirements.txt
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}
+          repository-cache: true
+          cache-save: ${{ github.event_name == 'push' }}
       - name: Check Release Approvals
         id: check-approvals
         env:
@@ -43,7 +41,7 @@ jobs:
           BASE_BRANCH: ${{ github.base_ref }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python3 scripts/tooling/cli/release/check_release_approvals.py
+          bazel run //scripts/tooling -- release check_approvals
       - name: Success
         if: steps.check-approvals.outputs.all-approved == 'true'
         run: |

@@ -19,11 +19,14 @@ import json
 import os
 import sys
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 from urllib.error import URLError
 from urllib.request import urlopen
 
 from github import Auth, Github  # type: ignore[import-untyped]
+
+from scripts.tooling.lib.known_good import load_known_good
 
 
 @dataclass
@@ -40,26 +43,29 @@ class ModuleResult:
     status: str  # 'approved', 'disapproved', or 'pending'
 
 
-def fetch_maintainers() -> dict[str, list[dict[str, Any]]]:
+def _find_repo_root() -> Path:
+    candidate = Path(__file__).resolve()
+    for parent in candidate.parents:
+        if (parent / "known_good.json").exists():
+            return parent
+    return Path.cwd()
+
+
+def fetch_maintainers(known_good_path: Path) -> dict[str, list[dict[str, Any]]]:
     """Fetch maintainers from module metadata files.
 
     Returns:
         Dictionary mapping module names to lists of maintainer information.
     """
-    modules = [
+    known_good = load_known_good(known_good_path)
+    sw_modules = known_good.modules.get("target_sw", {}).keys()
+
+    # Add subset of tooling modules
+    modules = list(sw_modules) + [
+        "score_docs_as_code",
         "score_platform",
-        "score_baselibs",
-        "score_logging",
-        "score_baselibs_rust",
-        "score_communication",
-        "score_feo",
-        "score_kyron",
-        "score_lifecycle_health",
-        "score_persistency",
-        "score_orchestrator",
         "score_itf",
         "score_test_scenarios",
-        "score_docs_as_code",
     ]
 
     modules_maintainers: dict[str, list[dict[str, Any]]] = {}
@@ -81,6 +87,7 @@ def fetch_maintainers() -> dict[str, list[dict[str, Any]]]:
             modules_maintainers[module_name] = []
 
     # Add extra maintainers
+    # TODO: move it to single config file
     modules_maintainers["Testing"] = [
         {
             "name": "Piotr Korkus",
@@ -343,14 +350,18 @@ def generate_summary(
     return summary
 
 
-def cmd_fetch_maintainers() -> None:
+def cmd_fetch_maintainers(known_good_path: Path) -> None:
     """Command: Fetch maintainers."""
-    modules_maintainers = fetch_maintainers()
+    modules_maintainers = fetch_maintainers(known_good_path)
     print(json.dumps(modules_maintainers, indent=2))
 
 
-def cmd_check_all() -> None:
-    """Command: Run all steps (fetch, check, summarize)."""
+def cmd_check_all(known_good_path: Path) -> int:
+    """Command: Run all steps (fetch, check, summarize).
+
+    Returns:
+        Exit code: 0 if all approved, 1 otherwise
+    """
     # Get required parameters from environment variables
     repo_owner = os.environ.get("REPO_OWNER", "")
     repo_name = os.environ.get("REPO_NAME", "")
@@ -362,11 +373,11 @@ def cmd_check_all() -> None:
         print("Error: Missing required environment variables", file=sys.stderr)
         print("Required: REPO_OWNER, REPO_NAME, PR_NUMBER, GITHUB_TOKEN", file=sys.stderr)
         print("Optional: BASE_BRANCH (defaults to 'unknown')", file=sys.stderr)
-        sys.exit(1)
+        return 1
 
     # Step 1: Fetch maintainers
     print("=== Fetching maintainers ===", file=sys.stderr)
-    modules_maintainers = fetch_maintainers()
+    modules_maintainers = fetch_maintainers(known_good_path)
 
     # Step 2: Check PR reviews
     print("\n=== Checking PR reviews ===", file=sys.stderr)
@@ -401,9 +412,43 @@ def cmd_check_all() -> None:
     # Exit with error if not all approved
     if not results["allApproved"]:
         print("\n" + summary, file=sys.stderr)
-        sys.exit(1)
+        return 1
     else:
         print("\n" + summary)
+        return 0
+
+
+def register(subparsers: argparse._SubParsersAction) -> None:
+    """Register this command as a subparser."""
+    parser = subparsers.add_parser(
+        "check_approvals",
+        help="Check release branch PR approvals against required maintainers",
+    )
+    parser.add_argument(
+        "--known_good",
+        metavar="PATH",
+        default=str(_find_repo_root()),
+        help="Directory containing known_good.json (default: repo root)",
+    )
+    parser.set_defaults(func=_run)
+
+
+def _run(args: argparse.Namespace) -> int:
+    """Run the command with parsed arguments.
+
+    Returns:
+        Exit code: 0 on success, 1 on failure
+    """
+    known_good_path = Path(args.known_good) / "known_good.json"
+
+    # Check if running in GitHub Actions (primary use case)
+    if all(var in os.environ for var in ["REPO_OWNER", "REPO_NAME", "PR_NUMBER", "GITHUB_TOKEN"]):
+        return cmd_check_all(known_good_path)
+    else:
+        print("Error: Missing required environment variables", file=sys.stderr)
+        print("Required: REPO_OWNER, REPO_NAME, PR_NUMBER, GITHUB_TOKEN", file=sys.stderr)
+        print("Optional: BASE_BRANCH (defaults to 'unknown')", file=sys.stderr)
+        return 1
 
 
 def main() -> None:
@@ -419,24 +464,31 @@ def main() -> None:
     Optional:
     - BASE_BRANCH: Target branch name (defaults to 'unknown')
     """
+    # Parse common arguments
+    parser = argparse.ArgumentParser(
+        description="Check release branch PR approvals",
+        epilog="Primary usage: Set environment variables and run without arguments",
+    )
+    parser.add_argument(
+        "--known_good",
+        type=Path,
+        default=_find_repo_root() / "known_good.json",
+        help="Path to known_good.json file (default: repo_root/known_good.json)",
+    )
+    subparsers = parser.add_subparsers(dest="command", help="Debug commands")
+
+    # fetch-maintainers command (for debugging)
+    subparsers.add_parser("fetch-maintainers", help="Fetch and print maintainers JSON")
+
+    args = parser.parse_args()
+
     # Check if running in GitHub Actions (primary use case)
     if all(var in os.environ for var in ["REPO_OWNER", "REPO_NAME", "PR_NUMBER", "GITHUB_TOKEN"]):
-        cmd_check_all()
+        sys.exit(cmd_check_all(args.known_good))
     else:
         # Fallback for standalone/debug usage
-        parser = argparse.ArgumentParser(
-            description="Check release branch PR approvals",
-            epilog="Primary usage: Set environment variables and run without arguments",
-        )
-        subparsers = parser.add_subparsers(dest="command", help="Debug commands")
-
-        # fetch-maintainers command (for debugging)
-        subparsers.add_parser("fetch-maintainers", help="Fetch and print maintainers JSON")
-
-        args = parser.parse_args()
-
         if args.command == "fetch-maintainers":
-            cmd_fetch_maintainers()
+            cmd_fetch_maintainers(args.known_good)
         else:
             parser.print_help()
             print("\n" + "=" * 60)
