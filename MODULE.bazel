@@ -60,6 +60,18 @@ git_override(
     remote = "https://github.com/bmw-software-engineering/trlc.git",
 )
 
+# SBOM generation
+bazel_dep(name = "score_sbom")
+git_override(
+    module_name = "score_sbom",
+    commit = "1adca3f11116f3bfe7c41f7564d011011fba31df",
+    remote = "https://github.com/eclipse-score/sbom-tool.git",
+)
+
+sbom_ext = use_extension("@score_sbom//:extensions.bzl", "sbom_metadata")
+sbom_ext.track_module(name = "score_ref_int")
+use_repo(sbom_ext, "sbom_metadata")
+
 # Currently required for ifs tooling
 bazel_dep(name = "score_toolchains_qnx", version = "0.0.7")
 
