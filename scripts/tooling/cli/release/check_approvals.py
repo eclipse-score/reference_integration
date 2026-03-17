@@ -530,56 +530,7 @@ def _run(args: argparse.Namespace) -> int:
 
 
 def main() -> None:
-    """Main entry point.
-
-    Runs approval check using environment variables:
-    Required:
-    - REPO_OWNER: Repository owner (e.g., 'eclipse-score')
-    - REPO_NAME: Repository name (e.g., 'reference_integration')
-    - PR_NUMBER: Pull request number
-    - GITHUB_TOKEN: GitHub authentication token
-
-    Optional:
-    - BASE_BRANCH: Target branch name (defaults to 'unknown')
-    """
-    # Parse common arguments
-    parser = argparse.ArgumentParser(
-        description="Check release branch PR approvals",
-        epilog="Primary usage: Set environment variables and run without arguments",
-    )
-    parser.add_argument(
-        "--known_good",
-        type=Path,
-        default=_find_repo_root() / "known_good.json",
-        help="Path to known_good.json file (default: repo_root/known_good.json)",
-    )
-    subparsers = parser.add_subparsers(dest="command", help="Debug commands")
-
-    # fetch-maintainers command (for debugging)
-    subparsers.add_parser("fetch-maintainers", help="Fetch and print maintainers JSON")
-
-    args = parser.parse_args()
-
-    # Check if running in GitHub Actions (primary use case)
-    if all(var in os.environ for var in ["REPO_OWNER", "REPO_NAME", "PR_NUMBER", "GITHUB_TOKEN"]):
-        sys.exit(cmd_check_all(args.known_good))
-    else:
-        # Fallback for standalone/debug usage
-        if args.command == "fetch-maintainers":
-            cmd_fetch_maintainers(args.known_good)
-        else:
-            parser.print_help()
-            print("\n" + "=" * 60)
-            print("ERROR: Missing required environment variables")
-            print("=" * 60)
-            print("Required environment variables:")
-            print("  - REPO_OWNER: Repository owner")
-            print("  - REPO_NAME: Repository name")
-            print("  - PR_NUMBER: Pull request number")
-            print("  - GITHUB_TOKEN: GitHub authentication token")
-            print("\nOptional:")
-            print("  - BASE_BRANCH: Target branch (defaults to 'unknown')")
-            sys.exit(1)
+    print("This script should be run via `bazel` as part of CICD")
 
 
 if __name__ == "__main__":
