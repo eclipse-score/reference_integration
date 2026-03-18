@@ -1,9 +1,24 @@
 [tool.pytest]
+addopts = ["-v"]
 pythonpath = [
     ".",
     "scripts/tooling",
+    "feature_integration_tests/test_cases"
 ]
-testpaths = ["scripts/tooling/tests"]
+testpaths = [
+    "scripts/tooling/tests",
+    "feature_integration_tests/test_cases/tests"
+]
+junit_log_passing_tests = true
+junit_family = "xunit1"
+markers = [
+    "metadata",
+    "test_properties(dict): Add custom properties to test XML output",
+]
+filterwarnings = [
+    'ignore:record_property is incompatible with junit_family:pytest.PytestWarning',
+    'ignore:record_xml_attribute is an experimental feature:pytest.PytestExperimentalApiWarning',
+]
 
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.

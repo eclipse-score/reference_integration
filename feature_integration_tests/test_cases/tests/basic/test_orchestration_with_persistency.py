@@ -22,7 +22,7 @@ from testing_utils import LogContainer
 
 
 @add_test_properties(
-    partially_verifies=["feat_req__persistency__persistency"],
+    partially_verifies=["feat_req__persistency__store_data"],
     test_type="requirements-based",
     derivation_technique="requirements-analysis",
 )
