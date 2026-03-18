@@ -12,20 +12,13 @@
 # *******************************************************************************
 
 genrule(
-    name = "fetch-fastdev-archive",
-    srcs = [],
-    outs = ["fastdev-archive.tgz"],
-    cmd = "wget -O $@ https://github.com/Elektrobit/eb_corbos_toolkit/releases/download/v2.0.0-beta1/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64.tar.gz",
-)
-
-genrule(
     name = "extract-fastdev-image",
-    srcs = [":fetch-fastdev-archive"],
+    srcs = ["@eb_corbos_toolkit_fastdev_archive//file"],
     outs = [
         "ebcl-qemuarm64/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64.wic",
         "ebcl-qemuarm64/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64-vmlinux",
     ],
-    cmd = "tar xzf $(location :fetch-fastdev-archive) -C $(RULEDIR)/ebcl-qemuarm64 && chmod +w $(RULEDIR)/ebcl-qemuarm64/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64.wic && ls -lah $(RULEDIR)/ebcl-qemuarm64/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64.wic > /tmp/foo",
+    cmd = "tar xzf $(location @eb_corbos_toolkit_fastdev_archive//file) -C $(RULEDIR)/ebcl-qemuarm64 && chmod +w $(RULEDIR)/ebcl-qemuarm64/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64.wic && ls -lah $(RULEDIR)/ebcl-qemuarm64/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64.wic > /tmp/foo",
     visibility = [
         "//visibility:public",
     ],
