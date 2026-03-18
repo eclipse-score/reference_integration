@@ -36,7 +36,6 @@ genrule(
     outs = [
         "ebcl-qemuarm64-deployed/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64.wic",
         "ebcl-qemuarm64-deployed/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64-vmlinux",
-        "qemu_deployment.log",
     ],
     cmd = " \
         $(location build_image.sh) \

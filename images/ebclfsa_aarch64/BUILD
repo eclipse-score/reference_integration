@@ -33,10 +33,12 @@ alias(
 sh_binary(
     name = "run",
     srcs = [
-        "//runners/qemu_ebclfsa_aarch64/scripts:run_qemu.sh",
+        "//runners/qemu_aarch64/scripts:run_qemu.sh",
     ],
     args = [
         "$(locations :image)",
+        "-append",
+        "'root=/dev/vda1 sdk_enable lisa_syscall_whitelist=2026 rw sharedmem.enable_sharedmem=0 init=/usr/bin/ebclfsa-cflinit'"
     ],
     data = [
         ":image",
