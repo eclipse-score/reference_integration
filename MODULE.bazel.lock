@@ -1299,6 +1299,41 @@
         ]
       }
     },
+    "@@os_autosd_toolchain+//autosd_10_gcc:extensions.bzl%autosd_10_gcc_extension": {
+      "general": {
+        "bzlTransitiveDigest": "q8IPfdy2EuBM6Vu7apobuLWsHXnMTmp4aAD6ESXr5rg=",
+        "usagesDigest": "oMHYpP3oXa0ve/6EDXRmj1+a4i43scdlE0mUTeyTFEQ=",
+        "recordedFileInputs": {},
+        "recordedDirentsInputs": {},
+        "envVariables": {},
+        "generatedRepoSpecs": {
+          "autosd_10_gcc_repo": {
+            "repoRuleId": "@@os_autosd_toolchain+//autosd_10_gcc:extensions.bzl%autosd_10_gcc_toolchain",
+            "attributes": {
+              "c_flags": [
+                "-O2",
+                "-g",
+                "-pipe",
+                "-Wall",
+                "-Werror=format-security"
+              ],
+              "cxx_flags": [
+                "-O2",
+                "-g",
+                "-pipe",
+                "-Wall",
+                "-Werror=format-security"
+              ],
+              "link_flags": [
+                "-Wl,-z,relro",
+                "-Wl,-z,now"
+              ]
+            }
+          }
+        },
+        "recordedRepoMappingEntries": []
+      }
+    },
     "@@rules_buf+//buf:extensions.bzl%buf": {
       "general": {
         "bzlTransitiveDigest": "nziVPz62Pjv2JecWM9NXmhpU/OjKhPz1MT9++4ObLUw=",
@@ -2045,6 +2080,22 @@
             "platforms"
           ]
         ]
+      }
+    },
+    "@@rules_rpm+//toolchain:extensions.bzl%rpm_toolchain": {
+      "general": {
+        "bzlTransitiveDigest": "sVM9H/0ylP/87FERTHeMVpdD/8K7C9NhONd5gVMMvM0=",
+        "usagesDigest": "h4CTc3Tp9qpLsNX1nMVMaaYigHeuNVKXUWvElDXFEas=",
+        "recordedFileInputs": {},
+        "recordedDirentsInputs": {},
+        "envVariables": {},
+        "generatedRepoSpecs": {
+          "rpm_toolchain": {
+            "repoRuleId": "@@rules_rpm+//toolchain:rpm_toolchain.bzl%rpm_toolchain_repo",
+            "attributes": {}
+          }
+        },
+        "recordedRepoMappingEntries": []
       }
     },
     "@@rules_rust+//crate_universe:extensions.bzl%crate": {
@@ -7919,6 +7970,34 @@
             "score_bazel_cpp_toolchains+",
             "score_bazel_cpp_toolchains",
             "score_bazel_cpp_toolchains+"
+          ]
+        ]
+      }
+    },
+    "@@score_communication+//third_party/lobster:lobster.bzl%lobster_ext": {
+      "general": {
+        "bzlTransitiveDigest": "ZCflMxqZlfnFjjNyAVZ8yPFB9wd3+IfzPMRbX/OpunU=",
+        "usagesDigest": "Oh5BIYRTBLHTdBqk1FNUppn+ZhSrqE+sBtlO/JelDKs=",
+        "recordedFileInputs": {},
+        "recordedDirentsInputs": {},
+        "envVariables": {},
+        "generatedRepoSpecs": {
+          "lobster": {
+            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_archive",
+            "attributes": {
+              "sha256": "5a0b86c62cadc872dcb1b79485ba72953400bcdc42f97c5b5aefe210e92ce6ff",
+              "strip_prefix": "lobster-lobster-0.14.1",
+              "urls": [
+                "https://github.com/bmw-software-engineering/lobster/archive/refs/tags/lobster-0.14.1.tar.gz"
+              ]
+            }
+          }
+        },
+        "recordedRepoMappingEntries": [
+          [
+            "score_communication+",
+            "bazel_tools",
+            "bazel_tools"
           ]
         ]
       }
