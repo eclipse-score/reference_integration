@@ -12,13 +12,14 @@
 # *******************************************************************************
 name: EB corbos Linux for Safety Applications - Build & Integration Test
 on:
-  pull_request:
-    types: [opened, reopened, synchronize]
-  merge_group:
-    types: [checks_requested]
-  push:
-    branches:
-      - main
+  workflow_call:
+  # pull_request:
+  #   types: [opened, reopened, synchronize]
+  # merge_group:
+  #   types: [checks_requested]
+  # push:
+  #   branches:
+  #     - main
 # Do not flood CI with unneeded previous runs in PR
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
@@ -33,7 +34,19 @@ jobs:
       - name: Clean disk space
         uses: eclipse-score/more-disk-space@v1
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
+      - name: download known_good.updated.json artifact
+        if: github.event_name == 'workflow_call'
+        uses: actions/download-artifact@v4
+        with:
+          name: known_good.updated.json
+      - name: update MODULE.bazel files
+        if: github.event_name == 'workflow_call'
+        run: |
+          echo "::group::update bazel_common/score_modules_*.MODULE.bazel"
+          scripts/known_good/update_module_from_known_good.py --known known_good.updated.json --output-dir-modules bazel_common
+          cat bazel_common/score_modules_*.MODULE.bazel
+          echo "::endgroup::"
       - name: Setup Bazel
         uses: bazel-contrib/setup-bazel@0.18.0
         with:

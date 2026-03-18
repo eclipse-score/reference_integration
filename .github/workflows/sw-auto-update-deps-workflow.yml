@@ -1,0 +1,56 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+# Nightly / manual integration tests: updates all modules to latest HEAD on their branch.
+name: Integration Tests (Nightly)
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 2 * * *' # Every night at 02:30 UTC on main-etas branch
+jobs:
+  sw-check:
+    uses: ./.github/workflows/reusable_sw-check.yml
+    secrets: inherit
+    with:
+      update_to_latest: true
+      repo_runner_labels: 'ubuntu-latest'
+      target_branch: '${{ github.ref }}'
+  update_known_good:
+    name: update_known_good
+    runs-on: ubuntu-latest
+    needs: sw-check
+    steps:
+      - name: checkout
+        uses: actions/checkout@v6.0.2
+      - name: download known_good.updated.json artifact
+        if: github.event_name == 'workflow_call'
+        uses: actions/download-artifact@v4
+        with:
+          name: known_good.updated.json
+      - name: update MODULE.bazel files
+        if: github.event_name == 'workflow_call'
+        run: |
+          echo "::group::update bazel_common/score_modules_*.MODULE.bazel"
+          scripts/known_good/update_module_from_known_good.py --known known_good.updated.json --output-dir-modules bazel_common
+          cat bazel_common/score_modules_*.MODULE.bazel
+          echo "::endgroup::"
+    # - name: push changes if there are any
+    #   run: |
+    #     git config user.name "github-actions[bot]"
+    #     git config user.email "github-actions[bot]@users.noreply.github.com"
+    #     if [[ -n $(git status --porcelain) ]]; then
+    #       git add .
+    #       git commit -m "Update known_good.json and MODULE.bazel files to latest HEAD"
+    #       git push
+    #     else
+    #       echo "No changes to push"
+    #     fi
