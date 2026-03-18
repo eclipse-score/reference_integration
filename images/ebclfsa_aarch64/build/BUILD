@@ -31,7 +31,7 @@ genrule(
         "//feature_integration_tests/configs:etc_configs",
         ":extract-fastdev-image",
         ":config-overlay",
-        "run_qemu.sh",
+        "build_image.sh",
     ],
     outs = [
         "ebcl-qemuarm64-deployed/fastdev-ubuntu-ebclfsa-ebcl-qemuarm64.wic",
@@ -39,15 +39,12 @@ genrule(
         "qemu_deployment.log",
     ],
     cmd = " \
-        mkdir -p $(RULEDIR)/ebcl-qemuarm64-deployed &&\
-        cp $(RULEDIR)/ebcl-qemuarm64/* $(RULEDIR)/ebcl-qemuarm64-deployed/ &&\
-        $(location run_qemu.sh) $(RULEDIR)/ebcl-qemuarm64-deployed -pidfile $(RULEDIR)/qemu.pid > $(RULEDIR)/qemu_deployment.log &\
-        sleep 30 ; \
-        sshpass -p linux scp -rp -o StrictHostKeyChecking=no -P 2222 $(location //showcases:showcases)/* root@localhost:/ &&\
-        sshpass -p linux scp -rp -o StrictHostKeyChecking=no -P 2222 $(location :config-overlay)/* root@localhost:/ &&\
-        sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost sync &&\
-        sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost crinit-ctl poweroff || true \
-        sleep 5  \
+        $(location build_image.sh) \
+            $(RULEDIR) \
+            $(RULEDIR)/ebcl-qemuarm64 \
+            $(RULEDIR)/ebcl-qemuarm64-deployed \
+            $(location //showcases:showcases)/* \
+            $(location :config-overlay)/* \
     ",
     visibility = [
         "//visibility:public",
