@@ -1,5 +1,5 @@
 # *******************************************************************************
-# Copyright (c) 2025 Contributors to the Eclipse Foundation
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -12,17 +12,3 @@
 # *******************************************************************************
 load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 load("@score_itf//:defs.bzl", "py_itf_test")
-
-# sh_binary(
-#     name = "qemu_x86_64",
-#     srcs = ["scripts/run_qemu.sh"],
-#     args = [
-#         "$(location @toolchains_qnx_sdp//:host_dir)",
-#         "$(location //:image)",
-#     ],
-#     data = [
-#         "//:image",
-#         "@toolchains_qnx_sdp//:host_all",
-#         "@toolchains_qnx_sdp//:host_dir",
-#     ],
-# )
