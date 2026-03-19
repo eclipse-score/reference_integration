@@ -13,19 +13,12 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# # --- begin runfiles.bash initialization v3 ---
-# # Copy-pasted from the Bazel Bash runfiles library v3.
-# set -uo pipefail; set +e; f=bazel_tools/tools/bash/runfiles/runfiles.bash
-# # shellcheck disable=SC1090
-# source "${RUNFILES_DIR:-/dev/null}/$f" 2>/dev/null || \
-#   source "$(grep -sm1 "^$f " "${RUNFILES_MANIFEST_FILE:-/dev/null}" | cut -f2- -d' ')" 2>/dev/null || \
-#   source "$0.runfiles/$f" 2>/dev/null || \
-#   source "$(grep -sm1 "^$f " "$0.runfiles_manifest" | cut -f2- -d' ')" 2>/dev/null || \
-#   source "$(grep -sm1 "^$f " "$0.exe.runfiles_manifest" | cut -f2- -d' ')" 2>/dev/null || \
-#   { echo>&2 "ERROR: cannot find $f"; exit 1; }; f=; set -e
-# # --- end runfiles.bash initialization v3 ---
-
 set -euox pipefail
+
+if ! declare -F rlocation > /dev/null; then
+    echo "Error: this script is expected to be run via Bazel's sh_binary() function with the option use_bash_launcher = True"
+    exit 1
+fi
 
 if [[ $# -lt 2 ]]; then
     echo "Error: This script requires at least 2 parameters"
@@ -33,8 +26,8 @@ if [[ $# -lt 2 ]]; then
     exit 1
 fi
 
-KERNEL="$(rlocation _main/$1)"
-IMAGE="$(rlocation _main/$2)"
+KERNEL="$(rlocation _main/"$1")"
+IMAGE="$(rlocation _main/"$2")"
 
 echo "Kernel: ${KERNEL}"
 echo "Image: ${IMAGE}"
