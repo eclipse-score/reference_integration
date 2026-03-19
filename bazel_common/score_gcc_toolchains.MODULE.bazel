@@ -14,8 +14,8 @@
 bazel_dep(name = "score_bazel_cpp_toolchains", version = "0.2.2")
 git_override(
     module_name = "score_bazel_cpp_toolchains",
-    commit = "91f56fa6ba2269fa3c3b5edc0cf71e899617897a",  # EBcLfSA toolchain update + LD_LIBRARY_PATH fix
-    remote = "https://github.com/elektrobit-contrib/eclipse-score_bazel_cpp_toolchains.git",
+    commit = "d49d68d1795314e33aed2f0dd84c45bdf57322fd",
+    remote = "https://github.com/eclipse-score/bazel_cpp_toolchains.git",
 )
 
 gcc = use_extension("@score_bazel_cpp_toolchains//extensions:gcc.bzl", "gcc", dev_dependency = True)
