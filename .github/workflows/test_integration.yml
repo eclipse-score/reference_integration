@@ -22,6 +22,7 @@ jobs:
       update_to_latest: true
       repo_runner_labels: 'ubuntu-latest'
       target_branch: '${{ github.ref }}'
+      
   codeql-scan:
     uses: ./.github/workflows/reusable_codeql-multiple-repo-scan.yml
     secrets: inherit
