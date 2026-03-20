@@ -53,37 +53,37 @@ jobs:
         id: checkout-repos
         run: |
           scripts/workflow/checkout_repos.sh
-      # - name: Setup Bazel
-      #   uses: bazel-contrib/setup-bazel@0.15.0
-      #   with:
-      #     # Avoid downloading Bazel every time.
-      #     bazelisk-cache: true
-      #     # Store build cache per workflow.
-      #     disk-cache: codeql-scan
-      #     # Share repository cache between workflows.
-      #     repository-cache: true
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.15.0
+        with:
+          # Avoid downloading Bazel every time.
+          bazelisk-cache: true
+          # Store build cache per workflow.
+          disk-cache: codeql-scan
+          # Share repository cache between workflows.
+          repository-cache: true
       - name: Initialize CodeQL for all repositories
         uses: github/codeql-action/init@v4
         with:
           languages: cpp
-          build-mode: none
+          build-mode: manual
           packs: codeql/misra-cpp-coding-standards@2.53.0
           config-file: ./.github/codeql/codeql-config.yml
-      # - name: Build all components with Bazel
-      #   run: |
-      #     echo "Building all C++ and Rust targets for CodeQL analysis"
-      #     # Build all targets from the checked-out repositories
-      #     # This ensures CodeQL captures the compilation database
-      #     bazel build --verbose_failures --config=x86_64-linux \
-      #       @score_baselibs//... \
-      #       @score_baselibs_rust//src/... \
-      #       @score_communication//score/mw/com/impl/... \
-      #       @score_persistency//src/... \
-      #       @score_orchestrator//src/... \
-      #       @score_kyron//src/... \
-      #       @score_lifecycle_health//src/... \
-      #       @score_logging//... \
-      #       || true  # Continue even if some targets fail
+      - name: Build all components with Bazel
+        run: |
+          echo "Building all C++ and Rust targets for CodeQL analysis"
+          # Build all targets from the checked-out repositories
+          # This ensures CodeQL captures the compilation database
+          bazel build --verbose_failures --config=linux-x86_64 \
+            @score_baselibs//score/... \
+            @score_baselibs_rust//src/... \
+            @score_communication//score/mw/com/impl/... \
+            @score_persistency//src/cpp/src/... \
+            @score_orchestrator//src/... \
+            @score_kyron//src/... \
+            @score_lifecycle_health//src/... \
+            @score_logging//score/... \
+            || true  # Continue even if some targets fail
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
         with:
