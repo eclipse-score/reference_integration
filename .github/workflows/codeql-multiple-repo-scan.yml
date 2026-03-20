@@ -40,12 +40,6 @@ jobs:
     steps:
       - name: Checkout central repository
         uses: actions/checkout@v4
-      - name: Checkout CodeQL Coding Standards scripts
-        uses: actions/checkout@v4
-        with:
-          repository: github/codeql-coding-standards
-          path: codeql-coding-standards-repo # Klonen in diesen Ordner
-          ref: main # Oder eine spezifische Release-Version, z.B. 'v2.53.0-dev'
       # Add coding standard packages and dependencies
       - name: Install Python dependencies for Coding Standards scripts
         run: |
@@ -96,6 +90,12 @@ jobs:
           upload-database: false # Don't upload databases for each repo
           output: sarif-results/
           category: "multi-repo-scan"
+      - name: Checkout CodeQL Coding Standards scripts
+        uses: actions/checkout@v4
+        with:
+          repository: github/codeql-coding-standards
+          path: codeql-coding-standards-repo # Klonen in diesen Ordner
+          ref: main # Oder eine spezifische Release-Version, z.B. 'v2.53.0-dev'
       - name: Recategorize Guidelines
         if: always()
         run: |
