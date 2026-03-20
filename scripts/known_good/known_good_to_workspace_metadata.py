@@ -42,7 +42,7 @@ def main():
     except ValueError as e:
         raise SystemExit(f"ERROR: {e}")
 
-    modules = list(known_good.modules.values())
+    modules = [module for group in known_good.modules.values() for module in group.values()]
 
     gita_metadata = []
     for module in modules:

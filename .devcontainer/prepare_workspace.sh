@@ -6,6 +6,7 @@ sudo apt update
 sudo apt install -y pipx
 
 # Install gita
+pipx ensurepath
 pipx install gita
 
 # Enable bash autocompletion for gita
