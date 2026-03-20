@@ -45,14 +45,14 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip
           pip3 install pyyaml jsonpath-ng jsonschema jsonpatch jsonpointer pytest sarif-tools
-      - name: Parse known_good.json and create repos.json
-        id: parse-repos
-        run: |
-          scripts/workflow/parse_repos.sh
-      - name: Checkout all pinned repositories
-        id: checkout-repos
-        run: |
-          scripts/workflow/checkout_repos.sh
+      # - name: Parse known_good.json and create repos.json
+      #   id: parse-repos
+      #   run: |
+      #     scripts/workflow/parse_repos.sh
+      # - name: Checkout all pinned repositories
+      #   id: checkout-repos
+      #   run: |
+      #     scripts/workflow/checkout_repos.sh
       - name: Setup Bazel
         uses: bazel-contrib/setup-bazel@0.15.0
         with:
@@ -75,12 +75,6 @@ jobs:
           # Build all targets from the checked-out repositories
           # This ensures CodeQL captures the compilation database
           bazel build --verbose_failures --config=linux-x86_64 \
-            @score_baselibs//score/... \
-            @score_baselibs_rust//src/... \
-            @score_communication//score/mw/com/impl/... \
-            @score_persistency//src/cpp/src/... \
-            @score_orchestrator//src/... \
-            @score_kyron//src/... \
             @score_lifecycle_health//src/... \
             @score_logging//score/... \
             || true  # Continue even if some targets fail

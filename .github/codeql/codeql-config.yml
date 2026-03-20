@@ -10,12 +10,19 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-name: "Custom CodeQL Configuration for MISRA"
-paths:
-  - repos
+name: "Custom CodeQL Configuration for MISRA (Manual Build)"
+
+# With build-mode: manual, CodeQL only analyzes files that were compiled.
+# The paths/paths-ignore act as FILTERS on compiled files, not scan directives.
+# Keep this minimal - CodeQL automatically captures everything built by Bazel.
+
+# Only analyze production code (exclude test/mock code from results)
 paths-ignore:
   - "**/*test*"
   - "**/*mock*"
   - "**/test/**"
+  - "**/tests/**"
   - "**/mock/**"
+  - "**/examples/**"
   - "**/codeql-coding-standards-repo/**"
+  - "**/bazel-*/**"
