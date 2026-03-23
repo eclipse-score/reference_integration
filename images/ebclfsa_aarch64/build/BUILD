@@ -10,6 +10,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 
 genrule(
     name = "extract-fastdev-image",
@@ -24,13 +25,32 @@ genrule(
     ],
 )
 
+pkg_tar(
+    name = "crinit_config_tar",
+    srcs = [
+        "//images/ebclfsa_aarch64/build/config-overlay:etc/crinit/crinit.d/getty-console.crinit",
+    ],
+    mode = "0755",
+    package_dir = "/etc/crinit/crinit.d",
+)
+
+pkg_tar(
+    name = "scripts_tar",
+    srcs = [
+        "//images/ebclfsa_aarch64/build/config-overlay:usr/bin/delayed-start.sh",
+    ],
+    mode = "0755",
+    package_dir = "/usr/bin",
+)
+
 genrule(
     name = "fastdev-image",
     srcs = [
-        "//showcases",
+        "//showcases:showcases_pkg_tar",
         "//feature_integration_tests/configs:etc_configs",
         ":extract-fastdev-image",
-        ":config-overlay",
+        ":crinit_config_tar",
+        ":scripts_tar",
         "build_image.sh",
     ],
     outs = [
@@ -42,8 +62,9 @@ genrule(
             $(RULEDIR) \
             $(RULEDIR)/ebcl-qemuarm64 \
             $(RULEDIR)/ebcl-qemuarm64-deployed \
-            $(location //showcases:showcases)/* \
-            $(location :config-overlay)/* \
+            $(location //showcases:showcases_pkg_tar) \
+            $(location :crinit_config_tar) \
+            $(location :scripts_tar) \
     ",
     visibility = [
         "//visibility:public",

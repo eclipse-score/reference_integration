@@ -15,7 +15,7 @@
 set -uoex pipefail
 
 if [[ $# -lt 4 ]]; then
-    echo "Error: Expected at least 4 arguments (working directoy, image source location, image target location, and one or more files/directories to deploy relative to the root of the image)" >&2
+    echo "Error: Expected at least 4 arguments (working directoy, image source location, image target location, and one or more tar files to deploy relative to the root of the image)" >&2
     exit 1
 fi
 
@@ -51,8 +51,13 @@ fi
 
 # Validate that each deploy source exists
 for src in "${DEPLOY_SRCS[@]}"; do
-    if [[ ! -e "$src" ]]; then
-        echo "Error: Deploy source does not exist: $src" >&2
+    if [[ ! -f "$src" ]]; then
+        echo "Error: Deploy source file does not exist: $src" >&2
+        exit 1
+    fi
+    # Check if the file is a tar file
+    if [[ ! "$src" =~ \.tar(\.(gz|bz2|xz))?$ ]]; then
+        echo "Error: Deploy source is not a tar file: $src" >&2
         exit 1
     fi
 done
@@ -93,6 +98,8 @@ done
 # deploy files to QEMU via scp
 for src in "${DEPLOY_SRCS[@]}"; do
     sshpass -p linux scp -rp -o StrictHostKeyChecking=no -P 2222 "$src" root@localhost:/
+    sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost "tar -xf /$(basename "$src") -C /"
+    sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost "rm -f /$(basename "$src")"
 done
 
 # Shutdown QEMU via SSH
