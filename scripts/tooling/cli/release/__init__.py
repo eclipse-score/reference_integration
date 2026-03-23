@@ -11,23 +11,15 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 import argparse
-import sys
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser(prog="tooling")
-    subparsers = parser.add_subparsers(dest="group", metavar="GROUP")
-    subparsers.required = True
+def register(subparsers: argparse._SubParsersAction) -> None:
+    release_parser = subparsers.add_parser("release", help="Release utilities")
+    release_sub = release_parser.add_subparsers(dest="command", metavar="COMMAND")
+    release_sub.required = True
 
-    from scripts.tooling.cli.misc import register as _register_misc
-    from scripts.tooling.cli.release import register as _register_release
+    from scripts.tooling.cli.release.check_approvals import (
+        register as _register_release_approvals,
+    )
 
-    _register_misc(subparsers)
-    _register_release(subparsers)
-
-    args = parser.parse_args()
-    sys.exit(args.func(args))
-
-
-if __name__ == "__main__":
-    main()
+    _register_release_approvals(release_sub)
