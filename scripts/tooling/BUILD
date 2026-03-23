@@ -64,6 +64,7 @@ score_py_pytest(
     srcs = glob(["tests/**/*.py"]),
     data = [
         ":cli/misc/assets/report_template.html",
+        "//:known_good.json",
     ],
     pytest_config = "//:pyproject.toml",
     deps = [
