@@ -11,5 +11,5 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 exports_files([
-    "launch_manager_config.json"
+    "launch_manager_config.json",
 ])
