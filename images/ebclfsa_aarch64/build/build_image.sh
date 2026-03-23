@@ -19,6 +19,12 @@ if [[ $# -lt 4 ]]; then
     exit 1
 fi
 
+# Check if sshpass is installed
+if ! command -v sshpass &> /dev/null; then
+    echo "Error: sshpass is not installed. Please install it to proceed." >&2
+    exit 1
+fi
+
 WORKING_DIR="$1"
 IMAGE_SOURCE="$2"
 IMAGE_TARGET="$3"
