@@ -96,7 +96,7 @@ jobs:
       - name: Clean disk space
         uses: eclipse-score/more-disk-space@v1
       - name: Checkout repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v6.0.2
         with:
           repository: ${{ env.REFERENCE_INTEGRATION_REPO }}
           ref: ${{ inputs.target_branch || 'main' }}
@@ -121,7 +121,7 @@ jobs:
           echo "::endgroup::"
 
           echo "::group::update score_modules.MODULE.bazel"
-          python3 scripts/known_good/update_module_from_known_good.py --known known_good.updated.json --output-dir bazel_common/
+          scripts/known_good/update_module_from_known_good.py --known known_good.updated.json --output-dir-modules bazel_common
           cat bazel_common/score_modules.MODULE.bazel
           echo "::endgroup::"
         env:

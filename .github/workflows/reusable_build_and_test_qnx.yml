@@ -12,13 +12,14 @@
 # *******************************************************************************
 name: QNX8 - Build & Integration Test
 on:
-  pull_request_target:
-    types: [opened, reopened, synchronize]
-  merge_group:
-    types: [checks_requested]
-  push:
-    branches:
-      - main
+  workflow_call:
+  # pull_request_target:
+  #   types: [opened, reopened, synchronize]
+  # merge_group:
+  #   types: [checks_requested]
+  # push:
+  #   branches:
+  #     - main
 # Do not flood CI with unneeded previous runs in PR
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
@@ -35,10 +36,22 @@ jobs:
       - name: Clean disk space
         uses: eclipse-score/more-disk-space@v1
       - name: Checkout repository (Handle all events)
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+      - name: download known_good.updated.json artifact
+        if: github.event_name == 'workflow_call'
+        uses: actions/download-artifact@v4
+        with:
+          name: known_good.updated.json
+      - name: update MODULE.bazel files
+        if: github.event_name == 'workflow_call'
+        run: |
+          echo "::group::update bazel_common/score_modules_*.MODULE.bazel"
+          scripts/known_good/update_module_from_known_good.py --known known_good.updated.json --output-dir-modules bazel_common
+          cat bazel_common/score_modules_*.MODULE.bazel
+          echo "::endgroup::"
       - name: Setup Bazel with shared caching
         uses: bazel-contrib/setup-bazel@0.18.0
         with:

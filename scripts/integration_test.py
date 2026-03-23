@@ -300,14 +300,24 @@ def main():
     log_dir.mkdir(parents=True, exist_ok=True)
     summary_file.parent.mkdir(parents=True, exist_ok=True)
 
-    # Load modules from known_good files
+    # Load modules from known_good files (flatten grouped structure to flat module dict)
+    def _flatten_modules(grouped: Dict[str, Dict[str, Module]]) -> Dict[str, Module]:
+        flat: Dict[str, Module] = {}
+        for group_modules in grouped.values():
+            flat.update(group_modules)
+        return flat
+
     try:
-        old_modules = load_known_good(Path("known_good.json")).modules if Path("known_good.json").exists() else {}
+        old_modules = (
+            _flatten_modules(load_known_good(Path("known_good.json")).modules)
+            if Path("known_good.json").exists()
+            else {}
+        )
     except FileNotFoundError:
         old_modules = {}
 
     try:
-        new_modules = load_known_good(known_good_file).modules if known_good_file else {}
+        new_modules = _flatten_modules(load_known_good(known_good_file).modules) if known_good_file else {}
     except FileNotFoundError as e:
         raise SystemExit(f"ERROR: {e}")
 

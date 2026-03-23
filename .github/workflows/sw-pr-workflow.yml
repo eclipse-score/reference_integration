@@ -1,0 +1,29 @@
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+# Workflow configuration for S-CORE CI - Bazel Build & Test baselibs
+# This workflow runs Bazel build and test when triggered by specific pull request events.
+name: Integration Tests (PR)
+on:
+  workflow_dispatch:
+  pull_request_target:
+    types: [opened, reopened, synchronize]
+jobs:
+  codeql-scan:
+    uses: ./.github/workflows/reusable_codeql-multiple-repo-scan.yml
+    secrets: inherit
+  integration_test:
+    uses: ./.github/workflows/reusable_sw-check.yml
+    secrets: inherit
+    with:
+      repo_runner_labels: 'ubuntu-latest'
+      target_branch: '${{ github.ref }}'

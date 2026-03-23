@@ -56,11 +56,10 @@ def generate_git_override_blocks(modules: List[Module], repo_commit_dict: Dict[s
         # Generate patches lines if bazel_patches exist
         patches_lines = ""
         if module.bazel_patches:
-            patches_lines = "    patches = [\n"
+            patches_lines = "    patch_strip = 1,\n    patches = [\n"
             for patch in module.bazel_patches:
                 patches_lines += f'        "{patch}",\n'
             patches_lines += "    ],\n"
-        patch_strip_line = "    patch_strip = 1,\n" if patches_lines else ""
 
         if module.version:
             # If version is provided, use bazel_dep with single_version_override
@@ -68,9 +67,8 @@ def generate_git_override_blocks(modules: List[Module], repo_commit_dict: Dict[s
                 f'bazel_dep(name = "{module.name}")\n'
                 "single_version_override(\n"
                 f'    module_name = "{module.name}",\n'
-                f"{patch_strip_line}"
-                f"{patches_lines}"
                 f'    version = "{module.version}",\n'
+                f"{patches_lines}"
                 ")\n"
             )
         else:
@@ -93,17 +91,16 @@ def generate_git_override_blocks(modules: List[Module], repo_commit_dict: Dict[s
                 continue
 
             # If no version, use bazel_dep with git_override
-            # Only include patch_strip if there are patches to apply
             block = (
                 f'bazel_dep(name = "{module.name}")\n'
                 "git_override(\n"
                 f'    module_name = "{module.name}",\n'
                 f'    commit = "{commit}",\n'
-                f"{patch_strip_line}"
                 f"{patches_lines}"
                 f'    remote = "{module.repo}",\n'
                 ")\n"
             )
+
         blocks.append(block)
 
     return blocks

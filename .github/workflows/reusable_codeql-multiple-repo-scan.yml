@@ -12,13 +12,14 @@
 # *******************************************************************************
 name: "CodeQL - Multi-Repo Source Scan"
 on:
-  pull_request:
-    types: [opened, reopened, synchronize]
-  merge_group:
-    types: [checks_requested]
-  push:
-    branches:
-      - main
+  # pull_request:
+  #   types: [opened, reopened, synchronize]
+  # merge_group:
+  #   types: [checks_requested]
+  # push:
+  #   branches:
+  #     - main
+  workflow_call:
   release:
     types: [created]
   workflow_dispatch:
@@ -39,9 +40,9 @@ jobs:
       contents: read
     steps:
       - name: Checkout central repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
       - name: Checkout CodeQL Coding Standards scripts
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           repository: github/codeql-coding-standards
           path: codeql-coding-standards-repo # Klonen in diesen Ordner

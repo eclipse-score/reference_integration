@@ -11,19 +11,20 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 name: Code Quality & Documentation
-permissions:
-  contents: write
-  pages: write
-  pull-requests: write
-  id-token: write
+# permissions:
+#   contents: write
+#   pages: write
+#   pull-requests: write
+#   id-token: write
 on:
-  pull_request_target: # Allows forks to trigger the docs build
-    types: [opened, reopened, synchronize]
-  push:
-    branches:
-      - main
-  merge_group:
-    types: [checks_requested]
+  workflow_call:
+  # pull_request_target: # Allows forks to trigger the docs build
+  #   types: [opened, reopened, synchronize]
+  # push:
+  #   branches:
+  #     - main
+  # merge_group:
+  #   types: [checks_requested]
   release:
     types: [created]
 # Do not flood CI with unneeded previous runs in PR
@@ -58,13 +59,25 @@ jobs:
           sudo apt-get install -y lcov
       - name: Checkout repository (pull_request_target via workflow_call)
         if: ${{ github.event_name == 'pull_request_target' }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
       - name: Checkout repository
         if: ${{ github.event_name != 'pull_request_target' }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
+      - name: download known_good.updated.json artifact
+        if: github.event_name == 'workflow_call'
+        uses: actions/download-artifact@v4
+        with:
+          name: known_good.updated.json
+      - name: update MODULE.bazel files
+        if: github.event_name == 'workflow_call'
+        run: |
+          echo "::group::update bazel_common/score_modules_*.MODULE.bazel"
+          scripts/known_good/update_module_from_known_good.py --known known_good.updated.json --output-dir-modules bazel_common
+          cat bazel_common/score_modules_*.MODULE.bazel
+          echo "::endgroup::"
       - name: Execute Unit Tests with Coverage Analysis
         run: |
           python ./scripts/quality_runners.py
@@ -189,7 +202,7 @@ jobs:
             echo "gh-pages branch exists. Skipping creation."
           fi
       - name: Checkout repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v6.0.2
       - name: Download documentation artifact
         uses: actions/download-artifact@v4.1.8
         with:
