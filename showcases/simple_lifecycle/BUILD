@@ -11,7 +11,13 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@score_lifecycle_health//:defs.bzl", "launch_manager_config")
 load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
+
+launch_manager_config(
+    name = "lifecycle_configs",
+    config = "//showcases/simple_lifecycle/configs:launch_manager_config.json",
+)
 
 score_pkg_bundle(
     name = "simple_lifecycle",
@@ -26,57 +32,6 @@ score_pkg_bundle(
         "//showcases/simple_lifecycle:simple_lifecycle.score.json",
     ],
     custom_layout = {
-        ":lm_demo.bin": "etc/lm_demo.bin",
-        ":hm_demo.bin": "etc/hm_demo.bin",
-        ":cpp_supervised_app_demo.bin": "etc/cpp_supervised_app_demo.bin",
-        ":rust_supervised_app_demo.bin": "etc/rust_supervised_app_demo.bin",
+        ":lifecycle_configs": "etc/",
     },
-)
-
-genrule(
-    name = "gen_lm_demo.bin",
-    srcs = [
-        "@score_lifecycle_health//src/launch_manager_daemon:lm_flatcfg_fbs",
-        "//showcases/simple_lifecycle/configs:lm_demo.json",
-    ],
-    outs = ["lm_demo.bin"],
-    cmd = "$(location @flatbuffers//:flatc) --binary $(SRCS) && mv lm_demo.bin $(location lm_demo.bin)",
-    tools = ["@flatbuffers//:flatc"],
-    visibility = ["//visibility:public"],
-)
-
-genrule(
-    name = "gen_hm_demo.bin",
-    srcs = [
-        "@score_lifecycle_health//src/launch_manager_daemon/health_monitor_lib:hm_flatcfg_fbs",
-        "//showcases/simple_lifecycle/configs:hm_demo.json",
-    ],
-    outs = ["hm_demo.bin"],
-    cmd = "$(location @flatbuffers//:flatc) --binary $(SRCS) && mv hm_demo.bin $(location hm_demo.bin)",
-    tools = ["@flatbuffers//:flatc"],
-    visibility = ["//visibility:public"],
-)
-
-genrule(
-    name = "gen_cpp_supervised_app_demo.bin",
-    srcs = [
-        "@score_lifecycle_health//src/launch_manager_daemon/health_monitor_lib:hm_flatcfg_fbs",
-        "//showcases/simple_lifecycle/configs:cpp_supervised_app_demo.json",
-    ],
-    outs = ["cpp_supervised_app_demo.bin"],
-    cmd = "$(location @flatbuffers//:flatc) --binary $(SRCS) && mv cpp_supervised_app_demo.bin $(location cpp_supervised_app_demo.bin)",
-    tools = ["@flatbuffers//:flatc"],
-    visibility = ["//visibility:public"],
-)
-
-genrule(
-    name = "gen_rust_supervised_app_demo.bin",
-    srcs = [
-        "@score_lifecycle_health//src/launch_manager_daemon/health_monitor_lib:hm_flatcfg_fbs",
-        "//showcases/simple_lifecycle/configs:rust_supervised_app_demo.json",
-    ],
-    outs = ["rust_supervised_app_demo.bin"],
-    cmd = "$(location @flatbuffers//:flatc) --binary $(SRCS) && mv rust_supervised_app_demo.bin $(location rust_supervised_app_demo.bin)",
-    tools = ["@flatbuffers//:flatc"],
-    visibility = ["//visibility:public"],
 )
