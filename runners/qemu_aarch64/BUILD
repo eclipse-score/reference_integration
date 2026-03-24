@@ -1,4 +1,3 @@
-#!/bin/bash
 # *******************************************************************************
 # Copyright (c) 2026 Contributors to the Eclipse Foundation
 #
@@ -11,6 +10,5 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-# Script to run C++ persistency tests inside the QEMU environment
-# Wrapper due to quoting issues when calling directly from Bazel
-cpp_tests_persistency --name basic.basic --input '{"kvs_parameters":{"instance_id":0}}'
+load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
+load("@score_itf//:defs.bzl", "py_itf_test")
