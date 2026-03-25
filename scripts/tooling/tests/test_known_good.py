@@ -11,47 +11,10 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 import json
-import pytest
 from pathlib import Path
 
+import pytest
 from lib.known_good import KnownGood, Metadata, Module, load_known_good
-
-
-KNOWN_GOOD_JSON = Path(__file__).parents[3] / "known_good.json"
-
-MINIMAL_JSON = {
-    "modules": {
-        "target_sw": {
-            "score_baselibs": {
-                "repo": "https://github.com/eclipse-score/baselibs.git",
-                "hash": "abc123",
-            }
-        }
-    },
-    "timestamp": "2026-01-01T00:00:00+00:00Z",
-}
-
-
-# ---------------------------------------------------------------------------
-# Fixtures
-# ---------------------------------------------------------------------------
-
-
-@pytest.fixture
-def minimal_json_file(tmp_path: Path) -> Path:
-    p = tmp_path / "known_good.json"
-    p.write_text(json.dumps(MINIMAL_JSON))
-    return p
-
-
-@pytest.fixture
-def full_json_file(tmp_path: Path) -> Path:
-    """Copy the real known_good.json into a temp location."""
-    content = KNOWN_GOOD_JSON.read_text(encoding="utf-8")
-    p = tmp_path / "known_good.json"
-    p.write_text(content)
-    return p
-
 
 # ---------------------------------------------------------------------------
 # load_known_good – happy path
@@ -100,12 +63,11 @@ class TestLoadKnownGood:
 
 
 # ---------------------------------------------------------------------------
-# load_known_good – real file
+# load_known_good – full file
 # ---------------------------------------------------------------------------
 
 
-@pytest.mark.skipif(not KNOWN_GOOD_JSON.exists(), reason="known_good.json not found")
-class TestLoadKnownGoodRealFile:
+class TestLoadKnownGoodFullFile:
     def test_loads_without_error(self, full_json_file: Path):
         load_known_good(full_json_file)
 
@@ -135,6 +97,42 @@ class TestLoadKnownGoodRealFile:
     def test_owner_repo_property(self, full_json_file: Path):
         m = load_known_good(full_json_file).modules["target_sw"]["score_baselibs"]
         assert m.owner_repo == "eclipse-score/baselibs"
+
+    def test_metadata_extra_test_config(self, full_json_file: Path):
+        known_good = load_known_good(full_json_file)
+        baselibs = known_good.modules["target_sw"]["score_baselibs"]
+        persistency = known_good.modules["target_sw"]["score_persistency"]
+        assert baselibs.metadata.extra_test_config == [
+            "//score/json:base_library=nlohmann",
+            "//score/memory/shared/flags:use_typedshmd=False",
+        ]
+        assert persistency.metadata.extra_test_config == []
+
+    def test_metadata_exclude_test_targets(self, full_json_file: Path):
+        known_good = load_known_good(full_json_file)
+        baselibs = known_good.modules["target_sw"]["score_baselibs"]
+        persistency = known_good.modules["target_sw"]["score_persistency"]
+        assert baselibs.metadata.exclude_test_targets == [
+            "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test",
+            "//score/containers:dynamic_array_test",
+            "//score/mw/log/configuration:*",
+            "//score/json/examples:*",
+        ]
+        assert persistency.metadata.exclude_test_targets == []
+
+    def test_metadata_code_root_path(self, full_json_file: Path):
+        known_good = load_known_good(full_json_file)
+        baselibs = known_good.modules["target_sw"]["score_baselibs"]
+        persistency = known_good.modules["target_sw"]["score_persistency"]
+        assert baselibs.metadata.code_root_path == "//score/..."
+        assert persistency.metadata.code_root_path == "//src/..."
+
+    def test_metadata_langs(self, full_json_file: Path):
+        known_good = load_known_good(full_json_file)
+        baselibs = known_good.modules["target_sw"]["score_baselibs"]
+        persistency = known_good.modules["target_sw"]["score_persistency"]
+        assert baselibs.metadata.langs == ["cpp"]
+        assert persistency.metadata.langs == ["cpp", "rust"]
 
 
 # ---------------------------------------------------------------------------

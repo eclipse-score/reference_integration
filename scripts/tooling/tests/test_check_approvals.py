@@ -18,49 +18,6 @@ import pytest
 from scripts.tooling.cli.release.check_approvals import check_pr_reviews
 
 
-@pytest.fixture
-def modules_maintainers():
-    """Sample modules and maintainers for testing."""
-    return {
-        "module_a": [
-            {
-                "name": "Alice Developer",
-                "email": "alice@example.com",
-                "github": "alice",
-                "github_user_id": 100,
-            },
-            {
-                "name": "Bob Developer",
-                "email": "bob@example.com",
-                "github": "bob",
-                "github_user_id": 101,
-            },
-        ],
-        "module_b": [
-            {
-                "name": "Charlie Developer",
-                "email": "charlie@example.com",
-                "github": "charlie",
-                "github_user_id": 102,
-            }
-        ],
-        "module_c": [
-            {
-                "name": "Diana Developer",
-                "email": "diana@example.com",
-                "github": "diana",
-                "github_user_id": 103,
-            },
-            {
-                "name": "Eve Developer",
-                "email": "eve@example.com",
-                "github": "eve",
-                "github_user_id": 104,
-            },
-        ],
-    }
-
-
 def _create_mock_review(user_id: int, username: str, state: str, submitted_at: datetime) -> Mock:
     """Create a mock GitHub review object.
 
