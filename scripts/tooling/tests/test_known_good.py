@@ -11,13 +11,10 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 import json
-import pytest
 from pathlib import Path
 
+import pytest
 from lib.known_good import KnownGood, Metadata, Module, load_known_good
-
-
-KNOWN_GOOD_JSON = Path(__file__).parents[3] / "known_good.json"
 
 MINIMAL_JSON = {
     "modules": {
@@ -27,6 +24,47 @@ MINIMAL_JSON = {
                 "hash": "abc123",
             }
         }
+    },
+    "timestamp": "2026-01-01T00:00:00+00:00Z",
+}
+
+FULL_JSON = {
+    "modules": {
+        "target_sw": {
+            "score_baselibs": {
+                "repo": "https://github.com/eclipse-score/baselibs.git",
+                "hash": "158fe6a7b791c58f6eac5f7e4662b8db0cf9ac6e",
+                "bazel_patches": ["//patches/baselibs:003-acl-fixes-for-aarch64.patch"],
+                "metadata": {
+                    "extra_test_config": [
+                        "//score/json:base_library=nlohmann",
+                        "//score/memory/shared/flags:use_typedshmd=False",
+                    ],
+                    "exclude_test_targets": [
+                        "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test",
+                        "//score/containers:dynamic_array_test",
+                        "//score/mw/log/configuration:*",
+                        "//score/json/examples:*",
+                    ],
+                    "langs": ["cpp"],
+                },
+            },
+            "score_persistency": {
+                "repo": "https://github.com/eclipse-score/persistency.git",
+                "hash": "438bf9b5c447fd41ad43b321679dd3d1b3a6c737",
+                "metadata": {"code_root_path": "//src/..."},
+            },
+        },
+        "tooling": {
+            "score_crates": {
+                "repo": "https://github.com/eclipse-score/score-crates.git",
+                "hash": "90539da0fd3e7e23e01f2b4de1679f7dfadd3b6b",
+            },
+            "score_itf": {
+                "repo": "https://github.com/eclipse-score/itf.git",
+                "hash": "44c75debab696a9c967455110a2c32f201159cdd",
+            },
+        },
     },
     "timestamp": "2026-01-01T00:00:00+00:00Z",
 }
@@ -47,9 +85,8 @@ def minimal_json_file(tmp_path: Path) -> Path:
 @pytest.fixture
 def full_json_file(tmp_path: Path) -> Path:
     """Copy the real known_good.json into a temp location."""
-    content = KNOWN_GOOD_JSON.read_text(encoding="utf-8")
     p = tmp_path / "known_good.json"
-    p.write_text(content)
+    p.write_text(json.dumps(FULL_JSON))
     return p
 
 
@@ -100,12 +137,11 @@ class TestLoadKnownGood:
 
 
 # ---------------------------------------------------------------------------
-# load_known_good – real file
+# load_known_good – full file
 # ---------------------------------------------------------------------------
 
 
-@pytest.mark.skipif(not KNOWN_GOOD_JSON.exists(), reason="known_good.json not found")
-class TestLoadKnownGoodRealFile:
+class TestLoadKnownGoodFullFile:
     def test_loads_without_error(self, full_json_file: Path):
         load_known_good(full_json_file)
 
@@ -135,6 +171,42 @@ class TestLoadKnownGoodRealFile:
     def test_owner_repo_property(self, full_json_file: Path):
         m = load_known_good(full_json_file).modules["target_sw"]["score_baselibs"]
         assert m.owner_repo == "eclipse-score/baselibs"
+
+    def test_metadata_extra_test_config(self, full_json_file: Path):
+        known_good = load_known_good(full_json_file)
+        baselibs = known_good.modules["target_sw"]["score_baselibs"]
+        persistency = known_good.modules["target_sw"]["score_persistency"]
+        assert baselibs.metadata.extra_test_config == [
+            "//score/json:base_library=nlohmann",
+            "//score/memory/shared/flags:use_typedshmd=False",
+        ]
+        assert persistency.metadata.extra_test_config == []
+
+    def test_metadata_exclude_test_targets(self, full_json_file: Path):
+        known_good = load_known_good(full_json_file)
+        baselibs = known_good.modules["target_sw"]["score_baselibs"]
+        persistency = known_good.modules["target_sw"]["score_persistency"]
+        assert baselibs.metadata.exclude_test_targets == [
+            "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test",
+            "//score/containers:dynamic_array_test",
+            "//score/mw/log/configuration:*",
+            "//score/json/examples:*",
+        ]
+        assert persistency.metadata.exclude_test_targets == []
+
+    def test_metadata_code_root_path(self, full_json_file: Path):
+        known_good = load_known_good(full_json_file)
+        baselibs = known_good.modules["target_sw"]["score_baselibs"]
+        persistency = known_good.modules["target_sw"]["score_persistency"]
+        assert baselibs.metadata.code_root_path == "//score/..."
+        assert persistency.metadata.code_root_path == "//src/..."
+
+    def test_metadata_langs(self, full_json_file: Path):
+        known_good = load_known_good(full_json_file)
+        baselibs = known_good.modules["target_sw"]["score_baselibs"]
+        persistency = known_good.modules["target_sw"]["score_persistency"]
+        assert baselibs.metadata.langs == ["cpp"]
+        assert persistency.metadata.langs == ["cpp", "rust"]
 
 
 # ---------------------------------------------------------------------------
