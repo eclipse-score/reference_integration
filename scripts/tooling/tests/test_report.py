@@ -12,70 +12,10 @@
 # *******************************************************************************
 import json
 import re
-from pathlib import Path
-
-import pytest
 
 from cli.misc.html_report import TEMPLATE_DIR, generate_report, write_report
-from lib.known_good import KnownGood, load_known_good
-from lib.known_good.module import Metadata, Module
-
-
-# ---------------------------------------------------------------------------
-# Fixtures
-# ---------------------------------------------------------------------------
-
-KNOWN_GOOD_JSON = Path(__file__).parents[3] / "known_good.json"
-
-
-def _make_known_good(**overrides) -> KnownGood:
-    """Build a minimal KnownGood with one module."""
-    module_data = {
-        "repo": "https://github.com/eclipse-score/baselibs.git",
-        "hash": "abc123def456abc123def456abc123def456abc123",
-        **overrides,
-    }
-    module = Module.from_dict("score_baselibs", module_data)
-    return KnownGood(
-        modules={"target_sw": {"score_baselibs": module}},
-        timestamp="2026-01-01T00:00:00+00:00Z",
-    )
-
-
-@pytest.fixture
-def minimal_known_good() -> KnownGood:
-    return _make_known_good()
-
-
-@pytest.fixture
-def multi_group_known_good() -> KnownGood:
-    m1 = Module.from_dict(
-        "score_baselibs",
-        {
-            "repo": "https://github.com/eclipse-score/baselibs.git",
-            "hash": "aaa",
-        },
-    )
-    m2 = Module.from_dict(
-        "score_crates",
-        {
-            "repo": "https://github.com/eclipse-score/score-crates.git",
-            "hash": "bbb",
-        },
-    )
-    return KnownGood(
-        modules={
-            "target_sw": {"score_baselibs": m1},
-            "tooling": {"score_crates": m2},
-        },
-        timestamp="2026-02-01T00:00:00+00:00Z",
-    )
-
-
-@pytest.fixture
-def real_known_good() -> KnownGood:
-    return load_known_good(KNOWN_GOOD_JSON)
-
+from lib.known_good import KnownGood
+from lib.known_good.module import Module
 
 # ---------------------------------------------------------------------------
 # generate_report – return type and structure
@@ -284,7 +224,6 @@ class TestWriteReport:
 # ---------------------------------------------------------------------------
 
 
-@pytest.mark.skipif(not KNOWN_GOOD_JSON.exists(), reason="known_good.json not found")
 class TestReportFromRealFile:
     def test_generates_without_error(self, real_known_good):
         html = generate_report(real_known_good, TEMPLATE_DIR)
