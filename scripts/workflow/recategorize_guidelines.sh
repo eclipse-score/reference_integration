@@ -26,3 +26,5 @@ python3 "$RECATEGORIZE_SCRIPT" \
   "sarif-results-recategorized/$(basename "$SARIF_FILE")"
   rm "$SARIF_FILE"
   mv "sarif-results-recategorized/$(basename "$SARIF_FILE")" "$SARIF_FILE"
+
+  #adding comments just to trigger a run
