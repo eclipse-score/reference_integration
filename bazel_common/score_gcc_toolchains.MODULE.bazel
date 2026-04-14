@@ -11,10 +11,10 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-bazel_dep(name = "score_bazel_cpp_toolchains", version = "0.2.2")
+bazel_dep(name = "score_bazel_cpp_toolchains", version = "0.5.0")
 git_override(
     module_name = "score_bazel_cpp_toolchains",
-    commit = "1a302d98b1f8f26864a38cb74761f891268a560f",
+    commit = "eba6b8c4b2d1d410a7f0cf8aae8b7938320bf6c8",
     remote = "https://github.com/eclipse-score/bazel_cpp_toolchains.git",
 )
 
@@ -31,6 +31,15 @@ gcc.toolchain(
     runtime_ecosystem = "ebclfsa",
     sdk_version = "0.1.0",
     target_cpu = "aarch64",
+    target_os = "linux",
+    use_default_package = True,
+)
+
+## AutoSD10 Toolchain
+gcc.toolchain(
+    name = "score_autosd10_x86_64_toolchain",
+    runtime_ecosystem = "autosd10",
+    target_cpu = "x86_64",
     target_os = "linux",
     use_default_package = True,
 )
@@ -54,6 +63,7 @@ use_repo(rpm_toolchain, "rpm_toolchain")
 
 use_repo(
     gcc,
+    "score_autosd10_x86_64_toolchain",
     "score_ebclfsa_toolchain",
     "score_gcc_x86_64_toolchain",
 )
