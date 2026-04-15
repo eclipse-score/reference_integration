@@ -8882,12 +8882,23 @@
     },
     "@@score_bazel_cpp_toolchains+//extensions:gcc.bzl%gcc": {
       "general": {
-        "bzlTransitiveDigest": "nZcsGzbA7gxL+rzoWSI0r/NeJ8NKwc1hZ2HpTmODLOk=",
-        "usagesDigest": "SxYNNSd2YcuSzXnFlyqDpFHwJHXcpuB6hLXsVwsx1mA=",
+        "bzlTransitiveDigest": "I3KeJTTPIf5P8AW8k/BJHGm84eMTsmyTctp36EuwIIY=",
+        "usagesDigest": "NSlK3wexNR60G/B0zzwjXeaMfmAbgFv12qnIVLfNZUo=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
         "generatedRepoSpecs": {
+          "score_ebclfsa_toolchain_raspi_pkg": {
+            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_archive",
+            "attributes": {
+              "urls": [
+                "https://github.com/Eclipse-SDV-HackFest-Esslingen-2026/eb_corbos_toolkit-hackfest/releases/download/2.0.0-beta-hackfest/fastdev-sdk-ubuntu-ebclfsa-rpi4b.tar.gz"
+              ],
+              "build_file": "@@score_bazel_cpp_toolchains+//packages/linux/aarch64/ebclfsa/0.1.0:ebclfsa.BUILD",
+              "sha256": "7e253dfdc9756fc329973f12561ff816dfc0102420c881592451aea35e061800",
+              "strip_prefix": "fastdev-sdk-ubuntu-ebclfsa-rpi4b"
+            }
+          },
           "score_gcc_x86_64_toolchain_pkg": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_archive",
             "attributes": {
@@ -8903,11 +8914,11 @@
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_archive",
             "attributes": {
               "urls": [
-                "https://github.com/Elektrobit/eb_corbos_toolkit/releases/download/v2.0.0-beta1/fastdev-sdk-ubuntu-ebclfsa-ebcl-qemuarm64.tar.gz"
+                "https://github.com/Eclipse-SDV-HackFest-Esslingen-2026/eb_corbos_toolkit-hackfest/releases/download/2.0.0-beta-hackfest/fastdev-sdk-ubuntu-ebclfsa-rpi4b.tar.gz"
               ],
               "build_file": "@@score_bazel_cpp_toolchains+//packages/linux/aarch64/ebclfsa/0.1.0:ebclfsa.BUILD",
-              "sha256": "f44286c28d831dc40acdac08ef49f38a2e9cbb057bea38c25834964693785287",
-              "strip_prefix": "fastdev-sdk-ubuntu-ebclfsa-ebcl-qemuarm64"
+              "sha256": "7e253dfdc9756fc329973f12561ff816dfc0102420c881592451aea35e061800",
+              "strip_prefix": "fastdev-sdk-ubuntu-ebclfsa-rpi4b"
             }
           },
           "score_qcc_aarch64_toolchain_pkg": {
@@ -9034,6 +9045,83 @@
               "use_base_constraints_only": false
             }
           },
+          "score_ebclfsa_raspi_toolchain": {
+            "repoRuleId": "@@score_bazel_cpp_toolchains+//rules:gcc.bzl%gcc_toolchain",
+            "attributes": {
+              "extra_compile_flags": [],
+              "extra_c_compile_flags": [
+                "-nostdinc",
+                "-isystem",
+                "external/%{toolchain_pkg}%/usr/lib/gcc-cross/aarch64-linux-gnu/13/include",
+                "-isystem",
+                "external/%{toolchain_pkg}%/usr/aarch64-linux-gnu/include",
+                "-L",
+                "external/%{toolchain_pkg}%/lib/aarch64-linux-gnu",
+                "-L",
+                "external/%{toolchain_pkg}%/usr/aarch64-linux-gnu/lib",
+                "-L",
+                "external/%{toolchain_pkg}%/usr/lib/x86_64-linux-gnu",
+                "--no-canonical-prefixes"
+              ],
+              "extra_cxx_compile_flags": [
+                "-nostdinc++",
+                "-isystem",
+                "external/%{toolchain_pkg}%/usr/aarch64-linux-gnu/include/c++/13",
+                "-isystem",
+                "external/%{toolchain_pkg}%/usr/aarch64-linux-gnu/include/c++/13/aarch64-linux-gnu",
+                "-isystem",
+                "external/%{toolchain_pkg}%/usr/aarch64-linux-gnu/include/c++/13/backward",
+                "-nostdinc",
+                "-isystem",
+                "external/%{toolchain_pkg}%/usr/lib/gcc-cross/aarch64-linux-gnu/13/include",
+                "-isystem",
+                "external/%{toolchain_pkg}%/usr/aarch64-linux-gnu/include",
+                "-L",
+                "external/%{toolchain_pkg}%/lib/aarch64-linux-gnu",
+                "-L",
+                "external/%{toolchain_pkg}%/usr/aarch64-linux-gnu/lib",
+                "-L",
+                "external/%{toolchain_pkg}%/usr/lib/x86_64-linux-gnu",
+                "--no-canonical-prefixes"
+              ],
+              "extra_link_flags": [
+                "-B",
+                "external/%{toolchain_pkg}%/usr/aarch64-linux-gnu/bin",
+                "-L",
+                "external/%{toolchain_pkg}%/lib/aarch64-linux-gnu",
+                "-L",
+                "external/%{toolchain_pkg}%/usr/aarch64-linux-gnu/lib",
+                "-L",
+                "external/%{toolchain_pkg}%/usr/lib/x86_64-linux-gnu",
+                "-lm",
+                "-ldl",
+                "-lrt",
+                "-static-libstdc++",
+                "-static-libgcc",
+                "-static",
+                "--no-canonical-prefixes"
+              ],
+              "license_info_variable": "",
+              "license_info_value": "",
+              "license_path": "/opt/score_qnx/license/licenses",
+              "sdk_version": "0.1.0",
+              "sdp_version": "",
+              "tc_compiler_library_search_paths": [
+                "external/%{toolchain_pkg}%/usr/lib/x86_64-linux-gnu",
+                "external/%{toolchain_pkg}%/lib/x86_64-linux-gnu"
+              ],
+              "tc_cpu": "aarch64",
+              "tc_identifier": "sdk_0.1.0",
+              "tc_os": "linux",
+              "tc_pkg_repo": "score_ebclfsa_toolchain_raspi_pkg",
+              "tc_system_toolchain": false,
+              "tc_runtime_ecosystem": "ebclfsa",
+              "gcc_version": "",
+              "cc_toolchain_config": "@@score_bazel_cpp_toolchains+//templates/linux:cc_toolchain_config.bzl.template",
+              "cc_toolchain_flags": "@@score_bazel_cpp_toolchains+//templates/linux:cc_toolchain_flags.bzl.template",
+              "use_base_constraints_only": false
+            }
+          },
           "score_qcc_aarch64_toolchain": {
             "repoRuleId": "@@score_bazel_cpp_toolchains+//rules:gcc.bzl%gcc_toolchain",
             "attributes": {
@@ -9086,6 +9174,11 @@
           }
         },
         "recordedRepoMappingEntries": [
+          [
+            "",
+            "score_bazel_cpp_toolchains",
+            "score_bazel_cpp_toolchains+"
+          ],
           [
             "bazel_tools",
             "rules_cc",

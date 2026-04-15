@@ -14,7 +14,7 @@
 bazel_dep(name = "score_bazel_cpp_toolchains", version = "0.2.2")
 git_override(
     module_name = "score_bazel_cpp_toolchains",
-    commit = "1a302d98b1f8f26864a38cb74761f891268a560f",
+    commit = "278440da54559779c548f1495c884285a634e268",
     remote = "https://github.com/eclipse-score/bazel_cpp_toolchains.git",
 )
 
@@ -34,6 +34,78 @@ gcc.toolchain(
     target_os = "linux",
     use_default_package = True,
 )
+gcc.sdp(
+    name = "score_ebclfsa_toolchain_raspi_pkg",
+    build_file = "@score_bazel_cpp_toolchains//packages/linux/aarch64/ebclfsa/0.1.0:ebclfsa.BUILD",
+    sha256 = "7e253dfdc9756fc329973f12561ff816dfc0102420c881592451aea35e061800",
+    strip_prefix = "fastdev-sdk-ubuntu-ebclfsa-rpi4b",
+    url = "https://github.com/Eclipse-SDV-HackFest-Esslingen-2026/eb_corbos_toolkit-hackfest/releases/download/2.0.0-beta-hackfest/fastdev-sdk-ubuntu-ebclfsa-rpi4b.tar.gz",
+)
+gcc.toolchain(
+    name = "score_ebclfsa_raspi_toolchain",
+    runtime_ecosystem = "ebclfsa",
+    sdp_to_link = "score_ebclfsa_toolchain_raspi_pkg",
+    sdk_version = "0.1.0",
+    target_cpu = "aarch64",
+    target_os = "linux",
+    extra_c_compile_flags = [
+        "-nostdinc",
+        "-isystem",
+        "external/%{toolchain_pkg}%/usr/lib/gcc-cross/aarch64-linux-gnu/13/include",
+        "-isystem",
+        "external/%{toolchain_pkg}%/usr/aarch64-linux-gnu/include",
+        "-L",
+        "external/%{toolchain_pkg}%/lib/aarch64-linux-gnu",
+        "-L",
+        "external/%{toolchain_pkg}%/usr/aarch64-linux-gnu/lib",
+        "-L",
+        "external/%{toolchain_pkg}%/usr/lib/x86_64-linux-gnu",
+        "--no-canonical-prefixes",
+    ],
+    extra_cxx_compile_flags = [
+        "-nostdinc++",
+        "-isystem",
+        "external/%{toolchain_pkg}%/usr/aarch64-linux-gnu/include/c++/13",
+        "-isystem",
+        "external/%{toolchain_pkg}%/usr/aarch64-linux-gnu/include/c++/13/aarch64-linux-gnu",
+        "-isystem",
+        "external/%{toolchain_pkg}%/usr/aarch64-linux-gnu/include/c++/13/backward",
+        "-nostdinc",
+        "-isystem",
+        "external/%{toolchain_pkg}%/usr/lib/gcc-cross/aarch64-linux-gnu/13/include",
+        "-isystem",
+        "external/%{toolchain_pkg}%/usr/aarch64-linux-gnu/include",
+        "-L",
+        "external/%{toolchain_pkg}%/lib/aarch64-linux-gnu",
+        "-L",
+        "external/%{toolchain_pkg}%/usr/aarch64-linux-gnu/lib",
+        "-L",
+        "external/%{toolchain_pkg}%/usr/lib/x86_64-linux-gnu",
+        "--no-canonical-prefixes",
+    ],
+    extra_link_flags = [
+        "-B",
+        "external/%{toolchain_pkg}%/usr/aarch64-linux-gnu/bin",
+        "-L",
+        "external/%{toolchain_pkg}%/lib/aarch64-linux-gnu",
+        "-L",
+        "external/%{toolchain_pkg}%/usr/aarch64-linux-gnu/lib",
+        "-L",
+        "external/%{toolchain_pkg}%/usr/lib/x86_64-linux-gnu",
+        "-lm",
+        "-ldl",
+        "-lrt",
+        "-static-libstdc++",
+        "-static-libgcc",
+        "-static",
+        "--no-canonical-prefixes",
+    ],
+    ld_library_paths = [
+        "external/%{toolchain_pkg}%/usr/lib/x86_64-linux-gnu",
+        "external/%{toolchain_pkg}%/lib/x86_64-linux-gnu",
+    ],
+)
+
 
 bazel_dep(name = "os_autosd_toolchain", version = "0.0.1")
 
@@ -55,5 +127,6 @@ use_repo(rpm_toolchain, "rpm_toolchain")
 use_repo(
     gcc,
     "score_ebclfsa_toolchain",
+    "score_ebclfsa_raspi_toolchain",
     "score_gcc_x86_64_toolchain",
 )

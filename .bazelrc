@@ -49,6 +49,11 @@ build:eb-aarch64 --extra_toolchains=@score_ebclfsa_toolchain//:aarch64-linux-sdk
 build:eb-aarch64 --extra_toolchains=@ferrocene_aarch64_ebclfsa//:rust_ferrocene_toolchain
 build:eb-aarch64 --platforms=@score_bazel_platforms//:aarch64-linux-sdk_0.1.0-ebclfsa
 
+build:eb-aarch64-rpi4b --config=_common
+build:eb-aarch64-rpi4b --extra_toolchains=@score_ebclfsa_raspi_toolchain//:aarch64-linux-sdk_0.1.0-ebclfsa
+build:eb-aarch64-rpi4b --extra_toolchains=@ferrocene_aarch64_ebclfsa//:rust_ferrocene_toolchain
+build:eb-aarch64-rpi4b --platforms=@score_bazel_platforms//:aarch64-linux-sdk_0.1.0-ebclfsa
+
 build:autosd-x86_64 --config=_common
 build:autosd-x86_64 --platforms=@score_bazel_platforms//:x86_64-linux
 build:autosd-x86_64 --force_pic
