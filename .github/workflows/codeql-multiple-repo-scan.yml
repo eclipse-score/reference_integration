@@ -63,7 +63,7 @@ jobs:
         with:
           languages: cpp
           build-mode: none
-          packs: codeql/misra-cpp-coding-standards
+          packs: codeql/misra-cpp-coding-standards@2.57.0
           config-file: ./.github/codeql/codeql-config.yml
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
@@ -81,6 +81,7 @@ jobs:
         with:
           repository: github/codeql-coding-standards
           path: codeql-coding-standards-repo
+          ref: v2.57.0
       - name: Recategorize Guidelines
         if: always()
         run: |

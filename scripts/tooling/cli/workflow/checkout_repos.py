@@ -76,7 +76,8 @@ def main() -> int:
     # Checkout each repository
     for name, module in modules.items():
         url = module.repo
-        ref = module.version or module.branch or module.hash
+        # Prioritize hash and version over branch to ensure pinned commits
+        ref = module.hash or module.version or module.branch
         # Use workspace-relative path
         path = workspace_root / "repos" / name
 
