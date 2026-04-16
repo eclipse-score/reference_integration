@@ -25,6 +25,9 @@ compile_pip_requirements(
         "requirements.txt",
         "@score_tooling//python_basics:requirements.txt",
     ],
+    extra_args = [
+        "--no-annotate",
+    ],
     requirements_txt = "requirements.txt.lock",
     tags = [
         "manual",

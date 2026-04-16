@@ -32,6 +32,7 @@ jobs:
   analyze-repos:
     name: Analyze Multiple Repositories
     runs-on: ubuntu-latest
+    timeout-minutes: 120 # Prevent indefinite hanging
     permissions:
       security-events: write
       packages: read
@@ -40,45 +41,58 @@ jobs:
     steps:
       - name: Checkout central repository
         uses: actions/checkout@v4
-      - name: Checkout CodeQL Coding Standards scripts
-        uses: actions/checkout@v4
-        with:
-          repository: github/codeql-coding-standards
-          path: codeql-coding-standards-repo # Klonen in diesen Ordner
-          ref: main # Oder eine spezifische Release-Version, z.B. 'v2.53.0-dev'
-      # Add coding standard packages and dependencies
-      - name: Install Python dependencies for Coding Standards scripts
+      - name: Install sarif-tools for HTML report generation
         run: |
           python3 -m pip install --upgrade pip
-          pip3 install pyyaml jsonpath-ng jsonschema jsonpatch jsonpointer pytest sarif-tools
-      - name: Parse known_good.json and create repos.json
-        id: parse-repos
-        run: |
-          scripts/workflow/parse_repos.sh
+          pip3 install sarif-tools
+      - name: Cache repository checkouts
+        uses: actions/cache@v4
+        with:
+          path: repos/
+          key: repos-${{ hashFiles('known_good.json') }}
+          restore-keys: |
+            repos-
       - name: Checkout all pinned repositories
         id: checkout-repos
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          scripts/workflow/checkout_repos.sh
+          bazel run //scripts/tooling:checkout_repos
       - name: Initialize CodeQL for all repositories
         uses: github/codeql-action/init@v4
         with:
           languages: cpp
           build-mode: none
-          packs: codeql/misra-cpp-coding-standards
+          packs: codeql/misra-cpp-coding-standards@2.57.0
           config-file: ./.github/codeql/codeql-config.yml
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
         with:
-          upload-database: false # Don't upload databases for each repo
+          upload-database: false
           output: sarif-results/
           category: "multi-repo-scan"
+      - name: Cleanup repository checkouts
+        if: always()
+        run: |
+          echo "Cleaning up checked out repositories to free disk space"
+          rm -rf repos/
+      - name: Checkout CodeQL Coding Standards scripts
+        uses: actions/checkout@v4
+        with:
+          repository: github/codeql-coding-standards
+          path: codeql-coding-standards-repo
+          ref: v2.57.0
       - name: Recategorize Guidelines
         if: always()
         run: |
-          scripts/workflow/recategorize_guidelines.sh
+          bazel run //scripts/tooling:recategorize_guidelines
       - name: Generate HTML Report from SARIF
         run: |
           SARIF_FILE="sarif-results/cpp.sarif"
+          if [ ! -f "$SARIF_FILE" ]; then
+            echo "Error: SARIF file not found at $SARIF_FILE"
+            exit 1
+          fi
           sarif html "$SARIF_FILE" --output codeql-report.html
       - name: Upload SARIF results as artifact
         uses: actions/upload-artifact@v4
