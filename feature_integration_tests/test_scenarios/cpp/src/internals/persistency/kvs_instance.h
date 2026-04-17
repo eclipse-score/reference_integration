@@ -33,22 +33,11 @@ public:
     // Set a value
     bool set_value(const std::string& key, double value);
 
-    // Set unsigned 32-bit value.
-    bool set_value_u32(const std::string& key, std::uint32_t value);
-
     // Get a value
     std::optional<double> get_value(const std::string& key);
 
-    // Get unsigned 32-bit value.
-    std::optional<std::uint32_t> get_value_u32(const std::string& key);
-
     // Flush to persistent storage
     bool flush();
-
-    // Get instance parameters
-    const KvsParameters& get_parameters() const {
-        return params_;
-    }
 
 private:
     KvsInstance(const KvsParameters& params, score::mw::per::kvs::Kvs&& kvs);

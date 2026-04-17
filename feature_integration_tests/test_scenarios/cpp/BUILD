@@ -35,16 +35,14 @@ cc_library(
 
 cc_library(
     name = "scenarios_lib",
-    hdrs = ["src/framework/scenario_framework.h"],
     srcs = [
         "src/scenarios/mod.cpp",
-        "src/scenarios/persistency/mod.cpp",
         "src/scenarios/persistency/multiple_kvs_per_app.cpp",
     ],
     deps = [
         ":kvs_instance",
-        ":kvs_parameters",
         "@score_baselibs//score/json",
+        "@score_test_scenarios//test_scenarios_cpp",
     ],
 )
 
@@ -55,5 +53,6 @@ cc_binary(
     visibility = ["//feature_integration_tests/test_cases:__pkg__"],
     deps = [
         ":scenarios_lib",
+        "@score_test_scenarios//test_scenarios_cpp",
     ],
 )

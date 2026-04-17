@@ -11,8 +11,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 import shutil
+from collections.abc import Generator
 from pathlib import Path
-from typing import Generator
 
 import pytest
 from testing_utils import (
@@ -59,7 +59,7 @@ def temp_dir_common(
     dir_name = "-".join(parts)
     dir_path = tmp_path_factory.mktemp(dir_name, numbered=True)
     yield dir_path
-    shutil.rmtree(dir_path)
+    shutil.rmtree(dir_path, ignore_errors=True)
 
 
 class FitScenario(Scenario):
@@ -69,8 +69,10 @@ class FitScenario(Scenario):
 
     @pytest.fixture(scope="class")
     def build_tools(self, request: pytest.FixtureRequest) -> BuildTools:
-        scenario_target = request.config.getoption("--scenario-target", default="rust")
-        return BazelTools(option_prefix=scenario_target)
+        # Use test parametrization when available; default to rust for non-parametrized tests.
+        if "version" in request.fixturenames:
+            return BazelTools(option_prefix=request.getfixturevalue("version"))
+        return BazelTools(option_prefix="rust")
 
     def expect_command_failure(self, *args, **kwargs) -> bool:
         """
@@ -88,9 +90,10 @@ class FitScenario(Scenario):
     ) -> ScenarioResult:
         result = self._run_command(command, execution_timeout, args, kwargs)
         success = result.return_code == ResultCode.SUCCESS and not result.hang
-        if self.expect_command_failure() and success:
+        expect_failure = self.expect_command_failure()
+        if expect_failure and success:
             raise RuntimeError(f"Command execution succeeded unexpectedly: {result=}")
-        if not self.expect_command_failure() and not success:
+        if not expect_failure and not success:
             raise RuntimeError(f"Command execution failed unexpectedly: {result=}")
         return result
 

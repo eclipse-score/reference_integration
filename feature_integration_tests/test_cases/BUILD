@@ -36,9 +36,8 @@ compile_pip_requirements(
 
 # Tests targets
 score_py_pytest(
-    name = "fit",
-    srcs = glob(["tests/**/*.py"]) + [
-    ],
+    name = "fit_rust",
+    srcs = glob(["tests/**/*.py"], exclude = ["tests/persistency/**/*.py"]),
     args = [
         "--traces=all",
         "--rust-target-path=$(rootpath //feature_integration_tests/test_scenarios/rust:rust_test_scenarios)",
@@ -62,16 +61,25 @@ score_py_pytest(
         "tests/persistency/test_multiple_kvs_per_app.py",
     ],
     args = [
-        "--scenario-target=cpp",
         "--traces=all",
+        "--rust-target-path=$(rootpath //feature_integration_tests/test_scenarios/rust:rust_test_scenarios)",
         "--cpp-target-path=$(rootpath //feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios)",
     ],
     data = [
         "conftest.py",
         "fit_scenario.py",
         "test_properties.py",
+        "//feature_integration_tests/test_scenarios/rust:rust_test_scenarios",
         "//feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios",
     ],
     pytest_config = "//:pyproject.toml",
     deps = all_requirements,
+)
+
+test_suite(
+    name = "fit",
+    tests = [
+        ":fit_rust",
+        ":fit_cpp",
+    ],
 )

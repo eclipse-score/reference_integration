@@ -21,10 +21,8 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
-#include <limits>
 #include <regex>
 #include <sstream>
-#include <stdexcept>
 
 namespace {
 
@@ -206,11 +204,6 @@ bool KvsInstance::set_value(const std::string& key, double value) {
     return static_cast<bool>(result);
 }
 
-bool KvsInstance::set_value_u32(const std::string& key, std::uint32_t value) {
-    auto result = kvs_.set_value(key, score::mw::per::kvs::KvsValue{value});
-    return static_cast<bool>(result);
-}
-
 std::optional<double> KvsInstance::get_value(const std::string& key) {
     auto result = kvs_.get_value(key);
     if (!result) {
@@ -230,44 +223,6 @@ std::optional<double> KvsInstance::get_value(const std::string& key) {
             return static_cast<double>(std::get<int64_t>(variant));
         case score::mw::per::kvs::KvsValue::Type::u64:
             return static_cast<double>(std::get<uint64_t>(variant));
-        default:
-            return std::nullopt;
-    }
-}
-
-std::optional<std::uint32_t> KvsInstance::get_value_u32(const std::string& key) {
-    auto result = kvs_.get_value(key);
-    if (!result) {
-        return std::nullopt;
-    }
-
-    const auto& stored = result.value();
-    const auto& variant = stored.getValue();
-    switch (stored.getType()) {
-        case score::mw::per::kvs::KvsValue::Type::u32:
-            return std::get<uint32_t>(variant);
-        case score::mw::per::kvs::KvsValue::Type::i32: {
-            const auto value = std::get<int32_t>(variant);
-            return value >= 0 ? std::optional<std::uint32_t>(static_cast<std::uint32_t>(value)) : std::nullopt;
-        }
-        case score::mw::per::kvs::KvsValue::Type::u64: {
-            const auto value = std::get<uint64_t>(variant);
-            return value <= static_cast<uint64_t>(std::numeric_limits<std::uint32_t>::max())
-                       ? std::optional<std::uint32_t>(static_cast<std::uint32_t>(value))
-                       : std::nullopt;
-        }
-        case score::mw::per::kvs::KvsValue::Type::i64: {
-            const auto value = std::get<int64_t>(variant);
-            return (value >= 0 && value <= static_cast<int64_t>(std::numeric_limits<std::uint32_t>::max()))
-                       ? std::optional<std::uint32_t>(static_cast<std::uint32_t>(value))
-                       : std::nullopt;
-        }
-        case score::mw::per::kvs::KvsValue::Type::f64: {
-            const auto value = std::get<double>(variant);
-            return (value >= 0.0 && value <= static_cast<double>(std::numeric_limits<std::uint32_t>::max()))
-                       ? std::optional<std::uint32_t>(static_cast<std::uint32_t>(value))
-                       : std::nullopt;
-        }
         default:
             return std::nullopt;
     }

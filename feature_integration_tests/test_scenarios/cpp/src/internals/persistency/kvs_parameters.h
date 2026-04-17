@@ -14,8 +14,8 @@
 #ifndef INTERNALS_PERSISTENCY_KVS_PARAMETERS_H_
 #define INTERNALS_PERSISTENCY_KVS_PARAMETERS_H_
 
-#include <optional>
 #include <cstdint>
+#include <optional>
 #include <string>
 
 // Enum for KVS defaults mode
@@ -35,9 +35,9 @@ enum class KvsLoad {
 // Instance ID wrapper
 struct InstanceId {
     uint32_t value;
-    
+
     explicit InstanceId(uint32_t v = 0) : value(v) {}
-    
+
     std::string to_string() const {
         return "InstanceId(" + std::to_string(value) + ")";
     }
@@ -55,4 +55,4 @@ struct KvsParameters {
     static KvsParameters from_json_section(const std::string& input, const std::string& section_name);
 };
 
-#endif // INTERNALS_PERSISTENCY_KVS_PARAMETERS_H_
+#endif  // INTERNALS_PERSISTENCY_KVS_PARAMETERS_H_

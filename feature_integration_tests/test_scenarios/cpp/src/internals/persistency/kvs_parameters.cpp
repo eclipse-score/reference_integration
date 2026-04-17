@@ -17,6 +17,7 @@
 
 #include <stdexcept>
 
+namespace {
 KvsDefaults parse_kvs_defaults(const std::string& str) {
     if (str == "ignored") return KvsDefaults::Ignored;
     if (str == "optional") return KvsDefaults::Optional;
@@ -31,7 +32,6 @@ KvsLoad parse_kvs_load(const std::string& str) {
     throw std::invalid_argument("Invalid KvsLoad mode: " + str);
 }
 
-namespace {
 const score::json::Object& expect_object(const score::json::Any& value, const std::string& field_name) {
     const auto object_res = value.As<score::json::Object>();
     if (!object_res.has_value()) {

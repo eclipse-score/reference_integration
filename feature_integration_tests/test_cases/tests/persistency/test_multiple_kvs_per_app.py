@@ -12,13 +12,16 @@
 # *******************************************************************************
 
 import json
+from collections.abc import Generator
 from pathlib import Path
-from typing import Any, Generator
+from typing import Any
 
 import pytest
 from fit_scenario import FitScenario, temp_dir_common
 from test_properties import add_test_properties
 from testing_utils import LogContainer
+
+pytestmark = pytest.mark.parametrize("version", ["rust", "cpp"], scope="class")
 
 
 @add_test_properties(
@@ -71,6 +74,11 @@ class TestMultipleInstanceIds(FitScenario):
             },
             "test": {"key": kvs_key, "value_1": kvs_value_1, "value_2": kvs_value_2},
         }
+
+    @pytest.fixture(autouse=True)
+    def _bind_version_parameter(self, version: str) -> None:
+        # Keep class parametrization explicit for report splitting by rust/cpp.
+        _ = version
 
     def test_logged_execution(
         self,

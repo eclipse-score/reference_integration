@@ -8,12 +8,8 @@ Current scope is persistency-focused scenarios.
 
 - src/main.cpp
   - CLI entry point for scenario execution.
+  - Uses shared test scenario framework from `@score_test_scenarios//test_scenarios_cpp`.
   - Supports listing scenarios and running a scenario with JSON input.
-- src/framework/scenario_framework.h
-  - Minimal scenario framework:
-    - Scenario interface
-    - ScenarioGroup hierarchy
-    - Recursive scenario name flattening
 - src/internals/persistency/
   - kvs_parameters.h/.cpp
     - Parses KVS config sections from JSON input.
@@ -25,9 +21,7 @@ Current scope is persistency-focused scenarios.
       so Python FIT checks can keep strict value equality.
 - src/scenarios/
   - mod.cpp
-    - Registers root scenario groups.
-  - persistency/mod.cpp
-    - Registers persistency scenarios.
+    - Registers root and persistency scenario groups.
   - persistency/multiple_kvs_per_app.cpp
     - Scenario implementation for multi-instance KVS validation.
 

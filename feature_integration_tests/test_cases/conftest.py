@@ -15,8 +15,6 @@ from pathlib import Path
 import pytest
 from testing_utils import BazelTools
 
-FAILED_CONFIGS = []
-
 
 # Cmdline options
 def pytest_addoption(parser):
@@ -30,12 +28,6 @@ def pytest_addoption(parser):
         '"all" - show all traces. ',
     )
 
-    parser.addoption(
-        "--scenario-target",
-        type=str,
-        choices=["cpp", "rust"],
-        help="Test scenario target language (cpp or rust).",
-    )
     parser.addoption(
         "--rust-target-name",
         type=str,
@@ -87,9 +79,15 @@ def pytest_sessionstart(session):
 
             # Build Rust test scenarios.
             print("Building Rust test scenarios executable...")
-            cargo_tools = BazelTools(option_prefix="rust", build_timeout=build_timeout)
+            rust_tools = BazelTools(option_prefix="rust", build_timeout=build_timeout)
             rust_target_name = session.config.getoption("--rust-target-name")
-            cargo_tools.build(rust_target_name)
+            rust_tools.build(rust_target_name)
+
+            # Build C++ test scenarios.
+            print("Building C++ test scenarios executable...")
+            cpp_tools = BazelTools(option_prefix="cpp", build_timeout=build_timeout)
+            cpp_target_name = session.config.getoption("--cpp-target-name")
+            cpp_tools.build(cpp_target_name)
 
     except Exception as e:
         pytest.exit(str(e), returncode=1)
