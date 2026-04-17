@@ -31,6 +31,12 @@ def pytest_addoption(parser):
     )
 
     parser.addoption(
+        "--scenario-target",
+        type=str,
+        choices=["cpp", "rust"],
+        help="Test scenario target language (cpp or rust).",
+    )
+    parser.addoption(
         "--rust-target-name",
         type=str,
         default="//feature_integration_tests/rust_test_scenarios:rust_test_scenarios",
@@ -40,6 +46,17 @@ def pytest_addoption(parser):
         "--rust-target-path",
         type=Path,
         help="Rust test scenario executable target.",
+    )
+    parser.addoption(
+        "--cpp-target-name",
+        type=str,
+        default="//feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios",
+        help="C++ test scenario executable target.",
+    )
+    parser.addoption(
+        "--cpp-target-path",
+        type=Path,
+        help="C++ test scenario executable target.",
     )
     parser.addoption(
         "--build-scenarios",

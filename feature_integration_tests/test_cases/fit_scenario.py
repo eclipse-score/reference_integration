@@ -68,8 +68,9 @@ class FitScenario(Scenario):
     """
 
     @pytest.fixture(scope="class")
-    def build_tools(self) -> BuildTools:
-        return BazelTools(option_prefix="rust")
+    def build_tools(self, request: pytest.FixtureRequest) -> BuildTools:
+        scenario_target = request.config.getoption("--scenario-target", default="rust")
+        return BazelTools(option_prefix=scenario_target)
 
     def expect_command_failure(self, *args, **kwargs) -> bool:
         """

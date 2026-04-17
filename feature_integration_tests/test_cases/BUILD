@@ -55,3 +55,23 @@ score_py_pytest(
     pytest_config = "//:pyproject.toml",
     deps = all_requirements,
 )
+
+score_py_pytest(
+    name = "fit_cpp",
+    srcs = [
+        "tests/persistency/test_multiple_kvs_per_app.py",
+    ],
+    args = [
+        "--scenario-target=cpp",
+        "--traces=all",
+        "--cpp-target-path=$(rootpath //feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios)",
+    ],
+    data = [
+        "conftest.py",
+        "fit_scenario.py",
+        "test_properties.py",
+        "//feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios",
+    ],
+    pytest_config = "//:pyproject.toml",
+    deps = all_requirements,
+)
