@@ -15,10 +15,10 @@ load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 load("@score_tooling//python_basics:defs.bzl", "score_py_pytest")
 
 # In order to update the requirements, change the `requirements.txt` file and run:
-# `bazel run //feature_integration_tests/python_test_cases:requirements.update`.
+# `bazel run //feature_integration_tests/test_cases:requirements.update`.
 # This will update the `requirements.txt.lock` file.
 # To upgrade all dependencies to their latest versions, run:
-# `bazel run //feature_integration_tests/python_test_cases:requirements.update -- --upgrade`.
+# `bazel run //feature_integration_tests/test_cases:requirements.update -- --upgrade`.
 compile_pip_requirements(
     name = "requirements",
     srcs = [
@@ -39,12 +39,15 @@ score_py_pytest(
     name = "fit_rust",
     srcs = glob(["tests/**/*.py"]),
     args = [
+        "-m rust",
         "--traces=all",
+        "--rust-target-path=$(rootpath //feature_integration_tests/test_scenarios/rust:rust_test_scenarios)",
     ],
     data = [
         "conftest.py",
         "fit_scenario.py",
         "test_properties.py",
+        "//feature_integration_tests/test_scenarios/rust:rust_test_scenarios",
     ],
     env = {
         "RUST_BACKTRACE": "1",
@@ -55,21 +58,21 @@ score_py_pytest(
 
 score_py_pytest(
     name = "fit_cpp",
-    srcs = [
-        "tests/persistency/test_multiple_kvs_per_app.py",
-    ],
+    srcs = glob(["tests/**/*.py"]),
     args = [
+        "-m cpp",
         "--traces=all",
-        "--rust-target-path=$(rootpath //feature_integration_tests/test_scenarios/rust:rust_test_scenarios)",
         "--cpp-target-path=$(rootpath //feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios)",
     ],
     data = [
         "conftest.py",
         "fit_scenario.py",
         "test_properties.py",
-        "//feature_integration_tests/test_scenarios/rust:rust_test_scenarios",
         "//feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios",
     ],
+    env = {
+        "RUST_BACKTRACE": "1",
+    },
     pytest_config = "//:pyproject.toml",
     deps = all_requirements,
 )

@@ -29,9 +29,6 @@ Current scope is persistency-focused scenarios.
 
 Defined in BUILD:
 
-- kvs_parameters (cc_library)
-- kvs_instance (cc_library)
-- scenarios_lib (cc_library)
 - cpp_test_scenarios (cc_binary)
 
 ## Available Scenario

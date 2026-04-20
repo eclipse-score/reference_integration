@@ -19,7 +19,7 @@ cc_binary(
         "src/**/*.cpp",
         "src/**/*.h",
     ]),
-    includes = ["src/internals/persistency"],
+    includes = ["src"],
     tags = ["manual"],
     visibility = ["//visibility:public"],
     deps = [

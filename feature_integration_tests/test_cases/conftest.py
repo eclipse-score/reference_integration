@@ -31,7 +31,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--rust-target-name",
         type=str,
-        default="//feature_integration_tests/rust_test_scenarios:rust_test_scenarios",
+        default="//feature_integration_tests/test_scenarios/rust:rust_test_scenarios",
         help="Rust test scenario executable target.",
     )
     parser.addoption(
@@ -70,6 +70,18 @@ def pytest_addoption(parser):
 
 
 # Hooks
+def pytest_collection_modifyitems(items: list[pytest.Function]):
+    for item in items:
+        # Automatically mark tests parametrized with 'version' as 'cpp' or 'rust'.
+        # This allows -m cpp / -m rust to select the correct variant in each target.
+        if hasattr(item, "callspec") and "version" in getattr(item.callspec, "params", {}):
+            version = item.callspec.params["version"]
+            if version == "cpp":
+                item.add_marker(pytest.mark.cpp)
+            elif version == "rust":
+                item.add_marker(pytest.mark.rust)
+
+
 @pytest.hookimpl(tryfirst=True)
 def pytest_sessionstart(session):
     try:
