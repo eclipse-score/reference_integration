@@ -37,16 +37,14 @@ compile_pip_requirements(
 # Tests targets
 score_py_pytest(
     name = "fit_rust",
-    srcs = glob(["tests/**/*.py"], exclude = ["tests/persistency/**/*.py"]),
+    srcs = glob(["tests/**/*.py"]),
     args = [
         "--traces=all",
-        "--rust-target-path=$(rootpath //feature_integration_tests/test_scenarios/rust:rust_test_scenarios)",
     ],
     data = [
         "conftest.py",
         "fit_scenario.py",
         "test_properties.py",
-        "//feature_integration_tests/test_scenarios/rust:rust_test_scenarios",
     ],
     env = {
         "RUST_BACKTRACE": "1",

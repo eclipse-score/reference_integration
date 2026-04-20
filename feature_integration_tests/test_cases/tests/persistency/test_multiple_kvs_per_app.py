@@ -54,8 +54,9 @@ class TestMultipleInstanceIds(FitScenario):
     def temp_dir(
         self,
         tmp_path_factory: pytest.TempPathFactory,
+        version: str,
     ) -> Generator[Path, None, None]:
-        yield from temp_dir_common(tmp_path_factory, self.__class__.__name__)
+        yield from temp_dir_common(tmp_path_factory, self.__class__.__name__, version)
 
     @pytest.fixture(scope="class")
     def test_config(
@@ -74,11 +75,6 @@ class TestMultipleInstanceIds(FitScenario):
             },
             "test": {"key": kvs_key, "value_1": kvs_value_1, "value_2": kvs_value_2},
         }
-
-    @pytest.fixture(autouse=True)
-    def _bind_version_parameter(self, version: str) -> None:
-        # Keep class parametrization explicit for report splitting by rust/cpp.
-        _ = version
 
     def test_logged_execution(
         self,

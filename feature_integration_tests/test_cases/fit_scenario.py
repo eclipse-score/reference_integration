@@ -59,7 +59,7 @@ def temp_dir_common(
     dir_name = "-".join(parts)
     dir_path = tmp_path_factory.mktemp(dir_name, numbered=True)
     yield dir_path
-    shutil.rmtree(dir_path, ignore_errors=True)
+    shutil.rmtree(dir_path)
 
 
 class FitScenario(Scenario):
