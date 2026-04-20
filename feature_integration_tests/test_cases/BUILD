@@ -80,7 +80,7 @@ score_py_pytest(
 test_suite(
     name = "fit",
     tests = [
-        ":fit_rust",
         ":fit_cpp",
+        ":fit_rust",
     ],
 )
