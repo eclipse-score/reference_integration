@@ -70,7 +70,7 @@ jobs:
           python ./scripts/quality_runners.py
       - name: Execute Feature Integration Tests
         run: |
-          bazel test //feature_integration_tests/test_cases:fit
+          bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit
       - name: Publish build summary
         if: always()
         run: |
