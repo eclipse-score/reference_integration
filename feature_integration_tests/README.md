@@ -13,16 +13,20 @@ This directory contains Feature Integration Tests for the S-CORE project. It inc
 - `test_scenarios/` — Test scenario implementations
   - `rust/` — Rust-based test scenarios
   - `cpp/` — C++-based test scenarios
-- `configs/` — Configuration files for test execution
+- `itf/` — Integration Test Framework tests (run on QEMU targets)
+  - `test_showcases.py` — Showcase validation tests
+  - `test_remote_logging.py` — Remote logging tests
+  - `test_ssh.py` — SSH connectivity tests
+- `configs/` — Configuration files for ITF execution (DLT, QEMU bridge, etc.)
 
 ## Running Tests
 
-### Python Test Cases
+### Python Test Cases (scenario-based FIT)
 
 Python tests are managed with Bazel and Pytest. To run all integration tests:
 
 ```sh
-bazel test //feature_integration_tests/test_cases:fit
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit
 ```
 
 To run specific test suites:
@@ -30,6 +34,14 @@ To run specific test suites:
 ```sh
 bazel test //feature_integration_tests/test_cases:fit_rust
 bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_cpp
+```
+
+### ITF Tests (QEMU-based)
+
+ITF tests run on a QEMU target and require the `itf-qnx-x86_64` config:
+
+```sh
+bazel test --config=itf-qnx-x86_64 //feature_integration_tests/itf:...
 ```
 
 ### Test Scenarios
