@@ -77,3 +77,13 @@ git_override(
     commit = "80feaae8ffaa2448c3872011b724e1668ad2930e",
     remote = "https://github.com/eclipse-score/logging.git",
 )
+
+#OpenSOVD Classic Diagnostic Adapter (CDA)
+#Provides a SOVD-to-UDS/DoIP bridge as opensovd-cda binary.
+bazel_dep(name = "score_opensovd_cda")
+git_override(
+   module_name = "score_opensovd_cda",
+   commit = "c85fa717a1abddb4582fb76fb6563bafc1b57850",
+   remote = "https://github.com/antonkri/opensovd-core.git",
+)
+

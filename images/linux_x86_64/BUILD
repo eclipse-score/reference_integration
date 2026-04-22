@@ -38,6 +38,13 @@ pkg_tar(
 )
 
 pkg_tar(
+    name = "opensovd_cda_bin_tar",
+    srcs = ["@score_opensovd_cda//:opensovd-cda"],
+    mode = "0755",
+    package_dir = "/usr/bin/opensovd_cda_bin",
+)
+
+pkg_tar(
     name = "datarouter_etc_tar",
     srcs = [
         "//feature_integration_tests/configs/datarouter:etc/log-channels.json",
@@ -54,6 +61,7 @@ oci_image(
         "//showcases:showcases_pkg_tar",
         ":datarouter_bin_tar",
         ":datarouter_etc_tar",
+        ":opensovd_cda_bin_tar",
     ],
 )
 
