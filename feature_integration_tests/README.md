@@ -41,7 +41,7 @@ bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_cpp
 ITF tests run on a QEMU target and require the `itf-qnx-x86_64` config:
 
 ```sh
-bazel test --config=itf-qnx-x86_64 //feature_integration_tests/itf:...
+bazel test --config=itf-qnx-x86_64 //feature_integration_tests/itf
 ```
 
 ### Test Scenarios
