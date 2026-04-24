@@ -32,6 +32,7 @@ docs(
         "@score_process//:needs_json",
         "@score_docs_as_code//:needs_json",
     ],
+    known_good = "known_good.json",
     source_dir = "docs",
 )
 
