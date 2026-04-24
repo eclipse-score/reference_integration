@@ -1,6 +1,6 @@
 # Feature Integration Tests
 
-This directory contains Feature Integration Tests for the S-CORE project. It includes both Python test cases and Rust test scenarios to validate features work together.
+This directory contains Feature Integration Tests for the S-CORE project. It includes Python test cases that orchestrate test scenarios implemented in Rust and C++ to validate that features work together correctly.
 
 ## Structure
 
@@ -9,32 +9,48 @@ This directory contains Feature Integration Tests for the S-CORE project. It inc
   - `fit_scenario.py` — Base scenario class
   - `requirements.txt` — Python dependencies
   - `BUILD` — Bazel build and test definitions
-  - `tests/` — Test cases (e.g., orchestration with persistency)
-- `test_scenarios/` — Location of test scenarios
-  - `rust/` — Rust-based integration test scenarios
-    - `src/` — Rust source code for test scenarios
-    - `BUILD` — Bazel build definitions
+  - `tests/` — Test cases organized by feature area
+- `test_scenarios/` — Test scenario implementations
+  - `rust/` — Rust-based test scenarios
+  - `cpp/` — C++-based test scenarios
+- `itf/` — Integration Test Framework tests (run on QEMU targets)
+  - `test_showcases.py` — Showcase validation tests
+  - `test_remote_logging.py` — Remote logging tests
+  - `test_ssh.py` — SSH connectivity tests
+- `configs/` — Configuration files for ITF execution (DLT, QEMU bridge, etc.)
 
 ## Running Tests
 
-### Python Test Cases
+### Python Test Cases (scenario-based FIT)
 
-Python tests are managed with Bazel and Pytest. To run the main test target:
-
-```sh
-bazel test //feature_integration_tests/test_cases:fit
-```
-
-### Rust Test Scenarios
-
-Rust test scenarios are defined in `test_scenarios/rust/src/scenarios`. Build and run them using Bazel:
+Python tests are managed with Bazel and Pytest. To run all integration tests:
 
 ```sh
-bazel build //feature_integration_tests/test_scenarios/rust:rust_test_scenarios
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit
 ```
+
+To run specific test suites:
+
+```sh
+bazel test //feature_integration_tests/test_cases:fit_rust
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_cpp
+```
+
+### ITF Tests (QEMU-based)
+
+ITF tests run on a QEMU target and require the `itf-qnx-x86_64` config:
+
+```sh
+bazel test --config=itf-qnx-x86_64 //feature_integration_tests/itf
+```
+
+### Test Scenarios
+
+Test scenarios can be listed and run directly for debugging:
 
 ```sh
 bazel run //feature_integration_tests/test_scenarios/rust:rust_test_scenarios -- --list-scenarios
+bazel run --config=linux-x86_64 //feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios -- --list-scenarios
 ```
 
 ## Updating Python Requirements

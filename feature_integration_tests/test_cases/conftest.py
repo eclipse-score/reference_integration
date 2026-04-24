@@ -15,8 +15,6 @@ from pathlib import Path
 import pytest
 from testing_utils import BazelTools
 
-FAILED_CONFIGS = []
-
 
 # Cmdline options
 def pytest_addoption(parser):
@@ -33,13 +31,24 @@ def pytest_addoption(parser):
     parser.addoption(
         "--rust-target-name",
         type=str,
-        default="//feature_integration_tests/rust_test_scenarios:rust_test_scenarios",
+        default="//feature_integration_tests/test_scenarios/rust:rust_test_scenarios",
         help="Rust test scenario executable target.",
     )
     parser.addoption(
         "--rust-target-path",
         type=Path,
         help="Rust test scenario executable target.",
+    )
+    parser.addoption(
+        "--cpp-target-name",
+        type=str,
+        default="//feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios",
+        help="C++ test scenario executable target.",
+    )
+    parser.addoption(
+        "--cpp-target-path",
+        type=Path,
+        help="C++ test scenario executable target.",
     )
     parser.addoption(
         "--build-scenarios",
@@ -61,6 +70,18 @@ def pytest_addoption(parser):
 
 
 # Hooks
+def pytest_collection_modifyitems(items: list[pytest.Function]):
+    for item in items:
+        # Automatically mark tests parametrized with 'version' as 'cpp' or 'rust'.
+        # This allows -m cpp / -m rust to select the correct variant in each target.
+        if hasattr(item, "callspec") and "version" in getattr(item.callspec, "params", {}):
+            version = item.callspec.params["version"]
+            if version == "cpp":
+                item.add_marker(pytest.mark.cpp)
+            elif version == "rust":
+                item.add_marker(pytest.mark.rust)
+
+
 @pytest.hookimpl(tryfirst=True)
 def pytest_sessionstart(session):
     try:
@@ -70,9 +91,15 @@ def pytest_sessionstart(session):
 
             # Build Rust test scenarios.
             print("Building Rust test scenarios executable...")
-            cargo_tools = BazelTools(option_prefix="rust", build_timeout=build_timeout)
+            rust_tools = BazelTools(option_prefix="rust", build_timeout=build_timeout)
             rust_target_name = session.config.getoption("--rust-target-name")
-            cargo_tools.build(rust_target_name)
+            rust_tools.build(rust_target_name)
+
+            # Build C++ test scenarios.
+            print("Building C++ test scenarios executable...")
+            cpp_tools = BazelTools(option_prefix="cpp", build_timeout=build_timeout)
+            cpp_target_name = session.config.getoption("--cpp-target-name")
+            cpp_tools.build(cpp_target_name)
 
     except Exception as e:
         pytest.exit(str(e), returncode=1)

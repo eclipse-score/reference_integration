@@ -1,5 +1,5 @@
 # *******************************************************************************
-# Copyright (c) 2025 Contributors to the Eclipse Foundation
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -12,13 +12,16 @@
 # *******************************************************************************
 
 import json
+from collections.abc import Generator
 from pathlib import Path
-from typing import Any, Generator
+from typing import Any
 
 import pytest
 from fit_scenario import FitScenario, temp_dir_common
 from test_properties import add_test_properties
 from testing_utils import LogContainer
+
+pytestmark = pytest.mark.parametrize("version", ["rust", "cpp"], scope="class")
 
 
 @add_test_properties(
@@ -51,8 +54,9 @@ class TestMultipleInstanceIds(FitScenario):
     def temp_dir(
         self,
         tmp_path_factory: pytest.TempPathFactory,
+        version: str,
     ) -> Generator[Path, None, None]:
-        yield from temp_dir_common(tmp_path_factory, self.__class__.__name__)
+        yield from temp_dir_common(tmp_path_factory, self.__class__.__name__, version)
 
     @pytest.fixture(scope="class")
     def test_config(
