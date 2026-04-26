@@ -26,6 +26,7 @@ from testing_utils import LogContainer
     test_type="requirements-based",
     derivation_technique="requirements-analysis",
 )
+@pytest.mark.rust
 class TestOrchWithPersistency(FitScenario):
     """
     Tests orchestration with persistency scenario.

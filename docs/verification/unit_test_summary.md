@@ -1,3 +1,5 @@
 # Unit Test Execution Summary
 
-## Template for a table with Unit Test execution summary
+| module | passed | failed | skipped | total |
+| --- | --- | --- | --- | --- |
+| score_communication | 3161 | 0 | 0 | 3161 |

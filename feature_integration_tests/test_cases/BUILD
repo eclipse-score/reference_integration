@@ -70,9 +70,6 @@ score_py_pytest(
         "test_properties.py",
         "//feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios",
     ],
-    env = {
-        "RUST_BACKTRACE": "1",
-    },
     pytest_config = "//:pyproject.toml",
     deps = all_requirements,
 )
