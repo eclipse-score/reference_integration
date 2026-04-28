@@ -1,5 +1,3 @@
-load("@rules_oci//oci:defs.bzl", "oci_image", "oci_load")
-
 # *******************************************************************************
 # Copyright (c) 2024 Contributors to the Eclipse Foundation
 #
@@ -12,18 +10,7 @@ load("@rules_oci//oci:defs.bzl", "oci_image", "oci_load")
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-load("@rules_rpm//:defs.bzl", "rpm_package")
-
-rpm_package(
-    name = "score-showcases",
-    data = [
-        "//showcases",
-    ],
-    data_dir = "/usr/share/score/examples",
-    description = "Eclipse S-CORE Reference Integration Showcases",
-    summary = "Eclipse S-CORE Reference Integration Showcases",
-    version = "0.6.0",
-)
+load("@rules_oci//oci:defs.bzl", "oci_image", "oci_load")
 
 sh_binary(
     name = "run",
@@ -39,9 +26,16 @@ sh_binary(
     },
 )
 
-oci_image(
+alias(
     name = "image",
-    base = "@centos_stream10_linux_amd64",
+    actual = select({
+        "@platforms//cpu:x86_64": ":image_amd64",
+    }),
+)
+
+oci_image(
+    name = "image_amd64",
+    base = "@eclipse_autosd10_qemu_amd64",
     tars = [
         "//showcases:showcases_pkg_tar",
     ],

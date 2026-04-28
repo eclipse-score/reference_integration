@@ -10,12 +10,20 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-[Unit]
-Requires=bluechi-proxy@agent-qm_lola-ipc-sub.service
-Requires=bluechi-proxy@agent-main_lola-ipc-pub.service
-After=proxy@agent-main_lola-ipc-pub.service
+#!/bin/bash
 
-[Service]
-Type=oneshot
-ExecStart=/bin/bash /usr/bin/lola-ipc-test
-RemainAfterExit=yes
+QEMU_ARCH=${QEMU_ARCH:=x86_64}
+
+/usr/bin/qemu-system-${QEMU_ARCH} \
+-drive file=/usr/share/OVMF/OVMF_CODE_4M.fd,if=pflash,format=raw,unit=0,readonly=on \
+-drive file=/usr/share/OVMF/OVMF_VARS_4M.fd,if=pflash,format=raw,unit=1,snapshot=on,readonly=off \
+-enable-kvm \
+-m 5G \
+-smp $(nproc) \
+-machine q35 \
+-cpu host \
+-device virtio-net-pci,netdev=n0 \
+-netdev user,id=n0,hostfwd=tcp::2222-:22 \
+-daemonize \
+-display none \
+-drive file=disk.qcow2,index=0,media=disk,format=qcow2,if=virtio,id=rootdisk,snapshot=off
