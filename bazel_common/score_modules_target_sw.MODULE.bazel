@@ -15,9 +15,10 @@
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py
 
 bazel_dep(name = "score_baselibs")
-single_version_override(
+git_override(
     module_name = "score_baselibs",
-    version = "0.2.6",
+    commit = "e87426c8d85d9c49fd68088f8c0134037d3a2748",
+    remote = "https://github.com/eclipse-score/baselibs.git",
 )
 
 bazel_dep(name = "score_baselibs_rust")
@@ -28,22 +29,22 @@ git_override(
 )
 
 bazel_dep(name = "score_communication")
-single_version_override(
+git_override(
     module_name = "score_communication",
+    commit = "bc1e3c54e7bacaa51bd56cfe768b9bd0bfd4aa06",
     patch_strip = 1,
     patches = [
         "//patches/communication:001-expose-comm-examples.patch",
         "//patches/communication:002-tests-visibility.patch",
         "//patches/communication:003-module-deps-visibility.patch",
-        "//patches/communication:004-download-utils-non-dev.patch",
     ],
-    version = "0.2.0",
+    remote = "https://github.com/eclipse-score/communication.git",
 )
 
 bazel_dep(name = "score_persistency")
 git_override(
     module_name = "score_persistency",
-    commit = "438bf9b5c447fd41ad43b321679dd3d1b3a6c737",
+    commit = "b20e218a3c990d2765dd57adc6c719f1f9801932",
     remote = "https://github.com/eclipse-score/persistency.git",
 )
 
@@ -64,13 +65,13 @@ git_override(
 bazel_dep(name = "score_lifecycle_health")
 git_override(
     module_name = "score_lifecycle_health",
-    commit = "28e96098f117dcdd4a43d26b92e6ed8d9d36f9c3",
+    commit = "2f2e9c4c3e6c6b38abd0b72f78c8ffb96dc7f9e8",
     remote = "https://github.com/eclipse-score/lifecycle.git",
 )
 
 bazel_dep(name = "score_logging")
 git_override(
     module_name = "score_logging",
-    commit = "5d4fbebd958908ef7223f535a9b98ac966a08145",
+    commit = "1684d41b54a3978a4a88e2fd5136305335486861",
     remote = "https://github.com/eclipse-score/logging.git",
 )

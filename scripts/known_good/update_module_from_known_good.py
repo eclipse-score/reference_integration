@@ -142,12 +142,13 @@ def generate_coverage_blocks(modules: List[Module]) -> List[str]:
         else:
             excluded_tests = ""
 
+        ferrocene_config = module.metadata.rust_coverage_config or "ferrocene-coverage"
         block = f"""
 rust_coverage_report(
     name = "rust_coverage_{module.name}",
     bazel_configs = [
         "linux-x86_64",
-        "ferrocene-coverage",
+        "{ferrocene_config}",
     ],
     query = 'kind("rust_test", @{module.name}{module.metadata.code_root_path}){excluded_tests}',
     visibility = ["//visibility:public"],

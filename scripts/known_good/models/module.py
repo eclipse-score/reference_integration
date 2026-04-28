@@ -35,6 +35,7 @@ class Metadata:
     extra_test_config: list[str] = field(default_factory=lambda: [])
     exclude_test_targets: list[str] = field(default_factory=lambda: [])
     langs: list[str] = field(default_factory=lambda: ["cpp", "rust"])
+    rust_coverage_config: str | None = "ferrocene-coverage"  # Optional field for Rust coverage configuration
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> Metadata:
@@ -51,6 +52,7 @@ class Metadata:
             extra_test_config=data.get("extra_test_config", []),
             exclude_test_targets=data.get("exclude_test_targets", []),
             langs=data.get("langs", ["cpp", "rust"]),
+            rust_coverage_config=data.get("rust_coverage_config", "ferrocene-coverage"),
         )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -64,6 +66,7 @@ class Metadata:
             "extra_test_config": self.extra_test_config,
             "exclude_test_targets": self.exclude_test_targets,
             "langs": self.langs,
+            "rust_coverage_config": self.rust_coverage_config,
         }
 
 

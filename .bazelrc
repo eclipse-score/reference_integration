@@ -69,6 +69,12 @@ test:ferrocene-coverage --run_under=@score_tooling//coverage:llvm_profile_wrappe
 # Coverage needs to have all intermediate .rlibs to be able to proceed
 build:ferrocene-coverage --remote_download_all
 
+# Persistency specific flags
+build:ferrocene-coverage-per --config=ferrocene-coverage
+build:ferrocene-coverage-per --@score_baselibs_rust//src/log:safety_level=qm
+build:ferrocene-coverage-per --@score_baselibs//score/json:base_library=nlohmann
+build:ferrocene-coverage-per --@score_logging//score/mw/log/flags:KRemote_Logging=False
+
 # Output only failed test logs
 test --test_output=errors
 
