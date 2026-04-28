@@ -30,11 +30,32 @@ public:
     // Wrap snapshot file into Rust-style top-level object envelope.
     static bool normalize_snapshot_file_to_rust_envelope(const KvsParameters& params);
 
-    // Set a value
+    // Set value methods for all supported types
+    bool set_value(const std::string& key, int32_t value);
+    bool set_value(const std::string& key, int64_t value);
+    bool set_value(const std::string& key, uint32_t value);
+    bool set_value(const std::string& key, uint64_t value);
     bool set_value(const std::string& key, double value);
+    bool set_value(const std::string& key, bool value);
+    bool set_value(const std::string& key, const std::string& value);
 
-    // Get a value
+    // Get value methods for all supported types
+    std::optional<int32_t> get_value_i32(const std::string& key);
+    std::optional<int64_t> get_value_i64(const std::string& key);
+    std::optional<uint32_t> get_value_u32(const std::string& key);
+    std::optional<uint64_t> get_value_u64(const std::string& key);
+    std::optional<double> get_value_f64(const std::string& key);
+    std::optional<bool> get_value_bool(const std::string& key);
+    std::optional<std::string> get_value_string(const std::string& key);
+
+    // Legacy method for backward compatibility
     std::optional<double> get_value(const std::string& key);
+
+    // Default value related methods
+    std::optional<bool> is_value_default(const std::string& key);
+    bool remove_key(const std::string& key);
+    bool reset();
+    bool reset_key(const std::string& key);
 
     // Flush to persistent storage
     bool flush();

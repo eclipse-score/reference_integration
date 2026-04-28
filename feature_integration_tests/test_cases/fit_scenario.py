@@ -10,9 +10,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+import json
 import shutil
-from collections.abc import Generator
 from pathlib import Path
+from typing import Generator
+from zlib import adler32
 
 import pytest
 from testing_utils import (
@@ -62,6 +64,41 @@ def temp_dir_common(
     shutil.rmtree(dir_path)
 
 
+def create_kvs_defaults_file(dir_path: Path, instance_id: int, values: dict) -> Path:
+    """
+    Create a KVS defaults JSON file and matching hash file at conventional paths.
+
+    KVS expects defaults at: {dir}/kvs_{instance_id}_default.json
+    and the hash at:         {dir}/kvs_{instance_id}_default.hash
+
+    The JSON format is: {"key": {"t": "type_tag", "v": value}, ...}
+    The hash is adler32 of the JSON string, written as 4 big-endian bytes.
+
+    Parameters
+    ----------
+    dir_path : Path
+        Working directory for the KVS instance.
+    instance_id : int
+        KVS instance identifier.
+    values : dict
+        Mapping of key -> (type_tag, value), e.g. {"my_key": ("f64", 1.0)}.
+
+    Returns
+    -------
+    Path
+        Path to the created JSON defaults file.
+    """
+    json_path = dir_path / f"kvs_{instance_id}_default.json"
+    hash_path = dir_path / f"kvs_{instance_id}_default.hash"
+
+    data = {key: {"t": type_tag, "v": val} for key, (type_tag, val) in values.items()}
+    json_str = json.dumps(data)
+
+    json_path.write_text(json_str)
+    hash_path.write_bytes(adler32(json_str.encode()).to_bytes(length=4, byteorder="big"))
+    return json_path
+
+
 class FitScenario(Scenario):
     """
     CIT test scenario definition.
@@ -90,10 +127,9 @@ class FitScenario(Scenario):
     ) -> ScenarioResult:
         result = self._run_command(command, execution_timeout, args, kwargs)
         success = result.return_code == ResultCode.SUCCESS and not result.hang
-        expect_failure = self.expect_command_failure()
-        if expect_failure and success:
+        if self.expect_command_failure() and success:
             raise RuntimeError(f"Command execution succeeded unexpectedly: {result=}")
-        if not expect_failure and not success:
+        if not self.expect_command_failure() and not success:
             raise RuntimeError(f"Command execution failed unexpectedly: {result=}")
         return result
 

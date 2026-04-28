@@ -16,12 +16,20 @@
 #include <vector>
 
 Scenario::Ptr make_multiple_kvs_per_app_scenario();
+Scenario::Ptr make_default_values_ignored_scenario();
+Scenario::Ptr make_reset_to_default_scenario();
+ScenarioGroup::Ptr supported_datatypes_group();
+ScenarioGroup::Ptr default_values_group();
 
 ScenarioGroup::Ptr persistency_scenario_group() {
     return std::make_shared<ScenarioGroupImpl>(
         "persistency",
-        std::vector<Scenario::Ptr>{make_multiple_kvs_per_app_scenario()},
-        std::vector<ScenarioGroup::Ptr>{});
+        std::vector<Scenario::Ptr>{
+            make_multiple_kvs_per_app_scenario(),
+            make_default_values_ignored_scenario(),
+            make_reset_to_default_scenario(),
+        },
+        std::vector<ScenarioGroup::Ptr>{supported_datatypes_group(), default_values_group()});
 }
 
 ScenarioGroup::Ptr root_scenario_group() {
