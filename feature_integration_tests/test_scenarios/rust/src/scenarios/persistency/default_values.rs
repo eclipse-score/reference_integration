@@ -44,8 +44,7 @@ impl Scenario for DefaultValues {
         let params = parse_params(input)?;
 
         {
-            let kvs = kvs_instance(params.clone())
-                .unwrap_or_else(|e| panic!("Failed to create KVS instance: {e:?}"));
+            let kvs = kvs_instance(params.clone()).unwrap_or_else(|e| panic!("Failed to create KVS instance: {e:?}"));
 
             let value_is_default = to_str(&kvs.is_value_default(key));
             let default_value = to_str(&kvs.get_default_value(key));
@@ -180,8 +179,7 @@ impl Scenario for ResetSingleKey {
             info!(key, value_is_default, current_value);
         }
 
-        kvs.reset_key(&key_values[reset_index].0)
-            .expect("Failed to reset key");
+        kvs.reset_key(&key_values[reset_index].0).expect("Failed to reset key");
 
         for (key, _) in key_values.iter() {
             let value_is_default = kvs.is_value_default(key).expect("Failed to check if default value");
@@ -206,8 +204,7 @@ impl Scenario for Checksum {
         let kvs_path;
         let hash_path;
         {
-            let kvs = kvs_instance(params.clone())
-                .unwrap_or_else(|e| panic!("Failed to create KVS instance: {e:?}"));
+            let kvs = kvs_instance(params.clone()).unwrap_or_else(|e| panic!("Failed to create KVS instance: {e:?}"));
             kvs.flush().expect("Failed to flush");
             (kvs_path, hash_path) = kvs_hash_paths(&working_dir, params.instance_id, SnapshotId(0));
         }

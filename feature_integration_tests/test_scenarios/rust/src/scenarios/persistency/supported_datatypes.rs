@@ -45,14 +45,14 @@ fn kvs_value_to_tagged_json(value: &KvsValue) -> JsonValue {
         KvsValue::Array(values) => {
             let tagged: Vec<JsonValue> = values.iter().map(kvs_value_to_tagged_json).collect();
             json!({"t": "arr", "v": tagged})
-        }
+        },
         KvsValue::Object(values) => {
             let mut map = Map::new();
             for (key, entry) in values.iter() {
                 map.insert(key.clone(), kvs_value_to_tagged_json(entry));
             }
             json!({"t": "obj", "v": JsonValue::Object(map)})
-        }
+        },
     }
 }
 
