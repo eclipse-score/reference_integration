@@ -13,8 +13,6 @@
 
 #include "../../internals/persistency/kvs_instance.h"
 
-#include "tracing.hpp"
-
 #include "score/json/json_parser.h"
 
 #include <scenario.hpp>
@@ -24,8 +22,6 @@
 #include <string>
 
 namespace {
-
-const std::string kTargetName{"cpp_test_scenarios::scenarios::persistency::default_values_ignored"};
 
 struct TestInput {
     std::string key;
@@ -92,11 +88,6 @@ void DefaultValuesIgnored::run(const std::string& input) const {
     KvsParameters params = KvsParameters::from_json_section(input, "kvs_parameters_1");
     TestInput test_input = TestInput::from_json(input);
 
-    // Verify KvsDefaults::Ignored mode
-    TRACING_INFO(kTargetName,
-                 std::pair{std::string{"mode"}, "ignored"},
-                 std::pair{std::string{"defaults_loaded"}, "false"});
-
     // Create KVS with Ignored mode
     auto kvs_opt = KvsInstance::create(params);
     if (!kvs_opt) {
@@ -104,34 +95,23 @@ void DefaultValuesIgnored::run(const std::string& input) const {
     }
     auto kvs = *kvs_opt;
 
-    // Attempt to get default value - should fail since defaults are ignored
+    // In Ignored mode, getting a non-existent key should fail (no defaults loaded)
     auto default_result = kvs->get_value_f64(test_input.key);
     if (default_result.has_value()) {
         throw std::runtime_error("Expected get_value to fail with Ignored mode, but it succeeded");
     }
 
-    // Set explicit value
+    // Set explicit value and flush to storage. Python reads the snapshot
+    // and verifies the explicitly set value is persisted.
     if (!kvs->set_value(test_input.key, test_input.override_value)) {
         throw std::runtime_error("Failed to set value");
     }
 
-    // Get the value back
-    auto retrieved_opt = kvs->get_value_f64(test_input.key);
-    if (!retrieved_opt) {
-        throw std::runtime_error("Failed to get explicitly set value");
-    }
-
-    TRACING_INFO(kTargetName,
-                 std::pair{std::string{"operation"}, "set_and_get"},
-                 std::pair{std::string{"key"}, test_input.key},
-                 std::pair{std::string{"value"}, *retrieved_opt});
-
-    // Flush to storage
     if (!kvs->flush()) {
         throw std::runtime_error("Failed to flush KVS");
     }
 
-    // Normalize snapshot file
+    // Normalize snapshot file for Python assertion
     if (!KvsInstance::normalize_snapshot_file_to_rust_envelope(params)) {
         std::cerr << "Warning: Failed to normalize snapshot file" << std::endl;
     }

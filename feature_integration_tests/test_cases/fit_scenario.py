@@ -99,9 +99,37 @@ def create_kvs_defaults_file(dir_path: Path, instance_id: int, values: dict) -> 
     return json_path
 
 
+def read_kvs_snapshot(dir_path: Path, instance_id: int, snapshot_id: int = 0) -> dict:
+    """
+    Read and parse the KVS snapshot JSON for a given instance.
+
+    Supports both the Rust/normalized envelope format {"t":"obj","v":{...}}
+    and the raw C++ format {key: {...}}. Returns the inner key -> tagged-value mapping.
+
+    Parameters
+    ----------
+    dir_path : Path
+        Working directory containing the KVS snapshot files.
+    instance_id : int
+        KVS instance identifier used in the filename convention.
+    snapshot_id : int, optional
+        Snapshot sequence number (default 0).
+
+    Returns
+    -------
+    dict
+        Mapping of key -> tagged-value dict, e.g. {"mykey": {"t": "f64", "v": 1.0}}.
+    """
+    path = dir_path / f"kvs_{instance_id}_{snapshot_id}.json"
+    data = json.loads(path.read_text())
+    if isinstance(data, dict) and data.get("t") == "obj" and "v" in data:
+        return data["v"]
+    return data
+
+
 class FitScenario(Scenario):
     """
-    CIT test scenario definition.
+    FIT test scenario definition.
     """
 
     @pytest.fixture(scope="class")

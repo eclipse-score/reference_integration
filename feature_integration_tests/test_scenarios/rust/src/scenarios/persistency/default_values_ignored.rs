@@ -15,7 +15,6 @@ use rust_kvs::prelude::KvsApi;
 use serde::Deserialize;
 use serde_json::Value;
 use test_scenarios_rust::scenario::Scenario;
-use tracing::info;
 
 #[derive(Deserialize, Debug)]
 pub struct TestInput {
@@ -43,35 +42,19 @@ impl Scenario for DefaultValuesIgnored {
         let params = KvsParameters::from_value(&v["kvs_parameters_1"]).expect("Failed to parse parameters");
         let test_input = TestInput::from_json(input).expect("Failed to parse test input");
 
-        // Verify KvsDefaults::Ignored mode
-        info!(mode = "ignored", defaults_loaded = "false", "KvsDefaults::Ignored mode");
-
         // Create KVS with Ignored mode - defaults file exists but should not be loaded
         let kvs = kvs_instance(params).expect("Failed to create KVS instance");
 
-        // Attempt to get default value - should fail since defaults are ignored
+        // In Ignored mode, getting a non-existent key should fail (no defaults loaded)
         let result: Result<f64, _> = kvs.get_value_as(&test_input.key);
         if result.is_ok() {
             return Err("Expected get_value to fail with Ignored mode, but it succeeded".to_string());
         }
 
-        // Set explicit value
+        // Set explicit value and flush to storage. Python reads the snapshot
+        // and verifies the explicitly set value is persisted.
         kvs.set_value(&test_input.key, test_input.override_value)
             .expect("Failed to set value");
-
-        // Get the value back
-        let retrieved_value: f64 = kvs
-            .get_value_as(&test_input.key)
-            .expect("Failed to get explicitly set value");
-
-        info!(
-            operation = "set_and_get",
-            key = test_input.key.as_str(),
-            value = retrieved_value,
-            "Explicit value set and retrieved"
-        );
-
-        // Flush to storage
         kvs.flush().expect("Failed to flush KVS");
 
         Ok(())

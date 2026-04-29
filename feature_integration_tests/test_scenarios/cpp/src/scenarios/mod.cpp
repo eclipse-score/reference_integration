@@ -18,6 +18,8 @@
 Scenario::Ptr make_multiple_kvs_per_app_scenario();
 Scenario::Ptr make_default_values_ignored_scenario();
 Scenario::Ptr make_reset_to_default_scenario();
+Scenario::Ptr make_utf8_defaults_scenario();
+Scenario::Ptr make_utf8_default_value_get_scenario();
 ScenarioGroup::Ptr supported_datatypes_group();
 ScenarioGroup::Ptr default_values_group();
 
@@ -28,6 +30,8 @@ ScenarioGroup::Ptr persistency_scenario_group() {
             make_multiple_kvs_per_app_scenario(),
             make_default_values_ignored_scenario(),
             make_reset_to_default_scenario(),
+            make_utf8_defaults_scenario(),
+            make_utf8_default_value_get_scenario(),
         },
         std::vector<ScenarioGroup::Ptr>{supported_datatypes_group(), default_values_group()});
 }

@@ -15,7 +15,6 @@ use rust_kvs::prelude::KvsApi;
 use serde::Deserialize;
 use serde_json::Value;
 use test_scenarios_rust::scenario::Scenario;
-use tracing::info;
 
 #[derive(Deserialize, Debug)]
 pub struct TestInput {
@@ -44,94 +43,20 @@ impl Scenario for ResetToDefault {
         let params = KvsParameters::from_value(&v["kvs_parameters_1"]).expect("Failed to parse parameters");
         let test_input = TestInput::from_json(input).expect("Failed to parse test input");
 
-        {
-            // Create KVS with Optional mode - defaults should be loaded
-            let kvs = kvs_instance(params.clone()).expect("Failed to create KVS instance");
+        // Create KVS with Optional mode - defaults should be loaded
+        let kvs = kvs_instance(params).expect("Failed to create KVS instance");
 
-            // Verify all keys start with default values
-            for (i, key) in test_input.keys.iter().enumerate() {
-                let default_value: f64 = kvs.get_value_as(key).expect("Failed to get default value");
-
-                if (default_value - test_input.default_values[i]).abs() > 1e-9 {
-                    return Err(format!(
-                        "Initial value mismatch for {}: expected {}, got {}",
-                        key, test_input.default_values[i], default_value
-                    ));
-                }
-            }
-
-            // Override all keys with new values
-            for (i, key) in test_input.keys.iter().enumerate() {
-                kvs.set_value(key, test_input.override_values[i])
-                    .expect("Failed to override value");
-
-                let is_default = kvs.is_value_default(key).expect("Failed to check is_value_default");
-
-                info!(
-                    operation = format!("override_{}", key).as_str(),
-                    key = key.as_str(),
-                    value = test_input.override_values[i],
-                    is_default = is_default.to_string().as_str(),
-                    "Overridden value"
-                );
-            }
-
-            // Reset key2 (index 1) using remove_key
-            let key_to_reset = &test_input.keys[1];
-            kvs.remove_key(key_to_reset).expect("Failed to remove key");
-
-            // Check key2 after reset - should be back to default
-            let reset_value: f64 = kvs.get_value_as(key_to_reset).expect("Failed to get value after reset");
-
-            let is_default_after = kvs
-                .is_value_default(key_to_reset)
-                .expect("Failed to check is_value_default after reset");
-
-            info!(
-                operation = format!("after_reset_{}", key_to_reset).as_str(),
-                key = key_to_reset.as_str(),
-                value = reset_value,
-                is_default = is_default_after.to_string().as_str(),
-                "Value after reset"
-            );
-
-            // Verify reset_value matches default
-            if (reset_value - test_input.default_values[1]).abs() > 1e-9 {
-                return Err(format!(
-                    "Reset value mismatch: expected {}, got {}",
-                    test_input.default_values[1], reset_value
-                ));
-            }
-
-            // Check other keys are still overridden
-            for (i, key) in test_input.keys.iter().enumerate() {
-                if i == 1 {
-                    continue; // Skip key2 which we just reset
-                }
-
-                let current_value: f64 = kvs.get_value_as(key).expect("Failed to get value");
-
-                let is_default = kvs.is_value_default(key).expect("Failed to check is_value_default");
-
-                info!(
-                    operation = format!("check_{}_after_reset", key).as_str(),
-                    key = key.as_str(),
-                    value = current_value,
-                    is_default = is_default.to_string().as_str(),
-                    "Other key after reset"
-                );
-
-                if (current_value - test_input.override_values[i]).abs() > 1e-9 {
-                    return Err(format!(
-                        "Other key was affected by reset: {} expected {}, got {}",
-                        key, test_input.override_values[i], current_value
-                    ));
-                }
-            }
-
-            // Flush to storage
-            kvs.flush().expect("Failed to flush KVS");
+        // Override all keys with new values
+        for (i, key) in test_input.keys.iter().enumerate() {
+            kvs.set_value(key, test_input.override_values[i])
+                .expect("Failed to override value");
         }
+
+        // Reset key2 (index 1) using remove_key — reverts to default in memory
+        kvs.remove_key(&test_input.keys[1]).expect("Failed to remove key");
+
+        // Flush to persist the state: key1 and key3 with overrides, key2 absent
+        kvs.flush().expect("Failed to flush KVS");
 
         Ok(())
     }

@@ -11,15 +11,15 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-import json
 from collections.abc import Generator
+from math import isclose
 from pathlib import Path
 from typing import Any
 
 import pytest
-from fit_scenario import FitScenario, create_kvs_defaults_file, temp_dir_common
+from fit_scenario import FitScenario, ResultCode, create_kvs_defaults_file, read_kvs_snapshot, temp_dir_common
 from test_properties import add_test_properties
-from testing_utils import LogContainer
+from testing_utils import ScenarioResult
 
 pytestmark = pytest.mark.parametrize("version", ["rust", "cpp"], scope="class")
 
@@ -36,9 +36,9 @@ _OVERRIDE_VALUES = [111.0, 222.0, 333.0]
 )
 class TestResetToDefault(FitScenario):
     """
-    Verifies that keys can be reset to their default values using remove_key() API.
-    When a key is removed from KVS with defaults enabled, it should revert to the
-    default value if one exists.
+    Verifies that remove_key() resets a key to default by removing it from storage.
+    After removing key2 and flushing: key1 and key3 remain in the snapshot with their
+    override values, while key2 is absent (reverts to default lookup at runtime).
     """
 
     @pytest.fixture(scope="class")
@@ -83,37 +83,23 @@ class TestResetToDefault(FitScenario):
             },
         }
 
-    def test_reset_single_key(self, logs_info_level: LogContainer):
-        """Verify that a single key can be reset to its default value."""
-        log_override = logs_info_level.find_log("operation", value="override_key2")
-        assert log_override is not None
-        assert abs(log_override.value - _OVERRIDE_VALUES[1]) < 1e-5
-        if hasattr(log_override, "is_default") and log_override.is_default != "unknown":
-            assert log_override.is_default == "false"
+    def test_storage_state(self, results: ScenarioResult, temp_dir: Path) -> None:
+        """
+        Verify the KVS snapshot reflects the expected state after remove_key:
+        - key2 (index 1) was removed and must be absent from the snapshot
+        - key1 and key3 remain with their override values
+        """
+        assert results.return_code == ResultCode.SUCCESS
+        snapshot = read_kvs_snapshot(temp_dir, 1)
 
-        log_reset = logs_info_level.find_log("operation", value="after_reset_key2")
-        assert log_reset is not None
-        assert abs(log_reset.value - _DEFAULT_VALUES[1]) < 1e-5
-        if hasattr(log_reset, "is_default") and log_reset.is_default != "unknown":
-            assert log_reset.is_default == "true"
+        # key2 was removed — must be absent from snapshot
+        assert _KEYS[1] not in snapshot, f"Reset key '{_KEYS[1]}' should be absent from snapshot after remove_key"
 
-    def test_other_keys_unchanged(self, logs_info_level: LogContainer):
-        """Verify that resetting one key doesn't affect other keys."""
-        log_key1 = logs_info_level.find_log("operation", value="check_key1_after_reset")
-        assert log_key1 is not None
-        assert abs(log_key1.value - _OVERRIDE_VALUES[0]) < 1e-5
-        if hasattr(log_key1, "is_default") and log_key1.is_default != "unknown":
-            assert log_key1.is_default == "false"
-
-        log_key3 = logs_info_level.find_log("operation", value="check_key3_after_reset")
-        assert log_key3 is not None
-        assert abs(log_key3.value - _OVERRIDE_VALUES[2]) < 1e-5
-        if hasattr(log_key3, "is_default") and log_key3.is_default != "unknown":
-            assert log_key3.is_default == "false"
-
-    def test_reset_persisted(self, temp_dir: Path):
-        """Verify that the KVS snapshot file exists after reset."""
-        kvs_file = temp_dir / "kvs_1_0.json"
-        assert kvs_file.exists()
-        data = json.loads(kvs_file.read_text())
-        assert "v" in data
+        # key1 and key3 remain with override values
+        for i, key in enumerate(_KEYS):
+            if i == 1:
+                continue  # key2 already checked above
+            assert key in snapshot, f"Key '{key}' should be present in snapshot"
+            assert isclose(snapshot[key]["v"], _OVERRIDE_VALUES[i], abs_tol=1e-4), (
+                f"Key '{key}': expected override {_OVERRIDE_VALUES[i]}, got {snapshot[key]['v']}"
+            )

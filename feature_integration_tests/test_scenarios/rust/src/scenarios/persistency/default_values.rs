@@ -13,184 +13,16 @@
 use crate::internals::persistency::{kvs_instance::kvs_instance, kvs_parameters::KvsParameters};
 use rust_kvs::prelude::*;
 use serde_json::Value;
-use std::path::{Path, PathBuf};
 use test_scenarios_rust::scenario::{Scenario, ScenarioGroup, ScenarioGroupImpl};
-use tracing::info;
-
-fn to_str<T: core::fmt::Debug>(value: &T) -> String {
-    format!("{value:?}")
-}
-
-fn kvs_hash_paths(working_dir: &Path, instance_id: InstanceId, snapshot_id: SnapshotId) -> (PathBuf, PathBuf) {
-    let kvs_path = working_dir.join(format!("kvs_{instance_id}_{snapshot_id}.json"));
-    let hash_path = working_dir.join(format!("kvs_{instance_id}_{snapshot_id}.hash"));
-    (kvs_path, hash_path)
-}
 
 fn parse_params(input: &str) -> Result<KvsParameters, String> {
     let v: Value = serde_json::from_str(input).map_err(|e| e.to_string())?;
     KvsParameters::from_value(&v["kvs_parameters_1"]).map_err(|e| e.to_string())
 }
 
-struct DefaultValues;
-
-impl Scenario for DefaultValues {
-    fn name(&self) -> &str {
-        "default_values"
-    }
-
-    fn run(&self, input: &str) -> Result<(), String> {
-        let key = "test_number";
-        let params = parse_params(input)?;
-
-        {
-            let kvs = kvs_instance(params.clone()).unwrap_or_else(|e| panic!("Failed to create KVS instance: {e:?}"));
-
-            let value_is_default = to_str(&kvs.is_value_default(key));
-            let default_value = to_str(&kvs.get_default_value(key));
-            let current_value = to_str(&kvs.get_value(key));
-
-            info!(key, value_is_default, default_value, current_value);
-
-            kvs.set_value(key, 432.1).expect("Failed to set value");
-            kvs.flush().expect("Failed to flush");
-        }
-
-        {
-            let kvs = kvs_instance(params).unwrap_or_else(|e| panic!("Failed to create KVS instance: {e:?}"));
-
-            let value_is_default = to_str(&kvs.is_value_default(key));
-            let default_value = to_str(&kvs.get_default_value(key));
-            let current_value = to_str(&kvs.get_value(key));
-
-            info!(key, value_is_default, default_value, current_value);
-        }
-
-        Ok(())
-    }
-}
-
-struct RemoveKey;
-
-impl Scenario for RemoveKey {
-    fn name(&self) -> &str {
-        "remove_key"
-    }
-
-    fn run(&self, input: &str) -> Result<(), String> {
-        let key = "test_number";
-        let params = parse_params(input)?;
-        let kvs = kvs_instance(params).unwrap_or_else(|e| panic!("Failed to create KVS instance: {e:?}"));
-
-        let value_is_default = to_str(&kvs.is_value_default(key));
-        let default_value = to_str(&kvs.get_default_value(key));
-        let current_value = to_str(&kvs.get_value(key));
-        info!(key, value_is_default, default_value, current_value);
-
-        kvs.set_value(key, 432.1).expect("Failed to set value");
-
-        let value_is_default = to_str(&kvs.is_value_default(key));
-        let default_value = to_str(&kvs.get_default_value(key));
-        let current_value = to_str(&kvs.get_value(key));
-        info!(key, value_is_default, default_value, current_value);
-
-        kvs.remove_key(key).expect("Failed to remove key");
-        let value_is_default = to_str(&kvs.is_value_default(key));
-        let default_value = to_str(&kvs.get_default_value(key));
-        let current_value = to_str(&kvs.get_value(key));
-        info!(key, value_is_default, default_value, current_value);
-
-        Ok(())
-    }
-}
-
-struct ResetAllKeys;
-
-impl Scenario for ResetAllKeys {
-    fn name(&self) -> &str {
-        "reset_all_keys"
-    }
-
-    fn run(&self, input: &str) -> Result<(), String> {
-        let num_values = 5;
-        let params = parse_params(input)?;
-        let kvs = kvs_instance(params).unwrap_or_else(|e| panic!("Failed to create KVS instance: {e:?}"));
-
-        let mut key_values = Vec::new();
-        for i in 0..num_values {
-            let key = format!("test_number_{i}");
-            let value = 123.4 * i as f64;
-            key_values.push((key, value));
-        }
-
-        for (key, value) in key_values.iter() {
-            let value_is_default = kvs.is_value_default(key).expect("Failed to check if default value");
-            let current_value = kvs.get_value_as::<f64>(key).expect("Failed to read value");
-            info!(key = key, value_is_default, current_value);
-
-            kvs.set_value(key.clone(), *value).expect("Failed to set value");
-
-            let value_is_default = kvs.is_value_default(key).expect("Failed to check if default value");
-            let current_value = kvs.get_value_as::<f64>(key).expect("Failed to read value");
-            info!(key, value_is_default, current_value);
-        }
-
-        kvs.reset().expect("Failed to reset KVS instance");
-
-        for (key, _) in key_values.iter() {
-            let value_is_default = kvs.is_value_default(key).expect("Failed to check if default value");
-            let current_value = kvs.get_value_as::<f64>(key).expect("Failed to read value");
-            info!(key, value_is_default, current_value);
-        }
-
-        Ok(())
-    }
-}
-
-struct ResetSingleKey;
-
-impl Scenario for ResetSingleKey {
-    fn name(&self) -> &str {
-        "reset_single_key"
-    }
-
-    fn run(&self, input: &str) -> Result<(), String> {
-        let num_values = 5;
-        let reset_index = 2;
-        let params = parse_params(input)?;
-        let kvs = kvs_instance(params).unwrap_or_else(|e| panic!("Failed to create KVS instance: {e:?}"));
-
-        let mut key_values = Vec::new();
-        for i in 0..num_values {
-            let key = format!("test_number_{i}");
-            let value = 123.4 * i as f64;
-            key_values.push((key, value));
-        }
-
-        for (key, value) in key_values.iter() {
-            let value_is_default = kvs.is_value_default(key).expect("Failed to check if default value");
-            let current_value = kvs.get_value_as::<f64>(key).expect("Failed to read value");
-            info!(key = key, value_is_default, current_value);
-
-            kvs.set_value(key.clone(), *value).expect("Failed to set value");
-
-            let value_is_default = kvs.is_value_default(key).expect("Failed to check if default value");
-            let current_value = kvs.get_value_as::<f64>(key).expect("Failed to read value");
-            info!(key, value_is_default, current_value);
-        }
-
-        kvs.reset_key(&key_values[reset_index].0).expect("Failed to reset key");
-
-        for (key, _) in key_values.iter() {
-            let value_is_default = kvs.is_value_default(key).expect("Failed to check if default value");
-            let current_value = kvs.get_value_as::<f64>(key).expect("Failed to read value");
-            info!(key, value_is_default, current_value);
-        }
-
-        Ok(())
-    }
-}
-
+/// Set a single value and flush. Python reads the snapshot bytes and the hash
+/// file, verifying adler32(snapshot) equals the hash written by KVS — exercising
+/// feat_req__persistency__integrity_check alongside feat_req__persistency__store_data.
 struct Checksum;
 
 impl Scenario for Checksum {
@@ -200,19 +32,129 @@ impl Scenario for Checksum {
 
     fn run(&self, input: &str) -> Result<(), String> {
         let params = parse_params(input)?;
-        let working_dir = params.dir.clone().expect("Working directory must be set");
-        let kvs_path;
-        let hash_path;
-        {
-            let kvs = kvs_instance(params.clone()).unwrap_or_else(|e| panic!("Failed to create KVS instance: {e:?}"));
-            kvs.flush().expect("Failed to flush");
-            (kvs_path, hash_path) = kvs_hash_paths(&working_dir, params.instance_id, SnapshotId(0));
-        }
-        info!(
-            kvs_path = kvs_path.display().to_string(),
-            hash_path = hash_path.display().to_string()
-        );
+        let kvs = kvs_instance(params).map_err(|e| format!("{e:?}"))?;
+        kvs.set_value("checksum_test_key", 1.0).map_err(|e| format!("{e:?}"))?;
+        kvs.flush().map_err(|e| format!("{e:?}"))?;
+        Ok(())
+    }
+}
 
+/// Open KVS with three default keys, override ONLY the middle key, flush.
+/// Python verifies the snapshot contains exactly the one overridden key
+/// (others were never explicitly written so they remain absent from storage).
+/// Combines feat_req__persistency__default_values,
+/// feat_req__persistency__default_value_file, and
+/// feat_req__persistency__store_data in one observable storage outcome.
+struct PartialOverride;
+
+impl Scenario for PartialOverride {
+    fn name(&self) -> &str {
+        "partial_override"
+    }
+
+    fn run(&self, input: &str) -> Result<(), String> {
+        let params = parse_params(input)?;
+        let kvs = kvs_instance(params).map_err(|e| format!("{e:?}"))?;
+        // Override only the middle key; key_0 and key_2 are intentionally left at defaults.
+        kvs.set_value("partial_key_1", 999.0_f64)
+            .map_err(|e| format!("{e:?}"))?;
+        kvs.flush().map_err(|e| format!("{e:?}"))?;
+        Ok(())
+    }
+}
+
+/// Open KVS with a defaults file containing one key. Call get_value on that key
+/// without ever calling set_value, write the retrieved value to a probe key, flush.
+/// Python verifies the probe key equals the expected default, confirming that
+/// feat_req__persistency__default_value_get is satisfied.
+struct GetDefaultValue;
+
+impl Scenario for GetDefaultValue {
+    fn name(&self) -> &str {
+        "get_default_value"
+    }
+
+    fn run(&self, input: &str) -> Result<(), String> {
+        let params = parse_params(input)?;
+        let kvs = kvs_instance(params).map_err(|e| format!("{e:?}"))?;
+        // Read the default — this key has a default value but was never explicitly set.
+        let default_val: f64 = kvs
+            .get_value_as("default_probe_key")
+            .map_err(|e| format!("Failed to read default value: {e:?}"))?;
+        // Persist the retrieved value to a probe key so Python can verify it.
+        kvs.set_value("result_key", default_val).map_err(|e| format!("{e:?}"))?;
+        kvs.flush().map_err(|e| format!("{e:?}"))?;
+        Ok(())
+    }
+}
+
+/// Override all six keys, then call reset_key on even-indexed keys (0, 2, 4),
+/// flush. Python verifies even-indexed keys are absent from the snapshot
+/// (reverted to in-memory defaults) while odd-indexed keys (1, 3, 5) remain
+/// with their override values — combining feat_req__persistency__reset_to_default,
+/// feat_req__persistency__default_values, feat_req__persistency__default_value_file,
+/// and feat_req__persistency__store_data in one observable storage outcome.
+struct SelectiveReset;
+
+impl Scenario for SelectiveReset {
+    fn name(&self) -> &str {
+        "selective_reset"
+    }
+
+    fn run(&self, input: &str) -> Result<(), String> {
+        let num_keys = 6usize;
+        let params = parse_params(input)?;
+        let kvs = kvs_instance(params).map_err(|e| format!("{e:?}"))?;
+
+        let mut keys = Vec::new();
+        for i in 0..num_keys {
+            let key = format!("sel_key_{i}");
+            kvs.set_value(key.clone(), 100.0 * (i + 1) as f64)
+                .map_err(|e| format!("{e:?}"))?;
+            keys.push(key);
+        }
+        kvs.flush().map_err(|e| format!("{e:?}"))?;
+
+        // Reset even-indexed keys (0, 2, 4); odd-indexed keep their overrides.
+        for i in (0..num_keys).step_by(2) {
+            kvs.reset_key(&keys[i]).map_err(|e| format!("{e:?}"))?;
+        }
+        kvs.flush().map_err(|e| format!("{e:?}"))?;
+        Ok(())
+    }
+}
+
+/// Write four initial keys and flush, then call reset() to clear all keys, then write
+/// two new keys and flush again. Python verifies all four initial keys are absent and
+/// both new keys are present with the correct values — proving reset() cleared the
+/// entire storage and subsequent writes persist correctly.
+/// This is the only FIT scenario that exercises the "all keys" variant of
+/// feat_req__persistency__reset_to_default (as opposed to reset_key which is covered
+/// by SelectiveReset). Combines with feat_req__persistency__default_values,
+/// feat_req__persistency__default_value_file, and feat_req__persistency__store_data.
+struct FullReset;
+
+impl Scenario for FullReset {
+    fn name(&self) -> &str {
+        "full_reset"
+    }
+
+    fn run(&self, input: &str) -> Result<(), String> {
+        let params = parse_params(input)?;
+        let kvs = kvs_instance(params).map_err(|e| format!("{e:?}"))?;
+
+        // Phase 1: write four initial keys and flush.
+        for i in 0..4usize {
+            kvs.set_value(format!("fr_key_{i}"), 100.0 * (i + 1) as f64)
+                .map_err(|e| format!("{e:?}"))?;
+        }
+        kvs.flush().map_err(|e| format!("{e:?}"))?;
+
+        // Phase 2: reset ALL keys, write two new keys, flush.
+        kvs.reset().map_err(|e| format!("{e:?}"))?;
+        kvs.set_value("fr_new_0", 10.0_f64).map_err(|e| format!("{e:?}"))?;
+        kvs.set_value("fr_new_1", 20.0_f64).map_err(|e| format!("{e:?}"))?;
+        kvs.flush().map_err(|e| format!("{e:?}"))?;
         Ok(())
     }
 }
@@ -221,11 +163,11 @@ pub fn default_values_group() -> Box<dyn ScenarioGroup> {
     Box::new(ScenarioGroupImpl::new(
         "default_values",
         vec![
-            Box::new(DefaultValues),
-            Box::new(RemoveKey),
-            Box::new(ResetAllKeys),
-            Box::new(ResetSingleKey),
             Box::new(Checksum),
+            Box::new(PartialOverride),
+            Box::new(GetDefaultValue),
+            Box::new(SelectiveReset),
+            Box::new(FullReset),
         ],
         vec![],
     ))

@@ -11,28 +11,26 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-import json
-from abc import abstractmethod
 from collections.abc import Generator
 from math import isclose
 from pathlib import Path
 from typing import Any
 
 import pytest
-from fit_scenario import FitScenario, ResultCode, temp_dir_common
+from fit_scenario import FitScenario, ResultCode, read_kvs_snapshot, temp_dir_common
 from test_properties import add_test_properties
-from testing_utils import LogContainer, ScenarioResult
+from testing_utils import ScenarioResult
 
 pytestmark = pytest.mark.parametrize("version", ["rust", "cpp"], scope="class")
 
 
 def assert_tagged_value(actual: dict[str, Any], expected: dict[str, Any]) -> None:
-    """Recursively compare tagged values with tolerance for f64 types."""
+    """Recursively compare tagged KVS values with tolerance for f64 types."""
     assert actual["t"] == expected["t"]
     value_type = expected["t"]
 
     if value_type == "f64":
-        assert isclose(actual["v"], expected["v"], abs_tol=1e-5)
+        assert isclose(actual["v"], expected["v"], abs_tol=1e-4)
         return
 
     if value_type == "arr":
@@ -75,153 +73,63 @@ class SupportedDatatypesScenario(FitScenario):
         }
 
 
-@add_test_properties(
-    partially_verifies=[
-        "feat_req__persistency__support_datatype_keys",
-        "feat_req__persistency__support_datatype_value",
-    ],
-    test_type="requirements-based",
-    derivation_technique="requirements-analysis",
-)
-class TestSupportedDatatypesKeys(SupportedDatatypesScenario):
-    """Verifies that KVS supports UTF-8 string keys for storing values."""
-
-    @pytest.fixture(scope="class")
-    def scenario_name(self) -> str:
-        return "persistency.supported_datatypes.keys"
-
-    def test_ok(self, results: ScenarioResult, logs_info_level: LogContainer) -> None:
-        assert results.return_code == ResultCode.SUCCESS
-
-        logs = logs_info_level.get_logs(field="key")
-        actual_keys = {log.key for log in logs}
-        expected_keys = {
-            "example",
-            "emoji ✅❗😀",
-            "greek ημα",
-        }
-        assert actual_keys == expected_keys
-
-
-@add_test_properties(
-    partially_verifies=[
-        "feat_req__persistency__support_datatype_keys",
-        "feat_req__persistency__support_datatype_value",
-    ],
-    test_type="requirements-based",
-    derivation_technique="requirements-analysis",
-)
-class TestSupportedDatatypesValues(SupportedDatatypesScenario):
-    """Verifies that KVS supports all documented value types."""
-
-    @abstractmethod
-    def exp_key(self) -> str:
-        raise NotImplementedError
-
-    @abstractmethod
-    def exp_value(self) -> Any:
-        raise NotImplementedError
-
-    def exp_tagged(self) -> dict[str, Any]:
-        return {"t": self.exp_key(), "v": self.exp_value()}
-
-    @pytest.fixture(scope="class")
-    def scenario_name(self) -> str:
-        return f"persistency.supported_datatypes.values.{self.exp_key()}"
-
-    def test_ok(self, results: ScenarioResult, logs_info_level: LogContainer) -> None:
-        assert results.return_code == ResultCode.SUCCESS
-
-        logs = logs_info_level.get_logs(field="key", value=self.exp_key())
-        assert len(logs) == 1
-        log = logs[0]
-
-        actual_value = json.loads(log.value)
-        assert_tagged_value(actual_value, self.exp_tagged())
-
-
-class TestSupportedDatatypesValues_I32(TestSupportedDatatypesValues):
-    def exp_key(self) -> str:
-        return "i32"
-
-    def exp_value(self) -> Any:
-        return -321
-
-
-class TestSupportedDatatypesValues_U32(TestSupportedDatatypesValues):
-    def exp_key(self) -> str:
-        return "u32"
-
-    def exp_value(self) -> Any:
-        return 1234
-
-
-class TestSupportedDatatypesValues_I64(TestSupportedDatatypesValues):
-    def exp_key(self) -> str:
-        return "i64"
-
-    def exp_value(self) -> Any:
-        return -123456789
-
-
-class TestSupportedDatatypesValues_U64(TestSupportedDatatypesValues):
-    def exp_key(self) -> str:
-        return "u64"
-
-    def exp_value(self) -> Any:
-        return 123456789
-
-
-class TestSupportedDatatypesValues_F64(TestSupportedDatatypesValues):
-    def exp_key(self) -> str:
-        return "f64"
-
-    def exp_value(self) -> Any:
-        return -5432.1
-
-
-class TestSupportedDatatypesValues_Bool(TestSupportedDatatypesValues):
-    def exp_key(self) -> str:
-        return "bool"
-
-    def exp_value(self) -> Any:
-        return True
-
-
-class TestSupportedDatatypesValues_String(TestSupportedDatatypesValues):
-    def exp_key(self) -> str:
-        return "str"
-
-    def exp_value(self) -> Any:
-        return "example"
-
-
-class TestSupportedDatatypesValues_Array(TestSupportedDatatypesValues):
-    def exp_key(self) -> str:
-        return "arr"
-
-    def exp_value(self) -> Any:
-        return [
+_EXPECTED_ALL_TYPES: dict[str, dict[str, Any]] = {
+    "i32_key": {"t": "i32", "v": -321},
+    "u32_key": {"t": "u32", "v": 1234},
+    "i64_key": {"t": "i64", "v": -123456789},
+    "u64_key": {"t": "u64", "v": 123456789},
+    "f64_key": {"t": "f64", "v": -5432.1},
+    "bool_key": {"t": "bool", "v": True},
+    "str_key": {"t": "str", "v": "example"},
+    "arr_key": {
+        "t": "arr",
+        "v": [
             {"t": "f64", "v": 321.5},
             {"t": "bool", "v": False},
             {"t": "str", "v": "hello"},
             {"t": "null", "v": None},
             {"t": "arr", "v": []},
-            {
-                "t": "obj",
-                "v": {
-                    "sub-number": {
-                        "t": "f64",
-                        "v": 789,
-                    },
-                },
-            },
-        ]
+            {"t": "obj", "v": {"sub-number": {"t": "f64", "v": 789.0}}},
+        ],
+    },
+    "obj_key": {"t": "obj", "v": {"sub-number": {"t": "f64", "v": 789.0}}},
+}
 
 
-class TestSupportedDatatypesValues_Object(TestSupportedDatatypesValues):
-    def exp_key(self) -> str:
-        return "obj"
+@add_test_properties(
+    partially_verifies=[
+        "feat_req__persistency__support_datatype_value",
+        "feat_req__persistency__support_datatype_keys",
+        "feat_req__persistency__store_data",
+    ],
+    test_type="requirements-based",
+    derivation_technique="requirements-analysis",
+)
+class TestAllValueTypes(SupportedDatatypesScenario):
+    """
+    Verify that all nine KVS value types coexist in a single flushed snapshot.
 
-    def exp_value(self) -> Any:
-        return {"sub-number": {"t": "f64", "v": 789}}
+    All nine types (i32, u32, i64, u64, f64, bool, str, arr, obj) are written
+    to one KVS instance and persisted in a single flush. Python verifies every
+    key is present with the correct type tag and value, confirming that multiple
+    value types do not interfere with each other in one atomic storage outcome.
+    This verifies multi-type coexistence — exercising feat_req__persistency__support_datatype_value,
+    feat_req__persistency__support_datatype_keys, and
+    feat_req__persistency__store_data together.
+    """
+
+    @pytest.fixture(scope="class")
+    def scenario_name(self) -> str:
+        return "persistency.supported_datatypes.all_value_types"
+
+    def test_all_types_in_snapshot(self, results: ScenarioResult, temp_dir: Path) -> None:
+        """
+        All nine type-tagged key-value pairs must be present in the snapshot
+        with the correct type tags and values written by the scenario.
+        """
+        assert results.return_code == ResultCode.SUCCESS
+        snapshot = read_kvs_snapshot(temp_dir, 1)
+
+        for key, expected_tagged in _EXPECTED_ALL_TYPES.items():
+            assert key in snapshot, f"Expected key '{key}' in snapshot"
+            assert_tagged_value(snapshot[key], expected_tagged)

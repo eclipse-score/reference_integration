@@ -12,195 +12,97 @@
 // *******************************************************************************
 use crate::internals::persistency::{kvs_instance::kvs_instance, kvs_parameters::KvsParameters};
 use rust_kvs::prelude::*;
-use serde_json::{json, Map, Value as JsonValue};
+use serde_json::Value as JsonValue;
 use std::collections::HashMap;
 use test_scenarios_rust::scenario::{Scenario, ScenarioGroup, ScenarioGroupImpl};
-use tracing::info;
 
-fn kvs_value_tag(value: &KvsValue) -> &'static str {
-    match value {
-        KvsValue::I32(_) => "i32",
-        KvsValue::U32(_) => "u32",
-        KvsValue::I64(_) => "i64",
-        KvsValue::U64(_) => "u64",
-        KvsValue::F64(_) => "f64",
-        KvsValue::Boolean(_) => "bool",
-        KvsValue::String(_) => "str",
-        KvsValue::Null => "null",
-        KvsValue::Array(_) => "arr",
-        KvsValue::Object(_) => "obj",
-    }
-}
+/// Write all nine value types under ASCII key names in a single flush.
+/// Python reads the snapshot and verifies every key is present with the correct
+/// type tag and value — proving that primitive and composite types coexist
+/// without interference in one atomic storage outcome.
+/// Combines feat_req__persistency__support_datatype_value,
+/// feat_req__persistency__support_datatype_keys, and
+/// feat_req__persistency__store_data.
+struct AllValueTypes;
 
-fn kvs_value_to_tagged_json(value: &KvsValue) -> JsonValue {
-    match value {
-        KvsValue::I32(v) => json!({"t": "i32", "v": v}),
-        KvsValue::U32(v) => json!({"t": "u32", "v": v}),
-        KvsValue::I64(v) => json!({"t": "i64", "v": v}),
-        KvsValue::U64(v) => json!({"t": "u64", "v": v}),
-        KvsValue::F64(v) => json!({"t": "f64", "v": v}),
-        KvsValue::Boolean(v) => json!({"t": "bool", "v": v}),
-        KvsValue::String(v) => json!({"t": "str", "v": v}),
-        KvsValue::Null => json!({"t": "null", "v": JsonValue::Null}),
-        KvsValue::Array(values) => {
-            let tagged: Vec<JsonValue> = values.iter().map(kvs_value_to_tagged_json).collect();
-            json!({"t": "arr", "v": tagged})
-        },
-        KvsValue::Object(values) => {
-            let mut map = Map::new();
-            for (key, entry) in values.iter() {
-                map.insert(key.clone(), kvs_value_to_tagged_json(entry));
-            }
-            json!({"t": "obj", "v": JsonValue::Object(map)})
-        },
-    }
-}
-
-struct SupportedDatatypesKeys;
-
-impl Scenario for SupportedDatatypesKeys {
+impl Scenario for AllValueTypes {
     fn name(&self) -> &str {
-        "keys"
+        "all_value_types"
     }
 
     fn run(&self, input: &str) -> Result<(), String> {
         let v: JsonValue = serde_json::from_str(input).map_err(|e| e.to_string())?;
         let params = KvsParameters::from_value(&v["kvs_parameters_1"]).map_err(|e| e.to_string())?;
-        let kvs = kvs_instance(params).map_err(|e| format!("Failed to create KVS instance: {e:?}"))?;
+        let kvs = kvs_instance(params).map_err(|e| format!("{e:?}"))?;
 
-        // Set key-value pairs. Unit type is used for value - only key is used later on.
-        let keys_to_check = vec![
-            String::from("example"),
-            String::from("emoji ✅❗😀"),
-            String::from("greek ημα"),
+        let nested_obj = HashMap::from([("sub-number".to_string(), KvsValue::from(789.0))]);
+        let array = vec![
+            KvsValue::from(321.5),
+            KvsValue::from(false),
+            KvsValue::from("hello".to_string()),
+            KvsValue::from(()),
+            KvsValue::from(vec![]),
+            KvsValue::from(nested_obj.clone()),
         ];
-        for key in keys_to_check {
-            kvs.set_value(key, ()).map_err(|e| format!("{e:?}"))?;
-        }
 
-        let keys_in_kvs = kvs.get_all_keys().map_err(|e| format!("{e:?}"))?;
-        for key in keys_in_kvs {
-            info!(key);
-        }
-
+        kvs.set_value("i32_key", KvsValue::I32(-321))
+            .map_err(|e| format!("{e:?}"))?;
+        kvs.set_value("u32_key", KvsValue::U32(1234))
+            .map_err(|e| format!("{e:?}"))?;
+        kvs.set_value("i64_key", KvsValue::I64(-123456789))
+            .map_err(|e| format!("{e:?}"))?;
+        kvs.set_value("u64_key", KvsValue::U64(123456789))
+            .map_err(|e| format!("{e:?}"))?;
+        kvs.set_value("f64_key", KvsValue::F64(-5432.1))
+            .map_err(|e| format!("{e:?}"))?;
+        kvs.set_value("bool_key", KvsValue::Boolean(true))
+            .map_err(|e| format!("{e:?}"))?;
+        kvs.set_value("str_key", KvsValue::String("example".to_string()))
+            .map_err(|e| format!("{e:?}"))?;
+        kvs.set_value("arr_key", KvsValue::Array(array))
+            .map_err(|e| format!("{e:?}"))?;
+        kvs.set_value("obj_key", KvsValue::Object(nested_obj))
+            .map_err(|e| format!("{e:?}"))?;
+        kvs.flush().map_err(|e| format!("{e:?}"))?;
         Ok(())
     }
 }
 
-struct SupportedDatatypesValues {
-    value: KvsValue,
-}
+/// Write five values with mixed types under both ASCII and UTF-8 key names,
+/// then flush. Python reads the single snapshot and verifies every key is
+/// present with the correct type tag and value — combining key-encoding and
+/// value-type requirements in one observable storage outcome.
+struct AllTypesUtf8;
 
-impl Scenario for SupportedDatatypesValues {
+impl Scenario for AllTypesUtf8 {
     fn name(&self) -> &str {
-        kvs_value_tag(&self.value)
+        "all_types_utf8"
     }
 
     fn run(&self, input: &str) -> Result<(), String> {
         let v: JsonValue = serde_json::from_str(input).map_err(|e| e.to_string())?;
         let params = KvsParameters::from_value(&v["kvs_parameters_1"]).map_err(|e| e.to_string())?;
-        let kvs = kvs_instance(params).map_err(|e| format!("Failed to create KVS instance: {e:?}"))?;
+        let kvs = kvs_instance(params).map_err(|e| format!("{e:?}"))?;
 
-        kvs.set_value(self.name(), self.value.clone())
+        kvs.set_value("ascii_i32", KvsValue::I32(-321))
             .map_err(|e| format!("{e:?}"))?;
-
-        let kvs_value = kvs.get_value(self.name()).map_err(|e| format!("{e:?}"))?;
-        let json_value = kvs_value_to_tagged_json(&kvs_value);
-        let json_str = serde_json::to_string(&json_value).map_err(|e| e.to_string())?;
-
-        info!(key = self.name(), value = json_str);
-
+        kvs.set_value("emoji_f64 🎯", KvsValue::F64(3.14))
+            .map_err(|e| format!("{e:?}"))?;
+        kvs.set_value("greek_bool αβγ", KvsValue::Boolean(true))
+            .map_err(|e| format!("{e:?}"))?;
+        kvs.set_value("ascii_str", KvsValue::String("hello".to_string()))
+            .map_err(|e| format!("{e:?}"))?;
+        kvs.set_value("ascii_null", KvsValue::Null)
+            .map_err(|e| format!("{e:?}"))?;
+        kvs.flush().map_err(|e| format!("{e:?}"))?;
         Ok(())
     }
-}
-
-fn supported_datatypes_i32() -> Box<dyn Scenario> {
-    Box::new(SupportedDatatypesValues {
-        value: KvsValue::I32(-321),
-    })
-}
-
-fn supported_datatypes_u32() -> Box<dyn Scenario> {
-    Box::new(SupportedDatatypesValues {
-        value: KvsValue::U32(1234),
-    })
-}
-
-fn supported_datatypes_i64() -> Box<dyn Scenario> {
-    Box::new(SupportedDatatypesValues {
-        value: KvsValue::I64(-123456789),
-    })
-}
-
-fn supported_datatypes_u64() -> Box<dyn Scenario> {
-    Box::new(SupportedDatatypesValues {
-        value: KvsValue::U64(123456789),
-    })
-}
-
-fn supported_datatypes_f64() -> Box<dyn Scenario> {
-    Box::new(SupportedDatatypesValues {
-        value: KvsValue::F64(-5432.1),
-    })
-}
-
-fn supported_datatypes_bool() -> Box<dyn Scenario> {
-    Box::new(SupportedDatatypesValues {
-        value: KvsValue::Boolean(true),
-    })
-}
-
-fn supported_datatypes_string() -> Box<dyn Scenario> {
-    Box::new(SupportedDatatypesValues {
-        value: KvsValue::String("example".to_string()),
-    })
-}
-
-fn supported_datatypes_array() -> Box<dyn Scenario> {
-    let hashmap = HashMap::from([("sub-number".to_string(), KvsValue::from(789.0))]);
-    let array = vec![
-        KvsValue::from(321.5),
-        KvsValue::from(false),
-        KvsValue::from("hello".to_string()),
-        KvsValue::from(()),
-        KvsValue::from(vec![]),
-        KvsValue::from(hashmap),
-    ];
-    Box::new(SupportedDatatypesValues {
-        value: KvsValue::Array(array),
-    })
-}
-
-fn supported_datatypes_object() -> Box<dyn Scenario> {
-    let hashmap = HashMap::from([("sub-number".to_string(), KvsValue::from(789.0))]);
-    Box::new(SupportedDatatypesValues {
-        value: KvsValue::Object(hashmap),
-    })
-}
-
-fn value_types_group() -> Box<dyn ScenarioGroup> {
-    let group = ScenarioGroupImpl::new(
-        "values",
-        vec![
-            supported_datatypes_i32(),
-            supported_datatypes_u32(),
-            supported_datatypes_i64(),
-            supported_datatypes_u64(),
-            supported_datatypes_f64(),
-            supported_datatypes_bool(),
-            supported_datatypes_string(),
-            supported_datatypes_array(),
-            supported_datatypes_object(),
-        ],
-        vec![],
-    );
-    Box::new(group)
 }
 
 pub fn supported_datatypes_group() -> Box<dyn ScenarioGroup> {
     Box::new(ScenarioGroupImpl::new(
         "supported_datatypes",
-        vec![Box::new(SupportedDatatypesKeys)],
-        vec![value_types_group()],
+        vec![Box::new(AllValueTypes), Box::new(AllTypesUtf8)],
+        vec![],
     ))
 }
