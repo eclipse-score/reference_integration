@@ -52,6 +52,11 @@ bazel_dep(name = "aspect_rules_lint", version = "2.0.0")
 bazel_dep(name = "buildifier_prebuilt", version = "8.2.0.2")
 bazel_dep(name = "score_rust_policies", version = "0.0.3")
 
+# Force grpc-java to 1.70.0 for compatibility with grpc 1.70.1
+# (grpc-java 1.66.0 pulled by googleapis uses grpc_repo_deps_ext which
+# no longer generates com_envoyproxy_protoc_gen_validate in grpc 1.70.x)
+bazel_dep(name = "grpc-java", version = "1.70.0")
+
 # TRLC dependency for requirements traceability
 bazel_dep(name = "trlc")
 git_override(
