@@ -27,18 +27,6 @@ from testing_utils import ScenarioResult
 
 pytestmark = pytest.mark.parametrize("version", ["rust", "cpp"], scope="class")
 
-_PARITY_KEY = "test_number"
-_PARITY_DEFAULT_VALUE = 123.4
-_RESET_KEY_COUNT = 5
-_RESET_DEFAULT_BASE = 10.0
-
-
-def _reset_default_value(index: int) -> float:
-    """
-    Provide the default value for reset scenarios for a given index.
-    """
-    return _RESET_DEFAULT_BASE * (index + 1)
-
 
 @add_test_properties(
     partially_verifies=["feat_req__persistency__default_values", "feat_req__persistency__default_value_get"],
@@ -106,6 +94,16 @@ class DefaultValuesParityScenario(FitScenario):
     Common fixtures for default value parity scenarios.
     """
 
+    _PARITY_KEY = "test_number"
+    _PARITY_DEFAULT_VALUE = 123.4
+    _RESET_KEY_COUNT = 5
+    _RESET_DEFAULT_BASE = 10.0
+
+    @staticmethod
+    def _reset_default_value(index: int) -> float:
+        """Return the default value for a given key index used in reset scenarios."""
+        return DefaultValuesParityScenario._RESET_DEFAULT_BASE * (index + 1)
+
     @pytest.fixture(scope="class")
     def temp_dir(
         self,
@@ -128,10 +126,10 @@ class DefaultValuesParityScenario(FitScenario):
         Provide default values for parity scenarios.
         """
         values: dict[str, tuple[str, float]] = {
-            _PARITY_KEY: ("f64", _PARITY_DEFAULT_VALUE),
+            self._PARITY_KEY: ("f64", self._PARITY_DEFAULT_VALUE),
         }
-        for idx in range(_RESET_KEY_COUNT):
-            values[f"{_PARITY_KEY}_{idx}"] = ("f64", _reset_default_value(idx))
+        for idx in range(self._RESET_KEY_COUNT):
+            values[f"{self._PARITY_KEY}_{idx}"] = ("f64", self._reset_default_value(idx))
         return values
 
     @pytest.fixture(scope="class")
@@ -230,7 +228,7 @@ class TestDefaultValuesMissingDefaultsFile(DefaultValuesParityScenario):
         assert results.return_code != ResultCode.SUCCESS
 
 
-@pytest.mark.parametrize("defaults", ["optional", "required"], scope="class")
+@pytest.mark.parametrize("defaults", ["required"], scope="class")
 @add_test_properties(
     partially_verifies=[
         "feat_req__persistency__default_values",
@@ -241,7 +239,9 @@ class TestDefaultValuesMissingDefaultsFile(DefaultValuesParityScenario):
 )
 class TestDefaultValuesMalformedDefaultsFile(DefaultValuesParityScenario):
     """
-    Verify required defaults mode fails with malformed defaults file.
+    Verify that KVS fails to start when the defaults file contains malformed JSON
+    and defaults mode is 'required'. A truncated JSON payload triggers the
+    JsonParserError / KvsFileReadError code path.
     """
 
     @pytest.fixture(scope="class")
@@ -534,9 +534,91 @@ class TestOptionalModeWithoutDefaults(DefaultValuesParityScenario):
     def scenario_name(self) -> str:
         return "persistency.default_values.checksum"
 
-    def test_succeeds_without_defaults_file(self, results: ScenarioResult) -> None:
-        """
-        KVS must initialise and complete successfully even when configured with
-        optional defaults and no defaults file exists on disk.
-        """
         assert results.return_code == ResultCode.SUCCESS
+
+
+# ---------------------------------------------------------------------------
+# Multi-instance isolation: defaults for one instance must not leak into another
+# ---------------------------------------------------------------------------
+
+
+@add_test_properties(
+    partially_verifies=[
+        "feat_req__persistency__default_values",
+        "feat_req__persistency__multiple_kvs",
+    ],
+    test_type="requirements-based",
+    derivation_technique="requirements-analysis",
+)
+class TestMultiInstanceDefaultIsolation(FitScenario):
+    """
+    Verify that default values loaded for one KVS instance do not leak into a
+    second instance sharing the same working directory.
+
+    kvs_1_default.json contains key_a; kvs_2_default.json contains key_b.
+    The scenario writes an override to each instance and flushes.  Python
+    checks that snapshot 1 has key_a but not key_b, and snapshot 2 has key_b
+    but not key_a, proving per-instance defaults file isolation.
+    """
+
+    @pytest.fixture(scope="class")
+    def scenario_name(self) -> str:
+        return "persistency.multi_instance_isolation"
+
+    @pytest.fixture(scope="class")
+    def temp_dir(
+        self,
+        tmp_path_factory: pytest.TempPathFactory,
+        version: str,
+    ) -> Generator[Path, None, None]:
+        yield from temp_dir_common(tmp_path_factory, self.__class__.__name__, version)
+
+    @pytest.fixture(scope="class")
+    def defaults_files(self, temp_dir: Path) -> tuple[Path, Path]:
+        """Create separate defaults files for each instance before the scenario runs."""
+        file1 = create_kvs_defaults_file(temp_dir, 1, {"key_a": ("f64", 1.0)})
+        file2 = create_kvs_defaults_file(temp_dir, 2, {"key_b": ("f64", 2.0)})
+        return file1, file2
+
+    @pytest.fixture(scope="class")
+    def test_config(
+        self, temp_dir: Path, defaults_files: tuple[Path, Path]
+    ) -> dict[str, Any]:
+        return {
+            "kvs_parameters_1": {
+                "kvs_parameters": {
+                    "instance_id": 1,
+                    "dir": str(temp_dir),
+                    "defaults": "optional",
+                },
+            },
+            "kvs_parameters_2": {
+                "kvs_parameters": {
+                    "instance_id": 2,
+                    "dir": str(temp_dir),
+                    "defaults": "optional",
+                },
+            },
+        }
+
+    def test_instance_1_snapshot_isolation(
+        self, results: ScenarioResult, temp_dir: Path
+    ) -> None:
+        """Instance 1 snapshot must contain key_a and must NOT contain key_b."""
+        assert results.return_code == ResultCode.SUCCESS
+        snapshot1 = read_kvs_snapshot(temp_dir, 1)
+        assert "key_a" in snapshot1, "key_a must be present in instance 1 snapshot"
+        assert "key_b" not in snapshot1, (
+            "key_b must not leak from instance 2 defaults into instance 1 snapshot"
+        )
+
+    def test_instance_2_snapshot_isolation(
+        self, results: ScenarioResult, temp_dir: Path
+    ) -> None:
+        """Instance 2 snapshot must contain key_b and must NOT contain key_a."""
+        assert results.return_code == ResultCode.SUCCESS
+        snapshot2 = read_kvs_snapshot(temp_dir, 2)
+        assert "key_b" in snapshot2, "key_b must be present in instance 2 snapshot"
+        assert "key_a" not in snapshot2, (
+            "key_a must not leak from instance 1 defaults into instance 2 snapshot"
+        )

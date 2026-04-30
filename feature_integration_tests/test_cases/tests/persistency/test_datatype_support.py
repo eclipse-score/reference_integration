@@ -24,35 +24,8 @@ from testing_utils import ScenarioResult
 pytestmark = pytest.mark.parametrize("version", ["rust", "cpp"], scope="class")
 
 
-def assert_tagged_value(actual: dict[str, Any], expected: dict[str, Any]) -> None:
-    """Recursively compare tagged KVS values with tolerance for f64 types."""
-    assert actual["t"] == expected["t"]
-    value_type = expected["t"]
-
-    if value_type == "f64":
-        assert isclose(actual["v"], expected["v"], abs_tol=1e-4)
-        return
-
-    if value_type == "arr":
-        assert isinstance(actual["v"], list)
-        assert len(actual["v"]) == len(expected["v"])
-        for actual_item, expected_item in zip(actual["v"], expected["v"]):
-            assert_tagged_value(actual_item, expected_item)
-        return
-
-    if value_type == "obj":
-        assert isinstance(actual["v"], dict)
-        assert set(actual["v"].keys()) == set(expected["v"].keys())
-        for key, expected_item in expected["v"].items():
-            assert_tagged_value(actual["v"][key], expected_item)
-        return
-
-    assert actual["v"] == expected["v"]
-
-
 class SupportedDatatypesScenario(PersistencyScenario):
     """Common base for supported datatypes scenarios."""
-
 
     @pytest.fixture(scope="class")
     def test_config(self, temp_dir: Path) -> dict[str, Any]:
@@ -64,29 +37,6 @@ class SupportedDatatypesScenario(PersistencyScenario):
                 },
             },
         }
-
-
-_EXPECTED_ALL_TYPES: dict[str, dict[str, Any]] = {
-    "i32_key": {"t": "i32", "v": -321},
-    "u32_key": {"t": "u32", "v": 1234},
-    "i64_key": {"t": "i64", "v": -123456789},
-    "u64_key": {"t": "u64", "v": 123456789},
-    "f64_key": {"t": "f64", "v": -5432.1},
-    "bool_key": {"t": "bool", "v": True},
-    "str_key": {"t": "str", "v": "example"},
-    "arr_key": {
-        "t": "arr",
-        "v": [
-            {"t": "f64", "v": 321.5},
-            {"t": "bool", "v": False},
-            {"t": "str", "v": "hello"},
-            {"t": "null", "v": None},
-            {"t": "arr", "v": []},
-            {"t": "obj", "v": {"sub-number": {"t": "f64", "v": 789.0}}},
-        ],
-    },
-    "obj_key": {"t": "obj", "v": {"sub-number": {"t": "f64", "v": 789.0}}},
-}
 
 
 @add_test_properties(
@@ -111,6 +61,54 @@ class TestAllValueTypes(SupportedDatatypesScenario):
     feat_req__persistency__store_data together.
     """
 
+    _EXPECTED_ALL_TYPES: dict[str, dict[str, Any]] = {
+        "i32_key": {"t": "i32", "v": -321},
+        "u32_key": {"t": "u32", "v": 1234},
+        "i64_key": {"t": "i64", "v": -123456789},
+        "u64_key": {"t": "u64", "v": 123456789},
+        "f64_key": {"t": "f64", "v": -5432.1},
+        "bool_key": {"t": "bool", "v": True},
+        "str_key": {"t": "str", "v": "example"},
+        "arr_key": {
+            "t": "arr",
+            "v": [
+                {"t": "f64", "v": 321.5},
+                {"t": "bool", "v": False},
+                {"t": "str", "v": "hello"},
+                {"t": "null", "v": None},
+                {"t": "arr", "v": []},
+                {"t": "obj", "v": {"sub-number": {"t": "f64", "v": 789.0}}},
+            ],
+        },
+        "obj_key": {"t": "obj", "v": {"sub-number": {"t": "f64", "v": 789.0}}},
+    }
+
+    @staticmethod
+    def _assert_tagged_value(actual: dict[str, Any], expected: dict[str, Any]) -> None:
+        """Recursively compare tagged KVS values with tolerance for f64 types."""
+        assert actual["t"] == expected["t"]
+        value_type = expected["t"]
+
+        if value_type == "f64":
+            assert isclose(actual["v"], expected["v"], abs_tol=1e-4)
+            return
+
+        if value_type == "arr":
+            assert isinstance(actual["v"], list)
+            assert len(actual["v"]) == len(expected["v"])
+            for actual_item, expected_item in zip(actual["v"], expected["v"]):
+                TestAllValueTypes._assert_tagged_value(actual_item, expected_item)
+            return
+
+        if value_type == "obj":
+            assert isinstance(actual["v"], dict)
+            assert set(actual["v"].keys()) == set(expected["v"].keys())
+            for key, expected_item in expected["v"].items():
+                TestAllValueTypes._assert_tagged_value(actual["v"][key], expected_item)
+            return
+
+        assert actual["v"] == expected["v"]
+
     @pytest.fixture(scope="class")
     def scenario_name(self) -> str:
         return "persistency.supported_datatypes.all_value_types"
@@ -123,6 +121,6 @@ class TestAllValueTypes(SupportedDatatypesScenario):
         assert results.return_code == ResultCode.SUCCESS
         snapshot = read_kvs_snapshot(temp_dir, 1)
 
-        for key, expected_tagged in _EXPECTED_ALL_TYPES.items():
+        for key, expected_tagged in self._EXPECTED_ALL_TYPES.items():
             assert key in snapshot, f"Expected key '{key}' in snapshot"
-            assert_tagged_value(snapshot[key], expected_tagged)
+            self._assert_tagged_value(snapshot[key], expected_tagged)

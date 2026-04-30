@@ -331,7 +331,9 @@ std::optional<bool> KvsInstance::get_value_bool(const std::string& key) {
     }
 
     const auto& stored = result.value();
-    // C++ KVS API may not have bool type, retrieve as int32_t
+    // NOTE: This method retrieves bool values stored via KvsInstance::set_value(bool),
+    // which encodes booleans as i32 (1/0). Values written directly via the raw KVS
+    // API using KvsValue(true) may carry a native bool type tag and will not be returned.
     if (stored.getType() != score::mw::per::kvs::KvsValue::Type::i32) {
         return std::nullopt;
     }
@@ -375,12 +377,26 @@ std::optional<bool> KvsInstance::is_value_default(const std::string& key) {
     if (dv.getType() != cv.getType()) {
         return false;
     }
-    if (dv.getType() == score::mw::per::kvs::KvsValue::Type::f64) {
-        const double d = std::get<double>(dv.getValue());
-        const double c = std::get<double>(cv.getValue());
-        return std::fabs(d - c) <= 1e-5;
+    switch (dv.getType()) {
+        case score::mw::per::kvs::KvsValue::Type::f64: {
+            const double d = std::get<double>(dv.getValue());
+            const double c = std::get<double>(cv.getValue());
+            return std::fabs(d - c) <= 1e-5;
+        }
+        case score::mw::per::kvs::KvsValue::Type::i32:
+            return std::get<int32_t>(dv.getValue()) == std::get<int32_t>(cv.getValue());
+        case score::mw::per::kvs::KvsValue::Type::u32:
+            return std::get<uint32_t>(dv.getValue()) == std::get<uint32_t>(cv.getValue());
+        case score::mw::per::kvs::KvsValue::Type::i64:
+            return std::get<int64_t>(dv.getValue()) == std::get<int64_t>(cv.getValue());
+        case score::mw::per::kvs::KvsValue::Type::u64:
+            return std::get<uint64_t>(dv.getValue()) == std::get<uint64_t>(cv.getValue());
+        case score::mw::per::kvs::KvsValue::Type::String:
+            return std::get<std::string>(dv.getValue()) == std::get<std::string>(cv.getValue());
+        default:
+            // arr, obj, null, and native bool types are not supported by this helper.
+            return std::nullopt;
     }
-    return false;
 }
 
 bool KvsInstance::remove_key(const std::string& key) {

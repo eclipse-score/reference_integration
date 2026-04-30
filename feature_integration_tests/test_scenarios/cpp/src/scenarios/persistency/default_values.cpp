@@ -12,10 +12,8 @@
 // *******************************************************************************
 
 #include "../../internals/persistency/kvs_instance.h"
-#include "../../internals/persistency/kvs_parameters.h"
+#include "kvs_build_helpers.h"
 
-#include <kvs.hpp>
-#include <kvsbuilder.hpp>
 #include <scenario.hpp>
 
 #include <iostream>
@@ -24,49 +22,9 @@
 #include <vector>
 
 using namespace score::mw::per::kvs;
+using kvs_build_helpers::create_kvs;
 
 namespace {
-
-std::optional<bool> to_need_flag(const std::optional<KvsDefaults>& mode) {
-    if (!mode.has_value()) {
-        return std::nullopt;
-    }
-    if (*mode == KvsDefaults::Required) {
-        return true;
-    }
-    return false;
-}
-
-std::optional<bool> to_need_flag(const std::optional<KvsLoad>& mode) {
-    if (!mode.has_value()) {
-        return std::nullopt;
-    }
-    if (*mode == KvsLoad::Required) {
-        return true;
-    }
-    return false;
-}
-
-Kvs create_kvs(const KvsParameters& params) {
-    KvsBuilder builder{score::mw::per::kvs::InstanceId{params.instance_id.value}};
-
-    if (const auto defaults = to_need_flag(params.defaults)) {
-        builder = builder.need_defaults_flag(*defaults);
-    }
-    if (const auto kvs_load = to_need_flag(params.kvs_load)) {
-        builder = builder.need_kvs_flag(*kvs_load);
-    }
-    if (params.dir.has_value()) {
-        builder = builder.dir(std::string(*params.dir));
-    }
-
-    auto build_result = builder.build();
-    if (!build_result) {
-        throw std::runtime_error(std::string(build_result.error().Message()));
-    }
-
-    return std::move(build_result.value());
-}
 
 /// Set a value and flush. Python reads the snapshot bytes and the hash file,
 /// verifying adler32(snapshot) matches the hash written by KVS.
