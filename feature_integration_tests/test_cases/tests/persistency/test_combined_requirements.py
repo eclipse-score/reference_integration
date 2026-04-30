@@ -92,6 +92,7 @@ class TestAllTypesWithUtf8Keys(PersistencyScenario):
         assert snapshot["ascii_null"]["t"] == "null"
         assert snapshot["ascii_null"]["v"] is None
 
+
 # ---------------------------------------------------------------------------
 # Scenario 2: Partial override — only explicitly written keys enter snapshot
 # ---------------------------------------------------------------------------
@@ -163,9 +164,7 @@ class TestPartialOverrideSnapshot(PersistencyScenario):
         assert "partial_key_0" not in snapshot, "Default-only key partial_key_0 must be absent from snapshot"
         assert "partial_key_2" not in snapshot, "Default-only key partial_key_2 must be absent from snapshot"
 
-    def test_default_values_accessible(
-        self, results: ScenarioResult, logs_info_level: Any, version: str
-    ) -> None:
+    def test_default_values_accessible(self, results: ScenarioResult, logs_info_level: Any, version: str) -> None:
         """
         Verify that the default values for partial_key_0 and partial_key_2 are
         accessible via get_value even though they were never explicitly written.
@@ -286,9 +285,7 @@ class TestUtf8KeysWithDefaults(PersistencyScenario):
             f"Default-only Greek key '{self._KEY_GREEK}' must be absent from snapshot"
         )
 
-    def test_utf8_default_values_accessible(
-        self, results: ScenarioResult, logs_info_level: Any, version: str
-    ) -> None:
+    def test_utf8_default_values_accessible(self, results: ScenarioResult, logs_info_level: Any, version: str) -> None:
         """
         Verify that default values behind UTF-8 ASCII and Greek keys are accessible
         via get_value even though they were never explicitly written.

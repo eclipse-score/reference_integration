@@ -56,6 +56,40 @@ double maybe_snap_noisy_decimal(double value) {
     return value;
 }
 
+/**
+ * @brief Replace integer-encoded boolean values with JSON boolean literals.
+ *
+ * The C++ KVS library stores true/false as numeric 1/0 in the snapshot JSON.
+ * This function rewrites every occurrence of {"t":"bool","v":1} → {"t":"bool","v":true}
+ * and {"t":"bool","v":0} → {"t":"bool","v":false} so that Python json.loads()
+ * returns Python bool values instead of ints.
+ *
+ * @param json Input JSON string.
+ * @return JSON string with boolean values normalised to true/false literals.
+ */
+std::string canonicalize_bool_literals(const std::string& json) {
+    static const std::regex bool_value_pattern(
+        R"("t"\s*:\s*"bool"\s*,\s*"v"\s*:\s*(0|1)\b)");
+
+    std::string result;
+    result.reserve(json.size());
+
+    std::size_t cursor = 0;
+    for (std::sregex_iterator it(json.begin(), json.end(), bool_value_pattern), end; it != end;
+         ++it) {
+        const std::smatch& match = *it;
+        const auto group_pos = static_cast<std::size_t>(match.position(1));
+        const auto group_len = static_cast<std::size_t>(match.length(1));
+
+        result.append(json, cursor, group_pos - cursor);
+        result += (match.str(1) == "1") ? "true" : "false";
+        cursor = group_pos + group_len;
+    }
+
+    result.append(json, cursor, std::string::npos);
+    return result;
+}
+
 std::string canonicalize_f64_literals(const std::string& json) {
     static const std::regex f64_value_pattern(
         R"("t"\s*:\s*"f64"\s*,\s*"v"\s*:\s*([-+]?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?))");
@@ -180,7 +214,8 @@ bool KvsInstance::normalize_snapshot_file_to_rust_envelope(const KvsParameters& 
     std::ostringstream buffer;
     buffer << in.rdbuf();
     const std::string content = trim(buffer.str());
-    const std::string canonical_content = canonicalize_f64_literals(content);
+    const std::string bool_canonical = canonicalize_bool_literals(content);
+    const std::string canonical_content = canonicalize_f64_literals(bool_canonical);
 
     std::string final_content;
     if (canonical_content.rfind("{\"t\":\"obj\",\"v\":", 0) == 0) {

@@ -35,10 +35,8 @@ impl Scenario for MultiInstanceIsolation {
     fn run(&self, input: &str) -> Result<(), String> {
         let v: Value = serde_json::from_str(input).map_err(|e| e.to_string())?;
 
-        let params1 =
-            KvsParameters::from_value(&v["kvs_parameters_1"]).map_err(|e| e.to_string())?;
-        let params2 =
-            KvsParameters::from_value(&v["kvs_parameters_2"]).map_err(|e| e.to_string())?;
+        let params1 = KvsParameters::from_value(&v["kvs_parameters_1"]).map_err(|e| e.to_string())?;
+        let params2 = KvsParameters::from_value(&v["kvs_parameters_2"]).map_err(|e| e.to_string())?;
 
         // Write key_a exclusively to instance 1.
         let kvs1 = kvs_instance(params1).map_err(|e| format!("{e:?}"))?;

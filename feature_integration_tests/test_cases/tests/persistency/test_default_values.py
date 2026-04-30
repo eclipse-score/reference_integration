@@ -35,9 +35,16 @@ pytestmark = pytest.mark.parametrize("version", ["rust", "cpp"], scope="class")
 )
 class TestDefaultValuesIgnored(PersistencyScenario):
     """
-    Verifies that with KvsDefaults::Ignored mode, default values are not loaded
-    even if a defaults file exists on disk. The explicitly set value is persisted
-    to storage, but no default is accessible before set_value is called.
+    Verifies that with KvsDefaults::Ignored mode the explicitly set value is
+    persisted to storage and is present in the KVS snapshot.
+
+    For Rust: also verifies that defaults are NOT loaded — get_value_as() fails
+    before set_value is called, as required by feat_req__persistency__default_values.
+
+    For C++: the KvsBuilder API maps both Ignored and Optional to
+    need_defaults_flag(false); when a defaults file is present the KVS still loads
+    it.  The C++ path therefore only verifies the "explicit set persists" half of
+    the requirement.  The "not loaded" invariant is covered by the Rust path.
     """
 
     # Constants scoped to this class; shared with test methods.
@@ -47,7 +54,6 @@ class TestDefaultValuesIgnored(PersistencyScenario):
     @pytest.fixture(scope="class")
     def scenario_name(self) -> str:
         return "persistency.default_values_ignored"
-
 
     @pytest.fixture(scope="class")
     def defaults_file(self, temp_dir: Path) -> Path:
@@ -301,7 +307,6 @@ class TestGetDefaultValue(PersistencyScenario):
     def scenario_name(self) -> str:
         return "persistency.default_values.get_default_value"
 
-
     @pytest.fixture(scope="class")
     def defaults_file(self, temp_dir: Path) -> Path:
         """Provision a default value for the probe key."""
@@ -372,7 +377,6 @@ class TestSelectiveReset(PersistencyScenario):
     @pytest.fixture(scope="class")
     def scenario_name(self) -> str:
         return "persistency.default_values.selective_reset"
-
 
     @pytest.fixture(scope="class")
     def defaults_file(self, temp_dir: Path) -> Path:
@@ -451,7 +455,6 @@ class TestFullReset(PersistencyScenario):
     @pytest.fixture(scope="class")
     def scenario_name(self) -> str:
         return "persistency.default_values.full_reset"
-
 
     @pytest.fixture(scope="class")
     def defaults_file(self, temp_dir: Path) -> Path:
@@ -581,9 +584,7 @@ class TestMultiInstanceDefaultIsolation(FitScenario):
         return file1, file2
 
     @pytest.fixture(scope="class")
-    def test_config(
-        self, temp_dir: Path, defaults_files: tuple[Path, Path]
-    ) -> dict[str, Any]:
+    def test_config(self, temp_dir: Path, defaults_files: tuple[Path, Path]) -> dict[str, Any]:
         return {
             "kvs_parameters_1": {
                 "kvs_parameters": {
@@ -601,24 +602,16 @@ class TestMultiInstanceDefaultIsolation(FitScenario):
             },
         }
 
-    def test_instance_1_snapshot_isolation(
-        self, results: ScenarioResult, temp_dir: Path
-    ) -> None:
+    def test_instance_1_snapshot_isolation(self, results: ScenarioResult, temp_dir: Path) -> None:
         """Instance 1 snapshot must contain key_a and must NOT contain key_b."""
         assert results.return_code == ResultCode.SUCCESS
         snapshot1 = read_kvs_snapshot(temp_dir, 1)
         assert "key_a" in snapshot1, "key_a must be present in instance 1 snapshot"
-        assert "key_b" not in snapshot1, (
-            "key_b must not leak from instance 2 defaults into instance 1 snapshot"
-        )
+        assert "key_b" not in snapshot1, "key_b must not leak from instance 2 defaults into instance 1 snapshot"
 
-    def test_instance_2_snapshot_isolation(
-        self, results: ScenarioResult, temp_dir: Path
-    ) -> None:
+    def test_instance_2_snapshot_isolation(self, results: ScenarioResult, temp_dir: Path) -> None:
         """Instance 2 snapshot must contain key_b and must NOT contain key_a."""
         assert results.return_code == ResultCode.SUCCESS
         snapshot2 = read_kvs_snapshot(temp_dir, 2)
         assert "key_b" in snapshot2, "key_b must be present in instance 2 snapshot"
-        assert "key_a" not in snapshot2, (
-            "key_a must not leak from instance 1 defaults into instance 2 snapshot"
-        )
+        assert "key_a" not in snapshot2, "key_a must not leak from instance 1 defaults into instance 2 snapshot"

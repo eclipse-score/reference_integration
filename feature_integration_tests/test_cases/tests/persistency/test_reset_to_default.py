@@ -45,7 +45,6 @@ class TestResetToDefault(PersistencyScenario):
     def scenario_name(self) -> str:
         return "persistency.reset_to_default"
 
-
     @pytest.fixture(scope="class")
     def defaults_file(self, temp_dir: Path) -> Path:
         """

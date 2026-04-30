@@ -12,6 +12,7 @@
 // *******************************************************************************
 
 #include "../../internals/persistency/kvs_instance.h"
+#include "kvs_build_helpers.h"
 
 #include <scenario.hpp>
 
@@ -62,8 +63,8 @@ public:
         if (!val_greek.has_value()) {
             throw std::runtime_error(u8"Failed to read default value for 'utf8_greek κλμ'");
         }
-        std::cout << "default key=utf8_ascii_key value=" << val_ascii.value() << "\n";
-        std::cout << u8"default key=utf8_greek κλμ value=" << val_greek.value() << "\n";
+        std::cout << "default key=utf8_ascii_key value=" << kvs_build_helpers::format_double_python(val_ascii.value()) << "\n";
+        std::cout << u8"default key=utf8_greek κλμ value=" << kvs_build_helpers::format_double_python(val_greek.value()) << "\n";
 
         if (!KvsInstance::normalize_snapshot_file_to_rust_envelope(params)) {
             std::cerr << "Warning: Failed to normalize snapshot file" << std::endl;

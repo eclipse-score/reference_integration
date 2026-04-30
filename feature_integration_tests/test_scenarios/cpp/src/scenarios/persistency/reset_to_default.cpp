@@ -12,6 +12,7 @@
 // *******************************************************************************
 
 #include "../../internals/persistency/kvs_instance.h"
+#include "kvs_build_helpers.h"
 
 #include <scenario.hpp>
 
@@ -72,7 +73,7 @@ void ResetToDefault::run(const std::string& input) const {
         if (!default_val.has_value()) {
             throw std::runtime_error("Failed to read default value after reset for 'key2'");
         }
-        std::cout << "default key=key2 value=" << default_val.value() << "\n";
+        std::cout << "default key=key2 value=" << kvs_build_helpers::format_double_python(default_val.value()) << "\n";
 
         // Flush to persist: key1 and key3 with overrides, key2 absent
         if (!kvs->flush()) {

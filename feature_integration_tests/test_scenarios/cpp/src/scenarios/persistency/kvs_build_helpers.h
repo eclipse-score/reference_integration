@@ -19,11 +19,35 @@
 #include <kvs.hpp>
 #include <kvsbuilder.hpp>
 
+#include <locale>
 #include <optional>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 
 namespace kvs_build_helpers {
+
+/**
+ * @brief Format a double value to match Python's str(float) representation.
+ *
+ * For whole-number values (e.g. 42.0, 200.0) this appends ".0" so that the
+ * resulting string matches what Python's f-string interpolation produces.
+ * Non-integer values (e.g. 3.14) are printed as-is by the default stream.
+ *
+ * @param v Double value to format.
+ * @return String representation matching Python float str().
+ */
+inline std::string format_double_python(double v) {
+    std::ostringstream oss;
+    oss.imbue(std::locale::classic());  // Ensure '.' decimal separator regardless of process locale.
+    oss << v;
+    std::string s = oss.str();
+    if (s.find('.') == std::string::npos && s.find('e') == std::string::npos &&
+        s.find('E') == std::string::npos) {
+        s += ".0";
+    }
+    return s;
+}
 
 /**
  * @brief Convert an optional KvsDefaults mode to the boolean flag expected by KvsBuilder.

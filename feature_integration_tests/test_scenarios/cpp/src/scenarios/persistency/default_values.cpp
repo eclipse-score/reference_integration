@@ -86,8 +86,8 @@ public:
         if (!val2.has_value()) {
             throw std::runtime_error{"Failed to read default value for 'partial_key_2'"};
         }
-        std::cout << "default key=partial_key_0 value=" << val0.value() << "\n";
-        std::cout << "default key=partial_key_2 value=" << val2.value() << "\n";
+        std::cout << "default key=partial_key_0 value=" << kvs_build_helpers::format_double_python(val0.value()) << "\n";
+        std::cout << "default key=partial_key_2 value=" << kvs_build_helpers::format_double_python(val2.value()) << "\n";
 
         KvsInstance::normalize_snapshot_file_to_rust_envelope(params);
     }
