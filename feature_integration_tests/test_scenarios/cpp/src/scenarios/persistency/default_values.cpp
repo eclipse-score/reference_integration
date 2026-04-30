@@ -18,6 +18,7 @@
 #include <kvsbuilder.hpp>
 #include <scenario.hpp>
 
+#include <iostream>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -102,18 +103,33 @@ public:
 
     void run(const std::string& input) const final {
         auto params{KvsParameters::from_json_section(input, "kvs_parameters_1")};
-        auto kvs{create_kvs(params)};
+
+        auto kvs_opt{KvsInstance::create(params)};
+        if (!kvs_opt) {
+            throw std::runtime_error{"Failed to create KVS instance for PartialOverride"};
+        }
+        auto kvs{*kvs_opt};
 
         // Override only the middle key; partial_key_0 and partial_key_2 stay as defaults.
-        auto set_result{kvs.set_value("partial_key_1", KvsValue{999.0})};
-        if (!set_result) {
+        if (!kvs->set_value("partial_key_1", 999.0)) {
             throw std::runtime_error{"Failed to set value"};
         }
 
-        auto flush_result{kvs.flush()};
-        if (!flush_result) {
+        if (!kvs->flush()) {
             throw std::runtime_error{"Failed to flush"};
         }
+
+        // Log default values for key_0 and key_2 so Python can assert they are accessible.
+        auto val0{kvs->get_value_f64("partial_key_0")};
+        if (!val0.has_value()) {
+            throw std::runtime_error{"Failed to read default value for 'partial_key_0'"};
+        }
+        auto val2{kvs->get_value_f64("partial_key_2")};
+        if (!val2.has_value()) {
+            throw std::runtime_error{"Failed to read default value for 'partial_key_2'"};
+        }
+        std::cout << "default key=partial_key_0 value=" << val0.value() << "\n";
+        std::cout << "default key=partial_key_2 value=" << val2.value() << "\n";
 
         KvsInstance::normalize_snapshot_file_to_rust_envelope(params);
     }

@@ -11,13 +11,13 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-from collections.abc import Generator
 from math import isclose
 from pathlib import Path
 from typing import Any
 
 import pytest
-from fit_scenario import FitScenario, ResultCode, read_kvs_snapshot, temp_dir_common
+from fit_scenario import ResultCode
+from persistency_scenario import PersistencyScenario, read_kvs_snapshot
 from test_properties import add_test_properties
 from testing_utils import ScenarioResult
 
@@ -50,16 +50,9 @@ def assert_tagged_value(actual: dict[str, Any], expected: dict[str, Any]) -> Non
     assert actual["v"] == expected["v"]
 
 
-class SupportedDatatypesScenario(FitScenario):
+class SupportedDatatypesScenario(PersistencyScenario):
     """Common base for supported datatypes scenarios."""
 
-    @pytest.fixture(scope="class")
-    def temp_dir(
-        self,
-        tmp_path_factory: pytest.TempPathFactory,
-        version: str,
-    ) -> Generator[Path, None, None]:
-        yield from temp_dir_common(tmp_path_factory, self.__class__.__name__, version)
 
     @pytest.fixture(scope="class")
     def test_config(self, temp_dir: Path) -> dict[str, Any]:

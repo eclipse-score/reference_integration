@@ -15,6 +15,7 @@ use rust_kvs::prelude::KvsApi;
 use serde::Deserialize;
 use serde_json::Value;
 use test_scenarios_rust::scenario::Scenario;
+use tracing::info;
 
 #[derive(Deserialize, Debug)]
 pub struct TestInput {
@@ -54,6 +55,12 @@ impl Scenario for ResetToDefault {
 
         // Reset key2 (index 1) using remove_key — reverts to default in memory
         kvs.remove_key(&test_input.keys[1]).expect("Failed to remove key");
+
+        // Log the default value reported by KVS after reset so Python can assert it.
+        let default_val: f64 = kvs
+            .get_value_as(&test_input.keys[1])
+            .expect("Failed to read default value after reset");
+        info!(key = "key2", value = default_val, source = "default_after_reset");
 
         // Flush to persist the state: key1 and key3 with overrides, key2 absent
         kvs.flush().expect("Failed to flush KVS");

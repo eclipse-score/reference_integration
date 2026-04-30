@@ -14,6 +14,7 @@ use crate::internals::persistency::{kvs_instance::kvs_instance, kvs_parameters::
 use rust_kvs::prelude::KvsApi;
 use serde_json::Value;
 use test_scenarios_rust::scenario::Scenario;
+use tracing::info;
 
 fn parse_params(input: &str) -> Result<KvsParameters, String> {
     let v: Value = serde_json::from_str(input).map_err(|e| e.to_string())?;
@@ -43,6 +44,15 @@ impl Scenario for Utf8Defaults {
         kvs.set_value("utf8_emoji 🔑", 777.0_f64)
             .map_err(|e| format!("{e:?}"))?;
         kvs.flush().map_err(|e| format!("{e:?}"))?;
+        // Log default values for ASCII and Greek keys so Python can assert accessibility.
+        let val_ascii: f64 = kvs
+            .get_value_as("utf8_ascii_key")
+            .map_err(|e| format!("Failed to read default utf8_ascii_key: {e:?}"))?;
+        let val_greek: f64 = kvs
+            .get_value_as("utf8_greek κλμ")
+            .map_err(|e| format!("Failed to read default utf8_greek κλμ: {e:?}"))?;
+        info!(key = "utf8_ascii_key", value = val_ascii, source = "default");
+        info!(key = "utf8_greek κλμ", value = val_greek, source = "default");
         Ok(())
     }
 }

@@ -17,13 +17,13 @@ Each test exercises multiple requirements together through a single observable
 storage outcome rather than testing each requirement in isolation.
 """
 
-from collections.abc import Generator
 from math import isclose
 from pathlib import Path
 from typing import Any
 
 import pytest
-from fit_scenario import FitScenario, ResultCode, create_kvs_defaults_file, read_kvs_snapshot, temp_dir_common
+from fit_scenario import ResultCode
+from persistency_scenario import PersistencyScenario, create_kvs_defaults_file, read_kvs_snapshot
 from test_properties import add_test_properties
 from testing_utils import ScenarioResult
 
@@ -44,7 +44,7 @@ pytestmark = pytest.mark.parametrize("version", ["rust", "cpp"], scope="class")
     test_type="requirements-based",
     derivation_technique="requirements-analysis",
 )
-class TestAllTypesWithUtf8Keys(FitScenario):
+class TestAllTypesWithUtf8Keys(PersistencyScenario):
     """
     Verify that KVS can store multiple value types simultaneously under both
     ASCII and UTF-8 encoded key names, and that all of them are physically
@@ -59,14 +59,6 @@ class TestAllTypesWithUtf8Keys(FitScenario):
         return "persistency.supported_datatypes.all_types_utf8"
 
     @pytest.fixture(scope="class")
-    def temp_dir(
-        self,
-        tmp_path_factory: pytest.TempPathFactory,
-        version: str,
-    ) -> Generator[Path, None, None]:
-        yield from temp_dir_common(tmp_path_factory, self.__class__.__name__, version)
-
-    @pytest.fixture(scope="class")
     def test_config(self, temp_dir: Path) -> dict[str, Any]:
         return {
             "kvs_parameters_1": {
@@ -76,24 +68,6 @@ class TestAllTypesWithUtf8Keys(FitScenario):
                 },
             },
         }
-
-    def test_utf8_keys_present(self, results: ScenarioResult, temp_dir: Path) -> None:
-        """
-        All five key names — including UTF-8 emoji and Greek characters — must
-        appear verbatim in the persisted KVS snapshot.
-        """
-        assert results.return_code == ResultCode.SUCCESS
-        snapshot = read_kvs_snapshot(temp_dir, 1)
-
-        expected_keys = {
-            "ascii_i32",
-            "emoji_f64 🎯",
-            "greek_bool αβγ",
-            "ascii_str",
-            "ascii_null",
-        }
-        for key in expected_keys:
-            assert key in snapshot, f"Expected UTF-8 key '{key}' in snapshot"
 
     def test_value_types_persisted(self, results: ScenarioResult, temp_dir: Path) -> None:
         """
@@ -110,21 +84,17 @@ class TestAllTypesWithUtf8Keys(FitScenario):
         assert isclose(snapshot["emoji_f64 🎯"]["v"], 3.14, abs_tol=1e-4)
 
         assert snapshot["greek_bool αβγ"]["t"] == "bool"
-        assert snapshot["greek_bool αβγ"]["v"]  # True or 1, both truthy
+        assert snapshot["greek_bool αβγ"]["v"] is True
 
         assert snapshot["ascii_str"]["t"] == "str"
         assert snapshot["ascii_str"]["v"] == "hello"
 
         assert snapshot["ascii_null"]["t"] == "null"
-
+        assert snapshot["ascii_null"]["v"] is None
 
 # ---------------------------------------------------------------------------
 # Scenario 2: Partial override — only explicitly written keys enter snapshot
 # ---------------------------------------------------------------------------
-
-_PARTIAL_DEFAULT_VALUE = 50.0
-_PARTIAL_OVERRIDE_VALUE = 999.0
-_PARTIAL_KEYS = ["partial_key_0", "partial_key_1", "partial_key_2"]
 
 
 @add_test_properties(
@@ -136,7 +106,7 @@ _PARTIAL_KEYS = ["partial_key_0", "partial_key_1", "partial_key_2"]
     test_type="requirements-based",
     derivation_technique="requirements-analysis",
 )
-class TestPartialOverrideSnapshot(FitScenario):
+class TestPartialOverrideSnapshot(PersistencyScenario):
     """
     Verify that when a KVS instance has default values for three keys but only
     one key is explicitly overridden, the snapshot contains ONLY the overridden
@@ -147,17 +117,13 @@ class TestPartialOverrideSnapshot(FitScenario):
     default_value_file, and store_data requirements.
     """
 
+    _DEFAULT_VALUE = 50.0
+    _OVERRIDE_VALUE = 999.0
+    _KEYS = ["partial_key_0", "partial_key_1", "partial_key_2"]
+
     @pytest.fixture(scope="class")
     def scenario_name(self) -> str:
         return "persistency.default_values.partial_override"
-
-    @pytest.fixture(scope="class")
-    def temp_dir(
-        self,
-        tmp_path_factory: pytest.TempPathFactory,
-        version: str,
-    ) -> Generator[Path, None, None]:
-        yield from temp_dir_common(tmp_path_factory, self.__class__.__name__, version)
 
     @pytest.fixture(scope="class")
     def defaults_file(self, temp_dir: Path) -> Path:
@@ -165,7 +131,7 @@ class TestPartialOverrideSnapshot(FitScenario):
         return create_kvs_defaults_file(
             temp_dir,
             1,
-            {key: ("f64", _PARTIAL_DEFAULT_VALUE) for key in _PARTIAL_KEYS},
+            {key: ("f64", self._DEFAULT_VALUE) for key in self._KEYS},
         )
 
     @pytest.fixture(scope="class")
@@ -191,22 +157,46 @@ class TestPartialOverrideSnapshot(FitScenario):
 
         # Explicitly overridden key must be present with the override value.
         assert "partial_key_1" in snapshot, "Overridden key must be present in snapshot"
-        assert isclose(snapshot["partial_key_1"]["v"], _PARTIAL_OVERRIDE_VALUE, abs_tol=1e-4)
+        assert isclose(snapshot["partial_key_1"]["v"], self._OVERRIDE_VALUE, abs_tol=1e-4)
 
         # Default-only keys must NOT appear in the snapshot.
         assert "partial_key_0" not in snapshot, "Default-only key partial_key_0 must be absent from snapshot"
         assert "partial_key_2" not in snapshot, "Default-only key partial_key_2 must be absent from snapshot"
 
+    def test_default_values_accessible(
+        self, results: ScenarioResult, logs_info_level: Any, version: str
+    ) -> None:
+        """
+        Verify that the default values for partial_key_0 and partial_key_2 are
+        accessible via get_value even though they were never explicitly written.
+
+        For Rust: checks structured log fields logged by the scenario after flush.
+        For C++: checks stdout output printed by the scenario after flush.
+        """
+        assert results.return_code == ResultCode.SUCCESS
+        if version == "rust":
+            log0 = logs_info_level.find_log("key", value="partial_key_0")
+            assert log0 is not None, "Expected log entry for default partial_key_0"
+            assert isclose(float(log0.value), self._DEFAULT_VALUE, abs_tol=1e-4), (
+                f"Expected partial_key_0 default ≈ {self._DEFAULT_VALUE}, got {log0.value}"
+            )
+            log2 = logs_info_level.find_log("key", value="partial_key_2")
+            assert log2 is not None, "Expected log entry for default partial_key_2"
+            assert isclose(float(log2.value), self._DEFAULT_VALUE, abs_tol=1e-4), (
+                f"Expected partial_key_2 default ≈ {self._DEFAULT_VALUE}, got {log2.value}"
+            )
+        else:
+            assert f"default key=partial_key_0 value={self._DEFAULT_VALUE}" in results.stdout, (
+                f"Expected stdout to contain default partial_key_0={self._DEFAULT_VALUE}"
+            )
+            assert f"default key=partial_key_2 value={self._DEFAULT_VALUE}" in results.stdout, (
+                f"Expected stdout to contain default partial_key_2={self._DEFAULT_VALUE}"
+            )
+
 
 # ---------------------------------------------------------------------------
 # Scenario 3: UTF-8 keys in defaults file + selective override
 # ---------------------------------------------------------------------------
-
-_UTF8_KEY_ASCII = "utf8_ascii_key"
-_UTF8_KEY_EMOJI = "utf8_emoji 🔑"
-_UTF8_KEY_GREEK = "utf8_greek κλμ"
-_UTF8_DEFAULT_VALUE = 42.0
-_UTF8_OVERRIDE_VALUE = 777.0
 
 
 @add_test_properties(
@@ -218,7 +208,7 @@ _UTF8_OVERRIDE_VALUE = 777.0
     test_type="requirements-based",
     derivation_technique="requirements-analysis",
 )
-class TestUtf8KeysWithDefaults(FitScenario):
+class TestUtf8KeysWithDefaults(PersistencyScenario):
     """
     Verify that UTF-8 encoded key names work correctly as keys in both the
     defaults file and the KVS snapshot.
@@ -232,17 +222,15 @@ class TestUtf8KeysWithDefaults(FitScenario):
     provisioning (default_values + default_value_file) in one storage outcome.
     """
 
+    _KEY_ASCII = "utf8_ascii_key"
+    _KEY_EMOJI = "utf8_emoji 🔑"
+    _KEY_GREEK = "utf8_greek κλμ"
+    _DEFAULT_VALUE = 42.0
+    _OVERRIDE_VALUE = 777.0
+
     @pytest.fixture(scope="class")
     def scenario_name(self) -> str:
         return "persistency.utf8_defaults"
-
-    @pytest.fixture(scope="class")
-    def temp_dir(
-        self,
-        tmp_path_factory: pytest.TempPathFactory,
-        version: str,
-    ) -> Generator[Path, None, None]:
-        yield from temp_dir_common(tmp_path_factory, self.__class__.__name__, version)
 
     @pytest.fixture(scope="class")
     def defaults_file(self, temp_dir: Path) -> Path:
@@ -251,9 +239,9 @@ class TestUtf8KeysWithDefaults(FitScenario):
             temp_dir,
             1,
             {
-                _UTF8_KEY_ASCII: ("f64", _UTF8_DEFAULT_VALUE),
-                _UTF8_KEY_EMOJI: ("f64", _UTF8_DEFAULT_VALUE),
-                _UTF8_KEY_GREEK: ("f64", _UTF8_DEFAULT_VALUE),
+                self._KEY_ASCII: ("f64", self._DEFAULT_VALUE),
+                self._KEY_EMOJI: ("f64", self._DEFAULT_VALUE),
+                self._KEY_GREEK: ("f64", self._DEFAULT_VALUE),
             },
         )
 
@@ -278,10 +266,10 @@ class TestUtf8KeysWithDefaults(FitScenario):
         assert results.return_code == ResultCode.SUCCESS
         snapshot = read_kvs_snapshot(temp_dir, 1)
 
-        assert _UTF8_KEY_EMOJI in snapshot, (
-            f"Overridden UTF-8 emoji key '{_UTF8_KEY_EMOJI}' must be present in snapshot"
+        assert self._KEY_EMOJI in snapshot, (
+            f"Overridden UTF-8 emoji key '{self._KEY_EMOJI}' must be present in snapshot"
         )
-        assert isclose(snapshot[_UTF8_KEY_EMOJI]["v"], _UTF8_OVERRIDE_VALUE, abs_tol=1e-4)
+        assert isclose(snapshot[self._KEY_EMOJI]["v"], self._OVERRIDE_VALUE, abs_tol=1e-4)
 
     def test_default_only_utf8_keys_absent(self, results: ScenarioResult, temp_dir: Path) -> None:
         """
@@ -291,20 +279,39 @@ class TestUtf8KeysWithDefaults(FitScenario):
         assert results.return_code == ResultCode.SUCCESS
         snapshot = read_kvs_snapshot(temp_dir, 1)
 
-        assert _UTF8_KEY_ASCII not in snapshot, (
-            f"Default-only ASCII key '{_UTF8_KEY_ASCII}' must be absent from snapshot"
+        assert self._KEY_ASCII not in snapshot, (
+            f"Default-only ASCII key '{self._KEY_ASCII}' must be absent from snapshot"
         )
-        assert _UTF8_KEY_GREEK not in snapshot, (
-            f"Default-only Greek key '{_UTF8_KEY_GREEK}' must be absent from snapshot"
+        assert self._KEY_GREEK not in snapshot, (
+            f"Default-only Greek key '{self._KEY_GREEK}' must be absent from snapshot"
         )
+
+    def test_utf8_default_values_accessible(
+        self, results: ScenarioResult, logs_info_level: Any, version: str
+    ) -> None:
+        """
+        Verify that default values behind UTF-8 ASCII and Greek keys are accessible
+        via get_value even though they were never explicitly written.
+
+        For Rust: checks structured log fields emitted by the scenario after flush.
+        For C++: checks stdout output printed by the scenario after flush.
+        """
+        assert results.return_code == ResultCode.SUCCESS
+        if version == "rust":
+            log_ascii = logs_info_level.find_log("key", value="utf8_ascii_key")
+            assert log_ascii is not None, "Expected log entry for default utf8_ascii_key"
+            assert isclose(float(log_ascii.value), self._DEFAULT_VALUE, abs_tol=1e-4)
+            log_greek = logs_info_level.find_log("key", value="utf8_greek κλμ")
+            assert log_greek is not None, "Expected log entry for default utf8_greek κλμ"
+            assert isclose(float(log_greek.value), self._DEFAULT_VALUE, abs_tol=1e-4)
+        else:
+            assert f"default key=utf8_ascii_key value={self._DEFAULT_VALUE}" in results.stdout
+            assert f"default key=utf8_greek κλμ value={self._DEFAULT_VALUE}" in results.stdout
 
 
 # ---------------------------------------------------------------------------
 # Scenario 4: UTF-8 key in defaults file + get_value without set_value
 # ---------------------------------------------------------------------------
-
-_UTF8_GET_KEY = "probe 🔍"
-_UTF8_GET_DEFAULT_VALUE = 42.0
 
 
 @add_test_properties(
@@ -313,7 +320,7 @@ _UTF8_GET_DEFAULT_VALUE = 42.0
     test_type="requirements-based",
     derivation_technique="requirements-analysis",
 )
-class TestUtf8DefaultValueGet(FitScenario):
+class TestUtf8DefaultValueGet(PersistencyScenario):
     """
     Verify that get_value retrieves the correct default for a UTF-8 emoji key
     that was provisioned in the defaults file but never explicitly set.
@@ -324,17 +331,12 @@ class TestUtf8DefaultValueGet(FitScenario):
     feat_req__persistency__support_datatype_keys in one storage outcome.
     """
 
+    _GET_KEY = "probe 🔍"
+    _GET_DEFAULT_VALUE = 42.0
+
     @pytest.fixture(scope="class")
     def scenario_name(self) -> str:
         return "persistency.utf8_default_value_get"
-
-    @pytest.fixture(scope="class")
-    def temp_dir(
-        self,
-        tmp_path_factory: pytest.TempPathFactory,
-        version: str,
-    ) -> Generator[Path, None, None]:
-        yield from temp_dir_common(tmp_path_factory, self.__class__.__name__, version)
 
     @pytest.fixture(scope="class")
     def defaults_file(self, temp_dir: Path) -> Path:
@@ -342,7 +344,7 @@ class TestUtf8DefaultValueGet(FitScenario):
         return create_kvs_defaults_file(
             temp_dir,
             1,
-            {_UTF8_GET_KEY: ("f64", _UTF8_GET_DEFAULT_VALUE)},
+            {self._GET_KEY: ("f64", self._GET_DEFAULT_VALUE)},
         )
 
     @pytest.fixture(scope="class")
@@ -365,6 +367,6 @@ class TestUtf8DefaultValueGet(FitScenario):
         assert results.return_code == ResultCode.SUCCESS
         snapshot = read_kvs_snapshot(temp_dir, 1)
         assert "result_key" in snapshot, "Probe key 'result_key' must be present in snapshot"
-        assert isclose(snapshot["result_key"]["v"], _UTF8_GET_DEFAULT_VALUE, abs_tol=1e-4), (
-            f"Expected probe key value ≈ {_UTF8_GET_DEFAULT_VALUE}, got {snapshot['result_key']['v']}"
+        assert isclose(snapshot["result_key"]["v"], self._GET_DEFAULT_VALUE, abs_tol=1e-4), (
+            f"Expected probe key value ≈ {self._GET_DEFAULT_VALUE}, got {snapshot['result_key']['v']}"
         )

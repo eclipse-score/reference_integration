@@ -53,6 +53,18 @@ public:
             throw std::runtime_error("Failed to flush KVS");
         }
 
+        // Log default values for ascii and greek keys so Python can assert they are accessible.
+        auto val_ascii = kvs->get_value_f64("utf8_ascii_key");
+        if (!val_ascii.has_value()) {
+            throw std::runtime_error("Failed to read default value for 'utf8_ascii_key'");
+        }
+        auto val_greek = kvs->get_value_f64(u8"utf8_greek κλμ");
+        if (!val_greek.has_value()) {
+            throw std::runtime_error(u8"Failed to read default value for 'utf8_greek κλμ'");
+        }
+        std::cout << "default key=utf8_ascii_key value=" << val_ascii.value() << "\n";
+        std::cout << u8"default key=utf8_greek κλμ value=" << val_greek.value() << "\n";
+
         if (!KvsInstance::normalize_snapshot_file_to_rust_envelope(params)) {
             std::cerr << "Warning: Failed to normalize snapshot file" << std::endl;
         }

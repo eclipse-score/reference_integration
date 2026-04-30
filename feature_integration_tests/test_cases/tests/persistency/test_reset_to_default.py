@@ -11,13 +11,13 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-from collections.abc import Generator
 from math import isclose
 from pathlib import Path
 from typing import Any
 
 import pytest
-from fit_scenario import FitScenario, ResultCode, create_kvs_defaults_file, read_kvs_snapshot, temp_dir_common
+from fit_scenario import ResultCode
+from persistency_scenario import PersistencyScenario, create_kvs_defaults_file, read_kvs_snapshot
 from test_properties import add_test_properties
 from testing_utils import ScenarioResult
 
@@ -34,7 +34,7 @@ _OVERRIDE_VALUES = [111.0, 222.0, 333.0]
     test_type="requirements-based",
     derivation_technique="requirements-analysis",
 )
-class TestResetToDefault(FitScenario):
+class TestResetToDefault(PersistencyScenario):
     """
     Verifies that remove_key() resets a key to default by removing it from storage.
     After removing key2 and flushing: key1 and key3 remain in the snapshot with their
@@ -45,13 +45,6 @@ class TestResetToDefault(FitScenario):
     def scenario_name(self) -> str:
         return "persistency.reset_to_default"
 
-    @pytest.fixture(scope="class")
-    def temp_dir(
-        self,
-        tmp_path_factory: pytest.TempPathFactory,
-        version: str,
-    ) -> Generator[Path, None, None]:
-        yield from temp_dir_common(tmp_path_factory, self.__class__.__name__, version)
 
     @pytest.fixture(scope="class")
     def defaults_file(self, temp_dir: Path) -> Path:
@@ -102,4 +95,27 @@ class TestResetToDefault(FitScenario):
             assert key in snapshot, f"Key '{key}' should be present in snapshot"
             assert isclose(snapshot[key]["v"], _OVERRIDE_VALUES[i], abs_tol=1e-4), (
                 f"Key '{key}': expected override {_OVERRIDE_VALUES[i]}, got {snapshot[key]['v']}"
+            )
+
+    def test_default_value_reported_after_reset(
+        self, results: ScenarioResult, logs_info_level: Any, version: str
+    ) -> None:
+        """
+        Verify that after remove_key on key2, KVS still reports its default value
+        via get_value — confirming the key was reset to default rather than deleted.
+
+        For Rust: checks structured log fields emitted by the scenario after reset.
+        For C++: checks stdout output printed by the scenario after reset.
+        """
+        assert results.return_code == ResultCode.SUCCESS
+        expected_default = _DEFAULT_VALUES[1]  # key2's default is 200.0
+        if version == "rust":
+            log = logs_info_level.find_log("key", value="key2")
+            assert log is not None, "Expected log entry for key2 default value after reset"
+            assert isclose(float(log.value), expected_default, abs_tol=1e-4), (
+                f"Expected key2 default ≈ {expected_default}, got {log.value}"
+            )
+        else:
+            assert f"default key=key2 value={expected_default}" in results.stdout, (
+                f"Expected stdout to contain 'default key=key2 value={expected_default}'"
             )

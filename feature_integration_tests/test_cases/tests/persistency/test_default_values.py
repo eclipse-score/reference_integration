@@ -20,15 +20,12 @@ from typing import Any
 from zlib import adler32
 
 import pytest
-from fit_scenario import FitScenario, ResultCode, create_kvs_defaults_file, read_kvs_snapshot, temp_dir_common
+from fit_scenario import FitScenario, ResultCode, temp_dir_common
+from persistency_scenario import PersistencyScenario, create_kvs_defaults_file, read_kvs_snapshot
 from test_properties import add_test_properties
 from testing_utils import ScenarioResult
 
 pytestmark = pytest.mark.parametrize("version", ["rust", "cpp"], scope="class")
-
-# Key and value constants shared across default-value tests.
-_DEFAULT_KEY = "test_key"
-_OVERRIDE_VALUE = 432.1
 
 _PARITY_KEY = "test_number"
 _PARITY_DEFAULT_VALUE = 123.4
@@ -48,26 +45,40 @@ def _reset_default_value(index: int) -> float:
     test_type="requirements-based",
     derivation_technique="requirements-analysis",
 )
-class TestDefaultValuesIgnored(FitScenario):
+class TestDefaultValuesIgnored(PersistencyScenario):
     """
     Verifies that with KvsDefaults::Ignored mode, default values are not loaded
-    even if a defaults file exists. The explicitly set value is persisted to storage.
+    even if a defaults file exists on disk. The explicitly set value is persisted
+    to storage, but no default is accessible before set_value is called.
     """
+
+    # Constants scoped to this class; shared with test methods.
+    _DEFAULT_KEY = "test_key"
+    _OVERRIDE_VALUE = 432.1
 
     @pytest.fixture(scope="class")
     def scenario_name(self) -> str:
         return "persistency.default_values_ignored"
 
-    @pytest.fixture(scope="class")
-    def temp_dir(
-        self,
-        tmp_path_factory: pytest.TempPathFactory,
-        version: str,
-    ) -> Generator[Path, None, None]:
-        yield from temp_dir_common(tmp_path_factory, self.__class__.__name__, version)
 
     @pytest.fixture(scope="class")
-    def test_config(self, temp_dir: Path) -> dict[str, Any]:
+    def defaults_file(self, temp_dir: Path) -> Path:
+        """
+        Create a defaults file on disk so the scenario can confirm KVS ignores it.
+
+        Having the file present and confirming it is not loaded (Ignored mode)
+        is the meaningful test; without the file the ignored flag would have
+        nothing to ignore.
+        """
+        return create_kvs_defaults_file(
+            temp_dir,
+            1,
+            {self._DEFAULT_KEY: ("f64", 999.0)},
+        )
+
+    @pytest.fixture(scope="class")
+    def test_config(self, temp_dir: Path, defaults_file: Path) -> dict[str, Any]:
+        # defaults_file dependency ensures the file is created before the scenario runs.
         return {
             "kvs_parameters_1": {
                 "kvs_parameters": {
@@ -77,8 +88,8 @@ class TestDefaultValuesIgnored(FitScenario):
                 },
             },
             "test": {
-                "key": _DEFAULT_KEY,
-                "override_value": _OVERRIDE_VALUE,
+                "key": self._DEFAULT_KEY,
+                "override_value": self._OVERRIDE_VALUE,
             },
         }
 
@@ -86,8 +97,8 @@ class TestDefaultValuesIgnored(FitScenario):
         """Verify that the explicitly set value is written to the KVS snapshot."""
         assert results.return_code == ResultCode.SUCCESS
         snapshot = read_kvs_snapshot(temp_dir, 1)
-        assert _DEFAULT_KEY in snapshot, f"Expected key '{_DEFAULT_KEY}' in snapshot"
-        assert isclose(snapshot[_DEFAULT_KEY]["v"], _OVERRIDE_VALUE, abs_tol=1e-5)
+        assert self._DEFAULT_KEY in snapshot, f"Expected key '{self._DEFAULT_KEY}' in snapshot"
+        assert isclose(snapshot[self._DEFAULT_KEY]["v"], self._OVERRIDE_VALUE, abs_tol=1e-5)
 
 
 class DefaultValuesParityScenario(FitScenario):
@@ -264,10 +275,6 @@ class TestDefaultValuesMalformedDefaultsFile(DefaultValuesParityScenario):
         assert re.search(r"(JsonParserError|KvsFileReadError|JSON parser error|KVS file read error)", results.stderr)
 
 
-_GET_DEFAULT_KEY = "default_probe_key"
-_GET_DEFAULT_EXPECTED = 123.456
-
-
 @add_test_properties(
     fully_verifies=["feat_req__persistency__default_value_get"],
     partially_verifies=[
@@ -277,7 +284,7 @@ _GET_DEFAULT_EXPECTED = 123.456
     test_type="requirements-based",
     derivation_technique="requirements-analysis",
 )
-class TestGetDefaultValue(FitScenario):
+class TestGetDefaultValue(PersistencyScenario):
     """
     Verify that get_value returns the default value for a key that was
     provisioned via the defaults file but never explicitly set.
@@ -287,17 +294,13 @@ class TestGetDefaultValue(FitScenario):
     in this suite that fully exercises feat_req__persistency__default_value_get.
     """
 
+    _GET_DEFAULT_KEY = "default_probe_key"
+    _GET_DEFAULT_EXPECTED = 123.456
+
     @pytest.fixture(scope="class")
     def scenario_name(self) -> str:
         return "persistency.default_values.get_default_value"
 
-    @pytest.fixture(scope="class")
-    def temp_dir(
-        self,
-        tmp_path_factory: pytest.TempPathFactory,
-        version: str,
-    ) -> Generator[Path, None, None]:
-        yield from temp_dir_common(tmp_path_factory, self.__class__.__name__, version)
 
     @pytest.fixture(scope="class")
     def defaults_file(self, temp_dir: Path) -> Path:
@@ -305,7 +308,7 @@ class TestGetDefaultValue(FitScenario):
         return create_kvs_defaults_file(
             temp_dir,
             1,
-            {_GET_DEFAULT_KEY: ("f64", _GET_DEFAULT_EXPECTED)},
+            {self._GET_DEFAULT_KEY: ("f64", self._GET_DEFAULT_EXPECTED)},
         )
 
     @pytest.fixture(scope="class")
@@ -329,21 +332,9 @@ class TestGetDefaultValue(FitScenario):
         assert results.return_code == ResultCode.SUCCESS
         snapshot = read_kvs_snapshot(temp_dir, 1)
         assert "result_key" in snapshot, "Probe key 'result_key' must be present in snapshot"
-        assert isclose(snapshot["result_key"]["v"], _GET_DEFAULT_EXPECTED, abs_tol=1e-4), (
-            f"Expected probe key value ≈ {_GET_DEFAULT_EXPECTED}, got {snapshot['result_key']['v']}"
+        assert isclose(snapshot["result_key"]["v"], self._GET_DEFAULT_EXPECTED, abs_tol=1e-4), (
+            f"Expected probe key value ≈ {self._GET_DEFAULT_EXPECTED}, got {snapshot['result_key']['v']}"
         )
-
-
-_SEL_KEY_COUNT = 6
-_SEL_DEFAULT_VALUE = 50.0
-
-
-def _sel_override_value(index: int) -> float:
-    """
-    Return the override value used by the selective_reset scenario for a given index.
-    Matches the value written by the scenario: 100.0 * (index + 1).
-    """
-    return 100.0 * (index + 1)
 
 
 @add_test_properties(
@@ -356,7 +347,7 @@ def _sel_override_value(index: int) -> float:
     test_type="requirements-based",
     derivation_technique="requirements-analysis",
 )
-class TestSelectiveReset(FitScenario):
+class TestSelectiveReset(PersistencyScenario):
     """
     Verify selective reset_key: even-indexed keys revert to absent (default),
     odd-indexed keys keep their override values.
@@ -367,17 +358,21 @@ class TestSelectiveReset(FitScenario):
     odd-indexed keys (1, 3, 5) must still hold their override values.
     """
 
+    _KEY_COUNT = 6
+    _DEFAULT_VALUE = 50.0
+
+    @staticmethod
+    def _override_value(index: int) -> float:
+        """
+        Return the override value written by the scenario for the given key index.
+        Matches the value computed by the scenario: 100.0 * (index + 1).
+        """
+        return 100.0 * (index + 1)
+
     @pytest.fixture(scope="class")
     def scenario_name(self) -> str:
         return "persistency.default_values.selective_reset"
 
-    @pytest.fixture(scope="class")
-    def temp_dir(
-        self,
-        tmp_path_factory: pytest.TempPathFactory,
-        version: str,
-    ) -> Generator[Path, None, None]:
-        yield from temp_dir_common(tmp_path_factory, self.__class__.__name__, version)
 
     @pytest.fixture(scope="class")
     def defaults_file(self, temp_dir: Path) -> Path:
@@ -385,7 +380,7 @@ class TestSelectiveReset(FitScenario):
         return create_kvs_defaults_file(
             temp_dir,
             1,
-            {f"sel_key_{i}": ("f64", _SEL_DEFAULT_VALUE) for i in range(_SEL_KEY_COUNT)},
+            {f"sel_key_{i}": ("f64", self._DEFAULT_VALUE) for i in range(self._KEY_COUNT)},
         )
 
     @pytest.fixture(scope="class")
@@ -407,24 +402,20 @@ class TestSelectiveReset(FitScenario):
         """
         assert results.return_code == ResultCode.SUCCESS
         snapshot = read_kvs_snapshot(temp_dir, 1)
-        for i in range(_SEL_KEY_COUNT):
+        for i in range(self._KEY_COUNT):
             key = f"sel_key_{i}"
             if i % 2 == 0:
                 assert key not in snapshot, f"Even key '{key}' must be absent after reset_key"
             else:
                 assert key in snapshot, f"Odd key '{key}' must be present with override"
-                assert isclose(snapshot[key]["v"], _sel_override_value(i), abs_tol=1e-4), (
-                    f"Expected {key} ≈ {_sel_override_value(i)}, got {snapshot[key]['v']}"
+                assert isclose(snapshot[key]["v"], self._override_value(i), abs_tol=1e-4), (
+                    f"Expected {key} ≈ {self._override_value(i)}, got {snapshot[key]['v']}"
                 )
 
 
 # ---------------------------------------------------------------------------
 # Full reset: reset() clears all keys; subsequent writes persist correctly
 # ---------------------------------------------------------------------------
-
-_FR_KEY_COUNT = 4
-_FR_NEW_KEYS = ("fr_new_0", "fr_new_1")
-_FR_NEW_VALUES = (10.0, 20.0)
 
 
 @add_test_properties(
@@ -437,7 +428,7 @@ _FR_NEW_VALUES = (10.0, 20.0)
     test_type="requirements-based",
     derivation_technique="requirements-analysis",
 )
-class TestFullReset(FitScenario):
+class TestFullReset(PersistencyScenario):
     """
     Verify that reset() clears all previously written keys from storage
     and that keys written after reset() are correctly persisted.
@@ -453,17 +444,14 @@ class TestFullReset(FitScenario):
     "individual key or all keys" phrase in the requirement.
     """
 
+    _KEY_COUNT = 4
+    _NEW_KEYS = ("fr_new_0", "fr_new_1")
+    _NEW_VALUES = (10.0, 20.0)
+
     @pytest.fixture(scope="class")
     def scenario_name(self) -> str:
         return "persistency.default_values.full_reset"
 
-    @pytest.fixture(scope="class")
-    def temp_dir(
-        self,
-        tmp_path_factory: pytest.TempPathFactory,
-        version: str,
-    ) -> Generator[Path, None, None]:
-        yield from temp_dir_common(tmp_path_factory, self.__class__.__name__, version)
 
     @pytest.fixture(scope="class")
     def defaults_file(self, temp_dir: Path) -> Path:
@@ -471,7 +459,7 @@ class TestFullReset(FitScenario):
         return create_kvs_defaults_file(
             temp_dir,
             1,
-            {f"fr_key_{i}": ("f64", 50.0) for i in range(_FR_KEY_COUNT)},
+            {f"fr_key_{i}": ("f64", 50.0) for i in range(self._KEY_COUNT)},
         )
 
     @pytest.fixture(scope="class")
@@ -493,7 +481,7 @@ class TestFullReset(FitScenario):
         """
         assert results.return_code == ResultCode.SUCCESS
         snapshot = read_kvs_snapshot(temp_dir, 1)
-        for i in range(_FR_KEY_COUNT):
+        for i in range(self._KEY_COUNT):
             key = f"fr_key_{i}"
             assert key not in snapshot, f"Initial key '{key}' must be absent after reset()"
 
@@ -504,7 +492,7 @@ class TestFullReset(FitScenario):
         """
         assert results.return_code == ResultCode.SUCCESS
         snapshot = read_kvs_snapshot(temp_dir, 1)
-        for key, expected in zip(_FR_NEW_KEYS, _FR_NEW_VALUES):
+        for key, expected in zip(self._NEW_KEYS, self._NEW_VALUES):
             assert key in snapshot, f"Post-reset key '{key}' must be present in snapshot"
             assert isclose(snapshot[key]["v"], expected, abs_tol=1e-4), (
                 f"Expected {key} ≈ {expected}, got {snapshot[key]['v']}"

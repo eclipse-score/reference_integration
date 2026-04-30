@@ -67,6 +67,13 @@ void ResetToDefault::run(const std::string& input) const {
             throw std::runtime_error("Failed to remove key");
         }
 
+        // Log the default value reported by KVS after reset so Python can assert it.
+        auto default_val = kvs->get_value_f64(key_to_reset);
+        if (!default_val.has_value()) {
+            throw std::runtime_error("Failed to read default value after reset for 'key2'");
+        }
+        std::cout << "default key=key2 value=" << default_val.value() << "\n";
+
         // Flush to persist: key1 and key3 with overrides, key2 absent
         if (!kvs->flush()) {
             throw std::runtime_error("Failed to flush KVS");

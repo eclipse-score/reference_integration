@@ -14,6 +14,7 @@ use crate::internals::persistency::{kvs_instance::kvs_instance, kvs_parameters::
 use rust_kvs::prelude::*;
 use serde_json::Value;
 use test_scenarios_rust::scenario::{Scenario, ScenarioGroup, ScenarioGroupImpl};
+use tracing::info;
 
 fn parse_params(input: &str) -> Result<KvsParameters, String> {
     let v: Value = serde_json::from_str(input).map_err(|e| e.to_string())?;
@@ -59,6 +60,15 @@ impl Scenario for PartialOverride {
         kvs.set_value("partial_key_1", 999.0_f64)
             .map_err(|e| format!("{e:?}"))?;
         kvs.flush().map_err(|e| format!("{e:?}"))?;
+        // Log default values for key_0 and key_2 so Python can assert they are accessible.
+        let val0: f64 = kvs
+            .get_value_as("partial_key_0")
+            .map_err(|e| format!("Failed to read default partial_key_0: {e:?}"))?;
+        let val2: f64 = kvs
+            .get_value_as("partial_key_2")
+            .map_err(|e| format!("Failed to read default partial_key_2: {e:?}"))?;
+        info!(key = "partial_key_0", value = val0, source = "default");
+        info!(key = "partial_key_2", value = val2, source = "default");
         Ok(())
     }
 }
