@@ -300,7 +300,6 @@ class TestGetDefaultValue(PersistencyScenario):
     in this suite that fully exercises feat_req__persistency__default_value_get.
     """
 
-    _GET_DEFAULT_KEY = "default_probe_key"
     _GET_DEFAULT_EXPECTED = 123.456
 
     @pytest.fixture(scope="class")
@@ -313,7 +312,7 @@ class TestGetDefaultValue(PersistencyScenario):
         return create_kvs_defaults_file(
             temp_dir,
             1,
-            {self._GET_DEFAULT_KEY: ("f64", self._GET_DEFAULT_EXPECTED)},
+            {"default_probe_key": ("f64", self._GET_DEFAULT_EXPECTED)},
         )
 
     @pytest.fixture(scope="class")
@@ -416,6 +415,19 @@ class TestSelectiveReset(PersistencyScenario):
                     f"Expected {key} ≈ {self._override_value(i)}, got {snapshot[key]['v']}"
                 )
 
+    def test_reset_key_returns_default(self, results: ScenarioResult, logs_info_level: Any) -> None:
+        """
+        Verify that after reset_key on sel_key_0, KVS still reports its default value
+        via get_value — confirming the key was reset to default rather than deleted.
+        Checks structured log fields emitted by the scenario after reset_key.
+        """
+        assert results.return_code == ResultCode.SUCCESS
+        log = logs_info_level.find_log("key", value="sel_key_0")
+        assert log is not None, "Expected log entry for sel_key_0 default value after reset_key"
+        assert isclose(float(log.value), self._DEFAULT_VALUE, abs_tol=1e-4), (
+            f"Expected sel_key_0 default ≈ {self._DEFAULT_VALUE}, got {log.value}"
+        )
+
 
 # ---------------------------------------------------------------------------
 # Full reset: reset() clears all keys; subsequent writes persist correctly
@@ -501,6 +513,17 @@ class TestFullReset(PersistencyScenario):
                 f"Expected {key} ≈ {expected}, got {snapshot[key]['v']}"
             )
 
+    def test_full_reset_key_returns_default(self, results: ScenarioResult, logs_info_level: Any) -> None:
+        """
+        Verify that after reset(), fr_key_0 still returns its default value via
+        get_value — confirming reset() reverts keys to defaults rather than deleting them.
+        Checks structured log fields emitted by the scenario after reset().
+        """
+        assert results.return_code == ResultCode.SUCCESS
+        log = logs_info_level.find_log("key", value="fr_key_0")
+        assert log is not None, "Expected log entry for fr_key_0 default value after reset()"
+        assert isclose(float(log.value), 50.0, abs_tol=1e-4), f"Expected fr_key_0 default ≈ 50.0, got {log.value}"
+
 
 # ---------------------------------------------------------------------------
 # Optional mode without defaults file: graceful degradation
@@ -537,6 +560,8 @@ class TestOptionalModeWithoutDefaults(DefaultValuesParityScenario):
     def scenario_name(self) -> str:
         return "persistency.default_values.checksum"
 
+    def test_optional_mode_succeeds(self, results: ScenarioResult) -> None:
+        """Verify KVS initialises and completes successfully without a defaults file."""
         assert results.return_code == ResultCode.SUCCESS
 
 
@@ -615,3 +640,22 @@ class TestMultiInstanceDefaultIsolation(FitScenario):
         snapshot2 = read_kvs_snapshot(temp_dir, 2)
         assert "key_b" in snapshot2, "key_b must be present in instance 2 snapshot"
         assert "key_a" not in snapshot2, "key_a must not leak from instance 1 defaults into instance 2 snapshot"
+
+    def test_default_isolation_via_logs(self, results: ScenarioResult, logs_info_level: Any) -> None:
+        """
+        Verify that each instance's own default value is accessible and the
+        other instance's default key is not, as confirmed by structured log entries
+        emitted by the scenario before override writes.
+
+        Instance 1 logs key_a with default value 1.0.
+        Instance 2 logs key_b with default value 2.0.
+        If either instance had cross-leaked defaults, the scenario would have
+        terminated with a non-zero exit code (isolation guard in scenario code).
+        """
+        assert results.return_code == ResultCode.SUCCESS
+        log_a = logs_info_level.find_log("key", value="key_a")
+        assert log_a is not None, "Expected log entry for key_a default from instance 1"
+        assert isclose(float(log_a.value), 1.0, abs_tol=1e-4), f"Expected key_a default ≈ 1.0, got {log_a.value}"
+        log_b = logs_info_level.find_log("key", value="key_b")
+        assert log_b is not None, "Expected log entry for key_b default from instance 2"
+        assert isclose(float(log_b.value), 2.0, abs_tol=1e-4), f"Expected key_b default ≈ 2.0, got {log_b.value}"

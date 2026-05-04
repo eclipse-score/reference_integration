@@ -130,6 +130,12 @@ impl Scenario for SelectiveReset {
             kvs.reset_key(&keys[i]).map_err(|e| format!("{e:?}"))?;
         }
         kvs.flush().map_err(|e| format!("{e:?}"))?;
+
+        // Log default for sel_key_0 after reset_key — confirms key returns to its default value.
+        let default_val: f64 = kvs
+            .get_value_as(&keys[0])
+            .map_err(|e| format!("Failed to read default after reset for sel_key_0: {e:?}"))?;
+        info!(key = "sel_key_0", value = default_val, source = "default_after_reset");
         Ok(())
     }
 }
@@ -162,6 +168,13 @@ impl Scenario for FullReset {
 
         // Phase 2: reset ALL keys, write two new keys, flush.
         kvs.reset().map_err(|e| format!("{e:?}"))?;
+
+        // Log default for fr_key_0 after reset — confirms key returns to its default value.
+        let default_val: f64 = kvs
+            .get_value_as("fr_key_0")
+            .map_err(|e| format!("Failed to read default after reset for fr_key_0: {e:?}"))?;
+        info!(key = "fr_key_0", value = default_val, source = "default_after_reset");
+
         kvs.set_value("fr_new_0", 10.0_f64).map_err(|e| format!("{e:?}"))?;
         kvs.set_value("fr_new_1", 20.0_f64).map_err(|e| format!("{e:?}"))?;
         kvs.flush().map_err(|e| format!("{e:?}"))?;

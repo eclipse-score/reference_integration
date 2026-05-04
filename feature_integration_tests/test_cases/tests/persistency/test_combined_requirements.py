@@ -164,33 +164,24 @@ class TestPartialOverrideSnapshot(PersistencyScenario):
         assert "partial_key_0" not in snapshot, "Default-only key partial_key_0 must be absent from snapshot"
         assert "partial_key_2" not in snapshot, "Default-only key partial_key_2 must be absent from snapshot"
 
-    def test_default_values_accessible(self, results: ScenarioResult, logs_info_level: Any, version: str) -> None:
+    def test_default_values_accessible(self, results: ScenarioResult, logs_info_level: Any) -> None:
         """
         Verify that the default values for partial_key_0 and partial_key_2 are
         accessible via get_value even though they were never explicitly written.
 
-        For Rust: checks structured log fields logged by the scenario after flush.
-        For C++: checks stdout output printed by the scenario after flush.
+        Checks structured log fields emitted by the scenario after flush.
         """
         assert results.return_code == ResultCode.SUCCESS
-        if version == "rust":
-            log0 = logs_info_level.find_log("key", value="partial_key_0")
-            assert log0 is not None, "Expected log entry for default partial_key_0"
-            assert isclose(float(log0.value), self._DEFAULT_VALUE, abs_tol=1e-4), (
-                f"Expected partial_key_0 default ≈ {self._DEFAULT_VALUE}, got {log0.value}"
-            )
-            log2 = logs_info_level.find_log("key", value="partial_key_2")
-            assert log2 is not None, "Expected log entry for default partial_key_2"
-            assert isclose(float(log2.value), self._DEFAULT_VALUE, abs_tol=1e-4), (
-                f"Expected partial_key_2 default ≈ {self._DEFAULT_VALUE}, got {log2.value}"
-            )
-        else:
-            assert f"default key=partial_key_0 value={self._DEFAULT_VALUE}" in results.stdout, (
-                f"Expected stdout to contain default partial_key_0={self._DEFAULT_VALUE}"
-            )
-            assert f"default key=partial_key_2 value={self._DEFAULT_VALUE}" in results.stdout, (
-                f"Expected stdout to contain default partial_key_2={self._DEFAULT_VALUE}"
-            )
+        log0 = logs_info_level.find_log("key", value="partial_key_0")
+        assert log0 is not None, "Expected log entry for default partial_key_0"
+        assert isclose(float(log0.value), self._DEFAULT_VALUE, abs_tol=1e-4), (
+            f"Expected partial_key_0 default ≈ {self._DEFAULT_VALUE}, got {log0.value}"
+        )
+        log2 = logs_info_level.find_log("key", value="partial_key_2")
+        assert log2 is not None, "Expected log entry for default partial_key_2"
+        assert isclose(float(log2.value), self._DEFAULT_VALUE, abs_tol=1e-4), (
+            f"Expected partial_key_2 default ≈ {self._DEFAULT_VALUE}, got {log2.value}"
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -285,25 +276,20 @@ class TestUtf8KeysWithDefaults(PersistencyScenario):
             f"Default-only Greek key '{self._KEY_GREEK}' must be absent from snapshot"
         )
 
-    def test_utf8_default_values_accessible(self, results: ScenarioResult, logs_info_level: Any, version: str) -> None:
+    def test_utf8_default_values_accessible(self, results: ScenarioResult, logs_info_level: Any) -> None:
         """
         Verify that default values behind UTF-8 ASCII and Greek keys are accessible
         via get_value even though they were never explicitly written.
 
-        For Rust: checks structured log fields emitted by the scenario after flush.
-        For C++: checks stdout output printed by the scenario after flush.
+        Checks structured log fields emitted by the scenario after flush.
         """
         assert results.return_code == ResultCode.SUCCESS
-        if version == "rust":
-            log_ascii = logs_info_level.find_log("key", value="utf8_ascii_key")
-            assert log_ascii is not None, "Expected log entry for default utf8_ascii_key"
-            assert isclose(float(log_ascii.value), self._DEFAULT_VALUE, abs_tol=1e-4)
-            log_greek = logs_info_level.find_log("key", value="utf8_greek κλμ")
-            assert log_greek is not None, "Expected log entry for default utf8_greek κλμ"
-            assert isclose(float(log_greek.value), self._DEFAULT_VALUE, abs_tol=1e-4)
-        else:
-            assert f"default key=utf8_ascii_key value={self._DEFAULT_VALUE}" in results.stdout
-            assert f"default key=utf8_greek κλμ value={self._DEFAULT_VALUE}" in results.stdout
+        log_ascii = logs_info_level.find_log("key", value="utf8_ascii_key")
+        assert log_ascii is not None, "Expected log entry for default utf8_ascii_key"
+        assert isclose(float(log_ascii.value), self._DEFAULT_VALUE, abs_tol=1e-4)
+        log_greek = logs_info_level.find_log("key", value="utf8_greek κλμ")
+        assert log_greek is not None, "Expected log entry for default utf8_greek κλμ"
+        assert isclose(float(log_greek.value), self._DEFAULT_VALUE, abs_tol=1e-4)
 
 
 # ---------------------------------------------------------------------------

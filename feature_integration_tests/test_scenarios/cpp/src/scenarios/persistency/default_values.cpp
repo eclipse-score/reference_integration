@@ -11,12 +11,11 @@
 // SPDX-License-Identifier: Apache-2.0
 // *******************************************************************************
 
+#include "../../internals/persistency/kvs_build_helpers.h"
 #include "../../internals/persistency/kvs_instance.h"
-#include "kvs_build_helpers.h"
 
 #include <scenario.hpp>
 
-#include <iostream>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -86,8 +85,12 @@ public:
         if (!val2.has_value()) {
             throw std::runtime_error{"Failed to read default value for 'partial_key_2'"};
         }
-        std::cout << "default key=partial_key_0 value=" << kvs_build_helpers::format_double_python(val0.value()) << "\n";
-        std::cout << "default key=partial_key_2 value=" << kvs_build_helpers::format_double_python(val2.value()) << "\n";
+        kvs_build_helpers::log_info(
+            "\"key\":\"partial_key_0\",\"value\":" + kvs_build_helpers::format_double_python(val0.value()),
+            "cpp_test_scenarios::scenarios::persistency::default_values");
+        kvs_build_helpers::log_info(
+            "\"key\":\"partial_key_2\",\"value\":" + kvs_build_helpers::format_double_python(val2.value()),
+            "cpp_test_scenarios::scenarios::persistency::default_values");
 
         KvsInstance::normalize_snapshot_file_to_rust_envelope(params);
     }
@@ -141,32 +144,45 @@ public:
     void run(const std::string& input) const final {
         const int num_keys{6};
         auto params{KvsParameters::from_json_section(input, "kvs_parameters_1")};
-        auto kvs{create_kvs(params)};
+        auto kvs_opt{KvsInstance::create(params)};
+        if (!kvs_opt) {
+            throw std::runtime_error{"Failed to create KVS instance"};
+        }
+        auto kvs{*kvs_opt};
 
         std::vector<std::string> keys;
         for (int i{0}; i < num_keys; ++i) {
             std::string key{"sel_key_" + std::to_string(i)};
-            if (!kvs.set_value(key, KvsValue{100.0 * (i + 1)})) {
+            if (!kvs->set_value(key, 100.0 * (i + 1))) {
                 throw std::runtime_error{"Failed to set value"};
             }
             keys.push_back(key);
         }
 
-        if (!kvs.flush()) {
+        if (!kvs->flush()) {
             throw std::runtime_error{"Failed to flush after set"};
         }
 
         // Reset even-indexed keys (0, 2, 4); odd-indexed keep their overrides.
         for (int i{0}; i < num_keys; i += 2) {
-            if (!kvs.reset_key(keys[i])) {
+            if (!kvs->reset_key(keys[i])) {
                 throw std::runtime_error{"Failed to reset key: " + keys[i]};
             }
         }
 
-        if (!kvs.flush()) {
+        if (!kvs->flush()) {
             throw std::runtime_error{"Failed to flush after reset"};
         }
 
+        // Log default for sel_key_0 after reset_key — confirms key returns to its default value.
+        auto default_val{kvs->get_value_f64(keys[0])};
+        if (!default_val.has_value()) {
+            throw std::runtime_error{"Failed to read default after reset for sel_key_0"};
+        }
+        kvs_build_helpers::log_info(
+            "\"key\":\"sel_key_0\",\"value\":" + kvs_build_helpers::format_double_python(default_val.value()) +
+                ",\"source\":\"default_after_reset\"",
+            "cpp_test_scenarios::scenarios::persistency::default_values");
         KvsInstance::normalize_snapshot_file_to_rust_envelope(params);
     }
 };
@@ -185,30 +201,45 @@ public:
 
     void run(const std::string& input) const final {
         auto params{KvsParameters::from_json_section(input, "kvs_parameters_1")};
-        auto kvs{create_kvs(params)};
+        auto kvs_opt{KvsInstance::create(params)};
+        if (!kvs_opt) {
+            throw std::runtime_error{"Failed to create KVS instance"};
+        }
+        auto kvs{*kvs_opt};
 
         // Phase 1: write four initial keys and flush.
         for (int i{0}; i < 4; ++i) {
             std::string key{"fr_key_" + std::to_string(i)};
-            if (!kvs.set_value(key, KvsValue{100.0 * (i + 1)})) {
+            if (!kvs->set_value(key, 100.0 * (i + 1))) {
                 throw std::runtime_error{"Failed to set initial value for " + key};
             }
         }
-        if (!kvs.flush()) {
+        if (!kvs->flush()) {
             throw std::runtime_error{"Failed to flush after initial set"};
         }
 
-        // Phase 2: reset ALL keys, write two new keys, flush.
-        if (!kvs.reset()) {
+        // Phase 2: reset ALL keys.
+        if (!kvs->reset()) {
             throw std::runtime_error{"Failed to reset all keys"};
         }
-        if (!kvs.set_value("fr_new_0", KvsValue{10.0})) {
+
+        // Log default for fr_key_0 after reset — confirms key returns to its default value.
+        auto default_val{kvs->get_value_f64("fr_key_0")};
+        if (!default_val.has_value()) {
+            throw std::runtime_error{"Failed to read default after reset for fr_key_0"};
+        }
+        kvs_build_helpers::log_info(
+            "\"key\":\"fr_key_0\",\"value\":" + kvs_build_helpers::format_double_python(default_val.value()) +
+                ",\"source\":\"default_after_reset\"",
+            "cpp_test_scenarios::scenarios::persistency::default_values");
+
+        if (!kvs->set_value("fr_new_0", 10.0)) {
             throw std::runtime_error{"Failed to set fr_new_0"};
         }
-        if (!kvs.set_value("fr_new_1", KvsValue{20.0})) {
+        if (!kvs->set_value("fr_new_1", 20.0)) {
             throw std::runtime_error{"Failed to set fr_new_1"};
         }
-        if (!kvs.flush()) {
+        if (!kvs->flush()) {
             throw std::runtime_error{"Failed to flush after reset"};
         }
         KvsInstance::normalize_snapshot_file_to_rust_envelope(params);

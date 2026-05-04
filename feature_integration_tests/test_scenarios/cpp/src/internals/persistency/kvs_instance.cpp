@@ -239,37 +239,6 @@ bool KvsInstance::set_value(const std::string& key, double value) {
     return static_cast<bool>(result);
 }
 
-bool KvsInstance::set_value(const std::string& key, int32_t value) {
-    auto result = kvs_.set_value(key, score::mw::per::kvs::KvsValue{value});
-    return static_cast<bool>(result);
-}
-
-bool KvsInstance::set_value(const std::string& key, int64_t value) {
-    auto result = kvs_.set_value(key, score::mw::per::kvs::KvsValue{value});
-    return static_cast<bool>(result);
-}
-
-bool KvsInstance::set_value(const std::string& key, uint32_t value) {
-    auto result = kvs_.set_value(key, score::mw::per::kvs::KvsValue{value});
-    return static_cast<bool>(result);
-}
-
-bool KvsInstance::set_value(const std::string& key, uint64_t value) {
-    auto result = kvs_.set_value(key, score::mw::per::kvs::KvsValue{value});
-    return static_cast<bool>(result);
-}
-
-bool KvsInstance::set_value(const std::string& key, bool value) {
-    // C++ KVS API may not have bool type, use int32_t as fallback
-    auto result = kvs_.set_value(key, score::mw::per::kvs::KvsValue{static_cast<int32_t>(value ? 1 : 0)});
-    return static_cast<bool>(result);
-}
-
-bool KvsInstance::set_value(const std::string& key, const std::string& value) {
-    auto result = kvs_.set_value(key, score::mw::per::kvs::KvsValue{value});
-    return static_cast<bool>(result);
-}
-
 std::optional<double> KvsInstance::get_value(const std::string& key) {
     auto result = kvs_.get_value(key);
     if (!result) {
@@ -294,58 +263,6 @@ std::optional<double> KvsInstance::get_value(const std::string& key) {
     }
 }
 
-std::optional<int32_t> KvsInstance::get_value_i32(const std::string& key) {
-    auto result = kvs_.get_value(key);
-    if (!result) {
-        return std::nullopt;
-    }
-
-    const auto& stored = result.value();
-    if (stored.getType() != score::mw::per::kvs::KvsValue::Type::i32) {
-        return std::nullopt;
-    }
-    return std::get<int32_t>(stored.getValue());
-}
-
-std::optional<int64_t> KvsInstance::get_value_i64(const std::string& key) {
-    auto result = kvs_.get_value(key);
-    if (!result) {
-        return std::nullopt;
-    }
-
-    const auto& stored = result.value();
-    if (stored.getType() != score::mw::per::kvs::KvsValue::Type::i64) {
-        return std::nullopt;
-    }
-    return std::get<int64_t>(stored.getValue());
-}
-
-std::optional<uint32_t> KvsInstance::get_value_u32(const std::string& key) {
-    auto result = kvs_.get_value(key);
-    if (!result) {
-        return std::nullopt;
-    }
-
-    const auto& stored = result.value();
-    if (stored.getType() != score::mw::per::kvs::KvsValue::Type::u32) {
-        return std::nullopt;
-    }
-    return std::get<uint32_t>(stored.getValue());
-}
-
-std::optional<uint64_t> KvsInstance::get_value_u64(const std::string& key) {
-    auto result = kvs_.get_value(key);
-    if (!result) {
-        return std::nullopt;
-    }
-
-    const auto& stored = result.value();
-    if (stored.getType() != score::mw::per::kvs::KvsValue::Type::u64) {
-        return std::nullopt;
-    }
-    return std::get<uint64_t>(stored.getValue());
-}
-
 std::optional<double> KvsInstance::get_value_f64(const std::string& key) {
     auto result = kvs_.get_value(key);
     if (!result) {
@@ -357,81 +274,6 @@ std::optional<double> KvsInstance::get_value_f64(const std::string& key) {
         return std::nullopt;
     }
     return std::get<double>(stored.getValue());
-}
-
-std::optional<bool> KvsInstance::get_value_bool(const std::string& key) {
-    auto result = kvs_.get_value(key);
-    if (!result) {
-        return std::nullopt;
-    }
-
-    const auto& stored = result.value();
-    // NOTE: This method retrieves bool values stored via KvsInstance::set_value(bool),
-    // which encodes booleans as i32 (1/0). Values written directly via the raw KVS
-    // API using KvsValue(true) may carry a native bool type tag and will not be returned.
-    if (stored.getType() != score::mw::per::kvs::KvsValue::Type::i32) {
-        return std::nullopt;
-    }
-    return std::get<int32_t>(stored.getValue()) != 0;
-}
-
-std::optional<std::string> KvsInstance::get_value_string(const std::string& key) {
-    auto result = kvs_.get_value(key);
-    if (!result) {
-        return std::nullopt;
-    }
-
-    const auto& stored = result.value();
-    if (stored.getType() != score::mw::per::kvs::KvsValue::Type::String) {
-        return std::nullopt;
-    }
-    return std::get<std::string>(stored.getValue());
-}
-
-std::optional<bool> KvsInstance::is_value_default(const std::string& key) {
-    // The native is_value_default() API is not available in the current pinned
-    // version of the persistency C++ library (kvs.hpp commit 438bf9b).
-    // We synthesize the result using has_default_value() + get_default_value() +
-    // get_value() and a value comparison.
-    auto has_default = kvs_.has_default_value(key);
-    if (!has_default) {
-        return std::nullopt;
-    }
-    if (!has_default.value()) {
-        return false;
-    }
-
-    auto default_val = kvs_.get_default_value(key);
-    auto current_val = kvs_.get_value(key);
-    if (!default_val || !current_val) {
-        return std::nullopt;
-    }
-
-    const auto& dv = default_val.value();
-    const auto& cv = current_val.value();
-    if (dv.getType() != cv.getType()) {
-        return false;
-    }
-    switch (dv.getType()) {
-        case score::mw::per::kvs::KvsValue::Type::f64: {
-            const double d = std::get<double>(dv.getValue());
-            const double c = std::get<double>(cv.getValue());
-            return std::fabs(d - c) <= 1e-5;
-        }
-        case score::mw::per::kvs::KvsValue::Type::i32:
-            return std::get<int32_t>(dv.getValue()) == std::get<int32_t>(cv.getValue());
-        case score::mw::per::kvs::KvsValue::Type::u32:
-            return std::get<uint32_t>(dv.getValue()) == std::get<uint32_t>(cv.getValue());
-        case score::mw::per::kvs::KvsValue::Type::i64:
-            return std::get<int64_t>(dv.getValue()) == std::get<int64_t>(cv.getValue());
-        case score::mw::per::kvs::KvsValue::Type::u64:
-            return std::get<uint64_t>(dv.getValue()) == std::get<uint64_t>(cv.getValue());
-        case score::mw::per::kvs::KvsValue::Type::String:
-            return std::get<std::string>(dv.getValue()) == std::get<std::string>(cv.getValue());
-        default:
-            // arr, obj, null, and native bool types are not supported by this helper.
-            return std::nullopt;
-    }
 }
 
 bool KvsInstance::remove_key(const std::string& key) {

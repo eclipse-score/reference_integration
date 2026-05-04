@@ -11,6 +11,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // *******************************************************************************
 
+#include "../../internals/persistency/kvs_build_helpers.h"
 #include "../../internals/persistency/kvs_instance.h"
 
 #include <scenario.hpp>
@@ -57,6 +58,23 @@ public:
             throw std::runtime_error("Failed to create KVS instance 1");
         }
         auto kvs1 = *kvs1_opt;
+
+        // Log instance 1's own default (key_a) — proves default was loaded for instance 1.
+        auto val_a = kvs1->get_value_f64("key_a");
+        if (!val_a.has_value()) {
+            throw std::runtime_error("Instance 1 should have key_a default but it is not accessible");
+        }
+        kvs_build_helpers::log_info(
+            "\"instance\":\"1\",\"key\":\"key_a\",\"value\":" + kvs_build_helpers::format_double_python(val_a.value()) +
+                ",\"source\":\"default\"",
+            "cpp_test_scenarios::scenarios::persistency::multi_instance_isolation");
+
+        // Confirm key_b is NOT accessible from instance 1 (isolation check).
+        auto cross_a = kvs1->get_value_f64("key_b");
+        if (cross_a.has_value()) {
+            throw std::runtime_error("Isolation broken: instance 1 can access key_b from instance 2 defaults");
+        }
+
         if (!kvs1->set_value("key_a", 11.0)) {
             throw std::runtime_error("Failed to set key_a on instance 1");
         }
@@ -73,6 +91,23 @@ public:
             throw std::runtime_error("Failed to create KVS instance 2");
         }
         auto kvs2 = *kvs2_opt;
+
+        // Log instance 2's own default (key_b) — proves default was loaded for instance 2.
+        auto val_b = kvs2->get_value_f64("key_b");
+        if (!val_b.has_value()) {
+            throw std::runtime_error("Instance 2 should have key_b default but it is not accessible");
+        }
+        kvs_build_helpers::log_info(
+            "\"instance\":\"2\",\"key\":\"key_b\",\"value\":" + kvs_build_helpers::format_double_python(val_b.value()) +
+                ",\"source\":\"default\"",
+            "cpp_test_scenarios::scenarios::persistency::multi_instance_isolation");
+
+        // Confirm key_a is NOT accessible from instance 2 (isolation check).
+        auto cross_b = kvs2->get_value_f64("key_a");
+        if (cross_b.has_value()) {
+            throw std::runtime_error("Isolation broken: instance 2 can access key_a from instance 1 defaults");
+        }
+
         if (!kvs2->set_value("key_b", 22.0)) {
             throw std::runtime_error("Failed to set key_b on instance 2");
         }

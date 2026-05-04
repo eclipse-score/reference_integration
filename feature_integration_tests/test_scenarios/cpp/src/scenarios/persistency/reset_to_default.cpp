@@ -11,12 +11,11 @@
 // SPDX-License-Identifier: Apache-2.0
 // *******************************************************************************
 
+#include "../../internals/persistency/kvs_build_helpers.h"
 #include "../../internals/persistency/kvs_instance.h"
-#include "kvs_build_helpers.h"
 
 #include <scenario.hpp>
 
-#include <iostream>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -43,47 +42,45 @@ std::string ResetToDefault::name() const {
 }
 
 void ResetToDefault::run(const std::string& input) const {
-    // Parse parameters
     KvsParameters params = KvsParameters::from_json_section(input, "kvs_parameters_1");
     const TestInput test_input;
 
-    // Create KVS with Optional mode - defaults should be loaded
-    {
-        auto kvs_opt = KvsInstance::create(params);
-        if (!kvs_opt) {
-            throw std::runtime_error("Failed to create KVS instance");
-        }
-        auto kvs = *kvs_opt;
+    auto kvs_opt = KvsInstance::create(params);
+    if (!kvs_opt) {
+        throw std::runtime_error("Failed to create KVS instance");
+    }
+    auto kvs = *kvs_opt;
 
-        // Override all keys with new values
-        for (size_t i = 0; i < test_input.keys.size(); ++i) {
-            if (!kvs->set_value(test_input.keys[i], test_input.override_values[i])) {
-                throw std::runtime_error("Failed to override value");
-            }
+    // Override all keys with new values
+    for (size_t i = 0; i < test_input.keys.size(); ++i) {
+        if (!kvs->set_value(test_input.keys[i], test_input.override_values[i])) {
+            throw std::runtime_error("Failed to override value");
         }
+    }
 
-        // Reset key2 (index 1) using remove_key — reverts to default in memory
-        const auto& key_to_reset = test_input.keys[1];
-        if (!kvs->remove_key(key_to_reset)) {
-            throw std::runtime_error("Failed to remove key");
-        }
+    // Reset key2 (index 1) using remove_key — reverts to default in memory
+    const auto& key_to_reset = test_input.keys[1];
+    if (!kvs->remove_key(key_to_reset)) {
+        throw std::runtime_error("Failed to remove key");
+    }
 
-        // Log the default value reported by KVS after reset so Python can assert it.
-        auto default_val = kvs->get_value_f64(key_to_reset);
-        if (!default_val.has_value()) {
-            throw std::runtime_error("Failed to read default value after reset for 'key2'");
-        }
-        std::cout << "default key=key2 value=" << kvs_build_helpers::format_double_python(default_val.value()) << "\n";
+    // Log the default value reported by KVS after reset so Python can assert it.
+    auto default_val = kvs->get_value_f64(key_to_reset);
+    if (!default_val.has_value()) {
+        throw std::runtime_error("Failed to read default value after reset for 'key2'");
+    }
+    kvs_build_helpers::log_info(
+        "\"key\":\"key2\",\"value\":" + kvs_build_helpers::format_double_python(default_val.value()) +
+            ",\"source\":\"default_after_reset\"",
+        "cpp_test_scenarios::scenarios::persistency::reset_to_default");
 
-        // Flush to persist: key1 and key3 with overrides, key2 absent
-        if (!kvs->flush()) {
-            throw std::runtime_error("Failed to flush KVS");
-        }
+    // Flush to persist: key1 and key3 with overrides, key2 absent
+    if (!kvs->flush()) {
+        throw std::runtime_error("Failed to flush KVS");
+    }
 
-        // Normalize snapshot file for Python assertion
-        if (!KvsInstance::normalize_snapshot_file_to_rust_envelope(params)) {
-            std::cerr << "Warning: Failed to normalize snapshot file" << std::endl;
-        }
+    if (!KvsInstance::normalize_snapshot_file_to_rust_envelope(params)) {
+        std::cerr << "Warning: Failed to normalize snapshot file" << std::endl;
     }
 }
 

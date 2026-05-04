@@ -11,14 +11,16 @@
 // SPDX-License-Identifier: Apache-2.0
 // *******************************************************************************
 
-#ifndef FEATURE_INTEGRATION_TESTS_TEST_SCENARIOS_CPP_SRC_SCENARIOS_PERSISTENCY_KVS_BUILD_HELPERS_H_
-#define FEATURE_INTEGRATION_TESTS_TEST_SCENARIOS_CPP_SRC_SCENARIOS_PERSISTENCY_KVS_BUILD_HELPERS_H_
+#ifndef INTERNALS_PERSISTENCY_KVS_BUILD_HELPERS_H_
+#define INTERNALS_PERSISTENCY_KVS_BUILD_HELPERS_H_
 
-#include "../../internals/persistency/kvs_parameters.h"
+#include "kvs_parameters.h"
 
 #include <kvs.hpp>
 #include <kvsbuilder.hpp>
 
+#include <chrono>
+#include <iostream>
 #include <locale>
 #include <optional>
 #include <sstream>
@@ -26,6 +28,45 @@
 #include <string>
 
 namespace kvs_build_helpers {
+
+/**
+ * @brief Return the current UNIX timestamp as a decimal string (seconds).
+ *
+ * Used to populate the "timestamp" field in structured JSON log lines so that
+ * the C++ output matches the Rust tracing JSON shape expected by the FIT log
+ * filters.
+ *
+ * @return String containing the number of seconds since the UNIX epoch.
+ */
+inline std::string unix_seconds_string() {
+    const auto now = std::chrono::system_clock::now();
+    const auto secs =
+        std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch()).count();
+    return std::to_string(secs);
+}
+
+/**
+ * @brief Emit a structured JSON INFO log line to stdout.
+ *
+ * Matches the Rust tracing JSON format expected by the FIT LogContainer so
+ * that Python test assertions can use find_log() uniformly for both Rust and
+ * C++ scenarios.
+ *
+ * Example output:
+ * @code
+ * {"timestamp":"1234567890","level":"INFO","fields":{"key":"my_key","value":42.0},
+ *  "target":"cpp_test_scenarios::scenarios::persistency::my_module","threadId":"ThreadId(1)"}
+ * @endcode
+ *
+ * @param fields  JSON fragment for the "fields" object, e.g. @c "\"key\":\"x\",\"value\":1.0"
+ * @param target  Module target string embedded in the log line.
+ */
+inline void log_info(const std::string& fields, const std::string& target) {
+    std::cout << "{\"timestamp\":\"" << unix_seconds_string()
+              << "\",\"level\":\"INFO\",\"fields\":{" << fields
+              << "},\"target\":\"" << target
+              << "\",\"threadId\":\"ThreadId(1)\"}\n";
+}
 
 /**
  * @brief Format a double value to match Python's str(float) representation.
@@ -115,4 +156,4 @@ inline score::mw::per::kvs::Kvs create_kvs(const KvsParameters& params) {
 
 }  // namespace kvs_build_helpers
 
-#endif  // FEATURE_INTEGRATION_TESTS_TEST_SCENARIOS_CPP_SRC_SCENARIOS_PERSISTENCY_KVS_BUILD_HELPERS_H_
+#endif  // INTERNALS_PERSISTENCY_KVS_BUILD_HELPERS_H_

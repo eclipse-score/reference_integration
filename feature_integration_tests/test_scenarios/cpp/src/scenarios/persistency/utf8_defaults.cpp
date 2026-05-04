@@ -11,12 +11,11 @@
 // SPDX-License-Identifier: Apache-2.0
 // *******************************************************************************
 
+#include "../../internals/persistency/kvs_build_helpers.h"
 #include "../../internals/persistency/kvs_instance.h"
-#include "kvs_build_helpers.h"
 
 #include <scenario.hpp>
 
-#include <iostream>
 #include <stdexcept>
 #include <string>
 
@@ -63,8 +62,12 @@ public:
         if (!val_greek.has_value()) {
             throw std::runtime_error(u8"Failed to read default value for 'utf8_greek κλμ'");
         }
-        std::cout << "default key=utf8_ascii_key value=" << kvs_build_helpers::format_double_python(val_ascii.value()) << "\n";
-        std::cout << u8"default key=utf8_greek κλμ value=" << kvs_build_helpers::format_double_python(val_greek.value()) << "\n";
+        kvs_build_helpers::log_info(
+            "\"key\":\"utf8_ascii_key\",\"value\":" + kvs_build_helpers::format_double_python(val_ascii.value()),
+            "cpp_test_scenarios::scenarios::persistency::utf8_defaults");
+        kvs_build_helpers::log_info(
+            u8"\"key\":\"utf8_greek \u03ba\u03bb\u03bc\",\"value\":" + kvs_build_helpers::format_double_python(val_greek.value()),
+            "cpp_test_scenarios::scenarios::persistency::utf8_defaults");
 
         if (!KvsInstance::normalize_snapshot_file_to_rust_envelope(params)) {
             std::cerr << "Warning: Failed to normalize snapshot file" << std::endl;

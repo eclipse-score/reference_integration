@@ -11,8 +11,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // *******************************************************************************
 
+#include "../../internals/persistency/kvs_build_helpers.h"
 #include "../../internals/persistency/kvs_instance.h"
-#include "kvs_build_helpers.h"
 
 #include <scenario.hpp>
 
