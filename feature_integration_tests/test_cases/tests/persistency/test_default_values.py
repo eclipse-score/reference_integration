@@ -21,7 +21,12 @@ from zlib import adler32
 
 import pytest
 from fit_scenario import FitScenario, ResultCode, temp_dir_common
-from persistency_scenario import PersistencyScenario, create_kvs_defaults_file, read_kvs_snapshot
+from persistency_scenario import (
+    PersistencyScenario,
+    create_kvs_defaults_file,
+    read_kvs_snapshot,
+    verify_kvs_snapshot_hash,
+)
 from test_properties import add_test_properties
 from testing_utils import ScenarioResult
 
@@ -93,6 +98,11 @@ class TestDefaultValuesIgnored(PersistencyScenario):
         snapshot = read_kvs_snapshot(temp_dir, 1)
         assert self._DEFAULT_KEY in snapshot, f"Expected key '{self._DEFAULT_KEY}' in snapshot"
         assert isclose(snapshot[self._DEFAULT_KEY]["v"], self._OVERRIDE_VALUE, abs_tol=1e-5)
+
+    def test_snapshot_hash_matches_content(self, results: ScenarioResult, temp_dir: Path) -> None:
+        """Verify the hash file matches the Adler-32 of the snapshot JSON after normalization."""
+        assert results.return_code == ResultCode.SUCCESS
+        verify_kvs_snapshot_hash(temp_dir, instance_id=1, snapshot_id=0)
 
 
 class DefaultValuesParityScenario(FitScenario):
@@ -191,12 +201,7 @@ class TestDefaultValuesChecksum(DefaultValuesParityScenario):
         Both files are at the conventional paths derived from instance_id.
         """
         assert results.return_code == ResultCode.SUCCESS
-        kvs_path = temp_dir / "kvs_1_0.json"
-        hash_path = temp_dir / "kvs_1_0.hash"
-        assert kvs_path.exists(), "KVS snapshot file must exist"
-        assert hash_path.exists(), "KVS hash file must exist"
-        expected = adler32(kvs_path.read_bytes()).to_bytes(length=4, byteorder="big")
-        assert hash_path.read_bytes() == expected
+        verify_kvs_snapshot_hash(temp_dir, instance_id=1, snapshot_id=0)
 
 
 @add_test_properties(
@@ -340,6 +345,11 @@ class TestGetDefaultValue(PersistencyScenario):
             f"Expected probe key value ≈ {self._GET_DEFAULT_EXPECTED}, got {snapshot['result_key']['v']}"
         )
 
+    def test_snapshot_hash_matches_content(self, results: ScenarioResult, temp_dir: Path) -> None:
+        """Verify the hash file matches the Adler-32 of the snapshot JSON after normalization."""
+        assert results.return_code == ResultCode.SUCCESS
+        verify_kvs_snapshot_hash(temp_dir, instance_id=1, snapshot_id=0)
+
 
 @add_test_properties(
     partially_verifies=[
@@ -414,6 +424,11 @@ class TestSelectiveReset(PersistencyScenario):
                 assert isclose(snapshot[key]["v"], self._override_value(i), abs_tol=1e-4), (
                     f"Expected {key} ≈ {self._override_value(i)}, got {snapshot[key]['v']}"
                 )
+
+    def test_snapshot_hash_matches_content(self, results: ScenarioResult, temp_dir: Path) -> None:
+        """Verify the hash file matches the Adler-32 of the snapshot JSON after normalization."""
+        assert results.return_code == ResultCode.SUCCESS
+        verify_kvs_snapshot_hash(temp_dir, instance_id=1, snapshot_id=0)
 
     def test_reset_key_returns_default(self, results: ScenarioResult, logs_info_level: Any) -> None:
         """
@@ -512,6 +527,11 @@ class TestFullReset(PersistencyScenario):
             assert isclose(snapshot[key]["v"], expected, abs_tol=1e-4), (
                 f"Expected {key} ≈ {expected}, got {snapshot[key]['v']}"
             )
+
+    def test_snapshot_hash_matches_content(self, results: ScenarioResult, temp_dir: Path) -> None:
+        """Verify the hash file matches the Adler-32 of the snapshot JSON after normalization."""
+        assert results.return_code == ResultCode.SUCCESS
+        verify_kvs_snapshot_hash(temp_dir, instance_id=1, snapshot_id=0)
 
     def test_full_reset_key_returns_default(self, results: ScenarioResult, logs_info_level: Any) -> None:
         """
@@ -640,6 +660,12 @@ class TestMultiInstanceDefaultIsolation(FitScenario):
         snapshot2 = read_kvs_snapshot(temp_dir, 2)
         assert "key_b" in snapshot2, "key_b must be present in instance 2 snapshot"
         assert "key_a" not in snapshot2, "key_a must not leak from instance 1 defaults into instance 2 snapshot"
+
+    def test_snapshot_hash_matches_content(self, results: ScenarioResult, temp_dir: Path) -> None:
+        """Verify hash files match the Adler-32 of each instance snapshot after normalization."""
+        assert results.return_code == ResultCode.SUCCESS
+        verify_kvs_snapshot_hash(temp_dir, instance_id=1, snapshot_id=0)
+        verify_kvs_snapshot_hash(temp_dir, instance_id=2, snapshot_id=0)
 
     def test_default_isolation_via_logs(self, results: ScenarioResult, logs_info_level: Any) -> None:
         """

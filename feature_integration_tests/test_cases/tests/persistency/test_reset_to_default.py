@@ -17,7 +17,12 @@ from typing import Any
 
 import pytest
 from fit_scenario import ResultCode
-from persistency_scenario import PersistencyScenario, create_kvs_defaults_file, read_kvs_snapshot
+from persistency_scenario import (
+    PersistencyScenario,
+    create_kvs_defaults_file,
+    read_kvs_snapshot,
+    verify_kvs_snapshot_hash,
+)
 from test_properties import add_test_properties
 from testing_utils import ScenarioResult
 
@@ -111,3 +116,8 @@ class TestResetToDefault(PersistencyScenario):
         assert isclose(float(log.value), expected_default, abs_tol=1e-4), (
             f"Expected key2 default ≈ {expected_default}, got {log.value}"
         )
+
+    def test_snapshot_hash_matches_content(self, results: ScenarioResult, temp_dir: Path) -> None:
+        """Verify the hash file matches the Adler-32 of the snapshot JSON after normalization."""
+        assert results.return_code == ResultCode.SUCCESS
+        verify_kvs_snapshot_hash(temp_dir, instance_id=1, snapshot_id=0)

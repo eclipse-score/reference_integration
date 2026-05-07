@@ -15,6 +15,7 @@
 
 #include <kvsbuilder.hpp>
 
+#include <array>
 #include <cctype>
 #include <cmath>
 #include <cstdint>
@@ -119,6 +120,25 @@ std::string canonicalize_f64_literals(const std::string& json) {
 
     result.append(json, cursor, std::string::npos);
     return result;
+}
+
+/**
+ * @brief Compute the Adler-32 checksum of a byte string.
+ *
+ * Matches Python's ``zlib.adler32(data).to_bytes(4, byteorder='big')``.
+ *
+ * @param data Input byte string.
+ * @return 32-bit Adler-32 checksum.
+ */
+uint32_t adler32_hash(const std::string& data) {
+    static constexpr uint32_t kMod = 65521U;
+    uint32_t a = 1U;
+    uint32_t b = 0U;
+    for (const unsigned char byte : data) {
+        a = (a + static_cast<uint32_t>(byte)) % kMod;
+        b = (b + a) % kMod;
+    }
+    return (b << 16U) | a;
 }
 
 std::optional<std::string> snapshot_path(const KvsParameters& params) {
@@ -231,7 +251,33 @@ bool KvsInstance::normalize_snapshot_file_to_rust_envelope(const KvsParameters& 
     }
 
     out << final_content;
-    return static_cast<bool>(out);
+    if (!out) {
+        return false;
+    }
+    out.close();
+
+    // Recalculate and rewrite the companion hash file so the snapshot stays
+    // valid after JSON modification.  Hash = Adler-32 of the written JSON
+    // bytes stored as 4 big-endian bytes, matching Python's
+    // zlib.adler32(data).to_bytes(4, byteorder='big').
+    const std::string hash_path_str =
+        (*path_opt).substr(0, (*path_opt).size() - 5U) + ".hash";
+    const uint32_t checksum = adler32_hash(final_content);
+    const std::array<uint8_t, 4> hash_bytes = {
+        static_cast<uint8_t>((checksum >> 24U) & 0xFFU),
+        static_cast<uint8_t>((checksum >> 16U) & 0xFFU),
+        static_cast<uint8_t>((checksum >>  8U) & 0xFFU),
+        static_cast<uint8_t>( checksum          & 0xFFU),
+    };
+    std::ofstream hash_out(hash_path_str, std::ios::binary | std::ios::trunc);
+    if (!hash_out.is_open()) {
+        std::cerr << "Cannot normalize snapshot: failed to write hash "
+                  << hash_path_str << std::endl;
+        return false;
+    }
+    hash_out.write(reinterpret_cast<const char*>(hash_bytes.data()),
+                   static_cast<std::streamsize>(hash_bytes.size()));
+    return static_cast<bool>(hash_out);
 }
 
 bool KvsInstance::set_value(const std::string& key, double value) {

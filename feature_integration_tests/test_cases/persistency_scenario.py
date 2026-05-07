@@ -91,6 +91,35 @@ def read_kvs_snapshot(dir_path: Path, instance_id: int, snapshot_id: int = 0) ->
     return data
 
 
+def verify_kvs_snapshot_hash(dir_path: Path, instance_id: int, snapshot_id: int = 0) -> None:
+    """
+    Assert that the snapshot hash file content matches the Adler-32 of the JSON file.
+
+    After ``normalize_snapshot_file_to_rust_envelope`` rewrites the JSON, the
+    companion ``.hash`` file must also be rewritten.  This helper detects any
+    mismatch between the two, catching stale hashes introduced by manual or
+    tool-driven JSON modifications.
+
+    Parameters
+    ----------
+    dir_path : Path
+        Working directory containing the KVS snapshot files.
+    instance_id : int
+        KVS instance identifier used in the filename convention.
+    snapshot_id : int, optional
+        Snapshot sequence number (default 0).
+    """
+    json_path = dir_path / f"kvs_{instance_id}_{snapshot_id}.json"
+    hash_path = dir_path / f"kvs_{instance_id}_{snapshot_id}.hash"
+    json_bytes = json_path.read_bytes()
+    expected = adler32(json_bytes).to_bytes(4, byteorder="big")
+    actual = hash_path.read_bytes()
+    assert actual == expected, (
+        f"Hash mismatch for kvs_{instance_id}_{snapshot_id}: "
+        f"hash file contains {actual.hex()} but Adler-32 of the JSON is {expected.hex()}"
+    )
+
+
 class PersistencyScenario(FitScenario):
     """
     Base class for persistency feature integration tests.

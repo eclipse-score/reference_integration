@@ -17,7 +17,7 @@ from typing import Any
 
 import pytest
 from fit_scenario import ResultCode
-from persistency_scenario import PersistencyScenario, read_kvs_snapshot
+from persistency_scenario import PersistencyScenario, read_kvs_snapshot, verify_kvs_snapshot_hash
 from test_properties import add_test_properties
 from testing_utils import ScenarioResult
 
@@ -124,3 +124,8 @@ class TestAllValueTypes(SupportedDatatypesScenario):
         for key, expected_tagged in self._EXPECTED_ALL_TYPES.items():
             assert key in snapshot, f"Expected key '{key}' in snapshot"
             self._assert_tagged_value(snapshot[key], expected_tagged)
+
+    def test_snapshot_hash_matches_content(self, results: ScenarioResult, temp_dir: Path) -> None:
+        """Verify the hash file matches the Adler-32 of the snapshot JSON after normalization."""
+        assert results.return_code == ResultCode.SUCCESS
+        verify_kvs_snapshot_hash(temp_dir, instance_id=1, snapshot_id=0)
