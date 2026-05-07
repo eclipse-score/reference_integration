@@ -200,7 +200,7 @@ Known Issues
 Upgrade Instructions
 ----------------------
 - Increase to newest bazel registry versions: https://eclipse-score.github.io/bazel_registry_ui
-- Versions can be found under: https://github.com/eclipse-score/reference_integration/blob/main/known_good.json
+- Versions can be found under: https://github.com/eclipse-score/reference_integration/blob/v0.7.0/known_good.json
 
 Contact Information
 ----------------------
