@@ -15,63 +15,59 @@
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py
 
 bazel_dep(name = "score_baselibs")
-git_override(
+single_version_override(
     module_name = "score_baselibs",
-    commit = "e87426c8d85d9c49fd68088f8c0134037d3a2748",
-    remote = "https://github.com/eclipse-score/baselibs.git",
+    version = "0.2.7",
 )
 
 bazel_dep(name = "score_baselibs_rust")
-git_override(
+single_version_override(
     module_name = "score_baselibs_rust",
-    commit = "ae2a7a3a91f7cf02bd04a8e42d9dc745bfd59b17",
-    remote = "https://github.com/eclipse-score/baselibs_rust.git",
+    version = "0.1.2",
 )
 
 bazel_dep(name = "score_communication")
-git_override(
+single_version_override(
     module_name = "score_communication",
-    commit = "bc1e3c54e7bacaa51bd56cfe768b9bd0bfd4aa06",
     patch_strip = 1,
     patches = [
         "//patches/communication:001-expose-comm-examples.patch",
         "//patches/communication:002-tests-visibility.patch",
         "//patches/communication:003-module-deps-visibility.patch",
     ],
-    remote = "https://github.com/eclipse-score/communication.git",
+    version = "0.2.1",
 )
 
 bazel_dep(name = "score_persistency")
-git_override(
+single_version_override(
     module_name = "score_persistency",
-    commit = "b20e218a3c990d2765dd57adc6c719f1f9801932",
-    remote = "https://github.com/eclipse-score/persistency.git",
+    patch_strip = 1,
+    patches = [
+        "//patches/persistency:001-remove-miri.patch",
+    ],
+    version = "0.3.1",
 )
 
 bazel_dep(name = "score_orchestrator")
-git_override(
+single_version_override(
     module_name = "score_orchestrator",
-    commit = "a09d4c75646511f4cd5b17e5f6af86057cb8785c",
-    remote = "https://github.com/eclipse-score/orchestrator.git",
+    version = "0.1.1",
 )
 
 bazel_dep(name = "score_kyron")
-git_override(
+single_version_override(
     module_name = "score_kyron",
-    commit = "8e6103e97b6b455ad9e117e706cfe7cbce248d17",
-    remote = "https://github.com/eclipse-score/kyron.git",
+    version = "0.1.2",
 )
 
 bazel_dep(name = "score_lifecycle_health")
-git_override(
+single_version_override(
     module_name = "score_lifecycle_health",
-    commit = "2f2e9c4c3e6c6b38abd0b72f78c8ffb96dc7f9e8",
-    remote = "https://github.com/eclipse-score/lifecycle.git",
+    version = "0.2.0",
 )
 
 bazel_dep(name = "score_logging")
-git_override(
+single_version_override(
     module_name = "score_logging",
-    commit = "1684d41b54a3978a4a88e2fd5136305335486861",
-    remote = "https://github.com/eclipse-score/logging.git",
+    version = "0.2.0",
 )

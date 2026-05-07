@@ -16,7 +16,7 @@ S-CORE v0.7-release notes
 =========================
 
 .. document:: S-CORE v0.7 release note
-   :id: doc__score_v06_release_note
+   :id: doc__score_v07_release_note
    :status: draft
    :safety: QM
    :security: YES
@@ -60,8 +60,8 @@ Baselibs
 ~~~~~~~~~~~~~
 Selection of basic C++ utility libraries for common use in the S-CORE project
 
-- **Version:** ``baselibs v0.2.6``
-- **Release notes**: `Baselibs release notes <https://github.com/eclipse-score/baselibs/releases/tag/v0.2.6>`_
+- **Version:** ``baselibs v0.2.7``
+- **Release notes**: `Baselibs release notes <https://github.com/eclipse-score/baselibs/releases/tag/v0.2.7>`_
 
 Baselibs Rust
 ~~~~~~~~~~~~~
@@ -76,8 +76,8 @@ Communication
 ~~~~~~~~~~~~~
 Zero-copy, shared-memory based inter-process communication for minimal-latency intra-ECU messaging.
 
-- **Version:** ``communication v0.2.0``
-- **Release notes**: `Communication release notes <https://github.com/eclipse-score/communication/releases/tag/v0.2.0>`_
+- **Version:** ``communication v0.2.1``
+- **Release notes**: `Communication release notes <https://github.com/eclipse-score/communication/releases/tag/v0.2.1>`_
 
 
 Persistency
@@ -95,12 +95,14 @@ Logging
 - **Version:** ``logging v0.2.0``
 - **Release notes**: `Logging release notes <https://github.com/eclipse-score/logging/releases/tag/v0.2.0>`_
 
+
 Orchestrator
 ~~~~~~~~~~~~~
 Orchestrator module provides a framework for defining and executing complex workflows and task sequences in a coordinated manner.
 
 - **Version:** ``orchestrator v0.1.1``
 - **Release notes**: `Orchestrator release notes <https://github.com/eclipse-score/orchestrator/releases/tag/v0.1.1>`_
+
 
 Kyron
 ~~~~~~~~~~~~~~
@@ -110,6 +112,7 @@ It allows fine-grained control over scheduling, thread management, and workload 
 - **Version:** ``kyron v0.1.2``
 - **Release notes**: `Kyron release notes <https://github.com/eclipse-score/kyron/releases/tag/v0.1.2>`_
 
+
 Lifecycle & Health Management
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Lifecycle module provides a Launch Manager for process lifecycle management as well as a Health Monitoring library to support supervision of process behavior.
@@ -117,12 +120,14 @@ Lifecycle module provides a Launch Manager for process lifecycle management as w
 - **Version:** ``lifecycle v0.2.0``
 - **Release notes**: `Lifecycle release notes <https://github.com/eclipse-score/lifecycle/releases/tag/v0.2.0>`_
 
+
 Reference integration
 ~~~~~~~~~~~~~~~~~~~~~~
 Central integration of Eclipse S-CORE modules
 
 - **Version:** ``reference integration v0.7.0``
 - **Source / tag:** `Reference Integration GitHub release <https://github.com/eclipse-score/reference_integration/releases/tag/v0.7.0>`_
+
 
 Reference QNX image
 +++++++++++++++++++++
@@ -147,7 +152,7 @@ process_description
 Provides a process model establishing organizational rules for developing open source software
 in the automotive domain, suitable for safety and security contexts.
 
-- **Version:** ``process description v1.5.3``
+- **Version:** ``process description v1.5.4``
 - **Release notes**: `process_description release <https://github.com/eclipse-score/process_description/releases/tag/v1.5.4>`_
 
 docs-as-code

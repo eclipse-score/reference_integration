@@ -36,7 +36,7 @@ Explore the documentation
    _collections/score_persistency/docs/index
    _collections/score_orchestrator/docs/index
    _collections/score_kyron/docs/index
-   _collections/score_baselibs/docs/index
+   _collections/score_baselibs_rust/docs/index
    _collections/score_logging/docs/index
 
 .. toctree::

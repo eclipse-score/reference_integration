@@ -103,6 +103,9 @@ def cpp_coverage(module: Module, artifact_dir: Path) -> ProcessResult:
         "--function-coverage",
         "--branch-coverage",
     ]
+    if module.name == "score_communication":
+        # Communication has negative values in generated .dat file
+        genhtml_call.extend(["--ignore-errors=negative,negative,source,source", "--synthesize-missing"])
     genhtml_result = run_command(genhtml_call, cwd=bazel_source_directory)
 
     return genhtml_result

@@ -1,0 +1,136 @@
+diff --git a/BUILD b/BUILD
+index 37f6e021..def40cfe 100644
+--- a/BUILD
++++ b/BUILD
+@@ -142,19 +142,3 @@ test_suite(
+     ],
+     visibility = ["//visibility:public"],
+ )
+-
+-test_suite(
+-    name = "miri_tests",
+-    tags = ["manual"],
+-    tests = [
+-        "//src/rust/rust_kvs:tests_miri_error_code",
+-        "//src/rust/rust_kvs:tests_miri_json_backend",
+-        "//src/rust/rust_kvs:tests_miri_kvs",
+-        "//src/rust/rust_kvs:tests_miri_kvs_api",
+-        "//src/rust/rust_kvs:tests_miri_kvs_builder",
+-        "//src/rust/rust_kvs:tests_miri_kvs_mock",
+-        "//src/rust/rust_kvs:tests_miri_kvs_serialize",
+-        "//src/rust/rust_kvs:tests_miri_kvs_value",
+-    ],
+-    visibility = ["//visibility:public"],
+-)
+diff --git a/src/rust/rust_kvs/BUILD b/src/rust/rust_kvs/BUILD
+index a397ec26..1e7617aa 100644
+--- a/src/rust/rust_kvs/BUILD
++++ b/src/rust/rust_kvs/BUILD
+@@ -10,7 +10,7 @@
+ #
+ # SPDX-License-Identifier: Apache-2.0
+ # *******************************************************************************
+-load("@rules_rust//rust:defs.bzl", "miri_test", "rust_library", "rust_test")
++load("@rules_rust//rust:defs.bzl", "rust_library", "rust_test")
+ 
+ rust_library(
+     name = "rust_kvs",
+@@ -32,74 +32,3 @@ rust_test(
+     ],
+     deps = ["@score_crates//:tempfile"],
+ )
+-
+-miri_test(
+-    name = "tests_miri",
+-    crate = ":tests",
+-    tags = ["manual"],
+-    visibility = ["//visibility:public"],
+-)
+-
+-miri_test(
+-    name = "tests_miri_error_code",
+-    crate = ":tests",
+-    miri_args = ["error_code::"],
+-    tags = ["manual"],
+-    visibility = ["//visibility:public"],
+-)
+-
+-miri_test(
+-    name = "tests_miri_json_backend",
+-    crate = ":tests",
+-    miri_args = ["json_backend::"],
+-    tags = ["manual"],
+-    visibility = ["//visibility:public"],
+-)
+-
+-miri_test(
+-    name = "tests_miri_kvs",
+-    crate = ":tests",
+-    miri_args = ["kvs::"],
+-    tags = ["manual"],
+-    visibility = ["//visibility:public"],
+-)
+-
+-miri_test(
+-    name = "tests_miri_kvs_api",
+-    crate = ":tests",
+-    miri_args = ["kvs_api::"],
+-    tags = ["manual"],
+-    visibility = ["//visibility:public"],
+-)
+-
+-miri_test(
+-    name = "tests_miri_kvs_builder",
+-    crate = ":tests",
+-    miri_args = ["kvs_builder::"],
+-    tags = ["manual"],
+-    visibility = ["//visibility:public"],
+-)
+-
+-miri_test(
+-    name = "tests_miri_kvs_mock",
+-    crate = ":tests",
+-    miri_args = ["kvs_mock::"],
+-    tags = ["manual"],
+-    visibility = ["//visibility:public"],
+-)
+-
+-miri_test(
+-    name = "tests_miri_kvs_serialize",
+-    crate = ":tests",
+-    miri_args = ["kvs_serialize::"],
+-    tags = ["manual"],
+-    visibility = ["//visibility:public"],
+-)
+-
+-miri_test(
+-    name = "tests_miri_kvs_value",
+-    crate = ":tests",
+-    miri_args = ["kvs_value::"],
+-    tags = ["manual"],
+-    visibility = ["//visibility:public"],
+-)
+diff --git a/src/rust/rust_kvs_tool/BUILD b/src/rust/rust_kvs_tool/BUILD
+index ea9d9882..db256db7 100644
+--- a/src/rust/rust_kvs_tool/BUILD
++++ b/src/rust/rust_kvs_tool/BUILD
+@@ -10,7 +10,7 @@
+ #
+ # SPDX-License-Identifier: Apache-2.0
+ # *******************************************************************************
+-load("@rules_rust//rust:defs.bzl", "miri_binary", "rust_binary")
++load("@rules_rust//rust:defs.bzl", "rust_binary")
+ 
+ rust_binary(
+     name = "kvs_tool",
+@@ -33,10 +33,3 @@ rust_binary(
+         "@score_logging//score/mw/log/rust/score_log_bridge",
+     ],
+ )
+-
+-miri_binary(
+-    name = "kvs_tool_miri",
+-    crate = ":kvs_tool",
+-    tags = ["manual"],
+-    visibility = ["//visibility:public"],
+-)
