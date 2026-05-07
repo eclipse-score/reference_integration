@@ -15,6 +15,7 @@ build --tool_java_runtime_version=remotejdk_17
 
 build:_common --@score_baselibs//score/json:base_library=nlohmann
 build:_common --@score_baselibs//score/memory/shared/flags:use_typedshmd=False
+build:_common --@score_baselibs_rust//src/log:safety_level=qm
 build:_common --@score_communication//score/mw/com/flags:tracing_library=@score_baselibs//score/analysis/tracing/generic_trace_library/stub_implementation
 build:_common --cxxopt=-Wno-error=mismatched-new-delete
 build:_common --host_platform=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix

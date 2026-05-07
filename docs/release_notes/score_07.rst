@@ -92,8 +92,8 @@ preserving application state and data integrity over time.
 Logging
 ~~~~~~~
 
-- **Version:** ``logging v0.2.0``
-- **Release notes**: `Logging release notes <https://github.com/eclipse-score/logging/releases/tag/v0.2.0>`_
+- **Version:** ``logging v0.2.1``
+- **Release notes**: `Logging release notes <https://github.com/eclipse-score/logging/releases/tag/v0.2.1>`_
 
 
 Orchestrator
