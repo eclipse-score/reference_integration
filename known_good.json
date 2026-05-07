@@ -3,10 +3,7 @@
         "target_sw": {
             "score_baselibs": {
                 "repo": "https://github.com/eclipse-score/baselibs.git",
-                "hash": "158fe6a7b791c58f6eac5f7e4662b8db0cf9ac6e",
-                "bazel_patches": [
-                    "//patches/baselibs:003-acl-fixes-for-aarch64.patch"
-                ],
+                "version": "0.2.6",
                 "metadata": {
                     "extra_test_config": [
                         "//score/json:base_library=nlohmann",
@@ -25,7 +22,7 @@
             },
             "score_baselibs_rust": {
                 "repo": "https://github.com/eclipse-score/baselibs_rust.git",
-                "hash": "0eba2934fa8b0e1a343ec6bf6f7ff00cec27d81c",
+                "hash": "ae2a7a3a91f7cf02bd04a8e42d9dc745bfd59b17",
                 "metadata": {
                     "code_root_path": "//src/...",
                     "exclude_test_targets": [
@@ -38,9 +35,12 @@
             },
             "score_communication": {
                 "repo": "https://github.com/eclipse-score/communication.git",
-                "hash": "56448a5589a5f7d3921b873e8127b824a8c1ca95",
+                "version": "0.2.0",
                 "bazel_patches": [
-                    "//patches/communication:001-expose-comm-examples.patch"
+                    "//patches/communication:001-expose-comm-examples.patch",
+                    "//patches/communication:002-tests-visibility.patch",
+                    "//patches/communication:003-module-deps-visibility.patch",
+                    "//patches/communication:004-download-utils-non-dev.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/mw/com/impl/...",
@@ -64,7 +64,7 @@
             },
             "score_orchestrator": {
                 "repo": "https://github.com/eclipse-score/orchestrator.git",
-                "hash": "600fdd8186305ffbf495e4fc788195c077de79ac",
+                "hash": "a09d4c75646511f4cd5b17e5f6af86057cb8785c",
                 "metadata": {
                     "code_root_path": "//src/...",
                     "langs": [
@@ -74,7 +74,7 @@
             },
             "score_kyron": {
                 "repo": "https://github.com/eclipse-score/kyron.git",
-                "hash": "5acfb1a593ec65cf4f64424f581c6ddd04813ee7",
+                "hash": "8e6103e97b6b455ad9e117e706cfe7cbce248d17",
                 "metadata": {
                     "code_root_path": "//src/...",
                     "langs": [
@@ -84,14 +84,14 @@
             },
             "score_lifecycle_health": {
                 "repo": "https://github.com/eclipse-score/lifecycle.git",
-                "hash": "757d17d4968ae3aebf6cd6981f8aeb875653a592",
+                "hash": "28e96098f117dcdd4a43d26b92e6ed8d9d36f9c3",
                 "metadata": {
                     "code_root_path": "//src/..."
                 }
             },
             "score_logging": {
                 "repo": "https://github.com/eclipse-score/logging.git",
-                "hash": "80feaae8ffaa2448c3872011b724e1668ad2930e",
+                "hash": "5d4fbebd958908ef7223f535a9b98ac966a08145",
                 "metadata": {
                     "extra_test_config": [
                         "//score/datarouter/build_configuration_flags:persistent_logging=False",
@@ -114,7 +114,7 @@
         "tooling": {
             "score_crates": {
                 "repo": "https://github.com/eclipse-score/score-crates.git",
-                "hash": "90539da0fd3e7e23e01f2b4de1679f7dfadd3b6b"
+                "version": "0.0.9"
             },
             "score_itf": {
                 "repo": "https://github.com/eclipse-score/itf.git",
@@ -122,15 +122,15 @@
             },
             "score_tooling": {
                 "repo": "https://github.com/eclipse-score/tooling.git",
-                "hash": "1159dcf9d35981ac4877265eff7a1e7a24452161"
+                "version": "1.1.2"
             },
             "score_platform": {
                 "repo": "https://github.com/eclipse-score/score.git",
-                "hash": "bf8502071d750cb70d88f1cb5cfbf5e5e7407f27"
+                "version": "0.5.5"
             },
             "score_bazel_platforms": {
                 "repo": "https://github.com/eclipse-score/bazel_platforms.git",
-                "hash": "b72a5c3510ca423efc71fef9a93d82f974b089a4"
+                "version": "0.1.2"
             },
             "score_test_scenarios": {
                 "repo": "https://github.com/eclipse-score/testing_tools.git",
@@ -138,11 +138,11 @@
             },
             "score_docs_as_code": {
                 "repo": "https://github.com/eclipse-score/docs-as-code.git",
-                "hash": "c1207676afe6cafd25c35d420e73279a799515d8"
+                "version": "4.0.3"
             },
             "score_process": {
                 "repo": "https://github.com/eclipse-score/process_description.git",
-                "hash": "fbe68f10041eb34fb791f08e31006afce8c9564a"
+                "version": "1.5.4"
             }
         }
     },
