@@ -142,7 +142,7 @@ Reference Red Hat AutoSD Linux image (Experimental)
 Reference Elektrobit corbos Linux for Safety Applications Linux image (Experimental)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-- ...
+- No changes compared to the previous software version.
 
 Associated Infrastructure Modules
 -----------------------------------
