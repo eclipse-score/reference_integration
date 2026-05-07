@@ -17,7 +17,7 @@ on:
 jobs:
   check-approvals:
     name: Verify Required Approvals
-    if: startsWith(github.event.pull_request.base.ref, 'release/')
+    if: startsWith(github.event.pull_request.base.ref, 'releases/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
