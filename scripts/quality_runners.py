@@ -51,7 +51,7 @@ def run_unit_test_with_coverage(module: Module) -> dict[str, str | int]:
             f"--instrumentation_filter=@{module.name}",
             f"@{module.name}{module.metadata.code_root_path}",
         ]
-        + [f"--@{module.name}{target}" for target in module.metadata.extra_test_config]
+        + [f"--{target}" for target in module.metadata.extra_test_config]
         + ["--"]
         + [
             # Exclude test targets specified in module metadata, if any
