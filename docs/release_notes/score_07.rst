@@ -25,7 +25,7 @@ S-CORE v0.7-release notes
 | **Platform Release:** S-CORE
 | **Release Tag:** v0.7.0
 | **Origin Release Tag**: v0.6
-| **Release Date:** 2026-05-04
+| **Release Date:** 2026-05-11
 
 
 Overview
@@ -153,7 +153,7 @@ Provides a process model establishing organizational rules for developing open s
 in the automotive domain, suitable for safety and security contexts.
 
 - **Version:** ``process description v1.5.4``
-- **Release notes**: `process_description release <https://github.com/eclipse-score/process_description/releases/tag/v1.5.4>`_
+- **Release notes**: :need:`doc__process_description_release_note_v152`
 
 docs-as-code
 ~~~~~~~~~~~~~~
