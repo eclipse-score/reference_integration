@@ -8658,7 +8658,7 @@
                 "https://github.com/eclipse-score/inc_os_autosd/releases/download/continuous/autosd-toolchain-x86_64.tar.gz"
               ],
               "build_file": "@@score_bazel_cpp_toolchains+//packages/linux/x86_64/autosd/10.0:autosd.BUILD",
-              "sha256": "bb5324ec04895eb70b1fcb1787d25856b137962b0381d11f5b3406c37ee15984",
+              "sha256": "39091c500a31bc58d5934cc9c27f5fec4326f30d8bff88fe67737c86385bf39f",
               "strip_prefix": "sysroot"
             }
           },
@@ -8920,7 +8920,7 @@
     "@@score_rules_imagefs+//extensions:imagefs.bzl%imagefs": {
       "general": {
         "bzlTransitiveDigest": "xJRMfKyb9krj7tW8mc7qHSmndlgVIywefmDXwdvj7kQ=",
-        "usagesDigest": "GMHtxI+4YucbcpHyCkckiYlsIpRkukV22uXhDgqkuPo=",
+        "usagesDigest": "/TmbRDKbrKvzgUh1kgwmBgikEuIonP0fOz164yCxbIw=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -8934,9 +8934,24 @@
               "sdp_version": "8.0.0",
               "tc_type": "ifs"
             }
+          },
+          "score_qnx_aarch64_ifs_toolchain": {
+            "repoRuleId": "@@score_rules_imagefs+//rules/qnx:imagefs_toolchain.bzl%imagefs_toolchain",
+            "attributes": {
+              "tc_cpu": "aarch64",
+              "tc_os": "qnx",
+              "tc_pkg_repo": "'@@score_bazel_cpp_toolchains++gcc+score_qcc_aarch64_toolchain_pkg'",
+              "sdp_version": "8.0.0",
+              "tc_type": "ifs"
+            }
           }
         },
         "recordedRepoMappingEntries": [
+          [
+            "",
+            "score_qcc_aarch64_toolchain_pkg",
+            "score_bazel_cpp_toolchains++gcc+score_qcc_aarch64_toolchain_pkg"
+          ],
           [
             "",
             "score_qcc_x86_64_toolchain_pkg",
