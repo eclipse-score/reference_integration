@@ -1,20 +1,34 @@
 #!/usr/bin/env python3
+import argparse
 import os
+import subprocess
 import sys
 import termios
 import tty
-import subprocess
-import argparse
 
 # ================== CONFIG ==================
 # Each entry: (description, command, name)
 mEntries = [
-    ("Run QNX x86_64 QEMU", "bazel --output_base=build/qnx-x86_64 run --config qnx-x86_64  //images/qnx_x86_64:run", "qnx-x86_64"),
-    ("Run Linux x86_64 Docker", "bazel --output_base=build/linux-x86_64 run --config linux-x86_64  //images/linux_x86_64:run", "linux-x86_64"),
-    ("Run Elektrobit corbos Linux for Safety Applications aarch64 QEMU",
-     "bazel --output_base=build/eb-aarch64 run --config eb-aarch64  //images/ebclfsa_aarch64:run", "eb-aarch64"),
-    ("Run Autosd x86_64 QEMU",
-     "bazel --output_base=build/autosd-x86_64 run --config autosd-x86_64  //images/autosd_x86_64:run", "autosd-x86_64"),
+    (
+        "Run QNX x86_64 QEMU",
+        "bazel --output_base=build/qnx-x86_64 run --config qnx-x86_64  //images/qnx_x86_64:run",
+        "qnx-x86_64",
+    ),
+    (
+        "Run Linux x86_64 Docker",
+        "bazel --output_base=build/linux-x86_64 run --config linux-x86_64  //images/linux_x86_64:run",
+        "linux-x86_64",
+    ),
+    (
+        "Run Elektrobit corbos Linux for Safety Applications aarch64 QEMU",
+        "bazel --output_base=build/eb-aarch64 run --config eb-aarch64  //images/ebclfsa_aarch64:run",
+        "eb-aarch64",
+    ),
+    (
+        "Run Autosd x86_64 QEMU",
+        "bazel --output_base=build/autosd-x86_64 run --config autosd-x86_64  //images/autosd_x86_64:run",
+        "autosd-x86_64",
+    ),
     ("Exit", "exit 0", "exit"),
 ]
 
@@ -73,9 +87,9 @@ def interactive_loop():
         draw_menu()
         key = read_key()
 
-        if key == "\x1b[A":        # Up
+        if key == "\x1b[A":  # Up
             mSelected = (mSelected - 1) % mCount
-        elif key == "\x1b[B":      # Down
+        elif key == "\x1b[B":  # Down
             mSelected = (mSelected + 1) % mCount
         elif key in ("\r", "\n"):  # Enter
             run_entry(mEntries[mSelected])
@@ -86,13 +100,10 @@ def interactive_loop():
 # ================== MAIN ==================
 def main():
     parser = argparse.ArgumentParser(
-        description="Interactive build/run menu script",
-        epilog="Use -r NAME to run a specific entry directly."
+        description="Interactive build/run menu script", epilog="Use -r NAME to run a specific entry directly."
     )
     parser.add_argument(
-        "-r", "--run",
-        help="Run a specific menu entry by name",
-        choices=[name for _, _, name in mEntries]
+        "-r", "--run", help="Run a specific menu entry by name", choices=[name for _, _, name in mEntries]
     )
 
     args = parser.parse_args()

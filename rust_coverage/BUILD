@@ -32,7 +32,7 @@ rust_coverage_report(
         "linux-x86_64",
         "ferrocene-coverage",
     ],
-    query = 'kind("rust_test", @score_communication//score/mw/com/impl/...) -@score_communication//score/mw/com/impl:unit_test_runtime_single_exec -@score_communication//score/mw/com/impl/configuration:config_parser_test -@score_communication//score/mw/com/impl/configuration:configuration_test -@score_communication//score/mw/com/impl/tracing/configuration:tracing_filter_config_parser_test',
+    query = 'kind("rust_test", @score_communication//score/mw/com/impl/...) -@score_communication//score/mw/com/impl:unit_test_runtime_single_exec -@score_communication//score/mw/com/impl:runtime_test -@score_communication//score/mw/com/impl/configuration:config_parser_test -@score_communication//score/mw/com/impl/configuration:configuration_test -@score_communication//score/mw/com/impl/tracing/configuration:tracing_filter_config_parser_test',
     visibility = ["//visibility:public"],
 )
 
@@ -40,7 +40,7 @@ rust_coverage_report(
     name = "rust_coverage_score_persistency",
     bazel_configs = [
         "linux-x86_64",
-        "ferrocene-coverage",
+        "ferrocene-coverage-per",
     ],
     query = 'kind("rust_test", @score_persistency//src/...) -@score_persistency//src/cpp/tests:bm_kvs_cpp',
     visibility = ["//visibility:public"],

@@ -15,7 +15,8 @@ build --tool_java_runtime_version=remotejdk_17
 
 build:_common --@score_baselibs//score/json:base_library=nlohmann
 build:_common --@score_baselibs//score/memory/shared/flags:use_typedshmd=False
-build:_common --@score_communication//score/mw/com/flags:tracing_library=stub
+build:_common --@score_baselibs_rust//src/log:safety_level=qm
+build:_common --@score_communication//score/mw/com/flags:tracing_library=@score_baselibs//score/analysis/tracing/generic_trace_library/stub_implementation
 build:_common --cxxopt=-Wno-error=mismatched-new-delete
 build:_common --host_platform=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
 build:_common --extra_toolchains=@score_toolchains_rust//toolchains/ferrocene:ferrocene_x86_64_unknown_linux_gnu
@@ -68,6 +69,12 @@ test:ferrocene-coverage --run_under=@score_tooling//coverage:llvm_profile_wrappe
 
 # Coverage needs to have all intermediate .rlibs to be able to proceed
 build:ferrocene-coverage --remote_download_all
+
+# Persistency specific flags
+build:ferrocene-coverage-per --config=ferrocene-coverage
+build:ferrocene-coverage-per --@score_baselibs_rust//src/log:safety_level=qm
+build:ferrocene-coverage-per --@score_baselibs//score/json:base_library=nlohmann
+build:ferrocene-coverage-per --@score_logging//score/mw/log/flags:KRemote_Logging=False
 
 # Output only failed test logs
 test --test_output=errors

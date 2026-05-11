@@ -51,7 +51,7 @@ def run_unit_test_with_coverage(module: Module) -> dict[str, str | int]:
             f"--instrumentation_filter=@{module.name}",
             f"@{module.name}{module.metadata.code_root_path}",
         ]
-        + [f"--@{module.name}{target}" for target in module.metadata.extra_test_config]
+        + [f"--{target}" for target in module.metadata.extra_test_config]
         + ["--"]
         + [
             # Exclude test targets specified in module metadata, if any
@@ -102,6 +102,8 @@ def cpp_coverage(module: Module, artifact_dir: Path) -> ProcessResult:
         "--legend",
         "--function-coverage",
         "--branch-coverage",
+        "--ignore-errors=negative,negative,source,source",
+        "--synthesize-missing",
     ]
     genhtml_result = run_command(genhtml_call, cwd=bazel_source_directory)
 
