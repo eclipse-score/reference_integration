@@ -136,7 +136,7 @@ Reference QNX image
 Reference Red Hat AutoSD Linux image (Experimental)
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-- ...
+- No changes compared to the previous software version.
 
 
 Reference Elektrobit corbos Linux for Safety Applications Linux image (Experimental)
