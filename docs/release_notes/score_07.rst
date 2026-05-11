@@ -153,7 +153,7 @@ Provides a process model establishing organizational rules for developing open s
 in the automotive domain, suitable for safety and security contexts.
 
 - **Version:** ``process description v1.5.4``
-- **Release notes**: :need:`doc__process_description_release_note_v152`
+- **Release notes**: `process_description release <https://github.com/eclipse-score/process_description/releases/tag/v1.5.4>`_
 
 docs-as-code
 ~~~~~~~~~~~~~~
