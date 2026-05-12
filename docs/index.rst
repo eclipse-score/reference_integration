@@ -18,17 +18,7 @@ Reference Integration Documentation
 Newest Release Notes
 --------------------
 
-.. needlist::
-   import re
-
-   all_release_notes = []
-
-   for need in needs:
-      if "wp__platform_sw_release_note" in need["realizes"]:
-         all_release_notes.append(need)
-
-   newest_release_note = max(all_release_notes, key=lambda s: int(re.search(r'v(\d+)', s["id"]).group(1)))
-   results = [newest_release_note]
+:doc:`release_notes/score_07`
 
 Current Integration Status Overview
 -----------------------------------
@@ -46,7 +36,6 @@ Explore the documentation
    _collections/score_persistency/docs/index
    _collections/score_orchestrator/docs/index
    _collections/score_kyron/docs/index
-   _collections/score_baselibs/docs/index
    _collections/score_baselibs_rust/docs/index
    _collections/score_logging/docs/index
 
@@ -70,4 +59,5 @@ Explore the documentation
    :hidden:
    :glob:
 
+   release_notes/*
    verification/*

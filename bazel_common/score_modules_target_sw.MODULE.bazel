@@ -17,28 +17,26 @@
 bazel_dep(name = "score_baselibs")
 git_override(
     module_name = "score_baselibs",
-    commit = "158fe6a7b791c58f6eac5f7e4662b8db0cf9ac6e",
-    patch_strip = 1,
-    patches = [
-        "//patches/baselibs:003-acl-fixes-for-aarch64.patch",
-    ],
+    commit = "cab36dd7de92c282f67e78e88032e08585803528",
     remote = "https://github.com/eclipse-score/baselibs.git",
 )
 
 bazel_dep(name = "score_baselibs_rust")
 git_override(
     module_name = "score_baselibs_rust",
-    commit = "0eba2934fa8b0e1a343ec6bf6f7ff00cec27d81c",
+    commit = "4050b62f298b639d27c092f63858642c3d08f9a0",
     remote = "https://github.com/eclipse-score/baselibs_rust.git",
 )
 
 bazel_dep(name = "score_communication")
 git_override(
     module_name = "score_communication",
-    commit = "56448a5589a5f7d3921b873e8127b824a8c1ca95",
+    commit = "b021eccf1d811625d21eeb493071c0c4f4f6243a",
     patch_strip = 1,
     patches = [
         "//patches/communication:001-expose-comm-examples.patch",
+        "//patches/communication:002-tests-visibility.patch",
+        "//patches/communication:003-module-deps-visibility.patch",
     ],
     remote = "https://github.com/eclipse-score/communication.git",
 )
@@ -46,34 +44,34 @@ git_override(
 bazel_dep(name = "score_persistency")
 git_override(
     module_name = "score_persistency",
-    commit = "438bf9b5c447fd41ad43b321679dd3d1b3a6c737",
+    commit = "4d1fa1ae3c55d27d0f1e863b8cdf59a148651c5d",
     remote = "https://github.com/eclipse-score/persistency.git",
 )
 
 bazel_dep(name = "score_orchestrator")
 git_override(
     module_name = "score_orchestrator",
-    commit = "600fdd8186305ffbf495e4fc788195c077de79ac",
+    commit = "c5bcbd39fc6e124a26b1d66abbfc696a3319c2a4",
     remote = "https://github.com/eclipse-score/orchestrator.git",
 )
 
 bazel_dep(name = "score_kyron")
 git_override(
     module_name = "score_kyron",
-    commit = "5acfb1a593ec65cf4f64424f581c6ddd04813ee7",
+    commit = "fc9218cc23d5fc62dd45b2e9dfcc9403e71ab27a",
     remote = "https://github.com/eclipse-score/kyron.git",
 )
 
 bazel_dep(name = "score_lifecycle_health")
 git_override(
     module_name = "score_lifecycle_health",
-    commit = "757d17d4968ae3aebf6cd6981f8aeb875653a592",
+    commit = "2f2e9c4c3e6c6b38abd0b72f78c8ffb96dc7f9e8",
     remote = "https://github.com/eclipse-score/lifecycle.git",
 )
 
 bazel_dep(name = "score_logging")
 git_override(
     module_name = "score_logging",
-    commit = "80feaae8ffaa2448c3872011b724e1668ad2930e",
+    commit = "0e9187f79a9935ca192779234b82f9d00dc4e335",
     remote = "https://github.com/eclipse-score/logging.git",
 )
