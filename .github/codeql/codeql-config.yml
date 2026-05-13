@@ -11,6 +11,12 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 name: "Custom CodeQL Configuration for MISRA"
+
+query-filters:
+  - include:
+      tags:
+        - /external\/misra\/obligation\/(required|mandatory)/
+
 paths:
   - repos
 paths-ignore:
