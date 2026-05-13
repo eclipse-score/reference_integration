@@ -12,12 +12,12 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-S-CORE v0.7-release notes
-=========================
+S-CORE Platform v0.7-release note
+=================================
 
 .. document:: S-CORE v0.7 release note
    :id: doc__score_v07_release_note
-   :status: draft
+   :status: valid
    :safety: QM
    :security: YES
    :realizes: wp__platform_sw_release_note
@@ -31,8 +31,28 @@ S-CORE v0.7-release notes
 Overview
 ^^^^^^^^
 
+This document provides an overview of the changes, improvements, and bug fixes included in the software platform release version v0.7.0 as compared to the platform’s origin release (v0.6).
+
 The SCORE 0.7 platform release centers on safety formalization (vulnerability management, OS tier definitions, safety manuals), Rust interoperability (FFI bindings in baselibs and a full Rust COM API in communication),
 and infrastructure hardening (toolchain improvements, Dependabot, CodeQL).
+
+Disclaimer
+----------
+
+This release note does not "release for production", as it does not come with a safety argumentation and a performed safety assessment.
+The work products compiled in the safety package are created with care according to a process satisfying standards, but the as the project,
+being a non-profit and open source organization, can not take over any liability for its content.
+
+Changes to the Platform
+^^^^^^^^^^^^^^^^^^^^^^^
+
+New Features
+------------
+
+No new features were added in this release.
+
+Improvements
+------------
 
 The release significantly expanded integration testing capabilities, with ITF upgrade and test execution now supported on both Docker and QNX targets using the new py_itf_test Bazel rule. 
 The CI/CD pipeline was overhauled — the bash-based integration script was replaced with Python and the pipeline became more robust with improved build caching, automatic cancellation of superseded runs, and workflow steps pinned to exact commit SHAs for supply-chain safety. 
@@ -40,24 +60,25 @@ EBcLfSA integration was updated to the new structure and extended with Rust appl
 On the documentation side, the build pipeline was fixed and an integration status dashboard was introduced to provide visibility into module health across the platform. 
 Infrastructure-wise, Bzlmod lockfile consistency is now enforced in CI, the AutoSD image version is frozen for reproducible builds, and image filesystem rules were migrated to the new Bazel API.
 
+
 Eclipse S-CORE book
 -------------------
+
 The `Eclipse S-CORE book <https://eclipse-score.github.io/score/main/handbook/index.html>`_
 is a “how-to” guide for users getting started with the project or who want to contribute new modules.
 
-S-CORE Platform
-^^^^^^^^^^^^^^^^^^
+S-CORE Platform scope
+^^^^^^^^^^^^^^^^^^^^^
 
 - **Version:** ``score v0.5.5``
 - **Release notes**: `S-CORE Platform release notes <https://github.com/eclipse-score/score/releases/tag/v0.5.5>`_
-
-
 
 Integrated Software Modules
 -----------------------------
 
 Baselibs
-~~~~~~~~~~~~~
+~~~~~~~~
+
 Selection of basic C++ utility libraries for common use in the S-CORE project
 
 - **Version:** ``baselibs v0.2.7``
@@ -74,6 +95,7 @@ Selection of basic Rust utility libraries for common use in the S-CORE project
 
 Communication
 ~~~~~~~~~~~~~
+
 Zero-copy, shared-memory based inter-process communication for minimal-latency intra-ECU messaging.
 
 - **Version:** ``communication v0.2.1``
@@ -82,6 +104,7 @@ Zero-copy, shared-memory based inter-process communication for minimal-latency i
 
 Persistency
 ~~~~~~~~~~~
+
 Ensures long-term storage and retrieval of data and provides a reliable mechanism for
 preserving application state and data integrity over time.
 
@@ -98,6 +121,7 @@ Logging
 
 Orchestrator
 ~~~~~~~~~~~~~
+
 Orchestrator module provides a framework for defining and executing complex workflows and task sequences in a coordinated manner.
 
 - **Version:** ``orchestrator v0.1.1``
@@ -105,7 +129,8 @@ Orchestrator module provides a framework for defining and executing complex work
 
 
 Kyron
-~~~~~~~~~~~~~~
+~~~~~
+
 Kyron is a customizable, high-performance async/await runtime designed for advanced concurrent programming with focus on functional safety.
 It allows fine-grained control over scheduling, thread management, and workload isolation through configurable execution engines.
 
@@ -114,7 +139,8 @@ It allows fine-grained control over scheduling, thread management, and workload 
 
 
 Lifecycle & Health Management
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Lifecycle module provides a Launch Manager for process lifecycle management as well as a Health Monitoring library to support supervision of process behavior.
 
 - **Version:** ``lifecycle v0.2.0``
@@ -122,7 +148,8 @@ Lifecycle module provides a Launch Manager for process lifecycle management as w
 
 
 Reference integration
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+
 Central integration of Eclipse S-CORE modules
 
 - **Version:** ``reference integration v0.7.0``
@@ -131,6 +158,7 @@ Central integration of Eclipse S-CORE modules
 
 Reference QNX image
 +++++++++++++++++++++
+
 - No changes compared to the previous software version.
 
 Reference Red Hat AutoSD Linux image (Experimental)
@@ -147,23 +175,26 @@ Reference Elektrobit corbos Linux for Safety Applications Linux image (Experimen
 Associated Infrastructure Modules
 -----------------------------------
 
-process_description
+Process description
 ~~~~~~~~~~~~~~~~~~~
+
 Provides a process model establishing organizational rules for developing open source software
 in the automotive domain, suitable for safety and security contexts.
 
 - **Version:** ``process description v1.5.4``
 - **Release notes**: `process_description release <https://github.com/eclipse-score/process_description/releases/tag/v1.5.4>`_
 
-docs-as-code
-~~~~~~~~~~~~~~
+Docs-as-code
+~~~~~~~~~~~~
+
 Tooling for linking and generation of documentation.
 
 - **Version:** ``docs-as-code v4.0.3``
 - **Source / tag:** `docs-as-code GitHub release <https://github.com/eclipse-score/docs-as-code/releases/tag/v4.0.3>`_
 
-tooling
-~~~~~~~~~~~~~~
+Tooling
+~~~~~~~
+
 Tooling for S-CORE development.
 
 - **Version:** ``tooling v1.1.2``
@@ -171,7 +202,8 @@ Tooling for S-CORE development.
 
 
 ITF (Integration Testing Framework)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 ITF is a pytest-based testing framework designed for ECU (Electronic Control Unit) testing in automotive domains. 
 It provides a flexible, plugin-based architecture that enables testing on multiple target environments including Docker containers,
 QEMU virtual machines, and real hardware.
@@ -180,7 +212,8 @@ QEMU virtual machines, and real hardware.
 - **Source / tag:** `ITF GitHub release <https://github.com/eclipse-score/itf/releases/tag/v0.3.0>`_
 
 Test Scenarios
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
+
 Test scenarios provide a backend for defining C++ and Rust implemented test scenarios that allow parametrized execution of built scenario applications which are the input for test cases.
 
 - **Version:** ``Test Scenarios v0.4.1``
@@ -188,21 +221,38 @@ Test scenarios provide a backend for defining C++ and Rust implemented test scen
 
 
 Bazel CPP Toolchain
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
+
 - **Version:** ``bazel_cpp_toolchains v0.5.1``
 - **Release notes**: `Bazel CPP Toolchain release notes <https://github.com/eclipse-score/bazel_cpp_toolchains/releases/tag/v0.5.1>`_
 
 
-Known Issues
-----------------------
+Compatibility
+^^^^^^^^^^^^^
+
+- **Dependencies:** None known ...
+
+Performed Verification
+^^^^^^^^^^^^^^^^^^^^^^
+
+Known Issues/Vulnerabilities and Bug Fixes
+------------------------------------------
+
 - see release notes of every module separately
 
 Upgrade Instructions
-----------------------
+--------------------
+
 - Increase to newest bazel registry versions: https://eclipse-score.github.io/bazel_registry_ui
 - Versions can be found under: https://github.com/eclipse-score/reference_integration/blob/v0.7.0/known_good.json
 
+Upgrade Instructions
+^^^^^^^^^^^^^^^^^^^^
+
+Not evaluated yet, but expected to be straightforward as no breaking changes are introduced in this release. Please refer to the release notes of the individual modules for any specific upgrade instructions.
+
 Contact Information
-----------------------
+-------------------
+
 For any questions or support, please contact the *Project leads* or raise an issue/discussion.
 https://projects.eclipse.org/projects/automotive.score

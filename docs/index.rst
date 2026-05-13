@@ -18,7 +18,7 @@ Reference Integration Documentation
 Newest Release Notes
 --------------------
 
-:doc:`release_notes/score_07`
+:doc:`score_releases/release_note_score_07`
 
 Current Integration Status Overview
 -----------------------------------
@@ -53,11 +53,11 @@ Explore the documentation
    :titlesonly:
    :glob:
 
-   verification/verification
+   verification_report/platform_verification_report
 
 .. toctree::
    :hidden:
    :glob:
 
-   release_notes/*
-   verification/*
+   score_releases/*
+   verification_report/*
