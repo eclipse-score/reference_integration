@@ -65,7 +65,7 @@ For this release, the safety-analyses-related verification output is as follows:
    No release-specific result table for safety analyses, including open mitigations, is provided in this report.
 
 
-1. Test results
+3. Test results
 ---------------
 
 Test result per test case with status passed/failed/not_run for :need:`wp__verification_platform_int_test` and :need:`wp__verification_feat_int_test`.
