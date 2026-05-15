@@ -15,6 +15,7 @@
 
 #include <kvsbuilder.hpp>
 
+#include <array>
 #include <cctype>
 #include <cmath>
 #include <cstdint>
@@ -56,6 +57,40 @@ double maybe_snap_noisy_decimal(double value) {
     return value;
 }
 
+/**
+ * @brief Replace integer-encoded boolean values with JSON boolean literals.
+ *
+ * The C++ KVS library stores true/false as numeric 1/0 in the snapshot JSON.
+ * This function rewrites every occurrence of {"t":"bool","v":1} → {"t":"bool","v":true}
+ * and {"t":"bool","v":0} → {"t":"bool","v":false} so that Python json.loads()
+ * returns Python bool values instead of ints.
+ *
+ * @param json Input JSON string.
+ * @return JSON string with boolean values normalised to true/false literals.
+ */
+std::string canonicalize_bool_literals(const std::string& json) {
+    static const std::regex bool_value_pattern(
+        R"("t"\s*:\s*"bool"\s*,\s*"v"\s*:\s*(0|1)\b)");
+
+    std::string result;
+    result.reserve(json.size());
+
+    std::size_t cursor = 0;
+    for (std::sregex_iterator it(json.begin(), json.end(), bool_value_pattern), end; it != end;
+         ++it) {
+        const std::smatch& match = *it;
+        const auto group_pos = static_cast<std::size_t>(match.position(1));
+        const auto group_len = static_cast<std::size_t>(match.length(1));
+
+        result.append(json, cursor, group_pos - cursor);
+        result += (match.str(1) == "1") ? "true" : "false";
+        cursor = group_pos + group_len;
+    }
+
+    result.append(json, cursor, std::string::npos);
+    return result;
+}
+
 std::string canonicalize_f64_literals(const std::string& json) {
     static const std::regex f64_value_pattern(
         R"("t"\s*:\s*"f64"\s*,\s*"v"\s*:\s*([-+]?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?))");
@@ -85,6 +120,25 @@ std::string canonicalize_f64_literals(const std::string& json) {
 
     result.append(json, cursor, std::string::npos);
     return result;
+}
+
+/**
+ * @brief Compute the Adler-32 checksum of a byte string.
+ *
+ * Matches Python's ``zlib.adler32(data).to_bytes(4, byteorder='big')``.
+ *
+ * @param data Input byte string.
+ * @return 32-bit Adler-32 checksum.
+ */
+uint32_t adler32_hash(const std::string& data) {
+    static constexpr uint32_t kMod = 65521U;
+    uint32_t a = 1U;
+    uint32_t b = 0U;
+    for (const unsigned char byte : data) {
+        a = (a + static_cast<uint32_t>(byte)) % kMod;
+        b = (b + a) % kMod;
+    }
+    return (b << 16U) | a;
 }
 
 std::optional<std::string> snapshot_path(const KvsParameters& params) {
@@ -180,7 +234,8 @@ bool KvsInstance::normalize_snapshot_file_to_rust_envelope(const KvsParameters& 
     std::ostringstream buffer;
     buffer << in.rdbuf();
     const std::string content = trim(buffer.str());
-    const std::string canonical_content = canonicalize_f64_literals(content);
+    const std::string bool_canonical = canonicalize_bool_literals(content);
+    const std::string canonical_content = canonicalize_f64_literals(bool_canonical);
 
     std::string final_content;
     if (canonical_content.rfind("{\"t\":\"obj\",\"v\":", 0) == 0) {
@@ -196,7 +251,33 @@ bool KvsInstance::normalize_snapshot_file_to_rust_envelope(const KvsParameters& 
     }
 
     out << final_content;
-    return static_cast<bool>(out);
+    if (!out) {
+        return false;
+    }
+    out.close();
+
+    // Recalculate and rewrite the companion hash file so the snapshot stays
+    // valid after JSON modification.  Hash = Adler-32 of the written JSON
+    // bytes stored as 4 big-endian bytes, matching Python's
+    // zlib.adler32(data).to_bytes(4, byteorder='big').
+    const std::string hash_path_str =
+        (*path_opt).substr(0, (*path_opt).size() - 5U) + ".hash";
+    const uint32_t checksum = adler32_hash(final_content);
+    const std::array<uint8_t, 4> hash_bytes = {
+        static_cast<uint8_t>((checksum >> 24U) & 0xFFU),
+        static_cast<uint8_t>((checksum >> 16U) & 0xFFU),
+        static_cast<uint8_t>((checksum >>  8U) & 0xFFU),
+        static_cast<uint8_t>( checksum          & 0xFFU),
+    };
+    std::ofstream hash_out(hash_path_str, std::ios::binary | std::ios::trunc);
+    if (!hash_out.is_open()) {
+        std::cerr << "Cannot normalize snapshot: failed to write hash "
+                  << hash_path_str << std::endl;
+        return false;
+    }
+    hash_out.write(reinterpret_cast<const char*>(hash_bytes.data()),
+                   static_cast<std::streamsize>(hash_bytes.size()));
+    return static_cast<bool>(hash_out);
 }
 
 bool KvsInstance::set_value(const std::string& key, double value) {
@@ -226,6 +307,34 @@ std::optional<double> KvsInstance::get_value(const std::string& key) {
         default:
             return std::nullopt;
     }
+}
+
+std::optional<double> KvsInstance::get_value_f64(const std::string& key) {
+    auto result = kvs_.get_value(key);
+    if (!result) {
+        return std::nullopt;
+    }
+
+    const auto& stored = result.value();
+    if (stored.getType() != score::mw::per::kvs::KvsValue::Type::f64) {
+        return std::nullopt;
+    }
+    return std::get<double>(stored.getValue());
+}
+
+bool KvsInstance::remove_key(const std::string& key) {
+    auto result = kvs_.remove_key(key);
+    return static_cast<bool>(result);
+}
+
+bool KvsInstance::reset() {
+    auto result = kvs_.reset();
+    return static_cast<bool>(result);
+}
+
+bool KvsInstance::reset_key(const std::string& key) {
+    auto result = kvs_.reset_key(key);
+    return static_cast<bool>(result);
 }
 
 bool KvsInstance::flush() {

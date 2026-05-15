@@ -11,8 +11,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 import shutil
-from collections.abc import Generator
 from pathlib import Path
+from typing import Generator
 
 import pytest
 from testing_utils import (
@@ -64,7 +64,7 @@ def temp_dir_common(
 
 class FitScenario(Scenario):
     """
-    CIT test scenario definition.
+    FIT test scenario definition.
     """
 
     @pytest.fixture(scope="class")
@@ -90,10 +90,9 @@ class FitScenario(Scenario):
     ) -> ScenarioResult:
         result = self._run_command(command, execution_timeout, args, kwargs)
         success = result.return_code == ResultCode.SUCCESS and not result.hang
-        expect_failure = self.expect_command_failure()
-        if expect_failure and success:
+        if self.expect_command_failure() and success:
             raise RuntimeError(f"Command execution succeeded unexpectedly: {result=}")
-        if not expect_failure and not success:
+        if not self.expect_command_failure() and not success:
             raise RuntimeError(f"Command execution failed unexpectedly: {result=}")
         return result
 

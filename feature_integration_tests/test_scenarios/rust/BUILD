@@ -19,7 +19,7 @@ rust_binary(
     tags = [
         "manual",
     ],
-    visibility = ["//feature_integration_tests/test_cases:__pkg__"],
+    visibility = ["//visibility:public"],
     deps = [
         "@score_crates//:serde",
         "@score_crates//:serde_json",
