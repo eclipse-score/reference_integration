@@ -28,16 +28,14 @@ Current Integration Status Overview
 Explore the documentation
 -------------------------
 .. toctree::
-   :caption: Software Components
    :titlesonly:
    :maxdepth: 1
 
+   Modules <sw_components>
+   PMT <process_tools>
+   Release Notes <release_notes>
+   Status <feature_and_process_status>
 
-   _collections/score_persistency/docs/index
-   _collections/score_orchestrator/docs/index
-   _collections/score_kyron/docs/index
-   _collections/score_baselibs_rust/docs/index
-   _collections/score_logging/docs/index
 
 .. toctree::
    :caption: Process, Methods, and Tools
