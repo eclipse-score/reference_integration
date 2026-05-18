@@ -12,13 +12,13 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-PMT
-===
+Code Quality
+============
 
 .. toctree::
    :titlesonly:
    :maxdepth: 1
 
-   _collections/score_platform/docs/index
-   _collections/score_process/process/index
-   _collections/score_docs_as_code/docs/index
+   verification_report/platform_verification_report
+   verification_report/coverage_summary
+   verification_report/unit_test_summary

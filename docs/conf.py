@@ -55,11 +55,13 @@ source_suffix = {
 html_static_path = ["_assets"]
 html_css_files = ["custom.css"]
 
-# Theme options: suppress the right-side TOC sidebar on the status overview page
-# (it is very wide and the local nav is not useful there).
+
 html_theme_options = {
     "secondary_sidebar_items": {
         "**": ["page-toc"],
         "feature_and_process_status": [],
+        "s_core_v_1/roadmap/overall_status": [],
     },
+    "show_toc_level": 2,
+    "navigation_with_keys": False,
 }

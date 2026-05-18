@@ -31,11 +31,7 @@ def std_req_status_for_area(needs, results, arg1=""):
     std_req_ids = set()
     needs_by_id = {n["id"]: n for n in needs}
     for need in needs:
-        if (
-            need.get("type") == "gd_req"
-            and not need.get("is_external", False)
-            and area_tag in need.get("tags", [])
-        ):
+        if need.get("type") == "gd_req" and not need.get("is_external", False) and area_tag in need.get("tags", []):
             for ref_id in need.get("complies", []):
                 if ref_id.startswith("std_req__iso26262__"):
                     std_req_ids.add(ref_id)
@@ -83,10 +79,7 @@ def wp_tag_status(needs, results, arg1=""):
                 tags = set(need.get("tags", []))
                 if "done_automation" in tags:
                     automated += 1
-                elif any(
-                    t.startswith("prio_") and t.endswith("_automation")
-                    for t in tags
-                ):
+                elif any(t.startswith("prio_") and t.endswith("_automation") for t in tags):
                     waiting += 1
                 elif any(t.startswith("manual_prio_") for t in tags):
                     inspection += 1
@@ -112,18 +105,11 @@ def area_verification_status(needs, results, arg1=""):
     area_tag = arg1.strip()
     automated = waiting = inspection = other = 0
     for need in needs:
-        if (
-            need.get("type") == "gd_req"
-            and not need.get("is_external", False)
-            and area_tag in need.get("tags", [])
-        ):
+        if need.get("type") == "gd_req" and not need.get("is_external", False) and area_tag in need.get("tags", []):
             tags = set(need.get("tags", []))
             if "done_automation" in tags:
                 automated += 1
-            elif any(
-                t.startswith("prio_") and t.endswith("_automation")
-                for t in tags
-            ):
+            elif any(t.startswith("prio_") and t.endswith("_automation") for t in tags):
                 waiting += 1
             elif any(t.startswith("manual_prio_") for t in tags):
                 inspection += 1

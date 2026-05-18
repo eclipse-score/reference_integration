@@ -15,47 +15,41 @@
 Reference Integration Documentation
 ===================================
 
-Newest Release Notes
---------------------
+The **Reference Integration** is the central integration repository of the
+eclipse-score project. It combines all
+S-CORE software modules — including Communication, Logging, Orchestrator,
+Persistency, Time, Config Management, Lifecycle, and Security/Crypto — into a
+single, consistently versioned workspace.
 
-:doc:`score_releases/release_note_score_07`
+Its purpose is to verify that all modules build, integrate, and pass their
+tests together, providing a stable baseline for downstream projects. The
+repository also hosts the consolidated documentation, verification reports,
+and release notes for each S-CORE release.
 
-Current Integration Status Overview
------------------------------------
+.. grid:: 1 1 3 3
+   :gutter: 3
 
-`View dashboard (points always to main for now) <https://eclipse-score.github.io/reference_integration/main/status_dashboard.html>`_
+   .. grid-item-card:: 📊 Status & Roadmap
+      :link: status_roadmap
+      :link-type: doc
 
-Explore the documentation
--------------------------
-.. toctree::
-   :titlesonly:
-   :maxdepth: 1
+      Module status, :doc:`S-Core v1.0 Roadmap <s_core_v_1/roadmap/roadmap>`, PI planning, and integration status.
 
-   Modules <sw_components>
-   PMT <process_tools>
-   Release Notes <release_notes>
-   Status <feature_and_process_status>
+   .. grid-item-card:: 📖 Process, Methods & Tools
+      :link: process_methods_tools
+      :link-type: doc
 
+      S-CORE process description, platform standards, and documentation toolchain.
 
-.. toctree::
-   :caption: Process, Methods, and Tools
-   :titlesonly:
-   :maxdepth: 1
+   .. grid-item-card:: ✅ Code Quality
+      :link: code_quality
+      :link-type: doc
 
-   _collections/score_platform/docs/index
-   _collections/score_process/process/index
-   _collections/score_docs_as_code/docs/index
-
-.. toctree::
-   :caption: Code Quality
-   :titlesonly:
-   :glob:
-
-   verification_report/platform_verification_report
+      Platform verification report and test coverage results.
 
 .. toctree::
    :hidden:
-   :glob:
 
-   score_releases/*
-   verification_report/*
+   status_roadmap
+   process_methods_tools
+   code_quality

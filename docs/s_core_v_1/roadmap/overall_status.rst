@@ -16,7 +16,7 @@
 
    <script>document.body.classList.add("wide-content-page");</script>
 
-Feature and Process Status
+Overall Status
 ##########################
 
 This page tracks the completion status of all 5 process areas per module.
@@ -109,7 +109,7 @@ See :ref:`chm_change_workflows`.
           :colors: LimeGreen, Gold, LightBlue, LightGray
           :filter-func: needs_filters.area_verification_status(change_management)
 
-.. rubric:: Implementation status: ✅ Available (9/9 deliverables complete)
+.. rubric:: Implementation status: 🔄 92% (11/12 deliverables complete)
 
 .. list-table::
    :header-rows: 1
@@ -145,6 +145,17 @@ See :ref:`chm_change_workflows`.
 
    * - Security/Crypto
      - ✅ Available
+
+   * - Diagnostic Services
+     - ✅ Available
+
+   * - NM
+     - ❌ Open
+
+   * - Some/IP
+     - ✅ Available
+
+.. _overall_status_pa2:
 
 Process Area 2 — Requirements Engineering
 *****************************************
@@ -191,7 +202,7 @@ See :ref:`requirements_workflows`.
           :colors: LimeGreen, Gold, LightBlue, LightGray
           :filter-func: needs_filters.area_verification_status(requirements_engineering)
 
-.. rubric:: Implementation status: 🔄 22% (6/27 deliverables complete)
+.. rubric:: Implementation status: 🔄 25% (9/36 deliverables complete)
 
 .. list-table::
    :header-rows: 1
@@ -271,6 +282,30 @@ See :ref:`requirements_workflows`.
      - ❌ Open
      - ❌ Open
 
+   * - Diagnostic Services
+     - ✅ Available (22/22)
+
+       | `requirements <https://github.com/eclipse-score/score/blob/main/docs/features/diagnostics/requirements/index.rst>`__
+     - ❌ Open
+     - ❌ Open
+
+   * - NM
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+
+   * - Some/IP
+     - ✅ Available (6/6)
+
+       | `score (5) <https://github.com/eclipse-score/score/blob/main/docs/features/communication/some_ip_gateway/requirements/index.rst>`__
+       | `tc8 conformance (1) <https://github.com/eclipse-score/inc_someip_gateway/blob/main/docs/tc8_conformance/requirements.rst>`__
+     - ✅ Available (8/8)
+
+       | `tc8 conformance <https://github.com/eclipse-score/inc_someip_gateway/blob/main/docs/tc8_conformance/requirements.rst>`__
+     - ❌ Open
+
+.. _overall_status_pa3:
+
 Process Area 3 — Architecture Design
 ************************************
 
@@ -316,7 +351,7 @@ See :ref:`arch_workflow`.
           :colors: LimeGreen, Gold, LightBlue, LightGray
           :filter-func: needs_filters.area_verification_status(architecture_design)
 
-.. rubric:: Implementation status: 🔄 22% (6/27 deliverables complete)
+.. rubric:: Implementation status: 🔄 17% (6/36 deliverables complete)
 
 .. list-table::
    :header-rows: 1
@@ -390,6 +425,23 @@ See :ref:`arch_workflow`.
      - ❌ Open
      - ❌ Open
 
+   * - Diagnostic Services
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+
+   * - NM
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+
+   * - Some/IP
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+
+.. _overall_status_pa4:
+
 Process Area 4 — Implementation
 ********************************
 
@@ -435,7 +487,7 @@ See :ref:`workflow_implementation`.
           :colors: LimeGreen, Gold, LightBlue, LightGray
           :filter-func: needs_filters.area_verification_status(implementation)
 
-.. rubric:: Implementation status: 🔄 47% (17/36 deliverables complete)
+.. rubric:: Implementation status: 🔄 38% (18/48 deliverables complete)
 
 .. list-table::
    :header-rows: 1
@@ -514,6 +566,26 @@ See :ref:`workflow_implementation`.
      - ❌ Open
      - ❌ Open
 
+   * - Diagnostic Services
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+
+   * - NM
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+
+   * - Some/IP
+     - ❌ Open
+     - ✅ Available (~12,500 LOC) `inc_someip_gateway <https://github.com/eclipse-score/inc_someip_gateway>`__
+     - ❌ Open
+     - ❌ Open
+
+.. _overall_status_pa5:
+
 Process Area 5 — Verification
 *****************************
 
@@ -580,7 +652,7 @@ See :ref:`verification_workflows`.
    ``--config=asan_ubsan_lsan``, TSan via ``--config=tsan``). All listed workflows are
    zero-tolerance, so a passing ``main`` branch implies **0 sanitizer findings**.
 
-.. rubric:: Implementation status: 🔄 37% (23/63 deliverables complete)
+.. rubric:: Implementation status: 🔄 29% (25/87 deliverables complete)
 
 .. list-table::
    :header-rows: 1
@@ -596,6 +668,8 @@ See :ref:`verification_workflows`.
      - **Dynamic Code Analysis**
      - | **Module Verification**
        | **Report**
+     - | **Platform Verification**
+       | **Report**
 
    * - Baselibs
      - ✅ Available
@@ -605,9 +679,7 @@ See :ref:`verification_workflows`.
 
        | **C1:** 60.3% (cpp)
        | **Rust line:** 74.4%
-     - ✅ Available
-
-       | (13 tests)
+     - ✅ Available (13 tests)
      - ❌ Open
      - ✅ 0 findings
 
@@ -615,6 +687,7 @@ See :ref:`verification_workflows`.
      - ✅ 0 findings
 
        | `ASan/UBSan/LSan <https://github.com/eclipse-score/baselibs/blob/main/.github/workflows/sanitizers_linux.yml>`__
+     - ❌ Open
      - ❌ Open
 
    * - Communication
@@ -624,9 +697,7 @@ See :ref:`verification_workflows`.
      - 🔄 **C0:** 87.9%
 
        | **C1:** 58.8% (cpp)
-     - ✅ Available
-
-       | (42 tests)
+     - ✅ Available (42 tests)
      - ❌ Open
      - 🔄 Configured
 
@@ -637,6 +708,7 @@ See :ref:`verification_workflows`.
 
        | `ASan/UBSan/LSan <https://github.com/eclipse-score/communication/blob/main/.github/workflows/address_undefined_behavior_leak_sanitizer.yml>`__
        | `TSan <https://github.com/eclipse-score/communication/blob/main/.github/workflows/thread_sanitizer.yml>`__
+     - ❌ Open
      - ❌ Open
 
    * - Logging
@@ -654,21 +726,21 @@ See :ref:`verification_workflows`.
      - ❌ Open
      - ❌ Open
      - ❌ Open
+     - ❌ Open
 
    * - Orchestrator
      - ✅ Available
 
        | (2 tests)
      - ❌ Open
-     - ✅ Available
-
-       | (9 tests)
+     - ✅ Available (9 tests)
      - ✅ Available (3 tests)
 
        | `reference_integration <https://github.com/eclipse-score/reference_integration>`__ (cross-module)
      - ✅ 0 findings
 
        | `Clippy <https://github.com/eclipse-score/orchestrator/blob/main/.github/workflows/clippy.yml>`__
+     - ❌ Open
      - ❌ Open
      - ❌ Open
 
@@ -689,15 +761,15 @@ See :ref:`verification_workflows`.
        | `Clippy <https://github.com/eclipse-score/persistency/blob/main/.github/workflows/clippy.yml>`__
      - ❌ Open
      - ❌ Open
+     - ❌ Open
 
    * - Time
      - ✅ Available
 
        | (296 tests)
      - ❌ Open
-     - ✅ Available
-
-       | (11 tests)
+     - ✅ Available (11 tests)
+     - ❌ Open
      - ❌ Open
      - ❌ Open
      - ❌ Open
@@ -715,6 +787,7 @@ See :ref:`verification_workflows`.
        | `clang-tidy <https://github.com/eclipse-score/config_management/blob/main/.github/workflows/static-analysis.yml>`__
      - ❌ Open
      - ❌ Open
+     - ❌ Open
 
    * - Lifecycle
      - ✅ Available
@@ -724,19 +797,51 @@ See :ref:`verification_workflows`.
 
        | **C1:** 45.8% (cpp)
        | **Rust line:** 53.8%
-     - ✅ Available
-
-       | (9 tests)
+     - ✅ Available (9 tests)
      - ❌ Open
      - ✅ 0 findings
 
        | `Clippy <https://github.com/eclipse-score/lifecycle/blob/main/.github/workflows/lint_clippy.yml>`__
      - ❌ Open
      - ❌ Open
+     - ❌ Open
 
    * - Security/Crypto
      - ❌ Open
      - ❌ Open
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+
+   * - Diagnostic Services
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+
+   * - NM
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+
+   * - Some/IP
+     - ✅ Available
+
+       | (199 tests)
+     - ❌ Open
+     - ✅ Available (17 stress tests)
      - ❌ Open
      - ❌ Open
      - ❌ Open

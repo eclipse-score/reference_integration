@@ -1,14 +1,20 @@
 ---
-name: module-phase-tracker
-description: "Update the Feature and Process Status table in feature_and_process_status.rst. Use when: checking module status, updating feature status tracker, refreshing work product status, deriving completion status from eclipse-score GitHub repos for Baselibs, Communication, Logging, Orchestrator, Persistency, Time, Config Management, Lifecycle, Security/Crypto."
+name: overall-status
+description: "Update the Feature and Process Status table in docs/s_core_v_1/roadmap/overall_status.rst. Use when: checking module status, updating feature status tracker, refreshing work product status, deriving completion status from eclipse-score GitHub repos for Baselibs, Communication, Logging, Orchestrator, Persistency, Time, Config Management, Lifecycle, Security/Crypto."
 argument-hint: "optional: module name or 'all'"
 ---
 
 # Feature and Process Status Tracker
 
 Derives and updates the completion status table in
-`docs/feature_and_process_status.rst` by querying the live eclipse-score GitHub
+`docs/s_core_v_1/roadmap/overall_status.rst` by querying the live eclipse-score GitHub
 repositories.
+
+> **Navigation (updated 2026-05)**: `overall_status.rst` is linked from
+> `docs/s_core_v_1/roadmap/roadmap.rst` under the **Status & Goals** toctree section.
+> The file was moved from `docs/s_core_v_1/status/` to `docs/s_core_v_1/roadmap/`.
+> The `status/` folder has been removed. The roadmap itself is split into sub-pages:
+> `roadmap.rst`, `pi1.rst` – `pi4.rst`, `overall_status.rst`, all under `docs/s_core_v_1/roadmap/`.
 
 ## When to Use
 
@@ -18,7 +24,7 @@ repositories.
 
 ## RST File Structure
 
-`docs/feature_and_process_status.rst` consists of a file header followed by 5
+`docs/s_core_v_1/roadmap/overall_status.rst` consists of a file header followed by 5
 Process Area sections. Each section has this exact pattern:
 
 ```rst
@@ -87,6 +93,7 @@ See :ref:`<workflow_ref>`.
 **Important rules:**
 - `.. needpie::` does **NOT** support a `:title:` option — omit it entirely (causes build errors)
 - The pie chart table uses CSS class `compact-overview-table`; each cell needs `.. rst-class:: small-pie-cell` before its `.. needpie::`
+- **Pie chart sizing**: `custom.css` sets `compact-overview-table` to `width: 100%; table-layout: fixed` with each column at `width: 33%`. The generated `<img>` elements have their sphinx-needs fixed pixel sizes overridden via `width: 100% !important; max-width: 100% !important; height: auto !important` (selectors: `.small-pie-cell img`, `.compact-overview-table td img`, `img[id^="needpie-"]`). **Do NOT add explicit pixel sizes** — this causes horizontal scrolling.
 - The module tracker table uses CSS class `module-phase-tracker-table`
 - Both `.. rubric::` directives are plain inline text — NOT RST section headings
 - The `.. rubric:: Implementation status:` line is computed (see Step 4 in Procedure) and placed directly before the module tracker table
@@ -99,8 +106,9 @@ See :ref:`<workflow_ref>`.
          | (4,663 tests)
     ```
     ```rst
-       - 🔄 **C0:** 92.3%
+       - 🔄
 
+         | **C0:** 92.3%
          | **C1:** 60.3% (cpp)
          | **Rust line:** 74.4%
     ```
@@ -261,7 +269,7 @@ See :ref:`verification_workflows`.
    **Dynamic Code Analysis** is tracked via sanitizer CI workflows ...
 ```
 
-Columns: **Unit Tests**, **C0/C1 Coverage**, **Comp. Integration Tests**, **Feature Integration Tests**, **Static Code Analysis**, **Dynamic Code Analysis**, **Module Verification Report**
+Columns: **Unit Tests**, **C0/C1 Coverage**, **Comp. Integration Tests**, **Feature Integration Tests**, **Static Code Analysis**, **Dynamic Code Analysis**, **Module Verification Report**, **Platform Verification Report**
 
 **Cross-module integration test format** (when tests live in `reference_integration`, not the module's own repo):
 ```rst
@@ -298,6 +306,31 @@ Columns: **Unit Tests**, **C0/C1 Coverage**, **Comp. Integration Tests**, **Feat
 ### Process Area 4 — Code
 - **✅ Available**: source files (`.cpp`, `.h`, `.py`, `.rs` etc.) exist in the module's own repo outside of `docs/`
 - **❌ Open**: no source files found
+
+**Always include the LOC count** in the cell using the format `✅ Available (~X,XXX LOC) \`repo <url>\`__`.
+
+**How to count LOC:**
+Count all lines (including blank/comment lines) across all source files (`.cpp`, `.h`, `.c`, `.rs`, `.py`) in the module's own repo. Round to the nearest 100.
+
+```python
+def count_loc(repo, tree, ref="main"):
+    src_files = [p for p in tree if
+                 any(p.endswith(ext) for ext in ('.cpp', '.h', '.c', '.rs', '.py'))
+                 and not p.startswith('docs/')]
+    total = 0
+    for f in src_files:
+        content = fetch_file(repo, f, ref)
+        total += len(content.split('\n'))
+    # round to nearest 100
+    rounded = round(total / 100) * 100
+    print(f"  LOC: {total} → ~{rounded:,}")
+    return rounded
+```
+
+**RST format:**
+```rst
+   - ✅ Available (~12,500 LOC) `inc_someip_gateway <https://github.com/eclipse-score/inc_someip_gateway>`__
+```
 
 ### Process Area 4 — Detailed Design
 - **✅ Available**: 100% of formal design doc needs elements in `detailed_design/` folders have `:status: valid`
@@ -353,26 +386,45 @@ gh api "repos/eclipse-score/reference_integration/actions/jobs/$JOB_ID/logs" \
 | Lifecycle | `score_lifecycle_health_cpp` | `score_lifecycle_health_rust` |
 | Security/Crypto | not in CI | — |
 
-**Format in table (C0 on first line, C1 and Rust each as `| ` line-blocks):**
+**Format in table (status emoji alone on first line, all coverage metrics as `| ` line-blocks below):**
 - CPP + Rust:
   ```rst
-     - 🔄 **C0:** 92.3%
+     - 🔄
 
+       | **C0:** 92.3%
        | **C1:** 60.3% (cpp)
        | **Rust line:** 74.4%
   ```
 - CPP only:
   ```rst
-     - 🔄 **C0:** 87.9%
+     - 🔄
 
+       | **C0:** 87.9%
        | **C1:** 58.8% (cpp)
   ```
 - Not available: `❌ Open`
 
 ### Process Area 5 — Comp. Integration Tests
-- **✅ Available**: Source repo contains integration test source files (`.cpp`/`.py` with "integration" in path)
-- **🔄 In Progress**: integration test CI workflow exists but no test source files
-- **❌ Open**: no integration test artifacts
+
+Look for component-level integration test targets inside the module’s own repository (i.e. tests that are **not** cross-module tests in `reference_integration`).
+
+**How to find them:**
+```bash
+# Count test targets or test files with "integration" in their path or name
+gh api repos/eclipse-score/<repo>/git/trees/main?recursive=1 \
+  --jq '[.tree[] | select(.path | test("integrat"; "i")) | select(.type=="blob")] | length'
+```
+
+Alternatively, look for test target names containing `_it_`, `_integration_`, `component_test`, or similar naming patterns.
+
+**Status criteria:**
+- **`✅ Available (N tests)`**: Component integration tests exist in the module repo.
+- **`❌ Open`**: No component integration tests found.
+
+**RST format:**
+```rst
+   - ✅ Available (9 tests)
+```
 
 ### Process Area 5 — Feature Integration Tests
 - **🔄 In Progress**: `integration_test_scenarios` or `feature*test*` paths found in source repo
@@ -454,6 +506,15 @@ Dynamic analysis is performed via sanitizer CI workflows (ASan/UBSan/LSan for C+
 - **✅ Available**: `verification/module_verification_report.rst` exists AND `:status: valid` AND contains actual verification data
 - **🔄 In Progress**: file exists with `:status: draft`
 - **❌ Open**: file does not exist, OR file is a template placeholder only
+
+### Process Area 5 — Platform Verification Report
+The Platform Verification Report (`wp__verification_platform_ver_report`) is a single cross-module document in `eclipse-score/score` at `docs/score_releases/verification/platform_ver_report.rst`. It tracks **feature requirement test coverage** (via `FullyVerifies`/`PartiallyVerifies` links in Feature Integration Tests on `feat_req__...` IDs) and platform-level test results.
+
+- **✅ Available**: `docs/score_releases/verification/platform_ver_report.rst` has `:status: valid` AND contains actual verification data
+- **🔄 In Progress**: file exists with `:status: draft`
+- **❌ Open**: file does not exist, OR is a template placeholder only
+
+> ⚠️ This column is **not per-module** — it is the same document for all modules. Show the same status in every row.
 
 ## Procedure
 
@@ -658,11 +719,142 @@ Before updating the file, verify these invariants:
 4. **`🔄 0%` vs `❌ Open`**: grep all cells — any `🔄 0%` means files exist but are all invalid. Any `❌ Open` means zero files found. These are fundamentally different states.
 5. **Cross-check against previous version**: If a cell flips from `🔄 NN%` to `❌ Open` compared to the prior RST, investigate before accepting — it almost certainly means a filter missed files, not that content disappeared.
 
+#### 5a — Structural completeness check (same set of information)
+
+**Before comparing values, verify that the new data has the same structure as the existing RST.**
+This catches missing modules, missing columns, or accidentally dropped rows — and must run first.
+
+```python
+def parse_rst_structure(rst_path):
+    """
+    Parses overall_status.rst and returns the set of modules and deliverable
+    columns present in each PA table.
+
+    Returns:
+      {
+        'PA1': {'modules': ['Baselibs', ...], 'columns': ['CR approved']},
+        'PA2': {'modules': [...], 'columns': ['Feature Requirements', ...]},
+        ...
+      }
+    """
+    with open(rst_path) as f:
+        text = f.read()
+
+    pa_sections = re.split(r'Process Area (\d+) —', text)[1:]  # alternating: pa_num, pa_body
+    result = {}
+    for i in range(0, len(pa_sections) - 1, 2):
+        pa = f"PA{pa_sections[i].strip()}"
+        body = pa_sections[i + 1]
+
+        # Extract header row (columns)
+        header_match = re.search(r'\* - \*\*Module\*\*(.*?)(?=\n   \* -\s+\w)', body, re.DOTALL)
+        cols = re.findall(r'\*\*([^*]+)\*\*', header_match.group(0)) if header_match else []
+        cols = [c.strip() for c in cols if c.strip() != 'Module']
+
+        # Extract module names (stub column = first cell of each data row)
+        modules = re.findall(r'\n   \* - ((?![\*\s])[\w][^\n]+)', body)
+        modules = [m.strip() for m in modules]
+
+        result[pa] = {'modules': modules, 'columns': cols}
+    return result
+
+def structural_check(old_structure, new_structure):
+    """
+    Compares structure dicts from parse_rst_structure.
+    Prints errors for any missing modules or columns.
+    Returns True if identical, False otherwise.
+    """
+    ok = True
+    for pa in old_structure:
+        if pa not in new_structure:
+            print(f"  🛑 MISSING PA: {pa} not found in new data")
+            ok = False
+            continue
+
+        old_mods = set(old_structure[pa]['modules'])
+        new_mods = set(new_structure[pa]['modules'])
+        missing_mods = old_mods - new_mods
+        extra_mods = new_mods - old_mods
+        if missing_mods:
+            print(f"  🛑 {pa}: MISSING MODULES: {sorted(missing_mods)}")
+            ok = False
+        if extra_mods:
+            print(f"  ℹ️  {pa}: NEW MODULES: {sorted(extra_mods)}  (verify intentional)")
+
+        old_cols = old_structure[pa]['columns']
+        new_cols = new_structure[pa]['columns']
+        if old_cols != new_cols:
+            print(f"  🛑 {pa}: COLUMN MISMATCH")
+            print(f"       old: {old_cols}")
+            print(f"       new: {new_cols}")
+            ok = False
+
+    return ok
+```
+
+**Run this before any value comparison:**
+```python
+old = parse_rst_structure("docs/s_core_v_1/roadmap/overall_status.rst")
+# ... compute new_structure from your freshly calculated data ...
+assert structural_check(old, new_structure), "Structure mismatch — do not write RST until resolved"
+```
+
+**Rules:**
+
+| Situation | Action |
+|---|---|
+| Module present in old, missing in new | 🛑 **STOP** — row was dropped accidentally |
+| Column present in old, missing in new | 🛑 **STOP** — deliverable column was dropped |
+| New module not in old | ℹ️ Intentional addition — verify it was requested |
+| Module count in new < old | 🛑 **STOP** — data loss |
+| All PA sections present | ✅ |
+
+#### 5b — Compare new values against existing RST (plausibility diff)
+
+**Only run this after 5a passes.** Diff computed values against the existing RST cell-by-cell:
+
+```python
+def plausibility_check(old_val, new_val, module, deliverable):
+    """
+    Flags suspicious regressions. Print a WARNING for human review.
+    """
+    def rank(val):
+        if '✅' in val: return 2
+        if '🔄' in val: return 1
+        return 0  # ❌ Open
+
+    old_rank = rank(old_val)
+    new_rank = rank(new_val)
+
+    if new_rank < old_rank:
+        print(f"  ⚠️  REGRESSION [{module} / {deliverable}]: {old_val!r} → {new_val!r}")
+        print(f"      → Check filter paths, repo tree, and pinned ref.")
+    elif old_rank == 0 and new_rank == 2:
+        print(f"  ℹ️  LARGE JUMP [{module} / {deliverable}]: {old_val!r} → {new_val!r}")
+        print(f"      → Confirm count is correct before accepting.")
+    else:
+        print(f"  ✓  [{module} / {deliverable}]: {old_val!r} → {new_val!r}")
+```
+
+**Rules for human review:**
+
+| Old value | New value | Action |
+|---|---|---|
+| `✅ Available` | `❌ Open` | 🛑 **STOP** — almost certainly a filter bug. Do not write. |
+| `✅ Available` | `🔄 NN%` | ⚠️ Regression — investigate before accepting. |
+| `🔄 NN%` | `❌ Open` | 🛑 **STOP** — files existed before, filter is now missing them. |
+| `🔄 NN%` → `🔄 MM%` | MM < NN | ⚠️ Percentage dropped — check if content was deleted or filter changed. |
+| `❌ Open` | `🔄 NN%` or `✅` | ✅ Progress — verify count is plausible. |
+| `🔄 NN%` | `✅ Available` | ✅ Completion — confirm valid == total. |
+| Any | Same | ✅ No change — OK. |
+
+**LOC plausibility** (PA4 Code column): if the new LOC count is less than 50% of the previous value, flag it — most likely a filter excluded files it shouldn't have.
+
 ---
 
 ### Step 6 — Update the RST file
 
-Write the computed values to `docs/feature_and_process_status.rst` following the formatting rules in the RST File Structure section above. Update the `.. rubric:: Implementation status:` line for each PA.
+Write the computed values to `docs/s_core_v_1/roadmap/overall_status.rst` following the formatting rules in the RST File Structure section above. Update the `.. rubric:: Implementation status:` line for each PA.
 
 ---
 
@@ -689,9 +881,45 @@ Add a row to the Modules and Repos table above (with known_good.json key and pat
 - Central CodeQL finding counts require GitHub Security tab access.
 - Feature integration tests heuristic is weak — manual verification recommended
 
+## Docs Structure (reference_integration)
+
+```
+docs/
+  index.rst                          ← top-level: Modules, PMT, S-Core v1.0, Integration Status
+  conf.py                            ← Sphinx config (pydata theme, sidebar-toggle.js, custom.css)
+  _assets/
+    custom.css                       ← compact-overview-table (fluid 33%-per-column pie charts, !important img override), module-phase-tracker-table, wide-content-page, collapsible right sidebar
+    sidebar-toggle.js                ← right sidebar collapse/expand toggle (persisted in localStorage)
+  _templates/
+    sidebar-root-nav.html            ← left nav with startdepth=0 (shows full toctree on all pages)
+  s_core_v_1/
+    index.rst                        ← S-Core v1.0 section: Status, Releases, Verification, Roadmap
+    status/
+      status.rst                     ← Status section index (toctree)
+      overall_status.rst             ← Feature and Process Status tracker (THIS FILE — updated by this skill)
+    releases/
+      releases.rst
+      score_07.rst
+    verification/
+      verification.rst
+      unit_test_summary.md
+      coverage_summary.md
+    roadmap.rst
+  integration_process/
+    integration_process.rst          ← Integration Process section (currently empty placeholder)
+  sw_components.rst
+  process_tools.rst
+  needs_filters.py                   ← sphinx-needs filter functions for pie charts
+```
+
+**`conf.py` key settings:**
+- `html_sidebars = {"**": ["sidebar-root-nav"]}` — full left nav on every page
+- `html_js_files = ["sidebar-toggle.js"]` — collapsible right TOC sidebar
+- `html_theme_options.secondary_sidebar_items` — suppresses right TOC on `s_core_v_1/roadmap/overall_status` and `feature_and_process_status` pages
+
 ## Complete RST Snapshot
 
-Full content of `docs/feature_and_process_status.rst` as of last update (2026-05).
+Full content of `docs/s_core_v_1/roadmap/overall_status.rst` as of last update (2026-05).
 Use this to recreate the file from scratch if needed.
 
-See the file directly at `docs/feature_and_process_status.rst` in `eclipse-score/reference_integration`.
+See the file directly at `docs/s_core_v_1/roadmap/overall_status.rst` in `eclipse-score/reference_integration`.
