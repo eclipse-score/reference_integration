@@ -73,6 +73,13 @@ Test result per test case with status passed/failed/not_run for :need:`wp__verif
 For this release, detailed per-test-case results are not available in this report yet.
 The following referenced summary pages exist only.
 
+.. toctree::
+   :titlesonly:
+
+   Unit Tests Summary <unit_test_summary>
+   Coverage Analysis Summary <coverage_summary>
+
+
 4. Test logs
 ---------------
 
@@ -81,8 +88,3 @@ Link to test log per test case for :need:`wp__verification_platform_int_test` an
 For this release, detailed test logs are not available in this report yet.
 
 
-.. toctree::
-   :titlesonly:
-
-   Unit Tests Summary <unit_test_summary>
-   Coverage Analysis Summary <coverage_summary>
