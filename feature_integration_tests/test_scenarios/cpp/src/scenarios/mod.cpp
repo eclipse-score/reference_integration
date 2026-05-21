@@ -24,6 +24,10 @@ Scenario::Ptr make_multi_instance_isolation_scenario();
 ScenarioGroup::Ptr supported_datatypes_group();
 ScenarioGroup::Ptr default_values_group();
 
+Scenario::Ptr make_process_launching_support_scenario();
+Scenario::Ptr make_dependency_ordering_scenario();
+Scenario::Ptr make_parallel_launching_scenario();
+
 ScenarioGroup::Ptr persistency_scenario_group() {
     return std::make_shared<ScenarioGroupImpl>(
         "persistency",
@@ -38,9 +42,20 @@ ScenarioGroup::Ptr persistency_scenario_group() {
         std::vector<ScenarioGroup::Ptr>{supported_datatypes_group(), default_values_group()});
 }
 
+ScenarioGroup::Ptr lifecycle_scenario_group() {
+    return std::make_shared<ScenarioGroupImpl>(
+        "lifecycle",
+        std::vector<Scenario::Ptr>{
+            make_process_launching_support_scenario(),
+            make_dependency_ordering_scenario(),
+            make_parallel_launching_scenario(),
+        },
+        std::vector<ScenarioGroup::Ptr>{});
+}
+
 ScenarioGroup::Ptr root_scenario_group() {
     return std::make_shared<ScenarioGroupImpl>(
         "root",
         std::vector<Scenario::Ptr>{},
-        std::vector<ScenarioGroup::Ptr>{persistency_scenario_group()});
+        std::vector<ScenarioGroup::Ptr>{persistency_scenario_group(), lifecycle_scenario_group()});
 }
