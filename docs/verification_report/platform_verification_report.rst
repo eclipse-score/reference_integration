@@ -16,7 +16,7 @@ Platform Verification Report
 ============================
 
 .. document:: Platform Verification Report
-   :id: doc__platform_verification_report_v07
+   :id: doc__platform_verification_report_latest
    :status: valid
    :safety: QM
    :security: YES

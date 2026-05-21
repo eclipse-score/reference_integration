@@ -18,7 +18,7 @@ Reference Integration Documentation
 Newest Release Notes
 --------------------
 
-:doc:`score_releases/release_note_score_07`
+:doc:`score_releases/release_note_score_v0_7`
 
 Current Integration Status Overview
 -----------------------------------
@@ -56,8 +56,8 @@ Explore the documentation
    verification_report/platform_verification_report
 
 .. toctree::
-   :hidden:
    :glob:
+   :caption: S-CORE Releases
+   :maxdepth: 2
 
-   score_releases/*
-   verification_report/*
+   score_releases/index

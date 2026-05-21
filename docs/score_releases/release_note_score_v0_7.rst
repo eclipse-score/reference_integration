@@ -12,7 +12,7 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-S-CORE Platform v0.7-release note
+S-CORE Platform v0.7 release note
 =================================
 
 .. document:: S-CORE v0.7 release note
@@ -120,7 +120,7 @@ Logging
 
 
 Orchestrator
-~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 Orchestrator module provides a framework for defining and executing complex workflows and task sequences in a coordinated manner.
 
@@ -157,18 +157,18 @@ Central integration of Eclipse S-CORE modules
 
 
 Reference QNX image
-+++++++++++++++++++++
++++++++++++++++++++
 
 - No changes compared to the previous software version.
 
 Reference Red Hat AutoSD Linux image (Experimental)
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 - No changes compared to the previous software version.
 
 
 Reference Elektrobit corbos Linux for Safety Applications Linux image (Experimental)
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 - No changes compared to the previous software version.
 
@@ -235,10 +235,12 @@ Compatibility
 Performed Verification
 ^^^^^^^^^^^^^^^^^^^^^^
 
+- See latest verification: :need:`doc__platform_verification_report_latest`.
+
 Known Issues/Vulnerabilities and Bug Fixes
 ------------------------------------------
 
-- see release notes of every module separately
+- See release notes of every module separately
 
 Upgrade Instructions
 --------------------
