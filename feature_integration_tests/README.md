@@ -19,6 +19,22 @@ This directory contains Feature Integration Tests for the S-CORE project. It inc
   - `test_ssh.py` — SSH connectivity tests
 - `configs/` — Configuration files for ITF execution (DLT, QEMU bridge, etc.)
 
+## Lifecycle FIT Summary
+
+Lifecycle Feature Integration Tests validate end-to-end integration patterns for the S-CORE lifecycle stack across Rust and C++ scenarios.
+
+- Coverage: 85/92 lifecycle requirements (92%)
+- Modes:
+  - API integration mode (no running daemon required)
+  - Daemon integration mode (real Launch Manager behavior)
+- Main validated areas:
+  - Process launching and dependency ordering (sequential/parallel)
+  - Conditional launching and run targets
+  - Process security/resources/termination
+  - Monitoring, recovery, control interface, logging, and configuration handling
+
+For full lifecycle requirement mapping and detailed rationale, see `feature_integration_tests/LIFECYCLE_TESTS_SUMMARY.md`.
+
 ## Running Tests
 
 ### Python Test Cases (scenario-based FIT)
@@ -26,14 +42,51 @@ This directory contains Feature Integration Tests for the S-CORE project. It inc
 Python tests are managed with Bazel and Pytest. To run all integration tests:
 
 ```sh
-bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_daemon
 ```
 
-To run specific test suites:
+To run lifecycle integration tests by language:
 
 ```sh
-bazel test //feature_integration_tests/test_cases:fit_rust
-bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_cpp
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_daemon_lifecycle_arc_rust
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_daemon_lifecycle_arc_cpp
+```
+
+Pytest direct local runs are also supported:
+
+```sh
+# All lifecycle tests (rust + cpp)
+python3 -m pytest feature_integration_tests/test_cases/tests/lifecycle/ -q -v
+
+# Rust only
+python3 -m pytest feature_integration_tests/test_cases/tests/lifecycle/ -q -v -m rust
+
+# C++ only
+python3 -m pytest feature_integration_tests/test_cases/tests/lifecycle/ -q -v -m cpp
+```
+
+To build scenario executables from pytest before running tests:
+
+```sh
+# Default Bazel config: linux-x86_64
+python3 -m pytest feature_integration_tests/test_cases/tests/lifecycle/ \
+  --build-scenarios \
+  --build-scenarios-timeout=600 \
+  -q -v
+
+# Explicit Bazel config
+python3 -m pytest feature_integration_tests/test_cases/tests/lifecycle/ \
+  --build-scenarios \
+  --bazel-config=linux-x86_64 \
+  --build-scenarios-timeout=600 \
+  -q -v
+
+# Or via environment override
+FIT_BAZEL_CONFIG=linux-x86_64 \
+python3 -m pytest feature_integration_tests/test_cases/tests/lifecycle/ \
+  --build-scenarios \
+  --build-scenarios-timeout=600 \
+  -q -v
 ```
 
 ### ITF Tests (QEMU-based)

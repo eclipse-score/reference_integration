@@ -13,6 +13,8 @@
 
 #include <scenario.hpp>
 
+#include "scenarios/lifecycle/launch_manager_support.h"
+
 #include <vector>
 
 Scenario::Ptr make_multiple_kvs_per_app_scenario();
@@ -23,6 +25,7 @@ Scenario::Ptr make_utf8_default_value_get_scenario();
 Scenario::Ptr make_multi_instance_isolation_scenario();
 ScenarioGroup::Ptr supported_datatypes_group();
 ScenarioGroup::Ptr default_values_group();
+
 
 ScenarioGroup::Ptr persistency_scenario_group() {
     return std::make_shared<ScenarioGroupImpl>(
@@ -38,9 +41,34 @@ ScenarioGroup::Ptr persistency_scenario_group() {
         std::vector<ScenarioGroup::Ptr>{supported_datatypes_group(), default_values_group()});
 }
 
+ScenarioGroup::Ptr lifecycle_scenario_group() {
+    return std::make_shared<ScenarioGroupImpl>(
+        "lifecycle",
+        std::vector<Scenario::Ptr>{
+            make_process_launching_support_scenario(),
+            make_dependency_ordering_scenario(),
+            make_parallel_launching_scenario(),
+            make_control_interface_support_scenario(),
+            make_process_arguments_scenario(),
+            make_process_security_scenario(),
+            make_process_resources_scenario(),
+            make_conditional_launching_scenario(),
+            make_process_management_scenario(),
+            make_run_targets_scenario(),
+            make_process_termination_scenario(),
+            make_monitoring_and_recovery_scenario(),
+            make_control_interface_commands_scenario(),
+            make_logging_support_scenario(),
+            make_configuration_management_scenario(),
+            make_debug_and_terminal_scenario(),
+            make_io_and_file_descriptors_scenario(),
+        },
+        std::vector<ScenarioGroup::Ptr>{});
+}
+
 ScenarioGroup::Ptr root_scenario_group() {
     return std::make_shared<ScenarioGroupImpl>(
         "root",
         std::vector<Scenario::Ptr>{},
-        std::vector<ScenarioGroup::Ptr>{persistency_scenario_group()});
+        std::vector<ScenarioGroup::Ptr>{persistency_scenario_group(), lifecycle_scenario_group()});
 }
