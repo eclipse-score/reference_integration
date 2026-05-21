@@ -67,7 +67,7 @@ bazel run //:docs_combo_experimental
 > Please refer to the README documents in the respective sub-directories for details about the specific integration.
 
 - [QNX](./images/qnx_x86_64//README.md)
-- [Red Hat AutoSD](./images/autosd_x86_64/build/README.md)
+- [Red Hat AutoSD](./images/autosd/)
 - [Elektrobit corbos Linux for Safety Applications](./images/ebclfsa_aarch64/README.md)
 - Linux x86_64
 
