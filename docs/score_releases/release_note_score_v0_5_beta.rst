@@ -16,7 +16,7 @@ S-CORE Platform v0.5-beta release note
 ======================================
 
 .. document:: S-Core v0.5-beta release note
-   :id: doc__score_v05_beta_release_note
+   :id: doc__score_v0_5_beta_release_note
    :status: draft
    :safety: ASIL_B
    :security: YES
@@ -127,7 +127,7 @@ preserving application state and data integrity over time.
 - **Version:** ``persistency v0.2.2``
 - **Source / tag:** `Persistency GitHub release <https://github.com/eclipse-score/persistency/archive/refs/tags/v0.2.2.tar.gz>`_
 
-.. _logging_daemon:
+.. _logging_daemon_v0_5_beta:
 
 Logging Daemon
 ~~~~~~~~~~~~~~~~~~
@@ -284,7 +284,7 @@ Test Scenarios
 - **Version:** ``Test Scenarios v0.3.1``
 - **Source / tag:** `Test Scenarios GitHub release <https://github.com/eclipse-score/testing_tools/releases/tag/v0.3.1>`_
 
-.. _bazel_cpp_toolchain:
+.. _bazel_cpp_toolchain_v0_5_beta:
 
 Bazel CPP Toolchain
 ~~~~~~~~~~~~~~~~~~~~
