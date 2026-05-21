@@ -283,7 +283,7 @@ def parse_arguments() -> argparse.Namespace:
 def main() -> bool:
     args = parse_arguments()
     args.coverage_output_dir.mkdir(parents=True, exist_ok=True)
-    path_to_docs = Path(__file__).parent.parent / "docs/verification_report"
+    path_to_docs = Path(__file__).parent.parent / "docs/s_core_v_1/verification"
 
     known = load_known_good(args.known_good_path.resolve())
 

@@ -74,16 +74,16 @@ jobs:
       - name: Publish build summary
         if: always()
         run: |
-          if [ -f docs/verification_report/unit_test_summary.md ]; then
-            cat docs/verification_report/unit_test_summary.md >> "$GITHUB_STEP_SUMMARY"
+          if [ -f docs/s_core_v_1/verification/unit_test_summary.md ]; then
+            cat docs/s_core_v_1/verification/unit_test_summary.md >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "No build summary file found (docs/verification_report/unit_test_summary.md)" >> "$GITHUB_STEP_SUMMARY"
+            echo "No build summary file found (docs/s_core_v_1/verification/unit_test_summary.md)" >> "$GITHUB_STEP_SUMMARY"
           fi
           echo "" >> "$GITHUB_STEP_SUMMARY" # Add a newline for better formatting
-          if [ -f docs/verification_report/coverage_summary.md ]; then
-            cat docs/verification_report/coverage_summary.md >> "$GITHUB_STEP_SUMMARY"
+          if [ -f docs/s_core_v_1/verification/coverage_summary.md ]; then
+            cat docs/s_core_v_1/verification/coverage_summary.md >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "No coverage summary file found (docs/verification_report/coverage_summary.md)" >> "$GITHUB_STEP_SUMMARY"
+            echo "No coverage summary file found (docs/s_core_v_1/verification/coverage_summary.md)" >> "$GITHUB_STEP_SUMMARY"
           fi
       - name: Create archive of test reports
         if: github.ref_type == 'tag'
