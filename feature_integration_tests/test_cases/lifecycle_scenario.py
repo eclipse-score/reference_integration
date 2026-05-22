@@ -91,7 +91,7 @@ def create_launch_manager_config(config_path: Path, components: dict[str, Any], 
         },
         "components": components,
         "run_targets": run_targets,
-        "initial_run_target": "Startup",
+        "initial_run_target": "startup",
         "fallback_run_target": {
             "description": "Fallback state",
             "depends_on": [],
