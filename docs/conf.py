@@ -25,6 +25,14 @@ extensions = [
     "score_sphinx_bundle",
 ]
 
+# Exclude external release notes that are now maintained locally in docs/score_releases/
+exclude_patterns = [
+    "_collections/score_platform/docs/score_releases/score_releases/**",
+]
+
+# Suppress toc.excluded warnings from external modules referencing excluded docs
+suppress_warnings = ["toc.excluded"]
+
 # Enable markdown rendering
 source_suffix = {
     ".rst": "restructuredtext",

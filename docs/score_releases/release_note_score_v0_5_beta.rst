@@ -66,7 +66,7 @@ This does include
 - Static code analysis with CodeQL MISRA C++ 2023: `release link <https://github.com/eclipse-score/reference_integration/releases/tag/v0.5.0-beta>`.
 - Execution of Unit tests as part of the Reference Integration `test_integration workflow <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/test_integration.yml>`_.
 - Unit-test coverage measurement results are now automatically part of Release Assests for every component: **//TODO:** link to an example.
-- A new combined build toolchain of qcc and gcc, see :ref:`bazel-cpp-toolchain <bazel_cpp_toolchain>`.
+- A new combined build toolchain of qcc and gcc, see `bazel-cpp-toolchain <https://github.com/eclipse-score/bazel_cpp_toolchains>`_.
 - Improved doc-as-code and process description
 - `bazel_tools_cc <https://github.com/eclipse-score/bazel-tools-cc>`_ introduces a clang-tidy integration into S-CORE bazel infrasturture:
 
@@ -74,7 +74,7 @@ This does include
     `example project <https://github.com/eclipse-score/bazel-tools-cc/tree/main/test>`_ for instructions how to set-up
     clang-tidy checks for your module
   - In the upcoming releases clang-tidy will be extended with custom S-CORE checks to meet necessary process requirements.
-- Platform functionality was extended with :ref:`logging daemon <logging_daemon>`.
+- Platform functionality was extended with `logging daemon <https://github.com/eclipse-score/logging>`_.
 
 
 S-CORE Platform

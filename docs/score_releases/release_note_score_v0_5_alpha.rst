@@ -16,7 +16,7 @@ S-CORE Platform v0.5-alpha release note
 =======================================
 
 .. document:: S-Core v0.5-alpha release note
-   :id: doc__score_v0_5_alpha_release_note
+   :id: doc__score_v05_alpha_release_note
    :status: valid
    :safety: ASIL_B
    :security: YES
