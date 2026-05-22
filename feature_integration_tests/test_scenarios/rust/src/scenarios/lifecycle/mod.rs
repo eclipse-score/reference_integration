@@ -12,7 +12,12 @@
 // *******************************************************************************
 mod launch_manager_support;
 
-use launch_manager_support::{DependencyOrdering, ParallelLaunching, ProcessLaunchingSupport};
+use launch_manager_support::{
+    ConditionalLaunching, ConfigurationManagement, ControlInterfaceCommands, ControlInterfaceSupport, DebugAndTerminal,
+    DependencyOrdering, IOAndFileDescriptors, LoggingSupport, MonitoringAndRecovery, ParallelLaunching,
+    ProcessArguments, ProcessLaunchingSupport, ProcessManagement, ProcessResources, ProcessSecurity,
+    ProcessTermination, RunTargets,
+};
 use test_scenarios_rust::scenario::{ScenarioGroup, ScenarioGroupImpl};
 
 pub fn lifecycle_group() -> Box<dyn ScenarioGroup> {
@@ -22,6 +27,20 @@ pub fn lifecycle_group() -> Box<dyn ScenarioGroup> {
             Box::new(ProcessLaunchingSupport),
             Box::new(DependencyOrdering),
             Box::new(ParallelLaunching),
+            Box::new(ControlInterfaceSupport),
+            Box::new(ProcessArguments),
+            Box::new(ProcessSecurity),
+            Box::new(ProcessResources),
+            Box::new(ConditionalLaunching),
+            Box::new(ProcessManagement),
+            Box::new(RunTargets),
+            Box::new(ProcessTermination),
+            Box::new(MonitoringAndRecovery),
+            Box::new(ControlInterfaceCommands),
+            Box::new(LoggingSupport),
+            Box::new(ConfigurationManagement),
+            Box::new(DebugAndTerminal),
+            Box::new(IOAndFileDescriptors),
         ],
         vec![],
     ))
