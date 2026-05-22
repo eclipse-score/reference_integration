@@ -49,3 +49,74 @@ Scenario::Ptr make_dependency_ordering_scenario();
  * simultaneously, supporting parallel application execution scenarios.
  */
 Scenario::Ptr make_parallel_launching_scenario();
+
+/**
+ * @brief Create ControlInterfaceSupport scenario.
+ */
+Scenario::Ptr make_control_interface_support_scenario();
+
+/**
+ * @brief Create ProcessArguments scenario.
+ */
+Scenario::Ptr make_process_arguments_scenario();
+
+/**
+ * @brief Create ProcessSecurity scenario.
+ */
+Scenario::Ptr make_process_security_scenario();
+
+/**
+ * @brief Create ProcessResources scenario.
+ */
+Scenario::Ptr make_process_resources_scenario();
+
+/**
+ * @brief Create ConditionalLaunching scenario.
+ */
+Scenario::Ptr make_conditional_launching_scenario();
+
+/**
+ * @brief Create ProcessManagement scenario.
+ */
+Scenario::Ptr make_process_management_scenario();
+
+/**
+ * @brief Create RunTargets scenario.
+ */
+Scenario::Ptr make_run_targets_scenario();
+
+/**
+ * @brief Create ProcessTermination scenario.
+ */
+Scenario::Ptr make_process_termination_scenario();
+
+/**
+ * @brief Create MonitoringAndRecovery scenario.
+ */
+Scenario::Ptr make_monitoring_and_recovery_scenario();
+
+/**
+ * @brief Create ControlInterfaceCommands scenario.
+ */
+Scenario::Ptr make_control_interface_commands_scenario();
+
+/**
+ * @brief Create LoggingSupport scenario.
+ */
+Scenario::Ptr make_logging_support_scenario();
+
+/**
+ * @brief Create ConfigurationManagement scenario.
+ */
+Scenario::Ptr make_configuration_management_scenario();
+
+/**
+ * @brief Create DebugAndTerminal scenario.
+ */
+Scenario::Ptr make_debug_and_terminal_scenario();
+
+/**
+ * @brief Create IOAndFileDescriptors scenario.
+ */
+Scenario::Ptr make_io_and_file_descriptors_scenario();
+
