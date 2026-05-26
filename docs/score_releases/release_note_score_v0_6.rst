@@ -16,7 +16,7 @@ S-CORE Platform v0.6 release note
 =================================
 
 .. document:: S-CORE v0.6 release note
-   :id: doc__score_v0_6_release_note
+   :id: doc__ref_int_v0_6_release_note
    :status: draft
    :safety: QM
    :security: YES
