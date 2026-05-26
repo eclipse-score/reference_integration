@@ -75,3 +75,16 @@ git_override(
     commit = "0e9187f79a9935ca192779234b82f9d00dc4e335",
     remote = "https://github.com/eclipse-score/logging.git",
 )
+
+bazel_dep(name = "classic-diagnostic-adapter")
+git_override(
+    module_name = "classic-diagnostic-adapter",
+    commit = "0656ae80ebf04b42329b41b47ce3947166753f92",
+    patch_strip = 1,
+    patches = [
+        #"//patches/diagnostics:002-cda-mbedtls-bindgen-multiarch-include.patch",
+        "//patches/diagnostics:003-cda-mbedtls-use-ext-build-deps-for-csrc.patch",
+        "//patches/diagnostics:004-cda-mbedtls-ed25519-linkstatic.patch",
+    ],
+    remote = "https://github.com/eclipse-opensovd/classic-diagnostic-adapter.git",
+)
