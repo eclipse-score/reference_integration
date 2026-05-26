@@ -46,6 +46,7 @@ score_py_pytest(
     data = [
         "conftest.py",
         "fit_scenario.py",
+        "lifecycle_scenario.py",
         "persistency_scenario.py",
         "test_properties.py",
         "//feature_integration_tests/test_scenarios/rust:rust_test_scenarios",
@@ -68,6 +69,7 @@ score_py_pytest(
     data = [
         "conftest.py",
         "fit_scenario.py",
+        "lifecycle_scenario.py",
         "persistency_scenario.py",
         "test_properties.py",
         "//feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios",
