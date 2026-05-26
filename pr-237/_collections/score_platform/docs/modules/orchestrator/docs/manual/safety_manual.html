@@ -158,6 +158,13 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../../score_releases/index.html">
+    S-CORE Release Notes
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../../../score_persistency/docs/index.html">
     Persistency Documentation
   </a>
@@ -184,13 +191,6 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../../../score_logging/docs/index.html">
-    Logging Documentation
-  </a>
-</li>
-
             <li class="nav-item dropdown">
                 <button class="btn dropdown-toggle nav-item" type="button"
                 data-bs-toggle="dropdown" aria-expanded="false"
@@ -199,6 +199,13 @@
                 </button>
                 <ul id="pst-nav-more-links" class="dropdown-menu">
                     
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../../score_logging/docs/index.html">
+    Logging Documentation
+  </a>
+</li>
+
+
 <li class=" current active">
   <a class="nav-link dropdown-item nav-internal" href="../../../../index.html">
     S-CORE Platform Documentation
@@ -223,13 +230,6 @@
 <li class=" ">
   <a class="nav-link dropdown-item nav-internal" href="../../../../../../../verification_report/platform_verification_report.html">
     Platform Verification Report
-  </a>
-</li>
-
-
-<li class=" ">
-  <a class="nav-link dropdown-item nav-internal" href="../../../../../../../score_releases/index.html">
-    S-CORE Release Notes
   </a>
 </li>
 
@@ -346,6 +346,13 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../../score_releases/index.html">
+    S-CORE Release Notes
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../../../score_persistency/docs/index.html">
     Persistency Documentation
   </a>
@@ -404,13 +411,6 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../../../../../verification_report/platform_verification_report.html">
     Platform Verification Report
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../../../../score_releases/index.html">
-    S-CORE Release Notes
   </a>
 </li>
 
@@ -598,7 +598,7 @@
                   
   <section id="safety-manual">
 <h1>Safety Manual<a class="headerlink" href="#safety-manual" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-645f09d7">
+<div class="need_container docutils container" id="SNCB-542d290c">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__orchestrator_safety_manual">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -643,16 +643,17 @@
 </div>
 <section id="introduction-scope">
 <h2>Introduction/Scope<a class="headerlink" href="#introduction-scope" title="Link to this heading">#</a></h2>
-<div class="line-block">
-<div class="line">&lt;Describe here which module (or the platform) is covered by this manual.&gt;</div>
-</div>
+<p>This safety manual covers the orchestrator module.</p>
 </section>
 <section id="assumed-platform-safety-requirements">
 <h2>Assumed Platform Safety Requirements<a class="headerlink" href="#assumed-platform-safety-requirements" title="Link to this heading">#</a></h2>
-<div class="line-block">
-<div class="line">For the &lt;Project platform / module name&gt; the following safety related stakeholder requirements are assumed to define the top level functionality (purpose) of the &lt;Project platform / module name&gt;. I.e. from these all the feature and component requirements implemented are derived.</div>
-<div class="line">&lt;List here all the stakeholder requirements, with safety not equal to QM, the module’s components requirements are derived from.&gt;</div>
-</div>
+<p>For the orchestrator module name the following safety related stakeholder requirements are assumed to define the top level functionality (purpose) of the module. I.e. from these all the feature and component requirements implemented are derived.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../../requirements/stakeholder/index.html#stkh_req__execution_model__processes" title="stkh_req__execution_model__processes"><em class="xref need">Processes and thread manage... (stkh_req__execution_model__processes)</em></a> - this requirement is QM and not fully covered as ASIL, only combined with the following requirements</p></li>
+<li><p><a class="reference internal" href="../../../../requirements/stakeholder/index.html#stkh_req__dependability__automotive_safety" title="stkh_req__dependability__automotive_safety"><em class="xref need">Automotive Safety Integrity... (stkh_req__dependability__automotive_safety)</em></a></p></li>
+<li><p><a class="reference internal" href="../../../../requirements/stakeholder/index.html#stkh_req__app_architectures__support_time" title="stkh_req__app_architectures__support_time"><em class="xref need">Support for Time-based Arch... (stkh_req__app_architectures__support_time)</em></a></p></li>
+</ul>
+<p>The user needs to check orchestration feature level requirements to see which functionalities are provided as ASIL B.</p>
 </section>
 <section id="assumptions-of-use">
 <h2>Assumptions of Use<a class="headerlink" href="#assumptions-of-use" title="Link to this heading">#</a></h2>
@@ -677,35 +678,31 @@
 </tr>
 </thead>
 <tbody>
-<tr class="need row-even"><td class="needs_title"><p>Application deadlock</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../../../features/persistency/requirements/index.html#aou_req__persistency__appl_design">aou_req__persistency__appl_design</a></p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Application execution</p></td>
+<tr class="need row-even"><td class="needs_title"><p>Application execution</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../../../../features/persistency/requirements/index.html#aou_req__persistency__appl_exec">aou_req__persistency__appl_exec</a></p></td>
 <td class="needs_status"><p>valid</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>External Health Management</p></td>
+<tr class="need row-odd"><td class="needs_title"><p>External Health Management</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../../../../requirements/platform_assumptions/index.html#aou_req__platform__external_health_management">aou_req__platform__external_health_management</a></p></td>
 <td class="needs_status"><p>valid</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>OS safety functions</p></td>
+<tr class="need row-even"><td class="needs_title"><p>OS safety functions</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../../../../requirements/platform_assumptions/index.html#aou_req__platform__os_safety_functions">aou_req__platform__os_safety_functions</a></p></td>
 <td class="needs_status"><p>valid</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Persistency Error handling</p></td>
+<tr class="need row-odd"><td class="needs_title"><p>Persistency Error handling</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../../../../features/persistency/requirements/index.html#aou_req__persistency__error_handling">aou_req__persistency__error_handling</a></p></td>
 <td class="needs_status"><p>valid</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>POSIX Operating System</p></td>
+<tr class="need row-even"><td class="needs_title"><p>POSIX Operating System</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../../../../requirements/platform_assumptions/index.html#aou_req__platform__posix_operating_system">aou_req__platform__posix_operating_system</a></p></td>
 <td class="needs_status"><p>valid</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Process Isolation</p></td>
+<tr class="need row-odd"><td class="needs_title"><p>Process Isolation</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../../../../requirements/platform_assumptions/index.html#aou_req__platform__process_isolation">aou_req__platform__process_isolation</a></p></td>
 <td class="needs_status"><p>valid</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Safe HW platform</p></td>
+<tr class="need row-even"><td class="needs_title"><p>Safe HW platform</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../../../../requirements/platform_assumptions/index.html#aou_req__platform__hardware_safety">aou_req__platform__hardware_safety</a></p></td>
 <td class="needs_status"><p>valid</p></td>
 </tr>
