@@ -15,11 +15,6 @@
 Reference Integration Documentation
 ===================================
 
-Newest Release Notes
---------------------
-
-:doc:`score_releases/release_note_score_07`
-
 Current Integration Status Overview
 -----------------------------------
 
@@ -27,6 +22,14 @@ Current Integration Status Overview
 
 Explore the documentation
 -------------------------
+
+.. toctree::
+   :glob:
+   :caption: S-CORE Releases
+   :maxdepth: 2
+
+   score_releases/index
+
 .. toctree::
    :caption: Software Components
    :titlesonly:
@@ -55,9 +58,3 @@ Explore the documentation
 
    verification_report/platform_verification_report
 
-.. toctree::
-   :hidden:
-   :glob:
-
-   score_releases/*
-   verification_report/*
