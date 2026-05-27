@@ -15,49 +15,65 @@
 Reference Integration Documentation
 ===================================
 
-Newest Release Notes
---------------------
+The **Reference Integration** is the central integration repository of the
+eclipse-score project. It combines all
+S-CORE software modules — including Communication, Logging, Orchestrator,
+Persistency, Time, Config Management, Lifecycle, and Security/Crypto — into a
+single, consistently versioned workspace.
 
-:doc:`score_releases/release_note_score_07`
+Its purpose is to verify that all modules build, integrate, and pass their
+tests together, providing a stable baseline for downstream projects. The
+repository also hosts the consolidated documentation, verification reports,
+and release notes for each S-CORE release.
 
-Current Integration Status Overview
------------------------------------
+Beyond validation, the **Reference Integration** also serves as a technical
+blueprint for future commercial distributions. It demonstrates how S-CORE
+modules can be combined into a coherent, releaseable platform baseline,
+including the expected integration structure, verification artifacts, and
+documentation set that downstream product distributions can build on.
 
-`View dashboard (points always to main for now) <https://eclipse-score.github.io/reference_integration/main/status_dashboard.html>`_
+.. grid:: 1 1 3 3
+   :gutter: 3
 
-Explore the documentation
--------------------------
-.. toctree::
-   :caption: Software Components
-   :titlesonly:
-   :maxdepth: 1
+   .. grid-item-card:: 📊 Status & Roadmap
+      :link: s_core_v_1/index
+      :link-type: doc
 
+      :doc:`S-Core v1.0 Roadmap <s_core_v_1/roadmap/roadmap>` and PI planning.
 
-   _collections/score_persistency/docs/index
-   _collections/score_orchestrator/docs/index
-   _collections/score_kyron/docs/index
-   _collections/score_baselibs_rust/docs/index
-   _collections/score_logging/docs/index
+   .. grid-item-card:: 📖 Process, Methods & Tools
+      :link: process_methods_tools
+      :link-type: doc
 
-.. toctree::
-   :caption: Process, Methods, and Tools
-   :titlesonly:
-   :maxdepth: 1
+      S-CORE process description, platform standards, and documentation toolchain.
 
-   _collections/score_platform/docs/index
-   _collections/score_process/process/index
-   _collections/score_docs_as_code/docs/index
+   .. grid-item-card:: ✅ Code Quality
+      :link: verification_report/platform_verification_report
+      :link-type: doc
 
-.. toctree::
-   :caption: Code Quality
-   :titlesonly:
-   :glob:
+      Platform verification report and test coverage results.
 
-   verification_report/platform_verification_report
+   .. grid-item-card:: Integration
+      Reference Integration workflow and health overview with links to
+      :doc:`Integration Process <integration_process/integration_process>` and
+      `Integration Status <https://eclipse-score.github.io/reference_integration/main/status_dashboard.html>`_.
+
+   .. grid-item-card:: Modules
+      :link: sw_components
+      :link-type: doc
+
+      Central overview for all integrated modules. See :doc:`All Modules <sw_components>`.
+
+   .. grid-item-card:: 📝 Release Notes
+      :link: s_core_v_1/releases/releases
+      :link-type: doc
+
+      Overview of published S-CORE releases and their release notes.
 
 .. toctree::
    :hidden:
-   :glob:
 
-   score_releases/*
-   verification_report/*
+   sw_components
+   integration_process/integration_process
+   process_methods_tools
+   s_core_v_1/releases/releases
