@@ -1,178 +1,271 @@
-# Score Reference Integration
+# Eclipse S-CORE Reference Integration
 
-This workspace integrates multiple Eclipse Score modules (baselibs, communication, persistency, orchestrator, etc.) to validate cross-repository builds and detect integration issues early in the development cycle.
+This workspace integrates multiple Eclipse S-CORE modules (baselibs, communication, persistency, orchestrator, etc.) to validate cross-repository builds and detect integration issues early in the development cycle.
 
 ## Overview
 
-The reference integration workspace serves as a single Bazel build environment to:
+The reference integration workspace serves as a unified Bazel build environment for:
 
-- Validate cross-module dependency graphs
-- Detect label and repository boundary issues
-- Test toolchain and platform support (Linux, QNX, LLVM/GCC)
-- Prepare for release validation workflows
+- Validating cross-module dependency graphs and boundary issues
+- Testing toolchain and platform support (Linux x86_64, QNX x86_64, Elektrobit corbos Linux aarch64, Red Hat AutoSD)
+- Running Feature Integration Tests (FIT) and Integration Test Framework (ITF) tests
+- Preparing for release validation and integration workflows
 
-## Get started
+For additional documentation covering repository workflows and platform-specific details, see the `docs/` directory.
 
-Simply run `./score_starter` and select which integration You want to run. Once running, You will be guided by our welcome cli to run selected examples.
+## Quick Start
 
-## Structure of repo
+Simply run:
 
-Intention for each folder is described below
+```bash
+./score_starter
+```
 
-### bazel_common
+You will be guided interactively through available integrations, build options, and examples to run.
 
-Used to keep a common bazel functionalities for `images` like:
+### Try it now (quick flow)
 
-- toolchain setups
-- common tooling deps
-- common S-CORE modules deps
-- common `.bzl` extensions needed to streamline images
+1. Ensure prerequisites above are installed.
+2. From the repo root, run:
 
-### showcases
+```bash
+./score_starter
+```
 
-Used to keep `S-CORE` wide **showcases** implementation to showcase S-CORE in certain deployments (images). Contains:
+3. Build a quick target (example: build a platform image):
 
-- proxy target bundling all `standalone` examples from all `S-CORE` repos to deploy then as single bazel target into image
-- implementation of certain **showcases** that shall be deployed into images
+```bash
+bazel build --config=linux-x86_64 //images/linux_x86_64:image
+```
 
-#### cli
+4. List available Rust test scenarios:
 
-Contains a CLI tool to be used on runner that is showcasing the S-CORE functionality. It will provide superior user experience and will guide user to run examples.
-How to use it in Your image, look [here] (./showcases/cli/README.md)
+```bash
+bazel run //feature_integration_tests/test_scenarios/rust:rust_test_scenarios -- --list-scenarios
+```
 
-### images
+## Run showcases
 
-Used to keep concrete `images` for given target platform as bazel modules. Each platform shall have it's own folder with name `{platform}_{arch}` ie. `qnx_aarch64`.
+Use the interactive helper or Bazel to run showcase binaries. Examples:
 
-This `images` shall:
+```bash
+# Interactive helper
+./score_starter
 
-- deploy all `showcases` into image so they can be run inside
-- other specific code for given `image`
+# Run a CLI showcase (example target, may vary by workspace state)
+bazel run //showcases/cli:cli -- --help
+```
 
-### runners
+See [showcases/cli/README.md](showcases/cli/README.md) for CLI configuration and examples.
 
-Used to keep thin logic ro reuse `runners` between images, like docker runner etc.
+## Run tests
 
-## Docs
+Run Feature Integration Tests (FIT) and Integration Test Framework (ITF) with Bazel. Common examples:
 
-To generate a full documentation of all integrated modules, run:
+```bash
+# Run all FIT tests (Rust + C++)
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit --test_output=streamed
+
+# Run only Rust scenarios listing
+bazel run //feature_integration_tests/test_scenarios/rust:rust_test_scenarios -- --list-scenarios
+
+# Run ITF tests on Docker (Linux)
+bazel test --config=linux-x86_64 //feature_integration_tests/itf --test_output=streamed
+
+# Run ITF tests on QNX (uses the itf-qnx-x86_64 test config)
+bazel test --config=itf-qnx-x86_64 //feature_integration_tests/itf --test_output=streamed
+```
+
+Notes:
+- Use `--config=<name>` to select the correct toolchain/platform (common configs: `linux-x86_64`, `qnx-x86_64`, `eb-aarch64`, `autosd-x86_64`). See `.bazelrc` for all available configs.
+- For streaming test output and real-time logs, use `--test_output=streamed` or `--test_output=all`.
+
+## Repository Structure
+
+Intention for each folder is described below.
+
+### `bazel_common/`
+
+Common Bazel configurations and macros used across the workspace:
+- Toolchain setups (GCC, Rust, QNX)
+- S-CORE module dependency versions
+- Bazel extensions and bundling macros
+
+### `feature_integration_tests/`
+
+Feature Integration Tests and test scenarios:
+- **`test_cases/`**: Python test orchestration and fixtures
+- **`test_scenarios/`**: Rust and C++ scenario implementations
+- **`itf/`**: Integration Test Framework (QEMU/Docker-based platform tests)
+- **`configs/`**: DLT, QEMU, and target-specific configurations
+
+### `showcases/`
+
+Eclipse S-CORE demonstration applications and examples:
+- **`cli/`**: Interactive CLI tool for running examples on deployed systems
+- **`standalone/`**: Standalone example binaries (communication, persistence, etc.)
+- **`orchestration_persistency/`**: Multi-module orchestration examples
+- **`simple_lifecycle/`**: Basic lifecycle management examples
+
+Configuration for CLI autodiscovery is in `name.score.json` files; see [showcases/cli/README.md](showcases/cli/README.md) for details.
+
+### `images/`
+
+Platform-specific target images bundling S-CORE artifacts and showcases:
+- **`linux_x86_64/`**: Linux x86_64 Docker image
+- **`qnx_x86_64/`**: QNX x86_64 QEMU image
+- **`ebclfsa_aarch64/`**: Elektrobit corbos Linux for Safety Applications (aarch64) (see [images/ebclfsa_aarch64/README.md](images/ebclfsa_aarch64/README.md))
+- **`autosd/`**: Red Hat AutoSD x86_64
+
+### `runners/`
+
+Thin abstraction layers for Docker and QEMU execution:
+- Centralized logic for spawning and interacting with target environments
+- Reusable across multiple image definitions
+
+## Documentation
+
+For documentation covering repository workflows, testing frameworks, and platform-specific details, see the `docs/` directory and these entry points:
+
+- **[Feature Integration Tests](feature_integration_tests/README.md)** — FIT and ITF test framework usage
+- **[CLI Documentation](showcases/cli/README.md)** — CLI tool configuration and usage
+- **Platform-Specific Guides:**
+   - [Elektrobit corbos Linux (aarch64)](images/ebclfsa_aarch64/README.md)
+
+To generate HTML documentation for all integrated modules:
 
 ```bash
 bazel run //:docs_combo_experimental
 ```
 
-## Operating system integrations
+## Supported Platforms
+
+Integration and deployment platforms for S-CORE:
+
+- **QNX x86_64** — QNX RTOS integration (QEMU-based testing)
+- **[Elektrobit corbos Linux for Safety Applications (aarch64)](images/ebclfsa_aarch64/README.md)** — Safety-critical automotive Linux
+- **Red Hat AutoSD (x86_64)** — Automotive system development
+- **Linux x86_64** — Standard Linux development and testing (Docker-based)
+
+## Multi-Module Development Workspace
+
+For cross-module development, you can obtain a complete S-CORE workspace—a local git checkout of all modules pinned in `known_good.json` on specific branches/commits—integrated into a single Bazel build.
+
+This enables:
+- Cross-module development and debugging
+- Testing changes across multiple modules simultaneously
+- Reproducible builds with pinned versions
 
 > [!NOTE]
-> Please refer to the README documents in the respective sub-directories for details about the specific integration.
+> The [S-CORE devcontainer](https://github.com/eclipse-score/devcontainer) [integrated in this repository](.devcontainer/) pre-installs workspace managers and generates required metadata.
+> Manual setup is also possible; see `.devcontainer/prepare_workspace.sh` for the setup script.
 
-- [QNX](./images/qnx_x86_64//README.md)
-- [Red Hat AutoSD](./images/autosd_x86_64/build/README.md)
-- [Elektrobit corbos Linux for Safety Applications](./images/ebclfsa_aarch64/README.md)
-- Linux x86_64
+### Initialization Steps
 
-## Workspace support 
-
-You can obtain a complete S-CORE workspace, i.e. a git checkout of all modules from `known_good.json`, on the specific branches / commits, integrated into one Bazel build.
-This helps with cross-module development, debugging, and generally "trying out things".
-
-> [!NOTE]
-> The startup of the [S-CORE devcontainer](https://github.com/eclipse-score/devcontainer) [integrated in this repository](.devcontainer/) already installs supported workspace managers and generates the required metadata.
-> You can do this manually as well, of course (e.g. if you do not use the devcontainer).
-> Take a look at `.devcontainer/prepare_workspace.sh`, which contains the setup script.
-
-### Initialization of the workspace
-
-1. Switch to local path overrides, using the VSCode Task (`Terminal`->`Run Task...`) "Switch Bazel modules to `local_path_overrides`".
-   Note that you can switch back to `git_overrides` (the default) using the task "Switch Bazel modules to `git_overrides`"
-
-   **Command line:**
-
+1. **Switch to local path overrides:**
+   
+   Use the VS Code Task (`Terminal` → `Run Task...`): **"Switch Bazel modules to `local_path_overrides`"**
+   
+   Command line:
    ```bash
    python3 scripts/known_good/update_module_from_known_good.py --override-type local_path
    ```
+   
+   To revert to git overrides:
+   ```bash
+   python3 scripts/known_good/update_module_from_known_good.py --override-type git
+   ```
 
-2. Update workspace metadata from known good, using the VSCode Task "Update workspace metadata from known good".
-   This will generate the `.gita-workspace.csv` file based on `known_good.json`.
-
-   **Command line:**
-
+2. **Update workspace metadata from known good:**
+   
+   Use the VS Code Task: **"Update workspace metadata from known good"**
+   
+   Command line:
    ```bash
    python3 scripts/known_good/known_good_to_workspace_metadata.py
    ```
 
-3. Run VSCode Task "&lt;Name&gt;: Generate workspace", e.g. "Gita: Generate workspace".
-   This will clone all modules using the chosen workspace manager.
-   The modules will be in sub-directories starting with `score_`.
-   Note that the usage of different workspace managers is mutually exclusive.
-
-   **Command line:**
-
+3. **Clone all modules:**
+   
+   Use the VS Code Task: **"Gita: Generate workspace"**
+   
+   Command line (using gita):
    ```bash
    gita clone --preserve-path --from-file .gita-workspace.csv
    ```
 
-When you now run Bazel, it will use the local working copies of all modules and not download them from git remotes.
-You can make local changes to each module, which will be directly reflected in the next Bazel run.
+Modules are cloned into subdirectories prefixed with `score_` (e.g., `score_persistency/`, `score_communication/`).
+
+When running Bazel, it will use these local working copies, and your changes will be immediately reflected in the next build.
 
 ## Known Issues ⚠️
 
-### Communication
+For a comprehensive list of known issues, limitations, and troubleshooting guidance, see the `docs/` directory.
+
+### Communication Module
 
 **Module:** `score/mw/com/requirements`
 
-**Issues when building from external repository:**
+**Integration issues when building from external repository:**
 
-1. **Label inconsistency:** Some `BUILD` files use `@//third_party` instead of `//third_party` (repository-qualified vs. local label). Should standardize on local labels within the module.
-2. **Outdated path reference:** `runtime_test.cpp:get_path` checks for `safe_posix_platform` (likely obsolete module name) instead of `external/score_communication+/`.
+1. **Label inconsistency**: Some `BUILD` files use `@//third_party` instead of `//third_party` (repository-qualified vs. local labels). Should standardize on local labels.
+2. **Outdated path reference**: `runtime_test.cpp:get_path` checks for obsolete `safe_posix_platform` instead of the current module path structure.
 
-### Coverage
+### Coverage Testing
 
-Running coverage has to be executed on Ubuntu 22.04, newer versions are not supported and might have issues.
+Coverage testing is only supported on **Ubuntu 22.04**. Newer versions (24.04+) may have compatibility issues with the lcov toolchain.
 
 ## System Dependencies
 
-Install the following system packages:
+Install required system packages:
 
 ```bash
 sudo apt-get update
 sudo apt-get install -y protobuf-compiler libclang-dev lcov
 ```
 
-## Proxy & External Dependencies 🌐
-
-### Current Issue
-
-The `starpls.bzl` file ([source](https://github.com/eclipse-score/tooling/blob/main/starpls/starpls.bzl)) uses `curl` directly for downloading dependencies, which:
-
-- Bypasses Bazel's managed fetch lifecycle and dependency tracking
-- Breaks reproducibility and remote caching expectations
-- May fail in corporate proxy-restricted environments
-
-### Workaround
-
-Use a `local_path_override` and configure proxy environment variables before building:
+For Rust analyzer support (VS Code):
 
 ```bash
-export http_proxy=http://127.0.0.1:3128
-export https_proxy=http://127.0.0.1:3128
-export HTTP_PROXY=http://127.0.0.1:3128
-export HTTPS_PROXY=http://127.0.0.1:3128
+scripts/generate_rust_analyzer_support.sh
 ```
 
-Add this to your `MODULE.bazel`:
+## Proxy & External Dependencies 🌐
 
-```python
-local_path_override(module_name = "score_tooling", path = "../tooling")
-```
+The `starpls.bzl` tool uses `curl` directly, which:
+- Bypasses Bazel's managed fetch lifecycle and dependency tracking
+- Breaks reproducibility and remote caching
+- May fail in corporate proxy-restricted environments
 
-## IDE support
+**Workaround:**
+
+1. Use a `local_path_override` for `score_tooling` in `MODULE.bazel`:
+   ```python
+   local_path_override(module_name = "score_tooling", path = "../tooling")
+   ```
+
+2. Configure proxy environment variables before building:
+   ```bash
+   export http_proxy=http://127.0.0.1:3128
+   export https_proxy=http://127.0.0.1:3128
+   export HTTP_PROXY=http://127.0.0.1:3128
+   export HTTPS_PROXY=http://127.0.0.1:3128
+   ```
+
+## IDE Support
 
 ### Rust
 
-Use `scripts/generate_rust_analyzer_support.sh` to generate rust_analyzer settings that will let VS Code work.
+To enable VS Code Rust analyzer support:
 
-## Internal tooling
+```bash
+scripts/generate_rust_analyzer_support.sh
+```
 
-Internal tooling scripts are currently under development to provide user single point of interaction with all
-created goods. More detailed readme can be found in scripts: [Tooling README](scripts/tooling/README.md)
+This generates the necessary Rust analyzer configuration for the workspace.
+
+## Internal Tooling
+
+Internal tooling scripts are currently under development to provide a unified interface for repository operations.
+
+For detailed documentation, see [scripts/tooling/README.md](scripts/tooling/README.md).
