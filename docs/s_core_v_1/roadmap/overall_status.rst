@@ -109,7 +109,7 @@ See :ref:`chm_change_workflows`.
           :colors: LimeGreen, Gold, LightBlue, LightGray
           :filter-func: needs_filters.area_verification_status(change_management)
 
-.. rubric:: Implementation status: 🔄 92% (11/12 deliverables complete)
+.. rubric:: Implementation status: 🔄 91% (10/11 deliverables complete)
 
 .. list-table::
    :header-rows: 1
@@ -126,9 +126,6 @@ See :ref:`chm_change_workflows`.
      - ✅ Available
 
    * - Logging
-     - ✅ Available
-
-   * - Orchestrator
      - ✅ Available
 
    * - Persistency
@@ -202,7 +199,7 @@ See :ref:`requirements_workflows`.
           :colors: LimeGreen, Gold, LightBlue, LightGray
           :filter-func: needs_filters.area_verification_status(requirements_engineering)
 
-.. rubric:: Implementation status: 🔄 25% (9/36 deliverables complete)
+.. rubric:: Implementation status: 🔄 27% (9/33 deliverables complete)
 
 .. list-table::
    :header-rows: 1
@@ -239,14 +236,6 @@ See :ref:`requirements_workflows`.
      - ✅ Available (46/46)
      - ❌ Open
      - ❌ Open
-
-   * - Orchestrator
-     - 🔄 83% (26/31)
-     - 🔄 0% (0/2)
-     - 🔄 0% (0/2)
-
-       | `executor <https://github.com/eclipse-score/score/blob/main/docs/modules/orchestrator/executor/docs/requirements/chklst_req_inspection.rst>`__
-       | `orchestrator <https://github.com/eclipse-score/score/blob/main/docs/modules/orchestrator/orchestrator/docs/requirements/chklst_req_inspection.rst>`__
 
    * - Persistency
      - ✅ Available (41/41)
@@ -351,7 +340,7 @@ See :ref:`arch_workflow`.
           :colors: LimeGreen, Gold, LightBlue, LightGray
           :filter-func: needs_filters.area_verification_status(architecture_design)
 
-.. rubric:: Implementation status: 🔄 17% (6/36 deliverables complete)
+.. rubric:: Implementation status: 🔄 15% (5/33 deliverables complete)
 
 .. list-table::
    :header-rows: 1
@@ -388,14 +377,6 @@ See :ref:`arch_workflow`.
      - ✅ Available (4/4)
      - ✅ Available (3/3)
      - ❌ Open
-
-   * - Orchestrator
-     - 🔄 66% (4/6)
-     - ✅ Available (27/27)
-     - 🔄 0% (0/2)
-
-       | `executor <https://github.com/eclipse-score/score/blob/main/docs/modules/orchestrator/executor/docs/architecture/chklst_arc_inspection.rst>`__
-       | `orchestrator <https://github.com/eclipse-score/score/blob/main/docs/modules/orchestrator/orchestrator/docs/architecture/chklst_arc_inspection.rst>`__
 
    * - Persistency
      - ✅ Available (12/12)
@@ -487,7 +468,7 @@ See :ref:`workflow_implementation`.
           :colors: LimeGreen, Gold, LightBlue, LightGray
           :filter-func: needs_filters.area_verification_status(implementation)
 
-.. rubric:: Implementation status: 🔄 38% (18/48 deliverables complete)
+.. rubric:: Implementation status: 🔄 36% (16/44 deliverables complete)
 
 .. list-table::
    :header-rows: 1
@@ -525,12 +506,6 @@ See :ref:`workflow_implementation`.
    * - Logging
      - ✅ Available
      - ✅ Available (~22,900 LOC) `logging <https://github.com/eclipse-score/logging>`__
-     - ❌ Open
-     - ❌ Open
-
-   * - Orchestrator
-     - ✅ Available
-     - ✅ Available (~38,300 LOC) `orchestrator <https://github.com/eclipse-score/orchestrator>`__
      - ❌ Open
      - ❌ Open
 
@@ -636,8 +611,8 @@ See :ref:`verification_workflows`.
    **C0/C1 Coverage** data is sourced from the `reference_integration <https://github.com/eclipse-score/reference_integration>`__
    CI (``Code Quality & Documentation`` workflow, ``bazel coverage --config=ferrocene-coverage``).
    C0 = line coverage, C1 = branch coverage. Rust coverage reports line coverage only.
-   Modules not yet integrated into the reference_integration CI (Time, Config Mgmt) or with
-   disabled coverage extraction (Orchestrator) show ❌ Open.
+   Modules not yet integrated into the reference_integration CI (Time, Config Mgmt)
+   show ❌ Open.
 
 .. note::
 
@@ -652,7 +627,7 @@ See :ref:`verification_workflows`.
    ``--config=asan_ubsan_lsan``, TSan via ``--config=tsan``). All listed workflows are
    zero-tolerance, so a passing ``main`` branch implies **0 sanitizer findings**.
 
-.. rubric:: Implementation status: 🔄 29% (25/87 deliverables complete)
+.. rubric:: Implementation status: 🔄 27% (21/79 deliverables complete)
 
 .. list-table::
    :header-rows: 1
@@ -724,22 +699,6 @@ See :ref:`verification_workflows`.
 
        | `reference_integration <https://github.com/eclipse-score/reference_integration>`__ (cross-module)
      - ❌ Open
-     - ❌ Open
-     - ❌ Open
-     - ❌ Open
-
-   * - Orchestrator
-     - ✅ Available
-
-       | (2 tests)
-     - ❌ Open
-     - ✅ Available (9 tests)
-     - ✅ Available (3 tests)
-
-       | `reference_integration <https://github.com/eclipse-score/reference_integration>`__ (cross-module)
-     - ✅ 0 findings
-
-       | `Clippy <https://github.com/eclipse-score/orchestrator/blob/main/.github/workflows/clippy.yml>`__
      - ❌ Open
      - ❌ Open
      - ❌ Open

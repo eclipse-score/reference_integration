@@ -67,6 +67,7 @@ Management
 
 .. grid:: 2 4 4 4
    :class-container: score-grid score-grid-compact
+   :gutter: 4
 
    .. grid-item-card:: `Platform Management <https://eclipse-score.github.io/process_description/main/process_areas/platform_management/index.html>`__
       :class-card: card-pa-grey
@@ -113,6 +114,7 @@ Development
 
 .. grid:: 1 2 3 4
    :class-container: score-grid
+   :gutter: 4
 
    .. grid-item-card:: `Requirements Engineering <https://eclipse-score.github.io/process_description/main/process_areas/requirements_engineering/index.html>`__
       :class-card: card-pa-highlight
@@ -135,7 +137,7 @@ Development
       Verify that work products fulfil their specified requirements.
 
    .. grid-item-card:: `Safety Analysis <https://eclipse-score.github.io/process_description/main/process_areas/safety_analysis/index.html>`__
-      :class-card: card-pa-grey
+      :class-card: card-pa-highlight
 
       Identify and assess safety hazards and derive mitigation measures.
 
@@ -149,6 +151,7 @@ Support
 
 .. grid:: 1 2 3 4
    :class-container: score-grid
+   :gutter: 4
 
    .. grid-item-card:: `Configuration Management <https://eclipse-score.github.io/process_description/main/process_areas/configuration_management/index.html>`__
       :class-card: card-pa-grey
@@ -185,8 +188,8 @@ Status & Next Steps
    :maxdepth: 1
 
    Overall Status <overall_status>
-   PI 1 — Requirements Engineering + Architecture Design <pi1>
-   PI 2 — Implementation <pi2>
-   PI 3 — Verification <pi3>
-   PI 4 — Hardening & Release <pi4>
+   Release Gate v0.8 — Requirements Engineering + Architecture Design <pi1>
+   Release Gate v0.9 — Implementation <pi2>
+   Release Gate v0.10 — Verification <pi3>
+   Release Gate v1.0 — Hardening & Release <pi4>
 

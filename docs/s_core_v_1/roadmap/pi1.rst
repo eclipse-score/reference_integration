@@ -12,8 +12,10 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-🚀 PI 1 — 13 May – 13 July 2026 · `v0.8 <https://github.com/eclipse-score/score/milestone/30>`__
-==================================================================================================
+🚀 Release Gate v0.8 — 13 May – 13 July 2026
+=================================================
+
+Milestone: `score/v0.8 <https://github.com/eclipse-score/score/milestone/30>`__
 
 Focus: Requirements Engineering (PA2) + Architecture Design (PA3)
 ------------------------------------------------------------------
@@ -46,7 +48,7 @@ See the relevant tables in :doc:`overall_status`:
 Feasibility Check
 -----------------
 
-Do we have everything in place to deliver the PI 1 focus items?
+Do we have everything in place to deliver the Release Gate v0.8 focus items?
 
 **Tooling & Process**
 
@@ -70,11 +72,11 @@ Do we have everything in place to deliver the PI 1 focus items?
 - [ ] Every module's ``chklst_req_inspection.rst`` and ``chklst_arc_inspection.rst`` are reviewed and merged into the module repo
 - [ ] The overall status tracker (``overall_status.rst``) reflects the current state for each module
 - [ ] All tracked findings from inspections have a linked GitHub issue with component + milestone set
-- [ ] A final PI 1 review meeting confirms sign-off by module owners and process responsible
+- [ ] A final Release Gate v0.8 review meeting confirms sign-off by module owners and process responsible
 
 **Integration in Reference Integration**
 
 - [ ] All modules with completed requirements and architecture are integrated in this reference integration repository
 - [ ] The reference integration build passes (no broken imports, no unresolved need IDs)
-- [ ] The documentation (this site) builds without warnings for all PI 1 modules
-- [ ] The PI 1 status table in ``overall_status.rst`` is updated to reflect the final state
+- [ ] The documentation (this site) builds without warnings for all Release Gate v0.8 modules
+- [ ] The Release Gate v0.8 status table in ``overall_status.rst`` is updated to reflect the final state

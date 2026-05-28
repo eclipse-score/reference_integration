@@ -12,8 +12,10 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-PI 4 — 3 November – 15 December 2026 · v1.0 Final *(milestone TBD)*
-=====================================================================
+Release Gate v1.0 — 3 November – 15 December 2026
+==================================================
+
+Milestone: `score/v1.0 <https://github.com/eclipse-score/score/milestone/27>`__
 
 **Focus: Hardening & Release**
 
