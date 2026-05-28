@@ -21,12 +21,15 @@ This document describes the release planning for **S-CORE v1.0**, organized arou
 `eclipse-score/score milestones <https://github.com/eclipse-score/score/milestones>`__,
 and covers **two overarching project goals**:
 
-**1. Feature Completeness** — Selected modules are fully implemented and tested.
+Feature Completeness
+--------------------
 
-   .. image:: ../../_assets/sw_arch_v_1.drawio.svg
-      :alt: S-CORE v1.0 Software Architecture
-      :align: center
-      :width: 100%
+Selected modules are fully implemented and tested.
+
+.. image:: ../../_assets/sw_arch_v_1.drawio.svg
+   :alt: S-CORE v1.0 Software Architecture
+   :align: center
+   :width: 100%
 
 .. list-table::
    :widths: 30 70
@@ -54,10 +57,13 @@ and covers **two overarching project goals**:
      - Cryptographic services
    * - `Diagnosis <https://github.com/eclipse-score/inc_diagnosis>`__
      - On-board diagnostics / DTC management
+   * - `NM <https://github.com/eclipse-score/inc_nm>`__
+     - Network management
    * - `Some/IP <https://github.com/eclipse-score/someip>`__
      - SOME/IP communication middleware
 
-**2. Qualifiable State**
+Qualifiable State
+-----------------
 
 All modules follow the S-CORE process and use S-CORE tools for
 artifact generation across the following process areas: **Requirements Engineering**, **Architecture Design**, **Implementation**, **Verification**.
@@ -67,6 +73,7 @@ Management
 
 .. grid:: 2 4 4 4
    :class-container: score-grid score-grid-compact
+   :gutter: 4
 
    .. grid-item-card:: `Platform Management <https://eclipse-score.github.io/process_description/main/process_areas/platform_management/index.html>`__
       :class-card: card-pa-grey
@@ -113,6 +120,7 @@ Development
 
 .. grid:: 1 2 3 4
    :class-container: score-grid
+   :gutter: 4
 
    .. grid-item-card:: `Requirements Engineering <https://eclipse-score.github.io/process_description/main/process_areas/requirements_engineering/index.html>`__
       :class-card: card-pa-highlight
@@ -135,7 +143,7 @@ Development
       Verify that work products fulfil their specified requirements.
 
    .. grid-item-card:: `Safety Analysis <https://eclipse-score.github.io/process_description/main/process_areas/safety_analysis/index.html>`__
-      :class-card: card-pa-grey
+      :class-card: card-pa-highlight
 
       Identify and assess safety hazards and derive mitigation measures.
 
@@ -149,6 +157,7 @@ Support
 
 .. grid:: 1 2 3 4
    :class-container: score-grid
+   :gutter: 4
 
    .. grid-item-card:: `Configuration Management <https://eclipse-score.github.io/process_description/main/process_areas/configuration_management/index.html>`__
       :class-card: card-pa-grey
@@ -185,8 +194,8 @@ Status & Next Steps
    :maxdepth: 1
 
    Overall Status <overall_status>
-   PI 1 — Requirements Engineering + Architecture Design <pi1>
-   PI 2 — Implementation <pi2>
-   PI 3 — Verification <pi3>
-   PI 4 — Hardening & Release <pi4>
+   Release Gate v0.8 — Requirements Engineering + Architecture Design <pi1>
+   Release Gate v0.9 — Implementation <pi2>
+   Release Gate v0.10 — Verification <pi3>
+   Release Gate v1.0 — Hardening & Release <pi4>
 

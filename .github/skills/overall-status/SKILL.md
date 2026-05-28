@@ -1,6 +1,6 @@
 ---
 name: overall-status
-description: "Update the Feature and Process Status table in docs/s_core_v_1/roadmap/overall_status.rst. Use when: checking module status, updating feature status tracker, refreshing work product status, deriving completion status from eclipse-score GitHub repos for Baselibs, Communication, Logging, Orchestrator, Persistency, Time, Config Management, Lifecycle, Security/Crypto."
+description: "Update the Feature and Process Status table in docs/s_core_v_1/roadmap/overall_status.rst. Use when: checking module status, updating feature status tracker, refreshing work product status, deriving completion status from eclipse-score GitHub repos for Baselibs, Communication, Logging, Persistency, Time, Config Management, Lifecycle, Security/Crypto."
 argument-hint: "optional: module name or 'all'"
 ---
 
@@ -151,6 +151,8 @@ The pie chart diagrams are computed live by sphinx-needs at build time — they 
 
 ## Modules and Repos
 
+> **EXCLUDED MODULES**: **Orchestrator** is intentionally not tracked in `overall_status.rst` and must NOT be added to any of the PA tables, even though `score_orchestrator` is pinned in `known_good.json` and the module exists in `eclipse-score/score` / `eclipse-score/orchestrator`. Do not query or generate rows for it.
+
 > **IMPORTANT**: Each module has its own dedicated repo in the `eclipse-score` GitHub org AND content in `eclipse-score/score`. **Always check BOTH** the module's own repo and `eclipse-score/score` when counting needs elements. Never rely on `eclipse-score/score` alone.
 
 > **VERSION PINNING**: Always use the commit hash pinned in `known_good.json` (column `known_good.json key`) — **never use `main`** for source repos. This ensures data matches exactly the versions that `reference_integration` is currently testing against. For modules not listed in `known_good.json` (marked `—`), fall back to `main`.
@@ -160,7 +162,6 @@ The pie chart diagrams are computed live by sphinx-needs at build time — they 
 | Baselibs | `score_baselibs` | `eclipse-score/baselibs` (no sphinx-needs RST so far) | `docs/modules/baselibs/**`, `docs/features/baselibs/docs` |
 | Communication | `score_communication` | `eclipse-score/communication` (no sphinx-needs RST so far) | `docs/modules/communication/**`, `docs/features/communication/docs` |
 | Logging | `score_logging` | `eclipse-score/logging` (no sphinx-needs RST so far) | `docs/modules/logging/**`, `docs/features/analysis-infra/logging/docs` |
-| Orchestrator | `score_orchestrator` | `eclipse-score/orchestrator` | `docs/modules/orchestrator/**`, `docs/features/orchestration` |
 | Persistency | `score_persistency` | `eclipse-score/persistency` — has `docs/persistency/kvs/` with comp_req/comp_arc ✅ | `docs/features/persistency` |
 | Time | `—` (not in known_good) | `eclipse-score/inc_time` (no sphinx-needs RST so far) | `docs/features/time/docs` |
 | Config Management | `—` (not in known_good) | `eclipse-score/config_management` (no sphinx-needs RST so far) | `docs/features/configuration` |
@@ -197,7 +198,7 @@ for repo in ["eclipse-score/score", "eclipse-score/<module_own_repo>"]:
 - **✅ Available**: A closed GitHub Issue with "Feature Request" or "Contribution Request" for the module exists in `eclipse-score/score`
 - **❌ Open**: No such issue found
 
-Known closed CRs: Baselibs (#549), Communication (#69), Logging (#68), Orchestrator (#273), Persistency (#95), Time (#910), Config Management (#754, #1764), Lifecycle (#909), Security/Crypto (#905)
+Known closed CRs: Baselibs (#549), Communication (#69), Logging (#68), Persistency (#95), Time (#910), Config Management (#754, #1764), Lifecycle (#909), Security/Crypto (#905)
 
 ### Process Area 2 — Feature Requirements
 - **✅ Available**: 100% of individual needs elements (e.g. `.. feat_req::`) inside the requirements doc have `:status: valid`
@@ -260,7 +261,7 @@ See :ref:`verification_workflows`.
    CI (``Code Quality & Documentation`` workflow, ``bazel coverage --config=ferrocene-coverage``).
    C0 = line coverage, C1 = branch coverage. Rust coverage reports line coverage only.
    Modules not yet integrated into the reference_integration CI (Time, Config Mgmt) or with
-   disabled coverage extraction (Orchestrator) show ❌ Open.
+   Modules not yet integrated into the reference_integration CI (Time, Config Mgmt) show ❌ Open.
 
 .. note::
 
@@ -379,7 +380,6 @@ gh api "repos/eclipse-score/reference_integration/actions/jobs/$JOB_ID/logs" \
 | Baselibs | `score_baselibs_cpp` | `score_baselibs_rust_rust` |
 | Communication | `score_communication_cpp` | — (disabled) |
 | Logging | `score_logging_cpp` | `score_logging_rust` |
-| Orchestrator | — (disabled) | — (disabled) |
 | Persistency | `score_persistency_cpp` | `score_persistency_rust` |
 | Time | not in CI | — |
 | Config Mgmt | not in CI | — |
@@ -459,7 +459,6 @@ Static analysis CI exists at two levels:
 | Baselibs | `✅ 0 findings` | [clang-tidy lint.yml](https://github.com/eclipse-score/baselibs/blob/main/.github/workflows/lint.yml) |
 | Communication | `🔄 Configured` | [static_analysis.bazelrc](https://github.com/eclipse-score/communication/blob/main/quality/static_analysis/static_analysis.bazelrc) + [CodeQL/MISRA](https://github.com/eclipse-score/communication/tree/main/quality/static_analysis) — no CI enforcement yet |
 | Logging | `❌ Open` | — |
-| Orchestrator | `✅ 0 findings` | [Clippy clippy.yml](https://github.com/eclipse-score/orchestrator/blob/main/.github/workflows/clippy.yml) |
 | Persistency | `✅ 0 findings` | [Clippy clippy.yml](https://github.com/eclipse-score/persistency/blob/main/.github/workflows/clippy.yml) |
 | Time | `❌ Open` | — |
 | Config Mgmt | `✅ 0 findings` | [clang-tidy static-analysis.yml](https://github.com/eclipse-score/config_management/blob/main/.github/workflows/static-analysis.yml) |
@@ -495,7 +494,6 @@ Dynamic analysis is performed via sanitizer CI workflows (ASan/UBSan/LSan for C+
 | Baselibs | `✅ 0 findings` | [sanitizers_linux.yml](https://github.com/eclipse-score/baselibs/blob/main/.github/workflows/sanitizers_linux.yml) — ASan+UBSan+LSan |
 | Communication | `✅ 0 findings` | [ASan/UBSan/LSan](https://github.com/eclipse-score/communication/blob/main/.github/workflows/address_undefined_behavior_leak_sanitizer.yml), [TSan](https://github.com/eclipse-score/communication/blob/main/.github/workflows/thread_sanitizer.yml) |
 | Logging | `❌ Open` | — |
-| Orchestrator | `❌ Open` | — |
 | Persistency | `❌ Open` | — |
 | Time | `❌ Open` | — |
 | Config Mgmt | `❌ Open` | — |
@@ -560,7 +558,6 @@ REFS = {
     "baselibs":            pinned_ref("score_baselibs"),
     "communication":       pinned_ref("score_communication"),
     "logging":             pinned_ref("score_logging"),
-    "orchestrator":        pinned_ref("score_orchestrator"),
     "persistency":         pinned_ref("score_persistency"),
     "lifecycle":           pinned_ref("score_lifecycle_health"),
     "inc_time":            "main",   # not in known_good
@@ -597,7 +594,6 @@ tree_score    = get_tree("eclipse-score/score",         REFS["score"])
 tree_baselibs = get_tree("eclipse-score/baselibs",      REFS["baselibs"])
 tree_comm     = get_tree("eclipse-score/communication", REFS["communication"])
 tree_log      = get_tree("eclipse-score/logging",       REFS["logging"])
-tree_orch     = get_tree("eclipse-score/orchestrator",  REFS["orchestrator"])
 tree_pers     = get_tree("eclipse-score/persistency",   REFS["persistency"])
 tree_life     = get_tree("eclipse-score/lifecycle",     REFS["lifecycle"])
 tree_time     = get_tree("eclipse-score/inc_time",      REFS["inc_time"])
@@ -694,9 +690,6 @@ Use these exact filters when calling `count_files()`. Verify printed file counts
 | Baselibs | Comp. Arch | score | `lambda p: 'modules/baselibs' in p and 'architecture' in p and p.endswith('.rst') and 'chklst' not in p` |
 | Baselibs | Arch. Inspection | score | `lambda p: 'baselibs' in p and 'chklst_arc_inspection' in p` |
 | Baselibs | Impl. Inspection | score | `lambda p: 'baselibs' in p and 'chklst_impl_inspection' in p` |
-| Orchestrator | Feat. Req | score | `lambda p: 'features/orchestration' in p and 'requirements' in p and p.endswith('.rst')` |
-| Orchestrator | Comp. Req | score | `lambda p: 'modules/orchestrator' in p and 'requirements' in p and p.endswith('.rst') and 'chklst' not in p` |
-| Orchestrator | Comp. Arch | score | `lambda p: 'modules/orchestrator' in p and 'architecture' in p and p.endswith('.rst') and 'chklst' not in p` |
 | Persistency | Feat. Req | score | `lambda p: 'features/persistency' in p and 'requirements' in p and p.endswith('.rst') and 'chklst' not in p` |
 | Persistency | Feat. Arch | score | `lambda p: 'features/persistency' in p and 'architecture' in p and p.endswith('.rst') and 'chklst' not in p` |
 | Persistency | Comp. Req | pers | `lambda p: 'kvs' in p and 'requirements' in p and p.endswith('.rst') and 'chklst' not in p` |

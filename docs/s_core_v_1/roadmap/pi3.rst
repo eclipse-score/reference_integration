@@ -12,8 +12,10 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-PI 3 — 8 September – 2 November 2026 · `v1.0 <https://github.com/eclipse-score/score/milestone/27>`__
-=======================================================================================================
+Release Gate v0.10 — 8 September – 2 November 2026
+===================================================
+
+Milestone: `score/v0.10 <https://github.com/eclipse-score/score/milestone/35>`__
 
 **Focus: Verification (PA5)**
 

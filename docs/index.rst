@@ -34,9 +34,10 @@ documentation set that downstream product distributions can build on.
 
 .. grid:: 1 1 3 3
    :gutter: 3
+   :class-container: landing-grid
 
    .. grid-item-card:: 📊 Status & Roadmap
-      :link: s_core_v_1/index
+      :link: s_core_v_1/roadmap/roadmap
       :link-type: doc
 
       :doc:`S-Core v1.0 Roadmap <s_core_v_1/roadmap/roadmap>` and PI planning.
@@ -73,7 +74,10 @@ documentation set that downstream product distributions can build on.
 .. toctree::
    :hidden:
 
-   sw_components
-   integration_process/integration_process
-   process_methods_tools
-   s_core_v_1/releases/releases
+   Modules <sw_components>
+   Integration Process <integration_process/integration_process>
+   Integration Status <https://eclipse-score.github.io/reference_integration/main/status_dashboard.html>
+   Process & Tools <process_methods_tools>
+   S-Core v1.0 <s_core_v_1/index>
+   Releases <s_core_v_1/releases/releases>
+   Verification Report <verification_report/platform_verification_report>
