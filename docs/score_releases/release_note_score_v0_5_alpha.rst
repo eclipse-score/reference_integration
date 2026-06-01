@@ -52,9 +52,10 @@ Highlights
 - Initial set of communication, persistency, orchestration, and base utility modules.
 - Experimental reference images for QNX, Red Hat AutoSD Linux, and EB corbos Linux for Safety Applications.
 
-Eclipse S-CORE book
--------------------
-The first version of the `Eclipse S-CORE book <https://eclipse-score.github.io/score/main/handbook/index.html>`_
+Eclipse S-CORE User’s Guide   
+---------------------------
+
+The `Eclipse S-CORE User’s Guide <https://eclipse-score.github.io/score/main/users_guide/index.html>`_
 is a “how-to” guide for users getting started with the project.
 It introduces the core concepts of Eclipse S-CORE and walks through building
 the ``scrample`` application step by step on top of the platform modules.

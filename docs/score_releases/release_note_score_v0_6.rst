@@ -47,9 +47,10 @@ Please be aware, that features may be incomplete, the software may exhibit insta
 Highlights
 -----------
 
-Eclipse S-CORE book
--------------------
-The `Eclipse S-CORE book <https://eclipse-score.github.io/score/main/handbook/index.html>`_
+Eclipse S-CORE User’s Guide   
+---------------------------
+
+The `Eclipse S-CORE User’s Guide <https://eclipse-score.github.io/score/main/users_guide/index.html>`_
 is a “how-to” guide for users getting started with the project or who want to contribute new modules.
 
 
