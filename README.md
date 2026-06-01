@@ -19,8 +19,10 @@ Install required system packages before building or running anything in this rep
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y protobuf-compiler libclang-18-dev lcov docker.io qemu-system-x86
+sudo apt-get install -y protobuf-compiler libclang-dev lcov qemu-system-x86
 ```
+
+For Docker, follow the [official Docker Engine install guide](https://docs.docker.com/engine/install/ubuntu/).
 
 ## Quick Start
 
@@ -65,7 +67,7 @@ bazel test --config=itf-qnx-x86_64 //feature_integration_tests/itf --test_output
 ```
 
 Notes:
-- Use `--config=<name>` to select the correct toolchain/platform (common configs: `linux-x86_64`, `qnx-x86_64`, `eb-aarch64`, `autosd-x86_64`). See `.bazelrc` for all available configs.
+- Use `--config=<name>` to select the correct toolchain/platform (supported configs for tests: `linux-x86_64`, `qnx-x86_64`). See `.bazelrc` for all available configs.
 - For streaming test output and real-time logs, use `--test_output=streamed` or `--test_output=all`.
 
 ## Repository Structure
