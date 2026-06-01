@@ -13,6 +13,15 @@ The reference integration workspace serves as a unified Bazel build environment 
 
 For additional documentation covering repository workflows and platform-specific details, see the `docs/` directory.
 
+## Prerequisites
+
+Install required system packages before building or running anything in this repository:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y protobuf-compiler libclang-18-dev lcov docker.io qemu-system-x86
+```
+
 ## Quick Start
 
 Simply run:
@@ -22,27 +31,6 @@ Simply run:
 ```
 
 You will be guided interactively through available integrations, build options, and examples to run.
-
-### Try it now (quick flow)
-
-1. Ensure prerequisites above are installed.
-2. From the repo root, run:
-
-```bash
-./score_starter
-```
-
-3. Build a quick target (example: build a platform image):
-
-```bash
-bazel build --config=linux-x86_64 //images/linux_x86_64:image
-```
-
-4. List available Rust test scenarios:
-
-```bash
-bazel run //feature_integration_tests/test_scenarios/rust:rust_test_scenarios -- --list-scenarios
-```
 
 ## Run showcases
 
@@ -210,47 +198,6 @@ For a comprehensive list of known issues, limitations, and troubleshooting guida
 
 1. **Label inconsistency**: Some `BUILD` files use `@//third_party` instead of `//third_party` (repository-qualified vs. local labels). Should standardize on local labels.
 2. **Outdated path reference**: `runtime_test.cpp:get_path` checks for obsolete `safe_posix_platform` instead of the current module path structure.
-
-### Coverage Testing
-
-Coverage testing is only supported on **Ubuntu 22.04**. Newer versions (24.04+) may have compatibility issues with the lcov toolchain.
-
-## System Dependencies
-
-Install required system packages:
-
-```bash
-sudo apt-get update
-sudo apt-get install -y protobuf-compiler libclang-dev lcov
-```
-
-For Rust analyzer support (VS Code):
-
-```bash
-scripts/generate_rust_analyzer_support.sh
-```
-
-## Proxy & External Dependencies 🌐
-
-The `starpls.bzl` tool uses `curl` directly, which:
-- Bypasses Bazel's managed fetch lifecycle and dependency tracking
-- Breaks reproducibility and remote caching
-- May fail in corporate proxy-restricted environments
-
-**Workaround:**
-
-1. Use a `local_path_override` for `score_tooling` in `MODULE.bazel`:
-   ```python
-   local_path_override(module_name = "score_tooling", path = "../tooling")
-   ```
-
-2. Configure proxy environment variables before building:
-   ```bash
-   export http_proxy=http://127.0.0.1:3128
-   export https_proxy=http://127.0.0.1:3128
-   export HTTP_PROXY=http://127.0.0.1:3128
-   export HTTPS_PROXY=http://127.0.0.1:3128
-   ```
 
 ## IDE Support
 
