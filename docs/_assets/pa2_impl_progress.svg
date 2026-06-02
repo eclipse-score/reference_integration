@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" font-family="Arial, sans-serif" font-size="13">
+  <title>PA2 Implementation — total Feature and Component Requirements per release</title>
+
+  <!-- title -->
+  <text x="360" y="22" text-anchor="middle" font-size="15" font-weight="bold">
+    PA2 Implementation — total requirements per release (sum of all modules)
+  </text>
+
+  <!-- plot area: x 70..690, y 50..260 (height 210) -->
+  <!-- y-axis -->
+  <line x1="70" y1="50"  x2="70"  y2="260" stroke="#333" stroke-width="1"/>
+  <line x1="70" y1="260" x2="690" y2="260" stroke="#333" stroke-width="1"/>
+
+  <!-- grid + y labels (max ~400) -->
+  <g stroke="#ddd" stroke-width="1">
+    <line x1="70" y1="207.5" x2="690" y2="207.5"/>
+    <line x1="70" y1="155"   x2="690" y2="155"/>
+    <line x1="70" y1="102.5" x2="690" y2="102.5"/>
+    <line x1="70" y1="50"    x2="690" y2="50"/>
+  </g>
+  <g fill="#555" text-anchor="end" font-size="11">
+    <text x="64" y="263">0</text>
+    <text x="64" y="211">100</text>
+    <text x="64" y="158">200</text>
+    <text x="64" y="106">300</text>
+    <text x="64" y="53">400</text>
+  </g>
+
+  <!-- 4 release groups, group width 140, bar width 50, gap 10 -->
+  <!-- scale: y = 260 - value * 0.525  (since 400 -> 210px) -->
+
+  <!-- v0.5.0-beta: FR=313 CR=80 -->
+  <g>
+    <rect x="100" y="95.675" width="50" height="164.325" fill="#1f77b4"/>
+    <rect x="160" y="218"    width="50" height="42"     fill="#ff7f0e"/>
+    <text x="125" y="89" text-anchor="middle" font-size="11" fill="#1f77b4" font-weight="bold">313</text>
+    <text x="185" y="212" text-anchor="middle" font-size="11" fill="#ff7f0e" font-weight="bold">80</text>
+    <text x="155" y="280" text-anchor="middle" font-weight="bold">v0.5.0-beta</text>
+  </g>
+
+  <!-- v0.6.0: FR=315 CR=160 -->
+  <g>
+    <rect x="260" y="94.625" width="50" height="165.375" fill="#1f77b4"/>
+    <rect x="320" y="176"    width="50" height="84"     fill="#ff7f0e"/>
+    <text x="285" y="88" text-anchor="middle" font-size="11" fill="#1f77b4" font-weight="bold">315</text>
+    <text x="345" y="170" text-anchor="middle" font-size="11" fill="#ff7f0e" font-weight="bold">160</text>
+    <text x="315" y="280" text-anchor="middle" font-weight="bold">v0.6.0</text>
+  </g>
+
+  <!-- v0.7.0: FR=316 CR=186 -->
+  <g>
+    <rect x="420" y="94.1"   width="50" height="165.9"  fill="#1f77b4"/>
+    <rect x="480" y="162.35" width="50" height="97.65"  fill="#ff7f0e"/>
+    <text x="445" y="88" text-anchor="middle" font-size="11" fill="#1f77b4" font-weight="bold">316</text>
+    <text x="505" y="156" text-anchor="middle" font-size="11" fill="#ff7f0e" font-weight="bold">186</text>
+    <text x="475" y="280" text-anchor="middle" font-weight="bold">v0.7.0</text>
+  </g>
+
+  <!-- now: FR=316 CR=186 -->
+  <g>
+    <rect x="580" y="94.1"   width="50" height="165.9"  fill="#1f77b4"/>
+    <rect x="640" y="162.35" width="50" height="97.65"  fill="#ff7f0e"/>
+    <text x="605" y="88" text-anchor="middle" font-size="11" fill="#1f77b4" font-weight="bold">316</text>
+    <text x="665" y="156" text-anchor="middle" font-size="11" fill="#ff7f0e" font-weight="bold">186</text>
+    <text x="635" y="280" text-anchor="middle" font-weight="bold">now</text>
+  </g>
+
+  <!-- legend -->
+  <g font-size="12">
+    <rect x="200" y="298" width="14" height="12" fill="#1f77b4"/>
+    <text x="220" y="308">Feature Requirements</text>
+    <rect x="380" y="298" width="14" height="12" fill="#ff7f0e"/>
+    <text x="400" y="308">Component Requirements</text>
+  </g>
+</svg>

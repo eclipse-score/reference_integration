@@ -1,0 +1,143 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" font-family="Arial, sans-serif" font-size="13">
+  <title>PA5 Verification — tests per release and current code coverage</title>
+
+  <text x="600" y="22" text-anchor="middle" font-size="15" font-weight="bold">
+    PA5 Verification — test counts per release and current code coverage (sum of all 11 PA2 modules)
+  </text>
+
+  <!-- ===================== Panel 1: Unit Tests ===================== -->
+  <g>
+    <text x="200" y="50" text-anchor="middle" font-size="13" font-weight="bold">Unit Tests</text>
+
+    <!-- axes: x 60..340, y 70..280 -->
+    <line x1="60" y1="70"  x2="60"  y2="280" stroke="#333"/>
+    <line x1="60" y1="280" x2="340" y2="280" stroke="#333"/>
+
+    <!-- y range 0..10000 -->
+    <g stroke="#ddd">
+      <line x1="60" y1="217" x2="340" y2="217"/>
+      <line x1="60" y1="154" x2="340" y2="154"/>
+      <line x1="60" y1="91"  x2="340" y2="91"/>
+    </g>
+    <g fill="#555" text-anchor="end" font-size="11">
+      <text x="55" y="283">0</text>
+      <text x="55" y="220">3k</text>
+      <text x="55" y="157">6k</text>
+      <text x="55" y="94">9k</text>
+    </g>
+
+    <!-- scale: y = 280 - v * 0.021  (10000 -> 210px) -->
+    <!-- v0.5.0-beta 8399 -->
+    <rect x="80" y="103.6" width="40" height="176.4" fill="#1f77b4"/>
+    <text x="100" y="98" text-anchor="middle" font-size="11" fill="#1f77b4" font-weight="bold">8399</text>
+    <text x="100" y="298" text-anchor="middle" font-size="11">v0.5.0-beta</text>
+    <!-- v0.6.0 8409 -->
+    <rect x="150" y="103.4" width="40" height="176.6" fill="#1f77b4"/>
+    <text x="170" y="98" text-anchor="middle" font-size="11" fill="#1f77b4" font-weight="bold">8409</text>
+    <text x="170" y="298" text-anchor="middle" font-size="11">v0.6.0</text>
+    <!-- v0.7.0 8718 -->
+    <rect x="220" y="96.92" width="40" height="183.08" fill="#1f77b4"/>
+    <text x="240" y="91" text-anchor="middle" font-size="11" fill="#1f77b4" font-weight="bold">8718</text>
+    <text x="240" y="298" text-anchor="middle" font-size="11">v0.7.0</text>
+    <!-- now 8434 -->
+    <rect x="290" y="102.89" width="40" height="177.11" fill="#1f77b4"/>
+    <text x="310" y="97" text-anchor="middle" font-size="11" fill="#1f77b4" font-weight="bold">8434</text>
+    <text x="310" y="298" text-anchor="middle" font-size="11">now</text>
+  </g>
+
+  <!-- ===================== Panel 2: Integration Tests ===================== -->
+  <g>
+    <text x="600" y="50" text-anchor="middle" font-size="13" font-weight="bold">Integration Tests</text>
+
+    <!-- axes: x 460..740, y 70..280 -->
+    <line x1="460" y1="70"  x2="460" y2="280" stroke="#333"/>
+    <line x1="460" y1="280" x2="740" y2="280" stroke="#333"/>
+
+    <!-- y range 0..100 -->
+    <g stroke="#ddd">
+      <line x1="460" y1="217" x2="740" y2="217"/>
+      <line x1="460" y1="154" x2="740" y2="154"/>
+      <line x1="460" y1="91"  x2="740" y2="91"/>
+    </g>
+    <g fill="#555" text-anchor="end" font-size="11">
+      <text x="455" y="283">0</text>
+      <text x="455" y="220">30</text>
+      <text x="455" y="157">60</text>
+      <text x="455" y="94">90</text>
+    </g>
+
+    <!-- scale: y = 280 - v * 2.1  (100 -> 210px) -->
+    <!-- v0.5.0-beta: comp=15 feat=3 -->
+    <rect x="475" y="248.5" width="20" height="31.5" fill="#ff7f0e"/>
+    <rect x="497" y="273.7" width="20" height="6.3"  fill="#9467bd"/>
+    <text x="505" y="298" text-anchor="middle" font-size="11">v0.5.0-beta</text>
+    <text x="485" y="244" text-anchor="middle" font-size="10" fill="#ff7f0e">15</text>
+    <text x="507" y="269" text-anchor="middle" font-size="10" fill="#9467bd">3</text>
+    <!-- v0.6.0: comp=43 feat=13 -->
+    <rect x="540" y="189.7" width="20" height="90.3" fill="#ff7f0e"/>
+    <rect x="562" y="252.7" width="20" height="27.3" fill="#9467bd"/>
+    <text x="570" y="298" text-anchor="middle" font-size="11">v0.6.0</text>
+    <text x="550" y="185" text-anchor="middle" font-size="10" fill="#ff7f0e">43</text>
+    <text x="572" y="248" text-anchor="middle" font-size="10" fill="#9467bd">13</text>
+    <!-- v0.7.0: comp=63 feat=12 -->
+    <rect x="605" y="147.7" width="20" height="132.3" fill="#ff7f0e"/>
+    <rect x="627" y="254.8" width="20" height="25.2"  fill="#9467bd"/>
+    <text x="635" y="298" text-anchor="middle" font-size="11">v0.7.0</text>
+    <text x="615" y="143" text-anchor="middle" font-size="10" fill="#ff7f0e">63</text>
+    <text x="637" y="250" text-anchor="middle" font-size="10" fill="#9467bd">12</text>
+    <!-- now: comp=92 feat=7 -->
+    <rect x="670" y="86.8" width="20" height="193.2" fill="#ff7f0e"/>
+    <rect x="692" y="265.3" width="20" height="14.7" fill="#9467bd"/>
+    <text x="700" y="298" text-anchor="middle" font-size="11">now</text>
+    <text x="680" y="82" text-anchor="middle" font-size="10" fill="#ff7f0e">92</text>
+    <text x="702" y="261" text-anchor="middle" font-size="10" fill="#9467bd">7</text>
+
+    <!-- legend -->
+    <g font-size="11">
+      <rect x="475" y="318" width="12" height="10" fill="#ff7f0e"/>
+      <text x="491" y="327">Component</text>
+      <rect x="575" y="318" width="12" height="10" fill="#9467bd"/>
+      <text x="591" y="327">Feature</text>
+    </g>
+  </g>
+
+  <!-- ===================== Panel 3: Coverage now ===================== -->
+  <g>
+    <text x="1000" y="50" text-anchor="middle" font-size="13" font-weight="bold">Code Coverage (now, weighted by # tests)</text>
+
+    <!-- axes: x 860..1140, y 70..280 -->
+    <line x1="860"  y1="70"  x2="860"  y2="280" stroke="#333"/>
+    <line x1="860"  y1="280" x2="1140" y2="280" stroke="#333"/>
+
+    <!-- y range 0..100% -->
+    <g stroke="#ddd">
+      <line x1="860" y1="217" x2="1140" y2="217"/>
+      <line x1="860" y1="154" x2="1140" y2="154"/>
+      <line x1="860" y1="91"  x2="1140" y2="91"/>
+    </g>
+    <g fill="#555" text-anchor="end" font-size="11">
+      <text x="855" y="283">0%</text>
+      <text x="855" y="220">30%</text>
+      <text x="855" y="157">60%</text>
+      <text x="855" y="94">90%</text>
+    </g>
+    <!-- 100% reference line -->
+    <line x1="860" y1="70" x2="1140" y2="70" stroke="#bbb" stroke-dasharray="3,3"/>
+    <text x="855" y="74" text-anchor="end" font-size="11" fill="#888">100%</text>
+
+    <!-- scale: y = 280 - pct * 2.1 -->
+    <!-- C0 = 90.1 -->
+    <rect x="900" y="90.79" width="80" height="189.21" fill="#17becf"/>
+    <text x="940" y="84" text-anchor="middle" font-size="13" fill="#17becf" font-weight="bold">90.1%</text>
+    <text x="940" y="298" text-anchor="middle" font-weight="bold">C0 (line)</text>
+    <!-- C1 = 58.7 -->
+    <rect x="1020" y="156.73" width="80" height="123.27" fill="#17becf" fill-opacity="0.55"/>
+    <text x="1060" y="150" text-anchor="middle" font-size="13" fill="#17becf" font-weight="bold">58.7%</text>
+    <text x="1060" y="298" text-anchor="middle" font-weight="bold">C1 (branch)</text>
+  </g>
+
+  <!-- footer note -->
+  <text x="600" y="350" text-anchor="middle" font-size="11" fill="#666">
+    Test counts: GTEST macros (TEST/TEST_F/TEST_P/TYPED_TEST), Rust #[test], Python def test_*  •  Coverage: weighted by unit-test count across modules with reported numbers
+  </text>
+</svg>

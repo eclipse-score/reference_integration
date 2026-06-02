@@ -201,6 +201,13 @@ See :ref:`requirements_workflows`.
 
 .. rubric:: Implementation status: 🔄 42% (14/33 deliverables complete)
 
+.. figure:: /_assets/pa2_impl_progress.svg
+   :alt: Total Feature and Component Requirements across PA2 modules per release
+   :width: 720px
+
+   Total Feature and Component Requirements across all PA2 modules per release
+   (v0.5.0-beta → v0.6.0 → v0.7.0 → current main).
+
 .. list-table::
    :header-rows: 1
    :stub-columns: 1
@@ -376,6 +383,13 @@ See :ref:`arch_workflow`.
 
 .. rubric:: Implementation status: 🔄 15% (5/33 deliverables complete)
 
+.. figure:: /_assets/pa3_arch_progress.svg
+   :alt: Total Feature and Component Architecture items across PA2 modules per release
+   :width: 720px
+
+   Total Feature and Component Architecture items across all PA2 modules per
+   release (v0.5.0-beta → v0.6.0 → v0.7.0 → current main).
+
 .. list-table::
    :header-rows: 1
    :stub-columns: 1
@@ -540,6 +554,13 @@ See :ref:`workflow_implementation`.
 
 .. rubric:: Implementation status: 🔄 39% (17/44 deliverables complete)
 
+.. figure:: /_assets/pa4_impl_progress.svg
+   :alt: Estimated total Lines of Code across PA2 modules per release
+   :width: 720px
+
+   Estimated total Lines of Code across all PA2 modules per release
+   (v0.5.0-beta → v0.6.0 → v0.7.0 → current main).
+
 .. list-table::
    :header-rows: 1
    :stub-columns: 1
@@ -702,6 +723,14 @@ See :ref:`verification_workflows`.
    zero-tolerance, so a passing ``main`` branch implies **0 sanitizer findings**.
 
 .. rubric:: Implementation status: 🔄 27% (21/79 deliverables complete)
+
+.. figure:: /_assets/pa5_verification_progress.svg
+   :alt: PA5 verification — test counts per release and current coverage
+   :width: 1100px
+
+   Test counts (Unit / Component Integration / Feature Integration) per release
+   and current code coverage across the 11 PA2 modules. Coverage values are
+   only available for the current snapshot.
 
 .. list-table::
    :header-rows: 1

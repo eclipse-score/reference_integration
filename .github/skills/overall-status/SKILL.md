@@ -507,6 +507,209 @@ sphinx-needs tag changes.
 
 ---
 
+## 6a. Progress graphics (per-PA SVG charts above each table)
+
+Above the module-tracker table of **PA2, PA3, PA4 and PA5** sits a `figure::`
+that renders an inline SVG showing how the totals evolved across the four
+most recent releases (`v0.5.0-beta → v0.6.0 → v0.7.0 → current main`).
+Files live in `docs/_assets/`:
+
+| PA | File | Bars |
+|---|---|---|
+| PA2 | `pa2_impl_progress.svg`        | Feature Req (`#1f77b4`), Component Req (`#ff7f0e`) |
+| PA3 | `pa3_arch_progress.svg`        | Feature Arch (`#1f77b4`), Component Arch (`#ff7f0e`) |
+| PA4 | `pa4_impl_progress.svg`        | Estimated LOC (`#1f77b4`) |
+| PA5 | `pa5_verification_progress.svg`| 3 panels: Unit Tests, Integration Tests (Component `#ff7f0e` + Feature `#9467bd`), Coverage now (`#17becf`) |
+
+Each figure embeds in RST as
+
+```rst
+.. figure:: /_assets/<file>.svg
+   :alt: ...
+   :width: 720px
+
+   <caption sentence ending with "(v0.5.0-beta → v0.6.0 → v0.7.0 → current main)".>
+```
+
+### 6a.1 Release pinning
+
+Resolve the four release SHAs once via the GitHub tag refs (annotated tags
+must be dereferenced):
+
+```python
+def resolve_tag(repo, tag):
+    d = json.loads(gh_raw(f"repos/{repo}/git/refs/tags/{tag}"))
+    sha = d["object"]["sha"]
+    if d["object"]["type"] == "tag":
+        d2 = json.loads(gh_raw(f"repos/{repo}/git/tags/{sha}"))
+        sha = d2["object"]["sha"]
+    return sha
+```
+
+For each release tag of `eclipse-score/reference_integration`, fetch its
+`known_good.json` and read the per-module hash. Schemas differ:
+
+- v0.5 / v0.6: `modules.<key>.{hash,version}` flat
+- v0.7+:       `modules.{target_sw,tooling}.<key>.hash`
+- v0.7.0 itself only carries `version` for some entries → fall back to
+  `resolve_tag(<owner/repo>, "v"+version)`.
+
+`now` is the per-module SHA from `known_good.json` on the **`main` branch of
+`eclipse-score/reference_integration`** (not the working tree). Fetch it via
+`gh api repos/eclipse-score/reference_integration/contents/known_good.json` —
+this keeps the charts reproducible regardless of local uncommitted changes
+or temporary ref bumps in the workspace.
+
+Module repos used for the charts:
+
+```
+score:             eclipse-score/score              (key: score_platform / "score")
+baselibs:          eclipse-score/baselibs           (key: score_baselibs)
+communication:     eclipse-score/communication      (key: score_communication)
+logging:           eclipse-score/logging            (key: score_logging)
+persistency:       eclipse-score/persistency        (key: score_persistency)
+lifecycle:         eclipse-score/lifecycle          (key: score_lifecycle_health)
+inc_time:          eclipse-score/inc_time           (only "now")
+config_management: eclipse-score/config_management  (only "now")
+inc_security_crypto: eclipse-score/inc_security_crypto (only "now")
+inc_someip_gateway:  eclipse-score/inc_someip_gateway  (only "now")
+```
+
+### 6a.2 Metrics — what each chart sums
+
+All four charts sum across the **11 PA2 modules** (Baselibs, Communication,
+Logging, Persistency, Time, Config Mgmt, Lifecycle, Security/Crypto,
+Diagnostic Services, NM, Some/IP). Modules whose data isn't in a release
+contribute 0.
+
+> **Communication vs. Some/IP — never double-count.**
+> Some/IP and Communication are **separate** modules even though Some/IP
+> lives at `docs/features/communication/some_ip_gateway/**` inside the score
+> repo. Whenever a path filter for Communication includes
+> `'features/communication' in p` (or its `modules/` counterpart), it
+> **MUST also exclude** `some_ip_gateway`:
+>
+> ```python
+> def is_comm(p):
+>     return ('features/communication' in p
+>             and 'some_ip_gateway' not in p)
+> ```
+>
+> Some/IP gets its own filter that requires `some_ip_gateway` in the path
+> plus its own repo `eclipse-score/inc_someip_gateway` for component-level
+> data. The rule applies to **every** PA — PA2 (FR/CR), PA3 (FA/CA),
+> PA4 (LOC, DD, code links) and PA5 (unit tests, integration tests, coverage).
+> For PA4/PA5 the separation is usually automatic because Some/IP code lives
+> in its own repo (`inc_someip_gateway`); but whenever a counter walks the
+> Communication module repo (`eclipse-score/communication`) or the score
+> repo's `features/communication/**` / `modules/communication/**` subtree,
+> the `'some_ip_gateway' not in p` guard MUST be present.
+
+| Chart | Metric | Source |
+|---|---|---|
+| PA2 — Feature Req | sum of `count_directives_with_status(..., DIRECTIVE_TYPES["feat_req"])` totals (denominator) | per-module `path_filter` from §4 |
+| PA2 — Component Req | analogous, `comp_req` + `aou_req` | per-module `path_filter` |
+| PA3 — Feature Arch | analogous, `DIRECTIVE_TYPES["feat_arc"]` | per-module under `architecture` |
+| PA3 — Component Arch | analogous, `DIRECTIVE_TYPES["comp_arc"]` | per-module under `architecture` |
+| PA4 — LOC | `sum(blob.size for path in tree if is_src(path)) / 30` (rounded) | each module's own repo at the release SHA |
+| PA5 — Unit Tests (historical) | count of `TEST(`, `TEST_F(`, `TEST_P(`, `TYPED_TEST(`, `TYPED_TEST_P(` macros plus Rust `#[test]` and Python `^def test_` in files matching `is_test_path` | each module's own repo |
+| PA5 — Comp. IT (historical) | same counters in files where path contains `integration` | each module's own repo |
+| PA5 — Feat. IT (historical) | same counters in `feature_integration_tests/` and `platform_integration_tests/` | `eclipse-score/reference_integration` at the release tag |
+| PA5 — Unit / Comp. IT / Feat. IT (**now** column) | **column sum** of the corresponding cells in the PA5 RST table (the `(N tests)` annotations) | parsed from `overall_status.rst` |
+| PA5 — C0/C1 now | weighted mean of per-module C0 and C1 from the current PA5 RST table, weights = unit-test count per module | parsed from `overall_status.rst` |
+
+> **PA5 test counts: table is the source of truth for "now".**
+> The four releases use **two different sources** for the test-count bars:
+> - `v0.5.0-beta`, `v0.6.0`, `v0.7.0` → macro-based regex over module repo
+>   sources (Best-Effort, no curated table available for past tags).
+> - `now` → **sum of the `(N tests)` annotations in the PA5 RST table**
+>   (`Unit Tests`, `Comp. Integration Tests`, `Feature Integration Tests`
+>   columns), because the curated table is what users see.
+>
+> The two methods diverge for several reasons that are NOT bugs:
+> 1. Some/IP integration tests are named `stress_tests/` not `integration*`,
+>    so the historical regex misses them; the table includes them.
+> 2. Feature-Integration counts in the table are **per module** (i.e. how
+>    many of the cross-module `reference_integration` tests exercise that
+>    module), not the total `feature_integration_tests/` tree size — so
+>    the table sum (≈7) is much smaller than the tree-walk total (≈59).
+> 3. Some modules have CI test-run counts in the table that don't match
+>    `TEST(...)` macro counts (parameterized tests count as one macro but
+>    many runs).
+>
+> Practical rule: when updating the SVG, run both the §6a recipe **and**
+> sum the `(N tests)` cells from the RST. Use the recipe values for the
+> three release bars and the **table sum** for `now`. Note the divergence
+> in the caption / commit message if it's >10 %.
+
+> **Charts count TOTAL, not valid-only.**
+> The progress bars must use the **total** count of directives (denominator
+> from §3) — i.e. every `feat_req` / `comp_req` / `feat_arc` / `comp_arc`
+> block irrespective of `:status:`. This is intentional and differs from
+> the per-cell tracker logic in the tables, which renders `valid/total`.
+> Rationale: the charts visualise *scope growth* across releases, not
+> validation maturity. Drafts and invalids count.
+>
+> Practical consequence: use `count_directives(...)` (returns total only),
+> **never** `count_directives_with_status(...)` for chart numbers. This is
+> particularly important for Lifecycle, whose feature-level requirements
+> were largely `:status: draft` or `:status: invalid` in v0.5/v0.6 — a
+> valid-only counter would report 0 instead of ~92.
+
+LOC source-file filter:
+
+```python
+SRC_EXT = (".cpp", ".cc", ".cxx", ".c", ".h", ".hpp", ".hh", ".rs", ".py")
+def is_src(p):
+    pl = p.lower()
+    if not pl.endswith(SRC_EXT): return False
+    if pl.startswith("docs/") or "/docs/" in pl: return False
+    if pl.startswith("third_party/") or "/third_party/" in pl: return False
+    if pl.startswith("bazel-"): return False
+    return True
+
+def is_test_path(p):
+    pl = p.lower()
+    if any(pl.startswith(x) or "/"+x in "/"+pl
+           for x in ("docs/","third_party/","bazel-",".git/")):
+        return False
+    return any(t in pl for t in
+               ("_test.","/test/","/tests/","_tests.","gtest","unit_test","unittest"))
+```
+
+### 6a.3 Generating / updating the SVGs
+
+The SVGs are hand-written (no toolchain). Workflow:
+
+1. Compute totals (one Python script per chart, using `gh api` with the
+   on-disk cache `/tmp/status_cache/`). Write `/tmp/release_totals.json`,
+   `/tmp/release_totals_pa3_pa4.json`, `/tmp/release_totals_pa5.json`.
+2. Update the bar `y`/`height` values and the printed numbers inside the
+   existing SVG. The chart frames stay fixed; only the bars and labels
+   change.
+3. Bar heights use linear scale anchored at the panel's plot area. For PA2
+   `viewBox="0 0 720 320"` with plot area `x=70..690, y=50..260` (height
+   210 px), max value 400 → `y = 260 − value · 0.525`,
+   `height = 260 − y`. PA3 uses max 240 (`× 0.875`), PA4 uses max 900 000
+   (`× 0.0002333`), PA5 panels: Unit `× 0.021`, Integration `× 2.1`,
+   Coverage `× 2.1`.
+
+When a metric goes out of the chart's current range, raise the y-axis max
+and rescale **all four bars** of that panel; do not crop.
+
+### 6a.4 Caption discipline
+
+Caption template per chart:
+
+> `<Metric description> across the 11 PA2 modules per release
+> (v0.5.0-beta → v0.6.0 → v0.7.0 → current main).`
+
+Always write "across the 11 PA2 modules" (not "across all modules") — the
+charts intentionally exclude orchestrator, baselibs_rust, score_platform,
+docs_as_code, kyron and other repos that don't appear in the PA tables.
+
+---
+
 ## 7. Limitations
 
 - Test coverage of requirements (link analysis) is not detected — needs
@@ -517,3 +720,14 @@ sphinx-needs tag changes.
 - Feature-Integration-Test heuristic is path-based and weak — confirm
   manually.
 - TRLC content is not parsed; cells reference the `.trlc` file via link only.
+- PA4 LOC bars are an estimate (`tree blob bytes ÷ 30`) since `gh api`
+  exposes blob sizes but not line counts; expect ±10 % vs `cloc`.
+- PA5 historical coverage is not available — only the current snapshot.
+- PA5 test-count bars use **two sources**: the three release bars come
+  from a TEST-macro regex over module repos (Best-Effort), the `now` bar
+  is the **column sum of the RST table cells**. Expect divergences of
+  10–20 % between the methods (parameterized tests, naming conventions
+  like Some/IP `stress_tests/`, per-module cross-feature attribution).
+  Lifecycle has only C0; modules without coverage in CI (Time, Config Mgmt,
+  Security/Crypto, Some/IP, NM, Diagnostic Services) are excluded from the
+  weighted mean.
