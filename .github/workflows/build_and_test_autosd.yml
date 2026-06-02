@@ -66,7 +66,7 @@ jobs:
           sudo podman run -it --rm \
           -v /var/run/docker.sock:/var/run/docker.sock \
           -v $PWD/images/autosd:/outputs \
-          quay.io/containers/skopeo:latest copy \
+          docker://quay.io/skopeo/stable:latest copy \
           docker-daemon:score_showcases_autosd:latest \
           oci-archive:/outputs/score_showcases_autosd_latest.oci
 
