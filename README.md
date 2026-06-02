@@ -94,7 +94,7 @@ The showcases CLI starts automatically on boot. You can also launch it manually:
 ### Flash QNX on Raspberry Pi
 
 > [!NOTE]
-> The default `images/qnx_aarch64` image uses `startup-virt`, which is suitable for QEMU. Deploying to real RPi hardware requires replacing this with the board-specific startup binary from the QNX Raspberry Pi BSP. See the `TODO` comment in [`images/qnx_aarch64/build/init.build`](https://github.com/qorix-group/reference_integration/blob/piotrkorkus_qnx8_aarch/images/qnx_aarch64/build/init.build).
+> The default `images/qnx_aarch64` image uses `startup-virt`, which is suitable for QEMU. Deploying to real RPi hardware requires replacing this with the board-specific startup binary from the QNX Raspberry Pi BSP. See the `TODO` comment in [`images/qnx_aarch64/build/init.build`](images/qnx_aarch64/build/init.build).
 
 General steps to create a bootable QNX SD card for Raspberry Pi:
 
