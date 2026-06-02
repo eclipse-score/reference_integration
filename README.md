@@ -48,6 +48,100 @@ bazel run //showcases/cli:cli -- --help
 
 See [showcases/cli/README.md](showcases/cli/README.md) for CLI configuration and examples.
 
+## Build and deploy showcases on Raspberry Pi (QNX aarch64)
+
+The `images/qnx_aarch64` image packages all S-CORE showcases into a bootable QNX 8.0 IFS (Image File System) for AArch64 targets. It can be run in QEMU for local development and testing, or deployed to a Raspberry Pi 4/5 for real hardware validation.
+
+### Prerequisites
+
+- **QNX SDP 8.0.0** — a licensed copy of the QNX Software Development Platform is required for cross-compilation. See the [QNX SDP product page](https://blackberry.qnx.com/en/products/foundation-software/qnx-software-development-platform).
+- For RPi hardware: a **Raspberry Pi 4 or 5**, microSD card (≥ 8 GB), and the [QNX Raspberry Pi BSP](https://www.qnx.com/developers/docs/8.0/).
+
+### Build the QNX aarch64 image
+
+Cross-compile all showcases and assemble the IFS image:
+
+```bash
+bazel build --config=qnx-aarch64 //images/qnx_aarch64:image
+```
+
+The built IFS image is written to:
+
+```
+bazel-bin/images/qnx_aarch64/build/init
+```
+
+### Run in QEMU (development and testing)
+
+# Direct Bazel invocation
+bazel run --config=qnx-aarch64 //images/qnx_aarch64:run
+```
+
+SSH into the running QEMU instance (no password required):
+
+```bash
+ssh -p 2222 root@localhost
+```
+
+The showcases CLI starts automatically on boot. You can also launch it manually:
+
+```bash
+/showcases/bin/cli
+```
+
+### Flash QNX on Raspberry Pi
+
+> [!NOTE]
+> The default `images/qnx_aarch64` image uses `startup-virt`, which is suitable for QEMU. Deploying to real RPi hardware requires replacing this with the board-specific startup binary from the QNX Raspberry Pi BSP. See the `TODO` comment in [`images/qnx_aarch64/build/init.build`](images/qnx_aarch64/build/init.build).
+
+General steps to create a bootable QNX SD card for Raspberry Pi:
+
+1. **Obtain the QNX Raspberry Pi BSP** from [BlackBerry QNX](https://blackberry.qnx.com/en/sdp8) and follow its *Getting Started* guide to install it under your QNX SDP.
+
+2. **Replace the startup binary** in `images/qnx_aarch64/build/init.build`: substitute `startup-virt` with the RPi-specific startup binary provided by the BSP (consult the BSP documentation for the correct binary name for your RPi model).
+
+3. **Rebuild the image** (see [Build the QNX aarch64 image](#build-the-qnx-aarch64-image) above).
+
+4. **Prepare the SD card** following the QNX BSP instructions. This typically involves creating a boot partition and copying the QNX IFS image to it:
+
+   ```bash
+   # Copy the IFS image to the SD card boot partition (exact path depends on your BSP layout)
+   cp bazel-bin/images/qnx_aarch64/build/init /media/$USER/boot/qnx-image.ifs
+   sync && umount /media/$USER/boot
+   ```
+
+5. **Insert the SD card** into the RPi and power it on. QNX boots and starts all services defined in [`images/qnx_aarch64/configs/startup.sh`](images/qnx_aarch64/configs/startup.sh).
+
+### Deploy and run showcases on Raspberry Pi
+
+Once QNX is running on the RPi:
+
+1. **Find the RPi IP address** — the system acquires an address via DHCP on the `vtnet0` interface at startup (configured in [`configs/network_setup_dhcp.sh`](images/qnx_aarch64/configs/network_setup_dhcp.sh)). Check your router's DHCP table or connect a serial console to read the address from the boot log.
+
+2. **SSH into the RPi** (root, no password — see [`configs/sshd_config`](images/qnx_aarch64/configs/sshd_config)):
+
+   ```bash
+   ssh root@<RPi_IP>
+   ```
+
+3. **Showcases are pre-loaded** in `/showcases/bin/`. The interactive CLI is started automatically on boot (see [`configs/startup.sh`](images/qnx_aarch64/configs/startup.sh)). Re-launch it at any time:
+
+   ```bash
+   /showcases/bin/cli
+   ```
+
+4. **Run a specific showcase** by following the CLI prompts, or invoke a binary directly. For example, to run the communication example (from [`showcases/standalone/com.score.json`](showcases/standalone/com.score.json)):
+
+   ```bash
+   /showcases/bin/ipc_bridge_cpp -n 10 -t 100 -m send
+   ```
+
+5. **View system logs**:
+
+   ```bash
+   slog2info
+   ```
+
 ## Run tests
 
 Run Feature Integration Tests (FIT) and Integration Test Framework (ITF) with Bazel. Common examples:
@@ -104,6 +198,7 @@ Configuration for CLI autodiscovery is in `name.score.json` files; see [showcase
 Platform-specific target images bundling S-CORE artifacts and showcases:
 - **`linux_x86_64/`**: Linux x86_64 Docker image
 - **`qnx_x86_64/`**: QNX x86_64 QEMU image
+- **`qnx_aarch64/`**: QNX 8.0 aarch64 image — QEMU or Raspberry Pi 4/5 (see [Build and deploy showcases on Raspberry Pi](#build-and-deploy-showcases-on-raspberry-pi-qnx-aarch64))
 - **`ebclfsa_aarch64/`**: Elektrobit corbos Linux for Safety Applications (aarch64) (see [images/ebclfsa_aarch64/README.md](images/ebclfsa_aarch64/README.md))
 - **`autosd/`**: Red Hat AutoSD x86_64
 
@@ -121,6 +216,7 @@ For documentation covering repository workflows, testing frameworks, and platfor
 - **[CLI Documentation](showcases/cli/README.md)** — CLI tool configuration and usage
 - **Platform-Specific Guides:**
    - [Elektrobit corbos Linux (aarch64)](images/ebclfsa_aarch64/README.md)
+   - [QNX aarch64 / Raspberry Pi](#build-and-deploy-showcases-on-raspberry-pi-qnx-aarch64)
 
 To generate HTML documentation for all integrated modules:
 
@@ -133,6 +229,7 @@ bazel run //:docs_combo_experimental
 Integration and deployment platforms for S-CORE:
 
 - **QNX x86_64** — QNX RTOS integration (QEMU-based testing)
+- **QNX aarch64 (RPi)** — QNX 8.0 on Raspberry Pi 4/5 or QEMU aarch64; see [Build and deploy showcases on Raspberry Pi](#build-and-deploy-showcases-on-raspberry-pi-qnx-aarch64)
 - **[Elektrobit corbos Linux for Safety Applications (aarch64)](images/ebclfsa_aarch64/README.md)** — Safety-critical automotive Linux
 - **Red Hat AutoSD (x86_64)** — Automotive system development
 - **Linux x86_64** — Standard Linux development and testing (Docker-based)
