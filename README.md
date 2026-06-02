@@ -55,7 +55,7 @@ The `images/qnx_aarch64` image packages all S-CORE showcases into a bootable QNX
 ### Prerequisites
 
 - **QNX SDP 8.0.0** — a licensed copy of the QNX Software Development Platform is required for cross-compilation. See the [QNX SDP product page](https://blackberry.qnx.com/en/products/foundation-software/qnx-software-development-platform).
-- For RPi hardware: a **Raspberry Pi 4 or 5**, microSD card (≥ 8 GB), and the [QNX Raspberry Pi BSP](https://www.qnx.com/developers/docs/8.0/).
+- For RPi hardware: a **Raspberry Pi** (4 or later), microSD card, and the [QNX Raspberry Pi BSP](https://www.qnx.com/developers/docs/8.0/) — consult the BSP documentation for model-specific support and requirements.
 
 ### Build the QNX aarch64 image
 
@@ -73,7 +73,9 @@ bazel-bin/images/qnx_aarch64/build/init
 
 ### Run in QEMU (development and testing)
 
-# Direct Bazel invocation
+Before deploying to hardware, validate the image in QEMU:
+
+```bash
 bazel run --config=qnx-aarch64 //images/qnx_aarch64:run
 ```
 
@@ -92,7 +94,7 @@ The showcases CLI starts automatically on boot. You can also launch it manually:
 ### Flash QNX on Raspberry Pi
 
 > [!NOTE]
-> The default `images/qnx_aarch64` image uses `startup-virt`, which is suitable for QEMU. Deploying to real RPi hardware requires replacing this with the board-specific startup binary from the QNX Raspberry Pi BSP. See the `TODO` comment in [`images/qnx_aarch64/build/init.build`](images/qnx_aarch64/build/init.build).
+> The default `images/qnx_aarch64` image uses `startup-virt`, which is suitable for QEMU. Deploying to real RPi hardware requires replacing this with the board-specific startup binary from the QNX Raspberry Pi BSP. See the `TODO` comment in [`images/qnx_aarch64/build/init.build`](https://github.com/qorix-group/reference_integration/blob/piotrkorkus_qnx8_aarch/images/qnx_aarch64/build/init.build).
 
 General steps to create a bootable QNX SD card for Raspberry Pi:
 
