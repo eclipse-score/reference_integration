@@ -132,10 +132,10 @@ Once QNX is running on the RPi:
    /showcases/bin/cli
    ```
 
-4. **Run a specific showcase** by following the CLI prompts, or invoke a binary directly. For example, to run the communication example (from [`showcases/standalone/com.score.json`](showcases/standalone/com.score.json)):
+4. **Run a specific showcase** by following the CLI prompts, or invoke a binary directly. For example, to run the lifecycle management example (from [`showcases/simple_lifecycle`](showcases/simple_lifecycle)):
 
    ```bash
-   /showcases/bin/ipc_bridge_cpp -n 10 -t 100 -m send
+   /showcases/bin/launch_manager
    ```
 
 5. **View system logs**:
