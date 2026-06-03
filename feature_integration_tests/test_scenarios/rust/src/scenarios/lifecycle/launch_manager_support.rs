@@ -32,9 +32,12 @@ pub struct LifecycleTestInput {
 
 impl LifecycleTestInput {
     /// Parse test input from JSON string.
-    pub fn from_json(json_str: &str) -> Result<Self, serde_json::Error> {
-        let v: Value = serde_json::from_str(json_str)?;
-        serde_json::from_value(v["test"].clone())
+    pub fn from_json(json_str: &str) -> Result<Self, String> {
+        let v: Value = serde_json::from_str(json_str).map_err(|e| format!("JSON parse error: {}", e))?;
+        let test_value = v
+            .get("test")
+            .ok_or_else(|| "Missing 'test' field in JSON input".to_string())?;
+        serde_json::from_value(test_value.clone()).map_err(|e| format!("Failed to parse 'test' field: {}", e))
     }
 }
 

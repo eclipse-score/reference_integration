@@ -1,6 +1,6 @@
 # Lifecycle Feature Integration Tests
 
-This document describes the lifecycle feature integration tests implemented in this repository, including the approach taken and the rationale behind design decisions.
+This document provides comprehensive guidance for lifecycle feature integration tests, including test architecture, implementation approach, running tests (both API and daemon modes), and detailed requirements coverage.
 
 ## Overview
 
@@ -17,9 +17,35 @@ Lifecycle feature integration tests verify that applications can properly integr
 9. **Configuration** — Modular configuration and session management
 10. **Debug & Logging** — Debug support, terminal support, and logging
 
+## Test Modes
+
+The lifecycle tests can run in two complementary modes:
+
+### 1. API Integration Mode (Default)
+
+Tests call lifecycle APIs but don't require a running daemon. This validates:
+
+- API signatures and integration patterns
+- Correct API usage in application code
+- Language bindings (Rust and C++) work correctly
+
+**When to use**: CI/CD pipelines, quick feedback, API contract validation
+
+### 2. Daemon Integration Mode
+
+Tests run with an actual Launch Manager daemon instance. This validates:
+
+- End-to-end supervision and monitoring behavior
+- Process recovery and health checks
+- Runtime configuration management
+
+**When to use**: Integration validation, E2E testing, behavior verification
+
 ## Requirements Coverage Summary
 
-This test suite covers 85 of 92 lifecycle requirements from the S-CORE Platform specification (92% coverage). The tests validate API integration patterns for both Rust and C++ implementations.
+This test suite covers **85 of 92 lifecycle requirements** from the S-CORE Platform specification (**92% coverage**). The tests validate API integration patterns for both Rust and C++ implementations.
+
+> **Note**: All tests should be run using Bazel. Direct pytest execution is a work in progress.
 
 **Coverage by Category:**
 
@@ -356,7 +382,6 @@ The tests are designed to run in environments without the Launch Manager daemon.
 **Rationale**:
 
 - **Separation of Concerns**: Python for orchestration, Rust/C++ for implementation
-- **Language-Appropriate Testing**: Leverages pytest for test management
 - **Reusability**: Base scenario class reduces code duplication
 - **Flexibility**: Easy to add new test scenarios or languages
 
@@ -399,7 +424,27 @@ All scenarios are implemented in both Rust and C++:
 
 ## Running the Tests
 
-### Using Bazel (Recommended)
+### Quick Reference
+
+**Run all non-daemon tests (Rust and C++):**
+
+```bash
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_rust
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_cpp
+```
+
+**Run daemon integration tests (Rust and C++):**
+
+```bash
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_daemon_rust
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_daemon_cpp
+```
+
+### Quick Start
+
+#### API Integration Tests (Fast, No Daemon Required)
+
+**Using Bazel:**
 
 Run all lifecycle tests (both languages):
 
@@ -410,7 +455,7 @@ bazel test --config=linux-x86_64 \
   --test_filter="*lifecycle*"
 ```
 
-Run specific language:
+**Run specific language:**
 
 ```bash
 # Rust only
@@ -420,45 +465,43 @@ bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_rust
 bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_cpp --test_filter="*lifecycle*"
 ```
 
-Run specific test file:
+**Run specific test file:**
 
 ```bash
 bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_cpp \
   --test_filter="*test_process_launching*"
 ```
 
-### Using Pytest Directly
+#### Daemon Integration Tests (End-to-End Validation)
 
-Run all lifecycle tests:
-
-```bash
-cd feature_integration_tests
-pytest test_cases/tests/lifecycle/
-```
-
-Run specific test file:
+**Using Bazel:**
 
 ```bash
-pytest test_cases/tests/lifecycle/test_control_interface_support.py
+# Run all daemon tests (both Rust and C++)
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_daemon_rust
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_daemon_cpp
+
+# Show detailed test output
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_daemon_rust --test_output=all
 ```
 
-Run tests for specific implementation (rust or cpp):
+### Understanding Build Configurations
 
-```bash
-pytest test_cases/tests/lifecycle/ -k "rust"
-pytest test_cases/tests/lifecycle/ -k "cpp"
-```
+**Bazel `--config` flag:**
+
+- `--config=linux-x86_64`: Builds for Linux x86_64 platform
+- `--config=qnx-x86_64`: Builds for QNX x86_64 platform
 
 ### Debug Individual Scenarios
 
-List available scenarios:
+**List available scenarios:**
 
 ```bash
 bazel run //feature_integration_tests/test_scenarios/rust:rust_test_scenarios -- --list-scenarios
 bazel run --config=linux-x86_64 //feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios -- --list-scenarios
 ```
 
-Run a scenario directly:
+**Run a scenario directly:**
 
 ```bash
 bazel run //feature_integration_tests/test_scenarios/rust:rust_test_scenarios -- \
@@ -466,6 +509,8 @@ bazel run //feature_integration_tests/test_scenarios/rust:rust_test_scenarios --
 ```
 
 ## Test Configuration
+
+### Scenario Configuration
 
 Scenarios accept JSON configuration to customize test behavior. Common parameters include:
 
@@ -502,6 +547,60 @@ Scenarios accept JSON configuration to customize test behavior. Common parameter
 
 The Python test files build appropriate configurations for each scenario automatically.
 
+### Launch Manager Configuration
+
+When running daemon integration tests, the Launch Manager requires a configuration file. The daemon fixture automatically creates this, but you can customize it for your tests:
+
+```json
+{
+  "schema_version": 1,
+  "defaults": {
+    "deployment_config": {
+      "bin_dir": "/path/to/bin/",
+      "ready_recovery_action": {
+        "restart": {
+          "number_of_attempts": 3,
+          "delay_before_restart": 0.5
+        }
+      },
+      "sandbox": {
+        "uid": 0,
+        "gid": 0,
+        "scheduling_policy": "SCHED_OTHER",
+        "scheduling_priority": 1
+      }
+    },
+    "component_properties": {
+      "application_profile": {
+        "application_type": "Reporting",
+        "alive_supervision": {
+          "reporting_cycle": 0.1,
+          "min_indications": 1,
+          "max_indications": 3,
+          "failed_cycles_tolerance": 2
+        }
+      }
+    }
+  },
+  "components": {
+    "my_app": {
+      "component_properties": {
+        "binary_name": "my_app_binary",
+        "application_profile": {
+          "application_type": "Reporting"
+        }
+      }
+    }
+  },
+  "run_targets": {
+    "startup": {
+      "description": "System startup",
+      "depends_on": ["my_app"]
+    }
+  },
+  "initial_run_target": "startup"
+}
+
 ## Dependencies
 
 ### Rust
@@ -519,81 +618,53 @@ The Python test files build appropriate configurations for each scenario automat
 
 ### Python
 
-- `pytest` — Test framework and orchestration
 - `testing_utils` — Log parsing and scenario execution utilities
 
 ## Future Enhancements
 
 Potential areas for expansion:
 
-1. **Integration with Real Launch Manager**:
-   - Tests that run against actual Launch Manager daemon
-   - Validation of supervision and recovery behavior
-   - End-to-end lifecycle state transitions
+1. **Enhanced Daemon Integration**:
+   - ✅ Basic daemon fixture and test infrastructure
+   - ✅ Supervised application launching tests
+   - ⏳ Dynamic configuration updates via control interface
+   - ⏳ Comprehensive health monitoring validation
+   - ⏳ Multi-daemon distributed scenarios
+   - ⏳ Performance metrics collection (timing, resource usage)
 
-2. **Additional Scenarios**:
-   - Process termination and cleanup
+2. **Additional Test Scenarios**:
+   - Process termination and cleanup validation
    - Error recovery patterns
    - State persistence across restarts
+   - Complex dependency graphs
 
-3. **Performance Testing**:
+3. **Test Infrastructure**:
+   - **Requirement Traceability**: Add requirement IDs as test markers for automated coverage reporting
+   - **Coverage Automation**: Generate machine-readable coverage reports linking tests to requirements
+   - **Log Parsing Utilities**: Structured log analysis for validation
+   - **Helper Functions**: Utilities to verify health check behavior
+
+4. **Performance Testing**:
    - Measure supervision overhead
    - Validate scalability with many parallel processes
    - Benchmark deadline monitoring accuracy
+   - Startup time analysis
 
-4. **Configuration Testing**:
+5. **Configuration Testing**:
    - Test various Launch Manager configurations
    - Validate configuration schema compliance
    - Test configuration error handling
+   - OCI compliance documentation (explicitly document OCI v1.2.0 specification sections)
 
 ## References
 
 - [Launch Manager Design](https://github.com/eclipse-score/lifecycle)
 - [Health Monitoring Documentation](https://github.com/eclipse-score/lifecycle/tree/main/src/health_monitoring_lib)
 - [Lifecycle Client API](https://github.com/eclipse-score/lifecycle/tree/main/src/launch_manager_daemon/lifecycle_client_lib)
+- [Simple Lifecycle Showcase](../showcases/simple_lifecycle/)
 - [Feature Integration Test Framework](./README.md)
 - [S-CORE Platform Lifecycle Requirements](https://eclipse-score.github.io/reference_integration/main/_collections/score_platform/docs/features/lifecycle/requirements/index.html)
 
-## Coverage Analysis
-
-### Test Implementation Characteristics
-
-The test suite implements several design patterns worth noting:
-
-1. Dual language implementation (Rust and C++) ensures API parity across both ecosystems
-2. Uses actual lifecycle and health monitoring APIs from `@score_lifecycle_health` rather than mocks
-3. Three-layer architecture separates Python orchestration from Rust/C++ implementation
-4. Tests function without requiring a running Launch Manager daemon (graceful degradation)
-5. Structured logging differs by language: JSON via `tracing` for Rust, plain text for C++
-
-### Technical Observations
-
-**API Integration Approach:**
-
-The tests validate API signatures and integration patterns rather than end-to-end daemon behavior. When no daemon is present, lifecycle client calls return empty results (C++) or `false` (Rust) without panicking. This allows tests to verify that application code correctly uses the lifecycle APIs.
-
-**OCI Compliance Coverage:**
-
-Requirement `feat_req__lifecycle__oci_compliant` (OCI Specification v1.2.0) is tested through `test_configuration_management.py` via the `runtime_config_compat` test. This test validates runtime configuration compliance with OCI standards. Additional documentation could clarify the specific OCI v1.2.0 features validated.
-
-### Potential Enhancements
-
-1. **Requirement Traceability**: Adding requirement IDs as pytest markers would enable automated coverage reporting:
-
-   ```python
-   @pytest.mark.requirement("feat_req__lifecycle__launch_support")
-   def test_process_launching_rust(self, rust_scenario):
-       ...
-   ```
-
-2. **Coverage Automation**: Generate machine-readable coverage reports linking tests to requirements for CI/CD integration
-
-3. **Daemon Integration**: The current approach focuses on API integration. Future work could add tests against a running Launch Manager daemon to validate supervision, recovery, and state management behavior
-
-4. **OCI Compliance Documentation**: Explicitly document which OCI v1.2.0 specification sections are validated by `runtime_config_compat`
-
-## Summary
-
-This test suite covers 85 of 92 lifecycle requirements (92% coverage) and validates API integration patterns for both Rust and C++ implementations. The tests verify that applications can correctly call lifecycle management APIs and integrate with the S-CORE lifecycle framework. The test architecture enables running without a daemon, making tests suitable for CI environments where full daemon infrastructure may not be available.
-
 ---
+
+**Summary**: This test suite covers 85 of 92 lifecycle requirements (92% coverage) and validates API integration patterns for both Rust and C++ implementations. Tests run with Bazel for both API integration mode (fast CI feedback) and daemon integration mode (comprehensive end-to-end validation). The dual-language implementation ensures both ecosystems have equal support and validates that lifecycle APIs work correctly across languages.

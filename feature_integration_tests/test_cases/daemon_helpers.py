@@ -1,0 +1,359 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+"""
+Helpers for running tests with the Launch Manager daemon.
+
+Provides fixtures and utilities for integration tests that require
+a running Launch Manager daemon instance.
+"""
+
+import json
+import os
+import shutil
+import signal
+import subprocess
+import time
+from collections.abc import Generator
+from pathlib import Path
+from typing import Any
+
+import pytest
+from testing_utils import BazelTools
+
+
+def find_binary_in_runfiles(target_path: str) -> Path | None:
+    """
+    Find a binary in Bazel runfiles when running under Bazel.
+
+    Parameters
+    ----------
+    target_path : str
+        Bazel target path (e.g., "@score_lifecycle_health//src/launch_manager_daemon:launch_manager")
+
+    Returns
+    -------
+    Path | None
+        Path to the binary if found in runfiles, None otherwise.
+    """
+    # Check if running under Bazel by looking for runfiles
+    runfiles_dir = os.environ.get("RUNFILES_DIR")
+    if not runfiles_dir:
+        # Try to find runfiles relative to current file
+        test_srcdir = os.environ.get("TEST_SRCDIR")
+        if test_srcdir:
+            runfiles_dir = test_srcdir
+
+    if not runfiles_dir:
+        # Try to find runfiles from the current working directory
+        cwd = Path.cwd()
+        if ".runfiles" in str(cwd):
+            # We're inside a runfiles directory
+            runfiles_parts = str(cwd).split(".runfiles")
+            if len(runfiles_parts) > 1:
+                runfiles_dir = runfiles_parts[0] + ".runfiles/_main"
+
+    if not runfiles_dir:
+        return None
+
+    # Convert Bazel target to runfiles path
+    # @score_lifecycle_health//src/launch_manager_daemon:launch_manager
+    # -> score_lifecycle_health/src/launch_manager_daemon/launch_manager
+    if target_path.startswith("@"):
+        # Remove @ and split by //
+        parts = target_path[1:].split("//")
+        if len(parts) == 2:
+            # Handle bzlmod repository names with + suffix
+            repo_name = parts[0]
+            # Try both with and without + suffix
+            repo_variants = [
+                repo_name,
+                repo_name.rstrip("+"),
+                repo_name + "+",
+                repo_name.replace("+", "~"),
+            ]
+
+            package_and_target = parts[1].split(":")
+            if len(package_and_target) == 2:
+                package = package_and_target[0]
+                target = package_and_target[1]
+
+                # Try different runfiles path patterns
+                candidates = []
+                for repo in repo_variants:
+                    candidates.extend(
+                        [
+                            Path(runfiles_dir) / repo / package / target,
+                            Path(runfiles_dir) / f"{repo}~" / package / target,
+                            Path(runfiles_dir) / "_main" / "external" / repo / package / target,
+                            Path(runfiles_dir) / "external" / repo / package / target,
+                        ]
+                    )
+
+                for candidate in candidates:
+                    if candidate.exists() and candidate.is_file():
+                        return candidate
+
+    return None
+
+
+def get_binary_path(target: str, version: str = "rust") -> Path:
+    """
+    Get path to a binary, either from runfiles or by building it.
+
+    Parameters
+    ----------
+    target : str
+        Bazel target path.
+    version : str
+        Build version ("rust" or "cpp").
+
+    Returns
+    -------
+    Path
+        Path to the binary.
+    """
+    # First try to find in runfiles (when running under Bazel)
+    binary_path = find_binary_in_runfiles(target)
+    if binary_path:
+        return binary_path
+
+    # Fall back to building with BazelTools (when running pytest directly)
+    tools = BazelTools(option_prefix=version)
+    tools.build(target)
+    return tools.find_target_path(target)
+
+
+class LaunchManagerDaemon:
+    """
+    Context manager for Launch Manager daemon lifecycle.
+
+    Starts and stops a Launch Manager daemon instance for testing purposes.
+
+    Parameters
+    ----------
+    daemon_binary : Path
+        Path to the launch_manager executable.
+    config_file : Path
+        Path to the launch manager configuration JSON file.
+    working_dir : Path
+        Working directory for the daemon process.
+    """
+
+    def __init__(self, daemon_binary: Path, config_file: Path, working_dir: Path):
+        self.daemon_binary = daemon_binary
+        self.config_file = config_file
+        self.working_dir = working_dir
+        self.process: subprocess.Popen | None = None
+        self.log_file: Path | None = None
+
+    def start(self, startup_timeout: float = 2.0) -> None:
+        """
+        Start the Launch Manager daemon.
+
+        Parameters
+        ----------
+        startup_timeout : float
+            Time to wait after starting the daemon (seconds).
+        """
+        if self.process is not None:
+            raise RuntimeError("Daemon already started")
+
+        # Create log file
+        self.log_file = self.working_dir / "launch_manager.log"
+        log_fd = open(self.log_file, "w")
+
+        # Start daemon process
+        cmd = [str(self.daemon_binary), str(self.config_file)]
+        self.process = subprocess.Popen(
+            cmd,
+            cwd=self.working_dir,
+            stdout=log_fd,
+            stderr=subprocess.STDOUT,
+            text=True,
+        )
+
+        # Wait for daemon to initialize
+        time.sleep(startup_timeout)
+
+        # Check if daemon is still running
+        if self.process.poll() is not None:
+            log_content = self.log_file.read_text() if self.log_file.exists() else "No logs available"
+            raise RuntimeError(
+                f"Launch Manager daemon failed to start. Exit code: {self.process.returncode}\nLogs:\n{log_content}"
+            )
+
+    def stop(self, shutdown_timeout: float = 5.0) -> None:
+        """
+        Stop the Launch Manager daemon gracefully.
+
+        Parameters
+        ----------
+        shutdown_timeout : float
+            Maximum time to wait for graceful shutdown (seconds).
+        """
+        if self.process is None:
+            return
+
+        # Send SIGTERM for graceful shutdown
+        self.process.send_signal(signal.SIGTERM)
+
+        try:
+            self.process.wait(timeout=shutdown_timeout)
+        except subprocess.TimeoutExpired:
+            # Force kill if graceful shutdown fails
+            self.process.kill()
+            self.process.wait()
+
+    def __enter__(self):
+        self.start()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.stop()
+        return False
+
+    def is_running(self) -> bool:
+        """Check if the daemon process is still running."""
+        return self.process is not None and self.process.poll() is None
+
+    def get_logs(self) -> str:
+        """Get the daemon log contents."""
+        if self.log_file and self.log_file.exists():
+            return self.log_file.read_text()
+        return ""
+
+
+@pytest.fixture(scope="class")
+def launch_manager_daemon(
+    tmp_path_factory: pytest.TempPathFactory, version: str
+) -> Generator[dict[str, Any], None, None]:
+    """
+    Fixture that provides a running Launch Manager daemon instance.
+
+    The fixture sets up a complete daemon environment including:
+    - Building the launch_manager binary
+    - Creating a temporary workspace with bin/ and etc/ directories
+    - Starting the daemon with a minimal configuration
+    - Cleaning up on teardown
+
+    Parameters
+    ----------
+    tmp_path_factory : pytest.TempPathFactory
+        Pytest temporary path factory.
+    version : str
+        Parametrized version ("rust" or "cpp").
+
+    Yields
+    ------
+    dict
+        Daemon information containing:
+        - daemon: LaunchManagerDaemon instance
+        - bin_dir: Path to bin directory for test applications
+        - etc_dir: Path to etc directory for configurations
+        - work_dir: Path to workspace root
+        - config_file: Path to launch manager config
+
+    Examples
+    --------
+    >>> def test_with_daemon(launch_manager_daemon):
+    ...     daemon_info = launch_manager_daemon
+    ...     assert daemon_info["daemon"].is_running()
+    ...     # Copy test app to daemon_info["bin_dir"]
+    ...     # Run your integration test
+    """
+    # Create workspace structure
+    work_dir = tmp_path_factory.mktemp(f"daemon_workspace_{version}")
+    bin_dir = work_dir / "bin"
+    etc_dir = work_dir / "etc"
+    bin_dir.mkdir(exist_ok=True)
+    etc_dir.mkdir(exist_ok=True)
+
+    # Get launch_manager daemon binary (from runfiles or build it)
+    daemon_target = "@score_lifecycle_health//src/launch_manager_daemon:launch_manager"
+    daemon_binary = get_binary_path(daemon_target, version)
+
+    # Copy daemon to bin directory
+    daemon_path = bin_dir / "launch_manager"
+    shutil.copy2(daemon_binary, daemon_path)
+    daemon_path.chmod(0o755)
+
+    # Create minimal launch manager configuration
+    config = {
+        "schema_version": 1,
+        "defaults": {
+            "deployment_config": {
+                "bin_dir": str(bin_dir) + "/",
+                "ready_recovery_action": {"restart": {"number_of_attempts": 3, "delay_before_restart": 0.5}},
+                "sandbox": {
+                    "uid": 0,
+                    "gid": 0,
+                    "supplementary_group_ids": [],
+                    "scheduling_policy": "SCHED_OTHER",
+                    "scheduling_priority": 1,
+                },
+            },
+            "component_properties": {
+                "application_profile": {
+                    "application_type": "Reporting",
+                    "is_self_terminating": False,
+                    "alive_supervision": {
+                        "reporting_cycle": 0.1,
+                        "min_indications": 1,
+                        "max_indications": 3,
+                        "failed_cycles_tolerance": 2,
+                    },
+                },
+                "depends_on": [],
+                "process_arguments": [],
+                "ready_condition": {"process_state": "Running"},
+            },
+            "run_target": {
+                "transition_timeout": 10,
+                "recovery_action": {"switch_run_target": {"run_target": "fallback"}},
+            },
+            "alive_supervision": {"evaluation_cycle": 0.5},
+        },
+        "components": {},  # Tests will add components dynamically
+        "run_targets": {
+            "startup": {"description": "System startup", "depends_on": []},
+            "fallback": {"description": "Fallback state", "depends_on": [], "transition_timeout": 1.5},
+        },
+        "initial_run_target": "startup",
+    }
+
+    config_file = etc_dir / "launch_manager_config.json"
+    config_file.write_text(json.dumps(config, indent=2))
+
+    # Start the daemon
+    daemon = LaunchManagerDaemon(daemon_path, config_file, work_dir)
+    daemon.start(startup_timeout=2.0)
+
+    try:
+        # Verify daemon is running
+        if not daemon.is_running():
+            raise RuntimeError("Launch Manager daemon failed to stay running")
+
+        print(f"Launch Manager daemon started successfully (PID: {daemon.process.pid})")
+
+        yield {
+            "daemon": daemon,
+            "bin_dir": bin_dir,
+            "etc_dir": etc_dir,
+            "work_dir": work_dir,
+            "config_file": config_file,
+        }
+    finally:
+        # Cleanup
+        print("\nStopping Launch Manager daemon...")
+        daemon.stop()
+        print(f"Daemon logs:\n{daemon.get_logs()}")
