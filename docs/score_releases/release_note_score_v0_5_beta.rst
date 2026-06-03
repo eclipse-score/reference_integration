@@ -49,9 +49,10 @@ Please be aware, that features may be incomplete, the software may exhibit insta
 Highlights
 -----------
 
-Eclipse S-CORE book
--------------------
-The `Eclipse S-CORE book <https://eclipse-score.github.io/score/main/handbook/index.html>`_
+Eclipse S-CORE User’s Guide   
+---------------------------
+
+The `Eclipse S-CORE User’s Guide <https://eclipse-score.github.io/score/main/users_guide/index.html>`_
 is a “how-to” guide for users getting started with the project or who want to contribute new modules.
 It introduces the core concepts of Eclipse S-CORE and walks through building
 the ``scrample`` application step by step on top of the platform modules.

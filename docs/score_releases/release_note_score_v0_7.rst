@@ -61,10 +61,10 @@ On the documentation side, the build pipeline was fixed and an integration statu
 Infrastructure-wise, Bzlmod lockfile consistency is now enforced in CI, the AutoSD image version is frozen for reproducible builds, and image filesystem rules were migrated to the new Bazel API.
 
 
-Eclipse S-CORE book
--------------------
+Eclipse S-CORE User’s Guide   
+---------------------------
 
-The `Eclipse S-CORE book <https://eclipse-score.github.io/score/main/handbook/index.html>`_
+The `Eclipse S-CORE User’s Guide <https://eclipse-score.github.io/score/main/users_guide/index.html>`_
 is a “how-to” guide for users getting started with the project or who want to contribute new modules.
 
 S-CORE Platform scope
