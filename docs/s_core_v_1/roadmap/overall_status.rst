@@ -3,6 +3,14 @@
 Overall Status
 ==============
 
+.. note::
+
+   This status overview is generated with AI assistance and is **not yet
+   fully accurate**. It is intended as a directional snapshot — the trend and
+   structure are correct, but individual figures and statuses may still be
+   off. Treat the numbers as indicative until the underlying data sources are
+   fully validated.
+
 This page tracks feature and process status across the SCORE platform modules.
 It is regenerated from live `eclipse-score` GitHub repositories pinned via
 ``known_good.json``.
