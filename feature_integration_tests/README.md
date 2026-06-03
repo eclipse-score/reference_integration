@@ -32,7 +32,7 @@ bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit
 To run specific test suites:
 
 ```sh
-bazel test //feature_integration_tests/test_cases:fit_rust
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_rust
 bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_cpp
 ```
 
