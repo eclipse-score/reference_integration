@@ -166,3 +166,67 @@ body.wide-content-page .bd-content .bd-article-container {
 .landing-grid .sd-card a:hover {
     color: #ffffff !important;
 }
+
+/* ---------------------------------------------------------------------------
+ * RST line-blocks inside list-tables (used in overall_status.rst PA cells):
+ * Sphinx wraps the indented "| ..." continuation in a <blockquote>, which
+ * adds a left border and a tinted background. Inside a status table we want
+ * those secondary lines (test counts, coverage values, links) to look like
+ * regular text — same color, no border, no inset background.
+ * ---------------------------------------------------------------------------*/
+
+table.docutils blockquote,
+table blockquote {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+table.docutils blockquote > div,
+table blockquote > div {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+table.docutils .line-block,
+table .line-block {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+table.docutils .line-block .line,
+table .line-block .line {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * Platform Verification Report admonition (overall_status.rst PA5):
+ * make this single project-wide deliverable visually prominent.
+ * ---------------------------------------------------------------------------*/
+
+.admonition.platform-ver-report {
+    font-size: 1.15rem;
+    border-left: 6px solid #1a5fa8;
+    background-color: #eef4fb;
+    padding: 0.8rem 1rem;
+    margin: 1.2rem 0;
+}
+
+.admonition.platform-ver-report > .admonition-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1a5fa8;
+    margin-bottom: 0.3rem;
+}
+
+.admonition.platform-ver-report p {
+    margin: 0;
+    font-size: 1.1rem;
+}
