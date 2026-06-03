@@ -30,7 +30,7 @@ Five process areas, each with its own table:
 | PA2 | Requirements Engineering | `requirements_engineering` | Feature Req · Component Req · Req. Inspection |
 | PA3 | Architecture Design | `architecture_design` | Feature Arch · Component Arch · Arch. Inspection |
 | PA4 | Implementation | `implementation` | SW Dev Plan · Code · Detailed Design · Impl. Inspection |
-| PA5 | Verification | `verification` | Unit Tests · C0/C1 Cov · Comp. IT · Feat. IT · Static · Dynamic · Module Ver. Rpt · Platform Ver. Rpt |
+| PA5 | Verification | `verification` | Unit Tests · C0/C1 Cov · Comp. IT · Feat. IT · Static · Dynamic · Module Ver. Rpt |
 
 ---
 
@@ -125,8 +125,11 @@ LOC counts every line in source files (`.cpp .h .c .rs .py`) outside `docs/`,
 `third_party/`, and `bazel-*/`, then rounds to the nearest 100. Format:
 
 ```rst
-   - ✅ Available (~12,500 LOC) `repo <https://github.com/eclipse-score/<repo>>`__
+   - ✅ Available (~12,500 LOC) `<repo-name> <https://github.com/eclipse-score/<repo-name>>`__
 ```
+
+The link label MUST be the bare repository name (e.g. `baselibs`,
+`communication`, `inc_time`), not the literal word `repo`.
 
 ---
 
@@ -134,7 +137,7 @@ LOC counts every line in source files (`.cpp .h .c .rs .py`) outside `docs/`,
 
 | Deliverable | `✅ Available` | `🔄 …` | `❌ Open` |
 |---|---|---|---|
-| **PA1** CR approved | Closed GitHub issue tagged "Feature/Contribution Request" for the module exists in `eclipse-score/score` | — | No such issue |
+| **PA1** CR approved | At least one matching `feature_request` issue **scoped to milestone v0.5 or v1.0** has Status `Accepted` (or `Done`) in Project V2 #4 "Feature Requests / Modification" (see §4.0); cell lists every matching FR with its individual project status and milestone tag | At least one in-scope FR in `In Progress`/`In Review`/`Ready for Review`/`Changes Requested`/`Draft`/`POC Needed` and none Accepted | No matching FR in scope, or all matching FRs `Rejected` |
 | **PA2** Feature Req | `valid = total` per §3 | files exist, not all valid | no `feat_req` directives in `docs/features/<mod>/**` |
 | **PA2** Component Req | `valid = total` per §3.2 | mixed | no `comp_req`/`aou_req` directives, and no TRLC stand-in |
 | **PA2** Req. Inspection | every `chklst_req_inspection.rst` has `:status: valid` | mixed | no checklists |
@@ -148,11 +151,163 @@ LOC counts every line in source files (`.cpp .h .c .rs .py`) outside `docs/`,
 | **PA5** Unit Tests | repo has `_test.cpp` / `_test.py` / `tests/` | — | none |
 | **PA5** C0/C1 Coverage | C0 = C1 = 100 % | data exists (any %) | not in `reference_integration` CI |
 | **PA5** Comp. Integration Tests | tests in module's own repo | — | none |
-| **PA5** Feature Integration Tests | `integration_test_scenarios` / `feature*test*` paths in repo | — | none |
-| **PA5** Static Analysis | zero-tolerance per-module CI workflow passes on `main` (clang-tidy / Clippy) | tools configured but no CI enforcement | no static-analysis config |
+e| **PA5** Static Analysis | zero-tolerance per-module CI workflow passes on `main` (clang-tidy / Clippy) | tools configured but no CI enforcement | no static-analysis config | _no link_ — Static cells render the **status only**, no source-code link. Same convention as Dynamic Analysis (§4.2). |
 | **PA5** Dynamic Analysis | zero-tolerance sanitizer CI passes on `main` | — | no sanitizer CI |
 | **PA5** Module Ver. Report | `verification/module_verification_report.rst` `:status: valid` and contains data | `:status: draft` | absent or template only |
-| **PA5** Platform Ver. Report | `eclipse-score/score: docs/score_releases/verification/platform_ver_report.rst` `:status: valid` (same status in every row) | `:status: draft` | absent or template only |
+| **PA5** Platform Ver. Report | _no column_ — the platform verification report exists **once** for the entire platform; do not render it as a per-module column. Add it as a **bold one-liner immediately after the PA5 table** (see §5.2). | | |
+
+### 4.0 PA1 — Feature Request issue lookup
+
+PA1 "CR approved" tracks **Feature Request** issues in `eclipse-score/score`.
+The label name is **`feature_request`** (lowercase, with underscore). Use
+`state=all` (some FRs are still open) and combine the topical
+`ft:<module>` label with a title-keyword pass; **always union both result
+sets** (deduplicated by issue number) so that older FRs which pre-date the
+`ft:*` label scheme are still attributed to a module — see the attribution
+note below.
+
+**Milestone scope.** Only Feature Requests targeted at the **v0.5** or
+**v1.0** release milestones are counted. The GitHub milestone titles that
+currently qualify are:
+
+- `SCORE v0.5 Feature Complete`
+- `S-CORE v0.5 Certifiable`
+- `v1.0`
+
+The match is performed by substring on the milestone title with whitespace
+stripped (`"0.5" in title` or `"1.0" in title`, case-insensitive). FRs with
+no milestone, or with any other milestone (`v0.6`…`v0.10`), are excluded
+from PA1 — even if they carry a matching `ft:*` label. Each rendered FR is
+tagged with its short milestone in square brackets (e.g. `[v1.0]`,
+`[v0.5 Certifiable]`).
+
+The issues fetch must therefore include the milestone field in the jq
+projection.
+
+For each issue, fetch its **`Status`** field from the org-level project
+**"Feature Requests / Modification"** (Project V2, id
+`PVT_kwDOCy9hX84Auo7w`, number `#4`). The PA1 cell renders **one entry per
+Feature Request**, each annotated with its individual project status — not a
+single aggregate "Available". The cell headline is the **best** status
+across all FRs for that module (so a module with at least one Accepted FR
+still shows ✅ in summaries).
+
+```python
+# 1. List feature requests via the issue label (incl. milestone)
+def fetch_frs():
+    s = gh_raw(
+        "repos/eclipse-score/score/issues?state=all"
+        "&labels=feature_request&per_page=100 --paginate",
+        '.[] | [(.number|tostring), .title,'
+        ' ((.labels // []) | map(.name) | join(",")),'
+        ' ((.milestone.title // ""))] | @tsv')
+    return [tuple(line.split("\t")) for line in s.splitlines() if line]
+
+def in_scope(milestone: str) -> bool:
+    s = milestone.lower().replace(" ", "")
+    return ("0.5" in s) or ("1.0" in s)
+
+# 2. Pull Status per issue from Project V2 #4
+PROJECT_FR_ID = "PVT_kwDOCy9hX84Auo7w"
+def fetch_fr_project_status() -> dict[str, str]:
+    q = ('query($endCursor:String){node(id:"' + PROJECT_FR_ID + '"){'
+         '... on ProjectV2{items(first:100, after:$endCursor){'
+         'pageInfo{hasNextPage endCursor} '
+         'nodes{content{... on Issue{number repository{nameWithOwner}}} '
+         'fieldValues(first:20){nodes{... on ProjectV2ItemFieldSingleSelectValue'
+         '{name field{... on ProjectV2SingleSelectField{name}}}}}}}}}}')
+    out = subprocess.run(
+        ["gh","api","graphql","--paginate","-f", "query="+q,
+         "--jq",
+         '.data.node.items.nodes[] | '
+         'select(.content.repository.nameWithOwner=="eclipse-score/score") | '
+         '[(.content.number|tostring), '
+         '((.fieldValues.nodes[]|select(.field.name=="Status")|.name) // "—")] | @tsv'],
+        capture_output=True, text=True, timeout=120)
+    return dict(line.split("\t",1) for line in out.stdout.splitlines() if "\t" in line)
+```
+
+Status-field options (from project schema) and the recommended emoji /
+ranking the cell uses to pick the headline:
+
+| Project Status      | Emoji | Rank |
+|---------------------|:-----:|:----:|
+| `Accepted` / `Done` | ✅    | 0    |
+| `In Progress`       | 🔄    | 1    |
+| `In Review`         | 🔄    | 1    |
+| `Ready for Review`  | 🔄    | 1    |
+| `Changes Requested` | 🔄    | 1    |
+| `Draft`             | 📝    | 2    |
+| `POC Needed`        | 🧪    | 3    |
+| `Rejected`          | ❌    | 4    |
+| _not in project_    | ❔    | 5    |
+
+Cell layout (RST):
+
+```rst
+   - ✅ Accepted
+
+     | `#914 <https://github.com/eclipse-score/score/issues/914>`__ — ✅ Accepted [v1.0] — Feature Request for SOME/IP Gateway
+     | `#549 <https://github.com/eclipse-score/score/issues/549>`__ — ✅ Accepted [v0.5 Certifiable] — Feature request: common libraries for IPC and Logging
+```
+
+Each FR line is `\`#NNN <url>\`__ — <emoji> <Status> [<milestone>] — <issue title>`.
+The issue title is taken verbatim from the GitHub `.title` field (already
+fetched by `fetch_frs()`).
+
+Module attribution mapping. **Always** combine the label-based hits and
+the title-keyword hits (deduplicated by issue number) — do **not** treat
+the keyword set as a fallback that only fires when the `ft:*` query is
+empty. Older feature requests pre-date the `ft:*` label scheme and only
+match by title keyword (e.g. `#69 "Feature Request for IPC"` for
+Communication carries `feature_request` + `community:architecture` +
+`planned-for:0.5` but no `ft:communication`); skipping the keyword pass
+when `ft:*` already produced hits causes such issues to silently disappear
+from PA1.
+
+```python
+FT_LABEL = {
+    "Baselibs":         "ft:baselibs",
+    "Communication":    "ft:communication",
+    "Logging":          "ft:logging",
+    "Persistency":      "ft:persistency",
+    "Config Mgmt":      "ft:config_management",
+    "Lifecycle":        "ft:health&lifecycle",
+    "Security/Crypto":  "ft:security&crypto",
+}
+KW_FALLBACK = {
+    "Baselibs":  ["baselib", "common librar", "abi compatible", "json parser"],
+    "Communication": ["ipc", "streaming", "record and replay"],
+    "Logging":   ["logging"],
+    "Persistency": ["persistency", " kvs"],
+    "Time":      [" time"],
+    "Some/IP":   ["some/ip", "someip", "some_ip"],
+    "Diagnostic Services": ["diagnos"],
+    "NM":        ["network management"],
+}
+```
+
+Render up to ~6 hits per cell. If a module has zero matches, render
+`❌ Open`. The older label `contribution request` exists too but tracks
+formal contribution intent, not feature scope — **do not** use it for PA1.
+
+> **Manual overrides — apply *after* the automated label∪keyword union
+> has produced its hit set:**
+>
+> - **`#549` "common libraries for IPC and Logging"** is rendered **only
+>   under Baselibs**, even though its title contains both "IPC" and
+>   "Logging" (which would otherwise match Communication and Logging).
+>   Drop `#549` from the Communication and Logging cells.
+> - **`#757` "Feature request for qualified json-parser"** belongs to
+>   **Baselibs** (label `ft:baselibs`). It has **no GitHub milestone**,
+>   so the standard milestone filter (`"0.5"|"1.0" in title`) excludes
+>   it; force-include it for Baselibs and render it without the `[…]`
+>   milestone bracket.
+> - **Communication scope is local IPC only.** Drop `#914` (SOME/IP
+>   Gateway → Some/IP module) and `#917` (ABI compatible datatypes →
+>   Baselibs) from the Communication cell, even though their title
+>   keywords (`some/ip`, `abi compatible`) or labels could attribute
+>   them. Communication renders only `#69 — Feature Request for IPC`.
 
 ### 4.1 PA5 — coverage CI keys
 
@@ -178,7 +333,44 @@ gh api "repos/eclipse-score/reference_integration/actions/jobs/$JOB_ID/logs" \
    | grep -A50 "COVERAGE ANALYSIS SUMMARY"
 ```
 
+The log emits a single Python-dict dump after the
+`=== QR: COVERAGE ANALYSIS SUMMARY ===` banner, e.g.
+
+```text
+{'score_baselibs_cpp': {'branches': '60.3%', 'exit_code': 0, 'functions': '85.4%', 'lines': '92.3%'},
+ 'score_logging_rust':  {'branches': 'NA',   'exit_code': 0, 'functions': '99.5%', 'lines': '74.4%'},
+ ...}
+```
+
+Parse it with this regex (works for both cpp and rust keys; either field may be `'NA'`):
+
+```python
+COV_RE = re.compile(
+    r"'(score_[a-z_]+)':\s*\{[^}]*'branches':\s*'([^']*)'"
+    r"[^}]*'functions':\s*'([^']*)'"
+    r"[^}]*'lines':\s*'([^']*)'")
+```
+
 ### 4.2 PA5 — static / dynamic analysis CI table
+
+> **Reader notes (rendered in the RST as `.. note::` blocks placed
+> immediately after the PA5 `Implementation status:` rubric and before
+> the PA5 list-table — keep them in sync when regenerating):**
+>
+> 1. **C0/C1 Coverage source.** Coverage data comes from the
+>    `reference_integration` CI (*Code Quality & Documentation* workflow,
+>    `bazel coverage --config=ferrocene-coverage`). C0 = line coverage,
+>    C1 = branch coverage. Rust coverage reports **line only**. Modules
+>    not yet integrated into the `reference_integration` CI render
+>    `❌ Open` (currently: Time, Config Mgmt, Security/Crypto, Some/IP —
+>    update list each regen).
+> 2. **Static / Dynamic semantics.** Static = per-module clang-tidy
+>    (C++) / Clippy (Rust) workflows; Dynamic = sanitizer workflows
+>    (`--config=asan_ubsan_lsan`, `--config=tsan`). All listed workflows
+>    are **zero-tolerance** → a passing `main` ⇒ `✅ 0 findings`.
+>    Central CodeQL runs in
+>    `reference_integration/.github/workflows/codeql-multiple-repo-scan.yml`
+>    (finding counts require the GitHub Security tab).
 
 | Module | Static | Dynamic |
 |---|---|---|
@@ -193,14 +385,49 @@ gh api "repos/eclipse-score/reference_integration/actions/jobs/$JOB_ID/logs" \
 
 Central CodeQL runs in `reference_integration/.github/workflows/codeql-multiple-repo-scan.yml`.
 
+> **Link discipline:** The **Static** column renders the workflow YAML
+> as a line-block link below the status emoji (so reviewers can click
+> through to the actual configuration). The **Dynamic** column renders
+> the **status only** (no link) — the dynamic-analysis CI is more
+> heterogeneous (multiple sanitizer runs per repo, sometimes split across
+> several workflow files) and listing one representative file would be
+> misleading. Keep this asymmetry when regenerating.
+
 ---
 
 ## 5. RST formatting rules
+
+### 5.0 Cross-reference labels (mandatory)
+
+Each `Process Area N — …` heading **must** be preceded by an explicit
+target label so that `pi1.rst`, `pi2.rst`, `pi3.rst` (and any future
+release-gate page) can link back via `:ref:\`overall_status_paN\``:
+
+```rst
+.. _overall_status_pa2:
+
+Process Area 2 — Requirements Engineering
+-----------------------------------------
+```
+
+Required labels: `overall_status_pa2`, `overall_status_pa3`,
+`overall_status_pa4`, `overall_status_pa5`. Omitting any of them
+produces six Sphinx `WARNING: undefined label` messages from the PI
+release-gate pages — a clean build is the success criterion.
 
 ### 5.1 Cell layout
 
 Status emoji + label on the **first line**; everything else (counts, links,
 notes) goes on a **line-block** (`| `) after a blank line.
+
+> **Pluralisation.** When emitting test counts, write `1 test` (singular)
+> and `N tests` (plural). A naive `f"{n} tests"` will produce the wrong
+> `1 tests` for Logging Feat. IT and any other 1-test cell:
+>
+> ```python
+> def plur(n, s="test"):
+>     return f"{n} {s}" if n == 1 else f"{n} {s}s"
+> ```
 
 ```rst
    - ✅ Available (37/37)
@@ -217,24 +444,134 @@ notes) goes on a **line-block** (`| `) after a blank line.
      | **Rust line:** 74.4%
 ```
 
+> **PA5 test counts on a new line.** For the **Unit Tests**, **Comp. IT**
+> and **Feat. IT** columns, the test count goes on its **own line-block
+> line** below the status — never on the same line as `✅ Available`:
+>
+> ```rst
+>      - ✅ Available
+>
+>             | 5376 tests
+> ```
+>
+> Do **not** emit `✅ Available (5376 tests)` on a single line. The
+> `(valid/total)` parenthetical form (§3, requirements/AoU columns) is
+> unaffected.
+
+> **Line-blocks inside table cells render flush-left.** Sphinx wraps an
+> indented `| ...` continuation in a `<blockquote><div class="line-block">`
+> which by default carries a left border + tinted background — visually
+> noisy inside a status table. `docs/_assets/custom.css` neutralises this
+> for `table … blockquote` and `table … .line-block` (zero margin/padding,
+> `border: none`, `background: transparent`). Do **not** add per-cell
+> raw-HTML wrappers to fight the styling — let the CSS rule do it.
+
 When mentioning `:status: invalid` in prose, **always use double backticks**:
 `` ``:status: invalid`` `` (single backticks are RST hyperlink syntax → parse warning).
 
 ### 5.2 Source links — mandatory
 
-Every Req / Arch / Detailed-Design / Code cell that is **not** `❌ Open`
-**MUST** carry one or more source links directly below the count line. Rules:
+Every Req / Arch / Detailed-Design / Code / Inspection cell that is **not**
+`❌ Open` **MUST** carry one or more source links directly below the count
+line. Rules:
 
 - One bullet per source RST file or per logical group (e.g. per module
-  subfolder).
+  subfolder). **List every matching source** — Feature Req, Component Req,
+  Feature Arch, Component Arch, Detailed Design, **and** Inspection cells
+  use no link cap. Earlier revisions capped non-Inspection cells at ~4
+  links; that rule is obsolete because the truncated cells (e.g. Baselibs
+  with 10 components) hid components from the reader.
+- **Link labels MUST be the component (or feature) name**, derived from
+  the URL path. This applies to **all** cells with source links —
+  Feature Req, Component Req, Feature Arch, Component Arch,
+  Detailed Design, **and** Inspection cells. Do **not** use the bare
+  filename (`index`, `requirements`, `aou_req`, `mw-fr_logging_req`,
+  `chklst_req_inspection`, …) as the label.
+- Algorithm to derive the label from a path:
+  1. drop the filename;
+  2. drop trailing segments `requirements` / `architecture` /
+     `detailed_design` / `docs` / `component_requirements` /
+     `feature_requirements`;
+  3. use the last remaining path segment.
+
+  Examples:
+
+  | Path | Label |
+  |---|---|
+  | `docs/features/baselibs/docs/requirements/index.rst` | `baselibs` |
+  | `docs/modules/baselibs/concurrency/docs/requirements/index.rst` | `concurrency` |
+  | `docs/features/communication/ipc/docs/requirements/index.rst` | `ipc` |
+  | `docs/persistency/kvs/requirements/index.rst` | `kvs` |
+  | `docs/module/health_monitor/requirements/index.rst` | `health_monitor` |
+  | `score/mw/com/requirements/component_requirements/component_requirements_ipc.trlc` | `com` |
+  | `docs/features/baselibs/docs/requirements/chklst_req_inspection.rst` | `baselibs` |
+  | `docs/modules/baselibs/concurrency/docs/requirements/chklst_req_inspection.rst` | `concurrency` |
+
+- Inspection cells (`Req. Inspection`, `Arch. Inspection`,
+  `Impl. Inspection`) link the underlying `chklst_*_inspection.rst` files,
+  not the parent index — readers want to click directly into the checklist
+  whose `:status:` drives the cell.
 - URLs **MUST** point to the pinned ref (40-char SHA from `known_good.json`),
   not `blob/main` — counts come from the pinned ref, and `main` may have been
   restructured. For repos not in `known_good.json` (`inc_time`,
   `config_management`, `inc_security_crypto`, `inc_someip_gateway`),
   `blob/main` is acceptable.
 - For Communication `comp_req` link the `.trlc` file marked `[TRLC]`.
+- **PA4 Code cell** links the **repository root** (e.g.
+  `https://github.com/eclipse-score/baselibs`). The link label MUST be the
+  repository name (last URL segment), **not** the literal word `repo` —
+  e.g. `baselibs`, `communication`, `inc_time`, `config_management`,
+  `inc_security_crypto`, `inc_someip_gateway`.
+- **PA5 Static Analysis cell** is **status-only** — do NOT add links to
+  CI workflow files or `quality/static_analysis` directories under the
+  status. Same rule as Dynamic Analysis (§4.2).
+- **PA5 Platform Verification Report** is a **single project-wide
+  deliverable** — it does **not** get a per-module column. Render it as
+  a prominent admonition immediately after the PA5 list-table (styled
+  via `.platform-ver-report` in `docs/_assets/custom.css` — larger font,
+  blue accent, so it can't be missed):
 
-### 5.3 Pie chart row (Process Status)
+  ```rst
+  .. admonition:: Platform Verification Report
+     :class: important platform-ver-report
+
+     `platform_ver_report
+     <https://github.com/eclipse-score/score/blob/<pinned-sha>/
+     docs/score_releases/verification/platform_ver_report.rst>`__
+     — 🔄 **Draft** (single project-wide deliverable)
+  ```
+
+  Update the status emoji + label to match the report's current
+  `:status:` field (✅ **Valid** / 🔄 **Draft**). Do **not** revert this
+  to a plain `**bold paragraph**` — the admonition class is what makes
+  it visually prominent.
+
+### 5.3 Per-PA progress figures
+
+Each Process Area embeds one SVG figure under `docs/_assets/`:
+
+| PA  | File                              | `:width:`  |
+|-----|-----------------------------------|------------|
+| PA2 | `pa2_impl_progress.svg`           | `720px`    |
+| PA3 | `pa3_arch_progress.svg`           | `720px`    |
+| PA4 | `pa4_impl_progress.svg`           | `720px`    |
+| PA5 | `pa5_verification_progress.svg`   | `1080px`   |
+
+The PA5 verification figure is rendered at **1.5× the standard width**
+(`1080px` instead of `720px`) because it carries four series across four
+release columns and a 720px render makes the per-module test counts hard
+to read. All other PAs keep the default 720px width.
+
+```rst
+.. figure:: /_assets/pa5_verification_progress.svg
+   :alt: PA5 verification progress
+   :width: 1080px
+
+   Test counts and coverage across the 11 PA2 modules per release
+   (v0.5.0-beta → v0.6.0 → v0.7.0 → current main).
+```
+
+### 5.4 Pie chart row (Process Status)
 
 Each PA section starts with a pie chart row.
 
@@ -439,6 +776,15 @@ def comp_req_cell(contents, *, trlc=False):
 
 ### Step 4 — Path filters (reference)
 
+> **Component-level data may live in two repos at once.** Baselibs and
+> Logging keep `comp_arc` directives both in `eclipse-score/score`
+> (`modules/<area>/**`) **and** in their own repo (`docs/<area>/**`).
+> Always query both filters and **sum** the `(valid, total)` tuples; never
+> drop one source. The same is true for Persistency `kvs` (uses both
+> `score/kvs/docs/<kind>` and the older `docs/persistency/kvs/<kind>`).
+> Some/IP keeps `comp_req` partly in `docs/requirements/component/**` and
+> partly in `docs/tc8_conformance/requirements.rst` — combine both.
+
 | Module | Deliverable | Repo | Filter (`lambda p: ...`) |
 |---|---|---|---|
 | Baselibs | Feat. Req | score | `'features/baselibs' in p and 'requirements' in p and p.endswith('.rst') and 'chklst' not in p` |
@@ -615,14 +961,14 @@ contribute 0.
 | PA5 — Unit Tests (historical) | count of `TEST(`, `TEST_F(`, `TEST_P(`, `TYPED_TEST(`, `TYPED_TEST_P(` macros plus Rust `#[test]` and Python `^def test_` in files matching `is_test_path` | each module's own repo |
 | PA5 — Comp. IT (historical) | same counters in files where path contains `integration` | each module's own repo |
 | PA5 — Feat. IT (historical) | same counters in `feature_integration_tests/` and `platform_integration_tests/` | `eclipse-score/reference_integration` at the release tag |
-| PA5 — Unit / Comp. IT / Feat. IT (**now** column) | **column sum** of the corresponding cells in the PA5 RST table (the `(N tests)` annotations) | parsed from `overall_status.rst` |
+| PA5 — Unit / Comp. IT / Feat. IT (**now** column) | **column sum** of the corresponding cells in the PA5 RST table (the `| N tests` line-block annotations) | parsed from `overall_status.rst` |
 | PA5 — C0/C1 now | weighted mean of per-module C0 and C1 from the current PA5 RST table, weights = unit-test count per module | parsed from `overall_status.rst` |
 
 > **PA5 test counts: table is the source of truth for "now".**
 > The four releases use **two different sources** for the test-count bars:
 > - `v0.5.0-beta`, `v0.6.0`, `v0.7.0` → macro-based regex over module repo
 >   sources (Best-Effort, no curated table available for past tags).
-> - `now` → **sum of the `(N tests)` annotations in the PA5 RST table**
+> - `now` → **sum of the `| N tests` line-block annotations in the PA5 RST table**
 >   (`Unit Tests`, `Comp. Integration Tests`, `Feature Integration Tests`
 >   columns), because the curated table is what users see.
 >
@@ -638,7 +984,7 @@ contribute 0.
 >    many runs).
 >
 > Practical rule: when updating the SVG, run both the §6a recipe **and**
-> sum the `(N tests)` cells from the RST. Use the recipe values for the
+> sum the `| N tests` line-block cells from the RST. Use the recipe values for the
 > three release bars and the **table sum** for `now`. Note the divergence
 > in the caption / commit message if it's >10 %.
 

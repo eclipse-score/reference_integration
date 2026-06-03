@@ -1,75 +1,15 @@
-..
-   # *******************************************************************************
-   # Copyright (c) 2026 Contributors to the Eclipse Foundation
-   #
-   # See the NOTICE file(s) distributed with this work for additional
-   # information regarding copyright ownership.
-   #
-   # This program and the accompanying materials are made available under the
-   # terms of the Apache License Version 2.0 which is available at
-   # https://www.apache.org/licenses/LICENSE-2.0
-   #
-   # SPDX-License-Identifier: Apache-2.0
-   # *******************************************************************************
-
-.. raw:: html
-
-   <script>document.body.classList.add("wide-content-page");</script>
+:hide-toc:
 
 Overall Status
-##########################
+==============
 
-This page tracks the completion status of all 5 process areas per module.
-Update the status column for each module after completing the respective deliverable.
+This page tracks feature and process status across the SCORE platform modules.
+It is regenerated from live `eclipse-score` GitHub repositories pinned via
+``known_good.json``.
 
-**Process Status chart legend:**
-
-.. list-table::
-   :header-rows: 1
-   :widths: 30 30 40
-
-   * - Process req. status
-     - ISO 26262 std_req status
-     - Req. verification status
-   * - 🟢 Valid
-
-       🟡 Draft
-
-       🔴 Invalid
-
-       ⬜ Other
-     - 🟢 Ok
-
-       🔵 Recommendation
-
-       🟡 Open
-
-       🟠 Action
-
-       🔴 Deviation
-
-       ⬜ N/A · ◻ Other
-     - 🟢 Automated
-
-       🟡 Waiting for automation
-
-       🔵 Inspection list
-
-       ⬜ Other
-
-**Implementation Status Values:**
-
-- ``✅ Available`` — Work product created, reviewed and approved
-- ``🔄 NN%`` — In Progress: artifact exists with at least one valid element, percentage shows valid/total
-- ``❌ Open`` — Not yet started, not found, or 0% valid
-- ``—`` — Not applicable for this module
 
 Process Area 1 — Change Management
-***********************************
-
-A Change Request must be created and approved by the Architecture Community before module
-development begins.
-See :ref:`chm_change_workflows`.
+----------------------------------
 
 .. rubric:: Process Status
 
@@ -109,57 +49,65 @@ See :ref:`chm_change_workflows`.
           :colors: LimeGreen, Gold, LightBlue, LightGray
           :filter-func: needs_filters.area_verification_status(change_management)
 
-.. rubric:: Implementation status: 🔄 91% (10/11 deliverables complete)
+
+.. rubric:: Implementation status: 🔄 90% (10/11 deliverables complete)
+
 
 .. list-table::
    :header-rows: 1
-   :stub-columns: 1
-   :class: module-phase-tracker-table
 
    * - **Module**
      - **CR approved**
-
    * - Baselibs
-     - ✅ Available
+     - ✅ Accepted
 
+            | `#549 <https://github.com/eclipse-score/score/issues/549>`__ — ✅ Accepted [v0.5 Certifiable] — Feature request: common libraries for IPC and Logging
+            | `#757 <https://github.com/eclipse-score/score/issues/757>`__ — ✅ Accepted — Feature request for qualified json-parser
+            | `#917 <https://github.com/eclipse-score/score/issues/917>`__ — ✅ Accepted [v1.0] — Feature Request for ABI compatible datatypes
    * - Communication
-     - ✅ Available
+     - ✅ Accepted
 
+            | `#69 <https://github.com/eclipse-score/score/issues/69>`__ — ✅ Accepted [v0.5 Certifiable] — Feature Request for IPC
    * - Logging
-     - ✅ Available
+     - ✅ Accepted
 
+            | `#68 <https://github.com/eclipse-score/score/issues/68>`__ — ✅ Accepted [v0.5 Certifiable] — Feature Request for Logging
    * - Persistency
-     - ✅ Available
+     - ✅ Accepted
 
+            | `#95 <https://github.com/eclipse-score/score/issues/95>`__ — ✅ Accepted [v0.5 Certifiable] — Feature Request for Persistency
    * - Time
-     - ✅ Available
+     - ✅ Accepted
 
+            | `#910 <https://github.com/eclipse-score/score/issues/910>`__ — ✅ Accepted [v1.0] — Feature Request for Time
    * - Config Mgmt
-     - ✅ Available
+     - ✅ Accepted
 
+            | `#754 <https://github.com/eclipse-score/score/issues/754>`__ — ✅ Accepted [v1.0] — Feature Request for Config Management
    * - Lifecycle
-     - ✅ Available
+     - ✅ Accepted
 
+            | `#909 <https://github.com/eclipse-score/score/issues/909>`__ — ✅ Accepted [v1.0] — Feature Request for Health & Lifecycle
    * - Security/Crypto
-     - ✅ Available
+     - ✅ Accepted
 
+            | `#905 <https://github.com/eclipse-score/score/issues/905>`__ — ✅ Accepted [v1.0] — Feature Request for Security & Crypto
    * - Diagnostic Services
-     - ✅ Available
+     - ✅ Accepted
 
+            | `#911 <https://github.com/eclipse-score/score/issues/911>`__ — ✅ Accepted [v1.0] — Feature Request for Diagnostic Services & Fault Management
    * - NM
      - ❌ Open
-
    * - Some/IP
-     - ✅ Available
+     - ✅ Accepted
+
+            | `#914 <https://github.com/eclipse-score/score/issues/914>`__ — ✅ Accepted [v1.0] — Feature Request for SOME/IP Gateway
+
 
 .. _overall_status_pa2:
 
 Process Area 2 — Requirements Engineering
-*****************************************
-
-Feature and component requirements must be written and inspected.
-Work products: ``wp__requirements_feat``, ``wp__requirements_comp``, ``wp__requirements_inspect``.
-See :ref:`requirements_workflows`.
+-----------------------------------------
 
 .. rubric:: Process Status
 
@@ -199,149 +147,129 @@ See :ref:`requirements_workflows`.
           :colors: LimeGreen, Gold, LightBlue, LightGray
           :filter-func: needs_filters.area_verification_status(requirements_engineering)
 
-.. rubric:: Implementation status: 🔄 42% (14/33 deliverables complete)
 
 .. figure:: /_assets/pa2_impl_progress.svg
-   :alt: Total Feature and Component Requirements across PA2 modules per release
+   :alt: PA2 implementation progress
    :width: 720px
 
-   Total Feature and Component Requirements across all PA2 modules per release
-   (v0.5.0-beta → v0.6.0 → v0.7.0 → current main).
+   Total Feature and Component Requirements across the 11 PA2 modules per release (v0.5.0-beta → v0.6.0 → v0.7.0 → current main).
+
+
+.. rubric:: Implementation status: 🔄 39% (13/33 deliverables complete)
+
 
 .. list-table::
    :header-rows: 1
-   :stub-columns: 1
-   :class: module-phase-tracker-table
 
    * - **Module**
-     - **Feature Requirements**
-     - **Component Requirements**
+     - **Feature Req**
+     - **Component Req**
      - **Req. Inspection**
-
    * - Baselibs
      - ✅ Available (37/37)
 
-       | `feature-level <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/baselibs/docs/requirements/index.rst>`__
-       | `abi-compatible-data-types <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/baselibs/abi_compatible_data_types/requirements.rst>`__
+            | `abi_compatible_data_types <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/features/baselibs/abi_compatible_data_types/requirements.rst>`__
+            | `baselibs <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/features/baselibs/docs/requirements/index.rst>`__
      - ✅ Available (84/84 comp_req + 32/32 AoU)
 
-       | `bitmanipulation <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/bitmanipulation/docs/requirements/index.rst>`__
-       | `concurrency <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/concurrency/docs/requirements/index.rst>`__
-       | `containers <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/containers/docs/requirements/index.rst>`__
-       | `filesystem <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/filesystem/docs/requirements/index.rst>`__
-       | `flatbuffers <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/flatbuffers/docs/requirements/index.rst>`__
-       | `json <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/json/docs/requirements/index.rst>`__
-       | `safecpp <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/language/safecpp/docs/requirements/index.rst>`__
-       | `memory_shared <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/memory_shared/docs/requirements/index.rst>`__
-       | `result <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/result/docs/requirements/index.rst>`__
-       | `srs <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/static_reflection_with_serialization/docs/requirements/index.rst>`__
-       | `utils <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/utils/docs/requirements/index.rst>`__
+            | `bitmanipulation <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/bitmanipulation/docs/requirements/index.rst>`__
+            | `concurrency <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/concurrency/docs/requirements/index.rst>`__
+            | `containers <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/containers/docs/requirements/index.rst>`__
+            | `filesystem <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/filesystem/docs/requirements/index.rst>`__
+            | `json <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/json/docs/requirements/index.rst>`__
+            | `safecpp <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/language/safecpp/docs/requirements/index.rst>`__
+            | `result <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/result/docs/requirements/index.rst>`__
+            | `static_reflection_with_serialization <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/static_reflection_with_serialization/docs/requirements/index.rst>`__
+            | `utils <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/utils/docs/requirements/index.rst>`__
      - 🔄 20% (2/10)
 
-       | `bitmanipulation <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/bitmanipulation/docs/requirements/chklst_req_inspection.rst>`__
-       | `concurrency <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/concurrency/docs/requirements/chklst_req_inspection.rst>`__
-       | `containers <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/containers/docs/requirements/chklst_req_inspection.rst>`__
-       | `filesystem <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/filesystem/docs/requirements/chklst_req_inspection.rst>`__
-       | `json <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/json/docs/requirements/chklst_req_inspection.rst>`__
-       | `safecpp <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/language/safecpp/docs/requirements/chklst_req_inspection.rst>`__
-       | `result <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/result/docs/requirements/chklst_req_inspection.rst>`__
-       | `srs <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/static_reflection_with_serialization/docs/requirements/chklst_req_inspection.rst>`__
-       | `utils <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/utils/docs/requirements/chklst_req_inspection.rst>`__
-       | `feature-level <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/baselibs/docs/requirements/chklst_req_inspection.rst>`__
-
+            | `baselibs <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/features/baselibs/docs/requirements/chklst_req_inspection.rst>`__
+            | `bitmanipulation <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/bitmanipulation/docs/requirements/chklst_req_inspection.rst>`__
+            | `concurrency <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/concurrency/docs/requirements/chklst_req_inspection.rst>`__
+            | `containers <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/containers/docs/requirements/chklst_req_inspection.rst>`__
+            | `filesystem <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/filesystem/docs/requirements/chklst_req_inspection.rst>`__
+            | `json <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/json/docs/requirements/chklst_req_inspection.rst>`__
+            | `safecpp <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/language/safecpp/docs/requirements/chklst_req_inspection.rst>`__
+            | `result <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/result/docs/requirements/chklst_req_inspection.rst>`__
+            | `static_reflection_with_serialization <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/static_reflection_with_serialization/docs/requirements/chklst_req_inspection.rst>`__
+            | `utils <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/utils/docs/requirements/chklst_req_inspection.rst>`__
    * - Communication
-     - ✅ Available (58/58)
+     - ✅ Available (53/53)
 
-       | `feature-level <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/communication/docs/requirements/index.rst>`__
-       | `ipc <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/communication/ipc/docs/requirements/index.rst>`__
-       | `some_ip_gateway <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/communication/some_ip_gateway/requirements/index.rst>`__
+            | `communication <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/features/communication/docs/requirements/index.rst>`__
+            | `ipc <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/features/communication/ipc/docs/requirements/index.rst>`__
      - ✅ Available (0/0 comp_req [TRLC] + 33/33 AoU)
 
-       | `aou_req (RST) <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/communication/docs/requirements/aou_req.rst>`__
-       | (real component requirements maintained in TRLC: `component_requirements_ipc.trlc <https://github.com/eclipse-score/communication/blob/b021eccf1d811625d21eeb493071c0c4f4f6243a/score/mw/com/requirements/component_requirements/component_requirements_ipc.trlc>`__)
+            | `com <https://github.com/eclipse-score/communication/blob/b021eccf1d811625d21eeb493071c0c4f4f6243a/score/mw/com/requirements/component_requirements/component_requirements_ipc.trlc>`__
+            | `communication <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/communication/docs/requirements/aou_req.rst>`__
      - ❌ Open
-
    * - Logging
      - ✅ Available (46/46)
 
-       | `mw-fr_logging_req <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/analysis-infra/logging/docs/requirements/mw-fr_logging_req.rst>`__
+            | `logging <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/features/analysis-infra/logging/docs/requirements/mw-fr_logging_req.rst>`__
      - ❌ Open
      - ❌ Open
-
    * - Persistency
      - ✅ Available (37/37)
 
-       | `feature-level <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/persistency/requirements/index.rst>`__
+            | `persistency <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/features/persistency/requirements/index.rst>`__
      - ✅ Available (35/35 comp_req)
 
-       | `kvs <https://github.com/eclipse-score/persistency/blob/4d1fa1ae3c55d27d0f1e863b8cdf59a148651c5d/docs/persistency/kvs/requirements/index.rst>`__
+            | `kvs <https://github.com/eclipse-score/persistency/blob/4d1fa1ae3c55d27d0f1e863b8cdf59a148651c5d/docs/persistency/kvs/requirements/index.rst>`__
      - 🔄 50% (1/2)
 
-       | `feature-level <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/persistency/requirements/chklst_req_inspection.rst>`__
-       | `kvs <https://github.com/eclipse-score/persistency/blob/4d1fa1ae3c55d27d0f1e863b8cdf59a148651c5d/docs/persistency/kvs/requirements/chklst_req_inspection.rst>`__
-
+            | `persistency <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/features/persistency/requirements/chklst_req_inspection.rst>`__
+            | `kvs <https://github.com/eclipse-score/persistency/blob/4d1fa1ae3c55d27d0f1e863b8cdf59a148651c5d/docs/persistency/kvs/requirements/chklst_req_inspection.rst>`__
    * - Time
      - ✅ Available (15/15)
 
-       | `feature-level <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/time/docs/requirements/index.rst>`__
+            | `time <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/features/time/docs/requirements/index.rst>`__
      - ❌ Open
      - ❌ Open
-
    * - Config Mgmt
      - ✅ Available (13/13)
 
-       | `feature-level <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/configuration/config_mgmt/requirements/index.rst>`__
+            | `config_mgmt <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/features/configuration/config_mgmt/requirements/index.rst>`__
      - ❌ Open
      - ❌ Open
-
    * - Lifecycle
      - 🔄 0% (0/92)
 
-       | `requirements <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/lifecycle/requirements/index.rst>`__
-       | (all 92 entries ``:status: invalid``)
+            | `lifecycle <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/features/lifecycle/requirements/index.rst>`__
      - 🔄 0% (0/1 comp_req + 0/1 AoU)
 
-       | `health_monitor <https://github.com/eclipse-score/lifecycle/blob/2f2e9c4c3e6c6b38abd0b72f78c8ffb96dc7f9e8/docs/module/health_monitor/requirements/index.rst>`__
-       | (template placeholder, ``:status: invalid``)
+            | `health_monitor <https://github.com/eclipse-score/lifecycle/blob/2f2e9c4c3e6c6b38abd0b72f78c8ffb96dc7f9e8/docs/module/health_monitor/requirements/index.rst>`__
      - ❌ Open
-
    * - Security/Crypto
      - ✅ Available (41/41)
 
-       | `feature-level <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/security_crypto/requirements/index.rst>`__
+            | `security_crypto <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/features/security_crypto/requirements/index.rst>`__
      - ❌ Open
      - ❌ Open
-
    * - Diagnostic Services
      - ✅ Available (22/22)
 
-       | `requirements <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/diagnostics/requirements/index.rst>`__
+            | `diagnostics <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/features/diagnostics/requirements/index.rst>`__
      - ❌ Open
      - ❌ Open
-
    * - NM
      - ❌ Open
      - ❌ Open
      - ❌ Open
-
    * - Some/IP
-     - ✅ Available (6/6)
+     - ✅ Available (5/5)
 
-       | `score (5) <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/communication/some_ip_gateway/requirements/index.rst>`__
-       | `tc8 conformance (1) <https://github.com/eclipse-score/inc_someip_gateway/blob/main/docs/tc8_conformance/requirements.rst>`__
-     - ✅ Available (8/8)
+            | `some_ip_gateway <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/features/communication/some_ip_gateway/requirements/index.rst>`__
+     - ✅ Available (8/8 comp_req)
 
-       | `tc8 conformance <https://github.com/eclipse-score/inc_someip_gateway/blob/main/docs/tc8_conformance/requirements.rst>`__
+            | `tc8_conformance <https://github.com/eclipse-score/inc_someip_gateway/blob/main/docs/tc8_conformance/requirements.rst>`__
      - ❌ Open
+
 
 .. _overall_status_pa3:
 
 Process Area 3 — Architecture Design
-************************************
-
-Feature and component architecture must be designed and inspected.
-Work products: ``wp__feature_arch``, ``wp__component_arch``, ``wp__sw_arch_verification``.
-See :ref:`arch_workflow`.
+------------------------------------
 
 .. rubric:: Process Status
 
@@ -381,138 +309,127 @@ See :ref:`arch_workflow`.
           :colors: LimeGreen, Gold, LightBlue, LightGray
           :filter-func: needs_filters.area_verification_status(architecture_design)
 
-.. rubric:: Implementation status: 🔄 15% (5/33 deliverables complete)
 
 .. figure:: /_assets/pa3_arch_progress.svg
-   :alt: Total Feature and Component Architecture items across PA2 modules per release
+   :alt: PA3 architecture progress
    :width: 720px
 
-   Total Feature and Component Architecture items across all PA2 modules per
-   release (v0.5.0-beta → v0.6.0 → v0.7.0 → current main).
+   Total Feature and Component Architecture elements across the 11 PA2 modules per release (v0.5.0-beta → v0.6.0 → v0.7.0 → current main).
+
+
+.. rubric:: Implementation status: 🔄 24% (8/33 deliverables complete)
+
 
 .. list-table::
    :header-rows: 1
-   :stub-columns: 1
-   :class: module-phase-tracker-table
 
    * - **Module**
-     - **Feature Architecture**
-     - **Component Architecture**
+     - **Feature Arch**
+     - **Component Arch**
      - **Arch. Inspection**
-
    * - Baselibs
      - ✅ Available (3/3)
 
-       | `feature-level <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/baselibs/docs/architecture/index.rst>`__
-     - 🔄 98% (165/167)
+            | `baselibs <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/features/baselibs/docs/architecture/index.rst>`__
+     - 🔄 98% (164/166)
 
-       | `bitmanipulation <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/bitmanipulation/docs/architecture/index.rst>`__
-       | `concurrency <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/concurrency/docs/architecture/index.rst>`__
-       | `containers <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/containers/docs/architecture/index.rst>`__
-       | `filesystem <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/filesystem/docs/architecture/index.rst>`__
-       | `flatbuffers <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/flatbuffers/docs/architecture/index.rst>`__
-       | `json <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/json/docs/architecture/index.rst>`__
-       | `safecpp <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/language/safecpp/docs/architecture/index.rst>`__
-       | `memory_shared <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/memory_shared/docs/architecture/index.rst>`__
-       | `result <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/result/docs/architecture/index.rst>`__
-       | `srs <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/static_reflection_with_serialization/docs/architecture/index.rst>`__
-       | `utils <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/utils/docs/architecture/index.rst>`__
+            | `bitmanipulation <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/bitmanipulation/docs/architecture/index.rst>`__
+            | `concurrency <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/concurrency/docs/architecture/index.rst>`__
+            | `containers <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/containers/docs/architecture/index.rst>`__
+            | `filesystem <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/filesystem/docs/architecture/index.rst>`__
+            | `json <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/json/docs/architecture/index.rst>`__
+            | `safecpp <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/language/safecpp/docs/architecture/index.rst>`__
+            | `result <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/result/docs/architecture/index.rst>`__
+            | `static_reflection_with_serialization <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/static_reflection_with_serialization/docs/architecture/index.rst>`__
+            | `utils <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/utils/docs/architecture/index.rst>`__
      - 🔄 80% (8/10)
 
-       | `bitmanipulation <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/bitmanipulation/docs/architecture/chklst_arc_inspection.rst>`__
-       | `concurrency <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/concurrency/docs/architecture/chklst_arc_inspection.rst>`__
-       | `containers <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/containers/docs/architecture/chklst_arc_inspection.rst>`__
-       | `filesystem <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/filesystem/docs/architecture/chklst_arc_inspection.rst>`__
-       | `json <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/json/docs/architecture/chklst_arc_inspection.rst>`__
-       | `safecpp <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/language/safecpp/docs/architecture/chklst_arc_inspection.rst>`__
-       | `result <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/result/docs/architecture/chklst_arc_inspection.rst>`__
-       | `srs <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/static_reflection_with_serialization/docs/architecture/chklst_arc_inspection.rst>`__
-       | `utils <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/utils/docs/architecture/chklst_arc_inspection.rst>`__
-       | `feature-level <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/baselibs/docs/architecture/chklst_arc_inspection.rst>`__
-
+            | `baselibs <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/features/baselibs/docs/architecture/chklst_arc_inspection.rst>`__
+            | `bitmanipulation <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/bitmanipulation/docs/architecture/chklst_arc_inspection.rst>`__
+            | `concurrency <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/concurrency/docs/architecture/chklst_arc_inspection.rst>`__
+            | `containers <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/containers/docs/architecture/chklst_arc_inspection.rst>`__
+            | `filesystem <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/filesystem/docs/architecture/chklst_arc_inspection.rst>`__
+            | `json <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/json/docs/architecture/chklst_arc_inspection.rst>`__
+            | `safecpp <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/language/safecpp/docs/architecture/chklst_arc_inspection.rst>`__
+            | `result <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/result/docs/architecture/chklst_arc_inspection.rst>`__
+            | `static_reflection_with_serialization <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/static_reflection_with_serialization/docs/architecture/chklst_arc_inspection.rst>`__
+            | `utils <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/utils/docs/architecture/chklst_arc_inspection.rst>`__
    * - Communication
      - ✅ Available (3/3)
 
-       | `feature-level <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/communication/docs/architecture/index.rst>`__
-       | `ipc <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/communication/ipc/docs/architecture/index.rst>`__
+            | `communication <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/features/communication/docs/architecture/index.rst>`__
+            | `ipc <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/features/communication/ipc/docs/architecture/index.rst>`__
      - ✅ Available (16/16)
 
-       | `configuration <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/communication/configuration/docs/architecture/index.rst>`__
-       | `frontent <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/communication/frontent/docs/architecture/index.rst>`__
-       | `ipc_binding <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/communication/ipc_binding/docs/architecture/index.rst>`__
-       | `message_passing <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/communication/message_passing/docs/architecture/index.rst>`__
-       | `mock_binding <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/communication/mock_binding/docs/architecture/index.rst>`__
+            | `configuration <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/communication/configuration/docs/architecture/index.rst>`__
+            | `frontent <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/communication/frontent/docs/architecture/index.rst>`__
+            | `ipc_binding <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/communication/ipc_binding/docs/architecture/index.rst>`__
+            | `message_passing <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/communication/message_passing/docs/architecture/index.rst>`__
      - ❌ Open
-
    * - Logging
      - ✅ Available (1/1)
 
-       | `feature-level <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/analysis-infra/logging/docs/architecture/index.rst>`__
+            | `logging <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/features/analysis-infra/logging/docs/architecture/index.rst>`__
      - ✅ Available (3/3)
 
-       | `logging <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/logging/logging/docs/architecture/index.rst>`__
+            | `logging <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/logging/logging/docs/architecture/index.rst>`__
      - ❌ Open
-
    * - Persistency
      - ✅ Available (9/9)
 
-       | `feature-level <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/persistency/architecture/index.rst>`__
+            | `persistency <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/features/persistency/architecture/index.rst>`__
      - 🔄 0% (0/3)
 
-       | `kvs <https://github.com/eclipse-score/persistency/blob/4d1fa1ae3c55d27d0f1e863b8cdf59a148651c5d/docs/persistency/kvs/architecture/index.rst>`__
+            | `kvs <https://github.com/eclipse-score/persistency/blob/4d1fa1ae3c55d27d0f1e863b8cdf59a148651c5d/docs/persistency/kvs/architecture/index.rst>`__
      - 🔄 0% (0/2)
 
-       | `feature-level <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/persistency/architecture/chklst_arc_inspection.rst>`__
-       | `kvs <https://github.com/eclipse-score/persistency/blob/4d1fa1ae3c55d27d0f1e863b8cdf59a148651c5d/docs/persistency/kvs/architecture/chklst_arc_inspection.rst>`__
-
+            | `persistency <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/features/persistency/architecture/chklst_arc_inspection.rst>`__
+            | `kvs <https://github.com/eclipse-score/persistency/blob/4d1fa1ae3c55d27d0f1e863b8cdf59a148651c5d/docs/persistency/kvs/architecture/chklst_arc_inspection.rst>`__
    * - Time
      - ❌ Open
      - ❌ Open
      - ❌ Open
-
    * - Config Mgmt
      - ❌ Open
      - ❌ Open
      - ❌ Open
-
    * - Lifecycle
      - 🔄 60% (3/5)
 
-       | `health_monitor <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/lifecycle/architecture/health_monitor.rst>`__
-       | `launch_manager <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/features/lifecycle/architecture/launch_manager.rst>`__
+            | `lifecycle <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/features/lifecycle/architecture/health_monitor.rst>`__
+            | `lifecycle <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/features/lifecycle/architecture/launch_manager.rst>`__
      - ✅ Available (15/15)
 
-       | `health_monitor <https://github.com/eclipse-score/lifecycle/blob/2f2e9c4c3e6c6b38abd0b72f78c8ffb96dc7f9e8/docs/module/health_monitor/architecture/index.rst>`__
+            | `health_monitor <https://github.com/eclipse-score/lifecycle/blob/2f2e9c4c3e6c6b38abd0b72f78c8ffb96dc7f9e8/docs/module/health_monitor/architecture/index.rst>`__
      - ❌ Open
-
    * - Security/Crypto
      - ❌ Open
-     - ❌ Open
-     - ❌ Open
+     - 🔄 0% (0/23)
 
+            | `crypto <https://github.com/eclipse-score/inc_security_crypto/blob/main/docs/crypto/architecture/dynamic_architecture.rst>`__
+            | `crypto <https://github.com/eclipse-score/inc_security_crypto/blob/main/docs/crypto/architecture/index.rst>`__
+            | `crypto <https://github.com/eclipse-score/inc_security_crypto/blob/main/docs/crypto/architecture/interfaces.rst>`__
+     - ❌ Open
    * - Diagnostic Services
      - ❌ Open
      - ❌ Open
      - ❌ Open
-
    * - NM
      - ❌ Open
      - ❌ Open
      - ❌ Open
-
    * - Some/IP
      - ❌ Open
+     - ✅ Available (2/2)
+
+            | `docs/architecture/components.rst <https://github.com/eclipse-score/inc_someip_gateway/blob/main/docs/architecture/components.rst>`__
      - ❌ Open
-     - ❌ Open
+
 
 .. _overall_status_pa4:
 
 Process Area 4 — Implementation
-********************************
-
-Source code and detailed design must be implemented and inspected.
-Work products: ``wp__sw_development_plan``, ``wp__sw_implementation``, ``wp__sw_implementation_inspection``.
-See :ref:`workflow_implementation`.
+-------------------------------
 
 .. rubric:: Process Status
 
@@ -552,116 +469,140 @@ See :ref:`workflow_implementation`.
           :colors: LimeGreen, Gold, LightBlue, LightGray
           :filter-func: needs_filters.area_verification_status(implementation)
 
-.. rubric:: Implementation status: 🔄 39% (17/44 deliverables complete)
 
 .. figure:: /_assets/pa4_impl_progress.svg
-   :alt: Estimated total Lines of Code across PA2 modules per release
+   :alt: PA4 implementation progress
    :width: 720px
 
-   Estimated total Lines of Code across all PA2 modules per release
-   (v0.5.0-beta → v0.6.0 → v0.7.0 → current main).
+   Estimated Lines of Code across the 11 PA2 modules per release (v0.5.0-beta → v0.6.0 → v0.7.0 → current main).
+
+
+.. rubric:: Implementation status: 🔄 47% (21/44 deliverables complete)
+
 
 .. list-table::
    :header-rows: 1
-   :stub-columns: 1
-   :class: module-phase-tracker-table
 
    * - **Module**
-     - **SW Development Plan**
+     - **SW Dev Plan**
      - **Code**
      - **Detailed Design**
      - **Impl. Inspection**
-
    * - Baselibs
      - ✅ Available
-     - ✅ Available (~219,400 LOC) `baselibs <https://github.com/eclipse-score/baselibs>`__
+
+            | `platform_management_plan <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/platform_management_plan/software_development.rst>`__
+     - ✅ Available (~315,200 LOC)
+
+            | `baselibs <https://github.com/eclipse-score/baselibs>`__
      - ❌ Open
      - 🔄 0% (0/9)
 
-       | `bitmanipulation <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/bitmanipulation/docs/detailed_design/chklst_impl_inspection.rst>`__
-       | `concurrency <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/concurrency/docs/detailed_design/chklst_impl_inspection.rst>`__
-       | `containers <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/containers/docs/detailed_design/chklst_impl_inspection.rst>`__
-       | `filesystem <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/filesystem/docs/detailed_design/chklst_impl_inspection.rst>`__
-       | `json <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/json/docs/detailed_design/chklst_impl_inspection.rst>`__
-       | `safecpp <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/language/safecpp/docs/detailed_design/chklst_impl_inspection.rst>`__
-       | `result <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/result/docs/detailed_design/chklst_impl_inspection.rst>`__
-       | `srs <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/static_reflection_with_serialization/docs/detailed_design/chklst_impl_inspection.rst>`__
-       | `utils <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/baselibs/utils/docs/detailed_design/chklst_impl_inspection.rst>`__
-
+            | `bitmanipulation <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/bitmanipulation/docs/detailed_design/chklst_impl_inspection.rst>`__
+            | `concurrency <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/concurrency/docs/detailed_design/chklst_impl_inspection.rst>`__
+            | `containers <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/containers/docs/detailed_design/chklst_impl_inspection.rst>`__
+            | `filesystem <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/filesystem/docs/detailed_design/chklst_impl_inspection.rst>`__
+            | `json <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/json/docs/detailed_design/chklst_impl_inspection.rst>`__
+            | `safecpp <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/language/safecpp/docs/detailed_design/chklst_impl_inspection.rst>`__
+            | `result <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/result/docs/detailed_design/chklst_impl_inspection.rst>`__
+            | `static_reflection_with_serialization <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/static_reflection_with_serialization/docs/detailed_design/chklst_impl_inspection.rst>`__
+            | `utils <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/modules/baselibs/utils/docs/detailed_design/chklst_impl_inspection.rst>`__
    * - Communication
      - ✅ Available
-     - ✅ Available (~175,100 LOC) `communication <https://github.com/eclipse-score/communication>`__
-     - 🔄 0% (0/1)
 
-       | `lola <https://github.com/eclipse-score/score/blob/1b51518e71835b02aef97433c5dd083339185256/docs/modules/communication/lola/docs/detailed_design/index.rst>`__
+            | `platform_management_plan <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/platform_management_plan/software_development.rst>`__
+     - ✅ Available (~253,700 LOC)
+
+            | `communication <https://github.com/eclipse-score/communication>`__
      - ❌ Open
-
+     - ❌ Open
    * - Logging
      - ✅ Available
-     - ✅ Available (~40,300 LOC) `logging <https://github.com/eclipse-score/logging>`__
-     - ❌ Open
-     - ❌ Open
 
+            | `platform_management_plan <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/platform_management_plan/software_development.rst>`__
+     - ✅ Available (~50,800 LOC)
+
+            | `logging <https://github.com/eclipse-score/logging>`__
+     - ❌ Open
+     - ❌ Open
    * - Persistency
      - ✅ Available
-     - ✅ Available (~14,700 LOC) `persistency <https://github.com/eclipse-score/persistency>`__
+
+            | `platform_management_plan <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/platform_management_plan/software_development.rst>`__
+     - ✅ Available (~18,000 LOC)
+
+            | `persistency <https://github.com/eclipse-score/persistency>`__
+     - ❌ Open
      - 🔄 0% (0/1)
 
-       | `kvs <https://github.com/eclipse-score/persistency/blob/4d1fa1ae3c55d27d0f1e863b8cdf59a148651c5d/docs/persistency/kvs/detailed_design/index.rst>`__
-     - 🔄 0% (0/1)
-
-       | `kvs <https://github.com/eclipse-score/persistency/blob/4d1fa1ae3c55d27d0f1e863b8cdf59a148651c5d/docs/persistency/kvs/detailed_design/chklst_impl_inspection.rst>`__
-
+            | `kvs <https://github.com/eclipse-score/persistency/blob/4d1fa1ae3c55d27d0f1e863b8cdf59a148651c5d/docs/persistency/kvs/detailed_design/chklst_impl_inspection.rst>`__
    * - Time
      - ✅ Available
-     - ✅ Available (~20,500 LOC) `inc_time <https://github.com/eclipse-score/inc_time>`__
-     - ❌ Open
-     - ❌ Open
 
+            | `platform_management_plan <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/platform_management_plan/software_development.rst>`__
+     - ✅ Available (~23,200 LOC)
+
+            | `inc_time <https://github.com/eclipse-score/inc_time>`__
+     - ❌ Open
+     - ❌ Open
    * - Config Mgmt
      - ✅ Available
-     - ✅ Available (~14,200 LOC) `config_management <https://github.com/eclipse-score/config_management>`__
-     - ❌ Open
-     - ❌ Open
 
+            | `platform_management_plan <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/platform_management_plan/software_development.rst>`__
+     - ✅ Available (~20,400 LOC)
+
+            | `config_management <https://github.com/eclipse-score/config_management>`__
+     - ❌ Open
+     - ❌ Open
    * - Lifecycle
      - ✅ Available
-     - ✅ Available (~28,800 LOC) `lifecycle <https://github.com/eclipse-score/lifecycle>`__
-     - 🔄 50% (1/2)
-     - ❌ Open
 
+            | `platform_management_plan <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/platform_management_plan/software_development.rst>`__
+     - ✅ Available (~51,800 LOC)
+
+            | `lifecycle <https://github.com/eclipse-score/lifecycle>`__
+     - ✅ Available (1/1)
+
+            | `health_monitor <https://github.com/eclipse-score/lifecycle/blob/2f2e9c4c3e6c6b38abd0b72f78c8ffb96dc7f9e8/docs/module/health_monitor/detailed_design/index.rst>`__
+     - ❌ Open
    * - Security/Crypto
      - ✅ Available
-     - ✅ Available (~20,600 LOC) `inc_security_crypto <https://github.com/eclipse-score/inc_security_crypto>`__
-     - ❌ Open
-     - ❌ Open
 
+            | `platform_management_plan <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/platform_management_plan/software_development.rst>`__
+     - ✅ Available (~51,600 LOC)
+
+            | `inc_security_crypto <https://github.com/eclipse-score/inc_security_crypto>`__
+     - ❌ Open
+     - ❌ Open
    * - Diagnostic Services
-     - ❌ Open
-     - ❌ Open
-     - ❌ Open
-     - ❌ Open
+     - ✅ Available
 
+            | `platform_management_plan <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/platform_management_plan/software_development.rst>`__
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
    * - NM
+     - ✅ Available
+
+            | `platform_management_plan <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/platform_management_plan/software_development.rst>`__
      - ❌ Open
      - ❌ Open
+     - ❌ Open
+   * - Some/IP
+     - ✅ Available
+
+            | `platform_management_plan <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/platform_management_plan/software_development.rst>`__
+     - ✅ Available (~24,500 LOC)
+
+            | `inc_someip_gateway <https://github.com/eclipse-score/inc_someip_gateway>`__
      - ❌ Open
      - ❌ Open
 
-   * - Some/IP
-     - ❌ Open
-     - ✅ Available (~12,700 LOC) `inc_someip_gateway <https://github.com/eclipse-score/inc_someip_gateway>`__
-     - ❌ Open
-     - ❌ Open
 
 .. _overall_status_pa5:
 
 Process Area 5 — Verification
-*****************************
-
-All tests must be implemented and a module verification report must be approved.
-Work products: ``wp__verification_sw_unit_test``, ``wp__verification_comp_int_test``, ``wp__verification_feat_int_test``, ``wp__verification_module_ver_report``.
-See :ref:`verification_workflows`.
+-----------------------------
 
 .. rubric:: Process Status
 
@@ -701,183 +642,165 @@ See :ref:`verification_workflows`.
           :colors: LimeGreen, Gold, LightBlue, LightGray
           :filter-func: needs_filters.area_verification_status(verification)
 
-.. note::
-
-   **C0/C1 Coverage** data is sourced from the `reference_integration <https://github.com/eclipse-score/reference_integration>`__
-   CI (``Code Quality & Documentation`` workflow, ``bazel coverage --config=ferrocene-coverage``).
-   C0 = line coverage, C1 = branch coverage. Rust coverage reports line coverage only.
-   Modules not yet integrated into the reference_integration CI (Time, Config Mgmt)
-   show ❌ Open.
-
-.. note::
-
-   **Static Code Analysis** is tracked per module via dedicated CI workflows (clang-tidy for C++,
-   Rust Clippy for Rust). All listed workflows are zero-tolerance (CI fails on any finding),
-   so a passing ``main`` branch implies **0 open findings**. Additionally,
-   `CodeQL <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/codeql-multiple-repo-scan.yml>`__
-   runs centrally across all pinned repositories in ``reference_integration``
-   (finding counts require the GitHub Security tab).
-
-   **Dynamic Code Analysis** is tracked via sanitizer CI workflows (ASan/UBSan/LSan via
-   ``--config=asan_ubsan_lsan``, TSan via ``--config=tsan``). All listed workflows are
-   zero-tolerance, so a passing ``main`` branch implies **0 sanitizer findings**.
-
-.. rubric:: Implementation status: 🔄 27% (21/79 deliverables complete)
 
 .. figure:: /_assets/pa5_verification_progress.svg
-   :alt: PA5 verification — test counts per release and current coverage
-   :width: 1100px
+   :alt: PA5 verification progress
+   :width: 1080px
 
-   Test counts (Unit / Component Integration / Feature Integration) per release
-   and current code coverage across the 11 PA2 modules. Coverage values are
-   only available for the current snapshot.
+   Test counts and coverage across the 11 PA2 modules per release (v0.5.0-beta → v0.6.0 → v0.7.0 → current main).
+
+
+.. rubric:: Implementation status: 🔄 28% (25/88 deliverables complete)
+
+.. note::
+
+   **C0/C1 Coverage** data is sourced from the ``reference_integration``
+   CI (*Code Quality & Documentation* workflow,
+   ``bazel coverage --config=ferrocene-coverage``). C0 = line coverage,
+   C1 = branch coverage. Rust coverage reports line coverage only.
+   Modules not yet integrated into the ``reference_integration`` CI
+   (Time, Config Mgmt, Security/Crypto, Some/IP) show ❌ Open.
+
+.. note::
+
+   **Static Code Analysis** is tracked per module via dedicated CI
+   workflows (clang-tidy for C++, Rust Clippy for Rust). All listed
+   workflows are *zero-tolerance* (CI fails on any finding), so a passing
+   ``main`` branch implies **0 open findings**. Additionally, CodeQL
+   runs centrally across all pinned repositories in
+   ``reference_integration`` (finding counts require the GitHub Security
+   tab).
+
+   **Dynamic Code Analysis** is tracked via sanitizer CI workflows
+   (ASan/UBSan/LSan via ``--config=asan_ubsan_lsan``, TSan via
+   ``--config=tsan``). All listed workflows are zero-tolerance, so a
+   passing ``main`` branch implies **0 sanitizer findings**.
+
 
 .. list-table::
    :header-rows: 1
-   :stub-columns: 1
-   :class: module-phase-tracker-table
 
    * - **Module**
      - **Unit Tests**
-     - **C0/C1 Coverage**
-     - **Comp. Integration Tests**
-     - **Feature Integration Tests**
-     - **Static Code Analysis**
-     - **Dynamic Code Analysis**
-     - | **Module Verification**
-       | **Report**
-     - | **Platform Verification**
-       | **Report**
-
+     - **C0/C1 Cov**
+     - **Comp. IT**
+     - **Feat. IT**
+     - **Static**
+     - **Dynamic**
+     - **Module Ver. Rpt**
    * - Baselibs
      - ✅ Available
 
-       | (4,663 tests)
-     - 🔄 **C0:** 92.3%
+            | 5376 tests
+     - 🔄
 
-       | **C1:** 60.4% (cpp)
-       | **Rust line:** 74.4%
-     - ✅ Available (13 tests)
+            | **C0:** 92.3%
+            | **C1:** 60.3% (cpp)
+            | **Rust line:** 74.35%
+     - ✅ Available
+
+            | 13 tests
      - ❌ Open
      - ✅ 0 findings
-
-       | `clang-tidy <https://github.com/eclipse-score/baselibs/blob/cab36dd7de92c282f67e78e88032e08585803528/.github/workflows/lint.yml>`__
      - ✅ 0 findings
-
-       | `ASan/UBSan/LSan <https://github.com/eclipse-score/baselibs/blob/cab36dd7de92c282f67e78e88032e08585803528/.github/workflows/sanitizers_linux.yml>`__
      - ❌ Open
-     - ❌ Open
-
    * - Communication
      - ✅ Available
 
-       | (2,374 tests)
-     - 🔄 **C0:** 87.9%
+            | 2585 tests
+     - 🔄
 
-       | **C1:** 58.8% (cpp)
-     - ✅ Available (42 tests)
+            | **C0:** 87.9%
+            | **C1:** 58.8% (cpp)
+     - ✅ Available
+
+            | 42 tests
      - ❌ Open
-     - 🔄 Configured
-
-       | `clang-tidy <https://github.com/eclipse-score/communication/blob/b021eccf1d811625d21eeb493071c0c4f4f6243a/quality/static_analysis/static_analysis.bazelrc>`__
-       | `CodeQL/MISRA <https://github.com/eclipse-score/communication/tree/main/quality/static_analysis>`__
-       | but no CI enforcement workflow yet
+     - 🔄 Configured (no CI)
      - ✅ 0 findings
-
-       | `ASan/UBSan/LSan <https://github.com/eclipse-score/communication/blob/b021eccf1d811625d21eeb493071c0c4f4f6243a/.github/workflows/address_undefined_behavior_leak_sanitizer.yml>`__
-       | `TSan <https://github.com/eclipse-score/communication/blob/b021eccf1d811625d21eeb493071c0c4f4f6243a/.github/workflows/thread_sanitizer.yml>`__
      - ❌ Open
-     - ❌ Open
-
    * - Logging
      - ✅ Available
 
-       | (619 tests)
-     - 🔄 **C0:** 79.5%
+            | 617 tests
+     - 🔄
 
-       | **C1:** 42.5% (cpp)
-       | **Rust line:** 39.9%
+            | **C0:** 79.3%
+            | **C1:** 42.1% (cpp)
+            | **Rust line:** 39.86%
      - ❌ Open
-     - ✅ Available (1 test)
+     - ✅ Available
 
-       | `reference_integration <https://github.com/eclipse-score/reference_integration>`__ (cross-module)
+            | 1 test
      - ❌ Open
      - ❌ Open
      - ❌ Open
-     - ❌ Open
-
    * - Persistency
      - ✅ Available
 
-       | (138 tests)
-     - 🔄 **C0:** 94.7%
+            | 138 tests
+     - 🔄
 
-       | **C1:** 63.0% (cpp)
-       | **Rust line:** 92.7%
-     - ❌ Open
-     - ✅ Available (6 tests)
+            | **C0:** 94.7%
+            | **C1:** 63.0% (cpp)
+            | **Rust line:** 92.66%
+     - ✅ Available
+     - ✅ Available
 
-       | `reference_integration <https://github.com/eclipse-score/reference_integration>`__ (cross-module)
+            | 53 tests
      - ✅ 0 findings
+     - ❌ Open
+     - ✅ Available
 
-       | `Clippy <https://github.com/eclipse-score/persistency/blob/4d1fa1ae3c55d27d0f1e863b8cdf59a148651c5d/.github/workflows/clippy.yml>`__
-     - ❌ Open
-     - ❌ Open
-     - ❌ Open
-
+            | `verification <https://github.com/eclipse-score/persistency/blob/4d1fa1ae3c55d27d0f1e863b8cdf59a148651c5d/docs/persistency/docs/verification/module_verification_report.rst>`__
    * - Time
      - ✅ Available
 
-       | (296 tests)
+            | 296 tests
      - ❌ Open
-     - ✅ Available (11 tests)
-     - ❌ Open
-     - ❌ Open
-     - ❌ Open
-     - ❌ Open
-     - ❌ Open
+     - ✅ Available
 
+            | 11 tests
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
    * - Config Mgmt
      - ✅ Available
 
-       | (143 tests)
+            | 179 tests
      - ❌ Open
      - ❌ Open
      - ❌ Open
      - ✅ 0 findings
-
-       | `clang-tidy <https://github.com/eclipse-score/config_management/blob/main/.github/workflows/static-analysis.yml>`__
      - ❌ Open
      - ❌ Open
-     - ❌ Open
-
    * - Lifecycle
      - ✅ Available
 
-       | (2 tests)
-     - 🔄 **C0:** 77.2%
+            | 2 tests
+     - 🔄
 
-       | **C1:** 45.8% (cpp)
-       | **Rust line:** 53.8%
-     - ✅ Available (9 tests)
+            | **C0:** 77.2%
+            | **C1:** 45.8% (cpp)
+            | **Rust line:** 53.81%
+     - ✅ Available
+
+            | 8 tests
      - ❌ Open
      - ✅ 0 findings
-
-       | `Clippy <https://github.com/eclipse-score/lifecycle/blob/2f2e9c4c3e6c6b38abd0b72f78c8ffb96dc7f9e8/.github/workflows/lint_clippy.yml>`__
      - ❌ Open
      - ❌ Open
-     - ❌ Open
-
    * - Security/Crypto
+     - ✅ Available
      - ❌ Open
-     - ❌ Open
-     - ❌ Open
-     - ❌ Open
-     - ❌ Open
-     - ❌ Open
-     - ❌ Open
-     - ❌ Open
+     - ✅ Available
 
+            | 5 tests
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
+     - ❌ Open
    * - Diagnostic Services
      - ❌ Open
      - ❌ Open
@@ -886,8 +809,6 @@ See :ref:`verification_workflows`.
      - ❌ Open
      - ❌ Open
      - ❌ Open
-     - ❌ Open
-
    * - NM
      - ❌ Open
      - ❌ Open
@@ -896,26 +817,22 @@ See :ref:`verification_workflows`.
      - ❌ Open
      - ❌ Open
      - ❌ Open
-     - ❌ Open
-
    * - Some/IP
      - ✅ Available
 
-       | (199 tests)
+            | 237 tests
      - ❌ Open
-     - ✅ Available (17 stress tests)
-     - ❌ Open
+     - ✅ Available
+
+            | 17 tests
      - ❌ Open
      - ❌ Open
      - ❌ Open
      - ❌ Open
 
-Done Criteria
-*************
+.. admonition:: Platform Verification Report
+   :class: important platform-ver-report
 
-A module is considered **complete** when all of the following are true:
+   `platform_ver_report <https://github.com/eclipse-score/score/blob/5b8a1e34c417384d919bb8c08d32213896ffe5aa/docs/score_releases/verification/platform_ver_report.rst>`__
+   — 🔄 **Draft** (single project-wide deliverable)
 
-#. All ``valid`` component requirements have **100% test coverage** (linked via ``FullyVerifies`` or ``PartiallyVerifies``).
-#. All CI metadata checks pass (``TestType``, ``DerivationTechnique``, ``Description`` set on every test).
-#. Static analysis has no open ``Critical`` or ``High`` findings.
-#. The **Module Verification Report** (``wp__verification_module_ver_report``) is generated and approved by a Committer.
