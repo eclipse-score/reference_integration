@@ -88,7 +88,7 @@ score_py_pytest(
         "-m rust",
         "--traces=all",
         "--rust-target-path=$(rootpath //feature_integration_tests/test_scenarios/rust:rust_test_scenarios)",
-        "-k with_daemon",
+        "-k launch_manager_health_monitor",
     ],
     data = [
         "conftest.py",
@@ -116,7 +116,7 @@ score_py_pytest(
         "-m cpp",
         "--traces=all",
         "--cpp-target-path=$(rootpath //feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios)",
-        "-k with_daemon",
+        "-k launch_manager_health_monitor",
     ],
     data = [
         "conftest.py",
