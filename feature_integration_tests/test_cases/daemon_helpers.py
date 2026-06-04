@@ -25,7 +25,7 @@ import subprocess
 import time
 from collections.abc import Generator
 from pathlib import Path
-from typing import Any
+from typing import Any, TextIO
 
 import pytest
 from testing_utils import BazelTools
@@ -155,6 +155,7 @@ class LaunchManagerDaemon:
         self.working_dir = working_dir
         self.process: subprocess.Popen | None = None
         self.log_file: Path | None = None
+        self._log_fd: TextIO | None = None
 
     def start(self, startup_timeout: float = 2.0) -> None:
         """
@@ -165,19 +166,23 @@ class LaunchManagerDaemon:
         startup_timeout : float
             Time to wait after starting the daemon (seconds).
         """
+        # If a stale process reference exists from a previous run, clear it.
+        if self.process is not None and self.process.poll() is not None:
+            self.process = None
+
         if self.process is not None:
             raise RuntimeError("Daemon already started")
 
         # Create log file
         self.log_file = self.working_dir / "launch_manager.log"
-        log_fd = open(self.log_file, "w")
+        self._log_fd = open(self.log_file, "w")
 
         # Start daemon process
         cmd = [str(self.daemon_binary), str(self.config_file)]
         self.process = subprocess.Popen(
             cmd,
             cwd=self.working_dir,
-            stdout=log_fd,
+            stdout=self._log_fd,
             stderr=subprocess.STDOUT,
             text=True,
         )
@@ -187,9 +192,12 @@ class LaunchManagerDaemon:
 
         # Check if daemon is still running
         if self.process.poll() is not None:
+            return_code = self.process.returncode
             log_content = self.log_file.read_text() if self.log_file.exists() else "No logs available"
+            self._close_log_fd()
+            self.process = None
             raise RuntimeError(
-                f"Launch Manager daemon failed to start. Exit code: {self.process.returncode}\nLogs:\n{log_content}"
+                f"Launch Manager daemon failed to start. Exit code: {return_code}\nLogs:\n{log_content}"
             )
 
     def stop(self, shutdown_timeout: float = 5.0) -> None:
@@ -202,17 +210,36 @@ class LaunchManagerDaemon:
             Maximum time to wait for graceful shutdown (seconds).
         """
         if self.process is None:
+            self._close_log_fd()
             return
 
-        # Send SIGTERM for graceful shutdown
-        self.process.send_signal(signal.SIGTERM)
+        try:
+            # Send SIGTERM for graceful shutdown if still running.
+            if self.process.poll() is None:
+                try:
+                    self.process.send_signal(signal.SIGTERM)
+                except ProcessLookupError:
+                    pass
+
+            try:
+                self.process.wait(timeout=shutdown_timeout)
+            except subprocess.TimeoutExpired:
+                # Force kill if graceful shutdown fails.
+                self.process.kill()
+                self.process.wait()
+        finally:
+            self.process = None
+            self._close_log_fd()
+
+    def _close_log_fd(self) -> None:
+        """Close daemon log file descriptor if it is open."""
+        if self._log_fd is None:
+            return
 
         try:
-            self.process.wait(timeout=shutdown_timeout)
-        except subprocess.TimeoutExpired:
-            # Force kill if graceful shutdown fails
-            self.process.kill()
-            self.process.wait()
+            self._log_fd.close()
+        finally:
+            self._log_fd = None
 
     def __enter__(self):
         self.start()
