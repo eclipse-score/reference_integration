@@ -126,15 +126,15 @@ impl Scenario for DependencyOrdering {
             test_input.checkpoint_count
         );
 
-        // Demonstrate sequential API usage
+        // Demonstrate sequential checkpoint progression (simulation only).
         for i in 0..test_input.checkpoint_count {
-            info!("Reported checkpoint init_step_{} in sequence", i);
+            info!("Simulated checkpoint init_step_{} in sequence", i);
             thread::sleep(Duration::from_millis(
                 test_input.test_duration_ms / test_input.checkpoint_count as u64,
             ));
         }
 
-        info!("All checkpoints reported in correct sequential order");
+        info!("All checkpoints simulated in correct sequential order");
 
         Ok(())
     }
