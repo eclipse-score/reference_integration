@@ -230,3 +230,66 @@ table .line-block .line {
     margin: 0;
     font-size: 1.1rem;
 }
+
+/* ---------------------------------------------------------------------------
+ * Process / Implementation status headings (overall_status.rst):
+ * make rubric headings visually larger, and render the implementation
+ * status as a single inline row with a progress bar.
+ * ---------------------------------------------------------------------------*/
+
+p.rubric.status-heading,
+.rubric.status-heading {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-top: 1.2rem;
+    margin-bottom: 0.6rem;
+    color: #1a5fa8;
+}
+
+.impl-status-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #1a5fa8;
+    margin: 1.2rem 0 0.8rem 0;
+}
+
+.impl-status-row .impl-status-label {
+    white-space: nowrap;
+}
+
+.impl-status-row .impl-status-icon {
+    font-size: 1.25rem;
+}
+
+.impl-status-row .impl-status-percent {
+    min-width: 3.5rem;
+    text-align: right;
+}
+
+.impl-status-row .impl-status-bar {
+    flex: 1 1 200px;
+    min-width: 160px;
+    max-width: 360px;
+    height: 14px;
+    background-color: #e3e8ef;
+    border: 1px solid #c0c8d4;
+    border-radius: 7px;
+    overflow: hidden;
+}
+
+.impl-status-row .impl-status-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #1a5fa8 0%, #4a90d9 100%);
+    border-radius: 6px 0 0 6px;
+}
+
+.impl-status-row .impl-status-detail {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #444;
+    white-space: nowrap;
+}
