@@ -20,6 +20,7 @@ Process Area 1 — Change Management
 ----------------------------------
 
 .. rubric:: Process Status
+   :class: status-heading
 
 .. list-table::
    :header-rows: 1
@@ -58,7 +59,15 @@ Process Area 1 — Change Management
           :filter-func: needs_filters.area_verification_status(change_management)
 
 
-.. rubric:: Implementation status: 🔄 90% (10/11 deliverables complete)
+.. raw:: html
+
+   <div class="impl-status-row">
+     <span class="impl-status-label">Rollout status:</span>
+     <span class="impl-status-icon">🔄</span>
+     <span class="impl-status-percent">90%</span>
+     <div class="impl-status-bar"><div class="impl-status-fill" style="width:90%"></div></div>
+     <span class="impl-status-detail">10/11 deliverables complete</span>
+   </div>
 
 
 .. list-table::
@@ -118,6 +127,7 @@ Process Area 2 — Requirements Engineering
 -----------------------------------------
 
 .. rubric:: Process Status
+   :class: status-heading
 
 .. list-table::
    :header-rows: 1
@@ -163,7 +173,15 @@ Process Area 2 — Requirements Engineering
    Total Feature and Component Requirements across the 11 PA2 modules per release (v0.5.0-beta → v0.6.0 → v0.7.0 → current main).
 
 
-.. rubric:: Implementation status: 🔄 39% (13/33 deliverables complete)
+.. raw:: html
+
+   <div class="impl-status-row">
+     <span class="impl-status-label">Rollout status:</span>
+     <span class="impl-status-icon">🔄</span>
+     <span class="impl-status-percent">39%</span>
+     <div class="impl-status-bar"><div class="impl-status-fill" style="width:39%"></div></div>
+     <span class="impl-status-detail">13/33 deliverables complete</span>
+   </div>
 
 
 .. list-table::
@@ -280,6 +298,7 @@ Process Area 3 — Architecture Design
 ------------------------------------
 
 .. rubric:: Process Status
+   :class: status-heading
 
 .. list-table::
    :header-rows: 1
@@ -325,7 +344,15 @@ Process Area 3 — Architecture Design
    Total Feature and Component Architecture elements across the 11 PA2 modules per release (v0.5.0-beta → v0.6.0 → v0.7.0 → current main).
 
 
-.. rubric:: Implementation status: 🔄 24% (8/33 deliverables complete)
+.. raw:: html
+
+   <div class="impl-status-row">
+     <span class="impl-status-label">Rollout status:</span>
+     <span class="impl-status-icon">🔄</span>
+     <span class="impl-status-percent">24%</span>
+     <div class="impl-status-bar"><div class="impl-status-fill" style="width:24%"></div></div>
+     <span class="impl-status-detail">8/33 deliverables complete</span>
+   </div>
 
 
 .. list-table::
@@ -440,6 +467,7 @@ Process Area 4 — Implementation
 -------------------------------
 
 .. rubric:: Process Status
+   :class: status-heading
 
 .. list-table::
    :header-rows: 1
@@ -485,7 +513,15 @@ Process Area 4 — Implementation
    Estimated Lines of Code across the 11 PA2 modules per release (v0.5.0-beta → v0.6.0 → v0.7.0 → current main).
 
 
-.. rubric:: Implementation status: 🔄 47% (21/44 deliverables complete)
+.. raw:: html
+
+   <div class="impl-status-row">
+     <span class="impl-status-label">Rollout status:</span>
+     <span class="impl-status-icon">🔄</span>
+     <span class="impl-status-percent">47%</span>
+     <div class="impl-status-bar"><div class="impl-status-fill" style="width:47%"></div></div>
+     <span class="impl-status-detail">21/44 deliverables complete</span>
+   </div>
 
 
 .. list-table::
@@ -613,6 +649,7 @@ Process Area 5 — Verification
 -----------------------------
 
 .. rubric:: Process Status
+   :class: status-heading
 
 .. list-table::
    :header-rows: 1
@@ -658,7 +695,15 @@ Process Area 5 — Verification
    Test counts and coverage across the 11 PA2 modules per release (v0.5.0-beta → v0.6.0 → v0.7.0 → current main).
 
 
-.. rubric:: Implementation status: 🔄 28% (25/88 deliverables complete)
+.. raw:: html
+
+   <div class="impl-status-row">
+     <span class="impl-status-label">Rollout status:</span>
+     <span class="impl-status-icon">🔄</span>
+     <span class="impl-status-percent">28%</span>
+     <div class="impl-status-bar"><div class="impl-status-fill" style="width:28%"></div></div>
+     <span class="impl-status-detail">25/88 deliverables complete</span>
+   </div>
 
 .. note::
 

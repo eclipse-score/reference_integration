@@ -354,7 +354,7 @@ COV_RE = re.compile(
 ### 4.2 PA5 — static / dynamic analysis CI table
 
 > **Reader notes (rendered in the RST as `.. note::` blocks placed
-> immediately after the PA5 `Implementation status:` rubric and before
+> immediately after the PA5 `Rollout status` row and before
 > the PA5 list-table — keep them in sync when regenerating):**
 >
 > 1. **C0/C1 Coverage source.** Coverage data comes from the
@@ -573,9 +573,14 @@ to read. All other PAs keep the default 720px width.
 
 ### 5.4 Pie chart row (Process Status)
 
-Each PA section starts with a pie chart row.
+Each PA section starts with a pie chart row. The section is introduced by a
+**Process Status** rubric that uses the `status-heading` class for an
+enlarged appearance (styles in `docs/_assets/custom.css`):
 
 ```rst
+.. rubric:: Process Status
+   :class: status-heading
+
 .. list-table::
    :header-rows: 1
    :class: compact-overview-table
@@ -620,17 +625,39 @@ Hard rules:
   `compact-overview-table`, fluid 33% per column, `!important` img override).
   Do not add explicit pixel sizes.
 
-### 5.4 Implementation status rubric
+### 5.4 Rollout status row
 
-Directly above the module tracker table:
+Directly above the module tracker table, render a **single-line row** with
+a label, percentage, an inline progress bar and a detail text. This
+replaces the older `.. rubric:: Implementation status: ...` line. Use a
+`raw:: html` block so the progress bar and the text sit on the same line:
 
 ```rst
-.. rubric:: Implementation status: 🔄 NN% (X/Y deliverables complete)
+.. raw:: html
+
+   <div class="impl-status-row">
+     <span class="impl-status-label">Rollout status:</span>
+     <span class="impl-status-icon">🔄</span>
+     <span class="impl-status-percent">NN%</span>
+     <div class="impl-status-bar"><div class="impl-status-fill" style="width:NN%"></div></div>
+     <span class="impl-status-detail">X/Y deliverables complete</span>
+   </div>
 ```
 
-`X` = number of `✅ Available` cells in the table; `Y` = number of cells in
-the table excluding the leftmost stub column. Both rubrics in a PA section
-(`Process Status` and `Implementation status`) are inline text, not headings.
+- `X` = number of `✅ Available` cells in the table.
+- `Y` = number of cells in the table excluding the leftmost stub column.
+- `NN` = `floor(100 * X / Y)`, clamped to `[0, 100]`. Use the **same**
+  value in both the `impl-status-percent` span and the
+  `style="width:NN%"` of `impl-status-fill`.
+- If `Y == 0`, render `NN = 0` (empty bar) and `0/0 deliverables complete`.
+- Keep the wording **"Rollout status"** — not "Implementation status"
+  (the term "implementation" is reserved for actual code).
+- Styling lives in `docs/_assets/custom.css` (`.impl-status-row`,
+  `.impl-status-bar`, `.impl-status-fill`). Do not inline additional
+  styles beyond the `width:NN%` on the fill div.
+- The `Process Status` rubric above the pie row uses the
+  `:class: status-heading` option (see §5.4 above) so both headings have
+  the same enlarged appearance.
 
 ---
 
@@ -841,9 +868,10 @@ Stop and investigate if:
 
 ### Step 6 — Write the RST
 
-Update each PA's module table and the `.. rubric:: Implementation status:`
-line. Source links as in §5.2. Pie-chart row stays unchanged unless the
-sphinx-needs tag changes.
+Update each PA's module table and the **Rollout status** `raw:: html`
+block above it (see §5.4). Source links as in §5.2. Pie-chart row and the
+`Process Status` rubric stay unchanged unless the sphinx-needs tag
+changes.
 
 ### Step 7 — Adding a new module
 
