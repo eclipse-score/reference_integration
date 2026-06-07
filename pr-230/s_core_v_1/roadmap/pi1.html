@@ -551,7 +551,7 @@ that unit-test coverage (C0/C1) reaches at least <strong>90%</strong> and dynami
 </section>
 <section id="work-breakdown">
 <h2>Work Breakdown<a class="headerlink" href="#work-breakdown" title="Link to this heading">#</a></h2>
-<ul class="simple">
+<ul>
 <li><p>Mark every <strong>feature requirement</strong> that is in scope for v1.0 with the
 <a class="reference external" href="https://github.com/eclipse-score/docs-as-code/blob/main/src/extensions/score_metamodel/metamodel.yaml">valid_from</a>
 attribute, set to one of the predefined release versions: <code class="docutils literal notranslate"><span class="pre">v0.5</span></code>,
@@ -561,10 +561,19 @@ Only feature requirements with <code class="docutils literal notranslate"><span 
 for v1.0; together with <strong>all elements linked to them</strong> — component
 requirements, AoUs, feature architecture and component architecture — they
 form the v1.0 scope and are the only elements counted in the roadmap
-statistics.</p></li>
+statistics.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>After the release of v0.8, every modification to requirements that are
+relevant for S-CORE v1.0 (i.e. carry a ``valid_from`` of ``v1.0`` or
+earlier and are still in the v1.0 scope) must be reviewed and approved
+in the TL circle</strong> before it is merged.</p>
+</div>
+</li>
 <li><p>All in-scope feature requirements and the elements linked to them
 (component requirements, AoUs, feature architecture, component architecture)
-are in status <code class="docutils literal notranslate"><span class="pre">valid</span></code>.</p></li>
+are in status <code class="docutils literal notranslate"><span class="pre">valid</span></code>. The overall status can always be tracked on the
+<a class="reference internal" href="overall_status.html"><span class="doc">Overall Status</span></a> page.</p></li>
 <li><p>Implement all missing automation checks for requirement and architecture
 elements as part of the docs-as-code toolchain used for generation of the
 documentation (<code class="docutils literal notranslate"><span class="pre">//:docs</span></code>), as depicted in the <em>Process Status</em> pies on
@@ -574,7 +583,16 @@ validate requirements and architecture artifacts in compliance with the
 S-CORE process. The workflow shall be executed in the
 <code class="docutils literal notranslate"><span class="pre">reference_integration</span></code> repository to verify, across all integrated
 modules, that the artifacts conform to the defined process and that the
-resulting documentation can be successfully generated.</p></li>
+resulting documentation can be successfully generated.</p>
+<ul class="simple">
+<li><p>In analogy to the unified unit-test/coverage target, all modules must
+agree on a <strong>single, unified Bazel target</strong> that every module exposes
+for documentation generation and for the S-CORE process validation of
+requirements and architecture artifacts. This target shall be
+<strong>agreed upon and documented</strong> as a <strong>public Bazel interface</strong> that
+every implementation Bazel module is required to implement.</p></li>
+</ul>
+</li>
 <li><p>Create and fully complete the inspection checklists for requirements and
 architecture. All findings shall be documented as tickets assigned to a
 milestone less than or equal to <code class="docutils literal notranslate"><span class="pre">v1.0</span></code>, with the corresponding
@@ -591,7 +609,28 @@ and have its <strong>process area</strong> set to <code class="docutils literal 
 module. All findings shall be documented as tickets assigned to a
 milestone less than or equal to <code class="docutils literal notranslate"><span class="pre">v1.0</span></code>, with the corresponding
 <strong>team</strong> attribute set and the <strong>process area</strong> set to
-<code class="docutils literal notranslate"><span class="pre">pa5_verification</span></code>.</p></li>
+<code class="docutils literal notranslate"><span class="pre">pa5_verification</span></code>.</p>
+<ul class="simple">
+<li><p>Define a standardized CI/CD workflow that runs the unit tests and
+measures the corresponding code coverage for every module, and
+integrate it into the <code class="docutils literal notranslate"><span class="pre">reference_integration</span></code> repository so that it
+is part of the <strong>voting CI/CD pipeline</strong>. All modules must agree on a
+<strong>single, unified Bazel target</strong> that every module exposes for
+invoking its unit tests and coverage measurement. This target shall
+be documented as a <strong>public Bazel interface</strong> that every
+implementation Bazel module is required to implement. Reuse and
+extend the existing rules where possible — see
+<a class="reference external" href="https://github.com/eclipse-score/tooling/tree/main/bazel/rules/rules_score">eclipse-score/tooling — bazel/rules/rules_score</a>.</p></li>
+<li><p>All unit tests shall be executed with <strong>active sanitizers</strong>
+(ASan/UBSan/LSan, TSan). The toolchain used to run the unit tests,
+measure coverage and enable the sanitizers shall be <strong>agreed upon and
+unique</strong> across all implementation modules — it is the same toolchain
+that is used in the <code class="docutils literal notranslate"><span class="pre">reference_integration</span></code> repository in the
+CI/CD workflow mentioned above. All implementation modules are
+strongly encouraged to use this toolchain <strong>locally</strong> as well, in
+addition to its execution in the CI/CD pipeline.</p></li>
+</ul>
+</li>
 </ul>
 </section>
 </section>
