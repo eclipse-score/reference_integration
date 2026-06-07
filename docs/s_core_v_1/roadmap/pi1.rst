@@ -59,9 +59,17 @@ Work Breakdown
   requirements, AoUs, feature architecture and component architecture — they
   form the v1.0 scope and are the only elements counted in the roadmap
   statistics.
+
+  .. warning::
+
+     **After the release of v0.8, every modification to requirements that are
+     relevant for S-CORE v1.0 (i.e. carry a ``valid_from`` of ``v1.0`` or
+     earlier and are still in the v1.0 scope) must be reviewed and approved
+     in the TL circle** before it is merged.
 - All in-scope feature requirements and the elements linked to them
   (component requirements, AoUs, feature architecture, component architecture)
-  are in status ``valid``.
+  are in status ``valid``. The overall status can always be tracked on the
+  :doc:`overall_status` page.
 - Implement all missing automation checks for requirement and architecture
   elements as part of the docs-as-code toolchain used for generation of the
   documentation (``//:docs``), as depicted in the *Process Status* pies on
@@ -72,6 +80,13 @@ Work Breakdown
   ``reference_integration`` repository to verify, across all integrated
   modules, that the artifacts conform to the defined process and that the
   resulting documentation can be successfully generated.
+
+  - In analogy to the unified unit-test/coverage target, all modules must
+    agree on a **single, unified Bazel target** that every module exposes
+    for documentation generation and for the S-CORE process validation of
+    requirements and architecture artifacts. This target shall be
+    **agreed upon and documented** as a **public Bazel interface** that
+    every implementation Bazel module is required to implement.
 - Create and fully complete the inspection checklists for requirements and
   architecture. All findings shall be documented as tickets assigned to a
   milestone less than or equal to ``v1.0``, with the corresponding
@@ -89,3 +104,23 @@ Work Breakdown
   milestone less than or equal to ``v1.0``, with the corresponding
   **team** attribute set and the **process area** set to
   ``pa5_verification``.
+
+  - Define a standardized CI/CD workflow that runs the unit tests and
+    measures the corresponding code coverage for every module, and
+    integrate it into the ``reference_integration`` repository so that it
+    is part of the **voting CI/CD pipeline**. All modules must agree on a
+    **single, unified Bazel target** that every module exposes for
+    invoking its unit tests and coverage measurement. This target shall
+    be documented as a **public Bazel interface** that every
+    implementation Bazel module is required to implement. Reuse and
+    extend the existing rules where possible — see
+    `eclipse-score/tooling — bazel/rules/rules_score
+    <https://github.com/eclipse-score/tooling/tree/main/bazel/rules/rules_score>`__.
+  - All unit tests shall be executed with **active sanitizers**
+    (ASan/UBSan/LSan, TSan). The toolchain used to run the unit tests,
+    measure coverage and enable the sanitizers shall be **agreed upon and
+    unique** across all implementation modules — it is the same toolchain
+    that is used in the ``reference_integration`` repository in the
+    CI/CD workflow mentioned above. All implementation modules are
+    strongly encouraged to use this toolchain **locally** as well, in
+    addition to its execution in the CI/CD pipeline.
