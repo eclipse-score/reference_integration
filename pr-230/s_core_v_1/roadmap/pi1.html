@@ -532,6 +532,8 @@ each tracked issue must have the <strong>team</strong> set and the <strong>miles
 is either completed or the finding is noted in the checklist with a tracked issue;
 each tracked issue must have the <strong>team</strong> set and the <strong>milestone</strong> set</p></li>
 <li><p>All requirements relevant for v1.0 must be explicitly marked as such</p></li>
+<li><p>The current state of every module — including its implementation — must be
+integrated into the <code class="docutils literal notranslate"><span class="pre">reference_integration</span></code> repository</p></li>
 <li><p>Implementation of functionality must be planned via tickets in the
 <a class="reference external" href="https://github.com/orgs/eclipse-score/projects">main S-CORE GitHub project</a> —
 each ticket must have the <strong>team</strong> set and the <strong>milestone</strong> set</p></li>
@@ -605,6 +607,16 @@ decision must be documented.</p></li>
 shall be tracked by tickets. Each ticket must be assigned to a milestone
 less than or equal to <code class="docutils literal notranslate"><span class="pre">v1.0</span></code>, have the dedicated <strong>team</strong> attribute set,
 and have its <strong>process area</strong> set to <code class="docutils literal notranslate"><span class="pre">pa4_impl</span></code>.</p></li>
+<li><p>Define the set of <strong>target platforms</strong> that S-CORE officially supports
+for v1.0. For every supported platform there shall be an <strong>official
+toolchain</strong>, and the <code class="docutils literal notranslate"><span class="pre">reference_integration</span></code> repository shall provide
+a dedicated CI/CD workflow that compiles every module against that
+platform’s toolchain. Every implementation module must be <strong>buildable
+with this toolchain</strong>, and it is <strong>strongly recommended</strong> that each
+module reuses the same toolchain definition locally instead of
+maintaining its own. The supported platforms together with their
+official toolchains shall be <strong>properly documented</strong> so that every
+module owner can refer to a single authoritative source.</p></li>
 <li><p>Create and fully complete the Module Verification Report for every
 module. All findings shall be documented as tickets assigned to a
 milestone less than or equal to <code class="docutils literal notranslate"><span class="pre">v1.0</span></code>, with the corresponding
