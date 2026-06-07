@@ -79,3 +79,28 @@ example ``pa1_req_eng``, ``pa2_arch_design``, ``pa3_implementation``,
 only **by time** (milestone / release gate) but also **by function**
 (process area), which is what feeds the per-process-area views on the
 :doc:`Overall Status <overall_status>` page.
+
+Terminology
+-----------
+
+To keep the planning vocabulary unambiguous, the following terms are used
+consistently throughout this section:
+
+- **Version** — A *version* refers to a software product version in the
+  classical sense: a defined, released state of the S-CORE platform with a
+  fixed scope and quality (e.g. ``v0.5``, ``v1.0``). It is the unit that is
+  shipped to and consumed by users of the platform.
+- **Release / Milestone** — A *release* (also called *milestone*, mapped
+  one-to-one to a `GitHub milestone
+  <https://github.com/eclipse-score/score/milestones>`__) is a planning
+  checkpoint that we use to **track our work on the way to a version**.
+  Several releases / milestones (e.g. ``v0.8``, ``v0.9``, ``v0.10``)
+  typically lead up to a single version (``v1.0``).
+- **Release Gate** — A *release gate* is the set of deliverables that, by
+  the corresponding release / milestone, **must be done for sure** in order
+  to keep the path to the target version on track. The release gate
+  documents the **mandatory minimum**; it does **not** restrict the teams
+  to working only on the items listed there. Teams are free to work on
+  additional topics in parallel — the release gate simply makes explicit
+  what is non-negotiable for that milestone.
+

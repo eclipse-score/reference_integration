@@ -29,6 +29,8 @@ Focus: Requirements Engineering (PA2) + Architecture Design (PA3)
   is either completed or the finding is noted in the checklist with a tracked issue;
   each tracked issue must have the **team** set and the **milestone** set
 - All requirements relevant for v1.0 must be explicitly marked as such
+- The current state of every module — including its implementation — must be
+  integrated into the ``reference_integration`` repository
 - Implementation of functionality must be planned via tickets in the
   `main S-CORE GitHub project <https://github.com/orgs/eclipse-score/projects>`__ —
   each ticket must have the **team** set and the **milestone** set
@@ -99,6 +101,16 @@ Work Breakdown
   shall be tracked by tickets. Each ticket must be assigned to a milestone
   less than or equal to ``v1.0``, have the dedicated **team** attribute set,
   and have its **process area** set to ``pa4_impl``.
+- Define the set of **target platforms** that S-CORE officially supports
+  for v1.0. For every supported platform there shall be an **official
+  toolchain**, and the ``reference_integration`` repository shall provide
+  a dedicated CI/CD workflow that compiles every module against that
+  platform's toolchain. Every implementation module must be **buildable
+  with this toolchain**, and it is **strongly recommended** that each
+  module reuses the same toolchain definition locally instead of
+  maintaining its own. The supported platforms together with their
+  official toolchains shall be **properly documented** so that every
+  module owner can refer to a single authoritative source.
 - Create and fully complete the Module Verification Report for every
   module. All findings shall be documented as tickets assigned to a
   milestone less than or equal to ``v1.0``, with the corresponding
