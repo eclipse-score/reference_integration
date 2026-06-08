@@ -66,7 +66,12 @@ Qualifiable State
 -----------------
 
 All modules follow the S-CORE process and use S-CORE tools for
-artifact generation across the following process areas: **Requirements Engineering**, **Architecture Design**, **Implementation**, **Verification**.
+artifact generation across the following process areas: **Requirements Engineering**, **Architecture Design**, **Implementation**, **Verification**, **Safety Analysis**, and **Safety Management**.
+
+Safety Management is mandatory because it produces the safety manuals
+and the safety (release) package required for qualification; Safety
+Analysis is mandatory to identify and mitigate safety hazards on the
+development side.
 
 Management
 ^^^^^^^^^^
@@ -81,7 +86,7 @@ Management
       Manage the common platform, its modules and integration.
 
    .. grid-item-card:: `Safety Management <https://eclipse-score.github.io/process_description/main/process_areas/safety_management/index.html>`__
-      :class-card: card-pa-grey
+      :class-card: card-pa-highlight
 
       Plan and oversee safety activities across the project lifecycle.
 
