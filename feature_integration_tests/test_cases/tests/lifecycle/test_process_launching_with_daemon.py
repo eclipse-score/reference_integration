@@ -230,13 +230,12 @@ class TestProcessLaunchingWithDaemon:
             else:
                 logs = daemon.get_logs()
                 recovery_signals = [
-                    f"unexpected termination of process" ,
+                    f"unexpected termination of process",
                     "Activating Recovery state.",
                     f"Got kRunning timeout for process",
                 ]
                 assert any(signal in logs for signal in recovery_signals), (
-                    f"Supervised app {app_name} not running and no recovery diagnostics found."
-                    f"\nDaemon logs:\n{logs}"
+                    f"Supervised app {app_name} not running and no recovery diagnostics found.\nDaemon logs:\n{logs}"
                 )
 
         except subprocess.CalledProcessError as e:

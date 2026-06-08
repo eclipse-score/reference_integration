@@ -134,19 +134,12 @@ def get_binary_path(target: str, version: str = "rust") -> Path:
     if build_res.returncode != 0:
         stderr_tail = "\n".join(build_res.stderr.strip().splitlines()[-20:])
         raise RuntimeError(
-            "Failed to build target "
-            f"{target!r} with --config={bazel_config}.\n"
-            f"stderr (last lines):\n{stderr_tail}"
+            f"Failed to build target {target!r} with --config={bazel_config}.\nstderr (last lines):\n{stderr_tail}"
         )
 
-    ws_info_res = subprocess.run(
-        ["bazel", "info", "workspace"], capture_output=True, text=True, check=False
-    )
+    ws_info_res = subprocess.run(["bazel", "info", "workspace"], capture_output=True, text=True, check=False)
     if ws_info_res.returncode != 0:
-        raise RuntimeError(
-            "Failed to resolve Bazel workspace path.\n"
-            f"stderr:\n{ws_info_res.stderr.strip()}"
-        )
+        raise RuntimeError(f"Failed to resolve Bazel workspace path.\nstderr:\n{ws_info_res.stderr.strip()}")
 
     cquery_cmd = [
         "bazel",
@@ -159,8 +152,7 @@ def get_binary_path(target: str, version: str = "rust") -> Path:
     cquery_res = subprocess.run(cquery_cmd, capture_output=True, text=True, check=False)
     if cquery_res.returncode != 0:
         raise RuntimeError(
-            "Failed to locate built executable with Bazel cquery.\n"
-            f"stderr:\n{cquery_res.stderr.strip()}"
+            f"Failed to locate built executable with Bazel cquery.\nstderr:\n{cquery_res.stderr.strip()}"
         )
 
     ws_path = Path(ws_info_res.stdout.strip())
@@ -191,9 +183,7 @@ def copy_flatbuffer_daemon_configs(etc_dir: Path) -> None:
             f"stderr (last lines):\n{stderr_tail}"
         )
 
-    ws_info_res = subprocess.run(
-        ["bazel", "info", "workspace"], capture_output=True, text=True, check=False
-    )
+    ws_info_res = subprocess.run(["bazel", "info", "workspace"], capture_output=True, text=True, check=False)
     if ws_info_res.returncode != 0:
         raise RuntimeError(
             "Failed to resolve Bazel workspace path while locating flatbuffer configs.\n"
@@ -286,9 +276,7 @@ class LaunchManagerDaemon:
             log_content = self.log_file.read_text() if self.log_file.exists() else "No logs available"
             self._close_log_fd()
             self.process = None
-            raise RuntimeError(
-                f"Launch Manager daemon failed to start. Exit code: {return_code}\nLogs:\n{log_content}"
-            )
+            raise RuntimeError(f"Launch Manager daemon failed to start. Exit code: {return_code}\nLogs:\n{log_content}")
 
     def stop(self, shutdown_timeout: float = 5.0) -> None:
         """

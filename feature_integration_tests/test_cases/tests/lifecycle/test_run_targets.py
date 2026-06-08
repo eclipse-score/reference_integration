@@ -94,10 +94,9 @@ class TestRunTargets(LifecycleScenario):
         assert results.return_code == ResultCode.SUCCESS
 
         if version == "cpp":
-            assert (
-                "Switching from startup to running" in results.stdout
-                or "Switching run targets" in results.stdout
-            ), "Run target switch failed"
+            assert "Switching from startup to running" in results.stdout or "Switching run targets" in results.stdout, (
+                "Run target switch failed"
+            )
         else:
             switch_logs = logs_info_level.get_logs(field="message", pattern="Switching run targets")
             assert len(switch_logs) > 0, "Run target switch failed"

@@ -66,10 +66,7 @@ def pytest_addoption(parser):
         "--bazel-config",
         type=str,
         default=os.environ.get("FIT_BAZEL_CONFIG", "linux-x86_64"),
-        help=(
-            "Bazel config used when --build-scenarios is enabled "
-            '(default: env FIT_BAZEL_CONFIG or "linux-x86_64").'
-        ),
+        help=('Bazel config used when --build-scenarios is enabled (default: env FIT_BAZEL_CONFIG or "linux-x86_64").'),
     )
     parser.addoption(
         "--default-execution-timeout",
