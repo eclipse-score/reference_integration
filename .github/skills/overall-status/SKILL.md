@@ -124,6 +124,12 @@ contributes `(1, 1)` if `:status: valid`, else `(0, 1)`. Files without any
 LOC counts every line in source files (`.cpp .h .c .rs .py`) outside `docs/`,
 `third_party/`, and `bazel-*/`, then rounds to the nearest 100. Format:
 
+> **Method.** The per-cell tracker uses the **same byte-÷-30 approximation**
+> as the SVG charts (`sum(blob.size for path in tree if is_src(path)) / 30`,
+> see §6a.2). The `is_src` filter in §6a.2 is authoritative for what counts
+> as a source file (extensions and the `docs/`, `third_party/`, `bazel-*/`
+> exclusions). Expect ±10 % vs. `cloc` (see §7).
+
 ```rst
    - ✅ Available (~12,500 LOC) `<repo-name> <https://github.com/eclipse-score/<repo-name>>`__
 ```
@@ -151,7 +157,7 @@ The link label MUST be the bare repository name (e.g. `baselibs`,
 | **PA5** Unit Tests | repo has `_test.cpp` / `_test.py` / `tests/` | — | none |
 | **PA5** C0/C1 Coverage | C0 = C1 = 100 % | data exists (any %) | not in `reference_integration` CI |
 | **PA5** Comp. Integration Tests | tests in module's own repo | — | none |
-e| **PA5** Static Analysis | zero-tolerance per-module CI workflow passes on `main` (clang-tidy / Clippy) | tools configured but no CI enforcement | no static-analysis config | _no link_ — Static cells render the **status only**, no source-code link. Same convention as Dynamic Analysis (§4.2). |
+| **PA5** Static Analysis | zero-tolerance per-module CI workflow passes on `main` (clang-tidy / Clippy) | tools configured but no CI enforcement | no static-analysis config | _no link_ — Static cells render the **status only**, no source-code link. Same convention as Dynamic Analysis (§4.2). |
 | **PA5** Dynamic Analysis | zero-tolerance sanitizer CI passes on `main` | — | no sanitizer CI |
 | **PA5** Module Ver. Report | `verification/module_verification_report.rst` `:status: valid` and contains data | `:status: draft` | absent or template only |
 | **PA5** Platform Ver. Report | _no column_ — the platform verification report exists **once** for the entire platform; do not render it as a per-module column. Add it as a **bold one-liner immediately after the PA5 table** (see §5.2). | | |
@@ -193,15 +199,22 @@ across all FRs for that module (so a module with at least one Accepted FR
 still shows ✅ in summaries).
 
 ```python
-# 1. List feature requests via the issue label (incl. milestone)
+# 1. List feature requests via the issue label (incl. milestone).
+#    `--paginate` must be a separate CLI flag — embedding it in the URL
+#    string sends it as a query parameter and silently truncates results
+#    at 100 issues.
 def fetch_frs():
-    s = gh_raw(
-        "repos/eclipse-score/score/issues?state=all"
-        "&labels=feature_request&per_page=100 --paginate",
-        '.[] | [(.number|tostring), .title,'
-        ' ((.labels // []) | map(.name) | join(",")),'
-        ' ((.milestone.title // ""))] | @tsv')
-    return [tuple(line.split("\t")) for line in s.splitlines() if line]
+    out = subprocess.run(
+        ["gh", "api", "--paginate",
+         "repos/eclipse-score/score/issues?state=all"
+         "&labels=feature_request&per_page=100",
+         "--jq",
+         '.[] | [(.number|tostring), .title,'
+         ' ((.labels // []) | map(.name) | join(",")),'
+         ' ((.milestone.title // ""))] | @tsv'],
+        capture_output=True, text=True, timeout=120)
+    assert out.returncode == 0, f"gh api failed: {out.stderr}"
+    return [tuple(line.split("\t")) for line in out.stdout.splitlines() if line]
 
 def in_scope(milestone: str) -> bool:
     s = milestone.lower().replace(" ", "")
@@ -280,6 +293,8 @@ KW_FALLBACK = {
     "Communication": ["ipc", "streaming", "record and replay"],
     "Logging":   ["logging"],
     "Persistency": ["persistency", " kvs"],
+    # Leading space is intentional: avoids matching "runtime", "realtime",
+    # "datetime" etc. Do NOT "fix" by stripping it.
     "Time":      [" time"],
     "Some/IP":   ["some/ip", "someip", "some_ip"],
     "Diagnostic Services": ["diagnos"],
@@ -410,10 +425,11 @@ Process Area 2 — Requirements Engineering
 -----------------------------------------
 ```
 
-Required labels: `overall_status_pa2`, `overall_status_pa3`,
-`overall_status_pa4`, `overall_status_pa5`. Omitting any of them
-produces six Sphinx `WARNING: undefined label` messages from the PI
-release-gate pages — a clean build is the success criterion.
+Required labels: `overall_status_pa1`, `overall_status_pa2`,
+`overall_status_pa3`, `overall_status_pa4`, `overall_status_pa5`.
+Omitting any of them produces Sphinx `WARNING: undefined label`
+messages from the PI release-gate pages — a clean build is the
+success criterion.
 
 ### 5.1 Cell layout
 
@@ -625,7 +641,7 @@ Hard rules:
   `compact-overview-table`, fluid 33% per column, `!important` img override).
   Do not add explicit pixel sizes.
 
-### 5.4 Rollout status row
+### 5.5 Rollout status row
 
 Directly above the module tracker table, render a **single-line row** with
 a label, percentage, an inline progress bar and a detail text. This
