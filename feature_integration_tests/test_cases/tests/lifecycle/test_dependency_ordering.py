@@ -79,7 +79,7 @@ class TestDependencyOrdering(LifecycleScenario):
             # Verify each checkpoint was reported in order
             for i in range(4):
                 checkpoint_logs = logs_info_level.get_logs(
-                    field="message", pattern=f"Reported checkpoint init_step_{i} in sequence"
+                    field="message", pattern=f"Simulated checkpoint init_step_{i} in sequence"
                 )
                 assert len(checkpoint_logs) > 0, f"Checkpoint init_step_{i} was not reported"
 
@@ -105,6 +105,6 @@ class TestDependencyOrdering(LifecycleScenario):
             assert len(init_logs) > 0, "Health monitor not initialized"
 
             completion_logs = logs_info_level.get_logs(
-                field="message", value="All checkpoints reported in correct sequential order"
+                field="message", value="All checkpoints simulated in correct sequential order"
             )
             assert len(completion_logs) > 0, "No confirmation of sequential checkpoint reporting"

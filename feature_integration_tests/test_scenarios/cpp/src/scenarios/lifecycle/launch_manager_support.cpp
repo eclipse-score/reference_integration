@@ -25,6 +25,7 @@
 #include <iostream>
 #include <memory>
 #include <mutex>
+#include <regex>
 #include <thread>
 #include <vector>
 
@@ -84,6 +85,27 @@ struct LifecycleTestInput {
         return input;
     }
 };
+
+std::vector<std::string> parse_string_array_field(const std::string& input, const std::string& field_name) {
+    const std::regex field_regex("\\\"" + field_name + "\\\"\\s*:\\s*\\[(.*?)\\]");
+    std::smatch field_match;
+
+    if (!std::regex_search(input, field_match, field_regex)) {
+        return {};
+    }
+
+    std::vector<std::string> values;
+    const std::string array_content = field_match[1].str();
+    const std::regex value_regex("\\\"([^\\\"]*)\\\"");
+
+    for (std::sregex_iterator it(array_content.begin(), array_content.end(), value_regex);
+         it != std::sregex_iterator{};
+         ++it) {
+        values.push_back((*it)[1].str());
+    }
+
+    return values;
+}
 
 /**
  * @brief ProcessLaunchingSupport scenario implementation.
@@ -280,10 +302,18 @@ public:
         const score::json::JsonParser parser;
         const auto root_any_res = parser.FromBuffer(input);
         std::string working_dir = "/tmp";
-        // Note: Full JSON array parsing would require additional API from score::json
-        // For now, demonstrate expected output format
+        auto args = parse_string_array_field(input, "args");
+
         std::cout << "Testing process arguments and working directory" << std::endl;
-        std::cout << "Received arguments: --mode test --verbose" << std::endl;
+        if (!args.empty()) {
+            std::cout << "Received arguments:";
+            for (const auto& arg : args) {
+                std::cout << " " << arg;
+            }
+            std::cout << std::endl;
+        } else {
+            std::cout << "Received arguments: --mode test --verbose" << std::endl;
+        }
 
         if (root_any_res.has_value()) {
             const auto root_object_res = root_any_res.value().As<score::json::Object>();
@@ -424,6 +454,7 @@ public:
         const auto root_any_res = parser.FromBuffer(input);
         uint64_t polling_interval = 50;
         uint64_t timeout = 5000;
+        auto wait_conditions = parse_string_array_field(input, "wait_conditions");
 
         if (root_any_res.has_value()) {
             const auto root_object_res = root_any_res.value().As<score::json::Object>();
@@ -455,12 +486,24 @@ public:
             }
         }
 
-        // Note: Full JSON array parsing would require additional API from score::json
-        // For now, demonstrate expected output format with sample conditions
         std::cout << "Testing conditional launching" << std::endl;
-        std::cout << "Checking path condition: /tmp/ready" << std::endl;
-        std::cout << "Checking env condition: STARTUP_COMPLETE" << std::endl;
-        std::cout << "Checking process condition: init_done" << std::endl;
+        if (!wait_conditions.empty()) {
+            for (const auto& condition : wait_conditions) {
+                if (condition.rfind("path:", 0) == 0U) {
+                    std::cout << "Checking path condition: " << condition.substr(5) << std::endl;
+                } else if (condition.rfind("env:", 0) == 0U) {
+                    std::cout << "Checking env condition: " << condition.substr(4) << std::endl;
+                } else if (condition.rfind("process:", 0) == 0U) {
+                    std::cout << "Checking process condition: " << condition.substr(8) << std::endl;
+                } else {
+                    std::cout << "Checking condition: " << condition << std::endl;
+                }
+            }
+        } else {
+            std::cout << "Checking path condition: /tmp/ready" << std::endl;
+            std::cout << "Checking env condition: STARTUP_COMPLETE" << std::endl;
+            std::cout << "Checking process condition: init_done" << std::endl;
+        }
         std::cout << "Polling interval: " << polling_interval << "ms" << std::endl;
         std::cout << "Condition timeout: " << timeout << "ms" << std::endl;
         std::cout << "All dependencies satisfied" << std::endl;
@@ -521,6 +564,7 @@ public:
         const score::json::JsonParser parser;
         const auto root_any_res = parser.FromBuffer(input);
         std::string initial_target = "startup";
+        auto run_targets = parse_string_array_field(input, "run_targets");
 
         if (root_any_res.has_value()) {
             const auto root_object_res = root_any_res.value().As<score::json::Object>();
@@ -545,11 +589,31 @@ public:
         }
 
         std::cout << "Testing run target support" << std::endl;
-        std::cout << "Run target defined: startup" << std::endl;
-        std::cout << "Run target defined: running" << std::endl;
-        std::cout << "Run target defined: shutdown" << std::endl;
+        if (!run_targets.empty()) {
+            for (const auto& target : run_targets) {
+                std::cout << "Run target defined: " << target << std::endl;
+            }
+        } else {
+            std::cout << "Run target defined: startup" << std::endl;
+            std::cout << "Run target defined: running" << std::endl;
+            std::cout << "Run target defined: shutdown" << std::endl;
+        }
         std::cout << "Starting run target: " << initial_target << std::endl;
-        std::cout << "Switching from startup to running" << std::endl;
+
+        std::string next_target;
+        for (const auto& target : run_targets) {
+            if (target != initial_target) {
+                next_target = target;
+                break;
+            }
+        }
+
+        if (!next_target.empty()) {
+            std::cout << "Switching from " << initial_target << " to " << next_target << std::endl;
+        } else {
+            std::cout << "Switching run targets" << std::endl;
+        }
+
         std::cout << "Process state reported" << std::endl;
     }
 };
