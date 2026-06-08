@@ -22,6 +22,15 @@ Lifecycle · Security/Crypto · Diagnostic Services · NM · Some/IP
 
 Excluded: **Orchestrator** — never add a row for it.
 
+> **PA1-only modules: Diagnostic Services and NM.** Both modules have a row in
+> every PA table for layout consistency, but only the PA1 column carries real
+> data: they are tracked via `feature_request` issues in `eclipse-score/score`
+> (see §4.0 keyword map). They have **no own repository** and **no
+> `known_good.json` key** yet, so §2 and the Step 4 path-filter table have no
+> rows for them and their PA2–PA5 cells render as `❌ Open` (zero directives,
+> zero files). They still contribute `0` to the per-PA progress charts
+> (§6a.2) and are excluded from the coverage weighted mean (§7).
+
 Five process areas, each with its own table:
 
 | PA | Title | sphinx-needs tag | Columns |
@@ -50,6 +59,10 @@ Each module has content in **`eclipse-score/score`** (feature-level) and in its
 | Lifecycle | `score_lifecycle_health` | `eclipse-score/lifecycle` (`docs/module/health_monitor/**`) | `docs/features/lifecycle/**` |
 | Security/Crypto | — | `eclipse-score/inc_security_crypto` | `docs/features/security_crypto/**` |
 | Some/IP | — | `eclipse-score/inc_someip_gateway` | `docs/features/communication/some_ip_gateway/**` |
+
+> **No row for Diagnostic Services or NM** — see §1. They are PA1-only;
+> PA2–PA5 cells render `❌ Open` until their own repos / `known_good.json`
+> keys exist, at which point a row must be added here **and** in Step 4.
 
 > `eclipse-score/score` itself is pinned under key **`score_platform`** in the
 > **`tooling`** section of `known_good.json` (not `target_sw`). Use the helper
@@ -157,10 +170,15 @@ The link label MUST be the bare repository name (e.g. `baselibs`,
 | **PA5** Unit Tests | repo has `_test.cpp` / `_test.py` / `tests/` | — | none |
 | **PA5** C0/C1 Coverage | C0 = C1 = 100 % | data exists (any %) | not in `reference_integration` CI |
 | **PA5** Comp. Integration Tests | tests in module's own repo | — | none |
-| **PA5** Static Analysis | zero-tolerance per-module CI workflow passes on `main` (clang-tidy / Clippy) | tools configured but no CI enforcement | no static-analysis config | _no link_ — Static cells render the **status only**, no source-code link. Same convention as Dynamic Analysis (§4.2). |
+| **PA5** Static Analysis | zero-tolerance per-module CI workflow passes on `main` (clang-tidy / Clippy) | tools configured but no CI enforcement | no static-analysis config |
 | **PA5** Dynamic Analysis | zero-tolerance sanitizer CI passes on `main` | — | no sanitizer CI |
 | **PA5** Module Ver. Report | `verification/module_verification_report.rst` `:status: valid` and contains data | `:status: draft` | absent or template only |
 | **PA5** Platform Ver. Report | _no column_ — the platform verification report exists **once** for the entire platform; do not render it as a per-module column. Add it as a **bold one-liner immediately after the PA5 table** (see §5.2). | | |
+
+> **Static / Dynamic Analysis cells render the status only, no source-code
+> link.** The PA5 link discipline of §5.2 does not apply to these two
+> columns: there is no canonical per-module artefact to point at (CI
+> workflows live in the org-wide `.github` repo, not per module).
 
 ### 4.0 PA1 — Feature Request issue lookup
 
