@@ -3,6 +3,10 @@
 Overall Status
 ==============
 
+.. important::
+
+   **Data collected on: 2026-06-02**
+
 .. note::
 
    This status overview is generated with AI assistance and is **not yet
