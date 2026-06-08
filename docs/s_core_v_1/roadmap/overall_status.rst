@@ -16,6 +16,8 @@ It is regenerated from live `eclipse-score` GitHub repositories pinned via
 ``known_good.json``.
 
 
+.. _overall_status_pa1:
+
 Process Area 1 — Change Management
 ----------------------------------
 
