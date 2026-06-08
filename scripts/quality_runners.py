@@ -339,10 +339,7 @@ def main() -> bool:
     pprint(coverage_summary, width=120)
 
     # Check all exit codes and return non-zero if any test or coverage extraction failed
-    return any(
-        result_ut["exit_code"] != 0 or result_cov["exit_code"] != 0
-        for result_ut, result_cov in zip(unit_tests_summary.values(), coverage_summary.values())
-    )
+    return any(r["exit_code"] != 0 for r in {**unit_tests_summary, **coverage_summary}.values())
 
 
 if __name__ == "__main__":

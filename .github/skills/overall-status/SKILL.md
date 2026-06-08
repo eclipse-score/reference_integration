@@ -807,13 +807,13 @@ def comp_req_cell(contents, *, trlc=False):
     for c in contents:
         v, t = count_directives_with_status(c, ('comp_req',)); cv+=v; ct+=t
         v, t = count_directives_with_status(c, ('aou_req',));  av+=v; at+=t
+    if ct == 0 and at == 0: return "❌ Open"
     parts = []
     if ct or trlc: parts.append(f"{cv}/{ct} comp_req" + (" [TRLC]" if trlc else ""))
     if at:         parts.append(f"{av}/{at} AoU")
-    if not parts:  return "❌ Open"
     body = " + ".join(parts)
     tot_v, tot_t = cv + av, ct + at
-    if tot_t == 0 or tot_v == tot_t: return f"✅ Available ({body})"
+    if tot_v == tot_t: return f"✅ Available ({body})"
     return f"🔄 {tot_v*100//tot_t}% ({body})"
 ```
 
@@ -885,7 +885,7 @@ Stop and investigate if:
 ### Step 6 — Write the RST
 
 Update each PA's module table and the **Rollout status** `raw:: html`
-block above it (see §5.4). Source links as in §5.2. Pie-chart row and the
+block above it (see §5.5). Source links as in §5.2. Pie-chart row and the
 `Process Status` rubric stay unchanged unless the sphinx-needs tag
 changes.
 
@@ -1040,8 +1040,8 @@ contribute 0.
 > Rationale: the charts visualise *scope growth* across releases, not
 > validation maturity. Drafts and invalids count.
 >
-> Practical consequence: use `count_directives(...)` (returns total only),
-> **never** `count_directives_with_status(...)` for chart numbers. This is
+> Practical consequence: use `count_directives_with_status(...)[1]` (returns total only),
+> **never** the full return value of `count_directives_with_status(...)` for chart numbers. This is
 > particularly important for Lifecycle, whose feature-level requirements
 > were largely `:status: draft` or `:status: invalid` in v0.5/v0.6 — a
 > valid-only counter would report 0 instead of ~92.
