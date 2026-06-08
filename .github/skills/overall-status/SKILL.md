@@ -907,6 +907,23 @@ block above it (see §5.5). Source links as in §5.2. Pie-chart row and the
 `Process Status` rubric stay unchanged unless the sphinx-needs tag
 changes.
 
+**Always update the data collection date** at the top of
+`docs/s_core_v_1/roadmap/overall_status.rst` to the date the refresh was
+performed (UTC, ISO format `YYYY-MM-DD`). The date lives in an
+`important` admonition directly below the page title:
+
+```rst
+Overall Status
+==============
+
+.. important::
+
+   **Data collected on: YYYY-MM-DD**
+```
+
+If the admonition is missing, add it. Never leave a stale date — every
+regeneration must bump it, even if no module values changed.
+
 ### Step 7 — Adding a new module
 
 1. Append to §1 module list and §2 repo table (with key + path filter).
