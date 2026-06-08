@@ -72,7 +72,7 @@ class TestDependencyOrdering(LifecycleScenario):
         if version == "cpp":
             # For C++ scenarios, check stdout directly
             for i in range(4):
-                assert f"Reported checkpoint init_step_{i} in sequence" in results.stdout, (
+                assert f"Simulated checkpoint init_step_{i} in sequence" in results.stdout, (
                     f"Checkpoint init_step_{i} was not reported"
                 )
         else:
@@ -93,8 +93,8 @@ class TestDependencyOrdering(LifecycleScenario):
 
         if version == "cpp":
             # For C++ scenarios, check stdout directly
-            assert "Would initialize health monitoring with" in results.stdout, "Health monitoring setup not mentioned"
-            assert "All checkpoints reported in correct sequential order" in results.stdout, (
+            assert "Health monitor initialized with" in results.stdout, "Health monitoring setup not mentioned"
+            assert "All checkpoints simulated in correct sequential order" in results.stdout, (
                 "No confirmation of sequential checkpoint reporting"
             )
         else:

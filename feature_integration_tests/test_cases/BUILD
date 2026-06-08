@@ -12,6 +12,7 @@
 # *******************************************************************************
 load("@pip_score_venv_test//:requirements.bzl", "all_requirements")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
+load("@score_lifecycle_health//:defs.bzl", "launch_manager_config")
 load("@score_tooling//python_basics:defs.bzl", "score_py_pytest")
 
 # In order to update the requirements, change the `requirements.txt` file and run:
@@ -32,6 +33,11 @@ compile_pip_requirements(
     tags = [
         "manual",
     ],
+)
+
+launch_manager_config(
+    name = "daemon_lifecycle_configs",
+    config = "//feature_integration_tests/test_cases/configs:daemon_launch_manager_config.json",
 )
 
 # Tests targets

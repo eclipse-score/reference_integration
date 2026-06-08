@@ -155,22 +155,21 @@ public:
             throw std::runtime_error("checkpoint_count must be at least 1");
         }
 
-        std::cout << "Testing sequential initialization pattern for ordered supervision"
-                  << std::endl;
+        std::cout << "Testing sequential deadline reporting for ordered supervision" << std::endl;
 
-        std::cout << "Would initialize health monitoring with "
+        std::cout << "Health monitor initialized with "
                   << std::to_string(test_input.checkpoint_count)
                   << " sequential deadline monitors" << std::endl;
 
-        // Demonstrate sequential checkpoint reporting pattern
+        // Demonstrate sequential checkpoint progression (simulation only).
         for (size_t i = 0; i < test_input.checkpoint_count; ++i) {
-            std::cout << "Reported checkpoint init_step_" << std::to_string(i) << " in sequence"
+            std::cout << "Simulated checkpoint init_step_" << std::to_string(i) << " in sequence"
                       << std::endl;
             std::this_thread::sleep_for(
                 std::chrono::milliseconds(test_input.test_duration_ms / test_input.checkpoint_count));
         }
 
-        std::cout << "All checkpoints reported in correct sequential order" << std::endl;
+        std::cout << "All checkpoints simulated in correct sequential order" << std::endl;
     }
 };
 

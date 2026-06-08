@@ -222,10 +222,22 @@ class TestProcessLaunchingWithDaemon:
                     print(f"App restarted with new PID: {new_pid}")
                     assert new_pid != pid, "PID should be different after restart"
                 else:
-                    # Recovery might be configured differently
-                    print("App not found after kill - check recovery configuration")
+                    logs = daemon.get_logs()
+                    pytest.fail(
+                        "Supervised app was not found after forced kill; expected daemon recovery restart."
+                        f"\nDaemon logs:\n{logs}"
+                    )
             else:
-                pytest.skip(f"Supervised app {app_name} not running - skipping recovery test")
+                logs = daemon.get_logs()
+                recovery_signals = [
+                    f"unexpected termination of process" ,
+                    "Activating Recovery state.",
+                    f"Got kRunning timeout for process",
+                ]
+                assert any(signal in logs for signal in recovery_signals), (
+                    f"Supervised app {app_name} not running and no recovery diagnostics found."
+                    f"\nDaemon logs:\n{logs}"
+                )
 
         except subprocess.CalledProcessError as e:
             pytest.fail(f"Failed to test recovery: {e}")
@@ -263,4 +275,17 @@ class TestHealthMonitoringWithDaemon:
         2. Verify daemon detects the failure
         3. Validate recovery action is triggered
         """
-        pytest.skip("Watchdog test requires custom test app - implement as needed")
+        daemon = launch_manager_daemon["daemon"]
+
+        # Give daemon enough time to perform supervision cycles and emit diagnostics.
+        time.sleep(2.0)
+        logs = daemon.get_logs()
+
+        watchdog_like_signals = [
+            "Got kRunning timeout for process",
+            "Problem discovered in PG MainPG Activating Recovery state.",
+            "unexpected termination of process",
+        ]
+        assert any(signal in logs for signal in watchdog_like_signals), (
+            "No supervision/watchdog-related diagnostics found in daemon logs."
+        )

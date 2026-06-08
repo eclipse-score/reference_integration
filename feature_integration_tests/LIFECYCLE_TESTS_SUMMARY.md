@@ -45,7 +45,7 @@ Tests run with an actual Launch Manager daemon instance. This validates:
 
 This test suite covers **85 of 92 lifecycle requirements** from the S-CORE Platform specification (**92% coverage**). The tests validate API integration patterns for both Rust and C++ implementations.
 
-> **Note**: All tests should be run using Bazel. Direct pytest execution is a work in progress.
+> **Note**: Tests can be executed with both Bazel and direct pytest. Bazel is recommended for CI; pytest is supported for local development and debugging.
 
 **Coverage by Category:**
 
@@ -440,6 +440,43 @@ bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_daem
 bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_daemon_cpp
 ```
 
+**Run lifecycle tests with pytest (local):**
+
+```bash
+# All lifecycle tests (Rust + C++)
+python3 -m pytest feature_integration_tests/test_cases/tests/lifecycle/ -q -v
+
+# Rust only
+python3 -m pytest feature_integration_tests/test_cases/tests/lifecycle/ -q -v -m rust
+
+# C++ only
+python3 -m pytest feature_integration_tests/test_cases/tests/lifecycle/ -q -v -m cpp
+```
+
+**Build scenario executables from pytest:**
+
+```bash
+# Build with default Bazel config (linux-x86_64)
+python3 -m pytest feature_integration_tests/test_cases/tests/lifecycle/ \
+  --build-scenarios \
+  --build-scenarios-timeout=600 \
+  -q -v
+
+# Build with explicit Bazel config
+python3 -m pytest feature_integration_tests/test_cases/tests/lifecycle/ \
+  --build-scenarios \
+  --bazel-config=linux-x86_64 \
+  --build-scenarios-timeout=600 \
+  -q -v
+
+# Or via environment override
+FIT_BAZEL_CONFIG=linux-x86_64 \
+python3 -m pytest feature_integration_tests/test_cases/tests/lifecycle/ \
+  --build-scenarios \
+  --build-scenarios-timeout=600 \
+  -q -v
+```
+
 ### Quick Start
 
 #### API Integration Tests (Fast, No Daemon Required)
@@ -472,6 +509,18 @@ bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_cpp 
   --test_filter="*test_process_launching*"
 ```
 
+**Using pytest (direct local run):**
+
+```bash
+# Full lifecycle API-mode set
+python3 -m pytest feature_integration_tests/test_cases/tests/lifecycle/ -q -v
+
+# Single file
+python3 -m pytest \
+  feature_integration_tests/test_cases/tests/lifecycle/test_process_launching.py \
+  -q -v
+```
+
 #### Daemon Integration Tests (End-to-End Validation)
 
 **Using Bazel:**
@@ -484,6 +533,21 @@ bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_daem
 # Show detailed test output
 bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_daemon_rust --test_output=all
 ```
+
+**Using pytest (direct local run):**
+
+```bash
+# Daemon integration file (Rust + C++)
+python3 -m pytest \
+  feature_integration_tests/test_cases/tests/lifecycle/test_process_launching_with_daemon.py \
+  -q -v
+```
+
+Local daemon fixture notes:
+
+- The fixture builds required binaries with Bazel using `--config=linux-x86_64` by default.
+- Override Bazel config with `FIT_BAZEL_CONFIG` when needed.
+- The fixture prepares required flatbuffer config binaries automatically.
 
 ### Understanding Build Configurations
 
@@ -600,6 +664,7 @@ When running daemon integration tests, the Launch Manager requires a configurati
   },
   "initial_run_target": "startup"
 }
+```
 
 ## Dependencies
 
@@ -625,12 +690,12 @@ When running daemon integration tests, the Launch Manager requires a configurati
 Potential areas for expansion:
 
 1. **Enhanced Daemon Integration**:
-   - ✅ Basic daemon fixture and test infrastructure
-   - ✅ Supervised application launching tests
-   - ⏳ Dynamic configuration updates via control interface
-   - ⏳ Comprehensive health monitoring validation
-   - ⏳ Multi-daemon distributed scenarios
-   - ⏳ Performance metrics collection (timing, resource usage)
+   - Basic daemon fixture and test infrastructure
+   - Supervised application launching tests
+   - Dynamic configuration updates via control interface
+   - Comprehensive health monitoring validation
+   - Multi-daemon distributed scenarios
+   - Performance metrics collection (timing, resource usage)
 
 2. **Additional Test Scenarios**:
    - Process termination and cleanup validation
@@ -667,4 +732,4 @@ Potential areas for expansion:
 
 ---
 
-**Summary**: This test suite covers 85 of 92 lifecycle requirements (92% coverage) and validates API integration patterns for both Rust and C++ implementations. Tests run with Bazel for both API integration mode (fast CI feedback) and daemon integration mode (comprehensive end-to-end validation). The dual-language implementation ensures both ecosystems have equal support and validates that lifecycle APIs work correctly across languages.
+**Summary**: This test suite covers 85 of 92 lifecycle requirements (92% coverage) and validates API integration patterns for both Rust and C++ implementations. Tests can run with Bazel (recommended for CI) and with direct pytest (recommended for local debugging) for both API integration and daemon integration modes. The dual-language implementation ensures both ecosystems have equal support and validates that lifecycle APIs work correctly across languages.

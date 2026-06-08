@@ -28,7 +28,6 @@ from pathlib import Path
 from typing import Any, TextIO
 
 import pytest
-from testing_utils import BazelTools
 
 
 def find_binary_in_runfiles(target_path: str) -> Path | None:
@@ -127,10 +126,101 @@ def get_binary_path(target: str, version: str = "rust") -> Path:
     if binary_path:
         return binary_path
 
-    # Fall back to building with BazelTools (when running pytest directly)
-    tools = BazelTools(option_prefix=version)
-    tools.build(target)
-    return tools.find_target_path(target)
+    # Fall back to a config-aware Bazel build (when running pytest directly).
+    # Local plain `bazel build` can fail for this target due to missing default flags.
+    bazel_config = os.environ.get("FIT_BAZEL_CONFIG", "linux-x86_64")
+    build_cmd = ["bazel", "build", f"--config={bazel_config}", target]
+    build_res = subprocess.run(build_cmd, capture_output=True, text=True, check=False)
+    if build_res.returncode != 0:
+        stderr_tail = "\n".join(build_res.stderr.strip().splitlines()[-20:])
+        raise RuntimeError(
+            "Failed to build target "
+            f"{target!r} with --config={bazel_config}.\n"
+            f"stderr (last lines):\n{stderr_tail}"
+        )
+
+    ws_info_res = subprocess.run(
+        ["bazel", "info", "workspace"], capture_output=True, text=True, check=False
+    )
+    if ws_info_res.returncode != 0:
+        raise RuntimeError(
+            "Failed to resolve Bazel workspace path.\n"
+            f"stderr:\n{ws_info_res.stderr.strip()}"
+        )
+
+    cquery_cmd = [
+        "bazel",
+        "cquery",
+        f"--config={bazel_config}",
+        "--output=starlark",
+        "--starlark:expr=target.files_to_run.executable.path",
+        target,
+    ]
+    cquery_res = subprocess.run(cquery_cmd, capture_output=True, text=True, check=False)
+    if cquery_res.returncode != 0:
+        raise RuntimeError(
+            "Failed to locate built executable with Bazel cquery.\n"
+            f"stderr:\n{cquery_res.stderr.strip()}"
+        )
+
+    ws_path = Path(ws_info_res.stdout.strip())
+    binary_path = ws_path / cquery_res.stdout.strip()
+    if not binary_path.is_file():
+        raise RuntimeError(f"Executable not found after build: {binary_path}")
+
+    return binary_path
+
+
+def copy_flatbuffer_daemon_configs(etc_dir: Path) -> None:
+    """
+    Populate `etc_dir` with Launch Manager flatbuffer config binaries.
+
+    The current Launch Manager daemon startup path expects flatbuffer files
+    (e.g., lm_demo.bin) in `etc/` relative to its working directory.
+    """
+    bazel_config = os.environ.get("FIT_BAZEL_CONFIG", "linux-x86_64")
+    config_target = "//feature_integration_tests/test_cases:daemon_lifecycle_configs"
+
+    build_cmd = ["bazel", "build", f"--config={bazel_config}", config_target]
+    build_res = subprocess.run(build_cmd, capture_output=True, text=True, check=False)
+    if build_res.returncode != 0:
+        stderr_tail = "\n".join(build_res.stderr.strip().splitlines()[-20:])
+        raise RuntimeError(
+            "Failed to build lifecycle flatbuffer configs "
+            f"from {config_target!r} with --config={bazel_config}.\n"
+            f"stderr (last lines):\n{stderr_tail}"
+        )
+
+    ws_info_res = subprocess.run(
+        ["bazel", "info", "workspace"], capture_output=True, text=True, check=False
+    )
+    if ws_info_res.returncode != 0:
+        raise RuntimeError(
+            "Failed to resolve Bazel workspace path while locating flatbuffer configs.\n"
+            f"stderr:\n{ws_info_res.stderr.strip()}"
+        )
+
+    cquery_cmd = [
+        "bazel",
+        "cquery",
+        f"--config={bazel_config}",
+        "--output=starlark",
+        "--starlark:expr=target.files.to_list()[0].path",
+        config_target,
+    ]
+    cquery_res = subprocess.run(cquery_cmd, capture_output=True, text=True, check=False)
+    if cquery_res.returncode != 0:
+        raise RuntimeError(
+            "Failed to locate generated flatbuffer config directory with Bazel cquery.\n"
+            f"stderr:\n{cquery_res.stderr.strip()}"
+        )
+
+    flatbuffer_dir = Path(ws_info_res.stdout.strip()) / cquery_res.stdout.strip().strip('"')
+    if not flatbuffer_dir.is_dir():
+        raise RuntimeError(f"Generated flatbuffer config directory not found: {flatbuffer_dir}")
+
+    for flatbuffer_file in flatbuffer_dir.glob("*.bin"):
+        shutil.copy2(flatbuffer_file, etc_dir / flatbuffer_file.name)
 
 
 class LaunchManagerDaemon:
@@ -314,6 +404,17 @@ def launch_manager_daemon(
     shutil.copy2(daemon_binary, daemon_path)
     daemon_path.chmod(0o755)
 
+    # Preload binaries referenced by the generated daemon config run target.
+    for app_target, app_name in [
+        ("@score_lifecycle_health//examples/rust_supervised_app:rust_supervised_app", "rust_supervised_app"),
+        ("@score_lifecycle_health//examples/cpp_supervised_app:cpp_supervised_app", "cpp_supervised_app"),
+        ("@score_lifecycle_health//examples/control_application:control_daemon", "control_daemon"),
+    ]:
+        app_binary = get_binary_path(app_target, version)
+        app_dest = bin_dir / app_name
+        shutil.copy2(app_binary, app_dest)
+        app_dest.chmod(0o755)
+
     # Create minimal launch manager configuration
     config = {
         "schema_version": 1,
@@ -348,7 +449,6 @@ def launch_manager_daemon(
                 "transition_timeout": 10,
                 "recovery_action": {"switch_run_target": {"run_target": "fallback"}},
             },
-            "alive_supervision": {"evaluation_cycle": 0.5},
         },
         "components": {},  # Tests will add components dynamically
         "run_targets": {
@@ -356,10 +456,15 @@ def launch_manager_daemon(
             "fallback": {"description": "Fallback state", "depends_on": [], "transition_timeout": 1.5},
         },
         "initial_run_target": "startup",
+        "fallback_run_target": {"description": "Fallback state", "depends_on": [], "transition_timeout": 1.5},
     }
 
     config_file = etc_dir / "launch_manager_config.json"
     config_file.write_text(json.dumps(config, indent=2))
+
+    # Launch Manager daemon currently consumes flatbuffer config binaries from
+    # `etc/` (e.g., lm_demo.bin), so populate them before startup.
+    copy_flatbuffer_daemon_configs(etc_dir)
 
     # Start the daemon
     daemon = LaunchManagerDaemon(daemon_path, config_file, work_dir)
