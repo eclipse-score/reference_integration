@@ -1,6 +1,9 @@
 {
     "name": "eclipse-s-core",
     "image": "ghcr.io/eclipse-score/devcontainer:v1.3.0",
+    "mounts": [
+        "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+    ],
     "postCreateCommand": "bash .devcontainer/prepare_workspace.sh",
     "postStartCommand": "ssh-keygen -f '/home/vscode/.ssh/known_hosts' -R '[localhost]:2222' || true"
 }
