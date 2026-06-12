@@ -1,0 +1,21 @@
+{
+    "name": "Logging example",
+    "description": "Example demonstrating logging integration across camera, perception, and vehicle control pipeline services",
+   "apps": [
+    {
+  "path": "/bin/sh",
+  "args": [
+    "-c",
+    "cd /usr/bin/datarouter && ./datarouter --no_adaptive_runtime >/dev/null 2>&1 & sleep 2"
+  ],
+  "env":{}
+},
+    {
+      "path": "/showcases/bin/logging_example",
+      "args": [],
+      "env": {
+        "MW_LOG_CONFIG_FILE": "/showcases/data/logging/etc/logging.json"
+      }
+    }
+  ]
+}

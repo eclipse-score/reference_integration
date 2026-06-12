@@ -10,17 +10,32 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+
 load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
 
-score_pkg_bundle(
-    name = "showcases",
-    bins = ["//showcases/cli"],
-    other_package_files = [
-        "//showcases/standalone:comm_pkg_files",
-        "//showcases/standalone:kyron_pkg_files",
-        "//showcases/logging:logging_pkg_files",
-        "//showcases/orchestration_persistency:orch_per_pkg_files",
-        "//showcases/simple_lifecycle:simple_lifecycle_pkg_files",
+cc_binary(
+    name = "logging_example",
+    srcs = ["main.cpp"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "@score_logging//score/mw/log:log",
+        "@score_logging//score/mw/log/backend:remote",
     ],
-    package_dir = "showcases",
 )
+
+score_pkg_bundle(
+    name = "logging",
+    bins = [
+        ":logging_example",
+    ],
+      config_data = [
+        "logging.score.json",
+
+    ],
+
+    custom_layout = {
+        "//showcases/logging:config/logging.json": "etc/logging.json",
+    },
+    
+)
+
