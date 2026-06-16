@@ -18,7 +18,7 @@ cc_binary(
     srcs = ["main.cpp"],
     visibility = ["//visibility:public"],
     deps = [
-        "@score_logging//score/mw/log:log",
+        "@score_logging//score/mw/log",
         "@score_logging//score/mw/log/backend:remote",
     ],
 )
@@ -28,14 +28,10 @@ score_pkg_bundle(
     bins = [
         ":logging_example",
     ],
-      config_data = [
+    config_data = [
         "logging.score.json",
-
     ],
-
     custom_layout = {
         "//showcases/logging:config/logging.json": "etc/logging.json",
     },
-    
 )
-
