@@ -42,6 +42,14 @@ setup_starpls(
 )
 
 # Copyright check
+#
+# NOTE: CI enforces copyright headers via the pre-commit `copyright` hook
+# (see //.pre-commit-config.yaml and .github/workflows/copyright.yml), not this
+# Bazel target. `bazel run //:copyright.check` currently fails to analyze because
+# its "docs" src pulls in the docs() -> needs_json graph, which references
+# @score_process/@score_platform; those are dev_dependencies in the score modules
+# and so are not visible when reference_integration aggregates them.
+# Tracked in https://github.com/eclipse-score/reference_integration/issues/166.
 copyright_checker(
     name = "copyright",
     srcs = [
