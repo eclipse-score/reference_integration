@@ -516,11 +516,12 @@
                   
   <section id="step-8-code-quality">
 <h1><span class="section-number">8. </span>Step 8 — Code quality<a class="headerlink" href="#step-8-code-quality" title="Link to this heading">#</a></h1>
-<blockquote>
-<div><p><strong>What this unlocks:</strong> your module’s source is <strong>statically analysed and
-style-checked</strong> on every pull request, on top of the unit, component and
-integration tests of the previous steps.</p>
-</div></blockquote>
+<div class="tip admonition">
+<p class="admonition-title">What it unlocks</p>
+<p><strong>Static analysis &amp; style checks</strong> — Your module’s source is <strong>statically
+analysed and style-checked</strong> on every pull request, on top of the unit,
+component and integration tests of the previous steps.</p>
+</div>
 <p>The integration runs several language-specific code-quality checks. They operate
 on <code class="docutils literal notranslate"><span class="pre">//...</span></code> (or on the pinned module checkouts), so they pick up your module
 automatically once it is in the graph — there is nothing module-specific to wire
@@ -529,7 +530,7 @@ in.</p>
 <h2><span class="section-number">8.1. </span>What runs today<a class="headerlink" href="#what-runs-today" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p><strong>Formatting checks</strong> (all languages) —
-<a class="reference external" href="../../.github/workflows/format.yml">format.yml</a> runs the shared S-CORE
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/format.yml">format.yml</a> runs the shared S-CORE
 formatter (a reusable workflow from
 <a class="reference external" href="https://github.com/eclipse-score/cicd-workflows">cicd-workflows</a>) and fails
 if any file is not formatted. Reproduce / fix locally by running the format
@@ -537,7 +538,7 @@ targets before pushing.</p></li>
 <li><p><strong>Bazel Clippy</strong> (Rust) — Rust static analysis runs through the <code class="docutils literal notranslate"><span class="pre">rules_rust</span></code>
 Clippy aspect over the Rust targets, flagging lint violations as build errors.</p></li>
 <li><p><strong>CodeQL multi-repo scan</strong> (C++) —
-<a class="reference external" href="../../.github/workflows/codeql-multiple-repo-scan.yml">codeql-multiple-repo-scan.yml</a>
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/codeql-multiple-repo-scan.yml">codeql-multiple-repo-scan.yml</a>
 checks out every module pinned in <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> and runs CodeQL with the
 <strong>MISRA C++ coding standards</strong> pack across all of them.</p></li>
 </ul>

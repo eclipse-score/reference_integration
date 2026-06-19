@@ -516,15 +516,25 @@
                   
   <section id="step-7-add-coverage-and-verification-reports">
 <span id="reporting"></span><h1><span class="section-number">7. </span>Step 7 — Add coverage and verification reports<a class="headerlink" href="#step-7-add-coverage-and-verification-reports" title="Link to this heading">#</a></h1>
-<blockquote>
-<div><p><strong>What this unlocks:</strong> your module shows up in the <strong>consolidated coverage and
-verification / status reports</strong> that are published alongside the docs — the
-evidence side of the integration.</p>
-</div></blockquote>
+<div class="tip admonition">
+<p class="admonition-title">What it unlocks</p>
+<p><strong>Consolidated reports</strong> — Your module shows up in the <strong>consolidated
+coverage and verification / status reports</strong> that are published alongside the
+docs — the evidence side of the integration.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>No extra action is required here.</strong> As already explained in
+<a class="reference internal" href="step_3_unit_tests.html"><span class="doc">Step 3</span></a>, the <code class="docutils literal notranslate"><span class="pre">test_and_docs</span></code> workflow already
+executes your module’s unit tests and gathers and publishes the code-coverage
+data. If your module passes Step 3, it is automatically part of the reports
+described below — this chapter only explains <em>how</em> that collection,
+aggregation and publishing happens.</p>
+</div>
 <section id="how-coverage-is-collected">
 <h2><span class="section-number">7.1. </span>How coverage is collected<a class="headerlink" href="#how-coverage-is-collected" title="Link to this heading">#</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">test_and_docs</span></code> workflow runs
-<a class="reference external" href="../../scripts/quality_runners.py">scripts/quality_runners.py</a>, which iterates
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/scripts/quality_runners.py">scripts/quality_runners.py</a>, which iterates
 over <strong>every</strong> module under <code class="docutils literal notranslate"><span class="pre">modules.target_sw</span></code> in <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> and, per
 module, runs its unit tests with coverage (<code class="docutils literal notranslate"><span class="pre">bazel</span> <span class="pre">coverage</span></code>) and then extracts
 a per-language summary. The driver is the module’s <code class="docutils literal notranslate"><span class="pre">metadata.langs</span></code>:</p>
@@ -533,9 +543,9 @@ a per-language summary. The driver is the module’s <code class="docutils liter
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;rust&quot;</span></code> → a Rust coverage run.</p></li>
 </ul>
 <p>Both write into the two consolidated reports
-<a class="reference external" href="../../docs/verification_report/unit_test_summary.md">docs/verification_report/unit_test_summary.md</a>
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/docs/verification_report/unit_test_summary.md">docs/verification_report/unit_test_summary.md</a>
 and
-<a class="reference external" href="../../docs/verification_report/coverage_summary.md">docs/verification_report/coverage_summary.md</a>.
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/docs/verification_report/coverage_summary.md">docs/verification_report/coverage_summary.md</a>.
 The same scoping metadata applies to both languages:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">metadata.code_root_path</span></code> — the target pattern that is instrumented and
@@ -553,12 +563,12 @@ output per module and <strong>exports the results</strong> in three forms:</p>
 <ul class="simple">
 <li><p><strong>Markdown summaries committed into the docs.</strong> A unit-test execution table
 and a coverage table are written to
-<a class="reference external" href="../../docs/verification_report/unit_test_summary.md">docs/verification_report/unit_test_summary.md</a>
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/docs/verification_report/unit_test_summary.md">docs/verification_report/unit_test_summary.md</a>
 (columns: module, passed, failed, skipped, total) and
-<a class="reference external" href="../../docs/verification_report/coverage_summary.md">docs/verification_report/coverage_summary.md</a>
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/docs/verification_report/coverage_summary.md">docs/verification_report/coverage_summary.md</a>
 (columns: module, lines, functions, branches). These two files are pulled into
 the published documentation by
-<a class="reference external" href="../../docs/verification_report/platform_verification_report.rst">docs/verification_report/platform_verification_report.rst</a>,
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/docs/verification_report/platform_verification_report.rst">docs/verification_report/platform_verification_report.rst</a>,
 so every module’s unit-test and coverage numbers appear in the
 <strong>Platform Verification Report</strong> on the docs site.</p></li>
 <li><p><strong>Detailed HTML coverage reports.</strong> The per-module <code class="docutils literal notranslate"><span class="pre">genhtml</span></code> / Rust coverage
@@ -595,7 +605,7 @@ points at the instrumented source root.</p></li>
 <h2><span class="section-number">7.4. </span>Rust coverage<a class="headerlink" href="#rust-coverage" title="Link to this heading">#</a></h2>
 <p>If your module declares <code class="docutils literal notranslate"><span class="pre">rust</span></code> in <code class="docutils literal notranslate"><span class="pre">metadata.langs</span></code>, the
 <code class="docutils literal notranslate"><span class="pre">rust_coverage_report</span></code> target is generated automatically into
-<a class="reference external" href="../../rust_coverage/BUILD">rust_coverage/BUILD</a> by step 1.2 — no manual action
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/rust_coverage/BUILD">rust_coverage/BUILD</a> by step 1.2 — no manual action
 is needed. Tune <code class="docutils literal notranslate"><span class="pre">metadata.exclude_test_targets</span></code> and
 <code class="docutils literal notranslate"><span class="pre">metadata.rust_coverage_config</span></code> in <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> to control what is
 measured. Build a single module’s report with:</p>
@@ -606,9 +616,9 @@ measured. Build a single module’s report with:</p>
 <section id="verification-status-reports">
 <h2><span class="section-number">7.5. </span>Verification &amp; status reports<a class="headerlink" href="#verification-status-reports" title="Link to this heading">#</a></h2>
 <p>The consolidated reports live under
-<a class="reference external" href="../../docs/verification_report">docs/verification_report</a> and the roadmap /
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/docs/verification_report">docs/verification_report</a> and the roadmap /
 status trackers under
-<a class="reference external" href="../../docs/s_core_v_1/roadmap">docs/s_core_v_1/roadmap</a> (e.g.
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/docs/s_core_v_1/roadmap">docs/s_core_v_1/roadmap</a> (e.g.
 <code class="docutils literal notranslate"><span class="pre">overall_status.rst</span></code>). Add your module to the relevant tables/rows so it shows
 up in the platform verification report and the feature/process status overview.
 The full catalogue of reports is under <a class="reference internal" href="reference.html#reports"><span class="std std-ref">Reports</span></a>.</p>

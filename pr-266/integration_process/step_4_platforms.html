@@ -516,16 +516,19 @@
                   
   <section id="step-4-get-built-and-tested-on-the-target-platforms">
 <h1><span class="section-number">4. </span>Step 4 — Get built and tested on the target platforms<a class="headerlink" href="#step-4-get-built-and-tested-on-the-target-platforms" title="Link to this heading">#</a></h1>
-<blockquote>
-<div><p><strong>What this unlocks:</strong> your module is actually <strong>compiled and tested by the
-pipelines</strong> — built for and deployed to every target platform (Linux x86_64,
-QNX, AutoSD, EBcLfSA aarch64), offered in the interactive CLI, and exercised
-by CI. This is the rung that turns a library into something that <em>runs</em> inside
-the integration images.</p>
-</div></blockquote>
-<p>The integration ships four target images, each built and tested by its own
-gating CI job. The table lists the platforms, the image target, the runner used
-to execute it, and the per-platform CI check.</p>
+<div class="tip admonition">
+<p class="admonition-title">What it unlocks</p>
+<p><strong>Target-platform builds &amp; tests</strong> — Your module is actually <strong>compiled and
+tested by the pipelines</strong> — built for and deployed to every target platform
+(Linux x86_64, QNX, AutoSD, EBcLfSA aarch64), offered in the interactive CLI,
+and exercised by CI. This is the rung that turns a library into something
+that <em>runs</em> inside the integration images.</p>
+</div>
+<p>The integration provides build definitions for four target images, each built
+and tested by its own gating CI job — it does not distribute ready-to-flash
+images; you build them yourself from these definitions. The table lists the
+platforms, the image target, the runner used to execute it, and the per-platform
+CI check.</p>
 <div class="pst-scrollable-table-container"><span id="supported-platforms"></span><table class="table" id="id6">
 <caption><span class="caption-number">Table 4.1 </span><span class="caption-text">Supported target platforms</span><a class="headerlink" href="#id6" title="Link to this table">#</a></caption>
 <colgroup>
@@ -546,27 +549,27 @@ to execute it, and the per-platform CI check.</p>
 <tbody>
 <tr class="row-even"><td><p>Linux</p></td>
 <td><p>x86_64</p></td>
-<td><p><a class="reference external" href="../../images/linux_x86_64">images/linux_x86_64</a></p></td>
-<td><p>Docker (<a class="reference external" href="../../runners/docker_x86_64">runners/docker_x86_64</a>)</p></td>
-<td><p><a class="reference external" href="../../.github/workflows/build_and_test_linux.yml">build_and_test_linux.yml</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/images/linux_x86_64">images/linux_x86_64</a></p></td>
+<td><p>Docker (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/runners/docker_x86_64">runners/docker_x86_64</a>)</p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_linux.yml">build_and_test_linux.yml</a></p></td>
 </tr>
 <tr class="row-odd"><td><p>QNX 8</p></td>
 <td><p>x86_64</p></td>
-<td><p><a class="reference external" href="../../images/qnx_x86_64">images/qnx_x86_64</a></p></td>
-<td><p>QEMU (<a class="reference external" href="../../runners/qemu_x86_64">runners/qemu_x86_64</a>)</p></td>
-<td><p><a class="reference external" href="../../.github/workflows/build_and_test_qnx.yml">build_and_test_qnx.yml</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/images/qnx_x86_64">images/qnx_x86_64</a></p></td>
+<td><p>QEMU (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/runners/qemu_x86_64">runners/qemu_x86_64</a>)</p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_qnx.yml">build_and_test_qnx.yml</a></p></td>
 </tr>
 <tr class="row-even"><td><p>Red Hat AutoSD</p></td>
 <td><p>x86_64</p></td>
-<td><p><a class="reference external" href="../../images/autosd">images/autosd</a></p></td>
-<td><p>Docker (<a class="reference external" href="../../runners/docker_x86_64">runners/docker_x86_64</a>)</p></td>
-<td><p><a class="reference external" href="../../.github/workflows/build_and_test_autosd.yml">build_and_test_autosd.yml</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/images/autosd">images/autosd</a></p></td>
+<td><p>Docker (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/runners/docker_x86_64">runners/docker_x86_64</a>)</p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_autosd.yml">build_and_test_autosd.yml</a></p></td>
 </tr>
 <tr class="row-odd"><td><p>EB corbos Linux (Safety Apps)</p></td>
 <td><p>aarch64</p></td>
-<td><p><a class="reference external" href="../../images/ebclfsa_aarch64">images/ebclfsa_aarch64</a></p></td>
-<td><p>QEMU (<a class="reference external" href="../../runners/qemu_aarch64">runners/qemu_aarch64</a>)</p></td>
-<td><p><a class="reference external" href="../../.github/workflows/build_and_test_ebclfsa.yml">build_and_test_ebclfsa.yml</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/images/ebclfsa_aarch64">images/ebclfsa_aarch64</a></p></td>
+<td><p>QEMU (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/runners/qemu_aarch64">runners/qemu_aarch64</a>)</p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_ebclfsa.yml">build_and_test_ebclfsa.yml</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -575,7 +578,7 @@ to execute it, and the per-platform CI check.</p>
 <p class="admonition-title">Note</p>
 <p>The EB corbos <em>Safety Applications</em> image is special: it runs a
 high-integrity application demo under additional constraints. Read
-<a class="reference external" href="../../images/ebclfsa_aarch64/README.md">images/ebclfsa_aarch64/README.md</a>
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/images/ebclfsa_aarch64/README.md">images/ebclfsa_aarch64/README.md</a>
 before targeting it.</p>
 </div>
 <section id="run-any-image-locally-in-qemu">
@@ -590,7 +593,7 @@ bazel<span class="w"> </span>run<span class="w"> </span>//images/ebclfsa_aarch64
 </div>
 <p>The QNX and aarch64 images boot under QEMU, which needs a one-time host setup
 (TUN device, bridge helper, libvirt network). Follow the QEMU runner how-to in
-<a class="reference external" href="../../runners/qemu_x86_64/README.md">runners/qemu_x86_64/README.md</a> before the
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/runners/qemu_x86_64/README.md">runners/qemu_x86_64/README.md</a> before the
 first run.</p>
 </section>
 <section id="two-ways-to-get-your-module-onto-the-images">
@@ -600,29 +603,29 @@ first run.</p>
 <li><p><strong>As a showcase (recommended).</strong> Bundle your binary once into the aggregate
 <code class="docutils literal notranslate"><span class="pre">//showcases</span></code> package; it is then deployed into <strong>every</strong> image
 automatically — one change covers all four platforms, and the binary is also
-offered in the interactive CLI. See <a class="reference internal" href="#add-showcase"><span class="std std-ref">4.1 Add a runtime showcase</span></a> below.</p></li>
+offered in the interactive CLI. See <a class="reference internal" href="#add-showcase"><span class="std std-ref">Add a runtime showcase</span></a> below.</p></li>
 <li><p><strong>Directly into each image.</strong> Wire the binary into each image’s build
 description by hand. This is <strong>per-image work that you repeat four times</strong>
 (once per image) and is only needed for components that are not run as a CLI
 showcase — typically a daemon. The <code class="docutils literal notranslate"><span class="pre">datarouter</span></code> is integrated this way; see
 how the QNX image does it in
-<a class="reference external" href="../../images/qnx_x86_64/build/BUILD">images/qnx_x86_64/build/BUILD</a> (the
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/images/qnx_x86_64/build/BUILD">images/qnx_x86_64/build/BUILD</a> (the
 <code class="docutils literal notranslate"><span class="pre">datarouter</span></code> source and the <code class="docutils literal notranslate"><span class="pre">DATAROUTER_PATH</span></code> mapping). See
-<a class="reference internal" href="#add-directly"><span class="std std-ref">4.2 Add a binary directly to an image</span></a> below. Prefer the showcase route unless you have a reason
+<a class="reference internal" href="#add-directly"><span class="std std-ref">Add a binary directly to an image</span></a> below. Prefer the showcase route unless you have a reason
 not to.</p></li>
 </ul>
 </section>
 <section id="add-a-runtime-showcase">
-<span id="add-showcase"></span><h2><span class="section-number">4.3. </span>4.1 Add a runtime showcase<a class="headerlink" href="#add-a-runtime-showcase" title="Link to this heading">#</a></h2>
+<span id="add-showcase"></span><h2><span class="section-number">4.3. </span>Add a runtime showcase<a class="headerlink" href="#add-a-runtime-showcase" title="Link to this heading">#</a></h2>
 <p>A <em>showcase</em> is the vehicle that gets your module onto the platforms: you bundle
 a runnable binary, and the aggregate <code class="docutils literal notranslate"><span class="pre">//showcases</span></code> package is deployed into
 <strong>every</strong> image automatically. You do this once — there is no per-platform work.</p>
-<p>There are two patterns under <a class="reference external" href="../../showcases">showcases/</a>:</p>
+<p>There are two patterns under <a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/showcases">showcases/</a>:</p>
 <ul class="simple">
-<li><p><strong>Standalone</strong> (<a class="reference external" href="../../showcases/standalone">showcases/standalone</a>) — bundle
+<li><p><strong>Standalone</strong> (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/showcases/standalone">showcases/standalone</a>) — bundle
 a binary that already exists in your module’s repo.</p></li>
 <li><p><strong>Composed</strong> (e.g.
-<a class="reference external" href="../../showcases/orchestration_persistency">showcases/orchestration_persistency</a>)
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/showcases/orchestration_persistency">showcases/orchestration_persistency</a>)
 — a small binary defined <em>here</em> that combines several modules.</p></li>
 </ul>
 <p><strong>1. Define the bundle.</strong> Add a <code class="docutils literal notranslate"><span class="pre">score_pkg_bundle</span></code> target. To re-use a binary
@@ -656,7 +659,7 @@ offers it in the interactive menu, so <strong>no code change to the CLI is requi
 </div>
 <p><strong>3. Register the bundle in the top-level showcase package.</strong> Add your bundle to
 the aggregate <code class="docutils literal notranslate"><span class="pre">score_pkg_bundle</span></code> in
-<a class="reference external" href="../../showcases/BUILD">showcases/BUILD</a> so it is packaged into the images:</p>
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/showcases/BUILD">showcases/BUILD</a> so it is packaged into the images:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">score_pkg_bundle</span><span class="p">(</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;showcases&quot;</span><span class="p">,</span>
     <span class="n">bins</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;//showcases/cli&quot;</span><span class="p">],</span>
@@ -674,7 +677,7 @@ the aggregate <code class="docutils literal notranslate"><span class="pre">score
 job</strong> automatically.</p>
 </section>
 <section id="add-a-binary-directly-to-an-image">
-<span id="add-directly"></span><h2><span class="section-number">4.4. </span>4.2 Add a binary directly to an image<a class="headerlink" href="#add-a-binary-directly-to-an-image" title="Link to this heading">#</a></h2>
+<span id="add-directly"></span><h2><span class="section-number">4.4. </span>Add a binary directly to an image<a class="headerlink" href="#add-a-binary-directly-to-an-image" title="Link to this heading">#</a></h2>
 <p>If your component is not a CLI showcase — for example a background daemon that
 must always be present — you wire it straight into each image’s build
 description instead. Unlike the showcase route, <strong>this is per-image work: you
@@ -698,13 +701,13 @@ location mapping, then placed into the filesystem by <code class="docutils liter
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>See <a class="reference external" href="../../images/qnx_x86_64/build/BUILD">images/qnx_x86_64/build/BUILD</a> and the
+<p>See <a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/images/qnx_x86_64/build/BUILD">images/qnx_x86_64/build/BUILD</a> and the
 matching deployment lines in
-<a class="reference external" href="../../images/qnx_x86_64/build/system.build">images/qnx_x86_64/build/system.build</a>
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/images/qnx_x86_64/build/system.build">images/qnx_x86_64/build/system.build</a>
 for the full picture, and repeat the equivalent wiring in the other images you
-need (<a class="reference external" href="../../images/linux_x86_64">images/linux_x86_64</a>,
-<a class="reference external" href="../../images/autosd">images/autosd</a>,
-<a class="reference external" href="../../images/ebclfsa_aarch64">images/ebclfsa_aarch64</a>).</p>
+need (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/images/linux_x86_64">images/linux_x86_64</a>,
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/images/autosd">images/autosd</a>,
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/images/ebclfsa_aarch64">images/ebclfsa_aarch64</a>).</p>
 <p>If your module simply cannot run on a given platform, exclude its targets via
 <code class="docutils literal notranslate"><span class="pre">metadata.exclude_test_targets</span></code> / <code class="docutils literal notranslate"><span class="pre">metadata.extra_test_config</span></code> in
 <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> (Step 1) rather than editing the workflow.</p>
@@ -760,8 +763,8 @@ need (<a class="reference external" href="../../images/linux_x86_64">images/linu
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-any-image-locally-in-qemu">4.1. Run any image locally in QEMU</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-ways-to-get-your-module-onto-the-images">4.2. Two ways to get your module onto the images</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#add-a-runtime-showcase">4.3. 4.1 Add a runtime showcase</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#add-a-binary-directly-to-an-image">4.4. 4.2 Add a binary directly to an image</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#add-a-runtime-showcase">4.3. Add a runtime showcase</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#add-a-binary-directly-to-an-image">4.4. Add a binary directly to an image</a></li>
 </ul>
   </nav></div>
 

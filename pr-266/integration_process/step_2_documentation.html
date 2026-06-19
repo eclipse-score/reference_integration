@@ -512,17 +512,18 @@
                   
   <section id="step-2-join-the-documentation-and-process-compliance-checks">
 <h1><span class="section-number">2. </span>Step 2 — Join the documentation and process-compliance checks<a class="headerlink" href="#step-2-join-the-documentation-and-process-compliance-checks" title="Link to this heading">#</a></h1>
-<blockquote>
-<div><p><strong>What this unlocks:</strong> your module’s documentation appears in the single,
-combined docs site that is built and published for the whole integration —
-and, just as importantly, your module’s <strong>requirements, architecture and
-other process artifacts are validated against the S-CORE process</strong> as part of
-the same build. This is usually the first thing you <em>extend the integration
-with</em> after the module is in the graph.</p>
-</div></blockquote>
+<div class="tip admonition">
+<p class="admonition-title">What it unlocks</p>
+<p><strong>Docs &amp; process checks</strong> — Your module’s documentation appears in the
+single, combined docs site that is built and published for the whole
+integration — and, just as importantly, your module’s <strong>requirements,
+architecture and other process artifacts are validated against the S-CORE
+process</strong> as part of the same build. This is usually the first thing you
+<em>extend the integration with</em> after the module is in the graph.</p>
+</div>
 <p>Building the docs is not only about rendering pages. The integration uses the
 docs-as-code toolchain (<a class="reference external" href="https://github.com/eclipse-score/docs-as-code">score_docs_as_code</a>, pulled in via
-<code class="docutils literal notranslate"><span class="pre">score_sphinx_bundle</span></code> in <a class="reference external" href="../../docs/conf.py">docs/conf.py</a>), which runs the
+<code class="docutils literal notranslate"><span class="pre">score_sphinx_bundle</span></code> in <a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/docs/conf.py">docs/conf.py</a>), which runs the
 <strong>S-CORE metamodel checks</strong> on every <code class="docutils literal notranslate"><span class="pre">needs</span></code> object: requirements,
 architecture elements, safety artifacts and their links must conform to the
 process model defined in <a class="reference external" href="https://github.com/eclipse-score/process_description">score_process</a>. If your module’s
@@ -533,7 +534,7 @@ its process artifacts continuously checked, not just published.</p>
 module. To pull yours in:</p>
 <ol class="arabic">
 <li><p>Add your module’s <code class="docutils literal notranslate"><span class="pre">needs_json</span></code> to the <code class="docutils literal notranslate"><span class="pre">docs(...)</span></code> rule’s <code class="docutils literal notranslate"><span class="pre">data</span></code> list in
-the top-level <a class="reference external" href="../../BUILD">BUILD</a> file:</p>
+the top-level <a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/BUILD">BUILD</a> file:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">docs</span><span class="p">(</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;@score_persistency//:needs_json&quot;</span><span class="p">,</span>
@@ -565,14 +566,14 @@ into two top-level sections, each backed by its own <code class="docutils litera
 </thead>
 <tbody>
 <tr class="row-even"><td><p><strong>Modules</strong></p></td>
-<td><p><a class="reference external" href="../../docs/sw_components.rst">docs/sw_components.rst</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/docs/sw_components.rst">docs/sw_components.rst</a></p></td>
 <td><p>an S-CORE <strong>software module</strong> that ships in the integration — i.e. it
 lives under <code class="docutils literal notranslate"><span class="pre">modules.target_sw</span></code> in <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> (communication,
 persistency, logging, orchestrator, baselibs, …). This is the common
 case.</p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>Process, Methods &amp; Tools</strong></p></td>
-<td><p><a class="reference external" href="../../docs/process_methods_tools.rst">docs/process_methods_tools.rst</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/docs/process_methods_tools.rst">docs/process_methods_tools.rst</a></p></td>
 <td><p>a <strong>tooling / process</strong> repo from <code class="docutils literal notranslate"><span class="pre">modules.tooling</span></code> (platform, process,
 docs-as-code) rather than a shipped software module.</p></td>
 </tr>
@@ -580,7 +581,7 @@ docs-as-code) rather than a shipped software module.</p></td>
 </table>
 </div>
 <p>For a normal software module, add the entry to the <code class="docutils literal notranslate"><span class="pre">Modules</span></code> toctree in
-<a class="reference external" href="../../docs/sw_components.rst">docs/sw_components.rst</a>, next to the existing
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/docs/sw_components.rst">docs/sw_components.rst</a>, next to the existing
 modules:</p>
 <div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="gh">Modules</span>
 <span class="gh">=======</span>
@@ -623,7 +624,7 @@ bazel<span class="w"> </span>run<span class="w"> </span>//:live_preview_combo_ex
 <p><strong>Planned refactoring.</strong> Today documentation generation is entangled with
 unit tests, coverage and feature integration tests in the single
 <code class="docutils literal notranslate"><span class="pre">test_and_docs</span></code> workflow
-(<a class="reference external" href="../../.github/workflows/test_and_docs.yml">test_and_docs.yml</a>). This
+(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/test_and_docs.yml">test_and_docs.yml</a>). This
 should be refactored: the documentation build (including the metamodel /
 process-compliance checks) belongs in a <strong>dedicated, reusable workflow shared
 across all S-CORE repositories</strong>, hosted centrally in the

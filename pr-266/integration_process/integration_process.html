@@ -514,7 +514,9 @@
   <section id="integration-process">
 <h1>Integration Process<a class="headerlink" href="#integration-process" title="Link to this heading">#</a></h1>
 <p>This document is a step-by-step <em>how-to</em> for module owners who want to integrate
-their own S-CORE module into the <strong>Reference Integration</strong> for the first time.</p>
+their own S-CORE module into the <strong>Reference Integration</strong> — whether for the
+first time, when bringing it back after an exclusion, or to make it part of the
+S-CORE releases in general.</p>
 <p>It walks you through everything from registering the module in
 <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> over wiring it into the Bazel build, the showcases, the
 images and the CLI, up to adding it to the CI/CD pipelines and the consolidated
@@ -543,7 +545,12 @@ organization and is a <strong>bzlmod module</strong>, i.e. it has a top-level
 <li><p>The module name follows the <code class="docutils literal notranslate"><span class="pre">score_&lt;name&gt;</span></code> convention (e.g.
 <code class="docutils literal notranslate"><span class="pre">score_communication</span></code>). The same name is used as the Bazel
 <code class="docutils literal notranslate"><span class="pre">bazel_dep</span></code> / repository name (<code class="docutils literal notranslate"><span class="pre">&#64;score_&lt;name&gt;//...</span></code>).</p></li>
-<li><p>The module builds and tests pass standalone on Linux <code class="docutils literal notranslate"><span class="pre">x86_64</span></code>.</p></li>
+<li><p>Your module is registered in the
+<a class="reference external" href="https://github.com/eclipse-score/bazel_registry">S-CORE Bazel registry</a> so
+that it can be resolved as a <code class="docutils literal notranslate"><span class="pre">bazel_dep</span></code> during the integration.</p></li>
+<li><p>The module builds and tests pass standalone on all four currently supported
+target platforms: Linux <code class="docutils literal notranslate"><span class="pre">x86_64</span></code>, QNX 8 <code class="docutils literal notranslate"><span class="pre">x86_64</span></code>, Red Hat AutoSD
+<code class="docutils literal notranslate"><span class="pre">x86_64</span></code> and EB corbos Linux (Safety Apps) <code class="docutils literal notranslate"><span class="pre">aarch64</span></code>.</p></li>
 <li><p>You know the commit hash you want to pin (the integration always pins an exact
 commit, never a floating branch).</p></li>
 </ul>
@@ -569,8 +576,8 @@ little further into the integration:</p>
 <li class="toctree-l1"><a class="reference internal" href="step_4_platforms.html">4. Step 4 — Get built and tested on the target platforms</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="step_4_platforms.html#run-any-image-locally-in-qemu">4.1. Run any image locally in QEMU</a></li>
 <li class="toctree-l2"><a class="reference internal" href="step_4_platforms.html#two-ways-to-get-your-module-onto-the-images">4.2. Two ways to get your module onto the images</a></li>
-<li class="toctree-l2"><a class="reference internal" href="step_4_platforms.html#add-a-runtime-showcase">4.3. 4.1 Add a runtime showcase</a></li>
-<li class="toctree-l2"><a class="reference internal" href="step_4_platforms.html#add-a-binary-directly-to-an-image">4.4. 4.2 Add a binary directly to an image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step_4_platforms.html#add-a-runtime-showcase">4.3. Add a runtime showcase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step_4_platforms.html#add-a-binary-directly-to-an-image">4.4. Add a binary directly to an image</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="step_5_component_tests.html">5. Step 5 — Add component tests</a></li>

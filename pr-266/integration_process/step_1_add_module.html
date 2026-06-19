@@ -516,19 +516,20 @@
                   
   <section id="step-1-adding-module-to-reference-integration">
 <h1><span class="section-number">1. </span>Step 1 — Adding module to reference integration<a class="headerlink" href="#step-1-adding-module-to-reference-integration" title="Link to this heading">#</a></h1>
-<blockquote>
-<div><p><strong>What this unlocks:</strong> your module becomes a <em>known</em> part of the integration,
-pinned at an exact commit, enters the <strong>Bazel module graph</strong> and builds
-cleanly against every other module. This is the foundation every later step
-builds on — afterwards <code class="docutils literal notranslate"><span class="pre">&#64;score_my_module//...</span></code> resolves and any other
+<div class="tip admonition">
+<p class="admonition-title">What it unlocks</p>
+<p><strong>Module in the graph</strong> — Your module becomes a <em>known</em> part of the
+integration, pinned at an exact commit, enters the <strong>Bazel module graph</strong> and
+builds cleanly against every other module. This is the foundation every later
+step builds on — afterwards <code class="docutils literal notranslate"><span class="pre">&#64;score_my_module//...</span></code> resolves and any other
 target can depend on your module.</p>
-</div></blockquote>
+</div>
 <section id="register-the-module-in-known-good-json">
 <h2><span class="section-number">1.1. </span>1.1 Register the module in <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code><a class="headerlink" href="#register-the-module-in-known-good-json" title="Link to this heading">#</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> is the single source of truth for which modules — and at
 which commit — are part of the integration. Every other generated file is
 derived from it, so this is always the first change.</p>
-<p>Open <a class="reference external" href="../../known_good.json">known_good.json</a>. It has two top-level groups
+<p>Open <a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/known_good.json">known_good.json</a>. It has two top-level groups
 under <code class="docutils literal notranslate"><span class="pre">modules</span></code>:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">target_sw</span></code> — the S-CORE software modules that are built and shipped
@@ -603,14 +604,25 @@ hand. After editing the JSON, regenerate them:</p>
 </div>
 <p>This (re)writes:</p>
 <ul class="simple">
-<li><p><a class="reference external" href="../../bazel_common/score_modules_target_sw.MODULE.bazel">bazel_common/score_modules_target_sw.MODULE.bazel</a>
+<li><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/bazel_common/score_modules_target_sw.MODULE.bazel">bazel_common/score_modules_target_sw.MODULE.bazel</a>
 — a <code class="docutils literal notranslate"><span class="pre">bazel_dep</span></code> + <code class="docutils literal notranslate"><span class="pre">git_override</span></code> block for your module. This file is
 pulled into the build via <code class="docutils literal notranslate"><span class="pre">include(...)</span></code> in
-<a class="reference external" href="../../MODULE.bazel">MODULE.bazel</a>.</p></li>
-<li><p><a class="reference external" href="../../rust_coverage/BUILD">rust_coverage/BUILD</a> — a
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/MODULE.bazel">MODULE.bazel</a>.</p></li>
+<li><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/rust_coverage/BUILD">rust_coverage/BUILD</a> — a
 <code class="docutils literal notranslate"><span class="pre">rust_coverage_report</span></code> target for every module that declares <code class="docutils literal notranslate"><span class="pre">rust</span></code> in its
 <code class="docutils literal notranslate"><span class="pre">langs</span></code> (skipped for C++-only modules).</p></li>
 </ul>
+<p>Next, refresh the Bazel lockfile so it reflects the updated module graph:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bazel<span class="w"> </span>mod<span class="w"> </span>deps<span class="w"> </span>--lockfile_mode<span class="o">=</span>update
+</pre></div>
+</div>
+<p>Adding your module introduces a new <code class="docutils literal notranslate"><span class="pre">bazel_dep</span></code> / <code class="docutils literal notranslate"><span class="pre">git_override</span></code> into the
+module graph, which changes the set of resolved dependencies. Running <code class="docutils literal notranslate"><span class="pre">bazel</span>
+<span class="pre">mod</span> <span class="pre">deps</span></code> with <code class="docutils literal notranslate"><span class="pre">--lockfile_mode=update</span></code> re-resolves the graph and writes the
+new dependencies into <a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/MODULE.bazel.lock">MODULE.bazel.lock</a>. Committing
+an up-to-date lockfile keeps the dependency resolution reproducible for everyone
+and is required by the <code class="docutils literal notranslate"><span class="pre">Bzlmod</span> <span class="pre">Lockfile</span> <span class="pre">Check</span></code> CI job (see section 1.4), which
+fails if the committed lockfile is out of sync with the module graph.</p>
 <p>Commit the regenerated files together with the <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> change. CI
 verifies that the generated files are in sync with the JSON (see the
 <code class="docutils literal notranslate"><span class="pre">known_good_correct</span></code> workflow), so a manual edit that drifts from the JSON
@@ -621,8 +633,16 @@ will fail.</p>
 <p>If the module does not build cleanly out-of-tree (e.g. label visibility issues),
 add patch files under <code class="docutils literal notranslate"><span class="pre">patches/&lt;module&gt;/</span></code> and reference them from the
 <code class="docutils literal notranslate"><span class="pre">bazel_patches</span></code> list of the module entry in <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>. See
-<a class="reference external" href="../../patches/communication">patches/communication</a> for a worked example. The
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/patches/communication">patches/communication</a> for a worked example. The
 generator emits <code class="docutils literal notranslate"><span class="pre">patches</span> <span class="pre">=</span> <span class="pre">[...]</span></code> with <code class="docutils literal notranslate"><span class="pre">patch_strip</span> <span class="pre">=</span> <span class="pre">1</span></code> automatically.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Patching a module should be the <strong>exception, not the rule</strong>. A patch keeps a
+local divergence from the upstream module that has to be maintained and
+re-based on every update. Prefer fixing the underlying issue in the module’s
+own repository so it builds cleanly out-of-tree, and only reach for a patch
+as a temporary, last-resort workaround.</p>
+</div>
 </section>
 <section id="ci-checks-that-the-module-was-added-correctly">
 <h2><span class="section-number">1.4. </span>1.4 CI checks that the module was added correctly<a class="headerlink" href="#ci-checks-that-the-module-was-added-correctly" title="Link to this heading">#</a></h2>
@@ -643,7 +663,7 @@ check that the generated metadata is in sync with <code class="docutils literal 
 </thead>
 <tbody>
 <tr class="row-even"><td><p>Known Good Matches Bazel
-(<a class="reference external" href="../../.github/workflows/known_good_correct.yml">known_good_correct.yml</a>)</p></td>
+(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/known_good_correct.yml">known_good_correct.yml</a>)</p></td>
 <td><p>Re-runs <code class="docutils literal notranslate"><span class="pre">update_module_from_known_good.py</span></code> and fails if the generated
 Bazel fragments differ from what you committed — i.e. <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>
 and the generated <code class="docutils literal notranslate"><span class="pre">*.MODULE.bazel</span></code> / <code class="docutils literal notranslate"><span class="pre">rust_coverage/BUILD</span></code> are out of
@@ -651,7 +671,7 @@ sync.</p></td>
 <td><p>re-run step 1.2 and commit the regenerated files</p></td>
 </tr>
 <tr class="row-odd"><td><p>Bzlmod Lockfile Check
-(<a class="reference external" href="../../.github/workflows/bzlmod-lock.yml">bzlmod-lock.yml</a>)</p></td>
+(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/bzlmod-lock.yml">bzlmod-lock.yml</a>)</p></td>
 <td><p>Verifies <code class="docutils literal notranslate"><span class="pre">MODULE.bazel.lock</span></code> is consistent with the updated module
 graph (your new <code class="docutils literal notranslate"><span class="pre">bazel_dep</span></code> / <code class="docutils literal notranslate"><span class="pre">git_override</span></code>).</p></td>
 <td><p>refresh and commit <code class="docutils literal notranslate"><span class="pre">MODULE.bazel.lock</span></code></p></td>

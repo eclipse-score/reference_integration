@@ -516,18 +516,19 @@
                   
   <section id="step-6-add-feature-integration-tests">
 <h1><span class="section-number">6. </span>Step 6 — Add feature integration tests<a class="headerlink" href="#step-6-add-feature-integration-tests" title="Link to this heading">#</a></h1>
-<blockquote>
-<div><p><strong>What this unlocks:</strong> your showcase is <strong>exercised at runtime</strong> on the
-deployed images, not just built. This is the difference between “it ships” and
-“it provably works on the target”.</p>
-</div></blockquote>
+<div class="tip admonition">
+<p class="admonition-title">What it unlocks</p>
+<p><strong>Runtime feature tests</strong> — Your showcase is <strong>exercised at runtime</strong> on the
+deployed images, not just built. This is the difference between “it ships”
+and “it provably works on the target”.</p>
+</div>
 <section id="two-test-frameworks">
 <h2><span class="section-number">6.1. </span>Two test frameworks<a class="headerlink" href="#two-test-frameworks" title="Link to this heading">#</a></h2>
 <p>The integration currently uses <strong>two</strong> separate frameworks for integration
 tests, each driven by its own Bazel target and run in a different CI workflow:</p>
 <ul>
 <li><p><strong>FIT — scenario-based feature integration tests</strong>
-(<a class="reference external" href="../../feature_integration_tests/test_cases">feature_integration_tests/test_cases</a>,
+(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/feature_integration_tests/test_cases">feature_integration_tests/test_cases</a>,
 target <code class="docutils literal notranslate"><span class="pre">//feature_integration_tests/test_cases:fit</span></code>). Python/Pytest test
 cases that orchestrate Rust and C++ scenarios. They are executed as part of the
 <code class="docutils literal notranslate"><span class="pre">test_and_docs</span></code> workflow on the default Linux platform:</p>
@@ -536,12 +537,12 @@ cases that orchestrate Rust and C++ scenarios. They are executed as part of the
 </div>
 </li>
 <li><p><strong>ITF — Integration Test Framework</strong>
-(<a class="reference external" href="../../feature_integration_tests/itf">feature_integration_tests/itf</a>,
+(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/feature_integration_tests/itf">feature_integration_tests/itf</a>,
 target <code class="docutils literal notranslate"><span class="pre">//feature_integration_tests/itf</span></code>). Black-box tests that run against a
 booted image. They are executed for <strong>two</strong> images only — QNX (on QEMU) by
-<a class="reference external" href="../../.github/workflows/build_and_test_qnx.yml">build_and_test_qnx.yml</a> and
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_qnx.yml">build_and_test_qnx.yml</a> and
 Linux x86_64 by
-<a class="reference external" href="../../.github/workflows/build_and_test_linux.yml">build_and_test_linux.yml</a>:</p>
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_linux.yml">build_and_test_linux.yml</a>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># QNX image, booted under QEMU</span>
 bazel<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--config<span class="o">=</span>itf-qnx-x86_64<span class="w"> </span>//feature_integration_tests/itf
 <span class="c1"># Linux x86_64 image</span>
@@ -551,7 +552,7 @@ bazel<span class="w"> </span><span class="nb">test</span><span class="w"> </span
 </li>
 </ul>
 <p>Add black-box tests that exercise your showcase on a running target under
-<a class="reference external" href="../../feature_integration_tests/itf">feature_integration_tests/itf</a>. They run
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/feature_integration_tests/itf">feature_integration_tests/itf</a>. They run
 against the deployed image and assert that the binary is present and behaves as
 expected:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">test_my_example_is_deployed</span><span class="p">(</span><span class="n">target</span><span class="p">):</span>

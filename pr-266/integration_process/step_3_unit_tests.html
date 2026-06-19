@@ -516,15 +516,16 @@
                   
   <section id="step-3-get-compiled-and-unit-tested-on-the-default-platform">
 <h1><span class="section-number">3. </span>Step 3 — Get compiled and unit-tested on the default platform<a class="headerlink" href="#step-3-get-compiled-and-unit-tested-on-the-default-platform" title="Link to this heading">#</a></h1>
-<blockquote>
-<div><p><strong>What this unlocks:</strong> every module registered in <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> is
-automatically <strong>compiled and run through its unit tests</strong> on the default
-platform (Linux <code class="docutils literal notranslate"><span class="pre">x86_64</span></code>, <code class="docutils literal notranslate"><span class="pre">--config=linux-x86_64</span></code>) — no per-module wiring
-is needed. As soon as your module is in the graph (Step 1), its unit tests
-are part of the integration’s quality gate.</p>
-</div></blockquote>
+<div class="tip admonition">
+<p class="admonition-title">What it unlocks</p>
+<p><strong>Default-platform unit tests</strong> — Every module registered in
+<code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> is automatically <strong>compiled and run through its unit
+tests</strong> on the default platform (Linux <code class="docutils literal notranslate"><span class="pre">x86_64</span></code>, <code class="docutils literal notranslate"><span class="pre">--config=linux-x86_64</span></code>)
+— no per-module wiring is needed. As soon as your module is in the graph
+(Step 1), its unit tests are part of the integration’s quality gate.</p>
+</div>
 <p>Unit tests are driven by
-<a class="reference external" href="../../scripts/quality_runners.py">scripts/quality_runners.py</a>, which loads
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/scripts/quality_runners.py">scripts/quality_runners.py</a>, which loads
 <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> and iterates over <strong>every</strong> module under
 <code class="docutils literal notranslate"><span class="pre">modules.target_sw</span></code>. For each module it runs <code class="docutils literal notranslate"><span class="pre">bazel</span> <span class="pre">coverage</span></code> with the
 <code class="docutils literal notranslate"><span class="pre">unit-tests</span></code> config, which builds and tests the module’s source tree on the
@@ -552,9 +553,13 @@ target-platform images in Step 4.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">metadata.extra_test_config</span></code> — extra <code class="docutils literal notranslate"><span class="pre">--flag=value</span></code> build/test settings
 injected for this module (feature flags, config selections).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">metadata.exclude_test_targets</span></code> — test targets that must <strong>not</strong> run
-(flaky, environment-specific or not meaningful out-of-tree); they are passed as
-<code class="docutils literal notranslate"><span class="pre">-&#64;score_my_module&lt;target&gt;</span></code> exclusions. Supports wildcards such as
-<code class="docutils literal notranslate"><span class="pre">//score/json/examples:*</span></code>.</p></li>
+(flaky, environment-specific or not meaningful out-of-tree). You list plain
+module-relative labels such as <code class="docutils literal notranslate"><span class="pre">//src/cpp/tests:bm_kvs_cpp</span></code>; the runner
+automatically turns each into a <code class="docutils literal notranslate"><span class="pre">-&#64;score_my_module&lt;target&gt;</span></code> exclusion.
+Supports wildcards such as <code class="docutils literal notranslate"><span class="pre">//score/json/examples:*</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">metadata.rust_coverage_config</span></code> (default <code class="docutils literal notranslate"><span class="pre">ferrocene-coverage</span></code>) — selects
+the Rust coverage configuration applied when running <code class="docutils literal notranslate"><span class="pre">bazel</span> <span class="pre">coverage</span></code> for
+this module (e.g. <code class="docutils literal notranslate"><span class="pre">ferrocene-coverage-per</span></code>).</p></li>
 </ul>
 <p>So enrolling your module into unit testing requires no extra step beyond Step 1
 — you only adjust these fields when the defaults do not fit.</p>
@@ -563,7 +568,7 @@ into the consolidated reports (markdown summaries on the docs site, HTML
 coverage reports and the CI job summary). How and where exactly is described in
 Step 7, see <a class="reference internal" href="step_7_reporting.html#reporting"><span class="std std-ref">Step 7 — Add coverage and verification reports</span></a>.</p>
 <p>This runs in the <code class="docutils literal notranslate"><span class="pre">test_and_docs</span></code> workflow
-(<a class="reference external" href="../../.github/workflows/test_and_docs.yml">test_and_docs.yml</a>), in the same
+(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/test_and_docs.yml">test_and_docs.yml</a>), in the same
 job as the docs build (see <a class="reference internal" href="reference.html#ci-checks"><span class="std std-ref">CI checks</span></a>).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
