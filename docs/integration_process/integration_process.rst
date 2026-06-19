@@ -17,7 +17,9 @@ Integration Process
 ###################
 
 This document is a step-by-step *how-to* for module owners who want to integrate
-their own S-CORE module into the **Reference Integration** for the first time.
+their own S-CORE module into the **Reference Integration** — whether for the
+first time, when bringing it back after an exclusion, or to make it part of the
+S-CORE releases in general.
 
 It walks you through everything from registering the module in
 ``known_good.json`` over wiring it into the Bazel build, the showcases, the
@@ -54,7 +56,12 @@ Before you start, make sure that:
 * The module name follows the ``score_<name>`` convention (e.g.
   ``score_communication``). The same name is used as the Bazel
   ``bazel_dep`` / repository name (``@score_<name>//...``).
-* The module builds and tests pass standalone on Linux ``x86_64``.
+* Your module is registered in the
+  `S-CORE Bazel registry <https://github.com/eclipse-score/bazel_registry>`_ so
+  that it can be resolved as a ``bazel_dep`` during the integration.
+* The module builds and tests pass standalone on all four currently supported
+  target platforms: Linux ``x86_64``, QNX 8 ``x86_64``, Red Hat AutoSD
+  ``x86_64`` and EB corbos Linux (Safety Apps) ``aarch64``.
 * You know the commit hash you want to pin (the integration always pins an exact
   commit, never a floating branch).
 

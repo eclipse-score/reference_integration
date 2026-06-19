@@ -15,9 +15,12 @@
 Step 6 — Add feature integration tests
 ======================================
 
-   **What this unlocks:** your showcase is **exercised at runtime** on the
-   deployed images, not just built. This is the difference between "it ships" and
-   "it provably works on the target".
+.. admonition:: What it unlocks
+   :class: tip
+
+   **Runtime feature tests** — Your showcase is **exercised at runtime** on the
+   deployed images, not just built. This is the difference between "it ships"
+   and "it provably works on the target".
 
 Two test frameworks
 -------------------
@@ -26,7 +29,7 @@ The integration currently uses **two** separate frameworks for integration
 tests, each driven by its own Bazel target and run in a different CI workflow:
 
 * **FIT — scenario-based feature integration tests**
-  (`feature_integration_tests/test_cases <../../feature_integration_tests/test_cases>`_,
+  (`feature_integration_tests/test_cases <https://github.com/eclipse-score/reference_integration/tree/main/feature_integration_tests/test_cases>`_,
   target ``//feature_integration_tests/test_cases:fit``). Python/Pytest test
   cases that orchestrate Rust and C++ scenarios. They are executed as part of the
   ``test_and_docs`` workflow on the default Linux platform:
@@ -36,12 +39,12 @@ tests, each driven by its own Bazel target and run in a different CI workflow:
      bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit
 
 * **ITF — Integration Test Framework**
-  (`feature_integration_tests/itf <../../feature_integration_tests/itf>`_,
+  (`feature_integration_tests/itf <https://github.com/eclipse-score/reference_integration/tree/main/feature_integration_tests/itf>`_,
   target ``//feature_integration_tests/itf``). Black-box tests that run against a
   booted image. They are executed for **two** images only — QNX (on QEMU) by
-  `build_and_test_qnx.yml <../../.github/workflows/build_and_test_qnx.yml>`_ and
+  `build_and_test_qnx.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_qnx.yml>`_ and
   Linux x86_64 by
-  `build_and_test_linux.yml <../../.github/workflows/build_and_test_linux.yml>`_:
+  `build_and_test_linux.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_linux.yml>`_:
 
   .. code-block:: bash
 
@@ -51,7 +54,7 @@ tests, each driven by its own Bazel target and run in a different CI workflow:
      bazel test --config=linux-x86_64  //feature_integration_tests/itf
 
 Add black-box tests that exercise your showcase on a running target under
-`feature_integration_tests/itf <../../feature_integration_tests/itf>`_. They run
+`feature_integration_tests/itf <https://github.com/eclipse-score/reference_integration/tree/main/feature_integration_tests/itf>`_. They run
 against the deployed image and assert that the binary is present and behaves as
 expected:
 

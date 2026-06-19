@@ -15,15 +15,20 @@
 Step 4 — Get built and tested on the target platforms
 =====================================================
 
-   **What this unlocks:** your module is actually **compiled and tested by the
-   pipelines** — built for and deployed to every target platform (Linux x86_64,
-   QNX, AutoSD, EBcLfSA aarch64), offered in the interactive CLI, and exercised
-   by CI. This is the rung that turns a library into something that *runs* inside
-   the integration images.
+.. admonition:: What it unlocks
+   :class: tip
 
-The integration ships four target images, each built and tested by its own
-gating CI job. The table lists the platforms, the image target, the runner used
-to execute it, and the per-platform CI check.
+   **Target-platform builds & tests** — Your module is actually **compiled and
+   tested by the pipelines** — built for and deployed to every target platform
+   (Linux x86_64, QNX, AutoSD, EBcLfSA aarch64), offered in the interactive CLI,
+   and exercised by CI. This is the rung that turns a library into something
+   that *runs* inside the integration images.
+
+The integration provides build definitions for four target images, each built
+and tested by its own gating CI job — it does not distribute ready-to-flash
+images; you build them yourself from these definitions. The table lists the
+platforms, the image target, the runner used to execute it, and the per-platform
+CI check.
 
 .. _supported_platforms:
 
@@ -38,30 +43,30 @@ to execute it, and the per-platform CI check.
      - Build & test workflow
    * - Linux
      - x86_64
-     - `images/linux_x86_64 <../../images/linux_x86_64>`_
-     - Docker (`runners/docker_x86_64 <../../runners/docker_x86_64>`_)
-     - `build_and_test_linux.yml <../../.github/workflows/build_and_test_linux.yml>`_
+     - `images/linux_x86_64 <https://github.com/eclipse-score/reference_integration/tree/main/images/linux_x86_64>`_
+     - Docker (`runners/docker_x86_64 <https://github.com/eclipse-score/reference_integration/tree/main/runners/docker_x86_64>`_)
+     - `build_and_test_linux.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_linux.yml>`_
    * - QNX 8
      - x86_64
-     - `images/qnx_x86_64 <../../images/qnx_x86_64>`_
-     - QEMU (`runners/qemu_x86_64 <../../runners/qemu_x86_64>`_)
-     - `build_and_test_qnx.yml <../../.github/workflows/build_and_test_qnx.yml>`_
+     - `images/qnx_x86_64 <https://github.com/eclipse-score/reference_integration/tree/main/images/qnx_x86_64>`_
+     - QEMU (`runners/qemu_x86_64 <https://github.com/eclipse-score/reference_integration/tree/main/runners/qemu_x86_64>`_)
+     - `build_and_test_qnx.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_qnx.yml>`_
    * - Red Hat AutoSD
      - x86_64
-     - `images/autosd <../../images/autosd>`_
-     - Docker (`runners/docker_x86_64 <../../runners/docker_x86_64>`_)
-     - `build_and_test_autosd.yml <../../.github/workflows/build_and_test_autosd.yml>`_
+     - `images/autosd <https://github.com/eclipse-score/reference_integration/tree/main/images/autosd>`_
+     - Docker (`runners/docker_x86_64 <https://github.com/eclipse-score/reference_integration/tree/main/runners/docker_x86_64>`_)
+     - `build_and_test_autosd.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_autosd.yml>`_
    * - EB corbos Linux (Safety Apps)
      - aarch64
-     - `images/ebclfsa_aarch64 <../../images/ebclfsa_aarch64>`_
-     - QEMU (`runners/qemu_aarch64 <../../runners/qemu_aarch64>`_)
-     - `build_and_test_ebclfsa.yml <../../.github/workflows/build_and_test_ebclfsa.yml>`_
+     - `images/ebclfsa_aarch64 <https://github.com/eclipse-score/reference_integration/tree/main/images/ebclfsa_aarch64>`_
+     - QEMU (`runners/qemu_aarch64 <https://github.com/eclipse-score/reference_integration/tree/main/runners/qemu_aarch64>`_)
+     - `build_and_test_ebclfsa.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_ebclfsa.yml>`_
 
 .. note::
 
    The EB corbos *Safety Applications* image is special: it runs a
    high-integrity application demo under additional constraints. Read
-   `images/ebclfsa_aarch64/README.md <../../images/ebclfsa_aarch64/README.md>`_
+   `images/ebclfsa_aarch64/README.md <https://github.com/eclipse-score/reference_integration/blob/main/images/ebclfsa_aarch64/README.md>`_
    before targeting it.
 
 Run any image locally in QEMU
@@ -79,7 +84,7 @@ try your module on the real target without hardware:
 
 The QNX and aarch64 images boot under QEMU, which needs a one-time host setup
 (TUN device, bridge helper, libvirt network). Follow the QEMU runner how-to in
-`runners/qemu_x86_64/README.md <../../runners/qemu_x86_64/README.md>`_ before the
+`runners/qemu_x86_64/README.md <https://github.com/eclipse-score/reference_integration/blob/main/runners/qemu_x86_64/README.md>`_ before the
 first run.
 
 Two ways to get your module onto the images
@@ -96,25 +101,25 @@ There are two ways to make your binary part of the images:
   (once per image) and is only needed for components that are not run as a CLI
   showcase — typically a daemon. The ``datarouter`` is integrated this way; see
   how the QNX image does it in
-  `images/qnx_x86_64/build/BUILD <../../images/qnx_x86_64/build/BUILD>`_ (the
+  `images/qnx_x86_64/build/BUILD <https://github.com/eclipse-score/reference_integration/blob/main/images/qnx_x86_64/build/BUILD>`_ (the
   ``datarouter`` source and the ``DATAROUTER_PATH`` mapping). See
   :ref:`add_directly` below. Prefer the showcase route unless you have a reason
   not to.
 
 .. _add_showcase:
 
-4.1 Add a runtime showcase
---------------------------
+Add a runtime showcase
+----------------------
 A *showcase* is the vehicle that gets your module onto the platforms: you bundle
 a runnable binary, and the aggregate ``//showcases`` package is deployed into
 **every** image automatically. You do this once — there is no per-platform work.
 
-There are two patterns under `showcases/ <../../showcases>`_:
+There are two patterns under `showcases/ <https://github.com/eclipse-score/reference_integration/tree/main/showcases>`_:
 
-* **Standalone** (`showcases/standalone <../../showcases/standalone>`_) — bundle
+* **Standalone** (`showcases/standalone <https://github.com/eclipse-score/reference_integration/tree/main/showcases/standalone>`_) — bundle
   a binary that already exists in your module's repo.
 * **Composed** (e.g.
-  `showcases/orchestration_persistency <../../showcases/orchestration_persistency>`_)
+  `showcases/orchestration_persistency <https://github.com/eclipse-score/reference_integration/tree/main/showcases/orchestration_persistency>`_)
   — a small binary defined *here* that combines several modules.
 
 **1. Define the bundle.** Add a ``score_pkg_bundle`` target. To re-use a binary
@@ -152,7 +157,7 @@ offers it in the interactive menu, so **no code change to the CLI is required**:
 
 **3. Register the bundle in the top-level showcase package.** Add your bundle to
 the aggregate ``score_pkg_bundle`` in
-`showcases/BUILD <../../showcases/BUILD>`_ so it is packaged into the images:
+`showcases/BUILD <https://github.com/eclipse-score/reference_integration/blob/main/showcases/BUILD>`_ so it is packaged into the images:
 
 .. code-block:: python
 
@@ -173,8 +178,8 @@ job** automatically.
 
 .. _add_directly:
 
-4.2 Add a binary directly to an image
--------------------------------------
+Add a binary directly to an image
+---------------------------------
 
 If your component is not a CLI showcase — for example a background daemon that
 must always be present — you wire it straight into each image's build
@@ -202,13 +207,13 @@ location mapping, then placed into the filesystem by ``system.build``:
        },
    )
 
-See `images/qnx_x86_64/build/BUILD <../../images/qnx_x86_64/build/BUILD>`_ and the
+See `images/qnx_x86_64/build/BUILD <https://github.com/eclipse-score/reference_integration/blob/main/images/qnx_x86_64/build/BUILD>`_ and the
 matching deployment lines in
-`images/qnx_x86_64/build/system.build <../../images/qnx_x86_64/build/system.build>`_
+`images/qnx_x86_64/build/system.build <https://github.com/eclipse-score/reference_integration/blob/main/images/qnx_x86_64/build/system.build>`_
 for the full picture, and repeat the equivalent wiring in the other images you
-need (`images/linux_x86_64 <../../images/linux_x86_64>`_,
-`images/autosd <../../images/autosd>`_,
-`images/ebclfsa_aarch64 <../../images/ebclfsa_aarch64>`_).
+need (`images/linux_x86_64 <https://github.com/eclipse-score/reference_integration/tree/main/images/linux_x86_64>`_,
+`images/autosd <https://github.com/eclipse-score/reference_integration/tree/main/images/autosd>`_,
+`images/ebclfsa_aarch64 <https://github.com/eclipse-score/reference_integration/tree/main/images/ebclfsa_aarch64>`_).
 
 If your module simply cannot run on a given platform, exclude its targets via
 ``metadata.exclude_test_targets`` / ``metadata.extra_test_config`` in

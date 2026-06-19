@@ -15,10 +15,13 @@
 Step 1 — Adding module to reference integration
 =================================================
 
-   **What this unlocks:** your module becomes a *known* part of the integration,
-   pinned at an exact commit, enters the **Bazel module graph** and builds
-   cleanly against every other module. This is the foundation every later step
-   builds on — afterwards ``@score_my_module//...`` resolves and any other
+.. admonition:: What it unlocks
+   :class: tip
+
+   **Module in the graph** — Your module becomes a *known* part of the
+   integration, pinned at an exact commit, enters the **Bazel module graph** and
+   builds cleanly against every other module. This is the foundation every later
+   step builds on — afterwards ``@score_my_module//...`` resolves and any other
    target can depend on your module.
 
 1.1 Register the module in ``known_good.json``
@@ -28,7 +31,7 @@ Step 1 — Adding module to reference integration
 which commit — are part of the integration. Every other generated file is
 derived from it, so this is always the first change.
 
-Open `known_good.json <../../known_good.json>`_. It has two top-level groups
+Open `known_good.json <https://github.com/eclipse-score/reference_integration/blob/main/known_good.json>`_. It has two top-level groups
 under ``modules``:
 
 * ``target_sw`` — the S-CORE software modules that are built and shipped
@@ -114,13 +117,27 @@ hand. After editing the JSON, regenerate them:
 
 This (re)writes:
 
-* `bazel_common/score_modules_target_sw.MODULE.bazel <../../bazel_common/score_modules_target_sw.MODULE.bazel>`_
+* `bazel_common/score_modules_target_sw.MODULE.bazel <https://github.com/eclipse-score/reference_integration/blob/main/bazel_common/score_modules_target_sw.MODULE.bazel>`_
   — a ``bazel_dep`` + ``git_override`` block for your module. This file is
   pulled into the build via ``include(...)`` in
-  `MODULE.bazel <../../MODULE.bazel>`_.
-* `rust_coverage/BUILD <../../rust_coverage/BUILD>`_ — a
+  `MODULE.bazel <https://github.com/eclipse-score/reference_integration/blob/main/MODULE.bazel>`_.
+* `rust_coverage/BUILD <https://github.com/eclipse-score/reference_integration/blob/main/rust_coverage/BUILD>`_ — a
   ``rust_coverage_report`` target for every module that declares ``rust`` in its
   ``langs`` (skipped for C++-only modules).
+
+Next, refresh the Bazel lockfile so it reflects the updated module graph:
+
+.. code-block:: bash
+
+   bazel mod deps --lockfile_mode=update
+
+Adding your module introduces a new ``bazel_dep`` / ``git_override`` into the
+module graph, which changes the set of resolved dependencies. Running ``bazel
+mod deps`` with ``--lockfile_mode=update`` re-resolves the graph and writes the
+new dependencies into `MODULE.bazel.lock <https://github.com/eclipse-score/reference_integration/blob/main/MODULE.bazel.lock>`_. Committing
+an up-to-date lockfile keeps the dependency resolution reproducible for everyone
+and is required by the ``Bzlmod Lockfile Check`` CI job (see section 1.4), which
+fails if the committed lockfile is out of sync with the module graph.
 
 Commit the regenerated files together with the ``known_good.json`` change. CI
 verifies that the generated files are in sync with the JSON (see the
@@ -135,8 +152,16 @@ will fail.
 If the module does not build cleanly out-of-tree (e.g. label visibility issues),
 add patch files under ``patches/<module>/`` and reference them from the
 ``bazel_patches`` list of the module entry in ``known_good.json``. See
-`patches/communication <../../patches/communication>`_ for a worked example. The
+`patches/communication <https://github.com/eclipse-score/reference_integration/tree/main/patches/communication>`_ for a worked example. The
 generator emits ``patches = [...]`` with ``patch_strip = 1`` automatically.
+
+.. note::
+
+   Patching a module should be the **exception, not the rule**. A patch keeps a
+   local divergence from the upstream module that has to be maintained and
+   re-based on every update. Prefer fixing the underlying issue in the module's
+   own repository so it builds cleanly out-of-tree, and only reach for a patch
+   as a temporary, last-resort workaround.
 
 1.4 CI checks that the module was added correctly
 -------------------------------------------------
@@ -153,14 +178,14 @@ check that the generated metadata is in sync with ``known_good.json``:
      - What it verifies
      - Fix if it fails
    * - Known Good Matches Bazel
-       (`known_good_correct.yml <../../.github/workflows/known_good_correct.yml>`_)
+       (`known_good_correct.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/known_good_correct.yml>`_)
      - Re-runs ``update_module_from_known_good.py`` and fails if the generated
        Bazel fragments differ from what you committed — i.e. ``known_good.json``
        and the generated ``*.MODULE.bazel`` / ``rust_coverage/BUILD`` are out of
        sync.
      - re-run step 1.2 and commit the regenerated files
    * - Bzlmod Lockfile Check
-       (`bzlmod-lock.yml <../../.github/workflows/bzlmod-lock.yml>`_)
+       (`bzlmod-lock.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/bzlmod-lock.yml>`_)
      - Verifies ``MODULE.bazel.lock`` is consistent with the updated module
        graph (your new ``bazel_dep`` / ``git_override``).
      - refresh and commit ``MODULE.bazel.lock``

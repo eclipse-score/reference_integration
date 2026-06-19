@@ -15,9 +15,12 @@
 Step 8 — Code quality
 =====================
 
-   **What this unlocks:** your module's source is **statically analysed and
-   style-checked** on every pull request, on top of the unit, component and
-   integration tests of the previous steps.
+.. admonition:: What it unlocks
+   :class: tip
+
+   **Static analysis & style checks** — Your module's source is **statically
+   analysed and style-checked** on every pull request, on top of the unit,
+   component and integration tests of the previous steps.
 
 The integration runs several language-specific code-quality checks. They operate
 on ``//...`` (or on the pinned module checkouts), so they pick up your module
@@ -28,7 +31,7 @@ What runs today
 ---------------
 
 * **Formatting checks** (all languages) —
-  `format.yml <../../.github/workflows/format.yml>`_ runs the shared S-CORE
+  `format.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/format.yml>`_ runs the shared S-CORE
   formatter (a reusable workflow from
   `cicd-workflows <https://github.com/eclipse-score/cicd-workflows>`_) and fails
   if any file is not formatted. Reproduce / fix locally by running the format
@@ -36,7 +39,7 @@ What runs today
 * **Bazel Clippy** (Rust) — Rust static analysis runs through the ``rules_rust``
   Clippy aspect over the Rust targets, flagging lint violations as build errors.
 * **CodeQL multi-repo scan** (C++) —
-  `codeql-multiple-repo-scan.yml <../../.github/workflows/codeql-multiple-repo-scan.yml>`_
+  `codeql-multiple-repo-scan.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/codeql-multiple-repo-scan.yml>`_
   checks out every module pinned in ``known_good.json`` and runs CodeQL with the
   **MISRA C++ coding standards** pack across all of them.
 

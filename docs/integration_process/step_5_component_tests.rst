@@ -15,8 +15,11 @@
 Step 5 — Add component tests
 ============================
 
-   **What this unlocks:** your module is verified **in isolation as a
-   component** — its public interfaces are tested against their specification,
+.. admonition:: What it unlocks
+   :class: tip
+
+   **Component-level verification** — Your module is verified **in isolation as
+   a component** — its public interfaces are tested against their specification,
    independently of the other modules and of the full integration images.
 
 .. warning::

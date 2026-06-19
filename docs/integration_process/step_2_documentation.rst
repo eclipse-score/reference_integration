@@ -15,17 +15,20 @@
 Step 2 — Join the documentation and process-compliance checks
 =============================================================
 
-   **What this unlocks:** your module's documentation appears in the single,
-   combined docs site that is built and published for the whole integration —
-   and, just as importantly, your module's **requirements, architecture and
-   other process artifacts are validated against the S-CORE process** as part of
-   the same build. This is usually the first thing you *extend the integration
-   with* after the module is in the graph.
+.. admonition:: What it unlocks
+   :class: tip
+
+   **Docs & process checks** — Your module's documentation appears in the
+   single, combined docs site that is built and published for the whole
+   integration — and, just as importantly, your module's **requirements,
+   architecture and other process artifacts are validated against the S-CORE
+   process** as part of the same build. This is usually the first thing you
+   *extend the integration with* after the module is in the graph.
 
 Building the docs is not only about rendering pages. The integration uses the
 docs-as-code toolchain (`score_docs_as_code
 <https://github.com/eclipse-score/docs-as-code>`_, pulled in via
-``score_sphinx_bundle`` in `docs/conf.py <../../docs/conf.py>`_), which runs the
+``score_sphinx_bundle`` in `docs/conf.py <https://github.com/eclipse-score/reference_integration/blob/main/docs/conf.py>`_), which runs the
 **S-CORE metamodel checks** on every ``needs`` object: requirements,
 architecture elements, safety artifacts and their links must conform to the
 process model defined in `score_process
@@ -38,7 +41,7 @@ The integration builds one Sphinx site that merges the docs of every integrated
 module. To pull yours in:
 
 #. Add your module's ``needs_json`` to the ``docs(...)`` rule's ``data`` list in
-   the top-level `BUILD <../../BUILD>`_ file:
+   the top-level `BUILD <https://github.com/eclipse-score/reference_integration/blob/main/BUILD>`_ file:
 
    .. code-block:: python
 
@@ -67,18 +70,18 @@ module. To pull yours in:
         - Page to edit
         - Put your module here if it is…
       * - **Modules**
-        - `docs/sw_components.rst <../../docs/sw_components.rst>`_
+        - `docs/sw_components.rst <https://github.com/eclipse-score/reference_integration/blob/main/docs/sw_components.rst>`_
         - an S-CORE **software module** that ships in the integration — i.e. it
           lives under ``modules.target_sw`` in ``known_good.json`` (communication,
           persistency, logging, orchestrator, baselibs, …). This is the common
           case.
       * - **Process, Methods & Tools**
-        - `docs/process_methods_tools.rst <../../docs/process_methods_tools.rst>`_
+        - `docs/process_methods_tools.rst <https://github.com/eclipse-score/reference_integration/blob/main/docs/process_methods_tools.rst>`_
         - a **tooling / process** repo from ``modules.tooling`` (platform, process,
           docs-as-code) rather than a shipped software module.
 
    For a normal software module, add the entry to the ``Modules`` toctree in
-   `docs/sw_components.rst <../../docs/sw_components.rst>`_, next to the existing
+   `docs/sw_components.rst <https://github.com/eclipse-score/reference_integration/blob/main/docs/sw_components.rst>`_, next to the existing
    modules:
 
    .. code-block:: rst
@@ -124,7 +127,7 @@ The docs are built and published by the ``test_and_docs`` workflow (see
    **Planned refactoring.** Today documentation generation is entangled with
    unit tests, coverage and feature integration tests in the single
    ``test_and_docs`` workflow
-   (`test_and_docs.yml <../../.github/workflows/test_and_docs.yml>`_). This
+   (`test_and_docs.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/test_and_docs.yml>`_). This
    should be refactored: the documentation build (including the metamodel /
    process-compliance checks) belongs in a **dedicated, reusable workflow shared
    across all S-CORE repositories**, hosted centrally in the

@@ -17,15 +17,27 @@
 Step 7 — Add coverage and verification reports
 ==============================================
 
-   **What this unlocks:** your module shows up in the **consolidated coverage and
-   verification / status reports** that are published alongside the docs — the
-   evidence side of the integration.
+.. admonition:: What it unlocks
+   :class: tip
+
+   **Consolidated reports** — Your module shows up in the **consolidated
+   coverage and verification / status reports** that are published alongside the
+   docs — the evidence side of the integration.
+
+.. note::
+
+   **No extra action is required here.** As already explained in
+   :doc:`Step 3 <step_3_unit_tests>`, the ``test_and_docs`` workflow already
+   executes your module's unit tests and gathers and publishes the code-coverage
+   data. If your module passes Step 3, it is automatically part of the reports
+   described below — this chapter only explains *how* that collection,
+   aggregation and publishing happens.
 
 How coverage is collected
 -------------------------
 
 The ``test_and_docs`` workflow runs
-`scripts/quality_runners.py <../../scripts/quality_runners.py>`_, which iterates
+`scripts/quality_runners.py <https://github.com/eclipse-score/reference_integration/blob/main/scripts/quality_runners.py>`_, which iterates
 over **every** module under ``modules.target_sw`` in ``known_good.json`` and, per
 module, runs its unit tests with coverage (``bazel coverage``) and then extracts
 a per-language summary. The driver is the module's ``metadata.langs``:
@@ -34,9 +46,9 @@ a per-language summary. The driver is the module's ``metadata.langs``:
 * ``"rust"`` → a Rust coverage run.
 
 Both write into the two consolidated reports
-`docs/verification_report/unit_test_summary.md <../../docs/verification_report/unit_test_summary.md>`_
+`docs/verification_report/unit_test_summary.md <https://github.com/eclipse-score/reference_integration/blob/main/docs/verification_report/unit_test_summary.md>`_
 and
-`docs/verification_report/coverage_summary.md <../../docs/verification_report/coverage_summary.md>`_.
+`docs/verification_report/coverage_summary.md <https://github.com/eclipse-score/reference_integration/blob/main/docs/verification_report/coverage_summary.md>`_.
 The same scoping metadata applies to both languages:
 
 * ``metadata.code_root_path`` — the target pattern that is instrumented and
@@ -55,12 +67,12 @@ output per module and **exports the results** in three forms:
 
 * **Markdown summaries committed into the docs.** A unit-test execution table
   and a coverage table are written to
-  `docs/verification_report/unit_test_summary.md <../../docs/verification_report/unit_test_summary.md>`_
+  `docs/verification_report/unit_test_summary.md <https://github.com/eclipse-score/reference_integration/blob/main/docs/verification_report/unit_test_summary.md>`_
   (columns: module, passed, failed, skipped, total) and
-  `docs/verification_report/coverage_summary.md <../../docs/verification_report/coverage_summary.md>`_
+  `docs/verification_report/coverage_summary.md <https://github.com/eclipse-score/reference_integration/blob/main/docs/verification_report/coverage_summary.md>`_
   (columns: module, lines, functions, branches). These two files are pulled into
   the published documentation by
-  `docs/verification_report/platform_verification_report.rst <../../docs/verification_report/platform_verification_report.rst>`_,
+  `docs/verification_report/platform_verification_report.rst <https://github.com/eclipse-score/reference_integration/blob/main/docs/verification_report/platform_verification_report.rst>`_,
   so every module's unit-test and coverage numbers appear in the
   **Platform Verification Report** on the docs site.
 * **Detailed HTML coverage reports.** The per-module ``genhtml`` / Rust coverage
@@ -97,7 +109,7 @@ Rust coverage
 
 If your module declares ``rust`` in ``metadata.langs``, the
 ``rust_coverage_report`` target is generated automatically into
-`rust_coverage/BUILD <../../rust_coverage/BUILD>`_ by step 1.2 — no manual action
+`rust_coverage/BUILD <https://github.com/eclipse-score/reference_integration/blob/main/rust_coverage/BUILD>`_ by step 1.2 — no manual action
 is needed. Tune ``metadata.exclude_test_targets`` and
 ``metadata.rust_coverage_config`` in ``known_good.json`` to control what is
 measured. Build a single module's report with:
@@ -110,9 +122,9 @@ Verification & status reports
 -----------------------------
 
 The consolidated reports live under
-`docs/verification_report <../../docs/verification_report>`_ and the roadmap /
+`docs/verification_report <https://github.com/eclipse-score/reference_integration/tree/main/docs/verification_report>`_ and the roadmap /
 status trackers under
-`docs/s_core_v_1/roadmap <../../docs/s_core_v_1/roadmap>`_ (e.g.
+`docs/s_core_v_1/roadmap <https://github.com/eclipse-score/reference_integration/tree/main/docs/s_core_v_1/roadmap>`_ (e.g.
 ``overall_status.rst``). Add your module to the relevant tables/rows so it shows
 up in the platform verification report and the feature/process status overview.
 The full catalogue of reports is under :ref:`reports`.

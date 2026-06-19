@@ -15,14 +15,17 @@
 Step 3 — Get compiled and unit-tested on the default platform
 =============================================================
 
-   **What this unlocks:** every module registered in ``known_good.json`` is
-   automatically **compiled and run through its unit tests** on the default
-   platform (Linux ``x86_64``, ``--config=linux-x86_64``) — no per-module wiring
-   is needed. As soon as your module is in the graph (Step 1), its unit tests
-   are part of the integration's quality gate.
+.. admonition:: What it unlocks
+   :class: tip
+
+   **Default-platform unit tests** — Every module registered in
+   ``known_good.json`` is automatically **compiled and run through its unit
+   tests** on the default platform (Linux ``x86_64``, ``--config=linux-x86_64``)
+   — no per-module wiring is needed. As soon as your module is in the graph
+   (Step 1), its unit tests are part of the integration's quality gate.
 
 Unit tests are driven by
-`scripts/quality_runners.py <../../scripts/quality_runners.py>`_, which loads
+`scripts/quality_runners.py <https://github.com/eclipse-score/reference_integration/blob/main/scripts/quality_runners.py>`_, which loads
 ``known_good.json`` and iterates over **every** module under
 ``modules.target_sw``. For each module it runs ``bazel coverage`` with the
 ``unit-tests`` config, which builds and tests the module's source tree on the
@@ -54,9 +57,13 @@ You do not edit ``quality_runners.py`` to control what is tested — the per-mod
 * ``metadata.extra_test_config`` — extra ``--flag=value`` build/test settings
   injected for this module (feature flags, config selections).
 * ``metadata.exclude_test_targets`` — test targets that must **not** run
-  (flaky, environment-specific or not meaningful out-of-tree); they are passed as
-  ``-@score_my_module<target>`` exclusions. Supports wildcards such as
-  ``//score/json/examples:*``.
+  (flaky, environment-specific or not meaningful out-of-tree). You list plain
+  module-relative labels such as ``//src/cpp/tests:bm_kvs_cpp``; the runner
+  automatically turns each into a ``-@score_my_module<target>`` exclusion.
+  Supports wildcards such as ``//score/json/examples:*``.
+* ``metadata.rust_coverage_config`` (default ``ferrocene-coverage``) — selects
+  the Rust coverage configuration applied when running ``bazel coverage`` for
+  this module (e.g. ``ferrocene-coverage-per``).
 
 So enrolling your module into unit testing requires no extra step beyond Step 1
 — you only adjust these fields when the defaults do not fit.
@@ -67,7 +74,7 @@ coverage reports and the CI job summary). How and where exactly is described in
 Step 7, see :ref:`reporting`.
 
 This runs in the ``test_and_docs`` workflow
-(`test_and_docs.yml <../../.github/workflows/test_and_docs.yml>`_), in the same
+(`test_and_docs.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/test_and_docs.yml>`_), in the same
 job as the docs build (see :ref:`ci_checks`).
 
 .. note::
