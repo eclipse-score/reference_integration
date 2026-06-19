@@ -1,0 +1,38 @@
+diff --git a/score/test/component/dlt_generator_app/BUILD b/score/test/component/dlt_generator_app/BUILD
+index 9736cac..a60ebd6 100644
+--- a/score/test/component/dlt_generator_app/BUILD
++++ b/score/test/component/dlt_generator_app/BUILD
+@@ -29,9 +29,14 @@ load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
+ cc_binary(
+     name = "dlt_generator",
+     srcs = ["dlt_generator.cpp"],
++    visibility = ["//visibility:public"],
+     deps = ["//score/mw/log"],
+ )
+ 
++exports_files([
++    "etc/logging.json",
++])
++
+ pkg_tar(
+     name = "dlt_generator_bin_pkg",
+     srcs = [":dlt_generator"],
+diff --git a/score/test/component/logging_app/BUILD b/score/test/component/logging_app/BUILD
+index de63c65..f9f3346 100644
+--- a/score/test/component/logging_app/BUILD
++++ b/score/test/component/logging_app/BUILD
+@@ -29,9 +29,14 @@ load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
+ cc_binary(
+     name = "logging_app",
+     srcs = ["logging_app.cpp"],
++    visibility = ["//visibility:public"],
+     deps = ["//score/mw/log"],
+ )
+ 
++exports_files([
++    "etc/logging.json",
++])
++
+ pkg_tar(
+     name = "logging_app_bin_pkg",
+     srcs = [":logging_app"],

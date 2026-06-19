@@ -97,7 +97,10 @@
             },
             "score_logging": {
                 "repo": "https://github.com/eclipse-score/logging.git",
-                "hash": "0e9187f79a9935ca192779234b82f9d00dc4e335",
+                "hash": "254fdfe0e35a2738917fb16d41bb70acc83f32ad",
+                "bazel_patches": [
+                    "//patches/logging:001-logging-example-visibility.patch",
+                    "//patches/logging:002-deps-visibility.patch"],
                 "metadata": {
                     "extra_test_config": [
                         "@score_logging//score/datarouter/build_configuration_flags:persistent_logging=False",
