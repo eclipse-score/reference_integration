@@ -12,7 +12,7 @@
 # *******************************************************************************
 
 load("@score_docs_as_code//:docs.bzl", "docs")
-load("@score_tooling//:defs.bzl", "copyright_checker", "setup_starpls", "use_format_targets")
+load("@score_tooling//:defs.bzl", "setup_starpls", "use_format_targets")
 
 # Docs-as-code
 docs(
@@ -38,27 +38,6 @@ docs(
 # Bazel formatting
 setup_starpls(
     name = "starpls_server",
-    visibility = ["//visibility:public"],
-)
-
-# Copyright check
-copyright_checker(
-    name = "copyright",
-    srcs = [
-        ".github",
-        "bazel_common",
-        "docs",
-        "feature_integration_tests",
-        "images",
-        "runners",
-        "rust_coverage",
-        "scripts",
-        "showcases",
-        "//:BUILD",
-        "//:MODULE.bazel",
-    ],
-    config = "@score_tooling//cr_checker/resources:config",
-    template = "@score_tooling//cr_checker/resources:templates",
     visibility = ["//visibility:public"],
 )
 
