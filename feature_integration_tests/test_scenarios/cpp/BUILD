@@ -25,6 +25,7 @@ cc_binary(
     deps = [
         "@score_baselibs//score/json",
         "@score_baselibs//score/mw/log:backend_stub_testutil",
+        "@score_lifecycle_health//src/launch_manager_daemon/lifecycle_client_lib:lifecycle_client",
         "@score_persistency//:kvs_cpp",
         "@score_test_scenarios//test_scenarios_cpp",
     ],

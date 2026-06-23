@@ -1,4 +1,4 @@
-[tool.pytest]
+[tool.pytest.ini_options]
 addopts = ["-v"]
 pythonpath = [
     ".",
@@ -16,6 +16,9 @@ markers = [
     "test_properties(dict): Add custom properties to test XML output",
     "cpp",
     "rust",
+    "manual: Manual tests that require specific setup or long execution time",
+    "daemon: Tests that require a running daemon process",
+    "slow: Slow tests that take significant time to complete",
 ]
 filterwarnings = [
     'ignore:record_property is incompatible with junit_family:pytest.PytestWarning',

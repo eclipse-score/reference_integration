@@ -12,6 +12,7 @@
 # *******************************************************************************
 load("@pip_score_venv_test//:requirements.bzl", "all_requirements")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
+load("@score_lifecycle_health//:defs.bzl", "launch_manager_config")
 load("@score_tooling//python_basics:defs.bzl", "score_py_pytest")
 
 # In order to update the requirements, change the `requirements.txt` file and run:
@@ -34,6 +35,11 @@ compile_pip_requirements(
     ],
 )
 
+launch_manager_config(
+    name = "daemon_lifecycle_configs",
+    config = "//feature_integration_tests/test_cases/configs:daemon_launch_manager_config.json",
+)
+
 # Tests targets
 score_py_pytest(
     name = "fit_rust",
@@ -45,7 +51,9 @@ score_py_pytest(
     ],
     data = [
         "conftest.py",
+        "daemon_helpers.py",
         "fit_scenario.py",
+        "lifecycle_scenario.py",
         "persistency_scenario.py",
         "test_properties.py",
         "//feature_integration_tests/test_scenarios/rust:rust_test_scenarios",
@@ -67,10 +75,65 @@ score_py_pytest(
     ],
     data = [
         "conftest.py",
+        "daemon_helpers.py",
         "fit_scenario.py",
+        "lifecycle_scenario.py",
         "persistency_scenario.py",
         "test_properties.py",
         "//feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios",
+    ],
+    pytest_config = "//:pyproject.toml",
+    deps = all_requirements,
+)
+
+# Daemon integration tests (Rust)
+score_py_pytest(
+    name = "fit_daemon_rust",
+    srcs = glob(["tests/**/*.py"]),
+    args = [
+        "-m rust",
+        "--traces=all",
+        "--rust-target-path=$(rootpath //feature_integration_tests/test_scenarios/rust:rust_test_scenarios)",
+        "-k with_daemon",
+    ],
+    data = [
+        "conftest.py",
+        "daemon_helpers.py",
+        "fit_scenario.py",
+        "lifecycle_scenario.py",
+        "persistency_scenario.py",
+        "test_properties.py",
+        "//feature_integration_tests/test_scenarios/rust:rust_test_scenarios",
+        "@score_lifecycle_health//examples/rust_supervised_app",
+        "@score_lifecycle_health//src/launch_manager_daemon:launch_manager",
+    ],
+    env = {
+        "RUST_BACKTRACE": "1",
+    },
+    pytest_config = "//:pyproject.toml",
+    deps = all_requirements,
+)
+
+# Daemon integration tests (C++)
+score_py_pytest(
+    name = "fit_daemon_cpp",
+    srcs = glob(["tests/**/*.py"]),
+    args = [
+        "-m cpp",
+        "--traces=all",
+        "--cpp-target-path=$(rootpath //feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios)",
+        "-k with_daemon",
+    ],
+    data = [
+        "conftest.py",
+        "daemon_helpers.py",
+        "fit_scenario.py",
+        "lifecycle_scenario.py",
+        "persistency_scenario.py",
+        "test_properties.py",
+        "//feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios",
+        "@score_lifecycle_health//examples/cpp_supervised_app",
+        "@score_lifecycle_health//src/launch_manager_daemon:launch_manager",
     ],
     pytest_config = "//:pyproject.toml",
     deps = all_requirements,
@@ -81,5 +144,13 @@ test_suite(
     tests = [
         ":fit_cpp",
         ":fit_rust",
+    ],
+)
+
+test_suite(
+    name = "fit_daemon",
+    tests = [
+        ":fit_daemon_cpp",
+        ":fit_daemon_rust",
     ],
 )

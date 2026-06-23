@@ -13,15 +13,17 @@
 use test_scenarios_rust::scenario::{ScenarioGroup, ScenarioGroupImpl};
 
 mod basic;
+mod lifecycle;
 mod persistency;
 
 use basic::basic_scenario_group;
+use lifecycle::lifecycle_group;
 use persistency::persistency_group;
 
 pub fn root_scenario_group() -> Box<dyn ScenarioGroup> {
     Box::new(ScenarioGroupImpl::new(
         "root",
         vec![],
-        vec![basic_scenario_group(), persistency_group()],
+        vec![basic_scenario_group(), lifecycle_group(), persistency_group()],
     ))
 }
