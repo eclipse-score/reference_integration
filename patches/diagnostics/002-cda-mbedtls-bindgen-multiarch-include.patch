@@ -1,0 +1,20 @@
+diff --git a/comm-mbedtls/mbedtls-sys/build.rs b/comm-mbedtls/mbedtls-sys/build.rs
+index 8543d8a..21d2a47 100644
+--- a/comm-mbedtls/mbedtls-sys/build.rs
++++ b/comm-mbedtls/mbedtls-sys/build.rs
+@@ -183,8 +183,14 @@ fn generate_bindings(mbedtls_src: &Path, manifest_dir: &Path, out_dir: &Path) {
+         .clang_arg("-DMBEDTLS_SSL_NULL_CIPHERSUITES")
+         .clang_arg("-DMBEDTLS_ED25519_PSA_DRIVER");
+ 
+     if let Ok(sysroot) = env::var("BINDGEN_SYSROOT") {
+-        builder = builder.clang_arg(format!("--sysroot={sysroot}"));
++        let sysroot = PathBuf::from(sysroot);
++        builder = builder.clang_arg(format!("--sysroot={}", sysroot.display()));
++
++        let multiarch_include = sysroot.join("usr").join("aarch64-linux-gnu").join("include");
++        if multiarch_include.exists() {
++            builder = builder.clang_arg(format!("-isystem{}", multiarch_include.display()));
++        }
+     }
+ 
+     let bindings = builder

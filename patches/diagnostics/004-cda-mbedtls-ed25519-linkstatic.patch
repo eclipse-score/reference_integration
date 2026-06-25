@@ -1,0 +1,14 @@
+diff --git a/third_party/mbedtls/BUILD.bazel b/third_party/mbedtls/BUILD.bazel
+index b49a1e1..d2a3f11 100644
+--- a/third_party/mbedtls/BUILD.bazel
++++ b/third_party/mbedtls/BUILD.bazel
+@@ -46,6 +46,7 @@ cc_library(
+     hdrs = [
+         "//comm-mbedtls/mbedtls-sys:csrc/ed25519_extract.h",
+         "//comm-mbedtls/mbedtls-sys:csrc/ed25519_psa_driver.h",
+     ],
+     alwayslink = True,
++    linkstatic = True,
+     copts = ["-DMBEDTLS_ED25519_PSA_DRIVER"],
+     deps = [":mbedtls"],
+ )
