@@ -64,3 +64,15 @@ Alternatively, the configuration file can contain a top-level array of configs, 
 ```
 
 You can customize where to look for examples using env `SCORE_CLI_INIT_DIR`.
+
+## Quick run
+
+Build and run the CLI example with Bazel:
+
+```bash
+# Show CLI help
+bazel run //showcases/cli:cli -- --help
+
+# Run CLI using the dev helper
+./score_starter
+```
