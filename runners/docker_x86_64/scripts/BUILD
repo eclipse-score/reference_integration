@@ -17,7 +17,7 @@ sh_library(
     name = "run_docker",
     srcs = ["run_docker.sh"],
     visibility = [
-        "//images/auto_x86_64:__pkg__",
+        "//images/autosd:__pkg__",
         "//images/linux_x86_64:__pkg__",
     ],
     deps = ["@rules_shell//shell/runfiles"],

@@ -75,6 +75,7 @@ The following referenced summary pages exist only.
 
 .. toctree::
    :titlesonly:
+   :hidden:
 
    Unit Tests Summary <unit_test_summary>
    Coverage Analysis Summary <coverage_summary>
