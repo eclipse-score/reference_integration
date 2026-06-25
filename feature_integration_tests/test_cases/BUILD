@@ -111,6 +111,13 @@ score_py_pytest(
 )
 
 test_suite(
+    name = "fit",
+    tests = [
+        ":fit_daemon",
+    ],
+)
+
+test_suite(
     name = "fit_daemon",
     tests = [
         ":fit_daemon_lifecycle_arc_cpp",
