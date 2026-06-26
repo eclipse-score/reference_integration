@@ -1,0 +1,26 @@
+{
+    "name": "Logging example",
+    "description": "Example for running logging with all log levels via remote and console",
+    "apps": [
+      {
+        "path": "/bin/sh",
+        "args": [
+          "-c",
+          "cd /usr/bin/datarouter && ./datarouter --no_adaptive_runtime >/dev/null 2>&1 &"
+        ],
+        "env": {}
+      },
+      {
+        "path": "/showcases/bin/logging_app",
+        "args": [],
+        "env": {},
+        "dir": "/showcases/data/logging/logging_app/etc"
+      },
+       {
+        "path": "/showcases/bin/dlt_generator",
+        "args": [],
+        "env": {},
+        "dir": "/showcases/data/logging/dlt_generator/etc"
+      }
+    ]
+  }
