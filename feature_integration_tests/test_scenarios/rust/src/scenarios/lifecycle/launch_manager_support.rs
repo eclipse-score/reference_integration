@@ -10,6 +10,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 // *******************************************************************************
+// *******************************************************************************
 
 //! Lifecycle integration test scenarios using real lifecycle and health monitoring APIs.
 //!
@@ -226,7 +227,11 @@ impl Scenario for ControlInterfaceSupport {
 
     fn run(&self, input: &str) -> Result<(), String> {
         let v: Value = serde_json::from_str(input).map_err(|e| format!("Parse error: {}", e))?;
-        let condition_name = v["test"]["condition_name"].as_str().unwrap_or("app_ready");
+        let test = v.get("test");
+        let condition_name = test
+            .and_then(|t| t.get("condition_name"))
+            .and_then(|v| v.as_str())
+            .unwrap_or("app_ready");
 
         info!("Testing control interface for custom conditions");
         info!("Signaling custom condition: {}", condition_name);
@@ -248,8 +253,12 @@ impl Scenario for ProcessArguments {
 
     fn run(&self, input: &str) -> Result<(), String> {
         let v: Value = serde_json::from_str(input).map_err(|e| format!("Parse error: {}", e))?;
-        let args = v["test"]["args"].as_array();
-        let working_dir = v["test"]["working_dir"].as_str().unwrap_or("/tmp");
+        let test = v.get("test");
+        let args = test.and_then(|t| t.get("args")).and_then(|a| a.as_array());
+        let working_dir = test
+            .and_then(|t| t.get("working_dir"))
+            .and_then(|w| w.as_str())
+            .unwrap_or("/tmp");
 
         info!("Testing process arguments and working directory");
 
@@ -274,13 +283,17 @@ impl Scenario for ProcessSecurity {
 
     fn run(&self, input: &str) -> Result<(), String> {
         let v: Value = serde_json::from_str(input).map_err(|e| format!("Parse error: {}", e))?;
-        let uid = v["test"]["uid"].as_u64().unwrap_or(1000);
-        let gid = v["test"]["gid"].as_u64().unwrap_or(1000);
+        let test = v.get("test");
+        let uid = test.and_then(|t| t.get("uid")).and_then(|v| v.as_u64()).unwrap_or(1000);
+        let gid = test.and_then(|t| t.get("gid")).and_then(|v| v.as_u64()).unwrap_or(1000);
 
         info!("Testing process security configuration");
         info!("Process UID: {}, GID: {}", uid, gid);
 
-        if let Some(groups) = v["test"]["supplementary_groups"].as_array() {
+        if let Some(groups) = test
+            .and_then(|t| t.get("supplementary_groups"))
+            .and_then(|v| v.as_array())
+        {
             let groups_vec: Vec<u64> = groups.iter().filter_map(|g| g.as_u64()).collect();
             info!("Supplementary groups: {:?}", groups_vec);
         }
@@ -301,14 +314,21 @@ impl Scenario for ProcessResources {
 
     fn run(&self, input: &str) -> Result<(), String> {
         let v: Value = serde_json::from_str(input).map_err(|e| format!("Parse error: {}", e))?;
-        let priority = v["test"]["priority"].as_u64().unwrap_or(10);
-        let sched_policy = v["test"]["scheduling_policy"].as_str().unwrap_or("SCHED_RR");
+        let test = v.get("test");
+        let priority = test
+            .and_then(|t| t.get("priority"))
+            .and_then(|v| v.as_u64())
+            .unwrap_or(10);
+        let sched_policy = test
+            .and_then(|t| t.get("scheduling_policy"))
+            .and_then(|v| v.as_str())
+            .unwrap_or("SCHED_RR");
 
         info!("Testing process resource management");
         info!("Process priority: {}", priority);
         info!("Scheduling policy: {}", sched_policy);
 
-        if let Some(affinity) = v["test"]["cpu_affinity"].as_array() {
+        if let Some(affinity) = test.and_then(|t| t.get("cpu_affinity")).and_then(|v| v.as_array()) {
             let affinity_vec: Vec<u64> = affinity.iter().filter_map(|a| a.as_u64()).collect();
             info!("CPU affinity: {:?}", affinity_vec);
         }
@@ -329,12 +349,19 @@ impl Scenario for ConditionalLaunching {
 
     fn run(&self, input: &str) -> Result<(), String> {
         let v: Value = serde_json::from_str(input).map_err(|e| format!("Parse error: {}", e))?;
-        let polling_interval = v["test"]["polling_interval_ms"].as_u64().unwrap_or(50);
-        let timeout = v["test"]["timeout_ms"].as_u64().unwrap_or(5000);
+        let test = v.get("test");
+        let polling_interval = test
+            .and_then(|t| t.get("polling_interval_ms"))
+            .and_then(|v| v.as_u64())
+            .unwrap_or(50);
+        let timeout = test
+            .and_then(|t| t.get("timeout_ms"))
+            .and_then(|v| v.as_u64())
+            .unwrap_or(5000);
 
         info!("Testing conditional launching");
 
-        if let Some(conditions) = v["test"]["wait_conditions"].as_array() {
+        if let Some(conditions) = test.and_then(|t| t.get("wait_conditions")).and_then(|v| v.as_array()) {
             for condition in conditions {
                 if let Some(cond_str) = condition.as_str() {
                     if cond_str.starts_with("path:") {
@@ -366,7 +393,11 @@ impl Scenario for ProcessManagement {
 
     fn run(&self, input: &str) -> Result<(), String> {
         let v: Value = serde_json::from_str(input).map_err(|e| format!("Parse error: {}", e))?;
-        let instance_count = v["test"]["instance_count"].as_u64().unwrap_or(3);
+        let instance_count = v
+            .get("test")
+            .and_then(|t| t.get("instance_count"))
+            .and_then(|v| v.as_u64())
+            .unwrap_or(3);
 
         info!("Testing process management");
         info!("Adopted running process");
@@ -392,11 +423,15 @@ impl Scenario for RunTargets {
 
     fn run(&self, input: &str) -> Result<(), String> {
         let v: Value = serde_json::from_str(input).map_err(|e| format!("Parse error: {}", e))?;
-        let initial_target = v["test"]["initial_target"].as_str().unwrap_or("startup");
+        let test = v.get("test");
+        let initial_target = test
+            .and_then(|t| t.get("initial_target"))
+            .and_then(|v| v.as_str())
+            .unwrap_or("startup");
 
         info!("Testing run target support");
 
-        if let Some(targets) = v["test"]["run_targets"].as_array() {
+        if let Some(targets) = test.and_then(|t| t.get("run_targets")).and_then(|v| v.as_array()) {
             for target in targets {
                 if let Some(target_name) = target.as_str() {
                     info!("Run target defined: {}", target_name);
@@ -422,8 +457,15 @@ impl Scenario for ProcessTermination {
 
     fn run(&self, input: &str) -> Result<(), String> {
         let v: Value = serde_json::from_str(input).map_err(|e| format!("Parse error: {}", e))?;
-        let stop_timeout = v["test"]["stop_timeout_ms"].as_u64().unwrap_or(1000);
-        let signal_delay = v["test"]["sigterm_to_sigkill_delay_ms"].as_u64().unwrap_or(500);
+        let test = v.get("test");
+        let stop_timeout = test
+            .and_then(|t| t.get("stop_timeout_ms"))
+            .and_then(|v| v.as_u64())
+            .unwrap_or(1000);
+        let signal_delay = test
+            .and_then(|t| t.get("sigterm_to_sigkill_delay_ms"))
+            .and_then(|v| v.as_u64())
+            .unwrap_or(500);
 
         info!("Testing process termination");
         info!("Stop timeout: {}ms", stop_timeout);
@@ -446,8 +488,15 @@ impl Scenario for MonitoringAndRecovery {
 
     fn run(&self, input: &str) -> Result<(), String> {
         let v: Value = serde_json::from_str(input).map_err(|e| format!("Parse error: {}", e))?;
-        let watchdog_interval = v["test"]["watchdog_interval_ms"].as_u64().unwrap_or(100);
-        let max_attempts = v["test"]["max_restart_attempts"].as_u64().unwrap_or(3);
+        let test = v.get("test");
+        let watchdog_interval = test
+            .and_then(|t| t.get("watchdog_interval_ms"))
+            .and_then(|v| v.as_u64())
+            .unwrap_or(100);
+        let max_attempts = test
+            .and_then(|t| t.get("max_restart_attempts"))
+            .and_then(|v| v.as_u64())
+            .unwrap_or(3);
 
         info!("Testing monitoring and recovery");
         info!("Process monitoring started");
@@ -559,7 +608,11 @@ impl Scenario for IOAndFileDescriptors {
 
     fn run(&self, input: &str) -> Result<(), String> {
         let v: Value = serde_json::from_str(input).map_err(|e| format!("Parse error: {}", e))?;
-        let max_retries = v["test"]["max_retries"].as_u64().unwrap_or(3);
+        let max_retries = v
+            .get("test")
+            .and_then(|t| t.get("max_retries"))
+            .and_then(|v| v.as_u64())
+            .unwrap_or(3);
 
         info!("Testing I/O and file descriptor management");
         info!("stdout redirected to /tmp/app.log");

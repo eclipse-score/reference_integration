@@ -25,7 +25,6 @@
 #include <iostream>
 #include <memory>
 #include <mutex>
-#include <regex>
 #include <thread>
 #include <vector>
 
@@ -86,24 +85,22 @@ struct LifecycleTestInput {
     }
 };
 
-std::vector<std::string> parse_string_array_field(const std::string& input, const std::string& field_name) {
-    const std::regex field_regex("\\\"" + field_name + "\\\"\\s*:\\s*\\[(.*?)\\]");
-    std::smatch field_match;
-
-    if (!std::regex_search(input, field_match, field_regex)) {
+std::vector<std::string> get_string_list_field(const score::json::Object& test_obj, const std::string& field_name) {
+    const auto it = test_obj.find(field_name);
+    if (it == test_obj.end()) {
         return {};
     }
-
-    std::vector<std::string> values;
-    const std::string array_content = field_match[1].str();
-    const std::regex value_regex("\\\"([^\\\"]*)\\\"");
-
-    for (std::sregex_iterator it(array_content.begin(), array_content.end(), value_regex);
-         it != std::sregex_iterator{};
-         ++it) {
-        values.push_back((*it)[1].str());
+    const auto list_res = it->second.As<score::json::List>();
+    if (!list_res.has_value()) {
+        return {};
     }
-
+    std::vector<std::string> values;
+    for (const auto& item : list_res.value().get()) {
+        const auto str_res = item.As<std::string>();
+        if (str_res.has_value()) {
+            values.push_back(str_res.value());
+        }
+    }
     return values;
 }
 
@@ -301,18 +298,9 @@ public:
         const score::json::JsonParser parser;
         const auto root_any_res = parser.FromBuffer(input);
         std::string working_dir = "/tmp";
-        auto args = parse_string_array_field(input, "args");
+        std::vector<std::string> args;
 
         std::cout << "Testing process arguments and working directory" << std::endl;
-        if (!args.empty()) {
-            std::cout << "Received arguments:";
-            for (const auto& arg : args) {
-                std::cout << " " << arg;
-            }
-            std::cout << std::endl;
-        } else {
-            std::cout << "Received arguments: --mode test --verbose" << std::endl;
-        }
 
         if (root_any_res.has_value()) {
             const auto root_object_res = root_any_res.value().As<score::json::Object>();
@@ -324,6 +312,8 @@ public:
                     if (test_object_res.has_value()) {
                         const auto& test = test_object_res.value().get();
 
+                        args = get_string_list_field(test, "args");
+
                         const auto wd_it = test.find("working_dir");
                         if (wd_it != test.end()) {
                             const auto wd_res = wd_it->second.As<std::string>();
@@ -334,6 +324,16 @@ public:
                     }
                 }
             }
+        }
+
+        if (!args.empty()) {
+            std::cout << "Received arguments:";
+            for (const auto& arg : args) {
+                std::cout << " " << arg;
+            }
+            std::cout << std::endl;
+        } else {
+            std::cout << "Received arguments: --mode test --verbose" << std::endl;
         }
 
         std::cout << "Working directory: " << working_dir << std::endl;
@@ -453,7 +453,7 @@ public:
         const auto root_any_res = parser.FromBuffer(input);
         uint64_t polling_interval = 50;
         uint64_t timeout = 5000;
-        auto wait_conditions = parse_string_array_field(input, "wait_conditions");
+        std::vector<std::string> wait_conditions;
 
         if (root_any_res.has_value()) {
             const auto root_object_res = root_any_res.value().As<score::json::Object>();
@@ -480,6 +480,8 @@ public:
                                 timeout = timeout_res.value();
                             }
                         }
+
+                        wait_conditions = get_string_list_field(test, "wait_conditions");
                     }
                 }
             }
@@ -563,7 +565,7 @@ public:
         const score::json::JsonParser parser;
         const auto root_any_res = parser.FromBuffer(input);
         std::string initial_target = "startup";
-        auto run_targets = parse_string_array_field(input, "run_targets");
+        std::vector<std::string> run_targets;
 
         if (root_any_res.has_value()) {
             const auto root_object_res = root_any_res.value().As<score::json::Object>();
@@ -582,6 +584,8 @@ public:
                                 initial_target = initial_res.value();
                             }
                         }
+
+                        run_targets = get_string_list_field(test, "run_targets");
                     }
                 }
             }

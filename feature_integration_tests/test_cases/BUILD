@@ -73,6 +73,7 @@ score_py_pytest(
     ],
     env = {
         "RUST_BACKTRACE": "1",
+        "FIT_ENABLE_SETCAP": "1",
     },
     pytest_config = "//:pyproject.toml",
     deps = all_requirements,
@@ -106,6 +107,9 @@ score_py_pytest(
         # Communication binaries (used by comm cross-module test)
         "@score_communication//score/mw/com/example/ipc_bridge:ipc_bridge_cpp",
     ],
+    env = {
+        "FIT_ENABLE_SETCAP": "1",
+    },
     pytest_config = "//:pyproject.toml",
     deps = all_requirements,
 )

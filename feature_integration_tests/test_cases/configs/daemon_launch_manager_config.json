@@ -49,13 +49,57 @@
                 },
                 "depends_on": []
             }
+        },
+        "rust_supervised_app": {
+            "description": "Rust supervised application (lifecycle recovery tests)",
+            "component_properties": {
+                "binary_name": "rust_supervised_app",
+                "application_profile": {
+                    "application_type": "Reporting_And_Supervised"
+                },
+                "depends_on": [],
+                "process_arguments": ["--delay", "100"]
+            },
+            "deployment_config": {
+                "environmental_variables": {
+                    "IDENTIFIER": "rust_supervised_app",
+                    "PROCESSIDENTIFIER": "rust_supervised_app"
+                }
+            }
+        },
+        "cpp_supervised_app": {
+            "description": "C++ supervised application (lifecycle recovery tests)",
+            "component_properties": {
+                "binary_name": "cpp_supervised_app",
+                "application_profile": {
+                    "application_type": "Reporting_And_Supervised"
+                },
+                "depends_on": [],
+                "process_arguments": ["-d50"]
+            },
+            "deployment_config": {
+                "environmental_variables": {
+                    "IDENTIFIER": "cpp_supervised_app",
+                    "PROCESSIDENTIFIER": "cpp_supervised_app"
+                }
+            }
         }
     },
     "run_targets": {
         "Startup": {
             "description": "Minimal functionality of the system",
+            "depends_on": [],
+            "recovery_action": {
+                "switch_run_target": {
+                    "run_target": "fallback_run_target"
+                }
+            }
+        },
+        "SupervisedApps": {
+            "description": "Run target used only to trigger hmproc flatbuffer generation for supervised apps",
             "depends_on": [
-                "state_manager"
+                "rust_supervised_app",
+                "cpp_supervised_app"
             ],
             "recovery_action": {
                 "switch_run_target": {
@@ -67,9 +111,7 @@
     "initial_run_target": "Startup",
     "fallback_run_target": {
         "description": "Switching off everything",
-        "depends_on": [
-            "state_manager"
-        ],
+        "depends_on": [],
         "transition_timeout": 1.5
     },
     "alive_supervision": {

@@ -10,6 +10,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+
 """
 Architectural interface test: Launch Manager <-> State Manager
                               Control Interface (activate_target)

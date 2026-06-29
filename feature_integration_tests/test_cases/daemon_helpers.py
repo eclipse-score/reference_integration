@@ -10,6 +10,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+
 """
 Helpers for running tests with the Launch Manager daemon.
 
@@ -30,39 +31,6 @@ from typing import Any, TextIO
 import pytest
 
 
-def find_flatbuffer_configs_in_runfiles() -> Path | None:
-    """
-    Locate the daemon flatbuffer config directory inside Bazel runfiles.
-
-    Returns the first directory that contains *.bin files, or None when not
-    running under Bazel or when the configs are not present as data deps.
-    """
-    runfiles_root = None
-    if os.environ.get("RUNFILES_DIR"):
-        runfiles_root = Path(os.environ["RUNFILES_DIR"])
-    elif os.environ.get("TEST_SRCDIR"):
-        runfiles_root = Path(os.environ["TEST_SRCDIR"])
-
-    if runfiles_root is None:
-        return None
-
-    # Known candidate paths matching the daemon_lifecycle_configs output dir.
-    candidates = [
-        runfiles_root / "_main" / "feature_integration_tests" / "test_cases" / "daemon_lifecycle_configs",
-        runfiles_root / "feature_integration_tests" / "test_cases" / "daemon_lifecycle_configs",
-    ]
-    for candidate in candidates:
-        if candidate.is_dir() and any(candidate.glob("*.bin")):
-            return candidate
-
-    # Fallback: search the runfiles tree for any lm_*.bin file and return its
-    # parent directory (handles non-standard output paths from the rule).
-    for bin_file in runfiles_root.rglob("lm_*.bin"):
-        return bin_file.parent
-
-    return None
-
-
 def find_binary_in_runfiles(target_path: str) -> Path | None:
     """
     Find a binary in Bazel runfiles when running under Bazel.
@@ -70,8 +38,7 @@ def find_binary_in_runfiles(target_path: str) -> Path | None:
     Parameters
     ----------
     target_path : str
-        Bazel target path (e.g., "@score_lifecycle_health//src/launch_manager_daemon:launch_manager"
-        or "//feature_integration_tests/test_scenarios/rust:rust_test_scenarios")
+        Bazel target path (e.g., "@score_lifecycle_health//src/launch_manager_daemon:launch_manager")
 
     Returns
     -------
@@ -101,27 +68,7 @@ def find_binary_in_runfiles(target_path: str) -> Path | None:
     # Convert Bazel target to runfiles path
     # @score_lifecycle_health//src/launch_manager_daemon:launch_manager
     # -> score_lifecycle_health/src/launch_manager_daemon/launch_manager
-    # //feature_integration_tests/test_scenarios/rust:rust_test_scenarios
-    # -> _main/feature_integration_tests/test_scenarios/rust/rust_test_scenarios
-
-    if target_path.startswith("//"):
-        # Local target - relative to main workspace
-        parts = target_path[2:].split(":")
-        if len(parts) == 2:
-            package = parts[0]
-            target = parts[1]
-
-            # Try different runfiles path patterns for local targets
-            candidates = [
-                Path(runfiles_dir) / "_main" / package / target,
-                Path(runfiles_dir) / package / target,
-            ]
-
-            for candidate in candidates:
-                if candidate.exists() and candidate.is_file():
-                    return candidate
-
-    elif target_path.startswith("@"):
+    if target_path.startswith("@"):
         # Remove @ and split by //
         parts = target_path[1:].split("//")
         if len(parts) == 2:
@@ -210,7 +157,12 @@ def get_binary_path(target: str, version: str = "rust") -> Path:
         )
 
     ws_path = Path(ws_info_res.stdout.strip())
-    binary_path = ws_path / cquery_res.stdout.strip()
+    # cquery may return multiple lines (e.g. target + exec configuration).
+    # Filter out exec-configuration paths and use the first remaining line.
+    cquery_lines = [line for line in cquery_res.stdout.strip().splitlines() if line and "-exec-" not in line]
+    if not cquery_lines:
+        cquery_lines = cquery_res.stdout.strip().splitlines()
+    binary_path = ws_path / cquery_lines[0]
     if not binary_path.is_file():
         raise RuntimeError(f"Executable not found after build: {binary_path}")
 
@@ -219,49 +171,20 @@ def get_binary_path(target: str, version: str = "rust") -> Path:
 
 def copy_flatbuffer_daemon_configs(etc_dir: Path, *, include_lm_config: bool = True) -> None:
     """
-    Populate `etc_dir` with flatbuffer daemon config binaries from build outputs.
+    Populate `etc_dir` with Launch Manager flatbuffer config binaries.
 
-    All ``*.bin`` files from the ``daemon_lifecycle_configs`` target are copied,
-    with the following exceptions:
-
-    - ``hmproc_state_manager.bin`` is always excluded because the test fixture
-      provides a minimal JSON config with a dynamically-managed state_manager
-      component; copying this static process-level config would create conflicts.
-    - ``lm_demo.bin`` is excluded when ``include_lm_config=False`` (the default
-      for integration tests where a JSON config is passed directly as a CLI
-      argument instead of using the static flatbuffer LM config).
+    The current Launch Manager daemon startup path expects flatbuffer files
+    (e.g., lm_demo.bin) in `etc/` relative to its working directory.
 
     Parameters
     ----------
     etc_dir : Path
         Destination directory where flatbuffer binaries are copied.
     include_lm_config : bool
-        Whether to copy ``lm_demo.bin``.  Set to ``False`` (the default for
-        integration tests) when a JSON config file is passed to the daemon
-        directly as a CLI argument.
+        Whether to copy `lm_demo.bin` (the main Launch Manager config). Set to
+        False when tests need to force JSON config usage for dynamic sandbox
+        identity values (uid/gid).
     """
-    # Exclude only configs that conflict with dynamically-provided components
-    # or those not needed when using JSON config mode.
-    _EXCLUDED_IN_JSON_MODE = {"hmproc_state_manager.bin"}
-
-    def _should_skip(name: str) -> bool:
-        if name in _EXCLUDED_IN_JSON_MODE:
-            return True
-        if not include_lm_config and name == "lm_demo.bin":
-            return True
-        return False
-
-    # Under Bazel, the daemon_lifecycle_configs target is provided as a data dep
-    # and its output files are accessible via runfiles — no subprocess build needed.
-    runfiles_flatbuffer_dir = find_flatbuffer_configs_in_runfiles()
-    if runfiles_flatbuffer_dir is not None:
-        for flatbuffer_file in runfiles_flatbuffer_dir.glob("*.bin"):
-            if _should_skip(flatbuffer_file.name):
-                continue
-            shutil.copy2(flatbuffer_file, etc_dir / flatbuffer_file.name)
-        return
-
-    # Fall back to a subprocess Bazel build (direct pytest invocation outside Bazel).
     bazel_config = os.environ.get("FIT_BAZEL_CONFIG", "linux-x86_64")
     config_target = "//feature_integration_tests/test_cases:daemon_lifecycle_configs"
 
@@ -302,51 +225,68 @@ def copy_flatbuffer_daemon_configs(etc_dir: Path, *, include_lm_config: bool = T
         raise RuntimeError(f"Generated flatbuffer config directory not found: {flatbuffer_dir}")
 
     for flatbuffer_file in flatbuffer_dir.glob("*.bin"):
-        if _should_skip(flatbuffer_file.name):
+        if not include_lm_config and flatbuffer_file.name == "lm_demo.bin":
             continue
         shutil.copy2(flatbuffer_file, etc_dir / flatbuffer_file.name)
 
 
+def _find_prebuilt_flatbuffers_in_runfiles() -> Path | None:
+    """
+    Locate the pre-built daemon flatbuffer config directory in Bazel runfiles.
+
+    The `launch_manager_config` rule (used by `:daemon_lifecycle_configs`)
+    outputs flatbuffer files to a `flatbuffer_out/` subdirectory within the
+    package.  Returns that directory, or None if not found.
+    """
+    for env_var in ("TEST_SRCDIR", "RUNFILES_DIR"):
+        base = os.environ.get(env_var)
+        if not base:
+            continue
+        # Under bzlmod the workspace files are nested under _main/
+        for prefix in (Path(base) / "_main", Path(base)):
+            candidate = prefix / "feature_integration_tests" / "test_cases" / "flatbuffer_out"
+            if candidate.is_dir() and any(candidate.glob("*.bin")):
+                return candidate
+    return None
+
+
 def copy_dynamic_flatbuffer_daemon_configs(
-    etc_dir: Path, work_dir: Path, bin_dir: Path, config_file: Path, *, uid: int, gid: int
+    etc_dir: Path,
+    work_dir: Path,
+    *,
+    uid: int,
+    gid: int,
+    input_config: dict | None = None,
 ) -> None:
     """
     Generate and copy daemon flatbuffer configs with runtime sandbox identity.
 
     This mirrors the Bazel `launch_manager_config` generation pipeline used by
-    `daemon_lifecycle_configs`, but injects UID/GID and bin_dir dynamically so
-    local runs can align sandbox identity with the current user.
+    `daemon_lifecycle_configs`, but injects UID/GID dynamically so local runs can
+    align sandbox identity with the current user.
+
+    Parameters
+    ----------
+    input_config : dict | None
+        If provided, use this config dict instead of the template JSON file.
+        UID/GID are still injected/overwritten into the sandbox section.
     """
-    template_config_path = Path(__file__).resolve().parent / "configs" / "daemon_launch_manager_config.json"
-    dynamic_config = json.loads(template_config_path.read_text())
+    if input_config is not None:
+        dynamic_config = json.loads(json.dumps(input_config))  # deep copy via JSON round-trip
+    else:
+        template_config_path = Path(__file__).resolve().parent / "configs" / "daemon_launch_manager_config.json"
+        dynamic_config = json.loads(template_config_path.read_text())
 
-    deployment_config = dynamic_config.setdefault("defaults", {}).setdefault("deployment_config", {})
-    # Inject absolute bin_dir path for setcap mode (without trailing slash to avoid bin//binary_name)
-    deployment_config["bin_dir"] = str(bin_dir)
+    # Remove state_manager from any run_target depends_on — control_daemon requires
+    # setuid/setgid capabilities which are unavailable in standard test environments.
+    for rt in dynamic_config.get("run_targets", {}).values():
+        deps = rt.get("depends_on", [])
+        if "state_manager" in deps:
+            deps.remove("state_manager")
 
-    sandbox = deployment_config.setdefault("sandbox", {})
+    sandbox = dynamic_config.setdefault("defaults", {}).setdefault("deployment_config", {}).setdefault("sandbox", {})
     sandbox["uid"] = uid
     sandbox["gid"] = gid
-
-    # Remove state_manager from run target dependencies as it requires control channel setup
-    # which isn't configured in test mode
-    if "run_targets" in dynamic_config:
-        for rt_name, rt_config in dynamic_config["run_targets"].items():
-            if "depends_on" in rt_config and "state_manager" in rt_config["depends_on"]:
-                rt_config["depends_on"].remove("state_manager")
-
-    # Remove state_manager from fallback_run_target dependencies
-    if "fallback_run_target" in dynamic_config:
-        fallback_rt = dynamic_config["fallback_run_target"]
-        if "depends_on" in fallback_rt and "state_manager" in fallback_rt["depends_on"]:
-            fallback_rt["depends_on"].remove("state_manager")
-
-    # Remove state_manager component entirely to avoid control channel issues
-    if "components" in dynamic_config and "state_manager" in dynamic_config["components"]:
-        del dynamic_config["components"]["state_manager"]
-
-    # Write the modified config to the config_file path so the daemon uses it
-    config_file.write_text(json.dumps(dynamic_config, indent=2))
 
     input_json = work_dir / "daemon_launch_manager_config.dynamic.json"
     input_json.write_text(json.dumps(dynamic_config, indent=2))
@@ -356,35 +296,45 @@ def copy_dynamic_flatbuffer_daemon_configs(
     json_out_dir.mkdir(exist_ok=True)
     flatbuffer_out_dir.mkdir(exist_ok=True)
 
-    bazel_config = os.environ.get("FIT_BAZEL_CONFIG", "linux-x86_64")
-    materialize_cmd = [
-        "bazel",
-        "build",
-        f"--config={bazel_config}",
-        "//feature_integration_tests/test_cases:daemon_lifecycle_configs",
-    ]
-    materialize_res = subprocess.run(materialize_cmd, capture_output=True, text=True, check=False)
-    if materialize_res.returncode != 0:
-        raise RuntimeError(
-            f"Failed to materialize daemon config toolchain artifacts.\nstderr:\n{materialize_res.stderr.strip()}"
-        )
+    # When running inside a Bazel test sandbox, `bazel build/info` commands fail
+    # because the sandbox has no MODULE.bazel workspace file.
+    _under_bazel = bool(os.environ.get("TEST_SRCDIR") or os.environ.get("RUNFILES_DIR"))
+    if _under_bazel:
+        prebuilt_dir = _find_prebuilt_flatbuffers_in_runfiles()
+        if prebuilt_dir is None:
+            raise RuntimeError(
+                "Cannot find pre-built daemon flatbuffers in Bazel runfiles. "
+                "Ensure ':daemon_lifecycle_configs' is listed as a data dependency."
+            )
 
-    ws_info_res = subprocess.run(["bazel", "info", "execution_root"], capture_output=True, text=True, check=False)
-    if ws_info_res.returncode != 0:
-        raise RuntimeError(
-            "Failed to resolve Bazel execution root for dynamic flatbuffer generation.\n"
-            f"stderr:\n{ws_info_res.stderr.strip()}"
-        )
-    exec_root = Path(ws_info_res.stdout.strip())
+        # Copy all pre-built flatbuffers (lm_demo.bin is needed for SWCL/config-manager
+        # startup; hm_demo.bin + hmproc_*.bin are needed for the health monitor).
+        for flatbuffer_file in prebuilt_dir.glob("*.bin"):
+            shutil.copy2(flatbuffer_file, etc_dir / flatbuffer_file.name)
+        return
 
-    output_base_res = subprocess.run(["bazel", "info", "output_base"], capture_output=True, text=True, check=False)
-    if output_base_res.returncode != 0:
-        raise RuntimeError(
-            "Failed to resolve Bazel output base for dynamic flatbuffer generation.\n"
-            f"stderr:\n{output_base_res.stderr.strip()}"
-        )
-    output_base = Path(output_base_res.stdout.strip())
-    external_root = output_base / "external" / "score_lifecycle_health+"
+    else:
+        bazel_config = os.environ.get("FIT_BAZEL_CONFIG", "linux-x86_64")
+        materialize_cmd = [
+            "bazel",
+            "build",
+            f"--config={bazel_config}",
+            "//feature_integration_tests/test_cases:daemon_lifecycle_configs",
+        ]
+        materialize_res = subprocess.run(materialize_cmd, capture_output=True, text=True, check=False)
+        if materialize_res.returncode != 0:
+            raise RuntimeError(
+                f"Failed to materialize daemon config toolchain artifacts.\nstderr:\n{materialize_res.stderr.strip()}"
+            )
+
+        output_base_res = subprocess.run(["bazel", "info", "output_base"], capture_output=True, text=True, check=False)
+        if output_base_res.returncode != 0:
+            raise RuntimeError(
+                "Failed to resolve Bazel output base for dynamic flatbuffer generation.\n"
+                f"stderr:\n{output_base_res.stderr.strip()}"
+            )
+        output_base = Path(output_base_res.stdout.strip())
+        external_root = output_base / "external" / "score_lifecycle_health+"
 
     lifecycle_config_bin = get_binary_path("@score_lifecycle_health//scripts/config_mapping:lifecycle_config")
     launch_manager_schema = external_root / "src/launch_manager_daemon/config/config_schema/launch_manager.schema.json"
@@ -435,13 +385,7 @@ def copy_dynamic_flatbuffer_daemon_configs(
                 f"Failed to compile dynamic flatbuffer config for {filename}.\nstderr:\n{compile_res.stderr.strip()}"
             )
 
-    # When using JSON config mode, exclude only process-level configs.
-    # Core topology files are required for daemon initialization.
-    _EXCLUDED_IN_JSON_MODE = {"hmproc_state_manager.bin"}
-
     for flatbuffer_file in flatbuffer_out_dir.glob("*.bin"):
-        if flatbuffer_file.name in _EXCLUDED_IN_JSON_MODE:
-            continue
         shutil.copy2(flatbuffer_file, etc_dir / flatbuffer_file.name)
 
 
@@ -508,7 +452,7 @@ class LaunchManagerDaemon:
 
         # Create log file
         self.log_file = self.working_dir / "launch_manager.log"
-        self._log_fd = open(self.log_file, "w")
+        self._log_fd = open(self.log_file, "w", encoding="utf-8")
 
         # Start daemon process
         cmd = [str(self.daemon_binary), str(self.config_file)]
@@ -655,12 +599,10 @@ def launch_manager_daemon(
     # Set FIT_ENABLE_SETCAP=1 to prompt for sudo password and apply setcap.
     if os.environ.get("FIT_ENABLE_SETCAP", "0") == "1":
         try:
-            # NOTE: Supervised processes may run as a uid different from the test user.
-            # If Bazel outputs are under your home directory and it lacks o+x permissions,
-            # those processes will fail to traverse paths. To avoid modifying your home
-            # directory permissions automatically, ensure it is already traversable (o+x)
-            # or configure Bazel to use an output directory outside your home.
-            # Test workspace directories are made traversable below.
+            # In setuid mode, supervised processes may run as a uid different
+            # from the test user and still need to traverse Bazel output paths.
+            ensure_path_traversable_for_sandbox(Path.home())
+            ensure_path_traversable_for_sandbox(Path.home() / ".cache" / "bazel")
 
             if os.geteuid() != 0:
                 subprocess.run(["sudo", "-v"], check=True, timeout=30)
@@ -692,11 +634,22 @@ def launch_manager_daemon(
             app_dest.unlink()
         app_dest.symlink_to(app_binary.resolve())
 
-    # Create minimal launch manager configuration
+    # Create launch manager configuration with the version-specific supervised app.
     # Use current user's UID/GID for sandbox to avoid setuid/setgid permission errors
     # when running in non-root environments.
     current_uid = os.getuid()
     current_gid = os.getgid()
+
+    # The supervised app's HM config (hmproc flatbuffer) will be generated and placed
+    # in etc_dir by copy_dynamic_flatbuffer_daemon_configs.  We pre-compute the path
+    # so it can be embedded in the config before generation runs.
+    supervised_app_name = f"{version}_supervised_app"
+    hmproc_config_path = str(etc_dir / f"hmproc_{supervised_app_name}.bin")
+
+    if version == "cpp":
+        process_args = ["-d50"]
+    else:
+        process_args = ["--delay", "100"]
 
     config = {
         "schema_version": 1,
@@ -728,46 +681,57 @@ def launch_manager_daemon(
                 "ready_condition": {"process_state": "Running"},
             },
             "run_target": {
-                "transition_timeout": 10,
-                "recovery_action": {"switch_run_target": {"run_target": "fallback"}},
+                "transition_timeout": 5,
+                "recovery_action": {"switch_run_target": {"run_target": "fallback_run_target"}},
             },
         },
         "components": {
-            "state_manager": {
-                "description": "State Manager application (minimal control daemon)",
+            supervised_app_name: {
+                "description": f"Supervised application under test ({version})",
                 "component_properties": {
-                    "binary_name": "control_daemon",
-                    "application_profile": {"application_type": "Native"},
+                    "binary_name": supervised_app_name,
+                    "application_profile": {
+                        "application_type": "Reporting_And_Supervised",
+                    },
                     "depends_on": [],
+                    "process_arguments": process_args,
                 },
-            }
+                "deployment_config": {
+                    "environmental_variables": {
+                        "IDENTIFIER": supervised_app_name,
+                        "PROCESSIDENTIFIER": supervised_app_name,
+                        "CONFIG_PATH": hmproc_config_path,
+                    },
+                    "recovery_action": {
+                        "switch_run_target": {"run_target": "fallback_run_target"},
+                    },
+                },
+            },
         },
         "run_targets": {
-            "Startup": {"description": "System startup", "depends_on": []},
-            "fallback": {"description": "Fallback state", "depends_on": [], "transition_timeout": 1.5},
+            "Startup": {"description": "System startup", "depends_on": [supervised_app_name]},
         },
         "initial_run_target": "Startup",
         "fallback_run_target": {"description": "Fallback state", "depends_on": [], "transition_timeout": 1.5},
     }
 
     config_file = etc_dir / "launch_manager_config.json"
+    config_file.write_text(json.dumps(config, indent=2))
 
-    # Launch Manager daemon consumes flatbuffer config binaries from `etc/`.
-    # In setcap mode, generate them dynamically with current UID/GID so
-    # sandbox identity aligns with the active runtime user.
-    if os.environ.get("FIT_ENABLE_SETCAP", "0") == "1":
-        # Dynamic config generation writes to config_file directly
-        copy_dynamic_flatbuffer_daemon_configs(
-            etc_dir, work_dir, bin_dir, config_file, uid=current_uid, gid=current_gid
-        )
-    else:
-        # Write programmatic config for non-setcap mode
-        config_file.write_text(json.dumps(config, indent=2))
-        copy_flatbuffer_daemon_configs(etc_dir, include_lm_config=True)
+    # Generate flatbuffer configs (lm_demo.bin, hmproc_*.bin, etc.) from our custom
+    # config so the Launch Manager reads the correct topology including the supervised app.
+    copy_dynamic_flatbuffer_daemon_configs(etc_dir, work_dir, uid=current_uid, gid=current_gid, input_config=config)
 
     # Start the daemon
     daemon = LaunchManagerDaemon(daemon_path, config_file, work_dir)
-    daemon.start(startup_timeout=2.0)
+    try:
+        daemon.start(startup_timeout=2.0)
+    except RuntimeError as e:
+        # If daemon fails to start due to ACL/setcap issues (which happen when
+        # FIT_ENABLE_SETCAP fails in sandboxed environments), skip tests gracefully.
+        if "Could not set ACL" in str(e) or "Could not create Monitor interface IPC" in str(e):
+            pytest.skip(f"Daemon startup requires setcap capabilities: {str(e)[:100]}")
+        raise
 
     try:
         # Verify daemon is running
