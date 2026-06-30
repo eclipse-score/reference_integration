@@ -196,10 +196,12 @@ def _simulate_probe_crash(
     crash_delay_s: float = 0.5,
 ) -> None:
     """
-    Start a persistency probe process and force-kill it (SIGKILL) to simulate a crash.
+    Start a persistency probe process, freeze it with SIGSTOP, then kill it with SIGKILL.
 
-    The process is given ``crash_delay_s`` seconds to start up before being killed,
-    exercising abnormal termination of a live process rather than post-exit cleanup.
+    SIGSTOP is sent immediately after the process starts so the subsequent SIGKILL always
+    targets a live process, regardless of how quickly the scenario binary would otherwise
+    complete.  ``crash_delay_s`` controls how long the process is held frozen before
+    being killed, giving it no opportunity to flush or close KVS storage cleanly.
     """
     if version == "rust":
         target = "//feature_integration_tests/test_scenarios/rust:rust_test_scenarios"
@@ -233,10 +235,21 @@ def _simulate_probe_crash(
 
     proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     try:
+        # Freeze the process immediately so it cannot exit before we kill it.
+        # Without SIGSTOP a fast-completing scenario exits normally before SIGKILL
+        # is delivered — proc.kill() would then hit a zombie, exercising nothing.
+        # After SIGSTOP the process is guaranteed alive; SIGKILL below delivers a
+        # real abnormal termination regardless of how quickly the scenario runs.
+        proc.send_signal(signal.SIGSTOP)
         time.sleep(crash_delay_s)
     finally:
         proc.kill()
         proc.wait()
+
+    assert proc.returncode == -signal.SIGKILL, (
+        f"Expected SIGKILL exit (returncode {-signal.SIGKILL}), got {proc.returncode}. "
+        "Crash simulation did not exercise abnormal termination."
+    )
 
 
 def _wait_for_process_restart(daemon: Any, process_name: str, old_pid: int, timeout_s: float = 10.0) -> int | None:
