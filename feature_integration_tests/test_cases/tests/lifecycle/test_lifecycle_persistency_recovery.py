@@ -365,30 +365,46 @@ class TestLifecyclePersistencyRecoveryContinuity:
         # Verify hash matches
         verify_kvs_snapshot_hash(kvs_dir, instance_id=1, snapshot_id=0)
 
-        # Record snapshot mtimes before second run so we can detect writes
+        # Record which snapshot IDs exist after the first run and their mtimes, so we
+        # can distinguish new snapshot IDs from overwrites in step 4.
+        def _snapshot_ids(directory: Path, instance_id: int) -> set[int]:
+            ids = set()
+            for f in directory.glob(f"kvs_{instance_id}_*.json"):
+                try:
+                    ids.add(int(f.stem.split("_")[-1]))
+                except ValueError:
+                    pass
+            return ids
+
+        snapshot_ids_after_first = _snapshot_ids(kvs_dir, instance_id=1)
         mtimes_before_second = {f: f.stat().st_mtime for f in snapshot_files}
 
         # Step 3: Run scenario again to verify storage directory remains writable
         # This tests that a second process can successfully access the same storage
         _run_persistency_probe(build_tools, version, kvs_dir, timeout_s=30.0)
 
-        # Step 4: Verify that at least one snapshot was updated by the second run.
-        # The implementation may overwrite existing snapshots rather than creating new
-        # files, so we check mtime change rather than file count.  An updated mtime
-        # proves the second run wrote data; a valid hash proves continuity.
-        all_snapshots = sorted(kvs_dir.glob("kvs_1_*.json"))
-        assert len(all_snapshots) > 0, "No snapshots found after second run"
+        # Step 4: Verify continuity across both runs.
+        # The second run must either create a new snapshot ID or overwrite an existing
+        # one (implementation-dependent).  Either way, every snapshot that now exists
+        # must be hash-valid, proving no corruption occurred across the two runs.
+        snapshot_ids_after_second = _snapshot_ids(kvs_dir, instance_id=1)
+        assert len(snapshot_ids_after_second) > 0, "No snapshots found after second run"
 
+        new_snapshot_ids = snapshot_ids_after_second - snapshot_ids_after_first
+        all_snapshots = sorted(kvs_dir.glob("kvs_1_*.json"))
         files_updated = any(
             f not in mtimes_before_second or f.stat().st_mtime != mtimes_before_second[f] for f in all_snapshots
         )
-        assert files_updated, (
-            "No snapshot file was updated by the second run. "
+        assert new_snapshot_ids or files_updated, (
+            "The second run neither created new snapshot IDs nor updated existing ones. "
             "The second probe wrote no data — storage may be read-only or broken."
         )
 
-        # Original snapshot_id=0 must still be hash-valid after the second run
-        verify_kvs_snapshot_hash(kvs_dir, instance_id=1, snapshot_id=0)
+        # Verify every snapshot ID that exists after both runs is hash-valid.
+        # This confirms continuity: data from the first run (snapshot_id=0) and any
+        # data written by the second run are both readable and uncorrupted.
+        for sid in sorted(snapshot_ids_after_second):
+            verify_kvs_snapshot_hash(kvs_dir, instance_id=1, snapshot_id=sid)
 
     def test_persistency_recovery_with_daemon_supervision(
         self,
@@ -491,6 +507,29 @@ class TestLifecyclePersistencyRecoveryContinuity:
         # Step 6: Persistency data written before the crash must remain intact.
         verify_kvs_snapshot_hash(kvs_dir, instance_id=1, snapshot_id=0)
         print("✓ Persistency data remains intact after lifecycle recovery")
+
+        # Step 7: Write new persistency data after recovery to confirm the storage
+        # directory remains fully operational following the lifecycle recovery event.
+        # This validates the core requirement: recovery does not corrupt or lock
+        # the storage layer for subsequent workload operations.
+        snapshots_before_post_recovery = {f: f.stat().st_mtime for f in kvs_dir.glob("kvs_1_*.json")}
+        _run_persistency_probe(build_tools, version, kvs_dir, timeout_s=30.0)
+
+        all_snapshots_after = sorted(kvs_dir.glob("kvs_1_*.json"))
+        assert len(all_snapshots_after) > 0, "No snapshot files found after post-recovery write"
+
+        post_recovery_write_occurred = any(
+            f not in snapshots_before_post_recovery or f.stat().st_mtime != snapshots_before_post_recovery[f]
+            for f in all_snapshots_after
+        )
+        assert post_recovery_write_occurred, (
+            "Post-recovery persistency probe did not write or update any snapshot files. "
+            "Storage may be locked or corrupted by the lifecycle recovery event."
+        )
+
+        # Verify the original pre-crash snapshot is still hash-valid alongside new data.
+        verify_kvs_snapshot_hash(kvs_dir, instance_id=1, snapshot_id=0)
+        print("✓ New persistency data written successfully after lifecycle recovery")
 
     def test_supervised_app_crash_persistency_recovery(
         self,

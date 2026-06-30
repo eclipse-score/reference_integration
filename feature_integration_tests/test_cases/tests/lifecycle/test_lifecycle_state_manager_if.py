@@ -33,8 +33,6 @@ FAIL  The daemon logs an explicit control-IPC error, OR no transition token
       appears after the request, OR the daemon terminates unexpectedly.
 """
 
-import json
-import os
 import subprocess
 import time
 from pathlib import Path
@@ -42,7 +40,6 @@ from typing import Any
 
 import pytest
 from daemon_helpers import launch_manager_daemon
-from lifecycle_scenario import add_supervised_component
 from test_properties import add_test_properties
 
 pytestmark = [
