@@ -43,11 +43,10 @@ score_pkg_bundle(
         "@score_time//examples/time/vehicle_time",
         "@score_time//examples/time/system_time",
         "@score_time//examples/time/steady_time",
-        "@score_time//examples/time/high_res_steady_time"
+        "@score_time//examples/time/high_res_steady_time",
     ],
     config_data = [
         "//showcases/standalone:time.score.json",
     ],
     package_dir = "standalone",
 )
-
