@@ -53,7 +53,7 @@ fi
 
 echo "pwd=$(pwd)"
 
-qemu-system-aarch64  \
+sudo qemu-system-aarch64  \
     -m "${MEM}" \
     -machine "${MACHINE}" \
     -cpu "${CPU}" \
