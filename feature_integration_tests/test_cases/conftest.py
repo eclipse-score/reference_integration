@@ -10,10 +10,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+import os
+import subprocess
 from pathlib import Path
 
 import pytest
-from testing_utils import BazelTools
 
 
 # Cmdline options
@@ -62,6 +63,12 @@ def pytest_addoption(parser):
         help="Build command timeout in seconds. Default: %(default)s",
     )
     parser.addoption(
+        "--bazel-config",
+        type=str,
+        default=os.environ.get("FIT_BAZEL_CONFIG", "linux-x86_64"),
+        help=('Bazel config used when --build-scenarios is enabled (default: env FIT_BAZEL_CONFIG or "linux-x86_64").'),
+    )
+    parser.addoption(
         "--default-execution-timeout",
         type=float,
         default=5.0,
@@ -88,18 +95,35 @@ def pytest_sessionstart(session):
         # Build scenarios.
         if session.config.getoption("--build-scenarios"):
             build_timeout = session.config.getoption("--build-scenarios-timeout")
+            bazel_config = session.config.getoption("--bazel-config")
+
+            def _build_target(target_name: str) -> None:
+                command = ["bazel", "build", f"--config={bazel_config}", target_name]
+                result = subprocess.run(
+                    command,
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                    timeout=build_timeout,
+                )
+                if result.returncode != 0:
+                    stderr_tail = "\n".join(result.stderr.strip().splitlines()[-40:])
+                    raise RuntimeError(
+                        "Failed to run build with pytest --build-scenarios.\n"
+                        f"Command: {' '.join(command)}\n"
+                        f"Return code: {result.returncode}\n"
+                        f"stderr (last lines):\n{stderr_tail}"
+                    )
 
             # Build Rust test scenarios.
-            print("Building Rust test scenarios executable...")
-            rust_tools = BazelTools(option_prefix="rust", build_timeout=build_timeout)
+            print(f"Building Rust test scenarios executable with --config={bazel_config}...")
             rust_target_name = session.config.getoption("--rust-target-name")
-            rust_tools.build(rust_target_name)
+            _build_target(rust_target_name)
 
             # Build C++ test scenarios.
-            print("Building C++ test scenarios executable...")
-            cpp_tools = BazelTools(option_prefix="cpp", build_timeout=build_timeout)
+            print(f"Building C++ test scenarios executable with --config={bazel_config}...")
             cpp_target_name = session.config.getoption("--cpp-target-name")
-            cpp_tools.build(cpp_target_name)
+            _build_target(cpp_target_name)
 
     except Exception as e:
         pytest.exit(str(e), returncode=1)
