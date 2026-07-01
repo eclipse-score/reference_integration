@@ -2,11 +2,10 @@ diff --git a/examples/rust_supervised_app/BUILD b/examples/rust_supervised_app/B
 index 9738ceb0..fb6c3bad 100644
 --- a/examples/rust_supervised_app/BUILD
 +++ b/examples/rust_supervised_app/BUILD
-@@ -31,6 +31,8 @@ rust_binary(
+@@ -31,6 +31,7 @@ rust_binary(
          "@platforms//os:linux": [
              "-Clink-arg=-lrt",
              "-Clink-arg=-lstdc++",
-+            "-Clink-arg=-L=usr/lib/gcc-cross/aarch64-linux-gnu/13",
 +            "-Clink-arg=-lgcc",
          ],
      }),
