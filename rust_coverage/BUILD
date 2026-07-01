@@ -72,7 +72,7 @@ rust_coverage_report(
         "linux-x86_64",
         "ferrocene-coverage",
     ],
-    query = 'kind("rust_test", @score_lifecycle_health//src/...)',
+    query = 'kind("rust_test", @score_lifecycle_health//score/...)',
     visibility = ["//visibility:public"],
 )
 
