@@ -27,8 +27,9 @@ logger = logging.getLogger(__name__)
 CAPTURE_DURATION_SECONDS = 10
 
 # DLT message identifiers for datarouter statistics
-APP_ID = "DR"
-CTX_ID = "STAT"
+
+APP_ID = "EXA"
+CTX_ID = "DFLT"
 
 _QNX_DATAROUTER_CHECK_CMD = "/proc/boot/pidin | /proc/boot/grep datarouter"
 _LINUX_DATAROUTER_CHECK_CMD = "ps -ef | grep datarouter | grep -v grep"
@@ -40,6 +41,9 @@ _QNX_DATAROUTER_START_CMD = (
     "./datarouter --no_adaptive_runtime > /dev/null 2>&1 &"
 )
 _LINUX_DATAROUTER_START_CMD = "cd /usr/bin/datarouter && nohup ./datarouter --no_adaptive_runtime > /dev/null 2>&1 &"
+
+
+_LOGGINGAPP_START_CMD = "cd /showcases/data/logging/logging_app/etc && nohup /showcases/bin/logging_app &"
 # Multicast route directs all multicast traffic (224.0.0.0/4) out of the containers
 # network interface required for DLT messages to reach the host via the Docker bridge.
 _LINUX_CHECK_MULTICAST_ROUTE_CMD = "ip route add 224.0.0.0/4 dev eth0 2>/dev/null || true"
@@ -85,7 +89,7 @@ def datarouter_running(target):
     yield
 
 
-def test_remote_logging(datarouter_running, dlt_config):
+def test_remote_logging(datarouter_running, target, dlt_config):
     """Verifies remote logging of Dataraouter
 
     Starts Datarouter on the target if not already running, then
@@ -100,6 +104,10 @@ def test_remote_logging(datarouter_running, dlt_config):
         print_to_stdout=True,
         binary_path=dlt_config.dlt_receive_path,
     ) as window:
+        logger.info("Starting logging app to generate DLT messages..")
+        exit_code, out = target.execute(_LOGGINGAPP_START_CMD)
+        logger.debug("Logging app start command exit_code=%s", exit_code)
+
         time.sleep(CAPTURE_DURATION_SECONDS)
 
     record = window.record(filters=[(APP_ID, CTX_ID)])

@@ -72,7 +72,12 @@ git_override(
 bazel_dep(name = "score_logging")
 git_override(
     module_name = "score_logging",
-    commit = "0e9187f79a9935ca192779234b82f9d00dc4e335",
+    commit = "3da15793ed76bc8b97cffe379345f3c3d61c17cd",
+    patch_strip = 1,
+    patches = [
+        "//patches/logging:001-logging-example-visibility.patch",
+        "//patches/logging:002-deps-visibility.patch",
+    ],
     remote = "https://github.com/eclipse-score/logging.git",
 )
 
