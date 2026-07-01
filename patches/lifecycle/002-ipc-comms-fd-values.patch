@@ -1,0 +1,19 @@
+diff --git a/score/launch_manager/src/daemon/src/osal/ipc_comms.hpp b/score/launch_manager/src/daemon/src/osal/ipc_comms.hpp
+index 725dc62b..391969bc 100644
+--- a/score/launch_manager/src/daemon/src/osal/ipc_comms.hpp
++++ b/score/launch_manager/src/daemon/src/osal/ipc_comms.hpp
+@@ -70,12 +70,12 @@ struct IpcCommsSync final
+     /// @brief Constant for the synchronization file descriptor.
+     /// The `sync_fd` is a constant representing the file descriptor used for synchronization
+     /// during communication. It is set to a value of 3 by default.
+-    static const int sync_fd = 3;
++    static const int sync_fd = 111;
+ 
+     /// @brief Constant for the file descriptor used to signal state transitions
+     /// The semaphore used to signal state transitions is stored in an unlinked shared memory area. This requires
+     /// the constant “control_client_handler_nudge_fd” so that the spawned processes can access this resource.
+-    static const int control_client_handler_nudge_fd = 4;
++    static const int control_client_handler_nudge_fd = 112;
+ 
+     // Cannot construct or destruct objects of this type
+ 
