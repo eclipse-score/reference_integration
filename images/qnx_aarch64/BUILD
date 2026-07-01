@@ -1,5 +1,5 @@
 # *******************************************************************************
-# Copyright (c) 2026 Contributors to the Eclipse Foundation
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -10,7 +10,21 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-exports_files([
-    "run_qemu.sh",
-    "run_qemu_qnx.sh",
-])
+load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
+
+alias(
+    name = "image",
+    actual = "//images/qnx_aarch64/build:init",
+    visibility = ["//visibility:public"],
+)
+
+sh_binary(
+    name = "run",
+    srcs = ["//runners/qemu_aarch64/scripts:run_qemu_qnx.sh"],
+    args = [
+        "$(location :image)",
+    ],
+    data = [
+        ":image",
+    ],
+)

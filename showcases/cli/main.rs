@@ -143,7 +143,7 @@ fn main() -> Result<()> {
     };
 
     for index in selected {
-        run_score(&configs[index])?;
+        run_score(&configs[index], &root_dir)?;
     }
 
     outro("All done!")?;
@@ -190,7 +190,16 @@ fn is_score_file(path: &Path) -> bool {
         .unwrap_or(false)
 }
 
-fn run_score(config: &ScoreConfig) -> Result<()> {
+fn resolve_path(path: &str, root_dir: &str) -> String {
+    const CANONICAL_ROOT: &str = "/showcases";
+    if let Some(suffix) = path.strip_prefix(CANONICAL_ROOT) {
+        format!("{}{}", root_dir, suffix)
+    } else {
+        path.to_string()
+    }
+}
+
+fn run_score(config: &ScoreConfig, root_dir: &str) -> Result<()> {
     println!("▶ Running example: {}", config.name);
 
     let mut children: Vec<(usize, String, Child)> = Vec::new();
@@ -212,22 +221,25 @@ fn run_score(config: &ScoreConfig) -> Result<()> {
             }
         }
 
-        println!("{:?} App {}: starting {}", now.elapsed(), i + 1, app.path);
+        let resolved_path = resolve_path(&app.path, root_dir);
+        let resolved_dir = app.dir.as_deref().map(|d| resolve_path(d, root_dir));
 
-        let mut cmd = Command::new(&app.path);
+        println!("{:?} App {}: starting {}", now.elapsed(), i + 1, resolved_path);
+
+        let mut cmd = Command::new(&resolved_path);
         cmd.args(&app.args);
         cmd.envs(&app.env);
-        if let Some(ref dir) = app.dir {
+        if let Some(ref dir) = resolved_dir {
             cmd.current_dir(dir);
         }
 
         let child = cmd
             .spawn()
-            .with_context(|| format!("Failed to start app {}: {}", i + 1, app.path))?;
+            .with_context(|| format!("Failed to start app {}: {}", i + 1, resolved_path))?;
 
         println!("App {}: spawned command {:?}", i + 1, cmd);
 
-        children.push((i + 1, app.path.clone(), child));
+        children.push((i + 1, resolved_path, child));
     }
 
     // Wait for all children

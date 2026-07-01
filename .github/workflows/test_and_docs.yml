@@ -40,7 +40,9 @@ jobs:
       pull-requests: write
     steps:
       - name: Clean disk space
-        uses: eclipse-score/more-disk-space@v1
+        uses: eclipse-score/more-disk-space@v1.1
+        with:
+          level: 4
       - name: Setup Bazel
         uses: bazel-contrib/setup-bazel@0.18.0
         with:
