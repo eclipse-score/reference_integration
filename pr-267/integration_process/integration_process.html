@@ -74,7 +74,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Process, Methods, and Tools" href="../process_methods_tools.html" />
+    <link rel="next" title="1. Step 1 — Adding module to reference integration" href="step_1_add_module.html" />
     <link rel="prev" title="Logging Documentation" href="../_collections/score_logging/docs/components/mw/log/index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -295,6 +295,10 @@
   
 
   
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
 </div>
 
     </header>
@@ -439,7 +443,19 @@
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"></div>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="step_1_add_module.html">1. Step 1 — Adding module to reference integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="step_2_documentation.html">2. Step 2 — Join the documentation and process-compliance checks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="step_3_unit_tests.html">3. Step 3 — Get compiled and unit-tested on the default platform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="step_4_platforms.html">4. Step 4 — Get built and tested on the target platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="step_5_component_tests.html">5. Step 5 — Add component tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="step_6_integration_tests.html">6. Step 6 — Add feature integration tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="step_7_reporting.html">7. Step 7 — Add coverage and verification reports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="step_8_code_quality.html">8. Step 8 — Code quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="checklist.html">9. Checklist</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">10. Reference</a></li>
+</ul>
+</div>
 </nav></div>
     </div>
   
@@ -497,6 +513,100 @@
                   
   <section id="integration-process">
 <h1>Integration Process<a class="headerlink" href="#integration-process" title="Link to this heading">#</a></h1>
+<p>This document is a step-by-step <em>how-to</em> for module owners who want to integrate
+their own S-CORE module into the <strong>Reference Integration</strong> — whether for the
+first time, when bringing it back after an exclusion, or to make it part of the
+S-CORE releases in general.</p>
+<p>It walks you through everything from registering the module in
+<code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> over wiring it into the Bazel build, the showcases, the
+images and the CLI, up to adding it to the CI/CD pipelines and the consolidated
+reporting (documentation, coverage and verification reports).</p>
+<section id="what-integration-means-here">
+<h2>What “integration” means here<a class="headerlink" href="#what-integration-means-here" title="Link to this heading">#</a></h2>
+<p>The Reference Integration is a single <a class="reference external" href="https://bazel.build/external/overview#bzlmod">Bazel (bzlmod)</a>
+build that pulls every S-CORE module together at a defined commit, builds them
+against each other and runs their tests, showcases and reports.</p>
+<p>Integrating a module is <strong>incremental</strong>: each step below builds on the previous
+one and <em>extends the reach</em> of your module a little further into the
+integration. You climb the ladder only as far as your module needs — a pure
+library may stop after it builds in-tree, while a module with a runnable example
+goes all the way to running on every target platform and being exercised by
+integration tests.</p>
+<p>The chapters that follow walk this ladder in order. Stop at whatever rung makes
+sense for your module.</p>
+</section>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
+<p>Before you start, make sure that:</p>
+<ul class="simple">
+<li><p>Your module lives in its own GitHub repository under the <code class="docutils literal notranslate"><span class="pre">eclipse-score</span></code>
+organization and is a <strong>bzlmod module</strong>, i.e. it has a top-level
+<code class="docutils literal notranslate"><span class="pre">MODULE.bazel</span></code> with a <code class="docutils literal notranslate"><span class="pre">module(name</span> <span class="pre">=</span> <span class="pre">&quot;score_&lt;your_module&gt;&quot;)</span></code> declaration.</p></li>
+<li><p>The module name follows the <code class="docutils literal notranslate"><span class="pre">score_&lt;name&gt;</span></code> convention (e.g.
+<code class="docutils literal notranslate"><span class="pre">score_communication</span></code>). The same name is used as the Bazel
+<code class="docutils literal notranslate"><span class="pre">bazel_dep</span></code> / repository name (<code class="docutils literal notranslate"><span class="pre">&#64;score_&lt;name&gt;//...</span></code>).</p></li>
+<li><p>Your module is registered in the
+<a class="reference external" href="https://github.com/eclipse-score/bazel_registry">S-CORE Bazel registry</a> so
+that it can be resolved as a <code class="docutils literal notranslate"><span class="pre">bazel_dep</span></code> during the integration.</p></li>
+<li><p>The module builds and tests pass standalone on all four currently supported
+target platforms: Linux <code class="docutils literal notranslate"><span class="pre">x86_64</span></code>, QNX 8 <code class="docutils literal notranslate"><span class="pre">x86_64</span></code>, Red Hat AutoSD
+<code class="docutils literal notranslate"><span class="pre">x86_64</span></code> and EB corbos Linux (Safety Apps) <code class="docutils literal notranslate"><span class="pre">aarch64</span></code>.</p></li>
+<li><p>You know the commit hash you want to pin (the integration always pins an exact
+commit, never a floating branch).</p></li>
+</ul>
+</section>
+<section id="the-integration-steps">
+<h2>The integration steps<a class="headerlink" href="#the-integration-steps" title="Link to this heading">#</a></h2>
+<p>Work through the chapters in order — each one extends the reach of your module a
+little further into the integration:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="step_1_add_module.html">1. Step 1 — Adding module to reference integration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="step_1_add_module.html#register-the-module-in-known-good-json">1.1. 1.1 Register the module in <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="step_1_add_module.html#regenerate-the-bazel-module-fragments">1.2. 1.2 Regenerate the Bazel module fragments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step_1_add_module.html#optional-add-bazel-patches">1.3. 1.3 (optional) Add Bazel patches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step_1_add_module.html#ci-checks-that-the-module-was-added-correctly">1.4. 1.4 CI checks that the module was added correctly</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="step_2_documentation.html">2. Step 2 — Join the documentation and process-compliance checks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="step_3_unit_tests.html">3. Step 3 — Get compiled and unit-tested on the default platform</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="step_3_unit_tests.html#what-you-can-tune-from-known-good-json">3.1. What you can tune from <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="step_4_platforms.html">4. Step 4 — Get built and tested on the target platforms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="step_4_platforms.html#run-any-image-locally-in-qemu">4.1. Run any image locally in QEMU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step_4_platforms.html#two-ways-to-get-your-module-onto-the-images">4.2. Two ways to get your module onto the images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step_4_platforms.html#add-a-runtime-showcase">4.3. Add a runtime showcase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step_4_platforms.html#add-a-binary-directly-to-an-image">4.4. Add a binary directly to an image</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="step_5_component_tests.html">5. Step 5 — Add component tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="step_6_integration_tests.html">6. Step 6 — Add feature integration tests</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="step_6_integration_tests.html#two-test-frameworks">6.1. Two test frameworks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="step_7_reporting.html">7. Step 7 — Add coverage and verification reports</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="step_7_reporting.html#how-coverage-is-collected">7.1. How coverage is collected</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step_7_reporting.html#where-the-results-are-exported">7.2. Where the results are exported</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step_7_reporting.html#c-coverage">7.3. C++ coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step_7_reporting.html#rust-coverage">7.4. Rust coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step_7_reporting.html#verification-status-reports">7.5. Verification &amp; status reports</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="step_8_code_quality.html">8. Step 8 — Code quality</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="step_8_code_quality.html#what-runs-today">8.1. What runs today</a></li>
+<li class="toctree-l2"><a class="reference internal" href="step_8_code_quality.html#generated-reports">8.2. Generated reports</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="checklist.html">9. Checklist</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">10. Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#ci-checks">10.1. CI checks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#reports">10.2. Reports</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
 </section>
 
 
@@ -519,11 +629,11 @@
       </div>
     </a>
     <a class="right-next"
-       href="../process_methods_tools.html"
+       href="step_1_add_module.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Process, Methods, and Tools</p>
+        <p class="prev-next-title"><span class="section-number">1. </span>Step 1 — Adding module to reference integration</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -533,6 +643,26 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-integration-means-here">What “integration” means here</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-integration-steps">The integration steps</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
