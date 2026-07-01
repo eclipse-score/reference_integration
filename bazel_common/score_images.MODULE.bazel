@@ -1,3 +1,15 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
 bazel_dep(name = "rules_oci", version = "2.3.1")
 git_override(
     module_name = "rules_oci",
@@ -47,7 +59,16 @@ imagefs.toolchain(
     target_os = "qnx",
     type = "ifs",
 )
+imagefs.toolchain(
+    name = "score_qnx_aarch64_ifs_toolchain",
+    sdp_to_import = "@score_qcc_aarch64_toolchain_pkg",
+    sdp_version = "8.0.0",
+    target_cpu = "aarch64",
+    target_os = "qnx",
+    type = "ifs",
+)
 use_repo(
     imagefs,
+    "score_qnx_aarch64_ifs_toolchain",
     "score_qnx_x86_64_ifs_toolchain",
 )

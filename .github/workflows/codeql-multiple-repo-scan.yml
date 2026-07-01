@@ -68,6 +68,7 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
         with:
+          upload: false
           upload-database: false
           output: sarif-results/
           category: "multi-repo-scan"
@@ -94,6 +95,11 @@ jobs:
             exit 1
           fi
           sarif html "$SARIF_FILE" --output codeql-report.html
+      - name: Upload SARIF to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: sarif-results/cpp.sarif
+          category: "multi-repo-scan"
       - name: Upload SARIF results as artifact
         uses: actions/upload-artifact@v4
         with:

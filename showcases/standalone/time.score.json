@@ -1,0 +1,82 @@
+[
+    {
+        "name": "Vehicle Time Example",
+        "description": "Uses VehicleTimeHandler to obtain a combined snapshot of the PTP-synchronized vehicle time and the local monotonic HIRS time",
+        "apps": [
+            {
+                "path": "/showcases/bin/vehicle_time",
+                "args": [],
+                "env": {}
+            },
+            {
+                "path": "/showcases/bin/lifecycle_signal.sh",
+                "args": [
+                    "vehicle_time",
+                    "SIGTERM"
+                ],
+                "env": {},
+                "delay": 4
+            }
+        ]
+    },
+    {
+        "name": "System Time Example",
+        "description": "Uses SystemTimeHandler to obtain the current wall-clock (Unix epoch) time",
+        "apps": [
+            {
+                "path": "/showcases/bin/system_time",
+                "args": [],
+                "env": {}
+            },
+            {
+                "path": "/showcases/bin/lifecycle_signal.sh",
+                "args": [
+                    "system_time",
+                    "SIGTERM"
+                ],
+                "env": {},
+                "delay": 4
+            }
+        ]
+    },
+    {
+        "name": "Steady Time Example",
+        "description": "Uses SteadyTimeHandler to obtain the current monotonic time",
+        "apps": [
+            {
+                "path": "/showcases/bin/steady_time",
+                "args": [],
+                "env": {}
+            },
+            {
+                "path": "/showcases/bin/lifecycle_signal.sh",
+                "args": [
+                    "steady_time",
+                    "SIGTERM"
+                ],
+                "env": {},
+                "delay": 4
+            }
+        ]
+    },
+    {
+        "name": "High Resolution Steady Time Example",
+        "description": "Uses HighResSteadyTimeHandler to obtain the current high-precision local steady time",
+        "apps": [
+            {
+                "path": "/showcases/bin/high_res_steady_time",
+                "args": [],
+                "env": {}
+            },
+            {
+                "path": "/showcases/bin/lifecycle_signal.sh",
+                "args": [
+                    "high_res_steady_time",
+                    "SIGTERM"
+                ],
+                "env": {},
+                "delay": 4
+            }
+        ]
+    }
+]
