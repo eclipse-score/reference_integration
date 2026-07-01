@@ -35,11 +35,87 @@ import re
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from models import Module
-from models.known_good import load_known_good
+# Import models whether run standalone (scripts/known_good on path) or imported as part
+# of the ``known_good`` package (scripts/ on path, where bare ``models`` is shadowed by
+# the separate scripts/models package).
+try:
+    from known_good.models.known_good import load_known_good
+    from known_good.models.module import Module
+except ImportError:
+    from models import Module
+    from models.known_good import load_known_good
 
 # Configure logging
 logging.basicConfig(level=logging.WARNING, format="%(levelname)s: %(message)s")
+
+
+def generate_override_directive(module: Module, repo_commit_dict: Optional[Dict[str, str]] = None) -> Optional[str]:
+    """Generate the override directive (single_version_override / git_override) for a module.
+
+    Returns just the override call (without the preceding ``bazel_dep(...)`` line), so the
+    same logic can be reused both to (a) build ref_int's score_modules_*.MODULE.bazel files
+    (composed with a bazel_dep line by ``generate_git_override_blocks``) and to (b) inject
+    overrides into a module's own MODULE.bazel where the bazel_dep is already declared
+    (see ``ResolvedDependencies.overwrite`` in resolved_dependencies.py).
+
+    Returns ``None`` (and logs a warning) when the module has neither a usable version nor a
+    valid repo+commit, mirroring the skip behaviour of the original generator.
+    """
+    repo_commit_dict = repo_commit_dict or {}
+    commit = module.hash
+
+    # Allow overriding specific repos via command line
+    if module.repo in repo_commit_dict:
+        commit = repo_commit_dict[module.repo]
+
+    # Generate patches lines if bazel_patches exist
+    patches_lines = ""
+    if module.bazel_patches:
+        patches_lines = "    patches = [\n"
+        for patch in module.bazel_patches:
+            patches_lines += f'        "{patch}",\n'
+        patches_lines += "    ],\n"
+    patch_strip_line = "    patch_strip = 1,\n" if patches_lines else ""
+
+    if module.version:
+        # If version is provided, use single_version_override
+        return (
+            "single_version_override(\n"
+            f'    module_name = "{module.name}",\n'
+            f"{patch_strip_line}"
+            f"{patches_lines}"
+            f'    version = "{module.version}",\n'
+            ")\n"
+        )
+
+    if not module.repo or not commit:
+        logging.warning(
+            "Skipping module %s with missing repo or commit: repo=%s, commit=%s",
+            module.name,
+            module.repo,
+            commit,
+        )
+        return None
+
+    # Validate commit hash format (7-40 hex characters)
+    if not re.match(r"^[a-fA-F0-9]{7,40}$", commit):
+        logging.warning(
+            "Skipping module %s with invalid commit hash: %s",
+            module.name,
+            commit,
+        )
+        return None
+
+    # If no version, use git_override. Only include patch_strip if there are patches to apply.
+    return (
+        "git_override(\n"
+        f'    module_name = "{module.name}",\n'
+        f'    commit = "{commit}",\n'
+        f"{patch_strip_line}"
+        f"{patches_lines}"
+        f'    remote = "{module.repo}",\n'
+        ")\n"
+    )
 
 
 def generate_git_override_blocks(modules: List[Module], repo_commit_dict: Dict[str, str]) -> List[str]:
@@ -47,64 +123,10 @@ def generate_git_override_blocks(modules: List[Module], repo_commit_dict: Dict[s
     blocks = []
 
     for module in modules:
-        commit = module.hash
-
-        # Allow overriding specific repos via command line
-        if module.repo in repo_commit_dict:
-            commit = repo_commit_dict[module.repo]
-
-        # Generate patches lines if bazel_patches exist
-        patches_lines = ""
-        if module.bazel_patches:
-            patches_lines = "    patches = [\n"
-            for patch in module.bazel_patches:
-                patches_lines += f'        "{patch}",\n'
-            patches_lines += "    ],\n"
-        patch_strip_line = "    patch_strip = 1,\n" if patches_lines else ""
-
-        if module.version:
-            # If version is provided, use bazel_dep with single_version_override
-            block = (
-                f'bazel_dep(name = "{module.name}")\n'
-                "single_version_override(\n"
-                f'    module_name = "{module.name}",\n'
-                f"{patch_strip_line}"
-                f"{patches_lines}"
-                f'    version = "{module.version}",\n'
-                ")\n"
-            )
-        else:
-            if not module.repo or not commit:
-                logging.warning(
-                    "Skipping module %s with missing repo or commit: repo=%s, commit=%s",
-                    module.name,
-                    module.repo,
-                    commit,
-                )
-                continue
-
-            # Validate commit hash format (7-40 hex characters)
-            if not re.match(r"^[a-fA-F0-9]{7,40}$", commit):
-                logging.warning(
-                    "Skipping module %s with invalid commit hash: %s",
-                    module.name,
-                    commit,
-                )
-                continue
-
-            # If no version, use bazel_dep with git_override
-            # Only include patch_strip if there are patches to apply
-            block = (
-                f'bazel_dep(name = "{module.name}")\n'
-                "git_override(\n"
-                f'    module_name = "{module.name}",\n'
-                f'    commit = "{commit}",\n'
-                f"{patch_strip_line}"
-                f"{patches_lines}"
-                f'    remote = "{module.repo}",\n'
-                ")\n"
-            )
-        blocks.append(block)
+        directive = generate_override_directive(module, repo_commit_dict)
+        if directive is None:
+            continue
+        blocks.append(f'bazel_dep(name = "{module.name}")\n' + directive)
 
     return blocks
 
