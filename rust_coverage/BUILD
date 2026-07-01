@@ -82,6 +82,6 @@ rust_coverage_report(
         "linux-x86_64",
         "ferrocene-coverage",
     ],
-    query = 'kind("rust_test", @score_logging//score/...) -@score_logging//score/datarouter/test/ut/ut_logging:dltprotocolUT -@score_logging//score/datarouter/test/ut/ut_logging:persistentLogConfigUT -@score_logging//score/datarouter/test/ut/ut_logging:socketserverConfigUT -@score_logging//score/datarouter/test/ut/ut_logging:socketserverUT -@score_logging//score/mw/log/legacy_non_verbose_api:unit_test',
+    query = 'kind("rust_test", @score_logging//score/mw/...) -@score_logging//score/datarouter/test/ut/ut_logging:dltprotocolUT -@score_logging//score/datarouter/test/ut/ut_logging:persistentLogConfigUT -@score_logging//score/datarouter/test/ut/ut_logging:socketserverConfigUT -@score_logging//score/datarouter/test/ut/ut_logging:socketserverUT -@score_logging//score/mw/log/legacy_non_verbose_api:unit_test',
     visibility = ["//visibility:public"],
 )
