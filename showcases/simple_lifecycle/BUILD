@@ -17,7 +17,7 @@ load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
 launch_manager_config(
     name = "lifecycle_configs",
     config = "//showcases/simple_lifecycle/configs:launch_manager_config.json",
-    flatbuffer_out_dir="etc"
+    flatbuffer_out_dir = "etc",
 )
 
 score_pkg_bundle(
@@ -34,6 +34,6 @@ score_pkg_bundle(
     ],
     custom_layout = {
         ":lifecycle_configs": "etc/",
-        "//showcases/simple_lifecycle/configs:logging.json":"etc/logging.json",
+        "//showcases/simple_lifecycle/configs:logging.json": "etc/logging.json",
     },
 )
