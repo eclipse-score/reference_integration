@@ -19,7 +19,7 @@ Overall Status
 
 .. important::
 
-   **Data collected on: 2026-06-12**
+   **Data collected on: 2026-07-01**
 
 .. note::
 
@@ -801,12 +801,14 @@ Process Area 5 — Verification
             | **C0:** 79.3%
             | **C1:** 42.1% (cpp)
             | **Rust line:** 39.86%
-     - ❌ Open
+     - ✅ Available
+
+            | 8 tests
      - ✅ Available
 
             | 1 test
-     - ❌ Open
-     - ❌ Open
+     - ✅ 0 findings
+     - ✅ 0 findings
      - ❌ Open
    * - Persistency
      - ✅ Available
