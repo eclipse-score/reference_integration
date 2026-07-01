@@ -17,7 +17,7 @@
 bazel_dep(name = "score_baselibs")
 git_override(
     module_name = "score_baselibs",
-    commit = "cab36dd7de92c282f67e78e88032e08585803528",
+    commit = "f4f9df39275760a60e54e5e3c5112210e35ae2a3",
     remote = "https://github.com/eclipse-score/baselibs.git",
 )
 
@@ -65,7 +65,12 @@ git_override(
 bazel_dep(name = "score_lifecycle_health")
 git_override(
     module_name = "score_lifecycle_health",
-    commit = "2f2e9c4c3e6c6b38abd0b72f78c8ffb96dc7f9e8",
+    commit = "57038b9be8f15261b8584599ea07087f59ee538e",
+    patch_strip = 1,
+    patches = [
+        "//patches/lifecycle:001-link-libgcc-aarch64.patch",
+        "//patches/lifecycle:002-ipc-comms-fd-values.patch",
+    ],
     remote = "https://github.com/eclipse-score/lifecycle.git",
 )
 

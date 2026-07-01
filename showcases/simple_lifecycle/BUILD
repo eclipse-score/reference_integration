@@ -17,12 +17,13 @@ load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
 launch_manager_config(
     name = "lifecycle_configs",
     config = "//showcases/simple_lifecycle/configs:launch_manager_config.json",
+    flatbuffer_out_dir = "etc",
 )
 
 score_pkg_bundle(
     name = "simple_lifecycle",
     bins = [
-        "@score_lifecycle_health//src/launch_manager_daemon:launch_manager",
+        "@score_lifecycle_health//score/launch_manager:launch_manager",
         "@score_lifecycle_health//examples/cpp_supervised_app",
         "@score_lifecycle_health//examples/rust_supervised_app",
         "@score_lifecycle_health//examples/control_application:control_daemon",
@@ -33,5 +34,6 @@ score_pkg_bundle(
     ],
     custom_layout = {
         ":lifecycle_configs": "etc/",
+        "//showcases/simple_lifecycle/configs:logging.json": "etc/logging.json",
     },
 )
