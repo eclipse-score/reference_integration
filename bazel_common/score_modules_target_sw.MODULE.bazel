@@ -66,6 +66,10 @@ bazel_dep(name = "score_lifecycle_health")
 git_override(
     module_name = "score_lifecycle_health",
     commit = "57038b9be8f15261b8584599ea07087f59ee538e",
+    patch_strip = 1,
+    patches = [
+        "//patches/lifecycle:001-link-libatomic-aarch64.patch",
+    ],
     remote = "https://github.com/eclipse-score/lifecycle.git",
 )
 
