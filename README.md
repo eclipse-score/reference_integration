@@ -61,6 +61,30 @@ To generate a full documentation of all integrated modules, run:
 bazel run //:docs_combo_experimental
 ```
 
+## Feature Integration Tests (FIT)
+
+Use the Linux config for both Rust and C++ FIT flows:
+
+```bash
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_rust
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_cpp
+```
+
+Run only lifecycle application interface checks:
+
+```bash
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_rust --test_arg=-k --test_arg=lifecycle_application_if
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_cpp --test_arg=-k --test_arg=lifecycle_application_if
+```
+
+Build scenario binaries directly:
+
+```bash
+bazel build --config=linux-x86_64 //feature_integration_tests/test_scenarios/rust:rust_test_scenarios
+bazel build --config=linux-x86_64 //feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios
+```
+
 ## Operating system integrations
 
 > [!NOTE]
@@ -71,7 +95,7 @@ bazel run //:docs_combo_experimental
 - [Elektrobit corbos Linux for Safety Applications](./images/ebclfsa_aarch64/README.md)
 - Linux x86_64
 
-## Workspace support 
+## Workspace support
 
 You can obtain a complete S-CORE workspace, i.e. a git checkout of all modules from `known_good.json`, on the specific branches / commits, integrated into one Bazel build.
 This helps with cross-module development, debugging, and generally "trying out things".

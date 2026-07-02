@@ -32,8 +32,38 @@ bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit
 To run specific test suites:
 
 ```sh
-bazel test //feature_integration_tests/test_cases:fit_rust
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_rust
 bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_cpp
+```
+
+To run lifecycle-focused FIT tests only:
+
+```sh
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_rust --test_arg=-k --test_arg=lifecycle
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_cpp --test_arg=-k --test_arg=lifecycle
+```
+
+To run only the new lifecycle application interface requirement test:
+
+```sh
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_rust --test_arg=-k --test_arg=lifecycle_application_if
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_cpp --test_arg=-k --test_arg=lifecycle_application_if
+```
+
+To build scenario binaries directly:
+
+```sh
+bazel build --config=linux-x86_64 //feature_integration_tests/test_scenarios/rust:rust_test_scenarios
+bazel build --config=linux-x86_64 //feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios
+```
+
+When running pytest directly with scenario pre-build enabled, use an explicit Bazel config:
+
+```sh
+python3 -m pytest feature_integration_tests/test_cases/tests/lifecycle/ --build-scenarios --bazel-config=linux-x86_64 -q -v
+
+# or via env var
+FIT_BAZEL_CONFIG=linux-x86_64 python3 -m pytest feature_integration_tests/test_cases/tests/lifecycle/ --build-scenarios -q -v
 ```
 
 ### ITF Tests (QEMU-based)
@@ -49,7 +79,7 @@ bazel test --config=itf-qnx-x86_64 //feature_integration_tests/itf
 Test scenarios can be listed and run directly for debugging:
 
 ```sh
-bazel run //feature_integration_tests/test_scenarios/rust:rust_test_scenarios -- --list-scenarios
+bazel run --config=linux-x86_64 //feature_integration_tests/test_scenarios/rust:rust_test_scenarios -- --list-scenarios
 bazel run --config=linux-x86_64 //feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios -- --list-scenarios
 ```
 

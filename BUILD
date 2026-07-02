@@ -12,7 +12,7 @@
 # *******************************************************************************
 
 load("@score_docs_as_code//:docs.bzl", "docs")
-load("@score_tooling//:defs.bzl", "setup_starpls", "use_format_targets")
+load("@score_tooling//:defs.bzl", "copyright_checker", "setup_starpls", "use_format_targets")
 
 # Docs-as-code
 docs(
@@ -42,6 +42,38 @@ setup_starpls(
 
 # Add target for formatting checks
 use_format_targets()
+
+# Add copyright check/fix targets:
+# - //:copyright.check
+# - //:copyright.fix
+copyright_checker(
+    name = "copyright",
+    srcs = glob(
+        ["**/*"],
+        exclude = [
+            ".git/**",
+            ".venv/**",
+            "bazel-*/**",
+            "**/*.png",
+            "**/*.jpg",
+            "**/*.jpeg",
+            "**/*.gif",
+            "**/*.svg",
+            "**/*.pdf",
+            "**/*.drawio",
+            "**/*.ipynb",
+            "**/*.bin",
+            "**/*.hash",
+            "**/*.zip",
+            "**/*.tar",
+            "**/*.tar.gz",
+            "**/*.tgz",
+        ],
+    ),
+    config = "@score_tooling//cr_checker/resources:config",
+    template = "@score_tooling//cr_checker/resources:templates",
+    visibility = ["//visibility:public"],
+)
 
 exports_files([
     "MODULE.bazel",
