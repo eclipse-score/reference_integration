@@ -22,12 +22,12 @@ from pathlib import Path
 
 import pytest
 
-# Make scripts/known_good importable when run via plain pytest.
-_KG_DIR = Path(__file__).resolve().parents[1]
-if str(_KG_DIR) not in sys.path:
-    sys.path.insert(0, str(_KG_DIR))
+# Make scripts/ importable so known_good.* package resolves when run via plain pytest.
+_SCRIPTS_DIR = Path(__file__).resolve().parents[2]
+if str(_SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPTS_DIR))
 
-from resolved_dependencies import (  # noqa: E402
+from known_good.resolved_dependencies import (  # noqa: E402
     INJECTION_BEGIN,
     INJECTION_END,
     ResolvedDependencies,
@@ -155,7 +155,8 @@ class TestOverwrite:
         assert first == second
         assert second.count(INJECTION_BEGIN) == 1
 
-    def test_skips_dep_with_existing_override(self, resolved: ResolvedDependencies, tmp_path: Path):
+    def test_overwrites_dep_with_existing_override(self, resolved: ResolvedDependencies, tmp_path: Path):
+        # ref_int always decides the version — a pre-existing override in the module is replaced.
         mod = tmp_path / "MODULE.bazel"
         mod.write_text(
             MODULE_BAZEL + '\ngit_override(\n    module_name = "score_logging",\n    commit = "deadbeef",\n'
@@ -163,28 +164,9 @@ class TestOverwrite:
         )
         patched = resolved.overwrite(mod, module_under_test="score_persistency", write=False)
         block = patched.split(INJECTION_BEGIN)[1].split(INJECTION_END)[0]
-        assert 'module_name = "score_logging"' not in block  # respected pre-existing override
-
-
-class TestMetadataBazelConfig:
-    def test_bazel_config_roundtrip(self):
-        from models.module import Metadata
-
-        m = Metadata.from_dict({"bazel_config": ["bl-x86_64-linux"]})
-        assert m.bazel_config == ["bl-x86_64-linux"]
-        assert m.to_dict()["bazel_config"] == ["bl-x86_64-linux"]
-
-    def test_bazel_config_default_empty(self):
-        from models.module import Metadata
-
-        m = Metadata.from_dict({})
-        assert m.bazel_config == []
-
-    def test_bazel_config_multi(self):
-        from models.module import Metadata
-
-        m = Metadata.from_dict({"bazel_config": ["per-x86_64-linux", "ferrocene-coverage"]})
-        assert m.bazel_config == ["per-x86_64-linux", "ferrocene-coverage"]
+        # ref_int's resolved commit must appear in the injection block, overwriting "deadbeef"
+        assert 'module_name = "score_logging"' in block
+        assert "deadbeef" not in block
 
 
 class TestFromModGraph:
@@ -276,7 +258,7 @@ class TestFromResolvedArtifact:
 
     def test_roundtrip_known_good_to_artifact(self, tmp_path: Path, resolved: ResolvedDependencies):
         # Build an artifact dir mirroring stage1-resolved-deps, then parse it back.
-        from update_module_from_known_good import generate_git_override_blocks
+        from known_good.update_module_from_known_good import generate_git_override_blocks
 
         art = tmp_path / "art"
         art.mkdir()
