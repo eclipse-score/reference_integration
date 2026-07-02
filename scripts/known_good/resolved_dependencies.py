@@ -13,22 +13,15 @@
 # *******************************************************************************
 """Resolved dependency versions from the reference_integration root.
 
-DR-008 Option 4 requires that the dependency versions ``reference_integration``
-resolves are pushed *into* each module so the module's own unit tests + coverage
-run against the resolved set (not against the versions the module declares in its
-released ``MODULE.bazel``).
+Provides :class:`ResolvedDependencies`, which holds the resolved version/commit per
+dependency (sourced from ref_int's root — either ``known_good.json`` for local runs,
+or the Stage-1 ``stage1-resolved-deps`` artifact for CI runs), and exposes an interface
+to **scan** an individual module's ``MODULE.bazel`` and **overwrite** the declared
+dependency versions to match the resolved set by appending the matching
+``git_override`` / ``single_version_override`` directives.
 
-This module provides :class:`ResolvedDependencies`, which:
-
-* holds the resolved version/commit per dependency (sourced from ref_int's root —
-  either ``known_good.json`` for local runs, or the Stage-1 ``stage1-resolved-deps``
-  artifact for CI runs so the resolution flows Stage 1 -> Stage 2), and
-* exposes an interface to **scan** an individual module's ``MODULE.bazel`` and
-  **overwrite** the declared dependency versions to match the resolved set, by
-  appending the matching ``git_override`` / ``single_version_override`` directives.
-
-The injection is append-only and operates on the CI checkout of the module — it is
-never committed back to the module's released sources (DR-008 "temporary mechanism").
+The injection operates on the CI checkout of the module — it is never committed back
+to the module's released sources.
 """
 
 from __future__ import annotations
@@ -37,29 +30,18 @@ import argparse
 import json
 import logging
 import re
-import sys
 from pathlib import Path
 from typing import Dict, List, Optional
 
-# Import ``models`` + ``generate_override_directive`` whether this file is loaded as
-# ``known_good.resolved_dependencies`` (scripts/ on path, e.g. from quality_runners.py)
-# or as ``resolved_dependencies`` (scripts/known_good/ on path). Preferring the
-# package-qualified form keeps a single ``Module`` class identity in the package context.
 _HERE = Path(__file__).resolve().parent
-try:
-    from known_good.models.known_good import load_known_good
-    from known_good.models.module import Module
-    from known_good.update_module_from_known_good import generate_override_directive
-except ImportError:
-    if str(_HERE) not in sys.path:
-        sys.path.insert(0, str(_HERE))
-    from models.known_good import load_known_good  # noqa: E402
-    from models.module import Module  # noqa: E402
-    from update_module_from_known_good import generate_override_directive  # noqa: E402
+
+from known_good.models.known_good import load_known_good
+from known_good.models.module import Module
+from known_good.update_module_from_known_good import generate_override_directive
 
 # Marker delimiting the block we append, so injection is idempotent / detectable.
-INJECTION_BEGIN = "# --- BEGIN ref_int resolved-deps injection (DR-008 Option 4) ---"
-INJECTION_END = "# --- END ref_int resolved-deps injection (DR-008 Option 4) ---"
+INJECTION_BEGIN = "# --- BEGIN ref_int resolved-deps injection ---"
+INJECTION_END = "# --- END ref_int resolved-deps injection ---"
 
 # The single file that carries the resolved set from Stage 1 (resolve) to Stage 2
 # (per-module validation). It is the only handoff needed: first-party commits +
@@ -71,10 +53,6 @@ _SKIP_MODULES = {"bazel_tools"}
 
 # Capture the module name from any ``bazel_dep(name = "...")`` call (name is the first arg).
 _BAZEL_DEP_RE = re.compile(r'bazel_dep\(\s*name\s*=\s*"([^"]+)"')
-# Capture an existing override target so we don't inject a duplicate for the same module.
-_OVERRIDE_RE = re.compile(
-    r'(?:git_override|single_version_override|local_path_override|archive_override)\(\s*module_name\s*=\s*"([^"]+)"'
-)
 # Parsers for reconstructing the resolved set from generated score_modules_*.MODULE.bazel.
 _GIT_OVERRIDE_BLOCK_RE = re.compile(r"git_override\((?P<body>.*?)\)", re.S)
 _SINGLE_VERSION_BLOCK_RE = re.compile(r"single_version_override\((?P<body>.*?)\)", re.S)
@@ -270,7 +248,6 @@ class ResolvedDependencies:
         original = self._strip_injection(module_bazel.read_text())
 
         declared = set(_BAZEL_DEP_RE.findall(original))
-        already_overridden = set(_OVERRIDE_RE.findall(original))
 
         from dataclasses import replace as _replace
 
@@ -280,11 +257,10 @@ class ResolvedDependencies:
         # module(s)" if an override targets a module that is not in this module's dependency
         # graph, so the full resolved set cannot be injected wholesale — a declared bazel_dep
         # is by definition in the graph, which makes its override safe.
+        # ref_int always decides the version — any existing module-level override is replaced.
         for name in sorted(declared):
             if name == module_under_test:
                 continue  # the module under test is the root; never override it
-            if name in already_overridden:
-                continue  # respect an override the module already declares
             module = self._resolved.get(name)
             if module is None:
                 continue  # dep ref_int does not pin; resolves normally
