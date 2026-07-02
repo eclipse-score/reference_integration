@@ -37,11 +37,66 @@ _HERE = Path(__file__).resolve().parent
 
 from known_good.models.known_good import load_known_good
 from known_good.models.module import Module
-from known_good.update_module_from_known_good import generate_override_directive
 
 # Marker delimiting the block we append, so injection is idempotent / detectable.
 INJECTION_BEGIN = "# --- BEGIN ref_int resolved-deps injection ---"
 INJECTION_END = "# --- END ref_int resolved-deps injection ---"
+
+
+def generate_override_directive(module: Module, repo_commit_dict: Optional[Dict[str, str]] = None) -> Optional[str]:
+    """Return the override directive (single_version_override / git_override) for a module.
+
+    Returns just the override call without a preceding ``bazel_dep(...)`` line, so the
+    same logic can be reused both to build ref_int's score_modules_*.MODULE.bazel files
+    and to inject overrides into a module's own MODULE.bazel where bazel_dep is already
+    declared (see :meth:`ResolvedDependencies.overwrite`).
+
+    Returns ``None`` when the module has neither a usable version nor a valid repo+commit.
+    """
+    repo_commit_dict = repo_commit_dict or {}
+    commit = module.hash
+
+    if module.repo in repo_commit_dict:
+        commit = repo_commit_dict[module.repo]
+
+    patches_lines = ""
+    if module.bazel_patches:
+        patches_lines = "    patches = [\n"
+        for patch in module.bazel_patches:
+            patches_lines += f'        "{patch}",\n'
+        patches_lines += "    ],\n"
+    patch_strip_line = "    patch_strip = 1,\n" if patches_lines else ""
+
+    if module.version:
+        return (
+            "single_version_override(\n"
+            f'    module_name = "{module.name}",\n'
+            f"{patch_strip_line}"
+            f"{patches_lines}"
+            f'    version = "{module.version}",\n'
+            ")\n"
+        )
+
+    if not module.repo or not commit:
+        logging.warning(
+            "Skipping module %s with missing repo or commit: repo=%s, commit=%s",
+            module.name, module.repo, commit,
+        )
+        return None
+
+    if not re.match(r"^[a-fA-F0-9]{7,40}$", commit):
+        logging.warning("Skipping module %s with invalid commit hash: %s", module.name, commit)
+        return None
+
+    return (
+        "git_override(\n"
+        f'    module_name = "{module.name}",\n'
+        f'    commit = "{commit}",\n'
+        f"{patch_strip_line}"
+        f"{patches_lines}"
+        f'    remote = "{module.repo}",\n'
+        ")\n"
+    )
 
 # The single file that carries the resolved set from Stage 1 (resolve) to Stage 2
 # (per-module validation). It is the only handoff needed: first-party commits +
