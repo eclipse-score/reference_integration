@@ -22,86 +22,83 @@ load("@score_tooling//python_basics:defs.bzl", "score_py_pytest")
 # `bazel run //scripts/tooling:requirements.update -- --upgrade`
 
 compile_pip_requirements(
-    name="requirements",
-    srcs=[
+    name = "requirements",
+    srcs = [
         "requirements.in",
         "@score_tooling//python_basics:requirements.txt",
     ],
-    extra_args=[
+    extra_args = [
         "--no-annotate",
     ],
-    requirements_txt="requirements.txt",
-    tags=[
+    requirements_txt = "requirements.txt",
+    tags = [
         "manual",
     ],
 )
 
 # Library target
 py_library(
-    name="lib",
-    srcs=glob(["lib/**/*.py"]),
-    visibility=["//visibility:public"],
+    name = "lib",
+    srcs = glob(["lib/**/*.py"]),
+    visibility = ["//visibility:public"],
 )
 
 # CLI library target (shared between binary and tests)
 py_library(
-    name="cli",
-    srcs=glob(["cli/**/*.py"]),
-    data=[
+    name = "cli",
+    srcs = glob(["cli/**/*.py"]),
+    data = [
         ":cli/misc/assets/report_template.html",
     ],
-    deps=[":lib"] + all_requirements,
+    deps = [":lib"] + all_requirements,
 )
 
 # CLI binary target
 py_binary(
-    name="tooling",
-    srcs=["cli/main.py"],
-    main="cli/main.py",
-    visibility=["//visibility:public"],
-    deps=[":cli"],
+    name = "tooling",
+    srcs = ["cli/main.py"],
+    main = "cli/main.py",
+    visibility = ["//visibility:public"],
+    deps = [":cli"],
 )
 
 # Workflow scripts as executables
 py_binary(
-    name="checkout_repos",
-    srcs=["cli/workflow/checkout_repos.py"],
-    main="cli/workflow/checkout_repos.py",
-    visibility=["//visibility:public"],
-    deps=[
+    name = "checkout_repos",
+    srcs = ["cli/workflow/checkout_repos.py"],
+    main = "cli/workflow/checkout_repos.py",
+    visibility = ["//visibility:public"],
+    deps = [
         ":cli",
         ":lib",
-    ]
-    + all_requirements,
+    ] + all_requirements,
 )
 
 py_binary(
-    name="recategorize_guidelines",
-    srcs=["cli/workflow/recategorize_guidelines.py"],
-    main="cli/workflow/recategorize_guidelines.py",
-    visibility=["//visibility:public"],
+    name = "recategorize_guidelines",
+    srcs = ["cli/workflow/recategorize_guidelines.py"],
+    main = "cli/workflow/recategorize_guidelines.py",
+    visibility = ["//visibility:public"],
 )
 
-# Alias: expose the resolve_deps script under //scripts/tooling so it can be
-# invoked as `bazel run //scripts/tooling:resolve_deps` alongside other tooling scripts.
+# Alias: expose resolve_deps under //scripts/tooling for `bazel run //scripts/tooling:resolve_deps`.
 alias(
-    name="resolve_deps",
-    actual="//scripts/known_good:resolve_deps",
-    visibility=["//visibility:public"],
+    name = "resolve_deps",
+    actual = "//scripts/known_good:resolve_deps",
+    visibility = ["//visibility:public"],
 )
 
 # Tests target
 score_py_pytest(
-    name="tooling_tests",
-    srcs=glob(["tests/**/*.py"]),
-    data=[
+    name = "tooling_tests",
+    srcs = glob(["tests/**/*.py"]),
+    data = [
         ":cli/misc/assets/report_template.html",
         "//:known_good.json",
     ],
-    pytest_config="//:pyproject.toml",
-    deps=[
+    pytest_config = "//:pyproject.toml",
+    deps = [
         ":cli",
         ":lib",
-    ]
-    + all_requirements,
+    ] + all_requirements,
 )
