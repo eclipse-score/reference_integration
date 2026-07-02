@@ -133,7 +133,8 @@ class TestOverwrite:
         # resolved dep the module does not declare must NOT be injected.
         mod = tmp_path / "MODULE.bazel"
         mod.write_text(
-            'module(name = "score_persistency", version = "0.0.0")\nbazel_dep(name = "score_baselibs", version = "0.1")\n'
+            'module(name = "score_persistency", version = "0.0.0")\n'
+            'bazel_dep(name = "score_baselibs", version = "0.1")\n'
         )
         block = resolved.overwrite(mod, module_under_test="score_persistency", write=False).split(INJECTION_BEGIN)[1]
         assert 'module_name = "score_baselibs"' in block  # declared -> injected
@@ -263,7 +264,7 @@ class TestFromResolvedArtifact:
         art.mkdir()
         (art / "MODULE.bazel.lock").write_text("{}")
         blocks = []
-        for m in resolved._resolved.values():
+        for m in resolved.modules.values():
             directive = generate_override_directive(m)
             if directive:
                 blocks.append(f'bazel_dep(name = "{m.name}")\n' + directive)

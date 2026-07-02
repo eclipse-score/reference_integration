@@ -31,19 +31,18 @@ import json
 import logging
 import re
 from pathlib import Path
-from typing import Dict, List, Optional
-
-_HERE = Path(__file__).resolve().parent
 
 from known_good.models.known_good import load_known_good
 from known_good.models.module import Module
+
+_HERE = Path(__file__).resolve().parent
 
 # Marker delimiting the block we append, so injection is idempotent / detectable.
 INJECTION_BEGIN = "# --- BEGIN ref_int resolved-deps injection ---"
 INJECTION_END = "# --- END ref_int resolved-deps injection ---"
 
 
-def generate_override_directive(module: Module, repo_commit_dict: Optional[Dict[str, str]] = None) -> Optional[str]:
+def generate_override_directive(module: Module, repo_commit_dict: dict[str, str] | None = None) -> str | None:
     """Return the override directive (single_version_override / git_override) for a module.
 
     Returns just the override call without a preceding ``bazel_dep(...)`` line, so the
@@ -80,7 +79,9 @@ def generate_override_directive(module: Module, repo_commit_dict: Optional[Dict[
     if not module.repo or not commit:
         logging.warning(
             "Skipping module %s with missing repo or commit: repo=%s, commit=%s",
-            module.name, module.repo, commit,
+            module.name,
+            module.repo,
+            commit,
         )
         return None
 
@@ -97,6 +98,7 @@ def generate_override_directive(module: Module, repo_commit_dict: Optional[Dict[
         f'    remote = "{module.repo}",\n'
         ")\n"
     )
+
 
 # The single file that carries the resolved set from Stage 1 (resolve) to Stage 2
 # (per-module validation). It is the only handoff needed: first-party commits +
@@ -121,23 +123,23 @@ class ResolvedDependencies:
     interface to scan + overwrite a module's ``MODULE.bazel`` to those versions.
     """
 
-    def __init__(self, resolved: Dict[str, Module]):
+    def __init__(self, resolved: dict[str, Module]):
         self._resolved = resolved
 
     # -- construction: "resolved deps versions from ref_int root" --------------------
 
     @classmethod
-    def from_known_good(cls, known_good_path: Path) -> "ResolvedDependencies":
+    def from_known_good(cls, known_good_path: Path) -> ResolvedDependencies:
         """Build from ``known_good.json`` (local / dev source of the resolved pins)."""
         kg = load_known_good(Path(known_good_path).resolve())
-        resolved: Dict[str, Module] = {}
+        resolved: dict[str, Module] = {}
         for group in kg.modules.values():
             for module in group.values():
                 resolved[module.name] = module
         return cls(resolved)
 
     @classmethod
-    def from_resolved_artifact(cls, artifact_dir: Path) -> "ResolvedDependencies":
+    def from_resolved_artifact(cls, artifact_dir: Path) -> ResolvedDependencies:
         """Build from the Stage-1 ``stage1-resolved-deps`` artifact.
 
         The handoff is the single ``resolved_versions.json`` manifest (see
@@ -164,14 +166,14 @@ class ResolvedDependencies:
         if not module_files:
             raise FileNotFoundError(f"No score_modules_*.MODULE.bazel files in resolved-deps artifact {artifact_dir}.")
 
-        resolved: Dict[str, Module] = {}
+        resolved: dict[str, Module] = {}
         for mf in module_files:
             for module in cls._parse_override_file(mf.read_text()):
                 resolved[module.name] = module
         return cls(resolved)
 
     @classmethod
-    def from_mod_graph(cls, mod_graph_json: Path, override_files: List[Path]) -> "ResolvedDependencies":
+    def from_mod_graph(cls, mod_graph_json: Path, override_files: list[Path]) -> ResolvedDependencies:
         """Build the *complete* resolved set by merging two sources.
 
         * The override directives ref_int actually declares — parsed from its root
@@ -190,8 +192,8 @@ class ResolvedDependencies:
         ``archive_override`` / ``local_path_override`` targets (e.g. ``rules_boost``) cannot
         be represented and are logged as not carried.
         """
-        resolved: Dict[str, Module] = {}
-        unrepresentable: List[str] = []
+        resolved: dict[str, Module] = {}
+        unrepresentable: list[str] = []
         for f in override_files:
             # Drop comment-only lines first: hand-written MODULE.bazel files contain
             # commented-out overrides (e.g. "# git_override(... rules_rpm ...)") that must
@@ -203,9 +205,9 @@ class ResolvedDependencies:
                 unrepresentable.append(f"{m.group(2)} ({m.group(1)})")
 
         graph = json.loads(Path(mod_graph_json).read_text())
-        versions: Dict[str, str] = {}
+        versions: dict[str, str] = {}
         _collect_resolved_versions(graph, versions)
-        skipped: List[str] = []
+        skipped: list[str] = []
         for name, version in versions.items():
             if name in resolved or name in _SKIP_MODULES:
                 continue  # already carried by an override directive, or non-overridable
@@ -237,23 +239,23 @@ class ResolvedDependencies:
         modules = {}
         for name in sorted(self._resolved):
             m = self._resolved[name]
-            entry: Dict[str, object] = {"version": m.version} if m.version else {"repo": m.repo, "hash": m.hash}
+            entry: dict[str, object] = {"version": m.version} if m.version else {"repo": m.repo, "hash": m.hash}
             if m.bazel_patches:
                 entry["bazel_patches"] = m.bazel_patches
             modules[name] = entry
         Path(path).write_text(json.dumps({"modules": modules}, indent=2) + "\n")
 
     @classmethod
-    def from_file(cls, path: Path) -> "ResolvedDependencies":
+    def from_file(cls, path: Path) -> ResolvedDependencies:
         """Load a resolved set previously written by :meth:`to_file`."""
         data = json.loads(Path(path).read_text())
         resolved = {name: Module.from_dict(name, md) for name, md in data.get("modules", {}).items()}
         return cls(resolved)
 
     @staticmethod
-    def _parse_override_file(text: str) -> List[Module]:
+    def _parse_override_file(text: str) -> list[Module]:
         """Reconstruct Module objects from generated git/single_version override blocks."""
-        modules: List[Module] = []
+        modules: list[Module] = []
 
         for match in _GIT_OVERRIDE_BLOCK_RE.finditer(text):
             body = match.group("body")
@@ -278,17 +280,21 @@ class ResolvedDependencies:
     def names(self) -> set[str]:
         return set(self._resolved)
 
-    def get(self, name: str) -> Optional[Module]:
+    @property
+    def modules(self) -> dict[str, Module]:
+        return dict(self._resolved)
+
+    def get(self, name: str) -> Module | None:
         return self._resolved.get(name)
 
-    def scan(self, module_bazel: Path) -> List[str]:
+    def scan(self, module_bazel: Path) -> list[str]:
         """Return the names of dependencies a module declares via ``bazel_dep``."""
         text = Path(module_bazel).read_text()
         # Ignore anything inside a previous injection block so re-scans are stable.
         text = self._strip_injection(text)
         return _BAZEL_DEP_RE.findall(text)
 
-    def overwrite(self, module_bazel: Path, *, module_under_test: Optional[str] = None, write: bool = True) -> str:
+    def overwrite(self, module_bazel: Path, *, module_under_test: str | None = None, write: bool = True) -> str:
         """Overwrite a module's declared dependency versions with the resolved set.
 
         Appends a ``git_override`` / ``single_version_override`` directive for every
@@ -306,7 +312,7 @@ class ResolvedDependencies:
 
         from dataclasses import replace as _replace
 
-        directives: List[str] = []
+        directives: list[str] = []
         # Inject overrides only for deps the module actually declares (intersected with the
         # resolved set). Bazel fails with "root module specifies overrides on nonexistent
         # module(s)" if an override targets a module that is not in this module's dependency
@@ -352,7 +358,7 @@ def _field(body: str, field: str) -> str:
     return match.group(1) if match else ""
 
 
-def _collect_resolved_versions(node: dict, acc: Dict[str, str]) -> None:
+def _collect_resolved_versions(node: dict, acc: dict[str, str]) -> None:
     """Walk a ``bazel mod graph --output=json`` tree, recording name -> resolved version.
 
     Each node carries the post-MVS ``name`` and ``version``; a module can appear many
