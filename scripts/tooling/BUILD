@@ -81,6 +81,14 @@ py_binary(
     visibility = ["//visibility:public"],
 )
 
+# Alias: expose the resolve_deps script under //scripts/tooling so it can be
+# invoked as `bazel run //scripts/tooling:resolve_deps` alongside other tooling scripts.
+alias(
+    name = "resolve_deps",
+    actual = "//scripts/known_good:resolve_deps",
+    visibility = ["//visibility:public"],
+)
+
 # Tests target
 score_py_pytest(
     name = "tooling_tests",
