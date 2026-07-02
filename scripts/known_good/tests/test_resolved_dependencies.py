@@ -31,6 +31,7 @@ from known_good.resolved_dependencies import (  # noqa: E402
     INJECTION_BEGIN,
     INJECTION_END,
     ResolvedDependencies,
+    generate_override_directive,
 )
 
 KNOWN_GOOD = {
@@ -257,13 +258,15 @@ class TestFromResolvedArtifact:
             ResolvedDependencies.from_resolved_artifact(tmp_path)
 
     def test_roundtrip_known_good_to_artifact(self, tmp_path: Path, resolved: ResolvedDependencies):
-        # Build an artifact dir mirroring stage1-resolved-deps, then parse it back.
-        from known_good.update_module_from_known_good import generate_git_override_blocks
-
+        # Build an artifact dir mirroring stage1-resolved-deps (legacy format), then parse it back.
         art = tmp_path / "art"
         art.mkdir()
         (art / "MODULE.bazel.lock").write_text("{}")
-        blocks = generate_git_override_blocks(list(resolved._resolved.values()), {})
+        blocks = []
+        for m in resolved._resolved.values():
+            directive = generate_override_directive(m)
+            if directive:
+                blocks.append(f'bazel_dep(name = "{m.name}")\n' + directive)
         (art / "score_modules_target_sw.MODULE.bazel").write_text("\n".join(blocks))
 
         parsed = ResolvedDependencies.from_resolved_artifact(art)
