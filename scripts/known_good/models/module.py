@@ -32,13 +32,13 @@ class Metadata:
     """
 
     code_root_path: str = "//score/..."
-    extra_test_config: list[str] = field(default_factory=list)
-    exclude_test_targets: list[str] = field(default_factory=list)
+    extra_test_config: list[str] = field(default_factory=lambda: [])
+    exclude_test_targets: list[str] = field(default_factory=lambda: [])
     langs: list[str] = field(default_factory=lambda: ["cpp", "rust"])
-    rust_coverage_config: str | None = "ferrocene-coverage"
+    rust_coverage_config: str | None = "ferrocene-coverage"  # Optional field for Rust coverage configuration
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> Metadata:
+    def from_dict(cls, data: Dict[str, Any]) -> Metadata:
         """Create a Metadata instance from a dictionary.
 
         Args:
@@ -55,7 +55,7 @@ class Metadata:
             rust_coverage_config=data.get("rust_coverage_config", "ferrocene-coverage"),
         )
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> Dict[str, Any]:
         """Convert Metadata instance to dictionary representation.
 
         Returns:
@@ -82,7 +82,7 @@ class Module:
     pin_version: bool = False
 
     @classmethod
-    def from_dict(cls, name: str, module_data: dict[str, Any]) -> Module:
+    def from_dict(cls, name: str, module_data: Dict[str, Any]) -> Module:
         """Create a Module instance from a dictionary representation.
 
         Args:
@@ -149,7 +149,7 @@ class Module:
         )
 
     @classmethod
-    def parse_modules(cls, modules_dict: dict[str, Any]) -> list[Module]:
+    def parse_modules(cls, modules_dict: Dict[str, Any]) -> List[Module]:
         """Parse modules dictionary into Module dataclass instances.
 
         Args:
@@ -190,13 +190,13 @@ class Module:
 
         return f"{parts[0]}/{parts[1]}"
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> Dict[str, Any]:
         """Convert Module instance to dictionary representation for JSON output.
 
         Returns:
                 Dictionary with module configuration
         """
-        result: dict[str, Any] = {"repo": self.repo}
+        result: Dict[str, Any] = {"repo": self.repo}
         if self.version:
             result["version"] = self.version
         else:
