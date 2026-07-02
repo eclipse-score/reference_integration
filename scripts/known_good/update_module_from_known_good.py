@@ -42,7 +42,7 @@ from models.known_good import load_known_good
 logging.basicConfig(level=logging.WARNING, format="%(levelname)s: %(message)s")
 
 
-def generate_git_override_blocks(modules: list[Module], repo_commit_dict: dict[str, str]) -> list[str]:
+def generate_git_override_blocks(modules: List[Module], repo_commit_dict: Dict[str, str]) -> List[str]:
     """Generate bazel_dep and git_override blocks for each module."""
     blocks = []
 
@@ -109,7 +109,7 @@ def generate_git_override_blocks(modules: list[Module], repo_commit_dict: dict[s
     return blocks
 
 
-def generate_local_override_blocks(modules: list[Module]) -> list[str]:
+def generate_local_override_blocks(modules: List[Module]) -> List[str]:
     """Generate bazel_dep and local_path_override blocks for each module."""
     blocks = []
 
@@ -127,7 +127,7 @@ def generate_local_override_blocks(modules: list[Module]) -> list[str]:
     return blocks
 
 
-def generate_coverage_blocks(modules: list[Module]) -> list[str]:
+def generate_coverage_blocks(modules: List[Module]) -> List[str]:
     """Generate rust_coverage_report  blocks for each module with rust impl."""
     blocks = ["""load("@score_tooling//:defs.bzl", "rust_coverage_report")"""]
 
@@ -161,9 +161,9 @@ rust_coverage_report(
 
 def generate_file_content(
     args: argparse.Namespace,
-    modules: list[Module],
-    repo_commit_dict: dict[str, str],
-    timestamp: str | None = None,
+    modules: List[Module],
+    repo_commit_dict: Dict[str, str],
+    timestamp: Optional[str] = None,
     file_type: str = "module",
 ) -> str:
     """Generate the complete content for score_modules.MODULE.bazel."""
@@ -292,9 +292,9 @@ Note:
     try:
         known_good = load_known_good(Path(known_path))
     except FileNotFoundError as e:
-        raise SystemExit(f"ERROR: {e}") from e
+        raise SystemExit(f"ERROR: {e}")
     except ValueError as e:
-        raise SystemExit(f"ERROR: {e}") from e
+        raise SystemExit(f"ERROR: {e}")
 
     if not known_good.modules:
         raise SystemExit("No modules found in known_good.json")
