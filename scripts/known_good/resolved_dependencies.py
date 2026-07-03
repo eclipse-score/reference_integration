@@ -302,7 +302,11 @@ class ResolvedDependencies:
         module (and all its transitive deps) build against ref_int's resolved versions.
 
         * Skips the module under test itself (the root is never overridden).
-        * Skips dependencies that already carry an override in the file.
+        * Always overwrites: any existing override the module already declares is replaced.
+        * A declared dependency with no entry in the resolved set is expected not to occur
+          when the resolved set comes from ref_int's full ``bazel mod graph`` (it is a
+          superset of every module's own graph) — if it does happen, a warning is logged
+          and that dependency is left to resolve on its own rather than failing the run.
         * Re-running is idempotent: a prior injection block is replaced.
         """
         module_bazel = Path(module_bazel)
@@ -324,7 +328,13 @@ class ResolvedDependencies:
                 continue  # the module under test is the root; never override it
             module = self._resolved.get(name)
             if module is None:
-                continue  # dep ref_int does not pin; resolves normally
+                logging.warning(
+                    "%s declares %s, which has no entry in the resolved set; "
+                    "leaving it to resolve on its own instead of failing the run.",
+                    module_bazel,
+                    name,
+                )
+                continue
             # Strip bazel_patches: they reference //patches/... labels in ref_int's
             # workspace which do not exist inside another module's checkout.
             module = _replace(module, bazel_patches=None)
