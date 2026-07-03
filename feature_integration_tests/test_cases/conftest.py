@@ -105,22 +105,25 @@ def pytest_sessionstart(session):
 
             def _build_target(target_name: str) -> None:
                 command = ["bazel", "build", f"--config={bazel_config}", target_name]
-                result = subprocess.run(
-                    command,
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                    timeout=build_timeout,
-                )
-                if result.returncode != 0:
-                    stderr_tail = "\n".join(result.stderr.strip().splitlines()[-40:])
-                    stdout_tail = "\n".join(result.stdout.strip().splitlines()[-40:])
+                try:
+                    result = subprocess.run(
+                        command,
+                        check=False,
+                        timeout=build_timeout,
+                    )
+                except subprocess.TimeoutExpired as exc:
                     raise RuntimeError(
-                        "Failed to run build with pytest --build-scenarios.\n"
+                        "Bazel build timed out while running pytest --build-scenarios.\n"
+                        f"Command: {' '.join(command)}\n"
+                        f"Timeout (seconds): {build_timeout}"
+                    ) from exc
+
+                if result.returncode != 0:
+                    raise RuntimeError(
+                        "Bazel build failed while running pytest --build-scenarios.\n"
                         f"Command: {' '.join(command)}\n"
                         f"Return code: {result.returncode}\n"
-                        f"stdout (last lines):\n{stdout_tail}\n"
-                        f"stderr (last lines):\n{stderr_tail}"
+                        "See streamed Bazel output above for details."
                     )
 
             # Build Rust test scenarios.
