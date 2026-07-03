@@ -11,6 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 load("@rules_python//python:defs.bzl", "py_binary", "py_library")
+load("@score_tooling//python_basics:defs.bzl", "score_py_pytest")
 
 # Library target: the known_good package (models + generators).
 # Used as a dep by //scripts/tooling and by the resolve_deps binary below.
@@ -21,6 +22,16 @@ py_library(
         exclude = ["tests/**"],
     ),
     visibility = ["//visibility:public"],
+)
+
+# Tests for the known_good package (currently: ResolvedDependencies).
+# Not part of //scripts/tooling:tooling_tests, whose glob is scoped to scripts/tooling/tests/.
+score_py_pytest(
+    name = "known_good_tests",
+    srcs = glob(["tests/**/*.py"]),
+    data = ["//:known_good.json"],
+    pytest_config = "//:pyproject.toml",
+    deps = [":known_good"],
 )
 
 # Runnable binary for the resolve + inject workflow.

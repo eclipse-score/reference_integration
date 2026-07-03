@@ -17,6 +17,7 @@ overwrites a temporary module MODULE.bazel — no cloned repos or Bazel required
 """
 
 import json
+import logging
 import sys
 from pathlib import Path
 
@@ -156,6 +157,17 @@ class TestOverwrite:
         second = resolved.overwrite(module_bazel, module_under_test="score_persistency", write=True)
         assert first == second
         assert second.count(INJECTION_BEGIN) == 1
+
+    def test_warns_on_declared_dep_not_in_resolved_set(
+        self, resolved: ResolvedDependencies, module_bazel: Path, caplog: pytest.LogCaptureFixture
+    ):
+        # "score_unpinned" is declared in MODULE_BAZEL but has no known_good.json entry.
+        # This is expected to be effectively impossible once the resolved set is sourced
+        # from the full 'bazel mod graph' (a superset of any module's own graph), so it
+        # must be surfaced as a warning rather than silently ignored.
+        with caplog.at_level(logging.WARNING):
+            resolved.overwrite(module_bazel, module_under_test="score_persistency", write=False)
+        assert "score_unpinned" in caplog.text
 
     def test_overwrites_dep_with_existing_override(self, resolved: ResolvedDependencies, tmp_path: Path):
         # ref_int always decides the version — a pre-existing override in the module is replaced.
