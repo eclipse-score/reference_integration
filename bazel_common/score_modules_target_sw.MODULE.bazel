@@ -11,14 +11,17 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Generated from known_good.json at 2026-05-26T07:01:41+00:00Z
+# Generated from known_good.json at 2026-07-03T00:00:00+00:00Z
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py
 
 bazel_dep(name = "score_baselibs")
-git_override(
+single_version_override(
     module_name = "score_baselibs",
-    commit = "cab36dd7de92c282f67e78e88032e08585803528",
-    remote = "https://github.com/eclipse-score/baselibs.git",
+    patch_strip = 1,
+    patches = [
+        "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
+    ],
+    version = "0.2.9",
 )
 
 bazel_dep(name = "score_baselibs_rust")
@@ -44,7 +47,7 @@ git_override(
 bazel_dep(name = "score_persistency")
 git_override(
     module_name = "score_persistency",
-    commit = "4d1fa1ae3c55d27d0f1e863b8cdf59a148651c5d",
+    commit = "3f674b1218f1669d33b6af92d2bd01b83241ec03",
     remote = "https://github.com/eclipse-score/persistency.git",
 )
 
@@ -72,7 +75,11 @@ git_override(
 bazel_dep(name = "score_logging")
 git_override(
     module_name = "score_logging",
-    commit = "0e9187f79a9935ca192779234b82f9d00dc4e335",
+    commit = "6c855d97e6004034ebe6e947770824dfb9358ca8",
+    patch_strip = 1,
+    patches = [
+        "//patches/logging:001-restore-remote-backend-in-datarouter.patch",
+    ],
     remote = "https://github.com/eclipse-score/logging.git",
 )
 
