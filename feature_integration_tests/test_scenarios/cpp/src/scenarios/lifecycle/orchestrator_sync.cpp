@@ -82,15 +82,27 @@ public:
         const bool orchestrator_state_synced = bool_from_input(input, "orchestrator_state_synced");
         const std::string from_target = string_from_input(input, "from_target", "Startup");
         const std::string to_target = string_from_input(input, "to_target", "Nominal");
-
+        const auto json_escape = [](const std::string& s) {
+             std::string out;
+             out.reserve(s.size());
+             for (char c : s) {
+                 if (c == '\\' || c == '"') {
+                     out.push_back('\\');
+                 }
+                 out.push_back(c);
+             }
+             return out;
+         };
+        const std::string escaped_from_target = json_escape(from_target);
+        const std::string escaped_to_target = json_escape(to_target);
         kvs_build_helpers::log_info(
             "\"event\":\"run_target_support\",\"status\":\"enabled\"",
             "cpp_test_scenarios::scenarios::lifecycle::orchestrator_sync");
 
         if (run_target_switch_success) {
             kvs_build_helpers::log_info(
-                "\"event\":\"run_target_switched\",\"from_target\":\"" + from_target +
-                    "\",\"to_target\":\"" + to_target + "\"",
+                "\"event\":\"run_target_switched\",\"from_target\":\"" + escaped_from_target +
+                    "\",\"to_target\":\"" + escaped_to_target + "\"",
                 "cpp_test_scenarios::scenarios::lifecycle::orchestrator_sync");
         } else {
             kvs_build_helpers::log_info(

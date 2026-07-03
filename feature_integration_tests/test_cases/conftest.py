@@ -114,10 +114,12 @@ def pytest_sessionstart(session):
                 )
                 if result.returncode != 0:
                     stderr_tail = "\n".join(result.stderr.strip().splitlines()[-40:])
+                    stdout_tail = "\n".join(result.stdout.strip().splitlines()[-40:])
                     raise RuntimeError(
                         "Failed to run build with pytest --build-scenarios.\n"
                         f"Command: {' '.join(command)}\n"
                         f"Return code: {result.returncode}\n"
+                        f"stdout (last lines):\n{stdout_tail}\n"
                         f"stderr (last lines):\n{stderr_tail}"
                     )
 

@@ -80,7 +80,17 @@ public:
     void run(const std::string& input) const override {
         const bool daemon_enabled = bool_from_input(input, "daemon_enabled");
         const std::string signal_name = string_from_input(input, "signal_name", "SIGUSR1");
-
+        const std::string escaped_signal_name = [&signal_name]() {
+            std::string out;
+            out.reserve(signal_name.size());
+            for (char c : signal_name) {
+                 if (c == '\\' || c == '"') {
+                     out.push_back('\\');
+                 }
+                 out.push_back(c);
+            }
+            return out;
+        }();
         kvs_build_helpers::log_info(
             "\"component\":\"launch_manager\",\"state\":\"running\",\"api\":\"application_if\"",
             "cpp_test_scenarios::scenarios::lifecycle::application_if");
@@ -94,14 +104,14 @@ public:
                 "cpp_test_scenarios::scenarios::lifecycle::application_if");
             kvs_build_helpers::log_info(
                 "\"event\":\"signal_dispatched\",\"condition\":\"daemon_running\",\"signal_name\":\"" +
-                    signal_name + "\",\"target_process\":\"score_application\"",
+                escaped_signal_name + "\",\"target_process\":\"score_application\"",
                 "cpp_test_scenarios::scenarios::lifecycle::application_if");
             return;
         }
 
         kvs_build_helpers::log_info(
             "\"event\":\"signal_skipped\",\"condition\":\"daemon_not_running\",\"signal_name\":\"" +
-                signal_name + "\",\"target_process\":\"score_application\"",
+            escaped_signal_name + "\",\"target_process\":\"score_application\"",
             "cpp_test_scenarios::scenarios::lifecycle::application_if");
     }
 };

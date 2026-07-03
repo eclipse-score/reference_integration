@@ -79,6 +79,18 @@ public:
 
     void run(const std::string& input) const override {
         const std::string secpol_type = string_from_input(input, "secpol_type", "strict");
+        const auto json_escape = [](const std::string& s) {
+            std::string out;
+            out.reserve(s.size());
+            for (char c : s) {
+                 if (c == '\\' || c == '"') {
+                     out.push_back('\\');
+                 }
+                 out.push_back(c);
+            }
+            return out;
+        };
+        const std::string escaped_secpol_type = json_escape(secpol_type);
         const bool run_as_root_attempt = bool_from_input(input, "run_as_root_attempt");
         const bool supported = secpol_type == "strict";
 
@@ -86,7 +98,7 @@ public:
             "\"component\":\"launch_manager\",\"state\":\"running\",\"api\":\"security_policy\"",
             "cpp_test_scenarios::scenarios::lifecycle::security_isolation");
         kvs_build_helpers::log_info(
-            "\"component\":\"security_crypto\",\"policy_domain\":\"secpol\",\"secpol_type\":\"" + secpol_type + "\"",
+            "\"component\":\"security_crypto\",\"policy_domain\":\"secpol\",\"secpol_type\":\"" + escaped_secpol_type + "\"",
             "cpp_test_scenarios::scenarios::lifecycle::security_isolation");
 
         if (supported) {
