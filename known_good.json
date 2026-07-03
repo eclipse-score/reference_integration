@@ -95,7 +95,10 @@
                     "//patches/lifecycle:001-aarch64-fd-values.patch"
                 ],
                 "metadata": {
-                    "code_root_path": "//score/..."
+                    "code_root_path": "//score/...",
+                    "exclude_test_targets": [
+                        "//score/health_monitor/src/rust:miri_tests"
+                    ]
                 }
             },
             "score_logging": {
