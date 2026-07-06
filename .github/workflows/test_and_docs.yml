@@ -73,6 +73,7 @@ jobs:
       - name: Execute Feature Integration Tests
         run: |
           bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit
+          bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_daemon
       - name: Publish build summary
         if: always()
         run: |
