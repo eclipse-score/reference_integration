@@ -18,6 +18,10 @@ bazel_dep(name = "score_baselibs")
 git_override(
     module_name = "score_baselibs",
     commit = "ce204159f37ee7815907369a8f678583bf102306",
+    patch_strip = 1,
+    patches = [
+        "//patches/baselibs:001-trace-library-mock-visibility.patch",
+    ],
     remote = "https://github.com/eclipse-score/baselibs.git",
 )
 
@@ -37,6 +41,7 @@ git_override(
         "//patches/communication:001-expose-comm-examples.patch",
         "//patches/communication:002-tests-visibility.patch",
         "//patches/communication:003-module-deps-visibility.patch",
+        "//patches/communication:004-tracing-library-target.patch",
     ],
     remote = "https://github.com/eclipse-score/communication.git",
 )
@@ -45,6 +50,10 @@ bazel_dep(name = "score_persistency")
 git_override(
     module_name = "score_persistency",
     commit = "4d1fa1ae3c55d27d0f1e863b8cdf59a148651c5d",
+    patch_strip = 1,
+    patches = [
+        "//patches/persistency:001-fix-string-view-to-string.patch",
+    ],
     remote = "https://github.com/eclipse-score/persistency.git",
 )
 

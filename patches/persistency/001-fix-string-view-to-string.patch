@@ -1,0 +1,12 @@
+diff --git a/src/cpp/src/internal/kvs_helper.cpp b/src/cpp/src/internal/kvs_helper.cpp
+--- a/src/cpp/src/internal/kvs_helper.cpp
++++ b/src/cpp/src/internal/kvs_helper.cpp
+@@ -240,7 +240,7 @@
+                                 result = score::MakeUnexpected(ErrorCode::InvalidValueType);
+                                 break;
+                             }
+-                            map.emplace(key.GetAsStringView().to_string(),
++                            map.emplace(std::string(key.GetAsStringView()),
+                                         std::make_shared<KvsValue>(std::move(conv.value())));
+                         }
+                         if (!error)

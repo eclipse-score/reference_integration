@@ -4,6 +4,9 @@
             "score_baselibs": {
                 "repo": "https://github.com/eclipse-score/baselibs.git",
                 "hash": "ce204159f37ee7815907369a8f678583bf102306",
+                "bazel_patches": [
+                    "//patches/baselibs:001-trace-library-mock-visibility.patch"
+                ],
                 "metadata": {
                     "extra_test_config": [
                         "@score_baselibs//score/json:base_library=nlohmann",
@@ -13,7 +16,8 @@
                         "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test",
                         "//score/containers:dynamic_array_test",
                         "//score/mw/log/configuration:*",
-                        "//score/json/examples:*"
+                        "//score/json/examples:*",
+                        "//score/flatbuffers/examples/config_usecase:demo_app"
                     ],
                     "langs": [
                         "cpp"
@@ -39,7 +43,8 @@
                 "bazel_patches": [
                     "//patches/communication:001-expose-comm-examples.patch",
                     "//patches/communication:002-tests-visibility.patch",
-                    "//patches/communication:003-module-deps-visibility.patch"
+                    "//patches/communication:003-module-deps-visibility.patch",
+                    "//patches/communication:004-tracing-library-target.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/mw/com/impl/...",
@@ -48,13 +53,18 @@
                         "//score/mw/com/impl:runtime_test",
                         "//score/mw/com/impl/configuration:config_parser_test",
                         "//score/mw/com/impl/configuration:configuration_test",
-                        "//score/mw/com/impl/tracing/configuration:tracing_filter_config_parser_test"
+                        "//score/mw/com/impl/tracing/configuration:tracing_filter_config_parser_test",
+                        "//score/mw/com/impl/tracing:tracing_runtime_test",
+                        "//score/mw/com/impl/bindings/lola/tracing:tracing_runtime_test"
                     ]
                 }
             },
             "score_persistency": {
                 "repo": "https://github.com/eclipse-score/persistency.git",
                 "hash": "4d1fa1ae3c55d27d0f1e863b8cdf59a148651c5d",
+                "bazel_patches": [
+                    "//patches/persistency:001-fix-string-view-to-string.patch"
+                ],
                 "metadata": {
                     "extra_test_config": [
                         "@score_baselibs_rust//src/log:safety_level=qm",
@@ -112,7 +122,8 @@
                         "//score/datarouter/test/ut/ut_logging:persistentLogConfigUT",
                         "//score/datarouter/test/ut/ut_logging:socketserverConfigUT",
                         "//score/datarouter/test/ut/ut_logging:socketserverUT",
-                        "//score/mw/log/legacy_non_verbose_api:unit_test"
+                        "//score/mw/log/legacy_non_verbose_api:unit_test",
+                        "//score/mw/log/detail/data_router:unit_test"
                     ]
                 }
             },

@@ -1,0 +1,13 @@
+diff --git a/score/analysis/tracing/generic_trace_library/mock/BUILD b/score/analysis/tracing/generic_trace_library/mock/BUILD
+--- a/score/analysis/tracing/generic_trace_library/mock/BUILD
++++ b/score/analysis/tracing/generic_trace_library/mock/BUILD
+@@ -20,8 +20,7 @@ cc_library(
+     hdrs = ["trace_library_mock.h"],
+     features = COMPILER_WARNING_FEATURES,
+     visibility = [
+-        "//score/analysis/tracing/generic_trace_library:__pkg__",
+-        "//score/analysis/tracing/generic_trace_library/test:__subpackages__",
++        "//visibility:public",
+     ],
+     deps = [
+         "//score/analysis/tracing/generic_trace_library/interface_types:generic_trace_api",
