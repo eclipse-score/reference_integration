@@ -1,6 +1,5 @@
-#!/usr/bin/env bash
 # *******************************************************************************
-# Copyright (c) 2026 Contributors to the Eclipse Foundation
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -12,4 +11,18 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-bazel run @score_tooling//format_checker:rustfmt_with_policies
+exports_files([
+    "startup.sh",
+    "network_setup.sh",
+    "network_setup_dhcp.sh",
+    "dhcpcd.conf",
+    "qcrypto.conf",
+    "passwd",
+    "group",
+    "sshd_config",
+    "ssh_host_rsa_key",
+    "ssh_host_rsa_key.pub",
+    "hostname",
+    "profile",
+    "network_capture.sh",
+])

@@ -26,7 +26,7 @@ else
 fi
 
 echo "Starting QEMU with IFS image: ${IFS_IMAGE}"
-qemu-system-x86_64 \
+sudo qemu-system-x86_64 \
                 ${QEMU_KVM_OPTS} \
                 -m 1G \
                 -pidfile /tmp/qemu.pid \
