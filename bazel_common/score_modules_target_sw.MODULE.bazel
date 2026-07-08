@@ -67,7 +67,11 @@ git_override(
 bazel_dep(name = "score_lifecycle_health")
 git_override(
     module_name = "score_lifecycle_health",
-    commit = "2f2e9c4c3e6c6b38abd0b72f78c8ffb96dc7f9e8",
+    commit = "caf5a187c79dd93b69b524a1da61edd7c3b68ac5",
+    patch_strip = 1,
+    patches = [
+        "//patches/lifecycle:001-aarch64-fd-values.patch",
+    ],
     remote = "https://github.com/eclipse-score/lifecycle.git",
 )
 
