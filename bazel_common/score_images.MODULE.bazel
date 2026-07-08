@@ -50,6 +50,16 @@ http_file(
 
 bazel_dep(name = "score_rules_imagefs", version = "0.0.1")
 
+# Pin score_rules_imagefs to 0.0.1. The bumped score_communication pulls in
+# score_qnx_unit_tests@0.2.0 which requests score_rules_imagefs@0.0.3, but 0.0.3
+# drops the `ext_repo_maping` attribute used by our QNX image build files. Force
+# 0.0.1 so the reference integration image definitions keep working without a
+# larger image-definition migration.
+single_version_override(
+    module_name = "score_rules_imagefs",
+    version = "0.0.1",
+)
+
 imagefs = use_extension("@score_rules_imagefs//extensions:imagefs.bzl", "imagefs", dev_dependency = True)
 imagefs.toolchain(
     name = "score_qnx_x86_64_ifs_toolchain",

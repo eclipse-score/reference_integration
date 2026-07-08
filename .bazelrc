@@ -7,6 +7,12 @@ common --registry=https://bcr.bazel.build
 common --credential_helper=*.qnx.com=%workspace%/.github/tools/qnx_credential_helper.py
 common --credential_helper_timeout="60s"
 
+# Clear ANDROID_HOME for repository rules. rules_android (pulled transitively via
+# grpc-java -> rules_jvm_external) evaluates android_sdk_repository, which fails
+# when ANDROID_HOME points at an incomplete SDK (as on CI runners). None of our
+# code uses Android, so forcing it empty makes the rule emit an empty stub repo.
+common --repo_env=ANDROID_HOME=
+
 # Java
 build --java_language_version=17
 build --tool_java_language_version=17
