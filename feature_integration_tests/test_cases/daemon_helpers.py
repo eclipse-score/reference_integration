@@ -163,6 +163,26 @@ def get_binary_path(target: str, version: str = "rust") -> Path:
     return binary_path
 
 
+def find_flatbuffer_dir_in_runfiles() -> Path | None:
+    """
+    Find the generated Launch Manager flatbuffer config directory in Bazel runfiles.
+
+    Returns
+    -------
+    Path | None
+        Path to the `flatbuffer_out` directory if found in runfiles, None otherwise.
+    """
+    runfiles_dir = os.environ.get("RUNFILES_DIR") or os.environ.get("TEST_SRCDIR")
+    if not runfiles_dir:
+        return None
+
+    candidate = Path(runfiles_dir) / "_main" / "flatbuffer_out"
+    if candidate.is_dir():
+        return candidate
+
+    return None
+
+
 def copy_flatbuffer_daemon_configs(etc_dir: Path) -> None:
     """
     Populate `etc_dir` with Launch Manager flatbuffer config binaries.
@@ -170,6 +190,12 @@ def copy_flatbuffer_daemon_configs(etc_dir: Path) -> None:
     The current Launch Manager daemon startup path expects flatbuffer files
     (e.g., lm_demo.bin) in `etc/` relative to its working directory.
     """
+    flatbuffer_dir = find_flatbuffer_dir_in_runfiles()
+    if flatbuffer_dir:
+        for flatbuffer_file in flatbuffer_dir.glob("*.bin"):
+            shutil.copy2(flatbuffer_file, etc_dir / flatbuffer_file.name)
+        return
+
     bazel_config = os.environ.get("FIT_BAZEL_CONFIG", "linux-x86_64")
     config_target = "//feature_integration_tests/test_cases:daemon_lifecycle_configs"
 

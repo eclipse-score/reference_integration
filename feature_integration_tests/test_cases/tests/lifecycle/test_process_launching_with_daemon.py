@@ -16,10 +16,6 @@ Feature integration tests for lifecycle with running Launch Manager daemon.
 These tests validate actual supervision and lifecycle management behavior
 by running test applications under a real Launch Manager daemon instance.
 
-**Note**: These tests are designed to run with pytest directly, not through Bazel.
-The Launch Manager daemon requires complex configuration and workspace access
-that isn't compatible with Bazel's test sandbox.
-
 To run these tests:
 
     # Run both Rust and C++ variants
@@ -35,7 +31,6 @@ For detailed documentation, see ../../LIFECYCLE_TESTS_SUMMARY.md
 """
 
 import json
-import os
 import shutil
 import subprocess
 import time
@@ -47,13 +42,8 @@ from daemon_helpers import get_binary_path, launch_manager_daemon
 from lifecycle_scenario import add_supervised_component
 from test_properties import add_test_properties
 
-# Skip these tests when running under Bazel - they require full workspace access
-_running_under_bazel = os.environ.get("TEST_SRCDIR") is not None
-_skip_reason = "Daemon tests require pytest with workspace access (not compatible with Bazel sandbox)"
-
 pytestmark = [
     pytest.mark.parametrize("version", ["rust", "cpp"], scope="class"),
-    pytest.mark.skipif(_running_under_bazel, reason=_skip_reason),
 ]
 
 

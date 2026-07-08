@@ -48,6 +48,7 @@ score_py_pytest(
         "-m rust",
         "--traces=all",
         "--rust-target-path=$(rootpath //feature_integration_tests/test_scenarios/rust:rust_test_scenarios)",
+        "-k 'not with_daemon'",
     ],
     data = [
         "conftest.py",
@@ -72,6 +73,7 @@ score_py_pytest(
         "-m cpp",
         "--traces=all",
         "--cpp-target-path=$(rootpath //feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios)",
+        "-k 'not with_daemon'",
     ],
     data = [
         "conftest.py",
@@ -103,7 +105,10 @@ score_py_pytest(
         "lifecycle_scenario.py",
         "persistency_scenario.py",
         "test_properties.py",
+        ":daemon_lifecycle_configs",
         "//feature_integration_tests/test_scenarios/rust:rust_test_scenarios",
+        "@score_lifecycle_health//examples/control_application:control_daemon",
+        "@score_lifecycle_health//examples/cpp_supervised_app",
         "@score_lifecycle_health//examples/rust_supervised_app",
         "@score_lifecycle_health//src/launch_manager_daemon:launch_manager",
     ],
@@ -111,6 +116,10 @@ score_py_pytest(
         "RUST_BACKTRACE": "1",
     },
     pytest_config = "//:pyproject.toml",
+    tags = [
+        "exclusive",
+        "no-sandbox",
+    ],
     deps = all_requirements,
 )
 
@@ -131,11 +140,18 @@ score_py_pytest(
         "lifecycle_scenario.py",
         "persistency_scenario.py",
         "test_properties.py",
+        ":daemon_lifecycle_configs",
         "//feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios",
+        "@score_lifecycle_health//examples/control_application:control_daemon",
         "@score_lifecycle_health//examples/cpp_supervised_app",
+        "@score_lifecycle_health//examples/rust_supervised_app",
         "@score_lifecycle_health//src/launch_manager_daemon:launch_manager",
     ],
     pytest_config = "//:pyproject.toml",
+    tags = [
+        "exclusive",
+        "no-sandbox",
+    ],
     deps = all_requirements,
 )
 
