@@ -3,9 +3,9 @@
         "target_sw": {
             "score_baselibs": {
                 "repo": "https://github.com/eclipse-score/baselibs.git",
-                "hash": "ce204159f37ee7815907369a8f678583bf102306",
+                "version": "0.2.9",
                 "bazel_patches": [
-                    "//patches/baselibs:001-trace-library-mock-visibility.patch"
+                    "//patches/baselibs:001-restore-trace-library-mock-visibility.patch"
                 ],
                 "metadata": {
                     "extra_test_config": [
@@ -59,10 +59,7 @@
             },
             "score_persistency": {
                 "repo": "https://github.com/eclipse-score/persistency.git",
-                "hash": "4d1fa1ae3c55d27d0f1e863b8cdf59a148651c5d",
-                "bazel_patches": [
-                    "//patches/persistency:001-fix-string-view-to-string.patch"
-                ],
+                "hash": "3f674b1218f1669d33b6af92d2bd01b83241ec03",
                 "metadata": {
                     "extra_test_config": [
                         "@score_baselibs_rust//src/log:safety_level=qm",
@@ -105,8 +102,12 @@
             },
             "score_logging": {
                 "repo": "https://github.com/eclipse-score/logging.git",
-                "hash": "0e9187f79a9935ca192779234b82f9d00dc4e335",
+                "hash": "6c855d97e6004034ebe6e947770824dfb9358ca8",
+                "bazel_patches": [
+                    "//patches/logging:001-restore-remote-backend-in-datarouter.patch"
+                ],
                 "metadata": {
+                    "code_root_path": "//score/mw/log/...",
                     "extra_test_config": [
                         "@score_logging//score/datarouter/build_configuration_flags:persistent_logging=False",
                         "@score_logging//score/datarouter/build_configuration_flags:persistent_config_feature_enabled=False",
@@ -116,12 +117,10 @@
                         "@score_logging//score/datarouter/build_configuration_flags:use_local_vlan=True"
                     ],
                     "exclude_test_targets": [
-                        "//score/datarouter/test/ut/ut_logging:dltprotocolUT",
-                        "//score/datarouter/test/ut/ut_logging:persistentLogConfigUT",
-                        "//score/datarouter/test/ut/ut_logging:socketserverConfigUT",
-                        "//score/datarouter/test/ut/ut_logging:socketserverUT",
-                        "//score/mw/log/legacy_non_verbose_api:unit_test",
-                        "//score/mw/log/detail/data_router:unit_test"
+                        "//score/mw/log/legacy_non_verbose_api:unit_test"
+                    ],
+                    "langs": [
+                        "cpp"
                     ]
                 }
             },
@@ -170,5 +169,5 @@
             }
         }
     },
-    "timestamp": "2026-05-26T07:01:41+00:00Z"
+    "timestamp": "2026-07-03T00:00:00+00:00Z"
 }
