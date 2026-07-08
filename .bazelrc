@@ -106,7 +106,7 @@ test:itf-qnx-x86_64 --run_under=@score_itf//scripts:run_under_qemu
 
 test:unit-tests --config=linux-x86_64
 test:unit-tests --build_tests_only
-test:unit-tests --test_tag_filters=-manual
+test:unit-tests --test_tag_filters=-manual,-miri
 
 # Coverage configuration for C++
 coverage --features=coverage

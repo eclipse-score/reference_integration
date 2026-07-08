@@ -75,3 +75,13 @@ rust_coverage_report(
     query = 'kind("rust_test", @score_lifecycle_health//src/...)',
     visibility = ["//visibility:public"],
 )
+
+rust_coverage_report(
+    name = "rust_coverage_score_logging",
+    bazel_configs = [
+        "linux-x86_64",
+        "ferrocene-coverage",
+    ],
+    query = 'kind("rust_test", @score_logging//score/mw/log/...) -@score_logging//score/mw/log/legacy_non_verbose_api:unit_test',
+    visibility = ["//visibility:public"],
+)
