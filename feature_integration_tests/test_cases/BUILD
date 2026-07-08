@@ -63,6 +63,7 @@ score_py_pytest(
         "RUST_BACKTRACE": "1",
     },
     pytest_config = "//:pyproject.toml",
+    tags = ["no-sandbox"],
     deps = all_requirements,
 )
 
@@ -85,6 +86,7 @@ score_py_pytest(
         "//feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios",
     ],
     pytest_config = "//:pyproject.toml",
+    tags = ["no-sandbox"],
     deps = all_requirements,
 )
 
@@ -159,14 +161,8 @@ test_suite(
     name = "fit",
     tests = [
         ":fit_cpp",
-        ":fit_rust",
-    ],
-)
-
-test_suite(
-    name = "fit_daemon",
-    tests = [
         ":fit_daemon_cpp",
         ":fit_daemon_rust",
+        ":fit_rust",
     ],
 )
