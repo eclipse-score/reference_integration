@@ -49,17 +49,3 @@ use_repo(
     ferrocene,
     "ferrocene_aarch64_ebclfsa",
 )
-
-# Pin the default host Rust toolchain above the rules_rust default (1.86.0).
-# score_baselibs / lifecycle use library APIs stabilized after 1.86
-# (is_multiple_of -> 1.87; NonNull::from_ref, str::from_utf8* inherent
-# constructors, array-length inference -> 1.89), so a newer stable toolchain
-# is required for the x86_64 host build.
-rust = use_extension("@rules_rust//rust:extensions.bzl", "rust")
-rust.toolchain(
-    edition = "2021",
-    versions = ["1.89.0"],
-)
-use_repo(rust, "rust_toolchains")
-
-register_toolchains("@rust_toolchains//:all")

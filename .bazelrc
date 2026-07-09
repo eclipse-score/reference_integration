@@ -12,6 +12,7 @@ common --credential_helper_timeout="60s"
 # when ANDROID_HOME points at an incomplete SDK (as on CI runners). None of our
 # code uses Android, so forcing it empty makes the rule emit an empty stub repo.
 common --repo_env=ANDROID_HOME=
+common --extra_toolchains=@score_toolchains_rust//toolchains/ferrocene:ferrocene_x86_64_unknown_linux_gnu
 
 # Java
 build --java_language_version=17
@@ -21,12 +22,10 @@ build --tool_java_runtime_version=remotejdk_17
 
 build:_common --@score_baselibs//score/json:base_library=nlohmann
 build:_common --@score_baselibs//score/memory/shared/flags:use_typedshmd=False
-build:_common --@score_baselibs_rust//src/log:safety_level=qm
 build:_common --@score_baselibs//src/log:safety_level=qm
 build:_common --@score_baselibs//score/analysis/tracing/generic_trace_library:implementation=@score_baselibs//score/analysis/tracing/generic_trace_library/stub_implementation
 build:_common --cxxopt=-Wno-error=mismatched-new-delete
 build:_common --host_platform=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
-build:_common --extra_toolchains=@score_toolchains_rust//toolchains/ferrocene:ferrocene_x86_64_unknown_linux_gnu
 build:_common --extra_toolchains=@score_gcc_x86_64_toolchain//:x86_64-linux-gcc_12.2.0
 build:_common --extra_toolchains=//bazel/toolchains:score_ref_int_libclang_toolchain
 
