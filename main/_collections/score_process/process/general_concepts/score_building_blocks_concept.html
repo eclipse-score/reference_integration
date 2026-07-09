@@ -32,9 +32,9 @@
 
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/css/score.css?v=6e51530f" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/css/score_needs.css?v=1f5dae2a" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/css/score_design.css?v=d9fd870c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/score.css?v=bb63a8e1" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/score_needs.css?v=82a1844f" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/score_design.css?v=8048e6ee" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
@@ -534,7 +534,7 @@
                   
   <section id="building-blocks-concept">
 <span id="general-concepts-building-blocks"></span><h1>Building blocks concept<a class="headerlink" href="#building-blocks-concept" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-08c9cbff">
+<div class="need_container docutils container" id="SNCB-39d1d55a">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_doc_concept table" id="doc_concept__general_building_blocks">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -554,6 +554,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">process_management</span></span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span></span></div>
 </div>
@@ -581,7 +582,9 @@
 <p>The meta model is not intended to be complete.
 The meta model is intended to give an overview about the building blocks of the
 platform and their relationships. It is not intended to give a detailed description
-of the building blocks and their relationships.</p>
+of the building blocks and their relationships.
+The meta model may used as basis for a tool based implementation, e.g. as done In
+<cite>Docs-As-Code</cite>.</p>
 </div>
 <section id="building-blocks-meta-model">
 <h2>Building blocks meta model<a class="headerlink" href="#building-blocks-meta-model" title="Link to this heading">#</a></h2>
@@ -593,12 +596,11 @@ as a Safety Element out of Context (<strong>SEooC</strong>) and it can be delive
 Delivery Container (green box, top, 1st column). The objectives of the platform are
 expressed as concrete <strong>Stakeholder Requirements</strong> (blue box, top, 4th column), which
 can be tested by provided <strong>Platform Integration Tests</strong> (blue box, top, 6th column)
-for reference hardware platforms. A <strong>Platform Safety/Security Analysis</strong>
-(blue box, top, 7th column) is required to verify the Feature Architectures, whereby
-violations of safety/security requirements must be documented. Potential faults
-may mitigated by updating the Stakeholder Requirements or by <strong>Assumptions of Use</strong>
-(white box, 8th column).</p>
-<p>The platform consists of <strong>Features</strong> (yellow box, middle, 2nd column).</p>
+for reference hardware platforms.  A <strong>Platform Safety/Security Analysis</strong>
+(blue box, top, 7th column) is required to verify <strong>Platform Architecture</strong> (including feature dependencies),
+whereby violations of safety/security requirements must be documented. Potential faults
+may be  mitigated by updating the Stakeholder Requirements or by <strong>Assumptions of Use</strong> (white box, 8th column).</p>
+<p>The platform consists of <strong>Features</strong> (yellow box, middle, 2nd column) defining a <strong>Platform Architecture</strong>.</p>
 <p>Further the project provides <strong>Dependable Elements</strong> (red box, middle, 1st column),
 which can also be developed as a SEooC and are delivered as part of a <strong>Delivery
 Container</strong>. This Delivery Container can contain one or more Dependable Elements,
@@ -646,11 +648,11 @@ variants of Assumptions of Use: “own” AoU required by the own element toward
 the “other” AoU asked from other element towards the own element and fulfilled by it.
 Generally the metamodel refers only within own architecture element (=component/feature), but
 AoUs need the fulfills link own -&gt; other.</p>
-<figure class="align-center" id="id1">
+<figure class="align-center" id="id2">
 <a class="reference internal image-reference" href="../../../../_images/score_building_blocks_meta_model.drawio.svg"><img alt="Building blocks overview for project platform" src="../../../../_images/score_building_blocks_meta_model.drawio.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 40 </span><span class="caption-text">Building blocks overview for the project platform</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 41 </span><span class="caption-text">Building blocks overview for the project platform</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
@@ -667,17 +669,17 @@ where the dependable element “JSON-Library” contains only one component “j
 The latter example is more or less a corner case. Components may optionally built-up
 by other components. Delivery container may also contain dependable elements, which are
 developed as safety element out of context (SEooC).</p>
-<figure class="align-center" id="id2">
+<figure class="align-center" id="id3">
 <a class="reference internal image-reference" href="../../../../_images/score_building_blocks_example.drawio.svg"><img alt="Building blocks example" src="../../../../_images/score_building_blocks_example.drawio.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 41 </span><span class="caption-text">Building blocks example</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 42 </span><span class="caption-text">Building blocks example</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
 <section id="deployment-example">
 <h2>Deployment example<a class="headerlink" href="#deployment-example" title="Link to this heading">#</a></h2>
-<p>The following figure is an example how the meta model may deployed on several repositories.
+<p id="id1">The following figure is an example how the meta model may deployed on several repositories.
 The project main repository has the information about the platform and the features.
 These include stakeholder requirements, platform architecture, safety/security analysis
 and platform assumptions of use. Further the features, their requirements and their
@@ -686,13 +688,31 @@ logical interfaces.</p>
 the components and units. There may several repositories of them.</p>
 <p>The project reference_integration repository includes only the platform integrations
 tests.</p>
-<figure class="align-center" id="id3">
+<figure class="align-center" id="id4">
 <a class="reference internal image-reference" href="../../../../_images/score_building_blocks_meta_model_deployment_example.drawio.svg"><img alt="Building blocks deployment example" src="../../../../_images/score_building_blocks_meta_model_deployment_example.drawio.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 42 </span><span class="caption-text">Building blocks deployment example</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 43 </span><span class="caption-text">Building blocks deployment example</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
+</section>
+<section id="hint-for-tool-implementation">
+<h2>Hint for Tool Implementation<a class="headerlink" href="#hint-for-tool-implementation" title="Link to this heading">#</a></h2>
+<p>The following figure shows the mandatory required relationships according
+to the meta model.</p>
+<figure class="align-center" id="id5">
+<a class="reference internal image-reference" href="../../../../_images/score_building_blocks_meta_model_simplified.drawio.svg"><img alt="Building blocks with minimal required relationships" src="../../../../_images/score_building_blocks_meta_model_simplified.drawio.svg" style="width: 100%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 44 </span><span class="caption-text">Building blocks with mandatory required relationships</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This mandatory required relationships is not what is finally expected from a compliance
+perspective point of you. For the compliance perspective, compare the images here:
+<a class="reference internal" href="score_traceability_concept.html#general-concepts-traceability"><span class="std std-ref">Traceability concept</span></a>.</p>
+</div>
 </section>
 </section>
 
@@ -746,6 +766,7 @@ tests.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-blocks-meta-model">Building blocks meta model</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-blocks-example">Building blocks example</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deployment-example">Deployment example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hint-for-tool-implementation">Hint for Tool Implementation</a></li>
 </ul>
   </nav></div>
 

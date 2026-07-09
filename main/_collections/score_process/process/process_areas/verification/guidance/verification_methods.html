@@ -32,9 +32,9 @@
 
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/graphviz.css?v=4ae1632d" />
-    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score.css?v=6e51530f" />
-    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score_needs.css?v=1f5dae2a" />
-    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score_design.css?v=d9fd870c" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score.css?v=bb63a8e1" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score_needs.css?v=82a1844f" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score_design.css?v=8048e6ee" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
@@ -565,7 +565,7 @@
 and how to create test cases using the same.</p>
 <section id="methods">
 <h2>Methods<a class="headerlink" href="#methods" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-6537f8d6">
+<div class="need_container docutils container" id="SNCB-1790fd87">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_method table" id="gd_meth__verification_methods">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -585,6 +585,7 @@ and how to create test cases using the same.</p>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">verification</span></span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__software_942" title="gd_meth__verification_methods">std_req__iso26262__software_942</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__software_944" title="gd_meth__verification_methods">std_req__iso26262__software_944</a>, <a class="reference internal" href="../../../standards/aspice_40/iic/iic-08.html#std_req__aspice_40__iic-08-58" title="gd_meth__verification_methods">std_req__aspice_40__iic-08-58</a></span></span></div>
 </span></div>
@@ -646,8 +647,8 @@ and data exchange between different software components or features. It’s abou
 interfaces (the points where different parts of the system connect and interact) are working
 correctly and reliably. This includes validating data formats, protocols, error handling, and
 overall communication integrity incl. the respective consumed and exchanged data.</p>
-<p>It can be distinguished between internal and external interfaces. Internal interfaces are best covered
-on unit level. External interfaces work best on component integration and feature level.</p>
+<p>The method applies to both internal and external interfaces. Internal interfaces are best covered
+on unit level. External interfaces are tested best on component integration and feature level.</p>
 <p>It is important that the interface tests include the testing of the actual intended functionality
 which the interface provides. The related requirements, architectural design, but also the descriptive
 interface name indicate the functional purpose of the interface.</p>
@@ -675,12 +676,12 @@ checksums, error handling).</p>
 <p>Stress the interfaces to see how they behave under heavy load (e.g., sending a large number of
 messages simultaneously).</p>
 </li>
-<li><p><strong>Security Tests:</strong> (Relevant for code interacting with security critical parts)</p>
+<li><p><strong>Security Tests:</strong> (Relevant for code part of, or interacting with, security critical parts)</p>
 <p>Verify that the interfaces are protected against unauthorized access and data breaches.</p>
 </li>
 <li><p><strong>Timing and Performance Tests</strong> (Relevant for realtime constraints)</p>
-<p>Measure the latency and throughput of the interfaces. This is mainly on integration level and is
-hard to have reasonable testing in the reference implementation</p>
+<p>Measure the latency and throughput of the interfaces. This should be tested mainly on integration level.
+Conversely, this method could be difficult to apply in the reference implementation</p>
 </li>
 </ul>
 </section>
@@ -688,15 +689,15 @@ hard to have reasonable testing in the reference implementation</p>
 <span id="ver-structural"></span><h3>Structural Coverage<a class="headerlink" href="#structural-coverage" title="Link to this heading">#</a></h3>
 <p>Structural coverage is a white-box testing technique used to check if the testing is sufficient by
 analyzing if code constructs were called during testing.</p>
-<p>In S-CORE we do both:</p>
+<p>Metrics applied are:</p>
 <ul class="simple">
 <li><p><strong>Statement Coverage:</strong> Measures whether each executable source code statement has been executed.</p></li>
 <li><p><strong>Branch Coverage:</strong> Measures whether each possible branch (decision outcome) in the code has
 been executed. It focuses on the overall boolean result of a decision point (if, while, etc.).</p></li>
 </ul>
 <p>S-CORE evaluates this coverage using the compiler selected for the target reference platform.</p>
-<p>If a sufficient structural coverage is not reached then additional test cases are added.
-What is sufficient and how to determine the coverage is defined in the <a class="reference internal" href="../verification_workproducts.html#wp__verification_plan" title="wp__verification_plan"><em class="xref need">Verification Plan (wp__verification_plan)</em></a> of the project.</p>
+<p>If a sufficient structural coverage is not reached then additional test cases shall be added.
+The coverage targets and how to determine the coverage is defined in the <a class="reference internal" href="../verification_workproducts.html#wp__verification_plan" title="wp__verification_plan"><em class="xref need">Verification Plan (wp__verification_plan)</em></a> of the project.</p>
 </section>
 <section id="static-code-analysis">
 <span id="ver-sta"></span><h3>Static Code Analysis<a class="headerlink" href="#static-code-analysis" title="Link to this heading">#</a></h3>
@@ -714,7 +715,7 @@ Systematic resolution or justified handling of findings contributes to the overa
 </section>
 <section id="derivation-techniques">
 <h2>Derivation Techniques<a class="headerlink" href="#derivation-techniques" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-da3d1a33">
+<div class="need_container docutils container" id="SNCB-cab28edc">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_method table" id="gd_meth__verification_derivation">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -734,6 +735,7 @@ Systematic resolution or justified handling of findings contributes to the overa
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">verification</span></span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__software_943" title="gd_meth__verification_derivation">std_req__iso26262__software_943</a>, <a class="reference internal" href="../../../standards/iso26262/iso26262.html#std_req__iso26262__software_1043" title="gd_meth__verification_derivation">std_req__iso26262__software_1043</a></span></span></div>
 </span></div>
@@ -743,6 +745,7 @@ Systematic resolution or justified handling of findings contributes to the overa
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><p>Following derivation techniques are explained</p>
 <ul class="simple">
+<li><p><a class="reference internal" href="#ver-req-anal"><span class="std std-ref">Requirements analysis</span></a></p></li>
 <li><p><a class="reference internal" href="#ver-boundary"><span class="std std-ref">Boundary Values</span></a></p></li>
 <li><p><a class="reference internal" href="#ver-equivalence"><span class="std std-ref">Equivalence Classes</span></a></p></li>
 <li><p><a class="reference internal" href="#ver-fuzzy"><span class="std std-ref">Fuzzy Testing</span></a></p></li>
@@ -763,6 +766,21 @@ Systematic resolution or justified handling of findings contributes to the overa
 </table>
 </div>
 </div>
+<section id="requirements-analysis">
+<span id="ver-req-anal"></span><h3>Requirements analysis<a class="headerlink" href="#requirements-analysis" title="Link to this heading">#</a></h3>
+<p>Requirements analysis is a test derivation technique where tests are designed based on the
+requirements assigned to the software element under test (unit, component, feature etc.).
+If available, the verification method defined for each requirement should be used as
+the basis of the test cases design.</p>
+<p>Requirements should always be tested against their “nominal” behaviour: i.e. “if input
+x = A, the output y of SW component Z shall be equal to B”. This leads to a test case
+injection value x = A and verifying that output y = B. “Negative” testing technique should
+be also considered: i.e. testing what happens when input x = C (if not already specified
+in other requirements).</p>
+<p>Note that requirement-based derived test case may also include other techniques and derivation methods
+mentioned here, such as Boundary Values, Equivalence Classes, Fuzzy Testing, Interface
+Testing and Fault Injection.</p>
+</section>
 <section id="boundary-values">
 <span id="ver-boundary"></span><h3>Boundary Values<a class="headerlink" href="#boundary-values" title="Link to this heading">#</a></h3>
 <p>Boundary Value Analysis (BVA) is a software testing technique where test cases are designed to
@@ -839,10 +857,13 @@ between the variables.</p>
 </li>
 </ul>
 </div></blockquote>
+<p>In case of non-trivial determination of test case inputs, a short explanation of the
+process followed can be given in order to facilitate maintenance and test regression,
+as well as during audits and assessments.</p>
 </section>
 <section id="equivalence-classes">
 <span id="ver-equivalence"></span><h3>Equivalence Classes<a class="headerlink" href="#equivalence-classes" title="Link to this heading">#</a></h3>
-<p>Equivalence Classes or also called Equivalence Partitioning (EP) is a software testing technique
+<p>Equivalence Classes, also called Equivalence Partitioning (EP), is a software testing technique
 that divides the input domain of a program into equivalence classes or partitions. The principle
 is that all values within a single partition are treated equivalently by the software. Therefore,
 only one test case from each partition is needed to achieve adequate test coverage. This reduces
@@ -906,6 +927,9 @@ Test Values could be:</p>
 <p>Create test cases using the representative values from each equivalence class.
 Aim to cover all classes in your test suite.</p>
 </div></blockquote>
+<p>In case of non-trivial determination of test case inputs, a short explanation of the
+process followed can be given in order to facilitate maintenance and test regression,
+as well as during audits and assessments.</p>
 </section>
 <section id="fuzzy-testing">
 <span id="ver-fuzzy"></span><h3>Fuzzy Testing<a class="headerlink" href="#fuzzy-testing" title="Link to this heading">#</a></h3>
@@ -1000,6 +1024,7 @@ and fix the underlying issue in the code.</p>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#derivation-techniques">Derivation Techniques</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements-analysis">Requirements analysis</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boundary-values">Boundary Values</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#equivalence-classes">Equivalence Classes</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fuzzy-testing">Fuzzy Testing</a></li>
