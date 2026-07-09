@@ -473,7 +473,19 @@ public:
         std::cout << "Testing process resource management" << std::endl;
         std::cout << "Process priority: " << priority << std::endl;
         std::cout << "Scheduling policy: " << sched_policy << std::endl;
-        std::cout << "CPU affinity: [0, 1]" << std::endl;
+
+        // Parse CPU affinity from config as numeric array
+        auto cpu_affinity = parse_numeric_array_field(input, "cpu_affinity");
+        if (!cpu_affinity.empty()) {
+            std::cout << "CPU affinity: [";
+            for (size_t i = 0; i < cpu_affinity.size(); ++i) {
+                if (i > 0) std::cout << ", ";
+                std::cout << cpu_affinity[i];
+            }
+            std::cout << "]" << std::endl;
+        } else {
+            std::cout << "ERROR: No CPU affinity in config (would use broken default)" << std::endl;
+        }
         std::cout << "Resource limits applied" << std::endl;
     }
 };
