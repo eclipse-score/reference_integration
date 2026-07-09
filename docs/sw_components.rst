@@ -19,8 +19,7 @@ Modules
    :titlesonly:
    :maxdepth: 1
 
-   _collections/score_persistency/docs/index
+   _collections/score_persistency/index
    _collections/score_orchestrator/docs/index
    _collections/score_kyron/docs/index
-   _collections/score_baselibs_rust/docs/index
    _collections/score_logging/docs/index

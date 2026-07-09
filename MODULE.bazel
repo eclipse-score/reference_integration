@@ -26,6 +26,9 @@ include("//bazel_common:score_qnx_toolchains.MODULE.bazel")  # WIP: Not used yet
 # Rust toolchains
 include("//bazel_common:score_rust_toolchains.MODULE.bazel")
 
+# LLVM/libclang toolchain (provides libclang for the score_tooling C++ parser)
+include("//bazel_common:score_llvm_libclang.MODULE.bazel")
+
 # Python support
 include("//bazel_common:score_python.MODULE.bazel")
 
@@ -67,6 +70,14 @@ bazel_dep(name = "score_rust_policies", version = "0.0.5")
 bazel_dep(name = "trlc")
 git_override(
     module_name = "trlc",
-    commit = "650b51a47264a4f232b3341f473527710fc32669",  # trlc-2.0.2 release
+    commit = "8d25f639ff44976893d7866ba421a04db5698ebe",
     remote = "https://github.com/bmw-software-engineering/trlc.git",
+)
+
+# Lobster dependency for requirements tracing (required by score_tooling)
+bazel_dep(name = "lobster", version = "0.0.0")
+git_override(
+    module_name = "lobster",
+    commit = "2792e2daee2cf524fdc7b1545fd3537791ebc36c",
+    remote = "https://github.com/bmw-software-engineering/lobster.git",
 )

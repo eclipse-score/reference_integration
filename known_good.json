@@ -3,7 +3,10 @@
         "target_sw": {
             "score_baselibs": {
                 "repo": "https://github.com/eclipse-score/baselibs.git",
-                "hash": "cab36dd7de92c282f67e78e88032e08585803528",
+                "version": "0.2.9",
+                "bazel_patches": [
+                    "//patches/baselibs:001-restore-trace-library-mock-visibility.patch"
+                ],
                 "metadata": {
                     "extra_test_config": [
                         "@score_baselibs//score/json:base_library=nlohmann",
@@ -13,32 +16,19 @@
                         "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test",
                         "//score/containers:dynamic_array_test",
                         "//score/mw/log/configuration:*",
-                        "//score/json/examples:*"
+                        "//score/json/examples:*",
+                        "//score/flatbuffers/examples/config_usecase:demo_app"
                     ],
                     "langs": [
                         "cpp"
                     ]
                 }
             },
-            "score_baselibs_rust": {
-                "repo": "https://github.com/eclipse-score/baselibs_rust.git",
-                "hash": "4050b62f298b639d27c092f63858642c3d08f9a0",
-                "metadata": {
-                    "code_root_path": "//src/...",
-                    "exclude_test_targets": [
-                        "//src/log/score_log_fmt_macro:tests"
-                    ],
-                    "langs": [
-                        "rust"
-                    ]
-                }
-            },
             "score_communication": {
                 "repo": "https://github.com/eclipse-score/communication.git",
-                "hash": "b021eccf1d811625d21eeb493071c0c4f4f6243a",
+                "hash": "0e0640998096049a8dd65a4173b03a988d5a85a7",
                 "bazel_patches": [
                     "//patches/communication:001-expose-comm-examples.patch",
-                    "//patches/communication:002-tests-visibility.patch",
                     "//patches/communication:003-module-deps-visibility.patch"
                 ],
                 "metadata": {
@@ -48,16 +38,21 @@
                         "//score/mw/com/impl:runtime_test",
                         "//score/mw/com/impl/configuration:config_parser_test",
                         "//score/mw/com/impl/configuration:configuration_test",
-                        "//score/mw/com/impl/tracing/configuration:tracing_filter_config_parser_test"
+                        "//score/mw/com/impl/tracing/configuration:tracing_filter_config_parser_test",
+                        "//score/mw/com/impl/tracing:tracing_runtime_test",
+                        "//score/mw/com/impl/bindings/lola/tracing:tracing_runtime_test"
                     ]
                 }
             },
             "score_persistency": {
                 "repo": "https://github.com/eclipse-score/persistency.git",
-                "hash": "4d1fa1ae3c55d27d0f1e863b8cdf59a148651c5d",
+                "hash": "35a937f34ff5b2daad8df56e36de76687f19d631",
+                "bazel_patches": [
+                    "//patches/persistency:001-fix-doc.patch"
+                ],
                 "metadata": {
                     "extra_test_config": [
-                        "@score_baselibs_rust//src/log:safety_level=qm",
+                        "@score_baselibs//src/log:safety_level=qm",
                         "@score_baselibs//score/json:base_library=nlohmann",
                         "@score_logging//score/mw/log/flags:KRemote_Logging=False"
                     ],
@@ -90,15 +85,27 @@
             },
             "score_lifecycle_health": {
                 "repo": "https://github.com/eclipse-score/lifecycle.git",
-                "hash": "2f2e9c4c3e6c6b38abd0b72f78c8ffb96dc7f9e8",
+                "hash": "caf5a187c79dd93b69b524a1da61edd7c3b68ac5",
+                "bazel_patches": [
+                    "//patches/lifecycle:001-aarch64-fd-values.patch"
+                ],
                 "metadata": {
-                    "code_root_path": "//src/..."
+                    "code_root_path": "//score/...",
+                    "exclude_test_targets": [
+                        "//score/health_monitor/src/rust:miri_tests",
+                        "//score/launch_manager/src/daemon/src/common/concurrency:mpmc_concurrent_queue_tsan_test"
+                    ]
                 }
             },
             "score_logging": {
                 "repo": "https://github.com/eclipse-score/logging.git",
-                "hash": "0e9187f79a9935ca192779234b82f9d00dc4e335",
+                "hash": "6c855d97e6004034ebe6e947770824dfb9358ca8",
+                "bazel_patches": [
+                    "//patches/logging:001-restore-remote-backend-in-datarouter.patch",
+                    "//patches/logging:002-needs-json-deps-not-dev-dependency.patch"
+                ],
                 "metadata": {
+                    "code_root_path": "//score/mw/log/...",
                     "extra_test_config": [
                         "@score_logging//score/datarouter/build_configuration_flags:persistent_logging=False",
                         "@score_logging//score/datarouter/build_configuration_flags:persistent_config_feature_enabled=False",
@@ -108,10 +115,6 @@
                         "@score_logging//score/datarouter/build_configuration_flags:use_local_vlan=True"
                     ],
                     "exclude_test_targets": [
-                        "//score/datarouter/test/ut/ut_logging:dltprotocolUT",
-                        "//score/datarouter/test/ut/ut_logging:persistentLogConfigUT",
-                        "//score/datarouter/test/ut/ut_logging:socketserverConfigUT",
-                        "//score/datarouter/test/ut/ut_logging:socketserverUT",
                         "//score/mw/log/legacy_non_verbose_api:unit_test"
                     ]
                 }
@@ -137,11 +140,11 @@
             },
             "score_tooling": {
                 "repo": "https://github.com/eclipse-score/tooling.git",
-                "hash": "1159dcf9d35981ac4877265eff7a1e7a24452161"
+                "hash": "7099e272c3f6114bad17736debd54139601aedd4"
             },
             "score_platform": {
                 "repo": "https://github.com/eclipse-score/score.git",
-                "hash": "1b51518e71835b02aef97433c5dd083339185256"
+                "hash": "80e96e9dbf01a5d2df4398cec4d6606ca0535603"
             },
             "score_bazel_platforms": {
                 "repo": "https://github.com/eclipse-score/bazel_platforms.git",
@@ -153,13 +156,13 @@
             },
             "score_docs_as_code": {
                 "repo": "https://github.com/eclipse-score/docs-as-code.git",
-                "hash": "1939bde2a3a3e023bcba726085be40471fd93fd4"
+                "hash": "8d28586a12daa57c29d9b0a3b0b532246b59ea64"
             },
             "score_process": {
                 "repo": "https://github.com/eclipse-score/process_description.git",
-                "hash": "42cfa87d5650fe4b70fcb8dce1cc0e24b658d687"
+                "hash": "8df530cab5efcb40e9f835ba6e9b61ae2f0175c7"
             }
         }
     },
-    "timestamp": "2026-05-26T07:01:41+00:00Z"
+    "timestamp": "2026-07-03T00:00:00+00:00Z"
 }

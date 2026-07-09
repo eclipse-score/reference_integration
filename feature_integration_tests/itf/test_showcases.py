@@ -17,14 +17,14 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def test_ipc_bridge_cpp_app_is_deployed(target):
-    exit_code, out = target.execute("test -f /showcases/bin/ipc_bridge_cpp")
+def test_com_api_example_app_is_deployed(target):
+    exit_code, out = target.execute("test -f /showcases/bin/com-api-example")
     assert exit_code == 0
 
 
-def test_ipc_bridge_cpp_app_is_running(target):
+def test_com_api_example_app_is_running(target):
     exit_code, out = target.execute(
-        "cd /showcases/data/comm; /showcases/bin/ipc_bridge_cpp -n 10 -t 100 -m send & /showcases/bin/ipc_bridge_cpp -n 5 -t 100 -m recv"
+        "cd /showcases/data/comm; /showcases/bin/com-api-example -s /showcases/data/comm/etc/mw_com_config.json"
     )
     logger.info(out)
     assert exit_code == 0

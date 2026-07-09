@@ -11,31 +11,26 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Generated from known_good.json at 2026-05-26T07:01:41+00:00Z
+# Generated from known_good.json at 2026-07-03T00:00:00+00:00Z
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py
 
 bazel_dep(name = "score_baselibs")
-git_override(
+single_version_override(
     module_name = "score_baselibs",
-    commit = "cab36dd7de92c282f67e78e88032e08585803528",
-    remote = "https://github.com/eclipse-score/baselibs.git",
-)
-
-bazel_dep(name = "score_baselibs_rust")
-git_override(
-    module_name = "score_baselibs_rust",
-    commit = "4050b62f298b639d27c092f63858642c3d08f9a0",
-    remote = "https://github.com/eclipse-score/baselibs_rust.git",
+    patch_strip = 1,
+    patches = [
+        "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
+    ],
+    version = "0.2.9",
 )
 
 bazel_dep(name = "score_communication")
 git_override(
     module_name = "score_communication",
-    commit = "b021eccf1d811625d21eeb493071c0c4f4f6243a",
+    commit = "0e0640998096049a8dd65a4173b03a988d5a85a7",
     patch_strip = 1,
     patches = [
         "//patches/communication:001-expose-comm-examples.patch",
-        "//patches/communication:002-tests-visibility.patch",
         "//patches/communication:003-module-deps-visibility.patch",
     ],
     remote = "https://github.com/eclipse-score/communication.git",
@@ -44,7 +39,11 @@ git_override(
 bazel_dep(name = "score_persistency")
 git_override(
     module_name = "score_persistency",
-    commit = "4d1fa1ae3c55d27d0f1e863b8cdf59a148651c5d",
+    commit = "35a937f34ff5b2daad8df56e36de76687f19d631",
+    patch_strip = 1,
+    patches = [
+        "//patches/persistency:001-fix-doc.patch",
+    ],
     remote = "https://github.com/eclipse-score/persistency.git",
 )
 
@@ -65,14 +64,23 @@ git_override(
 bazel_dep(name = "score_lifecycle_health")
 git_override(
     module_name = "score_lifecycle_health",
-    commit = "2f2e9c4c3e6c6b38abd0b72f78c8ffb96dc7f9e8",
+    commit = "caf5a187c79dd93b69b524a1da61edd7c3b68ac5",
+    patch_strip = 1,
+    patches = [
+        "//patches/lifecycle:001-aarch64-fd-values.patch",
+    ],
     remote = "https://github.com/eclipse-score/lifecycle.git",
 )
 
 bazel_dep(name = "score_logging")
 git_override(
     module_name = "score_logging",
-    commit = "0e9187f79a9935ca192779234b82f9d00dc4e335",
+    commit = "6c855d97e6004034ebe6e947770824dfb9358ca8",
+    patch_strip = 1,
+    patches = [
+        "//patches/logging:001-restore-remote-backend-in-datarouter.patch",
+        "//patches/logging:002-needs-json-deps-not-dev-dependency.patch",
+    ],
     remote = "https://github.com/eclipse-score/logging.git",
 )
 
