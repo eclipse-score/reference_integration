@@ -40,6 +40,10 @@ bazel_dep(name = "score_persistency")
 git_override(
     module_name = "score_persistency",
     commit = "35a937f34ff5b2daad8df56e36de76687f19d631",
+    patch_strip = 1,
+    patches = [
+        "//patches/persistency:001-fix-doc.patch",
+    ],
     remote = "https://github.com/eclipse-score/persistency.git",
 )
 
