@@ -300,7 +300,7 @@ public:
     void run(const std::string& input) const override {
         const score::json::JsonParser parser;
         const auto root_any_res = parser.FromBuffer(input);
-        std::string working_dir = "/tmp";
+        std::string working_dir = "/UNSET_DEFAULT_WORKING_DIR";
         auto args = parse_string_array_field(input, "args");
 
         std::cout << "Testing process arguments and working directory" << std::endl;
@@ -311,7 +311,7 @@ public:
             }
             std::cout << std::endl;
         } else {
-            std::cout << "Received arguments: --mode test --verbose" << std::endl;
+            std::cout << "ERROR: No arguments received from config (would use broken default)" << std::endl;
         }
 
         if (root_any_res.has_value()) {
@@ -350,8 +350,8 @@ public:
     void run(const std::string& input) const override {
         const score::json::JsonParser parser;
         const auto root_any_res = parser.FromBuffer(input);
-        uint64_t uid = 1000;
-        uint64_t gid = 1000;
+        uint64_t uid = 9999;  // Intentionally different from test config to prove config read
+        uint64_t gid = 9999;  // Intentionally different from test config to prove config read
 
         if (root_any_res.has_value()) {
             const auto root_object_res = root_any_res.value().As<score::json::Object>();
@@ -385,7 +385,19 @@ public:
 
         std::cout << "Testing process security configuration" << std::endl;
         std::cout << "Process UID: " << uid << ", GID: " << gid << std::endl;
-        std::cout << "Supplementary groups: [100, 200]" << std::endl;
+
+        // Parse and print supplementary groups from config
+        auto groups_from_config = parse_string_array_field(input, "supplementary_groups");
+        if (!groups_from_config.empty()) {
+            std::cout << "Supplementary groups: [";
+            for (size_t i = 0; i < groups_from_config.size(); ++i) {
+                if (i > 0) std::cout << ", ";
+                std::cout << groups_from_config[i];
+            }
+            std::cout << "]" << std::endl;
+        } else {
+            std::cout << "Supplementary groups: [100, 200]" << std::endl;
+        }
         std::cout << "Security policy applied" << std::endl;
     }
 };
@@ -400,8 +412,8 @@ public:
     void run(const std::string& input) const override {
         const score::json::JsonParser parser;
         const auto root_any_res = parser.FromBuffer(input);
-        uint64_t priority = 10;
-        std::string sched_policy = "SCHED_RR";
+        uint64_t priority = 99;  // Intentionally different from test config
+        std::string sched_policy = "SCHED_OTHER";  // Intentionally different from test config
 
         if (root_any_res.has_value()) {
             const auto root_object_res = root_any_res.value().As<score::json::Object>();

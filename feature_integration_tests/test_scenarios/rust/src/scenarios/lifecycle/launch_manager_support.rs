@@ -249,13 +249,17 @@ impl Scenario for ProcessArguments {
     fn run(&self, input: &str) -> Result<(), String> {
         let v: Value = serde_json::from_str(input).map_err(|e| format!("Parse error: {}", e))?;
         let args = v["test"]["args"].as_array();
-        let working_dir = v["test"]["working_dir"].as_str().unwrap_or("/tmp");
+        let working_dir = v["test"]["working_dir"]
+            .as_str()
+            .unwrap_or("/UNSET_DEFAULT_WORKING_DIR");
 
         info!("Testing process arguments and working directory");
 
         if let Some(args) = args {
             let args_str: Vec<String> = args.iter().filter_map(|a| a.as_str().map(String::from)).collect();
             info!("Received arguments: {}", args_str.join(" "));
+        } else {
+            return Err("ERROR: No arguments received from config".to_string());
         }
 
         info!("Working directory: {}", working_dir);
@@ -274,8 +278,8 @@ impl Scenario for ProcessSecurity {
 
     fn run(&self, input: &str) -> Result<(), String> {
         let v: Value = serde_json::from_str(input).map_err(|e| format!("Parse error: {}", e))?;
-        let uid = v["test"]["uid"].as_u64().unwrap_or(1000);
-        let gid = v["test"]["gid"].as_u64().unwrap_or(1000);
+        let uid = v["test"]["uid"].as_u64().unwrap_or(9999); // Intentionally different from test config
+        let gid = v["test"]["gid"].as_u64().unwrap_or(9999); // Intentionally different from test config
 
         info!("Testing process security configuration");
         info!("Process UID: {}, GID: {}", uid, gid);
@@ -283,6 +287,8 @@ impl Scenario for ProcessSecurity {
         if let Some(groups) = v["test"]["supplementary_groups"].as_array() {
             let groups_vec: Vec<u64> = groups.iter().filter_map(|g| g.as_u64()).collect();
             info!("Supplementary groups: {:?}", groups_vec);
+        } else {
+            return Err("ERROR: No supplementary groups in config".to_string());
         }
 
         info!("Security policy applied");
@@ -301,8 +307,8 @@ impl Scenario for ProcessResources {
 
     fn run(&self, input: &str) -> Result<(), String> {
         let v: Value = serde_json::from_str(input).map_err(|e| format!("Parse error: {}", e))?;
-        let priority = v["test"]["priority"].as_u64().unwrap_or(10);
-        let sched_policy = v["test"]["scheduling_policy"].as_str().unwrap_or("SCHED_RR");
+        let priority = v["test"]["priority"].as_u64().unwrap_or(99); // Intentionally different from test config
+        let sched_policy = v["test"]["scheduling_policy"].as_str().unwrap_or("SCHED_OTHER"); // Intentionally different
 
         info!("Testing process resource management");
         info!("Process priority: {}", priority);
