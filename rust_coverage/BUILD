@@ -72,7 +72,7 @@ rust_coverage_report(
         "linux-x86_64",
         "ferrocene-coverage",
     ],
-    query = 'kind("rust_test", @score_lifecycle_health//score/...) -@score_lifecycle_health//score/health_monitor/src/rust:miri_tests',
+    query = 'kind("rust_test", @score_lifecycle_health//score/...) -@score_lifecycle_health//score/health_monitor/src/rust:miri_tests -@score_lifecycle_health//score/launch_manager/src/daemon/src/common/concurrency:mpmc_concurrent_queue_tsan_test',
     visibility = ["//visibility:public"],
 )
 
