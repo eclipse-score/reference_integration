@@ -24,19 +24,6 @@
                     ]
                 }
             },
-            "score_baselibs_rust": {
-                "repo": "https://github.com/eclipse-score/baselibs_rust.git",
-                "hash": "4050b62f298b639d27c092f63858642c3d08f9a0",
-                "metadata": {
-                    "code_root_path": "//src/...",
-                    "exclude_test_targets": [
-                        "//src/log/score_log_fmt_macro:tests"
-                    ],
-                    "langs": [
-                        "rust"
-                    ]
-                }
-            },
             "score_communication": {
                 "repo": "https://github.com/eclipse-score/communication.git",
                 "hash": "0e0640998096049a8dd65a4173b03a988d5a85a7",
@@ -69,6 +56,9 @@
                     "code_root_path": "//src/...",
                     "exclude_test_targets": [
                         "//src/cpp/tests:bm_kvs_cpp"
+                    ],
+                    "bazel_patches": [
+                        "//patches/persistency:001-fix-docs.patch"
                     ],
                     "rust_coverage_config": "ferrocene-coverage-per"
                 }
@@ -153,7 +143,7 @@
             },
             "score_platform": {
                 "repo": "https://github.com/eclipse-score/score.git",
-                "hash": "1b51518e71835b02aef97433c5dd083339185256"
+                "hash": "80e96e9dbf01a5d2df4398cec4d6606ca0535603"
             },
             "score_bazel_platforms": {
                 "repo": "https://github.com/eclipse-score/bazel_platforms.git",
@@ -165,11 +155,11 @@
             },
             "score_docs_as_code": {
                 "repo": "https://github.com/eclipse-score/docs-as-code.git",
-                "hash": "1939bde2a3a3e023bcba726085be40471fd93fd4"
+                "hash": "8d28586a12daa57c29d9b0a3b0b532246b59ea64"
             },
             "score_process": {
                 "repo": "https://github.com/eclipse-score/process_description.git",
-                "hash": "42cfa87d5650fe4b70fcb8dce1cc0e24b658d687"
+                "hash": "8df530cab5efcb40e9f835ba6e9b61ae2f0175c7"
             }
         }
     },

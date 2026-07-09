@@ -45,6 +45,20 @@ extensions = [
     "score_sphinx_bundle",
 ]
 
+exclude_patterns = [
+    # The following entries are not required when building the documentation via 'bazel
+    # build //:docs', as that command runs in a sandboxed environment. However, when
+    # building the documentation via 'bazel run //:docs' or esbonio, these
+    # entries are required to prevent the build from failing.
+    "**/CONTRIBUTION.md",
+    "**/README.md",
+    "**/.github/**",
+    "**/improvement.md",
+    "bazel-*",
+    ".venv*",
+    "_build",
+]
+
 # Enable markdown rendering
 source_suffix = {
     ".rst": "restructuredtext",

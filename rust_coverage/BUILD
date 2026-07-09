@@ -17,16 +17,6 @@
 load("@score_tooling//:defs.bzl", "rust_coverage_report")
 
 rust_coverage_report(
-    name = "rust_coverage_score_baselibs_rust",
-    bazel_configs = [
-        "linux-x86_64",
-        "ferrocene-coverage",
-    ],
-    query = 'kind("rust_test", @score_baselibs_rust//src/...) -@score_baselibs_rust//src/log/score_log_fmt_macro:tests',
-    visibility = ["//visibility:public"],
-)
-
-rust_coverage_report(
     name = "rust_coverage_score_communication",
     bazel_configs = [
         "linux-x86_64",
