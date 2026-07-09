@@ -107,6 +107,31 @@ std::vector<std::string> parse_string_array_field(const std::string& input, cons
     return values;
 }
 
+std::vector<uint64_t> parse_numeric_array_field(const std::string& input, const std::string& field_name) {
+    const std::regex field_regex("\\\"" + field_name + "\\\"\\s*:\\s*\\[(.*?)\\]");
+    std::smatch field_match;
+
+    if (!std::regex_search(input, field_match, field_regex)) {
+        return {};
+    }
+
+    std::vector<uint64_t> values;
+    const std::string array_content = field_match[1].str();
+    const std::regex value_regex("(\\d+)");
+
+    for (std::sregex_iterator it(array_content.begin(), array_content.end(), value_regex);
+         it != std::sregex_iterator{};
+         ++it) {
+        try {
+            values.push_back(std::stoull((*it)[1].str()));
+        } catch (...) {
+            // Skip invalid numbers
+        }
+    }
+
+    return values;
+}
+
 /**
  * @brief ProcessLaunchingSupport scenario implementation.
  */
@@ -386,17 +411,17 @@ public:
         std::cout << "Testing process security configuration" << std::endl;
         std::cout << "Process UID: " << uid << ", GID: " << gid << std::endl;
 
-        // Parse and print supplementary groups from config
-        auto groups_from_config = parse_string_array_field(input, "supplementary_groups");
-        if (!groups_from_config.empty()) {
+        // Parse supplementary groups from config as numeric array
+        auto groups = parse_numeric_array_field(input, "supplementary_groups");
+        if (!groups.empty()) {
             std::cout << "Supplementary groups: [";
-            for (size_t i = 0; i < groups_from_config.size(); ++i) {
+            for (size_t i = 0; i < groups.size(); ++i) {
                 if (i > 0) std::cout << ", ";
-                std::cout << groups_from_config[i];
+                std::cout << groups[i];
             }
             std::cout << "]" << std::endl;
         } else {
-            std::cout << "Supplementary groups: [100, 200]" << std::endl;
+            std::cout << "ERROR: No supplementary groups in config (would use broken default [999, 888])" << std::endl;
         }
         std::cout << "Security policy applied" << std::endl;
     }
