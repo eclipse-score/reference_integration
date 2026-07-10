@@ -174,22 +174,29 @@ Reference integration
 - **Version:** ``TBD``
 - **Source / tag:** TBD
 
+- Added a dedicated `Integration Process Guide <https://eclipse-score.github.io/reference_integration/main/integration_process/integration_process.html>`_ with a step-by-step onboarding path (module onboarding, platform integration, testing, reporting, and code quality checks).
+- Introduced the v1.0 roadmap and release-gate documentation in `Roadmap <https://eclipse-score.github.io/reference_integration/main/s_core_v_1/roadmap/roadmap.html>`_, including clearer milestone alignment across process areas.
+- Established and continuously refreshed the `Overall Status <https://eclipse-score.github.io/reference_integration/main/s_core_v_1/roadmap/overall_status.html>`_ page to provide release-level visibility on cross-module progress and process-area metrics.
+
 
 Reference QNX image
 +++++++++++++++++++
 
-- To be added.
+- Added QNX 8 support for ``aarch64`` including build and configuration artifacts for the reference image.
+- Extended QEMU runner support for QNX ``aarch64`` to improve reproducible bring-up and integration testing in CI and local workflows.
 
 Reference Red Hat AutoSD Linux image (Experimental)
 +++++++++++++++++++++++++++++++++++++++++++++++++++
 
-- To be added.
+- Switched AutoSD image builds to a ``bootc``-based flow, improving image build reproducibility and maintainability.
+- Updated related build and CI workflow integration for the new AutoSD image generation approach.
 
 
 Reference Elektrobit corbos Linux for Safety Applications Linux image (Experimental)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-- To be added.
+- Updated EB corbos image documentation by removing outdated scrample-specific references and aligning the guidance with the current integration setup.
+- Refreshed EBcLfSA-specific CI workflow and development-container settings to keep the image pipeline aligned with current tooling.
 
 Associated Infrastructure Modules
 ---------------------------------
