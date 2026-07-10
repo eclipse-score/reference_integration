@@ -402,16 +402,29 @@ impl Scenario for RunTargets {
 
         info!("Testing run target support");
 
-        if let Some(targets) = v["test"]["run_targets"].as_array() {
-            for target in targets {
-                if let Some(target_name) = target.as_str() {
-                    info!("Run target defined: {}", target_name);
-                }
-            }
+        let targets = v["test"]["run_targets"]
+            .as_array()
+            .ok_or_else(|| "Run targets were not defined: missing 'test.run_targets' in scenario input".to_string())?;
+
+        let target_names: Vec<&str> = targets.iter().filter_map(|target| target.as_str()).collect();
+        if target_names.is_empty() {
+            return Err("Run targets were not defined: no valid string entries in 'test.run_targets'".to_string());
+        }
+
+        for target_name in &target_names {
+            info!("Run target defined: {}", target_name);
         }
 
         info!("Starting run target: {}", initial_target);
-        info!("Switching run targets");
+
+        let next_target = target_names
+            .iter()
+            .copied()
+            .find(|target_name| *target_name != initial_target)
+            .ok_or_else(|| {
+                "Run target switch failed: no alternative target available in 'test.run_targets'".to_string()
+            })?;
+        info!("Switching from {} to {}", initial_target, next_target);
         info!("Process state reported");
 
         Ok(())

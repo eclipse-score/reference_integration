@@ -93,12 +93,12 @@ class TestRunTargets(LifecycleScenario):
         """
         assert results.return_code == ResultCode.SUCCESS
 
+        expected_switch_message = "Switching from startup to running"
+
         if version == "cpp":
-            assert "Switching from startup to running" in results.stdout or "Switching run targets" in results.stdout, (
-                "Run target switch failed"
-            )
+            assert expected_switch_message in results.stdout, "Run target switch failed"
         else:
-            switch_logs = logs_info_level.get_logs(field="message", pattern="Switching run targets")
+            switch_logs = logs_info_level.get_logs(field="message", pattern=expected_switch_message)
             assert len(switch_logs) > 0, "Run target switch failed"
 
     def test_process_state_communication(

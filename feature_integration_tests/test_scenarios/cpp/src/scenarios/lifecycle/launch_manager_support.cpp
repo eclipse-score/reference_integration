@@ -636,14 +636,11 @@ public:
         }
 
         std::cout << "Testing run target support" << std::endl;
-        if (!run_targets.empty()) {
-            for (const auto& target : run_targets) {
-                std::cout << "Run target defined: " << target << std::endl;
-            }
-        } else {
-            std::cout << "Run target defined: startup" << std::endl;
-            std::cout << "Run target defined: running" << std::endl;
-            std::cout << "Run target defined: shutdown" << std::endl;
+        if (run_targets.empty()) {
+            throw std::runtime_error("Run targets were not defined: missing 'test.run_targets' in scenario input");
+        }
+        for (const auto& target : run_targets) {
+            std::cout << "Run target defined: " << target << std::endl;
         }
         std::cout << "Starting run target: " << initial_target << std::endl;
 
@@ -655,11 +652,10 @@ public:
             }
         }
 
-        if (!next_target.empty()) {
-            std::cout << "Switching from " << initial_target << " to " << next_target << std::endl;
-        } else {
-            std::cout << "Switching run targets" << std::endl;
+        if (next_target.empty()) {
+            throw std::runtime_error("Run target switch failed: no alternative target available in 'test.run_targets'");
         }
+        std::cout << "Switching from " << initial_target << " to " << next_target << std::endl;
 
         std::cout << "Process state reported" << std::endl;
     }
