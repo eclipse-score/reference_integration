@@ -31,11 +31,7 @@ ferrocene.toolchain(
         "-Clink-arg=-static",
         "-Clink-arg=-lm",
         "-Clink-arg=-lc",
-        # Provide the aarch64 GCC outline-atomics helpers (__aarch64_*_acq_rel)
-        # referenced by the C++ (communication/baselibs) objects that are now
-        # statically linked into this Rust binary via the new mw/com Rust
-        # com-api FFI layer. Without libgcc these resolve to undefined symbols.
-        "-Clink-arg=-lgcc",
+        "-Clink-arg=-lgcc",  # needed for gcc atomic helpers & rust
     ],
     sha256 = "b1f1eb1146bf595fe1f4a65d5793b7039b37d2cb6d395d1c3100fa7d0377b6c9",
     target_compatible_with = [
