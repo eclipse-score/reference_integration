@@ -105,7 +105,7 @@ def find_binary_in_runfiles(target_path: str) -> Path | None:
     return None
 
 
-def get_binary_path(target: str, version: str = "rust") -> Path:
+def get_binary_path(target: str) -> Path:
     """
     Get path to a binary, either from runfiles or by building it.
 
@@ -113,9 +113,6 @@ def get_binary_path(target: str, version: str = "rust") -> Path:
     ----------
     target : str
         Bazel target path.
-    version : str
-        Build version ("rust" or "cpp").
-
     Returns
     -------
     Path
@@ -411,7 +408,7 @@ def launch_manager_daemon(
 
     # Get launch_manager daemon binary (from runfiles or build it)
     daemon_target = "@score_lifecycle_health//src/launch_manager_daemon:launch_manager"
-    daemon_binary = get_binary_path(daemon_target, version)
+    daemon_binary = get_binary_path(daemon_target)
 
     # Copy daemon to bin directory
     daemon_path = bin_dir / "launch_manager"
@@ -424,7 +421,7 @@ def launch_manager_daemon(
         ("@score_lifecycle_health//examples/cpp_supervised_app:cpp_supervised_app", "cpp_supervised_app"),
         ("@score_lifecycle_health//examples/control_application:control_daemon", "control_daemon"),
     ]:
-        app_binary = get_binary_path(app_target, version)
+        app_binary = get_binary_path(app_target)
         app_dest = bin_dir / app_name
         shutil.copy2(app_binary, app_dest)
         app_dest.chmod(0o755)

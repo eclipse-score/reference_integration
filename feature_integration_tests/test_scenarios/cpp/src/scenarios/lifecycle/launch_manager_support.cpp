@@ -62,27 +62,25 @@ struct LifecycleTestInput {
 
         const auto& test = test_object_res.value().get();
 
-        // Initialize with sensible defaults to prevent zero-initialization issues
-        LifecycleTestInput input{100, 3};
-
         const auto duration_it = test.find("test_duration_ms");
-        if (duration_it != test.end()) {
-            const auto duration_res = duration_it->second.As<uint64_t>();
-            if (duration_res.has_value()) {
-                input.test_duration_ms = duration_res.value();
-            }
+        if (duration_it == test.end()) {
+            throw std::invalid_argument("Missing required field: test_duration_ms");
+        }
+        const auto duration_res = duration_it->second.As<uint64_t>();
+        if (!duration_res.has_value()) {
+            throw std::invalid_argument("Field test_duration_ms must be an unsigned integer");
         }
 
         const auto count_it = test.find("checkpoint_count");
-        if (count_it != test.end()) {
-            const auto count_res = count_it->second.As<uint64_t>();
-            // Validate checkpoint_count >= 1 to prevent division by zero
-            if (count_res.has_value() && count_res.value() >= 1U) {
-                input.checkpoint_count = static_cast<size_t>(count_res.value());
-            }
+        if (count_it == test.end()) {
+            throw std::invalid_argument("Missing required field: checkpoint_count");
+        }
+        const auto count_res = count_it->second.As<uint64_t>();
+        if (!count_res.has_value()) {
+            throw std::invalid_argument("Field checkpoint_count must be an unsigned integer");
         }
 
-        return input;
+        return LifecycleTestInput{duration_res.value(), static_cast<size_t>(count_res.value())};
     }
 };
 
@@ -213,7 +211,7 @@ public:
             throw std::runtime_error("checkpoint_count must be at least 1");
         }
 
-        std::cout << "Testing parallel execution pattern with multiple monitors" << std::endl;
+        std::cout << "Testing parallel health monitoring with multiple monitors" << std::endl;
 
         std::cout << "Started " << std::to_string(test_input.checkpoint_count)
                   << " parallel monitors" << std::endl;
@@ -534,22 +532,20 @@ public:
         }
 
         std::cout << "Testing conditional launching" << std::endl;
-        if (!wait_conditions.empty()) {
-            for (const auto& condition : wait_conditions) {
-                if (condition.rfind("path:", 0) == 0U) {
-                    std::cout << "Checking path condition: " << condition.substr(5) << std::endl;
-                } else if (condition.rfind("env:", 0) == 0U) {
-                    std::cout << "Checking env condition: " << condition.substr(4) << std::endl;
-                } else if (condition.rfind("process:", 0) == 0U) {
-                    std::cout << "Checking process condition: " << condition.substr(8) << std::endl;
-                } else {
-                    std::cout << "Checking condition: " << condition << std::endl;
-                }
+        if (wait_conditions.empty()) {
+            throw std::runtime_error("Wait conditions were not provided: missing 'test.wait_conditions' in scenario input");
+        }
+
+        for (const auto& condition : wait_conditions) {
+            if (condition.rfind("path:", 0) == 0U) {
+                std::cout << "Checking path condition: " << condition.substr(5) << std::endl;
+            } else if (condition.rfind("env:", 0) == 0U) {
+                std::cout << "Checking env condition: " << condition.substr(4) << std::endl;
+            } else if (condition.rfind("process:", 0) == 0U) {
+                std::cout << "Checking process condition: " << condition.substr(8) << std::endl;
+            } else {
+                throw std::runtime_error("Unsupported wait condition prefix: " + condition);
             }
-        } else {
-            std::cout << "Checking path condition: /tmp/ready" << std::endl;
-            std::cout << "Checking env condition: STARTUP_COMPLETE" << std::endl;
-            std::cout << "Checking process condition: init_done" << std::endl;
         }
         std::cout << "Polling interval: " << polling_interval << "ms" << std::endl;
         std::cout << "Condition timeout: " << timeout << "ms" << std::endl;

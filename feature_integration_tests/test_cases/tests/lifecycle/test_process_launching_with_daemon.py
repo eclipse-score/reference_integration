@@ -96,7 +96,7 @@ class TestProcessLaunchingWithDaemon:
             app_target = "@score_lifecycle_health//examples/cpp_supervised_app:cpp_supervised_app"
             app_name = "cpp_supervised_app"
 
-        app_binary = get_binary_path(app_target, version)
+        app_binary = get_binary_path(app_target)
 
         # Copy to daemon bin directory
         dest_path = bin_dir / app_name
@@ -150,16 +150,12 @@ class TestProcessLaunchingWithDaemon:
             )
             print(f"\nDaemon reported supervised process PID events: {', '.join(pid_events[:5])}")
 
-        # Verify daemon is still running
+        # Verify daemon is still running and target app appears in supervision logs.
         assert daemon.is_running(), "Launch Manager daemon stopped unexpectedly"
-
-        # Check daemon logs for supervision activity
         logs = daemon.get_logs()
-        print(f"\nDaemon logs:\n{logs}")
-
-        # Verify logs show component was started
-        # (Actual log messages depend on Launch Manager implementation)
-        assert len(logs) > 0, "No daemon logs generated"
+        assert app_name in logs or result.returncode == 0, (
+            f"No target-specific supervision evidence for {app_name}.\nDaemon logs:\n{logs}"
+        )
 
     def test_supervised_app_recovery(
         self, launch_manager_daemon: dict[str, Any], setup_test_app: Path, version: str
@@ -195,36 +191,40 @@ class TestProcessLaunchingWithDaemon:
                 print(f"\nKilling supervised app (PID: {pid})")
                 subprocess.run(["kill", "-9", pid], check=True)
 
-                # Wait for daemon to detect failure and restart
-                time.sleep(2.0)
+                # Poll for restart to avoid fixed-sleep race conditions.
+                deadline = time.time() + 12.0
+                new_pid = None
+                while time.time() < deadline:
+                    result = subprocess.run(
+                        ["pgrep", "-f", app_name],
+                        capture_output=True,
+                        text=True,
+                        check=False,
+                    )
+                    if result.returncode == 0:
+                        candidates = [p for p in result.stdout.strip().split("\n") if p and p != pid]
+                        if candidates:
+                            new_pid = candidates[0]
+                            break
+                    time.sleep(0.25)
 
-                # Verify app was restarted
-                result = subprocess.run(
-                    ["pgrep", "-f", app_name],
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                )
-
-                if result.returncode == 0:
-                    new_pid = result.stdout.strip().split("\n")[0]
+                if new_pid is not None:
                     print(f"App restarted with new PID: {new_pid}")
-                    assert new_pid != pid, "PID should be different after restart"
                 else:
                     logs = daemon.get_logs()
                     pytest.fail(
-                        "Supervised app was not found after forced kill; expected daemon recovery restart."
-                        f"\nDaemon logs:\n{logs}"
+                        "Supervised app was not restarted within timeout after forced kill."
+                        f"\nTarget app: {app_name}\nDaemon logs:\n{logs}"
                     )
             else:
                 logs = daemon.get_logs()
-                recovery_signals = [
-                    f"unexpected termination of process",
-                    "Activating Recovery state.",
-                    f"Got kRunning timeout for process",
+                target_patterns = [
+                    rf"unexpected termination of process.*\(\s*{re.escape(app_name)}\s*\)",
+                    rf"Got kRunning timeout for process.*\(\s*{re.escape(app_name)}\s*\)",
                 ]
-                assert any(signal in logs for signal in recovery_signals), (
-                    f"Supervised app {app_name} not running and no recovery diagnostics found.\nDaemon logs:\n{logs}"
+                assert any(re.search(pattern, logs) for pattern in target_patterns), (
+                    f"Supervised app {app_name} not running and no target-specific recovery diagnostics found."
+                    f"\nDaemon logs:\n{logs}"
                 )
 
         except subprocess.CalledProcessError as e:
@@ -264,16 +264,42 @@ class TestHealthMonitoringWithDaemon:
         3. Validate recovery action is triggered
         """
         daemon = launch_manager_daemon["daemon"]
+        app_name = "rust_supervised_app" if version == "rust" else "cpp_supervised_app"
 
-        # Give daemon enough time to perform supervision cycles and emit diagnostics.
-        time.sleep(2.0)
-        logs = daemon.get_logs()
-
-        watchdog_like_signals = [
-            "Got kRunning timeout for process",
-            "Problem discovered in PG MainPG Activating Recovery state.",
-            "unexpected termination of process",
-        ]
-        assert any(signal in logs for signal in watchdog_like_signals), (
-            "No supervision/watchdog-related diagnostics found in daemon logs."
+        # Setup: stop the supervised process to emulate a non-reporting workload.
+        result = subprocess.run(
+            ["pgrep", "-f", app_name],
+            capture_output=True,
+            text=True,
+            check=False,
         )
+        if result.returncode != 0:
+            # Some CI environments cannot keep startup apps alive due to uid/gid
+            # switching restrictions. Do not skip: require target-specific
+            # watchdog/recovery evidence from daemon logs instead.
+            logs = daemon.get_logs()
+            watchdog_patterns = [
+                rf"Got kRunning timeout for process.*\(\s*{re.escape(app_name)}\s*\)",
+                rf"unexpected termination of process.*\(\s*{re.escape(app_name)}\s*\)",
+            ]
+            assert any(re.search(pattern, logs) for pattern in watchdog_patterns), (
+                f"Target app {app_name} is not running and no target-specific watchdog diagnostics were found."
+                f"\nDaemon logs:\n{logs}"
+            )
+            return
+
+        pid = result.stdout.strip().split("\n")[0]
+        subprocess.run(["kill", "-STOP", pid], check=True)
+        try:
+            # Allow supervision/watchdog loop to detect stalled process.
+            time.sleep(4.0)
+            logs = daemon.get_logs()
+            watchdog_patterns = [
+                rf"Got kRunning timeout for process.*\(\s*{re.escape(app_name)}\s*\)",
+                rf"unexpected termination of process.*\(\s*{re.escape(app_name)}\s*\)",
+            ]
+            assert any(re.search(pattern, logs) for pattern in watchdog_patterns), (
+                f"No target-specific watchdog diagnostics found for {app_name}.\nDaemon logs:\n{logs}"
+            )
+        finally:
+            subprocess.run(["kill", "-CONT", pid], check=False)

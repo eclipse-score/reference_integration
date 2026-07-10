@@ -340,17 +340,28 @@ impl Scenario for ConditionalLaunching {
 
         info!("Testing conditional launching");
 
-        if let Some(conditions) = v["test"]["wait_conditions"].as_array() {
-            for condition in conditions {
-                if let Some(cond_str) = condition.as_str() {
-                    if cond_str.starts_with("path:") {
-                        info!("Checking path condition: {}", &cond_str[5..]);
-                    } else if cond_str.starts_with("env:") {
-                        info!("Checking env condition: {}", &cond_str[4..]);
-                    } else if cond_str.starts_with("process:") {
-                        info!("Checking process condition: {}", &cond_str[8..]);
-                    }
-                }
+        let conditions = v["test"]["wait_conditions"].as_array().ok_or_else(|| {
+            "Wait conditions were not provided: missing 'test.wait_conditions' in scenario input".to_string()
+        })?;
+
+        if conditions.is_empty() {
+            return Err(
+                "Wait conditions were not provided: empty 'test.wait_conditions' in scenario input".to_string(),
+            );
+        }
+
+        for condition in conditions {
+            let cond_str = condition
+                .as_str()
+                .ok_or_else(|| "Wait condition entries must be strings".to_string())?;
+            if cond_str.starts_with("path:") {
+                info!("Checking path condition: {}", &cond_str[5..]);
+            } else if cond_str.starts_with("env:") {
+                info!("Checking env condition: {}", &cond_str[4..]);
+            } else if cond_str.starts_with("process:") {
+                info!("Checking process condition: {}", &cond_str[8..]);
+            } else {
+                return Err(format!("Unsupported wait condition prefix: {}", cond_str));
             }
         }
 
