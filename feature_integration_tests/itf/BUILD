@@ -33,6 +33,9 @@ config_setting(
 filegroup(
     name = "all_tests",
     srcs = [
+        "comm_helpers.py",
+        "test_communication.py",
+        "test_properties.py",
         "test_remote_logging.py",
         "test_showcases.py",
         "test_ssh.py",
@@ -44,7 +47,13 @@ py_itf_test(
     srcs = [
         ":all_tests",
     ],
-    args = select(
+    # "-p attribute_plugin" activates score_tooling's requirement-traceability
+    # pytest plugin (see the "deps" attribute below) so that
+    # @add_test_properties(...) (feature_integration_tests/itf/test_properties.py)
+    # writes PartiallyVerifies/FullyVerifies properties into the JUnit XML
+    # report, matching the convention already used by
+    # feature_integration_tests/test_cases (persistency FIT).
+    args = ["-p", "attribute_plugin"] + select(
         {
             ":config_linux_x86_64": [
                 "--dlt-config=$(location //feature_integration_tests/configs:dlt_config_x86_64.json)",
@@ -59,6 +68,9 @@ py_itf_test(
         },
         no_match_error = "Unsupported platform",
     ),
+    deps = [
+        "@score_tooling//python_basics/score_pytest:attribute_plugin",
+    ],
     data = select({
         ":config_linux_x86_64": [
             "//feature_integration_tests/configs:dlt_config_x86_64.json",
