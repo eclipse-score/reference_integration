@@ -66,10 +66,13 @@ class TestProcessArguments(LifecycleScenario):
         """
         assert results.return_code == ResultCode.SUCCESS
 
+        expected_message = "Received arguments: --mode test --verbose"
+
+        # Both C++ and Rust now properly read and output args from config
         if version == "cpp":
-            assert "Received arguments: --mode test --verbose" in results.stdout, "Process arguments were not received"
+            assert expected_message in results.stdout, "Process arguments were not received"
         else:
-            args_logs = logs_info_level.get_logs(field="message", pattern="Received arguments: --mode test --verbose")
+            args_logs = logs_info_level.get_logs(field="message", pattern=expected_message)
             assert len(args_logs) > 0, "Process arguments were not received"
 
     def test_working_directory_set(self, results: ScenarioResult, logs_info_level: LogContainer, version: str) -> None:
@@ -78,8 +81,11 @@ class TestProcessArguments(LifecycleScenario):
         """
         assert results.return_code == ResultCode.SUCCESS
 
+        expected_message = "Working directory: /tmp"
+
+        # Both C++ and Rust now properly read and output working directory from config
         if version == "cpp":
-            assert "Working directory: /tmp" in results.stdout, "Working directory was not set correctly"
+            assert expected_message in results.stdout, "Working directory was not set correctly"
         else:
-            cwd_logs = logs_info_level.get_logs(field="message", pattern="Working directory: /tmp")
+            cwd_logs = logs_info_level.get_logs(field="message", pattern=expected_message)
             assert len(cwd_logs) > 0, "Working directory was not set correctly"

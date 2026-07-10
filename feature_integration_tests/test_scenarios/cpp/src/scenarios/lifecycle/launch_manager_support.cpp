@@ -329,15 +329,14 @@ public:
         auto args = parse_string_array_field(input, "args");
 
         std::cout << "Testing process arguments and working directory" << std::endl;
-        if (!args.empty()) {
-            std::cout << "Received arguments:";
-            for (const auto& arg : args) {
-                std::cout << " " << arg;
-            }
-            std::cout << std::endl;
-        } else {
-            std::cout << "ERROR: No arguments received from config (would use broken default)" << std::endl;
+        if (args.empty()) {
+            throw std::runtime_error("Process arguments were not received: missing 'test.args' in scenario input");
         }
+        std::cout << "Received arguments:";
+        for (const auto& arg : args) {
+            std::cout << " " << arg;
+        }
+        std::cout << std::endl;
 
         if (root_any_res.has_value()) {
             const auto root_object_res = root_any_res.value().As<score::json::Object>();
