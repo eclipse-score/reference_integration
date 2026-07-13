@@ -22,7 +22,7 @@ from typing import Any, Optional
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from scripts.tooling.lib.github import fetch_compare
+from scripts.tooling.lib.github import fetch_compare, resolve_ref_sha
 from scripts.tooling.lib.known_good import KnownGood, load_known_good
 
 _LOG = logging.getLogger(__name__)
@@ -73,9 +73,22 @@ def _collect_entries(known_good: KnownGood) -> list[dict[str, Any]]:
 
 def _enrich_with_compare_data(entries: list[dict[str, Any]], token: str) -> None:
     for entry in entries:
-        if not entry.get("owner_repo") or not entry.get("hash") or entry.get("version"):
+        if not entry.get("owner_repo"):
             continue
-        result = fetch_compare(entry["owner_repo"], entry["hash"], entry["branch"], token)
+
+        # Modules are pinned either by commit hash or by release version. A version
+        # pin (e.g. "0.2.9") is resolved to its tag's commit so it can be compared
+        # against the branch HEAD just like a hash pin.
+        base_ref = entry.get("hash")
+        if not base_ref and entry.get("version"):
+            base_ref = resolve_ref_sha(entry["owner_repo"], entry["version"], token)
+            if base_ref:
+                # Surface the resolved commit as the pinned hash for display/linking.
+                entry["hash"] = base_ref
+        if not base_ref:
+            continue
+
+        result = fetch_compare(entry["owner_repo"], base_ref, entry["branch"], token)
         if result:
             entry["current_hash"] = result.head_sha
             entry["behind_by"] = result.ahead_by
