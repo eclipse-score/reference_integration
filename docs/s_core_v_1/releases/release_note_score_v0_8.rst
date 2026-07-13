@@ -100,8 +100,8 @@ In a recent S-CORE Technical Lead meeting, it was decided to introduce module qu
 S-CORE Platform scope
 ^^^^^^^^^^^^^^^^^^^^^
 
-- **Version:** ``TBD``
-- **Release notes**: TBD
+- **Version:** ``v0.6.1``
+- **Release notes**: `S-CORE platform release notes <https://github.com/eclipse-score/score/releases/tag/v0.6.1>`_
 
 Integrated Software Modules
 ---------------------------
