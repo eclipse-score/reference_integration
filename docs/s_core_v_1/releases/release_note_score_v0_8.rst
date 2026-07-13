@@ -109,8 +109,8 @@ Integrated Software Modules
 Baselibs
 ~~~~~~~~
 
-- **Version:** ``TBD``
-- **Release notes**: TBD
+- **Version:** ``v0.2.9``
+- **Release notes**: `Baselibs release notes <https://github.com/eclipse-score/baselibs/releases/tag/v0.2.9>`_
 
 Baselibs Rust
 ~~~~~~~~~~~~~
