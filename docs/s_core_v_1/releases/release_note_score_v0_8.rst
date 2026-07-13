@@ -143,22 +143,23 @@ Logging
 Time
 ~~~~
 
-- **Version:** ``TBD``
-- **Release notes**: TBD
+- **Version:** ``v0.0.1``
+- **Release notes**: `Time release notes <https://github.com/eclipse-score/time/releases/tag/v0.0.1>`_
 
+- Initial preintegration of the Time module into the S-CORE platform, providing time synchronization and clock services.
 
 Orchestrator
 ~~~~~~~~~~~~
 
-- **Version:** ``TBD``
-- **Release notes**: TBD
+- **Version:** ``v0.1.1``
+- **Release notes**: Scheduled to be archived in v0.9 release.
 
 
 Kyron
 ~~~~~
 
-- **Version:** ``TBD``
-- **Release notes**: TBD
+- **Version:** ``v0.1.3``
+- **Release notes**: `Kyron release notes <https://github.com/eclipse-score/kyron/releases/tag/v0.1.3>`_
 
 
 Lifecycle & Health Management
