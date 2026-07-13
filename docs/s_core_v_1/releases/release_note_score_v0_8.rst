@@ -165,8 +165,8 @@ Kyron
 Lifecycle & Health Management
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- **Version:** ``TBD``
-- **Release notes**: TBD
+- **Version:** ``v0.3.0``
+- **Release notes**: `Lifecycle release notes <https://github.com/eclipse-score/lifecycle/releases/tag/v0.3.0>`_
 
 
 Reference integration
