@@ -24,14 +24,14 @@ S-CORE Platform v0.8 release note
 
 | **Platform Release:** S-CORE
 | **Release Tag:** v0.8.0
-| **Origin Release Tag**: v0.7
+| **Origin Release Tag**: v0.7.0
 | **Release Date:** TBD
 
 
 Overview
 ^^^^^^^^
 
-This document provides an overview of the changes, improvements, and bug fixes included in the software platform release version v0.8.0 as compared to the previous platform release (v0.7).
+This document provides an overview of the changes, improvements, and bug fixes included in the software platform release version v0.8.0 as compared to the previous platform release (v0.7.0).
 
 Release-specific summary content for v0.8 is to be added.
 
