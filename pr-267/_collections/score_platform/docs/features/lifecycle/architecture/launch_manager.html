@@ -32,9 +32,9 @@
 
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/graphviz.css?v=4ae1632d" />
-    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score.css?v=6e51530f" />
-    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score_needs.css?v=1f5dae2a" />
-    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score_design.css?v=d9fd870c" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score.css?v=bb63a8e1" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score_needs.css?v=82a1844f" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score_design.css?v=8048e6ee" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
@@ -445,10 +445,7 @@
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">S-CORE Platform Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../../../handbook/project_basics/index.html">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../handbook/own_application/index.html">Use</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../handbook/building_simple_application/index.html">Contribute own module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../handbook/index.html">Handbook</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../users_guide/index.html">User’s Guide</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../../index.html">Features</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../../ai_platform/index.html">AI Platform</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../analysis-infra/index.html">Analysis Infrastructure</a></li>
@@ -476,14 +473,22 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../requirements/index.html">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../modules/index.html">Modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../contribute/index.html">Contribute</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../score_releases/index.html">S-CORE Releases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../quality/qms_report.html">Quality Report</a></li>
 
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="../../../score_releases/index.html">Releases</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../score_tools/index.html">Tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../platform_management_plan/index.html">PMP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../safety/index.html">Safety</a></li>
 <li class="toctree-l2"><a class="reference external" href="https://projects.eclipse.org/projects/automotive.score">Eclipse</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../design_decisions/index.html">Decision Records</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../introduction/index.html">Eclipse S-CORE (Eclipse Safe Open Vehicle Core)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../users_guide/index.html">User’s Guide</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../score_process/process/index.html">Process description</a></li>
@@ -580,7 +585,7 @@ The <a class="reference internal" href="../glossary.html#term-Launch-Manager"><s
 </ol>
 <figure class="align-center">
 <p class="plantuml">
-<object data="../../../../../../_images/plantuml-000305eba2a357287af85f11b7452053492a121f.svg" type="image/svg+xml" style="width:397px;height:933px;background:#FFFFFF;"></object></p>
+<object data="../../../../../../_images/plantuml-1cde9f7f775de4ed3168116c82206b3d518010dd.svg" type="image/svg+xml" style="width:397px;height:933px;background:#FFFFFF;"></object></p>
 </figure>
 <p>The <a class="reference internal" href="../../../modules/lifecycle/index.html#comp__lifecycle_launch_manager" title="comp__lifecycle_launch_manager"><em class="xref need">Launch Manager (comp__lifecycle_launch_manager)</em></a> implements the following interfaces,for the selection of <a class="reference internal" href="../glossary.html#term-Run-target"><span class="xref std std-term">Run Target</span></a> s, starting and stopping of components and monitoring of the processes.</p>
 <section id="switching-between-run-targets">
@@ -596,7 +601,7 @@ determining which components need to be started or stopped based on their depend
 <p>This interface provides control functionality for activating and managing run targets.It allows users to trigger execution of configured <a class="reference internal" href="../glossary.html#term-Run-target"><span class="xref std std-term">Run targets</span></a> through a standardized activation mechanism.</p>
 <section id="static-architecture">
 <h3>Static architecture<a class="headerlink" href="#static-architecture" title="Link to this heading">#</a></h3>
-<div class="need_container docutils container" id="SNCB-6841fcb5">
+<div class="need_container docutils container" id="SNCB-b21bd85f">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int table" id="logic_arc_int__lifecycle__controlif">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -615,7 +620,7 @@ determining which components need to be started or stopped based on their depend
 </td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
-<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">log</span></span></span></div>
+<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../../communication/docs/requirements/index.html#feat_req__com__interfaces" title="logic_arc_int__lifecycle__controlif">feat_req__com__interfaces</a></span></span></div>
 <div class="line">implemented by: <span class="implements"><span><a class="reference internal" href="../../../modules/lifecycle/index.html#comp__lifecycle_launch_manager" title="logic_arc_int__lifecycle__controlif">comp__lifecycle_launch_manager</a></span></span></div>
@@ -643,7 +648,7 @@ determining which components need to be started or stopped based on their depend
 </div>
 </div>
 <p><strong>Operations</strong></p>
-<div class="need_container docutils container" id="SNCB-e92d2723">
+<div class="need_container docutils container" id="SNCB-209d26a4">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__lifecycle__activate_target">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -662,7 +667,7 @@ determining which components need to be started or stopped based on their depend
 </td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
-<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">log</span></span></span></div>
+<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">included by: <span class="included_by"><span><a class="reference internal" href="#logic_arc_int__lifecycle__controlif" title="logic_arc_int_op__lifecycle__activate_target">logic_arc_int__lifecycle__controlif</a></span></span></div>
 </span></div>
@@ -711,7 +716,7 @@ which allows the implementation of a state management applications to support dy
 - Failure with detailed error information if any component failed to transition</p></li>
 </ol>
 <p>This unified approach allows external state managers to request any run target activation without needing to know the current system state, as the <a class="reference internal" href="../glossary.html#term-Launch-Manager"><span class="xref std std-term">Launch Manager</span></a> handles the transition logic internally.</p>
-<div class="need_container docutils container" id="SNCB-96add7f7">
+<div class="need_container docutils container" id="SNCB-a6b0274f">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_dyn table" id="feat_arc_dyn__lifecycle__control_if_activate">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -730,7 +735,8 @@ which allows the implementation of a state management applications to support dy
 </td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
-<div class="line"><span><span></span></span></div>
+<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
 <div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="../index.html#feat__lifecycle" title="feat_arc_dyn__lifecycle__control_if_activate">feat__lifecycle</a></span></span></div>
 <div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#feat_req__lifecycle__control_commands" title="feat_arc_dyn__lifecycle__control_if_activate">feat_req__lifecycle__control_commands</a>, <a class="reference internal" href="../requirements/index.html#feat_req__lifecycle__request_run_target_start" title="feat_arc_dyn__lifecycle__control_if_activate">feat_req__lifecycle__request_run_target_start</a>, <a class="reference internal" href="../requirements/index.html#feat_req__lifecycle__switch_run_targets" title="feat_arc_dyn__lifecycle__control_if_activate">feat_req__lifecycle__switch_run_targets</a></span></span></div>
 </span></div>
@@ -740,7 +746,7 @@ which allows the implementation of a state management applications to support dy
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><figure class="align-center">
 <p class="plantuml">
-<object data="../../../../../../_images/plantuml-fc14742cf1d48e9612f1117560de35c1dcf7587b.svg" type="image/svg+xml" style="width:1396px;height:779px;background:#FFFFFF;"></object></p>
+<object data="../../../../../../_images/plantuml-fa17646d3ed181e4f688678d28191f1d8528d7ca.svg" type="image/svg+xml" style="width:1396px;height:779px;background:#FFFFFF;"></object></p>
 </figure>
 </td>
 </tr>
@@ -786,7 +792,7 @@ which allows the implementation of a state management applications to support dy
 - Exit code evaluation for failure detection</p>
 <section id="id1">
 <h3>Static architecture<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
-<div class="need_container docutils container" id="SNCB-8c1b41a0">
+<div class="need_container docutils container" id="SNCB-0d14263e">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int table" id="logic_arc_int__lifecycle__lifecycle_if">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -805,7 +811,7 @@ which allows the implementation of a state management applications to support dy
 </td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
-<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">log</span></span></span></div>
+<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#feat_req__lifecycle__process_state_comm" title="logic_arc_int__lifecycle__lifecycle_if">feat_req__lifecycle__process_state_comm</a>, <a class="reference internal" href="../requirements/index.html#feat_req__lifecycle__liveliness_detection" title="logic_arc_int__lifecycle__lifecycle_if">feat_req__lifecycle__liveliness_detection</a></span></span></div>
 <div class="line">used by: <span class="uses"><span><a class="reference internal" href="../../../modules/lifecycle/index.html#comp__lifecycle_launch_manager" title="logic_arc_int__lifecycle__lifecycle_if">comp__lifecycle_launch_manager</a></span></span></div>
@@ -835,7 +841,7 @@ which allows the implementation of a state management applications to support dy
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-13caecac">
+<div class="need_container docutils container" id="SNCB-6c6cd80f">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__lifecycle__run">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -854,7 +860,7 @@ which allows the implementation of a state management applications to support dy
 </td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
-<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">log</span></span></span></div>
+<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">included by: <span class="includes"><span><a class="reference internal" href="#logic_arc_int__lifecycle__lifecycle_if" title="logic_arc_int_op__lifecycle__run">logic_arc_int__lifecycle__lifecycle_if</a></span></span></div>
 <div class="line">included by: <span class="included_by"><span><a class="reference internal" href="#logic_arc_int__lifecycle__lifecycle_if" title="logic_arc_int_op__lifecycle__run">logic_arc_int__lifecycle__lifecycle_if</a></span></span></div>
@@ -879,7 +885,7 @@ which allows the implementation of a state management applications to support dy
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-9ffd22e5">
+<div class="need_container docutils container" id="SNCB-bbbfd0f6">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__lifecycle__terminate">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -898,7 +904,7 @@ which allows the implementation of a state management applications to support dy
 </td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
-<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">log</span></span></span></div>
+<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">included by: <span class="includes"><span><a class="reference internal" href="#logic_arc_int__lifecycle__lifecycle_if" title="logic_arc_int_op__lifecycle__terminate">logic_arc_int__lifecycle__lifecycle_if</a></span></span></div>
 <div class="line">included by: <span class="included_by"><span><a class="reference internal" href="#logic_arc_int__lifecycle__lifecycle_if" title="logic_arc_int_op__lifecycle__terminate">logic_arc_int__lifecycle__lifecycle_if</a></span></span></div>
@@ -968,7 +974,7 @@ which allows the implementation of a state management applications to support dy
 </section>
 <section id="id2">
 <h3>Dynamic Architecture<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
-<div class="need_container docutils container" id="SNCB-b6949b69">
+<div class="need_container docutils container" id="SNCB-f2dba803">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_dyn table" id="feat_arc_dyn__lifecycle__state_machine">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -987,7 +993,8 @@ which allows the implementation of a state management applications to support dy
 </td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
-<div class="line"><span><span></span></span></div>
+<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
 <div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="../index.html#feat__lifecycle" title="feat_arc_dyn__lifecycle__state_machine">feat__lifecycle</a></span></span></div>
 <div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#feat_req__lifecycle__control_commands" title="feat_arc_dyn__lifecycle__state_machine">feat_req__lifecycle__control_commands</a>, <a class="reference internal" href="../requirements/index.html#feat_req__lifecycle__request_run_target_start" title="feat_arc_dyn__lifecycle__state_machine">feat_req__lifecycle__request_run_target_start</a>, <a class="reference internal" href="../requirements/index.html#feat_req__lifecycle__switch_run_targets" title="feat_arc_dyn__lifecycle__state_machine">feat_req__lifecycle__switch_run_targets</a></span></span></div>
 </span></div>
@@ -997,7 +1004,7 @@ which allows the implementation of a state management applications to support dy
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><figure class="align-center">
 <p class="plantuml">
-<object data="../../../../../../_images/plantuml-c8d88e6b98505fde56caaa00953fc16e7d070d93.svg" type="image/svg+xml" style="width:313px;height:524px;background:#FFFFFF;"></object></p>
+<object data="../../../../../../_images/plantuml-3812b7aa8c604b163da222f1a8b534001eaf3f2a.svg" type="image/svg+xml" style="width:313px;height:524px;background:#FFFFFF;"></object></p>
 </figure>
 </td>
 </tr>
@@ -1078,7 +1085,7 @@ It implements core watchdog operations including heartbeat signals to ensure rel
 </ul>
 <section id="id4">
 <h3>Static architecture<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
-<div class="need_container docutils container" id="SNCB-cf7d7075">
+<div class="need_container docutils container" id="SNCB-4a08af27">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int table" id="logic_arc_int__lifecycle__alive_if">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1097,7 +1104,7 @@ It implements core watchdog operations including heartbeat signals to ensure rel
 </td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
-<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">log</span></span></span></div>
+<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../../communication/docs/requirements/index.html#feat_req__com__interfaces" title="logic_arc_int__lifecycle__alive_if">feat_req__com__interfaces</a></span></span></div>
 <div class="line">implemented by: <span class="implements"><span><a class="reference internal" href="../../../modules/lifecycle/index.html#comp__lifecycle_launch_manager" title="logic_arc_int__lifecycle__alive_if">comp__lifecycle_launch_manager</a></span></span></div>
@@ -1128,7 +1135,7 @@ It implements core watchdog operations including heartbeat signals to ensure rel
 </div>
 </div>
 <p><strong>Operations</strong></p>
-<div class="need_container docutils container" id="SNCB-49989c90">
+<div class="need_container docutils container" id="SNCB-5782e5e9">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__lifecycle__report_health">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1147,7 +1154,7 @@ It implements core watchdog operations including heartbeat signals to ensure rel
 </td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
-<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">log</span></span></span></div>
+<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">included by: <span class="included_by"><span><a class="reference internal" href="#logic_arc_int__lifecycle__alive_if" title="logic_arc_int_op__lifecycle__report_health">logic_arc_int__lifecycle__alive_if</a></span></span></div>
 </span></div>
@@ -1174,7 +1181,7 @@ It implements core watchdog operations including heartbeat signals to ensure rel
 </section>
 <section id="id5">
 <h3>Dynamic architecture<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
-<div class="need_container docutils container" id="SNCB-36f08679">
+<div class="need_container docutils container" id="SNCB-c391ec71">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_dyn table" id="feat_arc_dyn__lifecycle__alive_monitoring">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1193,7 +1200,8 @@ It implements core watchdog operations including heartbeat signals to ensure rel
 </td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
-<div class="line"><span><span></span></span></div>
+<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
 <div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="../index.html#feat__lifecycle" title="feat_arc_dyn__lifecycle__alive_monitoring">feat__lifecycle</a></span></span></div>
 <div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#feat_req__lifecycle__monitoring_processes" title="feat_arc_dyn__lifecycle__alive_monitoring">feat_req__lifecycle__monitoring_processes</a>, <a class="reference internal" href="../requirements/index.html#feat_req__lifecycle__polling_interval" title="feat_arc_dyn__lifecycle__alive_monitoring">feat_req__lifecycle__polling_interval</a>, <a class="reference internal" href="../requirements/index.html#feat_req__lifecycle__failure_detect" title="feat_arc_dyn__lifecycle__alive_monitoring">feat_req__lifecycle__failure_detect</a></span></span></div>
 </span></div>
@@ -1203,7 +1211,7 @@ It implements core watchdog operations including heartbeat signals to ensure rel
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><figure class="align-center">
 <p class="plantuml">
-<object data="../../../../../../_images/plantuml-2a4aa416dacf3254eb71d0ca534e066ad01e568b.svg" type="image/svg+xml" style="width:487px;height:478px;background:#FFFFFF;"></object></p>
+<object data="../../../../../../_images/plantuml-0d3d2d8f1e29ab70c599f0421e589029e3845b45.svg" type="image/svg+xml" style="width:487px;height:478px;background:#FFFFFF;"></object></p>
 </figure>
 </td>
 </tr>
