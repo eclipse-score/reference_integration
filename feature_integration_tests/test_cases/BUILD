@@ -112,7 +112,7 @@ score_py_pytest(
         "@score_lifecycle_health//examples/control_application:control_daemon",
         "@score_lifecycle_health//examples/cpp_supervised_app",
         "@score_lifecycle_health//examples/rust_supervised_app",
-        "@score_lifecycle_health//src/launch_manager_daemon:launch_manager",
+        "@score_lifecycle_health//score/launch_manager",
     ],
     env = {
         "RUST_BACKTRACE": "1",
@@ -147,7 +147,7 @@ score_py_pytest(
         "@score_lifecycle_health//examples/control_application:control_daemon",
         "@score_lifecycle_health//examples/cpp_supervised_app",
         "@score_lifecycle_health//examples/rust_supervised_app",
-        "@score_lifecycle_health//src/launch_manager_daemon:launch_manager",
+        "@score_lifecycle_health//score/launch_manager",
     ],
     pytest_config = "//:pyproject.toml",
     tags = [

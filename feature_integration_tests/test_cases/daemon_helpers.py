@@ -37,7 +37,7 @@ def find_binary_in_runfiles(target_path: str) -> Path | None:
     Parameters
     ----------
     target_path : str
-        Bazel target path (e.g., "@score_lifecycle_health//src/launch_manager_daemon:launch_manager")
+        Bazel target path (e.g., "@score_lifecycle_health//score/launch_manager:launch_manager")
 
     Returns
     -------
@@ -65,8 +65,8 @@ def find_binary_in_runfiles(target_path: str) -> Path | None:
         return None
 
     # Convert Bazel target to runfiles path
-    # @score_lifecycle_health//src/launch_manager_daemon:launch_manager
-    # -> score_lifecycle_health/src/launch_manager_daemon/launch_manager
+    # @score_lifecycle_health//score/launch_manager:launch_manager
+    # -> score_lifecycle_health/score/launch_manager/launch_manager
     if target_path.startswith("@"):
         # Remove @ and split by //
         parts = target_path[1:].split("//")
@@ -416,7 +416,7 @@ def launch_manager_daemon(
     etc_dir.mkdir(exist_ok=True)
 
     # Get launch_manager daemon binary (from runfiles or build it)
-    daemon_target = "@score_lifecycle_health//src/launch_manager_daemon:launch_manager"
+    daemon_target = "@score_lifecycle_health//score/launch_manager:launch_manager"
     daemon_binary = get_binary_path(daemon_target)
 
     # Copy daemon to bin directory

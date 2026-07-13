@@ -18,9 +18,9 @@
 
 #include "launch_manager_support.h"
 
-#include "score/hm/health_monitor.h"
+#include "score/mw/health/health_monitor.h"
+#include "score/mw/lifecycle/report_running.h"
 #include "score/json/json_parser.h"
-#include "score/lcm/lifecycle_client.h"
 
 #include <chrono>
 #include <ctime>
@@ -34,7 +34,7 @@
 #include <thread>
 #include <vector>
 
-using namespace score::lcm;
+using namespace score::mw::lifecycle;
 
 namespace {
 
@@ -193,16 +193,8 @@ public:
         // Attempt to report execution state - this demonstrates the API usage
         // Note: This requires a running Launch Manager daemon to succeed
         std::cout << "Lifecycle client API called" << std::endl;
-        LifecycleClient client{};
-        auto result = client.ReportExecutionState(ExecutionState::kRunning);
-
-        if (result.has_value()) {
-            std::cout << "Successfully reported execution state as running" << std::endl;
-        } else {
-            // In a test environment without Launch Manager, this is expected
-            std::cout << "Launch Manager not available in test env" << std::endl;
-            std::cout << "In production, this would report state to Launch Manager" << std::endl;
-        }
+        report_running();
+        std::cout << "Successfully reported execution state as running" << std::endl;
 
         // Simulate application doing work
         std::this_thread::sleep_for(std::chrono::milliseconds(test_input.test_duration_ms));
@@ -230,14 +222,14 @@ public:
 
         // Build a health monitor with a deadline monitor to simulate ordered initialization,
         // exercising the same real HealthMonitorBuilder API used by the Rust scenario.
-        auto deadline_builder = score::hm::deadline::DeadlineMonitorBuilder().add_deadline(
-            score::hm::DeadlineTag("init_step"),
-            score::hm::TimeRange(std::chrono::milliseconds(50), std::chrono::milliseconds(300)));
+        auto deadline_builder = score::mw::health::deadline::DeadlineMonitorBuilder().add_deadline(
+            score::mw::health::DeadlineTag("init_step"),
+            score::mw::health::TimeRange(std::chrono::milliseconds(50), std::chrono::milliseconds(300)));
 
-        auto hm_builder = score::hm::HealthMonitorBuilder()
+        auto hm_builder = score::mw::health::HealthMonitorBuilder()
                               .with_supervisor_api_cycle(std::chrono::milliseconds(50))
                               .with_internal_processing_cycle(std::chrono::milliseconds(50))
-                              .add_deadline_monitor(score::hm::MonitorTag("step_monitor"),
+                              .add_deadline_monitor(score::mw::health::MonitorTag("step_monitor"),
                                                     std::move(deadline_builder));
 
         auto hm_res = std::move(hm_builder).build();
@@ -280,14 +272,14 @@ public:
 
         // Build a health monitor with a deadline monitor to simulate parallel supervision,
         // exercising the same real HealthMonitorBuilder API used by the Rust scenario.
-        auto deadline_builder = score::hm::deadline::DeadlineMonitorBuilder().add_deadline(
-            score::hm::DeadlineTag("parallel_task"),
-            score::hm::TimeRange(std::chrono::milliseconds(50), std::chrono::milliseconds(200)));
+        auto deadline_builder = score::mw::health::deadline::DeadlineMonitorBuilder().add_deadline(
+            score::mw::health::DeadlineTag("parallel_task"),
+            score::mw::health::TimeRange(std::chrono::milliseconds(50), std::chrono::milliseconds(200)));
 
-        auto hm_builder = score::hm::HealthMonitorBuilder()
+        auto hm_builder = score::mw::health::HealthMonitorBuilder()
                               .with_supervisor_api_cycle(std::chrono::milliseconds(50))
                               .with_internal_processing_cycle(std::chrono::milliseconds(50))
-                              .add_deadline_monitor(score::hm::MonitorTag("monitor"),
+                              .add_deadline_monitor(score::mw::health::MonitorTag("monitor"),
                                                     std::move(deadline_builder));
 
         auto hm_res = std::move(hm_builder).build();
