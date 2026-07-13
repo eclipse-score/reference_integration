@@ -211,8 +211,8 @@ Process description
 Docs-as-code
 ~~~~~~~~~~~~
 
-- **Version:** ``TBD``
-- **Source / tag:** TBD
+- **Version:** ``docs-as-code v4.6.1``
+- **Source / tag:** `docs-as-code GitHub release <https://github.com/eclipse-score/docs-as-code/releases/tag/v4.6.1>`_
 
 Tooling
 ~~~~~~~
