@@ -276,11 +276,15 @@ class LaunchManagerDaemon:
         if self.process is not None:
             raise RuntimeError("Daemon already started")
 
-        # Create log file
+        # Create/append to log file so logs from a prior start() (e.g. before a
+        # restart) are preserved instead of being discarded.
         self.log_file = self.working_dir / "launch_manager.log"
-        self._log_fd = open(self.log_file, "w")
+        self._log_fd = open(self.log_file, "a")
 
-        # Start daemon process
+        # Start daemon process in its own process group so stop() can signal
+        # the whole supervision tree, not just the daemon itself. Otherwise
+        # supervised child processes are orphaned on daemon crash/restart and
+        # linger to pollute later pgrep-based assertions.
         cmd = [str(self.daemon_binary), str(self.config_file)]
         self.process = subprocess.Popen(
             cmd,
@@ -288,6 +292,7 @@ class LaunchManagerDaemon:
             stdout=self._log_fd,
             stderr=subprocess.STDOUT,
             text=True,
+            start_new_session=True,
         )
 
         # Wait for daemon to initialize
@@ -315,18 +320,22 @@ class LaunchManagerDaemon:
             return
 
         try:
-            # Send SIGTERM for graceful shutdown if still running.
+            # Send SIGTERM to the whole process group for graceful shutdown if
+            # still running, so supervised children are not orphaned.
             if self.process.poll() is None:
                 try:
-                    self.process.send_signal(signal.SIGTERM)
+                    os.killpg(self.process.pid, signal.SIGTERM)
                 except ProcessLookupError:
                     pass
 
             try:
                 self.process.wait(timeout=shutdown_timeout)
             except subprocess.TimeoutExpired:
-                # Force kill if graceful shutdown fails.
-                self.process.kill()
+                # Force kill the whole process group if graceful shutdown fails.
+                try:
+                    os.killpg(self.process.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
                 self.process.wait()
         finally:
             self.process = None

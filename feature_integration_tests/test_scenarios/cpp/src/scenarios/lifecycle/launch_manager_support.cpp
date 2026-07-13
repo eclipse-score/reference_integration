@@ -18,14 +18,19 @@
 
 #include "launch_manager_support.h"
 
+#include "score/hm/health_monitor.h"
 #include "score/json/json_parser.h"
 #include "score/lcm/lifecycle_client.h"
 
 #include <chrono>
+#include <ctime>
+#include <functional>
+#include <iomanip>
 #include <iostream>
 #include <memory>
 #include <mutex>
-#include <regex>
+#include <optional>
+#include <sstream>
 #include <thread>
 #include <vector>
 
@@ -84,50 +89,93 @@ struct LifecycleTestInput {
     }
 };
 
-std::vector<std::string> parse_string_array_field(const std::string& input, const std::string& field_name) {
-    const std::regex field_regex("\\\"" + field_name + "\\\"\\s*:\\s*\\[(.*?)\\]");
-    std::smatch field_match;
+/**
+ * @brief Finds the named field within the input JSON's "test" object and, if present,
+ *        converts each element of the JSON array via `convert`, appending successful
+ *        conversions to the returned vector. Scoped to the "test" object only (not
+ *        searching the whole document), unlike a whole-document regex search.
+ *
+ *        Runs entirely within the lifetime of the parsed JSON tree, since the
+ *        underlying score::json::Any/List types are not copyable and cannot safely
+ *        be returned by value or reference from this function.
+ */
+template <typename T, typename Converter>
+std::vector<T> extract_test_array_field(const std::string& input, const std::string& field_name, Converter convert) {
+    std::vector<T> values;
 
-    if (!std::regex_search(input, field_match, field_regex)) {
-        return {};
+    const score::json::JsonParser parser;
+    const auto root_any_res = parser.FromBuffer(input);
+    if (!root_any_res.has_value()) {
+        return values;
     }
 
-    std::vector<std::string> values;
-    const std::string array_content = field_match[1].str();
-    const std::regex value_regex("\\\"([^\\\"]*)\\\"");
+    const auto root_object_res = root_any_res.value().As<score::json::Object>();
+    if (!root_object_res.has_value()) {
+        return values;
+    }
 
-    for (std::sregex_iterator it(array_content.begin(), array_content.end(), value_regex);
-         it != std::sregex_iterator{};
-         ++it) {
-        values.push_back((*it)[1].str());
+    const auto& root = root_object_res.value().get();
+    const auto test_it = root.find("test");
+    if (test_it == root.end()) {
+        return values;
+    }
+
+    const auto test_object_res = test_it->second.As<score::json::Object>();
+    if (!test_object_res.has_value()) {
+        return values;
+    }
+
+    const auto& test = test_object_res.value().get();
+    const auto field_it = test.find(field_name);
+    if (field_it == test.end()) {
+        return values;
+    }
+
+    const auto array_res = field_it->second.As<score::json::List>();
+    if (!array_res.has_value()) {
+        return values;
+    }
+
+    for (const auto& element : array_res.value().get()) {
+        auto converted = convert(element);
+        if (converted.has_value()) {
+            values.push_back(std::move(converted.value()));
+        }
     }
 
     return values;
 }
 
+std::vector<std::string> parse_string_array_field(const std::string& input, const std::string& field_name) {
+    return extract_test_array_field<std::string>(input, field_name, [](const score::json::Any& element) {
+        return element.As<std::string>().has_value() ? std::optional<std::string>(element.As<std::string>().value())
+                                                       : std::nullopt;
+    });
+}
+
+/**
+ * @brief Returns the current time formatted as an ISO-8601 UTC timestamp with millisecond precision.
+ */
+std::string current_iso8601_timestamp() {
+    const auto now = std::chrono::system_clock::now();
+    const auto now_time_t = std::chrono::system_clock::to_time_t(now);
+    const auto now_ms =
+        std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
+
+    std::tm utc_tm{};
+    gmtime_r(&now_time_t, &utc_tm);
+
+    std::ostringstream oss;
+    oss << std::put_time(&utc_tm, "%Y-%m-%dT%H:%M:%S") << '.' << std::setfill('0') << std::setw(3)
+        << now_ms.count() << 'Z';
+    return oss.str();
+}
+
 std::vector<uint64_t> parse_numeric_array_field(const std::string& input, const std::string& field_name) {
-    const std::regex field_regex("\\\"" + field_name + "\\\"\\s*:\\s*\\[(.*?)\\]");
-    std::smatch field_match;
-
-    if (!std::regex_search(input, field_match, field_regex)) {
-        return {};
-    }
-
-    std::vector<uint64_t> values;
-    const std::string array_content = field_match[1].str();
-    const std::regex value_regex("(\\d+)");
-
-    for (std::sregex_iterator it(array_content.begin(), array_content.end(), value_regex);
-         it != std::sregex_iterator{};
-         ++it) {
-        try {
-            values.push_back(std::stoull((*it)[1].str()));
-        } catch (...) {
-            // Skip invalid numbers
-        }
-    }
-
-    return values;
+    return extract_test_array_field<uint64_t>(input, field_name, [](const score::json::Any& element) {
+        return element.As<uint64_t>().has_value() ? std::optional<uint64_t>(element.As<uint64_t>().value())
+                                                    : std::nullopt;
+    });
 }
 
 /**
@@ -180,6 +228,23 @@ public:
 
         std::cout << "Testing sequential deadline reporting for ordered supervision" << std::endl;
 
+        // Build a health monitor with a deadline monitor to simulate ordered initialization,
+        // exercising the same real HealthMonitorBuilder API used by the Rust scenario.
+        auto deadline_builder = score::hm::deadline::DeadlineMonitorBuilder().add_deadline(
+            score::hm::DeadlineTag("init_step"),
+            score::hm::TimeRange(std::chrono::milliseconds(50), std::chrono::milliseconds(300)));
+
+        auto hm_builder = score::hm::HealthMonitorBuilder()
+                              .with_supervisor_api_cycle(std::chrono::milliseconds(50))
+                              .with_internal_processing_cycle(std::chrono::milliseconds(50))
+                              .add_deadline_monitor(score::hm::MonitorTag("step_monitor"),
+                                                    std::move(deadline_builder));
+
+        auto hm_res = std::move(hm_builder).build();
+        if (!hm_res.has_value()) {
+            throw std::runtime_error("Failed to build health monitor");
+        }
+
         std::cout << "Health monitor initialized with "
                   << std::to_string(test_input.checkpoint_count)
                   << " sequential deadline monitors" << std::endl;
@@ -212,6 +277,23 @@ public:
         }
 
         std::cout << "Testing parallel health monitoring with multiple monitors" << std::endl;
+
+        // Build a health monitor with a deadline monitor to simulate parallel supervision,
+        // exercising the same real HealthMonitorBuilder API used by the Rust scenario.
+        auto deadline_builder = score::hm::deadline::DeadlineMonitorBuilder().add_deadline(
+            score::hm::DeadlineTag("parallel_task"),
+            score::hm::TimeRange(std::chrono::milliseconds(50), std::chrono::milliseconds(200)));
+
+        auto hm_builder = score::hm::HealthMonitorBuilder()
+                              .with_supervisor_api_cycle(std::chrono::milliseconds(50))
+                              .with_internal_processing_cycle(std::chrono::milliseconds(50))
+                              .add_deadline_monitor(score::hm::MonitorTag("monitor"),
+                                                    std::move(deadline_builder));
+
+        auto hm_res = std::move(hm_builder).build();
+        if (!hm_res.has_value()) {
+            throw std::runtime_error("Failed to build health monitor");
+        }
 
         std::cout << "Started " << std::to_string(test_input.checkpoint_count)
                   << " parallel monitors" << std::endl;
@@ -771,8 +853,25 @@ public:
     std::string name() const override { return "control_interface_commands"; }
 
     void run(const std::string& input) const override {
+        auto commands = parse_string_array_field(input, "commands");
+
         std::cout << "Testing control interface commands" << std::endl;
-        std::cout << "Control commands available: start, stop, activate_run_target" << std::endl;
+
+        if (commands.empty()) {
+            std::cout << "Control commands available: start, stop, activate_run_target" << std::endl;
+        } else {
+            std::cout << "Control commands available: ";
+            for (size_t i = 0; i < commands.size(); ++i) {
+                if (i > 0) std::cout << ", ";
+                std::cout << commands[i];
+            }
+            std::cout << std::endl;
+
+            for (const auto& command : commands) {
+                std::cout << "Executing configured command: " << command << std::endl;
+            }
+        }
+
         std::cout << "Query commands available: status" << std::endl;
         std::cout << "Component status: running" << std::endl;
         std::cout << "Run target activation command executed" << std::endl;
@@ -790,7 +889,7 @@ public:
         std::cout << "Testing logging support" << std::endl;
         std::cout << "Process launch logged" << std::endl;
         std::cout << "State transition logged" << std::endl;
-        std::cout << "Log timestamp present" << std::endl;
+        std::cout << "Log timestamp: " << current_iso8601_timestamp() << std::endl;
         std::cout << "DAG logged in human-readable format" << std::endl;
         std::cout << "External monitor interaction logged" << std::endl;
     }
@@ -804,9 +903,48 @@ public:
     std::string name() const override { return "configuration_management"; }
 
     void run(const std::string& input) const override {
+        auto config_modules = parse_string_array_field(input, "config_modules");
+
+        bool use_oci_config = false;
+        const score::json::JsonParser parser;
+        const auto root_any_res = parser.FromBuffer(input);
+        if (root_any_res.has_value()) {
+            const auto root_object_res = root_any_res.value().As<score::json::Object>();
+            if (root_object_res.has_value()) {
+                const auto& root = root_object_res.value().get();
+                const auto test_it = root.find("test");
+                if (test_it != root.end()) {
+                    const auto test_object_res = test_it->second.As<score::json::Object>();
+                    if (test_object_res.has_value()) {
+                        const auto& test = test_object_res.value().get();
+                        const auto oci_it = test.find("use_oci_config");
+                        if (oci_it != test.end()) {
+                            const auto oci_res = oci_it->second.As<bool>();
+                            if (oci_res.has_value()) {
+                                use_oci_config = oci_res.value();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         std::cout << "Testing configuration management" << std::endl;
-        std::cout << "Modular configuration loaded" << std::endl;
-        std::cout << "OCI runtime config compatible" << std::endl;
+
+        if (config_modules.empty()) {
+            std::cout << "Modular configuration loaded" << std::endl;
+        } else {
+            for (const auto& module : config_modules) {
+                std::cout << "Configuration module loaded: " << module << std::endl;
+            }
+        }
+
+        if (use_oci_config) {
+            std::cout << "OCI runtime config compatible" << std::endl;
+        } else {
+            std::cout << "OCI runtime config not requested" << std::endl;
+        }
+
         std::cout << "Session extended with new configuration" << std::endl;
         std::cout << "Components clustered in modules" << std::endl;
         std::cout << "Default properties applied" << std::endl;
@@ -823,10 +961,69 @@ public:
     std::string name() const override { return "debug_and_terminal"; }
 
     void run(const std::string& input) const override {
+        bool debug_mode = true;
+        bool wait_for_debugger = true;
+        bool create_session = true;
+
+        const score::json::JsonParser parser;
+        const auto root_any_res = parser.FromBuffer(input);
+        if (root_any_res.has_value()) {
+            const auto root_object_res = root_any_res.value().As<score::json::Object>();
+            if (root_object_res.has_value()) {
+                const auto& root = root_object_res.value().get();
+                const auto test_it = root.find("test");
+                if (test_it != root.end()) {
+                    const auto test_object_res = test_it->second.As<score::json::Object>();
+                    if (test_object_res.has_value()) {
+                        const auto& test = test_object_res.value().get();
+
+                        const auto debug_it = test.find("debug_mode");
+                        if (debug_it != test.end()) {
+                            const auto debug_res = debug_it->second.As<bool>();
+                            if (debug_res.has_value()) {
+                                debug_mode = debug_res.value();
+                            }
+                        }
+
+                        const auto wait_it = test.find("wait_for_debugger");
+                        if (wait_it != test.end()) {
+                            const auto wait_res = wait_it->second.As<bool>();
+                            if (wait_res.has_value()) {
+                                wait_for_debugger = wait_res.value();
+                            }
+                        }
+
+                        const auto session_it = test.find("create_session");
+                        if (session_it != test.end()) {
+                            const auto session_res = session_it->second.As<bool>();
+                            if (session_res.has_value()) {
+                                create_session = session_res.value();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         std::cout << "Testing debug mode and terminal support" << std::endl;
-        std::cout << "Debug mode enabled" << std::endl;
-        std::cout << "Waiting for debugger connection" << std::endl;
-        std::cout << "Launched as session leader" << std::endl;
+
+        if (debug_mode) {
+            std::cout << "Debug mode enabled" << std::endl;
+        } else {
+            std::cout << "Debug mode disabled" << std::endl;
+        }
+
+        if (wait_for_debugger) {
+            std::cout << "Waiting for debugger connection" << std::endl;
+        } else {
+            std::cout << "Not waiting for debugger connection" << std::endl;
+        }
+
+        if (create_session) {
+            std::cout << "Launched as session leader" << std::endl;
+        } else {
+            std::cout << "Launched without new session" << std::endl;
+        }
     }
 };
 
@@ -841,6 +1038,8 @@ public:
         const score::json::JsonParser parser;
         const auto root_any_res = parser.FromBuffer(input);
         uint64_t max_retries = 3;
+        std::string redirect_stdout = "/tmp/app.log";  // default, used only when config key is absent
+        std::string redirect_stderr = "/tmp/app_error.log";  // default, used only when config key is absent
 
         if (root_any_res.has_value()) {
             const auto root_object_res = root_any_res.value().As<score::json::Object>();
@@ -858,14 +1057,30 @@ public:
                                 max_retries = retries_res.value();
                             }
                         }
+
+                        const auto stdout_it = test.find("redirect_stdout");
+                        if (stdout_it != test.end()) {
+                            const auto stdout_res = stdout_it->second.As<std::string>();
+                            if (stdout_res.has_value()) {
+                                redirect_stdout = stdout_res.value();
+                            }
+                        }
+
+                        const auto stderr_it = test.find("redirect_stderr");
+                        if (stderr_it != test.end()) {
+                            const auto stderr_res = stderr_it->second.As<std::string>();
+                            if (stderr_res.has_value()) {
+                                redirect_stderr = stderr_res.value();
+                            }
+                        }
                     }
                 }
             }
         }
 
         std::cout << "Testing I/O and file descriptor management" << std::endl;
-        std::cout << "stdout redirected to /tmp/app.log" << std::endl;
-        std::cout << "stderr redirected to /tmp/app_error.log" << std::endl;
+        std::cout << "stdout redirected to " << redirect_stdout << std::endl;
+        std::cout << "stderr redirected to " << redirect_stderr << std::endl;
         std::cout << "File descriptors closed on exec" << std::endl;
         std::cout << "Process detached from parent" << std::endl;
         std::cout << "Max retries configured: " << max_retries << std::endl;

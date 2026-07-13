@@ -57,11 +57,11 @@ class TestIOAndFileDescriptors(LifecycleScenario):
         return {
             "test": {
                 "test_duration_ms": 150,
-                "redirect_stdout": "/tmp/app.log",
-                "redirect_stderr": "/tmp/app_error.log",
+                "redirect_stdout": "/tmp/lifecycle_test_stdout.log",
+                "redirect_stderr": "/tmp/lifecycle_test_stderr.log",
                 "close_fds": True,
                 "detach_from_parent": True,
-                "max_retries": 3,
+                "max_retries": 9,
             }
         }
 
@@ -72,9 +72,11 @@ class TestIOAndFileDescriptors(LifecycleScenario):
         assert results.return_code == ResultCode.SUCCESS
 
         if version == "cpp":
-            assert "stdout redirected to /tmp/app.log" in results.stdout, "stdout redirection failed"
+            assert "stdout redirected to /tmp/lifecycle_test_stdout.log" in results.stdout, "stdout redirection failed"
         else:
-            stdout_logs = logs_info_level.get_logs(field="message", pattern="stdout redirected to /tmp/app.log")
+            stdout_logs = logs_info_level.get_logs(
+                field="message", pattern="stdout redirected to /tmp/lifecycle_test_stdout.log"
+            )
             assert len(stdout_logs) > 0, "stdout redirection failed"
 
     def test_stderr_redirection(self, results: ScenarioResult, logs_info_level: LogContainer, version: str) -> None:
@@ -84,9 +86,11 @@ class TestIOAndFileDescriptors(LifecycleScenario):
         assert results.return_code == ResultCode.SUCCESS
 
         if version == "cpp":
-            assert "stderr redirected to /tmp/app_error.log" in results.stdout, "stderr redirection failed"
+            assert "stderr redirected to /tmp/lifecycle_test_stderr.log" in results.stdout, "stderr redirection failed"
         else:
-            stderr_logs = logs_info_level.get_logs(field="message", pattern="stderr redirected to /tmp/app_error.log")
+            stderr_logs = logs_info_level.get_logs(
+                field="message", pattern="stderr redirected to /tmp/lifecycle_test_stderr.log"
+            )
             assert len(stderr_logs) > 0, "stderr redirection failed"
 
     def test_fd_inheritance_control(self, results: ScenarioResult, logs_info_level: LogContainer, version: str) -> None:
@@ -120,7 +124,7 @@ class TestIOAndFileDescriptors(LifecycleScenario):
         assert results.return_code == ResultCode.SUCCESS
 
         if version == "cpp":
-            assert "Max retries configured: 3" in results.stdout, "Retry configuration failed"
+            assert "Max retries configured: 9" in results.stdout, "Retry configuration failed"
         else:
-            retry_logs = logs_info_level.get_logs(field="message", pattern="Max retries configured: 3")
+            retry_logs = logs_info_level.get_logs(field="message", pattern="Max retries configured: 9")
             assert len(retry_logs) > 0, "Retry configuration failed"

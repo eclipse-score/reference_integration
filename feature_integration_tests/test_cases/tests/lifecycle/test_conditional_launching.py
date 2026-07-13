@@ -69,8 +69,8 @@ class TestConditionalLaunching(LifecycleScenario):
             "test": {
                 "test_duration_ms": 300,
                 "wait_conditions": ["path:/tmp/ready", "env:STARTUP_COMPLETE", "process:init_done"],
-                "polling_interval_ms": 50,
-                "timeout_ms": 5000,
+                "polling_interval_ms": 173,
+                "timeout_ms": 6421,
             }
         }
 
@@ -121,9 +121,9 @@ class TestConditionalLaunching(LifecycleScenario):
         assert results.return_code == ResultCode.SUCCESS
 
         if version == "cpp":
-            assert "Polling interval: 50ms" in results.stdout, "Polling interval not configured"
+            assert "Polling interval: 173ms" in results.stdout, "Polling interval not configured"
         else:
-            polling_logs = logs_info_level.get_logs(field="message", pattern="Polling interval: 50ms")
+            polling_logs = logs_info_level.get_logs(field="message", pattern="Polling interval: 173ms")
             assert len(polling_logs) > 0, "Polling interval not configured"
 
     def test_condition_timeout_configured(
@@ -135,9 +135,9 @@ class TestConditionalLaunching(LifecycleScenario):
         assert results.return_code == ResultCode.SUCCESS
 
         if version == "cpp":
-            assert "Condition timeout: 5000ms" in results.stdout, "Condition timeout not configured"
+            assert "Condition timeout: 6421ms" in results.stdout, "Condition timeout not configured"
         else:
-            timeout_logs = logs_info_level.get_logs(field="message", pattern="Condition timeout: 5000ms")
+            timeout_logs = logs_info_level.get_logs(field="message", pattern="Condition timeout: 6421ms")
             assert len(timeout_logs) > 0, "Condition timeout not configured"
 
     def test_dependency_check(self, results: ScenarioResult, logs_info_level: LogContainer, version: str) -> None:

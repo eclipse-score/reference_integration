@@ -17,6 +17,7 @@ Tests verify that the Launch Manager provides comprehensive logging
 for process launches, state transitions, and system events.
 """
 
+import re
 from pathlib import Path
 from typing import Any
 
@@ -89,15 +90,33 @@ class TestLogging(LifecycleScenario):
 
     def test_timestamp_present(self, results: ScenarioResult, logs_info_level: LogContainer, version: str) -> None:
         """
-        Verify that log entries contain timestamps.
+        Verify that log entries contain a real, well-formed timestamp
+        (not just a static literal string).
         """
         assert results.return_code == ResultCode.SUCCESS
 
-        if version == "cpp":
-            assert "Log timestamp present" in results.stdout, "Timestamps not in logs"
-        else:
-            timestamp_logs = logs_info_level.get_logs(field="message", value="Log timestamp present")
-            assert len(timestamp_logs) > 0, "Timestamps not in logs"
+        # Accept both expected timestamp representations used by lifecycle scenarios:
+        # - ISO-8601 (C++ scenario output)
+        # - epoch milliseconds (Rust structured logs)
+        # This avoids false failures when the selected executable and parametrized
+        # marker diverge in external fixture routing.
+        iso_8601_pattern = (
+            r"Log timestamp: "
+            r"\d{4}-\d{2}-\d{2}T"
+            r"\d{2}:\d{2}:\d{2}"
+            r"(?:\.\d{1,9})?"
+            r"(?:Z|[+-]\d{2}:\d{2})"
+        )
+        epoch_ms_pattern = r"Log timestamp: \d{10,}"
+
+        iso_stdout = re.search(iso_8601_pattern, results.stdout)
+        epoch_stdout = re.search(epoch_ms_pattern, results.stdout)
+        iso_logs = logs_info_level.get_logs(field="message", pattern=iso_8601_pattern)
+        epoch_logs = logs_info_level.get_logs(field="message", pattern=epoch_ms_pattern)
+
+        assert iso_stdout is not None or epoch_stdout is not None or len(iso_logs) > 0 or len(epoch_logs) > 0, (
+            f"No valid timestamp format found in logs (expected ISO-8601 or epoch-ms).\nstdout:\n{results.stdout}"
+        )
 
     def test_dag_logging(self, results: ScenarioResult, logs_info_level: LogContainer, version: str) -> None:
         """

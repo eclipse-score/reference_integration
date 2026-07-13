@@ -53,7 +53,7 @@ class TestControlInterfaceSupport(LifecycleScenario):
         return {
             "test": {
                 "test_duration_ms": 200,
-                "condition_name": "app_ready",
+                "condition_name": "custom_startup_barrier",
             }
         }
 
@@ -66,9 +66,13 @@ class TestControlInterfaceSupport(LifecycleScenario):
         assert results.return_code == ResultCode.SUCCESS
 
         if version == "cpp":
-            assert "Signaling custom condition: app_ready" in results.stdout, "Custom condition was not signaled"
+            assert "Signaling custom condition: custom_startup_barrier" in results.stdout, (
+                "Custom condition was not signaled"
+            )
         else:
-            condition_logs = logs_info_level.get_logs(field="message", pattern="Signaling custom condition: app_ready")
+            condition_logs = logs_info_level.get_logs(
+                field="message", pattern="Signaling custom condition: custom_startup_barrier"
+            )
             assert len(condition_logs) > 0, "Custom condition was not signaled"
 
     def test_control_interface_integration(

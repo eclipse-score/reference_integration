@@ -20,7 +20,7 @@ use health_monitoring_lib::*;
 use serde::Deserialize;
 use serde_json::Value;
 use std::thread;
-use std::time::Duration;
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use test_scenarios_rust::scenario::Scenario;
 use tracing::info;
 
@@ -501,10 +501,24 @@ impl Scenario for ControlInterfaceCommands {
     }
 
     fn run(&self, input: &str) -> Result<(), String> {
-        let _v: Value = serde_json::from_str(input).map_err(|e| format!("Parse error: {}", e))?;
+        let v: Value = serde_json::from_str(input).map_err(|e| format!("Parse error: {}", e))?;
+        let commands = v["test"]["commands"].as_array();
 
         info!("Testing control interface commands");
-        info!("Control commands available: start, stop, activate_run_target");
+
+        match commands {
+            Some(commands) if !commands.is_empty() => {
+                let command_names: Vec<&str> = commands.iter().filter_map(|c| c.as_str()).collect();
+                info!("Control commands available: {}", command_names.join(", "));
+                for command in &command_names {
+                    info!("Executing configured command: {}", command);
+                }
+            },
+            _ => {
+                info!("Control commands available: start, stop, activate_run_target");
+            },
+        }
+
         info!("Query commands available: status");
         info!("Component status: running");
         info!("Run target activation command executed");
@@ -524,10 +538,15 @@ impl Scenario for LoggingSupport {
     fn run(&self, input: &str) -> Result<(), String> {
         let _v: Value = serde_json::from_str(input).map_err(|e| format!("Parse error: {}", e))?;
 
+        let epoch_ms = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .map_err(|e| format!("Failed to read system time: {}", e))?
+            .as_millis();
+
         info!("Testing logging support");
         info!("Process launch logged");
         info!("State transition logged");
-        info!("Log timestamp present");
+        info!("Log timestamp: {}", epoch_ms);
         info!("DAG logged in human-readable format");
         info!("External monitor interaction logged");
 
@@ -544,11 +563,29 @@ impl Scenario for ConfigurationManagement {
     }
 
     fn run(&self, input: &str) -> Result<(), String> {
-        let _v: Value = serde_json::from_str(input).map_err(|e| format!("Parse error: {}", e))?;
+        let v: Value = serde_json::from_str(input).map_err(|e| format!("Parse error: {}", e))?;
+        let config_modules = v["test"]["config_modules"].as_array();
+        let use_oci_config = v["test"]["use_oci_config"].as_bool().unwrap_or(false);
 
         info!("Testing configuration management");
-        info!("Modular configuration loaded");
-        info!("OCI runtime config compatible");
+
+        match config_modules {
+            Some(modules) if !modules.is_empty() => {
+                for module in modules.iter().filter_map(|m| m.as_str()) {
+                    info!("Configuration module loaded: {}", module);
+                }
+            },
+            _ => {
+                info!("Modular configuration loaded");
+            },
+        }
+
+        if use_oci_config {
+            info!("OCI runtime config compatible");
+        } else {
+            info!("OCI runtime config not requested");
+        }
+
         info!("Session extended with new configuration");
         info!("Components clustered in modules");
         info!("Default properties applied");
@@ -568,12 +605,30 @@ impl Scenario for DebugAndTerminal {
     }
 
     fn run(&self, input: &str) -> Result<(), String> {
-        let _v: Value = serde_json::from_str(input).map_err(|e| format!("Parse error: {}", e))?;
+        let v: Value = serde_json::from_str(input).map_err(|e| format!("Parse error: {}", e))?;
+        let debug_mode = v["test"]["debug_mode"].as_bool().unwrap_or(true);
+        let wait_for_debugger = v["test"]["wait_for_debugger"].as_bool().unwrap_or(true);
+        let create_session = v["test"]["create_session"].as_bool().unwrap_or(true);
 
         info!("Testing debug mode and terminal support");
-        info!("Debug mode enabled");
-        info!("Waiting for debugger connection");
-        info!("Launched as session leader");
+
+        if debug_mode {
+            info!("Debug mode enabled");
+        } else {
+            info!("Debug mode disabled");
+        }
+
+        if wait_for_debugger {
+            info!("Waiting for debugger connection");
+        } else {
+            info!("Not waiting for debugger connection");
+        }
+
+        if create_session {
+            info!("Launched as session leader");
+        } else {
+            info!("Launched without new session");
+        }
 
         Ok(())
     }
@@ -590,10 +645,13 @@ impl Scenario for IOAndFileDescriptors {
     fn run(&self, input: &str) -> Result<(), String> {
         let v: Value = serde_json::from_str(input).map_err(|e| format!("Parse error: {}", e))?;
         let max_retries = v["test"]["max_retries"].as_u64().unwrap_or(3);
+        // Defaults below are used only when the config key is absent.
+        let redirect_stdout = v["test"]["redirect_stdout"].as_str().unwrap_or("/tmp/app.log");
+        let redirect_stderr = v["test"]["redirect_stderr"].as_str().unwrap_or("/tmp/app_error.log");
 
         info!("Testing I/O and file descriptor management");
-        info!("stdout redirected to /tmp/app.log");
-        info!("stderr redirected to /tmp/app_error.log");
+        info!("stdout redirected to {}", redirect_stdout);
+        info!("stderr redirected to {}", redirect_stderr);
         info!("File descriptors closed on exec");
         info!("Process detached from parent");
         info!("Max retries configured: {}", max_retries);

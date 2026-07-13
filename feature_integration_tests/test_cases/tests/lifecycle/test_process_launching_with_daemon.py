@@ -173,6 +173,10 @@ class TestProcessLaunchingWithDaemon:
         daemon = daemon_info["daemon"]
 
         app_name = "rust_supervised_app" if version == "rust" else "cpp_supervised_app"
+        # Match on the exact deployed binary path rather than a bare app name
+        # substring, which could also match a leaked process, a bazel
+        # invocation, or the pytest command line itself.
+        pgrep_pattern = rf"^{re.escape(str(setup_test_app))}$"
 
         # Give daemon time to start and supervise app
         time.sleep(3.0)
@@ -180,7 +184,7 @@ class TestProcessLaunchingWithDaemon:
         # Find and kill the supervised app process
         try:
             result = subprocess.run(
-                ["pgrep", "-f", app_name],
+                ["pgrep", "-f", pgrep_pattern],
                 capture_output=True,
                 text=True,
                 check=False,
@@ -196,7 +200,7 @@ class TestProcessLaunchingWithDaemon:
                 new_pid = None
                 while time.time() < deadline:
                     result = subprocess.run(
-                        ["pgrep", "-f", app_name],
+                        ["pgrep", "-f", pgrep_pattern],
                         capture_output=True,
                         text=True,
                         check=False,

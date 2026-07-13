@@ -56,7 +56,7 @@ class TestControlInterfaceCommands(LifecycleScenario):
         return {
             "test": {
                 "test_duration_ms": 200,
-                "commands": ["start", "stop", "status", "activate_run_target"],
+                "commands": ["pause", "resume", "diagnostics", "activate_run_target"],
             }
         }
 
@@ -69,14 +69,23 @@ class TestControlInterfaceCommands(LifecycleScenario):
         assert results.return_code == ResultCode.SUCCESS
 
         if version == "cpp":
-            assert "Control commands available: start, stop, activate_run_target" in results.stdout, (
+            assert "Control commands available: pause, resume, diagnostics, activate_run_target" in results.stdout, (
                 "Control commands not available"
             )
+            for command in ["pause", "resume", "diagnostics", "activate_run_target"]:
+                assert f"Executing configured command: {command}" in results.stdout, (
+                    f"Configured command {command} was not executed"
+                )
         else:
             commands_logs = logs_info_level.get_logs(
-                field="message", pattern="Control commands available: start, stop, activate_run_target"
+                field="message", pattern="Control commands available: pause, resume, diagnostics, activate_run_target"
             )
             assert len(commands_logs) > 0, "Control commands not available"
+            for command in ["pause", "resume", "diagnostics", "activate_run_target"]:
+                exec_logs = logs_info_level.get_logs(
+                    field="message", pattern=f"Executing configured command: {command}"
+                )
+                assert len(exec_logs) > 0, f"Configured command {command} was not executed"
 
     def test_query_commands_available(
         self, results: ScenarioResult, logs_info_level: LogContainer, version: str

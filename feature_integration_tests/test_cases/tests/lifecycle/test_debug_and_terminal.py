@@ -98,3 +98,70 @@ class TestDebugAndTerminal(LifecycleScenario):
         else:
             session_logs = logs_info_level.get_logs(field="message", value="Launched as session leader")
             assert len(session_logs) > 0, "Session leader creation failed"
+
+
+@add_test_properties(
+    partially_verifies=[
+        "feat_req__lifecycle__debug_support",
+    ],
+    test_type="requirements-based",
+    derivation_technique="requirements-analysis",
+)
+class TestDebugModeDisabled(LifecycleScenario):
+    """
+    Verify that debug mode and terminal support flags are actually config-driven,
+    by disabling them and asserting the negative-path messages.
+    """
+
+    @pytest.fixture(scope="class")
+    def scenario_name(self) -> str:
+        return "lifecycle.debug_and_terminal"
+
+    @pytest.fixture(scope="class")
+    def test_config(self, temp_dir: Path) -> dict[str, Any]:
+        return {
+            "test": {
+                "test_duration_ms": 150,
+                "debug_mode": False,
+                "wait_for_debugger": False,
+                "create_session": False,
+            }
+        }
+
+    def test_debug_mode_disabled(self, results: ScenarioResult, logs_info_level: LogContainer, version: str) -> None:
+        """
+        Verify that debug mode can be disabled via configuration.
+        """
+        assert results.return_code == ResultCode.SUCCESS
+
+        if version == "cpp":
+            assert "Debug mode disabled" in results.stdout, "Debug mode was not disabled"
+        else:
+            debug_logs = logs_info_level.get_logs(field="message", value="Debug mode disabled")
+            assert len(debug_logs) > 0, "Debug mode was not disabled"
+
+    def test_debugger_wait_disabled(self, results: ScenarioResult, logs_info_level: LogContainer, version: str) -> None:
+        """
+        Verify that waiting for a debugger can be disabled via configuration.
+        """
+        assert results.return_code == ResultCode.SUCCESS
+
+        if version == "cpp":
+            assert "Not waiting for debugger connection" in results.stdout, "Debugger wait was not disabled"
+        else:
+            wait_logs = logs_info_level.get_logs(field="message", value="Not waiting for debugger connection")
+            assert len(wait_logs) > 0, "Debugger wait was not disabled"
+
+    def test_session_leader_disabled(
+        self, results: ScenarioResult, logs_info_level: LogContainer, version: str
+    ) -> None:
+        """
+        Verify that session leader creation can be disabled via configuration.
+        """
+        assert results.return_code == ResultCode.SUCCESS
+
+        if version == "cpp":
+            assert "Launched without new session" in results.stdout, "Session leader path not disabled"
+        else:
+            session_logs = logs_info_level.get_logs(field="message", value="Launched without new session")
+            assert len(session_logs) > 0, "Session leader path not disabled"

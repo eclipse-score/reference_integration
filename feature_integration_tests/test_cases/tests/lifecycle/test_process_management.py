@@ -32,12 +32,9 @@ pytestmark = pytest.mark.parametrize("version", ["rust", "cpp"], scope="class")
 @add_test_properties(
     partially_verifies=[
         "feat_req__lifecycle__running_processes",
-        "feat_req__lifecycle__drop_supervsion",
         "feat_req__lifecycle__multi_start_support",
         "feat_req__lifecycle__consistent_dependencies",
-        "feat_req__lifecycle__stop_process_dependents",
         "feat_req__lifecycle__stop_order_spec",
-        "feat_req__lifecycle__oci_compliant",
     ],
     test_type="requirements-based",
     derivation_technique="requirements-analysis",

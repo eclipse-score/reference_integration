@@ -35,10 +35,8 @@ pytestmark = pytest.mark.parametrize("version", ["rust", "cpp"], scope="class")
         "feat_req__lifecycle__process_termination",
         "feat_req__lifecycle__termination_dependency",
         "feat_req__lifecycle__time_to_wait_config",
-        "feat_req__lifecycle__launch_manager_shutdown",
         "feat_req__lifecycle__slow_shutdown_support",
         "feat_req__lifecycle__fast_shutdown_support",
-        "feat_req__lifecycle__launcher_exit_shutdown",
         "feat_req__lifecycle__shutdown_signal",
     ],
     test_type="requirements-based",
@@ -61,8 +59,8 @@ class TestProcessTermination(LifecycleScenario):
         return {
             "test": {
                 "test_duration_ms": 200,
-                "stop_timeout_ms": 1000,
-                "sigterm_to_sigkill_delay_ms": 500,
+                "stop_timeout_ms": 1234,
+                "sigterm_to_sigkill_delay_ms": 777,
             }
         }
 
@@ -75,9 +73,9 @@ class TestProcessTermination(LifecycleScenario):
         assert results.return_code == ResultCode.SUCCESS
 
         if version == "cpp":
-            assert "Stop timeout: 1000ms" in results.stdout, "Stop timeout not configured"
+            assert "Stop timeout: 1234ms" in results.stdout, "Stop timeout not configured"
         else:
-            timeout_logs = logs_info_level.get_logs(field="message", pattern="Stop timeout: 1000ms")
+            timeout_logs = logs_info_level.get_logs(field="message", pattern="Stop timeout: 1234ms")
             assert len(timeout_logs) > 0, "Stop timeout not configured"
 
     def test_signal_delay_configured(
@@ -89,9 +87,9 @@ class TestProcessTermination(LifecycleScenario):
         assert results.return_code == ResultCode.SUCCESS
 
         if version == "cpp":
-            assert "SIGTERM to SIGKILL delay: 500ms" in results.stdout, "Signal delay not configured"
+            assert "SIGTERM to SIGKILL delay: 777ms" in results.stdout, "Signal delay not configured"
         else:
-            delay_logs = logs_info_level.get_logs(field="message", pattern="SIGTERM to SIGKILL delay: 500ms")
+            delay_logs = logs_info_level.get_logs(field="message", pattern="SIGTERM to SIGKILL delay: 777ms")
             assert len(delay_logs) > 0, "Signal delay not configured"
 
     def test_graceful_shutdown(self, results: ScenarioResult, logs_info_level: LogContainer, version: str) -> None:

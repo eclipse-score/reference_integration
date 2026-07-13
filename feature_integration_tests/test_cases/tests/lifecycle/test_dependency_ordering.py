@@ -62,26 +62,33 @@ class TestDependencyOrdering(LifecycleScenario):
         self, results: ScenarioResult, logs_info_level: LogContainer, version: str
     ) -> None:
         """
-        Verify that checkpoints are reported in sequential order.
+        Verify that checkpoints are reported in sequential (non-decreasing index) order.
 
-        The test checks that init_step_0, init_step_1, init_step_2, etc.
-        are reported in the correct sequence.
+        The test locates the emission position of each init_step_{i} marker and
+        asserts those positions are sorted, so an out-of-order emission would fail.
         """
         assert results.return_code == ResultCode.SUCCESS
 
         if version == "cpp":
-            # For C++ scenarios, check stdout directly
+            # For C++ scenarios, check stdout directly and record emission order.
+            lines = results.stdout.splitlines()
+            positions = []
             for i in range(4):
-                assert f"Simulated checkpoint init_step_{i} in sequence" in results.stdout, (
-                    f"Checkpoint init_step_{i} was not reported"
-                )
+                marker = f"Simulated checkpoint init_step_{i} in sequence"
+                matching = [idx for idx, line in enumerate(lines) if marker in line]
+                assert len(matching) > 0, f"Checkpoint init_step_{i} was not reported"
+                positions.append(matching[0])
         else:
-            # Verify each checkpoint was reported in order
+            # Verify each checkpoint was reported and capture its log sequence index.
+            messages = [entry.message for entry in logs_info_level]
+            positions = []
             for i in range(4):
-                checkpoint_logs = logs_info_level.get_logs(
-                    field="message", pattern=f"Simulated checkpoint init_step_{i} in sequence"
-                )
-                assert len(checkpoint_logs) > 0, f"Checkpoint init_step_{i} was not reported"
+                marker = f"Simulated checkpoint init_step_{i} in sequence"
+                matching = [idx for idx, message in enumerate(messages) if marker in message]
+                assert len(matching) > 0, f"Checkpoint init_step_{i} was not reported"
+                positions.append(matching[0])
+
+        assert positions == sorted(positions), f"Checkpoints were not reported in non-decreasing order: {positions}"
 
     def test_sequential_supervision_completed(
         self, results: ScenarioResult, logs_info_level: LogContainer, version: str

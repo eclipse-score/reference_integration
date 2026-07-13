@@ -72,10 +72,16 @@ class TestConfigurationManagement(LifecycleScenario):
         assert results.return_code == ResultCode.SUCCESS
 
         if version == "cpp":
-            assert "Modular configuration loaded" in results.stdout, "Modular configuration not supported"
+            for module in ["base", "extended", "runtime"]:
+                assert f"Configuration module loaded: {module}" in results.stdout, (
+                    f"Configuration module {module} not loaded"
+                )
         else:
-            config_logs = logs_info_level.get_logs(field="message", value="Modular configuration loaded")
-            assert len(config_logs) > 0, "Modular configuration not supported"
+            for module in ["base", "extended", "runtime"]:
+                config_logs = logs_info_level.get_logs(
+                    field="message", pattern=f"Configuration module loaded: {module}"
+                )
+                assert len(config_logs) > 0, f"Configuration module {module} not loaded"
 
     def test_oci_compatibility(self, results: ScenarioResult, logs_info_level: LogContainer, version: str) -> None:
         """

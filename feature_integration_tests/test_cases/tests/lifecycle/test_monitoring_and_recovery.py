@@ -31,21 +31,15 @@ pytestmark = pytest.mark.parametrize("version", ["rust", "cpp"], scope="class")
 
 @add_test_properties(
     partially_verifies=[
-        "feat_req__lifecycle__monitor_abnormal_term",
         "feat_req__lifecycle__ext_monitor_notify",
         "feat_req__lifecycle__recovery_action_support",
-        "feat_req__lifecycle__recov_run_target_switch",
         "feat_req__lifecycle__smart_watchdog_config",
-        "feat_req__lifecycle__configurable_wait_time",
         "feat_req__lifecycle__monitoring_processes",
         "feat_req__lifecycle__failure_detect",
         "feat_req__lifecycle__liveliness_detection",
         "feat_req__lifecycle__process_monitoring",
-        "feat_req__lifecycle__process_failure_react",
-        "feat_req__lifecycle__multi_instance_support",
         "feat_req__lifecycle__lm_self_health_check",
         "feat_req__lifecycle__lm_ext_watchdog_notify",
-        "feat_req__lifecycle__lm_ext_wdg_failed_test",
         "feat_req__lifecycle__lm_ext_watchdog_cfg",
     ],
     test_type="requirements-based",
@@ -68,9 +62,9 @@ class TestMonitoringAndRecovery(LifecycleScenario):
         return {
             "test": {
                 "test_duration_ms": 400,
-                "watchdog_interval_ms": 100,
+                "watchdog_interval_ms": 137,
                 "recovery_wait_ms": 200,
-                "max_restart_attempts": 3,
+                "max_restart_attempts": 7,
             }
         }
 
@@ -93,9 +87,9 @@ class TestMonitoringAndRecovery(LifecycleScenario):
         assert results.return_code == ResultCode.SUCCESS
 
         if version == "cpp":
-            assert "Watchdog interval: 100ms" in results.stdout, "Watchdog not configured"
+            assert "Watchdog interval: 137ms" in results.stdout, "Watchdog not configured"
         else:
-            watchdog_logs = logs_info_level.get_logs(field="message", pattern="Watchdog interval: 100ms")
+            watchdog_logs = logs_info_level.get_logs(field="message", pattern="Watchdog interval: 137ms")
             assert len(watchdog_logs) > 0, "Watchdog not configured"
 
     def test_liveliness_detection(self, results: ScenarioResult, logs_info_level: LogContainer, version: str) -> None:
@@ -119,10 +113,10 @@ class TestMonitoringAndRecovery(LifecycleScenario):
         assert results.return_code == ResultCode.SUCCESS
 
         if version == "cpp":
-            assert "Recovery action: restart (max 3 attempts)" in results.stdout, "Recovery action not configured"
+            assert "Recovery action: restart (max 7 attempts)" in results.stdout, "Recovery action not configured"
         else:
             recovery_logs = logs_info_level.get_logs(
-                field="message", pattern="Recovery action: restart \\(max 3 attempts\\)"
+                field="message", pattern="Recovery action: restart \\(max 7 attempts\\)"
             )
             assert len(recovery_logs) > 0, "Recovery action not configured"
 
