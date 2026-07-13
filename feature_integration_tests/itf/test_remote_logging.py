@@ -12,7 +12,6 @@
 # *******************************************************************************
 
 import logging
-import os
 import time
 
 import pytest
@@ -44,6 +43,12 @@ _LINUX_DATAROUTER_START_CMD = "cd /usr/bin/datarouter && nohup ./datarouter --no
 # network interface required for DLT messages to reach the host via the Docker bridge.
 _LINUX_CHECK_MULTICAST_ROUTE_CMD = "ip route add 224.0.0.0/4 dev eth0 2>/dev/null || true"
 _DATAROUTER_STARTUP_TIMEOUT_SEC = 2
+
+# DLT message identifiers for the Logging App
+LOGGING_APP_ID = "EXA"
+LOGGING_CTX_ID = "DFLT"
+
+_LOGGINGAPP_START_CMD = "cd /showcases/data/logging/logging_app/etc && nohup /showcases/bin/logging_app &"
 
 
 def _is_qnx(target):
@@ -110,4 +115,40 @@ def test_remote_logging(datarouter_running, dlt_config):
 
     assert message_count > 1, (
         f"Expected atleast one DLT message with app_id: {APP_ID} and context_id: {CTX_ID}, but got {message_count}"
+    )
+
+
+def test_logging_app_logs_forwarded_to_dlt(datarouter_running, target, dlt_config):
+    """Verifies that Logging App logs are forwarded to DLT."""
+
+    with DltWindow(
+        protocol=Protocol.UDP,
+        host_ip=dlt_config.host_ip,
+        multicast_ips=dlt_config.multicast_ips,
+        print_to_stdout=True,
+        binary_path=dlt_config.dlt_receive_path,
+    ) as window:
+        logger.info("Starting logging_app...")
+        exit_code, out = target.execute(_LOGGINGAPP_START_CMD)
+
+        logger.info("logging_app start exit_code=%s", exit_code)
+        logger.info(out.decode(errors="replace"))
+
+        assert exit_code == 0, "Failed to start logging_app"
+
+        time.sleep(CAPTURE_DURATION_SECONDS)
+
+    record = window.record(filters=[(LOGGING_APP_ID, LOGGING_CTX_ID)])
+    messages = record.find(query=dict(apid=LOGGING_APP_ID, ctid=LOGGING_CTX_ID))
+
+    logger.debug(
+        "Found %d messages with app_id=%s, context_id=%s",
+        len(messages),
+        LOGGING_APP_ID,
+        LOGGING_CTX_ID,
+    )
+
+    assert len(messages) > 0, (
+        f"Expected at least one DLT message with app_id={LOGGING_APP_ID} "
+        f"and context_id={LOGGING_CTX_ID}, but got {len(messages)}"
     )
