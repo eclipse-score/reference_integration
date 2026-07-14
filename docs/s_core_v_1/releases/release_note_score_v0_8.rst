@@ -122,8 +122,8 @@ Baselibs Rust
 Communication
 ~~~~~~~~~~~~~
 
-- **Version:** ``TBD``
-- **Release notes**: TBD
+- **Version:** ``v0.3.0``
+- **Release notes**: `Communication release notes <https://github.com/eclipse-score/communication/releases/tag/v0.3.0>`_
 
 
 Persistency
@@ -217,8 +217,8 @@ Docs-as-code
 Tooling
 ~~~~~~~
 
-- **Version:** ``TBD``
-- **Source / tag:** TBD
+- **Version:** ``v1.3.1``
+- **Release notes**: `Tooling release notes <https://github.com/eclipse-score/tooling/releases/tag/v1.3.1>`_
 
 
 ITF (Integration Testing Framework)
