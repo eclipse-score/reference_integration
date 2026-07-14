@@ -25,6 +25,11 @@ status and the module verification report. For shared conventions see
 | **Module Ver. Report** | `verification/module_verification_report.rst` `:status: valid` and contains data | `:status: draft` | absent or template only |
 | **Platform Ver. Report** | _no column_ — the platform verification report exists **once** for the entire platform; do not render it as a per-module column. Add it as a **bold one-liner immediately after the PA5 table** (see [Platform Verification Report](#platform-verification-report)). | | |
 
+- **Per-link status marker (Module Ver. Report):** prefix the
+  `module_verification_report.rst` link with ✅/🔄/❌ by its document
+  `:status:` — see
+  [common.md C4.2.1](./common.md#c421-per-link-status-markers--inspection--report-cells-mandatory).
+
 > **Static / Dynamic Analysis cells render the status only, no source-code
 > link.** The PA5 link discipline of
 > [common.md C4.2](./common.md#c42-source-links--mandatory) does not apply to
@@ -40,6 +45,59 @@ goes on its **own line-block line** below the status — never on the same line
 as `✅ Available` (see
 [common.md C4.1](./common.md#c41-cell-layout)). Use `plur()` for correct
 singular/plural (`1 test` vs `N tests`).
+
+---
+
+## Test-counting pitfalls (read before touching Unit / Comp. IT numbers)
+
+Test discovery is the **most error-prone** part of PA5. Verified failure
+modes (each has produced a wrong number in the past — Logging was `340`
+unit / `❌` comp when the truth is `650` / `8`):
+
+1. **Count all components of a module, not just one subtree.** Two-component
+   modules keep tests in several roots — e.g. Logging has **both**
+   `score/datarouter/**` (~324 cases) **and** `score/mw/log/**` (~326).
+   Missing one silently halves the count. Always walk the *whole* repo tree.
+2. **Rust inline unit tests live in `src/`, not in `tests/`.** Counting only
+   files under a `test/`-style path (the old `is_test_path`) **misses every
+   `#[cfg(test)] mod tests { #[test] … }`** in `src/*.rs`. Lifecycle has
+   **235** such inline tests, all in `src/`. Count `#[test]` /
+   `#[tokio::test]` in **all** `.rs` files (outside `docs/`, `third_party/`,
+   `bazel-*`).
+3. **Unit vs. Component/Integration is per-repo convention, not one rule.**
+   There is no single reliable heuristic; classify with the module's own
+   convention:
+
+   | Module | Component/Integration tests live in | Count |
+   |---|---|---|
+   | Logging | `score/test/component/**` (Bazel `tags=["integration"]`, ITF `py_*_itf_test`) | 8 |
+   | Persistency | `tests/test_cases/tests/test_cit_*.py` (**CIT** = Component Integration Test) | 44 |
+   | Baselibs | `score/os/utils/test/mqueueintegration_test.cpp` | 13 |
+   | Communication | `score/mw/com/test/**/integration_test/*.py` | 63 |
+   | Time | `score/**/tests/integration_tests/**` | 4 |
+   | Security/Crypto | `tests/integration_tests/integration_test.py` | 11 |
+   | Some/IP | `tests/integration_test/**` + `quality/integration_testing/**` | 21 |
+
+   A **Rust `tests/` directory is a *crate integration* test**, but a
+   C++ component's `tests/` subfolder (e.g. `futurecpp/tests/`) is that
+   component's **unit** tests — do **not** blanket-classify `tests/` as
+   integration.
+4. **Two different "test count" metrics exist — do not mix them.**
+   - *Test-case declarations* — count of `TEST*(` / `#[test]` / `def test_`
+     macros (Logging 650, Baselibs ~5.7k).
+   - *Executed test cases* — the same expanded over `TYPED_TEST` types and
+     parametrised instances (Baselibs `25833`). Bazel CI reports *test
+     **targets*** (`Executed N tests` ≈ 297), a **third** number.
+
+   The current table predominantly uses the **executed-case** metric. When a
+   single cell is corrected, match the metric already used in that column;
+   do **not** silently switch the whole column to a different metric.
+
+> **When in doubt, verify a suspicious cell manually** against the repo at
+> the pinned ref (fetch the test files, count) before overwriting — a
+> `✅ Available` test cell dropping to `❌ Open` is almost always a discovery
+> bug, not a real regression (see the plausibility gate in
+> [common.md Step 5b](./common.md#5b-plausibility--diff-each-cell)).
 
 ---
 
