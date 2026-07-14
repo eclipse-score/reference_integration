@@ -58,7 +58,10 @@
                     "application_type": "Reporting_And_Supervised"
                 },
                 "depends_on": [],
-                "process_arguments": ["--delay", "100"]
+                "process_arguments": [
+                    "--delay",
+                    "100"
+                ]
             },
             "deployment_config": {
                 "environmental_variables": {
@@ -75,7 +78,9 @@
                     "application_type": "Reporting_And_Supervised"
                 },
                 "depends_on": [],
-                "process_arguments": ["-d50"]
+                "process_arguments": [
+                    "-d50"
+                ]
             },
             "deployment_config": {
                 "environmental_variables": {
@@ -88,15 +93,6 @@
     "run_targets": {
         "Startup": {
             "description": "Minimal functionality of the system",
-            "depends_on": [],
-            "recovery_action": {
-                "switch_run_target": {
-                    "run_target": "fallback_run_target"
-                }
-            }
-        },
-        "SupervisedApps": {
-            "description": "Run target used only to trigger hmproc flatbuffer generation for supervised apps",
             "depends_on": [
                 "rust_supervised_app",
                 "cpp_supervised_app"

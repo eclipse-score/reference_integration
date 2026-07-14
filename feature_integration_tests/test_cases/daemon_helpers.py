@@ -38,7 +38,7 @@ def find_binary_in_runfiles(target_path: str) -> Path | None:
     Parameters
     ----------
     target_path : str
-        Bazel target path (e.g., "@score_lifecycle_health//src/launch_manager_daemon:launch_manager")
+        Bazel target path (e.g., "@score_lifecycle_health//score/launch_manager:launch_manager")
 
     Returns
     -------
@@ -66,8 +66,8 @@ def find_binary_in_runfiles(target_path: str) -> Path | None:
         return None
 
     # Convert Bazel target to runfiles path
-    # @score_lifecycle_health//src/launch_manager_daemon:launch_manager
-    # -> score_lifecycle_health/src/launch_manager_daemon/launch_manager
+    # @score_lifecycle_health//score/launch_manager:launch_manager
+    # -> score_lifecycle_health/score/launch_manager/launch_manager
     if target_path.startswith("@"):
         # Remove @ and split by //
         parts = target_path[1:].split("//")
@@ -93,9 +93,17 @@ def find_binary_in_runfiles(target_path: str) -> Path | None:
                     candidates.extend(
                         [
                             Path(runfiles_dir) / repo / package / target,
+                            # Some public alias targets point to executables in
+                            # nested implementation packages (e.g.,
+                            # //score/launch_manager:launch_manager ->
+                            # //score/launch_manager/src/daemon:launch_manager).
+                            Path(runfiles_dir) / repo / package / "src" / "daemon" / target,
                             Path(runfiles_dir) / f"{repo}~" / package / target,
+                            Path(runfiles_dir) / f"{repo}~" / package / "src" / "daemon" / target,
                             Path(runfiles_dir) / "_main" / "external" / repo / package / target,
+                            Path(runfiles_dir) / "_main" / "external" / repo / package / "src" / "daemon" / target,
                             Path(runfiles_dir) / "external" / repo / package / target,
+                            Path(runfiles_dir) / "external" / repo / package / "src" / "daemon" / target,
                         ]
                     )
 
@@ -106,7 +114,7 @@ def find_binary_in_runfiles(target_path: str) -> Path | None:
     return None
 
 
-def get_binary_path(target: str, version: str = "rust") -> Path:
+def get_binary_path(target: str) -> Path:
     """
     Get path to a binary, either from runfiles or by building it.
 
@@ -114,8 +122,6 @@ def get_binary_path(target: str, version: str = "rust") -> Path:
     ----------
     target : str
         Bazel target path.
-    version : str
-        Build version ("rust" or "cpp").
 
     Returns
     -------
@@ -309,6 +315,15 @@ def copy_dynamic_flatbuffer_daemon_configs(
 
         # Copy all pre-built flatbuffers (lm_demo.bin is needed for SWCL/config-manager
         # startup; hm_demo.bin + hmproc_*.bin are needed for the health monitor).
+        #
+        # NOTE: under Bazel these pre-built flatbuffers come from the static
+        # ":daemon_lifecycle_configs" template (configs/daemon_launch_manager_config.json),
+        # not from `input_config`/`dynamic_config` above — the per-test topology
+        # (uid/gid, CONFIG_PATH, etc.) built above is only used in the non-Bazel
+        # (pytest-direct) branch below. The static template's "Startup" run target
+        # therefore must itself list both supervised apps under `depends_on` so
+        # that a supervised process actually launches at initial boot under
+        # `bazel test` (see configs/daemon_launch_manager_config.json).
         for flatbuffer_file in prebuilt_dir.glob("*.bin"):
             shutil.copy2(flatbuffer_file, etc_dir / flatbuffer_file.name)
         return
@@ -337,7 +352,9 @@ def copy_dynamic_flatbuffer_daemon_configs(
         external_root = output_base / "external" / "score_lifecycle_health+"
 
     lifecycle_config_bin = get_binary_path("@score_lifecycle_health//scripts/config_mapping:lifecycle_config")
-    launch_manager_schema = external_root / "src/launch_manager_daemon/config/config_schema/launch_manager.schema.json"
+    launch_manager_schema = (
+        external_root / "score/launch_manager/src/daemon/src/configuration/config_schema/launch_manager.schema.json"
+    )
     if not launch_manager_schema.is_file():
         raise RuntimeError(f"Launch Manager schema not found: {launch_manager_schema}")
 
@@ -356,9 +373,9 @@ def copy_dynamic_flatbuffer_daemon_configs(
         )
 
     flatc_bin = get_binary_path("@flatbuffers//:flatc")
-    lm_schema = external_root / "src/launch_manager_daemon/config/lm_flatcfg.fbs"
-    hm_schema = external_root / "src/launch_manager_daemon/health_monitor_lib/config/hm_flatcfg.fbs"
-    hmcore_schema = external_root / "src/launch_manager_daemon/health_monitor_lib/config/hmcore_flatcfg.fbs"
+    lm_schema = external_root / "score/launch_manager/src/daemon/src/configuration/config_schema/lm_flatcfg.fbs"
+    hm_schema = external_root / "score/launch_manager/src/daemon/src/alive_monitor/config/hm_flatcfg.fbs"
+    hmcore_schema = external_root / "score/launch_manager/src/daemon/src/alive_monitor/config/hmcore_flatcfg.fbs"
 
     for json_cfg in json_out_dir.glob("*"):
         if not json_cfg.is_file():
@@ -433,15 +450,20 @@ class LaunchManagerDaemon:
         self.process: subprocess.Popen | None = None
         self.log_file: Path | None = None
         self._log_fd: TextIO | None = None
+        self._log_file_initialized = False
 
-    def start(self, startup_timeout: float = 2.0) -> None:
+    def start(self, startup_timeout: float = 2.0, ready_timeout: float = 10.0) -> None:
         """
         Start the Launch Manager daemon.
 
         Parameters
         ----------
         startup_timeout : float
-            Time to wait after starting the daemon (seconds).
+            Minimum time to wait after starting the daemon before checking that
+            the process itself is alive (seconds).
+        ready_timeout : float
+            Maximum additional time to wait for evidence in the daemon logs
+            that the initial run-target transition has completed (seconds).
         """
         # If a stale process reference exists from a previous run, clear it.
         if self.process is not None and self.process.poll() is not None:
@@ -450,11 +472,17 @@ class LaunchManagerDaemon:
         if self.process is not None:
             raise RuntimeError("Daemon already started")
 
-        # Create log file
+        # Create log file. Only truncate on the very first start of this log
+        # path so that a class-scoped daemon restarted mid-class does not lose
+        # pre-restart log messages (append afterwards).
         self.log_file = self.working_dir / "launch_manager.log"
-        self._log_fd = open(self.log_file, "w", encoding="utf-8")
+        mode = "w" if not self._log_file_initialized else "a"
+        self._log_fd = open(self.log_file, mode, encoding="utf-8")
+        self._log_file_initialized = True
 
-        # Start daemon process
+        # Start daemon process in its own session/process group so that any
+        # supervised children it spawns can be reaped together with it via
+        # os.killpg (see stop()), instead of being leaked on a hard kill.
         cmd = [str(self.daemon_binary), str(self.config_file)]
         self.process = subprocess.Popen(
             cmd,
@@ -462,9 +490,10 @@ class LaunchManagerDaemon:
             stdout=self._log_fd,
             stderr=subprocess.STDOUT,
             text=True,
+            start_new_session=True,
         )
 
-        # Wait for daemon to initialize
+        # Wait for the process to come up at all.
         time.sleep(startup_timeout)
 
         # Check if daemon is still running
@@ -474,6 +503,19 @@ class LaunchManagerDaemon:
             self._close_log_fd()
             self.process = None
             raise RuntimeError(f"Launch Manager daemon failed to start. Exit code: {return_code}\nLogs:\n{log_content}")
+
+        # Wait for real readiness evidence: the daemon completing its initial
+        # run-target transition (logged by the process-group manager), rather
+        # than relying purely on a fixed sleep. Still bail out immediately if
+        # the process dies while we wait.
+        deadline = time.time() + ready_timeout
+        while time.time() < deadline:
+            if self.process.poll() is not None:
+                break
+            logs = self.get_logs()
+            if "Completed the request for" in logs or "unexpected termination" in logs.lower():
+                return
+            time.sleep(0.2)
 
     def stop(self, shutdown_timeout: float = 5.0) -> None:
         """
@@ -488,6 +530,7 @@ class LaunchManagerDaemon:
             self._close_log_fd()
             return
 
+        daemon_pid = self.process.pid
         try:
             # Send SIGTERM for graceful shutdown if still running.
             if self.process.poll() is None:
@@ -503,6 +546,14 @@ class LaunchManagerDaemon:
                 self.process.kill()
                 self.process.wait()
         finally:
+            # The daemon was launched in its own process group (start_new_session
+            # in start()). Signal the whole group so supervised children the
+            # daemon spawned do not leak past the daemon's own termination.
+            try:
+                pgid = os.getpgid(daemon_pid)
+                os.killpg(pgid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
             self.process = None
             self._close_log_fd()
 
@@ -533,6 +584,27 @@ class LaunchManagerDaemon:
         if self.log_file and self.log_file.exists():
             return self.log_file.read_text()
         return ""
+
+    def get_log_offset(self) -> int:
+        """
+        Return the current size (in bytes) of the daemon log file.
+
+        Callers can pass this value to :meth:`get_logs_since` to read only the
+        log content produced after a given point in time (e.g. after issuing a
+        kill signal), instead of scanning the whole log for substrings that may
+        already be present from an unrelated earlier event (e.g. daemon boot).
+        """
+        if self.log_file and self.log_file.exists():
+            return self.log_file.stat().st_size
+        return 0
+
+    def get_logs_since(self, offset: int) -> str:
+        """Get daemon log content written after the given byte offset."""
+        if not self.log_file or not self.log_file.exists():
+            return ""
+        with open(self.log_file, encoding="utf-8") as f:
+            f.seek(offset)
+            return f.read()
 
 
 @pytest.fixture(scope="class")
@@ -587,8 +659,8 @@ def launch_manager_daemon(
     ensure_path_traversable_for_sandbox(etc_dir)
 
     # Get launch_manager daemon binary (from runfiles or build it)
-    daemon_target = "@score_lifecycle_health//src/launch_manager_daemon:launch_manager"
-    daemon_binary = get_binary_path(daemon_target, version)
+    daemon_target = "@score_lifecycle_health//score/launch_manager:launch_manager"
+    daemon_binary = get_binary_path(daemon_target)
 
     # Copy daemon to bin directory
     daemon_path = bin_dir / "launch_manager"
@@ -628,11 +700,22 @@ def launch_manager_daemon(
         ("@score_lifecycle_health//examples/cpp_supervised_app:cpp_supervised_app", "cpp_supervised_app"),
         ("@score_lifecycle_health//examples/control_application:control_daemon", "control_daemon"),
     ]:
-        app_binary = get_binary_path(app_target, version)
+        app_binary = get_binary_path(app_target)
         app_dest = bin_dir / app_name
         if app_dest.exists() or app_dest.is_symlink():
             app_dest.unlink()
         app_dest.symlink_to(app_binary.resolve())
+
+    # Control-interface CLI client ("lmcontrol") — sends an activate_target
+    # (RunTargetInfo) request over the control socket exposed by the daemon's
+    # state_manager/control_daemon component. Used by tests that need to
+    # exercise the actual control interface instead of asserting on log
+    # substrings alone. Not fatal if unavailable (e.g. target renamed).
+    lm_ctl_binary: Path | None
+    try:
+        lm_ctl_binary = get_binary_path("@score_lifecycle_health//examples/control_application:lmcontrol")
+    except RuntimeError:
+        lm_ctl_binary = None
 
     # Create launch manager configuration with the version-specific supervised app.
     # Use current user's UID/GID for sandbox to avoid setuid/setgid permission errors
@@ -746,6 +829,7 @@ def launch_manager_daemon(
             "etc_dir": etc_dir,
             "work_dir": work_dir,
             "config_file": config_file,
+            "lm_ctl_binary": lm_ctl_binary,
         }
     finally:
         # Cleanup

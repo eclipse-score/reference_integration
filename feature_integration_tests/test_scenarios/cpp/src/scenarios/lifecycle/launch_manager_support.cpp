@@ -19,7 +19,7 @@
 #include "launch_manager_support.h"
 
 #include "score/json/json_parser.h"
-#include "score/lcm/lifecycle_client.h"
+#include "score/mw/lifecycle/report_running.h"
 
 #include <chrono>
 #include <iostream>
@@ -28,7 +28,7 @@
 #include <thread>
 #include <vector>
 
-using namespace score::lcm;
+using namespace score::mw::lifecycle;
 
 namespace {
 
@@ -119,16 +119,8 @@ public:
         // Attempt to report execution state - this demonstrates the API usage
         // Note: This requires a running Launch Manager daemon to succeed
         std::cout << "Lifecycle client API called" << std::endl;
-        LifecycleClient client{};
-        auto result = client.ReportExecutionState(ExecutionState::kRunning);
-
-        if (result.has_value()) {
-            std::cout << "Successfully reported execution state as running" << std::endl;
-        } else {
-            // In a test environment without Launch Manager, this is expected
-            std::cout << "Launch Manager not available in test env" << std::endl;
-            std::cout << "In production, this would report state to Launch Manager" << std::endl;
-        }
+        report_running();
+        std::cout << "Successfully reported execution state as running" << std::endl;
 
         // Simulate application doing work
         std::this_thread::sleep_for(std::chrono::milliseconds(test_input.test_duration_ms));

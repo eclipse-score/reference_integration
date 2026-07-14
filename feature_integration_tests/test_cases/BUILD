@@ -67,9 +67,10 @@ score_py_pytest(
         "//feature_integration_tests/test_scenarios/rust:rust_test_scenarios",
         # Lifecycle daemon and supervised application binaries
         "@score_lifecycle_health//examples/control_application:control_daemon",
+        "@score_lifecycle_health//examples/control_application:lmcontrol",
         "@score_lifecycle_health//examples/cpp_supervised_app",
         "@score_lifecycle_health//examples/rust_supervised_app",
-        "@score_lifecycle_health//src/launch_manager_daemon:launch_manager",
+        "@score_lifecycle_health//score/launch_manager",
     ],
     env = {
         "RUST_BACKTRACE": "1",
@@ -101,11 +102,10 @@ score_py_pytest(
         "//feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios",
         # Lifecycle daemon and supervised application binaries
         "@score_lifecycle_health//examples/control_application:control_daemon",
+        "@score_lifecycle_health//examples/control_application:lmcontrol",
         "@score_lifecycle_health//examples/cpp_supervised_app",
         "@score_lifecycle_health//examples/rust_supervised_app",
-        "@score_lifecycle_health//src/launch_manager_daemon:launch_manager",
-        # Communication binaries (used by comm cross-module test)
-        "@score_communication//score/mw/com/example/ipc_bridge:ipc_bridge_cpp",
+        "@score_lifecycle_health//score/launch_manager",
     ],
     env = {
         "FIT_ENABLE_SETCAP": "1",

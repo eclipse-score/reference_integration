@@ -80,25 +80,26 @@ The following API integration tests are maintained in the `saumya_lifecycle_fit`
 
 | Test File | Module Integration | Requirements Covered | Status | Description |
 |-----------|-------------------|---------------------|--------|-------------|
-| `test_lifecycle_persistency_recovery.py` | Lifecycle ↔ Persistency | `feat_req__lifecycle__process_failure_react`, `feat_req__lifecycle__monitor_abnormal_term`, `feat_req__persistency__store_data` | ✅ Implemented | Validates that persistency snapshots remain stable during lifecycle recovery actions |
-| `test_lifecycle_state_manager_if.py` | Launch Manager ↔ State Manager | `logic_arc_int__lifecycle__controlif`, `feat_req__lifecycle__controlif_status`, `feat_req__lifecycle__request_run_target_start` | ✅ Implemented | Tests run-target transitions and status queries via control interface |
+| `test_lifecycle_persistency_recovery.py` | Lifecycle ↔ Persistency | `feat_req__lifecycle__process_failure_react`, `feat_req__lifecycle__monitor_abnormal_term`, `feat_req__persistency__store_data`, `feat_req__lifecycle__recov_run_target_switch` | ✅ Implemented | Validates that persistency storage remains stable around a real supervised-app crash and switch-to-fallback recovery |
+| `test_lifecycle_state_manager_if.py` | Launch Manager ↔ State Manager | `logic_arc_int__lifecycle__controlif`, `feat_req__lifecycle__request_run_target_start` | ✅ Implemented (activate_target); status-query intentionally skipped | Sends a real `activate_target` request via the `lmcontrol` control-interface client; the status-query leg has no implemented query/response protocol in this codebase and is skipped with an explicit reason rather than asserted on log substrings |
 
 ### Test Capabilities
 
 **test_lifecycle_persistency_recovery.py:**
 
-- **`test_persistency_continuity_across_recovery`**: Verifies persistency snapshot stability across multiple write operations
-- **`test_persistency_recovery_with_daemon_supervision`**: Tests persistency operations continuity with Launch Manager daemon running
-- **`test_supervised_app_crash_persistency_recovery`**: Verifies persistency continuity across process lifecycle boundaries — simulates crash/recovery by running separate processes that write to the same KVS storage and validates data integrity remains intact
+- **`test_persistency_continuity_across_sequential_writes`**: Baseline — verifies persistency snapshot stability across two sequential writer processes (no supervision, no crash/recovery)
+- **`test_persistency_recovery_with_daemon_supervision`**: Force-kills the daemon-supervised app, verifies the LCM logs 'unexpected termination' and a completed transition into `fallback_run_target` (the schema's recovery action — not a "restart"), and that persistency storage colocated in the same daemon workspace remains intact and writable throughout
+- **`test_supervised_app_crash_persistency_recovery`**: Verifies persistency continuity across abnormal process termination — freezes a live probe process holding KVS storage open and SIGKILLs it, then validates data integrity remains intact
 - Tests recovery action integration with persistency snapshots
-- Validates data integrity after process termination and restart (crash/recovery simulation)
+- Validates data integrity after abnormal process termination and switch-to-fallback recovery (crash/recovery simulation)
+
+Note: the recovery action exercised here is `switch_run_target` to the reserved `fallback_run_target` — there is no "restart the same process in place" primitive in this configuration schema. The supervised example app binaries (`rust_supervised_app`/`cpp_supervised_app`, from the external `score_lifecycle_health` repository) do not themselves open persistency storage, so the persistency probe remains an independent process colocated with the supervised app rather than the same process; see the test module docstring for the precise claim being verified.
 
 **test_lifecycle_state_manager_if.py:**
 
 - Tests control interface IPC boundary
-- Validates `activate_target` routing
-- Verifies status query responses
-- Tests run-target transition coordination
+- Validates `activate_target` routing via the real `lmcontrol` CLI client
+- Status-query coverage is intentionally skipped: no query/response protocol exists yet in this codebase's control interface
 
 ## Running the Tests
 
