@@ -38,24 +38,6 @@ gcc.toolchain(
     target_os = "linux",
     use_default_package = True,
 )
-
-bazel_dep(name = "os_autosd_toolchain", version = "0.0.1")
-
-# override with git
-git_override(
-    module_name = "os_autosd_toolchain",
-    commit = "71324b1502db978001cc5c11a46fcb603b401ce6",
-    remote = "https://github.com/eclipse-score/inc_os_autosd.git",
-    strip_prefix = "toolchain",
-)
-
-autosd_10_gcc = use_extension("@os_autosd_toolchain//autosd_10_gcc:extensions.bzl", "autosd_10_gcc_extension")
-use_repo(autosd_10_gcc, "autosd_10_gcc_repo")
-
-# Register the RPM toolchain
-# rpm_toolchain = use_extension("@rules_rpm//toolchain:extensions.bzl", "rpm_toolchain")
-# use_repo(rpm_toolchain, "rpm_toolchain")
-
 use_repo(
     gcc,
     "score_autosd10_x86_64_toolchain",
