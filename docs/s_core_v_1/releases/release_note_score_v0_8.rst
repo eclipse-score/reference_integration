@@ -100,8 +100,8 @@ In a recent S-CORE Technical Lead meeting, it was decided to introduce module qu
 S-CORE Platform scope
 ^^^^^^^^^^^^^^^^^^^^^
 
-- **Version:** ``v0.6.1``
-- **Release notes**: `S-CORE platform release notes <https://github.com/eclipse-score/score/releases/tag/v0.6.1>`_
+- **Version:** ``v0.6.2``
+- **Release notes**: `S-CORE platform release notes <https://github.com/eclipse-score/score/releases/tag/v0.6.2>`_
 
 Integrated Software Modules
 ---------------------------
@@ -115,8 +115,7 @@ Baselibs
 Baselibs Rust
 ~~~~~~~~~~~~~
 
-- **Version:** ``TBD``
-- **Release notes**: TBD
+- Consolidated into the `Baselibs <https://github.com/eclipse-score/baselibs/releases/tag/v0.2.9>`_ module and repository (``v0.2.9``); no longer released as a separate module.
 
 
 Communication
@@ -136,8 +135,8 @@ Persistency
 Logging
 ~~~~~~~
 
-- **Version:** ``TBD``
-- **Release notes**: TBD
+- **Version:** ``v0.2.2``
+- **Release notes**: `Logging release notes <https://github.com/eclipse-score/logging/releases/tag/v0.2.2>`_
 
 
 Time
@@ -172,8 +171,8 @@ Lifecycle & Health Management
 Reference integration
 ~~~~~~~~~~~~~~~~~~~~~
 
-- **Version:** ``TBD``
-- **Source / tag:** TBD
+- **Version:** ``v0.8.0``
+- **Source / tag:** `Reference integration release notes <https://github.com/eclipse-score/reference_integration/releases/tag/v0.8.0>`_
 
 - Added a dedicated `Integration Process Guide <https://eclipse-score.github.io/reference_integration/main/integration_process/integration_process.html>`_ with a step-by-step onboarding path (module onboarding, platform integration, testing, reporting, and code quality checks).
 - Introduced the v1.0 roadmap and release-gate documentation in `Roadmap <https://eclipse-score.github.io/reference_integration/main/s_core_v_1/roadmap/roadmap.html>`_, including clearer milestone alignment across process areas.
@@ -205,14 +204,14 @@ Associated Infrastructure Modules
 Process description
 ~~~~~~~~~~~~~~~~~~~
 
-- **Version:** ``TBD``
-- **Release notes**: TBD
+- **Version:** ``v2.0.1``
+- **Release notes**: `Process description release notes <https://github.com/eclipse-score/process_description/releases/tag/v2.0.1>`_
 
 Docs-as-code
 ~~~~~~~~~~~~
 
 - **Version:** ``docs-as-code v4.6.1``
-- **Source / tag:** `docs-as-code GitHub release <https://github.com/eclipse-score/docs-as-code/releases/tag/v4.6.1>`_
+- **Source / tag:** `docs-as-code release notes <https://github.com/eclipse-score/docs-as-code/releases/tag/v4.6.1>`_
 
 Tooling
 ~~~~~~~
@@ -224,47 +223,43 @@ Tooling
 ITF (Integration Testing Framework)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- **Version:** ``TBD``
-- **Source / tag:** TBD
+- **Version:** ``v0.3.0``
+- **Source / tag:** `ITF release notes <https://github.com/eclipse-score/itf/releases/tag/v0.3.0>`_
 
 Test Scenarios
 ~~~~~~~~~~~~~~
 
-- **Version:** ``TBD``
-- **Source / tag:** TBD
+- **Version:** ``v0.4.1``
+- **Source / tag:** `Test Scenarios release notes <https://github.com/eclipse-score/testing_tools/releases/tag/v0.4.1>`_
 
 
 Bazel CPP Toolchain
 ~~~~~~~~~~~~~~~~~~~
 
-- **Version:** ``TBD``
-- **Release notes**: TBD
+- **Version:** ``v0.5.4``
+- **Release notes**: `Bazel CPP Toolchain release notes <https://github.com/eclipse-score/bazel_cpp_toolchains/releases/tag/v0.5.4>`_
 
 
 Compatibility
 ^^^^^^^^^^^^^
 
-- **Dependencies:** To be added.
+- **Dependencies:** None known ...
 
 Performed Verification
 ^^^^^^^^^^^^^^^^^^^^^^
 
-- To be added.
+- See latest verification: :need:`doc__platform_verification_report_latest`.
 
 Known Issues/Vulnerabilities and Bug Fixes
 ------------------------------------------
 
-- To be added.
+- See release notes of every module separately
 
 Upgrade Instructions
 --------------------
 
-- To be added.
-
-Upgrade Instructions
-^^^^^^^^^^^^^^^^^^^^
-
-To be added.
+- Increase to newest bazel registry versions: https://eclipse-score.github.io/bazel_registry_ui
+- Versions can be found under: https://github.com/eclipse-score/reference_integration/blob/v0.8.0/known_good.json
 
 Contact Information
 -------------------
