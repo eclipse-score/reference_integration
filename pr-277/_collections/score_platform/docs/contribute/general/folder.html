@@ -32,9 +32,9 @@
 
     <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
-    <link rel="stylesheet" type="text/css" href="../../../../../_static/css/score.css?v=6e51530f" />
-    <link rel="stylesheet" type="text/css" href="../../../../../_static/css/score_needs.css?v=1f5dae2a" />
-    <link rel="stylesheet" type="text/css" href="../../../../../_static/css/score_design.css?v=d9fd870c" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/css/score.css?v=bb63a8e1" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/css/score_needs.css?v=82a1844f" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/css/score_design.css?v=8048e6ee" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
@@ -445,10 +445,7 @@
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">S-CORE Platform Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../../handbook/project_basics/index.html">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../handbook/own_application/index.html">Use</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../handbook/building_simple_application/index.html">Contribute own module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../handbook/index.html">Handbook</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../users_guide/index.html">User’s Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../features/index.html">Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../requirements/index.html">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../modules/index.html">Modules</a></li>
@@ -469,14 +466,22 @@
 <li class="toctree-l3"><a class="reference internal" href="../fork/index.html">Enterprise Forking Guide for S-CORE Repositories</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2"><a class="reference internal" href="../../score_releases/index.html">S-CORE Releases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../quality/qms_report.html">Quality Report</a></li>
 
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="../../score_releases/index.html">Releases</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../score_tools/index.html">Tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../platform_management_plan/index.html">PMP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
 <li class="toctree-l2"><a class="reference external" href="https://projects.eclipse.org/projects/automotive.score">Eclipse</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../design_decisions/index.html">Decision Records</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../introduction/index.html">Eclipse S-CORE (Eclipse Safe Open Vehicle Core)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../users_guide/index.html">User’s Guide</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_process/process/index.html">Process description</a></li>
@@ -573,7 +578,8 @@
 ├── handbook/                      -&gt; Background, scope, high-level architecture of the platform features
 │                                     and handbook for the platform [<a class="reference internal" href="../../../../score_process/process/process_areas/release_management/release_workproducts.html#wp__platform_handbook" title="wp__platform_handbook"><em class="xref need">Platform Handbook (wp__platform_handbook)</em></a>],
 │                                     (e.g., onboarding, development guidelines, etc.)
-├── manuals/                       -&gt; User and integration manual(s)
+├── manuals/                       -&gt; User and integration manual(s) of the platform,
+│                                     may refer in the reference integration repository to the manuals for the modules.
 ├── modules/                       -&gt; Modules of the SW platform. [<a class="reference internal" href="../../../../score_process/process/process_areas/architecture_design/architecture_workproducts.html#wp__platform_arch" title="wp__platform_arch"><em class="xref need">Platform Architecture (wp__platform_arch)</em></a>]
 ├── platform_management_plan/      -&gt; Overall Platform Management Plan [<a class="reference internal" href="../../../../score_process/process/process_areas/platform_management/platform_management_workproducts.html#wp__platform_mgmt" title="wp__platform_mgmt"><em class="xref need">Platform Management Plan (wp__platform_mgmt)</em></a>]
 │                                     containing: [<a class="reference internal" href="../../../../score_process/process/process_areas/platform_management/platform_management_workproducts.html#wp__project_mgt" title="wp__project_mgt"><em class="xref need">Project Management Plan (wp__project_mgt)</em></a>], [<a class="reference internal" href="../../../../score_process/process/process_areas/safety_management/safety_management_workproducts.html#wp__platform_safety_plan" title="wp__platform_safety_plan"><em class="xref need">Platform Safety Plan (wp__platform_safety_plan)</em></a>],
@@ -660,10 +666,16 @@ README.md                          -&gt; Entrypoint of the repository</pre>
 │   │       └── security_planning/   -&gt; Feature specific security workproducts planning
 │   │                                   [<a class="reference internal" href="../../../../score_process/process/process_areas/security_management/security_management_workproducts.html#wp__platform_security_plan" title="wp__platform_security_plan"><em class="xref need">Platform Security Plan (wp__platform_security_plan)</em></a>]
 │   ├── manuals/                     -&gt; Module manual, e.g. integration manual, assumptions of use,
-│   │                                   safety manual [<a class="reference internal" href="../../../../score_process/process/process_areas/requirements_engineering/requirements_workproducts.html#wp__requirements_comp_aou" title="wp__requirements_comp_aou"><em class="xref need">Component Assumptions of Use (wp__requirements_comp_aou)</em></a>],
-│   │                                   [<a class="reference internal" href="../../../../score_process/process/process_areas/requirements_engineering/requirements_workproducts.html#wp__requirements_feat_aou" title="wp__requirements_feat_aou"><em class="xref need">Feature Assumptions of Use (wp__requirements_feat_aou)</em></a>],
-│   │                                   [<a class="reference internal" href="../../../../score_process/process/process_areas/safety_management/safety_management_workproducts.html#wp__module_safety_manual" title="wp__module_safety_manual"><em class="xref need">Module Safety Manual (wp__module_safety_manual)</em></a>],
-│   │                                   security_manual [<a class="reference internal" href="../../../../score_process/process/process_areas/security_management/security_management_workproducts.html#wp__module_security_manual" title="wp__module_security_manual"><em class="xref need">Module Security Manual (wp__module_security_manual)</em></a>].
+│   │   │                               safety manual [<a class="reference internal" href="../../../../score_process/process/process_areas/requirements_engineering/requirements_workproducts.html#wp__requirements_comp_aou" title="wp__requirements_comp_aou"><em class="xref need">Component Assumptions of Use (wp__requirements_comp_aou)</em></a>],
+│   │   │                               [<a class="reference internal" href="../../../../score_process/process/process_areas/requirements_engineering/requirements_workproducts.html#wp__requirements_feat_aou" title="wp__requirements_feat_aou"><em class="xref need">Feature Assumptions of Use (wp__requirements_feat_aou)</em></a>],
+│   │   │                               [<a class="reference internal" href="../../../../score_process/process/process_areas/safety_management/safety_management_workproducts.html#wp__module_safety_manual" title="wp__module_safety_manual"><em class="xref need">Module Safety Manual (wp__module_safety_manual)</em></a>],
+│   │   │                               security_manual [<a class="reference internal" href="../../../../score_process/process/process_areas/security_management/security_management_workproducts.html#wp__module_security_manual" title="wp__module_security_manual"><em class="xref need">Module Security Manual (wp__module_security_manual)</em></a>].
+│   │   │                            -&gt; Additional optional user centric documentation (e.g. configuration guide,
+│   │   │                               examples user guide, APIs &amp; usage, performance analysis)
+│   │   ├── config/                  -&gt; Configuration guide (optional)
+│   │   ├── examples/                -&gt; Examples user guide (optional)
+│   │   ├── api_description/         -&gt; API detail description (optional)
+│   │   └── performance/             -&gt; Performance analysis (optional)
 │   ├── release/                     -&gt; Module release note [<a class="reference internal" href="../../../../score_process/process/process_areas/release_management/release_workproducts.html#wp__module_sw_release_note" title="wp__module_sw_release_note"><em class="xref need">Module Release Notes (wp__module_sw_release_note)</em></a>],
 │   │                                   module release plan [<a class="reference internal" href="../../../../score_process/process/process_areas/release_management/release_workproducts.html#wp__module_sw_release_plan" title="wp__module_sw_release_plan"><em class="xref need">Module Release Plan (wp__module_sw_release_plan)</em></a>],
 │   ├── safety_mgt/                  -&gt; Module safety plan [<a class="reference internal" href="../../../../score_process/process/process_areas/safety_management/safety_management_workproducts.html#wp__module_safety_plan" title="wp__module_safety_plan"><em class="xref need">Module Safety Plan (wp__module_safety_plan)</em></a>],
@@ -688,21 +700,95 @@ README.md                          -&gt; Entrypoint of the repository</pre>
     │   │   │                           Detail design + code inspection [<a class="reference internal" href="../../../../score_process/process/process_areas/implementation/implementation_workproducts.html#wp__sw_implementation_inspection" title="wp__sw_implementation_inspection"><em class="xref need">Implementation Inspection (wp__sw_implementation_inspection)</em></a>],
     │   │   ├── manuals/             -&gt; User documentation of a single component
     │   │   │                           (e.g., user manual of a library, optional)
+    │   │   │                           (could contain optional subfolders for configuration guide,
+    │   │   │                           examples user guide, APIs &amp; usage, performance analysis, see module manual folder)
     │   │   ├── requirements/        -&gt; Component requirements [<a class="reference internal" href="../../../../score_process/process/process_areas/requirements_engineering/requirements_workproducts.html#wp__requirements_comp" title="wp__requirements_comp"><em class="xref need">Component Requirements (wp__requirements_comp)</em></a>],
     │   │   │                           requirements inspection [<a class="reference internal" href="../../../../score_process/process/process_areas/requirements_engineering/requirements_workproducts.html#wp__requirements_inspect" title="wp__requirements_inspect"><em class="xref need">Requirements Inspection (wp__requirements_inspect)</em></a>]
     │   │   ├── safety_analysis/     -&gt; Safety analysis on component level (only if component architecture exists)
     │   │   │                           [<a class="reference internal" href="../../../../score_process/process/process_areas/safety_analysis/safety_analysis_workproducts.html#wp__sw_component_fmea" title="wp__sw_component_fmea"><em class="xref need">Component FMEA (wp__sw_component_fmea)</em></a>], [<a class="reference internal" href="../../../../score_process/process/process_areas/safety_analysis/safety_analysis_workproducts.html#wp__sw_component_dfa" title="wp__sw_component_dfa"><em class="xref need">Component DFA (wp__sw_component_dfa)</em></a>]
     │   │   └── security_analysis/   -&gt; Security analysis on component level (only if component architecture exists)
-    │   └── src/                     -&gt; Source files of the component consisting of
-    │       │                           Include and source Files [<a class="reference internal" href="../../../../score_process/process/process_areas/implementation/implementation_workproducts.html#wp__sw_implementation" title="wp__sw_implementation"><em class="xref need">Implementation (wp__sw_implementation)</em></a>]
-    │       │                           Test doubles
-    │       │                           Unit tests [<a class="reference internal" href="../../../../score_process/process/process_areas/verification/verification_workproducts.html#wp__verification_sw_unit_test" title="wp__verification_sw_unit_test"><em class="xref need">Unit test (wp__verification_sw_unit_test)</em></a>]
-    │       ├── &lt;lower_level_comp&gt;/  -&gt; lower level component following &lt;component_name&gt; folder structure
-    │       └── tests/               -&gt; Component-level tests (e.g., unit tests)
-    │                                   [<a class="reference internal" href="../../../../score_process/process/process_areas/verification/verification_workproducts.html#wp__verification_sw_unit_test" title="wp__verification_sw_unit_test"><em class="xref need">Unit test (wp__verification_sw_unit_test)</em></a>]
+    │   ├── src/                     -&gt; Source files of the component consisting of
+    │   |   │                           Include and source Files [<a class="reference internal" href="../../../../score_process/process/process_areas/implementation/implementation_workproducts.html#wp__sw_implementation" title="wp__sw_implementation"><em class="xref need">Implementation (wp__sw_implementation)</em></a>]
+    │   |   │                           Unit tests [<a class="reference internal" href="../../../../score_process/process/process_areas/verification/verification_workproducts.html#wp__verification_sw_unit_test" title="wp__verification_sw_unit_test"><em class="xref need">Unit test (wp__verification_sw_unit_test)</em></a>]
+    │   |   └── &lt;lower_level_comp&gt;/  -&gt; lower level component following &lt;component_name&gt; folder structure
+    │   └── tests/                   -&gt; Component-level tests (e.g., integration tests)
+    │                                   [<a class="reference internal" href="../../../../score_process/process/process_areas/verification/verification_workproducts.html#wp__verification_comp_int_test" title="wp__verification_comp_int_test"><em class="xref need">Component Integration test (wp__verification_comp_int_test)</em></a>]
     └── tests/                       -&gt; Module-level tests (e.g., feature integration tests, system tests)
-                                        [<a class="reference internal" href="../../../../score_process/process/process_areas/verification/verification_workproducts.html#wp__verification_comp_int_test" title="wp__verification_comp_int_test"><em class="xref need">Component Integration test (wp__verification_comp_int_test)</em></a>]
-                                        Feature Integration tests [<a class="reference internal" href="../../../../score_process/process/process_areas/verification/verification_workproducts.html#wp__verification_feat_int_test" title="wp__verification_feat_int_test"><em class="xref need">Feature Integration test (wp__verification_feat_int_test)</em></a>]</pre>
+                                        [<a class="reference internal" href="../../../../score_process/process/process_areas/verification/verification_workproducts.html#wp__verification_feat_int_test" title="wp__verification_feat_int_test"><em class="xref need">Feature Integration test (wp__verification_feat_int_test)</em></a>]</pre>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The feature-specific subfolder under <code class="docutils literal notranslate"><span class="pre">docs/features/&lt;feature_name&gt;/</span></code> is only necessary
+if more than one feature is implemented in the module.</p>
+</div>
+</section>
+<section id="module-folder-structure-single-feature-variant">
+<h2>Module Folder Structure (Single-Feature Variant)<a class="headerlink" href="#module-folder-structure-single-feature-variant" title="Link to this heading">#</a></h2>
+<p>The following variant keeps the same structure but removes the additional
+feature-name nesting under <code class="docutils literal notranslate"><span class="pre">docs/features/</span></code>. In this case, the <code class="docutils literal notranslate"><span class="pre">features/</span></code>
+subfolder is optional and omitted. This variant is intended for modules that only implement a single feature, to avoid unnecessary nesting.
+For identification of the single feature, the repository name or module name should be replicate the feature name.</p>
+<pre class="literal-block">&lt;module_name&gt;/                       -&gt; Folder containing all artifacts corresponding to one module.
+│                                       As folder optional if the repository only contains a single module.
+├── docs/                            -&gt; Documentation of the module
+│   ├── architecture/                -&gt; Feature architecture
+│   │                                   [<a class="reference internal" href="../../../../score_process/process/process_areas/architecture_design/architecture_workproducts.html#wp__feature_arch" title="wp__feature_arch"><em class="xref need">Feature Architecture (wp__feature_arch)</em></a>], [<a class="reference internal" href="../../../../score_process/process/process_areas/architecture_design/architecture_workproducts.html#wp__sw_arch_verification" title="wp__sw_arch_verification"><em class="xref need">Architecture Verification (wp__sw_arch_verification)</em></a>]
+│   ├── safety_analysis/             -&gt; Safety analysis on feature level
+│   │                                   [<a class="reference internal" href="../../../../score_process/process/process_areas/safety_analysis/safety_analysis_workproducts.html#wp__feature_fmea" title="wp__feature_fmea"><em class="xref need">Feature FMEA (wp__feature_fmea)</em></a>], [<a class="reference internal" href="../../../../score_process/process/process_areas/safety_analysis/safety_analysis_workproducts.html#wp__feature_dfa" title="wp__feature_dfa"><em class="xref need">Feature DFA (wp__feature_dfa)</em></a>]
+│   ├── safety_planning/             -&gt; Feature specific safety workproducts planning
+│   │                                   [<a class="reference internal" href="../../../../score_process/process/process_areas/safety_management/safety_management_workproducts.html#wp__platform_safety_plan" title="wp__platform_safety_plan"><em class="xref need">Platform Safety Plan (wp__platform_safety_plan)</em></a>]
+│   ├── security_analysis/           -&gt; Security analysis on feature level
+│   │                                   [<a class="reference internal" href="../../../../score_process/process/process_areas/security_analysis/security_analysis_workproducts.html#wp__feature_security_analysis" title="wp__feature_security_analysis"><em class="xref need">Feature Security Analysis (wp__feature_security_analysis)</em></a>]
+│   ├── security_planning/           -&gt; Feature specific security workproducts planning
+│   │                                   [<a class="reference internal" href="../../../../score_process/process/process_areas/security_management/security_management_workproducts.html#wp__platform_security_plan" title="wp__platform_security_plan"><em class="xref need">Platform Security Plan (wp__platform_security_plan)</em></a>]
+│   ├── manuals/                     -&gt; Module manual, e.g. integration manual, assumptions of use,
+│   │   │                               safety manual [<a class="reference internal" href="../../../../score_process/process/process_areas/requirements_engineering/requirements_workproducts.html#wp__requirements_comp_aou" title="wp__requirements_comp_aou"><em class="xref need">Component Assumptions of Use (wp__requirements_comp_aou)</em></a>],
+│   │   │                               [<a class="reference internal" href="../../../../score_process/process/process_areas/requirements_engineering/requirements_workproducts.html#wp__requirements_feat_aou" title="wp__requirements_feat_aou"><em class="xref need">Feature Assumptions of Use (wp__requirements_feat_aou)</em></a>],
+│   │   │                               [<a class="reference internal" href="../../../../score_process/process/process_areas/safety_management/safety_management_workproducts.html#wp__module_safety_manual" title="wp__module_safety_manual"><em class="xref need">Module Safety Manual (wp__module_safety_manual)</em></a>],
+│   │   │                               security_manual [<a class="reference internal" href="../../../../score_process/process/process_areas/security_management/security_management_workproducts.html#wp__module_security_manual" title="wp__module_security_manual"><em class="xref need">Module Security Manual (wp__module_security_manual)</em></a>].
+│   │   │                            -&gt; Additional optional user centric documentation (e.g. configuration guide, examples user guide, APIs &amp; usage, performance analysis)
+│   │   ├── config/                  -&gt; Configuration guide (optional)
+│   │   ├── examples/                -&gt; Examples user guide (optional)
+│   │   ├── api_description/         -&gt; APIs detail description (optional)
+│   │   └── performance/             -&gt; Performance analysis (optional)
+│   ├── release/                     -&gt; Module release note [<a class="reference internal" href="../../../../score_process/process/process_areas/release_management/release_workproducts.html#wp__module_sw_release_note" title="wp__module_sw_release_note"><em class="xref need">Module Release Notes (wp__module_sw_release_note)</em></a>],
+│   │                                   module release plan [<a class="reference internal" href="../../../../score_process/process/process_areas/release_management/release_workproducts.html#wp__module_sw_release_plan" title="wp__module_sw_release_plan"><em class="xref need">Module Release Plan (wp__module_sw_release_plan)</em></a>],
+│   ├── safety_mgt/                  -&gt; Module safety plan [<a class="reference internal" href="../../../../score_process/process/process_areas/safety_management/safety_management_workproducts.html#wp__module_safety_plan" title="wp__module_safety_plan"><em class="xref need">Module Safety Plan (wp__module_safety_plan)</em></a>],
+│   │                                   module safety package [<a class="reference internal" href="../../../../score_process/process/process_areas/safety_management/safety_management_workproducts.html#wp__module_safety_package" title="wp__module_safety_package"><em class="xref need">Module Safety Package (wp__module_safety_package)</em></a>],
+│   │                                   formal documents reviews [<a class="reference internal" href="../../../../score_process/process/process_areas/safety_management/safety_management_workproducts.html#wp__fdr_reports" title="wp__fdr_reports"><em class="xref need">Formal Document Review Reports (wp__fdr_reports)</em></a>],
+│   │                                   safety analysis formal reviews [<a class="reference internal" href="../../../../score_process/process/process_areas/safety_management/safety_management_workproducts.html#wp__fdr_reports" title="wp__fdr_reports"><em class="xref need">Formal Document Review Reports (wp__fdr_reports)</em></a>],
+│   │                                   safety tailoring [<a class="reference internal" href="../../../../score_process/process/process_areas/safety_management/safety_management_workproducts.html#wp__safety_tailoring" title="wp__safety_tailoring"><em class="xref need">Tailoring Documents (wp__safety_tailoring)</em></a>]
+│   │                                   safety component classification [<a class="reference internal" href="../../../../score_process/process/process_areas/safety_management/safety_management_workproducts.html#wp__sw_component_class" title="wp__sw_component_class"><em class="xref need">Software component classifi... (wp__sw_component_class)</em></a>]
+│   ├── security_mgt/                -&gt; Module security plan [<a class="reference internal" href="../../../../score_process/process/process_areas/security_management/security_management_workproducts.html#wp__module_security_plan" title="wp__module_security_plan"><em class="xref need">Module Security Plan (wp__module_security_plan)</em></a>],
+│   │                                   module security package [<a class="reference internal" href="../../../../score_process/process/process_areas/security_management/security_management_workproducts.html#wp__module_security_package" title="wp__module_security_package"><em class="xref need">Module Security Package (wp__module_security_package)</em></a>],
+│   │                                   formal documents reviews [<a class="reference internal" href="../../../../score_process/process/process_areas/security_management/security_management_workproducts.html#wp__fdr_reports_security" title="wp__fdr_reports_security"><em class="xref need">Formal Document Review Reports (wp__fdr_reports_security)</em></a>],
+│   │                                   module SW bill of material [<a class="reference internal" href="../../../../score_process/process/process_areas/security_management/security_management_workproducts.html#wp__sw_module_sbom" title="wp__sw_module_sbom"><em class="xref need">Module Software Bill of Mat... (wp__sw_module_sbom)</em></a>]
+│   └── verification_report/         -&gt; Module verification report
+│                                       module verifications [<a class="reference internal" href="../../../../score_process/process/process_areas/verification/verification_workproducts.html#wp__verification_module_ver_report" title="wp__verification_module_ver_report"><em class="xref need">Module Verification Report (wp__verification_module_ver_report)</em></a>],
+└── score/                           -&gt; Folder containing all artifacts corresponding to the components of the module.
+    ├── &lt;component_name&gt;/            -&gt; Components of the module.
+    │   │                               Folder containing all artifacts corresponding to one component.
+    │   ├── docs/                    -&gt; Documentation of the component
+    │   │   ├── architecture/        -&gt; Component architecture (only if lower level components exist)
+    │   │   │                           [<a class="reference internal" href="../../../../score_process/process/process_areas/architecture_design/architecture_workproducts.html#wp__component_arch" title="wp__component_arch"><em class="xref need">Component Architecture (wp__component_arch)</em></a>].
+    │   │   ├── detailed_design/     -&gt; Detailed Design [<a class="reference internal" href="../../../../score_process/process/process_areas/implementation/implementation_workproducts.html#wp__sw_implementation" title="wp__sw_implementation"><em class="xref need">Implementation (wp__sw_implementation)</em></a>] and
+    │   │   │                           Detail design + code inspection [<a class="reference internal" href="../../../../score_process/process/process_areas/implementation/implementation_workproducts.html#wp__sw_implementation_inspection" title="wp__sw_implementation_inspection"><em class="xref need">Implementation Inspection (wp__sw_implementation_inspection)</em></a>],
+    │   │   ├── manuals/             -&gt; User documentation of a single component
+    │   │   │                           (e.g., user manual of a library, optional)
+    │   │   │                           (could contain optional subfolders for configuration guide,
+    │   │   │                           examples user guide, APIs &amp; usage, performance analysis, see module manual folder)
+    │   │   ├── requirements/        -&gt; Component requirements [<a class="reference internal" href="../../../../score_process/process/process_areas/requirements_engineering/requirements_workproducts.html#wp__requirements_comp" title="wp__requirements_comp"><em class="xref need">Component Requirements (wp__requirements_comp)</em></a>],
+    │   │   │                           requirements inspection [<a class="reference internal" href="../../../../score_process/process/process_areas/requirements_engineering/requirements_workproducts.html#wp__requirements_inspect" title="wp__requirements_inspect"><em class="xref need">Requirements Inspection (wp__requirements_inspect)</em></a>]
+    │   │   ├── safety_analysis/     -&gt; Safety analysis on component level (only if component architecture exists)
+    │   │   │                           [<a class="reference internal" href="../../../../score_process/process/process_areas/safety_analysis/safety_analysis_workproducts.html#wp__sw_component_fmea" title="wp__sw_component_fmea"><em class="xref need">Component FMEA (wp__sw_component_fmea)</em></a>], [<a class="reference internal" href="../../../../score_process/process/process_areas/safety_analysis/safety_analysis_workproducts.html#wp__sw_component_dfa" title="wp__sw_component_dfa"><em class="xref need">Component DFA (wp__sw_component_dfa)</em></a>]
+    │   │   └── security_analysis/   -&gt; Security analysis on component level (only if component architecture exists)
+    │   ├── src/                     -&gt; Source files of the component consisting of
+    │   |   │                           Include and source Files [<a class="reference internal" href="../../../../score_process/process/process_areas/implementation/implementation_workproducts.html#wp__sw_implementation" title="wp__sw_implementation"><em class="xref need">Implementation (wp__sw_implementation)</em></a>]
+    │   |   │                           Unit tests [<a class="reference internal" href="../../../../score_process/process/process_areas/verification/verification_workproducts.html#wp__verification_sw_unit_test" title="wp__verification_sw_unit_test"><em class="xref need">Unit test (wp__verification_sw_unit_test)</em></a>]
+    │   |   └── &lt;lower_level_comp&gt;/  -&gt; lower level component following &lt;component_name&gt; folder structure
+    │   └── tests/                   -&gt; Component-level tests (e.g., integration tests)
+    │                                   [<a class="reference internal" href="../../../../score_process/process/process_areas/verification/verification_workproducts.html#wp__verification_comp_int_test" title="wp__verification_comp_int_test"><em class="xref need">Component Integration test (wp__verification_comp_int_test)</em></a>]
+    └── tests/                       -&gt; Module-level tests (e.g., feature integration tests, system tests)
+                                        [<a class="reference internal" href="../../../../score_process/process/process_areas/verification/verification_workproducts.html#wp__verification_feat_int_test" title="wp__verification_feat_int_test"><em class="xref need">Feature Integration test (wp__verification_feat_int_test)</em></a>]</pre>
 </section>
 </section>
 
@@ -756,6 +842,7 @@ README.md                          -&gt; Entrypoint of the repository</pre>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#platform-folder-structure">Platform Folder Structure</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reference-integration-repository-folder-structure">Reference Integration Repository Folder Structure</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-folder-structure">Module Folder Structure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-folder-structure-single-feature-variant">Module Folder Structure (Single-Feature Variant)</a></li>
 </ul>
   </nav></div>
 
