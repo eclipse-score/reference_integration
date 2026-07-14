@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Generated from known_good.json at 2026-07-03T00:00:00+00:00Z
+# Generated from known_good.json at 2026-07-14T00:00:00+00:00Z
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py
 
 bazel_dep(name = "score_baselibs")
@@ -60,15 +60,14 @@ single_version_override(
 )
 
 bazel_dep(name = "score_logging")
-git_override(
+single_version_override(
     module_name = "score_logging",
-    commit = "6282f3a2ec6b1eeeab87c8e9a4435c586bcf9973",
     patch_strip = 1,
     patches = [
         "//patches/logging:002-needs-json-deps-not-dev-dependency.patch",
         "//patches/logging:003-docs-as-code-not-dev-dependency.patch",
     ],
-    remote = "https://github.com/eclipse-score/logging.git",
+    version = "0.2.2",
 )
 
 bazel_dep(name = "score_time")

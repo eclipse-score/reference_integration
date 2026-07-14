@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Generated from known_good.json at 2026-07-03T00:00:00+00:00Z
+# Generated from known_good.json at 2026-07-14T00:00:00+00:00Z
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py
 
 load("@score_tooling//:defs.bzl", "rust_coverage_report")
