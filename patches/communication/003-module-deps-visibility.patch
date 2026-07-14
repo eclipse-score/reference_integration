@@ -2,6 +2,13 @@ diff --git a/MODULE.bazel b/MODULE.bazel
 index 5b4a75cd..5b4b7e17 100644
 --- a/MODULE.bazel
 +++ b/MODULE.bazel
+@@ -363,5 +363,5 @@
+ bazel_dep(name = "aspect_rules_lint", version = "2.5.0", dev_dependency = True)
+ bazel_dep(name = "rules_shell", version = "0.6.1", dev_dependency = True)
+-bazel_dep(name = "rules_build_error", version = "0.11.0", dev_dependency = True)
++bazel_dep(name = "rules_build_error", version = "0.11.0")
+ bazel_dep(name = "google_benchmark", version = "1.9.5", dev_dependency = True)
+ bazel_dep(name = "buildifier_prebuilt", version = "8.5.1", dev_dependency = True)
 @@ -369,8 +369,7 @@ git_override(
  download_archive(
      name = "json_schema_validator",
