@@ -129,8 +129,8 @@ Communication
 Persistency
 ~~~~~~~~~~~
 
-- **Version:** ``TBD``
-- **Release notes**: TBD
+- **Version:** ``v0.3.4``
+- **Release notes**: `Persistency release notes <https://github.com/eclipse-score/persistency/releases/tag/v0.3.4>`_
 
 
 Logging
