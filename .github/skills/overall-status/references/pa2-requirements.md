@@ -38,6 +38,10 @@ embedding) see [common.md C4](./common.md#c4-rst-formatting-rules).
   (`.trlc`, not parsed) — render the Component Req cell as
   `0/0 comp_req [TRLC]` plus a link to the `.trlc` file (see
   [C4.2](./common.md#c42-source-links--mandatory)).
+- **Per-link status markers (Req. Inspection):** prefix every
+  `chklst_req_inspection.rst` link with ✅/🔄/❌ by its document `:status:`
+  (count of ✅ must equal the `valid` numerator) — see
+  [common.md C4.2.1](./common.md#c421-per-link-status-markers--inspection--report-cells-mandatory).
 
 ---
 
