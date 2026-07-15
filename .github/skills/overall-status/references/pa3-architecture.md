@@ -36,6 +36,11 @@ Never counted as Arch directives: `stkh_req`, `tool_req`, `document`,
 `needtable`, `needpie`, `needextend`, `figure`, `uml`, `note`, `attention`,
 `toctree`, `grid`.
 
+- **Per-link status markers (Arch. Inspection):** prefix every
+  `chklst_arc_inspection.rst` link with ✅/🔄/❌ by its document `:status:`
+  (count of ✅ must equal the `valid` numerator) — see
+  [common.md C4.2.1](./common.md#c421-per-link-status-markers--inspection--report-cells-mandatory).
+
 ---
 
 ## Path filters

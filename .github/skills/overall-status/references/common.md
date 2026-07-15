@@ -298,6 +298,61 @@ line. Rules:
   to a plain `**bold paragraph**` — the admonition class is what makes
   it visually prominent.
 
+### C4.2.1 Per-link status markers — Inspection & Report cells (mandatory)
+
+Inspection cells (`Req. Inspection`, `Arch. Inspection`, `Impl. Inspection`)
+and the **Module Verification Report** cells routinely list many source
+links (Baselibs alone has 10 checklists per inspection column). A reader
+cannot tell which checklist is finished from the aggregate `3/10` count
+alone. Therefore **every source link in these cells MUST be prefixed with a
+status marker** derived from the *linked* file's document-level `:status:`
+(the same `:status:` that drives the cell count — see
+[C3.3](#c33-inspections)):
+
+| Linked file `:status:` | Marker |
+|---|---|
+| `valid`                | ✅ |
+| `draft`                | 🔄 |
+| `invalid`              | ❌ |
+| missing / no `:status:`| ⚠️ (investigate — usually a wrong path) |
+
+Format — the marker sits **between** the line-block bar and the backtick:
+
+```rst
+   - 🔄 30% (3/10)
+
+     | ✅ `baselibs <…/docs/requirements/chklst_req_inspection.rst>`__
+     | ✅ `bitmanipulation <…/docs/requirements/chklst_req_inspection.rst>`__
+     | 🔄 `concurrency <…/docs/requirements/chklst_req_inspection.rst>`__
+```
+
+Hard rules:
+- Applies to **every** cell whose links point at `chklst_*_inspection.rst`
+  files (`Req./Arch./Impl. Inspection`) **and** at
+  `module_verification_report.rst` / `platform_ver_report.rst` files.
+- The marker reflects the **document-level** `:status:` of the *linked*
+  file (parse with `count_checklist_status`, see
+  [Step 2](#step-2--count-directives)), **not** the aggregate cell status.
+- Self-check: the number of ✅ markers in a cell **MUST equal** the `valid`
+  numerator of that cell (e.g. `3/10` ⇒ exactly three ✅). A mismatch means
+  a stale marker or a wrong link.
+- Requirements / Architecture / Detailed-Design / Code cells (which link
+  `index.rst` requirement/architecture files, **not** checklists) do **not**
+  get per-link markers — only inspection and report links do.
+- Markers are additive to the existing link rules ([C4.2](#c42-source-links--mandatory)):
+  keep the component-name label, the pinned-ref URL and the no-cap listing.
+
+Helper (renders one marked inspection/report link):
+
+```python
+INSP_MARK = {"valid": "✅", "draft": "🔄", "invalid": "❌"}
+
+def insp_link(label, url, status):
+    """status is the document :status: of the linked chklst_*/report file,
+    from count_checklist_status()'s underlying :status: match."""
+    return f"| {INSP_MARK.get(status, '⚠️')} `{label} <{url}>`__"
+```
+
 ### C4.3 Per-PA progress figures
 
 Each Process Area embeds one SVG figure under `docs/_assets/`:

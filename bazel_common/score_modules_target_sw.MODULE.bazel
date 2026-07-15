@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Generated from known_good.json at 2026-07-03T00:00:00+00:00Z
+# Generated from known_good.json at 2026-07-14T00:00:00+00:00Z
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py
 
 bazel_dep(name = "score_baselibs")
@@ -25,64 +25,58 @@ single_version_override(
 )
 
 bazel_dep(name = "score_communication")
-git_override(
+single_version_override(
     module_name = "score_communication",
-    commit = "0e0640998096049a8dd65a4173b03a988d5a85a7",
     patch_strip = 1,
     patches = [
         "//patches/communication:001-expose-comm-examples.patch",
         "//patches/communication:003-module-deps-visibility.patch",
     ],
-    remote = "https://github.com/eclipse-score/communication.git",
+    version = "0.3.0",
 )
 
 bazel_dep(name = "score_persistency")
-git_override(
+single_version_override(
     module_name = "score_persistency",
-    commit = "35a937f34ff5b2daad8df56e36de76687f19d631",
     patch_strip = 1,
     patches = [
         "//patches/persistency:001-fix-doc.patch",
     ],
-    remote = "https://github.com/eclipse-score/persistency.git",
+    version = "0.3.4",
 )
 
 bazel_dep(name = "score_orchestrator")
-git_override(
+single_version_override(
     module_name = "score_orchestrator",
-    commit = "c5bcbd39fc6e124a26b1d66abbfc696a3319c2a4",
-    remote = "https://github.com/eclipse-score/orchestrator.git",
+    version = "0.1.1",
 )
 
 bazel_dep(name = "score_kyron")
-git_override(
+single_version_override(
     module_name = "score_kyron",
-    commit = "cc72f599cc0c04a4e80c12a204f57e59a48d284a",
-    remote = "https://github.com/eclipse-score/kyron.git",
+    version = "0.1.3",
 )
 
 bazel_dep(name = "score_lifecycle_health")
-git_override(
+single_version_override(
     module_name = "score_lifecycle_health",
-    commit = "654ac348e1cb9327e5c8c4d84fd0028ad3ef2714",
-    remote = "https://github.com/eclipse-score/lifecycle.git",
+    version = "0.3.0",
 )
 
 bazel_dep(name = "score_logging")
-git_override(
+single_version_override(
     module_name = "score_logging",
-    commit = "6282f3a2ec6b1eeeab87c8e9a4435c586bcf9973",
     patch_strip = 1,
     patches = [
         "//patches/logging:002-needs-json-deps-not-dev-dependency.patch",
         "//patches/logging:003-docs-as-code-not-dev-dependency.patch",
+        "//patches/logging:004-add-valid-from-to-docgen-example-req.patch",
     ],
-    remote = "https://github.com/eclipse-score/logging.git",
+    version = "0.2.2",
 )
 
 bazel_dep(name = "score_time")
-git_override(
+single_version_override(
     module_name = "score_time",
-    commit = "414d4ce4d984e461db8153c95eceb9d5a2020f57",
-    remote = "https://github.com/eclipse-score/time.git",
+    version = "0.0.1",
 )

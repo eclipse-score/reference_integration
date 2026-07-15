@@ -67,17 +67,12 @@ bazel_dep(name = "buildifier_prebuilt", version = "8.5.1")
 bazel_dep(name = "score_rust_policies", version = "0.0.5")
 
 # TRLC dependency for requirements traceability
-bazel_dep(name = "trlc")
-git_override(
-    module_name = "trlc",
-    commit = "8d25f639ff44976893d7866ba421a04db5698ebe",
-    remote = "https://github.com/bmw-software-engineering/trlc.git",
-)
+bazel_dep(name = "trlc", version = "3.0.0")
 
 # Lobster dependency for requirements tracing (required by score_tooling)
 bazel_dep(name = "lobster", version = "0.0.0")
 git_override(
     module_name = "lobster",
-    commit = "2792e2daee2cf524fdc7b1545fd3537791ebc36c",
+    commit = "07382c33f95e22992e0f8788c0537ec06877e51f",
     remote = "https://github.com/bmw-software-engineering/lobster.git",
 )

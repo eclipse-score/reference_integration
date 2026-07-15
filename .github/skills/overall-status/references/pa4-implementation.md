@@ -34,6 +34,12 @@ estimate (Code), directive counting (Detailed Design) and checklist status
 | Detailed Design | `dd` | `dd`, `dd_sta`, `dd_dyn` |
 | Impl. Inspection | `chklst` | document `:status:` of each `chklst_impl_inspection.rst` / `chklst_dd_inspection.rst` (see [C3.3](./common.md#c33-inspections)) |
 
+- **Per-link status markers (Impl. Inspection):** prefix every
+  `chklst_impl_inspection.rst` / `chklst_dd_inspection.rst` link with
+  ✅/🔄/❌ by its document `:status:` (count of ✅ must equal the `valid`
+  numerator) — see
+  [common.md C4.2.1](./common.md#c421-per-link-status-markers--inspection--report-cells-mandatory).
+
 ### Lines of Code (Code column)
 
 LOC counts every line in source files (`.cpp .h .c .rs .py`) outside `docs/`,
