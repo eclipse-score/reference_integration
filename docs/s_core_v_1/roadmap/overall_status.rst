@@ -19,7 +19,7 @@ Overall Status
 
 .. important::
 
-   **Data collected on: 2026-07-14**
+   **Data collected on: 2026-07-15**
 
 .. note::
 
@@ -245,10 +245,10 @@ Process Area 2 — Requirements Engineering
             | `ipc <https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/communication/ipc/docs/requirements/index.rst>`__
      - ✅ Available (363/363 comp_req [TRLC] + 33/33 AoU)
 
-            | `ipc <https://github.com/eclipse-score/communication/blob/0e0640998096049a8dd65a4173b03a988d5a85a7/score/mw/com/dependability/requirements/component_requirements/component_requirements_ipc.trlc>`__ (310) [TRLC]
-            | `ipc_fields <https://github.com/eclipse-score/communication/blob/0e0640998096049a8dd65a4173b03a988d5a85a7/score/mw/com/dependability/requirements/component_requirements/component_requirements_ipc_fields.trlc>`__ (17) [TRLC]
-            | `ipc_methods <https://github.com/eclipse-score/communication/blob/0e0640998096049a8dd65a4173b03a988d5a85a7/score/mw/com/dependability/requirements/component_requirements/component_requirements_ipc_methods.trlc>`__ (3) [TRLC]
-            | `message_passing <https://github.com/eclipse-score/communication/blob/0e0640998096049a8dd65a4173b03a988d5a85a7/score/message_passing/dependability/requirements/component_requirements.trlc>`__ (33) [TRLC]
+            | `ipc <https://github.com/eclipse-score/communication/blob/6b1a78b6303da54c9773d4fae4d8a07a879c9ebb/score/mw/com/dependability/requirements/component_requirements/component_requirements_ipc.trlc>`__ (310) [TRLC]
+            | `ipc_fields <https://github.com/eclipse-score/communication/blob/6b1a78b6303da54c9773d4fae4d8a07a879c9ebb/score/mw/com/dependability/requirements/component_requirements/component_requirements_ipc_fields.trlc>`__ (17) [TRLC]
+            | `ipc_methods <https://github.com/eclipse-score/communication/blob/6b1a78b6303da54c9773d4fae4d8a07a879c9ebb/score/mw/com/dependability/requirements/component_requirements/component_requirements_ipc_methods.trlc>`__ (3) [TRLC]
+            | `message_passing <https://github.com/eclipse-score/communication/blob/6b1a78b6303da54c9773d4fae4d8a07a879c9ebb/score/message_passing/dependability/requirements/component_requirements.trlc>`__ (33) [TRLC]
             | `aou_req <https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/modules/communication/docs/requirements/aou_req.rst>`__
      - ❌ Open
    * - Logging
@@ -257,8 +257,8 @@ Process Area 2 — Requirements Engineering
             | `logging <https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/analysis-infra/logging/docs/requirements/mw-fr_logging_req.rst>`__
      - ✅ Available (22/22 comp_req)
 
-            | `datarouter <https://github.com/eclipse-score/logging/blob/6282f3a2ec6b1eeeab87c8e9a4435c586bcf9973/docs/components/datarouter/requirements.rst>`__
-            | `log <https://github.com/eclipse-score/logging/blob/6282f3a2ec6b1eeeab87c8e9a4435c586bcf9973/docs/components/mw/log/requirements.rst>`__
+            | `datarouter <https://github.com/eclipse-score/logging/blob/9faad72199cbc2259b1fe4d712c5c769cdfd954e/docs/components/datarouter/requirements.rst>`__
+            | `log <https://github.com/eclipse-score/logging/blob/9faad72199cbc2259b1fe4d712c5c769cdfd954e/docs/components/mw/log/requirements.rst>`__
      - ❌ Open
    * - Persistency
      - ✅ Available (37/37)
@@ -266,11 +266,11 @@ Process Area 2 — Requirements Engineering
             | `persistency <https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/persistency/requirements/index.rst>`__
      - ✅ Available (35/35 comp_req)
 
-            | `kvs <https://github.com/eclipse-score/persistency/blob/35a937f34ff5b2daad8df56e36de76687f19d631/score/kvs/docs/requirements/index.rst>`__
+            | `kvs <https://github.com/eclipse-score/persistency/blob/71dafa712fb514b4705f1b914e1f72b3e385da5b/score/kvs/docs/requirements/index.rst>`__
      - ✅ Available (2/2)
 
             | ✅ `persistency <https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/persistency/requirements/chklst_req_inspection.rst>`__
-            | ✅ `kvs <https://github.com/eclipse-score/persistency/blob/35a937f34ff5b2daad8df56e36de76687f19d631/score/kvs/docs/requirements/chklst_req_inspection.rst>`__
+            | ✅ `kvs <https://github.com/eclipse-score/persistency/blob/71dafa712fb514b4705f1b914e1f72b3e385da5b/score/kvs/docs/requirements/chklst_req_inspection.rst>`__
    * - Time
      - ✅ Available (15/15)
 
@@ -434,7 +434,7 @@ Process Area 3 — Architecture Design
      - ✅ Available (2/2)
 
             | `logging <https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/analysis-infra/logging/docs/architecture/index.rst>`__
-            | `logging <https://github.com/eclipse-score/logging/blob/6282f3a2ec6b1eeeab87c8e9a4435c586bcf9973/docs/features/logging/architecture/index.rst>`__
+            | `logging <https://github.com/eclipse-score/logging/blob/9faad72199cbc2259b1fe4d712c5c769cdfd954e/docs/features/logging/architecture/index.rst>`__
      - ✅ Available (3/3)
 
             | `logging <https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/modules/logging/logging/docs/architecture/index.rst>`__
@@ -443,14 +443,14 @@ Process Area 3 — Architecture Design
      - ✅ Available (9/9)
 
             | `persistency <https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/persistency/architecture/index.rst>`__
-            | `persistency <https://github.com/eclipse-score/persistency/blob/35a937f34ff5b2daad8df56e36de76687f19d631/docs/features/persistency/architecture/index.rst>`__
+            | `persistency <https://github.com/eclipse-score/persistency/blob/71dafa712fb514b4705f1b914e1f72b3e385da5b/docs/features/persistency/architecture/index.rst>`__
      - 🔄 0% (0/3)
 
-            | `kvs <https://github.com/eclipse-score/persistency/blob/35a937f34ff5b2daad8df56e36de76687f19d631/score/kvs/docs/architecture/index.rst>`__
+            | `kvs <https://github.com/eclipse-score/persistency/blob/71dafa712fb514b4705f1b914e1f72b3e385da5b/score/kvs/docs/architecture/index.rst>`__
      - 🔄 0% (0/2)
 
-            | 🔄 `persistency <https://github.com/eclipse-score/persistency/blob/35a937f34ff5b2daad8df56e36de76687f19d631/docs/features/persistency/architecture/chklst_arc_inspection.rst>`__
-            | 🔄 `kvs <https://github.com/eclipse-score/persistency/blob/35a937f34ff5b2daad8df56e36de76687f19d631/score/kvs/docs/architecture/chklst_arc_inspection.rst>`__
+            | 🔄 `persistency <https://github.com/eclipse-score/persistency/blob/71dafa712fb514b4705f1b914e1f72b3e385da5b/docs/features/persistency/architecture/chklst_arc_inspection.rst>`__
+            | 🔄 `kvs <https://github.com/eclipse-score/persistency/blob/71dafa712fb514b4705f1b914e1f72b3e385da5b/score/kvs/docs/architecture/chklst_arc_inspection.rst>`__
    * - Time
      - ❌ Open
      - ❌ Open
@@ -608,7 +608,7 @@ Process Area 4 — Implementation
      - ❌ Open
      - 🔄 0% (0/1)
 
-            | 🔄 `kvs <https://github.com/eclipse-score/persistency/blob/35a937f34ff5b2daad8df56e36de76687f19d631/score/kvs/docs/detailed_design/chklst_impl_inspection.rst>`__
+            | 🔄 `kvs <https://github.com/eclipse-score/persistency/blob/71dafa712fb514b4705f1b914e1f72b3e385da5b/score/kvs/docs/detailed_design/chklst_impl_inspection.rst>`__
    * - Time
      - ✅ Available
 
@@ -789,8 +789,8 @@ Process Area 5 — Verification
             | 3301 tests
      - 🔄
 
-            | **C0:** 83.7%
-            | **C1:** 54.8% (cpp)
+            | **C0:** 96.22%
+            | **C1:** 94.19% (cpp)
      - ✅ Available
 
             | 63 tests
@@ -837,7 +837,7 @@ Process Area 5 — Verification
      - ❌ Open
      - ✅ Available
 
-            | ✅ `verification <https://github.com/eclipse-score/persistency/blob/35a937f34ff5b2daad8df56e36de76687f19d631/docs/verification_report/module_verification_report.rst>`__
+            | ✅ `verification <https://github.com/eclipse-score/persistency/blob/71dafa712fb514b4705f1b914e1f72b3e385da5b/docs/verification_report/module_verification_report.rst>`__
    * - Time
      - ✅ Available
 
