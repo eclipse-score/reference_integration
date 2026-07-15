@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 """
-Feature integration tests for the communication module (LoLa / mw::com).
+ITF tests for the communication module (LoLa / mw::com).
 
 Tests exercise the deployed ipc_bridge example on the target image as two
 separate OS processes communicating over real shared memory, and assert on

@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 """
-Helpers for the communication (LoLa / mw::com) feature integration tests.
+Helpers for the communication (LoLa / mw::com) ITF tests.
 
 The checks in this module are derived from observable data produced by the
 deployed ipc_bridge example, not from strings the application echoes about
