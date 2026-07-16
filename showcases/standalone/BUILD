@@ -50,3 +50,19 @@ score_pkg_bundle(
     ],
     package_dir = "standalone",
 )
+
+score_pkg_bundle(
+    name = "logging",
+    bins = [
+        "@score_logging//score/test/component/logging_app:logging_app",
+        "@score_logging//score/test/component/dlt_generator_app:dlt_generator",
+    ],
+    config_data = [
+        "//showcases/standalone:logging.score.json",
+    ],
+    custom_layout = {
+        "@score_logging//score/test/component/logging_app:etc/logging.json": "logging_app/etc/logging.json",
+        "@score_logging//score/test/component/dlt_generator_app:etc/logging.json": "dlt_generator/etc/logging.json",
+    },
+    package_dir = "standalone",
+)
