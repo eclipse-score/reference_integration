@@ -15,6 +15,10 @@ exports_files(
         "dlt_config_qnx_x86_64.json",
         "dlt_config_x86_64.json",
         "qemu_bridge_config.json",
+        "lifecycle_daemon_config.json",
+        "lifecycle_daemon_parallel_launch_config.json",
+        "lifecycle_daemon_retry_recovers_config.json",
+        "lifecycle_daemon_retry_exhausts_config.json",
     ],
 )
 
