@@ -35,9 +35,11 @@ compile_pip_requirements(
 )
 
 # Tests targets
+#
 score_py_pytest(
-    name = "fit_rust",
-    srcs = glob(["tests/**/*.py"]),
+    name = "fit_rust_orch",
+    timeout = "long",
+    srcs = glob(["tests/basic/**/*.py"]),
     args = [
         "-m rust",
         "--traces=all",
@@ -58,8 +60,78 @@ score_py_pytest(
 )
 
 score_py_pytest(
-    name = "fit_cpp",
-    srcs = glob(["tests/**/*.py"]),
+    name = "fit_rust_persistency",
+    timeout = "long",
+    srcs = glob(["tests/persistency/**/*.py"]),
+    args = [
+        "-m rust",
+        "--traces=all",
+        "--rust-target-path=$(rootpath //feature_integration_tests/test_scenarios/rust:rust_test_scenarios)",
+    ],
+    data = [
+        "conftest.py",
+        "fit_scenario.py",
+        "persistency_scenario.py",
+        "test_properties.py",
+        "//feature_integration_tests/test_scenarios/rust:rust_test_scenarios",
+    ],
+    env = {
+        "RUST_BACKTRACE": "1",
+    },
+    pytest_config = "//:pyproject.toml",
+    deps = all_requirements,
+)
+
+score_py_pytest(
+    name = "fit_rust_lifecycle",
+    timeout = "long",
+    srcs = glob(["tests/lifecycle/**/*.py"]),
+    args = [
+        "-m rust",
+        "--traces=all",
+        "--rust-target-path=$(rootpath //feature_integration_tests/test_scenarios/rust:rust_lifecycle_test_scenarios)",
+    ],
+    data = [
+        "conftest.py",
+        "daemon_helpers.py",
+        "fit_scenario.py",
+        "lifecycle_scenario.py",
+        "test_properties.py",
+        "//feature_integration_tests/configs:lifecycle_daemon_config",
+        "//feature_integration_tests/test_scenarios/rust:rust_lifecycle_test_scenarios",
+        "@score_lifecycle_health//examples/control_application:control_daemon",
+        "@score_lifecycle_health//examples/control_application:lmcontrol",
+        "@score_lifecycle_health//examples/cpp_supervised_app",
+        "@score_lifecycle_health//examples/rust_supervised_app",
+        "@score_lifecycle_health//score/launch_manager",
+    ],
+    env = {
+        "FIT_CPP_SUPERVISED_APP_PATH": "$(rootpath @score_lifecycle_health//examples/cpp_supervised_app)",
+        "FIT_LAUNCH_MANAGER_PATH": "$(rootpath @score_lifecycle_health//score/launch_manager)",
+        "FIT_LIFECYCLE_DAEMON_CONFIG_PATH": "$(rootpath //feature_integration_tests/configs:lifecycle_daemon_config)",
+        "FIT_RUST_SUPERVISED_APP_PATH": "$(rootpath @score_lifecycle_health//examples/rust_supervised_app)",
+        "RUST_BACKTRACE": "1",
+    },
+    env_inherit = ["FIT_ENABLE_SETCAP"],
+    pytest_config = "//:pyproject.toml",
+    # Lifecycle tests drive a shared launch_manager daemon and cannot run concurrently with each other.
+    tags = ["exclusive"],
+    deps = all_requirements,
+)
+
+test_suite(
+    name = "fit_rust",
+    tests = [
+        ":fit_rust_lifecycle",
+        ":fit_rust_orch",
+        ":fit_rust_persistency",
+    ],
+)
+
+score_py_pytest(
+    name = "fit_cpp_persistency",
+    timeout = "long",
+    srcs = glob(["tests/persistency/**/*.py"]),
     args = [
         "-m cpp",
         "--traces=all",
@@ -74,6 +146,50 @@ score_py_pytest(
     ],
     pytest_config = "//:pyproject.toml",
     deps = all_requirements,
+)
+
+score_py_pytest(
+    name = "fit_cpp_lifecycle",
+    timeout = "long",
+    srcs = glob(["tests/lifecycle/**/*.py"]),
+    args = [
+        "-m cpp",
+        "--traces=all",
+        "--cpp-target-path=$(rootpath //feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios)",
+    ],
+    data = [
+        "conftest.py",
+        "daemon_helpers.py",
+        "fit_scenario.py",
+        "lifecycle_scenario.py",
+        "test_properties.py",
+        "//feature_integration_tests/configs:lifecycle_daemon_config",
+        "//feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios",
+        "@score_lifecycle_health//examples/control_application:control_daemon",
+        "@score_lifecycle_health//examples/control_application:lmcontrol",
+        "@score_lifecycle_health//examples/cpp_supervised_app",
+        "@score_lifecycle_health//examples/rust_supervised_app",
+        "@score_lifecycle_health//score/launch_manager",
+    ],
+    env = {
+        "FIT_CPP_SUPERVISED_APP_PATH": "$(rootpath @score_lifecycle_health//examples/cpp_supervised_app)",
+        "FIT_LAUNCH_MANAGER_PATH": "$(rootpath @score_lifecycle_health//score/launch_manager)",
+        "FIT_LIFECYCLE_DAEMON_CONFIG_PATH": "$(rootpath //feature_integration_tests/configs:lifecycle_daemon_config)",
+        "FIT_RUST_SUPERVISED_APP_PATH": "$(rootpath @score_lifecycle_health//examples/rust_supervised_app)",
+    },
+    env_inherit = ["FIT_ENABLE_SETCAP"],
+    pytest_config = "//:pyproject.toml",
+    # Lifecycle tests drive a shared launch_manager daemon and cannot run concurrently with each other.
+    tags = ["exclusive"],
+    deps = all_requirements,
+)
+
+test_suite(
+    name = "fit_cpp",
+    tests = [
+        ":fit_cpp_lifecycle",
+        ":fit_cpp_persistency",
+    ],
 )
 
 test_suite(

@@ -1,0 +1,103 @@
+{
+    "schema_version": 1,
+    "defaults": {
+        "deployment_config": {
+            "bin_dir": "/tmp/lifecycle_fit/bin",
+            "ready_timeout": 2.0,
+            "shutdown_timeout": 2.0,
+            "ready_recovery_action": {
+                "restart": {
+                    "number_of_attempts": 0
+                }
+            },
+            "recovery_action": {
+                "switch_run_target": {
+                    "run_target": "fallback_run_target"
+                }
+            },
+            "sandbox": {
+                "uid": 1001,
+                "gid": 1001,
+                "scheduling_policy": "SCHED_OTHER",
+                "scheduling_priority": 0
+            }
+        },
+        "component_properties": {
+            "application_profile": {
+                "application_type": "Reporting",
+                "is_self_terminating": false,
+                "alive_supervision": {
+                    "reporting_cycle": 0.1,
+                    "min_indications": 1,
+                    "max_indications": 3,
+                    "failed_cycles_tolerance": 1
+                }
+            },
+            "ready_condition": {
+                "process_state": "Running"
+            }
+        }
+    },
+    "components": {
+        "cpp_supervised_app": {
+            "component_properties": {
+                "binary_name": "cpp_supervised_app",
+                "application_profile": {
+                    "application_type": "Reporting_And_Supervised"
+                },
+                "process_arguments": [
+                    "-d50"
+                ]
+            },
+            "deployment_config": {
+                "environmental_variables": {
+                    "PROCESSIDENTIFIER": "cpp_supervised_app",
+                    "IDENTIFIER": "cpp_supervised_app"
+                }
+            }
+        },
+        "rust_supervised_app": {
+            "component_properties": {
+                "binary_name": "rust_supervised_app",
+                "depends_on": [
+                    "cpp_supervised_app"
+                ],
+                "application_profile": {
+                    "application_type": "Reporting_And_Supervised"
+                },
+                "process_arguments": [
+                    "-d50"
+                ]
+            },
+            "deployment_config": {
+                "environmental_variables": {
+                    "PROCESSIDENTIFIER": "rust_supervised_app",
+                    "IDENTIFIER": "rust_supervised_app"
+                }
+            }
+        }
+    },
+    "run_targets": {
+        "Startup": {
+            "depends_on": [
+                "cpp_supervised_app",
+                "rust_supervised_app"
+            ],
+            "recovery_action": {
+                "switch_run_target": {
+                    "run_target": "fallback_run_target"
+                }
+            }
+        }
+    },
+    "initial_run_target": "Startup",
+    "alive_supervision": {
+        "evaluation_cycle": 0.05
+    },
+    "fallback_run_target": {
+        "depends_on": [
+            "cpp_supervised_app",
+            "rust_supervised_app"
+        ]
+    }
+}
