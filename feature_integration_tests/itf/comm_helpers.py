@@ -120,13 +120,19 @@ def run_event_exchange(
     recv_extra = "" if hash_check else " -d"
     manifest_arg = f" -s {manifest}" if manifest else ""
 
+    # The producer is started in the background but its PID is captured and
+    # killed once the consumer finishes, so a long-running producer never
+    # outlives the test and collides with the next one on the shared target
+    # (two providers offering the same instance make the next consumer hang).
     command = (
         f"cd {COMM_CWD} && rm -f {send_log} {recv_log} && "
-        f"( {IPC_BRIDGE_BIN} -n {send_cycles} -t {cycle_time_ms} -m send{manifest_arg} "
-        f"> {send_log} 2>&1 & ) && "
+        f"{{ {IPC_BRIDGE_BIN} -n {send_cycles} -t {cycle_time_ms} -m send{manifest_arg} "
+        f"> {send_log} 2>&1 & SEND_PID=$!; }} && "
         f"sleep {startup_delay_s} && "
         f"{IPC_BRIDGE_BIN} -n {recv_cycles} -t {cycle_time_ms} -m recv{recv_extra}{manifest_arg} "
-        f"> {recv_log} 2>&1 ; echo RECV_EXIT=$?"
+        f"> {recv_log} 2>&1 ; RECV_RC=$? ; "
+        f"kill $SEND_PID 2>/dev/null ; wait $SEND_PID 2>/dev/null ; "
+        f"echo RECV_EXIT=$RECV_RC"
     )
     _, out = target.execute(command)
     recv_exit_code = _shell_exit_marker(out.decode(errors="replace"))
@@ -245,6 +251,15 @@ def run_consumer_with_manifest(
 # root or CAP_SETUID, i.e. it works if the ITF target container already runs
 # as root, mirroring how test_remote_logging.py starts datarouter without
 # invoking sudo).
+#
+# This SHM-open denial signature is only reachable on Linux. On QNX, a
+# consumer launched under a lower-privilege UID aborts earlier, at
+# MessagePassingService endpoint registration ("Failed to start listening ...
+# Operation not permitted"), because that registration itself requires
+# privilege -- so an excluded UID never reaches the SHM-open ACL. A control
+# run in which the excluded UID was added to allowedConsumer failed
+# identically, confirming this is a generic QNX IPC-privilege limitation, not
+# allowedConsumer enforcement. The isolation test therefore skips on QNX.
 
 DENIED_CONSUMER_UID = 64000
 
@@ -351,18 +366,21 @@ def run_acl_isolation_scenario(
     denied_log = "/tmp/comm_acl_recv_denied.log"
     denied_prefix = as_uid_prefix(target, DENIED_CONSUMER_UID)
 
+    # As in run_event_exchange, capture the producer PID and kill it after both
+    # consumers finish so it does not leak onto the shared target.
     command = (
         f"cd {COMM_CWD} && rm -f {send_log} {allowed_log} {denied_log} && "
         f"chmod 666 {manifest_path} && "
-        f"( {IPC_BRIDGE_BIN} -n {send_cycles} -t {cycle_time_ms} -m send -s {manifest_path} "
-        f"> {send_log} 2>&1 & ) && "
+        f"{{ {IPC_BRIDGE_BIN} -n {send_cycles} -t {cycle_time_ms} -m send -s {manifest_path} "
+        f"> {send_log} 2>&1 & SEND_PID=$!; }} && "
         f"sleep {startup_delay_s} && "
         f"( {IPC_BRIDGE_BIN} -n {recv_cycles} -t {cycle_time_ms} -m recv -s {manifest_path} "
         f"> {allowed_log} 2>&1 & ALLOWED_PID=$! ; "
         f"{denied_prefix}timeout 8 {IPC_BRIDGE_BIN} -n {recv_cycles} -t {cycle_time_ms} -m recv "
         f"-s {manifest_path} > {denied_log} 2>&1 ; DENIED_EXIT=$? ; "
         f"wait $ALLOWED_PID ; ALLOWED_EXIT=$? ; "
-        f"echo ALLOWED_EXIT=$ALLOWED_EXIT ; echo DENIED_EXIT=$DENIED_EXIT )"
+        f"echo ALLOWED_EXIT=$ALLOWED_EXIT ; echo DENIED_EXIT=$DENIED_EXIT ) ; "
+        f"kill $SEND_PID 2>/dev/null ; wait $SEND_PID 2>/dev/null"
     )
     _, out = target.execute(command)
     decoded = out.decode(errors="replace")
