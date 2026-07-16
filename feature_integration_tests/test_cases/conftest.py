@@ -15,6 +15,39 @@ from pathlib import Path
 import pytest
 from testing_utils import BazelTools
 
+try:
+    # Private API - not guaranteed stable across pytest versions.
+    from _pytest.mark.expression import Expression
+except ImportError:
+    Expression = None
+
+_DEFAULT_RUST_TARGET = "//feature_integration_tests/test_scenarios/rust:rust_test_scenarios"
+
+
+def _selected_versions(session: pytest.Session) -> set[str]:
+    """Return the scenario variants explicitly requested by the mark expression.
+
+    Uses pytest's own marker expression evaluator so that logical operators and
+    negations are respected. For example, ``-m "not rust"`` must *not* select the
+    Rust build, while a plain substring check would incorrectly match it.
+    Falls back to all variants when no expression is given or parsing fails.
+    """
+    mark_expression = session.config.option.markexpr or ""
+    if not mark_expression or Expression is None:
+        return {"rust", "cpp"}
+    try:
+        expr = Expression.compile(mark_expression)
+        # pytest 9's MatcherNameAdapter.__call__ forwards **kwargs to the matcher (needed for
+        # registered markers with args, e.g. `test_properties(x=1)`), so a matcher that only
+        # accepts `name` raises TypeError for an expression like `"rust and test_properties(x=1)"`.
+        # Keep evaluate() inside this try so that also falls back to all variants.
+        selected_versions = {
+            version for version in ("rust", "cpp") if expr.evaluate(lambda name, **_kwargs: name == version)
+        }
+    except Exception:  # noqa: BLE001 – malformed expression; fall back to all variants
+        return {"rust", "cpp"}
+    return selected_versions or {"rust", "cpp"}
+
 
 # Cmdline options
 def pytest_addoption(parser):
@@ -31,7 +64,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--rust-target-name",
         type=str,
-        default="//feature_integration_tests/test_scenarios/rust:rust_test_scenarios",
+        default=_DEFAULT_RUST_TARGET,
         help="Rust test scenario executable target.",
     )
     parser.addoption(
@@ -88,18 +121,21 @@ def pytest_sessionstart(session):
         # Build scenarios.
         if session.config.getoption("--build-scenarios"):
             build_timeout = session.config.getoption("--build-scenarios-timeout")
+            selected_versions = _selected_versions(session)
 
             # Build Rust test scenarios.
-            print("Building Rust test scenarios executable...")
-            rust_tools = BazelTools(option_prefix="rust", build_timeout=build_timeout)
-            rust_target_name = session.config.getoption("--rust-target-name")
-            rust_tools.build(rust_target_name)
+            if "rust" in selected_versions:
+                print("Building Rust test scenarios executable...")
+                rust_tools = BazelTools(option_prefix="rust", build_timeout=build_timeout)
+                rust_target_name = session.config.getoption("--rust-target-name")
+                rust_tools.build(rust_target_name)
 
             # Build C++ test scenarios.
-            print("Building C++ test scenarios executable...")
-            cpp_tools = BazelTools(option_prefix="cpp", build_timeout=build_timeout)
-            cpp_target_name = session.config.getoption("--cpp-target-name")
-            cpp_tools.build(cpp_target_name)
+            if "cpp" in selected_versions:
+                print("Building C++ test scenarios executable...")
+                cpp_tools = BazelTools(option_prefix="cpp", build_timeout=build_timeout)
+                cpp_target_name = session.config.getoption("--cpp-target-name")
+                cpp_tools.build(cpp_target_name)
 
     except Exception as e:
         pytest.exit(str(e), returncode=1)
