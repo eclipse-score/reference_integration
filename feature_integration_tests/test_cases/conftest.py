@@ -16,6 +16,13 @@ import pytest
 from testing_utils import BazelTools
 
 
+def _selected_versions(session: pytest.Session) -> set[str]:
+    """Return the scenario variants explicitly requested by the mark expression."""
+    mark_expression = session.config.option.markexpr or ""
+    selected_versions = {version for version in ("rust", "cpp") if version in mark_expression}
+    return selected_versions or {"rust", "cpp"}
+
+
 # Cmdline options
 def pytest_addoption(parser):
     parser.addoption(
@@ -88,18 +95,21 @@ def pytest_sessionstart(session):
         # Build scenarios.
         if session.config.getoption("--build-scenarios"):
             build_timeout = session.config.getoption("--build-scenarios-timeout")
+            selected_versions = _selected_versions(session)
 
             # Build Rust test scenarios.
-            print("Building Rust test scenarios executable...")
-            rust_tools = BazelTools(option_prefix="rust", build_timeout=build_timeout)
-            rust_target_name = session.config.getoption("--rust-target-name")
-            rust_tools.build(rust_target_name)
+            if "rust" in selected_versions:
+                print("Building Rust test scenarios executable...")
+                rust_tools = BazelTools(option_prefix="rust", build_timeout=build_timeout)
+                rust_target_name = session.config.getoption("--rust-target-name")
+                rust_tools.build(rust_target_name)
 
             # Build C++ test scenarios.
-            print("Building C++ test scenarios executable...")
-            cpp_tools = BazelTools(option_prefix="cpp", build_timeout=build_timeout)
-            cpp_target_name = session.config.getoption("--cpp-target-name")
-            cpp_tools.build(cpp_target_name)
+            if "cpp" in selected_versions:
+                print("Building C++ test scenarios executable...")
+                cpp_tools = BazelTools(option_prefix="cpp", build_timeout=build_timeout)
+                cpp_target_name = session.config.getoption("--cpp-target-name")
+                cpp_tools.build(cpp_target_name)
 
     except Exception as e:
         pytest.exit(str(e), returncode=1)

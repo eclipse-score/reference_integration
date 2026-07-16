@@ -36,6 +36,37 @@ bazel test //feature_integration_tests/test_cases:fit_rust
 bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_cpp
 ```
 
+To run only the conditional launching lifecycle FITs:
+
+```sh
+bazel test //feature_integration_tests/test_cases:fit_conditional_launching
+```
+
+The Rust side of this lifecycle-only suite uses a dedicated Bazel target,
+`//feature_integration_tests/test_scenarios/rust:rust_lifecycle_test_scenarios`,
+which still reuses `test_scenarios/rust/src/main.rs`. It is built with the
+`lifecycle_only` cfg so only lifecycle scenarios are compiled for that suite,
+while the normal `fit` and `fit_rust` targets continue to use the full scenario tree.
+
+To run the lifecycle tests directly with `pytest` and build the scenario binaries on demand:
+
+```sh
+python3 -m pytest feature_integration_tests/test_cases/tests/lifecycle/ \
+  --build-scenarios \
+  -m rust \
+  --rust-target-name=//feature_integration_tests/test_scenarios/rust:rust_lifecycle_test_scenarios \
+  -q -v
+
+python3 -m pytest feature_integration_tests/test_cases/tests/lifecycle/ \
+  --build-scenarios \
+  -m cpp \
+  -q -v
+```
+
+The Rust override is required because plain `--build-scenarios` defaults to
+`//feature_integration_tests/test_scenarios/rust:rust_test_scenarios`, while the
+lifecycle tests need the reduced lifecycle-only Rust target.
+
 ### ITF Tests (QEMU-based)
 
 ITF tests run on a QEMU target and require the `itf-qnx-x86_64` config:
@@ -50,6 +81,7 @@ Test scenarios can be listed and run directly for debugging:
 
 ```sh
 bazel run //feature_integration_tests/test_scenarios/rust:rust_test_scenarios -- --list-scenarios
+bazel run //feature_integration_tests/test_scenarios/rust:rust_lifecycle_test_scenarios -- --list-scenarios
 bazel run --config=linux-x86_64 //feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios -- --list-scenarios
 ```
 
