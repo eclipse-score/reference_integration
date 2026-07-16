@@ -290,10 +290,28 @@ def test_mixed_criticality_acl_isolation(target):
     "Permission denied" / "Could not create Proxy" diagnostic) and never
     receives a sample.
 
-    Obtaining the excluded consumer's distinct UID uses `on -u` on QNX and
-    `setpriv` on Linux; the QNX path has not been exercised on real QNX
-    hardware.
+    Obtaining the excluded consumer's distinct UID uses `setpriv` on Linux,
+    which lets an unprivileged UID still bring up its LoLa endpoint and so
+    reach the shared-memory ACL check the assertions below rely on.
+
+    Skipped on QNX: there, LoLa's MessagePassingService endpoint registration
+    itself requires privilege, so a consumer launched under a lower-privilege
+    UID (`on -u <uid>`) aborts at message-passing setup before reaching the
+    shared-memory ACL. A control run in which the excluded UID was explicitly
+    added to allowedConsumer failed identically, confirming the failure is a
+    generic privilege limitation of the QNX IPC layer, not allowedConsumer
+    enforcement -- so denial there cannot be attributed to the ACL.
     """
+    if comm.is_qnx(target):
+        pytest.skip(
+            "allowedConsumer ACL enforcement cannot be exercised via a "
+            "lower-privilege UID on QNX: LoLa's MessagePassingService endpoint "
+            "registration requires privilege, so a consumer run under `on -u` "
+            "aborts at message-passing setup before reaching the shared-memory "
+            "ACL check (confirmed by a control run where an allow-listed UID "
+            "failed identically)."
+        )
+
     allowed_result, denied_result, allowed_uid = comm.run_acl_isolation_scenario(target)
     logger.info("ACL scenario allowed_uid=%s", allowed_uid)
     logger.info("allowed consumer stdout:\n%s", allowed_result.recv_stdout)
