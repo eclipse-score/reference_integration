@@ -156,6 +156,17 @@ def run_event_exchange(
 # so failed via SIGABRT), the exact underlying failure mode of the Rust
 # `com_api` runtime builder is intentionally NOT asserted on here -- only the
 # black-box contract is.
+#
+# These tests run against a dedicated instance specifier that no other test
+# ever offers (NEGATIVE_CONFIG_INSTANCE_SPECIFIER), rather than the shared
+# default. The QEMU target fixture is session-scoped (the same booted image
+# persists across every test in the file, unlike the Docker plugin's
+# per-test container), and run_event_exchange's producer cleanup is a plain
+# `kill`, not a graceful unoffer() -- so a killed producer's SHM registration
+# / cached samples for the *shared* default instance can still be
+# discoverable by a later test. A consumer whose own config genuinely
+# resolves to zero instances must never be able to observe that kind of
+# cross-test leftover, so it needs an instance nobody else touches.
 
 # Deliberately malformed: not valid JSON at all.
 TRUNCATED_CONFIG_JSON = '{ "serviceTypes": [ { "serviceTypeName"'
@@ -163,6 +174,9 @@ TRUNCATED_CONFIG_JSON = '{ "serviceTypes": [ { "serviceTypeName"'
 # Deliberately incomplete: valid JSON, but missing the required
 # "serviceTypes"/"serviceInstances" structure the schema demands.
 SCHEMA_INVALID_CONFIG_JSON = "{}"
+
+# Never offered by any producer in this suite -- see the note above.
+NEGATIVE_CONFIG_INSTANCE_SPECIFIER = "/Vehicle/ServiceNegativeConfigTest/Instance"
 
 
 def write_remote_file(target, path: str, content: str) -> None:
@@ -180,6 +194,7 @@ def run_receiver_with_manifest(
     interval_ms: int = 100,
     max_polls: int = 10,
     timeout_s: int = 10,
+    instance_specifier: str = NEGATIVE_CONFIG_INSTANCE_SPECIFIER,
 ) -> CommResult:
     """
     Run only the receiver against ``manifest_path``, bounded by a shell
@@ -187,12 +202,17 @@ def run_receiver_with_manifest(
     test suite. Used for negative config scenarios where no producer is
     started -- the receiver is expected to fail before ever discovering a
     service.
+
+    ``instance_specifier`` defaults to one no producer in this suite ever
+    offers, so a consumer that (incorrectly) reaches discovery cannot latch
+    onto another test's leftover service state.
     """
     recv_log = "/tmp/fit_recv_negative.log"
     command = (
         f"cd {COMM_CWD} && rm -f {recv_log} && "
         f"timeout {timeout_s} {FIT_RECEIVER_BIN} -n {cycles} -t {interval_ms} "
-        f"--max-polls {max_polls} -s {manifest_path} > {recv_log} 2>&1 ; echo RECV_EXIT=$?"
+        f"--max-polls {max_polls} -s {manifest_path} -i {instance_specifier} "
+        f"> {recv_log} 2>&1 ; echo RECV_EXIT=$?"
     )
     _, out = target.execute(command)
     recv_exit_code = _shell_exit_marker(out.decode(errors="replace"))
