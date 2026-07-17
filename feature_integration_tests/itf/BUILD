@@ -53,7 +53,10 @@ py_itf_test(
     # writes PartiallyVerifies/FullyVerifies properties into the JUnit XML
     # report, matching the convention already used by
     # feature_integration_tests/test_cases (persistency FIT).
-    args = ["-p", "attribute_plugin"] + select(
+    args = [
+        "-p",
+        "attribute_plugin",
+    ] + select(
         {
             ":config_linux_x86_64": [
                 "--dlt-config=$(location //feature_integration_tests/configs:dlt_config_x86_64.json)",
@@ -68,9 +71,6 @@ py_itf_test(
         },
         no_match_error = "Unsupported platform",
     ),
-    deps = [
-        "@score_tooling//python_basics/score_pytest:attribute_plugin",
-    ],
     data = select({
         ":config_linux_x86_64": [
             "//feature_integration_tests/configs:dlt_config_x86_64.json",
@@ -97,6 +97,9 @@ py_itf_test(
     ),
     tags = [
         "manual",
+    ],
+    deps = [
+        "@score_tooling//python_basics/score_pytest:attribute_plugin",
     ],
 )
 
