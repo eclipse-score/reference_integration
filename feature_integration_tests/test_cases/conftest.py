@@ -13,14 +13,68 @@
 from pathlib import Path
 
 import pytest
+from _pytest.mark.expression import Expression
 from testing_utils import BazelTools
 
 
+_DEFAULT_RUST_TARGET = "//feature_integration_tests/test_scenarios/rust:rust_test_scenarios"
+_LIFECYCLE_ONLY_RUST_TARGET = "//feature_integration_tests/test_scenarios/rust:rust_lifecycle_test_scenarios"
+_LIFECYCLE_TESTS_DIR = Path("feature_integration_tests/test_cases/tests/lifecycle")
+
+
 def _selected_versions(session: pytest.Session) -> set[str]:
-    """Return the scenario variants explicitly requested by the mark expression."""
+    """Return the scenario variants explicitly requested by the mark expression.
+
+    Uses pytest's own marker expression evaluator so that logical operators and
+    negations are respected. For example, ``-m "not rust"`` must *not* select the
+    Rust build, while a plain substring check would incorrectly match it.
+    Falls back to all variants when no expression is given or parsing fails.
+    """
     mark_expression = session.config.option.markexpr or ""
-    selected_versions = {version for version in ("rust", "cpp") if version in mark_expression}
+    if not mark_expression:
+        return {"rust", "cpp"}
+    try:
+        expr = Expression.compile(mark_expression)
+    except Exception:  # noqa: BLE001 – malformed expression; fall back to all variants
+        return {"rust", "cpp"}
+    selected_versions = {version for version in ("rust", "cpp") if expr.evaluate(lambda name: name == version)}
     return selected_versions or {"rust", "cpp"}
+
+
+def _is_lifecycle_only_selection(session: pytest.Session) -> bool:
+    """Return True when pytest was invoked only for lifecycle test paths."""
+    if not session.config.args:
+        return False
+
+    normalized_args: list[Path] = []
+    for arg in session.config.args:
+        if arg.startswith("-"):
+            continue
+        candidate = Path(arg)
+        normalized_args.append(candidate if candidate.is_absolute() else Path.cwd() / candidate)
+
+    if not normalized_args:
+        return False
+
+    lifecycle_root = (Path.cwd() / _LIFECYCLE_TESTS_DIR).resolve()
+    for candidate in normalized_args:
+        resolved = candidate.resolve()
+        try:
+            resolved.relative_to(lifecycle_root)
+        except ValueError:
+            if resolved != lifecycle_root:
+                return False
+    return True
+
+
+def _selected_rust_target_name(session: pytest.Session) -> str:
+    """Choose the Rust scenario target for the requested test slice."""
+    rust_target_name = session.config.getoption("--rust-target-name")
+    if rust_target_name != _DEFAULT_RUST_TARGET:
+        return rust_target_name
+    if _is_lifecycle_only_selection(session):
+        return _LIFECYCLE_ONLY_RUST_TARGET
+    return rust_target_name
 
 
 # Cmdline options
@@ -38,7 +92,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--rust-target-name",
         type=str,
-        default="//feature_integration_tests/test_scenarios/rust:rust_test_scenarios",
+        default=_DEFAULT_RUST_TARGET,
         help="Rust test scenario executable target.",
     )
     parser.addoption(
@@ -101,7 +155,7 @@ def pytest_sessionstart(session):
             if "rust" in selected_versions:
                 print("Building Rust test scenarios executable...")
                 rust_tools = BazelTools(option_prefix="rust", build_timeout=build_timeout)
-                rust_target_name = session.config.getoption("--rust-target-name")
+                rust_target_name = _selected_rust_target_name(session)
                 rust_tools.build(rust_target_name)
 
             # Build C++ test scenarios.

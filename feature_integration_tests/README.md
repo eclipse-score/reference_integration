@@ -36,12 +36,6 @@ bazel test //feature_integration_tests/test_cases:fit_rust
 bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_cpp
 ```
 
-To run only the conditional launching lifecycle FITs:
-
-```sh
-bazel test //feature_integration_tests/test_cases:fit_conditional_launching
-```
-
 The Rust side of this lifecycle-only suite uses a dedicated Bazel target,
 `//feature_integration_tests/test_scenarios/rust:rust_lifecycle_test_scenarios`,
 which still reuses `test_scenarios/rust/src/main.rs`. It is built with the

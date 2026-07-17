@@ -11,143 +11,165 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 """
-Feature integration tests for conditional launching.
+Feature integration tests for conditional launching against a real Launch Manager.
 
-Tests verify that the Launch Manager supports conditional process launching
-based on various conditions including process state, environment variables,
-paths, and dependencies.
+Unlike scenario-stub checks, these tests validate behavior from an actual
+launch_manager process started with lifecycle daemon configuration.
 """
 
+import json
+import re
+import subprocess
+import time
 from pathlib import Path
 from typing import Any
 
 import pytest
-from fit_scenario import ResultCode
-from lifecycle_scenario import LifecycleScenario
+from daemon_helpers import launch_manager_daemon
 from test_properties import add_test_properties
-from testing_utils import LogContainer, ScenarioResult
 
-pytestmark = pytest.mark.parametrize("version", ["rust", "cpp"], scope="class")
+pytestmark = [
+    pytest.mark.daemon,
+    pytest.mark.parametrize("version", ["rust", "cpp"], scope="class"),
+]
 
 
 @add_test_properties(
     partially_verifies=[
+        "feat_req__lifecycle__launch_support",
         "feat_req__lifecycle__waitfor_support",
         "feat_req__lifecycle__cond_process_start",
-        "feat_req__lifecycle__total_wait_time_support",
-        "feat_req__lifecycle__polling_interval",
-        "feat_req__lifecycle__validate_conditions",
-        "feat_req__lifecycle__validation_conditions",
-        "feat_req__lifecycle__launcher_status_storage",
-        "feat_req__lifecycle__condition_check_method",
-        "feat_req__lifecycle__config_actions_cond",
-        "feat_req__lifecycle__path_condition_check",
-        "feat_req__lifecycle__env_variable_cond_check",
         "feat_req__lifecycle__dependency_check",
-        "feat_req__lifecycle__check_dependency_exec",
-        "feat_req__lifecycle__define_swc_dependencies",
-        "feat_req__lifecycle__stop_sequence",
+        "feat_req__lifecycle__process_ordering",
     ],
-    test_type="requirements-based",
-    derivation_technique="requirements-analysis",
+    test_type="integration",
+    derivation_technique="end-to-end-testing",
 )
-class TestConditionalLaunching(LifecycleScenario):
-    """
-    Verify conditional process launching support.
+class TestConditionalLaunchingWithDaemon:
+    """Verify dependency-based conditional launching with real daemon behavior."""
 
-    This test confirms that the Launch Manager can conditionally launch
-    processes based on various criteria and wait conditions.
-    """
+    @staticmethod
+    def _pgrep_cmdline_pattern(binary_path: str) -> str:
+        """Build POSIX ERE pattern matching binary with optional arguments."""
+        return rf"^{re.escape(binary_path)}([[:space:]]|$)"
 
-    @pytest.fixture(scope="class")
-    def scenario_name(self) -> str:
-        return "lifecycle.conditional_launching"
+    @staticmethod
+    def _is_running(binary_path: str) -> bool:
+        result = subprocess.run(
+            ["pgrep", "-f", TestConditionalLaunchingWithDaemon._pgrep_cmdline_pattern(binary_path)],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        return result.returncode == 0
 
-    @pytest.fixture(scope="class")
-    def test_config(self, temp_dir: Path) -> dict[str, Any]:
-        return {
-            "test": {
-                "test_duration_ms": 300,
-                "wait_conditions": ["path:/tmp/ready", "env:STARTUP_COMPLETE", "process:init_done"],
-                "polling_interval_ms": 173,
-                "timeout_ms": 6421,
-            }
-        }
+    @staticmethod
+    def _first_pid(binary_path: str) -> str | None:
+        result = subprocess.run(
+            ["pgrep", "-f", TestConditionalLaunchingWithDaemon._pgrep_cmdline_pattern(binary_path)],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if result.returncode != 0:
+            return None
+        lines = [line for line in result.stdout.splitlines() if line]
+        return lines[0] if lines else None
 
-    def test_path_condition_check(self, results: ScenarioResult, logs_info_level: LogContainer, version: str) -> None:
-        """
-        Verify that path-based condition checking works.
-        """
-        assert results.return_code == ResultCode.SUCCESS
+    @staticmethod
+    def _proc_start_ticks(pid: str) -> int | None:
+        try:
+            stat_fields = Path(f"/proc/{pid}/stat").read_text(encoding="utf-8").split()
+        except OSError:
+            return None
+        if len(stat_fields) <= 21:
+            return None
+        try:
+            return int(stat_fields[21])
+        except ValueError:
+            return None
 
-        if version == "cpp":
-            assert "Checking path condition: /tmp/ready" in results.stdout, "Path condition not checked"
-        else:
-            path_logs = logs_info_level.get_logs(field="message", pattern="Checking path condition: /tmp/ready")
-            assert len(path_logs) > 0, "Path condition not checked"
+    @staticmethod
+    def _wait_until(predicate, timeout_s: float, interval_s: float = 0.2) -> bool:
+        deadline = time.time() + timeout_s
+        while time.time() < deadline:
+            if predicate():
+                return True
+            time.sleep(interval_s)
+        return False
 
-    def test_env_condition_check(self, results: ScenarioResult, logs_info_level: LogContainer, version: str) -> None:
-        """
-        Verify that environment variable condition checking works.
-        """
-        assert results.return_code == ResultCode.SUCCESS
+    def test_startup_launches_conditioned_processes(self, launch_manager_daemon: dict[str, Any], version: str) -> None:
+        """Verify supervised processes are launched as part of conditional startup."""
+        daemon_info = launch_manager_daemon
+        app_name = "rust_supervised_app" if version == "rust" else "cpp_supervised_app"
+        app_path = str(daemon_info["apps"][version])
 
-        if version == "cpp":
-            assert "Checking env condition: STARTUP_COMPLETE" in results.stdout, "Environment condition not checked"
-        else:
-            env_logs = logs_info_level.get_logs(field="message", pattern="Checking env condition: STARTUP_COMPLETE")
-            assert len(env_logs) > 0, "Environment condition not checked"
+        started = self._wait_until(lambda: self._is_running(app_path), timeout_s=8.0)
+        assert started, f"{app_name} was not launched in conditional startup"
 
-    def test_process_condition_check(
-        self, results: ScenarioResult, logs_info_level: LogContainer, version: str
+    def test_rust_launch_is_conditioned_on_cpp_dependency(
+        self,
+        launch_manager_daemon: dict[str, Any],
+        version: str,
     ) -> None:
-        """
-        Verify that process state condition checking works.
-        """
-        assert results.return_code == ResultCode.SUCCESS
+        """Verify rust app starts no earlier than its configured C++ dependency."""
+        daemon_info = launch_manager_daemon
+        cpp_path = str(daemon_info["apps"]["cpp"])
+        rust_path = str(daemon_info["apps"]["rust"])
 
-        if version == "cpp":
-            assert "Checking process condition: init_done" in results.stdout, "Process condition not checked"
-        else:
-            process_logs = logs_info_level.get_logs(field="message", pattern="Checking process condition: init_done")
-            assert len(process_logs) > 0, "Process condition not checked"
+        started = self._wait_until(
+            lambda: self._is_running(cpp_path) and self._is_running(rust_path),
+            timeout_s=8.0,
+        )
+        assert started, "cpp_supervised_app and rust_supervised_app should both be running"
 
-    def test_polling_interval_configured(
-        self, results: ScenarioResult, logs_info_level: LogContainer, version: str
+        cpp_pid = self._first_pid(cpp_path)
+        rust_pid = self._first_pid(rust_path)
+        assert cpp_pid is not None, "Could not resolve PID for cpp_supervised_app"
+        assert rust_pid is not None, "Could not resolve PID for rust_supervised_app"
+
+        cpp_start = self._proc_start_ticks(cpp_pid)
+        rust_start = self._proc_start_ticks(rust_pid)
+        assert cpp_start is not None, f"Could not resolve start ticks for cpp_supervised_app pid={cpp_pid}"
+        assert rust_start is not None, f"Could not resolve start ticks for rust_supervised_app pid={rust_pid}"
+        assert cpp_start <= rust_start, (
+            "rust_supervised_app started before its configured dependency "
+            f"(cpp_start={cpp_start}, rust_start={rust_start})"
+        )
+
+    def test_rust_never_runs_without_cpp_running(
+        self,
+        launch_manager_daemon: dict[str, Any],
+        version: str,
     ) -> None:
-        """
-        Verify that polling interval is configured correctly.
-        """
-        assert results.return_code == ResultCode.SUCCESS
+        """Verify conditional gating keeps rust app from running before cpp is active."""
+        daemon_info = launch_manager_daemon
+        cpp_path = str(daemon_info["apps"]["cpp"])
+        rust_path = str(daemon_info["apps"]["rust"])
 
-        if version == "cpp":
-            assert "Polling interval: 173ms" in results.stdout, "Polling interval not configured"
-        else:
-            polling_logs = logs_info_level.get_logs(field="message", pattern="Polling interval: 173ms")
-            assert len(polling_logs) > 0, "Polling interval not configured"
+        deadline = time.time() + 8.0
+        while time.time() < deadline:
+            rust_running = self._is_running(rust_path)
+            cpp_running = self._is_running(cpp_path)
+            if rust_running and not cpp_running:
+                pytest.fail("rust_supervised_app became running before cpp_supervised_app was active")
+            if rust_running and cpp_running:
+                return
+            time.sleep(0.2)
 
-    def test_condition_timeout_configured(
-        self, results: ScenarioResult, logs_info_level: LogContainer, version: str
+        assert False, "Timed out waiting for rust_supervised_app to reach running state"
+
+    def test_dependency_is_declared_in_lifecycle_config(
+        self,
+        launch_manager_daemon: dict[str, Any],
+        version: str,
     ) -> None:
-        """
-        Verify that condition timeout is configured.
-        """
-        assert results.return_code == ResultCode.SUCCESS
+        """Verify runtime configuration defines rust conditional dependency on cpp."""
+        config_path = Path(__file__).resolve().parents[3] / "configs" / "lifecycle_daemon_config.json"
+        config = json.loads(config_path.read_text(encoding="utf-8"))
 
-        if version == "cpp":
-            assert "Condition timeout: 6421ms" in results.stdout, "Condition timeout not configured"
-        else:
-            timeout_logs = logs_info_level.get_logs(field="message", pattern="Condition timeout: 6421ms")
-            assert len(timeout_logs) > 0, "Condition timeout not configured"
-
-    def test_dependency_check(self, results: ScenarioResult, logs_info_level: LogContainer, version: str) -> None:
-        """
-        Verify that dependency checking works.
-        """
-        assert results.return_code == ResultCode.SUCCESS
-
-        if version == "cpp":
-            assert "All dependencies satisfied" in results.stdout, "Dependency check failed"
-        else:
-            dep_logs = logs_info_level.get_logs(field="message", value="All dependencies satisfied")
-            assert len(dep_logs) > 0, "Dependency check failed"
+        rust_component = config["components"]["rust_supervised_app"]["component_properties"]
+        depends_on = rust_component.get("depends_on", [])
+        assert "cpp_supervised_app" in depends_on, (
+            "Expected rust_supervised_app to depend on cpp_supervised_app in lifecycle daemon config"
+        )

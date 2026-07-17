@@ -1,4 +1,4 @@
-/*******************************************************************************
+/********************************************************************************
  * Copyright (c) 2026 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
@@ -9,7 +9,7 @@
  * https://www.apache.org/licenses/LICENSE-2.0
  *
  * SPDX-License-Identifier: Apache-2.0
- *******************************************************************************/
+ ********************************************************************************/
 
 #include "conditional_launching.h"
 
@@ -64,9 +64,10 @@ std::vector<std::string> parse_string_array_field(const std::string& input,
 
     for (const auto& element : array_res.value().get()) {
         const auto converted = convert(element);
-        if (converted.has_value()) {
-            values.push_back(*converted);
-        }
+         if (!converted.has_value()) {
+             throw std::invalid_argument("Wait condition entries must be strings");
+         }
+         values.push_back(*converted);
     }
 
     return values;
@@ -127,7 +128,7 @@ public:
 
         if (wait_conditions.empty()) {
             throw std::runtime_error(
-                "Wait conditions were not provided: missing 'test.wait_conditions' in scenario input");
+                 "Wait conditions were not provided: missing or empty 'test.wait_conditions' in scenario input");
         }
 
         std::cout << "Testing conditional launching" << std::endl;
