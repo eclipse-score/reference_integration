@@ -21,16 +21,16 @@ real shared memory and assert on the data the consumer actually observes --
 sequence and value-integrity -- rather than on log strings the application
 prints about its own configuration.
 
-Scope is deliberately kept small and high-value (delivery, ordering,
-integrity, service discovery, runtime deployment config, late join). Detailed
-safety guarantees (ASIL-B/ACL isolation, bad-config fault handling) are
-verified in the communication module's own unit/component tests and are not
-re-derived here.
+Scope covers delivery, ordering, integrity, service discovery, runtime
+deployment config, late join, deployment-config integrity (negative
+scenarios), and ASIL-B/ACL isolation -- the requirement set the removed
+ipc_bridge example exercised, now reproduced against fit_sender/fit_receiver.
 """
 
 import logging
 
 import comm_helpers as comm
+import pytest
 from test_properties import add_test_properties
 
 logger = logging.getLogger(__name__)
@@ -145,3 +145,129 @@ def test_late_joining_consumer_receives_data(target):
     assert result.recv_exit_code == 0, "late-joining consumer did not exit cleanly"
     assert result.found_service, "late-joining consumer failed to discover the service"
     assert result.received_samples, "late-joining consumer received no samples"
+
+
+def _assert_fails_on_load_without_hang(result: comm.CommResult) -> None:
+    """
+    Shared check for the config-integrity tests below: the process must fail
+    deterministically -- bounded by the shell `timeout` in
+    run_receiver_with_manifest -- never silently succeed, and never proceed
+    far enough to discover a service or process a sample.
+    """
+    assert result.recv_exit_code != 0, "consumer did not fail on an invalid/missing config"
+    assert not result.found_service, "consumer proceeded past config load to service discovery"
+    assert not result.received_samples, "consumer proceeded to receive samples despite bad config"
+
+
+@add_test_properties(
+    partially_verifies=[
+        "feat_req__com__depl_config_runtime",
+    ],
+    test_type="requirements-based",
+    derivation_technique="requirements-analysis",
+)
+def test_missing_config_file_fails_deterministically(target):
+    """
+    Verify that a missing deployment manifest causes the process to fail
+    deterministically and quickly rather than hang or silently continue.
+    """
+    result = comm.run_receiver_with_manifest(target, "/tmp/comm_fit_missing_config.json")
+    logger.info("missing-config consumer output:\n%s", result.recv_stdout)
+    _assert_fails_on_load_without_hang(result)
+
+
+@add_test_properties(
+    partially_verifies=[
+        "feat_req__com__depl_config_runtime",
+    ],
+    test_type="requirements-based",
+    derivation_technique="requirements-analysis",
+)
+def test_truncated_config_fails_deterministically(target):
+    """
+    Verify that syntactically invalid JSON in the deployment manifest fails
+    deterministically rather than hang or silently continue.
+    """
+    manifest_path = "/tmp/comm_fit_truncated_config.json"
+    comm.write_remote_file(target, manifest_path, comm.TRUNCATED_CONFIG_JSON)
+
+    result = comm.run_receiver_with_manifest(target, manifest_path)
+    logger.info("truncated-config consumer output:\n%s", result.recv_stdout)
+    _assert_fails_on_load_without_hang(result)
+
+
+@add_test_properties(
+    partially_verifies=[
+        "feat_req__com__depl_config_runtime",
+    ],
+    test_type="requirements-based",
+    derivation_technique="requirements-analysis",
+)
+def test_schema_invalid_config_fails_deterministically(target):
+    """
+    Verify that well-formed JSON missing the required schema structure fails
+    deterministically rather than hang or silently continue.
+    """
+    manifest_path = "/tmp/comm_fit_schema_invalid_config.json"
+    comm.write_remote_file(target, manifest_path, comm.SCHEMA_INVALID_CONFIG_JSON)
+
+    result = comm.run_receiver_with_manifest(target, manifest_path)
+    logger.info("schema-invalid-config consumer output:\n%s", result.recv_stdout)
+    _assert_fails_on_load_without_hang(result)
+
+
+@add_test_properties(
+    partially_verifies=[
+        "feat_req__com__asil",
+        "feat_req__com__acl_for_consumer",
+        "feat_req__com__acl_for_producer",
+        "feat_req__com__acl_per_service_instance",
+    ],
+    test_type="requirements-based",
+    derivation_technique="requirements-analysis",
+)
+def test_mixed_criticality_acl_isolation(target):
+    """
+    Verify ASIL-B mixed-criticality isolation: an ASIL-B provider offers to
+    exactly one allowed UID (the target's own default identity). Two
+    consumers subscribe concurrently -- one running as that allowed UID, one
+    running as a UID deliberately excluded from allowedConsumer.
+
+    The allowed consumer receives samples while the excluded consumer is
+    active concurrently, proving the excluded consumer cannot affect the
+    allowed stream. The excluded consumer fails deterministically (non-zero
+    exit, never discovers the service) and never receives a sample.
+
+    Obtaining the excluded consumer's distinct UID uses `setpriv` on Linux,
+    which lets an unprivileged UID still bring up its LoLa endpoint and so
+    reach the shared-memory ACL check the assertions below rely on.
+
+    Skipped on QNX: there, LoLa's MessagePassingService endpoint registration
+    itself requires privilege, so a consumer launched under a lower-privilege
+    UID (`on -u <uid>`) aborts at message-passing setup before reaching the
+    shared-memory ACL -- a limitation of the QNX IPC layer itself, not of
+    allowedConsumer enforcement, already documented for the removed
+    ipc_bridge example.
+    """
+    if comm.is_qnx(target):
+        pytest.skip(
+            "allowedConsumer ACL enforcement cannot be exercised via a "
+            "lower-privilege UID on QNX: LoLa's MessagePassingService endpoint "
+            "registration requires privilege, so a consumer run under `on -u` "
+            "aborts at message-passing setup before reaching the shared-memory "
+            "ACL check."
+        )
+
+    allowed_result, denied_result, allowed_uid = comm.run_acl_isolation_scenario(target)
+    logger.info("ACL scenario allowed_uid=%s", allowed_uid)
+    logger.info("allowed consumer stdout:\n%s", allowed_result.recv_stdout)
+    logger.info("denied consumer stdout:\n%s", denied_result.recv_stdout)
+
+    # Allowed consumer: unaffected by the concurrently-running denied one.
+    assert allowed_result.recv_exit_code == 0, "allowed consumer did not exit cleanly"
+    assert allowed_result.received_samples, "allowed consumer received no samples"
+
+    # Denied consumer: fails deterministically, never receives data.
+    assert denied_result.recv_exit_code != 0, "consumer with an excluded UID was not denied"
+    assert not denied_result.found_service, "consumer with an excluded UID reached service discovery"
+    assert not denied_result.received_samples, "consumer with an excluded UID received samples"

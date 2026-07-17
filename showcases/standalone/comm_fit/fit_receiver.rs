@@ -35,8 +35,10 @@ use com_api::{
 };
 use com_api_gen::VehicleInterface;
 
-/// Same instance specifier as com-api-example's deployment manifest.
-const INSTANCE_SPECIFIER: &str = "/Vehicle/Service1/Instance";
+/// Default instance specifier, matching com-api-example's deployment manifest.
+/// Overridable via `-i` so tests can target a dedicated (e.g. ASIL-B) instance
+/// without disturbing the default exchange scenario.
+const DEFAULT_INSTANCE_SPECIFIER: &str = "/Vehicle/Service1/Instance";
 
 struct Arguments {
     /// Deployment manifest read at runtime (feat_req__com__depl_config_runtime).
@@ -47,6 +49,8 @@ struct Arguments {
     interval_ms: u64,
     /// Maximum number of poll iterations before giving up (bounds the run).
     max_polls: u32,
+    /// Service instance specifier to subscribe to.
+    instance_specifier: String,
 }
 
 fn parse_args() -> Arguments {
@@ -54,6 +58,7 @@ fn parse_args() -> Arguments {
     let mut cycles: u32 = 10;
     let mut interval_ms: u64 = 100;
     let mut max_polls: u32 = 100;
+    let mut instance_specifier = DEFAULT_INSTANCE_SPECIFIER.to_string();
 
     let argv: Vec<String> = std::env::args().collect();
     let mut i = 1;
@@ -87,6 +92,10 @@ fn parse_args() -> Arguments {
                     .parse()
                     .expect("invalid --max-polls");
             },
+            "-i" | "--instance-specifier" => {
+                i += 1;
+                instance_specifier = argv.get(i).expect("missing value for -i").clone();
+            },
             other => eprintln!("FIT_RECV_IGNORED_ARG {other}"),
         }
         i += 1;
@@ -97,6 +106,7 @@ fn parse_args() -> Arguments {
         cycles,
         interval_ms,
         max_polls,
+        instance_specifier,
     }
 }
 
@@ -133,7 +143,7 @@ fn main() {
     let args = parse_args();
     let runtime = init_lola_runtime(&args.service_instance_manifest);
 
-    let service_id = InstanceSpecifier::new(INSTANCE_SPECIFIER).expect("Failed to create InstanceSpecifier");
+    let service_id = InstanceSpecifier::new(&args.instance_specifier).expect("Failed to create InstanceSpecifier");
 
     let consumer = match discover_consumer(&runtime, &service_id, args.max_polls, args.interval_ms) {
         Some(consumer) => consumer,

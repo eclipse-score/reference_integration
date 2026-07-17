@@ -36,8 +36,10 @@ use com_api::{
 };
 use com_api_gen::{Tire, VehicleInterface};
 
-/// Same instance specifier as com-api-example's deployment manifest.
-const INSTANCE_SPECIFIER: &str = "/Vehicle/Service1/Instance";
+/// Default instance specifier, matching com-api-example's deployment manifest.
+/// Overridable via `-i` so tests can target a dedicated (e.g. ASIL-B) instance
+/// without disturbing the default exchange scenario.
+const DEFAULT_INSTANCE_SPECIFIER: &str = "/Vehicle/Service1/Instance";
 
 struct Arguments {
     /// Deployment manifest read at runtime (feat_req__com__depl_config_runtime).
@@ -46,12 +48,15 @@ struct Arguments {
     cycles: u32,
     /// Delay between samples in milliseconds.
     interval_ms: u64,
+    /// Service instance specifier to offer.
+    instance_specifier: String,
 }
 
 fn parse_args() -> Arguments {
     let mut manifest = PathBuf::from("./etc/mw_com_config.json");
     let mut cycles: u32 = 50;
     let mut interval_ms: u64 = 100;
+    let mut instance_specifier = DEFAULT_INSTANCE_SPECIFIER.to_string();
 
     let argv: Vec<String> = std::env::args().collect();
     let mut i = 1;
@@ -77,6 +82,10 @@ fn parse_args() -> Arguments {
                     .parse()
                     .expect("invalid -t/--interval-ms");
             },
+            "-i" | "--instance-specifier" => {
+                i += 1;
+                instance_specifier = argv.get(i).expect("missing value for -i").clone();
+            },
             other => eprintln!("FIT_SEND_IGNORED_ARG {other}"),
         }
         i += 1;
@@ -86,6 +95,7 @@ fn parse_args() -> Arguments {
         service_instance_manifest: manifest,
         cycles,
         interval_ms,
+        instance_specifier,
     }
 }
 
@@ -103,7 +113,7 @@ fn main() {
     let args = parse_args();
     let runtime = init_lola_runtime(&args.service_instance_manifest);
 
-    let service_id = InstanceSpecifier::new(INSTANCE_SPECIFIER).expect("Failed to create InstanceSpecifier");
+    let service_id = InstanceSpecifier::new(&args.instance_specifier).expect("Failed to create InstanceSpecifier");
     let producer = runtime
         .producer_builder::<VehicleInterface>(service_id)
         .build()
