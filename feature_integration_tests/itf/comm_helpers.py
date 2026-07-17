@@ -268,6 +268,12 @@ DENIED_CONSUMER_UID = 64000
 # com-api-gen bakes in, so fit_sender/fit_receiver can still bind against it;
 # only the service *instance* below is new, with a dedicated ASIL-B binding
 # and a restrictive allowedConsumer/allowedProvider list.
+#
+# "global.asil-level" declares the *process's own* ASIL capability -- distinct
+# from the per-instance "asil-level" below, which declares the *instance's*
+# level. LoLa aborts ("Service instance has a higher ASIL than the process")
+# if a process without this declaration touches an ASIL-B instance, checked
+# before any allowedConsumer/allowedProvider UID enforcement is reached.
 ASILB_CONFIG_TEMPLATE = """{{
   "serviceTypes": [
     {{
@@ -285,7 +291,7 @@ ASILB_CONFIG_TEMPLATE = """{{
       ]
     }}
   ],
-  "global": {{"applicationID": 4099}},
+  "global": {{"applicationID": 4099, "asil-level": "B"}},
   "serviceInstances": [
     {{
       "instanceSpecifier": "{instance_specifier}",
