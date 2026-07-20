@@ -13,18 +13,9 @@
 """
 ITF tests for the communication module (LoLa / mw::com).
 
-Upstream ships only the single-process ``com-api-example`` demo, which cannot
-exercise producer/consumer as separate processes. Per the maintainer's
-guidance these tests drive our own two-process scenario
-(``showcases/standalone/comm_fit``: ``fit_sender`` + ``fit_receiver``) over
-real shared memory and assert on the data the consumer actually observes --
-sequence and value-integrity -- rather than on log strings the application
-prints about its own configuration.
-
 Scope covers delivery, ordering, integrity, service discovery, runtime
 deployment config, late join, deployment-config integrity (negative
-scenarios), and ASIL-B/ACL isolation -- the requirement set the removed
-ipc_bridge example exercised, now reproduced against fit_sender/fit_receiver.
+scenarios), and ASIL-B/ACL isolation.
 """
 
 import logging
