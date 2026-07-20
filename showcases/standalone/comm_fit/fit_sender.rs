@@ -20,10 +20,6 @@
 //! and value-integrity on the data the consumer actually observes, rather than
 //! on strings the app prints about itself.
 //!
-//! Kept deliberately close to `com-api-example` (score/mw/com) so it tracks the
-//! same public `com_api` surface BMW ships. Arguments are parsed with `std`
-//! (no `clap`) to avoid depending on the communication module's crate index.
-//!
 //! Usage: `fit_sender [-s <manifest>] [-n <cycles>] [-t <interval_ms>]`
 
 use std::path::{Path, PathBuf};
