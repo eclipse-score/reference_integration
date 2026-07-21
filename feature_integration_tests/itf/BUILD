@@ -30,15 +30,24 @@ config_setting(
     ],
 )
 
+# Grouped per suite so future additions don't mix into one undifferentiated
+# list; all_tests below is the union of these groups plus shared utilities.
 filegroup(
-    name = "all_tests",
+    name = "communication_tests",
     srcs = [
         "comm_helpers.py",
         "test_communication.py",
+    ],
+)
+
+filegroup(
+    name = "all_tests",
+    srcs = [
         "test_properties.py",
         "test_remote_logging.py",
         "test_showcases.py",
         "test_ssh.py",
+        ":communication_tests",
     ],
 )
 
@@ -47,16 +56,14 @@ py_itf_test(
     srcs = [
         ":all_tests",
     ],
-    # "-p attribute_plugin" activates score_tooling's requirement-traceability
-    # pytest plugin (see the "deps" attribute below) so that
     # @add_test_properties(...) (feature_integration_tests/itf/test_properties.py)
     # writes PartiallyVerifies/FullyVerifies properties into the JUnit XML
     # report, matching the convention already used by
-    # feature_integration_tests/test_cases (persistency FIT).
-    args = [
-        "-p",
-        "attribute_plugin",
-    ] + select(
+    # feature_integration_tests/test_cases (persistency FIT). The
+    # score_itf//score/itf/plugins:attribute_plugin entry below (not a raw
+    # score_tooling dep) activates the plugin and injects the required
+    # "-p attribute_plugin" pytest arg automatically.
+    args = select(
         {
             ":config_linux_x86_64": [
                 "--dlt-config=$(location //feature_integration_tests/configs:dlt_config_x86_64.json)",
@@ -94,12 +101,11 @@ py_itf_test(
             ],
         },
         no_match_error = "Unsupported platform",
-    ),
+    ) + [
+        "@score_itf//score/itf/plugins:attribute_plugin",
+    ],
     tags = [
         "manual",
-    ],
-    deps = [
-        "@score_tooling//python_basics/score_pytest:attribute_plugin",
     ],
 )
 

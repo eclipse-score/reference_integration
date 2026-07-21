@@ -42,8 +42,13 @@ FIT_RECEIVER_BIN = "/showcases/bin/fit_receiver"
 COMM_CWD = "/showcases/data/comm"
 DEFAULT_MANIFEST = "/showcases/data/comm/etc/mw_com_config.json"
 
-# Oracle strings emitted by fit_sender / fit_receiver.
-RECV_SAMPLE_RE = re.compile(r"FIT_RECV seq=(\d+)")
+# Oracle strings emitted by fit_sender / fit_receiver. The sequence number is
+# captured as a raw token (not constrained to \d+): fit_receiver prints the
+# f32 payload via Display with no lossy cast, so a corrupted/NaN/negative/
+# infinite value renders as something that fails CommResult.received_samples'
+# strict digit check below instead of silently becoming a plausible-looking
+# (but wrong) integer.
+RECV_SAMPLE_RE = re.compile(r"FIT_RECV seq=(\S+)")
 FOUND_SERVICE_MARKER = "FIT_FOUND_SERVICE"
 RECV_DONE_MARKER = "FIT_RECV_DONE"
 
@@ -59,8 +64,18 @@ class CommResult:
     # --- oracles ---------------------------------------------------------
     @property
     def received_samples(self) -> list[int]:
-        """Ordered list of the producer sequence numbers the consumer received."""
-        return [int(m.group(1)) for m in RECV_SAMPLE_RE.finditer(self.recv_stdout)]
+        """
+        Ordered list of the producer sequence numbers the consumer received.
+
+        Each token must be a clean non-negative integer string. A corrupted
+        payload (NaN, negative, fractional, infinite) fails this assertion
+        instead of being silently coerced into some other valid-looking
+        integer.
+        """
+        tokens = RECV_SAMPLE_RE.findall(self.recv_stdout)
+        for token in tokens:
+            assert token.isdigit(), f"non-integer sequence token (corruption): {token!r} in {tokens}"
+        return [int(token) for token in tokens]
 
     @property
     def found_service(self) -> bool:
@@ -73,18 +88,20 @@ class CommResult:
         return RECV_DONE_MARKER in self.recv_stdout
 
 
-def is_non_decreasing(seq: list[int]) -> bool:
-    """No reordering: each received sequence number is >= the previous one."""
-    return all(b >= a for a, b in zip(seq, seq[1:]))
-
-
-def samples_are_intact(seq: list[int], send_cycles: int) -> bool:
+def samples_are_sequential_and_intact(seq: list[int], send_cycles: int) -> bool:
     """
-    Value-integrity: every received sequence number is one the sender actually
-    produced (0 .. send_cycles-1). A corrupted payload would decode to a value
-    outside that range.
+    Every received value is one the sender actually produced (0 <= value <
+    send_cycles), and each consecutive pair increases by *exactly* one --
+    checking the expected next value at each step, not just that values fall
+    somewhere in a valid range. A plain non-decreasing (`>=`) check would
+    tolerate a duplicate delivery of the same sample; fit_sender's sequence
+    never repeats or skips, so any repeat or gap here is corruption.
     """
-    return all(0 <= s < send_cycles for s in seq)
+    if not seq:
+        return False
+    if not all(0 <= s < send_cycles for s in seq):
+        return False
+    return all(b == a + 1 for a, b in zip(seq, seq[1:]))
 
 
 def _shell_exit_marker(out: str, marker: str = "RECV_EXIT") -> int:
@@ -102,6 +119,7 @@ def run_event_exchange(
     interval_ms: int = 100,
     startup_delay_s: int = 1,
     manifest: str | None = None,
+    instance_specifier: str | None = None,
 ) -> CommResult:
     """
     Run one producer/consumer exchange on ``target`` and return parsed output.
@@ -116,17 +134,22 @@ def run_event_exchange(
 
     ``manifest`` points both roles at a deployment config via ``-s``; when
     ``None`` the deployed default (``DEFAULT_MANIFEST``) is used.
+
+    ``instance_specifier`` points both roles at a service instance via ``-i``;
+    when ``None`` both binaries fall back to their compiled-in default
+    (``/Vehicle/Service1/Instance``).
     """
     manifest_path = manifest or DEFAULT_MANIFEST
+    instance_arg = f" -i {instance_specifier}" if instance_specifier else ""
     send_log = "/tmp/fit_send.log"
     recv_log = "/tmp/fit_recv.log"
 
     command = (
         f"cd {COMM_CWD} && rm -f {send_log} {recv_log} && "
-        f"{{ {FIT_SENDER_BIN} -n {send_cycles} -t {interval_ms} -s {manifest_path} "
+        f"{{ {FIT_SENDER_BIN} -n {send_cycles} -t {interval_ms} -s {manifest_path}{instance_arg} "
         f"> {send_log} 2>&1 & SEND_PID=$!; }} && "
         f"sleep {startup_delay_s} && "
-        f"{FIT_RECEIVER_BIN} -n {recv_cycles} -t {interval_ms} -s {manifest_path} "
+        f"{FIT_RECEIVER_BIN} -n {recv_cycles} -t {interval_ms} -s {manifest_path}{instance_arg} "
         f"> {recv_log} 2>&1 ; RECV_RC=$? ; "
         f"kill $SEND_PID 2>/dev/null ; wait $SEND_PID 2>/dev/null ; "
         f"echo RECV_EXIT=$RECV_RC"
@@ -240,12 +263,17 @@ def run_receiver_with_manifest(
 #      "allowed" consumers under the same UID proves nothing, because the
 #      excluded UID is never actually attempted.
 #
-# fit_receiver's discover_consumer() swallows a denied proxy-construction
-# error into a retry-then-give-up loop (see fit_receiver.rs), so a denied
-# consumer surfaces identically to "no service found": non-zero exit,
-# FIT_FOUND_SERVICE never printed, no samples received. That is what is
-# asserted here; the exact underlying error text is not, since it depends on
-# the Rust `com_api` FFI error formatting.
+# Empirically, a denied UID's `builder.build()` in fit_receiver's
+# discover_consumer() does *not* return an Err to retry on -- the denial
+# surfaces one layer later, inside the generated com_api_gen bindings'
+# subscriber setup, as an *uncaught panic* ("Failed to create subscriber for
+# left_tire: ConsumerError(ProxyCreationFailed)"), preceded by LoLa's own
+# mw::log lines ("Could not open Shared Memory ...", "Could not create
+# Proxy: Opening shared memory failed"). fit_receiver.rs's Err-branch
+# eprintln (FIT_RECV_PROXY_BUILD_ERROR) is kept as defensive diagnostics for
+# the case where build() *does* return an Err some other way, but the
+# assertions here key off the markers actually observed for this panic path
+# (ACL_DENIAL_MARKERS below), not just a generic non-zero exit code.
 #
 # Getting a second real UID needs `on -u <uid>:<gid>` on QNX (no /etc/passwd
 # entry required) or `setpriv --reuid=<uid> --regid=<uid>` on Linux (needs
@@ -262,6 +290,15 @@ def run_receiver_with_manifest(
 # limitation already documented and observed for ipc_bridge.
 
 ASILB_INSTANCE_SPECIFIER = "/Vehicle/ServiceAcl/Instance"
+
+# Evidence that a denial was specifically attributable to the ACL/proxy
+# creation path -- observed empirically on Linux as an uncaught panic in the
+# generated bindings, preceded by LoLa's own shared-memory-open diagnostics.
+ACL_DENIAL_MARKERS = (
+    "FIT_RECV_PROXY_BUILD_ERROR",  # our own diagnostic, if build() itself ever returns Err
+    "Could not create Proxy",  # LoLa's own mw::log line when SHM-open is denied
+    "ProxyCreationFailed",  # substring of the resulting panic message
+)
 DENIED_CONSUMER_UID = 64000
 
 # Reuses the VehicleInterface service type (serviceId / event ids) that
