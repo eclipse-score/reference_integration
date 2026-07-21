@@ -48,5 +48,4 @@ score_pkg_bundle(
         ":fit_sender",
         ":fit_receiver",
     ],
-    package_dir = "standalone",
 )

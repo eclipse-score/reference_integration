@@ -131,7 +131,14 @@ fn discover_consumer(
         let discovery = runtime.find_service::<VehicleInterface>(FindServiceSpecifier::Specific(service_id.clone()));
         if let Ok(instances) = discovery.get_available_instances() {
             if let Some(builder) = instances.into_iter().next() {
-                return builder.build().ok();
+                match builder.build() {
+                    Ok(consumer) => return Some(consumer),
+                    // A denied proxy build (e.g. ACL rejection) is expected to
+                    // keep retrying rather than abort, but the rejection must
+                    // still be visible for diagnosis instead of silently
+                    // discarded.
+                    Err(error) => eprintln!("FIT_RECV_PROXY_BUILD_ERROR {error:?}"),
+                }
             }
         }
         sleep(Duration::from_millis(interval_ms));
@@ -170,9 +177,13 @@ fn main() {
             Ok(_) => {
                 while let Some(sample) = buffer.pop_front() {
                     // Sequence number was encoded in the payload by fit_sender;
-                    // the sample derefs to the generated Tire type.
+                    // the sample derefs to the generated Tire type. Printed via
+                    // Display with no numeric cast: `as i64` on a corrupted
+                    // (NaN/negative/infinite) f32 would saturate to a
+                    // plausible-looking integer instead of surfacing the
+                    // corruption, defeating the ITF's ability to detect it.
                     let pressure = sample.pressure;
-                    println!("FIT_RECV seq={}", pressure as i64);
+                    println!("FIT_RECV seq={pressure}");
                     received += 1;
                 }
             },
