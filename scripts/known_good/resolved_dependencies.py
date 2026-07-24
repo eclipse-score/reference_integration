@@ -30,12 +30,18 @@ import argparse
 import json
 import logging
 import re
+import sys
 from pathlib import Path
 
-from known_good.models.known_good import load_known_good
-from known_good.models.module import Module
-
 _HERE = Path(__file__).resolve().parent
+try:
+    from known_good.models.known_good import load_known_good
+    from known_good.models.module import Module
+except ImportError:
+    if str(_HERE) not in sys.path:
+        sys.path.insert(0, str(_HERE))
+    from models.known_good import load_known_good  # noqa: E402
+    from models.module import Module  # noqa: E402
 
 # Marker delimiting the block we append, so injection is idempotent / detectable.
 INJECTION_BEGIN = "# --- BEGIN ref_int resolved-deps injection ---"
@@ -317,6 +323,7 @@ class ResolvedDependencies:
         from dataclasses import replace as _replace
 
         directives: list[str] = []
+        injected_names: list[str] = []
         # Inject overrides only for deps the module actually declares (intersected with the
         # resolved set). Bazel fails with "root module specifies overrides on nonexistent
         # module(s)" if an override targets a module that is not in this module's dependency
@@ -342,6 +349,13 @@ class ResolvedDependencies:
             if directive is None:
                 continue
             directives.append(directive)
+            injected_names.append(name)
+
+        # ref_int's injected override must be the ONLY override for each dep. A module that
+        # pins a dep with its own git_override/single_version_override (e.g. score_platform)
+        # would otherwise trip Bazel's "multiple overrides for dep <x> found". Remove the
+        # module's own override for every dep we inject so ref_int's resolved version wins.
+        original = _strip_existing_overrides(original, injected_names)
 
         if not directives:
             patched = original
@@ -361,6 +375,34 @@ class ResolvedDependencies:
             re.S,
         )
         return pattern.sub("", text).rstrip() + "\n" if pattern.search(text) else text
+
+
+_OVERRIDE_KINDS = (
+    "git_override",
+    "single_version_override",
+    "archive_override",
+    "local_path_override",
+    "multiple_version_override",
+)
+
+
+def _strip_existing_overrides(text: str, names: list[str]) -> str:
+    """Remove any ``*_override(module_name = "<name>", ...)`` the module declares itself.
+
+    ref_int re-injects its own resolved override for each of ``names``; Bazel forbids two
+    overrides for the same module, so a module's pre-existing override must be removed first.
+    Matches from the override call to its closing ``)`` on its own line.
+    """
+    if not names:
+        return text
+    kinds = "|".join(_OVERRIDE_KINDS)
+    for name in names:
+        pattern = re.compile(
+            r"(?:" + kinds + r")\s*\(\s*module_name\s*=\s*\"" + re.escape(name) + r"\".*?\n\)\n?",
+            re.S,
+        )
+        text = pattern.sub("", text)
+    return text.rstrip() + "\n"
 
 
 def _field(body: str, field: str) -> str:

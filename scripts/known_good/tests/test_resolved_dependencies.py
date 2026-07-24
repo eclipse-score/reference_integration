@@ -181,6 +181,10 @@ class TestOverwrite:
         # ref_int's resolved commit must appear in the injection block, overwriting "deadbeef"
         assert 'module_name = "score_logging"' in block
         assert "deadbeef" not in block
+        # the module's OWN override must be removed from the whole file — otherwise Bazel
+        # aborts with "multiple overrides for dep score_logging found".
+        assert "deadbeef" not in patched
+        assert patched.count('module_name = "score_logging"') == 1
 
 
 class TestFromModGraph:
