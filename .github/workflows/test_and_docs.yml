@@ -10,6 +10,28 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+# Two-stage quality workflow aligned with DR-008 Option 4.
+#
+# Stage 1 (stage1_integration): build the integrated platform, run Feature
+#   Integration Tests, and publish the resolved dependency set (MODULE.bazel.lock
+#   + generated git_override files) as the stage1-resolved-deps artifact.
+#
+# prepare_matrix: derive the Stage 2 module list dynamically from known_good.json
+#   (target_sw group) so it is never hardcoded.
+#
+# Stage 2 (stage2_module_validation): per-module matrix. For each module: check it
+#   out at its known_good commit, overwrite its MODULE.bazel with the Stage-1
+#   resolved dependency set (downloaded artifact, via ResolvedDependencies), and run
+#   the module's unit tests + coverage *inside the module* (bazel root //...). This
+#   is the DR-008 Option 4 "overwrite deps from resolved deps and execute UTs +
+#   coverage directly in the modules" flow. Injection is ephemeral (CI only).
+#
+# Aggregate (aggregate): downloads all Stage 2 reports, renders a consolidated
+#   quality report to the GitHub Step Summary, and (on tags) creates the
+#   combined test-report ZIP for the GitHub Release.
+#
+# Docs / docs-deploy: unchanged from the previous workflow; depends on
+#   stage1_integration which builds and uploads the pages artifact.
 name: Code Quality & Documentation
 permissions:
   contents: write
@@ -22,10 +44,14 @@ on:
   push:
     branches:
       - main
+      - Subramanian-K812_update_test_workflow_dr8 # TEMP: remove after CI verified
   merge_group:
     types: [checks_requested]
   release:
     types: [created]
+  workflow_dispatch: # Manual trigger — used to test this workflow from a feature branch
+  # (pull_request_target always runs the base-branch workflow, so workflow_dispatch
+  # is the only way to exercise the new structure before it merges to main)
 # Do not flood CI with unneeded previous runs in PR
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
@@ -33,10 +59,21 @@ concurrency:
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
-  test_and_docs:
+  # ---------------------------------------------------------------------------
+  # Stage 1 — Integration-Scoped
+  # Builds the integrated platform and runs Feature Integration Tests.
+  # Publishes the Bazel-resolved dependency set (MODULE.bazel.lock +
+  # generated score_modules_*.MODULE.bazel) as the stage1-resolved-deps
+  # artifact, satisfying the "resolve complete dependency set incl. transitive
+  # deps" requirement of DR-008 Option 4.
+  # Documentation is built in a separate parallel job (docs_build) so that
+  # a Sphinx warning does not block Stage 2 validation.
+  # ---------------------------------------------------------------------------
+  stage1_integration:
+    name: "Stage 1 — Platform Build & Feature Integration Tests"
     runs-on: ubuntu-latest
     permissions:
-      contents: write # required to upload release assets
+      contents: write
       pull-requests: write
     steps:
       - name: Clean disk space
@@ -47,17 +84,13 @@ jobs:
         uses: bazel-contrib/setup-bazel@0.18.0
         with:
           bazelisk-cache: true
-          disk-cache: ${{ github.workflow }}
+          disk-cache: ${{ github.workflow }}-stage1
           repository-cache: true
           cache-save: ${{ github.event_name == 'push' }}
       - name: Set up Python 3
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install lcov
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y lcov
       - name: Checkout repository (pull_request_target via workflow_call)
         if: ${{ github.event_name == 'pull_request_target' }}
         uses: actions/checkout@v4
@@ -67,41 +100,62 @@ jobs:
       - name: Checkout repository
         if: ${{ github.event_name != 'pull_request_target' }}
         uses: actions/checkout@v4
-      - name: Execute Unit Tests with Coverage Analysis
-        run: |
-          python ./scripts/quality_runners.py
       - name: Execute Feature Integration Tests
         run: |
-          bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit
-      - name: Publish build summary
+          bazel test --lockfile_mode=error --config=linux-x86_64 //feature_integration_tests/test_cases:fit
+      - name: Export resolved dependency manifest
         if: always()
         run: |
-          if [ -f docs/verification_report/unit_test_summary.md ]; then
-            cat docs/verification_report/unit_test_summary.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "No build summary file found (docs/verification_report/unit_test_summary.md)" >> "$GITHUB_STEP_SUMMARY"
-          fi
-          echo "" >> "$GITHUB_STEP_SUMMARY" # Add a newline for better formatting
-          if [ -f docs/verification_report/coverage_summary.md ]; then
-            cat docs/verification_report/coverage_summary.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "No coverage summary file found (docs/verification_report/coverage_summary.md)" >> "$GITHUB_STEP_SUMMARY"
-          fi
-      - name: Create archive of test reports
-        if: github.ref_type == 'tag'
-        run: |
-          mkdir -p artifacts
-          find bazel-testlogs/external -name 'test.xml' -print0 | xargs -0 -I{} cp --parents {} artifacts/
-          cp -r "$(bazel info --lockfile_mode=error bazel-bin)/coverage/rust-tests" artifacts/rust
-          zip -r ${{ github.event.repository.name }}_test_reports.zip artifacts/
-        shell: bash
-      - name: Upload release asset (attach ZIP to GitHub Release)
-        uses: softprops/action-gh-release@v2.5.0
-        if: github.ref_type == 'tag'
+          mkdir -p artifacts/stage1-resolved-deps
+          # Resolve the full graph (registry versions) against the committed lock, then merge
+          # with ref_int's own override directives (git_override for score_*/trlc/..., plus
+          # any single_version_override) into the single Stage 1 -> Stage 2 handoff manifest.
+          bazel mod graph --output=json --lockfile_mode=error > resolved_graph.json
+          python scripts/known_good/resolved_dependencies.py \
+            --mod-graph resolved_graph.json \
+            --export artifacts/stage1-resolved-deps/resolved_versions.json
+          cp MODULE.bazel.lock artifacts/stage1-resolved-deps/   # evidence of full resolution
+      - name: Upload resolved dependency set artifact
+        if: always()
+        uses: actions/upload-artifact@v4.4.0
         with:
-          files: ${{ github.event.repository.name }}_test_reports.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: stage1-resolved-deps
+          path: artifacts/stage1-resolved-deps/
+          retention-days: 14
+          if-no-files-found: warn
+  # ---------------------------------------------------------------------------
+  # Documentation build — runs in parallel with Stage 1 so Sphinx warnings
+  # never block Stage 2. docs-deploy depends on this job, not stage1_integration.
+  # ---------------------------------------------------------------------------
+  docs_build:
+    name: "Build Documentation"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Clean disk space
+        uses: eclipse-score/more-disk-space@v1
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.18.0
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}-docs
+          repository-cache: true
+          cache-save: ${{ github.event_name == 'push' }}
+      - name: Set up Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Checkout repository (pull_request_target)
+        if: ${{ github.event_name == 'pull_request_target' }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+      - name: Checkout repository
+        if: ${{ github.event_name != 'pull_request_target' }}
+        uses: actions/checkout@v4
       - name: Install Graphviz
         uses: eclipse-score/apt-install@main
         with:
@@ -128,10 +182,194 @@ jobs:
           path: github-pages.tar
           retention-days: 3
           if-no-files-found: error
+  # ---------------------------------------------------------------------------
+  # Prepare the Stage 2 matrix dynamically from known_good.json's target_sw group.
+  # The module list is NEVER hardcoded in this workflow (reviewer R1: "we need to
+  # take it from know_good always"). Each matrix entry carries {name, repo, slug,
+  # commit, branch} so Stage 2 can check the module out at its resolved commit.
+  # ---------------------------------------------------------------------------
+  prepare_matrix:
+    name: "Prepare Stage 2 module matrix"
+    needs: stage1_integration
+    runs-on: ubuntu-latest
+    outputs:
+      modules: ${{ steps.list.outputs.modules }}
+    steps:
+      - name: Checkout repository (pull_request_target)
+        if: ${{ github.event_name == 'pull_request_target' }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+      - name: Checkout repository
+        if: ${{ github.event_name != 'pull_request_target' }}
+        uses: actions/checkout@v4
+      - name: Set up Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: List target_sw modules from known_good.json
+        id: list
+        run: |
+          echo "modules=$(python scripts/known_good/list_modules.py --group target_sw)" >> "$GITHUB_OUTPUT"
+  # ---------------------------------------------------------------------------
+  # Stage 2 — Module-Scoped (DR-008 Option 4)
+  # For each target_sw module: check the module out at its known_good commit,
+  # overwrite its MODULE.bazel with the dependency set ref_int RESOLVED in Stage 1
+  # (downloaded stage1-resolved-deps artifact), and run the module's own unit tests
+  # + coverage *inside the module* (bazel root //...), not through ref_int's graph.
+  # This is the "overwrite deps from resolved deps in ref_int and execute UTs and
+  # coverage directly in the modules" flow the reviewer described (R2/R3/R4).
+  #
+  # The injection is ephemeral (CI checkout only) — released module sources are
+  # never modified. Each matrix job is isolated; fail-fast: false ensures one
+  # module's failure does not hide the results of others.
+  # ---------------------------------------------------------------------------
+  stage2_module_validation:
+    name: "Stage 2 — Module UT & Coverage (${{ matrix.module.name }})"
+    needs: [stage1_integration, prepare_matrix]
+    strategy:
+      fail-fast: false
+      matrix:
+        module: ${{ fromJSON(needs.prepare_matrix.outputs.modules) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clean disk space
+        uses: eclipse-score/more-disk-space@v1
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.18.0
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}-stage2-${{ matrix.module.name }}
+          repository-cache: true
+          cache-save: ${{ github.event_name == 'push' }}
+      - name: Set up Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install lcov
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lcov
+      # ref_int checkout — provides the scripts (quality_runners.py, ResolvedDependencies).
+      - name: Checkout reference_integration (pull_request_target)
+        if: ${{ github.event_name == 'pull_request_target' }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+      - name: Checkout reference_integration
+        if: ${{ github.event_name != 'pull_request_target' }}
+        uses: actions/checkout@v4
+      # The module under test, checked out at its Stage-1 known_good commit (R4).
+      - name: Checkout module under test
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ matrix.module.slug }}
+          ref: ${{ matrix.module.commit }}
+          path: _module
+      # Consume the Stage-1 resolved dependency set (R2).
+      - name: Download Stage 1 resolved dependency set
+        uses: actions/download-artifact@v4.1.8
+        with:
+          name: stage1-resolved-deps
+          path: _resolved_deps/
+      - name: Execute Unit Tests with Coverage Analysis (in module context)
+        run: |
+          python ./scripts/quality_runners.py \
+            --modules-to-test ${{ matrix.module.name }} \
+            --module-dir _module \
+            --resolved-deps _resolved_deps
+      - name: Upload module quality report
+        if: always()
+        uses: actions/upload-artifact@v4.4.0
+        with:
+          name: stage2-report-${{ matrix.module.name }}
+          path: docs/verification_report/
+          retention-days: 14
+          if-no-files-found: warn
+      - name: Upload module test logs and coverage
+        if: always()
+        uses: actions/upload-artifact@v4.4.0
+        with:
+          name: stage2-testlogs-${{ matrix.module.name }}
+          path: |
+            _module/bazel-testlogs/
+            artifacts/coverage/
+          retention-days: 14
+          if-no-files-found: warn
+      # The module's MODULE.bazel.lock, regenerated (--lockfile_mode=update) after the
+      # resolved-deps injection: the verifiable record of exactly which dependency
+      # versions this module was validated against in Stage 2.
+      - name: Upload regenerated module lockfile
+        if: always()
+        uses: actions/upload-artifact@v4.4.0
+        with:
+          name: stage2-resolved-lock-${{ matrix.module.name }}
+          path: _module/MODULE.bazel.lock
+          retention-days: 14
+          if-no-files-found: warn
+  # ---------------------------------------------------------------------------
+  # Aggregate — consolidate Stage 1 + Stage 2 results into one quality report.
+  # Also handles the release-tag test-report ZIP (formerly in test_and_docs).
+  # ---------------------------------------------------------------------------
+  aggregate:
+    name: "Aggregate Quality Report"
+    needs: [stage1_integration, stage2_module_validation]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository (pull_request_target via workflow_call)
+        if: ${{ github.event_name == 'pull_request_target' }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+      - name: Checkout repository
+        if: ${{ github.event_name != 'pull_request_target' }}
+        uses: actions/checkout@v4
+      - name: Set up Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download Stage 2 quality reports
+        uses: actions/download-artifact@v4.1.8
+        with:
+          pattern: stage2-report-*
+          path: _stage2_reports/
+      - name: Create archive of test reports
+        if: github.ref_type == 'tag'
+        run: |
+          mkdir -p artifacts/test-reports
+          find _stage2_reports -name 'test.xml' -print0 | \
+            xargs -0 -I{} cp --parents {} artifacts/test-reports/ 2>/dev/null || true
+          zip -r ${{ github.event.repository.name }}_test_reports.zip artifacts/test-reports/
+        shell: bash
+      - name: Upload release asset (attach ZIP to GitHub Release)
+        uses: softprops/action-gh-release@v2.5.0
+        if: github.ref_type == 'tag'
+        with:
+          files: ${{ github.event.repository.name }}_test_reports.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish consolidated quality report
+        if: always()
+        run: |
+          python3 scripts/aggregate_quality_report.py \
+            --stage1-result "${{ needs.stage1_integration.result }}" \
+            --stage2-result "${{ needs.stage2_module_validation.result }}" \
+            --stage2-dir "_stage2_reports/" \
+            >> "$GITHUB_STEP_SUMMARY"
+  # ---------------------------------------------------------------------------
+  # Docs deploy — depends on docs_build (separate parallel job) which uploads
+  # the github-pages artifact.
+  # ---------------------------------------------------------------------------
   docs-deploy:
     name: Deploy Documentation to GitHub Pages
     runs-on: ${{ vars.REPO_RUNNER_LABELS && fromJSON(vars.REPO_RUNNER_LABELS) || 'ubuntu-latest' }}
-    needs: test_and_docs
+    needs: docs_build
+    environment:
+      name: github-pages
     permissions:
       pages: write
       id-token: write

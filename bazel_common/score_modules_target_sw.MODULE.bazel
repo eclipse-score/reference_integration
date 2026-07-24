@@ -15,13 +15,14 @@
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py
 
 bazel_dep(name = "score_baselibs")
-single_version_override(
+git_override(
     module_name = "score_baselibs",
+    commit = "ce204159f37ee7815907369a8f678583bf102306",
     patch_strip = 1,
     patches = [
         "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
     ],
-    version = "0.2.9",
+    remote = "https://github.com/eclipse-score/baselibs.git",
 )
 
 bazel_dep(name = "score_communication")
