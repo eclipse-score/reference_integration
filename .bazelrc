@@ -72,6 +72,11 @@ build:eb-aarch64 --config=_common
 build:eb-aarch64 --extra_toolchains=@score_ebclfsa_toolchain//:aarch64-linux-sdk_0.1.0-ebclfsa
 build:eb-aarch64 --extra_toolchains=@ferrocene_aarch64_ebclfsa//:rust_ferrocene_toolchain
 build:eb-aarch64 --platforms=@score_bazel_platforms//:aarch64-linux-sdk_0.1.0-ebclfsa
+# GCC-13 emits aarch64 outline-atomic calls (__aarch64_ldadd4_acq_rel, __aarch64_cas*, ...)
+# whose helpers live in libgcc.a. Ferrocene rustc drives the final link with -nodefaultlibs,
+# so libgcc.a is never pulled in -> undefined references when Rust binaries link C++ libs.
+# Force inline atomics instead.
+build:eb-aarch64 --copt=-mno-outline-atomics
 
 build:autosd-x86_64 --config=_common
 build:autosd-x86_64 --force_pic
@@ -111,6 +116,13 @@ test:unit-tests --test_tag_filters=-manual,-miri
 # Coverage configuration for C++
 coverage --features=coverage
 coverage --combined_report=lcov
+# Exclude tests the modules tag out of coverage (e.g. *_tsan_test): gcov-instrumenting a
+# ThreadSanitizer binary reports false data races on the non-atomic __gcov* counters.
+# Mirrors the modules' own .bazelrc so central-mode coverage matches in-module coverage.
+coverage --test_tag_filters=-no-coverage
+# Make gcov counter updates atomic so any remaining multithreaded coverage test is race-free.
+coverage --copt=-fprofile-update=atomic
+coverage --linkopt=-fprofile-update=atomic
 
 # user specific overrides (like proxy settings)
 try-import %workspace%/user.bazelrc
