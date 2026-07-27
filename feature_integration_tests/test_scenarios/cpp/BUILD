@@ -27,5 +27,8 @@ cc_binary(
         "@score_baselibs//score/mw/log:backend_stub_testutil",
         "@score_persistency//score/kvs",
         "@score_test_scenarios//score/test_scenarios_cpp",
+        "@score_time//score/time/high_res_steady_time",
+        "@score_time//score/time/steady_time",
+        "@score_time//score/time/system_time",
     ],
 )
