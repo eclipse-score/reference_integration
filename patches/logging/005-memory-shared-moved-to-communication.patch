@@ -1,0 +1,31 @@
+Upstream baselibs migrated score/memory/shared to score_communication in commit
+b90e0695 ("Migrate score/memory/shared to score_communication"). score_logging
+still points at the old @score_baselibs labels; score_communication is already a
+bazel_dep here, so only the labels need redirecting.
+
+diff --git a/score/mw/log/backend/BUILD b/score/mw/log/backend/BUILD
+index 846c781f..de1997f8 100644
+--- a/score/mw/log/backend/BUILD
++++ b/score/mw/log/backend/BUILD
+@@ -72,7 +72,7 @@ cc_library(
+             "//score/mw/log/legacy_non_verbose_api",
+             "@score_baselibs//score/concurrency",
+             "@score_baselibs//score/os:errno_logging",
+-            "@score_baselibs//score/memory/shared",
++            "@score_communication//score/memory/shared",
+         ],
+         "//conditions:default": [],
+     }),
+diff --git a/score/mw/log/detail/data_router/BUILD b/score/mw/log/detail/data_router/BUILD
+index a4c21083..73e92d7a 100644
+--- a/score/mw/log/detail/data_router/BUILD
++++ b/score/mw/log/detail/data_router/BUILD
+@@ -61,7 +61,7 @@ cc_library(
+         "@score_baselibs//score/concurrency",
+         "@score_baselibs//score/concurrency:thread_pool",
+         "@score_baselibs//score/language/futurecpp",
+-        "@score_baselibs//score/memory/shared",  # Preperation for full rollout of (Ticket-105741), build cyclic dependency is broken (runtime, in next commit)
++        "@score_communication//score/memory/shared",  # Preperation for full rollout of (Ticket-105741), build cyclic dependency is broken (runtime, in next commit)
+         "@score_baselibs//score/mw/log:recorder",
+         "@score_baselibs//score/mw/log/configuration",
+         "@score_baselibs//score/mw/log/detail:backend_interface",
