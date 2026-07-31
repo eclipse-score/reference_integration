@@ -203,10 +203,20 @@ class TestProcessLaunchingWithDaemon:
         launch_manager_daemon: dict[str, Any],
         version: str,
     ) -> None:
-        """Verify launched process cmdline includes configured lifecycle arguments."""
+        """Verify launched process cmdline includes every configured lifecycle argument.
+
+        Reads the expected arguments from the config itself (rather than a hardcoded
+        literal) so this test tracks config drift and catches partial-application bugs
+        instead of only ever re-checking a single known-good value.
+        """
         daemon_info = launch_manager_daemon
         app_name = "rust_supervised_app" if version == "rust" else "cpp_supervised_app"
         app_path = str(daemon_info["apps"][version])
+
+        config_path = Path(__file__).resolve().parents[3] / "configs" / "lifecycle_daemon_config.json"
+        config = json.loads(config_path.read_text(encoding="utf-8"))
+        configured_args = config["components"][app_name]["component_properties"]["process_arguments"]
+        assert configured_args, f"{app_name} does not configure any process_arguments to verify against"
 
         started = self._wait_until(lambda: self._is_running(app_path), timeout_s=8.0)
         assert started, f"{app_name} was not launched before argument verification"
@@ -216,7 +226,10 @@ class TestProcessLaunchingWithDaemon:
         cmdline = self._proc_cmdline(pid)
 
         assert cmdline, f"Could not read command line arguments for {app_name} pid={pid}"
-        assert "-d50" in cmdline, f"Configured launch argument '-d50' missing in {app_name} cmdline: {cmdline}"
+        for configured_arg in configured_args:
+            assert configured_arg in cmdline, (
+                f"Configured launch argument {configured_arg!r} missing in {app_name} cmdline: {cmdline}"
+            )
 
     def test_launch_process_environment_is_applied(
         self,

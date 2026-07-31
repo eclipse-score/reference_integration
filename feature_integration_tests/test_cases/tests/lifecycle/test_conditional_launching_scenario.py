@@ -20,6 +20,8 @@ observes and enforces them, not merely that it echoes back what was configured.
 
 import os
 import subprocess
+import threading
+import time
 from collections.abc import Generator
 from pathlib import Path
 from typing import Any
@@ -187,6 +189,97 @@ class TestConditionalLaunchingScenarioTimesOutOnUnmetConditions(LifecycleScenari
 
 
 @add_test_properties(
+    partially_verifies=[
+        "feat_req__lifecycle__polling_interval",
+        "feat_req__lifecycle__path_condition_check",
+        "feat_req__lifecycle__total_wait_time_support",
+    ],
+    test_type="requirements-based",
+    derivation_technique="requirements-analysis",
+)
+class TestConditionalLaunchingScenarioDetectsConditionArrivingLate(LifecycleScenario):
+    """Verify the scenario is actually re-checking the condition over time (real polling),
+    rather than only ever observing the condition's state at process start (t=0) or its
+    absence at the very end (timeout).
+
+    Without this, an implementation that checks the condition exactly once - either at
+    the very start or only right before giving up - would still pass both the
+    already-satisfied test and the never-satisfied timeout test above.
+    """
+
+    _DELAY_BEFORE_CONDITION_MET_S = 0.5
+    _TIMEOUT_MS = 3000
+    _POLLING_INTERVAL_MS = 100
+
+    @pytest.fixture(scope="class")
+    def scenario_name(self) -> str:
+        return "lifecycle.conditional_launching"
+
+    @pytest.fixture(scope="class")
+    def flag_path(self, temp_dir: Path) -> Path:
+        return temp_dir / "lifecycle_launch_ready_late.flag"
+
+    @pytest.fixture(scope="class")
+    def test_config(self, flag_path: Path) -> dict[str, Any]:
+        return {
+            "test": {
+                "wait_conditions": [f"path:{flag_path}"],
+                "polling_interval_ms": self._POLLING_INTERVAL_MS,
+                "timeout_ms": self._TIMEOUT_MS,
+            },
+        }
+
+    @pytest.fixture(scope="class")
+    def results(
+        self,
+        command: list[str],
+        execution_timeout: float,
+        flag_path: Path,
+    ) -> Generator[ScenarioResult, None, None]:
+        # Overrides the base class-scoped `results` fixture so the flag-write timer is armed
+        # before the command runs. The base fixture is also pulled in by the autouse
+        # `print_to_report` fixture ahead of the test body, so starting the timer inside the
+        # test method itself is too late: the base fixture would already have run the command
+        # to completion (and timed out) before the test method ever executes.
+        timer = threading.Timer(self._DELAY_BEFORE_CONDITION_MET_S, flag_path.write_text, args=("ready",))
+        timer.start()
+        try:
+            start = time.monotonic()
+            result = self._run_command(command, execution_timeout)
+            # A pytest fixture's `self` and a test method's `self` are different instances of
+            # the test class, so state can't be handed off via an instance attribute; stash it
+            # on the class object instead, which both share.
+            type(self)._elapsed_s = time.monotonic() - start
+        finally:
+            timer.cancel()
+        yield result
+        flag_path.unlink(missing_ok=True)
+
+    def test_condition_satisfied_partway_through_the_wait_is_detected_promptly(
+        self,
+        results: ScenarioResult,
+        version: str,
+    ) -> None:
+        """Verify the scenario succeeds shortly after the condition becomes true mid-wait,
+        not merely at t=0 or by coincidentally still being true once the full timeout
+        elapses."""
+        result = results
+        elapsed_s = self._elapsed_s
+
+        assert result.return_code == ResultCode.SUCCESS, f"Expected success once the condition became true: {result}"
+        assert elapsed_s >= self._DELAY_BEFORE_CONDITION_MET_S, (
+            f"Scenario reported success ({elapsed_s:.2f}s) before the condition could possibly have been "
+            f"true ({self._DELAY_BEFORE_CONDITION_MET_S}s) - it isn't actually observing the real condition."
+        )
+        margin_s = self._TIMEOUT_MS / 1000 - self._DELAY_BEFORE_CONDITION_MET_S
+        assert elapsed_s < self._DELAY_BEFORE_CONDITION_MET_S + margin_s / 2, (
+            f"Scenario took {elapsed_s:.2f}s to detect a condition that became true after "
+            f"{self._DELAY_BEFORE_CONDITION_MET_S}s - this is close to the full {self._TIMEOUT_MS}ms timeout, "
+            "suggesting it isn't re-checking at the configured polling interval."
+        )
+
+
+@add_test_properties(
     partially_verifies=["feat_req__lifecycle__validate_conditions"],
     test_type="requirements-based",
     derivation_technique="requirements-analysis",
@@ -199,13 +292,15 @@ class TestConditionalLaunchingScenarioRejectsUnsupportedPrefix(LifecycleScenario
     def scenario_name(self) -> str:
         return "lifecycle.conditional_launching"
 
+    _TIMEOUT_MS = 2000
+
     @pytest.fixture(scope="class")
     def test_config(self) -> dict[str, Any]:
         return {
             "test": {
                 "wait_conditions": ["badprefix:value"],
                 "polling_interval_ms": 20,
-                "timeout_ms": 200,
+                "timeout_ms": self._TIMEOUT_MS,
             },
         }
 
@@ -215,12 +310,26 @@ class TestConditionalLaunchingScenarioRejectsUnsupportedPrefix(LifecycleScenario
     def capture_stderr(self) -> bool:
         return True
 
-    def test_unsupported_prefix_is_rejected_immediately(self, results: ScenarioResult, version: str) -> None:
-        """Verify validation rejects the condition outright rather than waiting out the timeout."""
-        assert results.return_code != ResultCode.SUCCESS, (
-            f"Expected failure for an unsupported wait-condition prefix, got: {results}"
+    def test_unsupported_prefix_is_rejected_immediately(
+        self,
+        command: list[str],
+        execution_timeout: float,
+        version: str,
+    ) -> None:
+        """Verify validation rejects the condition outright, before entering the wait loop,
+        rather than only surfacing the same error after waiting out the full timeout."""
+        start = time.monotonic()
+        result = self._run_command(command, execution_timeout)
+        elapsed_s = time.monotonic() - start
+
+        assert result.return_code != ResultCode.SUCCESS, (
+            f"Expected failure for an unsupported wait-condition prefix, got: {result}"
         )
-        assert results.stderr is not None
-        assert "Unsupported wait condition prefix" in results.stderr, (
-            f"Expected an unsupported-prefix validation error on stderr, got: {results.stderr}"
+        assert result.stderr is not None
+        assert "Unsupported wait condition prefix" in result.stderr, (
+            f"Expected an unsupported-prefix validation error on stderr, got: {result.stderr}"
+        )
+        assert elapsed_s < (self._TIMEOUT_MS / 1000) / 2, (
+            f"Rejection took {elapsed_s:.2f}s, close to the full {self._TIMEOUT_MS}ms timeout - "
+            "the prefix should be validated up front, not discovered by waiting it out."
         )
