@@ -89,8 +89,8 @@ class TestConditionalLaunchingWithDaemon:
 
     @add_test_properties(
         partially_verifies=["feat_req__lifecycle__launch_support"],
-        test_type="integration",
-        derivation_technique="end-to-end-testing",
+        test_type="requirements-based",
+        derivation_technique="requirements-analysis",
     )
     def test_startup_launches_conditioned_processes(self, launch_manager_daemon: dict[str, Any], version: str) -> None:
         """Verify supervised processes are launched as part of conditional startup."""
@@ -106,8 +106,8 @@ class TestConditionalLaunchingWithDaemon:
             "feat_req__lifecycle__process_ordering",
             "feat_req__lifecycle__cond_process_start",
         ],
-        test_type="integration",
-        derivation_technique="end-to-end-testing",
+        test_type="requirements-based",
+        derivation_technique="requirements-analysis",
     )
     def test_rust_launch_is_conditioned_on_cpp_dependency(
         self,
@@ -140,9 +140,9 @@ class TestConditionalLaunchingWithDaemon:
         )
 
     @add_test_properties(
-        partially_verifies=["feat_req__lifecycle__dependency_check"],
-        test_type="integration",
-        derivation_technique="end-to-end-testing",
+        partially_verifies=["feat_req__lifecycle__define_swc_dependencies"],
+        test_type="requirements-based",
+        derivation_technique="requirements-analysis",
     )
     def test_dependency_is_declared_in_lifecycle_config(
         self,
@@ -201,8 +201,8 @@ class TestConditionalLaunchingBlocksOnMissingDependency:
             "feat_req__lifecycle__dependency_check",
             "feat_req__lifecycle__cond_process_start",
         ],
-        test_type="integration",
-        derivation_technique="end-to-end-testing",
+        test_type="requirements-based",
+        derivation_technique="requirements-analysis",
     )
     def test_rust_stays_down_until_cpp_dependency_becomes_available(
         self, tmp_path_factory: pytest.TempPathFactory, version: str

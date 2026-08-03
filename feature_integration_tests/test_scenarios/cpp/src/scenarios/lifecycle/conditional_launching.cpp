@@ -13,6 +13,7 @@
 
 #include "conditional_launching.h"
 
+#include "internals/persistency/kvs_build_helpers.h"
 #include "score/json/json_parser.h"
 
 #include <algorithm>
@@ -33,18 +34,8 @@ namespace {
 
 constexpr const char* kTarget = "cpp_test_scenarios::scenarios::lifecycle::conditional_launching";
 
-std::string unix_seconds_string() {
-    const auto now = std::chrono::system_clock::now();
-    const auto secs = std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch()).count();
-    return std::to_string(secs);
-}
-
-// Emits the same structured JSON shape the Rust `tracing` subscriber produces, so FIT's
-// LogContainer (which filters on the "target"/"level" fields) can find these messages instead
-// of falling back to a raw stdout substring match.
 void log_info(const std::string& message) {
-    std::cout << "{\"timestamp\":\"" << unix_seconds_string() << "\",\"level\":\"INFO\",\"fields\":{\"message\":\""
-              << message << "\"},\"target\":\"" << kTarget << "\",\"threadId\":\"ThreadId(1)\"}" << std::endl;
+    kvs_build_helpers::log_info("\"message\":\"" + message + "\"", kTarget);
 }
 
 bool path_condition_met(const std::string& path) {

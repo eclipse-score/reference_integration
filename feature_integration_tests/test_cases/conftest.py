@@ -18,8 +18,6 @@ from testing_utils import BazelTools
 
 
 _DEFAULT_RUST_TARGET = "//feature_integration_tests/test_scenarios/rust:rust_test_scenarios"
-_LIFECYCLE_ONLY_RUST_TARGET = "//feature_integration_tests/test_scenarios/rust:rust_lifecycle_test_scenarios"
-_LIFECYCLE_TESTS_DIR = Path("feature_integration_tests/test_cases/tests/lifecycle")
 
 
 def _selected_versions(session: pytest.Session) -> set[str]:
@@ -39,54 +37,6 @@ def _selected_versions(session: pytest.Session) -> set[str]:
         return {"rust", "cpp"}
     selected_versions = {version for version in ("rust", "cpp") if expr.evaluate(lambda name: name == version)}
     return selected_versions or {"rust", "cpp"}
-
-
-def _is_lifecycle_only_selection(session: pytest.Session) -> bool:
-    """Return True when pytest was invoked only for lifecycle test paths."""
-    if not session.config.args:
-        return False
-
-    normalized_args: list[Path] = []
-    for arg in session.config.args:
-        if arg.startswith("-"):
-            continue
-        candidate = Path(arg)
-        normalized_args.append(candidate if candidate.is_absolute() else Path.cwd() / candidate)
-
-    if not normalized_args:
-        return False
-
-    lifecycle_root = (Path.cwd() / _LIFECYCLE_TESTS_DIR).resolve()
-    for candidate in normalized_args:
-        resolved = candidate.resolve()
-        try:
-            resolved.relative_to(lifecycle_root)
-        except ValueError:
-            if resolved != lifecycle_root:
-                return False
-    return True
-
-
-def _selected_rust_target_name(session: pytest.Session) -> str:
-    """Choose the Rust scenario target for the requested test slice."""
-    rust_target_name = session.config.getoption("--rust-target-name")
-    if rust_target_name != _DEFAULT_RUST_TARGET:
-        return rust_target_name
-    if _is_lifecycle_only_selection(session):
-        return _LIFECYCLE_ONLY_RUST_TARGET
-    return rust_target_name
-
-
-# [tool.pytest] in pyproject.toml is not read by pytest (it only honors
-# [tool.pytest.ini_options]), so the marker declarations there are silently ignored.
-# Register them here instead to suppress PytestUnknownMarkWarning.
-def pytest_configure(config: pytest.Config) -> None:
-    config.addinivalue_line("markers", "metadata")
-    config.addinivalue_line("markers", "test_properties(dict): Add custom properties to test XML output")
-    config.addinivalue_line("markers", "cpp")
-    config.addinivalue_line("markers", "rust")
-    config.addinivalue_line("markers", "daemon")
-    config.addinivalue_line("markers", "manual")
 
 
 # Cmdline options
@@ -167,7 +117,7 @@ def pytest_sessionstart(session):
             if "rust" in selected_versions:
                 print("Building Rust test scenarios executable...")
                 rust_tools = BazelTools(option_prefix="rust", build_timeout=build_timeout)
-                rust_target_name = _selected_rust_target_name(session)
+                rust_target_name = session.config.getoption("--rust-target-name")
                 rust_tools.build(rust_target_name)
 
             # Build C++ test scenarios.

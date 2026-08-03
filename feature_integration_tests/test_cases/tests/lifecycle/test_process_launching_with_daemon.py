@@ -164,8 +164,8 @@ class TestProcessLaunchingWithDaemon:
 
     @add_test_properties(
         partially_verifies=["feat_req__lifecycle__parallel_launch_support"],
-        test_type="integration",
-        derivation_technique="end-to-end-testing",
+        test_type="requirements-based",
+        derivation_technique="requirements-analysis",
     )
     def test_startup_declares_and_launches_multiple_processes(
         self,
@@ -195,8 +195,8 @@ class TestProcessLaunchingWithDaemon:
 
     @add_test_properties(
         partially_verifies=["feat_req__lifecycle__process_launch_args"],
-        test_type="integration",
-        derivation_technique="end-to-end-testing",
+        test_type="requirements-based",
+        derivation_technique="requirements-analysis",
     )
     def test_launch_process_arguments_are_applied(
         self,
@@ -236,10 +236,20 @@ class TestProcessLaunchingWithDaemon:
         launch_manager_daemon: dict[str, Any],
         version: str,
     ) -> None:
-        """Verify launched process environment contains configured identifiers."""
+        """Verify launched process environment matches every configured environment variable.
+
+        Reads the expected variables from the config itself (rather than hardcoded
+        literals) so this test tracks config drift instead of only ever re-checking
+        values that happen to coincide with the app name.
+        """
         daemon_info = launch_manager_daemon
         app_name = "rust_supervised_app" if version == "rust" else "cpp_supervised_app"
         app_path = str(daemon_info["apps"][version])
+
+        config_path = Path(__file__).resolve().parents[3] / "configs" / "lifecycle_daemon_config.json"
+        config = json.loads(config_path.read_text(encoding="utf-8"))
+        configured_env = config["components"][app_name]["deployment_config"]["environmental_variables"]
+        assert configured_env, f"{app_name} does not configure any environmental_variables to verify against"
 
         started = self._wait_until(lambda: self._is_running(app_path), timeout_s=8.0)
         assert started, f"{app_name} was not launched before environment verification"
@@ -248,12 +258,10 @@ class TestProcessLaunchingWithDaemon:
         assert pid is not None, f"Could not resolve PID for {app_name}"
         proc_env = self._proc_environ(pid)
 
-        assert proc_env.get("PROCESSIDENTIFIER") == app_name, (
-            f"PROCESSIDENTIFIER mismatch for {app_name}: {proc_env.get('PROCESSIDENTIFIER')}"
-        )
-        assert proc_env.get("IDENTIFIER") == app_name, (
-            f"IDENTIFIER mismatch for {app_name}: {proc_env.get('IDENTIFIER')}"
-        )
+        for key, expected_value in configured_env.items():
+            assert proc_env.get(key) == expected_value, (
+                f"{key} mismatch for {app_name}: expected {expected_value!r}, got {proc_env.get(key)!r}"
+            )
 
     @add_test_properties(
         partially_verifies=[
@@ -261,8 +269,8 @@ class TestProcessLaunchingWithDaemon:
             "feat_req__lifecycle__launch_priority_support",
             "feat_req__lifecycle__scheduling_policy",
         ],
-        test_type="integration",
-        derivation_technique="end-to-end-testing",
+        test_type="requirements-based",
+        derivation_technique="requirements-analysis",
     )
     def test_config_defines_uid_gid_scheduling_and_priority(
         self, launch_manager_daemon: dict[str, Any], version: str
@@ -279,8 +287,8 @@ class TestProcessLaunchingWithDaemon:
 
     @add_test_properties(
         partially_verifies=["feat_req__lifecycle__uid_gid_support"],
-        test_type="integration",
-        derivation_technique="end-to-end-testing",
+        test_type="requirements-based",
+        derivation_technique="requirements-analysis",
     )
     def test_launched_process_uid_gid_matches_config_when_applied(
         self,
@@ -325,8 +333,8 @@ class TestProcessLaunchingWithDaemon:
             "feat_req__lifecycle__launch_priority_support",
             "feat_req__lifecycle__scheduling_policy",
         ],
-        test_type="integration",
-        derivation_technique="end-to-end-testing",
+        test_type="requirements-based",
+        derivation_technique="requirements-analysis",
     )
     def test_launched_process_scheduling_matches_config_when_applied(
         self,
@@ -381,8 +389,8 @@ class TestProcessLaunchingWithDaemon:
 
     @add_test_properties(
         partially_verifies=["feat_req__lifecycle__secpol_non_root"],
-        test_type="integration",
-        derivation_technique="end-to-end-testing",
+        test_type="requirements-based",
+        derivation_technique="requirements-analysis",
     )
     def test_launch_manager_and_apps_are_not_running_as_root(
         self,
@@ -413,8 +421,8 @@ class TestProcessLaunchingWithDaemon:
             "feat_req__lifecycle__monitor_abnormal_term",
             "feat_req__lifecycle__retries_configurable",
         ],
-        test_type="integration",
-        derivation_technique="end-to-end-testing",
+        test_type="requirements-based",
+        derivation_technique="requirements-analysis",
     )
     def test_supervised_app_recovery(self, launch_manager_daemon: dict[str, Any], version: str) -> None:
         """
@@ -456,8 +464,8 @@ class TestProcessLaunchingWithDaemon:
         "feat_req__lifecycle__liveliness_detection",
         "feat_req__lifecycle__smart_watchdog_config",
     ],
-    test_type="integration",
-    derivation_technique="end-to-end-testing",
+    test_type="requirements-based",
+    derivation_technique="requirements-analysis",
 )
 class TestHealthMonitoringWithDaemon:
     """
