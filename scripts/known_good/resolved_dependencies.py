@@ -31,6 +31,9 @@ import json
 import logging
 import re
 import sys
+import urllib.error
+import urllib.request
+from collections.abc import Callable
 from pathlib import Path
 
 _HERE = Path(__file__).resolve().parent
@@ -106,6 +109,46 @@ def generate_override_directive(module: Module, repo_commit_dict: dict[str, str]
     )
 
 
+# Returns the bazel_dep names a git-overridden dependency itself declares in its own
+# MODULE.bazel, given that dependency's resolved Module (repo + commit). Used by
+# ResolvedDependencies.overwrite() to reach one level of transitive pass-through — see
+# fetch_module_bazel_deps for the real (network) implementation.
+TransitiveFetcher = Callable[["Module"], "set[str]"]
+
+
+def fetch_module_bazel_deps(module: Module, timeout: float = 10.0) -> set[str]:
+    """Fetch a git-overridden dependency's own MODULE.bazel and return its bazel_dep names.
+
+    A module we override by commit (e.g. score_tooling) may itself declare further
+    bazel_deps with their own git_override inside ITS MODULE.bazel (e.g. trlc, lobster).
+    Bazel discards overrides declared by a non-root module, so unless the module we are
+    injecting into repeats them at its own root, they fall through to an unresolvable
+    registry lookup (e.g. "module lobster@0.0.0 not found in registries"). This lets
+    :meth:`ResolvedDependencies.overwrite` carry those one level deeper.
+
+    Best-effort and github.com-only (true for every first-party score_* module and the
+    trlc/lobster third-party deps ref_int pins — see Module.owner_repo): any failure
+    (unsupported remote, network error, timeout) logs a warning and returns an empty set
+    rather than failing the run — same graceful-degradation philosophy as the rest of
+    this module.
+    """
+    if not module.repo or not module.hash:
+        return set()
+    try:
+        owner_repo = module.owner_repo
+    except ValueError as exc:
+        logging.warning("Cannot fetch MODULE.bazel for %s: %s", module.name, exc)
+        return set()
+    url = f"https://raw.githubusercontent.com/{owner_repo}/{module.hash}/MODULE.bazel"
+    try:
+        with urllib.request.urlopen(url, timeout=timeout) as resp:  # noqa: S310
+            text = resp.read().decode("utf-8", errors="replace")
+    except (urllib.error.URLError, TimeoutError, ValueError) as exc:
+        logging.warning("Could not fetch %s to check for transitive overrides: %s", url, exc)
+        return set()
+    return _non_dev_bazel_dep_names(text)
+
+
 # The single file that carries the resolved set from Stage 1 (resolve) to Stage 2
 # (per-module validation). It is the only handoff needed: first-party commits +
 # third-party resolved versions, merged. The lock travels alongside only as evidence.
@@ -116,10 +159,33 @@ _SKIP_MODULES = {"bazel_tools"}
 
 # Capture the module name from any ``bazel_dep(name = "...")`` call (name is the first arg).
 _BAZEL_DEP_RE = re.compile(r'bazel_dep\(\s*name\s*=\s*"([^"]+)"')
+# The full body of a bazel_dep(...) call, to additionally check for dev_dependency = True.
+_BAZEL_DEP_CALL_RE = re.compile(r"bazel_dep\((?P<body>.*?)\)", re.S)
+_DEV_DEPENDENCY_RE = re.compile(r"dev_dependency\s*=\s*True")
 # Parsers for reconstructing the resolved set from generated score_modules_*.MODULE.bazel.
 _GIT_OVERRIDE_BLOCK_RE = re.compile(r"git_override\((?P<body>.*?)\)", re.S)
 _SINGLE_VERSION_BLOCK_RE = re.compile(r"single_version_override\((?P<body>.*?)\)", re.S)
 _FIELD_RE = lambda field: re.compile(rf'{field}\s*=\s*"([^"]+)"')  # noqa: E731
+
+
+def _non_dev_bazel_dep_names(text: str) -> set[str]:
+    """Names from ``bazel_dep(...)`` calls that are NOT ``dev_dependency``-only.
+
+    A ``dev_dependency`` bazel_dep only takes effect when the declaring module is itself
+    the Bazel root. Used to inspect a *dependency's own* MODULE.bazel (e.g. score_tooling)
+    while it is never root — the module under test is — so its dev deps never enter the
+    actual graph. Including them would inject overrides for names Bazel does not resolve,
+    tripping "the root module specifies overrides on nonexistent module(s)".
+    """
+    names: set[str] = set()
+    for match in _BAZEL_DEP_CALL_RE.finditer(text):
+        body = match.group("body")
+        if _DEV_DEPENDENCY_RE.search(body):
+            continue
+        name = _field(body, "name")
+        if name:
+            names.add(name)
+    return names
 
 
 class ResolvedDependencies:
@@ -300,7 +366,14 @@ class ResolvedDependencies:
         text = self._strip_injection(text)
         return _BAZEL_DEP_RE.findall(text)
 
-    def overwrite(self, module_bazel: Path, *, module_under_test: str | None = None, write: bool = True) -> str:
+    def overwrite(
+        self,
+        module_bazel: Path,
+        *,
+        module_under_test: str | None = None,
+        write: bool = True,
+        fetch_transitive_deps: TransitiveFetcher | None = None,
+    ) -> str:
         """Overwrite a module's declared dependency versions with the resolved set.
 
         Appends a ``git_override`` / ``single_version_override`` directive for every
@@ -314,6 +387,12 @@ class ResolvedDependencies:
           superset of every module's own graph) — if it does happen, a warning is logged
           and that dependency is left to resolve on its own rather than failing the run.
         * Re-running is idempotent: a prior injection block is replaced.
+        * ``fetch_transitive_deps``, if given, is used to reach one level deeper: for every
+          git-overridden dependency just injected (e.g. score_tooling), it returns that
+          dependency's own declared bazel_dep names, and any of those present in the
+          resolved set but not already declared by this module are injected too. Without
+          it (the default), only the module's own directly-declared deps are considered —
+          see :func:`fetch_module_bazel_deps` for the real (network-based) implementation.
         """
         module_bazel = Path(module_bazel)
         original = self._strip_injection(module_bazel.read_text())
@@ -350,6 +429,33 @@ class ResolvedDependencies:
                 continue
             directives.append(directive)
             injected_names.append(name)
+
+        if fetch_transitive_deps is not None:
+            # One level of transitive reach: a dependency we just overrode by commit (e.g.
+            # score_tooling) may itself declare further bazel_deps with their own
+            # git_override inside ITS MODULE.bazel (e.g. trlc, lobster). Bazel discards
+            # overrides declared by a non-root module, so unless this module repeats them
+            # itself, they fall through to an unresolvable registry lookup the moment we
+            # upgrade the carrier to ref_int's resolved commit — even though the module's
+            # own (older) version of that carrier never needed them. single_version_override
+            # carriers are registry-resolved and carry no such risk, so only git-overridden
+            # ones are checked.
+            for carrier_name in list(injected_names):
+                carrier = self._resolved[carrier_name]
+                if not carrier.repo or not carrier.hash:
+                    continue
+                for sub_name in sorted(fetch_transitive_deps(carrier)):
+                    if sub_name == module_under_test or sub_name in declared or sub_name in injected_names:
+                        continue
+                    sub_module = self._resolved.get(sub_name)
+                    if sub_module is None:
+                        continue
+                    sub_module = _replace(sub_module, bazel_patches=None)
+                    directive = generate_override_directive(sub_module)
+                    if directive is None:
+                        continue
+                    directives.append(directive)
+                    injected_names.append(sub_name)
 
         # ref_int's injected override must be the ONLY override for each dep. A module that
         # pins a dep with its own git_override/single_version_override (e.g. score_platform)
@@ -499,6 +605,7 @@ def main() -> None:
         args.module_bazel,
         module_under_test=args.module_under_test,
         write=not args.dry_run,
+        fetch_transitive_deps=fetch_module_bazel_deps,
     )
     if args.dry_run:
         print(patched)
