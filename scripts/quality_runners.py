@@ -35,7 +35,23 @@ def print_centered(message: str, width: int = 120, fillchar: str = "-") -> None:
     print(message.center(width, fillchar))
 
 
-def run_unit_test_with_coverage(module: Module, workspace: Path | None = None) -> dict[str, str | int]:
+def stage2_startup_flags(ref_int_root: Path) -> list[str]:
+    """Bazel startup options that swap in ref_int's centralized config for Stage 2.
+
+    ``--noworkspace_rc`` disables the module's own ``.bazelrc``; ``--bazelrc`` supplies
+    ``ci/stage2/module.bazelrc`` instead. Every Bazel call for a module must use the same
+    startup flags, since different ones start a different server with a different output
+    base (relevant to the ``bazel info`` calls in ``cpp_coverage``).
+    """
+    return [
+        "--noworkspace_rc",
+        f"--bazelrc={ref_int_root / 'ci' / 'stage2' / 'module.bazelrc'}",
+    ]
+
+
+def run_unit_test_with_coverage(
+    module: Module, workspace: Path | None = None, startup: list[str] | None = None
+) -> dict[str, str | int]:
     """Run a module's unit tests + coverage.
 
     When ``workspace`` is None (central/legacy mode) the module is addressed through
@@ -55,16 +71,11 @@ def run_unit_test_with_coverage(module: Module, workspace: Path | None = None) -
     in_module = workspace is not None
     repo = "" if in_module else f"@{module.name}"
 
-    # --config=unit-tests   is defined as "test:unit-tests" in ref_int's .bazelrc,
-    # so Bazel ignores it for the "coverage" command and the module's .bazelrc has no
-    # such entry at all. --config=ferrocene-coverage references @score_tooling which
-    # is not in the module's own dep graph. Both are ref_int-specific; expand them to
-    # their individual flags when running inside a module checkout.
+    # --config names now resolve against ci/stage2/module.bazelrc, not the module's own
+    # .bazelrc. No filter flag is added here: it would override the centralized one (last
+    # wins) and re-admit miri/no-coverage targets.
     if in_module:
-        config_flags = [f"--config={c}" for c in module.metadata.bazel_config] + [
-            "--build_tests_only",
-            "--test_tag_filters=-manual",
-        ]
+        config_flags = [f"--config={c}" for c in module.metadata.bazel_config]
     else:
         config_flags = [
             "--config=unit-tests",
@@ -72,18 +83,23 @@ def run_unit_test_with_coverage(module: Module, workspace: Path | None = None) -
         ]
 
     call = (
-        [
-            "bazel",
+        ["bazel"]
+        + (startup or [])
+        + [
             "coverage",  # Call coverage instead of test to get .dat files already
-            "--test_verbose_timeout_warnings",
-            "--test_timeout=1200",
         ]
         + config_flags
-        + [
-            "--test_summary=testcase",
-            "--test_output=errors",
-            "--nocache_test_results",
-        ]
+        + (
+            []
+            if in_module  # test flags come from ci/stage2/module.bazelrc
+            else [
+                "--test_verbose_timeout_warnings",
+                "--test_timeout=1200",
+                "--test_summary=testcase",
+                "--test_output=errors",
+                "--nocache_test_results",
+            ]
+        )
         + (["--lockfile_mode=update"] if in_module else [f"--instrumentation_filter=@{module.name}"])
         + [f"{repo}{module.metadata.code_root_path}"]
         + [f"--{target}" for target in module.metadata.extra_test_config]
@@ -100,10 +116,12 @@ def run_unit_test_with_coverage(module: Module, workspace: Path | None = None) -
     return {**summary, "exit_code": result.exit_code}
 
 
-def run_cpp_coverage_extraction(module: Module, output_path: Path, workspace: Path | None = None) -> int:
+def run_cpp_coverage_extraction(
+    module: Module, output_path: Path, workspace: Path | None = None, startup: list[str] | None = None
+) -> int:
     print_centered("QR: Running cpp coverage analysis")
 
-    result_cpp = cpp_coverage(module, output_path, workspace=workspace)
+    result_cpp = cpp_coverage(module, output_path, workspace=workspace, startup=startup)
     summary = extract_coverage_summary(result_cpp.stdout)
 
     return {**summary, "exit_code": result_cpp.exit_code}
@@ -118,7 +136,9 @@ def run_rust_coverage_extraction(module: Module, output_path: Path, workspace: P
     return {**summary, "exit_code": result_rust.exit_code}
 
 
-def cpp_coverage(module: Module, artifact_dir: Path, workspace: Path | None = None) -> ProcessResult:
+def cpp_coverage(
+    module: Module, artifact_dir: Path, workspace: Path | None = None, startup: list[str] | None = None
+) -> ProcessResult:
     # .dat files are already generated in UT step
 
     # Run genhtml to generate the HTML report and get the summary
@@ -127,9 +147,12 @@ def cpp_coverage(module: Module, artifact_dir: Path, workspace: Path | None = No
     output_dir.mkdir(parents=True, exist_ok=True)
     # Find input locations. In module-context mode (DR-008 Option 4) Bazel runs inside the
     # checked-out module, so query its output paths with cwd=workspace.
+    # The same startup flags as the coverage run: different startup options mean a
+    # different Bazel server and therefore a different output base.
     info_cwd = {"cwd": str(workspace)} if workspace is not None else {}
-    bazel_coverage_output_directory = run_command(["bazel", "info", "output_path"], **info_cwd).stdout.strip()
-    bazel_source_directory = run_command(["bazel", "info", "output_base"], **info_cwd).stdout.strip()
+    info = ["bazel"] + (startup or []) + ["info"]
+    bazel_coverage_output_directory = run_command([*info, "output_path"], **info_cwd).stdout.strip()
+    bazel_source_directory = run_command([*info, "output_base"], **info_cwd).stdout.strip()
 
     dat_file = f"{bazel_coverage_output_directory}/_coverage/_coverage_report.dat"
     if not Path(dat_file).exists():
@@ -377,9 +400,17 @@ def main() -> bool:
         print_centered(f"QR: User requested tests only for specified modules: {', '.join(args.modules_to_test)}")
 
     workspace = args.module_dir
+    startup: list[str] = []
     if workspace is not None:
         if len(args.modules_to_test) != 1:
             raise SystemExit("--module-dir requires exactly one --modules-to-test entry")
+        # ref_int's checkout root; _module is a subdirectory of it in the Stage-2 job.
+        ref_int_root = args.known_good_path.resolve().parent
+        startup = stage2_startup_flags(ref_int_root)
+        stage2_rc = ref_int_root / "ci" / "stage2" / "module.bazelrc"
+        if not stage2_rc.is_file():
+            raise SystemExit(f"Stage-2 centralized config not found at {stage2_rc}")
+        print_centered(f"QR: Using ref_int centralized config {stage2_rc} (--noworkspace_rc)")
         # DR-008 Option 4: overwrite the checked-out module's declared dependency versions
         # with the dependency set ref_int resolved (Stage-1 artifact, falling back to
         # known_good.json), so the module's tests run against the resolved versions.
@@ -405,7 +436,6 @@ def main() -> bool:
 
         # Overwrite .bazelversion in the module checkout with ref_int's pinned version
         # so all Stage-2 runs use the same Bazel binary as the integrated build.
-        ref_int_root = args.known_good_path.resolve().parent
         bazelversion_src = ref_int_root / ".bazelversion"
         bazelversion_dst = workspace.resolve() / ".bazelversion"
         bazel_ver = bazelversion_src.read_text().strip()
@@ -418,11 +448,13 @@ def main() -> bool:
             continue
 
         print_centered(f"QR: Testing module: {module.name}")
-        unit_tests_summary[module.name] = run_unit_test_with_coverage(module=module, workspace=workspace)
+        unit_tests_summary[module.name] = run_unit_test_with_coverage(
+            module=module, workspace=workspace, startup=startup
+        )
 
         if "cpp" in module.metadata.langs:
             coverage_summary[f"{module.name}_cpp"] = run_cpp_coverage_extraction(
-                module=module, output_path=args.coverage_output_dir, workspace=workspace
+                module=module, output_path=args.coverage_output_dir, workspace=workspace, startup=startup
             )
 
         if "rust" in module.metadata.langs:

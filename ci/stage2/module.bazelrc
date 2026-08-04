@@ -1,0 +1,55 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+#
+# DR-008 Stage 2 centralized config. Loaded via --bazelrc with --noworkspace_rc, so it
+# replaces the checked-out module's own .bazelrc entirely and must restate every setting
+# a module build needs.
+
+# Repository mapping resolves before any --config is applied, so registries must be
+# unconditional here — a config-gated --registry leaves modules unresolvable.
+common --registry=https://raw.githubusercontent.com/eclipse-score/bazel_registry/main/
+common --registry=https://bcr.bazel.build
+
+build --java_language_version=17
+build --tool_java_language_version=17
+build --java_runtime_version=remotejdk_17
+build --tool_java_runtime_version=remotejdk_17
+
+# ─── stage2-base: shared build/test settings ─────────────────────────────────
+build:stage2-base --cxxopt=-Wno-error=mismatched-new-delete
+build:stage2-base --cxxopt=-Wno-deprecated-declarations
+
+# -miri excluded: ref_int registers only the non-miri ferrocene toolchain (stage2-rust).
+test:stage2-base --test_output=errors
+test:stage2-base --build_tests_only
+test:stage2-base --test_tag_filters=-manual,-miri,-no-coverage
+test:stage2-base --test_summary=testcase
+test:stage2-base --test_verbose_timeout_warnings
+test:stage2-base --test_timeout=1200
+test:stage2-base --nocache_test_results
+
+coverage:stage2-base --features=coverage
+coverage:stage2-base --combined_report=lcov
+# Make gcov counter updates atomic so a multithreaded coverage test is race-free.
+coverage:stage2-base --copt=-fprofile-update=atomic
+coverage:stage2-base --linkopt=-fprofile-update=atomic
+
+# ─── stage2-linux-x86_64: the mandatory Stage-2 target ───────────────────────
+build:stage2-linux-x86_64 --config=stage2-base
+build:stage2-linux-x86_64 --host_platform=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
+build:stage2-linux-x86_64 --platforms=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
+build:stage2-linux-x86_64 --extra_toolchains=@score_gcc_x86_64_toolchain//:x86_64-linux-gcc_12.2.0
+
+# ─── stage2-rust: additive, for modules that declare score_toolchains_rust ───
+# score_time doesn't, so it must not be pulled into stage2-base.
+build:stage2-rust --extra_toolchains=@score_toolchains_rust//toolchains/ferrocene:ferrocene_x86_64_unknown_linux_gnu
