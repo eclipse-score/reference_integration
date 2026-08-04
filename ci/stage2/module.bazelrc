@@ -60,3 +60,9 @@ build:stage2-gcc-base-constraints --extra_toolchains=@score_gcc_x86_64_toolchain
 # ─── stage2-rust: additive, for modules that declare score_toolchains_rust ───
 # score_time doesn't, so it must not be pulled into stage2-base.
 build:stage2-rust --extra_toolchains=@score_toolchains_rust//toolchains/ferrocene:ferrocene_x86_64_unknown_linux_gnu
+
+# ─── stage2-libclang-*: score_tooling's C++ parser needs a libclang toolchain ──
+# score_tooling deliberately registers none for consumers, so each consumer defines its
+# own. // resolves against the module in Stage 2, so we point at the module's target.
+# Only score_communication has parser-backed targets, hence one config for now.
+build:stage2-libclang-communication --extra_toolchains=//bazel/toolchains:score_communication_libclang_toolchain
