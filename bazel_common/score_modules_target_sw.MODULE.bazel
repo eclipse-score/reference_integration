@@ -94,3 +94,14 @@ git_override(
     ],
     remote = "https://github.com/eclipse-score/time.git",
 )
+
+bazel_dep(name = "score_config_management")
+git_override(
+    module_name = "score_config_management",
+    commit = "b22ca9bd222b99985be4339187c639d6862051a0",
+    patch_strip = 1,
+    patches = [
+        "patches/config_management/001-fix-communication-api-and-remove-targets.patch",
+    ],
+    remote = "https://github.com/eclipse-score/config_management.git",
+)
