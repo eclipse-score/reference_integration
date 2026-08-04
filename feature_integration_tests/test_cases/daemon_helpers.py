@@ -108,19 +108,41 @@ def get_binary_path(target: str) -> Path:
     return _resolve_target_path(target)
 
 
-def _pgrep_cmdline_pattern(binary_path: str) -> str:
+def pgrep_cmdline_pattern(binary_path: str) -> str:
     """Build POSIX ERE pattern matching binary with optional arguments."""
     return rf"^{re.escape(binary_path)}([[:space:]]|$)"
 
 
-def _is_running(binary_path: Path) -> bool:
+def is_running(binary_path: str | Path) -> bool:
     result = subprocess.run(
-        ["pgrep", "-f", _pgrep_cmdline_pattern(str(binary_path))],
+        ["pgrep", "-f", pgrep_cmdline_pattern(str(binary_path))],
         capture_output=True,
         text=True,
         check=False,
     )
     return result.returncode == 0
+
+
+def first_pid(binary_path: str | Path) -> str | None:
+    result = subprocess.run(
+        ["pgrep", "-f", pgrep_cmdline_pattern(str(binary_path))],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        return None
+    lines = [line for line in result.stdout.splitlines() if line]
+    return lines[0] if lines else None
+
+
+def wait_until(predicate, timeout_s: float, interval_s: float = 0.2) -> bool:
+    deadline = time.time() + timeout_s
+    while time.time() < deadline:
+        if predicate():
+            return True
+        time.sleep(interval_s)
+    return False
 
 
 _SETCAP_CAPS = "cap_setuid,cap_setgid,cap_sys_nice+ep"
@@ -220,12 +242,39 @@ def _grant_sandbox_capabilities(binary_path: Path) -> tuple[bool, str]:
 
 
 def _wait_for_apps(apps: dict[str, Path], timeout_s: float = 8.0, interval_s: float = 0.2) -> bool:
+    return wait_until(lambda: all(is_running(path) for path in apps.values()), timeout_s, interval_s)
+
+
+_RUNTIME_ROOT_LOCK_PATH = Path("/tmp/lifecycle_fit.lock")
+_RUNTIME_ROOT_LOCK_TIMEOUT_S = 120.0
+
+
+def _acquire_runtime_root_lock(timeout_s: float = _RUNTIME_ROOT_LOCK_TIMEOUT_S):
+    """Acquire the exclusive lock guarding the shared /tmp/lifecycle_fit runtime_root.
+
+    Polls with a non-blocking flock instead of blocking indefinitely: an unbounded
+    `LOCK_EX` would hang forever (and silently eat the whole CI job's timeout budget)
+    if the lock is ever legitimately held longer than expected, giving no diagnostic
+    signal about what's actually stuck. No lifecycle test suite should need this lock
+    for anywhere near `timeout_s`, so failing loudly here is strictly more useful than
+    an indefinite wait.
+    """
+    lock_file = _RUNTIME_ROOT_LOCK_PATH.open("w", encoding="utf-8")
     deadline = time.time() + timeout_s
-    while time.time() < deadline:
-        if all(_is_running(path) for path in apps.values()):
-            return True
-        time.sleep(interval_s)
-    return False
+    while True:
+        try:
+            fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+            return lock_file
+        except OSError:
+            if time.time() >= deadline:
+                lock_file.close()
+                raise RuntimeError(
+                    f"Could not acquire {_RUNTIME_ROOT_LOCK_PATH} within {timeout_s}s; "
+                    "another lifecycle daemon run appears to be holding it. If no other "
+                    "lifecycle test is genuinely running, a stale process may be stuck "
+                    "holding this lock."
+                ) from None
+            time.sleep(0.5)
 
 
 @dataclass
@@ -276,8 +325,7 @@ def start_launch_manager_daemon(
     instance here rather than the shared `launch_manager_daemon` fixture.
     """
 
-    lock_file = Path("/tmp/lifecycle_fit.lock").open("w", encoding="utf-8")
-    fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
+    lock_file = _acquire_runtime_root_lock()
 
     work_dir = tmp_path_factory.mktemp("lm-daemon")
     etc_dir = work_dir / "etc"

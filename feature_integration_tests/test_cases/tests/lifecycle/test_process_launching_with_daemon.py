@@ -37,7 +37,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from daemon_helpers import launch_manager_daemon
+from daemon_helpers import first_pid, is_running, launch_manager_daemon, pgrep_cmdline_pattern, wait_until
 from test_properties import add_test_properties
 
 pytestmark = [
@@ -56,34 +56,6 @@ class TestProcessLaunchingWithDaemon:
     - Process monitoring and health checks
     - Recovery actions on failure
     """
-
-    @staticmethod
-    def _pgrep_cmdline_pattern(binary_path: str) -> str:
-        """Build POSIX ERE pattern matching binary with optional arguments."""
-        return rf"^{re.escape(binary_path)}([[:space:]]|$)"
-
-    @staticmethod
-    def _is_running(binary_path: str) -> bool:
-        result = subprocess.run(
-            ["pgrep", "-f", TestProcessLaunchingWithDaemon._pgrep_cmdline_pattern(binary_path)],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        return result.returncode == 0
-
-    @staticmethod
-    def _first_pid(binary_path: str) -> str | None:
-        result = subprocess.run(
-            ["pgrep", "-f", TestProcessLaunchingWithDaemon._pgrep_cmdline_pattern(binary_path)],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        if result.returncode != 0:
-            return None
-        lines = [line for line in result.stdout.splitlines() if line]
-        return lines[0] if lines else None
 
     @staticmethod
     def _proc_cmdline(pid: str) -> list[str]:
@@ -148,15 +120,6 @@ class TestProcessLaunchingWithDaemon:
             return None
         return policy, priority
 
-    @staticmethod
-    def _wait_until(predicate, timeout_s: float, interval_s: float = 0.2) -> bool:
-        deadline = time.time() + timeout_s
-        while time.time() < deadline:
-            if predicate():
-                return True
-            time.sleep(interval_s)
-        return False
-
     # NOTE: launch-order/dependency-gating coverage for rust-on-cpp startup lives in
     # test_conditional_launching.py (that is the feature this repo dedicates to conditional
     # launching); duplicating it here as test_startup_launches_supervised_apps /
@@ -186,8 +149,8 @@ class TestProcessLaunchingWithDaemon:
         daemon = daemon_info["daemon"]
         cpp_path = str(daemon_info["apps"]["cpp"])
         rust_path = str(daemon_info["apps"]["rust"])
-        both_running = self._wait_until(
-            lambda: self._is_running(cpp_path) and self._is_running(rust_path),
+        both_running = wait_until(
+            lambda: is_running(cpp_path) and is_running(rust_path),
             timeout_s=8.0,
         )
         assert both_running, "Startup should launch all configured supervised processes"
@@ -218,10 +181,10 @@ class TestProcessLaunchingWithDaemon:
         configured_args = config["components"][app_name]["component_properties"]["process_arguments"]
         assert configured_args, f"{app_name} does not configure any process_arguments to verify against"
 
-        started = self._wait_until(lambda: self._is_running(app_path), timeout_s=8.0)
+        started = wait_until(lambda: is_running(app_path), timeout_s=8.0)
         assert started, f"{app_name} was not launched before argument verification"
 
-        pid = self._first_pid(app_path)
+        pid = first_pid(app_path)
         assert pid is not None, f"Could not resolve PID for {app_name}"
         cmdline = self._proc_cmdline(pid)
 
@@ -251,10 +214,10 @@ class TestProcessLaunchingWithDaemon:
         configured_env = config["components"][app_name]["deployment_config"]["environmental_variables"]
         assert configured_env, f"{app_name} does not configure any environmental_variables to verify against"
 
-        started = self._wait_until(lambda: self._is_running(app_path), timeout_s=8.0)
+        started = wait_until(lambda: is_running(app_path), timeout_s=8.0)
         assert started, f"{app_name} was not launched before environment verification"
 
-        pid = self._first_pid(app_path)
+        pid = first_pid(app_path)
         assert pid is not None, f"Could not resolve PID for {app_name}"
         proc_env = self._proc_environ(pid)
 
@@ -312,10 +275,10 @@ class TestProcessLaunchingWithDaemon:
         expected_uid = int(sandbox["uid"])
         expected_gid = int(sandbox["gid"])
 
-        started = self._wait_until(lambda: self._is_running(app_path), timeout_s=8.0)
+        started = wait_until(lambda: is_running(app_path), timeout_s=8.0)
         assert started, f"{app_name} was not launched before uid/gid verification"
 
-        pid = self._first_pid(app_path)
+        pid = first_pid(app_path)
         assert pid is not None, f"Could not resolve PID for {app_name}"
         proc_ids = self._proc_status_ids(pid)
         assert proc_ids is not None, f"Could not read /proc status uid/gid for {app_name} pid={pid}"
@@ -358,7 +321,7 @@ class TestProcessLaunchingWithDaemon:
         configured_policy = sandbox["scheduling_policy"]
         configured_priority = int(sandbox["scheduling_priority"])
 
-        started = self._wait_until(lambda: self._is_running(app_path), timeout_s=8.0)
+        started = wait_until(lambda: is_running(app_path), timeout_s=8.0)
         assert started, f"{app_name} was not launched before scheduling verification"
 
         # Supervised apps can exit/restart between pid resolution and the chrt subprocess
@@ -367,7 +330,7 @@ class TestProcessLaunchingWithDaemon:
         sched = None
         pid = None
         for _ in range(20):
-            pid = self._first_pid(app_path)
+            pid = first_pid(app_path)
             if pid is None:
                 time.sleep(0.1)
                 continue
@@ -406,10 +369,10 @@ class TestProcessLaunchingWithDaemon:
         assert os.geteuid() != 0, "Test environment unexpectedly runs as root"
         assert daemon.pid() > 0, "Launch Manager daemon pid should be available"
 
-        started = self._wait_until(lambda: self._is_running(app_path), timeout_s=8.0)
+        started = wait_until(lambda: is_running(app_path), timeout_s=8.0)
         assert started, f"{app_name} was not launched before non-root verification"
 
-        pid = self._first_pid(app_path)
+        pid = first_pid(app_path)
         assert pid is not None, f"Could not resolve PID for {app_name}"
         proc_ids = self._proc_status_ids(pid)
         assert proc_ids is not None, f"Could not read /proc status uid/gid for {app_name} pid={pid}"
@@ -439,16 +402,16 @@ class TestProcessLaunchingWithDaemon:
         app_name = "rust_supervised_app" if version == "rust" else "cpp_supervised_app"
         app_path = str(daemon_info["apps"][version])
 
-        started = self._wait_until(lambda: self._is_running(app_path), timeout_s=8.0)
+        started = wait_until(lambda: is_running(app_path), timeout_s=8.0)
         assert started, f"{app_name} was not running before recovery test"
 
-        old_pid = self._first_pid(app_path)
+        old_pid = first_pid(app_path)
         assert old_pid is not None, f"Could not resolve PID for {app_name}"
 
         subprocess.run(["kill", "-9", old_pid], check=True)
 
-        restarted = self._wait_until(
-            lambda: (new_pid := self._first_pid(app_path)) is not None and new_pid != old_pid,
+        restarted = wait_until(
+            lambda: (new_pid := first_pid(app_path)) is not None and new_pid != old_pid,
             timeout_s=12.0,
         )
         assert restarted, f"{app_name} was not restarted after forced termination"
@@ -492,7 +455,7 @@ class TestHealthMonitoringWithDaemon:
         # Setup: stop the supervised process to emulate a non-reporting workload.
         app_path = str(launch_manager_daemon["apps"][version])
         result = subprocess.run(
-            ["pgrep", "-f", TestProcessLaunchingWithDaemon._pgrep_cmdline_pattern(app_path)],
+            ["pgrep", "-f", pgrep_cmdline_pattern(app_path)],
             capture_output=True,
             text=True,
             check=False,

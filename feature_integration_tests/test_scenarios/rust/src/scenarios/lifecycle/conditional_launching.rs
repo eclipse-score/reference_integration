@@ -52,7 +52,10 @@ fn process_condition_met(process_name: &str) -> bool {
         if let Ok(cmdline) = fs::read(entry.path().join("cmdline")) {
             let argv0 = cmdline.split(|&b| b == 0).next().unwrap_or(&[]);
             if let Ok(argv0) = std::str::from_utf8(argv0) {
-                if argv0.ends_with(process_name) {
+                // Compare the basename only: a raw suffix match on the full path would also
+                // accept e.g. "/usr/bin/oversleep" as satisfying process_name="sleep".
+                let basename = argv0.rsplit('/').next().unwrap_or(argv0);
+                if basename == process_name {
                     return true;
                 }
             }

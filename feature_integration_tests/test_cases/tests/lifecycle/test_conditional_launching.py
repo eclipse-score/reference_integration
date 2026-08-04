@@ -18,52 +18,49 @@ launch_manager process started with lifecycle daemon configuration.
 """
 
 import json
-import re
-import subprocess
-import time
 from pathlib import Path
 from typing import Any
 
 import pytest
-from daemon_helpers import launch_manager_daemon, start_launch_manager_daemon, stop_launch_manager_daemon
+from daemon_helpers import (
+    first_pid,
+    is_running,
+    launch_manager_daemon,
+    start_launch_manager_daemon,
+    stop_launch_manager_daemon,
+    wait_until,
+)
 from test_properties import add_test_properties
 
-pytestmark = [
-    pytest.mark.daemon,
-    pytest.mark.parametrize("version", ["rust", "cpp"], scope="class"),
-]
+pytestmark = [pytest.mark.daemon]
 
 
+@pytest.mark.parametrize("version", ["rust", "cpp"], scope="class")
 class TestConditionalLaunchingWithDaemon:
     """Verify dependency-based conditional launching with real daemon behavior."""
 
-    @staticmethod
-    def _pgrep_cmdline_pattern(binary_path: str) -> str:
-        """Build POSIX ERE pattern matching binary with optional arguments."""
-        return rf"^{re.escape(binary_path)}([[:space:]]|$)"
+    @add_test_properties(
+        partially_verifies=["feat_req__lifecycle__launch_support"],
+        test_type="requirements-based",
+        derivation_technique="requirements-analysis",
+    )
+    def test_startup_launches_conditioned_processes(self, launch_manager_daemon: dict[str, Any], version: str) -> None:
+        """Verify supervised processes are launched as part of conditional startup."""
+        daemon_info = launch_manager_daemon
+        app_name = "rust_supervised_app" if version == "rust" else "cpp_supervised_app"
+        app_path = str(daemon_info["apps"][version])
 
-    @staticmethod
-    def _is_running(binary_path: str) -> bool:
-        result = subprocess.run(
-            ["pgrep", "-f", TestConditionalLaunchingWithDaemon._pgrep_cmdline_pattern(binary_path)],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        return result.returncode == 0
+        started = wait_until(lambda: is_running(app_path), timeout_s=8.0)
+        assert started, f"{app_name} was not launched in conditional startup"
 
-    @staticmethod
-    def _first_pid(binary_path: str) -> str | None:
-        result = subprocess.run(
-            ["pgrep", "-f", TestConditionalLaunchingWithDaemon._pgrep_cmdline_pattern(binary_path)],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        if result.returncode != 0:
-            return None
-        lines = [line for line in result.stdout.splitlines() if line]
-        return lines[0] if lines else None
+
+class TestConditionalLaunchingDependencyOrdering:
+    """Verify cpp-before-rust ordering and its declaration in config.
+
+    Not parametrized on `version`: both tests inspect the fixed cpp/rust pair
+    (or the static config) regardless of which scenario variant is under test
+    elsewhere, so parametrizing here would only re-run identical assertions.
+    """
 
     @staticmethod
     def _proc_start_ticks(pid: str) -> int | None:
@@ -78,29 +75,6 @@ class TestConditionalLaunchingWithDaemon:
         except ValueError:
             return None
 
-    @staticmethod
-    def _wait_until(predicate, timeout_s: float, interval_s: float = 0.2) -> bool:
-        deadline = time.time() + timeout_s
-        while time.time() < deadline:
-            if predicate():
-                return True
-            time.sleep(interval_s)
-        return False
-
-    @add_test_properties(
-        partially_verifies=["feat_req__lifecycle__launch_support"],
-        test_type="requirements-based",
-        derivation_technique="requirements-analysis",
-    )
-    def test_startup_launches_conditioned_processes(self, launch_manager_daemon: dict[str, Any], version: str) -> None:
-        """Verify supervised processes are launched as part of conditional startup."""
-        daemon_info = launch_manager_daemon
-        app_name = "rust_supervised_app" if version == "rust" else "cpp_supervised_app"
-        app_path = str(daemon_info["apps"][version])
-
-        started = self._wait_until(lambda: self._is_running(app_path), timeout_s=8.0)
-        assert started, f"{app_name} was not launched in conditional startup"
-
     @add_test_properties(
         partially_verifies=[
             "feat_req__lifecycle__process_ordering",
@@ -112,21 +86,20 @@ class TestConditionalLaunchingWithDaemon:
     def test_rust_launch_is_conditioned_on_cpp_dependency(
         self,
         launch_manager_daemon: dict[str, Any],
-        version: str,
     ) -> None:
         """Verify rust app starts no earlier than its configured C++ dependency."""
         daemon_info = launch_manager_daemon
         cpp_path = str(daemon_info["apps"]["cpp"])
         rust_path = str(daemon_info["apps"]["rust"])
 
-        started = self._wait_until(
-            lambda: self._is_running(cpp_path) and self._is_running(rust_path),
+        started = wait_until(
+            lambda: is_running(cpp_path) and is_running(rust_path),
             timeout_s=8.0,
         )
         assert started, "cpp_supervised_app and rust_supervised_app should both be running"
 
-        cpp_pid = self._first_pid(cpp_path)
-        rust_pid = self._first_pid(rust_path)
+        cpp_pid = first_pid(cpp_path)
+        rust_pid = first_pid(rust_path)
         assert cpp_pid is not None, "Could not resolve PID for cpp_supervised_app"
         assert rust_pid is not None, "Could not resolve PID for rust_supervised_app"
 
@@ -144,11 +117,7 @@ class TestConditionalLaunchingWithDaemon:
         test_type="requirements-based",
         derivation_technique="requirements-analysis",
     )
-    def test_dependency_is_declared_in_lifecycle_config(
-        self,
-        launch_manager_daemon: dict[str, Any],
-        version: str,
-    ) -> None:
+    def test_dependency_is_declared_in_lifecycle_config(self, launch_manager_daemon: dict[str, Any]) -> None:
         """Verify runtime configuration defines rust conditional dependency on cpp."""
         config_path = Path(__file__).resolve().parents[3] / "configs" / "lifecycle_daemon_config.json"
         config = json.loads(config_path.read_text(encoding="utf-8"))
@@ -160,7 +129,6 @@ class TestConditionalLaunchingWithDaemon:
         )
 
 
-@pytest.mark.daemon
 class TestConditionalLaunchingBlocksOnMissingDependency:
     """Verify rust startup is actually gated on cpp, not merely correlated with it.
 
@@ -170,30 +138,10 @@ class TestConditionalLaunchingBlocksOnMissingDependency:
     Safe to run its own daemon here because the bazel targets for these tests
     are tagged tags = ["exclusive"], guaranteeing no other lifecycle daemon is
     using the shared runtime_root/lock at the same time.
+
+    Not parametrized on `version`: dependency gating is independent of which
+    scenario variant is under test elsewhere, so this runs exactly once.
     """
-
-    @staticmethod
-    def _pgrep_cmdline_pattern(binary_path: str) -> str:
-        return rf"^{re.escape(binary_path)}([[:space:]]|$)"
-
-    @classmethod
-    def _is_running(cls, binary_path: str) -> bool:
-        result = subprocess.run(
-            ["pgrep", "-f", cls._pgrep_cmdline_pattern(binary_path)],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        return result.returncode == 0
-
-    @staticmethod
-    def _wait_until(predicate, timeout_s: float, interval_s: float = 0.2) -> bool:
-        deadline = time.time() + timeout_s
-        while time.time() < deadline:
-            if predicate():
-                return True
-            time.sleep(interval_s)
-        return False
 
     @add_test_properties(
         partially_verifies=[
@@ -205,12 +153,9 @@ class TestConditionalLaunchingBlocksOnMissingDependency:
         derivation_technique="requirements-analysis",
     )
     def test_rust_stays_down_until_cpp_dependency_becomes_available(
-        self, tmp_path_factory: pytest.TempPathFactory, version: str
+        self, tmp_path_factory: pytest.TempPathFactory
     ) -> None:
         """Verify rust does not start while cpp is withheld, and does once cpp is unblocked."""
-        if version != "rust":
-            pytest.skip("dependency-gating check is independent of the 'version' axis; runs once")
-
         daemon_info = start_launch_manager_daemon(
             tmp_path_factory,
             blocked_apps=frozenset({"cpp"}),
@@ -221,7 +166,7 @@ class TestConditionalLaunchingBlocksOnMissingDependency:
             rust_path = str(daemon_info["apps"]["rust"])
 
             # cpp cannot execute (mode 0o000): rust must not appear while it's withheld.
-            rust_started_early = self._wait_until(lambda: self._is_running(rust_path), timeout_s=4.0)
+            rust_started_early = wait_until(lambda: is_running(rust_path), timeout_s=4.0)
             assert not rust_started_early, (
                 "rust_supervised_app started even though its cpp_supervised_app dependency "
                 "was withheld (non-executable); dependency gating was not enforced"
@@ -229,7 +174,7 @@ class TestConditionalLaunchingBlocksOnMissingDependency:
 
             # Unblock cpp: rust should now be allowed to start.
             cpp_path.chmod(0o755)
-            rust_started = self._wait_until(lambda: self._is_running(rust_path), timeout_s=8.0)
+            rust_started = wait_until(lambda: is_running(rust_path), timeout_s=8.0)
             assert rust_started, (
                 "rust_supervised_app did not start after its cpp_supervised_app dependency became available"
             )

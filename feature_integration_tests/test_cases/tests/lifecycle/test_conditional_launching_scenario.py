@@ -333,3 +333,65 @@ class TestConditionalLaunchingScenarioRejectsUnsupportedPrefix(LifecycleScenario
             f"Rejection took {elapsed_s:.2f}s, close to the full {self._TIMEOUT_MS}ms timeout - "
             "the prefix should be validated up front, not discovered by waiting it out."
         )
+
+
+@add_test_properties(
+    partially_verifies=["feat_req__lifecycle__validate_conditions"],
+    test_type="requirements-based",
+    derivation_technique="requirements-analysis",
+)
+class TestConditionalLaunchingScenarioRejectsEmptyConditions(LifecycleScenario):
+    """Verify an empty wait_conditions list is rejected as invalid configuration up front,
+    distinct from a legitimate condition that simply times out unmet.
+
+    Without this, a future refactor of parse_wait_conditions/parse_string_array_field could
+    silently start treating an empty list as "nothing to wait for, immediate success" instead
+    of a configuration error - a regression this test would otherwise be the only thing to
+    catch, since the happy-path and unsupported-prefix tests never exercise this branch.
+    """
+
+    @pytest.fixture(scope="class")
+    def scenario_name(self) -> str:
+        return "lifecycle.conditional_launching"
+
+    _TIMEOUT_MS = 2000
+
+    @pytest.fixture(scope="class")
+    def test_config(self) -> dict[str, Any]:
+        return {
+            "test": {
+                "wait_conditions": [],
+                "polling_interval_ms": 20,
+                "timeout_ms": self._TIMEOUT_MS,
+            },
+        }
+
+    def expect_command_failure(self) -> bool:
+        return True
+
+    def capture_stderr(self) -> bool:
+        return True
+
+    def test_empty_conditions_are_rejected_immediately(
+        self,
+        command: list[str],
+        execution_timeout: float,
+        version: str,
+    ) -> None:
+        """Verify validation rejects an empty wait_conditions list outright, before entering
+        the wait loop, rather than only surfacing the same error after the full timeout."""
+        start = time.monotonic()
+        result = self._run_command(command, execution_timeout)
+        elapsed_s = time.monotonic() - start
+
+        assert result.return_code != ResultCode.SUCCESS, (
+            f"Expected failure for an empty wait_conditions list, got: {result}"
+        )
+        assert result.stderr is not None
+        assert "Wait conditions were not provided" in result.stderr, (
+            f"Expected a missing/empty wait_conditions validation error on stderr, got: {result.stderr}"
+        )
+        assert elapsed_s < (self._TIMEOUT_MS / 1000) / 2, (
+            f"Rejection took {elapsed_s:.2f}s, close to the full {self._TIMEOUT_MS}ms timeout - "
+            "an empty condition list should be validated up front, not discovered by waiting it out."
+        )

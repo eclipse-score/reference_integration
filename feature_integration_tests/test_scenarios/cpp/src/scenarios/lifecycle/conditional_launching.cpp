@@ -79,9 +79,13 @@ bool process_condition_met(const std::string& process_name) {
             if (!argv0.empty()) {
                 const auto argv0_end = argv0.find('\0');
                 const std::string first_arg = argv0.substr(0, argv0_end);
-                if (first_arg.size() >= process_name.size() &&
-                    first_arg.compare(first_arg.size() - process_name.size(), process_name.size(), process_name) ==
-                        0) {
+                // Compare the basename only (portion after the last '/'), not a raw suffix of
+                // the full path: a plain suffix match would also accept e.g. "/usr/bin/oversleep"
+                // as satisfying process_name="sleep".
+                const auto slash_pos = first_arg.find_last_of('/');
+                const std::string basename =
+                    slash_pos == std::string::npos ? first_arg : first_arg.substr(slash_pos + 1);
+                if (basename == process_name) {
                     return true;
                 }
             }
