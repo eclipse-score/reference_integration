@@ -69,6 +69,10 @@ bazel_dep(name = "score_lifecycle_health")
 git_override(
     module_name = "score_lifecycle_health",
     commit = "23e9849437c578ade99b8ccbf5d09c1835737b3f",
+    patch_strip = 1,
+    patches = [
+        "//patches/lifecycle:001-forward-visibility-to-config-combiner.patch",
+    ],
     remote = "https://github.com/eclipse-score/lifecycle.git",
 )
 
