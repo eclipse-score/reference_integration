@@ -1,0 +1,45 @@
+Upstream baselibs migrated score/memory/shared to score_communication in commit
+b90e0695 ("Migrate score/memory/shared to score_communication"). score_time HEAD
+still points at the old @score_baselibs labels, so redirect them and declare the
+score_communication dependency they now require.
+
+diff --git a/MODULE.bazel b/MODULE.bazel
+index 19aa03e7..839777b7 100644
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -110,6 +110,7 @@ bazel_dep(name = "google_benchmark", version = "1.9.5")
+ bazel_dep(name = "buildifier_prebuilt", version = "8.5.1", dev_dependency = True)
+ 
+ bazel_dep(name = "score_baselibs", version = "0.2.9")
++bazel_dep(name = "score_communication", version = "0.2.1")
+ bazel_dep(name = "score_lifecycle_health", version = "0.2.0")
+ 
+ # LLVM toolchain — provides @llvm_toolchain//:clang-tidy for the clang-tidy aspect.
+diff --git a/score/time_daemon/src/ipc/core/BUILD b/score/time_daemon/src/ipc/core/BUILD
+index 2e671e0c..788008ff 100644
+--- a/score/time_daemon/src/ipc/core/BUILD
++++ b/score/time_daemon/src/ipc/core/BUILD
+@@ -24,8 +24,8 @@ cc_library(
+     visibility = ["//score/time_daemon/src/ipc:__subpackages__"],
+     deps = [
+         "//score/time_daemon/src/common:logging_contexts",
+-        "@score_baselibs//score/memory/shared",
+-        "@score_baselibs//score/memory/shared/typedshm/typedshm_wrapper:typedmemory",
++        "@score_communication//score/memory/shared",
++        "@score_communication//score/memory/shared/typedshm/typedshm_wrapper:typedmemory",
+         "@score_baselibs//score/mw/log:frontend",
+     ],
+ )
+diff --git a/score/ts_client/src/BUILD b/score/ts_client/src/BUILD
+index 3fcc0a90..3d244fd6 100644
+--- a/score/ts_client/src/BUILD
++++ b/score/ts_client/src/BUILD
+@@ -34,7 +34,7 @@ cc_library(
+         "//score/time_slave:__subpackages__",
+     ],
+     deps = [
+-        "@score_baselibs//score/memory/shared",
++        "@score_communication//score/memory/shared",
+     ],
+ )
+ 
