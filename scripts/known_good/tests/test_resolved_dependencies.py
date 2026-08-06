@@ -19,9 +19,7 @@ overwrites a temporary module MODULE.bazel — no cloned repos or Bazel required
 import json
 import logging
 import sys
-import urllib.error
 from pathlib import Path
-from unittest.mock import patch
 
 import pytest
 
@@ -30,12 +28,11 @@ _SCRIPTS_DIR = Path(__file__).resolve().parents[2]
 if str(_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS_DIR))
 
-from known_good.models.module import Module  # noqa: E402
 from known_good.resolved_dependencies import (  # noqa: E402
     INJECTION_BEGIN,
     INJECTION_END,
+    DependencyGraph,
     ResolvedDependencies,
-    fetch_module_bazel_deps,
     generate_override_directive,
 )
 
@@ -96,58 +93,57 @@ def resolved(known_good_file: Path) -> ResolvedDependencies:
     return ResolvedDependencies.from_known_good(known_good_file)
 
 
-class TestFetchModuleBazelDeps:
-    """fetch_module_bazel_deps: the real (HTTP) implementation of TransitiveFetcher."""
+def _node(name: str, version: str = "1.0", deps: list[dict] | None = None, **extra) -> dict:
+    """An expanded graph node, matching 'bazel mod graph --output=json'."""
+    return {"name": name, "version": version, "dependencies": deps or [], "indirectDependencies": [], **extra}
 
-    @staticmethod
-    def _module(**overrides) -> Module:
-        defaults = {"name": "score_tooling", "hash": "abc1234", "repo": "https://github.com/eclipse-score/tooling.git"}
-        return Module(**{**defaults, **overrides})
 
-    def test_parses_bazel_dep_names_from_fetched_text(self):
-        fake_text = 'module(name = "score_tooling")\nbazel_dep(name = "trlc", version = "0.0.0")\n'
-        with patch("known_good.resolved_dependencies.urllib.request.urlopen") as mock_urlopen:
-            mock_urlopen.return_value.__enter__.return_value.read.return_value = fake_text.encode()
-            names = fetch_module_bazel_deps(self._module())
-        assert names == {"trlc"}
-        # the raw-content URL is derived from the module's own repo + commit
-        (url,), _ = mock_urlopen.call_args
-        assert url == "https://raw.githubusercontent.com/eclipse-score/tooling/abc1234/MODULE.bazel"
+def _unexpanded(name: str, version: str = "1.0") -> dict:
+    """A repeated reference: no 'dependencies' key, so it must be resolved via the index."""
+    return {"name": name, "version": version, "unexpanded": True}
 
-    def test_excludes_dev_dependency_bazel_deps(self):
-        # dev_dependency bazel_deps only take effect when the DECLARING module is itself
-        # the Bazel root, which it never is here (see score_baselibs' own MODULE.bazel,
-        # which declares score_platform/toolchains_llvm as dev_dependency = True — pulling
-        # those in for an unrelated module trips Bazel's "overrides on nonexistent
-        # module(s)", since they never actually enter that module's graph).
-        fake_text = (
-            'bazel_dep(name = "trlc", version = "0.0.0")\n'
-            'bazel_dep(name = "toolchains_llvm", version = "1.6.0", dev_dependency = True)\n'
+
+class TestDependencyGraph:
+    """Closure computation over the mod graph, including its unexpanded-node encoding."""
+
+    def test_closure_follows_transitive_edges(self):
+        baselibs = _node("score_baselibs", deps=[_node("flatbuffers")])
+        graph = DependencyGraph(_node("<root>", "", [_node("score_persistency", deps=[baselibs])]))
+        assert graph.closure("score_persistency") == {"score_baselibs", "flatbuffers"}
+
+    def test_closure_resolves_unexpanded_references(self):
+        # Bazel emits a module's children only at its first occurrence; every later
+        # occurrence is an 'unexpanded' stub. Walking the subtree literally would stop at
+        # the stub and miss flatbuffers, which is exactly the gap this must not have.
+        graph = DependencyGraph(
+            _node(
+                "<root>",
+                "",
+                [
+                    _node("score_baselibs", deps=[_node("flatbuffers")]),
+                    _node("score_communication", deps=[_unexpanded("score_baselibs")]),
+                ],
+            )
         )
-        with patch("known_good.resolved_dependencies.urllib.request.urlopen") as mock_urlopen:
-            mock_urlopen.return_value.__enter__.return_value.read.return_value = fake_text.encode()
-            names = fetch_module_bazel_deps(self._module())
-        assert names == {"trlc"}
+        assert graph.closure("score_communication") == {"score_baselibs", "flatbuffers"}
 
-    def test_missing_repo_or_hash_returns_empty_without_fetching(self):
-        with patch("known_good.resolved_dependencies.urllib.request.urlopen") as mock_urlopen:
-            assert fetch_module_bazel_deps(self._module(hash="")) == set()
-            assert fetch_module_bazel_deps(self._module(repo="")) == set()
-        mock_urlopen.assert_not_called()
+    def test_closure_excludes_the_module_itself(self):
+        graph = DependencyGraph(_node("<root>", "", [_node("score_time", deps=[_node("rules_cc")])]))
+        assert "score_time" not in graph.closure("score_time")
 
-    def test_unsupported_remote_returns_empty_without_fetching(self):
-        with patch("known_good.resolved_dependencies.urllib.request.urlopen") as mock_urlopen:
-            names = fetch_module_bazel_deps(self._module(repo="https://gitlab.com/example/repo.git"))
-        assert names == set()
-        mock_urlopen.assert_not_called()
+    def test_closure_terminates_on_cycles(self):
+        a = _node("a")
+        b = _node("b", deps=[_unexpanded("a")])
+        a["dependencies"] = [b]
+        assert DependencyGraph(_node("<root>", "", [a])).closure("a") == {"b"}
 
-    def test_network_failure_returns_empty_instead_of_raising(self, caplog: pytest.LogCaptureFixture):
-        with patch("known_good.resolved_dependencies.urllib.request.urlopen") as mock_urlopen:
-            mock_urlopen.side_effect = urllib.error.URLError("boom")
-            with caplog.at_level(logging.WARNING):
-                names = fetch_module_bazel_deps(self._module())
-        assert names == set()
-        assert "boom" in caplog.text
+    def test_closure_of_unknown_module_is_empty(self):
+        graph = DependencyGraph(_node("<root>", "", [_node("score_time")]))
+        assert graph.closure("not_in_graph") == set()
+
+    def test_from_file_reports_a_missing_graph(self, tmp_path: Path):
+        with pytest.raises(FileNotFoundError, match="bazel mod graph"):
+            DependencyGraph.from_file(tmp_path / "graph.json")
 
 
 class TestFromKnownGood:
@@ -246,59 +242,90 @@ class TestOverwrite:
 
 
 class TestOverwriteTransitive:
-    """fetch_transitive_deps: one level of transitive reach (e.g. score_tooling -> trlc/lobster)."""
+    """Closure injection: pin transitive deps the module never declares itself."""
 
-    def test_injects_dep_found_via_carrier(self, resolved: ResolvedDependencies, tmp_path: Path):
-        # Module declares ONLY score_baselibs. score_logging is never declared directly,
-        # only discovered because the fake fetcher reports it as something score_baselibs'
-        # own MODULE.bazel declares.
-        mod = tmp_path / "MODULE.bazel"
-        mod.write_text('module(name = "score_persistency", version = "0.0.0")\nbazel_dep(name = "score_baselibs")\n')
+    @staticmethod
+    def _graph() -> DependencyGraph:
+        # score_persistency -> score_baselibs -> score_logging. Only score_baselibs is
+        # declared directly by the module; score_logging arrives through it.
+        return DependencyGraph(
+            _node(
+                "<root>",
+                "",
+                [_node("score_persistency", deps=[_node("score_baselibs", deps=[_node("score_logging")])])],
+            )
+        )
 
-        def fake_fetch(module: Module) -> set[str]:
-            return {"score_logging"} if module.name == "score_baselibs" else set()
+    @pytest.fixture
+    def only_baselibs(self, tmp_path: Path) -> Path:
+        p = tmp_path / "MODULE.bazel"
+        p.write_text('module(name = "score_persistency", version = "0.0.0")\nbazel_dep(name = "score_baselibs")\n')
+        return p
 
+    def test_injects_transitive_dep_with_its_bazel_dep(self, resolved: ResolvedDependencies, only_baselibs: Path):
         patched = resolved.overwrite(
-            mod, module_under_test="score_persistency", write=False, fetch_transitive_deps=fake_fetch
+            only_baselibs, module_under_test="score_persistency", write=False, graph=self._graph()
         )
         block = patched.split(INJECTION_BEGIN)[1].split(INJECTION_END)[0]
         assert 'module_name = "score_baselibs"' in block
         assert 'module_name = "score_logging"' in block
+        # The override alone would be rejected ("overrides on nonexistent module(s)") since
+        # the module never declares score_logging — the bazel_dep is what makes it legal.
+        assert 'bazel_dep(name = "score_logging")' in block
 
-    def test_without_fetcher_transitive_dep_not_injected(self, resolved: ResolvedDependencies, tmp_path: Path):
-        # Default behaviour (no fetch_transitive_deps given) is unchanged: only directly
-        # declared deps are considered.
+    def test_declared_dep_gets_no_extra_bazel_dep(self, resolved: ResolvedDependencies, only_baselibs: Path):
+        # score_baselibs is already declared above the block; re-declaring it would be a
+        # duplicate declaration of the same module.
+        patched = resolved.overwrite(
+            only_baselibs, module_under_test="score_persistency", write=False, graph=self._graph()
+        )
+        block = patched.split(INJECTION_BEGIN)[1].split(INJECTION_END)[0]
+        assert "bazel_dep" not in block.split('module_name = "score_baselibs"')[0]
+        assert patched.count('bazel_dep(name = "score_baselibs")') == 1
+
+    def test_registry_dep_stub_repeats_the_resolved_version(self, resolved: ResolvedDependencies, tmp_path: Path):
+        # score_tooling is registry-pinned (version 1.2.0). Its stub must carry that exact
+        # version so it matches MVS and --check_direct_dependencies stays quiet; a
+        # git-overridden module instead gets a bare bazel_dep with no version at all.
         mod = tmp_path / "MODULE.bazel"
-        mod.write_text('module(name = "score_persistency", version = "0.0.0")\nbazel_dep(name = "score_baselibs")\n')
-        patched = resolved.overwrite(mod, module_under_test="score_persistency", write=False)
+        mod.write_text('module(name = "score_persistency", version = "0.0.0")\n')
+        graph = DependencyGraph(
+            _node("<root>", "", [_node("score_persistency", deps=[_node("score_tooling"), _node("score_logging")])])
+        )
+        block = (
+            resolved.overwrite(mod, module_under_test="score_persistency", write=False, graph=graph)
+            .split(INJECTION_BEGIN)[1]
+            .split(INJECTION_END)[0]
+        )
+        assert 'bazel_dep(name = "score_tooling", version = "1.2.0")' in block
+        assert 'bazel_dep(name = "score_logging")\n' in block
+
+    def test_without_graph_only_declared_deps_are_pinned(self, resolved: ResolvedDependencies, only_baselibs: Path):
+        patched = resolved.overwrite(only_baselibs, module_under_test="score_persistency", write=False)
         assert 'module_name = "score_logging"' not in patched
 
-    def test_does_not_duplicate_already_declared_dep(self, resolved: ResolvedDependencies, module_bazel: Path):
-        # score_logging is already declared directly in MODULE_BAZEL; even though the fake
-        # fetcher also reports it via score_baselibs, it must not be injected twice.
-        def fake_fetch(module: Module) -> set[str]:
-            return {"score_logging"} if module.name == "score_baselibs" else set()
-
-        patched = resolved.overwrite(
-            module_bazel, module_under_test="score_persistency", write=False, fetch_transitive_deps=fake_fetch
+    def test_closure_member_absent_from_resolved_set_is_skipped(
+        self, resolved: ResolvedDependencies, only_baselibs: Path, caplog: pytest.LogCaptureFixture
+    ):
+        # A module's dev_dependency deps activate only when it is root — true in Stage 2 but
+        # not in Stage 1 — so ref_int's graph never saw them. Warn, never fail.
+        graph = DependencyGraph(
+            _node("<root>", "", [_node("score_persistency", deps=[_node("rules_doxygen")])]),
         )
-        assert patched.count('module_name = "score_logging"') == 1
+        with caplog.at_level(logging.WARNING):
+            patched = resolved.overwrite(
+                only_baselibs, module_under_test="score_persistency", write=False, graph=graph
+            )
+        assert "rules_doxygen" not in patched
+        assert "rules_doxygen" in caplog.text
 
-    def test_skips_single_version_override_carriers(self, resolved: ResolvedDependencies, module_bazel: Path):
-        # score_tooling is declared with a plain version (single_version_override kind) in
-        # this fixture -> registry-resolved, no non-root-override risk, so the fetcher must
-        # not even be called for it. score_baselibs/score_logging ARE git-overridden.
-        calls: list[str] = []
-
-        def fake_fetch(module: Module) -> set[str]:
-            calls.append(module.name)
-            return set()
-
-        resolved.overwrite(
-            module_bazel, module_under_test="score_persistency", write=False, fetch_transitive_deps=fake_fetch
-        )
-        assert "score_tooling" not in calls
-        assert "score_baselibs" in calls
+    def test_module_under_test_inferred_from_module_declaration(
+        self, resolved: ResolvedDependencies, only_baselibs: Path
+    ):
+        # module(name = "...") identifies the root, so --module-under-test is optional.
+        patched = resolved.overwrite(only_baselibs, write=False, graph=self._graph())
+        assert 'module_name = "score_persistency"' not in patched
+        assert 'module_name = "score_baselibs"' in patched
 
 
 class TestFromModGraph:

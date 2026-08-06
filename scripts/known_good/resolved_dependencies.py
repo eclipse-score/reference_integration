@@ -29,14 +29,27 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import re
 import sys
-import urllib.error
-import urllib.request
-from collections.abc import Callable
 from pathlib import Path
 
 _HERE = Path(__file__).resolve().parent
+
+
+def _repo_root() -> Path:
+    """ref_int's workspace root.
+
+    Prefers the environment Bazel sets for ``bazel run`` targets so paths passed on the
+    command line resolve against the user's workspace rather than the runfiles tree (and
+    so ``graph.json`` need not be declared in ``data = [...]``). Falls back to walking up
+    from this file for direct ``python3 scripts/...`` invocations.
+    """
+    for var in ("BUILD_WORKSPACE_DIRECTORY", "BUILD_WORKING_DIRECTORY"):
+        value = os.environ.get(var)
+        if value:
+            return Path(value)
+    return _HERE.parents[1]
 try:
     from known_good.models.known_good import load_known_good
     from known_good.models.module import Module
@@ -109,44 +122,84 @@ def generate_override_directive(module: Module, repo_commit_dict: dict[str, str]
     )
 
 
-# Returns the bazel_dep names a git-overridden dependency itself declares in its own
-# MODULE.bazel, given that dependency's resolved Module (repo + commit). Used by
-# ResolvedDependencies.overwrite() to reach one level of transitive pass-through — see
-# fetch_module_bazel_deps for the real (network) implementation.
-TransitiveFetcher = Callable[["Module"], "set[str]"]
+# The file Stage 1 stores alongside the manifest so Stage 2 can determine, for a given
+# module, which *transitive* dependencies need an override (see DependencyGraph).
+GRAPH_NAME = "graph.json"
 
 
-def fetch_module_bazel_deps(module: Module, timeout: float = 10.0) -> set[str]:
-    """Fetch a git-overridden dependency's own MODULE.bazel and return its bazel_dep names.
+class DependencyGraph:
+    """The ``bazel mod graph --output=json`` tree, queryable per module.
 
-    A module we override by commit (e.g. score_tooling) may itself declare further
-    bazel_deps with their own git_override inside ITS MODULE.bazel (e.g. trlc, lobster).
-    Bazel discards overrides declared by a non-root module, so unless the module we are
-    injecting into repeats them at its own root, they fall through to an unresolvable
-    registry lookup (e.g. "module lobster@0.0.0 not found in registries"). This lets
-    :meth:`ResolvedDependencies.overwrite` carry those one level deeper.
+    Stage 2 needs more than the module-under-test's *declared* dependencies: Bazel only
+    honours ``*_override`` directives from the **root** module, so any transitive dep the
+    module does not itself declare falls through to plain MVS and can resolve to a version
+    ref_int never validated (e.g. ``score_communication`` never declares ``flatbuffers``;
+    it arrives via ``score_baselibs``). :meth:`closure` returns the full set so
+    :meth:`ResolvedDependencies.overwrite` can pin every one of them.
 
-    Best-effort and github.com-only (true for every first-party score_* module and the
-    trlc/lobster third-party deps ref_int pins — see Module.owner_repo): any failure
-    (unsupported remote, network error, timeout) logs a warning and returns an empty set
-    rather than failing the run — same graceful-degradation philosophy as the rest of
-    this module.
+    The graph is *not* a plain tree. A module that appears more than once is emitted once
+    with its ``dependencies`` and thereafter as an ``unexpanded`` stub carrying no
+    children (in ref_int's graph: 865 unexpanded vs 157 expanded nodes). Walking the
+    subtree naively would therefore miss most of the closure, so nodes are indexed by name
+    on load and unexpanded references are resolved through that index.
     """
-    if not module.repo or not module.hash:
-        return set()
-    try:
-        owner_repo = module.owner_repo
-    except ValueError as exc:
-        logging.warning("Cannot fetch MODULE.bazel for %s: %s", module.name, exc)
-        return set()
-    url = f"https://raw.githubusercontent.com/{owner_repo}/{module.hash}/MODULE.bazel"
-    try:
-        with urllib.request.urlopen(url, timeout=timeout) as resp:  # noqa: S310
-            text = resp.read().decode("utf-8", errors="replace")
-    except (urllib.error.URLError, TimeoutError, ValueError) as exc:
-        logging.warning("Could not fetch %s to check for transitive overrides: %s", url, exc)
-        return set()
-    return _non_dev_bazel_dep_names(text)
+
+    def __init__(self, root: dict):
+        self._index: dict[str, dict] = {}
+        self._build_index(root)
+
+    def _build_index(self, node: dict, seen: set[int] | None = None) -> None:
+        seen = set() if seen is None else seen
+        if id(node) in seen:
+            return
+        seen.add(id(node))
+        name = node.get("name")
+        # Only expanded nodes carry children; the first occurrence is the authoritative one.
+        if name and not node.get("unexpanded") and "dependencies" in node:
+            self._index.setdefault(name, node)
+        for dep in node.get("dependencies") or []:
+            self._build_index(dep, seen)
+
+    @classmethod
+    def from_file(cls, path: Path) -> DependencyGraph:
+        path = Path(path)
+        if not path.is_file():
+            raise FileNotFoundError(
+                f"Dependency graph {path} not found. Stage 1 must produce it with "
+                f"'bazel mod graph --output=json' and store it as {GRAPH_NAME} in the "
+                f"stage1-resolved-deps artifact."
+            )
+        return cls(json.loads(path.read_text()))
+
+    @property
+    def names(self) -> set[str]:
+        return set(self._index)
+
+    def closure(self, module_name: str) -> set[str]:
+        """Every module reachable from ``module_name``, excluding itself.
+
+        Traversal follows ``dependencies`` and ``indirectDependencies``, resolving
+        ``unexpanded`` stubs via the name index. A ``visited`` set guards the ``cycles``
+        the graph schema can carry.
+        """
+        visited: set[str] = set()
+        stack = [module_name]
+        while stack:
+            node = self._index.get(stack.pop())
+            if node is None:
+                continue  # unexpanded-only or absent: nothing further to walk
+            for dep in node.get("dependencies") or []:
+                name = dep.get("name")
+                if name and name not in visited:
+                    visited.add(name)
+                    stack.append(name)
+            for dep in node.get("indirectDependencies") or []:
+                name = dep if isinstance(dep, str) else dep.get("name")
+                if name and name not in visited:
+                    visited.add(name)
+                    stack.append(name)
+        visited.discard(module_name)
+        return visited
 
 
 # The single file that carries the resolved set from Stage 1 (resolve) to Stage 2
@@ -159,33 +212,47 @@ _SKIP_MODULES = {"bazel_tools"}
 
 # Capture the module name from any ``bazel_dep(name = "...")`` call (name is the first arg).
 _BAZEL_DEP_RE = re.compile(r'bazel_dep\(\s*name\s*=\s*"([^"]+)"')
-# The full body of a bazel_dep(...) call, to additionally check for dev_dependency = True.
-_BAZEL_DEP_CALL_RE = re.compile(r"bazel_dep\((?P<body>.*?)\)", re.S)
-_DEV_DEPENDENCY_RE = re.compile(r"dev_dependency\s*=\s*True")
 # Parsers for reconstructing the resolved set from generated score_modules_*.MODULE.bazel.
 _GIT_OVERRIDE_BLOCK_RE = re.compile(r"git_override\((?P<body>.*?)\)", re.S)
 _SINGLE_VERSION_BLOCK_RE = re.compile(r"single_version_override\((?P<body>.*?)\)", re.S)
+# multiple_version_override pins several versions of one module simultaneously; unlike the
+# other two it cannot be represented by a single Module.version, so it is carried
+# separately (see ResolvedDependencies._multi).
+_MULTIPLE_VERSION_BLOCK_RE = re.compile(r"multiple_version_override\((?P<body>.*?)\)", re.S)
+_VERSIONS_LIST_RE = re.compile(r"versions\s*=\s*\[(?P<items>.*?)\]", re.S)
 _FIELD_RE = lambda field: re.compile(rf'{field}\s*=\s*"([^"]+)"')  # noqa: E731
 
 
-def _non_dev_bazel_dep_names(text: str) -> set[str]:
-    """Names from ``bazel_dep(...)`` calls that are NOT ``dev_dependency``-only.
+def _parse_versions_list(body: str) -> list[str]:
+    """Extract the string items of a ``versions = [...]`` keyword argument."""
+    match = _VERSIONS_LIST_RE.search(body)
+    return re.findall(r'"([^"]+)"', match.group("items")) if match else []
 
-    A ``dev_dependency`` bazel_dep only takes effect when the declaring module is itself
-    the Bazel root. Used to inspect a *dependency's own* MODULE.bazel (e.g. score_tooling)
-    while it is never root — the module under test is — so its dev deps never enter the
-    actual graph. Including them would inject overrides for names Bazel does not resolve,
-    tripping "the root module specifies overrides on nonexistent module(s)".
+
+def generate_multiple_version_override(module_name: str, versions: list[str]) -> str:
+    """Return a ``multiple_version_override`` directive for a module pinned to several versions."""
+    items = "".join(f'        "{v}",\n' for v in versions)
+    return f'multiple_version_override(\n    module_name = "{module_name}",\n    versions = [\n{items}    ],\n)\n'
+
+
+def generate_bazel_dep(module: Module | None, name: str) -> str:
+    """Return the ``bazel_dep`` line that brings ``name`` into the root module's graph.
+
+    An override is only legal for a module Bazel actually resolves; injecting one for a
+    transitive dependency the module-under-test does not declare would trip "the root
+    module specifies overrides on nonexistent module(s)". Declaring the ``bazel_dep``
+    alongside the override is what makes it valid.
+
+    The version is deliberate: a registry module repeats its *resolved* version so it
+    matches what MVS selects and ``--check_direct_dependencies`` stays quiet, while a
+    git-overridden module omits the version entirely (the override supplies the source,
+    and any literal here — ``0.0.0`` included — would only produce a spurious mismatch
+    warning). Omitting it is the same idiom the score modules already use, e.g.
+    ``bazel_dep(name = "score_tooling")``.
     """
-    names: set[str] = set()
-    for match in _BAZEL_DEP_CALL_RE.finditer(text):
-        body = match.group("body")
-        if _DEV_DEPENDENCY_RE.search(body):
-            continue
-        name = _field(body, "name")
-        if name:
-            names.add(name)
-    return names
+    if module is not None and module.version:
+        return f'bazel_dep(name = "{name}", version = "{module.version}")\n'
+    return f'bazel_dep(name = "{name}")\n'
 
 
 class ResolvedDependencies:
@@ -195,8 +262,11 @@ class ResolvedDependencies:
     interface to scan + overwrite a module's ``MODULE.bazel`` to those versions.
     """
 
-    def __init__(self, resolved: dict[str, Module]):
+    def __init__(self, resolved: dict[str, Module], multi: dict[str, list[str]] | None = None):
         self._resolved = resolved
+        # name -> versions, for modules ref_int pins with multiple_version_override. Kept
+        # apart from _resolved because a Module carries exactly one version.
+        self._multi = multi or {}
 
     # -- construction: "resolved deps versions from ref_int root" --------------------
 
@@ -265,6 +335,7 @@ class ResolvedDependencies:
         be represented and are logged as not carried.
         """
         resolved: dict[str, Module] = {}
+        multi: dict[str, list[str]] = {}
         unrepresentable: list[str] = []
         for f in override_files:
             # Drop comment-only lines first: hand-written MODULE.bazel files contain
@@ -273,6 +344,11 @@ class ResolvedDependencies:
             text = "\n".join(ln for ln in Path(f).read_text().splitlines() if not ln.lstrip().startswith("#"))
             for module in cls._parse_override_file(text):  # git_override + single_version_override
                 resolved[module.name] = module
+            for block in _MULTIPLE_VERSION_BLOCK_RE.finditer(text):
+                body = block.group("body")
+                name, versions = _field(body, "module_name"), _parse_versions_list(body)
+                if name and versions:
+                    multi[name] = versions
             for m in re.finditer(r'(archive_override|local_path_override)\(\s*module_name\s*=\s*"([^"]+)"', text):
                 unrepresentable.append(f"{m.group(2)} ({m.group(1)})")
 
@@ -281,7 +357,7 @@ class ResolvedDependencies:
         _collect_resolved_versions(graph, versions)
         skipped: list[str] = []
         for name, version in versions.items():
-            if name in resolved or name in _SKIP_MODULES:
+            if name in resolved or name in multi or name in _SKIP_MODULES:
                 continue  # already carried by an override directive, or non-overridable
             if not version or version == "0.0.0":
                 # Non-registry version: ref_int pins it via an override we did not capture
@@ -298,7 +374,7 @@ class ResolvedDependencies:
             logging.warning(
                 "Graph modules at version 0.0.0 with no carried override, skipped: %s", ", ".join(sorted(skipped))
             )
-        return cls(resolved)
+        return cls(resolved, multi)
 
     def to_file(self, path: Path) -> None:
         """Serialize the resolved set to the JSON manifest (Stage 1 -> Stage 2 handoff).
@@ -308,21 +384,25 @@ class ResolvedDependencies:
         Metadata is intentionally omitted — the manifest carries dependency pins, not the
         module-under-test's test configuration (that comes from known_good.json).
         """
-        modules = {}
+        modules: dict[str, dict[str, object]] = {}
         for name in sorted(self._resolved):
             m = self._resolved[name]
             entry: dict[str, object] = {"version": m.version} if m.version else {"repo": m.repo, "hash": m.hash}
             if m.bazel_patches:
                 entry["bazel_patches"] = m.bazel_patches
             modules[name] = entry
-        Path(path).write_text(json.dumps({"modules": modules}, indent=2) + "\n")
+        for name, versions in self._multi.items():
+            modules[name] = {"versions": versions}
+        Path(path).write_text(json.dumps({"modules": dict(sorted(modules.items()))}, indent=2) + "\n")
 
     @classmethod
     def from_file(cls, path: Path) -> ResolvedDependencies:
         """Load a resolved set previously written by :meth:`to_file`."""
         data = json.loads(Path(path).read_text())
-        resolved = {name: Module.from_dict(name, md) for name, md in data.get("modules", {}).items()}
-        return cls(resolved)
+        entries = data.get("modules", {})
+        multi = {name: md["versions"] for name, md in entries.items() if md.get("versions")}
+        resolved = {name: Module.from_dict(name, md) for name, md in entries.items() if name not in multi}
+        return cls(resolved, multi)
 
     @staticmethod
     def _parse_override_file(text: str) -> list[Module]:
@@ -350,11 +430,16 @@ class ResolvedDependencies:
 
     @property
     def names(self) -> set[str]:
-        return set(self._resolved)
+        return set(self._resolved) | set(self._multi)
 
     @property
     def modules(self) -> dict[str, Module]:
         return dict(self._resolved)
+
+    @property
+    def multiple_versions(self) -> dict[str, list[str]]:
+        """Modules ref_int pins with ``multiple_version_override`` -> their versions."""
+        return dict(self._multi)
 
     def get(self, name: str) -> Module | None:
         return self._resolved.get(name)
@@ -372,90 +457,86 @@ class ResolvedDependencies:
         *,
         module_under_test: str | None = None,
         write: bool = True,
-        fetch_transitive_deps: TransitiveFetcher | None = None,
+        graph: DependencyGraph | None = None,
     ) -> str:
-        """Overwrite a module's declared dependency versions with the resolved set.
+        """Overwrite a module's dependency versions with ref_int's resolved set.
 
-        Appends a ``git_override`` / ``single_version_override`` directive for every
-        dependency the module declares that we have a resolved version for, so the
-        module (and all its transitive deps) build against ref_int's resolved versions.
+        Appends an override directive for every dependency in scope, so the module builds
+        and tests against exactly the versions ref_int resolved in Stage 1.
+
+        Scope is the module's **transitive closure** when ``graph`` is supplied, not just
+        the dependencies it declares. Bazel honours ``*_override`` only from the root
+        module, so a transitive dependency the module does not itself declare would
+        otherwise fall through to plain MVS and can select a version ref_int never
+        validated (``score_communication`` never declares ``flatbuffers``; it arrives via
+        ``score_baselibs``). For each closure member that is not already declared, a
+        ``bazel_dep`` is emitted alongside the override — an override for a module absent
+        from the graph is rejected by Bazel as "the root module specifies overrides on
+        nonexistent module(s)", and the ``bazel_dep`` is what makes it legal.
+
+        Without ``graph`` only declared dependencies are pinned, which leaves that
+        transitive gap open; Stage 2 always passes one.
 
         * Skips the module under test itself (the root is never overridden).
         * Always overwrites: any existing override the module already declares is replaced.
-        * A declared dependency with no entry in the resolved set is expected not to occur
-          when the resolved set comes from ref_int's full ``bazel mod graph`` (it is a
-          superset of every module's own graph) — if it does happen, a warning is logged
-          and that dependency is left to resolve on its own rather than failing the run.
+        * A dependency with no entry in the resolved set is left to resolve on its own and
+          logged. This is expected and structural rather than a defect: a module's
+          ``dev_dependency`` deps activate only when it is the root, which is true in
+          Stage 2 but not in Stage 1, so ref_int's graph never saw them.
         * Re-running is idempotent: a prior injection block is replaced.
-        * ``fetch_transitive_deps``, if given, is used to reach one level deeper: for every
-          git-overridden dependency just injected (e.g. score_tooling), it returns that
-          dependency's own declared bazel_dep names, and any of those present in the
-          resolved set but not already declared by this module are injected too. Without
-          it (the default), only the module's own directly-declared deps are considered —
-          see :func:`fetch_module_bazel_deps` for the real (network-based) implementation.
         """
         module_bazel = Path(module_bazel)
         original = self._strip_injection(module_bazel.read_text())
 
         declared = set(_BAZEL_DEP_RE.findall(original))
+        module_under_test = module_under_test or _module_name_of(original)
 
         from dataclasses import replace as _replace
 
+        in_scope = set(declared)
+        if graph is not None and module_under_test:
+            # The closure and nothing beyond it: pinning only what is already in this
+            # module's graph keeps the injection faithful to Stage 1 without pulling new
+            # modules (and the toolchains they register) into the build. Members with no
+            # resolved entry are reported below rather than filtered out silently.
+            in_scope |= graph.closure(module_under_test)
+
         directives: list[str] = []
         injected_names: list[str] = []
-        # Inject overrides only for deps the module actually declares (intersected with the
-        # resolved set). Bazel fails with "root module specifies overrides on nonexistent
-        # module(s)" if an override targets a module that is not in this module's dependency
-        # graph, so the full resolved set cannot be injected wholesale — a declared bazel_dep
-        # is by definition in the graph, which makes its override safe.
-        # ref_int always decides the version — any existing module-level override is replaced.
-        for name in sorted(declared):
-            if name == module_under_test:
+        unresolved: list[str] = []
+        for name in sorted(in_scope):
+            if name == module_under_test or name in _SKIP_MODULES:
                 continue  # the module under test is the root; never override it
-            module = self._resolved.get(name)
-            if module is None:
-                logging.warning(
-                    "%s declares %s, which has no entry in the resolved set; "
-                    "leaving it to resolve on its own instead of failing the run.",
-                    module_bazel,
-                    name,
-                )
-                continue
-            # Strip bazel_patches: they reference //patches/... labels in ref_int's
-            # workspace which do not exist inside another module's checkout.
-            module = _replace(module, bazel_patches=None)
-            directive = generate_override_directive(module)
+            if name in self._multi:
+                directive: str | None = generate_multiple_version_override(name, self._multi[name])
+                module = None
+            else:
+                module = self._resolved.get(name)
+                if module is None:
+                    unresolved.append(name)
+                    continue
+                # Strip bazel_patches: they reference //patches/... labels in ref_int's
+                # workspace which do not exist inside another module's checkout.
+                module = _replace(module, bazel_patches=None)
+                directive = generate_override_directive(module)
             if directive is None:
                 continue
+            # Only closure members the module does not declare need the bazel_dep line;
+            # emitting a second one for a declared dep would be a duplicate declaration.
+            if name not in declared:
+                directives.append(generate_bazel_dep(module, name))
             directives.append(directive)
             injected_names.append(name)
 
-        if fetch_transitive_deps is not None:
-            # One level of transitive reach: a dependency we just overrode by commit (e.g.
-            # score_tooling) may itself declare further bazel_deps with their own
-            # git_override inside ITS MODULE.bazel (e.g. trlc, lobster). Bazel discards
-            # overrides declared by a non-root module, so unless this module repeats them
-            # itself, they fall through to an unresolvable registry lookup the moment we
-            # upgrade the carrier to ref_int's resolved commit — even though the module's
-            # own (older) version of that carrier never needed them. single_version_override
-            # carriers are registry-resolved and carry no such risk, so only git-overridden
-            # ones are checked.
-            for carrier_name in list(injected_names):
-                carrier = self._resolved[carrier_name]
-                if not carrier.repo or not carrier.hash:
-                    continue
-                for sub_name in sorted(fetch_transitive_deps(carrier)):
-                    if sub_name == module_under_test or sub_name in declared or sub_name in injected_names:
-                        continue
-                    sub_module = self._resolved.get(sub_name)
-                    if sub_module is None:
-                        continue
-                    sub_module = _replace(sub_module, bazel_patches=None)
-                    directive = generate_override_directive(sub_module)
-                    if directive is None:
-                        continue
-                    directives.append(directive)
-                    injected_names.append(sub_name)
+        if unresolved:
+            logging.warning(
+                "%s: no entry in the resolved set for %s; leaving them to resolve on their own. "
+                "Expected for dev_dependency-only deps (active only when the module is root, "
+                "so absent from ref_int's Stage 1 graph) and for modules ref_int pins with an "
+                "archive_override/local_path_override.",
+                module_bazel,
+                ", ".join(unresolved),
+            )
 
         # ref_int's injected override must be the ONLY override for each dep. A module that
         # pins a dep with its own git_override/single_version_override (e.g. score_platform)
@@ -516,6 +597,33 @@ def _field(body: str, field: str) -> str:
     return match.group(1) if match else ""
 
 
+# A module declares its own name in the module(...) call at the top of its MODULE.bazel.
+_MODULE_DECL_RE = re.compile(r"module\(\s*name\s*=\s*\"([^\"]+)\"", re.S)
+
+
+def injected_override_names(module_bazel_text: str) -> set[str]:
+    """Module names ref_int injected an override for, read back from a patched MODULE.bazel.
+
+    The authoritative answer to "did ref_int pin this?" — used by the Stage 2 verification
+    to tell an override that failed to take effect (ref_int's bug) from a dependency that
+    was never pinned at all (the module resolved it on its own).
+    """
+    if INJECTION_BEGIN not in module_bazel_text:
+        return set()
+    block = module_bazel_text.split(INJECTION_BEGIN, 1)[1].split(INJECTION_END, 1)[0]
+    return set(re.findall(r'_override\(\s*module_name\s*=\s*"([^"]+)"', block))
+
+
+def _module_name_of(module_bazel_text: str) -> str:
+    """The module's own name, from the ``module(name = "...")`` call in its MODULE.bazel.
+
+    Lets Stage 2 identify the module under test from the file itself, so the caller need
+    not also pass ``--module-under-test``.
+    """
+    match = _MODULE_DECL_RE.search(module_bazel_text)
+    return match.group(1) if match else ""
+
+
 def _collect_resolved_versions(node: dict, acc: dict[str, str]) -> None:
     """Walk a ``bazel mod graph --output=json`` tree, recording name -> resolved version.
 
@@ -544,14 +652,17 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--known-good-path",
         type=Path,
-        default=_HERE.parents[1] / "known_good.json",
-        help="Resolved set source: known_good.json (default; first-party commit pins).",
+        default=None,
+        help="Export mode only: known_good.json (defaults to ref_int's). Not a valid inject source.",
     )
     parser.add_argument(
         "--resolved-deps",
         type=Path,
         default=None,
-        help="Inject mode: Stage-1 stage1-resolved-deps artifact dir (overrides --known-good-path).",
+        help=(
+            "Inject mode (required): Stage-1 stage1-resolved-deps artifact dir, holding "
+            f"{MANIFEST_NAME} and {GRAPH_NAME}."
+        ),
     )
     parser.add_argument(
         "--mod-graph",
@@ -583,29 +694,50 @@ def main() -> None:
     if args.export is not None:
         if args.mod_graph is None:
             raise SystemExit("--export requires --mod-graph (output of 'bazel mod graph --output=json')")
-        repo_root = _HERE.parents[1]
-        override_files = [repo_root / "MODULE.bazel", *sorted((repo_root / "bazel_common").glob("*.MODULE.bazel"))]
-        override_files = [f for f in override_files if f.is_file()]
-        resolved = ResolvedDependencies.from_mod_graph(args.mod_graph, override_files)
-        Path(args.export).parent.mkdir(parents=True, exist_ok=True)
-        resolved.to_file(args.export)
-        print(f"Wrote resolved dependency manifest ({len(resolved.names)} modules) to {args.export}")
+        mod_graph = Path(args.mod_graph)
+        if not mod_graph.is_file():
+            raise SystemExit(
+                f"--mod-graph {mod_graph} does not exist. Produce it first with: "
+                "bazel mod graph --output=json > graph.json"
+            )
+        repo_root = _repo_root()
+        override_files = [
+            f
+            for f in [repo_root / "MODULE.bazel", *sorted((repo_root / "bazel_common").glob("*.MODULE.bazel"))]
+            if f.is_file()
+        ]
+        resolved = ResolvedDependencies.from_mod_graph(mod_graph, override_files)
+        export = Path(args.export)
+        export.parent.mkdir(parents=True, exist_ok=True)
+        resolved.to_file(export)
+        # Stage 2 needs the graph too: the manifest says which version each module resolves
+        # to, the graph says which of them a given module actually depends on.
+        graph_copy = export.parent / GRAPH_NAME
+        graph_copy.write_text(mod_graph.read_text())
+        print(f"Wrote resolved dependency manifest ({len(resolved.names)} modules) to {export}")
+        print(f"Stored dependency graph for Stage 2 at {graph_copy}")
         return
 
     # Inject mode (Stage 2): overwrite a module's MODULE.bazel with the resolved set.
     if args.module_bazel is None:
         raise SystemExit("module_bazel is required unless --export is given")
 
-    if args.resolved_deps:
-        resolved = ResolvedDependencies.from_resolved_artifact(args.resolved_deps)
-    else:
-        resolved = ResolvedDependencies.from_known_good(args.known_good_path)
+    # known_good.json is not a valid inject source: it carries only first-party score
+    # modules with no transitive registry versions, so the closure could not be pinned.
+    if not args.resolved_deps:
+        raise SystemExit(
+            "--resolved-deps is required for inject mode: Stage 2 must pin against the "
+            "Stage-1 resolved set. known_good.json carries only first-party pins and no "
+            "transitive versions, so it cannot back the injection."
+        )
+    resolved = ResolvedDependencies.from_resolved_artifact(args.resolved_deps)
+    graph = DependencyGraph.from_file(Path(args.resolved_deps) / GRAPH_NAME)
 
     patched = resolved.overwrite(
         args.module_bazel,
         module_under_test=args.module_under_test,
         write=not args.dry_run,
-        fetch_transitive_deps=fetch_module_bazel_deps,
+        graph=graph,
     )
     if args.dry_run:
         print(patched)

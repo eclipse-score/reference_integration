@@ -35,10 +35,20 @@ score_py_pytest(
 )
 
 # Runnable binary for the resolve + inject workflow.
-#   Stage 1 (export): bazel run //scripts/known_good:resolve_deps -- \
-#       --mod-graph graph.json --export artifacts/resolved_versions.json
-#   Stage 2 (inject): bazel run //scripts/known_good:resolve_deps -- \
-#       _module/MODULE.bazel --resolved-deps _resolved_deps/
+#
+# Stage 1 (export) — 'bazel mod graph' is a prerequisite; run it first and pass the result:
+#       bazel mod graph --output=json > graph.json
+#       bazel run //scripts/known_good:resolve_deps -- \
+#           --mod-graph graph.json --export _resolved_deps/resolved_versions.json
+#   Writes the manifest and stores graph.json next to it; both are published as the
+#   stage1-resolved-deps artifact. Paths are resolved against BUILD_WORKSPACE_DIRECTORY,
+#   so graph.json does not need to be listed in data = [...].
+#
+# Stage 2 (inject) — consumes that same directory:
+#       bazel run //scripts/known_good:resolve_deps -- \
+#           _module/MODULE.bazel --resolved-deps _resolved_deps/
+#   The manifest supplies each module's resolved version; graph.json identifies the
+#   module-under-test's transitive closure so all of it is pinned, not only direct deps.
 py_binary(
     name = "resolve_deps",
     srcs = ["resolved_dependencies.py"],
