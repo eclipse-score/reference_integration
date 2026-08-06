@@ -21,7 +21,7 @@ from subprocess import PIPE, Popen
 
 from known_good.models.known_good import load_known_good
 from known_good.models.module import Module
-from known_good.resolved_dependencies import ResolvedDependencies, fetch_module_bazel_deps
+from known_good.resolved_dependencies import GRAPH_NAME, DependencyGraph, ResolvedDependencies
 
 
 @dataclass
@@ -35,17 +35,42 @@ def print_centered(message: str, width: int = 120, fillchar: str = "-") -> None:
     print(message.center(width, fillchar))
 
 
-def stage2_startup_flags(ref_int_root: Path) -> list[str]:
-    """Bazel startup options that swap in ref_int's centralized config for Stage 2.
+REF_INT_ROOT = Path(__file__).resolve().parent.parent
+STAGE2_RC = REF_INT_ROOT / "ci" / "stage2" / "module.bazelrc"
+# Emitted for every module, so a missing or mistyped bazel_config can never leave a Stage-2
+# run with no platform, no toolchain and no test filter (see ci/stage2/README.md).
+STAGE2_BASE_CONFIG = "stage2-linux-x86_64"
+# Central/legacy mode only (workspace=None): configs defined in ref_int's own root .bazelrc.
+CENTRAL_MODE_CONFIGS = ["--config=unit-tests", "--config=ferrocene-coverage"]
 
-    ``--noworkspace_rc`` disables the module's own ``.bazelrc``; ``--bazelrc`` supplies
-    ``ci/stage2/module.bazelrc`` instead. Every Bazel call for a module must use the same
-    startup flags, since different ones start a different server with a different output
-    base (relevant to the ``bazel info`` calls in ``cpp_coverage``).
+
+def stage2_startup_flags() -> list[str]:
+    """Bazel startup options that layer ref_int's Stage-2 config over the module's own.
+
+    Deliberately does NOT pass ``--noworkspace_rc``: the module's ``.bazelrc`` carries
+    settings unrelated to the configs ref_int names (its own toolchains, trace-library stub
+    selection, sandbox settings) and discarding them changes what Stage 2 validates. Being
+    read last, this file still wins every single-valued flag.
+
+    Every Bazel call for a module must use the same startup flags, since different ones
+    start a different server with a different output base (see ``cpp_coverage``).
     """
-    return [
-        "--noworkspace_rc",
-        f"--bazelrc={ref_int_root / 'ci' / 'stage2' / 'module.bazelrc'}",
+    return [f"--bazelrc={STAGE2_RC}"]
+
+
+def stage2_config_flags(module: Module) -> list[str]:
+    """``--config`` flags for a module: the mandatory base plus its additive opt-ins.
+
+    ``bazel_config`` in known_good.json carries opt-ins only, and every name must be
+    defined in ref_int's Stage-2 rc — a name that is not is a silent misconfiguration
+    (Bazel would fail late, or worse, succeed having applied nothing).
+    """
+    defined = set(re.findall(r"^(?:build|test|coverage|common):([\w.-]+)", STAGE2_RC.read_text(), re.M))
+    unknown = [c for c in module.metadata.bazel_config if c not in defined]
+    if unknown:
+        raise SystemExit(f"QR: {module.name} requests config(s) not defined in {STAGE2_RC}: {', '.join(unknown)}")
+    return [f"--config={STAGE2_BASE_CONFIG}"] + [
+        f"--config={c}" for c in module.metadata.bazel_config if c != STAGE2_BASE_CONFIG
     ]
 
 
@@ -71,16 +96,10 @@ def run_unit_test_with_coverage(
     in_module = workspace is not None
     repo = "" if in_module else f"@{module.name}"
 
-    # --config names now resolve against ci/stage2/module.bazelrc, not the module's own
-    # .bazelrc. No filter flag is added here: it would override the centralized one (last
-    # wins) and re-admit miri/no-coverage targets.
-    if in_module:
-        config_flags = [f"--config={c}" for c in module.metadata.bazel_config]
-    else:
-        config_flags = [
-            "--config=unit-tests",
-            "--config=ferrocene-coverage",
-        ]
+    # --config names resolve against ci/stage2/module.bazelrc. No test filter is added here:
+    # a command-line flag would override the centralized one (last wins) and re-admit
+    # miri/no-coverage targets.
+    config_flags = stage2_config_flags(module) if in_module else CENTRAL_MODE_CONFIGS
 
     call = (
         ["bazel"]
@@ -379,9 +398,9 @@ def parse_arguments() -> argparse.Namespace:
         type=Path,
         default=None,
         help=(
-            "Module-context mode: directory of the Stage-1 'stage1-resolved-deps' artifact "
-            "(resolved_versions.json manifest) used as the resolved set to inject. "
-            "Defaults to --known-good-path when omitted."
+            "Module-context mode (required with --module-dir): directory of the Stage-1 "
+            "'stage1-resolved-deps' artifact, holding the resolved_versions.json manifest "
+            "and the graph.json used to pin the module's full transitive closure."
         ),
     )
     return parser.parse_args()
@@ -404,26 +423,30 @@ def main() -> bool:
     if workspace is not None:
         if len(args.modules_to_test) != 1:
             raise SystemExit("--module-dir requires exactly one --modules-to-test entry")
-        # ref_int's checkout root; _module is a subdirectory of it in the Stage-2 job.
-        ref_int_root = args.known_good_path.resolve().parent
-        startup = stage2_startup_flags(ref_int_root)
-        stage2_rc = ref_int_root / "ci" / "stage2" / "module.bazelrc"
-        if not stage2_rc.is_file():
-            raise SystemExit(f"Stage-2 centralized config not found at {stage2_rc}")
-        print_centered(f"QR: Using ref_int centralized config {stage2_rc} (--noworkspace_rc)")
-        # DR-008 Option 4: overwrite the checked-out module's declared dependency versions
-        # with the dependency set ref_int resolved (Stage-1 artifact, falling back to
-        # known_good.json), so the module's tests run against the resolved versions.
-        if args.resolved_deps is not None:
-            resolved = ResolvedDependencies.from_resolved_artifact(args.resolved_deps.resolve())
-        else:
-            resolved = ResolvedDependencies.from_known_good(args.known_good_path.resolve())
+        if not STAGE2_RC.is_file():
+            raise SystemExit(f"Stage-2 centralized config not found at {STAGE2_RC}")
+        startup = stage2_startup_flags()
+        print_centered(f"QR: Layering ref_int config {STAGE2_RC} over the module's own .bazelrc")
+        # DR-008 Option 4: overwrite the checked-out module's dependency versions with the
+        # set ref_int resolved in Stage 1, so the module's tests run against those versions.
+        # The Stage-1 artifact is mandatory: known_good.json carries only first-party pins
+        # with no transitive registry versions, so it cannot back the closure injection.
+        if args.resolved_deps is None:
+            raise SystemExit(
+                "--resolved-deps is required with --module-dir: Stage 2 must pin against the "
+                "Stage-1 resolved set, which known_good.json cannot supply."
+            )
+        resolved_dir = args.resolved_deps.resolve()
+        resolved = ResolvedDependencies.from_resolved_artifact(resolved_dir)
+        # The graph tells us which modules are in this module's transitive closure, so every
+        # one of them is pinned — not just the deps it declares directly.
+        graph = DependencyGraph.from_file(resolved_dir / GRAPH_NAME)
         module_bazel = workspace.resolve() / "MODULE.bazel"
         print_centered(f"QR: Injecting resolved deps into {module_bazel}")
         resolved.overwrite(
             module_bazel,
             module_under_test=args.modules_to_test[0],
-            fetch_transitive_deps=fetch_module_bazel_deps,
+            graph=graph,
         )
 
         # The module's committed MODULE.bazel.lock is stale the moment we inject overrides.
@@ -436,7 +459,7 @@ def main() -> bool:
 
         # Overwrite .bazelversion in the module checkout with ref_int's pinned version
         # so all Stage-2 runs use the same Bazel binary as the integrated build.
-        bazelversion_src = ref_int_root / ".bazelversion"
+        bazelversion_src = REF_INT_ROOT / ".bazelversion"
         bazelversion_dst = workspace.resolve() / ".bazelversion"
         bazel_ver = bazelversion_src.read_text().strip()
         print_centered(f"QR: Pinning .bazelversion to ref_int's {bazel_ver} in {bazelversion_dst}")

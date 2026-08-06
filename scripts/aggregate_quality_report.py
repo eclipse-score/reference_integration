@@ -78,6 +78,37 @@ def _extract_table_data_rows(md_path: Path) -> list[str]:
     return data_rows
 
 
+def _parse_ut_rows(rows: list[str]) -> list[tuple[str, int, int, int, int]]:
+    """Parse ``| module | passed | failed | skipped | total |`` rows into typed tuples.
+
+    Rows whose numeric cells do not parse are skipped rather than crashing the report.
+    """
+    parsed: list[tuple[str, int, int, int, int]] = []
+    for row in rows:
+        cells = [c.strip() for c in row.strip().strip("|").split("|")]
+        if len(cells) < 5:
+            continue
+        try:
+            parsed.append((cells[0], int(cells[1]), int(cells[2]), int(cells[3]), int(cells[4])))
+        except ValueError:
+            continue
+    return parsed
+
+
+def _classify(total: int, failed: int) -> tuple[str, str]:
+    """Return (verdict, owner) for one module's unit-test result.
+
+    Implements the DR-008 ownership rule: a Stage-2 job that executed **no** tests did not
+    validate anything, so it is a ref_int harness defect regardless of how it exited. Only a
+    run that reached test execution can produce a finding a module team owns.
+    """
+    if total == 0:
+        return "❌ no tests executed", "ref_int (harness defect)"
+    if failed > 0:
+        return f"❌ {failed} failing", "module team (integration finding)"
+    return "✅ passed", "—"
+
+
 def _excluded_test_targets(known_good_path: Path) -> list[tuple[str, list[str]]]:
     """Return [(module, [excluded targets])] for target_sw modules in known_good.json.
 
@@ -179,6 +210,19 @@ def main() -> int:
     else:
         out.write("*No Stage 2 unit test reports found.*\n\n")
 
+    # Failure ownership — a Stage-2 job that ran no tests validated nothing, so it is a
+    # harness defect and must never be reported as a module finding.
+    parsed = _parse_ut_rows(ut_rows)
+    no_tests = [name for name, _p, _f, _s, total in parsed if total == 0]
+    if parsed:
+        out.write("### Failure Ownership\n\n")
+        out.write("| module | tests run | verdict | owner |\n")
+        out.write("|--------|-----------|---------|-------|\n")
+        for name, _passed, failed, _skipped, total in parsed:
+            verdict, owner = _classify(total, failed)
+            out.write(f"| {name} | {total} | {verdict} | {owner} |\n")
+        out.write("\n")
+
     if cov_rows:
         out.write("### Coverage Summary\n\n")
         out.write("| module | lines | functions | branches |\n")
@@ -186,6 +230,15 @@ def main() -> int:
         for row in cov_rows:
             out.write(f"{row}\n")
         out.write("\n")
+
+    # Rust coverage is not extracted in module context (the rust_coverage_* targets are
+    # generated in ref_int's rust_coverage/BUILD and do not exist inside a module checkout).
+    # Stated explicitly so an absent row reads as "not measured", not "not applicable".
+    out.write(
+        "> Rust coverage is not measured in Stage 2 — the `rust_coverage_*` targets live in "
+        "ref_int's `rust_coverage/BUILD` and do not exist inside a module checkout. Tracked "
+        "follow-up; Rust *tests* do run.\n\n"
+    )
 
     # ------------------------------------------------------------------
     # Excluded test targets — completeness disclosure (DR-008 Q4)
@@ -211,8 +264,11 @@ def main() -> int:
     out.write("## Overall Status\n\n")
     stage1_ok = args.stage1_result == "success"
     stage2_ok = args.stage2_result in ("success", "skipped")
+    # A module that configured but executed no tests is a failure: Stage 2's purpose is to
+    # run the module's tests against the resolved set, and zero tests validates nothing.
+    tests_ran = not no_tests
 
-    if stage1_ok and stage2_ok:
+    if stage1_ok and stage2_ok and tests_ran:
         out.write("✅ All quality checks passed.\n")
     else:
         out.write("❌ One or more quality checks failed — see details above.\n\n")
@@ -220,8 +276,14 @@ def main() -> int:
         out.write("|-------|--------|\n")
         out.write(f"| Stage 1 (integration) | {_format_status(args.stage1_result)} |\n")
         out.write(f"| Stage 2 (module validation) | {_format_status(args.stage2_result)} |\n")
+        if no_tests:
+            out.write(
+                f"\n**ref_int harness defect** — no tests executed for: "
+                f"{', '.join(f'`{n}`' for n in no_tests)}. "
+                "These did not validate the resolved dependency set.\n"
+            )
 
-    return 0 if (stage1_ok and stage2_ok) else 1
+    return 0 if (stage1_ok and stage2_ok and tests_ran) else 1
 
 
 if __name__ == "__main__":

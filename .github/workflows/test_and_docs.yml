@@ -111,6 +111,8 @@ jobs:
           # Resolve the full graph (registry versions) against the committed lock, then merge
           # with ref_int's own override directives (git_override for score_*/trlc/..., plus
           # any single_version_override) into the single Stage 1 -> Stage 2 handoff manifest.
+          # The graph itself is stored alongside the manifest by the script: Stage 2 needs it
+          # to pin each module's full transitive closure, not just the deps it declares.
           bazel mod graph --output=json --lockfile_mode=error > resolved_graph.json
           python scripts/known_good/resolved_dependencies.py \
             --mod-graph resolved_graph.json \
@@ -281,6 +283,20 @@ jobs:
             --modules-to-test ${{ matrix.module.name }} \
             --module-dir _module \
             --resolved-deps _resolved_deps
+      # DR-008's claim is that the module was validated against ref_int's resolved versions.
+      # Prove it from the module's own post-MVS graph rather than assuming the injection took.
+      - name: Verify module resolved to ref_int's dependency versions
+        if: always()
+        run: |
+          # Same --bazelrc as the test run so this reuses that Bazel server, not a new one.
+          ( cd _module && bazel --bazelrc="$GITHUB_WORKSPACE/ci/stage2/module.bazelrc" \
+              mod graph --output=json > "$GITHUB_WORKSPACE/_module_graph.json" ) || {
+            echo "::warning::could not produce module graph for ${{ matrix.module.name }}"; exit 0; }
+          PYTHONPATH=scripts python3 scripts/known_good/verify_stage2_resolution.py \
+            --mod-graph _module_graph.json \
+            --resolved _resolved_deps/resolved_versions.json \
+            --module-bazel _module/MODULE.bazel \
+            --module ${{ matrix.module.name }}
       - name: Upload module quality report
         if: always()
         uses: actions/upload-artifact@v4.4.0
