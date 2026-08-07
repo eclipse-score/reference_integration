@@ -14,13 +14,13 @@ module(
     name = "score_ref_int",
 )
 
-# SBOM generation is consumed from the local git checkout until score_sbom is
-# available in the Bazel registry.
+# SBOM generation is consumed from a pinned score_sbom commit until the module
+# is available in the Bazel registry.
 bazel_dep(name = "score_sbom", version = "0.0.1")
 git_override(
     module_name = "score_sbom",
-    commit = "9634f855ad9e631307241ab16091a24478ead19f",
-    remote = "file:///workspaces/sbom-tool",
+    commit = "2249efd97d4a2681dfa18d5b1d6cebbe7da1ce0f",
+    remote = "https://github.com/eclipse-score/sbom-tool.git",
 )
 
 sbom_ext = use_extension("@score_sbom//:extensions.bzl", "sbom_metadata")
