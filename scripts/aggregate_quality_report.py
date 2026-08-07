@@ -231,13 +231,14 @@ def main() -> int:
             out.write(f"{row}\n")
         out.write("\n")
 
-    # Rust coverage is not extracted in module context (the rust_coverage_* targets are
-    # generated in ref_int's rust_coverage/BUILD and do not exist inside a module checkout).
-    # Stated explicitly so an absent row reads as "not measured", not "not applicable".
+    # score_communication and score_orchestrator have known-broken rust coverage extraction
+    # (mostly proc_macro) and are excluded from the *_rust rows above in both modes — see
+    # DISABLED_RUST_COVERAGE in quality_runners.py. Stated explicitly so their absent row
+    # reads as "not measured for this module", not "not measured at all".
     out.write(
-        "> Rust coverage is not measured in Stage 2 — the `rust_coverage_*` targets live in "
-        "ref_int's `rust_coverage/BUILD` and do not exist inside a module checkout. Tracked "
-        "follow-up; Rust *tests* do run.\n\n"
+        "> Rust coverage is not measured for `score_communication` or `score_orchestrator` "
+        "(known extraction issues, mostly proc_macro). Rust *tests* do run for both; every "
+        "other Rust module's coverage is measured in Stage 2 the same as in the old workflow.\n\n"
     )
 
     # ------------------------------------------------------------------

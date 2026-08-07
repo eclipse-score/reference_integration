@@ -37,11 +37,33 @@ def print_centered(message: str, width: int = 120, fillchar: str = "-") -> None:
 
 REF_INT_ROOT = Path(__file__).resolve().parent.parent
 STAGE2_RC = REF_INT_ROOT / "ci" / "stage2" / "module.bazelrc"
+RUST_COVERAGE_BUILD = REF_INT_ROOT / "rust_coverage" / "BUILD"
 # Emitted for every module, so a missing or mistyped bazel_config can never leave a Stage-2
 # run with no platform, no toolchain and no test filter (see ci/stage2/README.md).
 STAGE2_BASE_CONFIG = "stage2-linux-x86_64"
 # Central/legacy mode only (workspace=None): configs defined in ref_int's own root .bazelrc.
 CENTRAL_MODE_CONFIGS = ["--config=unit-tests", "--config=ferrocene-coverage"]
+# Known-broken rust coverage extraction (mostly proc_macro); applies in both modes.
+DISABLED_RUST_COVERAGE = ["score_communication", "score_orchestrator"]
+
+
+def rust_coverage_query(module_name: str, rust_coverage_build: Path = RUST_COVERAGE_BUILD) -> str:
+    """The ``bazel query`` ref_int already runs for a module's rust_test targets.
+
+    ``rust_coverage/BUILD`` (generated from known_good.json by
+    ``update_module_from_known_good.py``) declares a ``rust_coverage_report`` per module,
+    each with the query that finds its rust_test targets. Reused rather than duplicated so
+    a known_good.json change and a regenerated BUILD file stay the single source of truth.
+
+    The query targets ref_int's own graph, where the module is mounted as ``@<module>//...``.
+    In module-context mode the module *is* the Bazel root, so that prefix is stripped back
+    to ``//...`` — the exact query the module's own tests already use to find themselves.
+    """
+    text = rust_coverage_build.read_text()
+    match = re.search(rf'name = "rust_coverage_{re.escape(module_name)}".*?query = \'([^\']*)\'', text, re.S)
+    if match is None:
+        raise ValueError(f"No rust_coverage_{module_name} entry found in {rust_coverage_build}")
+    return match.group(1).replace(f"@{module_name}//", "//")
 
 
 def stage2_startup_flags() -> list[str]:
@@ -64,14 +86,22 @@ def stage2_config_flags(module: Module) -> list[str]:
     ``bazel_config`` in known_good.json carries opt-ins only, and every name must be
     defined in ref_int's Stage-2 rc — a name that is not is a silent misconfiguration
     (Bazel would fail late, or worse, succeed having applied nothing).
+
+    Its own rust coverage config (``rust_coverage_config``, e.g. ``ferrocene-coverage`` or
+    ``score_persistency``'s ``ferrocene-coverage-per``) is added automatically — never listed
+    in known_good.json's ``bazel_config`` — when the module has Rust to extract coverage for.
+    Without it during THIS run, rustc never emits the .profraw files the later
+    ferrocene_report step reads, so instrumentation has to be on during the same coverage
+    run that produces them, not opt-in-per-module like the rest.
     """
     defined = set(re.findall(r"^(?:build|test|coverage|common):([\w.-]+)", STAGE2_RC.read_text(), re.M))
     unknown = [c for c in module.metadata.bazel_config if c not in defined]
     if unknown:
         raise SystemExit(f"QR: {module.name} requests config(s) not defined in {STAGE2_RC}: {', '.join(unknown)}")
-    return [f"--config={STAGE2_BASE_CONFIG}"] + [
-        f"--config={c}" for c in module.metadata.bazel_config if c != STAGE2_BASE_CONFIG
-    ]
+    configs = [STAGE2_BASE_CONFIG] + [c for c in module.metadata.bazel_config if c != STAGE2_BASE_CONFIG]
+    if "rust" in module.metadata.langs and module.name not in DISABLED_RUST_COVERAGE:
+        configs.append(module.metadata.rust_coverage_config or "ferrocene-coverage")
+    return [f"--config={c}" for c in configs]
 
 
 def run_unit_test_with_coverage(
@@ -146,10 +176,12 @@ def run_cpp_coverage_extraction(
     return {**summary, "exit_code": result_cpp.exit_code}
 
 
-def run_rust_coverage_extraction(module: Module, output_path: Path, workspace: Path | None = None) -> int:
+def run_rust_coverage_extraction(
+    module: Module, output_path: Path, workspace: Path | None = None, startup: list[str] | None = None
+) -> int:
     print_centered("QR: Running rust coverage analysis")
 
-    result_rust = rust_coverage(module, output_path, workspace=workspace)
+    result_rust = rust_coverage(module, output_path, workspace=workspace, startup=startup)
     summary = extract_coverage_summary(result_rust.stdout)
 
     return {**summary, "exit_code": result_rust.exit_code}
@@ -207,20 +239,89 @@ def cpp_coverage(
     return genhtml_result
 
 
-def rust_coverage(module: Module, artifact_dir: Path, workspace: Path | None = None) -> ProcessResult:
-    # .profraw files are already generated in UT step
+def _ensure_stage2_rc_importable(workspace: Path) -> None:
+    """Make ref_int's Stage-2 config visible to bazel calls that don't inherit our flags.
 
-    # Run bazel covverage target
+    ``ferrocene_report`` (invoked by :func:`rust_coverage` below) is a shell script that
+    shells out to its own nested ``bazel query``/``build``/``cquery`` calls internally.
+    Those calls don't see our ``--bazelrc=`` startup flag — that only applies to the *outer*
+    ``bazel run`` we invoke it with — so without this they'd silently build under the
+    module's own config only, missing ref_int's platform/toolchain/coverage settings the
+    original coverage run used. An ``import`` line makes every bazel invocation in this
+    checkout, ours and the nested ones alike, pick it up via Bazel's normal default-rc
+    discovery instead. Ephemeral (this checkout only); idempotent.
+    """
+    module_bazelrc = workspace / ".bazelrc"
+    import_line = f"import {STAGE2_RC}\n"
+    existing = module_bazelrc.read_text() if module_bazelrc.exists() else ""
+    if import_line not in existing:
+        with module_bazelrc.open("a") as f:
+            f.write(("\n" if existing and not existing.endswith("\n") else "") + import_line)
+
+
+def _resolve_ferrocene_report_script(workspace: Path, startup: list[str] | None) -> Path:
+    """The runfiles copy of ``@score_tooling//coverage:ferrocene_report``, not the bare binary.
+
+    Confirmed by an actual failing run, not assumed: ``ferrocene_report.sh`` locates its own
+    helper scripts as ``$(dirname "${BASH_SOURCE[0]}")/scripts/*.py`` rather than through
+    Bazel's runfiles-lookup convention. That only resolves when the script executes from
+    inside its own ``<target>.runfiles/`` tree — where its declared ``data`` deps land as
+    real sibling files — not from the bare ``bazel-bin`` symlink ``bazel run`` normally
+    invokes directly (confirmed on disk: the runfiles copy has a ``scripts/`` sibling: the
+    bare symlink's directory does not). So this bypasses ``bazel run`` for the final
+    execution and calls that copy directly.
+
+    Uses the same ``cquery --output=starlark`` + exec-root-relative-path handling
+    ``ferrocene_report.sh`` already uses internally to resolve *other* binaries — applying
+    its own idiom to itself, not inventing a new one.
+    """
+    target = "@score_tooling//coverage:ferrocene_report"
+    run_command(["bazel"] + (startup or []) + ["build", target], cwd=str(workspace))
+    bin_rel = (
+        run_command(
+            ["bazel"]
+            + (startup or [])
+            + ["cquery", "--output=starlark", "--starlark:expr=target.files_to_run.executable.path", target],
+            cwd=str(workspace),
+        )
+        .stdout.strip()
+    )
+    if bin_rel.startswith("/"):
+        bin_path = Path(bin_rel)
+    else:
+        exec_root = run_command(["bazel"] + (startup or []) + ["info", "execution_root"], cwd=str(workspace))
+        bin_path = Path(exec_root.stdout.strip()) / bin_rel
+    matches = list(Path(f"{bin_path}.runfiles").glob("*/coverage/ferrocene_report.sh"))
+    if not matches:
+        raise FileNotFoundError(f"No ferrocene_report.sh found under {bin_path}.runfiles")
+    return matches[0]
+
+
+def rust_coverage(
+    module: Module, artifact_dir: Path, workspace: Path | None = None, startup: list[str] | None = None
+) -> ProcessResult:
+    # .profraw files are already generated in the UT step (ferrocene-coverage was active
+    # there too — see stage2_config_flags — so instrumentation and extraction share one run).
+
     # Create dedicated output directory for this module's coverage reports
     output_dir = artifact_dir / "rust" / module.name
     output_dir.mkdir(parents=True, exist_ok=True)
 
     if workspace is not None:
-        # The rust_coverage_<module> target is generated in ref_int's rust_coverage/BUILD
-        # and does not exist inside a module checkout. Module-context (DR-008 Option 4)
-        # Rust coverage is tracked as a follow-up; skip without failing the job.
-        print_centered(f"QR: Skipping ref_int rust_coverage target for {module.name} in module-context mode")
-        return ProcessResult(stdout="", stderr="", exit_code=0)
+        # ref_int's own rust_coverage/BUILD target addresses the module as @<module>//..., a
+        # mapping that only exists in ref_int's graph. Run the underlying tool directly with
+        # the same query, module-rooted (see rust_coverage_query), instead.
+        _ensure_stage2_rc_importable(workspace)
+        query = rust_coverage_query(module.name)
+        config_flags = [c.removeprefix("--config=") for c in stage2_config_flags(module)]
+        script = _resolve_ferrocene_report_script(workspace, startup)
+        run_call = (
+            [str(script)]
+            + ["--query", query]
+            + [flag for c in config_flags for flag in ("--bazel-config", c)]
+            + ["--out-dir", str(output_dir.resolve())]
+        )
+        return run_command(run_call, cwd=str(workspace))
 
     bazel_call = [
         "bazel",
@@ -481,15 +582,11 @@ def main() -> bool:
             )
 
         if "rust" in module.metadata.langs:
-            DISABLED_RUST_COVERAGE = [
-                "score_communication",
-                "score_orchestrator",
-            ]  # Known issues with coverage extraction for these modules, mostly proc_macro
             if module.name in DISABLED_RUST_COVERAGE:
                 print_centered(f"QR: Skipping rust coverage extraction for module {module.name} due to known issues")
                 continue
             coverage_summary[f"{module.name}_rust"] = run_rust_coverage_extraction(
-                module=module, output_path=args.coverage_output_dir, workspace=workspace
+                module=module, output_path=args.coverage_output_dir, workspace=workspace, startup=startup
             )
 
         print_centered(f"QR: Finished testing module: {module.name}")
