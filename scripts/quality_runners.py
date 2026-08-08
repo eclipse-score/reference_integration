@@ -276,21 +276,30 @@ def _resolve_ferrocene_report_script(workspace: Path, startup: list[str] | None)
     its own idiom to itself, not inventing a new one.
     """
     target = "@score_tooling//coverage:ferrocene_report"
-    run_command(["bazel"] + (startup or []) + ["build", target], cwd=str(workspace))
-    bin_rel = (
-        run_command(
-            ["bazel"]
-            + (startup or [])
-            + ["cquery", "--output=starlark", "--starlark:expr=target.files_to_run.executable.path", target],
-            cwd=str(workspace),
-        )
-        .stdout.strip()
-    )
+
+    def bazel(args: list[str], what: str) -> ProcessResult:
+        """Run a nested bazel call, failing loudly rather than on its empty output.
+
+        ``run_command`` never raises, so an unchecked failure returns empty stdout and the
+        path arithmetic below degrades silently: ``Path("") / ""`` is ``.``, which turns
+        into the literal ``..runfiles``. That is how a dependency-resolution error once
+        surfaced as ``No ferrocene_report.sh found under ..runfiles`` -- a message naming
+        neither the failing command nor the real cause.
+        """
+        result = run_command(["bazel"] + (startup or []) + args, cwd=str(workspace))
+        if result.exit_code != 0:
+            raise RuntimeError(f"QR: {what} failed (exit {result.exit_code}) while resolving {target}")
+        return result
+
+    bazel(["build", target], "bazel build")
+    bin_rel = bazel(
+        ["cquery", "--output=starlark", "--starlark:expr=target.files_to_run.executable.path", target],
+        "bazel cquery",
+    ).stdout.strip()
     if bin_rel.startswith("/"):
         bin_path = Path(bin_rel)
     else:
-        exec_root = run_command(["bazel"] + (startup or []) + ["info", "execution_root"], cwd=str(workspace))
-        bin_path = Path(exec_root.stdout.strip()) / bin_rel
+        bin_path = Path(bazel(["info", "execution_root"], "bazel info execution_root").stdout.strip()) / bin_rel
     matches = list(Path(f"{bin_path}.runfiles").glob("*/coverage/ferrocene_report.sh"))
     if not matches:
         raise FileNotFoundError(f"No ferrocene_report.sh found under {bin_path}.runfiles")
@@ -575,6 +584,20 @@ def main() -> bool:
         unit_tests_summary[module.name] = run_unit_test_with_coverage(
             module=module, workspace=workspace, startup=startup
         )
+
+        # Diagnostic rule (see ci/stage2/README.md): a Stage-2 run that fails without
+        # executing a single test failed at configuration, toolchain or dependency
+        # resolution, so it is a ref_int harness defect -- never a finding about the module.
+        # Extraction has nothing to read in that case, and running it anyway buries the real
+        # error under downstream ones. No extra bazel call is needed to detect this: the
+        # coverage run's own exit code and test count already say it. A non-zero exit with
+        # tests counted is the other case -- real failing tests, whose coverage data exists
+        # and is still worth extracting -- so it deliberately does not short-circuit here.
+        if unit_tests_summary[module.name]["exit_code"] != 0 and unit_tests_summary[module.name]["total"] == 0:
+            print_centered(
+                f"QR: {module.name}: 0 tests executed -- ref_int harness defect; skipping coverage extraction"
+            )
+            continue
 
         if "cpp" in module.metadata.langs:
             coverage_summary[f"{module.name}_cpp"] = run_cpp_coverage_extraction(
