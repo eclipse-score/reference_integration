@@ -288,12 +288,13 @@ jobs:
       - name: Verify module resolved to ref_int's dependency versions
         if: always()
         run: |
-          # Same --bazelrc as the test run so this reuses that Bazel server, not a new one.
-          ( cd _module && bazel --bazelrc="$GITHUB_WORKSPACE/ci/stage2/module.bazelrc" \
-              mod graph --output=json > "$GITHUB_WORKSPACE/_module_graph.json" ) || {
-            echo "::warning::could not produce module graph for ${{ matrix.module.name }}"; exit 0; }
+          # The resolution gate already captured this graph, before the tests ran and under the
+          # resolution they were pinned to. Reuse it rather than recomputing a second one.
+          if [ ! -s _module/module_graph.json ]; then
+            echo "::warning::no module graph captured for ${{ matrix.module.name }}"; exit 0
+          fi
           PYTHONPATH=scripts python3 scripts/known_good/verify_stage2_resolution.py \
-            --mod-graph _module_graph.json \
+            --mod-graph _module/module_graph.json \
             --resolved _resolved_deps/resolved_versions.json \
             --module-bazel _module/MODULE.bazel \
             --module ${{ matrix.module.name }}
@@ -315,15 +316,23 @@ jobs:
             artifacts/coverage/
           retention-days: 14
           if-no-files-found: warn
-      # The module's MODULE.bazel.lock, regenerated (--lockfile_mode=update) after the
-      # resolved-deps injection: the verifiable record of exactly which dependency
-      # versions this module was validated against in Stage 2.
-      - name: Upload regenerated module lockfile
+      # The module's MODULE.bazel.lock, written by the resolution gate (`bazel mod deps
+      # --lockfile_mode=update`) after the resolved-deps injection and *before* any test
+      # ran. The test run then pins to it with --lockfile_mode=error, so this is not just a
+      # record of what resolved -- it is the state the tests were forbidden to deviate from.
+      # module_graph.json is the module's own post-MVS graph, rooted at the module. It is the
+      # only artifact in the whole pipeline that contains a module's dev-dependency closure:
+      # Stage 1's graph.json is rooted at ref_int, where those edges are inactive and therefore
+      # absent. Publishing both is what makes the Stage-2 record complete.
+      - name: Upload regenerated module lockfile and resolved graph
         if: always()
         uses: actions/upload-artifact@v4.4.0
         with:
           name: stage2-resolved-lock-${{ matrix.module.name }}
-          path: _module/MODULE.bazel.lock
+          path: |
+            _module/MODULE.bazel.lock
+            _module/module_graph.json
+          if-no-files-found: warn
           retention-days: 14
           if-no-files-found: warn
   # ---------------------------------------------------------------------------

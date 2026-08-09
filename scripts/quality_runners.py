@@ -19,6 +19,7 @@ from pathlib import Path
 from pprint import pprint
 from subprocess import PIPE, Popen
 
+from known_good.bazel_version import resolve_stage2_bazel_version
 from known_good.models.known_good import load_known_good
 from known_good.models.module import Module
 from known_good.resolved_dependencies import GRAPH_NAME, DependencyGraph, ResolvedDependencies
@@ -45,6 +46,10 @@ STAGE2_BASE_CONFIG = "stage2-linux-x86_64"
 CENTRAL_MODE_CONFIGS = ["--config=unit-tests", "--config=ferrocene-coverage"]
 # Known-broken rust coverage extraction (mostly proc_macro); applies in both modes.
 DISABLED_RUST_COVERAGE = ["score_communication", "score_orchestrator"]
+# The module's own post-MVS graph, captured by the resolution gate inside the module checkout.
+# Distinct from Stage 1's GRAPH_NAME, which is rooted at ref_int: only this one is rooted at the
+# module, so only this one contains the module's dev-dependency closure.
+MODULE_GRAPH_NAME = "module_graph.json"
 
 
 def rust_coverage_query(module_name: str, rust_coverage_build: Path = RUST_COVERAGE_BUILD) -> str:
@@ -104,6 +109,96 @@ def stage2_config_flags(module: Module) -> list[str]:
     return [f"--config={c}" for c in configs]
 
 
+def stage2_module_command(module: Module, startup: list[str] | None) -> list[str]:
+    """The Stage-2 test command for a module checkout.
+
+    ``--lockfile_mode=error`` pins the run to the lock :func:`run_resolution_gate` wrote after
+    validating the injected set. Bazel re-runs module selection on *every* invocation — the lock
+    carries no dependency graph, only registry file hashes and module-extension results — so this
+    flag is what turns a deviation from the validated resolution into a hard error rather than a
+    silent re-resolve. ``--lockfile_mode=update``, which this replaces, allowed exactly that
+    silent re-resolve.
+    """
+    return (
+        ["bazel"]
+        + (startup or [])
+        + ["coverage"]  # coverage, not test: the .dat files come out of the same run
+        + stage2_config_flags(module)
+        + ["--lockfile_mode=error"]
+        + [module.metadata.code_root_path]
+        + [f"--{target}" for target in module.metadata.extra_test_config]
+        + ["--"]
+        + [f"-{target}" for target in module.metadata.exclude_test_targets]
+    )
+
+
+def run_resolution_gate(module: Module, workspace: Path, startup: list[str] | None = None) -> ProcessResult:
+    """Resolve the module graph before a single test runs, and write the lock the tests pin to.
+
+    Splits the one opaque step Stage 2 used to be into the two things it was always doing. What
+    this checks is determined entirely by the versions ref_int injected and the config ref_int
+    layered, so a failure here says nothing about the module's code: it is a ref_int harness
+    defect *by construction*, rather than by classifying the logs after the fact. Test execution
+    is the module's. Running them as separate steps makes that ownership structural. All three
+    Stage-2 failures seen so far (module ``.bazelrc``, dev-dependency versions, ``.bazelversion``)
+    were module-graph resolution failures, which is exactly what this catches.
+
+    ``bazel mod deps`` and not a build command, for two measured reasons. ``coverage --nobuild``
+    exits 1 unconditionally ("Couldn't start the build. Unable to run tests") even when the graph
+    resolves and the lock is written, so it would report a harness defect for every module.
+    ``build --nobuild`` exits 0 but also loads and analyses the target pattern, so it can fail on
+    targets the coverage run would never build -- a false ref_int defect. ``mod deps`` analyses no
+    targets at all, so it cannot.
+
+    The lock it writes is a *superset*: ``mod deps`` evaluates every module extension, where a
+    build evaluates only the ones it needs. That is what makes the subsequent
+    ``--lockfile_mode=error`` run safe -- verified end to end, gate then strict test run, on a
+    real workspace.
+
+    Toolchain selection and target analysis are deliberately **not** gated here; they still surface
+    in the test run, where the existing "0 tests executed" rule already attributes them to ref_int.
+    """
+    print_centered(f"QR: Resolving module graph for {module.name} (gate)")
+    call = ["bazel"] + (startup or []) + ["mod", "deps", "--lockfile_mode=update"]
+    print_centered("QR: Running command:")
+    print(" ".join(call))
+    result = run_command(call, cwd=str(workspace))
+    if result.exit_code == 0:
+        capture_module_graph(workspace, startup)
+    return result
+
+
+def capture_module_graph(workspace: Path, startup: list[str] | None = None) -> Path | None:
+    """Write the module's own post-MVS dependency graph next to its regenerated lock.
+
+    This is the **only** place a module's dev-dependency closure exists. ref_int's Stage-1 graph
+    is rooted at ref_int, and bzlmod activates ``dev_dependency`` edges and dev-only
+    ``use_extension`` calls solely for the root module — so no flag on ``bazel mod`` can make
+    Stage 1 see them (the command's options cover extension filtering and display only). Rooted at
+    the module they are all present: measured on ``score_baselibs``, 29 direct dependencies here
+    against 15 under ``--ignore_dev_dependency``.
+
+    Stage 2 already computed this graph and discarded it. Keeping it is what makes the published
+    artifact set a complete record of what each module actually resolved, dev dependencies
+    included — the same move as storing ref_int's ``graph.json`` in Stage 1, sourced from the one
+    root that can produce it.
+
+    Capturing it in the gate rather than after the tests means it describes the state the tests
+    were pinned to, and that it survives a failing test run. Evidence capture must never turn a
+    passing gate into a failure, so a problem here is reported and swallowed: the gate's verdict
+    comes from ``mod deps`` alone.
+    """
+    graph_path = workspace.resolve() / MODULE_GRAPH_NAME
+    call = ["bazel"] + (startup or []) + ["mod", "graph", "--output=json", "--lockfile_mode=error"]
+    result = run_command(call, cwd=str(workspace))
+    if result.exit_code != 0:
+        print_centered(f"QR: could not capture {MODULE_GRAPH_NAME} (exit {result.exit_code}); continuing")
+        return None
+    graph_path.write_text(result.stdout)
+    print_centered(f"QR: Captured module-rooted dependency graph -> {graph_path}")
+    return graph_path
+
+
 def run_unit_test_with_coverage(
     module: Module, workspace: Path | None = None, startup: list[str] | None = None
 ) -> dict[str, str | int]:
@@ -114,53 +209,44 @@ def run_unit_test_with_coverage(
 
     When ``workspace`` is a checked-out module directory (DR-008 Option 4 mode), the
     module *is* the Bazel root, so targets are plain ``//...`` and the command runs with
-    ``cwd=workspace``. ``--lockfile_mode=update`` is used so Bazel *regenerates* the
-    module's ``MODULE.bazel.lock`` to reflect the resolved-deps overrides we inject (the
-    module's committed lock is deleted first in module-context mode); the regenerated lock
-    is the verifiable record of exactly what the module was validated against and is
-    uploaded as a Stage-2 artifact. Instrumentation falls back to Bazel's default (root
-    code instrumented, external deps excluded).
+    ``cwd=workspace``. ``--lockfile_mode=error`` is used so the run cannot re-resolve: it is
+    pinned to the lock :func:`run_resolution_gate` wrote after validating the injected set, and
+    any deviation from it is a hard error rather than a silent re-resolution. The module's
+    committed lock is deleted first in module-context mode, and the gate-written lock is the
+    verifiable record of exactly what the module was validated against, uploaded as a Stage-2
+    artifact. Instrumentation falls back to Bazel's default (root code instrumented, external
+    deps excluded).
     """
     print_centered("QR: Running unit tests")
 
-    in_module = workspace is not None
-    repo = "" if in_module else f"@{module.name}"
-
-    # --config names resolve against ci/stage2/module.bazelrc. No test filter is added here:
-    # a command-line flag would override the centralized one (last wins) and re-admit
-    # miri/no-coverage targets.
-    config_flags = stage2_config_flags(module) if in_module else CENTRAL_MODE_CONFIGS
-
-    call = (
-        ["bazel"]
-        + (startup or [])
-        + [
-            "coverage",  # Call coverage instead of test to get .dat files already
-        ]
-        + config_flags
-        + (
-            []
-            if in_module  # test flags come from ci/stage2/module.bazelrc
-            else [
+    if workspace is not None:
+        call = stage2_module_command(module, startup)
+    else:
+        # Central/legacy mode: the module is addressed through ref_int's own graph.
+        call = (
+            ["bazel"]
+            + (startup or [])
+            + ["coverage"]  # Call coverage instead of test to get .dat files already
+            + CENTRAL_MODE_CONFIGS
+            + [
                 "--test_verbose_timeout_warnings",
                 "--test_timeout=1200",
                 "--test_summary=testcase",
                 "--test_output=errors",
                 "--nocache_test_results",
+                f"--instrumentation_filter=@{module.name}",
+            ]
+            + [f"@{module.name}{module.metadata.code_root_path}"]
+            + [f"--{target}" for target in module.metadata.extra_test_config]
+            + ["--"]
+            + [
+                # Exclude test targets specified in module metadata, if any
+                f"-@{module.name}{target}"
+                for target in module.metadata.exclude_test_targets
             ]
         )
-        + (["--lockfile_mode=update"] if in_module else [f"--instrumentation_filter=@{module.name}"])
-        + [f"{repo}{module.metadata.code_root_path}"]
-        + [f"--{target}" for target in module.metadata.extra_test_config]
-        + ["--"]
-        + [
-            # Exclude test targets specified in module metadata, if any
-            f"-{repo}{target}"
-            for target in module.metadata.exclude_test_targets
-        ]
-    )
 
-    result = run_command(call, cwd=str(workspace)) if in_module else run_command(call)
+    result = run_command(call, cwd=str(workspace)) if workspace is not None else run_command(call)
     summary = extract_ut_summary(result.stdout)
     return {**summary, "exit_code": result.exit_code}
 
@@ -560,20 +646,27 @@ def main() -> bool:
         )
 
         # The module's committed MODULE.bazel.lock is stale the moment we inject overrides.
-        # Delete it so the run (with --lockfile_mode=update) regenerates a lock reflecting
-        # exactly the resolved set the module was validated against (DR-008 verifiable record).
+        # Delete it so the resolution gate regenerates a lock reflecting exactly the resolved set
+        # the module is validated against, which the test run then pins to (DR-008 record).
         module_lock = workspace.resolve() / "MODULE.bazel.lock"
         if module_lock.exists():
-            print_centered(f"QR: Removing stale module lock {module_lock} (regenerated by --lockfile_mode=update)")
+            print_centered(f"QR: Removing stale module lock {module_lock} (rewritten by the resolution gate)")
             module_lock.unlink()
 
-        # Overwrite .bazelversion in the module checkout with ref_int's pinned version
-        # so all Stage-2 runs use the same Bazel binary as the integrated build.
-        bazelversion_src = REF_INT_ROOT / ".bazelversion"
+        # .bazelversion in the checkout decides which Bazel binary bazelisk launches for this
+        # module. ref_int's release is a floor -- raise a module that pins an older Bazel, keep
+        # one that pins a newer. Overwriting unconditionally downgraded 6 of the 8 target_sw
+        # modules and changed their bzlmod resolution semantics; see
+        # resolve_stage2_bazel_version and ci/stage2/README.md's criterion 5.
         bazelversion_dst = workspace.resolve() / ".bazelversion"
-        bazel_ver = bazelversion_src.read_text().strip()
-        print_centered(f"QR: Pinning .bazelversion to ref_int's {bazel_ver} in {bazelversion_dst}")
-        bazelversion_dst.write_text(bazel_ver + "\n")
+        module_ver = bazelversion_dst.read_text().strip() if bazelversion_dst.is_file() else None
+        ref_int_ver = (REF_INT_ROOT / ".bazelversion").read_text().strip()
+        bazel_ver = resolve_stage2_bazel_version(ref_int_ver, module_ver)
+        if bazel_ver == module_ver:
+            print_centered(f"QR: Keeping the module's .bazelversion {bazel_ver} (ref_int's floor is {ref_int_ver})")
+        else:
+            print_centered(f"QR: Raising .bazelversion {module_ver or '<none>'} -> {bazel_ver} in {bazelversion_dst}")
+            bazelversion_dst.write_text(bazel_ver + "\n")
 
     for module in known.modules["target_sw"].values():
         if args.modules_to_test and module.name not in args.modules_to_test:
@@ -581,6 +674,26 @@ def main() -> bool:
             continue
 
         print_centered(f"QR: Testing module: {module.name}")
+
+        # Resolution gate: prove the injected set resolves, the toolchains select and the tests
+        # analyse -- before running anything. Everything it checks is determined by what ref_int
+        # injected and layered, so a failure here is ref_int's by construction and never a
+        # statement about the module's code. It also writes the lock the test run pins to.
+        if workspace is not None:
+            gate = run_resolution_gate(module, workspace=workspace, startup=startup)
+            if gate.exit_code != 0:
+                print_centered(
+                    f"QR: {module.name}: module graph did not resolve -- ref_int harness defect; skipping tests"
+                )
+                unit_tests_summary[module.name] = {
+                    "passed": 0,
+                    "failed": 0,
+                    "skipped": 0,
+                    "total": 0,
+                    "exit_code": gate.exit_code,
+                }
+                continue
+
         unit_tests_summary[module.name] = run_unit_test_with_coverage(
             module=module, workspace=workspace, startup=startup
         )
