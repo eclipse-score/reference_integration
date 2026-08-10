@@ -36,6 +36,18 @@ bazel test //feature_integration_tests/test_cases:fit_rust
 bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_cpp
 ```
 
+## Quick try
+
+Run a quick smoke of the FIT harness (lists scenarios or runs a small subset):
+
+```bash
+# List available Rust scenarios
+bazel run //feature_integration_tests/test_scenarios/rust:rust_test_scenarios -- --list-scenarios
+
+# Run all FIT tests (streaming output)
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit --test_output=streamed
+```
+
 ### ITF Tests (QEMU-based)
 
 ITF tests run on a QEMU target and require the `itf-qnx-x86_64` config:
