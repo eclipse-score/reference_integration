@@ -14,14 +14,9 @@ module(
     name = "score_ref_int",
 )
 
-# SBOM generation is consumed from a pinned score_sbom commit until the module
-# is available in the Bazel registry.
-bazel_dep(name = "score_sbom", version = "0.0.1")
-git_override(
-    module_name = "score_sbom",
-    commit = "2249efd97d4a2681dfa18d5b1d6cebbe7da1ce0f",
-    remote = "https://github.com/eclipse-score/sbom-tool.git",
-)
+# SBOM generation pinned to sbom-tool v0.0.2 until registry module naming is aligned.
+bazel_dep(name = "score_sbom", version = "0.0.2")
+
 
 sbom_ext = use_extension("@score_sbom//:extensions.bzl", "sbom_metadata")
 sbom_ext.track_module(name = "score_sbom")
@@ -96,6 +91,7 @@ download_archive(
 bazel_dep(name = "aspect_rules_lint", version = "2.3.0")
 bazel_dep(name = "buildifier_prebuilt", version = "8.5.1")
 bazel_dep(name = "score_rust_policies", version = "0.0.5")
+bazel_dep(name = "score_sbom", version = "0.0.2")
 
 # TRLC dependency for requirements traceability
 bazel_dep(name = "trlc")
