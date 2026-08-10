@@ -13,18 +13,15 @@
 # *******************************************************************************
 """Check that a Stage-2 module really resolved to ref_int's dependency versions.
 
-DR-008 Option 4 claims each module is validated "against the dependency versions resolved by
-reference_integration". This turns that claim into a check instead of an assumption: compare
-the module's own post-MVS graph (``bazel mod graph --output=json``, run inside the module
-checkout after injection) against ref_int's ``resolved_versions.json``.
+Compares the module's own post-MVS graph (``bazel mod graph --output=json``, run in the module
+checkout after injection) against ref_int's ``resolved_versions.json``, turning DR-008's
+"validated against the versions reference_integration resolved" into a check rather than an
+assumption.
 
-``MODULE.bazel.lock`` is deliberately NOT the input here. Its ``registryFileHashes`` records
-every registry file Bazel *consulted* during resolution, including candidate versions it then
-rejected, so presence there does not show which version was selected. ``bazel mod graph``
-reports the resolved graph, which is what the DR-008 claim is about.
-
-Modules pinned by ``git_override`` carry a commit rather than a registry version, so they are
-counted separately as unverifiable-by-version rather than silently treated as agreeing.
+Not ``MODULE.bazel.lock``: its ``registryFileHashes`` lists every registry file Bazel consulted,
+including versions it rejected, so presence there does not show what was selected. Modules pinned
+by ``git_override`` carry a commit rather than a version and are counted separately as
+unverifiable-by-version rather than as agreeing.
 
 Usage:
   python3 scripts/known_good/verify_stage2_resolution.py \\

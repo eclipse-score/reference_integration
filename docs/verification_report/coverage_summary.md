@@ -1,5 +1,3 @@
 # Coverage Analysis Summary
 
-| module | lines | functions | branches |
-| --- | --- | --- | --- |
-| score_communication_cpp |  |  |  |
+## Template for a table with Coverage execution summary

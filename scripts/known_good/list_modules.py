@@ -13,16 +13,13 @@
 # *******************************************************************************
 """Emit the modules of a known_good.json group as a JSON array.
 
-Used to build the Stage-2 module matrix dynamically in test_and_docs.yml so the
-list of modules is always sourced from known_good.json and never hardcoded
-(reviewer guidance: "dont hardcode it, we need to take it from know_good always").
-
-Each entry carries the data Stage 2 needs to check the module out and validate it:
+Builds the Stage-2 module matrix in test_and_docs.yml so it is always sourced from
+known_good.json and never hardcoded. Each entry is
   {"name": <bazel module name>, "repo": <git url>, "slug": <owner/name>,
    "commit": <hash>, "branch": <branch>}
-The "slug" (e.g. "eclipse-score/baselibs") is what actions/checkout expects as
-`repository:`, derived from the git URL since the repo name often differs from the
-bazel module name (e.g. score_lifecycle_health -> eclipse-score/lifecycle).
+where "slug" is what actions/checkout expects as `repository:`, derived from the git URL because
+the repo name often differs from the bazel module name (score_lifecycle_health ->
+eclipse-score/lifecycle).
 
 Usage:
   python scripts/known_good/list_modules.py --group target_sw

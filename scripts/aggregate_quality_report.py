@@ -11,12 +11,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-"""
-Aggregate Stage 1 and Stage 2 quality reports into a single consolidated report.
+"""Aggregate Stage 1 and Stage 2 quality reports into a single consolidated report.
 
-Implements the upstream aggregation step of DR-008 Option 4: reads per-module
-unit_test_summary.md and coverage_summary.md from downloaded stage2-report-*
-artifacts and combines them with the Stage 1 integration result.
+The upstream aggregation step of DR-008 Option 4. ``--stage2-dir`` holds one
+``stage2-report-<module>/`` per module, each with the ``unit_test_summary.md`` and
+``coverage_summary.md`` quality_runners.py produced.
 
 Usage:
   python3 scripts/aggregate_quality_report.py \\
@@ -24,10 +23,6 @@ Usage:
       --stage2-result success \\
       --stage2-dir _stage2_reports/ \\
       >> "$GITHUB_STEP_SUMMARY"
-
-The --stage2-dir is expected to contain subdirectories named
-stage2-report-<module>, each holding unit_test_summary.md and
-coverage_summary.md produced by quality_runners.py.
 """
 
 import argparse

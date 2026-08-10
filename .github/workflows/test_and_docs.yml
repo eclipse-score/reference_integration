@@ -12,26 +12,14 @@
 # *******************************************************************************
 # Two-stage quality workflow aligned with DR-008 Option 4.
 #
-# Stage 1 (stage1_integration): build the integrated platform, run Feature
-#   Integration Tests, and publish the resolved dependency set (MODULE.bazel.lock
-#   + generated git_override files) as the stage1-resolved-deps artifact.
-#
-# prepare_matrix: derive the Stage 2 module list dynamically from known_good.json
-#   (target_sw group) so it is never hardcoded.
-#
-# Stage 2 (stage2_module_validation): per-module matrix. For each module: check it
-#   out at its known_good commit, overwrite its MODULE.bazel with the Stage-1
-#   resolved dependency set (downloaded artifact, via ResolvedDependencies), and run
-#   the module's unit tests + coverage *inside the module* (bazel root //...). This
-#   is the DR-008 Option 4 "overwrite deps from resolved deps and execute UTs +
-#   coverage directly in the modules" flow. Injection is ephemeral (CI only).
-#
-# Aggregate (aggregate): downloads all Stage 2 reports, renders a consolidated
-#   quality report to the GitHub Step Summary, and (on tags) creates the
-#   combined test-report ZIP for the GitHub Release.
-#
-# Docs / docs-deploy: unchanged from the previous workflow; depends on
-#   stage1_integration which builds and uploads the pages artifact.
+# stage1_integration: build the platform, run Feature Integration Tests, publish the resolved
+#   dependency set as the stage1-resolved-deps artifact.
+# prepare_matrix:     derive the Stage 2 module list from known_good.json (target_sw).
+# stage2_module_validation: per-module matrix -- check the module out at its known_good commit,
+#   pin its MODULE.bazel to the Stage-1 set, and run its unit tests + coverage as the Bazel root.
+#   Injection is ephemeral (CI only).
+# aggregate:          consolidate Stage 2 reports into the Step Summary, and on tags the release ZIP.
+# docs / docs-deploy: unchanged; depends on stage1_integration for the pages artifact.
 name: Code Quality & Documentation
 permissions:
   contents: write
@@ -61,14 +49,9 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
   # ---------------------------------------------------------------------------
-  # Stage 1 — Integration-Scoped
-  # Builds the integrated platform and runs Feature Integration Tests.
-  # Publishes the Bazel-resolved dependency set (MODULE.bazel.lock +
-  # generated score_modules_*.MODULE.bazel) as the stage1-resolved-deps
-  # artifact, satisfying the "resolve complete dependency set incl. transitive
-  # deps" requirement of DR-008 Option 4.
-  # Documentation is built in a separate parallel job (docs_build) so that
-  # a Sphinx warning does not block Stage 2 validation.
+  # Stage 1 — Integration-Scoped. Builds the platform, runs Feature Integration Tests, and
+  # publishes the resolved dependency set as the stage1-resolved-deps artifact. Docs build in a
+  # separate parallel job so a Sphinx warning cannot block Stage 2.
   # ---------------------------------------------------------------------------
   stage1_integration:
     name: "Stage 1 — Platform Build & Feature Integration Tests"
@@ -108,11 +91,9 @@ jobs:
         if: always()
         run: |
           mkdir -p artifacts/stage1-resolved-deps
-          # Resolve the full graph (registry versions) against the committed lock, then merge
-          # with ref_int's own override directives (git_override for score_*/trlc/..., plus
-          # any single_version_override) into the single Stage 1 -> Stage 2 handoff manifest.
-          # The graph itself is stored alongside the manifest by the script: Stage 2 needs it
-          # to pin each module's full transitive closure, not just the deps it declares.
+          # Merge the resolved registry versions with ref_int's own override directives into the
+          # single Stage 1 -> Stage 2 handoff manifest. The script stores the graph alongside it,
+          # which Stage 2 needs to pin each module's full transitive closure.
           bazel mod graph --output=json --lockfile_mode=error > resolved_graph.json
           python scripts/known_good/resolved_dependencies.py \
             --mod-graph resolved_graph.json \
@@ -186,10 +167,8 @@ jobs:
           retention-days: 3
           if-no-files-found: error
   # ---------------------------------------------------------------------------
-  # Prepare the Stage 2 matrix dynamically from known_good.json's target_sw group.
-  # The module list is NEVER hardcoded in this workflow (reviewer R1: "we need to
-  # take it from know_good always"). Each matrix entry carries {name, repo, slug,
-  # commit, branch} so Stage 2 can check the module out at its resolved commit.
+  # Stage 2 matrix, derived from known_good.json's target_sw group and never hardcoded here.
+  # Each entry carries {name, repo, slug, commit, branch} so Stage 2 can check the module out.
   # ---------------------------------------------------------------------------
   prepare_matrix:
     name: "Prepare Stage 2 module matrix"
@@ -216,17 +195,10 @@ jobs:
         run: |
           echo "modules=$(python scripts/known_good/list_modules.py --group target_sw)" >> "$GITHUB_OUTPUT"
   # ---------------------------------------------------------------------------
-  # Stage 2 — Module-Scoped (DR-008 Option 4)
-  # For each target_sw module: check the module out at its known_good commit,
-  # overwrite its MODULE.bazel with the dependency set ref_int RESOLVED in Stage 1
-  # (downloaded stage1-resolved-deps artifact), and run the module's own unit tests
-  # + coverage *inside the module* (bazel root //...), not through ref_int's graph.
-  # This is the "overwrite deps from resolved deps in ref_int and execute UTs and
-  # coverage directly in the modules" flow the reviewer described (R2/R3/R4).
-  #
-  # The injection is ephemeral (CI checkout only) — released module sources are
-  # never modified. Each matrix job is isolated; fail-fast: false ensures one
-  # module's failure does not hide the results of others.
+  # Stage 2 — Module-Scoped (DR-008 Option 4). Per module: check it out at its known_good commit,
+  # pin its MODULE.bazel to the Stage-1 resolved set, and run its own unit tests + coverage inside
+  # the module (bazel root //...), not through ref_int's graph. Injection is ephemeral (CI checkout
+  # only). fail-fast: false so one module's failure does not hide the others' results.
   # ---------------------------------------------------------------------------
   stage2_module_validation:
     name: "Stage 2 — Module UT & Coverage (${{ matrix.module.name }})"
@@ -316,14 +288,11 @@ jobs:
             artifacts/coverage/
           retention-days: 14
           if-no-files-found: warn
-      # The module's MODULE.bazel.lock, written by the resolution gate (`bazel mod deps
-      # --lockfile_mode=update`) after the resolved-deps injection and *before* any test
-      # ran. The test run then pins to it with --lockfile_mode=error, so this is not just a
-      # record of what resolved -- it is the state the tests were forbidden to deviate from.
-      # module_graph.json is the module's own post-MVS graph, rooted at the module. It is the
-      # only artifact in the whole pipeline that contains a module's dev-dependency closure:
-      # Stage 1's graph.json is rooted at ref_int, where those edges are inactive and therefore
-      # absent. Publishing both is what makes the Stage-2 record complete.
+      # MODULE.bazel.lock as the resolution gate wrote it, after injection and before any test ran;
+      # selection_digest then asserts the test run did not move any selected version.
+      # module_graph.json is the module-rooted post-MVS graph -- the only artifact carrying a
+      # module's dev-dependency closure, since Stage 1's graph is rooted at ref_int where those
+      # edges are inactive.
       - name: Upload regenerated module lockfile and resolved graph
         if: always()
         uses: actions/upload-artifact@v4.4.0

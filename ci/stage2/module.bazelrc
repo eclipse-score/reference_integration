@@ -16,8 +16,10 @@
 # known_good.json instead of dangling a name whose meaning lives downstream.
 #
 # Read last, so single-valued flags here win; --extra_toolchains and other accumulating
-# flags add to what the module already registers. Do NOT add --noworkspace_rc — see
-# ci/stage2/README.md for what that broke and why the module's rc must stay.
+# flags add to what the module already registers. Do NOT add --noworkspace_rc: it was tried and
+# reverted because it discarded module settings unrelated to the configs ref_int names (stub
+# trace-library selection, sandbox settings, module-owned libclang/cc toolchains, Rust coverage
+# instrumentation, clippy aspects) — 3 of 8 modules configured silently wrong instead of failing.
 
 # rules_android is pulled in transitively (grpc-java -> rules_jvm_external) and evaluates
 # android_sdk_repository, which fails when ANDROID_HOME points at an incomplete SDK, as on
@@ -58,16 +60,10 @@ build:stage2-gcc --extra_toolchains=@score_gcc_x86_64_toolchain//:x86_64-linux-g
 build:stage2-rust --extra_toolchains=@score_toolchains_rust//toolchains/ferrocene:ferrocene_x86_64_unknown_linux_gnu
 
 # ─── ferrocene-coverage: Rust coverage instrumentation ───────────────────────
-# Applied automatically by quality_runners.py (never opt-in via known_good.json) whenever a
-# module has Rust to extract coverage for — see stage2_config_flags. Without rustc emitting
-# .profraw during the SAME run genhtml/ferrocene_report later reads, extraction finds
-# nothing to report.
-#
-# score_kyron, score_persistency and score_lifecycle_health already define this name
-# identically in their own .bazelrc (verified against their known_good pins); layering
-# repeats the same values there, which is a no-op for a list-accumulating rustc flag set
-# to the same value twice. score_logging's own .bazelrc has no Rust instrumentation config
-# at all, so this is what actually supplies it there. Mirrors ref_int's root .bazelrc.
+# Added in code by stage2_config_flags, never opted into via known_good.json: rustc must emit
+# .profraw during the same run ferrocene_report later reads. kyron/persistency/lifecycle_health
+# define this name identically themselves (layering repeats the same values, a no-op);
+# score_logging has no Rust instrumentation config, so this is its only source.
 build:ferrocene-coverage --@rules_rust//rust/settings:extra_rustc_flag=-Cinstrument-coverage
 build:ferrocene-coverage --@rules_rust//rust/settings:extra_rustc_flag=-Clink-dead-code
 build:ferrocene-coverage --@rules_rust//rust/settings:extra_rustc_flag=-Ccodegen-units=1
@@ -78,14 +74,10 @@ build:ferrocene-coverage --@rules_rust//rust/settings:extra_exec_rustc_flag=-Cco
 build:ferrocene-coverage --@rules_rust//rust/settings:extra_exec_rustc_flag=-Cdebuginfo=2
 test:ferrocene-coverage --run_under=@score_tooling//coverage:llvm_profile_wrapper
 
-# score_persistency's own rust_coverage_config (known_good.json) is ferrocene-coverage-per,
-# not plain ferrocene-coverage — its own .bazelrc does not define this name at all (checked
-# against its known_good pin), so this is the sole source. Only the two score_baselibs
-# settings are ported: they're real deps persistency itself declares, so they resolve
-# inside its own checkout same as ref_int's. ref_int's root .bazelrc also carries a third,
-# @score_logging-relative one, but that's ref_int-graph-specific in a way these two aren't —
-# and persistency's own known_good.json `extra_test_config` already passes it directly on
-# every Stage-2 invocation, so nothing is lost by leaving it out here.
+# score_persistency's rust_coverage_config; its own .bazelrc does not define this name, so this
+# is the sole source. Only the two score_baselibs settings are ported -- deps persistency itself
+# declares, so they resolve in its checkout. ref_int's root .bazelrc has a third,
+# @score_logging-relative one, which persistency's `extra_test_config` already passes directly.
 build:ferrocene-coverage-per --config=ferrocene-coverage
 build:ferrocene-coverage-per --@score_baselibs//src/log:safety_level=qm
 build:ferrocene-coverage-per --@score_baselibs//score/json:base_library=nlohmann

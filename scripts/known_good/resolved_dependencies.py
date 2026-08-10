@@ -132,12 +132,8 @@ GRAPH_NAME = "graph.json"
 class DependencyGraph:
     """The ``bazel mod graph --output=json`` tree, queryable per module.
 
-    Stage 2 needs more than the module-under-test's *declared* dependencies: Bazel only
-    honours ``*_override`` directives from the **root** module, so any transitive dep the
-    module does not itself declare falls through to plain MVS and can resolve to a version
-    ref_int never validated (e.g. ``score_communication`` never declares ``flatbuffers``;
-    it arrives via ``score_baselibs``). :meth:`closure` returns the full set so
-    :meth:`ResolvedDependencies.overwrite` can pin every one of them.
+    :meth:`closure` returns a module's full transitive set, which is what
+    :meth:`ResolvedDependencies.overwrite` pins.
 
     The graph is *not* a plain tree. A module that appears more than once is emitted once
     with its ``dependencies`` and thereafter as an ``unexpanded`` stub carrying no
@@ -237,17 +233,10 @@ def _declared_deps(text: str) -> set[str]:
 def generate_bazel_dep(module: Module | None, name: str) -> str:
     """Return the ``bazel_dep`` line that brings ``name`` into the root module's graph.
 
-    An override is only legal for a module Bazel actually resolves; injecting one for a
-    transitive dependency the module-under-test does not declare would trip "the root
-    module specifies overrides on nonexistent module(s)". Declaring the ``bazel_dep``
-    alongside the override is what makes it valid.
-
-    The version is deliberate: a registry module repeats its *resolved* version so it
-    matches what MVS selects and ``--check_direct_dependencies`` stays quiet, while a
-    git-overridden module omits the version entirely (the override supplies the source,
-    and any literal here — ``0.0.0`` included — would only produce a spurious mismatch
-    warning). Omitting it is the same idiom the score modules already use, e.g.
-    ``bazel_dep(name = "score_tooling")``.
+    Required alongside an injected override: without it Bazel rejects "the root module specifies
+    overrides on nonexistent module(s)". A registry module repeats its resolved version so
+    ``--check_direct_dependencies`` stays quiet; a git-overridden one omits the version, since the
+    override supplies the source and any literal would only produce a spurious mismatch warning.
     """
     if module is not None and module.version:
         return f'bazel_dep(name = "{name}", version = "{module.version}")\n'
@@ -302,23 +291,18 @@ class ResolvedDependencies:
 
     @classmethod
     def from_mod_graph(cls, mod_graph_json: Path, override_files: list[Path]) -> ResolvedDependencies:
-        """Build the *complete* resolved set by merging two sources.
+        """Build the complete resolved set by merging two sources.
 
-        * The override directives ref_int actually declares — parsed from its root
-          ``MODULE.bazel`` and the ``bazel_common/*.MODULE.bazel`` files it ``include()``s.
-          This carries every module ref_int pins by a non-registry source as its real
-          directive: ``git_override(commit, remote)`` for ``score_*`` plus third-party like
-          ``trlc`` / ``flatbuffers`` / ``rules_oci``, and ``single_version_override`` where
-          ref_int pins a registry version. The graph cannot supply these — it reports
-          overridden modules as version ``0.0.0``.
-        * ``bazel mod graph --output=json`` — the post-MVS resolved version of every other
-          (registry) module (protobuf, abseil, rules_rust, ...), emitted as
-          ``single_version_override`` so each module under test is forced to the exact
-          version ref_int resolved (MVS is graph-global, so a module's own subgraph could
-          otherwise select a different version).
+        * ref_int's own override directives, parsed from its root ``MODULE.bazel`` and the
+          ``bazel_common/*.MODULE.bazel`` files it ``include()``s. The graph cannot supply these
+          -- it reports overridden modules as version ``0.0.0``.
+        * ``bazel mod graph --output=json`` for the post-MVS version of every other (registry)
+          module, emitted as ``single_version_override`` so each module under test is forced to
+          the version ref_int resolved -- MVS is graph-global, so a module's own subgraph could
+          otherwise select a different one.
 
-        ``archive_override`` / ``local_path_override`` targets (e.g. ``rules_boost``) cannot
-        be represented and are logged as not carried.
+        ``archive_override`` / ``local_path_override`` targets cannot be represented and are
+        logged as not carried.
         """
         resolved: dict[str, Module] = {}
         unrepresentable: list[str] = []

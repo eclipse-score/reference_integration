@@ -46,7 +46,8 @@ REF_INT_ROOT = Path(__file__).resolve().parent.parent
 STAGE2_RC = REF_INT_ROOT / "ci" / "stage2" / "module.bazelrc"
 RUST_COVERAGE_BUILD = REF_INT_ROOT / "rust_coverage" / "BUILD"
 # Emitted for every module, so a missing or mistyped bazel_config can never leave a Stage-2
-# run with no platform, no toolchain and no test filter (see ci/stage2/README.md).
+# run with no platform, no toolchain and no test filter. Per-module bazel_config entries are
+# additive opt-ins only; this base config is unconditional.
 STAGE2_BASE_CONFIG = "stage2-linux-x86_64"
 # Central/legacy mode only (workspace=None): configs defined in ref_int's own root .bazelrc.
 CENTRAL_MODE_CONFIGS = ["--config=unit-tests", "--config=ferrocene-coverage"]
@@ -61,14 +62,9 @@ MODULE_GRAPH_NAME = "module_graph.json"
 def rust_coverage_query(module_name: str, rust_coverage_build: Path = RUST_COVERAGE_BUILD) -> str:
     """The ``bazel query`` ref_int already runs for a module's rust_test targets.
 
-    ``rust_coverage/BUILD`` (generated from known_good.json by
-    ``update_module_from_known_good.py``) declares a ``rust_coverage_report`` per module,
-    each with the query that finds its rust_test targets. Reused rather than duplicated so
-    a known_good.json change and a regenerated BUILD file stay the single source of truth.
-
-    The query targets ref_int's own graph, where the module is mounted as ``@<module>//...``.
-    In module-context mode the module *is* the Bazel root, so that prefix is stripped back
-    to ``//...`` — the exact query the module's own tests already use to find themselves.
+    Read out of the generated ``rust_coverage/BUILD`` rather than duplicated, so known_good.json
+    stays the single source of truth. The ``@<module>//`` prefix is stripped because in
+    module-context mode the module is the Bazel root.
     """
     text = rust_coverage_build.read_text()
     match = re.search(rf'name = "rust_coverage_{re.escape(module_name)}".*?query = \'([^\']*)\'', text, re.S)
@@ -80,13 +76,10 @@ def rust_coverage_query(module_name: str, rust_coverage_build: Path = RUST_COVER
 def stage2_startup_flags() -> list[str]:
     """Bazel startup options that layer ref_int's Stage-2 config over the module's own.
 
-    Deliberately does NOT pass ``--noworkspace_rc``: the module's ``.bazelrc`` carries
-    settings unrelated to the configs ref_int names (its own toolchains, trace-library stub
-    selection, sandbox settings) and discarding them changes what Stage 2 validates. Being
-    read last, this file still wins every single-valued flag.
-
-    Every Bazel call for a module must use the same startup flags, since different ones
-    start a different server with a different output base (see ``cpp_coverage``).
+    Deliberately not ``--noworkspace_rc``: the module's own ``.bazelrc`` carries settings
+    unrelated to the configs ref_int names, and discarding them changes what Stage 2 validates.
+    Read last, this file still wins every single-valued flag. Every Bazel call for a module must
+    pass the same startup flags -- different ones start a server with a different output base.
     """
     return [f"--bazelrc={STAGE2_RC}"]
 
@@ -94,16 +87,10 @@ def stage2_startup_flags() -> list[str]:
 def stage2_config_flags(module: Module) -> list[str]:
     """``--config`` flags for a module: the mandatory base plus its additive opt-ins.
 
-    ``bazel_config`` in known_good.json carries opt-ins only, and every name must be
-    defined in ref_int's Stage-2 rc — a name that is not is a silent misconfiguration
-    (Bazel would fail late, or worse, succeed having applied nothing).
-
-    Its own rust coverage config (``rust_coverage_config``, e.g. ``ferrocene-coverage`` or
-    ``score_persistency``'s ``ferrocene-coverage-per``) is added automatically — never listed
-    in known_good.json's ``bazel_config`` — when the module has Rust to extract coverage for.
-    Without it during THIS run, rustc never emits the .profraw files the later
-    ferrocene_report step reads, so instrumentation has to be on during the same coverage
-    run that produces them, not opt-in-per-module like the rest.
+    Every ``bazel_config`` name must be defined in ref_int's Stage-2 rc; one that is not would
+    otherwise apply nothing silently. The Rust coverage config is added in code rather than
+    opted into per module, because rustc must be instrumented during the same run that produces
+    the .profraw files the later ferrocene_report step reads.
     """
     defined = set(re.findall(r"^(?:build|test|coverage|common):([\w.-]+)", STAGE2_RC.read_text(), re.M))
     unknown = [c for c in module.metadata.bazel_config if c not in defined]
@@ -118,10 +105,8 @@ def stage2_config_flags(module: Module) -> list[str]:
 def stage2_target_args(module: Module) -> list[str]:
     """The target pattern, extra flags and exclusions shared by the gate and the test run.
 
-    The gate's entire correctness argument is that it cannot fail on anything the test run would
-    not itself reach. That holds only while both commands address the *same* target set, so both
-    build it from here rather than each assembling its own — a divergence would silently
-    reintroduce the false-failure mode :func:`run_resolution_gate` exists to avoid.
+    Both build it from here rather than assembling their own: the gate is only sound while it
+    addresses the same target set as the test run (see :func:`run_resolution_gate`).
     """
     return (
         [module.metadata.code_root_path]
@@ -134,15 +119,10 @@ def stage2_target_args(module: Module) -> list[str]:
 def stage2_module_command(module: Module, startup: list[str] | None) -> list[str]:
     """The Stage-2 test command for a module checkout.
 
-    ``--lockfile_mode=update``, not ``=error``: the gate is scoped to this command's own target
-    set (see :func:`run_resolution_gate`), so the lock it leaves behind covers the extensions
-    *analysis* needed, not the further ones a coverage run evaluates (test runners, lcov tooling).
-    Under ``=error`` a legitimate addition of that kind is a hard failure.
-
-    What ``=error`` was there to guarantee — that the tests ran against the resolution the gate
-    validated, with no silent re-resolve — is preserved by :func:`selection_digest` instead, which
-    asserts after the run that the inputs to module *selection* are byte-identical to what the gate
-    validated. Extension results may grow; selected versions may not move.
+    ``--lockfile_mode=update``, not ``=error``: the gate's lock covers the extensions analysis
+    needed, and a coverage run legitimately evaluates further ones (test runners, lcov tooling)
+    that ``=error`` would reject. :func:`selection_digest` preserves the guarantee instead --
+    extension results may grow, selected versions may not move.
     """
     return (
         ["bazel"]
@@ -169,41 +149,17 @@ def stage2_gate_command(module: Module, startup: list[str] | None) -> list[str]:
 def run_resolution_gate(module: Module, workspace: Path, startup: list[str] | None = None) -> ProcessResult:
     """Resolve and analyse the module's test targets before a single test runs.
 
-    Splits the one opaque step Stage 2 used to be into the two things it was always doing. What
-    this checks is determined by the versions ref_int injected and the config ref_int layered, so
-    a failure here says nothing about whether the module's *tests* pass. Test execution is the
-    module's. Running them as separate steps makes that ownership structural. The three Stage-2
-    failures that motivated the gate (module ``.bazelrc``, dev-dependency versions,
-    ``.bazelversion``) were all resolution failures, which this still catches.
+    Uses ``build --nobuild`` over :func:`stage2_target_args` -- the same target pattern, flags and
+    exclusions the coverage run uses. Sharing the target set is the correctness argument: Bazel
+    evaluates a module extension only when a target needs a repository it generates, so the gate
+    cannot fail on a region of the graph the tests would never reach. ``bazel mod deps``, which
+    this replaces, evaluates every extension and so failed ``score_lifecycle_health`` on a latent
+    ``grpc``/``grpc-java`` ``use_repo`` inconsistency no build target reaches -- with and without
+    ref_int's injection -- while its tests ran green at their 248-test baseline.
+    ``coverage --nobuild`` is unusable: it exits 1 even when analysis succeeds.
 
-    A failure here is not automatically ref_int's, though the gate was originally written as if it
-    were. It can also be an *integration conflict* -- ref_int's resolved set is internally fine and
-    the module is fine, but the two are incompatible. :func:`classify_gate_failure` separates the
-    two, because the difference decides who acts.
-
-    ``build --nobuild`` over :func:`stage2_target_args` -- the *same* target pattern, flags and
-    exclusions the coverage run uses. Scope is the whole correctness argument. Bazel evaluates a
-    module extension only when some target needs a repository it generates, so addressing the test
-    run's own targets makes the gate structurally incapable of failing on a region of the graph
-    the test run would never reach.
-
-    That is not academic. ``bazel mod deps``, which this replaces, evaluates *every* extension in
-    the graph. Measured on ``score_lifecycle_health`` at its known_good pin, it fails on a
-    ``use_repo`` inconsistency between ``grpc-java 1.66.0`` and ``grpc 1.70.1`` that no build
-    target reaches -- identically with ref_int's injection applied and with the module completely
-    untouched -- while the module's tests run green and reproduce their 248-test baseline to the
-    digit. The gate reported a defect that did not exist and the "0 tests executed" rule below
-    then attributed it to ref_int. ``mod graph`` shares the flaw. Full experiment:
-    docs/dr8_stage2_injection_scope_rca.md.
-
-    An earlier revision rejected ``build --nobuild`` because it "can fail on targets the coverage
-    run would never build -- a false ref_int defect". Passing the identical target set answers
-    that: there are no such targets. ``coverage --nobuild`` remains unusable, for a different and
-    still-valid reason -- it exits 1 unconditionally ("Couldn't start the build. Unable to run
-    tests") even when analysis succeeds, so it would report a harness defect for every module.
-
-    Analysis resolves toolchains, so toolchain selection *is* gated here. Test execution is not,
-    and still surfaces in the test run.
+    A failure here is not automatically ref_int's; :func:`classify_gate_failure` separates a
+    harness defect from an integration conflict, because that decides who acts.
     """
     print_centered(f"QR: Resolving and analysing test targets for {module.name} (gate)")
     call = stage2_gate_command(module, startup)
@@ -218,30 +174,17 @@ def run_resolution_gate(module: Module, workspace: Path, startup: list[str] | No
 def capture_module_graph(workspace: Path, startup: list[str] | None = None) -> Path | None:
     """Write the module's own post-MVS dependency graph next to its regenerated lock.
 
-    This is the **only** place a module's dev-dependency closure exists. ref_int's Stage-1 graph
-    is rooted at ref_int, and bzlmod activates ``dev_dependency`` edges and dev-only
-    ``use_extension`` calls solely for the root module — so no flag on ``bazel mod`` can make
-    Stage 1 see them (the command's options cover extension filtering and display only). Rooted at
-    the module they are all present: measured on ``score_baselibs``, 29 direct dependencies here
-    against 15 under ``--ignore_dev_dependency``.
+    Rooted at the module, this is the only place its dev-dependency closure is visible: bzlmod
+    activates ``dev_dependency`` edges for the root module only, so ref_int's Stage-1 graph cannot
+    show them (measured on ``score_baselibs``: 29 direct deps here against 15 with
+    ``--ignore_dev_dependency``). Captured in the gate so it describes the state the tests were
+    pinned to and survives a failing test run.
 
-    Stage 2 already computed this graph and discarded it. Keeping it is what makes the published
-    artifact set a complete record of what each module actually resolved, dev dependencies
-    included — the same move as storing ref_int's ``graph.json`` in Stage 1, sourced from the one
-    root that can produce it.
-
-    Capturing it in the gate rather than after the tests means it describes the state the tests
-    were pinned to, and that it survives a failing test run. Evidence capture must never turn a
-    passing gate into a failure, so a problem here is reported and swallowed: the gate's verdict
-    comes from its own command alone.
-
-    A non-zero exit is *expected* for some modules and is not a reason to discard the dump.
-    ``mod graph`` evaluates every module extension, so it inherits exactly the over-reach that
-    disqualified ``mod deps`` as the gate (see :func:`run_resolution_gate`): on
-    ``score_lifecycle_health`` it exits non-zero while still printing the complete resolved graph.
-    That graph is what the DR-008 verification step reads, and discarding it would leave precisely
-    the modules under investigation with no evidence. So the dump is kept whenever it parses, and
-    the exit code is reported rather than obeyed.
+    Failures are reported and swallowed -- evidence capture must never fail a passing gate. A
+    non-zero exit is expected for some modules, because ``mod graph`` evaluates every extension and
+    so inherits the over-reach that disqualified ``mod deps`` (see :func:`run_resolution_gate`); it
+    still prints the complete graph, which the DR-008 verification step reads. So the dump is kept
+    whenever it parses and the exit code is reported rather than obeyed.
     """
     graph_path = workspace.resolve() / MODULE_GRAPH_NAME
     call = ["bazel"] + (startup or []) + ["mod", "graph", "--output=json", "--lockfile_mode=update"]
@@ -261,15 +204,13 @@ def capture_module_graph(workspace: Path, startup: list[str] | None = None) -> P
 def selection_digest(lock: Path) -> dict[str, dict] | None:
     """The parts of ``MODULE.bazel.lock`` that decide which module *versions* get selected.
 
-    Bazel's lock stores no dependency graph. Selection is a function of the registry files it read
-    (``registryFileHashes``) and the yanked-version allowances (``selectedYankedVersions``);
-    ``moduleExtensions`` holds evaluated extension results, which legitimately grow as more of the
-    build is exercised. Comparing only the first two is what lets the test run evaluate extensions
-    the analysis-only gate never reached while still proving no version moved underneath it --
-    the guarantee ``--lockfile_mode=error`` used to provide before the gate was narrowed.
+    Selection depends only on ``registryFileHashes`` and ``selectedYankedVersions``;
+    ``moduleExtensions`` holds extension results, which legitimately grow as more of the build is
+    exercised. Comparing only the first two proves no version moved while still allowing the test
+    run to evaluate extensions the analysis-only gate never reached.
 
-    Returns ``None`` when there is no readable lock, which callers must treat as "cannot check"
-    rather than as "unchanged".
+    Returns ``None`` when there is no readable lock -- callers must treat that as "cannot check",
+    not "unchanged".
     """
     if not lock.is_file():
         return None
@@ -286,17 +227,14 @@ def selection_digest(lock: Path) -> dict[str, dict] | None:
 def classify_gate_failure(output: str, module_bazel: Path) -> tuple[str, list[str]]:
     """Attribute a gate failure to ref_int's harness or to an integration conflict.
 
-    Stage 2 had two buckets -- ref_int harness defect, module defect -- and a real failure fits
-    neither: ref_int's resolved set is self-consistent, the module is self-consistent, and the two
-    are incompatible. Measured instance: ``score_communication`` needs ``@score_crates//:mockall``,
-    which does not exist at the ``score_crates`` commit ref_int integrates. Filing that as a
-    harness defect sends it to the wrong owner, and it is the exact class of conflict DR-008
-    Stage 2 exists to surface.
+    An *integration conflict* is the third bucket: ref_int's resolved set and the module are each
+    self-consistent but mutually incompatible -- ``score_communication`` needs
+    ``@score_crates//:mockall``, absent at the ``score_crates`` commit ref_int integrates. Filing
+    that as a harness defect sends it to the wrong owner.
 
-    The signal is which repositories the failure names. ``injected_override_names`` is the
-    authoritative record of what ref_int pinned, so an error naming one of them is a conflict
-    *with ref_int's resolved set* rather than a mistake in how the harness was configured.
-    Anything else stays ref_int's, which keeps the default conservative.
+    The signal is which repositories the error names, checked against ``injected_override_names``
+    (the authoritative record of what ref_int pinned). Anything else stays ref_int's, keeping the
+    default conservative.
     """
     try:
         injected = injected_override_names(module_bazel.read_text())
@@ -312,20 +250,11 @@ def run_unit_test_with_coverage(
 ) -> dict[str, str | int]:
     """Run a module's unit tests + coverage.
 
-    When ``workspace`` is None (central/legacy mode) the module is addressed through
-    ref_int's Bazel graph as ``@<module>//...``.
-
-    When ``workspace`` is a checked-out module directory (DR-008 Option 4 mode), the
-    module *is* the Bazel root, so targets are plain ``//...`` and the command runs with
-    ``cwd=workspace``. The run starts from the lock :func:`run_resolution_gate` wrote after
-    validating the injected set and may extend it, because a coverage run evaluates module
-    extensions an analysis-only gate never reaches; that the *selected versions* did not move is
-    asserted afterwards by :func:`selection_digest` rather than enforced by
-    ``--lockfile_mode=error``, which would reject the legitimate additions. The module's committed
-    lock is deleted first in module-context mode, and the resulting lock is the verifiable record
-    of exactly what the module was validated against, uploaded as a Stage-2 artifact.
-    Instrumentation falls back to Bazel's default (root code instrumented, external deps
-    excluded).
+    ``workspace`` None is central/legacy mode, addressing the module through ref_int's graph as
+    ``@<module>//...``. Otherwise (DR-008 Option 4) the module is the Bazel root, targets are plain
+    ``//...`` and the command runs with ``cwd=workspace``, starting from the lock the gate wrote.
+    The resulting lock is the record of what the module was validated against and is uploaded as a
+    Stage-2 artifact.
     """
     print_centered("QR: Running unit tests")
 
@@ -438,14 +367,10 @@ def cpp_coverage(
 def _ensure_stage2_rc_importable(workspace: Path) -> None:
     """Make ref_int's Stage-2 config visible to bazel calls that don't inherit our flags.
 
-    ``ferrocene_report`` (invoked by :func:`rust_coverage` below) is a shell script that
-    shells out to its own nested ``bazel query``/``build``/``cquery`` calls internally.
-    Those calls don't see our ``--bazelrc=`` startup flag — that only applies to the *outer*
-    ``bazel run`` we invoke it with — so without this they'd silently build under the
-    module's own config only, missing ref_int's platform/toolchain/coverage settings the
-    original coverage run used. An ``import`` line makes every bazel invocation in this
-    checkout, ours and the nested ones alike, pick it up via Bazel's normal default-rc
-    discovery instead. Ephemeral (this checkout only); idempotent.
+    ``ferrocene_report`` shells out to its own nested bazel calls, which never see our
+    ``--bazelrc=`` startup flag (that applies to the outer ``bazel run`` only) and would silently
+    build under the module's config alone. An ``import`` line puts it on Bazel's normal default-rc
+    discovery path instead. Ephemeral (this checkout only); idempotent.
     """
     module_bazelrc = workspace / ".bazelrc"
     import_line = f"import {STAGE2_RC}\n"
@@ -458,18 +383,11 @@ def _ensure_stage2_rc_importable(workspace: Path) -> None:
 def _resolve_ferrocene_report_script(workspace: Path, startup: list[str] | None) -> Path:
     """The runfiles copy of ``@score_tooling//coverage:ferrocene_report``, not the bare binary.
 
-    Confirmed by an actual failing run, not assumed: ``ferrocene_report.sh`` locates its own
-    helper scripts as ``$(dirname "${BASH_SOURCE[0]}")/scripts/*.py`` rather than through
-    Bazel's runfiles-lookup convention. That only resolves when the script executes from
-    inside its own ``<target>.runfiles/`` tree — where its declared ``data`` deps land as
-    real sibling files — not from the bare ``bazel-bin`` symlink ``bazel run`` normally
-    invokes directly (confirmed on disk: the runfiles copy has a ``scripts/`` sibling: the
-    bare symlink's directory does not). So this bypasses ``bazel run`` for the final
-    execution and calls that copy directly.
-
-    Uses the same ``cquery --output=starlark`` + exec-root-relative-path handling
-    ``ferrocene_report.sh`` already uses internally to resolve *other* binaries — applying
-    its own idiom to itself, not inventing a new one.
+    ``ferrocene_report.sh`` finds its helper scripts as
+    ``$(dirname "${BASH_SOURCE[0]}")/scripts/*.py``, which resolves only from inside its own
+    ``<target>.runfiles/`` tree, not from the bare ``bazel-bin`` symlink ``bazel run`` invokes. So
+    this resolves that copy -- via the same ``cquery --output=starlark`` idiom the script itself
+    uses for other binaries -- and calls it directly.
     """
     target = "@score_tooling//coverage:ferrocene_report"
 
@@ -733,10 +651,9 @@ def main() -> bool:
             raise SystemExit(f"Stage-2 centralized config not found at {STAGE2_RC}")
         startup = stage2_startup_flags()
         print_centered(f"QR: Layering ref_int config {STAGE2_RC} over the module's own .bazelrc")
-        # DR-008 Option 4: overwrite the checked-out module's dependency versions with the
-        # set ref_int resolved in Stage 1, so the module's tests run against those versions.
-        # The Stage-1 artifact is mandatory: known_good.json carries only first-party pins
-        # with no transitive registry versions, so it cannot back the closure injection.
+        # DR-008 Option 4: pin the checkout to the set ref_int resolved in Stage 1. That artifact
+        # is mandatory -- known_good.json carries only first-party pins, no transitive registry
+        # versions, so it cannot back the closure injection.
         if args.resolved_deps is None:
             raise SystemExit(
                 "--resolved-deps is required with --module-dir: Stage 2 must pin against the "
@@ -763,11 +680,8 @@ def main() -> bool:
             print_centered(f"QR: Removing stale module lock {module_lock} (rewritten by the resolution gate)")
             module_lock.unlink()
 
-        # .bazelversion in the checkout decides which Bazel binary bazelisk launches for this
-        # module. ref_int's release is a floor -- raise a module that pins an older Bazel, keep
-        # one that pins a newer. Overwriting unconditionally downgraded 6 of the 8 target_sw
-        # modules and changed their bzlmod resolution semantics; see
-        # resolve_stage2_bazel_version and ci/stage2/README.md's criterion 5.
+        # ref_int's release is a floor, not a ceiling: raise a module pinning an older Bazel, keep
+        # one pinning a newer. See resolve_stage2_bazel_version for why downgrading is unsafe.
         bazelversion_dst = workspace.resolve() / ".bazelversion"
         module_ver = bazelversion_dst.read_text().strip() if bazelversion_dst.is_file() else None
         ref_int_ver = (REF_INT_ROOT / ".bazelversion").read_text().strip()
@@ -785,10 +699,8 @@ def main() -> bool:
 
         print_centered(f"QR: Testing module: {module.name}")
 
-        # Resolution gate: prove the injected set resolves, the toolchains select and the tests
-        # analyse -- before running anything. It addresses the test run's own targets, so it
-        # cannot fail on a part of the graph the tests would never reach. It also writes the lock
-        # the test run starts from.
+        # Prove the injected set resolves, toolchains select and tests analyse before running
+        # anything; also writes the lock the test run starts from.
         gate_selection = None
         if workspace is not None:
             gate = run_resolution_gate(module, workspace=workspace, startup=startup)
@@ -817,11 +729,9 @@ def main() -> bool:
             module=module, workspace=workspace, startup=startup
         )
 
-        # The guarantee --lockfile_mode=error used to give. The test run may legitimately evaluate
-        # module extensions the analysis-only gate never reached (test runners, lcov tooling), so
-        # the lock is allowed to grow -- but the inputs to module *selection* must be untouched.
-        # If they moved, the tests ran against a resolution nobody validated, which is exactly the
-        # silent re-resolve the strict lock mode existed to forbid.
+        # The guarantee --lockfile_mode=error used to give: the lock may grow with extensions the
+        # analysis-only gate never reached, but if module *selection* moved, the tests ran against
+        # a resolution nobody validated.
         if gate_selection is not None:
             after = selection_digest(workspace.resolve() / "MODULE.bazel.lock")
             if after is not None and after != gate_selection:
@@ -830,14 +740,10 @@ def main() -> bool:
                     "the tests did not run against the resolution the gate validated"
                 )
 
-        # Diagnostic rule (see ci/stage2/README.md): a Stage-2 run that fails without
-        # executing a single test failed at configuration, toolchain or dependency
-        # resolution, so it is a ref_int harness defect -- never a finding about the module.
-        # Extraction has nothing to read in that case, and running it anyway buries the real
-        # error under downstream ones. No extra bazel call is needed to detect this: the
-        # coverage run's own exit code and test count already say it. A non-zero exit with
-        # tests counted is the other case -- real failing tests, whose coverage data exists
-        # and is still worth extracting -- so it deliberately does not short-circuit here.
+        # A run that fails without executing a single test failed at configuration, toolchain or
+        # dependency resolution -- a ref_int harness defect, not a finding about the module.
+        # Extraction has nothing to read and would bury the real error. A non-zero exit *with*
+        # tests counted is real failing tests, whose coverage data exists and is still extracted.
         if unit_tests_summary[module.name]["exit_code"] != 0 and unit_tests_summary[module.name]["total"] == 0:
             print_centered(
                 f"QR: {module.name}: 0 tests executed -- ref_int harness defect; skipping coverage extraction"
