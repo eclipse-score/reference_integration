@@ -12,8 +12,8 @@
 # *******************************************************************************
 
 load("@score_docs_as_code//:docs.bzl", "docs")
-load("@score_tooling//:defs.bzl", "setup_starpls", "use_format_targets")
 load("@score_sbom//:defs.bzl", "sbom")
+load("@score_tooling//:defs.bzl", "setup_starpls", "use_format_targets")
 
 # Docs-as-code
 docs(
@@ -53,6 +53,15 @@ exports_files([
 
 sbom(
     name = "sbom",
+    auto_cdxgen = True,
+    auto_crates_cache = True,
+    component_name = "score_reference_integration",
+    generation_context = "build",
+    module_lockfiles = [":MODULE.bazel.lock"],
+    output_formats = [
+        "spdx",
+        "cyclonedx",
+    ],
     targets = [
         "//feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios",
         "//feature_integration_tests/test_scenarios/rust:rust_test_scenarios",
@@ -69,12 +78,6 @@ sbom(
         "@score_time//examples/time/system_time",
         "@score_time//examples/time/vehicle_time",
     ],
-    auto_cdxgen = True,
-    auto_crates_cache = True,
-    component_name = "score_reference_integration",
-    generation_context = "build",
-    module_lockfiles = [":MODULE.bazel.lock"],
-    output_formats = ["spdx", "cyclonedx"],
 )
 
 # Product SBOM alias with an explicit lifecycle-oriented name.
@@ -89,6 +92,21 @@ alias(
 # product/runtime dependencies.
 sbom(
     name = "build_tools_sbom",
+    testonly = True,
+    auto_cdxgen = False,
+    auto_crates_cache = False,
+    component_name = "score_reference_integration_build_tools",
+    # Pip repositories are represented authoritatively by python_lockfiles;
+    # exclude their generated Bazel aliases to avoid duplicate components.
+    exclude_patterns = ["rules_python++pip+"],
+    generation_context = "build",
+    java_files = ["@score_docs_as_code//src:plantuml.jar"],
+    output_formats = ["spdx"],
+    python_lockfiles = [
+        "//feature_integration_tests/test_cases:requirements.txt.lock",
+        "//scripts/tooling:requirements.txt",
+        "@score_docs_as_code//src:requirements_lock",
+    ],
     targets = [
         "//:docs_combo_experimental",
         "//feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios",
@@ -96,20 +114,5 @@ sbom(
         "//scripts/tooling:recategorize_guidelines",
         "//scripts/tooling:tooling",
         "@score_docs_as_code//src:plantuml",
-    ],
-    java_files = ["@score_docs_as_code//src:plantuml.jar"],
-    testonly = True,
-    auto_cdxgen = False,
-    auto_crates_cache = False,
-    component_name = "score_reference_integration_build_tools",
-    generation_context = "build",
-    # Pip repositories are represented authoritatively by python_lockfiles;
-    # exclude their generated Bazel aliases to avoid duplicate components.
-    exclude_patterns = ["rules_python++pip+"],
-    output_formats = ["spdx"],
-    python_lockfiles = [
-        "//feature_integration_tests/test_cases:requirements.txt.lock",
-        "//scripts/tooling:requirements.txt",
-        "@score_docs_as_code//src:requirements_lock",
     ],
 )
