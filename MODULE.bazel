@@ -66,7 +66,6 @@ download_archive(
 bazel_dep(name = "aspect_rules_lint", version = "2.3.0")
 bazel_dep(name = "buildifier_prebuilt", version = "8.5.1")
 bazel_dep(name = "score_rust_policies", version = "0.0.5")
-bazel_dep(name = "score_sbom", version = "0.0.2")
 
 # TRLC dependency for requirements traceability
 bazel_dep(name = "trlc")
@@ -85,7 +84,7 @@ git_override(
 )
 
 
-bazel_dep(name = "score_sbom_tool", version = "0.0.2")
+bazel_dep(name = "score_sbom_tool", version = "0.0.2", repo_name = "score_sbom")
 
 sbom_ext = use_extension("@score_sbom//:extensions.bzl", "sbom_metadata")
 sbom_ext.track_module(name = "score_sbom_tool")
