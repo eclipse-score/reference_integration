@@ -42,16 +42,15 @@ jobs:
           disk-cache: ${{ github.workflow }}
           repository-cache: true
           cache-save: ${{ github.event_name == 'push' }}
-      - name: Build image
+      - name: Build image and product SBOM
         run: |
-          bazel build --lockfile_mode=error --config=linux-x86_64 //images/linux_x86_64:image
+          bazel build --lockfile_mode=error --config=linux-x86_64 \
+            //images/linux_x86_64:image \
+            //:sbom
       - name: Integration tests
         run: |
           bazel test --lockfile_mode=error --config=linux-x86_64 //feature_integration_tests/itf
-      - name: Build SBOM
-        run: |
-          bazel build --lockfile_mode=error //:sbom
-      - name: Upload SBOM to release
+      - name: Upload product SBOM to release
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v1
         with:

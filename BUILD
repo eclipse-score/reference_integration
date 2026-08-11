@@ -53,14 +53,13 @@ exports_files([
 
 sbom(
     name = "sbom",
-    auto_cdxgen = True,
+    auto_cdxgen = False,
     auto_crates_cache = True,
     component_name = "score_reference_integration",
     generation_context = "build",
     module_lockfiles = [":MODULE.bazel.lock"],
     output_formats = [
         "spdx",
-        "cyclonedx",
     ],
     targets = [
         "//feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios",

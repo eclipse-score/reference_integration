@@ -73,6 +73,9 @@ jobs:
       - name: Execute Feature Integration Tests
         run: |
           bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit
+      - name: Build build tools SBOM
+        run: |
+          bazel build --lockfile_mode=error //:build_tools_sbom
       - name: Publish build summary
         if: always()
         run: |
@@ -102,6 +105,11 @@ jobs:
           files: ${{ github.event.repository.name }}_test_reports.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload build tools SBOM to release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: bazel-bin/build_tools_sbom.spdx.json
       - name: Install Graphviz
         uses: eclipse-score/apt-install@main
         with:
