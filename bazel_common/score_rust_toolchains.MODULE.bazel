@@ -12,11 +12,9 @@
 # *******************************************************************************
 bazel_dep(name = "rules_rust", version = "0.68.1-score")
 
-# 0.9.1 declares the ferrocene *_miri toolchain targets that score_lifecycle_health and
-# score_persistency register in their own .bazelrc. Stage 2 layers ref_int's config over the
-# module's rather than replacing it, so those registrations survive and --extra_toolchains
-# accumulates — ref_int cannot un-register them, and the version must match here instead.
-# UNVERIFIED: nobody has read 0.9.1 to confirm those targets are in it.
+# 0.9.1 declares the four *_rules_rust_miri toolchains score_lifecycle_health and
+# score_persistency register in their own .bazelrc; 0.8.0 has none. ref_int cannot un-register
+# them, so the version must match here. Locked in score_test_artifact_versions.MODULE.bazel.
 bazel_dep(name = "score_toolchains_rust", version = "0.9.1", dev_dependency = True)
 
 ferrocene = use_extension(
