@@ -73,6 +73,9 @@ jobs:
       - name: Execute Feature Integration Tests
         run: |
           bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit
+      - name: Install uv (required for SBOM license scanning)
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
       - name: Build build tools SBOM
         run: |
           bazel build --lockfile_mode=error //:build_tools_sbom

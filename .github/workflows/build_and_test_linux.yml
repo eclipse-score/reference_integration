@@ -42,6 +42,9 @@ jobs:
           disk-cache: ${{ github.workflow }}
           repository-cache: true
           cache-save: ${{ github.event_name == 'push' }}
+      - name: Install uv (required for SBOM license scanning)
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
       - name: Build image and product SBOM
         run: |
           bazel build --lockfile_mode=error --config=linux-x86_64 \
