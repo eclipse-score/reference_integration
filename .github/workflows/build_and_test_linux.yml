@@ -48,3 +48,11 @@ jobs:
       - name: Integration tests
         run: |
           bazel test --lockfile_mode=error --config=linux-x86_64 //feature_integration_tests/itf
+      - name: Build SBOM
+        run: |
+          bazel build --lockfile_mode=error //:sbom
+      - name: Upload SBOM to release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: bazel-bin/sbom.spdx.json
