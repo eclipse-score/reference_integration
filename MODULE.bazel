@@ -85,8 +85,10 @@ git_override(
 )
 
 
+bazel_dep(name = "score_sbom_tool", version = "0.0.2")
+
 sbom_ext = use_extension("@score_sbom//:extensions.bzl", "sbom_metadata")
-sbom_ext.track_module(name = "score_sbom")
+sbom_ext.track_module(name = "score_sbom_tool")
 sbom_ext.track_module(name = "score_baselibs")
 sbom_ext.track_module(name = "score_communication")
 sbom_ext.track_module(name = "score_persistency")
