@@ -20,6 +20,7 @@ score_pkg_bundle(
         "//showcases/standalone:kyron_pkg_files",
         "//showcases/standalone:time_pkg_files",
         "//showcases/standalone:logging_pkg_files",
+        "//showcases/standalone:config_management_pkg_files",
         "//showcases/orchestration_persistency:orch_per_pkg_files",
         "//showcases/simple_lifecycle:simple_lifecycle_pkg_files",
     ],
