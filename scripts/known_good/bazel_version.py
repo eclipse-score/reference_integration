@@ -38,12 +38,14 @@ def resolve_stage2_bazel_version(ref_int_version: str, module_version: str | Non
     ref_int's release is a floor, not a ceiling: a module pinning an older Bazel is raised so
     ``ci/stage2/module.bazelrc`` is never read by a Bazel older than it was written against, but a
     module pinning a newer one keeps it. Forcing a module *down* changes bzlmod resolution
-    semantics, so its failures stop being reproducible by the team that owns it. Measured:
-    ``score_baselibs`` resolves cleanly under the 8.6.0 it pins and fails under 8.4.2 with
-    ``score_docs_as_code@4.6.0 depends on score_process@1.6.0 with compatibility level 1, but
-    <root> depends on score_process@2.0.0 with compatibility level 2``. Both are the module's own
-    dev dependencies, so no pin-scope change can reach it. Six of the eight ``target_sw`` modules
-    pin newer than ref_int, so downgrading is the common case, not an outlier.
+    semantics, so its failures stop being reproducible by the team that owns it. Six of the eight
+    ``target_sw`` modules pin newer than ref_int's 8.4.2, so downgrading is the common case.
+
+    The motivating failure is a single earlier observation, **not re-measured**: ``score_baselibs``
+    resolves under the 8.6.0 it pins and fails under 8.4.2 on a ``score_process`` compatibility
+    level conflict between its own dev dependencies. Re-run before relying on it::
+
+        echo 8.4.2 > .bazelversion && bazel mod deps --lockfile_mode=off
 
     No ``.bazelversion`` gets ref_int's. One that is not a plain dotted release cannot be ordered,
     so it is left as written -- the floor cannot be established, and the module's own value at

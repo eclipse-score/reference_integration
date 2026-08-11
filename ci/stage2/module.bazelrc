@@ -19,7 +19,8 @@
 # flags add to what the module already registers. Do NOT add --noworkspace_rc: it was tried and
 # reverted because it discarded module settings unrelated to the configs ref_int names (stub
 # trace-library selection, sandbox settings, module-owned libclang/cc toolchains, Rust coverage
-# instrumentation, clippy aspects) — 3 of 8 modules configured silently wrong instead of failing.
+# instrumentation, clippy aspects), leaving modules configured silently wrong instead of failing.
+# The "3 of 8 modules" figure behind that reversal is a single earlier observation, not re-measured.
 
 # rules_android is pulled in transitively (grpc-java -> rules_jvm_external) and evaluates
 # android_sdk_repository, which fails when ANDROID_HOME points at an incomplete SDK, as on

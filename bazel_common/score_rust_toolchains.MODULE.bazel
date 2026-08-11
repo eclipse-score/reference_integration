@@ -16,6 +16,7 @@ bazel_dep(name = "rules_rust", version = "0.68.1-score")
 # score_persistency register in their own .bazelrc. Stage 2 layers ref_int's config over the
 # module's rather than replacing it, so those registrations survive and --extra_toolchains
 # accumulates — ref_int cannot un-register them, and the version must match here instead.
+# UNVERIFIED: nobody has read 0.9.1 to confirm those targets are in it.
 bazel_dep(name = "score_toolchains_rust", version = "0.9.1", dev_dependency = True)
 
 ferrocene = use_extension(

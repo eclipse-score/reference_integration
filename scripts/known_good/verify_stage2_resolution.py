@@ -57,12 +57,6 @@ def main() -> int:
         "actually injected an override for the module: a mismatch there is an injection failure and "
         "fails the check, whereas one outside the injection block resolved on its own and only warns.",
     )
-    parser.add_argument(
-        "--strict",
-        action="store_true",
-        help="Also fail on mismatches ref_int did not inject an override for, and on resolved "
-        "modules absent from the module's graph.",
-    )
     args = parser.parse_args()
 
     # Every module ref_int injected an override for — its declared deps *and* its transitive
@@ -125,8 +119,9 @@ def main() -> int:
     if absent:
         print(f"::warning::verify_stage2_resolution: {len(absent)} resolved modules absent from the module's graph")
 
-    failed = bool(injected_mismatches) or (args.strict and (transitive_mismatches or absent))
-    return 1 if failed else 0
+    # Only an override that failed to take effect fails the check; anything ref_int never pinned
+    # warns above.
+    return 1 if injected_mismatches else 0
 
 
 if __name__ == "__main__":

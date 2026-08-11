@@ -38,9 +38,34 @@ _STATUS_MAP = {
     "": "⚪ Unknown",
 }
 
+# Written by quality_runners.py into the same report directory; keep in sync with the constant of
+# the same name there. Carries the owner of a failure, which the count columns cannot: zero tests
+# looks identical for a harness defect and an integration conflict.
+ATTRIBUTION_NAME = "failure_attribution.json"
+
+_OWNER_REF_INT = "ref_int (harness defect)"
+_OWNER_MODULE = "module team (integration finding)"
+_OWNER_JOINT = "integration conflict (ref_int pin ↔ module sources)"
+
 
 def _format_status(result: str) -> str:
     return _STATUS_MAP.get(result.lower().strip(), "⚪ Unknown")
+
+
+def _read_attributions(artifact_dir: Path) -> dict[str, dict]:
+    """Return ``{module: {"owner", "conflicting"}}`` from one report directory.
+
+    Missing or unparseable is ``{}``, so :func:`_classify` falls back to its count-based default
+    rather than the report failing on a corrupt sidecar.
+    """
+    path = artifact_dir / ATTRIBUTION_NAME
+    if not path.is_file():
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except ValueError:
+        return {}
+    return data if isinstance(data, dict) else {}
 
 
 def _extract_table_data_rows(md_path: Path) -> list[str]:
@@ -90,17 +115,25 @@ def _parse_ut_rows(rows: list[str]) -> list[tuple[str, int, int, int, int]]:
     return parsed
 
 
-def _classify(total: int, failed: int) -> tuple[str, str]:
+def _classify(total: int, failed: int, attribution: dict | None = None) -> tuple[str, str]:
     """Return (verdict, owner) for one module's unit-test result.
 
-    Implements the DR-008 ownership rule: a Stage-2 job that executed **no** tests did not
-    validate anything, so it is a ref_int harness defect regardless of how it exited. Only a
-    run that reached test execution can produce a finding a module team owns.
+    Zero tests validated nothing and always fails, but *who must act* does not follow from the
+    count: only ``quality_runners.classify_gate_failure`` sees which repositories the failure
+    named, and ``attribution`` is that verdict carried through :data:`ATTRIBUTION_NAME`.
+
+    Tests that ran and failed are the module team's regardless of any earlier attribution; an
+    absent attribution keeps ref_int as the conservative default.
     """
     if total == 0:
-        return "❌ no tests executed", "ref_int (harness defect)"
+        owner = (attribution or {}).get("owner", "")
+        conflicting = (attribution or {}).get("conflicting") or []
+        if owner == "integration conflict":
+            over = f" over {', '.join(conflicting)}" if conflicting else ""
+            return f"❌ no tests executed — integration conflict{over}", _OWNER_JOINT
+        return "❌ no tests executed", _OWNER_REF_INT
     if failed > 0:
-        return f"❌ {failed} failing", "module team (integration finding)"
+        return f"❌ {failed} failing", _OWNER_MODULE
     return "✅ passed", "—"
 
 
@@ -183,6 +216,7 @@ def main() -> int:
     stage2_dir: Path = args.stage2_dir
     ut_rows: list[str] = []
     cov_rows: list[str] = []
+    attributions: dict[str, dict] = {}
 
     if stage2_dir.exists():
         for artifact_dir in sorted(stage2_dir.iterdir()):
@@ -192,6 +226,7 @@ def main() -> int:
                 continue
             ut_rows.extend(_extract_table_data_rows(artifact_dir / "unit_test_summary.md"))
             cov_rows.extend(_extract_table_data_rows(artifact_dir / "coverage_summary.md"))
+            attributions.update(_read_attributions(artifact_dir))
     else:
         out.write(f"*Stage 2 reports directory not found: `{stage2_dir}`*\n\n")
 
@@ -205,8 +240,8 @@ def main() -> int:
     else:
         out.write("*No Stage 2 unit test reports found.*\n\n")
 
-    # Failure ownership — a Stage-2 job that ran no tests validated nothing, so it is a
-    # harness defect and must never be reported as a module finding.
+    # Failure ownership — a Stage-2 job that ran no tests validated nothing and always fails, but
+    # the owner comes from the attribution Stage 2 recorded, never from the count (see _classify).
     parsed = _parse_ut_rows(ut_rows)
     no_tests = [name for name, _p, _f, _s, total in parsed if total == 0]
     if parsed:
@@ -214,7 +249,7 @@ def main() -> int:
         out.write("| module | tests run | verdict | owner |\n")
         out.write("|--------|-----------|---------|-------|\n")
         for name, _passed, failed, _skipped, total in parsed:
-            verdict, owner = _classify(total, failed)
+            verdict, owner = _classify(total, failed, attributions.get(name))
             out.write(f"| {name} | {total} | {verdict} | {owner} |\n")
         out.write("\n")
 
@@ -272,11 +307,23 @@ def main() -> int:
         out.write("|-------|--------|\n")
         out.write(f"| Stage 1 (integration) | {_format_status(args.stage1_result)} |\n")
         out.write(f"| Stage 2 (module validation) | {_format_status(args.stage2_result)} |\n")
-        if no_tests:
+        # Both are failures, but they go to different people, so they cannot share one heading.
+        conflicts = [n for n in no_tests if (attributions.get(n) or {}).get("owner") == "integration conflict"]
+        harness = [n for n in no_tests if n not in conflicts]
+        if harness:
             out.write(
                 f"\n**ref_int harness defect** — no tests executed for: "
-                f"{', '.join(f'`{n}`' for n in no_tests)}. "
+                f"{', '.join(f'`{n}`' for n in harness)}. "
                 "These did not validate the resolved dependency set.\n"
+            )
+        for name in conflicts:
+            over = ", ".join(f"`{c}`" for c in (attributions.get(name) or {}).get("conflicting") or [])
+            out.write(
+                f"\n**Integration conflict** — `{name}` did not run: ref_int's resolved set and the "
+                f"module's sources are each self-consistent but mutually incompatible"
+                f"{f' over {over}' if over else ''}. "
+                "Resolve by moving ref_int's pin or the module's `known_good` commit — not by "
+                "changing the harness.\n"
             )
 
     return 0 if (stage1_ok and stage2_ok and tests_ran) else 1

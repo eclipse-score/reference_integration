@@ -57,6 +57,10 @@ DISABLED_RUST_COVERAGE = ["score_communication", "score_orchestrator"]
 # Distinct from Stage 1's GRAPH_NAME, which is rooted at ref_int: only this one is rooted at the
 # module, so only this one contains the module's dev-dependency closure.
 MODULE_GRAPH_NAME = "module_graph.json"
+# Carries who owns a failure to the aggregate job, beside the two markdown summaries. Needed
+# because those carry counts only, and a count of zero cannot distinguish a harness defect from an
+# integration conflict. Written only on failure; absence means no verdict, not success.
+ATTRIBUTION_NAME = "failure_attribution.json"
 
 
 def rust_coverage_query(module_name: str, rust_coverage_build: Path = RUST_COVERAGE_BUILD) -> str:
@@ -176,9 +180,9 @@ def capture_module_graph(workspace: Path, startup: list[str] | None = None) -> P
 
     Rooted at the module, this is the only place its dev-dependency closure is visible: bzlmod
     activates ``dev_dependency`` edges for the root module only, so ref_int's Stage-1 graph cannot
-    show them (measured on ``score_baselibs``: 29 direct deps here against 15 with
-    ``--ignore_dev_dependency``). Captured in the gate so it describes the state the tests were
-    pinned to and survives a failing test run.
+    show them. Captured in the gate so it describes the state the tests were pinned to and
+    survives a failing test run. (The size of that gap is unmeasured: an earlier "29 vs 15 deps for
+    score_baselibs" did not reproduce, so no number is claimed.)
 
     Failures are reported and swallowed -- evidence capture must never fail a passing gate. A
     non-zero exit is expected for some modules, because ``mod graph`` evaluates every extension and
@@ -638,6 +642,8 @@ def main() -> bool:
     known = load_known_good(args.known_good_path.resolve())
 
     unit_tests_summary, coverage_summary = {}, {}
+    # module -> {"owner", "conflicting"}; populated on failure only. See ATTRIBUTION_NAME.
+    attribution: dict[str, dict[str, object]] = {}
 
     if args.modules_to_test:
         print_centered(f"QR: User requested tests only for specified modules: {', '.join(args.modules_to_test)}")
@@ -715,6 +721,9 @@ def main() -> bool:
                         "QR: ref_int's resolved set is incompatible with this module's sources. "
                         "Resolve by moving the pin or the module, not by changing the harness."
                     )
+                # Recorded, not just printed: without this the aggregate job re-derives ownership
+                # from total == 0 and always reports "ref_int harness defect".
+                attribution[module.name] = {"owner": owner, "conflicting": conflicting}
                 unit_tests_summary[module.name] = {
                     "passed": 0,
                     "failed": 0,
@@ -748,6 +757,9 @@ def main() -> bool:
             print_centered(
                 f"QR: {module.name}: 0 tests executed -- ref_int harness defect; skipping coverage extraction"
             )
+            # Past the gate the injected set already analysed, so a run that then executes
+            # nothing is ref_int's, not an integration conflict.
+            attribution[module.name] = {"owner": "ref_int harness defect", "conflicting": []}
             continue
 
         if "cpp" in module.metadata.langs:
@@ -782,6 +794,12 @@ def main() -> bool:
     )
     print_centered("QR: COVERAGE ANALYSIS SUMMARY", fillchar="=")
     pprint(coverage_summary, width=120)
+
+    # Same directory as the two summaries above, so the aggregate job reads the owner instead of
+    # guessing it from a zero count.
+    if attribution:
+        (path_to_docs / ATTRIBUTION_NAME).write_text(json.dumps(attribution, indent=2, sort_keys=True) + "\n")
+        print_centered(f"QR: Recorded failure attribution -> {path_to_docs / ATTRIBUTION_NAME}")
 
     # Check all exit codes and return non-zero if any test or coverage extraction failed.
     # Checked independently per dict (not zip()'d together): a module can be missing from

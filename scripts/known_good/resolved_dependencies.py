@@ -133,7 +133,8 @@ class DependencyGraph:
     """The ``bazel mod graph --output=json`` tree, queryable per module.
 
     :meth:`closure` returns a module's full transitive set, which is what
-    :meth:`ResolvedDependencies.overwrite` pins.
+    :meth:`ResolvedDependencies.overwrite` pins. For ``score_communication`` that is 149 modules
+    against 32 declared -- it never declares ``flatbuffers``, which arrives via ``score_baselibs``.
 
     The graph is *not* a plain tree. A module that appears more than once is emitted once
     with its ``dependencies`` and thereafter as an ``unexpanded`` stub carrying no

@@ -23,7 +23,6 @@ eclipse-score/lifecycle).
 
 Usage:
   python scripts/known_good/list_modules.py --group target_sw
-  python scripts/known_good/list_modules.py --group target_sw --names-only
 """
 
 from __future__ import annotations
@@ -59,11 +58,6 @@ def main() -> None:
         help="Path to known_good.json (default: repo-root known_good.json).",
     )
     parser.add_argument("--group", default="target_sw", help="Module group to list (default: target_sw).")
-    parser.add_argument(
-        "--names-only",
-        action="store_true",
-        help="Emit a JSON array of module names instead of full {name, repo, commit, branch} objects.",
-    )
     args = parser.parse_args()
 
     kg = load_known_good(args.known_good_path.resolve())
@@ -71,10 +65,6 @@ def main() -> None:
         raise SystemExit(f"Group '{args.group}' not found in {args.known_good_path}. Groups: {sorted(kg.modules)}")
 
     modules = [kg.modules[args.group][name] for name in sorted(kg.modules[args.group])]
-
-    if args.names_only:
-        print(json.dumps([m.name for m in modules]))
-        return
 
     print(
         json.dumps(
