@@ -37,12 +37,16 @@ score_py_pytest(
 # Runnable binary for the resolve + inject workflow.
 #
 # Stage 1 (export) — 'bazel mod graph' is a prerequisite; run it first and pass the result:
-#       bazel mod graph --output=json > graph.json
+#       bazel mod graph --verbose --output=json > graph.json
 #       bazel run //scripts/known_good:resolve_deps -- \
 #           --mod-graph graph.json --export _resolved_deps/resolved_versions.json
-#   Writes the manifest and stores graph.json next to it; both are published as the
-#   stage1-resolved-deps artifact. Paths are resolved against BUILD_WORKSPACE_DIRECTORY,
-#   so graph.json does not need to be listed in data = [...].
+#   Writes the manifest, graph.json and resolved_pins_report.json side by side; all three are
+#   published as the stage1-resolved-deps artifact. Paths are resolved against
+#   BUILD_WORKSPACE_DIRECTORY, so graph.json does not need to be listed in data = [...].
+#
+#   '--verbose' adds 'originalVersion' to each edge, the only record of a consumer asking for a
+#   version other than the one ref_int imposes. It is a strict superset, so Stage 2 reads the same
+#   graph.json either way; without it the export still succeeds, with every verdict 'unknown'.
 #
 # Stage 2 (inject) — consumes that same directory:
 #       bazel run //scripts/known_good:resolve_deps -- \
