@@ -470,15 +470,17 @@ class TestScopeIsDecidedByTheResolvedSet:
 class TestFromModGraph:
     @staticmethod
     def _graph() -> dict:
-        # Mirrors 'bazel mod graph --output=json': overridden modules report version 0.0.0.
+        # Mirrors 'bazel mod graph --output=json': an overridden module reports whatever version its
+        # own MODULE.bazel declares, which is empty when it declares none -- never the version
+        # ref_int meant to impose. All three values below are the ones ref_int's real graph reports.
         return {
             "key": "<root>",
             "name": "ref_int",
             "version": "",
             "dependencies": [
-                {"name": "trlc", "version": "0.0.0"},  # git_override (carried from file)
-                {"name": "rules_boost", "version": "0.0.0"},  # archive_override (not representable)
-                {"name": "score_baselibs", "version": "0.0.0"},  # git_override (carried from file)
+                {"name": "trlc", "version": "0.0.0"},  # git_override; trlc declares 0.0.0 itself
+                {"name": "rules_boost", "version": ""},  # archive_override; declares no version
+                {"name": "score_baselibs", "version": "0.2.9"},  # git_override; declares a real version
                 {
                     "name": "protobuf",
                     "version": "29.1",
@@ -505,13 +507,13 @@ class TestFromModGraph:
         )
 
         rd = ResolvedDependencies.from_mod_graph(graph, [root, scoremods])
-        # Overridden modules carried as their real git_override (graph's 0.0.0 ignored).
+        # Overridden modules carried as their real git_override; the graph's version is ignored.
         assert rd.get("trlc").hash == "abc1234"
         assert rd.get("score_baselibs").hash == "def5678"
         # Registry modules carried from the resolved graph version.
         assert rd.get("protobuf").version == "29.1"
         assert rd.get("abseil-cpp").version == "20250512.1"
-        # archive_override target at 0.0.0 is not representable -> not carried.
+        # An archive_override cannot be expressed as a manifest directive -> not carried.
         assert rd.get("rules_boost") is None
 
     def test_ignores_commented_out_overrides(self, tmp_path: Path):

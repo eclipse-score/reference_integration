@@ -14,7 +14,8 @@ load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 load("@score_tooling//python_basics:defs.bzl", "score_py_pytest")
 
 # Library target: the known_good package (models + generators).
-# Used as a dep by //scripts/tooling and by the resolve_deps binary below.
+# Depended on by the test and binary targets below. Note //scripts/tooling has its own separate
+# lib/known_good package and does not use this one.
 py_library(
     name = "known_good",
     srcs = glob(
