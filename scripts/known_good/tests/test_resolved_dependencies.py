@@ -33,8 +33,12 @@ from known_good.resolved_dependencies import (  # noqa: E402
     INJECTION_BEGIN,
     INJECTION_END,
     MANIFEST_NAME,
+    REPORT_NAME,
     DependencyGraph,
     ResolvedDependencies,
+    _compare_versions,
+    _declared_dep_specs,
+    _declared_deps,
 )
 
 KNOWN_GOOD = {
@@ -523,6 +527,395 @@ class TestFromModGraph:
         assert rd.get("rules_rpm") is None  # commented-out override must not be carried
 
 
+class TestUncarriedOverridesAreNeverSilent:
+    """Every override ref_int declares reaches the manifest, or is named in the report.
+
+    A silently dropped override is ref_int's authority quietly failing: the pin looks present in its
+    MODULE.bazel while every module resolves its own version. ``rules_oci`` was exactly that, and
+    logged nothing at all. The guard is a set difference over every override kind.
+    """
+
+    @staticmethod
+    def _graph(*names: str) -> dict:
+        # Overridden modules report an empty version, so the override file is the only source.
+        return {
+            "key": "<root>",
+            "name": "ref_int",
+            "version": "",
+            "dependencies": [{"name": n, "version": ""} for n in names],
+        }
+
+    def _export(self, tmp_path: Path, override_text: str, *graph_names: str) -> ResolvedDependencies:
+        graph = tmp_path / "graph.json"
+        graph.write_text(json.dumps(self._graph(*graph_names)))
+        root = tmp_path / "MODULE.bazel"
+        root.write_text(override_text)
+        return ResolvedDependencies.from_mod_graph(graph, [root])
+
+    @staticmethod
+    def _uncarried(rd: ResolvedDependencies) -> dict[str, dict]:
+        return {entry["module"]: entry for entry in rd.report["uncarried"]}
+
+    def test_git_override_with_tag_and_no_commit_is_reported(self, tmp_path: Path):
+        # The real rules_oci shape: a mutable ref cannot be carried, but must not vanish silently.
+        rd = self._export(
+            tmp_path,
+            'git_override(\n    module_name = "rules_oci",\n'
+            '    remote = "https://github.com/bazel-contrib/rules_oci.git",\n    tag = "v2.3.1",\n)\n',
+            "rules_oci",
+        )
+        assert rd.get("rules_oci") is None
+        entry = self._uncarried(rd)["rules_oci"]
+        assert entry["kind"] == "git_override"
+        assert "v2.3.1" in entry["reason"]
+        assert "commit" in entry["reason"]
+
+    def test_archive_override_is_reported_with_its_kind(self, tmp_path: Path):
+        rd = self._export(
+            tmp_path,
+            'archive_override(\n    module_name = "rules_boost",\n    urls = ["https://e/master.tar.gz"],\n)\n',
+            "rules_boost",
+        )
+        assert rd.get("rules_boost") is None
+        assert self._uncarried(rd)["rules_boost"]["kind"] == "archive_override"
+
+    def test_local_path_override_is_reported(self, tmp_path: Path):
+        # A third kind, so the guard is kind-agnostic rather than a list of known-bad cases.
+        rd = self._export(
+            tmp_path,
+            'local_path_override(\n    module_name = "some_dep",\n    path = "../some_dep",\n)\n',
+            "some_dep",
+        )
+        assert self._uncarried(rd)["some_dep"]["kind"] == "local_path_override"
+
+    def test_single_version_override_without_a_version_is_reported(self, tmp_path: Path):
+        rd = self._export(
+            tmp_path,
+            'single_version_override(\n    module_name = "googletest",\n    patch_strip = 1,\n)\n',
+            "googletest",
+        )
+        assert rd.get("googletest") is None
+        assert "version" in self._uncarried(rd)["googletest"]["reason"]
+
+    def test_commented_out_override_is_not_reported_as_uncarried(self, tmp_path: Path):
+        # A commented-out override is not a pin ref_int is making: neither manifest nor report.
+        rd = self._export(
+            tmp_path,
+            '# git_override(\n#     module_name = "rules_rpm",\n#     tag = "v1",\n# )\n',
+        )
+        assert rd.get("rules_rpm") is None
+        assert "rules_rpm" not in self._uncarried(rd)
+
+    def test_a_carried_override_is_not_reported(self, tmp_path: Path):
+        rd = self._export(
+            tmp_path,
+            'git_override(\n    module_name = "trlc",\n    commit = "abc1234",\n'
+            '    remote = "https://github.com/x/trlc.git",\n)\n',
+            "trlc",
+        )
+        assert rd.get("trlc").hash == "abc1234"
+        assert self._uncarried(rd) == {}
+
+    def test_every_declared_override_is_pinned_or_uncarried(self, tmp_path: Path):
+        # The completeness invariant as a set identity, rather than a claim in a comment.
+        rd = self._export(
+            tmp_path,
+            'git_override(\n    module_name = "trlc",\n    commit = "abc1234",\n'
+            '    remote = "https://github.com/x/trlc.git",\n)\n'
+            'git_override(\n    module_name = "rules_oci",\n    remote = "https://e/o.git",\n'
+            '    tag = "v2.3.1",\n)\n'
+            'archive_override(\n    module_name = "rules_boost",\n    urls = ["https://e/x.tar"],\n)\n',
+            "trlc",
+            "rules_oci",
+            "rules_boost",
+        )
+        declared = {"trlc", "rules_oci", "rules_boost"}
+        assert declared - rd.names == set(self._uncarried(rd))
+        assert declared & rd.names == {"trlc"}
+
+
+class TestPinProvenance:
+    """Which pins ref_int decided, and which it merely inherited from MVS.
+
+    Both are imposed equally, so the manifest cannot tell them apart, though fixing a bad pin needs
+    to know which it is. The yq.bzl pin that breaks score_communication is incidental: nothing in
+    ref_int declares yq.bzl, so nobody ever chose 0.1.1.
+    """
+
+    @staticmethod
+    def _graph() -> dict:
+        return {
+            "key": "<root>",
+            "name": "ref_int",
+            "version": "",
+            "dependencies": [
+                {"name": "trlc", "version": ""},
+                {"name": "protobuf", "version": "29.1"},
+                {"name": "googletest", "version": "1.17.0.bcr.2"},
+            ],
+        }
+
+    def _report(self, tmp_path: Path, override_text: str) -> dict:
+        graph = tmp_path / "graph.json"
+        graph.write_text(json.dumps(self._graph()))
+        root = tmp_path / "MODULE.bazel"
+        root.write_text(override_text)
+        return ResolvedDependencies.from_mod_graph(graph, [root]).report
+
+    def test_override_declared_by_ref_int_is_asserted(self, tmp_path: Path):
+        report = self._report(
+            tmp_path,
+            'git_override(\n    module_name = "trlc",\n    commit = "abc1234",\n'
+            '    remote = "https://github.com/x/trlc.git",\n)\n',
+        )
+        assert report["pins"]["trlc"]["provenance"] == "asserted"
+
+    def test_registry_version_only_from_the_graph_is_incidental(self, tmp_path: Path):
+        report = self._report(tmp_path, "")
+        assert report["pins"]["protobuf"]["provenance"] == "incidental"
+
+    def test_bare_single_version_override_promotes_a_graph_pin_to_asserted(self, tmp_path: Path):
+        # The score_test_artifact_versions shape: a bare override for a module already in the graph
+        # at that version. A no-op for manifest content, so provenance is what shows it doing anything.
+        report = self._report(
+            tmp_path,
+            'single_version_override(\n    module_name = "googletest",\n    version = "1.17.0.bcr.2",\n)\n',
+        )
+        assert report["pins"]["googletest"]["provenance"] == "asserted"
+        assert report["pins"]["googletest"]["pin"] == {"version": "1.17.0.bcr.2"}
+
+    def test_counts_split_the_set(self, tmp_path: Path):
+        report = self._report(
+            tmp_path,
+            'git_override(\n    module_name = "trlc",\n    commit = "abc1234",\n'
+            '    remote = "https://github.com/x/trlc.git",\n)\n',
+        )
+        counts = report["counts"]
+        assert counts["asserted"] + counts["incidental"] == counts["pinned"]
+        assert counts["asserted"] == 1
+
+
+class TestVersionComparison:
+    """Version ordering, because a lexical compare silently inverts the whole report.
+
+    ``"0.0.10" < "0.0.6"`` holds for strings, and score_crates is exactly that pair -- so a naive
+    compare would report ref_int as ahead of its consumers on the case that matters most.
+    """
+
+    def test_numeric_identifiers_compare_numerically_not_lexically(self):
+        assert _compare_versions("0.0.10", "0.0.6") == 1
+        assert _compare_versions("0.0.6", "0.0.10") == -1
+
+    @pytest.mark.parametrize(
+        ("higher", "lower"),
+        [
+            ("0.4.0", "0.2.0"),  # score_itf
+            ("0.9.1", "0.8.0"),  # score_toolchains_rust
+            ("0.0.3", "0.0.1"),  # score_rules_imagefs
+            ("0.3.1", "0.1.1"),  # yq.bzl
+            ("0.68.2-score", "0.68.1-score"),  # rules_rust, prerelease suffix on both sides
+            ("1.3.1.bcr.8", "1.3.1.bcr.5"),  # zlib, four-identifier registry version
+            ("0.1.1", "0.1"),  # a longer numeric identifier list outranks a shorter one
+        ],
+    )
+    def test_real_manifest_versions(self, higher: str, lower: str):
+        assert _compare_versions(higher, lower) == 1
+        assert _compare_versions(lower, higher) == -1
+
+    def test_equal_versions_compare_equal(self):
+        assert _compare_versions("1.17.0.bcr.2", "1.17.0.bcr.2") == 0
+
+    def test_undecidable_pair_returns_none(self):
+        # These differ by an alphanumeric identifier with no defensible order.
+        assert _compare_versions("1.17.0.bcr.2", "1.17.0") is None
+        assert _compare_versions("1.17.0", "1.17.0.bcr.2") is None
+
+    def test_prerelease_sorts_below_the_same_release(self):
+        assert _compare_versions("0.51.0", "0.51.0-rc2") == 1
+
+
+class TestConflictReportDoesNotAbort:
+    """ref_int's version is imposed, the disagreement is reported, and the export never aborts.
+
+    Never raised to the consumer's version, never fallen back to. All that changes is visibility: an
+    override suppresses Bazel's own --check_direct_dependencies warning, so before this report all
+    five measured downgrades produced no output at all.
+    """
+
+    @staticmethod
+    def _graph(name: str, resolved_version: str, *declared: str) -> dict:
+        # --verbose records the version a dependent asked for whenever MVS moved the module off it.
+        return {
+            "key": "<root>",
+            "name": "ref_int",
+            "version": "",
+            "dependencies": [{"name": name, "version": resolved_version, "originalVersion": d} for d in declared]
+            or [{"name": name, "version": resolved_version}],
+        }
+
+    def _export(self, tmp_path: Path, graph: dict, override_text: str = "") -> ResolvedDependencies:
+        graph_file = tmp_path / "graph.json"
+        graph_file.write_text(json.dumps(graph))
+        root = tmp_path / "MODULE.bazel"
+        root.write_text(override_text)
+        return ResolvedDependencies.from_mod_graph(graph_file, [root])
+
+    def test_a_downgrade_is_reported_and_the_export_still_writes_the_manifest(self, tmp_path: Path):
+        rd = self._export(tmp_path, self._graph("score_rules_imagefs", "0.0.1", "0.0.3"))
+        pin = rd.report["pins"]["score_rules_imagefs"]
+        assert pin["verdict"] == "differs"
+        assert pin["direction"] == "ref_int_lower"
+        assert pin["declared_versions"] == ["0.0.3"]
+        # ref_int's version is imposed, not raised to the consumer's.
+        assert rd.get("score_rules_imagefs").version == "0.0.1"
+        manifest = tmp_path / "resolved_versions.json"
+        rd.to_file(manifest)
+        assert json.loads(manifest.read_text())["modules"]["score_rules_imagefs"] == {"version": "0.0.1"}
+
+    def test_an_upgrade_is_reported_as_the_other_direction(self, tmp_path: Path):
+        rd = self._export(tmp_path, self._graph("stardoc", "0.7.2", "0.7.1"))
+        assert rd.report["pins"]["stardoc"]["direction"] == "ref_int_higher"
+
+    def test_agreement_is_not_a_conflict(self, tmp_path: Path):
+        rd = self._export(tmp_path, self._graph("protobuf", "29.1", "29.1"))
+        assert rd.report["pins"]["protobuf"]["verdict"] == "agree"
+        assert rd.report["counts"]["conflicts"] == 0
+
+    def test_commit_pin_reports_the_conflict_with_null_direction(self, tmp_path: Path):
+        # The score_crates shape: no comparable version, but the disagreement must stay visible --
+        # otherwise the obvious "fix" is dropping commit pins from the report and losing 18 of them.
+        rd = self._export(
+            tmp_path,
+            self._graph("score_crates", "0.0.6", "0.0.10", "0.0.9"),
+            'git_override(\n    module_name = "score_crates",\n    commit = "a5f4f57",\n'
+            '    remote = "https://github.com/eclipse-score/score-crates.git",\n)\n',
+        )
+        pin = rd.report["pins"]["score_crates"]
+        assert pin["verdict"] == "differs"
+        assert pin["direction"] is None
+        assert pin["declared_versions"] == ["0.0.10", "0.0.9"]
+        assert rd.report["counts"]["conflicts"] == 1
+
+    def test_undecidable_comparison_reports_no_direction(self, tmp_path: Path):
+        rd = self._export(tmp_path, self._graph("googletest", "1.17.0.bcr.2", "1.17.0"))
+        pin = rd.report["pins"]["googletest"]
+        assert pin["verdict"] == "differs"
+        assert pin["direction"] is None
+
+    def test_a_dev_declared_conflict_is_not_claimed_to_be_detected(self, tmp_path: Path):
+        # A non-root dev edge leaves no originalVersion, so an empty declared_versions must not
+        # read as "nobody disagrees".
+        rd = self._export(tmp_path, self._graph("score_toolchains_rust", "0.8.0"))
+        assert rd.report["pins"]["score_toolchains_rust"]["verdict"] == "unknown"
+        assert any("dev_dependency" in limitation for limitation in rd.report["limitations"])
+
+    def test_graph_without_verbose_says_so(self, tmp_path: Path):
+        # No requests at all must not read as universal agreement.
+        rd = self._export(tmp_path, self._graph("protobuf", "29.1"))
+        assert any("originalVersion" in limitation for limitation in rd.report["limitations"])
+
+    def test_verbose_graph_drops_the_no_requests_caveat(self, tmp_path: Path):
+        rd = self._export(tmp_path, self._graph("protobuf", "29.1", "28.0"))
+        assert not any("originalVersion" in limitation for limitation in rd.report["limitations"])
+        # The structural caveats describe what Bazel loads, not this run, so they always apply.
+        assert any("dev_dependency" in limitation for limitation in rd.report["limitations"])
+
+
+class TestInternalDrift:
+    """ref_int disagreeing with itself: a declared bazel_dep version it does not actually impose.
+
+    The declaration reads like a decision but is only a floor, so the version in review is not the
+    one Stage 2 imposes. Five are live today.
+    """
+
+    def test_declared_floor_below_the_resolved_version_is_reported(self, tmp_path: Path):
+        graph = tmp_path / "graph.json"
+        graph.write_text(
+            json.dumps(
+                {
+                    "key": "<root>",
+                    "name": "ref_int",
+                    "version": "",
+                    "dependencies": [{"name": "rules_cc", "version": "0.2.17"}],
+                }
+            )
+        )
+        root = tmp_path / "MODULE.bazel"
+        root.write_text('bazel_dep(name = "rules_cc", version = "0.2.16")\n')
+        report = ResolvedDependencies.from_mod_graph(graph, [root]).report
+        assert report["ref_int_internal_drift"] == [
+            {
+                "module": "rules_cc",
+                "declared": "0.2.16",
+                "resolved": "0.2.17",
+                "file": "MODULE.bazel",
+                "dev_dependency": False,
+            }
+        ]
+
+    def test_dev_scoped_declaration_is_recorded_as_such(self, tmp_path: Path):
+        graph = tmp_path / "graph.json"
+        graph.write_text(
+            json.dumps(
+                {
+                    "key": "<root>",
+                    "name": "ref_int",
+                    "version": "",
+                    "dependencies": [{"name": "score_toolchains_rust", "version": "0.9.1"}],
+                }
+            )
+        )
+        root = tmp_path / "MODULE.bazel"
+        root.write_text('bazel_dep(name = "score_toolchains_rust", version = "0.8.0", dev_dependency = True)\n')
+        drift = ResolvedDependencies.from_mod_graph(graph, [root]).report["ref_int_internal_drift"]
+        assert drift[0]["dev_dependency"] is True
+
+    def test_declaration_matching_the_resolved_version_is_not_drift(self, tmp_path: Path):
+        graph = tmp_path / "graph.json"
+        graph.write_text(
+            json.dumps(
+                {
+                    "key": "<root>",
+                    "name": "ref_int",
+                    "version": "",
+                    "dependencies": [{"name": "rules_pkg", "version": "1.2.0"}],
+                }
+            )
+        )
+        root = tmp_path / "MODULE.bazel"
+        root.write_text('bazel_dep(name = "rules_pkg", version = "1.2.0")\n')
+        report = ResolvedDependencies.from_mod_graph(graph, [root]).report
+        assert report["ref_int_internal_drift"] == []
+
+
+class TestDeclaredDepSpecs:
+    def test_captures_version_and_dev_flag(self):
+        # Real score_communication declarations, including a repo_name after the version.
+        text = (
+            'bazel_dep(name = "score_crates", version = "0.0.10", repo_name = "score_communication_crate_index")\n'
+            'bazel_dep(name = "score_itf", version = "0.4.0", dev_dependency = True)\n'
+            'bazel_dep(name = "score_toolchains_rust", version = "0.9.1", dev_dependency = True)\n'
+        )
+        specs = _declared_dep_specs(text)
+        assert specs["score_crates"] == {"version": "0.0.10", "dev_dependency": False}
+        assert specs["score_itf"] == {"version": "0.4.0", "dev_dependency": True}
+        assert specs["score_toolchains_rust"]["dev_dependency"] is True
+
+    def test_dep_without_version_is_captured_with_none(self):
+        # The non-registry idiom: the override supplies the source, so no version is declared.
+        assert _declared_dep_specs('bazel_dep(name = "score_tooling")\n') == {
+            "score_tooling": {"version": None, "dev_dependency": False}
+        }
+
+    def test_declared_deps_set_is_unchanged(self):
+        # The narrower contract overwrite() depends on: names only, dev-declared included.
+        text = (
+            'bazel_dep(name = "score_crates", version = "0.0.10")\n'
+            'bazel_dep(name = "score_itf", version = "0.4.0", dev_dependency = True)\n'
+        )
+        assert _declared_deps(text) == {"score_crates", "score_itf"}
+
+
 class TestManifestRoundtrip:
     def test_to_file_is_lean_and_roundtrips(self, tmp_path: Path, resolved: ResolvedDependencies):
         manifest = tmp_path / "resolved_versions.json"
@@ -533,6 +926,51 @@ class TestManifestRoundtrip:
         loaded = ResolvedDependencies.from_file(manifest)
         assert loaded.get("score_baselibs").hash == resolved.get("score_baselibs").hash
         assert loaded.get("score_tooling").version == "1.2.0"
+
+    def test_report_is_a_sidecar_and_the_manifest_schema_is_unchanged(self, tmp_path: Path):
+        # The manifest is the Stage1->Stage2 contract, so new fields go in the sidecar instead.
+        graph = tmp_path / "graph.json"
+        graph.write_text(
+            json.dumps(
+                {
+                    "key": "<root>",
+                    "name": "ref_int",
+                    "version": "",
+                    "dependencies": [
+                        {"name": "protobuf", "version": "29.1", "originalVersion": "28.0"},
+                        {"name": "trlc", "version": ""},
+                    ],
+                }
+            )
+        )
+        root = tmp_path / "MODULE.bazel"
+        root.write_text(
+            'git_override(\n    module_name = "trlc",\n    commit = "abc1234",\n'
+            '    remote = "https://github.com/x/trlc.git",\n)\n'
+        )
+        rd = ResolvedDependencies.from_mod_graph(graph, [root])
+
+        manifest = tmp_path / MANIFEST_NAME
+        rd.to_file(manifest)
+        modules = json.loads(manifest.read_text())["modules"]
+        # Exactly the two legal shapes; nothing leaks in from the report.
+        assert modules == {
+            "protobuf": {"version": "29.1"},
+            "trlc": {"repo": "https://github.com/x/trlc.git", "hash": "abc1234"},
+        }
+        assert ResolvedDependencies.from_file(manifest).get("trlc").hash == "abc1234"
+
+        report = tmp_path / REPORT_NAME
+        rd.write_report(report)
+        parsed = json.loads(report.read_text())
+        assert parsed["schema"] == 1
+        assert parsed["pins"]["protobuf"]["declared_versions"] == ["28.0"]
+
+    def test_a_manifest_read_back_carries_no_report(self, tmp_path: Path, resolved: ResolvedDependencies):
+        # The pins survive a round trip; the evidence behind them is not faked.
+        manifest = tmp_path / MANIFEST_NAME
+        resolved.to_file(manifest)
+        assert ResolvedDependencies.from_file(manifest).report["pins"] == {}
 
 
 class TestFromResolvedArtifact:

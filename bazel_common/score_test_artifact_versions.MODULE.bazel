@@ -11,61 +11,31 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 #
-# Single-version locks for the dependencies Stage 2 collects test artifacts from.
+# Deliberate ceilings for the deps Stage 2 collects test artifacts from.
 #
-# The rule: if a dependency's output ends up inside a collected Stage-2 artifact, it gets
-# ONE version, defined here, used by every downstream module execution. A dependency we
-# collect nothing from is deliberately left alone, and each module keeps whatever it
-# declares -- hedron_compile_commands is the reference case: never in ref_int's resolved
-# set, never injected, and that is correct.
+# ref_int's resolved set is imposed on every module under test whether a dependency is named here or
+# not; this file does not decide *which* deps get pinned. It decides which of those pins are a
+# decision rather than an inheritance. `bazel_dep(version = ...)` is only a floor that MVS raises
+# silently, while `single_version_override` is also a ceiling, so the versions below are ones Stage 1
+# reports as `asserted` rather than `incidental`.
 #
-# Why an override rather than just a bazel_dep version. `bazel_dep(version = ...)` is only
-# a FLOOR: MVS raises it whenever anything else in the graph asks for more, silently and
-# without review. Five deps already drift that way today -- rules_cc (0.2.16 declared vs
-# 0.2.17 resolved), rules_python (1.8.3/1.8.5), rules_shell (0.6.0/0.6.1),
-# aspect_rules_lint (2.3.0/2.5.0), and rules_rust below. `single_version_override` is the
-# ceiling as well as the floor, so the version Stage 1 writes into resolved_versions.json
-# -- and therefore the version Stage 2 injects into all 8 modules -- is one ref_int
-# asserted, not one MVS happened to land on.
-#
-# Every version below equals what MVS already resolves today, so this file changes no
-# build now. It changes what happens the day a module bumps its own copy.
+# Every version here equals what MVS resolves today, so this changes no build now -- only what
+# happens the day something in the graph asks for more.
 
-# Every C++ test binary Stage 2 runs is a gtest binary, and every _coverage_report.dat
-# that genhtml turns into a report comes out of one. Before this lock ref_int declared no
-# googletest version anywhere: 1.17.0.bcr.2 was purely what MVS selected transitively.
+# C++ test binaries and the coverage .dat files genhtml reads.
 single_version_override(
     module_name = "googletest",
     version = "1.17.0.bcr.2",
 )
 
-# The Rust test rules that build the binaries emitting .profraw. This also closes an
-# existing drift: score_rust_toolchains.MODULE.bazel declares 0.68.1-score while MVS
-# resolves 0.68.2-score. That bazel_dep stays as the floor; this is the assertion.
+# Rust test rules that build the .profraw-emitting binaries.
 single_version_override(
     module_name = "rules_rust",
     version = "0.68.2-score",
 )
 
-# The ferrocene coverage tooling itself. `ferrocene.toolchain(coverage_tools_url = ...)`
-# in score_rust_toolchains.MODULE.bazel is what produces the .profraw files that
-# @score_tooling//coverage:ferrocene_report then reads. It is declared
-# `dev_dependency = True`, which is correct and unrelated: dev_dependency scopes when an
-# edge activates, not who owns the version.
+# Ferrocene coverage tooling behind those .profraw files.
 single_version_override(
     module_name = "score_toolchains_rust",
     version = "0.8.0",
 )
-
-# Considered and deliberately NOT locked here:
-#
-# * toolchains_llvm -- supplies libclang.so for the score_tooling C++ parser behind
-#   score_communication's code generation; the LLVM C++ toolchain is not registered at all
-#   (see score_llvm_libclang.MODULE.bazel). Nothing collects an artifact from it. It can
-#   reach a collected artifact only indirectly, by changing generated sources, so locking
-#   it would be a defensible *extension* of this rule rather than an instance of it. Open
-#   for the reviewer to include if that indirect path is judged in scope.
-# * google_benchmark, aspect_rules_lint, score_qnx_unit_tests -- no collection path in
-#   scripts/quality_runners.py.
-# * score_tooling, score_test_scenarios -- already exact, both pinned by git_override
-#   commit; a version lock would add nothing.
