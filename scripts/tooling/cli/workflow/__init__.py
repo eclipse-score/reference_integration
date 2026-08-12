@@ -10,3 +10,18 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+import argparse
+
+
+def register(subparsers: argparse._SubParsersAction) -> None:
+    """Register workflow utility commands."""
+    workflow_parser = subparsers.add_parser("workflow", help="Workflow utility commands")
+    workflow_sub = workflow_parser.add_subparsers(dest="command", metavar="COMMAND")
+    workflow_sub.required = True
+
+    from scripts.tooling.cli.workflow.extract_codeql_metrics import (
+        register as _register_extract_codeql_metrics,
+    )
+
+    _register_extract_codeql_metrics(workflow_sub)
+
