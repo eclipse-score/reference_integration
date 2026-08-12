@@ -66,21 +66,16 @@ INJECTION_BEGIN = "# --- BEGIN ref_int resolved-deps injection ---"
 INJECTION_END = "# --- END ref_int resolved-deps injection ---"
 
 
-def generate_override_directive(module: Module, repo_commit_dict: dict[str, str] | None = None) -> str | None:
+def generate_override_directive(module: Module) -> str | None:
     """Return the override directive (single_version_override / git_override) for a module.
 
-    Returns just the override call without a preceding ``bazel_dep(...)`` line, so the
-    same logic can be reused both to build ref_int's score_modules_*.MODULE.bazel files
-    and to inject overrides into a module's own MODULE.bazel where bazel_dep is already
-    declared (see :meth:`ResolvedDependencies.overwrite`).
+    Returns just the override call without a preceding ``bazel_dep(...)`` line, since
+    :meth:`ResolvedDependencies.overwrite` injects into a module's own MODULE.bazel where the
+    ``bazel_dep`` is already declared, and adds one itself only for a closure member that is not.
 
     Returns ``None`` when the module has neither a usable version nor a valid repo+commit.
     """
-    repo_commit_dict = repo_commit_dict or {}
     commit = module.hash
-
-    if module.repo in repo_commit_dict:
-        commit = repo_commit_dict[module.repo]
 
     patches_lines = ""
     if module.bazel_patches:
@@ -214,8 +209,6 @@ POLICY = "ref_int's pins are authoritative and are forced onto every module unde
 # Built-in / non-registry modules that must not be given a single_version_override.
 _SKIP_MODULES = {"bazel_tools"}
 
-# Capture the module name from any ``bazel_dep(name = "...")`` call (name is the first arg).
-_BAZEL_DEP_RE = re.compile(r'bazel_dep\(\s*name\s*=\s*"([^"]+)"')
 # The whole ``bazel_dep(...)`` argument list. ``[^)]*`` is sufficient: bazel_dep takes only
 # scalar keyword arguments, never a nested call.
 _BAZEL_DEP_CALL_RE = re.compile(r"bazel_dep\((?P<body>[^)]*)\)", re.S)
@@ -460,9 +453,9 @@ class ResolvedDependencies:
         for name, version in versions.items():
             if name in resolved or name in _SKIP_MODULES:
                 continue  # already carried by an override directive, or non-overridable
-            # A literal 0.0.0 means the module declares 0.0.0 itself and ref_int overrides it with
-            # nothing, so there is no version worth imposing. (Overridden modules report an empty
-            # version, already dropped upstream by _collect_resolved_versions.)
+            # Defensive: a module declaring 0.0.0 itself that ref_int does not override has no
+            # version worth imposing. Every 0.0.0 module in ref_int's graph today (trlc,
+            # score_tooling, the score_* target modules) is already carried by an override above.
             if version == "0.0.0":
                 declared_overrides.setdefault(
                     name,
@@ -572,13 +565,12 @@ class ResolvedDependencies:
         * ref_int resolved nothing for it -> leave the module's own declaration untouched and log
           it. There is nothing to impose.
 
-        ``dev_dependency`` is not the discriminator and is never read. The two properties are
-        independent: ``score_baselibs`` declares 11 dev-only deps ref_int *has* resolved
-        (``score_tooling``, ``score_docs_as_code``, ``toolchains_llvm``, ...), while
-        ``score_baselibs_rust`` is a public dep ref_int has *not* resolved. A dependency is absent
-        from the resolved set because nothing in ref_int's own graph reaches it -- usually it is
-        only reachable through some module's dev edge, inactive while ref_int is root -- or because
-        ref_int pins it with an ``archive_override`` the manifest cannot express.
+        ``dev_dependency`` is not the discriminator and is never read: it does not predict whether
+        ref_int resolved a dependency. ``score_baselibs`` at 0.2.9 declares 13 dev-only deps that
+        ref_int *has* resolved and therefore pins (``score_tooling``, ``score_docs_as_code``,
+        ``toolchains_llvm``, ...). A dependency is absent from the resolved set for an unrelated
+        reason: nothing in ref_int's own graph reaches it, or ref_int pins it with an override the
+        manifest cannot express (``rules_boost``, an ``archive_override``).
 
         Scope is the module's declared deps plus ``closure()`` of the module and of each declared
         dep. The closure is what makes the rule above safe rather than merely permissive: pinning
