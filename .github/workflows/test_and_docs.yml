@@ -109,7 +109,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload build tools SBOM to release
-        if: github.event_name == 'release'
         uses: softprops/action-gh-release@v1
         with:
           files: bazel-bin/build_tools_sbom.spdx.json
