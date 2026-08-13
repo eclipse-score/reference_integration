@@ -256,12 +256,90 @@
       border-top: 1px solid var(--border);
       padding-top: 1rem;
     }
+  <style>
+    /* ── Tabs (new) ─────────────────────────────────────────────── */
+    .tabs {
+      max-width: 1400px;
+      margin: 0 auto 1.2rem;
+      display: flex;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.3rem;
+    }
+    .tab-btn {
+      font-size: 0.85rem;
+      padding: 0.4rem 0.9rem;
+      border-radius: 6px 6px 0 0;
+      border-bottom: none;
+    }
+    .tab-btn.active {
+      background: var(--bg);
+      color: #e6edf3;
+      border-color: var(--accent);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* SBOM / Tools table */
+    .sbom-table-wrap {
+      max-width: 1400px;
+      margin: 0 auto 1.5rem;
+      overflow-x: auto;
+    }
+    .sbom-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+    .sbom-table th,
+    .sbom-table td {
+      padding: 0.45rem 0.6rem;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--border);
+    }
+    .sbom-table thead th {
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      color: #e6edf3;
+      font-weight: 600;
+    }
+    .sbom-table tbody tr:hover td {
+      background: #161b22;
+    }
+
+    /* Traceability */
+    .trace-section {
+      max-width: 1400px;
+      margin: 0 auto 1.5rem;
+      font-size: 0.85rem;
+    }
+    .trace-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.1rem;
+      margin-bottom: 1rem;
+    }
+    .trace-links a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.82rem;
+    }
+    .trace-links a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
   <header>
-    <h1>Known Good Status</h1>
+    <h1>Integration Dashboard</h1>
     <p class="subtitle">Snapshot: {{ timestamp }}</p>
+
+    <div class="tabs" id="main-tabs">
+      <button class="tab-btn active" data-tab="modules">Modules</button>
+      <button class="tab-btn" data-tab="traceability">Traceability</button>
+      <button class="tab-btn" data-tab="sbom-tools">SBOM & Tools</button>
+    </div>
 
     <div class="header-row">
       <div id="summary"><!-- filled by JS --></div>
@@ -272,25 +350,165 @@
     </div>
   </header>
 
-  <div class="pat-notice">
-    <span>&#128274; Add a <strong>GitHub personal access token (PAT)</strong> for <em>live</em> status — exact commit counts fetched directly from GitHub.
-    Enter it in the token field above, or
-    <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">create one here</a>.
-    Without a token, up-to-date / behind status is still shown from data embedded at report generation time.
-    <strong>Your PAT is not sent anywhere — it is only kept in the local cache of this page.</strong></span>
-  </div>
+  <!-- Modules tab (existing) -->
+  <section id="tab-modules" class="tab-panel active">
+    <div class="pat-notice">
+      <span>&#128274; Add a <strong>GitHub personal access token (PAT)</strong> for <em>live</em> status — exact commit counts fetched directly from GitHub.
+      Enter it in the token field above, or
+      <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">create one here</a>.
+      Without a token, up-to-date / behind status is still shown from data embedded at report generation time.
+      <strong>Your PAT is not sent anywhere — it is only kept in the local cache of this page.</strong></span>
+    </div>
 
-  <div id="filters"></div>
-  <div id="grid"></div>
+    <div id="filters"></div>
+    <div id="grid"></div>
 
-  <footer>
-    Commits-behind data fetched live from the GitHub REST API.
-  </footer>
+    <footer>
+      Commits-behind data fetched live from the GitHub REST API.
+    </footer>
+  </section>
+
+  <!-- Traceability tab (ISO 26262) -->
+  <section id="tab-traceability" class="tab-panel">
+    <div class="trace-section">
+      <h2 style="font-size:1.1rem; margin-bottom:0.5rem;">Traceability Overview</h2>
+      <p style="color:var(--muted); font-size:0.82rem; margin-bottom:0.75rem;">
+        This tab provides an overview of requirements, architecture, and test traceability for the S-CORE reference integration.
+        Detailed models are maintained in Sphinx with sphinx-needs and linked below.
+      </p>
+
+      <div class="trace-card">
+        <h3 style="font-size:0.95rem; margin-bottom:0.4rem;">Requirements & Architecture</h3>
+        <p style="color:var(--muted); font-size:0.82rem; margin-bottom:0.4rem;">
+          Central documentation and needs-based traceability are published via Sphinx. Use the links below to inspect coverage between requirements, design, tests, and components.
+        </p>
+        <div class="trace-links">
+          <ul style="padding-left:1.2rem; margin-top:0.25rem;">
+            <li><a href="https://eclipse-score.github.io/reference_integration" target="_blank" rel="noopener">Reference Integration Docs</a></li>
+            <li><a href="https://eclipse-score.github.io/score/main/" target="_blank" rel="noopener">S-CORE Project Documentation</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="trace-card">
+        <h3 style="font-size:0.95rem; margin-bottom:0.4rem;">ISO 26262 Alignment</h3>
+        <p style="color:var(--muted); font-size:0.82rem;">
+          For ISO 26262, this view will be extended to expose:
+        </p>
+        <ul style="padding-left:1.2rem; margin-top:0.25rem; color:var(--text); font-size:0.82rem;">
+          <li>Traceability from system requirements → software components → tests.</li>
+          <li>Links to Safety Sentinel–based checks in the Bazel build.</li>
+          <li>Automated coverage metrics derived from Sphinx-Needs exports (future).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+          Central documentation and needs-based traceability are published via Sphinx. Use the links below to inspect coverage between requirements, design, tests, and components.
+        </p>
+        <div class="trace-links">
+          <ul style="padding-left:1.2rem; margin-top:0.25rem;">
+            <li><a href="https://eclipse-score.github.io/reference_integration" target="_blank" rel="noopener">Reference Integration Docs</a></li>
+            <li><a href="https://eclipse-score.github.io/score/main/" target="_blank" rel="noopener">S-CORE Project Documentation</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="trace-card">
+        <h3 style="font-size:0.95rem; margin-bottom:0.4rem;">ISO 26262 Alignment</h3>
+        <p style="color:var(--muted); font-size:0.82rem;">
+          For ISO 26262, this view will be extended to expose:
+        </p>
+        <ul style="padding-left:1.2rem; margin-top:0.25rem; color:var(--text); font-size:0.82rem;">
+          <li>Traceability from system requirements → software components → tests.</li>
+          <li>Links to Safety Sentinel–based checks in the Bazel build.</li>
+          <li>Automated coverage metrics derived from Sphinx-Needs exports (future).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  -->
+
+  <!-- SBOM & Tools tab -->
+  <section id="tab-sbom-tools" class="tab-panel">
+    <div style="max-width:1400px; margin:0 auto 1rem;">
+      <h2 style="font-size:1.1rem; margin-bottom:0.35rem;">SBOM & Tool Qualification</h2>
+      <p style="color:var(--muted); font-size:0.82rem;">
+        Product SBOM (ISO 26262) and tool qualification overview for the S-CORE reference integration.
+      </p>
+    </div>
+
+    <!-- Product SBOM -->
+    <div style="max-width:1400px; margin:0 auto 1.5rem;">
+      <h3 style="font-size:0.95rem; margin-bottom:0.5rem;">Product SBOM</h3>
+      <p id="sbom-summary" style="color:var(--muted); font-size:0.82rem; margin-bottom:0.5rem;"></p>
+
+      <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.75rem;">
+        <input id="sbom-search" type="text" placeholder="Filter packages (name, license, supplier)…"
+               style="background:var(--surface); border:1px solid var(--border); color:var(--text); padding:0.35rem 0.7rem; border-radius:var(--radius); font-size:0.82rem; width:260px;" />
+      </div>
+
+      <div class="sbom-table-wrap">
+        <table class="sbom-table" id="sbom-table">
+          <thead>
+            <tr>
+              <th>Package</th>
+              <th>Version</th>
+              <th>Supplier</th>
+              <th>Licenses</th>
+            </tr>
+          </thead>
+          <tbody id="sbom-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tool Qualification -->
+    <div style="max-width:1400px; margin:0 auto 1.5rem;">
+      <h3 style="font-size:0.95rem; margin-bottom:0.4rem;">Tool Qualification (ISO 26262)</h3>
+      <p style="color:var(--muted); font-size:0.82rem; margin-bottom:0.5rem;">
+        Tools used in the build, analysis, and verification pipeline are documented separately and linked here.
+        Detailed qualification information is maintained in the S-CORE tooling documentation.
+      </p>
+
+      <div class="trace-card">
+        <h4 style="font-size:0.9rem; margin-bottom:0.35rem;">Static Analysis & Code Quality</h4>
+        <div class="trace-links">
+          <ul style="padding-left:1.2rem; margin-top:0.25rem;">
+            <li><a href="https://eclipse-score.github.io/score/main/score_tools/tools_static_analysis_code_quality/index.html" target="_blank" rel="noopener">Static Analysis & Code Quality Tools</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="trace-card">
+        <h4 style="font-size:0.9rem; margin-bottom:0.35rem;">SBOM & Dependency Tools</h4>
+        <p style="color:var(--muted); font-size:0.82rem;">
+          SBOM generation and dependency analysis tools (e.g., Syft, Grype) are configured in CI and documented as part of the tooling landscape.
+          A dedicated tool-qualification table will be added here once a central manifest is available.
+        </p>
+      </div>
+    </div>
+  </section>
 
   <script>
-    const MODULES = {{ modules_json | safe }};
+    // ── Tab switching ───────────────────────────────────────────────
+    (function() {
+      const tabs = document.querySelectorAll('#main-tabs .tab-btn');
+      const panels = document.querySelectorAll('.tab-panel');
+      tabs.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const target = btn.dataset.tab;
+          tabs.forEach(t => t.classList.remove('active'));
+          panels.forEach(p => p.classList.remove('active'));
+          btn.classList.add('active');
+          document.getElementById('tab-' + target).classList.add('active');
+        });
+      });
+    })();
 
-    // ── Token storage ──────────────────────────────────────────────────────
+    const MODULES = {{ modules_json | safe }};
+    const SBOM_PACKAGES = {{ sbom_packages_json | safe }};
+
+    // ── Token storage (unchanged) ───────────────────────────────────────
     function getToken()   { return localStorage.getItem('gh_token') || ''; }
     function setToken(t)  { localStorage.setItem('gh_token', t); }
     function clearToken() { localStorage.removeItem('gh_token'); }
@@ -578,6 +796,47 @@
     document.getElementById('refresh-btn').addEventListener('click', () => render(false));
     renderAuthBar();
     render(true);   // use cache on initial page load
+
+    // ── SBOM table rendering (optional) ────────────────────────────────────
+    const sbomData = typeof window.SBOM_DATA !== 'undefined' ? window.SBOM_DATA : null;
+
+    function renderSBOMTable() {
+      if (!sbomData || !Array.isArray(sbomData.modules)) return;
+
+      const container = document.getElementById('sbom-section');
+      if (!container) return;
+
+      // Show section
+      container.style.display = 'block';
+
+      const tableWrap = document.getElementById('sbom-table-wrap');
+      const tbody = document.getElementById('sbom-tbody');
+
+      if (!tableWrap || !tbody) return;
+      tableWrap.classList.add('visible');
+
+      // Build rows
+      let html = '';
+      for (const m of sbomData.modules) {
+        const name = esc(m.name);
+        const version = esc(m.version || '');
+        const provider = esc(m.provider || '');
+        const licenseShort = esc(m.license_short || '');
+        const depsCount = m.deps_count ?? '-';
+
+        html += `<tr>
+          <td>${name}</td>
+          <td class="mono">${version}</td>
+          <td>${provider}</td>
+          <td>${licenseShort}</td>
+          <td class="num">${depsCount}</td>
+        </tr>`;
+      }
+
+      tbody.innerHTML = html;
+    }
+
+    renderSBOMTable();
   </script>
 </body>
 </html>

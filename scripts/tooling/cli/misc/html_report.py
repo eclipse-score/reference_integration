@@ -97,10 +97,40 @@ def _enrich_with_compare_data(entries: list[dict[str, Any]], token: str) -> None
             _LOG.warning("Could not fetch compare data for %s@%s", entry["owner_repo"], entry["branch"])
 
 
-def generate_report(known_good: KnownGood, token: Optional[str] = None) -> str:
+def _parse_sbom_packages(sbom_path: Path) -> list[dict[str, Any]]:
+    """Minimal SPDX JSON parser for SBOM dashboard."""
+    data = json.loads(sbom_path.read_text(encoding="utf-8"))
+    packages = []
+    for p in data.get("packages", []):
+        name = (p.get("name") or "").strip()
+        version = (p.get("versionInfo") or "").strip()
+        supplier_raw = p.get("supplier") or {}
+        supplier = ""
+        if isinstance(supplier_raw, dict):
+            supplier = supplier_raw.get("name", "")
+        elif isinstance(supplier_raw, str):
+            supplier = supplier_raw
+
+        licenses = []
+        for lic in (p.get("licenseConcluded") or "").split(" OR "):
+            lic = lic.strip()
+            if lic and lic != "NOASSERTION":
+                licenses.append(lic)
+
+        packages.append({
+            "name": name,
+            "version": version or "",
+            "supplier": supplier or "",
+            "licenses": licenses,
+        })
+    return packages
+
+
+def generate_report(known_good: KnownGood, token: Optional[str] = None, sbom_packages: Optional[list[dict[str, Any]]] = None) -> str:
     entries = _collect_entries(known_good)
     if token:
         _enrich_with_compare_data(entries, token)
+
     env = Environment(
         loader=FileSystemLoader(TEMPLATE_DIR),
         autoescape=select_autoescape(["html"]),
@@ -108,12 +138,13 @@ def generate_report(known_good: KnownGood, token: Optional[str] = None) -> str:
     tmpl = env.get_template("report_template.html")
     return tmpl.render(
         modules_json=json.dumps(entries, indent=2),
+        sbom_packages_json=json.dumps(sbom_packages or [], indent=2),
         timestamp=known_good.timestamp,
     )
 
 
-def write_report(known_good: KnownGood, output_path: Path, token: Optional[str] = None) -> None:
-    Path(output_path).write_text(generate_report(known_good, token), encoding="utf-8")
+def write_report(known_good: KnownGood, output_path: Path, token: Optional[str] = None, sbom_packages: Optional[list[dict[str, Any]]] = None) -> None:
+    Path(output_path).write_text(generate_report(known_good, token, sbom_packages), encoding="utf-8")
 
 
 def register(subparsers: argparse._SubParsersAction) -> None:
@@ -130,6 +161,12 @@ def register(subparsers: argparse._SubParsersAction) -> None:
         default="report.html",
         help="Output HTML file path (default: report.html)",
     )
+    parser.add_argument(
+        "--sbom",
+        metavar="PATH",
+        default=None,
+        help="Optional SPDX JSON SBOM to include in the SBOM & Tools tab.",
+    )
     parser.set_defaults(func=_run)
 
 
@@ -143,7 +180,17 @@ def _run(args: argparse.Namespace) -> int:
 
     token = os.environ.get("GITHUB_TOKEN")
     output = _resolve_path_from_bazel(Path(args.output))
-    write_report(known_good, output, token=token)
+
+    sbom_packages = None
+    if args.sbom:
+        sbom_path = _resolve_path_from_bazel(Path(args.sbom))
+        try:
+            sbom_packages = _parse_sbom_packages(sbom_path)
+        except Exception as e:
+            print(f"warning: failed to parse SBOM {sbom_path}: {e}", file=sys.stderr)
+
+    write_report(known_good, output, token=token, sbom_packages=sbom_packages)
+
     if token:
         print(f"Report written to {output} (current hashes fetched from GitHub)")
     else:

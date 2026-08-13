@@ -74,8 +74,9 @@ jobs:
         run: |
           bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit
       - name: Install uv (required for SBOM license scanning)
-        run: |
-          curl -LsSf https://astral.sh/uv/install.sh | sh
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: false
       - name: Build build tools SBOM
         run: |
           bazel build --lockfile_mode=error //:build_tools_sbom
@@ -132,7 +133,7 @@ jobs:
           bazel run //scripts/tooling -- misc html_report --output ${CURRENT}/_build/status_dashboard.html
           tar -cf github-pages.tar _build
       - name: Upload documentation artifact
-        uses: actions/upload-artifact@v4.4.0
+        uses: actions/upload-artifact@b4b15b6c7981bb8d8f533a89aa19f67a4b7b679e # v4.4.1
         with:
           name: github-pages-${{ github.event.pull_request.head.sha || github.sha }}
           path: github-pages.tar
