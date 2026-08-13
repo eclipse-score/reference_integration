@@ -53,8 +53,8 @@ jobs:
       - name: Integration tests
         run: |
           bazel test --lockfile_mode=error --config=linux-x86_64 //feature_integration_tests/itf
-      - name: Upload product SBOM to release
-        if: github.event_name == 'release'
-        uses: softprops/action-gh-release@v1
+      - name: Upload product SBOM
+        uses: actions/upload-artifact@v4
         with:
-          files: bazel-bin/sbom.spdx.json
+          name: sbom-spdx
+          path: bazel-bin/sbom.spdx.json
