@@ -372,9 +372,9 @@ class TestOverwriteTransitive:
 class TestScopeIsDecidedByTheResolvedSet:
     """Presence in the resolved set decides the pin scope. ``dev_dependency`` plays no part.
 
-    The two properties are independent, measured on the real modules: ``score_baselibs`` declares
-    11 dev-only deps ref_int *has* resolved, while ``score_baselibs_rust`` is a *public* dep of
-    ``score_communication`` that ref_int has *not*. So the flag predicts neither case and cannot
+    The two properties are independent, measured on the real modules: ``score_baselibs`` at 0.2.9
+    declares 13 dev-only deps ref_int *has* resolved, while ``score_baselibs_rust`` is a *public*
+    dep of ``score_logging`` that ref_int has *not*. So the flag predicts neither case and cannot
     be the discriminator.
     """
 
@@ -727,13 +727,30 @@ class TestVersionComparison:
     def test_equal_versions_compare_equal(self):
         assert _compare_versions("1.17.0.bcr.2", "1.17.0.bcr.2") == 0
 
-    def test_undecidable_pair_returns_none(self):
-        # These differ by an alphanumeric identifier with no defensible order.
-        assert _compare_versions("1.17.0.bcr.2", "1.17.0") is None
-        assert _compare_versions("1.17.0", "1.17.0.bcr.2") is None
+    def test_a_longer_release_list_outranks_its_prefix(self):
+        # Bazel compares release identifiers lexicographically, so the shorter list sorts lower --
+        # a BCR re-release of 1.17.0 is above it. This is ref_int's own googletest pin.
+        assert _compare_versions("1.17.0.bcr.2", "1.17.0") == 1
+        assert _compare_versions("1.17.0", "1.17.0.bcr.2") == -1
+
+    def test_alphanumeric_identifiers_compare_lexicographically(self):
+        # Bazel's ordering is total: two differing alphanumeric identifiers still have an order.
+        assert _compare_versions("1.0.alpha", "1.0.beta") == -1
+        assert _compare_versions("1.0.beta", "1.0.alpha") == 1
+
+    def test_numeric_identifiers_sort_below_alphanumeric_ones(self):
+        assert _compare_versions("1.0.2", "1.0.rc") == -1
 
     def test_prerelease_sorts_below_the_same_release(self):
         assert _compare_versions("0.51.0", "0.51.0-rc2") == 1
+
+    def test_prerelease_identifiers_are_dot_split(self):
+        # Compared identifier-wise like the release part, not as one opaque string -- otherwise
+        # "rc.10" would sort below "rc.9".
+        assert _compare_versions("1.0.0-rc.10", "1.0.0-rc.9") == 1
+
+    def test_build_metadata_does_not_affect_ordering(self):
+        assert _compare_versions("1.0.0+build1", "1.0.0+build2") == 0
 
 
 class TestConflictReportDoesNotAbort:
@@ -798,11 +815,13 @@ class TestConflictReportDoesNotAbort:
         assert pin["declared_versions"] == ["0.0.10", "0.0.9"]
         assert rd.report["counts"]["conflicts"] == 1
 
-    def test_undecidable_comparison_reports_no_direction(self, tmp_path: Path):
+    def test_a_bcr_rerelease_is_reported_as_higher(self, tmp_path: Path):
+        # ref_int's real googletest pin. Bazel orders 1.17.0.bcr.2 above 1.17.0, so the direction
+        # is knowable and must be stated -- reporting "unknown" here would be misinformation.
         rd = self._export(tmp_path, self._graph("googletest", "1.17.0.bcr.2", "1.17.0"))
         pin = rd.report["pins"]["googletest"]
         assert pin["verdict"] == "differs"
-        assert pin["direction"] is None
+        assert pin["direction"] == "ref_int_higher"
 
     def test_a_dev_declared_conflict_is_not_claimed_to_be_detected(self, tmp_path: Path):
         # A non-root dev edge leaves no originalVersion, so an empty declared_versions must not
@@ -815,6 +834,17 @@ class TestConflictReportDoesNotAbort:
         # No requests at all must not read as universal agreement.
         rd = self._export(tmp_path, self._graph("protobuf", "29.1"))
         assert any("originalVersion" in limitation for limitation in rd.report["limitations"])
+
+    def test_a_non_verbose_graph_is_announced_not_just_recorded(self, tmp_path: Path, capsys):
+        # The conflict half of the report is a constant without originalVersion -- every verdict
+        # "unknown", no disagreement detectable, which reads exactly like a graph nobody disagrees
+        # in. A limitations entry alone is invisible in a CI log, so it must be annotated too.
+        self._export(tmp_path, self._graph("protobuf", "29.1"))
+        assert "::warning::" in capsys.readouterr().out
+
+    def test_a_verbose_graph_is_not_announced(self, tmp_path: Path, capsys):
+        self._export(tmp_path, self._graph("protobuf", "29.1", "28.0"))
+        assert "originalVersion" not in capsys.readouterr().out
 
     def test_verbose_graph_drops_the_no_requests_caveat(self, tmp_path: Path):
         rd = self._export(tmp_path, self._graph("protobuf", "29.1", "28.0"))
