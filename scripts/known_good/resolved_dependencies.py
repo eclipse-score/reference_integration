@@ -745,63 +745,64 @@ def _collect_declared_versions(node: dict, acc: dict[str, set[str]]) -> None:
         _collect_declared_versions(dep, acc)
 
 
-def _version_identifiers(version: str) -> tuple[list[str], str]:
-    """Split a Bazel module version into its release identifiers and its prerelease suffix."""
-    release, _, prerelease = version.partition("-")
-    return release.split("."), prerelease
+# Bazel's own module-version grammar: a mandatory release part, an optional ``-prerelease``, and
+# optional ``+build`` metadata that is deliberately not captured because it does not affect ordering.
+_VERSION_RE = re.compile(r"^(?P<release>[a-zA-Z0-9.]+)(?:-(?P<prerelease>[a-zA-Z0-9.-]+))?(?:\+[a-zA-Z0-9.-]+)?$")
 
 
-def _compare_identifier(left: str, right: str) -> int | None:
-    if left == right:
-        return 0
-    if left.isdigit() and right.isdigit():
-        return -1 if int(left) < int(right) else 1
-    if left.isdigit() != right.isdigit():
-        return -1 if left.isdigit() else 1  # Bazel orders numeric identifiers below alphanumeric
-    return None  # two different alphanumerics have no defensible order
+def _identifier_key(identifier: str) -> tuple[int, int, str]:
+    """Sort key for one version identifier, matching Bazel's ``Identifier.COMPARATOR``.
+
+    Digits-only identifiers sort *below* alphanumeric ones; two numeric identifiers compare
+    numerically; two alphanumeric ones compare lexicographically.
+    """
+    if identifier.isdigit():
+        return (0, int(identifier), "")
+    return (1, 0, identifier)
 
 
-def _compare_versions(left: str, right: str) -> int | None:
-    """Order two Bazel module versions: -1, 0, 1, or ``None`` when undecidable.
+def _version_key(version: str) -> tuple[list[tuple[int, int, str]], int, list[tuple[int, int, str]]]:
+    """Sort key for a whole version, mirroring Bazel's ``Version.COMPARATOR`` chain.
 
-    Not a string comparison: ``"0.0.10" < "0.0.6"`` holds lexically, which would report the real
-    ``score_crates`` conflict backwards. ``None`` rather than a guess when the two carry different
-    alphanumeric identifiers (``1.17.0.bcr.2`` vs ``1.17.0``).
+    Release identifiers first (list comparison is lexicographic, so a shorter list sorts lower --
+    ``1.17.0`` is below ``1.17.0.bcr.2``), then presence of a prerelease (a prerelease sorts *below*
+    the same release without one), then the prerelease identifiers, which are dot-split like the
+    release part rather than compared as one opaque string.
+    """
+    match = _VERSION_RE.match(version)
+    if match is None:
+        # Not a version Bazel would accept; order it as a single alphanumeric identifier so the
+        # comparison stays total rather than raising on data we only ever report on.
+        return ([_identifier_key(version)], 1, [])
+    release = [_identifier_key(i) for i in match.group("release").split(".")]
+    prerelease = match.group("prerelease")
+    if not prerelease:
+        return (release, 1, [])
+    return (release, 0, [_identifier_key(i) for i in prerelease.split(".")])
+
+
+def _compare_versions(left: str, right: str) -> int:
+    """Order two Bazel module versions: -1, 0 or 1.
+
+    Ports Bazel's own ordering (``Version.java``) rather than approximating it, because the report
+    claims to say whether ref_int's pin is behind what a consumer asked for -- saying "unknown"
+    where Bazel has a definite answer is misinformation, not caution. The ordering is total; Bazel
+    has no incomparable pair.
+
+    Deliberately not a string comparison: ``"0.0.10" < "0.0.6"`` holds lexically, which would report
+    the real ``score_crates`` conflict backwards.
     """
     if left == right:
         return 0
-    left_ids, left_pre = _version_identifiers(left)
-    right_ids, right_pre = _version_identifiers(right)
-    for a, b in zip(left_ids, right_ids, strict=False):
-        order = _compare_identifier(a, b)
-        if order is None:
-            return None
-        if order:
-            return order
-    if len(left_ids) != len(right_ids):
-        shared = min(len(left_ids), len(right_ids))
-        longer, sign = (left_ids, 1) if len(left_ids) > len(right_ids) else (right_ids, -1)
-        # 0.1 vs 0.1.1 -> the longer one is higher. 1.17.0 vs 1.17.0.bcr.2 -> undecidable.
-        return sign if longer[shared].isdigit() else None
-    if left_pre != right_pre:
-        if not left_pre:
-            return 1
-        if not right_pre:
-            return -1
-        return None
-    return 0
+    left_key, right_key = _version_key(left), _version_key(right)
+    if left_key == right_key:
+        return 0
+    return -1 if left_key < right_key else 1
 
 
-def _highest(versions: list[str]) -> str | None:
-    """The greatest of ``versions``, or ``None`` if any pair is undecidable."""
-    highest = versions[0]
-    for candidate in versions[1:]:
-        order = _compare_versions(candidate, highest)
-        if order is None:
-            return None
-        if order > 0:
-            highest = candidate
-    return highest
+def _highest(versions: list[str]) -> str:
+    """The greatest of ``versions`` under Bazel's ordering."""
+    return max(versions, key=_version_key)
 
 
 def _empty_report() -> dict:
@@ -877,10 +878,8 @@ def _build_report(
             entry["verdict"] = "agree"
         else:
             entry["verdict"] = "differs"
-            highest = _highest(wanted)
-            order = None if highest is None else _compare_versions(module.version, highest)
-            if order is not None:
-                entry["direction"] = "ref_int_lower" if order < 0 else "ref_int_higher"
+            order = _compare_versions(module.version, _highest(wanted))
+            entry["direction"] = "ref_int_lower" if order < 0 else "ref_int_higher"
         if entry["verdict"] == "differs":
             conflicts.append(name)
         report["pins"][name] = entry
@@ -910,6 +909,15 @@ def _warn_report(report: dict) -> None:
     silent downgrades and the dropped ``rules_oci`` pin went unnoticed. The export always exits 0;
     ref_int's version is imposed and reported rather than blocking the run.
     """
+    if _NO_VERBOSE_LIMITATION in report["limitations"]:
+        # Without this the conflict half of the report is silently a constant: every verdict is
+        # "unknown" and no consumer disagreement can be detected, which reads identically to a
+        # graph in which nobody disagrees.
+        print(
+            "::warning::resolved_dependencies - the graph carries no originalVersion, so no "
+            "consumer version conflicts can be detected. Produce it with "
+            "'bazel mod graph --verbose --output=json' to enable them."
+        )
     for entry in report["uncarried"]:
         print(
             f"::warning::resolved_dependencies - ref_int declares an override for "
