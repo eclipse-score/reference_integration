@@ -117,16 +117,22 @@ def _parse_sbom_packages(sbom_path: Path) -> list[dict[str, Any]]:
             if lic and lic != "NOASSERTION":
                 licenses.append(lic)
 
-        packages.append({
-            "name": name,
-            "version": version or "",
-            "supplier": supplier or "",
-            "licenses": licenses,
-        })
+        packages.append(
+            {
+                "name": name,
+                "version": version or "",
+                "supplier": supplier or "",
+                "licenses": licenses,
+            }
+        )
     return packages
 
 
-def generate_report(known_good: KnownGood, token: Optional[str] = None, sbom_packages: Optional[list[dict[str, Any]]] = None) -> str:
+def generate_report(
+    known_good: KnownGood,
+    token: str | None = None,
+    sbom_packages: list[dict[str, Any]] | None = None,
+) -> str:
     entries = _collect_entries(known_good)
     if token:
         _enrich_with_compare_data(entries, token)
@@ -143,7 +149,12 @@ def generate_report(known_good: KnownGood, token: Optional[str] = None, sbom_pac
     )
 
 
-def write_report(known_good: KnownGood, output_path: Path, token: Optional[str] = None, sbom_packages: Optional[list[dict[str, Any]]] = None) -> None:
+def write_report(
+    known_good: KnownGood,
+    output_path: Path,
+    token: str | None = None,
+    sbom_packages: list[dict[str, Any]] | None = None,
+) -> None:
     Path(output_path).write_text(generate_report(known_good, token, sbom_packages), encoding="utf-8")
 
 

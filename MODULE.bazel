@@ -82,8 +82,6 @@ git_override(
     remote = "https://github.com/bmw-software-engineering/lobster.git",
 )
 
-bazel_dep(name = "score_sbom", version = "0.0.2")
-
 sbom_ext = use_extension("@score_sbom//:extensions.bzl", "sbom_metadata")
 sbom_ext.track_module(name = "score_sbom")
 sbom_ext.track_module(name = "score_baselibs")
