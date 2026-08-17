@@ -15,11 +15,8 @@
 Modules
 =======
 
+.. toctree will be filled by bazel
+
 .. toctree::
    :titlesonly:
    :maxdepth: 1
-
-   _collections/score_persistency/index
-   _collections/score_orchestrator/docs/index
-   _collections/score_kyron/docs/index
-   _collections/score_logging/docs/index

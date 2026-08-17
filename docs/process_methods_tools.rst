@@ -15,10 +15,8 @@
 Process, Methods, and Tools
 ============================
 
+.. toctree will be filled by bazel
+
 .. toctree::
    :titlesonly:
    :maxdepth: 1
-
-   _collections/score_platform/docs/index
-   _collections/score_process/process/index
-   _collections/score_docs_as_code/docs/index

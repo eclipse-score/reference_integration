@@ -17,7 +17,7 @@
 bazel_dep(name = "score_baselibs")
 git_override(
     module_name = "score_baselibs",
-    commit = "06f6b9b7d48710438ea4664d84da5143594763cb",
+    commit = "881457150e1878115ba6bbffff3d1b425e803826",
     patch_strip = 1,
     patches = [
         "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
@@ -28,12 +28,11 @@ git_override(
 bazel_dep(name = "score_communication")
 git_override(
     module_name = "score_communication",
-    commit = "21652a6196c22bdf89e0a0abb34aabeb79eb26a0",
+    commit = "28c6d881d3462d1a7e79673fe218780dc1c01b47",
     patch_strip = 1,
     patches = [
         "//patches/communication:001-expose-comm-examples.patch",
         "//patches/communication:003-module-deps-visibility.patch",
-        "//patches/communication:004-rules-build-error-not-dev-dependency.patch",
     ],
     remote = "https://github.com/eclipse-score/communication.git",
 )
@@ -41,7 +40,7 @@ git_override(
 bazel_dep(name = "score_persistency")
 git_override(
     module_name = "score_persistency",
-    commit = "b987d375e54f038c31f9441fa738c747c7a07c75",
+    commit = "711c8f1f8401836cb36c1165ff23a13effdeaffb",
     patch_strip = 1,
     patches = [
         "//patches/persistency:001-fix-doc.patch",
@@ -66,14 +65,14 @@ git_override(
 bazel_dep(name = "score_lifecycle_health")
 git_override(
     module_name = "score_lifecycle_health",
-    commit = "23e9849437c578ade99b8ccbf5d09c1835737b3f",
+    commit = "32fd77625c0484051e4b4cc504c4a0ef403d8d5b",
     remote = "https://github.com/eclipse-score/lifecycle.git",
 )
 
 bazel_dep(name = "score_logging")
 git_override(
     module_name = "score_logging",
-    commit = "e1bf097cdbf718f993ab7b24ae5f59639ed96bdb",
+    commit = "4e18b4fa1c74afd8ca992f2c6d187f2b75f94df3",
     patch_strip = 1,
     patches = [
         "//patches/logging:002-needs-json-deps-not-dev-dependency.patch",
@@ -87,10 +86,6 @@ git_override(
 bazel_dep(name = "score_time")
 git_override(
     module_name = "score_time",
-    commit = "8c42d34698535dabeaa4782d5ec123256151fb30",
-    patch_strip = 1,
-    patches = [
-        "//patches/time:001-memory-shared-moved-to-communication.patch",
-    ],
+    commit = "9510acd8fe09c62db2df313a9d24ef901f7df999",
     remote = "https://github.com/eclipse-score/time.git",
 )

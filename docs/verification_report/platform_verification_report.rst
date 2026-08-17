@@ -21,6 +21,7 @@ Platform Verification Report
    :safety: QM
    :security: YES
    :realizes: wp__verification_platform_ver_report
+   :version: 1
 
 
 This is the content according to the template (see :need:`doc__platform_verification_report`) for the platform verification report, filled in with the information available for this release.
@@ -33,10 +34,10 @@ This is the content according to the template (see :need:`doc__platform_verifica
 
 For this release, the requirements-related verification output is as follows:
 
-* Lists of stakeholder and feature requirements tested (split in separate lists for QM and ASIL) by which test case, passed/failed/not_run and completeness verdict: 
+* Lists of stakeholder and feature requirements tested (split in separate lists for QM and ASIL) by which test case, passed/failed/not_run and completeness verdict:
    No release-specific requirement verification matrix is available in this platform verification report.
 
-* List of external component Assumptions of Use and coverage by platform safety manual: 
+* List of external component Assumptions of Use and coverage by platform safety manual:
    Assumptions of Use requirements and safety manual content exist in the documentation set, but no release-specific coverage matrix is provided in this platform verification report.
 
 * List of stakeholder requirements (ASIL rated) linked to inspection checklist and verdict derived from PR export:
@@ -87,5 +88,3 @@ The following referenced summary pages exist only.
 Link to test log per test case for :need:`wp__verification_platform_int_test` and :need:`wp__verification_feat_int_test`.
 
 For this release, detailed test logs are not available in this report yet.
-
-
