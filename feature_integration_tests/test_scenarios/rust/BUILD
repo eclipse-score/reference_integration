@@ -42,12 +42,10 @@ rust_binary(
     ],
     crate_root = "src/main.rs",
     # Build the lifecycle-only Rust FIT from the same main.rs entrypoint.
-    # This target exists as a workaround: the full Rust FIT graph currently
-    # hits unresolved ScoreDebug issues in score_persistency/rust_kvs.
-    # Keep this until score_persistency is fixed upstream.
-    # TODO: file an issue in eclipse-score/score_persistency for the ScoreDebug problem
-    # above and link it here, so this workaround target has a tracked removal condition
-    # instead of an open-ended "until fixed upstream".
+    # This target is a temporary workaround for the unresolved ScoreDebug
+    # dependency in score_persistency/rust_kvs.
+    # Tracking issue: https://github.com/eclipse-score/persistency/issues/375
+    # Remove this target when the issue is fixed upstream.
     rustc_flags = ["--cfg=lifecycle_only"],
     tags = [
         "manual",
