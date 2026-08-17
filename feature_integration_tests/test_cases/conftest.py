@@ -13,9 +13,13 @@
 from pathlib import Path
 
 import pytest
-from _pytest.mark.expression import Expression
 from testing_utils import BazelTools
 
+try:
+    # Private API - not guaranteed stable across pytest versions.
+    from _pytest.mark.expression import Expression
+except ImportError:
+    Expression = None
 
 _DEFAULT_RUST_TARGET = "//feature_integration_tests/test_scenarios/rust:rust_test_scenarios"
 
@@ -29,13 +33,19 @@ def _selected_versions(session: pytest.Session) -> set[str]:
     Falls back to all variants when no expression is given or parsing fails.
     """
     mark_expression = session.config.option.markexpr or ""
-    if not mark_expression:
+    if not mark_expression or Expression is None:
         return {"rust", "cpp"}
     try:
         expr = Expression.compile(mark_expression)
+        # pytest 9's MatcherNameAdapter.__call__ forwards **kwargs to the matcher (needed for
+        # registered markers with args, e.g. `test_properties(x=1)`), so a matcher that only
+        # accepts `name` raises TypeError for an expression like `"rust and test_properties(x=1)"`.
+        # Keep evaluate() inside this try so that also falls back to all variants.
+        selected_versions = {
+            version for version in ("rust", "cpp") if expr.evaluate(lambda name, **_kwargs: name == version)
+        }
     except Exception:  # noqa: BLE001 – malformed expression; fall back to all variants
         return {"rust", "cpp"}
-    selected_versions = {version for version in ("rust", "cpp") if expr.evaluate(lambda name: name == version)}
     return selected_versions or {"rust", "cpp"}
 
 

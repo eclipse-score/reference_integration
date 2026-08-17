@@ -241,12 +241,38 @@ def _grant_sandbox_capabilities(binary_path: Path) -> tuple[bool, str]:
     return False, "; ".join(failures) if failures else "no grant attempt produced a result"
 
 
+def signal_process(pid: str, sig: str, *, sandbox_privileged: bool) -> tuple[bool, str]:
+    """Send `sig` (e.g. "-9", "-STOP", "-CONT") to `pid`, escalating via sudo if needed.
+
+    Under sandbox capabilities, supervised apps run as the configured sandbox uid/gid,
+    not the runner's own uid, so a plain `kill` fails. Falls back to `sudo -n kill` when
+    `FIT_ENABLE_SETCAP=1` (same sudoers scope as `_grant_sandbox_capabilities`).
+    """
+    attempts: list[list[str]] = [["kill", sig, pid]]
+    if sandbox_privileged and os.environ.get("FIT_ENABLE_SETCAP") == "1" and shutil.which("sudo") is not None:
+        attempts.append(["sudo", "-n", "kill", sig, pid])
+
+    failures: list[str] = []
+    for cmd in attempts:
+        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        if result.returncode == 0:
+            return True, f"sent via {' '.join(cmd)}"
+        failures.append(f"{' '.join(cmd)} failed (rc={result.returncode}): {result.stderr.strip() or '<no output>'}")
+
+    return False, "; ".join(failures)
+
+
 def _wait_for_apps(apps: dict[str, Path], timeout_s: float = 8.0, interval_s: float = 0.2) -> bool:
     return wait_until(lambda: all(is_running(path) for path in apps.values()), timeout_s, interval_s)
 
 
 _RUNTIME_ROOT_LOCK_PATH = Path("/tmp/lifecycle_fit.lock")
 _RUNTIME_ROOT_LOCK_TIMEOUT_S = 120.0
+
+# bin_dir is hardcoded into the build-time flatbuffer config, so it can't move to
+# TEST_TMPDIR without regenerating that config per run. Path stays fixed and shared;
+# permissive modes below just guard against a stale lock/runtime_root from another uid.
+_SHARED_PATH_MODE = 0o777
 
 
 def _acquire_runtime_root_lock(timeout_s: float = _RUNTIME_ROOT_LOCK_TIMEOUT_S):
@@ -259,7 +285,17 @@ def _acquire_runtime_root_lock(timeout_s: float = _RUNTIME_ROOT_LOCK_TIMEOUT_S):
     for anywhere near `timeout_s`, so failing loudly here is strictly more useful than
     an indefinite wait.
     """
-    lock_file = _RUNTIME_ROOT_LOCK_PATH.open("w", encoding="utf-8")
+    try:
+        lock_file = _RUNTIME_ROOT_LOCK_PATH.open("w", encoding="utf-8")
+    except PermissionError as exc:
+        raise RuntimeError(
+            f"Could not open {_RUNTIME_ROOT_LOCK_PATH} for writing ({exc}). On a shared runner "
+            "this usually means the file is a leftover owned by a different user from a previous "
+            "run; delete it manually (or as root) and retry."
+        ) from exc
+    # World-writable so a later run under a different uid can still open/flock/replace it.
+    os.chmod(_RUNTIME_ROOT_LOCK_PATH, _SHARED_PATH_MODE)
+
     deadline = time.time() + timeout_s
     while True:
         try:
@@ -333,9 +369,19 @@ def start_launch_manager_daemon(
 
     runtime_root = Path("/tmp/lifecycle_fit")
     if runtime_root.exists():
-        shutil.rmtree(runtime_root)
+        try:
+            shutil.rmtree(runtime_root)
+        except PermissionError as exc:
+            raise RuntimeError(
+                f"Could not remove {runtime_root} ({exc}). On a shared runner this usually means "
+                "it is a leftover owned by a different user from a previous run; remove it "
+                "manually (or as root) and retry."
+            ) from exc
     bin_dir = runtime_root / "bin"
     bin_dir.mkdir(parents=True, exist_ok=True)
+    # World-writable, same rationale as _acquire_runtime_root_lock.
+    os.chmod(runtime_root, _SHARED_PATH_MODE)
+    os.chmod(bin_dir, _SHARED_PATH_MODE)
 
     launch_manager = _resolve_target_path("@score_lifecycle_health//score/launch_manager:launch_manager")
     rust_supervised = _resolve_target_path("@score_lifecycle_health//examples/rust_supervised_app:rust_supervised_app")

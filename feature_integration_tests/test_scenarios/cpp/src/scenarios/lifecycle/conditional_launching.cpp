@@ -13,7 +13,7 @@
 
 #include "conditional_launching.h"
 
-#include "internals/persistency/kvs_build_helpers.h"
+#include "internals/log_helpers.h"
 #include "score/json/json_parser.h"
 
 #include <algorithm>
@@ -35,7 +35,7 @@ namespace {
 constexpr const char* kTarget = "cpp_test_scenarios::scenarios::lifecycle::conditional_launching";
 
 void log_info(const std::string& message) {
-    kvs_build_helpers::log_info("\"message\":\"" + message + "\"", kTarget);
+    log_helpers::log_info("\"message\":\"" + log_helpers::json_escape(message) + "\"", kTarget);
 }
 
 bool path_condition_met(const std::string& path) {
@@ -137,10 +137,10 @@ std::vector<std::string> parse_string_array_field(const std::string& input,
 
     for (const auto& element : array_res.value().get()) {
         const auto converted = convert(element);
-         if (!converted.has_value()) {
-             throw std::invalid_argument("Wait condition entries must be strings");
-         }
-         values.push_back(*converted);
+        if (!converted.has_value()) {
+            throw std::invalid_argument("Wait condition entries must be strings");
+        }
+        values.push_back(*converted);
     }
 
     return values;
@@ -201,7 +201,7 @@ public:
 
         if (wait_conditions.empty()) {
             throw std::runtime_error(
-                 "Wait conditions were not provided: missing or empty 'test.wait_conditions' in scenario input");
+                "Wait conditions were not provided: missing or empty 'test.wait_conditions' in scenario input");
         }
 
         log_info("Testing conditional launching");

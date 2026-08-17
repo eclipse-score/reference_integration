@@ -45,6 +45,9 @@ rust_binary(
     # This target exists as a workaround: the full Rust FIT graph currently
     # hits unresolved ScoreDebug issues in score_persistency/rust_kvs.
     # Keep this until score_persistency is fixed upstream.
+    # TODO: file an issue in eclipse-score/score_persistency for the ScoreDebug problem
+    # above and link it here, so this workaround target has a tracked removal condition
+    # instead of an open-ended "until fixed upstream".
     rustc_flags = ["--cfg=lifecycle_only"],
     tags = [
         "manual",

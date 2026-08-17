@@ -37,7 +37,14 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from daemon_helpers import first_pid, is_running, launch_manager_daemon, pgrep_cmdline_pattern, wait_until
+from daemon_helpers import (
+    first_pid,
+    is_running,
+    launch_manager_daemon,
+    pgrep_cmdline_pattern,
+    signal_process,
+    wait_until,
+)
 from test_properties import add_test_properties
 
 pytestmark = [
@@ -120,13 +127,11 @@ class TestProcessLaunchingWithDaemon:
             return None
         return policy, priority
 
-    # NOTE: launch-order/dependency-gating coverage for rust-on-cpp startup lives in
-    # test_conditional_launching.py (that is the feature this repo dedicates to conditional
-    # launching); duplicating it here as test_startup_launches_supervised_apps /
-    # test_dependency_gates_rust_startup was removed per review feedback.
+    # Dependency-gating coverage (rust-on-cpp startup order) lives in
+    # test_conditional_launching.py; not duplicated here.
 
     @add_test_properties(
-        partially_verifies=["feat_req__lifecycle__parallel_launch_support"],
+        partially_verifies=["feat_req__lifecycle__launch_support"],
         test_type="requirements-based",
         derivation_technique="requirements-analysis",
     )
@@ -168,9 +173,8 @@ class TestProcessLaunchingWithDaemon:
     ) -> None:
         """Verify launched process cmdline includes every configured lifecycle argument.
 
-        Reads the expected arguments from the config itself (rather than a hardcoded
-        literal) so this test tracks config drift and catches partial-application bugs
-        instead of only ever re-checking a single known-good value.
+        Expected args are read from the config itself, not hardcoded, so the test
+        tracks config drift.
         """
         daemon_info = launch_manager_daemon
         app_name = "rust_supervised_app" if version == "rust" else "cpp_supervised_app"
@@ -194,6 +198,11 @@ class TestProcessLaunchingWithDaemon:
                 f"Configured launch argument {configured_arg!r} missing in {app_name} cmdline: {cmdline}"
             )
 
+    @add_test_properties(
+        partially_verifies=["feat_req__lifecycle__process_launch_args"],
+        test_type="requirements-based",
+        derivation_technique="requirements-analysis",
+    )
     def test_launch_process_environment_is_applied(
         self,
         launch_manager_daemon: dict[str, Any],
@@ -201,9 +210,8 @@ class TestProcessLaunchingWithDaemon:
     ) -> None:
         """Verify launched process environment matches every configured environment variable.
 
-        Reads the expected variables from the config itself (rather than hardcoded
-        literals) so this test tracks config drift instead of only ever re-checking
-        values that happen to coincide with the app name.
+        Expected variables are read from the config itself, not hardcoded, so the
+        test tracks config drift.
         """
         daemon_info = launch_manager_daemon
         app_name = "rust_supervised_app" if version == "rust" else "cpp_supervised_app"
@@ -226,19 +234,16 @@ class TestProcessLaunchingWithDaemon:
                 f"{key} mismatch for {app_name}: expected {expected_value!r}, got {proc_env.get(key)!r}"
             )
 
-    @add_test_properties(
-        partially_verifies=[
-            "feat_req__lifecycle__uid_gid_support",
-            "feat_req__lifecycle__launch_priority_support",
-            "feat_req__lifecycle__scheduling_policy",
-        ],
-        test_type="requirements-based",
-        derivation_technique="requirements-analysis",
-    )
-    def test_config_defines_uid_gid_scheduling_and_priority(
-        self, launch_manager_daemon: dict[str, Any], version: str
-    ) -> None:
-        """Verify lifecycle config defines launch user/group and scheduling defaults."""
+    def test_config_defines_uid_gid_scheduling_and_priority(self, version: str) -> None:
+        """Sanity-check the lifecycle config's shape for launch user/group and scheduling defaults.
+
+        No requirement tag here: this only confirms the config file is well-formed, not
+        that launch_manager applies it - that's covered by
+        test_launched_process_uid_gid_matches_config_when_applied and
+        test_launched_process_scheduling_matches_config_when_applied below, which inspect
+        the real launched process. `version` is unused but required by the class-scope
+        parametrize on this class.
+        """
         config_path = Path(__file__).resolve().parents[3] / "configs" / "lifecycle_daemon_config.json"
         config = json.loads(config_path.read_text(encoding="utf-8"))
 
@@ -253,6 +258,10 @@ class TestProcessLaunchingWithDaemon:
         test_type="requirements-based",
         derivation_technique="requirements-analysis",
     )
+    # Skipped in CI/CD (both rust/cpp): requires launch_manager to gain cap_setuid/cap_setgid via
+    # setcap, which needs both FIT_ENABLE_SETCAP=1 (unset in the GitHub Actions workflow) and
+    # unsandboxed execution (linux-sandbox's PR_SET_NO_NEW_PRIVS makes the grant inert at exec
+    # time even if setcap itself succeeds). See feature_integration_tests/README.md for details.
     def test_launched_process_uid_gid_matches_config_when_applied(
         self,
         launch_manager_daemon: dict[str, Any],
@@ -299,6 +308,10 @@ class TestProcessLaunchingWithDaemon:
         test_type="requirements-based",
         derivation_technique="requirements-analysis",
     )
+    # Skipped in CI/CD (both rust/cpp): requires launch_manager to gain cap_sys_nice via setcap,
+    # which needs both FIT_ENABLE_SETCAP=1 (unset in the GitHub Actions workflow) and unsandboxed
+    # execution (linux-sandbox's PR_SET_NO_NEW_PRIVS makes the grant inert at exec time even if
+    # setcap itself succeeds). See feature_integration_tests/README.md for details.
     def test_launched_process_scheduling_matches_config_when_applied(
         self,
         launch_manager_daemon: dict[str, Any],
@@ -324,9 +337,8 @@ class TestProcessLaunchingWithDaemon:
         started = wait_until(lambda: is_running(app_path), timeout_s=8.0)
         assert started, f"{app_name} was not launched before scheduling verification"
 
-        # Supervised apps can exit/restart between pid resolution and the chrt subprocess
-        # call, so a single pid snapshot can go stale (ESRCH) before chrt reads it. Retry
-        # against a freshly resolved pid instead of failing on that race.
+        # Pid can go stale between resolution and the chrt call if the app restarts;
+        # retry against a fresh pid rather than failing on that race.
         sched = None
         pid = None
         for _ in range(20):
@@ -388,27 +400,28 @@ class TestProcessLaunchingWithDaemon:
         derivation_technique="requirements-analysis",
     )
     def test_supervised_app_recovery(self, launch_manager_daemon: dict[str, Any], version: str) -> None:
-        """
-        Verify that daemon restarts supervised app on failure.
+        """Verify daemon restarts a killed supervised app in place per the retry policy.
 
-        This test:
-        1. Starts supervised application
-        2. Kills the application process
-        3. Verifies daemon detects failure and restarts it
-        4. Validates recovery action execution
+        Also confirms the other supervised app is left untouched, proving recovery
+        went through `ready_recovery_action.restart` rather than a run-target switch.
         """
         daemon_info = launch_manager_daemon
         daemon = daemon_info["daemon"]
         app_name = "rust_supervised_app" if version == "rust" else "cpp_supervised_app"
         app_path = str(daemon_info["apps"][version])
+        other_version = "cpp" if version == "rust" else "rust"
+        other_app_path = str(daemon_info["apps"][other_version])
 
         started = wait_until(lambda: is_running(app_path), timeout_s=8.0)
         assert started, f"{app_name} was not running before recovery test"
 
         old_pid = first_pid(app_path)
         assert old_pid is not None, f"Could not resolve PID for {app_name}"
+        other_old_pid = first_pid(other_app_path)
+        assert other_old_pid is not None, "Could not resolve PID for the other supervised app"
 
-        subprocess.run(["kill", "-9", old_pid], check=True)
+        sent, reason = signal_process(old_pid, "-9", sandbox_privileged=daemon_info["sandbox_privileged"])
+        assert sent, f"Could not signal {app_name} (pid={old_pid}): {reason}"
 
         restarted = wait_until(
             lambda: (new_pid := first_pid(app_path)) is not None and new_pid != old_pid,
@@ -419,40 +432,38 @@ class TestProcessLaunchingWithDaemon:
         # Verify daemon is still running after recovery
         assert daemon.is_running(), "Launch Manager daemon should still be running"
 
+        other_new_pid = first_pid(other_app_path)
+        assert other_new_pid == other_old_pid, (
+            "The other supervised app was relaunched too, indicating recovery switched the "
+            "whole run target instead of retrying only the failed app per the configured "
+            "restart policy"
+        )
+
 
 @pytest.mark.daemon
 @pytest.mark.manual
-@add_test_properties(
-    partially_verifies=[
-        "feat_req__lifecycle__liveliness_detection",
-        "feat_req__lifecycle__smart_watchdog_config",
-    ],
-    test_type="requirements-based",
-    derivation_technique="requirements-analysis",
-)
 class TestHealthMonitoringWithDaemon:
     """
-    Tests for health monitoring and watchdog with daemon.
+    Health monitoring / watchdog tests with daemon.
 
-    Marked as manual because these tests require specific setup
-    and longer execution times.
-
-    Run with: pytest -v -m manual
+    Marked manual: needs specific setup and longer execution, excluded from CI
+    (see fit_lifecycle_daemon's `-m not manual`). Run with: pytest -v -m manual
     """
 
+    @add_test_properties(
+        partially_verifies=[
+            "feat_req__lifecycle__liveliness_detection",
+            "feat_req__lifecycle__smart_watchdog_config",
+        ],
+        test_type="requirements-based",
+        derivation_technique="requirements-analysis",
+    )
     def test_watchdog_detection(self, launch_manager_daemon: dict[str, Any], version: str) -> None:
-        """
-        Verify watchdog detects unresponsive applications.
-
-        This test would:
-        1. Start an app that stops reporting health
-        2. Verify daemon detects the failure
-        3. Validate recovery action is triggered
-        """
+        """Verify watchdog detects an unresponsive app (stopped, not reporting health) and reacts."""
         daemon = launch_manager_daemon["daemon"]
         app_name = "rust_supervised_app" if version == "rust" else "cpp_supervised_app"
 
-        # Setup: stop the supervised process to emulate a non-reporting workload.
+        # Stop the supervised process to emulate a non-reporting workload.
         app_path = str(launch_manager_daemon["apps"][version])
         result = subprocess.run(
             ["pgrep", "-f", pgrep_cmdline_pattern(app_path)],
@@ -464,7 +475,9 @@ class TestHealthMonitoringWithDaemon:
             pytest.skip(f"{app_name} not active; activate Running run target before manual watchdog check")
 
         pid = result.stdout.strip().split("\n")[0]
-        subprocess.run(["kill", "-STOP", pid], check=True)
+        sandbox_privileged = launch_manager_daemon["sandbox_privileged"]
+        sent, reason = signal_process(pid, "-STOP", sandbox_privileged=sandbox_privileged)
+        assert sent, f"Could not signal {app_name} (pid={pid}): {reason}"
         try:
             # Allow supervision/watchdog loop to detect stalled process.
             time.sleep(4.0)
@@ -479,4 +492,4 @@ class TestHealthMonitoringWithDaemon:
                 f"No target-specific watchdog diagnostics found for {app_name}.\nDaemon logs:\n{logs}"
             )
         finally:
-            subprocess.run(["kill", "-CONT", pid], check=False)
+            signal_process(pid, "-CONT", sandbox_privileged=sandbox_privileged)

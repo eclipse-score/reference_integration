@@ -10,12 +10,19 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-"""Scenario-level lifecycle tests for conditional launching.
+"""Scenario-level smoke tests for the conditional-launching test-scenario binary.
 
-Unlike scenario logging smoke tests, these exercise the scenario binary's actual
-wait-condition evaluation: preconditions (a path, an env var, a running process) are
-really established or really withheld, so the assertions verify that the scenario
-observes and enforces them, not merely that it echoes back what was configured.
+These exercise the bespoke wait-condition poller in test_scenarios/{rust,cpp}/.../lifecycle/
+conditional_launching.{rs,cpp} directly: preconditions (a path, an env var, a running process)
+are really established or really withheld, so the assertions verify that *this stub* observes
+and enforces them, not merely that it echoes back what was configured.
+
+This is a fact about the FIT's own test code, not about launch_manager - no test here starts
+or drives an actual launch_manager instance, so none of them verify a `feat_req__lifecycle__*`
+requirement of the lifecycle module. That verification belongs to the daemon-driven tests in
+test_conditional_launching.py / test_process_launching_with_daemon.py, or a future test that
+exercises this same wait-condition logic through launch_manager's real config. Do not add
+`@add_test_properties(partially_verifies=[...])` claims to classes in this file.
 """
 
 import os
@@ -29,7 +36,6 @@ from typing import Any
 import pytest
 from fit_scenario import ResultCode
 from lifecycle_scenario import LifecycleScenario
-from test_properties import add_test_properties
 from testing_utils import ScenarioResult
 
 pytestmark = [pytest.mark.parametrize("version", ["rust", "cpp"], scope="class")]
@@ -38,17 +44,6 @@ _CONDITION_ENV_VAR = "LM_CONDITION_READY"
 _CONDITION_PROCESS_NAME = "sleep"
 
 
-@add_test_properties(
-    partially_verifies=[
-        "feat_req__lifecycle__total_wait_time_support",
-        "feat_req__lifecycle__polling_interval",
-        "feat_req__lifecycle__path_condition_check",
-        "feat_req__lifecycle__env_variable_cond_check",
-        "feat_req__lifecycle__dependency_check",
-    ],
-    test_type="requirements-based",
-    derivation_technique="requirements-analysis",
-)
 class TestConditionalLaunchingScenario(LifecycleScenario):
     """Verify the scenario actually waits for and detects satisfied conditions."""
 
@@ -133,16 +128,6 @@ class TestConditionalLaunchingScenario(LifecycleScenario):
         assert logs_info_level.find_log("message", value="Condition timeout: 2000ms") is not None
 
 
-@add_test_properties(
-    partially_verifies=[
-        "feat_req__lifecycle__total_wait_time_support",
-        "feat_req__lifecycle__path_condition_check",
-        "feat_req__lifecycle__env_variable_cond_check",
-        "feat_req__lifecycle__dependency_check",
-    ],
-    test_type="requirements-based",
-    derivation_technique="requirements-analysis",
-)
 class TestConditionalLaunchingScenarioTimesOutOnUnmetConditions(LifecycleScenario):
     """Verify the scenario fails when its wait conditions are never satisfied.
 
@@ -188,15 +173,6 @@ class TestConditionalLaunchingScenarioTimesOutOnUnmetConditions(LifecycleScenari
         )
 
 
-@add_test_properties(
-    partially_verifies=[
-        "feat_req__lifecycle__polling_interval",
-        "feat_req__lifecycle__path_condition_check",
-        "feat_req__lifecycle__total_wait_time_support",
-    ],
-    test_type="requirements-based",
-    derivation_technique="requirements-analysis",
-)
 class TestConditionalLaunchingScenarioDetectsConditionArrivingLate(LifecycleScenario):
     """Verify the scenario is actually re-checking the condition over time (real polling),
     rather than only ever observing the condition's state at process start (t=0) or its
@@ -279,11 +255,6 @@ class TestConditionalLaunchingScenarioDetectsConditionArrivingLate(LifecycleScen
         )
 
 
-@add_test_properties(
-    partially_verifies=["feat_req__lifecycle__validate_conditions"],
-    test_type="requirements-based",
-    derivation_technique="requirements-analysis",
-)
 class TestConditionalLaunchingScenarioRejectsUnsupportedPrefix(LifecycleScenario):
     """Verify an unsupported wait-condition prefix is rejected as invalid configuration,
     distinct from a legitimate condition that simply times out unmet."""
@@ -310,17 +281,29 @@ class TestConditionalLaunchingScenarioRejectsUnsupportedPrefix(LifecycleScenario
     def capture_stderr(self) -> bool:
         return True
 
+    @pytest.fixture(scope="class")
+    def results(self, command: list[str], execution_timeout: float) -> ScenarioResult:
+        # Overrides the base class-scoped `results` fixture to time the single command
+        # invocation. Without this override, the test body's own `self._run_command(...)`
+        # call would run the scenario binary a *second* time on top of the one the autouse
+        # `print_to_report` -> `logs` -> `results` chain already ran ahead of the test.
+        start = time.monotonic()
+        result = self._run_command(command, execution_timeout)
+        # A pytest fixture's `self` and a test method's `self` are different instances of
+        # the test class, so state can't be handed off via an instance attribute; stash it
+        # on the class object instead, which both share.
+        type(self)._elapsed_s = time.monotonic() - start
+        return result
+
     def test_unsupported_prefix_is_rejected_immediately(
         self,
-        command: list[str],
-        execution_timeout: float,
+        results: ScenarioResult,
         version: str,
     ) -> None:
         """Verify validation rejects the condition outright, before entering the wait loop,
         rather than only surfacing the same error after waiting out the full timeout."""
-        start = time.monotonic()
-        result = self._run_command(command, execution_timeout)
-        elapsed_s = time.monotonic() - start
+        result = results
+        elapsed_s = self._elapsed_s
 
         assert result.return_code != ResultCode.SUCCESS, (
             f"Expected failure for an unsupported wait-condition prefix, got: {result}"
@@ -335,11 +318,6 @@ class TestConditionalLaunchingScenarioRejectsUnsupportedPrefix(LifecycleScenario
         )
 
 
-@add_test_properties(
-    partially_verifies=["feat_req__lifecycle__validate_conditions"],
-    test_type="requirements-based",
-    derivation_technique="requirements-analysis",
-)
 class TestConditionalLaunchingScenarioRejectsEmptyConditions(LifecycleScenario):
     """Verify an empty wait_conditions list is rejected as invalid configuration up front,
     distinct from a legitimate condition that simply times out unmet.
@@ -372,17 +350,25 @@ class TestConditionalLaunchingScenarioRejectsEmptyConditions(LifecycleScenario):
     def capture_stderr(self) -> bool:
         return True
 
+    @pytest.fixture(scope="class")
+    def results(self, command: list[str], execution_timeout: float) -> ScenarioResult:
+        # See TestConditionalLaunchingScenarioRejectsUnsupportedPrefix.results: overrides the
+        # base class-scoped `results` fixture so the test body doesn't run the scenario binary
+        # a second time on top of the one the autouse fixture chain already ran.
+        start = time.monotonic()
+        result = self._run_command(command, execution_timeout)
+        type(self)._elapsed_s = time.monotonic() - start
+        return result
+
     def test_empty_conditions_are_rejected_immediately(
         self,
-        command: list[str],
-        execution_timeout: float,
+        results: ScenarioResult,
         version: str,
     ) -> None:
         """Verify validation rejects an empty wait_conditions list outright, before entering
         the wait loop, rather than only surfacing the same error after the full timeout."""
-        start = time.monotonic()
-        result = self._run_command(command, execution_timeout)
-        elapsed_s = time.monotonic() - start
+        result = results
+        elapsed_s = self._elapsed_s
 
         assert result.return_code != ResultCode.SUCCESS, (
             f"Expected failure for an empty wait_conditions list, got: {result}"
