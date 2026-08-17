@@ -35,7 +35,13 @@ import json
 import sys
 from pathlib import Path
 
-from known_good.resolved_dependencies import _collect_resolved_versions, injected_override_names
+_HERE = Path(__file__).resolve().parent
+try:
+    from known_good.resolved_dependencies import _collect_resolved_versions, injected_override_names
+except ImportError:
+    if str(_HERE) not in sys.path:
+        sys.path.insert(0, str(_HERE))
+    from resolved_dependencies import _collect_resolved_versions, injected_override_names  # noqa: E402
 
 
 def module_graph_versions(graph_path: Path) -> dict[str, str]:

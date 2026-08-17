@@ -35,7 +35,7 @@ score_py_pytest(
 
 # One label for every Python unit test, so CI runs all of them by naming a single target.
 test_suite(
-    name = "python_tests",
+    name = "all_python_unit_tests",
     tests = [
         ":quality_scripts_tests",
         "//scripts/known_good:known_good_tests",

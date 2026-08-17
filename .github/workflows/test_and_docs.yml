@@ -32,14 +32,10 @@ on:
   push:
     branches:
       - main
-      - Subramanian-K812_test_execution_upgrade # TEMP: remove after CI verified
   merge_group:
     types: [checks_requested]
   release:
     types: [created]
-  workflow_dispatch: # Manual trigger — used to test this workflow from a feature branch
-  # (pull_request_target always runs the base-branch workflow, so workflow_dispatch
-  # is the only way to exercise the new structure before it merges to main)
 # Do not flood CI with unneeded previous runs in PR
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
@@ -118,7 +114,9 @@ jobs:
       pull-requests: write
     steps:
       - name: Clean disk space
-        uses: eclipse-score/more-disk-space@v1
+        uses: eclipse-score/more-disk-space@v1.1
+        with:
+          level: 4
       - name: Setup Bazel
         uses: bazel-contrib/setup-bazel@0.18.0
         with:
@@ -126,10 +124,6 @@ jobs:
           disk-cache: ${{ github.workflow }}-docs
           repository-cache: true
           cache-save: ${{ github.event_name == 'push' }}
-      - name: Set up Python 3
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
       - name: Checkout repository (pull_request_target)
         if: ${{ github.event_name == 'pull_request_target' }}
         uses: actions/checkout@v4
@@ -209,7 +203,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clean disk space
-        uses: eclipse-score/more-disk-space@v1
+        uses: eclipse-score/more-disk-space@v1.1
+        with:
+          level: 4
       - name: Setup Bazel
         uses: bazel-contrib/setup-bazel@0.18.0
         with:
@@ -264,7 +260,7 @@ jobs:
           if [ ! -s _module/module_graph.json ]; then
             echo "::warning::no module graph captured for ${{ matrix.module.name }}"; exit 0
           fi
-          PYTHONPATH=scripts python3 scripts/known_good/verify_stage2_resolution.py \
+          python3 scripts/known_good/verify_stage2_resolution.py \
             --mod-graph _module/module_graph.json \
             --resolved _resolved_deps/resolved_versions.json \
             --module-bazel _module/MODULE.bazel \
