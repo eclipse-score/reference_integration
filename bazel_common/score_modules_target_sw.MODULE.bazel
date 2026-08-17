@@ -96,3 +96,14 @@ git_override(
     ],
     remote = "https://github.com/eclipse-score/time.git",
 )
+
+bazel_dep(name = "score_config_management")
+git_override(
+    module_name = "score_config_management",
+    commit = "952461ceffff774fb4c125ee023fea0221fcdce2",
+    patch_strip = 1,
+    patches = [
+        "patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch",
+    ],
+    remote = "https://github.com/eclipse-score/config_management.git",
+)

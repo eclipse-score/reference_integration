@@ -137,6 +137,29 @@
                         "cpp"
                     ]
                 }
+            },
+            "score_config_management": {
+                "repo": "https://github.com/eclipse-score/config_management.git",
+                "hash": "952461ceffff774fb4c125ee023fea0221fcdce2",
+                "bazel_patches": [
+                    "patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch"
+                ],
+                "metadata": {
+                    "code_root_path": "//score/config_management/...",
+                    "extra_test_config": [
+                        "@score_config_management//score/config_management/config_daemon/code:score_variant=true"
+                    ],
+                    "exclude_test_targets": [
+                        "//score/config_management/config_daemon/code/factory/details:unit_test_mw_com",
+                        "//score/config_management/config_daemon/code/services/details/mw_com:unit_test",
+                        "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com",
+                        "//score/config_management/config_provider/code/proxies/details:unit_test_mw",
+                        "//score/config_management/dependability/..."
+                    ],
+                    "langs": [
+                        "cpp"
+                    ]
+                }
             }
         },
         "tooling": {
