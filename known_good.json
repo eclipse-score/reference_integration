@@ -11,7 +11,12 @@
                         "@score_baselibs//score/json:base_library=nlohmann",
                         "@score_baselibs//score/memory/shared/flags:use_typedshmd=False"
                     ],
-                    "exclude_test_targets": [],
+                    "exclude_test_targets": [
+                        "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test"
+                    ],
+                    "exclude_test_target_reasons": {
+                        "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test": "Stage 2's toolchain does not implement the aborts_upon_exception feature."
+                    },
                     "langs": [
                         "cpp"
                     ],
