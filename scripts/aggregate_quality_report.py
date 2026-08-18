@@ -38,6 +38,10 @@ _STATUS_MAP = {
     "": "⚪ Unknown",
 }
 
+# Printed when an exclusion carries no recorded reason, so the gap is visible in the report
+# rather than papered over with a generic justification.
+_NO_EXCLUSION_REASON = "⚠️ no reason recorded"
+
 # Written by quality_runners.py into the same report directory; keep in sync with the constant of
 # the same name there. Carries the owner of a failure, which the count columns cannot: zero tests
 # looks identical for a harness defect and an integration conflict.
@@ -137,12 +141,19 @@ def _classify(total: int, failed: int, attribution: dict | None = None) -> tuple
     return "✅ passed", "—"
 
 
-def _excluded_test_targets(known_good_path: Path) -> list[tuple[str, list[str]]]:
-    """Return [(module, [excluded targets])] for target_sw modules in known_good.json.
+def _excluded_test_targets(known_good_path: Path) -> list[tuple[str, list[tuple[str, str]]]]:
+    """Return [(module, [(excluded target, reason)])] for target_sw modules in known_good.json.
 
-    These targets are excluded from Stage 2 (e.g. they depend on dev_dependency-only
-    deps) and so are absent from the consolidated report — they are still covered by
-    each module's own CI. Surfacing them keeps the report honest about completeness.
+    These targets never run in Stage 2 and so are absent from the counts above; they remain
+    covered by each module's own CI. Surfacing them keeps the report honest about completeness.
+
+    The reason is printed rather than inferred. Stage 2 runs each module as the Bazel *root*, so
+    the old blanket explanation -- "depends on dev_dependency-only deps invisible from the
+    resolved graph" -- describes a build scope that no longer exists: a root module's dev edges
+    are active. An exclusion that survives that change has a specific, scope-independent reason
+    (a benchmark, a sanitizer or miri target), and it belongs in ``metadata.exclude_test_target_reasons``
+    next to the label. An entry with no recorded reason is flagged here instead of being dressed
+    up in a justification nobody checked.
     """
     if not known_good_path.exists():
         return []
@@ -150,11 +161,13 @@ def _excluded_test_targets(known_good_path: Path) -> list[tuple[str, list[str]]]
     data = json.loads(known_good_path.read_text(encoding="utf-8"))
     target_sw = data.get("modules", {}).get("target_sw", {})
 
-    excluded: list[tuple[str, list[str]]] = []
+    excluded: list[tuple[str, list[tuple[str, str]]]] = []
     for name in sorted(target_sw):
-        targets = target_sw[name].get("metadata", {}).get("exclude_test_targets", [])
+        metadata = target_sw[name].get("metadata", {})
+        targets = metadata.get("exclude_test_targets", [])
+        reasons = metadata.get("exclude_test_target_reasons", {})
         if targets:
-            excluded.append((name, targets))
+            excluded.append((name, [(t, reasons.get(t, _NO_EXCLUSION_REASON)) for t in targets]))
     return excluded
 
 
@@ -278,15 +291,16 @@ def main() -> int:
     if excluded:
         out.write("### Test Targets Excluded from Stage 2\n\n")
         out.write(
-            "These targets are excluded from central Stage 2 execution (typically because "
-            "they depend on `dev_dependency`-only deps that are not visible from the resolved "
-            "graph). They are still validated by each module's own CI.\n\n"
+            "These targets do not run in Stage 2, so they are not counted above. They are still "
+            "validated by each module's own CI. Stage 2 runs each module as the Bazel root, so an "
+            "exclusion has to justify itself on its own terms — the reason is recorded per target "
+            "in `known_good.json`.\n\n"
         )
-        out.write("| module | excluded test target |\n")
-        out.write("|--------|----------------------|\n")
+        out.write("| module | excluded test target | reason |\n")
+        out.write("|--------|----------------------|--------|\n")
         for module_name, targets in excluded:
-            for target in targets:
-                out.write(f"| {module_name} | `{target}` |\n")
+            for target, reason in targets:
+                out.write(f"| {module_name} | `{target}` | {reason} |\n")
         out.write("\n")
 
     # ------------------------------------------------------------------

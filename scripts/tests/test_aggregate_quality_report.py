@@ -24,7 +24,9 @@ if str(_SCRIPTS_DIR) not in sys.path:
 
 from aggregate_quality_report import (  # noqa: E402
     ATTRIBUTION_NAME,
+    _NO_EXCLUSION_REASON,
     _classify,
+    _excluded_test_targets,
     _extract_table_data_rows,
     _parse_ut_rows,
     _read_attributions,
@@ -126,3 +128,51 @@ class TestExitCode:
         # Attribution changes who acts, never whether it passed.
         _verdict, owner = _classify(total=0, failed=0, attribution=attribution)
         assert owner != "—"
+
+
+def _known_good(root: Path, metadata: dict) -> Path:
+    """Write a minimal known_good.json carrying one target_sw module's metadata."""
+    p = root / "known_good.json"
+    p.write_text(json.dumps({"modules": {"target_sw": {"score_x": {"metadata": metadata}}}, "timestamp": "t"}))
+    return p
+
+
+class TestExcludedTestTargets:
+    """The report must state *why* a target is excluded, not assert a generic justification.
+
+    Stage 2 runs each module as the Bazel root, so the old blanket wording ("depends on
+    dev_dependency-only deps invisible from the resolved graph") no longer describes anything real.
+    """
+
+    def test_pairs_each_target_with_its_reason(self, tmp_path: Path):
+        kg = _known_good(
+            tmp_path,
+            {
+                "exclude_test_targets": ["//a:bench", "//b:tsan_test"],
+                "exclude_test_target_reasons": {
+                    "//a:bench": "benchmark, not a correctness test",
+                    "//b:tsan_test": "needs the TSan runtime",
+                },
+            },
+        )
+        assert _excluded_test_targets(kg) == [
+            (
+                "score_x",
+                [
+                    ("//a:bench", "benchmark, not a correctness test"),
+                    ("//b:tsan_test", "needs the TSan runtime"),
+                ],
+            )
+        ]
+
+    def test_flags_an_exclusion_with_no_recorded_reason(self, tmp_path: Path):
+        """An unexplained exclusion is surfaced, not silently given a plausible reason."""
+        kg = _known_good(tmp_path, {"exclude_test_targets": ["//a:mystery"]})
+        assert _excluded_test_targets(kg) == [("score_x", [("//a:mystery", _NO_EXCLUSION_REASON)])]
+
+    def test_module_with_no_exclusions_is_omitted(self, tmp_path: Path):
+        kg = _known_good(tmp_path, {"exclude_test_targets": []})
+        assert _excluded_test_targets(kg) == []
+
+    def test_missing_known_good_file_is_not_an_error(self, tmp_path: Path):
+        assert _excluded_test_targets(tmp_path / "absent.json") == []
