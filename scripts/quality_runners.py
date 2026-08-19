@@ -15,6 +15,7 @@ import json
 import re
 import select
 import sys
+import zipfile
 from dataclasses import dataclass
 from pathlib import Path
 from pprint import pprint
@@ -316,6 +317,38 @@ def run_rust_coverage_extraction(
     return {**summary, "exit_code": result_rust.exit_code}
 
 
+def _extract_lcov_from_zip(dat_file: Path, module: Module) -> Path | None:
+    """Pull the lcov member out of a module-generated coverage zip, or None if absent.
+
+    Returning None rather than the zip keeps a reporter that emits no lcov a loud failure
+    instead of a silently empty coverage row.
+    """
+    with zipfile.ZipFile(dat_file) as zf:
+        members = [n for n in zf.namelist() if n.endswith(".dat") or n.endswith(".info")]
+        if not members:
+            print_centered(
+                f"QR: {dat_file} is a zip with no lcov member (has: {', '.join(zf.namelist()[:5])}) "
+                f"— cannot extract {module.name} coverage"
+            )
+            return None
+        member = min(members, key=len)
+        payload = zf.read(member).decode("utf-8", errors="replace")
+
+    # The reporter writes `llvm-cov export` stdout straight to lcov.dat, so its diagnostics land
+    # in the data file and genhtml rejects it. Drop them here rather than passing genhtml a
+    # blanket --ignore-errors=format, which would also mute real format faults in other modules.
+    lines = payload.splitlines(keepends=True)
+    diagnostics = [ln for ln in lines if ln.startswith(("warning:", "error:"))]
+    for line in diagnostics:
+        print(f"QR: {module.name} llvm-cov: {line.strip()}")
+
+    extracted = dat_file.parent / f"_lcov_from_zip_{module.name}.dat"
+    extracted.write_text("".join(ln for ln in lines if ln not in diagnostics))
+
+    print_centered(f"QR: {module.name} ships coverage as a zip; extracted {member} for genhtml")
+    return extracted
+
+
 def cpp_coverage(
     module: Module, artifact_dir: Path, workspace: Path | None = None, startup: list[str] | None = None
 ) -> ProcessResult:
@@ -339,22 +372,20 @@ def cpp_coverage(
         print_centered(f"QR: No coverage dat file at {dat_file} — skipping genhtml for {module.name}")
         return ProcessResult(stdout="", stderr="", exit_code=0)
 
-    # Some modules override Bazel's --coverage_report_generator in their own coverage.bazelrc
-    # (e.g. score_communication's llvm_cov merger packages a pre-built HTML report as a zip at
-    # this same path, for its own CI). genhtml only understands lcov's plain-text .info format,
-    # so detect a zip (PK magic) and skip rather than crash trying to parse binary as text.
+    # Some modules override --coverage_report_generator in their own coverage.bazelrc (e.g.
+    # score_communication's llvm_cov reporter) and emit a zip here. They ship lcov inside it, so
+    # unpack that instead of forcing Bazel's gcov generators back on, which would contradict the
+    # instrumentation the module's own toolchain already applied.
     with open(dat_file, "rb") as f:
         is_zip = f.read(2) == b"PK"
     if is_zip:
-        print_centered(
-            f"QR: {dat_file} is not lcov format (zip) — {module.name}'s own coverage.bazelrc overrides "
-            "--coverage_report_generator; skipping genhtml"
-        )
-        return ProcessResult(stdout="", stderr="", exit_code=0)
+        dat_file = _extract_lcov_from_zip(Path(dat_file), module)
+        if dat_file is None:
+            return ProcessResult(stdout="", stderr="", exit_code=1)
 
     genhtml_call = [
         "genhtml",
-        f"{bazel_coverage_output_directory}/_coverage/_coverage_report.dat",
+        str(dat_file),
         f"--output-directory={output_dir}",
         "--show-details",
         "--legend",
