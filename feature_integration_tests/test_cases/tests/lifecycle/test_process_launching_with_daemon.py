@@ -394,7 +394,6 @@ class TestProcessLaunchingWithDaemon:
     @add_test_properties(
         partially_verifies=[
             "feat_req__lifecycle__monitor_abnormal_term",
-            "feat_req__lifecycle__retries_configurable",
         ],
         test_type="requirements-based",
         derivation_technique="requirements-analysis",
@@ -404,6 +403,10 @@ class TestProcessLaunchingWithDaemon:
 
         Also confirms the other supervised app is left untouched, proving recovery
         went through `ready_recovery_action.restart` rather than a run-target switch.
+
+        Does not claim `feat_req__lifecycle__retries_configurable`: this only exercises a
+        single restart within the configured attempt budget, it never varies or exhausts
+        `number_of_attempts`, so the "configurable" half of that requirement is unverified.
         """
         daemon_info = launch_manager_daemon
         daemon = daemon_info["daemon"]

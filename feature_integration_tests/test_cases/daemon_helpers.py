@@ -34,6 +34,15 @@ _TARGET_ENV_MAP = {
     "@score_lifecycle_health//examples/rust_supervised_app:rust_supervised_app": "FIT_RUST_SUPERVISED_APP_PATH",
     "@score_lifecycle_health//examples/cpp_supervised_app:cpp_supervised_app": "FIT_CPP_SUPERVISED_APP_PATH",
     "//feature_integration_tests/configs:lifecycle_daemon_config": "FIT_LIFECYCLE_DAEMON_CONFIG_PATH",
+    "//feature_integration_tests/test_cases/support_apps/flaky_startup_app:flaky_startup_app": (
+        "FIT_FLAKY_STARTUP_APP_PATH"
+    ),
+    "//feature_integration_tests/configs:lifecycle_daemon_retry_recovers_config": (
+        "FIT_LIFECYCLE_RETRY_RECOVERS_CONFIG_PATH"
+    ),
+    "//feature_integration_tests/configs:lifecycle_daemon_retry_exhausts_config": (
+        "FIT_LIFECYCLE_RETRY_EXHAUSTS_CONFIG_PATH"
+    ),
 }
 
 
@@ -470,6 +479,134 @@ def start_launch_manager_daemon(
         "runtime_root": runtime_root,
         "lock_file": lock_file,
     }
+
+
+_RETRY_RUNTIME_ROOT = Path("/tmp/lifecycle_fit_retries")
+
+
+def start_flaky_retry_daemon(
+    tmp_path_factory: pytest.TempPathFactory,
+    config_target: str,
+    crashes_before_success: int,
+) -> dict[str, Any]:
+    """Start launch_manager against a single-component retry config.
+
+    Drives `flaky_startup_app` (see support_apps/flaky_startup_app/main.cpp), which
+    aborts on its first `crashes_before_success` startup attempts and stays running
+    from then on, so `ready_recovery_action.restart.number_of_attempts` can be
+    exercised deterministically instead of relying on a real, racy startup failure.
+    Does not wait for the app to reach Running: whether it ever does is exactly
+    what the calling test is checking.
+    """
+    lock_file = _acquire_runtime_root_lock()
+
+    work_dir = tmp_path_factory.mktemp("lm-retry-daemon")
+    etc_dir = work_dir / "etc"
+    etc_dir.mkdir(parents=True, exist_ok=True)
+
+    runtime_root = _RETRY_RUNTIME_ROOT
+    if runtime_root.exists():
+        try:
+            shutil.rmtree(runtime_root)
+        except PermissionError as exc:
+            raise RuntimeError(
+                f"Could not remove {runtime_root} ({exc}). On a shared runner this usually means "
+                "it is a leftover owned by a different user from a previous run; remove it "
+                "manually (or as root) and retry."
+            ) from exc
+    bin_dir = runtime_root / "bin"
+    bin_dir.mkdir(parents=True, exist_ok=True)
+    os.chmod(runtime_root, _SHARED_PATH_MODE)
+    os.chmod(bin_dir, _SHARED_PATH_MODE)
+
+    launch_manager = _resolve_target_path("@score_lifecycle_health//score/launch_manager:launch_manager")
+    flaky_app = _resolve_target_path(
+        "//feature_integration_tests/test_cases/support_apps/flaky_startup_app:flaky_startup_app"
+    )
+    config_artifact = _resolve_target_path(config_target)
+
+    lm_dst = work_dir / "launch_manager"
+    shutil.copy2(launch_manager, lm_dst)
+    lm_dst.chmod(0o755)
+
+    app_dst = bin_dir / "flaky_startup_app"
+    shutil.copy2(flaky_app, app_dst)
+    app_dst.chmod(0o755)
+
+    counter_path = runtime_root / "flaky_startup_app.counter"
+    if counter_path.exists():
+        counter_path.unlink()
+
+    if config_artifact.is_dir():
+        for item in config_artifact.iterdir():
+            if item.is_file():
+                shutil.copy2(item, etc_dir / item.name)
+    else:
+        if config_artifact.name.endswith(".bin"):
+            shutil.copy2(config_artifact, etc_dir / "lm_demo.bin")
+        else:
+            raise RuntimeError(f"Unexpected lifecycle daemon config artifact: {config_artifact}")
+
+    env = os.environ.copy()
+    env.setdefault("ECUCFG_ENV_VAR_ROOTFOLDER", str(etc_dir))
+
+    lines: list[str] = []
+    process = subprocess.Popen(
+        [str(lm_dst)],
+        cwd=work_dir,
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        start_new_session=True,
+    )
+
+    def _collect_output() -> None:
+        assert process.stdout is not None
+        for line in process.stdout:
+            line = line.rstrip("\n")
+            if line:
+                lines.append(line)
+
+    thread = threading.Thread(target=_collect_output, daemon=True)
+    thread.start()
+
+    daemon = ManagedDaemon(process=process, _lines=lines, _thread=thread)
+
+    time.sleep(1.0)
+    if not daemon.is_running():
+        logs = daemon.get_logs()
+        fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
+        lock_file.close()
+        pytest.skip(f"launch_manager failed to start in this environment. Logs:\n{logs}")
+
+    return {
+        "daemon": daemon,
+        "work_dir": work_dir,
+        "bin_dir": bin_dir,
+        "app_path": app_dst,
+        "counter_path": counter_path,
+        "crashes_before_success": crashes_before_success,
+        "runtime_root": runtime_root,
+        "lock_file": lock_file,
+    }
+
+
+def stop_flaky_retry_daemon(daemon_info: dict[str, Any]) -> None:
+    """Tear down a daemon started by `start_flaky_retry_daemon`."""
+    daemon_info["daemon"].stop()
+    shutil.rmtree(daemon_info["runtime_root"], ignore_errors=True)
+    lock_file = daemon_info["lock_file"]
+    fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
+    lock_file.close()
+
+
+def read_retry_attempt_count(counter_path: Path) -> int:
+    """Read flaky_startup_app's persisted attempt counter; 0 if it hasn't run yet."""
+    try:
+        return int(counter_path.read_text().strip())
+    except (FileNotFoundError, ValueError):
+        return 0
 
 
 def stop_launch_manager_daemon(daemon_info: dict[str, Any]) -> None:

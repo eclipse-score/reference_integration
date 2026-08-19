@@ -210,11 +210,45 @@ score_py_pytest(
     deps = all_requirements,
 )
 
+# Dedicated, isolated coverage for ready_recovery_action.restart.number_of_attempts
+# (feat_req__lifecycle__retries_configurable). Uses its own single-component config and
+# runtime_root (/tmp/lifecycle_fit_retries) so it doesn't interleave with fit_lifecycle_daemon's
+# shared /tmp/lifecycle_fit state; "exclusive" still applies since both hardcode /tmp paths.
+score_py_pytest(
+    name = "fit_lifecycle_retries",
+    timeout = "long",
+    srcs = [
+        "tests/lifecycle/test_retry_exhaustion.py",
+    ],
+    args = [
+        "--traces=all",
+    ],
+    data = [
+        "conftest.py",
+        "daemon_helpers.py",
+        "test_properties.py",
+        "//feature_integration_tests/configs:lifecycle_daemon_retry_exhausts_config",
+        "//feature_integration_tests/configs:lifecycle_daemon_retry_recovers_config",
+        "//feature_integration_tests/test_cases/support_apps/flaky_startup_app",
+        "@score_lifecycle_health//score/launch_manager",
+    ],
+    env = {
+        "FIT_FLAKY_STARTUP_APP_PATH": "$(rootpath //feature_integration_tests/test_cases/support_apps/flaky_startup_app)",
+        "FIT_LAUNCH_MANAGER_PATH": "$(rootpath @score_lifecycle_health//score/launch_manager)",
+        "FIT_LIFECYCLE_RETRY_EXHAUSTS_CONFIG_PATH": "$(rootpath //feature_integration_tests/configs:lifecycle_daemon_retry_exhausts_config)",
+        "FIT_LIFECYCLE_RETRY_RECOVERS_CONFIG_PATH": "$(rootpath //feature_integration_tests/configs:lifecycle_daemon_retry_recovers_config)",
+    },
+    pytest_config = "//:pyproject.toml",
+    tags = ["exclusive"],
+    deps = all_requirements,
+)
+
 test_suite(
     name = "fit",
     tests = [
         ":fit_cpp",
         ":fit_lifecycle_daemon",
+        ":fit_lifecycle_retries",
         ":fit_rust",
     ],
 )

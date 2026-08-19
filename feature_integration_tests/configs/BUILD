@@ -18,6 +18,8 @@ exports_files(
         "dlt_config_x86_64.json",
         "qemu_bridge_config.json",
         "lifecycle_daemon_config.json",
+        "lifecycle_daemon_retry_recovers_config.json",
+        "lifecycle_daemon_retry_exhausts_config.json",
     ],
 )
 
@@ -39,5 +41,23 @@ launch_manager_config(
     name = "lifecycle_daemon_config",
     config = ":lifecycle_daemon_config.json",
     flatbuffer_out_dir = "etc",
+    visibility = ["//visibility:public"],
+)
+
+# Dedicated configs exercising ready_recovery_action.restart.number_of_attempts in isolation
+# (see feature_integration_tests/test_cases/tests/lifecycle/test_retry_exhaustion.py):
+# "recovers" crashes fewer times than the configured attempts and must reach Running;
+# "exhausts" always crashes and must give up after exactly the configured attempts.
+launch_manager_config(
+    name = "lifecycle_daemon_retry_recovers_config",
+    config = ":lifecycle_daemon_retry_recovers_config.json",
+    flatbuffer_out_dir = "etc_retry_recovers",
+    visibility = ["//visibility:public"],
+)
+
+launch_manager_config(
+    name = "lifecycle_daemon_retry_exhausts_config",
+    config = ":lifecycle_daemon_retry_exhausts_config.json",
+    flatbuffer_out_dir = "etc_retry_exhausts",
     visibility = ["//visibility:public"],
 )
