@@ -21,6 +21,7 @@ S-CORE Platform v0.7 release note
    :safety: QM
    :security: YES
    :realizes: wp__platform_sw_release_note
+   :version: 1
 
 | **Platform Release:** S-CORE
 | **Release Tag:** v0.7.0
@@ -54,10 +55,10 @@ No new features were added in this release.
 Improvements
 ------------
 
-The release significantly expanded integration testing capabilities, with ITF upgrade and test execution now supported on both Docker and QNX targets using the new py_itf_test Bazel rule. 
-The CI/CD pipeline was overhauled — the bash-based integration script was replaced with Python and the pipeline became more robust with improved build caching, automatic cancellation of superseded runs, and workflow steps pinned to exact commit SHAs for supply-chain safety. 
+The release significantly expanded integration testing capabilities, with ITF upgrade and test execution now supported on both Docker and QNX targets using the new py_itf_test Bazel rule.
+The CI/CD pipeline was overhauled — the bash-based integration script was replaced with Python and the pipeline became more robust with improved build caching, automatic cancellation of superseded runs, and workflow steps pinned to exact commit SHAs for supply-chain safety.
 EBcLfSA integration was updated to the new structure and extended with Rust application support.
-On the documentation side, the build pipeline was fixed and an integration status dashboard was introduced to provide visibility into module health across the platform. 
+On the documentation side, the build pipeline was fixed and an integration status dashboard was introduced to provide visibility into module health across the platform.
 Infrastructure-wise, Bzlmod lockfile consistency is now enforced in CI, the AutoSD image version is frozen for reproducible builds, and image filesystem rules were migrated to the new Bazel API.
 
 
@@ -204,7 +205,7 @@ Tooling for S-CORE development.
 ITF (Integration Testing Framework)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-ITF is a pytest-based testing framework designed for ECU (Electronic Control Unit) testing in automotive domains. 
+ITF is a pytest-based testing framework designed for ECU (Electronic Control Unit) testing in automotive domains.
 It provides a flexible, plugin-based architecture that enables testing on multiple target environments including Docker containers,
 QEMU virtual machines, and real hardware.
 
