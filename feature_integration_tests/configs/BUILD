@@ -18,6 +18,7 @@ exports_files(
         "dlt_config_x86_64.json",
         "qemu_bridge_config.json",
         "lifecycle_daemon_config.json",
+        "lifecycle_daemon_parallel_launch_config.json",
         "lifecycle_daemon_retry_recovers_config.json",
         "lifecycle_daemon_retry_exhausts_config.json",
     ],
@@ -41,6 +42,18 @@ launch_manager_config(
     name = "lifecycle_daemon_config",
     config = ":lifecycle_daemon_config.json",
     flatbuffer_out_dir = "etc",
+    visibility = ["//visibility:public"],
+)
+
+# Same two supervised apps as lifecycle_daemon_config, but with no depends_on between
+# them (see feature_integration_tests/test_cases/tests/lifecycle/test_process_launching_with_daemon.py,
+# TestParallelLaunch): proves genuine parallel launch by withholding one app and asserting
+# the other still reaches Running, which lifecycle_daemon_config's rust-on-cpp dependency
+# cannot demonstrate.
+launch_manager_config(
+    name = "lifecycle_daemon_parallel_launch_config",
+    config = ":lifecycle_daemon_parallel_launch_config.json",
+    flatbuffer_out_dir = "etc_parallel_launch",
     visibility = ["//visibility:public"],
 )
 

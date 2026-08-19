@@ -34,6 +34,9 @@ _TARGET_ENV_MAP = {
     "@score_lifecycle_health//examples/rust_supervised_app:rust_supervised_app": "FIT_RUST_SUPERVISED_APP_PATH",
     "@score_lifecycle_health//examples/cpp_supervised_app:cpp_supervised_app": "FIT_CPP_SUPERVISED_APP_PATH",
     "//feature_integration_tests/configs:lifecycle_daemon_config": "FIT_LIFECYCLE_DAEMON_CONFIG_PATH",
+    "//feature_integration_tests/configs:lifecycle_daemon_parallel_launch_config": (
+        "FIT_LIFECYCLE_PARALLEL_LAUNCH_CONFIG_PATH"
+    ),
     "//feature_integration_tests/test_cases/support_apps/flaky_startup_app:flaky_startup_app": (
         "FIT_FLAKY_STARTUP_APP_PATH"
     ),
@@ -355,6 +358,8 @@ def start_launch_manager_daemon(
     tmp_path_factory: pytest.TempPathFactory,
     blocked_apps: frozenset[str] = frozenset(),
     wait_for_apps: bool = True,
+    config_target: str = "//feature_integration_tests/configs:lifecycle_daemon_config",
+    runtime_root: Path = Path("/tmp/lifecycle_fit"),
 ) -> dict[str, Any]:
     """Start a real launch_manager process with generated flatbuffer config.
 
@@ -362,7 +367,9 @@ def start_launch_manager_daemon(
     non-executable, so launch_manager cannot start them until the caller
     chmod's them back to 0o755. Used to exercise the dependency-gating
     negative path: assert the dependent app stays down while its
-    dependency is withheld, then unblock and assert it starts.
+    dependency is withheld, then unblock and assert it starts - and, with
+    an independent config (no depends_on between the two apps), the inverse:
+    assert the other app starts anyway, proving it isn't gated at all.
 
     Relies on tags = ["exclusive"] on the bazel test targets that use this:
     only one lifecycle daemon (sharing the runtime_root/lock below) may run
@@ -376,7 +383,6 @@ def start_launch_manager_daemon(
     etc_dir = work_dir / "etc"
     etc_dir.mkdir(parents=True, exist_ok=True)
 
-    runtime_root = Path("/tmp/lifecycle_fit")
     if runtime_root.exists():
         try:
             shutil.rmtree(runtime_root)
@@ -396,7 +402,7 @@ def start_launch_manager_daemon(
     rust_supervised = _resolve_target_path("@score_lifecycle_health//examples/rust_supervised_app:rust_supervised_app")
     cpp_supervised = _resolve_target_path("@score_lifecycle_health//examples/cpp_supervised_app:cpp_supervised_app")
 
-    config_artifact = _resolve_target_path("//feature_integration_tests/configs:lifecycle_daemon_config")
+    config_artifact = _resolve_target_path(config_target)
 
     lm_dst = work_dir / "launch_manager"
     shutil.copy2(launch_manager, lm_dst)

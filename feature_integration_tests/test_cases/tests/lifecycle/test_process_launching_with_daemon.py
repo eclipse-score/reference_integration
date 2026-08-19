@@ -43,6 +43,8 @@ from daemon_helpers import (
     launch_manager_daemon,
     pgrep_cmdline_pattern,
     signal_process,
+    start_launch_manager_daemon,
+    stop_launch_manager_daemon,
     wait_until,
 )
 from test_properties import add_test_properties
@@ -441,6 +443,72 @@ class TestProcessLaunchingWithDaemon:
             "whole run target instead of retrying only the failed app per the configured "
             "restart policy"
         )
+
+
+@pytest.mark.daemon
+class TestParallelLaunch:
+    """Verify genuinely parallel launch of independent components.
+
+    Runs its own launch_manager instance (rather than the shared class-scoped
+    `launch_manager_daemon` fixture used by TestProcessLaunchingWithDaemon) against
+    a dedicated runtime_root (/tmp/lifecycle_fit_parallel), for two reasons:
+
+    1. `lifecycle_daemon_parallel_launch_config.json` has no depends_on between the
+       two apps, unlike the shared fixture's config - that's the whole point.
+    2. The shared `_acquire_runtime_root_lock` flock is not re-entrant within a
+       process: a class-scoped `launch_manager_daemon` fixture holds that lock for
+       the lifetime of its class, so calling `start_launch_manager_daemon` again
+       from a test in the *same* class would deadlock against its own fixture.
+       Keeping this in a class that never requests `launch_manager_daemon` avoids
+       that regardless of test execution order.
+
+    Parametrized on `version` only because the module-level `pytestmark` applies it
+    to every class in this file; parallel launch itself is independent of which
+    scenario variant is under test elsewhere, so `version` is unused here.
+    """
+
+    @add_test_properties(
+        partially_verifies=["feat_req__lifecycle__parallel_launch_support"],
+        test_type="requirements-based",
+        derivation_technique="requirements-analysis",
+    )
+    def test_independent_processes_launch_without_waiting_on_each_other(
+        self,
+        tmp_path_factory: pytest.TempPathFactory,
+        version: str,
+    ) -> None:
+        """Verify two independent components launch in parallel, not one-after-the-other.
+
+        `lifecycle_daemon_config.json` has rust_supervised_app depend on
+        cpp_supervised_app, so it cannot demonstrate parallel launch - both apps
+        eventually running there is equally consistent with strict serialization.
+
+        Runs against `lifecycle_daemon_parallel_launch_config.json`, where neither
+        app depends on the other, and withholds one app's binary (non-executable) at
+        a time. If launch order were still serialized (e.g. alphabetically or by
+        declaration order), withholding the first-launched app would also block the
+        second. The other app reaching Running regardless of which one is withheld
+        shows launch does not wait on the withheld one, i.e. genuine parallel launch.
+
+        `version` is unused but required by the module-scope parametrize.
+        """
+        for blocked, other in (("cpp", "rust"), ("rust", "cpp")):
+            daemon_info = start_launch_manager_daemon(
+                tmp_path_factory,
+                blocked_apps=frozenset({blocked}),
+                wait_for_apps=False,
+                config_target="//feature_integration_tests/configs:lifecycle_daemon_parallel_launch_config",
+                runtime_root=Path("/tmp/lifecycle_fit_parallel"),
+            )
+            try:
+                other_path = str(daemon_info["apps"][other])
+                other_started = wait_until(lambda: is_running(other_path), timeout_s=8.0)
+                assert other_started, (
+                    f"{other}_supervised_app did not start while {blocked}_supervised_app was "
+                    "withheld, even though neither depends on the other - launch is not parallel"
+                )
+            finally:
+                stop_launch_manager_daemon(daemon_info)
 
 
 @pytest.mark.daemon

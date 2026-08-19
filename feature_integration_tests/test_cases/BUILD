@@ -35,11 +35,6 @@ compile_pip_requirements(
 )
 
 # Tests targets
-#
-# fit_rust_orch has no fit_cpp_orch counterpart: every test currently under tests/basic/ is
-# @pytest.mark.rust-only, so there is nothing for a cpp target to select today. If a
-# cpp-marked test is ever added under tests/basic/, add a matching fit_cpp_orch
-# (`-m cpp`, --cpp-target-path) target - otherwise it would silently never run in CI.
 score_py_pytest(
     name = "fit_rust_orch",
     timeout = "long",
@@ -119,6 +114,26 @@ test_suite(
 )
 
 score_py_pytest(
+    name = "fit_cpp_orch",
+    timeout = "long",
+    srcs = glob(["tests/basic/**/*.py"]),
+    args = [
+        "-m cpp",
+        "--traces=all",
+        "--cpp-target-path=$(rootpath //feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios)",
+    ],
+    data = [
+        "conftest.py",
+        "fit_scenario.py",
+        "persistency_scenario.py",
+        "test_properties.py",
+        "//feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios",
+    ],
+    pytest_config = "//:pyproject.toml",
+    deps = all_requirements,
+)
+
+score_py_pytest(
     name = "fit_cpp_persistency",
     timeout = "long",
     srcs = glob(["tests/persistency/**/*.py"]),
@@ -161,6 +176,7 @@ score_py_pytest(
 test_suite(
     name = "fit_cpp",
     tests = [
+        ":fit_cpp_orch",
         ":fit_cpp_persistency",
         ":fit_cpp_scenario_lifecycle",
     ],
@@ -185,6 +201,7 @@ score_py_pytest(
         "daemon_helpers.py",
         "test_properties.py",
         "//feature_integration_tests/configs:lifecycle_daemon_config",
+        "//feature_integration_tests/configs:lifecycle_daemon_parallel_launch_config",
         "@score_lifecycle_health//examples/control_application:control_daemon",
         "@score_lifecycle_health//examples/control_application:lmcontrol",
         "@score_lifecycle_health//examples/cpp_supervised_app",
@@ -195,6 +212,7 @@ score_py_pytest(
         "FIT_CPP_SUPERVISED_APP_PATH": "$(rootpath @score_lifecycle_health//examples/cpp_supervised_app)",
         "FIT_LAUNCH_MANAGER_PATH": "$(rootpath @score_lifecycle_health//score/launch_manager)",
         "FIT_LIFECYCLE_DAEMON_CONFIG_PATH": "$(rootpath //feature_integration_tests/configs:lifecycle_daemon_config)",
+        "FIT_LIFECYCLE_PARALLEL_LAUNCH_CONFIG_PATH": "$(rootpath //feature_integration_tests/configs:lifecycle_daemon_parallel_launch_config)",
         "FIT_RUST_SUPERVISED_APP_PATH": "$(rootpath @score_lifecycle_health//examples/rust_supervised_app)",
         "RUST_BACKTRACE": "1",
     },
