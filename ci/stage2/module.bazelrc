@@ -75,6 +75,9 @@ build:ferrocene-coverage --@rules_rust//rust/settings:extra_exec_rustc_flag=-Cco
 build:ferrocene-coverage --@rules_rust//rust/settings:extra_exec_rustc_flag=-Cdebuginfo=2
 test:ferrocene-coverage --run_under=@score_tooling//coverage:llvm_profile_wrapper
 
+# Coverage needs to have all intermediate .rlibs to be able to proceed
+build:ferrocene-coverage --remote_download_all
+
 # score_persistency's rust_coverage_config; its own .bazelrc does not define this name, so this
 # is the sole source. Only the two score_baselibs settings are ported -- deps persistency itself
 # declares, so they resolve in its checkout. ref_int's root .bazelrc has a third,
