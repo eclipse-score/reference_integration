@@ -48,19 +48,13 @@ bazel run //feature_integration_tests/test_scenarios/rust:rust_test_scenarios --
 bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit --test_output=streamed
 ```
 
-The Rust side of this lifecycle-only suite uses a dedicated Bazel target,
-`//feature_integration_tests/test_scenarios/rust:rust_lifecycle_test_scenarios`,
-which still reuses `test_scenarios/rust/src/main.rs`. It is built with the
-`lifecycle_only` cfg so only lifecycle scenarios are compiled for that suite,
-while the normal `fit` and `fit_rust` targets continue to use the full scenario tree.
-
 To run the lifecycle tests directly with `pytest` and build the scenario binaries on demand:
 
 ```sh
 python3 -m pytest feature_integration_tests/test_cases/tests/lifecycle/ \
   --build-scenarios \
   -m rust \
-  --rust-target-name=//feature_integration_tests/test_scenarios/rust:rust_lifecycle_test_scenarios \
+  --rust-target-name=//feature_integration_tests/test_scenarios/rust:rust_test_scenarios \
   -q -v
 
 python3 -m pytest feature_integration_tests/test_cases/tests/lifecycle/ \

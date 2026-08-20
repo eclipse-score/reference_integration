@@ -32,29 +32,3 @@ rust_binary(
         "@score_test_scenarios//test_scenarios_rust",
     ],
 )
-
-rust_binary(
-    name = "rust_lifecycle_test_scenarios",
-    srcs = [
-        "src/main.rs",
-        "src/scenarios/lifecycle/conditional_launching.rs",
-        "src/scenarios/lifecycle/mod.rs",
-    ],
-    crate_root = "src/main.rs",
-    # Build the lifecycle-only Rust FIT from the same main.rs entrypoint.
-    # This target is a temporary workaround for the unresolved ScoreDebug
-    # dependency in score_persistency/rust_kvs.
-    # Tracking issue: https://github.com/eclipse-score/persistency/issues/375
-    # Remove this target when the issue is fixed upstream.
-    rustc_flags = ["--cfg=lifecycle_only"],
-    tags = [
-        "manual",
-    ],
-    visibility = ["//visibility:public"],
-    deps = [
-        "@score_crates//:serde_json",
-        "@score_crates//:tracing",
-        "@score_crates//:tracing_subscriber",
-        "@score_test_scenarios//test_scenarios_rust",
-    ],
-)

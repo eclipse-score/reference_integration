@@ -88,14 +88,14 @@ score_py_pytest(
     args = [
         "-m rust",
         "--traces=all",
-        "--rust-target-path=$(rootpath //feature_integration_tests/test_scenarios/rust:rust_lifecycle_test_scenarios)",
+        "--rust-target-path=$(rootpath //feature_integration_tests/test_scenarios/rust:rust_test_scenarios)",
     ],
     data = [
         "conftest.py",
         "fit_scenario.py",
         "lifecycle_scenario.py",
         "test_properties.py",
-        "//feature_integration_tests/test_scenarios/rust:rust_lifecycle_test_scenarios",
+        "//feature_integration_tests/test_scenarios/rust:rust_test_scenarios",
     ],
     env = {
         "RUST_BACKTRACE": "1",
