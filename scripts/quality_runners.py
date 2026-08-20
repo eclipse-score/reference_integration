@@ -128,13 +128,16 @@ def stage2_module_command(module: Module, startup: list[str] | None) -> list[str
     needed, and a coverage run legitimately evaluates further ones (test runners, lcov tooling)
     that ``=error`` would reject. :func:`selection_digest` preserves the guarantee instead --
     extension results may grow, selected versions may not move.
+
+    ``--instrumentation_filter=^//``: without it, Bazel derives one from the test packages only,
+    silently dropping code the tests exercise but don't live in (e.g. score_baselibs' score/os).
     """
     return (
         ["bazel"]
         + (startup or [])
         + ["coverage"]  # coverage, not test: the .dat files come out of the same run
         + stage2_config_flags(module)
-        + ["--lockfile_mode=update"]
+        + ["--lockfile_mode=update", "--instrumentation_filter=^//"]
         + stage2_target_args(module)
     )
 
