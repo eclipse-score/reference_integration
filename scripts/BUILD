@@ -21,7 +21,7 @@ py_library(
         "quality_runners.py",
     ],
     visibility = ["//visibility:public"],
-    deps = ["//scripts/known_good:known_good"],
+    deps = ["//scripts/known_good"],
 )
 
 # No `data` needed: the tests point STAGE2_RC at a temp file rather than reading
