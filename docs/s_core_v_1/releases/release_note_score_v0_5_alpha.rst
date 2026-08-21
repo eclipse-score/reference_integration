@@ -21,6 +21,7 @@ S-CORE Platform v0.5-alpha release note
    :safety: ASIL_B
    :security: YES
    :realizes: wp__platform_sw_release_note
+   :version: 1
 
 | **Platform Name**: S-CORE
 | **Release Tag**: v0.5.0-alpha
