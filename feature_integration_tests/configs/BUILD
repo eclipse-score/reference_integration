@@ -10,11 +10,17 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+load("@score_lifecycle_health//:defs.bzl", "launch_manager_config")
+
 exports_files(
     [
         "dlt_config_qnx_x86_64.json",
         "dlt_config_x86_64.json",
         "qemu_bridge_config.json",
+        "lifecycle_daemon_config.json",
+        "lifecycle_daemon_parallel_launch_config.json",
+        "lifecycle_daemon_retry_recovers_config.json",
+        "lifecycle_daemon_retry_exhausts_config.json",
     ],
 )
 
@@ -29,5 +35,42 @@ filegroup(
         "etc/logging.json",
         "etc/mw_com_config.json",
     ],
+    visibility = ["//visibility:public"],
+)
+
+launch_manager_config(
+    name = "lifecycle_daemon_config",
+    config = ":lifecycle_daemon_config.json",
+    flatbuffer_out_dir = "etc",
+    visibility = ["//visibility:public"],
+)
+
+# Same two supervised apps as lifecycle_daemon_config, but with no depends_on between
+# them (see feature_integration_tests/test_cases/tests/lifecycle/test_process_launching_with_daemon.py,
+# TestParallelLaunch): proves genuine parallel launch by withholding one app and asserting
+# the other still reaches Running, which lifecycle_daemon_config's rust-on-cpp dependency
+# cannot demonstrate.
+launch_manager_config(
+    name = "lifecycle_daemon_parallel_launch_config",
+    config = ":lifecycle_daemon_parallel_launch_config.json",
+    flatbuffer_out_dir = "etc_parallel_launch",
+    visibility = ["//visibility:public"],
+)
+
+# Dedicated configs exercising ready_recovery_action.restart.number_of_attempts in isolation
+# (see feature_integration_tests/test_cases/tests/lifecycle/test_retry_exhaustion.py):
+# "recovers" crashes fewer times than the configured attempts and must reach Running;
+# "exhausts" always crashes and must give up after exactly the configured attempts.
+launch_manager_config(
+    name = "lifecycle_daemon_retry_recovers_config",
+    config = ":lifecycle_daemon_retry_recovers_config.json",
+    flatbuffer_out_dir = "etc_retry_recovers",
+    visibility = ["//visibility:public"],
+)
+
+launch_manager_config(
+    name = "lifecycle_daemon_retry_exhausts_config",
+    config = ":lifecycle_daemon_retry_exhausts_config.json",
+    flatbuffer_out_dir = "etc_retry_exhausts",
     visibility = ["//visibility:public"],
 )
