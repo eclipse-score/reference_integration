@@ -39,6 +39,7 @@ from known_good.resolved_dependencies import (  # noqa: E402
     _compare_versions,
     _declared_dep_specs,
     _declared_deps,
+    _workspace_path,
 )
 
 KNOWN_GOOD = {
@@ -1021,3 +1022,16 @@ class TestFromResolvedArtifact:
         (tmp_path / "score_modules_target_sw.MODULE.bazel").write_text("bazel_dep(name='x')\n")
         with pytest.raises(FileNotFoundError, match=MANIFEST_NAME):
             ResolvedDependencies.from_resolved_artifact(tmp_path)
+
+
+class TestWorkspacePath:
+    """bazel run's cwd is the runfiles tree, so relative CLI paths must anchor at repo_root."""
+
+    def test_relative_path_is_anchored_at_the_workspace(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+        monkeypatch.setenv("BUILD_WORKSPACE_DIRECTORY", str(tmp_path))
+        assert _workspace_path(Path("_resolved_deps") / MANIFEST_NAME) == tmp_path / "_resolved_deps" / MANIFEST_NAME
+
+    def test_absolute_path_is_taken_as_given(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+        monkeypatch.setenv("BUILD_WORKSPACE_DIRECTORY", str(tmp_path / "workspace"))
+        absolute = tmp_path / "elsewhere" / "graph.json"
+        assert _workspace_path(absolute) == absolute

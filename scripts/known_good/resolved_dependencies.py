@@ -52,6 +52,16 @@ def _repo_root() -> Path:
     return _HERE.parents[1]
 
 
+def _workspace_path(path: Path) -> Path:
+    """Anchor a relative command-line path at :func:`_repo_root`.
+
+    ``bazel run`` executes the binary with the runfiles tree as its working directory, so a
+    relative path would be read from — or, worse, written into — runfiles instead of the
+    user's workspace. Absolute paths are taken as given.
+    """
+    return path if path.is_absolute() else _repo_root() / path
+
+
 try:
     from known_good.models.known_good import load_known_good
     from known_good.models.module import Module
@@ -995,7 +1005,7 @@ def main() -> None:
     if args.export is not None:
         if args.mod_graph is None:
             raise SystemExit("--export requires --mod-graph (output of 'bazel mod graph --output=json')")
-        mod_graph = Path(args.mod_graph)
+        mod_graph = _workspace_path(args.mod_graph)
         if not mod_graph.is_file():
             raise SystemExit(
                 f"--mod-graph {mod_graph} does not exist. Produce it first with: "
@@ -1008,14 +1018,14 @@ def main() -> None:
             if f.is_file()
         ]
         resolved = ResolvedDependencies.from_mod_graph(mod_graph, override_files)
-        export = Path(args.export)
+        export = _workspace_path(args.export)
         export.parent.mkdir(parents=True, exist_ok=True)
         resolved.to_file(export)
         # Stage 2 needs the graph too: the manifest says which version each module resolves
         # to, the graph says which of them a given module actually depends on.
         graph_copy = export.parent / GRAPH_NAME
         graph_copy.write_text(mod_graph.read_text())
-        report_path = args.report or export.parent / REPORT_NAME
+        report_path = _workspace_path(args.report) if args.report else export.parent / REPORT_NAME
         resolved.write_report(report_path)
         counts = resolved.report["counts"]
         print(f"Wrote resolved dependency manifest ({len(resolved.names)} modules) to {export}")
@@ -1039,11 +1049,13 @@ def main() -> None:
             "Stage-1 resolved set. known_good.json carries only first-party pins and no "
             "transitive versions, so it cannot back the injection."
         )
-    resolved = ResolvedDependencies.from_resolved_artifact(args.resolved_deps)
-    graph = DependencyGraph.from_file(Path(args.resolved_deps) / GRAPH_NAME)
+    module_bazel = _workspace_path(args.module_bazel)
+    resolved_deps = _workspace_path(args.resolved_deps)
+    resolved = ResolvedDependencies.from_resolved_artifact(resolved_deps)
+    graph = DependencyGraph.from_file(resolved_deps / GRAPH_NAME)
 
     patched = resolved.overwrite(
-        args.module_bazel,
+        module_bazel,
         graph,
         module_under_test=args.module_under_test,
         write=not args.dry_run,
@@ -1051,7 +1063,7 @@ def main() -> None:
     if args.dry_run:
         print(patched)
     else:
-        print(f"Injected resolved-deps overrides into {args.module_bazel}")
+        print(f"Injected resolved-deps overrides into {module_bazel}")
 
 
 if __name__ == "__main__":
