@@ -21,8 +21,8 @@ This is a fact about the FIT's own test code, not about launch_manager - no test
 or drives an actual launch_manager instance, so none of them verify a `feat_req__lifecycle__*`
 requirement of the lifecycle module. That verification belongs to the daemon-driven tests in
 test_conditional_launching.py / test_process_launching_with_daemon.py, or a future test that
-exercises this same wait-condition logic through launch_manager's real config. Do not add
-`@add_test_properties(partially_verifies=[...])` claims to classes in this file.
+exercises this same wait-condition logic through launch_manager's real config. Hence no add
+`@add_test_properties(partially_verifies=[...])` claims have been added to classes in this file.
 """
 
 import os

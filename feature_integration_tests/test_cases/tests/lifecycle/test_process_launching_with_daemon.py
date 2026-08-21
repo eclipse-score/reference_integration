@@ -396,6 +396,7 @@ class TestProcessLaunchingWithDaemon:
     @add_test_properties(
         partially_verifies=[
             "feat_req__lifecycle__monitor_abnormal_term",
+            "feat_req__lifecycle__recovery_action_support",
         ],
         test_type="requirements-based",
         derivation_technique="requirements-analysis",
@@ -512,7 +513,6 @@ class TestParallelLaunch:
 
 
 @pytest.mark.daemon
-@pytest.mark.manual
 class TestHealthMonitoringWithDaemon:
     """
     Health monitoring / watchdog tests with daemon.
