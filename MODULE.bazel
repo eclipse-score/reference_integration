@@ -41,6 +41,11 @@ include("//bazel_common:score_modules_target_sw.MODULE.bazel")
 # Score test images
 include("//bazel_common:score_images.MODULE.bazel")
 
+# Single-version locks for the deps Stage 2 collects test artifacts from (GTest, the Rust
+# test rules, the ferrocene coverage tooling). Read after the includes above so it pins the
+# versions they bring in transitively.
+include("//bazel_common:score_test_artifact_versions.MODULE.bazel")
+
 bazel_dep(name = "rules_boost", repo_name = "com_github_nelhage_rules_boost")
 archive_override(
     module_name = "rules_boost",
