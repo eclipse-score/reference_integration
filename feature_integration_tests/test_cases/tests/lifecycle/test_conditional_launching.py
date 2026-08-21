@@ -31,8 +31,6 @@ from daemon_helpers import (
 )
 from test_properties import add_test_properties
 
-pytestmark = [pytest.mark.daemon]
-
 
 @pytest.mark.parametrize("version", ["rust", "cpp"], scope="class")
 class TestConditionalLaunchingWithDaemon:

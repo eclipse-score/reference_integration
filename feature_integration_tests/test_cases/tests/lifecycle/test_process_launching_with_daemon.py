@@ -54,7 +54,6 @@ pytestmark = [
 ]
 
 
-@pytest.mark.daemon
 class TestProcessLaunchingWithDaemon:
     """
     Verify lifecycle management with running Launch Manager daemon.
@@ -446,7 +445,6 @@ class TestProcessLaunchingWithDaemon:
         )
 
 
-@pytest.mark.daemon
 class TestParallelLaunch:
     """Verify genuinely parallel launch of independent components.
 
@@ -512,7 +510,6 @@ class TestParallelLaunch:
                 stop_launch_manager_daemon(daemon_info)
 
 
-@pytest.mark.daemon
 class TestHealthMonitoringWithDaemon:
     """
     Health monitoring / watchdog tests with daemon.
