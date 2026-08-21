@@ -120,6 +120,37 @@ class TestLoadKnownGoodFullFile:
         ]
         assert persistency.metadata.exclude_test_targets == []
 
+    def test_metadata_exclude_test_target_reasons_round_trip(self, tmp_path: Path):
+        """A reason survives load -> to_dict, keyed by the label it explains."""
+        target = "//src/cpp/tests:bm_kvs_cpp"
+        payload = {
+            "modules": {
+                "target_sw": {
+                    "score_x": {
+                        "repo": "https://github.com/eclipse-score/x.git",
+                        "hash": "a" * 40,
+                        "metadata": {
+                            "exclude_test_targets": [target],
+                            "exclude_test_target_reasons": {target: "benchmark, not a test"},
+                        },
+                    }
+                }
+            },
+            "timestamp": "2026-02-01T00:00:00+00:00Z",
+        }
+        p = tmp_path / "known_good.json"
+        p.write_text(json.dumps(payload))
+
+        meta = load_known_good(p).modules["target_sw"]["score_x"].metadata
+        assert meta.exclude_test_target_reasons == {target: "benchmark, not a test"}
+        assert meta.to_dict()["exclude_test_target_reasons"] == {target: "benchmark, not a test"}
+
+    def test_metadata_exclude_test_target_reasons_defaults_empty(self, full_json_file: Path):
+        """Absent in the JSON is an empty mapping, not a KeyError."""
+        known_good = load_known_good(full_json_file)
+        baselibs = known_good.modules["target_sw"]["score_baselibs"]
+        assert baselibs.metadata.exclude_test_target_reasons == {}
+
     def test_metadata_code_root_path(self, full_json_file: Path):
         known_good = load_known_good(full_json_file)
         baselibs = known_good.modules["target_sw"]["score_baselibs"]
@@ -228,3 +259,33 @@ class TestLoadKnownGoodErrors:
         minimal_json_file.write_text(json.dumps(data))
         m = load_known_good(minimal_json_file).modules["target_sw"]["score_baselibs"]
         assert m.bazel_patches == ["//patch:foo.patch"]
+
+
+class TestRealKnownGoodExclusions:
+    """Every exclusion in the shipped known_good.json must explain itself.
+
+    Stage 2 (DR-008 Option 4) runs each module as the Bazel *root*, which retired the blanket
+    justification the exclusion list used to rely on -- dev_dependency-only deps being invisible
+    from ref_int's resolved graph. Without a recorded reason there is no way to tell a
+    scope-independent exclusion (a benchmark, a sanitizer target) from a stale workaround, which
+    is how the list accumulated 16 entries nobody could account for.
+    """
+
+    def test_every_exclusion_has_a_reason(self, real_known_good):
+        missing = [
+            (name, target)
+            for name, module in real_known_good.modules["target_sw"].items()
+            for target in module.metadata.exclude_test_targets
+            if not module.metadata.exclude_test_target_reasons.get(target, "").strip()
+        ]
+        assert not missing, f"exclusions with no recorded reason: {missing}"
+
+    def test_no_reasons_for_targets_that_are_not_excluded(self, real_known_good):
+        """A reason left behind after its exclusion was dropped is stale documentation."""
+        orphans = [
+            (name, target)
+            for name, module in real_known_good.modules["target_sw"].items()
+            for target in module.metadata.exclude_test_target_reasons
+            if target not in module.metadata.exclude_test_targets
+        ]
+        assert not orphans, f"reasons with no matching exclusion: {orphans}"

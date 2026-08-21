@@ -17,7 +17,6 @@ Captures warning counts for regression tracking and generates build summaries.
 """
 
 import argparse
-import json
 import os
 import re
 import subprocess
@@ -27,7 +26,6 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, Optional, Tuple
 
-from models.build_config import BuildModuleConfig, load_build_config
 from known_good.models import Module
 from known_good.models.known_good import load_known_good
 
@@ -267,12 +265,6 @@ def main():
         help="Path to known_good.json file (default: known_good.json in repo root)",
     )
     parser.add_argument(
-        "--build-config",
-        type=Path,
-        default=None,
-        help="Path to build_config.json file (default: build_config.json in repo root)",
-    )
-    parser.add_argument(
         "--config",
         default=os.environ.get("CONFIG", "x86_64-linux"),
         help="Bazel config to use (default: x86_64-linux, or from CONFIG env var)",
@@ -288,13 +280,6 @@ def main():
     known_good_file = args.known_good
     if not known_good_file:
         known_good_file = repo_root / "known_good.json"
-
-    build_config_file = args.build_config
-    if not build_config_file:
-        build_config_file = repo_root / "build_config.json"
-
-    # Load build configuration
-    BUILD_TARGET_GROUPS = load_build_config(build_config_file)
 
     # Create log directory
     log_dir.mkdir(parents=True, exist_ok=True)
@@ -333,11 +318,16 @@ def main():
     overall_depr_total = 0
     any_failed = False
 
-    # Build each group
-    for group_name, module_config in BUILD_TARGET_GROUPS.items():
+    # Derive build targets from known_good.json (build_config.json was removed in #101;
+    # known_good.json is the single source of truth for module locations).
+    all_modules = {name: module for group in new_modules.values() for name, module in group.items()}
+
+    # Build each module
+    for group_name, module in all_modules.items():
+        build_targets = f"@{module.name}{module.metadata.code_root_path}"
         log_file = log_dir / f"{group_name}-{config}.log"
 
-        exit_code, duration = build_group(group_name, module_config.build_targets, config, log_file)
+        exit_code, duration = build_group(group_name, build_targets, config, log_file)
 
         if exit_code != 0:
             any_failed = True
