@@ -69,7 +69,7 @@ py_itf_test(
             "//feature_integration_tests/configs:qemu_bridge_config.json",
             "//images/qnx_x86_64:image",
         ],
-    }),
+    }) + ["conftest.py"],
     plugins = select(
         {
             ":config_linux_x86_64": [
