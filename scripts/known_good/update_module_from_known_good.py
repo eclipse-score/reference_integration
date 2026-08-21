@@ -257,6 +257,7 @@ Note:
 
     # Generate files based on structure (flat vs grouped)
     output_dir_modules = os.path.abspath(args.output_dir_modules)
+    output_dir_coverage = Path(args.output_dir_coverage)
     os.makedirs(output_dir_modules, exist_ok=True)
 
     generated_files = []
@@ -273,7 +274,7 @@ Note:
         output_filename = f"score_modules_{group_name}.MODULE.bazel"
 
         output_path_modules = os.path.join(output_dir_modules, output_filename)
-        output_path_coverage = args.output_dir_coverage / "BUILD"
+        output_path_coverage = output_dir_coverage / "BUILD"
 
         # Generate file content of MODULE files
         content_module = generate_file_content(

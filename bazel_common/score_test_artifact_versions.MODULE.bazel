@@ -11,10 +11,16 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 #
-# Single versions for the deps Stage 2 collects test artifacts from. A bazel_dep version is
-# only a floor that MVS raises silently; the override is what makes ref_int's version reach
-# resolved_versions.json and every downstream module. Deps nothing is collected from are
-# deliberately absent -- hedron_compile_commands never enters the resolved set at all.
+# Deliberate ceilings for the deps Stage 2 collects test artifacts from.
+#
+# ref_int's resolved set is imposed on every module under test whether a dependency is named here or
+# not; this file does not decide *which* deps get pinned. It decides which of those pins are a
+# decision rather than an inheritance. `bazel_dep(version = ...)` is only a floor that MVS raises
+# silently, while `single_version_override` is also a ceiling, so the versions below are ones Stage 1
+# reports as `asserted` rather than `incidental`.
+#
+# Every version here equals what MVS resolves today, so this changes no build now -- only what
+# happens the day something in the graph asks for more.
 
 # C++ test binaries and the coverage .dat files genhtml reads.
 single_version_override(

@@ -1,0 +1,171 @@
+diff --git a/score/config_management/config_provider/BUILD b/score/config_management/config_provider/BUILD
+index e0d763b..0dd66b9 100644
+--- a/score/config_management/config_provider/BUILD
++++ b/score/config_management/config_provider/BUILD
+@@ -14,13 +14,6 @@ alias(
+     visibility = ["//visibility:public"],
+ )
+ 
+-cc_library(
+-    name = "config_provider_factory_impl",
+-    tags = ["FUSA"],
+-    visibility = ["//visibility:public"],
+-    deps = ["//score/config_management/config_provider/code/config_provider/factory:factory_socal_r20_11"],
+-)
+-
+ cc_library(
+     name = "config_provider_mw_com",
+     tags = ["FUSA"],
+@@ -28,12 +21,6 @@ cc_library(
+     deps = ["//score/config_management/config_provider/code/config_provider/factory:factory_mw_com"],
+ )
+ 
+-alias(
+-    name = "config_provider_factory_for_unit_test",
+-    actual = "//score/config_management/config_provider/code/config_provider/factory:factory_socal_r20_11_for_unit_tests",
+-    visibility = ["//visibility:public"],
+-)
+-
+ cc_unit_test_suites_for_host_and_qnx(
+     name = "unit_tests",
+     test_suites_from_sub_packages = [
+@@ -45,14 +32,6 @@ cc_unit_test_suites_for_host_and_qnx(
+     visibility = ["//score/config_management:__pkg__"],
+ )
+ 
+-test_suite(
+-    name = "component_tests",
+-    tests = [
+-        "//score/config_management/config_provider/test/sct:component_tests",
+-    ],
+-    visibility = ["//score/config_management:__pkg__"],
+-)
+-
+ clang_tidy_extra_checks(
+     name = "clang_tidy_extra_checks",
+     extra_features = [
+diff --git a/score/config_management/config_provider/code/config_provider/details/config_provider_impl.cpp b/score/config_management/config_provider/code/config_provider/details/config_provider_impl.cpp
+index 6784355..c6f05ea 100644
+--- a/score/config_management/config_provider/code/config_provider/details/config_provider_impl.cpp
++++ b/score/config_management/config_provider/code/config_provider/details/config_provider_impl.cpp
+@@ -46,7 +46,7 @@ std::string GetParameterSetValue(mw::log::Logger& logger, const ParameterSet& pa
+ }  // namespace
+ 
+ ConfigProviderImpl::ConfigProviderImpl(
+-    mw::service::OptionalProxyData<IInternalConfigProvider> proxy_data,
++    mw::service::ProxyFuture<std::unique_ptr<IInternalConfigProvider>> proxy_future,
+     score::cpp::stop_token user_stop_token,
+     score::cpp::pmr::memory_resource* const memory_resource,
+     score::cpp::optional<std::size_t> max_samples_limit,
+@@ -78,22 +78,23 @@ ConfigProviderImpl::ConfigProviderImpl(
+     score::cpp::ignore = proxy_available_thread_.emplace(
+         [this](const score::cpp::stop_token jthread_stop_token,
+                decltype(callback) notification_callback,
+-               decltype(proxy_data) pd) mutable {
+-            auto proxy_holder = pd.GetProxyFuture().Get(jthread_stop_token);
+-            pd.StopServiceDiscovery();
+-            if (proxy_holder.has_value())
++               decltype(proxy_future) pf) mutable {
++            auto proxy_holder = pf.Get(jthread_stop_token);
++            if (proxy_holder.has_value() && (proxy_holder.value() != nullptr))
+             {
+                 logger_.LogInfo() << "ProxyAvailableThread: InternalConfigProvider proxy is connected";
+                 SetupInternalConfigProvider(
+-                    std::move(proxy_holder).value(), std::move(notification_callback), jthread_stop_token);
++                    std::shared_ptr<IInternalConfigProvider>(std::move(proxy_holder).value()),
++                    std::move(notification_callback),
++                    jthread_stop_token);
+             }
+             else
+             {
+-                logger_.LogInfo() << "ProxyAvailableThread: No proxy found: " << proxy_holder.error().Message();
++                logger_.LogInfo() << "ProxyAvailableThread: No proxy found";
+             }
+         },
+         std::move(callback),
+-        std::move(proxy_data));
++        std::move(proxy_future));
+ 
+     score::cpp::ignore = stop_callback_.emplace(user_stop_token, [this]() {
+         score::cpp::ignore = proxy_available_thread_->request_stop();
+diff --git a/score/config_management/config_provider/code/config_provider/details/config_provider_impl.h b/score/config_management/config_provider/code/config_provider/details/config_provider_impl.h
+index 508555c..7630e60 100644
+--- a/score/config_management/config_provider/code/config_provider/details/config_provider_impl.h
++++ b/score/config_management/config_provider/code/config_provider/details/config_provider_impl.h
+@@ -24,6 +24,7 @@
+ 
+ #include "score/concurrency/condition_variable.h"
+ #include "score/mw/service/proxy_data.h"
++#include "score/mw/service/proxy_future.h"
+ 
+ #include <score/jthread.hpp>
+ #include <score/memory.hpp>
+@@ -87,7 +88,7 @@ class ConfigProviderImpl final : public ConfigProvider
+     bool IsAwaitingProxyConnection() const noexcept;
+ 
+     ConfigProviderImpl(
+-        mw::service::OptionalProxyData<IInternalConfigProvider> proxy_data,
++        mw::service::ProxyFuture<std::unique_ptr<IInternalConfigProvider>> proxy_future,
+         score::cpp::stop_token user_stop_token,
+         score::cpp::pmr::memory_resource* const memory_resource,
+         score::cpp::optional<std::size_t> max_samples_limit,
+diff --git a/score/config_management/config_provider/code/config_provider/details/config_provider_impl_test.cpp b/score/config_management/config_provider/code/config_provider/details/config_provider_impl_test.cpp
+index 8bd5f2f..ed559ea 100644
+--- a/score/config_management/config_provider/code/config_provider/details/config_provider_impl_test.cpp
++++ b/score/config_management/config_provider/code/config_provider/details/config_provider_impl_test.cpp
+@@ -182,7 +182,7 @@ class ConfigProviderTest : public ::testing::Test
+     auto CreateConfigProviderWithAvailableCallback(IsAvailableNotificationCallback callback)
+     {
+         return std::make_unique<ConfigProviderImpl>(
+-            mw::service::OptionalProxyData<IInternalConfigProvider>{promise_.GetInterruptibleFuture().value()},
++            promise_.GetInterruptibleFuture().value(),
+             stop_source_.get_token(),
+             score::cpp::pmr::get_default_resource(),
+             score::cpp::nullopt,  // default max_samples_limit
+@@ -196,7 +196,7 @@ class ConfigProviderTest : public ::testing::Test
+         IsAvailableNotificationCallback callback)
+     {
+         return std::make_unique<ConfigProviderImpl>(
+-            mw::service::OptionalProxyData<IInternalConfigProvider>{promise_.GetInterruptibleFuture().value()},
++            promise_.GetInterruptibleFuture().value(),
+             stop_source_.get_token(),
+             score::cpp::pmr::get_default_resource(),
+             score::cpp::nullopt,
+diff --git a/score/config_management/config_provider/code/config_provider/factory/factory_mw_com.h b/score/config_management/config_provider/code/config_provider/factory/factory_mw_com.h
+index 5aeca26..123868b 100644
+--- a/score/config_management/config_provider/code/config_provider/factory/factory_mw_com.h
++++ b/score/config_management/config_provider/code/config_provider/factory/factory_mw_com.h
+@@ -182,7 +182,8 @@ class ConfigProviderFactory final
+         logger_.LogDebug() << "ConfigProviderFactory:: Create ConfigProviderImpl";
+         auto config_provider = score::cpp::pmr::make_unique<ConfigProviderImpl>(
+             memory_resource,
+-            proxy_container.template Extract<mw::service::Optional<IInternalConfigProvider>>(),
++            static_cast<mw::service::ProxyFuture<std::unique_ptr<IInternalConfigProvider>>>(
++                proxy_container.template Extract<mw::service::Optional<IInternalConfigProvider>>()),
+             token,
+             memory_resource,
+             max_samples_limit,
+diff --git a/score/config_management/config_daemon/code/app/details/BUILD b/score/config_management/config_daemon/code/app/details/BUILD
+index 63e9161..db9b630 100644
+--- a/score/config_management/config_daemon/code/app/details/BUILD
++++ b/score/config_management/config_daemon/code/app/details/BUILD
+@@ -52,6 +52,7 @@ cc_library(
+         "//score/config_management/config_daemon/code/factory:interface_for_unit_test",
+         "//score/config_management/config_daemon/code/fault_event_reporter",
+         "@score_baselibs//score/scope_exit",
++        "@score_lifecycle_health//score/launch_manager:application_cc",
+         "@score_lifecycle_health//score/launch_manager:applicationcontext_mock_cc",
+         "@score_logging//score/mw/log",
+     ],
+diff --git a/score/config_management/config_daemon/code/BUILD b/score/config_management/config_daemon/code/BUILD
+index b9a1469..7fdb370 100644
+--- a/score/config_management/config_daemon/code/BUILD
++++ b/score/config_management/config_daemon/code/BUILD
+@@ -76,6 +76,7 @@ cc_binary(
+     deps = [
+         "//score/config_management/config_daemon/code/app/details:app",
+         "//score/config_management/config_daemon/code/factory/details:mw_factory",
++        "@score_lifecycle_health//score/launch_manager:lifecyclemanager_cc",
+         "@score_lifecycle_health//score/launch_manager:runapplication_cc",
+     ],
+ )

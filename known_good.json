@@ -3,39 +3,42 @@
         "target_sw": {
             "score_baselibs": {
                 "repo": "https://github.com/eclipse-score/baselibs.git",
+                "hash": "06f6b9b7d48710438ea4664d84da5143594763cb",
                 "bazel_patches": [
                     "//patches/baselibs:001-restore-trace-library-mock-visibility.patch"
                 ],
                 "metadata": {
                     "extra_test_config": [
-                        "@score_baselibs//score/json:base_library=nlohmann",
-                        "@score_baselibs//score/memory/shared/flags:use_typedshmd=False"
+                        "@score_baselibs//score/json:base_library=nlohmann"
                     ],
                     "exclude_test_targets": [
                         "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test"
                     ],
-                    "exclude_test_target_reasons": {
-                        "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test": "Stage 2's toolchain does not implement the aborts_upon_exception feature."
-                    },
                     "langs": [
                         "cpp"
                     ],
                     "bazel_config": [
                         "stage2-gcc",
                         "stage2-rust"
-                    ]
-                },
-                "hash": "ce204159f37ee7815907369a8f678583bf102306"
+                    ],
+                    "exclude_test_target_reasons": {
+                        "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test": "Stage 2's toolchain does not implement the aborts_upon_exception feature."
+                    }
+                }
             },
             "score_communication": {
                 "repo": "https://github.com/eclipse-score/communication.git",
-                "hash": "0e0640998096049a8dd65a4173b03a988d5a85a7",
+                "hash": "21652a6196c22bdf89e0a0abb34aabeb79eb26a0",
                 "bazel_patches": [
                     "//patches/communication:001-expose-comm-examples.patch",
-                    "//patches/communication:003-module-deps-visibility.patch"
+                    "//patches/communication:003-module-deps-visibility.patch",
+                    "//patches/communication:004-rules-build-error-not-dev-dependency.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/mw/com/impl/...",
+                    "extra_test_config": [
+                        "@score_communication//score/memory/shared/flags:use_typedshmd=False"
+                    ],
                     "exclude_test_targets": [],
                     "bazel_config": [
                         "stage2-rust"
@@ -44,13 +47,15 @@
             },
             "score_persistency": {
                 "repo": "https://github.com/eclipse-score/persistency.git",
-                "hash": "35a937f34ff5b2daad8df56e36de76687f19d631",
+                "hash": "b987d375e54f038c31f9441fa738c747c7a07c75",
                 "bazel_patches": [
-                    "//patches/persistency:001-fix-doc.patch"
+                    "//patches/persistency:001-fix-doc.patch",
+                    "//patches/persistency:002-fix-dev-dep.patch",
+                    "//patches/persistency:003-fix-docs-version.patch"
                 ],
                 "metadata": {
                     "extra_test_config": [
-                        "@score_baselibs//src/log:safety_level=qm",
+                        "@score_baselibs//score/log_rust:safety_level=qm",
                         "@score_baselibs//score/json:base_library=nlohmann",
                         "@score_logging//score/mw/log/flags:KRemote_Logging=False"
                     ],
@@ -58,14 +63,14 @@
                     "exclude_test_targets": [
                         "//src/cpp/tests:bm_kvs_cpp"
                     ],
-                    "exclude_test_target_reasons": {
-                        "//src/cpp/tests:bm_kvs_cpp": "google_benchmark benchmark declared as a cc_test; a timing measurement, not a correctness test, so it is not meaningful in a UT/coverage run."
-                    },
                     "rust_coverage_config": "ferrocene-coverage-per",
                     "bazel_config": [
                         "stage2-gcc",
                         "stage2-rust"
-                    ]
+                    ],
+                    "exclude_test_target_reasons": {
+                        "//src/cpp/tests:bm_kvs_cpp": "google_benchmark benchmark declared as a cc_test; a timing measurement, not a correctness test, so it is not meaningful in a UT/coverage run."
+                    }
                 }
             },
             "score_orchestrator": {
@@ -98,7 +103,7 @@
             },
             "score_lifecycle_health": {
                 "repo": "https://github.com/eclipse-score/lifecycle.git",
-                "hash": "654ac348e1cb9327e5c8c4d84fd0028ad3ef2714",
+                "hash": "23e9849437c578ade99b8ccbf5d09c1835737b3f",
                 "bazel_patches": [],
                 "metadata": {
                     "code_root_path": "//score/...",
@@ -106,23 +111,24 @@
                         "//score/health_monitor/src/rust:miri_tests",
                         "//score/launch_manager/src/daemon/src/common/concurrency:mpmc_concurrent_queue_tsan_test"
                     ],
-                    "exclude_test_target_reasons": {
-                        "//score/health_monitor/src/rust:miri_tests": "miri_test rule (tags=[\"miri\"]); needs the miri interpreter toolchain, which Stage 2's configs do not provide.",
-                        "//score/launch_manager/src/daemon/src/common/concurrency:mpmc_concurrent_queue_tsan_test": "built with -fsanitize=thread (tags=[\"tsan\"]); needs the TSan runtime and a sanitizer build, incompatible with the coverage configuration."
-                    },
                     "bazel_config": [
                         "stage2-gcc",
                         "stage2-rust"
-                    ]
+                    ],
+                    "exclude_test_target_reasons": {
+                        "//score/health_monitor/src/rust:miri_tests": "miri_test rule (tags=[\"miri\"]); needs the miri interpreter toolchain, which Stage 2's configs do not provide.",
+                        "//score/launch_manager/src/daemon/src/common/concurrency:mpmc_concurrent_queue_tsan_test": "built with -fsanitize=thread (tags=[\"tsan\"]); needs the TSan runtime and a sanitizer build, incompatible with the coverage configuration."
+                    }
                 }
             },
             "score_logging": {
                 "repo": "https://github.com/eclipse-score/logging.git",
-                "hash": "a6da5cfca65c1a2402f94ef65a61aa7737d1aa32",
+                "hash": "e1bf097cdbf718f993ab7b24ae5f59639ed96bdb",
                 "bazel_patches": [
                     "//patches/logging:002-needs-json-deps-not-dev-dependency.patch",
                     "//patches/logging:003-docs-as-code-not-dev-dependency.patch",
-                    "//patches/logging:004-rules-pkg-not-dev-dependency.patch"
+                    "//patches/logging:004-rules-pkg-not-dev-dependency.patch",
+                    "//patches/logging:005-memory-shared-moved-to-communication.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/mw/log/...",
@@ -143,7 +149,10 @@
             },
             "score_time": {
                 "repo": "https://github.com/eclipse-score/time.git",
-                "hash": "414d4ce4d984e461db8153c95eceb9d5a2020f57",
+                "hash": "8c42d34698535dabeaa4782d5ec123256151fb30",
+                "bazel_patches": [
+                    "//patches/time:001-memory-shared-moved-to-communication.patch"
+                ],
                 "metadata": {
                     "langs": [
                         "cpp"
@@ -151,6 +160,36 @@
                     "bazel_config": [
                         "stage2-gcc"
                     ]
+                }
+            },
+            "score_config_management": {
+                "repo": "https://github.com/eclipse-score/config_management.git",
+                "hash": "952461ceffff774fb4c125ee023fea0221fcdce2",
+                "bazel_patches": [
+                    "patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch"
+                ],
+                "metadata": {
+                    "code_root_path": "//score/config_management/...",
+                    "extra_test_config": [
+                        "@score_config_management//score/config_management/config_daemon/code:score_variant=true"
+                    ],
+                    "exclude_test_targets": [
+                        "//score/config_management/config_daemon/code/factory/details:unit_test_mw_com",
+                        "//score/config_management/config_daemon/code/services/details/mw_com:unit_test",
+                        "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com",
+                        "//score/config_management/config_provider/code/proxies/details:unit_test_mw",
+                        "//score/config_management/dependability/..."
+                    ],
+                    "langs": [
+                        "cpp"
+                    ],
+                    "exclude_test_target_reasons": {
+                        "//score/config_management/config_daemon/code/factory/details:unit_test_mw_com": "Excluded when the module joined ref_int (#299): depends on mw_com/SOCAL targets not present in the OSS build, which ref_int's patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch removes. Carried over unchanged; not yet re-audited for Stage 2.",
+                        "//score/config_management/config_daemon/code/services/details/mw_com:unit_test": "Excluded when the module joined ref_int (#299): depends on mw_com/SOCAL targets not present in the OSS build, which ref_int's patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch removes. Carried over unchanged; not yet re-audited for Stage 2.",
+                        "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com": "Excluded when the module joined ref_int (#299): depends on mw_com/SOCAL targets not present in the OSS build, which ref_int's patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch removes. Carried over unchanged; not yet re-audited for Stage 2.",
+                        "//score/config_management/config_provider/code/proxies/details:unit_test_mw": "Excluded when the module joined ref_int (#299): depends on mw_com/SOCAL targets not present in the OSS build, which ref_int's patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch removes. Carried over unchanged; not yet re-audited for Stage 2.",
+                        "//score/config_management/dependability/...": "Excluded when the module joined ref_int (#299): depends on mw_com/SOCAL targets not present in the OSS build, which ref_int's patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch removes. Carried over unchanged; not yet re-audited for Stage 2."
+                    }
                 }
             }
         },
@@ -189,5 +228,5 @@
             }
         }
     },
-    "timestamp": "2026-07-03T00:00:00+00:00Z"
+    "timestamp": "2026-07-31T00:00:00+00:00Z"
 }

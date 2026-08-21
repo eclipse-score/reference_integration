@@ -52,6 +52,16 @@ def _repo_root() -> Path:
     return _HERE.parents[1]
 
 
+def _workspace_path(path: Path) -> Path:
+    """Anchor a relative command-line path at :func:`_repo_root`.
+
+    ``bazel run`` executes the binary with the runfiles tree as its working directory, so a
+    relative path would be read from — or, worse, written into — runfiles instead of the
+    user's workspace. Absolute paths are taken as given.
+    """
+    return path if path.is_absolute() else _repo_root() / path
+
+
 try:
     from known_good.models.known_good import load_known_good
     from known_good.models.module import Module
@@ -69,18 +79,17 @@ INJECTION_END = "# --- END ref_int resolved-deps injection ---"
 def generate_override_directive(module: Module, repo_commit_dict: dict[str, str] | None = None) -> str | None:
     """Return the override directive (single_version_override / git_override) for a module.
 
-    Returns just the override call without a preceding ``bazel_dep(...)`` line, so the
-    same logic can be reused both to build ref_int's score_modules_*.MODULE.bazel files
-    and to inject overrides into a module's own MODULE.bazel where bazel_dep is already
-    declared (see :meth:`ResolvedDependencies.overwrite`).
+    Returns just the override call without a preceding ``bazel_dep(...)`` line, since
+    :meth:`ResolvedDependencies.overwrite` injects into a module's own MODULE.bazel where the
+    ``bazel_dep`` is already declared, and adds one itself only for a closure member that is not.
 
     Returns ``None`` when the module has neither a usable version nor a valid repo+commit.
+
+    ``repo_commit_dict`` lets a caller pin a specific repo to a different commit than
+    known_good.json records, backing update_module_from_known_good.py's --repo-override.
     """
     repo_commit_dict = repo_commit_dict or {}
-    commit = module.hash
-
-    if module.repo in repo_commit_dict:
-        commit = repo_commit_dict[module.repo]
+    commit = repo_commit_dict.get(module.repo, module.hash)
 
     patches_lines = ""
     if module.bazel_patches:
@@ -201,11 +210,16 @@ class DependencyGraph:
 # third-party resolved versions, merged. The lock travels alongside only as evidence.
 MANIFEST_NAME = "resolved_versions.json"
 
+# Sidecar beside the manifest: what a human needs to judge the pins, kept out of the manifest so
+# that stays a lean Stage-2 input.
+REPORT_NAME = "resolved_pins_report.json"
+
+# Stated in the report so a reader does not have to infer why the export is this broad.
+POLICY = "ref_int's pins are authoritative and are forced onto every module under test."
+
 # Built-in / non-registry modules that must not be given a single_version_override.
 _SKIP_MODULES = {"bazel_tools"}
 
-# Capture the module name from any ``bazel_dep(name = "...")`` call (name is the first arg).
-_BAZEL_DEP_RE = re.compile(r'bazel_dep\(\s*name\s*=\s*"([^"]+)"')
 # The whole ``bazel_dep(...)`` argument list. ``[^)]*`` is sufficient: bazel_dep takes only
 # scalar keyword arguments, never a nested call.
 _BAZEL_DEP_CALL_RE = re.compile(r"bazel_dep\((?P<body>[^)]*)\)", re.S)
@@ -216,12 +230,119 @@ _GIT_OVERRIDE_BLOCK_RE = re.compile(r"git_override\((?P<body>.*?)\)", re.S)
 _SINGLE_VERSION_BLOCK_RE = re.compile(r"single_version_override\((?P<body>.*?)\)", re.S)
 _FIELD_RE = lambda field: re.compile(rf'{field}\s*=\s*"([^"]+)"')  # noqa: E731
 
+# Every override directive Bazel accepts from a root module.
+_OVERRIDE_KINDS = (
+    "git_override",
+    "single_version_override",
+    "archive_override",
+    "local_path_override",
+    "multiple_version_override",
+)
+# Any override block. ``[^)]*`` suffices: override arguments are scalars and lists, never a call.
+_ANY_OVERRIDE_BLOCK_RE = re.compile(r"(?P<kind>" + "|".join(_OVERRIDE_KINDS) + r")\((?P<body>[^)]*)\)", re.S)
+
+_UNCARRIED_CONSEQUENCE = "ref_int imposes nothing for this module; each module under test resolves its own version"
+
+
+def _declared_overrides(text: str, source: str) -> dict[str, dict[str, str]]:
+    """Every module ref_int declares an override for, with its kind and why it might not carry.
+
+    The completeness half of the manifest guard: ``_parse_override_file`` says what can become a
+    Module, this says what ref_int actually wrote, and the difference is a pin ref_int believes it
+    imposes but does not. That gap hid ``rules_oci`` -- a ``git_override`` with ``tag`` instead of
+    ``commit``, rejected by the parser and missed by a warning that only matched archive/local_path,
+    so it produced no output at all. Enumerated from :data:`_OVERRIDE_KINDS` rather than a list of
+    known-bad cases, so an unforeseen kind cannot vanish quietly either.
+    """
+    declared: dict[str, dict[str, str]] = {}
+    for match in _ANY_OVERRIDE_BLOCK_RE.finditer(text):
+        kind, body = match.group("kind"), match.group("body")
+        name = _field(body, "module_name")
+        if not name:
+            continue
+        declared[name] = {
+            "module": name,
+            "kind": kind,
+            "file": source,
+            "reason": _uncarried_reason(kind, body),
+            "consequence": _UNCARRIED_CONSEQUENCE,
+        }
+    return declared
+
+
+def _uncarried_reason(kind: str, body: str) -> str:
+    """Why an override ref_int declares cannot become a manifest entry."""
+    if kind == "git_override":
+        ref = _field(body, "tag") or _field(body, "branch")
+        if ref:
+            return (
+                f"git_override pins the mutable ref {ref!r} rather than a commit; the manifest "
+                f"carries immutable commits only"
+            )
+        if not _field(body, "commit"):
+            return "git_override declares no commit"
+        return "git_override declares no remote"
+    if kind == "single_version_override":
+        return "single_version_override declares no version"
+    if kind == "multiple_version_override":
+        return "multiple_version_override cannot be expressed as a single pin"
+    return f"{kind} cannot be expressed as a manifest directive"
+
+
+# ``dev_dependency = True`` is a bare token, not a quoted value, so _FIELD_RE cannot match it.
+_DEV_DEPENDENCY_RE = re.compile(r"dev_dependency\s*=\s*True")
+
+
+def _declared_dep_specs(text: str) -> dict[str, dict[str, object]]:
+    """Every ``bazel_dep`` in ``text``, with the version it asks for and whether it is dev-scoped.
+
+    Kept separate from :func:`_declared_deps` so ``overwrite()`` keeps its narrower contract.
+    ``dev_dependency`` is recorded for Stage 2, which needs it to attribute a conflict on a dev
+    edge; Stage 1 does not filter on it.
+    """
+    specs: dict[str, dict[str, object]] = {}
+    for call in _BAZEL_DEP_CALL_RE.finditer(text):
+        body = call.group("body")
+        name = _FIELD_RE("name").search(body)
+        if name is None:
+            continue
+        version = _FIELD_RE("version").search(body)
+        specs[name.group(1)] = {
+            "version": version.group(1) if version else None,
+            "dev_dependency": bool(_DEV_DEPENDENCY_RE.search(body)),
+        }
+    return specs
+
+
+def _internal_drift(resolved: dict[str, Module], declared: dict[str, dict[str, object]]) -> list[dict[str, object]]:
+    """Where ref_int's own declared ``bazel_dep`` version is not the one it ends up imposing.
+
+    ref_int disagreeing with itself, invisible in review because ``bazel_dep(version = ...)`` reads
+    like a decision while MVS treats it as a floor and raises it silently.
+    """
+    drift: list[dict[str, object]] = []
+    for name, spec in sorted(declared.items()):
+        wanted, module = spec.get("version"), resolved.get(name)
+        if not wanted or module is None or not module.version or module.version == wanted:
+            continue
+        drift.append(
+            {
+                "module": name,
+                "declared": wanted,
+                "resolved": module.version,
+                "file": spec.get("file"),
+                "dev_dependency": spec.get("dev_dependency", False),
+            }
+        )
+    return drift
+
 
 def _declared_deps(text: str) -> set[str]:
     """Every dependency a module declares via ``bazel_dep``, dev-declared ones included.
 
-    The ``dev_dependency`` flag is deliberately not reported: it does not decide whether ref_int
-    pins a dependency -- presence in the resolved set does. See :meth:`ResolvedDependencies.overwrite`.
+    The ``dev_dependency`` flag is deliberately not reported -- policy, not omission: ref_int's pins
+    are authoritative, so presence in its resolved set decides a pin, not how the module scopes its
+    own declaration. See :func:`_declared_dep_specs` where the version and dev flag are needed.
     """
     declared: set[str] = set()
     for call in _BAZEL_DEP_CALL_RE.finditer(text):
@@ -251,8 +372,11 @@ class ResolvedDependencies:
     :meth:`overwrite` interface that pins a module's ``MODULE.bazel`` to those versions.
     """
 
-    def __init__(self, resolved: dict[str, Module]):
+    def __init__(self, resolved: dict[str, Module], report: dict | None = None):
         self._resolved = resolved
+        # Only from_mod_graph sees both what ref_int declared and what Bazel resolved, so only it can
+        # populate the report. A manifest read back has the pins but not the evidence.
+        self._report = report if report is not None else _empty_report()
 
     # -- construction: "resolved deps versions from ref_int root" --------------------
 
@@ -292,21 +416,27 @@ class ResolvedDependencies:
 
     @classmethod
     def from_mod_graph(cls, mod_graph_json: Path, override_files: list[Path]) -> ResolvedDependencies:
-        """Build the complete resolved set by merging two sources.
+        """Build the resolved set by merging two sources.
 
-        * ref_int's own override directives, parsed from its root ``MODULE.bazel`` and the
-          ``bazel_common/*.MODULE.bazel`` files it ``include()``s. The graph cannot supply these
-          -- it reports overridden modules as version ``0.0.0``.
-        * ``bazel mod graph --output=json`` for the post-MVS version of every other (registry)
-          module, emitted as ``single_version_override`` so each module under test is forced to
-          the version ref_int resolved -- MVS is graph-global, so a module's own subgraph could
-          otherwise select a different one.
+        A module keeps its own version only where ref_int has no representable pin, and each such
+        gap lands in the report's ``uncarried`` list rather than staying implicit.
 
-        ``archive_override`` / ``local_path_override`` targets cannot be represented and are
-        logged as not carried.
+        * The override directives ref_int declares — parsed from its root ``MODULE.bazel`` and the
+          ``bazel_common/*.MODULE.bazel`` files it ``include()``s. The graph cannot supply these: it
+          reports an overridden module at an empty version, or at whatever the overridden source
+          declares for itself, never at the version ref_int meant to impose.
+        * ``bazel mod graph --output=json`` — the post-MVS resolved version of every other
+          (registry) module, emitted as ``single_version_override`` so each module under test is
+          forced to the exact version ref_int resolved (MVS is graph-global, so a module's own
+          subgraph could otherwise select a different version).
+
+        Produce the graph with ``--verbose`` to populate ``originalVersion``, without which every
+        report verdict is ``unknown``. The export succeeds either way.
         """
         resolved: dict[str, Module] = {}
-        unrepresentable: list[str] = []
+        provenance: dict[str, str] = {}
+        declared_overrides: dict[str, dict[str, str]] = {}
+        declared_deps: dict[str, dict[str, object]] = {}
         for f in override_files:
             # Drop comment-only lines first: hand-written MODULE.bazel files contain
             # commented-out overrides (e.g. "# git_override(... rules_rpm ...)") that must
@@ -314,33 +444,42 @@ class ResolvedDependencies:
             text = "\n".join(ln for ln in Path(f).read_text().splitlines() if not ln.lstrip().startswith("#"))
             for module in cls._parse_override_file(text):  # git_override + single_version_override
                 resolved[module.name] = module
-            for m in re.finditer(r'(archive_override|local_path_override)\(\s*module_name\s*=\s*"([^"]+)"', text):
-                unrepresentable.append(f"{m.group(2)} ({m.group(1)})")
+                provenance[module.name] = "asserted"
+            declared_overrides.update(_declared_overrides(text, Path(f).name))
+            for name, spec in _declared_dep_specs(text).items():
+                declared_deps[name] = {**spec, "file": Path(f).name}
 
         graph = json.loads(Path(mod_graph_json).read_text())
         versions: dict[str, str] = {}
         _collect_resolved_versions(graph, versions)
-        skipped: list[str] = []
+        declared_by: dict[str, set[str]] = {}
+        _collect_declared_versions(graph, declared_by)
         for name, version in versions.items():
             if name in resolved or name in _SKIP_MODULES:
                 continue  # already carried by an override directive, or non-overridable
-            # 0.0.0 means ref_int pins it via an override this parser did not capture (an
-            # archive_override), which single_version_override cannot reproduce. Empty versions
-            # are already dropped by _collect_resolved_versions.
+            # Defensive: a module declaring 0.0.0 itself that ref_int does not override has no
+            # version worth imposing. Every 0.0.0 module in ref_int's graph today (trlc,
+            # score_tooling, the score_* target modules) is already carried by an override above.
             if version == "0.0.0":
-                skipped.append(name)
+                declared_overrides.setdefault(
+                    name,
+                    {
+                        "module": name,
+                        "kind": "none",
+                        "file": str(mod_graph_json),
+                        "reason": "resolves to 0.0.0 in the graph and ref_int declares no override for it",
+                        "consequence": _UNCARRIED_CONSEQUENCE,
+                    },
+                )
                 continue
             resolved[name] = Module(name=name, hash="", repo="", version=version)
+            provenance[name] = "incidental"
 
-        if unrepresentable:
-            logging.warning(
-                "Overrides not carried into manifest (need manual handling): %s", ", ".join(unrepresentable)
-            )
-        if skipped:
-            logging.warning(
-                "Graph modules at version 0.0.0 with no carried override, skipped: %s", ", ".join(sorted(skipped))
-            )
-        return cls(resolved)
+        # The completeness guard: every override ref_int declared that did not become a manifest entry.
+        uncarried = [entry for name, entry in sorted(declared_overrides.items()) if name not in resolved]
+        report = _build_report(resolved, provenance, uncarried, declared_by, _internal_drift(resolved, declared_deps))
+        _warn_report(report)
+        return cls(resolved, report)
 
     def to_file(self, path: Path) -> None:
         """Serialize the resolved set to the JSON manifest (Stage 1 -> Stage 2 handoff).
@@ -358,6 +497,16 @@ class ResolvedDependencies:
                 entry["bazel_patches"] = m.bazel_patches
             modules[name] = entry
         Path(path).write_text(json.dumps({"modules": dict(sorted(modules.items()))}, indent=2) + "\n")
+
+    @property
+    def report(self) -> dict:
+        """Pin provenance, consumer conflicts and uncarried overrides. Empty unless built by
+        :meth:`from_mod_graph`."""
+        return self._report
+
+    def write_report(self, path: Path) -> None:
+        """Write the sidecar beside the manifest (see :data:`REPORT_NAME`)."""
+        Path(path).write_text(json.dumps(self._report, indent=2, sort_keys=False) + "\n")
 
     @classmethod
     def from_file(cls, path: Path) -> ResolvedDependencies:
@@ -411,20 +560,21 @@ class ResolvedDependencies:
     ) -> str:
         """Overwrite a module's dependency versions with ref_int's resolved set.
 
-        The rule is *presence in the resolved set*, not how the module declares a dependency:
+        ref_int's version wins wherever ref_int has one -- never raised to the module's own, never
+        fallen back to it. The rule is *presence in the resolved set*, not how the module declares
+        a dependency:
 
         * ref_int resolved a version or commit for it -> pin it, whether the module declares it
           ``dev_dependency`` or not. ref_int has an answer, so it imposes it.
         * ref_int resolved nothing for it -> leave the module's own declaration untouched and log
           it. There is nothing to impose.
 
-        ``dev_dependency`` is not the discriminator and is never read. The two properties are
-        independent: ``score_baselibs`` declares 11 dev-only deps ref_int *has* resolved
-        (``score_tooling``, ``score_docs_as_code``, ``toolchains_llvm``, ...), while
-        ``score_baselibs_rust`` is a public dep ref_int has *not* resolved. A dependency is absent
-        from the resolved set because nothing in ref_int's own graph reaches it -- usually it is
-        only reachable through some module's dev edge, inactive while ref_int is root -- or because
-        ref_int pins it with an ``archive_override`` the manifest cannot express.
+        ``dev_dependency`` is not the discriminator and is never read: it does not predict whether
+        ref_int resolved a dependency. ``score_baselibs`` at 0.2.9 declares 13 dev-only deps that
+        ref_int *has* resolved and therefore pins (``score_tooling``, ``score_docs_as_code``,
+        ``toolchains_llvm``, ...). A dependency is absent from the resolved set for an unrelated
+        reason: nothing in ref_int's own graph reaches it, or ref_int pins it with an override the
+        manifest cannot express (``rules_boost``, an ``archive_override``).
 
         Scope is the module's declared deps plus ``closure()`` of the module and of each declared
         dep. The closure is what makes the rule above safe rather than merely permissive: pinning
@@ -511,15 +661,6 @@ class ResolvedDependencies:
         return pattern.sub("", text).rstrip() + "\n" if pattern.search(text) else text
 
 
-_OVERRIDE_KINDS = (
-    "git_override",
-    "single_version_override",
-    "archive_override",
-    "local_path_override",
-    "multiple_version_override",
-)
-
-
 def _strip_existing_overrides(text: str, names: list[str]) -> str:
     """Remove any ``*_override(module_name = "<name>", ...)`` the module declares itself.
 
@@ -555,9 +696,12 @@ _MODULE_DECL_RE = re.compile(r"module\(\s*name\s*=\s*\"([^\"]+)\"", re.S)
 def injected_override_names(module_bazel_text: str) -> set[str]:
     """Module names ref_int injected an override for, read back from a patched MODULE.bazel.
 
-    The authoritative answer to "did ref_int pin this?" — used by the Stage 2 verification
-    to tell an override that failed to take effect (ref_int's bug) from a dependency that
-    was never pinned at all (the module resolved it on its own).
+    The authoritative answer to "did ref_int pin this?" — it distinguishes an override that failed
+    to take effect (ref_int's bug) from a dependency that was never pinned at all (the module
+    resolved it on its own).
+
+    Consumed by ``scripts/known_good/verify_stage2_resolution.py``, which lands with the Stage-2
+    workflow; it has no caller inside Stage 1, where the manifest itself is the source of truth.
     """
     if INJECTION_BEGIN not in module_bazel_text:
         return set()
@@ -587,6 +731,212 @@ def _collect_resolved_versions(node: dict, acc: dict[str, str]) -> None:
         if name and version:
             acc[name] = version
         _collect_resolved_versions(dep, acc)
+
+
+def _collect_declared_versions(node: dict, acc: dict[str, set[str]]) -> None:
+    """Walk the graph recording name -> the versions consumers asked for.
+
+    ``--verbose`` adds ``originalVersion`` to an edge whenever MVS moved a module off the version its
+    dependent declared; without it, nothing is recorded. Incomplete by construction, since a non-root
+    ``dev_dependency`` edge is never loaded: ``score_crates`` and ``score_rules_imagefs`` are visible
+    but ``score_toolchains_rust``, ``score_itf`` and ``yq.bzl`` are not. See
+    :data:`_DEV_EDGE_LIMITATION`.
+    """
+    for dep in node.get("dependencies", []):
+        name, original = dep.get("name"), dep.get("originalVersion")
+        if name and original:
+            acc.setdefault(name, set()).add(original)
+        _collect_declared_versions(dep, acc)
+
+
+# Bazel's own module-version grammar: a mandatory release part, an optional ``-prerelease``, and
+# optional ``+build`` metadata that is deliberately not captured because it does not affect ordering.
+_VERSION_RE = re.compile(r"^(?P<release>[a-zA-Z0-9.]+)(?:-(?P<prerelease>[a-zA-Z0-9.-]+))?(?:\+[a-zA-Z0-9.-]+)?$")
+
+
+def _identifier_key(identifier: str) -> tuple[int, int, str]:
+    """Sort key for one version identifier, matching Bazel's ``Identifier.COMPARATOR``.
+
+    Digits-only identifiers sort *below* alphanumeric ones; two numeric identifiers compare
+    numerically; two alphanumeric ones compare lexicographically.
+    """
+    if identifier.isdigit():
+        return (0, int(identifier), "")
+    return (1, 0, identifier)
+
+
+def _version_key(version: str) -> tuple[list[tuple[int, int, str]], int, list[tuple[int, int, str]]]:
+    """Sort key for a whole version, mirroring Bazel's ``Version.COMPARATOR`` chain.
+
+    Release identifiers first (list comparison is lexicographic, so a shorter list sorts lower --
+    ``1.17.0`` is below ``1.17.0.bcr.2``), then presence of a prerelease (a prerelease sorts *below*
+    the same release without one), then the prerelease identifiers, which are dot-split like the
+    release part rather than compared as one opaque string.
+    """
+    match = _VERSION_RE.match(version)
+    if match is None:
+        # Not a version Bazel would accept; order it as a single alphanumeric identifier so the
+        # comparison stays total rather than raising on data we only ever report on.
+        return ([_identifier_key(version)], 1, [])
+    release = [_identifier_key(i) for i in match.group("release").split(".")]
+    prerelease = match.group("prerelease")
+    if not prerelease:
+        return (release, 1, [])
+    return (release, 0, [_identifier_key(i) for i in prerelease.split(".")])
+
+
+def _compare_versions(left: str, right: str) -> int:
+    """Order two Bazel module versions: -1, 0 or 1.
+
+    Ports Bazel's own ordering (``Version.java``) rather than approximating it, because the report
+    claims to say whether ref_int's pin is behind what a consumer asked for -- saying "unknown"
+    where Bazel has a definite answer is misinformation, not caution. The ordering is total; Bazel
+    has no incomparable pair.
+
+    Deliberately not a string comparison: ``"0.0.10" < "0.0.6"`` holds lexically, which would report
+    the real ``score_crates`` conflict backwards.
+    """
+    if left == right:
+        return 0
+    left_key, right_key = _version_key(left), _version_key(right)
+    if left_key == right_key:
+        return 0
+    return -1 if left_key < right_key else 1
+
+
+def _highest(versions: list[str]) -> str:
+    """The greatest of ``versions`` under Bazel's ordering."""
+    return max(versions, key=_version_key)
+
+
+def _empty_report() -> dict:
+    return {
+        "schema": 1,
+        "policy": POLICY,
+        "counts": {
+            "pinned": 0,
+            "asserted": 0,
+            "incidental": 0,
+            "uncarried": 0,
+            "conflicts": 0,
+            "ref_int_internal_drift": 0,
+        },
+        "pins": {},
+        "uncarried": [],
+        "ref_int_internal_drift": [],
+        "limitations": [],
+    }
+
+
+_DEV_EDGE_LIMITATION = (
+    "A non-root dev_dependency edge is never loaded by Bazel, so a consumer's dev-declared version "
+    "cannot appear in declared_versions. Measured on ref_int: score_toolchains_rust (0.9.1), "
+    "score_itf (0.4.0) and score_rules_imagefs are dev-declared by modules under test. Stage 2 "
+    "completes this from each module's own MODULE.bazel."
+)
+_OUT_OF_GRAPH_LIMITATION = (
+    "A dependency of a module outside ref_int's own graph is invisible here: rules_distroless "
+    "requires yq.bzl 0.3.1 and never appears in ref_int's graph, so ref_int's incidental yq.bzl "
+    "pin looks unconflicted while it breaks that module's load phase."
+)
+_NO_VERBOSE_LIMITATION = (
+    "The graph carried no originalVersion for any module, so consumer requests were unavailable "
+    "and every verdict is 'unknown'. Produce the graph with "
+    "'bazel mod graph --verbose --output=json' to populate them."
+)
+
+
+def _build_report(
+    resolved: dict[str, Module],
+    provenance: dict[str, str],
+    uncarried: list[dict[str, str]],
+    declared_by: dict[str, set[str]],
+    internal_drift: list[dict[str, object]],
+) -> dict:
+    """Assemble the sidecar: where each pin came from, and who disagrees with it.
+
+    ``provenance`` separates the two: ``asserted`` means ref_int wrote an override, so the version
+    is a decision; ``incidental`` means it merely inherited whatever MVS selected. Both are imposed
+    with equal force -- the ``yq.bzl`` pin that breaks score_communication is incidental, since
+    nothing in ref_int declares yq.bzl at all.
+    """
+    report = _empty_report()
+    conflicts: list[str] = []
+    for name in sorted(resolved):
+        module = resolved[name]
+        wanted = sorted(declared_by.get(name, ()))
+        entry: dict[str, object] = {
+            "pin": {"version": module.version} if module.version else {"repo": module.repo, "hash": module.hash},
+            "provenance": provenance.get(name, "incidental"),
+            "declared_versions": wanted,
+            "verdict": "unknown",
+            "direction": None,
+        }
+        if not wanted:
+            # Nothing asked for a different version, or the request rode an edge Bazel never loaded.
+            # Indistinguishable here, hence "unknown" rather than "agree".
+            entry["verdict"] = "by_commit" if not module.version else "unknown"
+        elif not module.version:
+            entry["verdict"] = "differs"  # a commit replaced a version request: not comparable
+        elif all(v == module.version for v in wanted):
+            entry["verdict"] = "agree"
+        else:
+            entry["verdict"] = "differs"
+            order = _compare_versions(module.version, _highest(wanted))
+            entry["direction"] = "ref_int_lower" if order < 0 else "ref_int_higher"
+        if entry["verdict"] == "differs":
+            conflicts.append(name)
+        report["pins"][name] = entry
+
+    report["uncarried"] = uncarried
+    report["ref_int_internal_drift"] = internal_drift
+    asserted = sum(1 for v in provenance.values() if v == "asserted")
+    report["counts"] = {
+        "pinned": len(resolved),
+        "asserted": asserted,
+        "incidental": len(resolved) - asserted,
+        "uncarried": len(uncarried),
+        "conflicts": len(conflicts),
+        "ref_int_internal_drift": len(internal_drift),
+    }
+    # The first two are properties of what Bazel loads, not of this run, so they always apply.
+    report["limitations"] = [_DEV_EDGE_LIMITATION, _OUT_OF_GRAPH_LIMITATION]
+    if not declared_by:
+        report["limitations"].append(_NO_VERBOSE_LIMITATION)
+    return report
+
+
+def _warn_report(report: dict) -> None:
+    """Surface the report's findings as GitHub annotations, without failing the export.
+
+    ``::warning::`` rather than ``logging.warning``, which does not reach the job UI -- the reason
+    silent downgrades and the dropped ``rules_oci`` pin went unnoticed. The export always exits 0;
+    ref_int's version is imposed and reported rather than blocking the run.
+    """
+    if _NO_VERBOSE_LIMITATION in report["limitations"]:
+        # Without this the conflict half of the report is silently a constant: every verdict is
+        # "unknown" and no consumer disagreement can be detected, which reads identically to a
+        # graph in which nobody disagrees.
+        print(
+            "::warning::resolved_dependencies - the graph carries no originalVersion, so no "
+            "consumer version conflicts can be detected. Produce it with "
+            "'bazel mod graph --verbose --output=json' to enable them."
+        )
+    for entry in report["uncarried"]:
+        print(
+            f"::warning::resolved_dependencies - ref_int declares an override for "
+            f"{entry['module']} that the manifest cannot carry: {entry['reason']}. {entry['consequence']}."
+        )
+    for name, pin in report["pins"].items():
+        if pin["verdict"] != "differs":
+            continue
+        pinned = pin["pin"].get("version") or f"commit {pin['pin'].get('hash', '')[:12]}"
+        direction = f" ({pin['direction']})" if pin["direction"] else ""
+        print(
+            f"::warning::resolved_dependencies - ref_int pins {name} at {pinned}{direction}; "
+            f"consumers in ref_int's graph declare {', '.join(pin['declared_versions'])}. "
+            f"ref_int's version is imposed."
+        )
 
 
 def _parse_args() -> argparse.Namespace:
@@ -622,6 +972,16 @@ def _parse_args() -> argparse.Namespace:
         help=f"Export mode: write the merged resolved set to this {MANIFEST_NAME} manifest and exit.",
     )
     parser.add_argument(
+        "--report",
+        type=Path,
+        default=None,
+        help=(
+            f"Export mode: write the pin report to this path instead of {REPORT_NAME} beside the "
+            f"manifest. Produce the graph with 'bazel mod graph --verbose --output=json' so the "
+            f"report can name the consumers that asked for a different version."
+        ),
+    )
+    parser.add_argument(
         "--module-under-test",
         default=None,
         help="Name of the module under test (never overridden as it is the root).",
@@ -639,7 +999,7 @@ def main() -> None:
     if args.export is not None:
         if args.mod_graph is None:
             raise SystemExit("--export requires --mod-graph (output of 'bazel mod graph --output=json')")
-        mod_graph = Path(args.mod_graph)
+        mod_graph = _workspace_path(args.mod_graph)
         if not mod_graph.is_file():
             raise SystemExit(
                 f"--mod-graph {mod_graph} does not exist. Produce it first with: "
@@ -652,15 +1012,23 @@ def main() -> None:
             if f.is_file()
         ]
         resolved = ResolvedDependencies.from_mod_graph(mod_graph, override_files)
-        export = Path(args.export)
+        export = _workspace_path(args.export)
         export.parent.mkdir(parents=True, exist_ok=True)
         resolved.to_file(export)
         # Stage 2 needs the graph too: the manifest says which version each module resolves
         # to, the graph says which of them a given module actually depends on.
         graph_copy = export.parent / GRAPH_NAME
         graph_copy.write_text(mod_graph.read_text())
+        report_path = _workspace_path(args.report) if args.report else export.parent / REPORT_NAME
+        resolved.write_report(report_path)
+        counts = resolved.report["counts"]
         print(f"Wrote resolved dependency manifest ({len(resolved.names)} modules) to {export}")
         print(f"Stored dependency graph for Stage 2 at {graph_copy}")
+        print(
+            f"Wrote pin report to {report_path} "
+            f"({counts['asserted']} asserted, {counts['incidental']} incidental, "
+            f"{counts['conflicts']} conflicting, {counts['uncarried']} uncarried)"
+        )
         return
 
     # Inject mode (Stage 2): overwrite a module's MODULE.bazel with the resolved set.
@@ -675,11 +1043,13 @@ def main() -> None:
             "Stage-1 resolved set. known_good.json carries only first-party pins and no "
             "transitive versions, so it cannot back the injection."
         )
-    resolved = ResolvedDependencies.from_resolved_artifact(args.resolved_deps)
-    graph = DependencyGraph.from_file(Path(args.resolved_deps) / GRAPH_NAME)
+    module_bazel = _workspace_path(args.module_bazel)
+    resolved_deps = _workspace_path(args.resolved_deps)
+    resolved = ResolvedDependencies.from_resolved_artifact(resolved_deps)
+    graph = DependencyGraph.from_file(resolved_deps / GRAPH_NAME)
 
     patched = resolved.overwrite(
-        args.module_bazel,
+        module_bazel,
         graph,
         module_under_test=args.module_under_test,
         write=not args.dry_run,
@@ -687,7 +1057,7 @@ def main() -> None:
     if args.dry_run:
         print(patched)
     else:
-        print(f"Injected resolved-deps overrides into {args.module_bazel}")
+        print(f"Injected resolved-deps overrides into {module_bazel}")
 
 
 if __name__ == "__main__":

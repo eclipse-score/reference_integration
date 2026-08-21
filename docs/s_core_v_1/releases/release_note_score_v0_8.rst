@@ -21,6 +21,7 @@ S-CORE Platform v0.8 release note
    :safety: QM
    :security: YES
    :realizes: wp__platform_sw_release_note
+   :version: 1
 
 | **Platform Release:** S-CORE
 | **Release Tag:** v0.8.0
