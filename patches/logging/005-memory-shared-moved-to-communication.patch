@@ -3,6 +3,22 @@ b90e0695 ("Migrate score/memory/shared to score_communication"). score_logging
 still points at the old @score_baselibs labels; score_communication is already a
 bazel_dep here, so only the labels need redirecting.
 
+The .bazelrc hunk only matters in Stage 2, where this module is the Bazel root; inert in
+Stage 1.
+
+diff --git a/.bazelrc b/.bazelrc
+index 1a2b3c4d..5e6f7a8b 100644
+--- a/.bazelrc
++++ b/.bazelrc
+@@ -33,7 +33,7 @@ build:_common --extra_toolchains=@score_toolchains_rust//toolchains/ferrocene:fe
+ build:_common --features=minimal_warnings --features=-strict_warnings --features=warnings_as_errors
+ 
+ # Common flags for all builds
+-common --@score_baselibs//score/memory/shared/flags:use_typedshmd=False
++common --@score_communication//score/memory/shared/flags:use_typedshmd=False
+ common --@score_baselibs//score/mw/log/flags:KRemote_Logging=False
+ common --@score_baselibs//score/json:base_library=nlohmann
+ common --//score/datarouter/build_configuration_flags:persistent_logging=False
 diff --git a/score/mw/log/backend/BUILD b/score/mw/log/backend/BUILD
 index 846c781f..de1997f8 100644
 --- a/score/mw/log/backend/BUILD

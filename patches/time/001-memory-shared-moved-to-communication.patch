@@ -3,6 +3,22 @@ b90e0695 ("Migrate score/memory/shared to score_communication"). score_time HEAD
 still points at the old @score_baselibs labels, so redirect them and declare the
 score_communication dependency they now require.
 
+The .bazelrc hunk only matters in Stage 2, where this module is the Bazel root; inert in
+Stage 1.
+
+diff --git a/.bazelrc b/.bazelrc
+index 2b3c4d5e..6f7a8b9c 100644
+--- a/.bazelrc
++++ b/.bazelrc
+@@ -27,7 +27,7 @@ common --@score_logging//score/mw/log/flags:KRemote_Logging=False
+ common --repo_env=ANDROID_HOME=
+ 
+ build --@score_baselibs//score/json:base_library=nlohmann
+-build --@score_baselibs//score/memory/shared/flags:use_typedshmd=False
++build --@score_communication//score/memory/shared/flags:use_typedshmd=False
+ build --credential_helper="*.qnx.com=%workspace%/tools/qnx_credential_helper.py"
+ 
+ # -------------------------------------------------------------------------------
 diff --git a/MODULE.bazel b/MODULE.bazel
 index 19aa03e7..839777b7 100644
 --- a/MODULE.bazel

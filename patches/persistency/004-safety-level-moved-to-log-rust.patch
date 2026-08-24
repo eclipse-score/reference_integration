@@ -1,0 +1,20 @@
+Upstream baselibs deleted src/log/BUILD and moved safety_level to score/log_rust/BUILD
+(same migration patches/logging/005 and patches/time/001 redirect). score_persistency HEAD
+still names the old label, so redirect it.
+
+Upstream main already fixed this (commit 7b4dd6925), but bumping the pin there breaks
+patches 001/002 and swaps the coverage pipeline. Patch instead; retire on the next pin bump.
+
+diff --git a/.bazelrc b/.bazelrc
+index 8fc1a66..560b1e6 100644
+--- a/.bazelrc
++++ b/.bazelrc
+@@ -35,7 +35,7 @@ build --tool_java_language_version=17
+ build --java_runtime_version=remotejdk_17
+ build --tool_java_runtime_version=remotejdk_17
+ 
+-build --@score_baselibs//src/log:safety_level=qm
++build --@score_baselibs//score/log_rust:safety_level=qm
+ build --@score_baselibs//score/json:base_library=nlohmann
+ build --@score_logging//score/mw/log/flags:KRemote_Logging=False
+ 
