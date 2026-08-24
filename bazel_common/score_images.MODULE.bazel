@@ -10,11 +10,13 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+# Spelled as a commit, not `tag = "v2.3.1"`: the Stage-1 manifest carries immutable commits only, so
+# a tag-pinned git_override was dropped from it silently and every module resolved its own rules_oci.
 bazel_dep(name = "rules_oci", version = "2.3.1")
 git_override(
     module_name = "rules_oci",
+    commit = "f214185dcf149090cb3212e878f692eb2c8c0d3d",  # v2.3.1
     remote = "https://github.com/bazel-contrib/rules_oci.git",
-    tag = "v2.3.1",
 )
 
 oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
