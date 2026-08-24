@@ -23,7 +23,14 @@
                     ],
                     "exclude_test_target_reasons": {
                         "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test": "Stage 2's toolchain does not implement the aborts_upon_exception feature."
-                    }
+                    },
+                    "legacy_exclude_test_targets": [
+                        "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test",
+                        "//score/containers:dynamic_array_test",
+                        "//score/mw/log/configuration:*",
+                        "//score/json/examples:*",
+                        "//score/flatbuffers:version_reader_test"
+                    ]
                 }
             },
             "score_communication": {
@@ -42,6 +49,16 @@
                     "exclude_test_targets": [],
                     "bazel_config": [
                         "stage2-rust"
+                    ],
+                    "legacy_exclude_test_targets": [
+                        "//score/mw/com/impl:unit_test_runtime_single_exec",
+                        "//score/mw/com/impl:runtime_test",
+                        "//score/mw/com/impl/configuration:config_parser_test",
+                        "//score/mw/com/impl/configuration:configuration_test",
+                        "//score/mw/com/impl/configuration:configuration_json_parsing_strategy_test",
+                        "//score/mw/com/impl/tracing/configuration:tracing_filter_config_parser_test",
+                        "//score/mw/com/impl/tracing:tracing_runtime_test",
+                        "//score/mw/com/impl/bindings/lola/tracing:tracing_runtime_test"
                     ]
                 }
             },
@@ -71,7 +88,10 @@
                     ],
                     "exclude_test_target_reasons": {
                         "//src/cpp/tests:bm_kvs_cpp": "google_benchmark benchmark declared as a cc_test; a timing measurement, not a correctness test, so it is not meaningful in a UT/coverage run."
-                    }
+                    },
+                    "legacy_exclude_test_targets": [
+                        "//src/cpp/tests:bm_kvs_cpp"
+                    ]
                 }
             },
             "score_orchestrator": {
@@ -119,7 +139,12 @@
                     "exclude_test_target_reasons": {
                         "//score/health_monitor/src/rust:miri_tests": "miri_test rule (tags=[\"miri\"]); needs the miri interpreter toolchain, which Stage 2's configs do not provide.",
                         "//score/launch_manager/src/daemon/src/common/concurrency:mpmc_concurrent_queue_tsan_test": "built with -fsanitize=thread (tags=[\"tsan\"]); needs the TSan runtime and a sanitizer build, incompatible with the coverage configuration."
-                    }
+                    },
+                    "legacy_exclude_test_targets": [
+                        "//score/health_monitor/src/rust:miri_tests",
+                        "//score/launch_manager/src/daemon/src/common/concurrency:mpmc_concurrent_queue_tsan_test",
+                        "//score/launch_manager/src/daemon/src/common/concurrency:mpsc_bounded_queue_tsan_test"
+                    ]
                 }
             },
             "score_logging": {
@@ -145,6 +170,9 @@
                     "bazel_config": [
                         "stage2-gcc",
                         "stage2-rust"
+                    ],
+                    "legacy_exclude_test_targets": [
+                        "//score/mw/log/legacy_non_verbose_api:unit_test"
                     ]
                 }
             },
@@ -190,7 +218,14 @@
                         "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com": "Excluded when the module joined ref_int (#299): depends on mw_com/SOCAL targets not present in the OSS build, which ref_int's patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch removes. Carried over unchanged; not yet re-audited for Stage 2.",
                         "//score/config_management/config_provider/code/proxies/details:unit_test_mw": "Excluded when the module joined ref_int (#299): depends on mw_com/SOCAL targets not present in the OSS build, which ref_int's patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch removes. Carried over unchanged; not yet re-audited for Stage 2.",
                         "//score/config_management/dependability/...": "Excluded when the module joined ref_int (#299): depends on mw_com/SOCAL targets not present in the OSS build, which ref_int's patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch removes. Carried over unchanged; not yet re-audited for Stage 2."
-                    }
+                    },
+                    "legacy_exclude_test_targets": [
+                        "//score/config_management/config_daemon/code/factory/details:unit_test_mw_com",
+                        "//score/config_management/config_daemon/code/services/details/mw_com:unit_test",
+                        "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com",
+                        "//score/config_management/config_provider/code/proxies/details:unit_test_mw",
+                        "//score/config_management/dependability/..."
+                    ]
                 }
             }
         },

@@ -288,9 +288,9 @@ def run_unit_test_with_coverage(
             + [f"--{target}" for target in module.metadata.extra_test_config]
             + ["--"]
             + [
-                # Exclude test targets specified in module metadata, if any
+                # This mode needs exclusions the module-rooted Stage 2 does not.
                 f"-@{module.name}{target}"
-                for target in module.metadata.exclude_test_targets
+                for target in module.metadata.legacy_exclude_test_targets
             ]
         )
 

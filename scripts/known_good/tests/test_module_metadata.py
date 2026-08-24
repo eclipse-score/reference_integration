@@ -76,3 +76,21 @@ class TestExclusionsMustCarryAReason:
     def test_module_without_metadata_still_loads(self):
         module = Module.from_dict("score_x", {"repo": _REPO, "hash": _HASH})
         assert module.metadata.exclude_test_targets == []
+
+
+class TestLegacyExclusionsAreSeparate:
+    """The central-mode list predates the audit, so the two checks above must not apply to it."""
+
+    def test_wildcards_allowed(self):
+        module = _module({"legacy_exclude_test_targets": ["//score/mw/log/configuration:*"]})
+        assert module.metadata.legacy_exclude_test_targets == ["//score/mw/log/configuration:*"]
+
+    def test_no_reason_required(self):
+        assert _module({"legacy_exclude_test_targets": ["//a:b"]}).metadata.legacy_exclude_test_targets == ["//a:b"]
+
+    def test_does_not_leak_into_the_stage2_list(self):
+        module = _module({"legacy_exclude_test_targets": ["//a:b"], "exclude_test_targets": []})
+        assert module.metadata.exclude_test_targets == []
+
+    def test_defaults_empty(self):
+        assert _module({}).metadata.legacy_exclude_test_targets == []
