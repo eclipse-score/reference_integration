@@ -1,0 +1,7 @@
+NAME = getty-console
+
+COMMAND = /usr/bin/setsid /sbin/getty --login-program /usr/bin/delayed-start.sh --autologin root 115200 console
+
+RESPAWN = YES
+DEPENDS = ""
+RESPAWN_RETRIES = 3
