@@ -21,6 +21,7 @@ S-CORE Platform v0.5-beta release note
    :safety: ASIL_B
    :security: YES
    :realizes: wp__platform_sw_release_note
+   :version: 1
 
 | **Platform Name**: S-CORE
 | **Release Tag**: v0.5.0-beta
@@ -104,7 +105,6 @@ Zero-copy, shared-memory based inter-process communication for minimal-latency i
 
 - **Version:** ``communication v0.1.2``
 - **Source / tag:** `Communication GitHub release <https://github.com/eclipse-score/communication/archive/refs/tags/v0.1.2.tar.gz>`_
-- **Release notes:** :need:`doc__communication_release_note`
 
 **Improvements**
 

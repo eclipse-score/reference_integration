@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Generated from known_good.json at 2026-07-31T00:00:00+00:00Z
+# Generated from known_good.json at 2026-08-21T00:00:00+00:00Z
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py
 
 bazel_dep(name = "score_baselibs")
@@ -45,6 +45,8 @@ git_override(
     patch_strip = 1,
     patches = [
         "//patches/persistency:001-fix-doc.patch",
+        "//patches/persistency:002-fix-dev-dep.patch",
+        "//patches/persistency:003-fix-docs-version.patch",
     ],
     remote = "https://github.com/eclipse-score/persistency.git",
 )
@@ -93,4 +95,15 @@ git_override(
         "//patches/time:001-memory-shared-moved-to-communication.patch",
     ],
     remote = "https://github.com/eclipse-score/time.git",
+)
+
+bazel_dep(name = "score_config_management")
+git_override(
+    module_name = "score_config_management",
+    commit = "952461ceffff774fb4c125ee023fea0221fcdce2",
+    patch_strip = 1,
+    patches = [
+        "patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch",
+    ],
+    remote = "https://github.com/eclipse-score/config_management.git",
 )

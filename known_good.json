@@ -52,7 +52,9 @@
                 "repo": "https://github.com/eclipse-score/persistency.git",
                 "hash": "b987d375e54f038c31f9441fa738c747c7a07c75",
                 "bazel_patches": [
-                    "//patches/persistency:001-fix-doc.patch"
+                    "//patches/persistency:001-fix-doc.patch",
+                    "//patches/persistency:002-fix-dev-dep.patch",
+                    "//patches/persistency:003-fix-docs-version.patch"
                 ],
                 "metadata": {
                     "extra_test_config": [
@@ -135,16 +137,39 @@
                         "cpp"
                     ]
                 }
+            },
+            "score_config_management": {
+                "repo": "https://github.com/eclipse-score/config_management.git",
+                "hash": "952461ceffff774fb4c125ee023fea0221fcdce2",
+                "bazel_patches": [
+                    "patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch"
+                ],
+                "metadata": {
+                    "code_root_path": "//score/config_management/...",
+                    "extra_test_config": [
+                        "@score_config_management//score/config_management/config_daemon/code:score_variant=true"
+                    ],
+                    "exclude_test_targets": [
+                        "//score/config_management/config_daemon/code/factory/details:unit_test_mw_com",
+                        "//score/config_management/config_daemon/code/services/details/mw_com:unit_test",
+                        "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com",
+                        "//score/config_management/config_provider/code/proxies/details:unit_test_mw",
+                        "//score/config_management/dependability/..."
+                    ],
+                    "langs": [
+                        "cpp"
+                    ]
+                }
             }
         },
         "tooling": {
             "score_crates": {
                 "repo": "https://github.com/eclipse-score/score-crates.git",
-                "hash": "a5f4f5765acc83f9c23b0b12860e130b9ebef3a7"
+                "hash": "4656dda8f04a3d88c8089f63111195840cfbd9e3"
             },
             "score_itf": {
                 "repo": "https://github.com/eclipse-score/itf.git",
-                "hash": "bf5294d7618e361c224edbd754060cee810285eb"
+                "hash": "802e0186d373e0d9d67c1c9ccb1ea08952c7ad06"
             },
             "score_tooling": {
                 "repo": "https://github.com/eclipse-score/tooling.git",
@@ -176,5 +201,5 @@
             }
         }
     },
-    "timestamp": "2026-07-31T00:00:00+00:00Z"
+    "timestamp": "2026-08-21T00:00:00+00:00Z"
 }
