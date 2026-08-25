@@ -1,0 +1,72 @@
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@score_rules_imagefs//rules/qnx:ifs.bzl", "qnx_ifs")
+
+filegroup(
+    name = "scripts",
+    srcs = [
+        "//images/qnx_aarch64/configs:startup.sh",
+    ],
+    visibility = ["//visibility:private"],
+)
+
+filegroup(
+    name = "configs",
+    srcs = [
+        "//images/qnx_aarch64/configs:dhcpcd.conf",
+        "//images/qnx_aarch64/configs:group",
+        "//images/qnx_aarch64/configs:hostname",
+        "//images/qnx_aarch64/configs:network_capture.sh",
+        "//images/qnx_aarch64/configs:network_setup.sh",
+        "//images/qnx_aarch64/configs:network_setup_dhcp.sh",
+        "//images/qnx_aarch64/configs:passwd",
+        "//images/qnx_aarch64/configs:profile",
+        "//images/qnx_aarch64/configs:qcrypto.conf",
+        "//images/qnx_aarch64/configs:ssh_host_rsa_key",
+        "//images/qnx_aarch64/configs:ssh_host_rsa_key.pub",
+        "//images/qnx_aarch64/configs:sshd_config",
+    ],
+    visibility = ["//visibility:private"],
+)
+
+qnx_ifs(
+    name = "init",
+    srcs = [
+        ":configs",
+        ":scripts",
+        ":system.build",
+        ":system_dir",
+        "//feature_integration_tests/configs:etc_configs",
+        "//feature_integration_tests/configs/datarouter:etc_configs",
+        "//showcases",
+        "@score_logging//score/datarouter",
+        "@score_persistency//tests/test_scenarios/cpp:test_scenarios",
+    ],
+    build_file = "init.build",
+    ext_repo_maping = {
+        "BUNDLE_PATH": "$(location //showcases:showcases)",
+        "DATAROUTER_PATH": "$(location @score_logging//score/datarouter:datarouter)",
+    },
+    visibility = [
+        "//visibility:public",
+    ],
+)
+
+filegroup(
+    name = "system_dir",
+    srcs = [
+        "init.build",
+        "system.build",
+    ],
+)
