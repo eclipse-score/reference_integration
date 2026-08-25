@@ -75,15 +75,13 @@ git_override(
 bazel_dep(name = "score_logging")
 git_override(
     module_name = "score_logging",
-    commit = "e1bf097cdbf718f993ab7b24ae5f59639ed96bdb",
+    commit = "5b6082754821e417e840f6de304cce39e0dcd7c8",
     patch_strip = 1,
     patches = [
-        "//patches/logging:002-needs-json-deps-not-dev-dependency.patch",
-        "//patches/logging:003-docs-as-code-not-dev-dependency.patch",
         "//patches/logging:004-rules-pkg-not-dev-dependency.patch",
         "//patches/logging:005-memory-shared-moved-to-communication.patch",
     ],
-    remote = "https://github.com/eclipse-score/logging.git",
+    remote = "https://github.com/RSingh1511/logging.git",
 )
 
 bazel_dep(name = "score_time")
