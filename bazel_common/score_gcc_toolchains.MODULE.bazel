@@ -11,11 +11,18 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-bazel_dep(name = "score_bazel_cpp_toolchains", version = "0.5.4")
+bazel_dep(name = "score_bazel_cpp_toolchains", version = "1.0.2")
+bazel_dep(name = "score_cpp_policies", version = "0.1.1")
 
 gcc = use_extension("@score_bazel_cpp_toolchains//extensions:gcc.bzl", "gcc", dev_dependency = True)
 gcc.toolchain(
     name = "score_gcc_x86_64_toolchain",
+    extra_known_features = [
+        "@score_cpp_policies//warnings/gcc/features:minimal_warnings",
+        "@score_cpp_policies//warnings/gcc/features:strict_warnings",
+        "@score_cpp_policies//warnings/gcc/features:all_wall_warnings",
+        "@score_cpp_policies//warnings/gcc/features:warnings_as_errors",
+    ],
     target_cpu = "x86_64",
     target_os = "linux",
     use_default_package = True,
@@ -23,6 +30,12 @@ gcc.toolchain(
 )
 gcc.toolchain(
     name = "score_ebclfsa_toolchain",
+    extra_known_features = [
+        "@score_cpp_policies//warnings/gcc/features:minimal_warnings",
+        "@score_cpp_policies//warnings/gcc/features:strict_warnings",
+        "@score_cpp_policies//warnings/gcc/features:all_wall_warnings",
+        "@score_cpp_policies//warnings/gcc/features:warnings_as_errors",
+    ],
     runtime_ecosystem = "ebclfsa",
     sdk_version = "0.1.0",
     target_cpu = "aarch64",
@@ -33,6 +46,12 @@ gcc.toolchain(
 ## AutoSD10 Toolchain
 gcc.toolchain(
     name = "score_autosd10_x86_64_toolchain",
+    extra_known_features = [
+        "@score_cpp_policies//warnings/gcc/features:minimal_warnings",
+        "@score_cpp_policies//warnings/gcc/features:strict_warnings",
+        "@score_cpp_policies//warnings/gcc/features:all_wall_warnings",
+        "@score_cpp_policies//warnings/gcc/features:warnings_as_errors",
+    ],
     runtime_ecosystem = "autosd10",
     target_cpu = "x86_64",
     target_os = "linux",
