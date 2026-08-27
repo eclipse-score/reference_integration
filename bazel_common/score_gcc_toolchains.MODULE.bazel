@@ -12,6 +12,11 @@
 # *******************************************************************************
 
 bazel_dep(name = "score_bazel_cpp_toolchains", version = "0.5.4")
+git_override(
+    module_name = "score_bazel_cpp_toolchains",
+    commit = "6d33a7b951d0c86f8fa8d2214af4562b27965d8f",
+    remote = "https://github.com/eclipse-score/bazel_cpp_toolchains.git",
+)
 
 gcc = use_extension("@score_bazel_cpp_toolchains//extensions:gcc.bzl", "gcc", dev_dependency = True)
 gcc.toolchain(
@@ -24,7 +29,7 @@ gcc.toolchain(
 gcc.toolchain(
     name = "score_ebclfsa_toolchain",
     runtime_ecosystem = "ebclfsa",
-    sdk_version = "0.1.0",
+    sdk_version = "2.0.0-beta2",
     target_cpu = "aarch64",
     target_os = "linux",
     use_default_package = True,
