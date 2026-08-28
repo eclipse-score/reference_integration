@@ -434,20 +434,19 @@ def cpp_coverage(
     return genhtml_result
 
 
-def _ensure_stage2_rc_importable(workspace: Path) -> None:
-    """Make ref_int's Stage-2 config visible to bazel calls that don't inherit our flags.
-
-    ``ferrocene_report`` shells out to its own nested bazel calls, which never see our
-    ``--bazelrc=`` startup flag (that applies to the outer ``bazel run`` only) and would silently
-    build under the module's config alone. An ``import`` line puts it on Bazel's normal default-rc
-    discovery path instead. Ephemeral (this checkout only); idempotent.
+def _ensure_stage2_rc_importable(workspace: Path, module_name: str) -> None:
+    """ferrocene_report's nested bazel calls get no startup flags, so they read the
+    module's own (possibly stale) ``.bazelrc`` by default. Overwrite it with just the
+    import(s), same footing as the MODULE.bazel injection.
     """
+    if module_name in MODULES_WITH_OWN_RC:
+        return
     module_bazelrc = workspace / ".bazelrc"
-    import_line = f"import {STAGE2_RC}\n"
-    existing = module_bazelrc.read_text() if module_bazelrc.exists() else ""
-    if import_line not in existing:
-        with module_bazelrc.open("a") as f:
-            f.write(("\n" if existing and not existing.endswith("\n") else "") + import_line)
+    import_lines = [f"import {STAGE2_RC}\n"]
+    dedicated = stage2_module_rc(module_name)
+    if dedicated is not None:
+        import_lines.append(f"import {dedicated}\n")
+    module_bazelrc.write_text("".join(import_lines))
 
 
 def _resolve_ferrocene_report_script(workspace: Path, startup: list[str] | None) -> Path:
@@ -504,7 +503,7 @@ def rust_coverage(
         # ref_int's own rust_coverage/BUILD target addresses the module as @<module>//..., a
         # mapping that only exists in ref_int's graph. Run the underlying tool directly with
         # the same query, module-rooted (see rust_coverage_query), instead.
-        _ensure_stage2_rc_importable(workspace)
+        _ensure_stage2_rc_importable(workspace, module.name)
         query = rust_coverage_query(module.name)
         config_flags = [c.removeprefix("--config=") for c in stage2_config_flags(module)]
         script = _resolve_ferrocene_report_script(workspace, startup)
