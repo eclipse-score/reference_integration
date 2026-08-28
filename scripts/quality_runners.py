@@ -434,21 +434,6 @@ def cpp_coverage(
     return genhtml_result
 
 
-def _ensure_stage2_rc_importable(workspace: Path, module_name: str) -> None:
-    """ferrocene_report's nested bazel calls get no startup flags, so they read the
-    module's own (possibly stale) ``.bazelrc`` by default. Overwrite it with just the
-    import(s), same footing as the MODULE.bazel injection.
-    """
-    if module_name in MODULES_WITH_OWN_RC:
-        return
-    module_bazelrc = workspace / ".bazelrc"
-    import_lines = [f"import {STAGE2_RC}\n"]
-    dedicated = stage2_module_rc(module_name)
-    if dedicated is not None:
-        import_lines.append(f"import {dedicated}\n")
-    module_bazelrc.write_text("".join(import_lines))
-
-
 def _resolve_ferrocene_report_script(workspace: Path, startup: list[str] | None) -> Path:
     """The runfiles copy of ``@score_tooling//coverage:ferrocene_report``, not the bare binary.
 
@@ -503,7 +488,13 @@ def rust_coverage(
         # ref_int's own rust_coverage/BUILD target addresses the module as @<module>//..., a
         # mapping that only exists in ref_int's graph. Run the underlying tool directly with
         # the same query, module-rooted (see rust_coverage_query), instead.
-        _ensure_stage2_rc_importable(workspace, module.name)
+        #
+        # ferrocene_report.sh's own nested bazel calls get no startup flags, so they read the
+        # module's own .bazelrc -- left unmodified on purpose, since ref_int never patches one.
+        # That rc has neither the stage2-* configs nor the ANDROID_HOME guard, so every module
+        # here currently fails: logging/persistency on a stale @score_baselibs label, kyron on
+        # the Android SDK, lifecycle_health on an undefined stage2-linux-x86_64.
+        # TODO(next release): forward --bazelrc/--noworkspace_rc upstream in ferrocene_report.sh.
         query = rust_coverage_query(module.name)
         config_flags = [c.removeprefix("--config=") for c in stage2_config_flags(module)]
         script = _resolve_ferrocene_report_script(workspace, startup)
