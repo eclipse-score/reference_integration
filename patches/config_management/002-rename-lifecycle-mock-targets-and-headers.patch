@@ -1,0 +1,62 @@
+diff --git a/bazel/patches/wire_unit_test_to_lobster.patch b/bazel/patches/wire_unit_test_to_lobster.patch
+--- a/bazel/patches/wire_unit_test_to_lobster.patch
++++ b/bazel/patches/wire_unit_test_to_lobster.patch
+@@ -31,7 +31,7 @@
+  cc_library(
+      name = "app",
+ @@ -85,3 +86,11 @@
+-         "@score_lifecycle_health//score/launch_manager:lifecycle_mock_cc",
++         "@score_lifecycle_health//score/launch_manager:mock_lifecycle_cc",
+      ],
+  )
+ +
+diff --git a/score/config_management/config_daemon/code/BUILD b/score/config_management/config_daemon/code/BUILD
+--- a/score/config_management/config_daemon/code/BUILD
++++ b/score/config_management/config_daemon/code/BUILD
+@@ -41,8 +41,8 @@
+     tags = ["unit"],
+     deps = [
+         "//score/config_management/config_daemon/code/app/details:app_for_unit_test",
+-        "@score_lifecycle_health//score/launch_manager:applicationcontext_mock_cc",
+-        "@score_lifecycle_health//score/launch_manager:lifecycle_mock_cc",
++        "@score_lifecycle_health//score/launch_manager:mock_application_context_cc",
++        "@score_lifecycle_health//score/launch_manager:mock_lifecycle_cc",
+         "@score_lifecycle_health//score/launch_manager:runapplication_cc",
+     ] + select({
+         ":is_score_variant": ["//score/config_management/config_daemon/code/factory/details:mw_factory_for_unit_test"],
+diff --git a/score/config_management/config_daemon/code/app/details/BUILD b/score/config_management/config_daemon/code/app/details/BUILD
+--- a/score/config_management/config_daemon/code/app/details/BUILD
++++ b/score/config_management/config_daemon/code/app/details/BUILD
+@@ -53,7 +53,7 @@
+         "//score/config_management/config_daemon/code/fault_event_reporter",
+         "@score_baselibs//score/scope_exit",
+         "@score_lifecycle_health//score/launch_manager:application_cc",
+-        "@score_lifecycle_health//score/launch_manager:applicationcontext_mock_cc",
++        "@score_lifecycle_health//score/launch_manager:mock_application_context_cc",
+         "@score_logging//score/mw/log",
+     ],
+ )
+@@ -84,6 +84,6 @@
+         "@score_communication//score/mw/service:factory",
+         "@score_communication//score/mw/service:provided_service_container",
+         "@score_lifecycle_health//score/launch_manager:applicationcontext_cc",
+-        "@score_lifecycle_health//score/launch_manager:lifecycle_mock_cc",
++        "@score_lifecycle_health//score/launch_manager:mock_lifecycle_cc",
+     ],
+ )
+diff --git a/score/config_management/config_daemon/code/main_test.cpp b/score/config_management/config_daemon/code/main_test.cpp
+--- a/score/config_management/config_daemon/code/main_test.cpp
++++ b/score/config_management/config_daemon/code/main_test.cpp
+@@ -13,9 +13,9 @@
+ 
+ #include "score/config_management/config_daemon/code/app/config_daemon.h"
+ 
+-#include "score/mw/lifecycle/applicationcontextmock.h"
+-#include "score/mw/lifecycle/mwlifecyclemanagermock.h"
+-#include "score/mw/lifecycle/lifecyclemanagermock.h"
++#include "score/mw/lifecycle/mock_application_context.h"
++#include "score/mw/lifecycle/mock_mw_lifecycle_manager.h"
++#include "score/mw/lifecycle/mock_lifecycle_manager.h"
+ 
+ #include <sys/wait.h>
+ #include <unistd.h>
