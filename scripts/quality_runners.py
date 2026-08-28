@@ -21,7 +21,6 @@ from pathlib import Path
 from pprint import pprint
 from subprocess import PIPE, Popen
 
-from known_good.bazel_version import resolve_stage2_bazel_version
 from known_good.models.known_good import load_known_good
 from known_good.models.module import Module
 from known_good.module_patches import ModulePatchError, apply_module_patches
@@ -55,6 +54,11 @@ STAGE2_BASE_CONFIG = "stage2-linux-x86_64"
 CENTRAL_MODE_CONFIGS = ["--config=unit-tests", "--config=ferrocene-coverage"]
 # Known-broken rust coverage extraction (mostly proc_macro); applies in both modes.
 DISABLED_RUST_COVERAGE = ["score_communication", "score_orchestrator"]
+# Modules whose own libclang registration ref_int cannot yet replace; untested under isolation.
+MODULES_WITH_OWN_RC = ["score_config_management"]
+# Modules with a second, ref_int-owned rc at ci/stage2/<module>.bazelrc (`//`-relative labels,
+# valid only when that module is Bazel root).
+MODULES_WITH_DEDICATED_RC = ["score_communication"]
 # The module's own post-MVS graph, captured by the resolution gate inside the module checkout.
 # Distinct from Stage 1's GRAPH_NAME, which is rooted at ref_int: only this one is rooted at the
 # module, so only this one contains the module's dev-dependency closure.
@@ -79,15 +83,42 @@ def rust_coverage_query(module_name: str, rust_coverage_build: Path = RUST_COVER
     return match.group(1).replace(f"@{module_name}//", "//")
 
 
-def stage2_startup_flags() -> list[str]:
-    """Bazel startup options that layer ref_int's Stage-2 config over the module's own.
+def stage2_module_rc(module_name: str) -> Path | None:
+    """ref_int's dedicated rc for one module, or ``None`` if it owns none."""
+    if module_name not in MODULES_WITH_DEDICATED_RC:
+        return None
+    path = STAGE2_RC.parent / f"{module_name}.bazelrc"
+    if not path.is_file():
+        raise SystemExit(f"QR: {module_name} declares a dedicated Stage-2 rc, but {path} is missing")
+    return path
 
-    Deliberately not ``--noworkspace_rc``: the module's own ``.bazelrc`` carries settings
-    unrelated to the configs ref_int names, and discarding them changes what Stage 2 validates.
-    Read last, this file still wins every single-valued flag. Every Bazel call for a module must
-    pass the same startup flags -- different ones start a server with a different output base.
+
+def stage2_startup_flags(module_name: str) -> list[str]:
+    """``--noworkspace_rc`` unless the module is in :data:`MODULES_WITH_OWN_RC`."""
+    isolate = [] if module_name in MODULES_WITH_OWN_RC else ["--noworkspace_rc"]
+    flags = isolate + [f"--bazelrc={STAGE2_RC}"]
+    dedicated = stage2_module_rc(module_name)
+    if dedicated is not None:
+        flags.append(f"--bazelrc={dedicated}")
+    return flags
+
+
+def unpatched_dependencies(module_name: str, known, graph) -> list[str]:
+    """Deps in ``module_name``'s closure that ref_int patches in Stage 1 but cannot patch here.
+
+    A ``//patches/...`` label does not resolve inside another module's root, so injected
+    overrides carry no patches (ResolvedDependencies.overwrite strips them). The same commit is
+    therefore built patched in Stage 1 and unpatched in Stage 2. Reported by name because the
+    resulting failure is a stale label *inside the dependency*, which reads like a defect in the
+    module under test.
     """
-    return [f"--bazelrc={STAGE2_RC}"]
+    closure = graph.closure(module_name)
+    return sorted(
+        f"{name} ({len(module.bazel_patches)})"
+        for group in known.modules.values()
+        for name, module in group.items()
+        if name != module_name and name in closure and module.bazel_patches
+    )
 
 
 def stage2_config_flags(module: Module) -> list[str]:
@@ -690,8 +721,19 @@ def main() -> bool:
             raise SystemExit("--module-dir requires exactly one --modules-to-test entry")
         if not STAGE2_RC.is_file():
             raise SystemExit(f"Stage-2 centralized config not found at {STAGE2_RC}")
-        startup = stage2_startup_flags()
-        print_centered(f"QR: Layering ref_int config {STAGE2_RC} over the module's own .bazelrc")
+        startup = stage2_startup_flags(args.modules_to_test[0])
+        dedicated_rc = stage2_module_rc(args.modules_to_test[0])
+        if args.modules_to_test[0] in MODULES_WITH_OWN_RC:
+            print_centered(
+                f"QR: Layering ref_int config {STAGE2_RC} over {args.modules_to_test[0]}'s own "
+                ".bazelrc (registers a libclang toolchain ref_int cannot supply)"
+            )
+        elif dedicated_rc is not None:
+            print_centered(
+                f"QR: Using ref_int config {STAGE2_RC} plus {dedicated_rc}; the module's .bazelrc is not read"
+            )
+        else:
+            print_centered(f"QR: Using ref_int config {STAGE2_RC} only; the module's .bazelrc is not read")
         # DR-008 Option 4: pin the checkout to the set ref_int resolved in Stage 1. That artifact
         # is mandatory -- known_good.json carries only first-party pins, no transitive registry
         # versions, so it cannot back the closure injection.
@@ -723,6 +765,12 @@ def main() -> bool:
             module_under_test=args.modules_to_test[0],
             graph=graph,
         )
+        unpatched = unpatched_dependencies(args.modules_to_test[0], known, graph)
+        if unpatched:
+            print_centered(
+                f"QR: WARNING: {', '.join(unpatched)} injected WITHOUT ref_int's patches "
+                "(patch count in brackets); Stage 1 applies them, Stage 2 cannot"
+            )
 
         # The module's committed MODULE.bazel.lock is stale the moment we inject overrides.
         # Delete it so the resolution gate regenerates a lock reflecting exactly the resolved set
@@ -732,17 +780,14 @@ def main() -> bool:
             print_centered(f"QR: Removing stale module lock {module_lock} (rewritten by the resolution gate)")
             module_lock.unlink()
 
-        # ref_int's release is a floor, not a ceiling: raise a module pinning an older Bazel, keep
-        # one pinning a newer. See resolve_stage2_bazel_version for why downgrading is unsafe.
+        # The Bazel release is environment ref_int defines, not a dependency to resolve.
         bazelversion_dst = workspace.resolve() / ".bazelversion"
         module_ver = bazelversion_dst.read_text().strip() if bazelversion_dst.is_file() else None
         ref_int_ver = (REF_INT_ROOT / ".bazelversion").read_text().strip()
-        bazel_ver = resolve_stage2_bazel_version(ref_int_ver, module_ver)
-        if bazel_ver == module_ver:
-            print_centered(f"QR: Keeping the module's .bazelversion {bazel_ver} (ref_int's floor is {ref_int_ver})")
-        else:
-            print_centered(f"QR: Raising .bazelversion {module_ver or '<none>'} -> {bazel_ver} in {bazelversion_dst}")
-            bazelversion_dst.write_text(bazel_ver + "\n")
+        print_centered(
+            f"QR: Pinning .bazelversion {module_ver or '<none>'} -> {ref_int_ver} (ref_int's) in {bazelversion_dst}"
+        )
+        bazelversion_dst.write_text(ref_int_ver + "\n")
 
     for module in known.modules["target_sw"].values():
         if args.modules_to_test and module.name not in args.modules_to_test:

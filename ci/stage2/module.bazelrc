@@ -11,16 +11,27 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 #
-# DR-008 Stage 2 configuration, owned by reference_integration. Layered ON TOP of the
-# module's own .bazelrc via --bazelrc, so ref_int defines the configs it names in
-# known_good.json instead of dangling a name whose meaning lives downstream.
-#
-# Read last, so single-valued flags here win; --extra_toolchains and other accumulating
-# flags add to what the module already registers. Do NOT add --noworkspace_rc: it was tried and
-# reverted because it discarded module settings unrelated to the configs ref_int names (stub
-# trace-library selection, sandbox settings, module-owned libclang/cc toolchains, Rust coverage
-# instrumentation, clippy aspects), leaving modules configured silently wrong instead of failing.
-# The "3 of 8 modules" figure behind that reversal is a single earlier observation, not re-measured.
+# DR-008 Stage 2 configuration, owned by reference_integration. Sole source of common config:
+# quality_runners.py passes --noworkspace_rc, so the module's own .bazelrc is not read.
+
+# Registries must be unconditional -- repo mapping is computed before command configs apply.
+common --registry=https://raw.githubusercontent.com/eclipse-score/bazel_registry/main/
+common --registry=https://bcr.bazel.build
+
+# Download resilience. Lost under --noworkspace_rc since each module's own .bazelrc carried it.
+common --experimental_repository_downloader_retries=10
+common --experimental_scale_timeouts=2.0
+common --http_connector_attempts=10
+common --http_connector_retry_max_timeout=1s
+common --http_timeout_scaling=2.0
+
+# ─── Repo-scoped build settings, ported from ref_int's root .bazelrc ─────────
+# Opt-in per module, because a build setting can only be loaded by a module whose graph contains
+# the repo that defines it. Set unconditionally, they abort option loading with "No repository
+# visible as '@<repo>'" for every module that does not depend on it (score_kyron and
+# score_orchestrator depend on neither).
+build:stage2-baselibs-flags --@score_baselibs//score/log_rust:safety_level=qm
+build:stage2-communication-flags --@score_communication//score/memory/shared/flags:use_typedshmd=False
 
 # rules_android is pulled in transitively (grpc-java -> rules_jvm_external) and evaluates
 # android_sdk_repository, which fails when ANDROID_HOME points at an incomplete SDK, as on

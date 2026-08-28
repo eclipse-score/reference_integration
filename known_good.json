@@ -19,7 +19,8 @@
                     ],
                     "bazel_config": [
                         "stage2-gcc",
-                        "stage2-rust"
+                        "stage2-rust",
+                        "stage2-baselibs-flags"
                     ],
                     "exclude_test_target_reasons": {
                         "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test": "Stage 2's toolchain does not implement the aborts_upon_exception feature."
@@ -48,7 +49,8 @@
                     ],
                     "exclude_test_targets": [],
                     "bazel_config": [
-                        "stage2-rust"
+                        "stage2-rust",
+                        "stage2-baselibs-flags"
                     ],
                     "legacy_exclude_test_targets": [
                         "//score/mw/com/impl:unit_test_runtime_single_exec",
@@ -68,8 +70,7 @@
                 "bazel_patches": [
                     "//patches/persistency:001-fix-doc.patch",
                     "//patches/persistency:002-fix-dev-dep.patch",
-                    "//patches/persistency:003-fix-docs-version.patch",
-                    "//patches/persistency:004-safety-level-moved-to-log-rust.patch"
+                    "//patches/persistency:003-fix-docs-version.patch"
                 ],
                 "metadata": {
                     "extra_test_config": [
@@ -84,7 +85,9 @@
                     "rust_coverage_config": "ferrocene-coverage-per",
                     "bazel_config": [
                         "stage2-gcc",
-                        "stage2-rust"
+                        "stage2-rust",
+                        "stage2-communication-flags",
+                        "stage2-baselibs-flags"
                     ],
                     "exclude_test_target_reasons": {
                         "//src/cpp/tests:bm_kvs_cpp": "google_benchmark benchmark declared as a cc_test; a timing measurement, not a correctness test, so it is not meaningful in a UT/coverage run."
@@ -134,7 +137,8 @@
                     ],
                     "bazel_config": [
                         "stage2-gcc",
-                        "stage2-rust"
+                        "stage2-rust",
+                        "stage2-baselibs-flags"
                     ],
                     "exclude_test_target_reasons": {
                         "//score/health_monitor/src/rust:miri_tests": "miri_test rule (tags=[\"miri\"]); needs the miri interpreter toolchain, which Stage 2's configs do not provide.",
@@ -169,7 +173,9 @@
                     "exclude_test_targets": [],
                     "bazel_config": [
                         "stage2-gcc",
-                        "stage2-rust"
+                        "stage2-rust",
+                        "stage2-communication-flags",
+                        "stage2-baselibs-flags"
                     ],
                     "legacy_exclude_test_targets": [
                         "//score/mw/log/legacy_non_verbose_api:unit_test"
@@ -180,14 +186,17 @@
                 "repo": "https://github.com/eclipse-score/time.git",
                 "hash": "8c42d34698535dabeaa4782d5ec123256151fb30",
                 "bazel_patches": [
-                    "//patches/time:001-memory-shared-moved-to-communication.patch"
+                    "//patches/time:001-memory-shared-moved-to-communication.patch",
+                    "//patches/time:002-lifecycle-client-moved-to-launch-manager.patch"
                 ],
                 "metadata": {
                     "langs": [
                         "cpp"
                     ],
                     "bazel_config": [
-                        "stage2-gcc"
+                        "stage2-gcc",
+                        "stage2-communication-flags",
+                        "stage2-baselibs-flags"
                     ]
                 }
             },
@@ -225,6 +234,10 @@
                         "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com",
                         "//score/config_management/config_provider/code/proxies/details:unit_test_mw",
                         "//score/config_management/dependability/..."
+                    ],
+                    "bazel_config": [
+                        "stage2-communication-flags",
+                        "stage2-baselibs-flags"
                     ]
                 }
             }

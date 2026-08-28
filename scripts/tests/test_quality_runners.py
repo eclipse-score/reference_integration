@@ -20,6 +20,7 @@ and is exercised by the Stage-2 job itself.
 import json
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -29,6 +30,7 @@ if str(_SCRIPTS_DIR) not in sys.path:
 
 import quality_runners  # noqa: E402
 from known_good.models.module import Metadata, Module  # noqa: E402
+from known_good.resolved_dependencies import DependencyGraph  # noqa: E402
 from quality_runners import (  # noqa: E402
     STAGE2_BASE_CONFIG,
     classify_gate_failure,
@@ -37,6 +39,7 @@ from quality_runners import (  # noqa: E402
     stage2_gate_command,
     stage2_module_command,
     stage2_target_args,
+    unpatched_dependencies,
 )
 
 # Pointed at via STAGE2_RC so the tests do not read ci/stage2/module.bazelrc, which is not at a
@@ -219,3 +222,100 @@ class TestClassifyGateFailure:
         p = tmp_path / "MODULE.bazel"
         p.write_text('module(name = "m")\n')
         assert classify_gate_failure("ERROR: '@@score_crates+//:mockall'", p) == ("ref_int harness defect", [])
+
+
+class TestStage2StartupFlags:
+    """The rc files Stage 2 reads for a module, and in which order."""
+
+    def test_isolated_module_reads_shared_rc_only(self):
+        flags = quality_runners.stage2_startup_flags("score_kyron")
+        assert flags == ["--noworkspace_rc", f"--bazelrc={quality_runners.STAGE2_RC}"]
+
+    def test_dedicated_rc_module_is_isolated_and_reads_both_rcs_in_order(self, tmp_path, monkeypatch):
+        shared = tmp_path / "module.bazelrc"
+        shared.write_text("build:stage2-linux-x86_64 --platforms=//:x\n")
+        dedicated = tmp_path / "score_communication.bazelrc"
+        dedicated.write_text("build --extra_toolchains=//bazel/toolchains:x\n")
+        monkeypatch.setattr(quality_runners, "STAGE2_RC", shared)
+
+        flags = quality_runners.stage2_startup_flags("score_communication")
+
+        assert flags == [
+            "--noworkspace_rc",
+            f"--bazelrc={shared}",
+            f"--bazelrc={dedicated}",
+        ]
+
+    def test_module_keeping_its_own_rc_is_not_isolated(self):
+        flags = quality_runners.stage2_startup_flags("score_config_management")
+        assert "--noworkspace_rc" not in flags
+
+    def test_missing_dedicated_rc_is_loud(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(quality_runners, "STAGE2_RC", tmp_path / "module.bazelrc")
+        with pytest.raises(SystemExit, match="declares a dedicated Stage-2 rc"):
+            quality_runners.stage2_startup_flags("score_communication")
+
+    def test_module_without_dedicated_rc_gets_none(self):
+        assert quality_runners.stage2_module_rc("score_kyron") is None
+
+    def test_dedicated_rc_is_looked_up_beside_the_shared_one(self, tmp_path, monkeypatch):
+        shared = tmp_path / "nested" / "module.bazelrc"
+        shared.parent.mkdir()
+        shared.write_text("")
+        (shared.parent / "score_communication.bazelrc").write_text("")
+        monkeypatch.setattr(quality_runners, "STAGE2_RC", shared)
+
+        assert quality_runners.stage2_module_rc("score_communication") == shared.parent / "score_communication.bazelrc"
+
+
+class TestUnpatchedDependencies:
+    """Deps ref_int patches in Stage 1 but cannot patch when another module is the Bazel root."""
+
+    _REPO = "https://example.invalid/x.git"
+    _HASH = "a" * 40
+
+    def _dep(self, name, patches=None):
+        data = {"repo": self._REPO, "hash": self._HASH}
+        if patches:
+            data["bazel_patches"] = patches
+        return Module.from_dict(name, data)
+
+    def _known(self, **modules):
+        return SimpleNamespace(modules={"target_sw": modules})
+
+    def _graph(self, root, deps):
+        return DependencyGraph({"name": root, "dependencies": [{"name": d, "dependencies": []} for d in deps]})
+
+    def test_patched_dependency_is_reported_with_its_patch_count(self):
+        known = self._known(
+            score_config_management=self._dep("score_config_management"),
+            score_logging=self._dep("score_logging", ["//patches/logging:a.patch", "//patches/logging:b.patch"]),
+        )
+        graph = self._graph("score_config_management", ["score_logging"])
+
+        assert unpatched_dependencies("score_config_management", known, graph) == ["score_logging (2)"]
+
+    def test_dependency_without_patches_is_not_reported(self):
+        known = self._known(
+            score_kyron=self._dep("score_kyron"),
+            score_baselibs=self._dep("score_baselibs"),
+        )
+        graph = self._graph("score_kyron", ["score_baselibs"])
+
+        assert unpatched_dependencies("score_kyron", known, graph) == []
+
+    def test_the_module_under_tests_own_patches_are_not_reported(self):
+        """They are applied by apply_module_patches; only dependencies lose theirs."""
+        known = self._known(score_time=self._dep("score_time", ["//patches/time:001.patch"]))
+        graph = self._graph("score_time", [])
+
+        assert unpatched_dependencies("score_time", known, graph) == []
+
+    def test_patched_module_outside_the_closure_is_not_reported(self):
+        known = self._known(
+            score_kyron=self._dep("score_kyron"),
+            score_logging=self._dep("score_logging", ["//patches/logging:a.patch"]),
+        )
+        graph = self._graph("score_kyron", [])
+
+        assert unpatched_dependencies("score_kyron", known, graph) == []

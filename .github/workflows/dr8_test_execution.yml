@@ -26,14 +26,13 @@ on:
     types: [created]
 # Do not flood CI with unneeded previous runs in PR
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
-  cancel-in-progress: ${{ github.ref_name != 'main' && !startsWith(github.ref_name, 'release/') }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request_target' }}
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
   stage1_integration:
     name: "Stage 1 — Platform Build & Feature Integration Tests"
-    continue-on-error: true
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -94,7 +93,6 @@ jobs:
     name: "Prepare Stage 2 module matrix"
     needs: stage1_integration
     if: ${{ !cancelled() }}
-    continue-on-error: true
     runs-on: ubuntu-latest
     outputs:
       modules: ${{ steps.list.outputs.modules }}
@@ -126,7 +124,6 @@ jobs:
     name: "Stage 2 — Module UT & Coverage (${{ matrix.module.name }})"
     needs: [stage1_integration, prepare_matrix]
     if: ${{ !cancelled() }}
-    continue-on-error: true
     strategy:
       fail-fast: false
       matrix:
@@ -237,7 +234,6 @@ jobs:
     name: "Aggregate Quality Report"
     needs: [stage1_integration, stage2_module_validation]
     if: always()
-    continue-on-error: true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository (pull_request_target via workflow_call)
