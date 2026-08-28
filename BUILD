@@ -12,7 +12,8 @@
 # *******************************************************************************
 
 load("@score_docs_as_code//:docs.bzl", "docs")
-load("@score_tooling//:defs.bzl", "setup_starpls", "use_format_targets")
+load("@score_tooling//:defs.bzl", "setup_starpls")
+load("@score_tooling//third_party/format:macros.bzl", "use_format_targets")
 
 # Docs-as-code
 docs(

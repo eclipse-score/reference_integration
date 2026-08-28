@@ -29,7 +29,11 @@ single_version_override(
 bazel_dep(name = "score_tooling")
 single_version_override(
     module_name = "score_tooling",
-    version = "2.2.1",
+    patch_strip = 1,
+    patches = [
+        "//patches/tooling:001-expose-aspect-rules-lint-non-dev.patch",
+    ],
+    version = "2.0.2",
 )
 
 bazel_dep(name = "score_platform")
