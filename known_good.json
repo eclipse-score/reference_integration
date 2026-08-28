@@ -3,7 +3,6 @@
         "target_sw": {
             "score_baselibs": {
                 "repo": "https://github.com/eclipse-score/baselibs.git",
-                "hash": "06f6b9b7d48710438ea4664d84da5143594763cb",
                 "bazel_patches": [
                     "//patches/baselibs:001-restore-trace-library-mock-visibility.patch"
                 ],
@@ -21,11 +20,12 @@
                     "langs": [
                         "cpp"
                     ]
-                }
+                },
+                "version": "0.2.12"
             },
             "score_communication": {
                 "repo": "https://github.com/eclipse-score/communication.git",
-                "hash": "21652a6196c22bdf89e0a0abb34aabeb79eb26a0",
+                "version": "0.4.0",
                 "bazel_patches": [
                     "//patches/communication:001-expose-comm-examples.patch",
                     "//patches/communication:003-module-deps-visibility.patch",
@@ -50,48 +50,43 @@
             },
             "score_persistency": {
                 "repo": "https://github.com/eclipse-score/persistency.git",
-                "hash": "b987d375e54f038c31f9441fa738c747c7a07c75",
-                "bazel_patches": [
-                    "//patches/persistency:001-fix-doc.patch",
-                    "//patches/persistency:002-fix-dev-dep.patch",
-                    "//patches/persistency:003-fix-docs-version.patch"
-                ],
+                "bazel_patches": [],
                 "metadata": {
                     "extra_test_config": [
                         "@score_baselibs//score/log_rust:safety_level=qm",
                         "@score_baselibs//score/json:base_library=nlohmann",
                         "@score_logging//score/mw/log/flags:KRemote_Logging=False"
                     ],
-                    "code_root_path": "//src/...",
+                    "code_root_path": "//score/kvs/...",
                     "exclude_test_targets": [
-                        "//src/cpp/tests:bm_kvs_cpp"
+                        "//score/kvs/tests:bm_kvs_cpp"
                     ],
                     "rust_coverage_config": "ferrocene-coverage-per"
-                }
+                },
+                "version": "0.3.5"
             },
             "score_orchestrator": {
                 "repo": "https://github.com/eclipse-score/orchestrator.git",
-                "hash": "c5bcbd39fc6e124a26b1d66abbfc696a3319c2a4",
                 "metadata": {
                     "code_root_path": "//src/...",
                     "langs": [
                         "rust"
                     ]
-                }
+                },
+                "version": "0.1.1"
             },
             "score_kyron": {
                 "repo": "https://github.com/eclipse-score/kyron.git",
-                "hash": "cc72f599cc0c04a4e80c12a204f57e59a48d284a",
                 "metadata": {
                     "code_root_path": "//src/...",
                     "langs": [
                         "rust"
                     ]
-                }
+                },
+                "version": "0.1.3"
             },
-            "score_lifecycle_health": {
+            "score_lifecycle": {
                 "repo": "https://github.com/eclipse-score/lifecycle.git",
-                "hash": "23e9849437c578ade99b8ccbf5d09c1835737b3f",
                 "bazel_patches": [],
                 "metadata": {
                     "code_root_path": "//score/...",
@@ -100,21 +95,20 @@
                         "//score/launch_manager/src/daemon/src/common/concurrency:mpmc_concurrent_queue_tsan_test",
                         "//score/launch_manager/src/daemon/src/common/concurrency:mpsc_bounded_queue_tsan_test"
                     ]
-                }
+                },
+                "version": "0.5.0"
             },
             "score_logging": {
                 "repo": "https://github.com/eclipse-score/logging.git",
-                "hash": "e1bf097cdbf718f993ab7b24ae5f59639ed96bdb",
+                "hash": "d41fbde4aa447faad3d4d57269255377569cd2fe",
                 "bazel_patches": [
                     "//patches/logging:002-needs-json-deps-not-dev-dependency.patch",
                     "//patches/logging:003-docs-as-code-not-dev-dependency.patch",
-                    "//patches/logging:004-rules-pkg-not-dev-dependency.patch",
-                    "//patches/logging:005-memory-shared-moved-to-communication.patch"
+                    "//patches/logging:004-rules-pkg-not-dev-dependency.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/mw/log/...",
                     "extra_test_config": [
-                        "@score_logging//score/datarouter/build_configuration_flags:persistent_logging=False",
                         "@score_logging//score/datarouter/build_configuration_flags:persistent_config_feature_enabled=False",
                         "@score_logging//score/datarouter/build_configuration_flags:enable_nonverbose_dlt=False",
                         "@score_logging//score/datarouter/build_configuration_flags:enable_dynamic_configuration=False",
@@ -128,9 +122,11 @@
             },
             "score_time": {
                 "repo": "https://github.com/eclipse-score/time.git",
-                "hash": "8c42d34698535dabeaa4782d5ec123256151fb30",
+                "hash": "4a3a6c5a83fb2fcaa8808a6bb5a54008eb2087e6",
                 "bazel_patches": [
-                    "//patches/time:001-memory-shared-moved-to-communication.patch"
+                    "//patches/time:001-memory-shared-moved-to-communication.patch",
+                    "//patches/time:002-lifecycle-renamed-to-score_lifecycle.patch",
+                    "//patches/time:003-remove-obsolete-py_unittest_qnx_test.patch"
                 ],
                 "metadata": {
                     "langs": [
@@ -140,9 +136,10 @@
             },
             "score_config_management": {
                 "repo": "https://github.com/eclipse-score/config_management.git",
-                "hash": "952461ceffff774fb4c125ee023fea0221fcdce2",
+                "hash": "f0d4f67e7a73ee666a2b4c04b3495fae5df9f4e5",
                 "bazel_patches": [
-                    "patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch"
+                    "patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch",
+                    "patches/config_management/002-lifecycle-renamed-to-score_lifecycle.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/config_management/...",
@@ -165,37 +162,37 @@
         "tooling": {
             "score_crates": {
                 "repo": "https://github.com/eclipse-score/score-crates.git",
-                "hash": "4656dda8f04a3d88c8089f63111195840cfbd9e3"
+                "version": "0.0.11"
             },
             "score_itf": {
                 "repo": "https://github.com/eclipse-score/itf.git",
-                "hash": "802e0186d373e0d9d67c1c9ccb1ea08952c7ad06"
+                "version": "0.5.0"
             },
             "score_tooling": {
                 "repo": "https://github.com/eclipse-score/tooling.git",
-                "hash": "7099e272c3f6114bad17736debd54139601aedd4"
+                "version": "2.2.1"
             },
             "score_platform": {
                 "repo": "https://github.com/eclipse-score/score.git",
-                "hash": "24ec6f276cd37755b5dae7f2345913628d56831f"
+                "version": "0.7.1"
             },
             "score_bazel_platforms": {
                 "repo": "https://github.com/eclipse-score/bazel_platforms.git",
-                "hash": "82b6df6ce93fb2960c52d992939fc6c3cf0e1f0f"
+                "version": "1.0.0"
             },
             "score_test_scenarios": {
                 "repo": "https://github.com/eclipse-score/testing_tools.git",
-                "hash": "fec712d490ff5d46fae91332bafac4777b300026"
+                "version": "0.4.1"
             },
             "score_docs_as_code": {
                 "repo": "https://github.com/eclipse-score/docs-as-code.git",
-                "hash": "f1f20f0579ab5e63513561db0ab055cbec46c987"
+                "version": "8.0.1"
             },
-            "score_process": {
+            "score_process_description": {
                 "repo": "https://github.com/eclipse-score/process_description.git",
-                "hash": "8df530cab5efcb40e9f835ba6e9b61ae2f0175c7"
+                "version": "2.1.2"
             }
         }
     },
-    "timestamp": "2026-08-21T00:00:00+00:00Z"
+    "timestamp": "2026-08-28T09:19:12Z"
 }

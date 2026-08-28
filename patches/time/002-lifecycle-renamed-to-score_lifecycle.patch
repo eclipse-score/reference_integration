@@ -1,0 +1,38 @@
+diff --git a/MODULE.bazel b/MODULE.bazel
+index ea89389..23ba8f0 100644
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -100,7 +100,7 @@ bazel_dep(name = "buildifier_prebuilt", version = "8.5.1", dev_dependency = True
+ 
+ bazel_dep(name = "score_baselibs", version = "0.2.9")
+ bazel_dep(name = "score_communication", version = "0.4.0")
+-bazel_dep(name = "score_lifecycle_health", version = "0.3.0")
++bazel_dep(name = "score_lifecycle", version = "0.5.0")
+ 
+ # LLVM toolchain — provides @llvm_toolchain//:clang-tidy for the clang-tidy aspect.
+ llvm = use_extension(
+diff --git a/score/time_daemon/src/application/BUILD b/score/time_daemon/src/application/BUILD
+index 57ade29..9d7a565 100644
+--- a/score/time_daemon/src/application/BUILD
++++ b/score/time_daemon/src/application/BUILD
+@@ -42,7 +42,7 @@ cc_binary(
+         "//score/time_daemon/src/application/svt:svt_handler",
+         "//score/time_daemon/src/common:logging_contexts",
+         "@score_baselibs//score/concurrency",
+-        "@score_lifecycle_health//score/launch_manager:lifecycle_cc",
++        "@score_lifecycle//score/launch_manager:lifecycle_cc",
+         # "@score_logging//score/mw/log",
+         "@score_baselibs//score/mw/log:console_only_backend",
+     ],
+diff --git a/score/time_slave/src/application/BUILD b/score/time_slave/src/application/BUILD
+index 34ed6ef..091f8b3 100644
+--- a/score/time_slave/src/application/BUILD
++++ b/score/time_slave/src/application/BUILD
+@@ -28,6 +28,6 @@ cc_binary(
+         "//score/time_slave/src/gptp:gptp_engine",
+         "//score/ts_client/src:gptp_ipc",
+         "@score_baselibs//score/mw/log:console_only_backend",
+-        "@score_lifecycle_health//score/launch_manager:lifecycle_cc",
++        "@score_lifecycle//score/launch_manager:lifecycle_cc",
+     ],
+ )

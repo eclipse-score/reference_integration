@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Generated from known_good.json at 2026-08-21T00:00:00+00:00Z
+# Generated from known_good.json at 2026-08-28T09:19:12Z
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py
 
 load("@score_tooling//:defs.bzl", "rust_coverage_report")
@@ -32,7 +32,7 @@ rust_coverage_report(
         "linux-x86_64",
         "ferrocene-coverage-per",
     ],
-    query = 'kind("rust_test", @score_persistency//src/...) -@score_persistency//src/cpp/tests:bm_kvs_cpp',
+    query = 'kind("rust_test", @score_persistency//score/kvs/...) -@score_persistency//score/kvs/tests:bm_kvs_cpp',
     visibility = ["//visibility:public"],
 )
 
@@ -57,12 +57,12 @@ rust_coverage_report(
 )
 
 rust_coverage_report(
-    name = "rust_coverage_score_lifecycle_health",
+    name = "rust_coverage_score_lifecycle",
     bazel_configs = [
         "linux-x86_64",
         "ferrocene-coverage",
     ],
-    query = 'kind("rust_test", @score_lifecycle_health//score/...) -@score_lifecycle_health//score/health_monitor/src/rust:miri_tests -@score_lifecycle_health//score/launch_manager/src/daemon/src/common/concurrency:mpmc_concurrent_queue_tsan_test -@score_lifecycle_health//score/launch_manager/src/daemon/src/common/concurrency:mpsc_bounded_queue_tsan_test',
+    query = 'kind("rust_test", @score_lifecycle//score/...) -@score_lifecycle//score/health_monitor/src/rust:miri_tests -@score_lifecycle//score/launch_manager/src/daemon/src/common/concurrency:mpmc_concurrent_queue_tsan_test -@score_lifecycle//score/launch_manager/src/daemon/src/common/concurrency:mpsc_bounded_queue_tsan_test',
     visibility = ["//visibility:public"],
 )
 

@@ -28,7 +28,7 @@ rust_binary(
         "@score_kyron//src/kyron:libkyron",
         "@score_kyron//src/kyron-foundation:libkyron_foundation",
         "@score_orchestrator//src/orchestration:liborchestration",
-        "@score_persistency//src/rust/rust_kvs",
+        "@score_persistency//score/kvs/rust_kvs",
         "@score_test_scenarios//test_scenarios_rust",
     ],
 )

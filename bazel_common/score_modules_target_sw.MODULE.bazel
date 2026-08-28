@@ -11,77 +11,64 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Generated from known_good.json at 2026-08-21T00:00:00+00:00Z
+# Generated from known_good.json at 2026-08-28T09:19:12Z
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py
 
 bazel_dep(name = "score_baselibs")
-git_override(
+single_version_override(
     module_name = "score_baselibs",
-    commit = "06f6b9b7d48710438ea4664d84da5143594763cb",
     patch_strip = 1,
     patches = [
         "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
     ],
-    remote = "https://github.com/eclipse-score/baselibs.git",
+    version = "0.2.12",
 )
 
 bazel_dep(name = "score_communication")
-git_override(
+single_version_override(
     module_name = "score_communication",
-    commit = "21652a6196c22bdf89e0a0abb34aabeb79eb26a0",
     patch_strip = 1,
     patches = [
         "//patches/communication:001-expose-comm-examples.patch",
         "//patches/communication:003-module-deps-visibility.patch",
         "//patches/communication:004-rules-build-error-not-dev-dependency.patch",
     ],
-    remote = "https://github.com/eclipse-score/communication.git",
+    version = "0.4.0",
 )
 
 bazel_dep(name = "score_persistency")
-git_override(
+single_version_override(
     module_name = "score_persistency",
-    commit = "b987d375e54f038c31f9441fa738c747c7a07c75",
-    patch_strip = 1,
-    patches = [
-        "//patches/persistency:001-fix-doc.patch",
-        "//patches/persistency:002-fix-dev-dep.patch",
-        "//patches/persistency:003-fix-docs-version.patch",
-    ],
-    remote = "https://github.com/eclipse-score/persistency.git",
+    version = "0.3.5",
 )
 
 bazel_dep(name = "score_orchestrator")
-git_override(
+single_version_override(
     module_name = "score_orchestrator",
-    commit = "c5bcbd39fc6e124a26b1d66abbfc696a3319c2a4",
-    remote = "https://github.com/eclipse-score/orchestrator.git",
+    version = "0.1.1",
 )
 
 bazel_dep(name = "score_kyron")
-git_override(
+single_version_override(
     module_name = "score_kyron",
-    commit = "cc72f599cc0c04a4e80c12a204f57e59a48d284a",
-    remote = "https://github.com/eclipse-score/kyron.git",
+    version = "0.1.3",
 )
 
-bazel_dep(name = "score_lifecycle_health")
-git_override(
-    module_name = "score_lifecycle_health",
-    commit = "23e9849437c578ade99b8ccbf5d09c1835737b3f",
-    remote = "https://github.com/eclipse-score/lifecycle.git",
+bazel_dep(name = "score_lifecycle")
+single_version_override(
+    module_name = "score_lifecycle",
+    version = "0.5.0",
 )
 
 bazel_dep(name = "score_logging")
 git_override(
     module_name = "score_logging",
-    commit = "e1bf097cdbf718f993ab7b24ae5f59639ed96bdb",
+    commit = "d41fbde4aa447faad3d4d57269255377569cd2fe",
     patch_strip = 1,
     patches = [
         "//patches/logging:002-needs-json-deps-not-dev-dependency.patch",
         "//patches/logging:003-docs-as-code-not-dev-dependency.patch",
         "//patches/logging:004-rules-pkg-not-dev-dependency.patch",
-        "//patches/logging:005-memory-shared-moved-to-communication.patch",
     ],
     remote = "https://github.com/eclipse-score/logging.git",
 )
@@ -89,10 +76,12 @@ git_override(
 bazel_dep(name = "score_time")
 git_override(
     module_name = "score_time",
-    commit = "8c42d34698535dabeaa4782d5ec123256151fb30",
+    commit = "4a3a6c5a83fb2fcaa8808a6bb5a54008eb2087e6",
     patch_strip = 1,
     patches = [
         "//patches/time:001-memory-shared-moved-to-communication.patch",
+        "//patches/time:002-lifecycle-renamed-to-score_lifecycle.patch",
+        "//patches/time:003-remove-obsolete-py_unittest_qnx_test.patch",
     ],
     remote = "https://github.com/eclipse-score/time.git",
 )
@@ -100,10 +89,11 @@ git_override(
 bazel_dep(name = "score_config_management")
 git_override(
     module_name = "score_config_management",
-    commit = "952461ceffff774fb4c125ee023fea0221fcdce2",
+    commit = "f0d4f67e7a73ee666a2b4c04b3495fae5df9f4e5",
     patch_strip = 1,
     patches = [
         "patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch",
+        "patches/config_management/002-lifecycle-renamed-to-score_lifecycle.patch",
     ],
     remote = "https://github.com/eclipse-score/config_management.git",
 )

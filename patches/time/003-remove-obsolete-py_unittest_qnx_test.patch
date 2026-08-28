@@ -1,0 +1,122 @@
+diff --git a/score/time/BUILD b/score/time/BUILD
+index 7f707a4..8796817 100644
+--- a/score/time/BUILD
++++ b/score/time/BUILD
+@@ -12,7 +12,6 @@
+ # *******************************************************************************
+ 
+ load("@score_baselibs//:bazel/unit_tests.bzl", "cc_unit_test_suites_for_host_and_qnx")
+-load("@score_baselibs//third_party/itf:py_unittest_qnx_test.bzl", "py_unittest_qnx_test")
+ load("@score_docs_as_code//:docs.bzl", "docs_bundle")
+ 
+ docs_bundle(
+@@ -21,13 +20,6 @@ docs_bundle(
+     visibility = ["//visibility:public"],
+ )
+ 
+-py_unittest_qnx_test(
+-    name = "qnx_unit_test_cases",
+-    test_suites = [
+-        "//score/time/high_res_steady_time:qnx_unit_test_cases",
+-    ],
+-    visibility = ["//score/time:__pkg__"],
+-)
+ 
+ cc_unit_test_suites_for_host_and_qnx(
+     name = "unit_test_suite",
+diff --git a/score/time/high_res_steady_time/BUILD b/score/time/high_res_steady_time/BUILD
+index 486fb6a..5a407ae 100644
+--- a/score/time/high_res_steady_time/BUILD
++++ b/score/time/high_res_steady_time/BUILD
+@@ -12,7 +12,6 @@
+ # *******************************************************************************
+ 
+ load("@score_baselibs//:bazel/unit_tests.bzl", "cc_unit_test_suites_for_host_and_qnx")
+-load("@score_baselibs//third_party/itf:py_unittest_qnx_test.bzl", "py_unittest_qnx_test")
+ 
+ # The public interface of the HighResSteadyTime clock domain
+ alias(
+@@ -37,11 +36,6 @@ alias(
+     visibility = ["//visibility:public"],
+ )
+ 
+-py_unittest_qnx_test(
+-    name = "qnx_unit_test_cases",
+-    test_suites = ["//score/time/high_res_steady_time/src:qnx_unit_test_cases"],
+-    visibility = ["//score/time:__pkg__"],
+-)
+ 
+ cc_unit_test_suites_for_host_and_qnx(
+     name = "unit_test_suite",
+diff --git a/score/time/high_res_steady_time/src/BUILD b/score/time/high_res_steady_time/src/BUILD
+index 99bd56a..40a69af 100644
+--- a/score/time/high_res_steady_time/src/BUILD
++++ b/score/time/high_res_steady_time/src/BUILD
+@@ -13,7 +13,6 @@
+ 
+ load("@score_baselibs//:bazel/unit_tests.bzl", "cc_unit_test_suites_for_host_and_qnx")
+ load("@score_baselibs//score/language/safecpp:toolchain_features.bzl", "COMPILER_WARNING_FEATURES")
+-load("@score_baselibs//third_party/itf:py_unittest_qnx_test.bzl", "py_unittest_qnx_test")
+ 
+ cc_library(
+     name = "high_res_steady_clock",
+@@ -62,13 +61,6 @@ cc_library(
+     ],
+ )
+ 
+-py_unittest_qnx_test(
+-    name = "qnx_unit_test_cases",
+-    test_suites = [
+-        "//score/time/high_res_steady_time/src/details:qnx_unit_test_cases",
+-    ],
+-    visibility = ["//score/time/high_res_steady_time:__pkg__"],
+-)
+ 
+ cc_test(
+     name = "high_res_steady_clock_adapter_test",
+diff --git a/score/time/high_res_steady_time/src/details/BUILD b/score/time/high_res_steady_time/src/details/BUILD
+index f1d0655..c05a399 100644
+--- a/score/time/high_res_steady_time/src/details/BUILD
++++ b/score/time/high_res_steady_time/src/details/BUILD
+@@ -12,16 +12,6 @@
+ # *******************************************************************************
+ 
+ load("@score_baselibs//:bazel/unit_tests.bzl", "cc_unit_test_suites_for_host_and_qnx")
+-load("@score_baselibs//third_party/itf:py_unittest_qnx_test.bzl", "py_unittest_qnx_test")
+-
+-py_unittest_qnx_test(
+-    name = "qnx_unit_test_cases",
+-    test_suites = [
+-        "//score/time/high_res_steady_time/src/details/qtime:qnx_unit_test_cases",
+-        "//score/time/high_res_steady_time/src/details/system_clock:qnx_unit_test_cases",
+-    ],
+-    visibility = ["//score/time/high_res_steady_time:__subpackages__"],
+-)
+ 
+ cc_unit_test_suites_for_host_and_qnx(
+     name = "unit_test_suite",
+diff --git a/score/time/high_res_steady_time/src/details/qtime/BUILD b/score/time/high_res_steady_time/src/details/qtime/BUILD
+index 423a717..c4b1f68 100644
+--- a/score/time/high_res_steady_time/src/details/qtime/BUILD
++++ b/score/time/high_res_steady_time/src/details/qtime/BUILD
+@@ -12,7 +12,6 @@
+ # *******************************************************************************
+ 
+ load("@score_baselibs//score/language/safecpp:toolchain_features.bzl", "COMPILER_WARNING_FEATURES")
+-load("@score_baselibs//third_party/itf:py_unittest_qnx_test.bzl", "py_unittest_qnx_test")
+ 
+ cc_library(
+     name = "qclock",
+@@ -89,12 +88,3 @@ cc_test(
+     ],
+ )
+ 
+-py_unittest_qnx_test(
+-    name = "qnx_unit_test_cases",
+-    test_cases = [
+-        ":factory_test",
+-        ":high_res_steady_qclock_test",
+-        ":tick_provider_test",
+-    ],
+-    visibility = ["//score/time/high_res_steady_time/src/details:__pkg__"],
+-)

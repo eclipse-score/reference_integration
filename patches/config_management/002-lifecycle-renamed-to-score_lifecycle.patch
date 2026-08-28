@@ -1,0 +1,79 @@
+diff --git a/MODULE.bazel b/MODULE.bazel
+index 3f7a3e6..34dfcba 100644
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -161,12 +161,7 @@ git_override(
+     remote = "https://github.com/eclipse-score/logging.git",
+ )
+ 
+-bazel_dep(name = "score_lifecycle_health", version = "0.2.0")
+-git_override(
+-    module_name = "score_lifecycle_health",
+-    commit = "7fb5140d39aca047a01880b4aa0a8ddd16d73f0f",
+-    remote = "https://github.com/eclipse-score/lifecycle.git",
+-)
++bazel_dep(name = "score_lifecycle", version = "0.5.0")
+ 
+ # s-core persistency
+ bazel_dep(name = "score_persistency", version = "0.3.2")
+diff --git a/score/config_management/config_daemon/code/BUILD b/score/config_management/config_daemon/code/BUILD
+index 7fdb370..2ddcc60 100644
+--- a/score/config_management/config_daemon/code/BUILD
++++ b/score/config_management/config_daemon/code/BUILD
+@@ -41,9 +41,9 @@ cc_test(
+     tags = ["unit"],
+     deps = [
+         "//score/config_management/config_daemon/code/app/details:app_for_unit_test",
+-        "@score_lifecycle_health//score/launch_manager:applicationcontext_mock_cc",
+-        "@score_lifecycle_health//score/launch_manager:lifecycle_mock_cc",
+-        "@score_lifecycle_health//score/launch_manager:runapplication_cc",
++        "@score_lifecycle//score/launch_manager:mock_application_context_cc",
++        "@score_lifecycle//score/launch_manager:mock_lifecycle_cc",
++        "@score_lifecycle//score/launch_manager:runapplication_cc",
+     ] + select({
+         ":is_score_variant": ["//score/config_management/config_daemon/code/factory/details:mw_factory_for_unit_test"],
+         "//conditions:default": ["//score/config_management/config_daemon/code/factory/details:ara_factory_for_unit_test"],
+@@ -76,7 +76,7 @@ cc_binary(
+     deps = [
+         "//score/config_management/config_daemon/code/app/details:app",
+         "//score/config_management/config_daemon/code/factory/details:mw_factory",
+-        "@score_lifecycle_health//score/launch_manager:lifecyclemanager_cc",
+-        "@score_lifecycle_health//score/launch_manager:runapplication_cc",
++        "@score_lifecycle//score/launch_manager:lifecyclemanager_cc",
++        "@score_lifecycle//score/launch_manager:runapplication_cc",
+     ],
+ )
+diff --git a/score/config_management/config_daemon/code/app/details/BUILD b/score/config_management/config_daemon/code/app/details/BUILD
+index db9b630..9aeff36 100644
+--- a/score/config_management/config_daemon/code/app/details/BUILD
++++ b/score/config_management/config_daemon/code/app/details/BUILD
+@@ -31,7 +31,7 @@ cc_library(
+         "//score/config_management/config_daemon/code/factory:interface",
+         "@score_baselibs//score/concurrency:interruptible_wait",
+         "@score_baselibs//score/scope_exit",
+-        "@score_lifecycle_health//score/launch_manager:application_cc",
++        "@score_lifecycle//score/launch_manager:application_cc",
+         "@score_logging//score/mw/log",
+     ],
+ )
+@@ -52,8 +52,8 @@ cc_library(
+         "//score/config_management/config_daemon/code/factory:interface_for_unit_test",
+         "//score/config_management/config_daemon/code/fault_event_reporter",
+         "@score_baselibs//score/scope_exit",
+-        "@score_lifecycle_health//score/launch_manager:application_cc",
+-        "@score_lifecycle_health//score/launch_manager:applicationcontext_mock_cc",
++        "@score_lifecycle//score/launch_manager:application_cc",
++        "@score_lifecycle//score/launch_manager:mock_application_context_cc",
+         "@score_logging//score/mw/log",
+     ],
+ )
+@@ -83,7 +83,7 @@ cc_test(
+         "@score_baselibs//score/os/mocklib:stat_mock",
+         "@score_communication//score/mw/service:factory",
+         "@score_communication//score/mw/service:provided_service_container",
+-        "@score_lifecycle_health//score/launch_manager:applicationcontext_cc",
+-        "@score_lifecycle_health//score/launch_manager:lifecycle_mock_cc",
++        "@score_lifecycle//score/launch_manager:applicationcontext_cc",
++        "@score_lifecycle//score/launch_manager:mock_lifecycle_cc",
+     ],
+ )

@@ -23,11 +23,11 @@ docs(
         "@score_kyron//:needs_json",
         # "@score_baselibs//:needs_json",  # score_tooling is dev_dependency
         # "@score_communication//:needs_json",  # no docs_sources
-        # "@score_lifecycle_health//:needs_json",  # unreadable images - relative paths issue
+        # "@score_lifecycle//:needs_json",  # unreadable images - relative paths issue
         "@score_logging//:needs_json",  # duplicated labels
         # Tools
         "@score_platform//:needs_json",
-        "@score_process//:needs_json",
+        "@score_process_description//:needs_json",
         "@score_docs_as_code//:needs_json",
     ],
     known_good = "known_good.json",
