@@ -13,6 +13,12 @@
 qcc = use_extension("@score_bazel_cpp_toolchains//extensions:gcc.bzl", "gcc", dev_dependency = True)
 qcc.toolchain(
     name = "score_qcc_aarch64_toolchain",
+    extra_known_features = [
+        "@score_cpp_policies//warnings/gcc/features:minimal_warnings",
+        "@score_cpp_policies//warnings/gcc/features:strict_warnings",
+        "@score_cpp_policies//warnings/gcc/features:all_wall_warnings",
+        "@score_cpp_policies//warnings/gcc/features:warnings_as_errors",
+    ],
     sdp_version = "8.0.0",
     target_cpu = "aarch64",
     target_os = "qnx",
@@ -21,6 +27,12 @@ qcc.toolchain(
 )
 qcc.toolchain(
     name = "score_qcc_x86_64_toolchain",
+    extra_known_features = [
+        "@score_cpp_policies//warnings/gcc/features:minimal_warnings",
+        "@score_cpp_policies//warnings/gcc/features:strict_warnings",
+        "@score_cpp_policies//warnings/gcc/features:all_wall_warnings",
+        "@score_cpp_policies//warnings/gcc/features:warnings_as_errors",
+    ],
     sdp_version = "8.0.0",
     target_cpu = "x86_64",
     target_os = "qnx",
