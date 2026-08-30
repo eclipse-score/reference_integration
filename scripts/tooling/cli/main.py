@@ -21,9 +21,11 @@ def main() -> None:
 
     from scripts.tooling.cli.misc import register as _register_misc
     from scripts.tooling.cli.release import register as _register_release
+    from scripts.tooling.cli.workflow import register as _register_workflow
 
     _register_misc(subparsers)
     _register_release(subparsers)
+    _register_workflow(subparsers)
 
     args = parser.parse_args()
     sys.exit(args.func(args))
