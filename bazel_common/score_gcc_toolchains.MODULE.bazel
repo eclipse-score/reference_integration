@@ -11,12 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-bazel_dep(name = "score_bazel_cpp_toolchains", version = "0.5.4")
-git_override(
-    module_name = "score_bazel_cpp_toolchains",
-    commit = "4462cdf5040e4b652e047a410ab5face2c99bcfe",
-    remote = "https://github.com/eclipse-score/bazel_cpp_toolchains.git",
-)
+bazel_dep(name = "score_bazel_cpp_toolchains", version = "1.0.3")
 
 gcc = use_extension("@score_bazel_cpp_toolchains//extensions:gcc.bzl", "gcc", dev_dependency = True)
 gcc.toolchain(
