@@ -15,7 +15,9 @@ permissions:
   contents: write
   pull-requests: write
 on:
-  pull_request_target: # Allow forks to access secrets
+  # Not pull_request_target: no step here needs a fork's secrets (the release upload is
+  # tag-gated), and it would run this file from the base branch, never the PR's own version.
+  pull_request:
     types: [opened, reopened, synchronize]
   push:
     branches:
@@ -27,7 +29,7 @@ on:
 # Do not flood CI with unneeded previous runs in PR
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request_target' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
@@ -49,18 +51,7 @@ jobs:
           disk-cache: ${{ github.workflow }}-stage1
           repository-cache: true
           cache-save: ${{ github.event_name == 'push' }}
-      - name: Set up Python 3
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Checkout repository (pull_request_target via workflow_call)
-        if: ${{ github.event_name == 'pull_request_target' }}
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-        with:
-          ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
       - name: Checkout repository
-        if: ${{ github.event_name != 'pull_request_target' }}
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Execute Feature Integration Tests
         run: |
@@ -72,8 +63,9 @@ jobs:
           # Merge the resolved registry versions with ref_int's own override directives into the
           # single Stage 1 -> Stage 2 handoff manifest. The script stores the graph alongside it,
           # which Stage 2 needs to pin each module's full transitive closure.
-          bazel mod graph --output=json --lockfile_mode=error > resolved_graph.json
-          python scripts/known_good/resolved_dependencies.py \
+          # --verbose populates originalVersion; without it every pin report verdict is "unknown".
+          bazel mod graph --verbose --output=json --lockfile_mode=error > resolved_graph.json
+          bazel run //scripts/known_good:resolve_deps -- \
             --mod-graph resolved_graph.json \
             --export artifacts/stage1-resolved-deps/resolved_versions.json
           cp MODULE.bazel.lock artifacts/stage1-resolved-deps/   # evidence of full resolution
@@ -97,23 +89,19 @@ jobs:
     outputs:
       modules: ${{ steps.list.outputs.modules }}
     steps:
-      - name: Checkout repository (pull_request_target)
-        if: ${{ github.event_name == 'pull_request_target' }}
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
       - name: Checkout repository
-        if: ${{ github.event_name != 'pull_request_target' }}
         uses: actions/checkout@v4
-      - name: Set up Python 3
-        uses: actions/setup-python@v5
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.18.0
         with:
-          python-version: '3.12'
+          bazelisk-cache: true
+          repository-cache: true
+          cache-save: ${{ github.event_name == 'push' }}
       - name: List target_sw modules from known_good.json
         id: list
         run: |
-          echo "modules=$(python scripts/known_good/list_modules.py --group target_sw)" >> "$GITHUB_OUTPUT"
+          echo "modules=$(bazel run --ui_event_filters=-info,-stdout --noshow_progress \
+            //scripts/known_good:list_modules -- --group target_sw)" >> "$GITHUB_OUTPUT"
   # ---------------------------------------------------------------------------
   # Stage 2 — Module-Scoped (DR-008 Option 4). Per module: check it out at its known_good commit,
   # pin its MODULE.bazel to the Stage-1 resolved set, and run its own unit tests + coverage inside
@@ -141,23 +129,12 @@ jobs:
           disk-cache: ${{ github.workflow }}-stage2-${{ matrix.module.name }}
           repository-cache: true
           cache-save: ${{ github.event_name == 'push' }}
-      - name: Set up Python 3
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
       - name: Install lcov
         run: |
           sudo apt-get update
           sudo apt-get install -y lcov
       # ref_int checkout — provides the scripts (quality_runners.py, ResolvedDependencies).
-      - name: Checkout reference_integration (pull_request_target)
-        if: ${{ github.event_name == 'pull_request_target' }}
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
       - name: Checkout reference_integration
-        if: ${{ github.event_name != 'pull_request_target' }}
         uses: actions/checkout@v4
       # The module under test, checked out at its Stage-1 known_good commit (R4).
       - name: Checkout module under test
@@ -174,7 +151,7 @@ jobs:
           path: _resolved_deps/
       - name: Execute Unit Tests with Coverage Analysis (in module context)
         run: |
-          python ./scripts/quality_runners.py \
+          bazel run //scripts:quality_runners -- \
             --modules-to-test ${{ matrix.module.name }} \
             --module-dir _module \
             --resolved-deps _resolved_deps
@@ -188,7 +165,7 @@ jobs:
           if [ ! -s _module/module_graph.json ]; then
             echo "::warning::no module graph captured for ${{ matrix.module.name }}"; exit 0
           fi
-          python3 scripts/known_good/verify_stage2_resolution.py \
+          bazel run //scripts/known_good:verify_stage2_resolution -- \
             --mod-graph _module/module_graph.json \
             --resolved _resolved_deps/resolved_versions.json \
             --module-bazel _module/MODULE.bazel \
@@ -236,19 +213,14 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository (pull_request_target via workflow_call)
-        if: ${{ github.event_name == 'pull_request_target' }}
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
       - name: Checkout repository
-        if: ${{ github.event_name != 'pull_request_target' }}
         uses: actions/checkout@v4
-      - name: Set up Python 3
-        uses: actions/setup-python@v5
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.18.0
         with:
-          python-version: '3.12'
+          bazelisk-cache: true
+          repository-cache: true
+          cache-save: ${{ github.event_name == 'push' }}
       - name: Download Stage 2 quality reports
         uses: actions/download-artifact@v4.1.8
         with:
@@ -273,7 +245,8 @@ jobs:
       - name: Publish consolidated quality report
         if: always()
         run: |
-          python3 scripts/aggregate_quality_report.py \
+          bazel run --ui_event_filters=-info,-stdout --noshow_progress \
+            //scripts:aggregate_quality_report -- \
             --stage1-result "${{ needs.stage1_integration.result }}" \
             --stage2-result "${{ needs.stage2_module_validation.result }}" \
             --stage2-dir "_stage2_reports/" \

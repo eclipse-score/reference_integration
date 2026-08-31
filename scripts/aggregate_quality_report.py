@@ -30,6 +30,14 @@ import json
 import sys
 from pathlib import Path
 
+_HERE = Path(__file__).resolve().parent
+try:
+    from known_good.resolved_dependencies import workspace_path
+except ImportError:
+    if str(_HERE) not in sys.path:
+        sys.path.insert(0, str(_HERE))
+    from known_good.resolved_dependencies import workspace_path  # noqa: E402
+
 _STATUS_MAP = {
     "success": "✅ Success",
     "failure": "❌ Failure",
@@ -207,6 +215,9 @@ def main() -> int:
         help="Path to known_good.json (used to list test targets excluded from Stage 2).",
     )
     args = parser.parse_args()
+    # Under 'bazel run' the cwd is the runfiles tree, so relative paths need anchoring.
+    args.stage2_dir = workspace_path(args.stage2_dir)
+    args.known_good_path = workspace_path(args.known_good_path)
 
     out = sys.stdout
 

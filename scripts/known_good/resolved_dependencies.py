@@ -37,7 +37,7 @@ from pathlib import Path
 _HERE = Path(__file__).resolve().parent
 
 
-def _repo_root() -> Path:
+def repo_root() -> Path:
     """ref_int's workspace root.
 
     Prefers the environment Bazel sets for ``bazel run`` targets so paths passed on the
@@ -52,24 +52,26 @@ def _repo_root() -> Path:
     return _HERE.parents[1]
 
 
-def _workspace_path(path: Path) -> Path:
-    """Anchor a relative command-line path at :func:`_repo_root`.
+def workspace_path(path: Path) -> Path:
+    """Anchor a relative command-line path at :func:`repo_root`.
 
     ``bazel run`` executes the binary with the runfiles tree as its working directory, so a
     relative path would be read from — or, worse, written into — runfiles instead of the
     user's workspace. Absolute paths are taken as given.
     """
-    return path if path.is_absolute() else _repo_root() / path
+    return path if path.is_absolute() else repo_root() / path
 
 
 try:
     from known_good.models.known_good import load_known_good
     from known_good.models.module import Module
+    from known_good.module_patches import patch_relpath
 except ImportError:
     if str(_HERE) not in sys.path:
         sys.path.insert(0, str(_HERE))
     from models.known_good import load_known_good  # noqa: E402
     from models.module import Module  # noqa: E402
+    from module_patches import patch_relpath  # noqa: E402
 
 # Marker delimiting the block we append, so injection is idempotent / detectable.
 INJECTION_BEGIN = "# --- BEGIN ref_int resolved-deps injection ---"
@@ -136,6 +138,14 @@ def generate_override_directive(module: Module, repo_commit_dict: dict[str, str]
 # The file Stage 1 stores alongside the manifest so Stage 2 can determine, for a given
 # module, which *transitive* dependencies need an override (see DependencyGraph).
 GRAPH_NAME = "graph.json"
+
+# The patch files themselves, beside the manifest: Stage 2 can name a dependency's patches
+# from the manifest alone, but not apply them.
+PATCHES_DIRNAME = "patches"
+
+# overwrite() re-hosts them here inside the checkout; ref_int's own //patches/... labels do
+# not resolve in another module's root.
+INJECTED_PATCHES_PKG = "ref_int_patches"
 
 
 class DependencyGraph:
@@ -229,6 +239,9 @@ _BAZEL_DEP_CALL_RE = re.compile(r"bazel_dep\((?P<body>[^)]*)\)", re.S)
 _GIT_OVERRIDE_BLOCK_RE = re.compile(r"git_override\((?P<body>.*?)\)", re.S)
 _SINGLE_VERSION_BLOCK_RE = re.compile(r"single_version_override\((?P<body>.*?)\)", re.S)
 _FIELD_RE = lambda field: re.compile(rf'{field}\s*=\s*"([^"]+)"')  # noqa: E731
+# ``patches = [...]``, whose entries are the only list-valued field the manifest carries.
+_PATCHES_FIELD_RE = re.compile(r"patches\s*=\s*\[(?P<items>[^\]]*)\]", re.S)
+_QUOTED_RE = re.compile(r'"([^"]+)"')
 
 # Every override directive Bazel accepts from a root module.
 _OVERRIDE_KINDS = (
@@ -242,6 +255,36 @@ _OVERRIDE_KINDS = (
 _ANY_OVERRIDE_BLOCK_RE = re.compile(r"(?P<kind>" + "|".join(_OVERRIDE_KINDS) + r")\((?P<body>[^)]*)\)", re.S)
 
 _UNCARRIED_CONSEQUENCE = "ref_int imposes nothing for this module; each module under test resolves its own version"
+
+# Fetched outside bzlmod, so MVS never sees them and no override reaches them.
+_NON_BZLMOD_FETCH_RULES = (
+    "http_archive",
+    "http_file",
+    "git_repository",
+    "new_git_repository",
+    "local_repository",
+)
+_NON_BZLMOD_FETCH_RE = re.compile(r"^\s*(?:\w+\s*=\s*)?(?P<rule>" + "|".join(_NON_BZLMOD_FETCH_RULES) + r")\s*\(", re.M)
+
+
+def module_resolution_hazards(text: str) -> list[str]:
+    """Ways ``text`` resolves a dependency that ref_int's injected pins cannot reach.
+
+    Reported, not rejected: several are legitimate. Without them a dependency that silently
+    ignored ref_int's pin reads as a defect in the module under test.
+    """
+    hazards: list[str] = []
+    scannable = "\n".join(ln for ln in text.splitlines() if not ln.lstrip().startswith("#"))
+    for match in _ANY_OVERRIDE_BLOCK_RE.finditer(scannable):
+        name = _field(match.group("body"), "module_name")
+        if not name:
+            continue
+        patches = _patch_labels(match.group("body"))
+        detail = f" with {len(patches)} patch(es)" if patches else ""
+        hazards.append(f"{match.group('kind')} for {name}{detail}")
+    for match in _NON_BZLMOD_FETCH_RE.finditer(scannable):
+        hazards.append(f"{match.group('rule')} (fetched outside bzlmod; no override applies)")
+    return sorted(set(hazards))
 
 
 def _declared_overrides(text: str, source: str) -> dict[str, dict[str, str]]:
@@ -268,6 +311,12 @@ def _declared_overrides(text: str, source: str) -> dict[str, dict[str, str]]:
             "consequence": _UNCARRIED_CONSEQUENCE,
         }
     return declared
+
+
+def _patch_labels(body: str) -> list[str]:
+    """The ``patches = [...]`` entries of one override block, in declaration order."""
+    match = _PATCHES_FIELD_RE.search(body)
+    return _QUOTED_RE.findall(match.group("items")) if match else []
 
 
 def _uncarried_reason(kind: str, body: str) -> str:
@@ -500,7 +549,7 @@ class ResolvedDependencies:
 
     @property
     def report(self) -> dict:
-        """Pin provenance, consumer conflicts and uncarried overrides. Empty unless built by
+        """Pin provenance, consumer version differences and uncarried overrides. Empty unless built by
         :meth:`from_mod_graph`."""
         return self._report
 
@@ -517,7 +566,11 @@ class ResolvedDependencies:
 
     @staticmethod
     def _parse_override_file(text: str) -> list[Module]:
-        """Reconstruct Module objects from ref_int's own git/single_version override blocks."""
+        """Reconstruct Module objects from ref_int's own git/single_version override blocks.
+
+        ``patches`` travels with the pin: the same commit built patched and unpatched is not
+        the same dependency.
+        """
         modules: list[Module] = []
 
         for match in _GIT_OVERRIDE_BLOCK_RE.finditer(text):
@@ -526,16 +579,37 @@ class ResolvedDependencies:
             commit = _field(body, "commit")
             remote = _field(body, "remote")
             if name and commit and remote:
-                modules.append(Module(name=name, hash=commit, repo=remote))
+                modules.append(Module(name=name, hash=commit, repo=remote, bazel_patches=_patch_labels(body)))
 
         for match in _SINGLE_VERSION_BLOCK_RE.finditer(text):
             body = match.group("body")
             name = _field(body, "module_name")
             version = _field(body, "version")
             if name and version:
-                modules.append(Module(name=name, hash="", repo="", version=version))
+                modules.append(
+                    Module(name=name, hash="", repo="", version=version, bazel_patches=_patch_labels(body))
+                )
 
         return modules
+
+    def export_patches(self, dest_root: Path, ref_int_root: Path) -> list[str]:
+        """Copy every patch the resolved set references into ``dest_root``, workspace-relative.
+
+        The manifest names them; Stage 2 needs the bytes to apply them.
+        """
+        copied: list[str] = []
+        for module in sorted(self._resolved.values(), key=lambda m: m.name):
+            for entry in module.bazel_patches or ():
+                relative = patch_relpath(entry)
+                source = Path(ref_int_root) / relative
+                if not source.is_file():
+                    logging.warning("%s declares patch %s, missing at %s", module.name, entry, source)
+                    continue
+                destination = Path(dest_root) / relative
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(source.read_bytes())
+                copied.append(relative.as_posix())
+        return copied
 
     # -- interface: overwrite a module's MODULE.bazel ---------------------------------
 
@@ -556,6 +630,7 @@ class ResolvedDependencies:
         graph: DependencyGraph,
         *,
         module_under_test: str | None = None,
+        patch_source: Path | None = None,
         write: bool = True,
     ) -> str:
         """Overwrite a module's dependency versions with ref_int's resolved set.
@@ -585,6 +660,9 @@ class ResolvedDependencies:
         Each closure member the module does not declare gets a ``bazel_dep`` alongside its
         override, without which Bazel rejects it as an override on a nonexistent module.
 
+        ``patch_source`` is the ``patches/`` tree Stage 1 shipped beside the manifest; without
+        one a pinned dependency's patches are dropped and it is reported as unpatched.
+
         * Skips the module under test itself (the root is never overridden).
         * Always overwrites an existing override; re-running replaces a prior block.
         """
@@ -606,6 +684,8 @@ class ResolvedDependencies:
         directives: list[str] = []
         injected_names: list[str] = []
         unresolved: list[str] = []
+        unpatched: list[str] = []
+        workspace = module_bazel.parent
         for name in sorted(in_scope):
             if name == module_under_test or name in _SKIP_MODULES:
                 continue  # the module under test is the root; never override it
@@ -613,9 +693,10 @@ class ResolvedDependencies:
             if module is None:
                 unresolved.append(name)
                 continue
-            # Strip bazel_patches: they reference //patches/... labels in ref_int's
-            # workspace which do not exist inside another module's checkout.
-            module = _replace(module, bazel_patches=None)
+            labels = self._stage_patches(module, workspace, patch_source)
+            if module.bazel_patches and not labels:
+                unpatched.append(f"{name} ({len(module.bazel_patches)})")
+            module = _replace(module, bazel_patches=labels or None)
             directive = generate_override_directive(module)
             if directive is None:
                 continue
@@ -625,6 +706,14 @@ class ResolvedDependencies:
                 directives.append(generate_bazel_dep(module, name))
             directives.append(directive)
             injected_names.append(name)
+
+        if unpatched:
+            logging.warning(
+                "%s: pinned %s WITHOUT ref_int's patches (count in brackets); Stage 1 builds them "
+                "patched. Pass patch_source to transport them.",
+                module_bazel,
+                ", ".join(unpatched),
+            )
 
         if unresolved:
             logging.warning(
@@ -641,6 +730,17 @@ class ResolvedDependencies:
         # module's own override for every dep we inject so ref_int's resolved version wins.
         original = _strip_existing_overrides(original, injected_names)
 
+        # After the module's competing overrides are stripped and before ref_int's are appended,
+        # what is left is the module's own resolution that survives injection.
+        hazards = module_resolution_hazards(original)
+        if hazards:
+            logging.warning(
+                "%s resolves dependencies in ways ref_int's pins cannot reach: %s. These win over "
+                "the resolved set; a version or patch difference here is not a defect in ref_int.",
+                module_under_test,
+                "; ".join(hazards),
+            )
+
         if not directives:
             patched = original
         else:
@@ -650,6 +750,36 @@ class ResolvedDependencies:
         if write:
             module_bazel.write_text(patched)
         return patched
+
+    @staticmethod
+    def _stage_patches(module: Module, workspace: Path, patch_source: Path | None) -> list[str]:
+        """Copy one dependency's ref_int patches into the checkout; return their new labels.
+
+        All or nothing: patches are cumulative, so a partial set builds something nobody
+        validated. A missing file drops the whole set, which the caller reports.
+        """
+        if not module.bazel_patches or patch_source is None:
+            return []
+
+        staged: list[tuple[Path, bytes]] = []
+        labels: list[str] = []
+        for entry in module.bazel_patches:
+            relative = patch_relpath(entry)
+            source = Path(patch_source) / relative
+            if not source.is_file():
+                return []
+            staged.append((workspace / INJECTED_PATCHES_PKG / relative, source.read_bytes()))
+            labels.append(f"//{INJECTED_PATCHES_PKG}:{relative.as_posix()}")
+
+        for destination, payload in staged:
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(payload)
+        # One package for the whole tree: subdirectories stay plain directories, so each patch is
+        # addressable as //<pkg>:<relative path> without a BUILD file of its own.
+        build_file = workspace / INJECTED_PATCHES_PKG / "BUILD"
+        if not build_file.is_file():
+            build_file.write_text('exports_files(glob(["**/*.patch"]))\n')
+        return labels
 
     @staticmethod
     def _strip_injection(text: str) -> str:
@@ -818,7 +948,7 @@ def _empty_report() -> dict:
             "asserted": 0,
             "incidental": 0,
             "uncarried": 0,
-            "conflicts": 0,
+            "differs": 0,
             "ref_int_internal_drift": 0,
         },
         "pins": {},
@@ -861,7 +991,7 @@ def _build_report(
     nothing in ref_int declares yq.bzl at all.
     """
     report = _empty_report()
-    conflicts: list[str] = []
+    differs: list[str] = []
     for name in sorted(resolved):
         module = resolved[name]
         wanted = sorted(declared_by.get(name, ()))
@@ -885,7 +1015,7 @@ def _build_report(
             order = _compare_versions(module.version, _highest(wanted))
             entry["direction"] = "ref_int_lower" if order < 0 else "ref_int_higher"
         if entry["verdict"] == "differs":
-            conflicts.append(name)
+            differs.append(name)
         report["pins"][name] = entry
 
     report["uncarried"] = uncarried
@@ -896,7 +1026,7 @@ def _build_report(
         "asserted": asserted,
         "incidental": len(resolved) - asserted,
         "uncarried": len(uncarried),
-        "conflicts": len(conflicts),
+        "differs": len(differs),
         "ref_int_internal_drift": len(internal_drift),
     }
     # The first two are properties of what Bazel loads, not of this run, so they always apply.
@@ -914,12 +1044,12 @@ def _warn_report(report: dict) -> None:
     ref_int's version is imposed and reported rather than blocking the run.
     """
     if _NO_VERBOSE_LIMITATION in report["limitations"]:
-        # Without this the conflict half of the report is silently a constant: every verdict is
+        # Without this the "differs" half of the report is silently a constant: every verdict is
         # "unknown" and no consumer disagreement can be detected, which reads identically to a
         # graph in which nobody disagrees.
         print(
             "::warning::resolved_dependencies - the graph carries no originalVersion, so no "
-            "consumer version conflicts can be detected. Produce it with "
+            "consumer version differences can be detected. Produce it with "
             "'bazel mod graph --verbose --output=json' to enable them."
         )
     for entry in report["uncarried"]:
@@ -999,35 +1129,39 @@ def main() -> None:
     if args.export is not None:
         if args.mod_graph is None:
             raise SystemExit("--export requires --mod-graph (output of 'bazel mod graph --output=json')")
-        mod_graph = _workspace_path(args.mod_graph)
+        mod_graph = workspace_path(args.mod_graph)
         if not mod_graph.is_file():
             raise SystemExit(
                 f"--mod-graph {mod_graph} does not exist. Produce it first with: "
                 "bazel mod graph --output=json > graph.json"
             )
-        repo_root = _repo_root()
+        root = repo_root()
         override_files = [
             f
-            for f in [repo_root / "MODULE.bazel", *sorted((repo_root / "bazel_common").glob("*.MODULE.bazel"))]
+            for f in [root / "MODULE.bazel", *sorted((root / "bazel_common").glob("*.MODULE.bazel"))]
             if f.is_file()
         ]
         resolved = ResolvedDependencies.from_mod_graph(mod_graph, override_files)
-        export = _workspace_path(args.export)
+        export = workspace_path(args.export)
         export.parent.mkdir(parents=True, exist_ok=True)
         resolved.to_file(export)
         # Stage 2 needs the graph too: the manifest says which version each module resolves
         # to, the graph says which of them a given module actually depends on.
         graph_copy = export.parent / GRAPH_NAME
         graph_copy.write_text(mod_graph.read_text())
-        report_path = _workspace_path(args.report) if args.report else export.parent / REPORT_NAME
+        # And the patch bytes, without which Stage 2 can only record that ref_int patched it.
+        patches_copy = export.parent / PATCHES_DIRNAME
+        copied = resolved.export_patches(patches_copy, root)
+        report_path = workspace_path(args.report) if args.report else export.parent / REPORT_NAME
         resolved.write_report(report_path)
         counts = resolved.report["counts"]
         print(f"Wrote resolved dependency manifest ({len(resolved.names)} modules) to {export}")
         print(f"Stored dependency graph for Stage 2 at {graph_copy}")
+        print(f"Copied {len(copied)} dependency patch file(s) for Stage 2 to {patches_copy}")
         print(
             f"Wrote pin report to {report_path} "
             f"({counts['asserted']} asserted, {counts['incidental']} incidental, "
-            f"{counts['conflicts']} conflicting, {counts['uncarried']} uncarried)"
+            f"{counts['differs']} differing, {counts['uncarried']} uncarried)"
         )
         return
 
@@ -1043,15 +1177,17 @@ def main() -> None:
             "Stage-1 resolved set. known_good.json carries only first-party pins and no "
             "transitive versions, so it cannot back the injection."
         )
-    module_bazel = _workspace_path(args.module_bazel)
-    resolved_deps = _workspace_path(args.resolved_deps)
+    module_bazel = workspace_path(args.module_bazel)
+    resolved_deps = workspace_path(args.resolved_deps)
     resolved = ResolvedDependencies.from_resolved_artifact(resolved_deps)
     graph = DependencyGraph.from_file(resolved_deps / GRAPH_NAME)
 
+    patches = resolved_deps / PATCHES_DIRNAME
     patched = resolved.overwrite(
         module_bazel,
         graph,
         module_under_test=args.module_under_test,
+        patch_source=patches if patches.is_dir() else None,
         write=not args.dry_run,
     )
     if args.dry_run:

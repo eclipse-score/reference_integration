@@ -23,6 +23,9 @@ including versions it rejected, so presence there does not show what was selecte
 by ``git_override`` carry a commit rather than a version and are counted separately as
 unverifiable-by-version rather than as agreeing.
 
+Version is not the whole pin: the same commit built patched and unpatched is not the same
+dependency, so the second half of this check is that the injection carried ref_int's patches.
+
 Usage:
   python3 scripts/known_good/verify_stage2_resolution.py \\
       --mod-graph _module_graph.json \\
@@ -37,11 +40,23 @@ from pathlib import Path
 
 _HERE = Path(__file__).resolve().parent
 try:
-    from known_good.resolved_dependencies import _collect_resolved_versions, injected_override_names
+    from known_good.module_patches import patch_relpath
+    from known_good.resolved_dependencies import (
+        INJECTED_PATCHES_PKG,
+        _collect_resolved_versions,
+        injected_override_names,
+        workspace_path,
+    )
 except ImportError:
     if str(_HERE) not in sys.path:
         sys.path.insert(0, str(_HERE))
-    from resolved_dependencies import _collect_resolved_versions, injected_override_names  # noqa: E402
+    from module_patches import patch_relpath  # noqa: E402
+    from resolved_dependencies import (  # noqa: E402
+        INJECTED_PATCHES_PKG,
+        _collect_resolved_versions,
+        injected_override_names,
+        workspace_path,
+    )
 
 
 def module_graph_versions(graph_path: Path) -> dict[str, str]:
@@ -49,6 +64,32 @@ def module_graph_versions(graph_path: Path) -> dict[str, str]:
     acc: dict[str, str] = {}
     _collect_resolved_versions(json.loads(graph_path.read_text(encoding="utf-8")), acc)
     return acc
+
+
+def missing_patches(resolved: dict, module_bazel: Path, module_under_test: str) -> list[str]:
+    """Dependencies ref_int pinned into this module whose patches the injection did not carry.
+
+    Each patch must appear as a label in the injected override *and* as a file in the checkout;
+    a label without the file fails at fetch time naming the dependency, not ref_int. Scoped to
+    what was actually injected -- the manifest is ref_int-wide.
+    """
+    if not module_bazel or not module_bazel.is_file():
+        return []
+    text = module_bazel.read_text(encoding="utf-8")
+    injected = injected_override_names(text)
+    workspace = module_bazel.parent
+    missing: list[str] = []
+    for name, entry in sorted(resolved.items()):
+        if name == module_under_test or name not in injected:
+            continue
+        for patch in entry.get("bazel_patches") or ():
+            relative = patch_relpath(patch)
+            label = f"//{INJECTED_PATCHES_PKG}:{relative.as_posix()}"
+            if label not in text:
+                missing.append(f"{name}: {patch} not injected")
+            elif not (workspace / INJECTED_PATCHES_PKG / relative).is_file():
+                missing.append(f"{name}: {patch} injected but absent from the checkout")
+    return missing
 
 
 def main() -> int:
@@ -64,6 +105,11 @@ def main() -> int:
         "fails the check, whereas one outside the injection block resolved on its own and only warns.",
     )
     args = parser.parse_args()
+    # Under 'bazel run' the cwd is the runfiles tree, so relative paths need anchoring.
+    args.mod_graph = workspace_path(args.mod_graph)
+    args.resolved = workspace_path(args.resolved)
+    if args.module_bazel:
+        args.module_bazel = workspace_path(args.module_bazel)
 
     # Every module ref_int injected an override for — its declared deps *and* its transitive
     # closure, since overwrite() emits a bazel_dep stub alongside the override for the latter.
@@ -104,11 +150,14 @@ def main() -> int:
         detail = f"{name}: ref_int resolved {want}, module built {actual[name]}"
         (injected_mismatches if name in injected else transitive_mismatches).append(detail)
 
+    unpatched = missing_patches(resolved, args.module_bazel, args.module)
+
     print(
         f"verify_stage2_resolution: {agreed} agree, "
         f"{len(injected_mismatches)} MISMATCHED despite injection, "
         f"{len(transitive_mismatches)} mismatched transitively, "
-        f"{len(absent)} not in module graph, {by_commit} pinned by commit"
+        f"{len(absent)} not in module graph, {by_commit} pinned by commit, "
+        f"{len(unpatched)} pinned without ref_int's patches"
     )
 
     # ref_int injected an override and the module still built something else — our bug.
@@ -125,9 +174,13 @@ def main() -> int:
     if absent:
         print(f"::warning::verify_stage2_resolution: {len(absent)} resolved modules absent from the module's graph")
 
-    # Only an override that failed to take effect fails the check; anything ref_int never pinned
-    # warns above.
-    return 1 if injected_mismatches else 0
+    # Same class of defect as a version mismatch, so it fails rather than warns.
+    for line in unpatched:
+        print(f"::error::verify_stage2_resolution - dependency patch did not reach Stage 2: {line}")
+
+    # Only ref_int's own injection failing to take effect fails the check; anything ref_int never
+    # pinned warns above.
+    return 1 if injected_mismatches or unpatched else 0
 
 
 if __name__ == "__main__":

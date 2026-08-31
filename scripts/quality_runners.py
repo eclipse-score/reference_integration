@@ -12,6 +12,7 @@
 # *******************************************************************************
 import argparse
 import json
+import os
 import re
 import select
 import sys
@@ -23,12 +24,15 @@ from subprocess import PIPE, Popen
 
 from known_good.models.known_good import load_known_good
 from known_good.models.module import Module
-from known_good.module_patches import ModulePatchError, apply_module_patches
+from known_good.module_patches import ModulePatchError, apply_module_patches, patch_relpath
 from known_good.resolved_dependencies import (
     GRAPH_NAME,
+    PATCHES_DIRNAME,
     DependencyGraph,
     ResolvedDependencies,
     injected_override_names,
+    repo_root,
+    workspace_path,
 )
 
 
@@ -43,7 +47,9 @@ def print_centered(message: str, width: int = 120, fillchar: str = "-") -> None:
     print(message.center(width, fillchar))
 
 
-REF_INT_ROOT = Path(__file__).resolve().parent.parent
+# Not Path(__file__).parents[1]: under 'bazel run' that is the runfiles tree, where ci/stage2's
+# rc files, .bazelversion and patches/ do not exist.
+REF_INT_ROOT = repo_root()
 STAGE2_RC = REF_INT_ROOT / "ci" / "stage2" / "module.bazelrc"
 RUST_COVERAGE_BUILD = REF_INT_ROOT / "rust_coverage" / "BUILD"
 # Emitted for every module, so a missing or mistyped bazel_config can never leave a Stage-2
@@ -103,21 +109,22 @@ def stage2_startup_flags(module_name: str) -> list[str]:
     return flags
 
 
-def unpatched_dependencies(module_name: str, known, graph) -> list[str]:
-    """Deps in ``module_name``'s closure that ref_int patches in Stage 1 but cannot patch here.
+def unpatched_dependencies(module_name: str, known, graph, module_bazel: Path) -> list[str]:
+    """Deps in ``module_name``'s closure that ref_int patches, but the injection did not.
 
-    A ``//patches/...`` label does not resolve inside another module's root, so injected
-    overrides carry no patches (ResolvedDependencies.overwrite strips them). The same commit is
-    therefore built patched in Stage 1 and unpatched in Stage 2. Reported by name because the
-    resulting failure is a stale label *inside the dependency*, which reads like a defect in the
-    module under test.
+    An entry means the patch bytes never reached Stage 2. Reported by name because the failure
+    is a stale label *inside the dependency*, which reads like a defect in the module under test.
     """
     closure = graph.closure(module_name)
+    injected = module_bazel.read_text() if module_bazel.is_file() else ""
     return sorted(
         f"{name} ({len(module.bazel_patches)})"
         for group in known.modules.values()
         for name, module in group.items()
-        if name != module_name and name in closure and module.bazel_patches
+        if name != module_name
+        and name in closure
+        and module.bazel_patches
+        and not all(patch_relpath(patch).as_posix() in injected for patch in module.bazel_patches)
     )
 
 
@@ -489,11 +496,8 @@ def rust_coverage(
         # mapping that only exists in ref_int's graph. Run the underlying tool directly with
         # the same query, module-rooted (see rust_coverage_query), instead.
         #
-        # ferrocene_report.sh's own nested bazel calls get no startup flags, so they read the
-        # module's own .bazelrc -- left unmodified on purpose, since ref_int never patches one.
-        # That rc has neither the stage2-* configs nor the ANDROID_HOME guard, so every module
-        # here currently fails: logging/persistency on a stale @score_baselibs label, kyron on
-        # the Android SDK, lifecycle_health on an undefined stage2-linux-x86_64.
+        # ferrocene_report.sh runs nested bazel calls without startup flags, so they read the
+        # module's own .bazelrc rather than ref_int's Stage-2 rc, and rust coverage fails here.
         # TODO(next release): forward --bazelrc/--noworkspace_rc upstream in ferrocene_report.sh.
         query = rust_coverage_query(module.name)
         config_flags = [c.removeprefix("--config=") for c in stage2_config_flags(module)]
@@ -594,6 +598,22 @@ def extract_coverage_summary(logs: str) -> dict[str, str]:
     return summary
 
 
+# Set by 'bazel run'. A nested bazel inheriting them is pointed at this run's runfiles and
+# workspace instead of the module checkout's.
+_BAZEL_RUN_ENV = (
+    "BUILD_WORKSPACE_DIRECTORY",
+    "BUILD_WORKING_DIRECTORY",
+    "RUNFILES_DIR",
+    "RUNFILES_MANIFEST_FILE",
+    "JAVA_RUNFILES",
+    "PYTHONPATH",
+)
+
+
+def _child_env() -> dict[str, str]:
+    return {k: v for k, v in os.environ.items() if k not in _BAZEL_RUN_ENV}
+
+
 def run_command(command: list[str], **kwargs) -> ProcessResult:
     """
     Run a command and print output live while storing it.
@@ -611,6 +631,7 @@ def run_command(command: list[str], **kwargs) -> ProcessResult:
     print_centered("QR: Running command:")
     print(f"{' '.join(command)}")
 
+    kwargs.setdefault("env", _child_env())
     with Popen(command, stdout=PIPE, stderr=PIPE, text=True, bufsize=1, errors="replace", **kwargs) as p:
         # Use select to read from both streams without blocking
         streams = {
@@ -656,7 +677,7 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         "--coverage-output-dir",
         type=Path,
-        default=Path(__file__).parent.parent / "artifacts/coverage",
+        default=REF_INT_ROOT / "artifacts/coverage",
         help="Path to the directory for coverage output files",
     )
     parser.add_argument(
@@ -692,8 +713,14 @@ def parse_arguments() -> argparse.Namespace:
 
 def main() -> bool:
     args = parse_arguments()
+    args.coverage_output_dir = workspace_path(args.coverage_output_dir)
+    args.known_good_path = workspace_path(args.known_good_path)
+    if args.module_dir is not None:
+        args.module_dir = workspace_path(args.module_dir)
+    if args.resolved_deps is not None:
+        args.resolved_deps = workspace_path(args.resolved_deps)
     args.coverage_output_dir.mkdir(parents=True, exist_ok=True)
-    path_to_docs = Path(__file__).parent.parent / "docs/verification_report"
+    path_to_docs = REF_INT_ROOT / "docs/verification_report"
 
     known = load_known_good(args.known_good_path.resolve())
 
@@ -750,16 +777,23 @@ def main() -> bool:
         graph = DependencyGraph.from_file(resolved_dir / GRAPH_NAME)
         module_bazel = workspace.resolve() / "MODULE.bazel"
         print_centered(f"QR: Injecting resolved deps into {module_bazel}")
+        patch_source = resolved_dir / PATCHES_DIRNAME
+        if not patch_source.is_dir():
+            print_centered(
+                f"QR: WARNING: no {PATCHES_DIRNAME}/ in the Stage-1 artifact; dependency patches "
+                "cannot be transported and pinned deps will build unpatched"
+            )
         resolved.overwrite(
             module_bazel,
             module_under_test=args.modules_to_test[0],
             graph=graph,
+            patch_source=patch_source if patch_source.is_dir() else None,
         )
-        unpatched = unpatched_dependencies(args.modules_to_test[0], known, graph)
+        unpatched = unpatched_dependencies(args.modules_to_test[0], known, graph, module_bazel)
         if unpatched:
             print_centered(
                 f"QR: WARNING: {', '.join(unpatched)} injected WITHOUT ref_int's patches "
-                "(patch count in brackets); Stage 1 applies them, Stage 2 cannot"
+                "(patch count in brackets); Stage 1 applies them, Stage 2 could not"
             )
 
         # The module's committed MODULE.bazel.lock is stale the moment we inject overrides.

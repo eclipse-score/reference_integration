@@ -268,11 +268,33 @@ class TestStage2StartupFlags:
         assert quality_runners.stage2_module_rc("score_communication") == shared.parent / "score_communication.bazelrc"
 
 
+class TestNestedBazelEnvironment:
+    """A nested bazel must not inherit this process's 'bazel run' context."""
+
+    def test_bazel_run_variables_are_removed(self, monkeypatch):
+        monkeypatch.setenv("BUILD_WORKSPACE_DIRECTORY", "/ref_int")
+        monkeypatch.setenv("RUNFILES_DIR", "/ref_int/bazel-bin/x.runfiles")
+        monkeypatch.setenv("PATH", "/usr/bin")
+
+        env = quality_runners._child_env()
+
+        assert "BUILD_WORKSPACE_DIRECTORY" not in env
+        assert "RUNFILES_DIR" not in env
+        assert env["PATH"] == "/usr/bin"
+
+
 class TestUnpatchedDependencies:
-    """Deps ref_int patches in Stage 1 but cannot patch when another module is the Bazel root."""
+    """Deps ref_int patches in Stage 1 whose patches did not reach the injected MODULE.bazel."""
 
     _REPO = "https://example.invalid/x.git"
     _HASH = "a" * 40
+
+    @pytest.fixture
+    def uninjected(self, tmp_path):
+        """A MODULE.bazel naming no patch at all: nothing was transported."""
+        path = tmp_path / "MODULE.bazel"
+        path.write_text('module(name = "score_config_management")\n')
+        return path
 
     def _dep(self, name, patches=None):
         data = {"repo": self._REPO, "hash": self._HASH}
@@ -286,36 +308,47 @@ class TestUnpatchedDependencies:
     def _graph(self, root, deps):
         return DependencyGraph({"name": root, "dependencies": [{"name": d, "dependencies": []} for d in deps]})
 
-    def test_patched_dependency_is_reported_with_its_patch_count(self):
+    def test_patched_dependency_is_reported_with_its_patch_count(self, uninjected):
         known = self._known(
             score_config_management=self._dep("score_config_management"),
             score_logging=self._dep("score_logging", ["//patches/logging:a.patch", "//patches/logging:b.patch"]),
         )
         graph = self._graph("score_config_management", ["score_logging"])
 
-        assert unpatched_dependencies("score_config_management", known, graph) == ["score_logging (2)"]
+        assert unpatched_dependencies("score_config_management", known, graph, uninjected) == ["score_logging (2)"]
 
-    def test_dependency_without_patches_is_not_reported(self):
+    def test_dependency_without_patches_is_not_reported(self, uninjected):
         known = self._known(
             score_kyron=self._dep("score_kyron"),
             score_baselibs=self._dep("score_baselibs"),
         )
         graph = self._graph("score_kyron", ["score_baselibs"])
 
-        assert unpatched_dependencies("score_kyron", known, graph) == []
+        assert unpatched_dependencies("score_kyron", known, graph, uninjected) == []
 
-    def test_the_module_under_tests_own_patches_are_not_reported(self):
+    def test_the_module_under_tests_own_patches_are_not_reported(self, uninjected):
         """They are applied by apply_module_patches; only dependencies lose theirs."""
         known = self._known(score_time=self._dep("score_time", ["//patches/time:001.patch"]))
         graph = self._graph("score_time", [])
 
-        assert unpatched_dependencies("score_time", known, graph) == []
+        assert unpatched_dependencies("score_time", known, graph, uninjected) == []
 
-    def test_patched_module_outside_the_closure_is_not_reported(self):
+    def test_patched_module_outside_the_closure_is_not_reported(self, uninjected):
         known = self._known(
             score_kyron=self._dep("score_kyron"),
             score_logging=self._dep("score_logging", ["//patches/logging:a.patch"]),
         )
         graph = self._graph("score_kyron", [])
 
-        assert unpatched_dependencies("score_kyron", known, graph) == []
+        assert unpatched_dependencies("score_kyron", known, graph, uninjected) == []
+
+    def test_transported_patches_are_not_reported(self, tmp_path):
+        known = self._known(
+            score_config_management=self._dep("score_config_management"),
+            score_logging=self._dep("score_logging", ["//patches/logging:a.patch"]),
+        )
+        graph = self._graph("score_config_management", ["score_logging"])
+        injected = tmp_path / "MODULE.bazel"
+        injected.write_text('git_override(\n    patches = ["//ref_int_patches:patches/logging/a.patch"],\n)\n')
+
+        assert unpatched_dependencies("score_config_management", known, graph, injected) == []

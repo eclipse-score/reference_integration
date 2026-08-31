@@ -43,10 +43,12 @@ def repo_slug(repo_url: str) -> str:
 _HERE = Path(__file__).resolve().parent
 try:
     from known_good.models.known_good import load_known_good
+    from known_good.resolved_dependencies import repo_root, workspace_path
 except ImportError:
     if str(_HERE) not in sys.path:
         sys.path.insert(0, str(_HERE))
     from models.known_good import load_known_good  # noqa: E402
+    from resolved_dependencies import repo_root, workspace_path  # noqa: E402
 
 
 def main() -> None:
@@ -54,13 +56,13 @@ def main() -> None:
     parser.add_argument(
         "--known-good-path",
         type=Path,
-        default=_HERE.parents[1] / "known_good.json",
+        default=repo_root() / "known_good.json",
         help="Path to known_good.json (default: repo-root known_good.json).",
     )
     parser.add_argument("--group", default="target_sw", help="Module group to list (default: target_sw).")
     args = parser.parse_args()
 
-    kg = load_known_good(args.known_good_path.resolve())
+    kg = load_known_good(workspace_path(args.known_good_path).resolve())
     if args.group not in kg.modules:
         raise SystemExit(f"Group '{args.group}' not found in {args.known_good_path}. Groups: {sorted(kg.modules)}")
 
