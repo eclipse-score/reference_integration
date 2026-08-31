@@ -586,9 +586,7 @@ class ResolvedDependencies:
             name = _field(body, "module_name")
             version = _field(body, "version")
             if name and version:
-                modules.append(
-                    Module(name=name, hash="", repo="", version=version, bazel_patches=_patch_labels(body))
-                )
+                modules.append(Module(name=name, hash="", repo="", version=version, bazel_patches=_patch_labels(body)))
 
         return modules
 
@@ -1137,9 +1135,7 @@ def main() -> None:
             )
         root = repo_root()
         override_files = [
-            f
-            for f in [root / "MODULE.bazel", *sorted((root / "bazel_common").glob("*.MODULE.bazel"))]
-            if f.is_file()
+            f for f in [root / "MODULE.bazel", *sorted((root / "bazel_common").glob("*.MODULE.bazel"))] if f.is_file()
         ]
         resolved = ResolvedDependencies.from_mod_graph(mod_graph, override_files)
         export = workspace_path(args.export)

@@ -27,7 +27,11 @@ from known_good.resolved_dependencies import INJECTION_BEGIN, INJECTION_END  # n
 from known_good.verify_stage2_resolution import missing_patches  # noqa: E402
 
 MANIFEST = {
-    "score_logging": {"repo": "https://e/logging.git", "hash": "a" * 40, "bazel_patches": ["//patches/logging:a.patch"]},
+    "score_logging": {
+        "repo": "https://e/logging.git",
+        "hash": "a" * 40,
+        "bazel_patches": ["//patches/logging:a.patch"],
+    },
     "rules_cc": {"version": "0.2.17"},
 }
 

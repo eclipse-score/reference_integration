@@ -612,7 +612,7 @@ class TestPatchesTravelWithThePin:
         root = tmp_path / "MODULE.bazel"
         root.write_text(
             'git_override(\n    module_name = "score_logging",\n    commit = "abc1234",\n'
-            '    patch_strip = 1,\n'
+            "    patch_strip = 1,\n"
             '    patches = [\n        "//patches/logging:002-a.patch",\n        "//patches/logging:003-b.patch",\n    ],\n'
             '    remote = "https://github.com/eclipse-score/logging.git",\n)\n'
         )
@@ -642,14 +642,16 @@ class TestPatchesTravelWithThePin:
         (ref_int / "patches" / "logging").mkdir(parents=True)
         (ref_int / "patches" / "logging" / "002-a.patch").write_text("payload\n")
         rd = ResolvedDependencies(
-            {"score_logging": Module.from_dict(
-                "score_logging",
-                {
-                    "repo": "https://github.com/eclipse-score/logging.git",
-                    "hash": "a" * 40,
-                    "bazel_patches": ["//patches/logging:002-a.patch"],
-                },
-            )}
+            {
+                "score_logging": Module.from_dict(
+                    "score_logging",
+                    {
+                        "repo": "https://github.com/eclipse-score/logging.git",
+                        "hash": "a" * 40,
+                        "bazel_patches": ["//patches/logging:002-a.patch"],
+                    },
+                )
+            }
         )
 
         copied = rd.export_patches(tmp_path / "artifact" / "patches", ref_int)
@@ -659,10 +661,12 @@ class TestPatchesTravelWithThePin:
 
     def test_export_patches_survives_a_missing_file(self, tmp_path: Path):
         rd = ResolvedDependencies(
-            {"score_logging": Module.from_dict(
-                "score_logging",
-                {"repo": "https://e/x.git", "hash": "a" * 40, "bazel_patches": ["//patches/logging:gone.patch"]},
-            )}
+            {
+                "score_logging": Module.from_dict(
+                    "score_logging",
+                    {"repo": "https://e/x.git", "hash": "a" * 40, "bazel_patches": ["//patches/logging:gone.patch"]},
+                )
+            }
         )
         assert rd.export_patches(tmp_path / "out", tmp_path / "ref_int") == []
 
