@@ -1,9 +1,16 @@
 {
   "name": "eclipse-s-core",
-  "image": "ghcr.io/eclipse-score/devcontainer:v1.7.0",
-  "mounts": [
-    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+  "image": "ghcr.io/eclipse-score/devcontainer:v1.11.0",
+  "runArgs": [
+    "--device=/dev/kvm"
   ],
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker": {
+    }
+  },
   "postCreateCommand": "bash .devcontainer/prepare_workspace.sh",
-  "postStartCommand": "ssh-keygen -f '/home/vscode/.ssh/known_hosts' -R '[localhost]:2222' || true"
+  "postStartCommand": {
+    "Add key to known_hosts": "ssh-keygen -f '/home/vscode/.ssh/known_hosts' -R '[localhost]:2222' || true",
+    "Make /dev/kvm readable and writable": "sudo chmod 666 /dev/kvm"
+  }
 }
