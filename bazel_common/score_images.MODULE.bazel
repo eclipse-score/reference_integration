@@ -42,12 +42,11 @@ use_repo(
     "ubuntu_22_04_linux_amd64",
 )
 
-http_file = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
-
-http_file(
-    name = "eb_corbos_toolkit_fastdev_archive",
-    sha256 = "d84ffd33210a71a2fdd478fa25df3775f873a83d2fe158b56c5ed37da4265823",
-    url = "https://github.com/Elektrobit/eb_corbos_toolkit/releases/download/v2.0.0-beta3/fastdev-trixie-ebclfsa-ebcl-qemuarm64.tar.gz",
+bazel_dep(name = "os_images", version = "0.0.0")
+git_override(
+    module_name = "os_images",
+    commit = "aead080d0d2a41f05788da4688728892be90461d",
+    remote = "https://github.com/eclipse-score/os_images.git",
 )
 
 bazel_dep(name = "score_rules_imagefs", version = "0.1.0")
