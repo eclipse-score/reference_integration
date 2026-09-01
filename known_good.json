@@ -51,7 +51,10 @@
             },
             "score_persistency": {
                 "repo": "https://github.com/eclipse-score/persistency.git",
-                "bazel_patches": [],
+                "bazel_patches": [
+                    "//patches/persistency:001-add-mod-need.patch",
+                    "//patches/persistency:002-rename-manual-verification-report-id.patch"
+                ],
                 "metadata": {
                     "extra_test_config": [
                         "@score_baselibs//score/log_rust:safety_level=qm",
@@ -190,7 +193,7 @@
             },
             "score_docs_as_code": {
                 "repo": "https://github.com/eclipse-score/docs-as-code.git",
-                "version": "8.0.1"
+                "version": "8.1.0"
             },
             "score_process_description": {
                 "repo": "https://github.com/eclipse-score/process_description.git",

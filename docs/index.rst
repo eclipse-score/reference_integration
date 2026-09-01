@@ -49,17 +49,18 @@ documentation set that downstream product distributions can build on.
       S-CORE process description, platform standards, and documentation toolchain.
 
    .. grid-item-card:: ✅ Code Quality
-      :link: verification_report/platform_verification_report
+      :link: verification_report/index
       :link-type: doc
 
-      Platform verification report and test coverage results.
+      Platform and module verification reports and test coverage results.
 
-   .. grid-item-card:: Integration
+   .. grid-item-card:: 🔗 Integration
+
       Reference Integration workflow and health overview with links to
       :doc:`Integration Process <integration_process/integration_process>` and
       `Integration Status <https://eclipse-score.github.io/reference_integration/main/status_dashboard.html>`_.
 
-   .. grid-item-card:: Modules
+   .. grid-item-card:: 🧩 Modules
       :link: sw_components
       :link-type: doc
 
@@ -75,9 +76,9 @@ documentation set that downstream product distributions can build on.
    :hidden:
 
    Modules <sw_components>
-   Integration Process <integration_process/integration_process>
+   Verification Reports <verification_report/index>
    Integration Status <https://eclipse-score.github.io/reference_integration/main/status_dashboard.html>
-   Process & Tools <process_methods_tools>
    S-Core v1.0 <s_core_v_1/index>
    Releases <s_core_v_1/releases/releases>
-   Verification Report <verification_report/platform_verification_report>
+   Integration Process <integration_process/integration_process>
+   Process & Tools <process_methods_tools>
