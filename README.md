@@ -1,6 +1,6 @@
 # Eclipse S-CORE Reference Integration
 
-This workspace integrates multiple Eclipse S-CORE modules (baselibs, communication, persistency, orchestrator, etc.) to validate cross-repository builds and detect integration issues early in the development cycle.
+This workspace integrates multiple Eclipse S-CORE modules (baselibs, communication, persistency, kyron, etc.) to validate cross-repository builds and detect integration issues early in the development cycle.
 
 ## Overview
 
@@ -190,7 +190,6 @@ Feature Integration Tests and test scenarios:
 Eclipse S-CORE demonstration applications and examples:
 - **`cli/`**: Interactive CLI tool for running examples on deployed systems
 - **`standalone/`**: Standalone example binaries (communication, persistence, etc.)
-- **`orchestration_persistency/`**: Multi-module orchestration examples
 - **`simple_lifecycle/`**: Basic lifecycle management examples
 
 Configuration for CLI autodiscovery is in `name.score.json` files; see [showcases/cli/README.md](showcases/cli/README.md) for details.

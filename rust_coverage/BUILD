@@ -37,16 +37,6 @@ rust_coverage_report(
 )
 
 rust_coverage_report(
-    name = "rust_coverage_score_orchestrator",
-    bazel_configs = [
-        "linux-x86_64",
-        "ferrocene-coverage",
-    ],
-    query = 'kind("rust_test", @score_orchestrator//src/...)',
-    visibility = ["//visibility:public"],
-)
-
-rust_coverage_report(
     name = "rust_coverage_score_kyron",
     bazel_configs = [
         "linux-x86_64",

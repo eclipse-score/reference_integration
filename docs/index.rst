@@ -17,8 +17,8 @@ Reference Integration Documentation
 
 The **Reference Integration** is the central integration repository of the
 eclipse-score project. It combines all
-S-CORE software modules — including Communication, Logging, Orchestrator,
-Persistency, Time, Config Management, Lifecycle, and Security/Crypto — into a
+S-CORE software modules — including Communication, Logging, Persistency,
+Time, Config Management, Lifecycle, and Security/Crypto — into a
 single, consistently versioned workspace.
 
 Its purpose is to verify that all modules build, integrate, and pass their
