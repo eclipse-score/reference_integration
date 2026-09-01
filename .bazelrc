@@ -7,12 +7,12 @@ common --registry=https://bcr.bazel.build
 common --credential_helper=*.qnx.com=%workspace%/.github/tools/qnx_credential_helper.py
 common --credential_helper_timeout="60s"
 
-# In order to overcome stability issues in GitHub
-common --experimental_repository_downloader_retries=30
+# Overcome stability issues when downloading external dependencies on GH Runners
+common --experimental_repository_downloader_retries=10
 common --experimental_scale_timeouts=2.0
-common --http_connector_attempts=30
-common --http_connector_retry_max_timeout=1s
-common --http_timeout_scaling=2.0
+common --http_connector_attempts=10
+common --http_connector_retry_max_timeout=30s
+common --http_timeout_scaling=4.0
 
 # Clear ANDROID_HOME for repository rules. rules_android (pulled transitively via
 # grpc-java -> rules_jvm_external) evaluates android_sdk_repository, which fails
