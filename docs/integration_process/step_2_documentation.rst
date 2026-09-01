@@ -73,7 +73,7 @@ module. To pull yours in:
         - `docs/sw_components.rst <https://github.com/eclipse-score/reference_integration/blob/main/docs/sw_components.rst>`_
         - an S-CORE **software module** that ships in the integration — i.e. it
           lives under ``modules.target_sw`` in ``known_good.json`` (communication,
-          persistency, logging, orchestrator, baselibs, …). This is the common
+          persistency, logging, kyron, baselibs, …). This is the common
           case.
       * - **Process, Methods & Tools**
         - `docs/process_methods_tools.rst <https://github.com/eclipse-score/reference_integration/blob/main/docs/process_methods_tools.rst>`_
