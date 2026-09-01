@@ -69,6 +69,17 @@ It checks at runtime, whether high integrity applications adhere to certain assu
 Note that this image represents a development image but not a production image of Linux for Safety Application.
 It is aimed at demonstrating development with focus on key features and AoUs.
 
+### Run the image and connect over SSH
+
+Start the image with `bazel run --config=eb-aarch64 //images/ebclfsa_aarch64:run`.
+After it has booted, connect from a separate terminal:
+
+```bash
+ssh -p 2222 root@localhost
+```
+
+The development image permits root login with an empty password.
+
 ## Main constraints for high-integrity applications
 
 For non-safety ("low integrity") applications, Linux for Safety Applications _is_ a standard Linux system.

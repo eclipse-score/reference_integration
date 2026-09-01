@@ -10,20 +10,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+load("@rules_pkg//pkg:pkg.bzl", "pkg_deb")
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
-
-genrule(
-    name = "extract-fastdev-image",
-    srcs = ["@eb_corbos_toolkit_fastdev_archive//file"],
-    outs = [
-        "ebcl-qemuarm64/fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic",
-        "ebcl-qemuarm64/fastdev-trixie-ebclfsa-ebcl-qemuarm64-vmlinux",
-    ],
-    cmd = "tar xzf $(location @eb_corbos_toolkit_fastdev_archive//file) -C $(RULEDIR)/ebcl-qemuarm64 && chmod +w $(RULEDIR)/ebcl-qemuarm64/fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic && ls -lah $(RULEDIR)/ebcl-qemuarm64/fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic > /tmp/foo",
-    visibility = [
-        "//visibility:public",
-    ],
-)
 
 pkg_tar(
     name = "crinit_config_tar",
@@ -43,29 +31,75 @@ pkg_tar(
     package_dir = "/usr/bin",
 )
 
+pkg_deb(
+    name = "platform_deb",
+    architecture = "arm64",
+    data = "//deploy:platform_tar",
+    description = "S-CORE platform files for the fast-dev image",
+    maintainer = "Eclipse S-CORE contributors",
+    package = "score-reference-integration-platform",
+    version = "1.0.0",
+)
+
+pkg_deb(
+    name = "showcases_deb",
+    architecture = "arm64",
+    data = "//showcases:showcases_pkg_tar",
+    description = "S-CORE showcases for the fast-dev image",
+    maintainer = "Eclipse S-CORE contributors",
+    package = "score-reference-integration-showcases",
+    version = "1.0.0",
+)
+
+pkg_deb(
+    name = "crinit_config_deb",
+    architecture = "all",
+    data = ":crinit_config_tar",
+    description = "Crinit configuration for the fast-dev image",
+    maintainer = "Eclipse S-CORE contributors",
+    package = "score-reference-integration-crinit-config",
+    replaces = ["ebclfsa-fastdev-crinit-getty"],
+    version = "1.0.0",
+)
+
+pkg_deb(
+    name = "scripts_deb",
+    architecture = "all",
+    data = ":scripts_tar",
+    description = "Scripts for the fast-dev image",
+    maintainer = "Eclipse S-CORE contributors",
+    package = "score-reference-integration-scripts",
+    version = "1.0.0",
+)
+
 genrule(
     name = "fastdev-image",
+    # Keep the vanilla network configuration for QEMU user-mode networking;
+    # the os_images network package is for the ITF bridge.
     srcs = [
-        "//deploy:platform_tar",
-        "//showcases:showcases_pkg_tar",
-        ":extract-fastdev-image",
-        ":crinit_config_tar",
-        ":scripts_tar",
-        "build_image.sh",
+        ":platform_deb",
+        ":showcases_deb",
+        "@os_images//ebclfsa_aarch64_prebuild:vanilla-image",
+        "@os_images//ebclfsa_aarch64_prebuild:kernel",
+        "@os_images//ebclfsa_aarch64:sshd_config_deb",
+        ":crinit_config_deb",
+        ":scripts_deb",
+        "@os_images//ebclfsa_aarch64_prebuild:build_image.sh",
     ],
     outs = [
         "ebcl-qemuarm64-deployed/fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic",
         "ebcl-qemuarm64-deployed/fastdev-trixie-ebclfsa-ebcl-qemuarm64-vmlinux",
     ],
     cmd = " \
-        $(location build_image.sh) \
+        $(location @os_images//ebclfsa_aarch64_prebuild:build_image.sh) \
             $(RULEDIR) \
-            $(RULEDIR)/ebcl-qemuarm64 \
+            $$(dirname $(location @os_images//ebclfsa_aarch64_prebuild:vanilla-image)) \
             $(RULEDIR)/ebcl-qemuarm64-deployed \
-            $(location //deploy:platform_tar) \
-            $(location //showcases:showcases_pkg_tar) \
-            $(location :crinit_config_tar) \
-            $(location :scripts_tar) \
+            $(location :platform_deb) \
+            $(location :showcases_deb) \
+            $(location @os_images//ebclfsa_aarch64:sshd_config_deb) \
+            $(location :crinit_config_deb) \
+            $(location :scripts_deb) \
     ",
     visibility = [
         "//visibility:public",
