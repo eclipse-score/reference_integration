@@ -23,7 +23,7 @@
                         "stage2-baselibs-flags"
                     ],
                     "exclude_test_target_reasons": {
-                        "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test": "Stage 2's toolchain does not implement the aborts_upon_exception feature."
+                        "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test": "Intentionally-failing upstream target (eclipse-score/baselibs#7): asserts an aborts_upon_exception feature no S-CORE toolchain implements; tags=[\"unit\"], so no tag filter removes it."
                     },
                     "legacy_exclude_test_targets": [
                         "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test",
@@ -141,8 +141,8 @@
                         "stage2-baselibs-flags"
                     ],
                     "exclude_test_target_reasons": {
-                        "//score/health_monitor/src/rust:miri_tests": "miri_test rule (tags=[\"miri\"]); needs the miri interpreter toolchain, which Stage 2's configs do not provide.",
-                        "//score/launch_manager/src/daemon/src/common/concurrency:mpmc_concurrent_queue_tsan_test": "built with -fsanitize=thread (tags=[\"tsan\"]); needs the TSan runtime and a sanitizer build, incompatible with the coverage configuration."
+                        "//score/health_monitor/src/rust:miri_tests": "miri_test rule (tags=[\"miri\"]); ref_int registers no miri toolchain, so the target fails toolchain resolution during analysis, before any tag filter applies.",
+                        "//score/launch_manager/src/daemon/src/common/concurrency:mpmc_concurrent_queue_tsan_test": "cc_test built with -fsanitize=thread (tags=[\"tsan\",\"no-coverage\"]); gcov-instrumenting a TSAN binary reports false races on the non-atomic __gcov* counters. The no-coverage tag already drops it from the run."
                     },
                     "legacy_exclude_test_targets": [
                         "//score/health_monitor/src/rust:miri_tests",
@@ -213,20 +213,16 @@
                     ],
                     "exclude_test_targets": [
                         "//score/config_management/config_daemon/code/factory/details:unit_test_mw_com",
-                        "//score/config_management/config_daemon/code/services/details/mw_com:unit_test",
                         "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com",
-                        "//score/config_management/config_provider/code/proxies/details:unit_test_mw",
                         "//score/config_management/dependability/..."
                     ],
                     "langs": [
                         "cpp"
                     ],
                     "exclude_test_target_reasons": {
-                        "//score/config_management/config_daemon/code/factory/details:unit_test_mw_com": "Excluded when the module joined ref_int (#299): depends on mw_com/SOCAL targets not present in the OSS build, which ref_int's patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch removes. Carried over unchanged; not yet re-audited for Stage 2.",
-                        "//score/config_management/config_daemon/code/services/details/mw_com:unit_test": "Excluded when the module joined ref_int (#299): depends on mw_com/SOCAL targets not present in the OSS build, which ref_int's patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch removes. Carried over unchanged; not yet re-audited for Stage 2.",
-                        "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com": "Excluded when the module joined ref_int (#299): depends on mw_com/SOCAL targets not present in the OSS build, which ref_int's patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch removes. Carried over unchanged; not yet re-audited for Stage 2.",
-                        "//score/config_management/config_provider/code/proxies/details:unit_test_mw": "Excluded when the module joined ref_int (#299): depends on mw_com/SOCAL targets not present in the OSS build, which ref_int's patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch removes. Carried over unchanged; not yet re-audited for Stage 2.",
-                        "//score/config_management/dependability/...": "Excluded when the module joined ref_int (#299): depends on mw_com/SOCAL targets not present in the OSS build, which ref_int's patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch removes. Carried over unchanged; not yet re-audited for Stage 2."
+                        "//score/config_management/config_daemon/code/factory/details:unit_test_mw_com": "tags=[\"exclusive\"] upstream for LoLa message passing 2.0 sandboxing (Ticket-217341); mw_com service discovery does not come up in Stage 2 and 4 TestFactoryMwImpl cases fail.",
+                        "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com": "tags=[\"exclusive\"] upstream for LoLa message passing 2.0 sandboxing (Ticket-217341); mw_com service discovery does not come up in Stage 2 and ConfigProviderFactoryTest.FoundServiceDuringCreation times out.",
+                        "//score/config_management/dependability/...": "No test rules (component()/dependable_element(), tests=[]); analysis fails because dependability/BUILD references :config_daemon_app_unit and :config_provider_details_unit, declared nowhere in the module."
                     },
                     "legacy_exclude_test_targets": [
                         "//score/config_management/config_daemon/code/factory/details:unit_test_mw_com",
@@ -236,6 +232,7 @@
                         "//score/config_management/dependability/..."
                     ],
                     "bazel_config": [
+                        "stage2-gcc",
                         "stage2-communication-flags",
                         "stage2-baselibs-flags"
                     ]

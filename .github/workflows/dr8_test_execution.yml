@@ -15,8 +15,6 @@ permissions:
   contents: write
   pull-requests: write
 on:
-  # Not pull_request_target: no step here needs a fork's secrets (the release upload is
-  # tag-gated), and it would run this file from the base branch, never the PR's own version.
   pull_request:
     types: [opened, reopened, synchronize]
   push:
