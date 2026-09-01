@@ -12,7 +12,6 @@
 // *******************************************************************************
 use test_scenarios_rust::scenario::{ScenarioGroup, ScenarioGroupImpl};
 
-
 mod lifecycle;
 mod persistency;
 
