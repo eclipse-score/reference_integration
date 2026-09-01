@@ -12,19 +12,6 @@
 # *******************************************************************************
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 
-genrule(
-    name = "extract-fastdev-image",
-    srcs = ["@eb_corbos_toolkit_fastdev_archive//file"],
-    outs = [
-        "ebcl-qemuarm64/fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic",
-        "ebcl-qemuarm64/fastdev-trixie-ebclfsa-ebcl-qemuarm64-vmlinux",
-    ],
-    cmd = "tar xzf $(location @eb_corbos_toolkit_fastdev_archive//file) -C $(RULEDIR)/ebcl-qemuarm64 && chmod +w $(RULEDIR)/ebcl-qemuarm64/fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic && ls -lah $(RULEDIR)/ebcl-qemuarm64/fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic > /tmp/foo",
-    visibility = [
-        "//visibility:public",
-    ],
-)
-
 pkg_tar(
     name = "crinit_config_tar",
     srcs = [
@@ -48,19 +35,20 @@ genrule(
     srcs = [
         "//showcases:showcases_pkg_tar",
         "//feature_integration_tests/configs:etc_configs",
-        ":extract-fastdev-image",
+        "@os_images//ebclfsa_aarch64:vanilla-image",
+        "@os_images//ebclfsa_aarch64:kernel",
         ":crinit_config_tar",
         ":scripts_tar",
-        "build_image.sh",
+        "@os_images//scripts:build_ebclfsa_aarch64_image.sh",
     ],
     outs = [
         "ebcl-qemuarm64-deployed/fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic",
         "ebcl-qemuarm64-deployed/fastdev-trixie-ebclfsa-ebcl-qemuarm64-vmlinux",
     ],
     cmd = " \
-        $(location build_image.sh) \
+        $(location @os_images//scripts:build_ebclfsa_aarch64_image.sh) \
             $(RULEDIR) \
-            $(RULEDIR)/ebcl-qemuarm64 \
+            $$(dirname $(location @os_images//ebclfsa_aarch64:vanilla-image)) \
             $(RULEDIR)/ebcl-qemuarm64-deployed \
             $(location //showcases:showcases_pkg_tar) \
             $(location :crinit_config_tar) \
