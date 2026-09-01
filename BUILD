@@ -19,7 +19,6 @@ docs(
     data = [
         # Software components
         "@score_persistency//:needs_json",
-        "@score_orchestrator//:needs_json",
         "@score_kyron//:needs_json",
         # "@score_baselibs//:needs_json",  # score_tooling is dev_dependency
         # "@score_communication//:needs_json",  # no docs_sources

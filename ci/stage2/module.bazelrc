@@ -28,8 +28,8 @@ common --http_timeout_scaling=2.0
 # ─── Repo-scoped build settings, ported from ref_int's root .bazelrc ─────────
 # Opt-in per module, because a build setting can only be loaded by a module whose graph contains
 # the repo that defines it. Set unconditionally, they abort option loading with "No repository
-# visible as '@<repo>'" for every module that does not depend on it (score_kyron and
-# score_orchestrator depend on neither).
+# visible as '@<repo>'" for every module that does not depend on it (score_kyron depends on
+# neither).
 build:stage2-baselibs-flags --@score_baselibs//score/log_rust:safety_level=qm
 build:stage2-communication-flags --@score_communication//score/memory/shared/flags:use_typedshmd=False
 

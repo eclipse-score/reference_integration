@@ -7,6 +7,13 @@ common --registry=https://bcr.bazel.build
 common --credential_helper=*.qnx.com=%workspace%/.github/tools/qnx_credential_helper.py
 common --credential_helper_timeout="60s"
 
+# Overcome stability issues when downloading external dependencies on GH Runners
+common --experimental_repository_downloader_retries=10
+common --experimental_scale_timeouts=2.0
+common --http_connector_attempts=10
+common --http_connector_retry_max_timeout=30s
+common --http_timeout_scaling=4.0
+
 # Clear ANDROID_HOME for repository rules. rules_android (pulled transitively via
 # grpc-java -> rules_jvm_external) evaluates android_sdk_repository, which fails
 # when ANDROID_HOME points at an incomplete SDK (as on CI runners). None of our
@@ -70,9 +77,9 @@ build:linux-x86_64 --extra_toolchains=@score_gcc_x86_64_toolchain//:x86_64-linux
 build:linux-x86_64 --platforms=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
 
 build:eb-aarch64 --config=_common
-build:eb-aarch64 --extra_toolchains=@score_ebclfsa_toolchain//:aarch64-linux-sdk_0.1.0-ebclfsa
+build:eb-aarch64 --extra_toolchains=@score_ebclfsa_toolchain//:aarch64-linux-sdk_2.0.0-beta2-ebclfsa
 build:eb-aarch64 --extra_toolchains=@ferrocene_aarch64_ebclfsa//:rust_ferrocene_toolchain
-build:eb-aarch64 --platforms=@score_bazel_platforms//:aarch64-linux-sdk_0.1.0-ebclfsa
+build:eb-aarch64 --platforms=@score_bazel_platforms//:aarch64-linux-sdk_2.0.0-beta2-ebclfsa
 
 build:autosd-x86_64 --config=_common
 build:autosd-x86_64 --force_pic

@@ -59,7 +59,7 @@ STAGE2_BASE_CONFIG = "stage2-linux-x86_64"
 # Central/legacy mode only (workspace=None): configs defined in ref_int's own root .bazelrc.
 CENTRAL_MODE_CONFIGS = ["--config=unit-tests", "--config=ferrocene-coverage"]
 # Known-broken rust coverage extraction (mostly proc_macro); applies in both modes.
-DISABLED_RUST_COVERAGE = ["score_communication", "score_orchestrator"]
+DISABLED_RUST_COVERAGE = ["score_communication"]
 # Modules whose own libclang registration ref_int cannot yet replace; untested under isolation.
 MODULES_WITH_OWN_RC = ["score_config_management"]
 # Modules with a second, ref_int-owned rc at ci/stage2/<module>.bazelrc (`//`-relative labels,

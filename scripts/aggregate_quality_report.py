@@ -285,13 +285,13 @@ def main() -> int:
             out.write(f"{row}\n")
         out.write("\n")
 
-    # score_communication and score_orchestrator have known-broken rust coverage extraction
-    # (mostly proc_macro) and are excluded from the *_rust rows above in both modes — see
-    # DISABLED_RUST_COVERAGE in quality_runners.py. Stated explicitly so their absent row
-    # reads as "not measured for this module", not "not measured at all".
+    # score_communication has known-broken rust coverage extraction (mostly proc_macro) and is
+    # excluded from the *_rust rows above in both modes — see DISABLED_RUST_COVERAGE in
+    # quality_runners.py. Stated explicitly so its absent row reads as "not measured for this
+    # module", not "not measured at all".
     out.write(
-        "> Rust coverage is not measured for `score_communication` or `score_orchestrator` "
-        "(known extraction issues, mostly proc_macro). Rust *tests* do run for both; every "
+        "> Rust coverage is not measured for `score_communication` "
+        "(known extraction issues, mostly proc_macro). Rust *tests* do run for it; every "
         "other Rust module's coverage is measured in Stage 2 the same as in the old workflow.\n\n"
     )
 
