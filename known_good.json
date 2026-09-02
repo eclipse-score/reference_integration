@@ -8,7 +8,8 @@
                     "//patches/baselibs:002-restore-qnx8-poll-workaround.patch",
                     "//patches/baselibs:003-score-tooling-not-dev-dependency.patch",
                     "//patches/baselibs:004-remove-hedron-and-clang-tidy-config.patch",
-                    "//patches/baselibs:005-rename-manual-verification-report-id.patch"
+                    "//patches/baselibs:005-rename-manual-verification-report-id.patch",
+                    "//patches/baselibs:006-include-cpp-style-guide-in-toctree.patch"
                 ],
                 "metadata": {
                     "extra_test_config": [
@@ -59,7 +60,8 @@
                     "//patches/persistency:002-rename-manual-verification-report-id.patch",
                     "//patches/persistency:003-pip-not-dev-dependency.patch",
                     "//patches/persistency:004-imagefs-not-dev-dependency.patch",
-                    "//patches/persistency:005-googletest-not-dev-dependency.patch"
+                    "//patches/persistency:005-googletest-not-dev-dependency.patch",
+                    "//patches/persistency:006-add-module-index-title.patch"
                 ],
                 "metadata": {
                     "extra_test_config": [
@@ -194,6 +196,9 @@
             },
             "score_platform": {
                 "repo": "https://github.com/eclipse-score/score.git",
+                "bazel_patches": [
+                    "//patches/platform:001-fix-software-verification-doc-ref.patch"
+                ],
                 "version": "0.7.1"
             },
             "score_bazel_platforms": {

@@ -15,10 +15,8 @@
 Process, Methods, and Tools
 ============================
 
-.. toctree::
-   :titlesonly:
-   :maxdepth: 1
+.. Module documentation is mounted here automatically via the `bundles`
+   parameter of the `docs()` macro in the root BUILD file (see
+   `attach_to: "process_methods_tools"`), which wires each module's index
+   into this page's toctree at build time.
 
-   _collections/score_platform/docs/index
-   _collections/score_process/process/index
-   _collections/score_docs_as_code/docs/index

@@ -15,11 +15,8 @@
 Modules
 =======
 
-.. toctree::
-   :titlesonly:
-   :maxdepth: 1
+.. Module documentation is mounted here automatically via the `bundles`
+   parameter of the `docs()` macro in the root BUILD file (see
+   `attach_to: "sw_components"`), which wires each module's index into this
+   page's toctree at build time.
 
-   _collections/score_persistency/index
-   _collections/score_orchestrator/docs/index
-   _collections/score_kyron/docs/index
-   _collections/score_logging/docs/index
