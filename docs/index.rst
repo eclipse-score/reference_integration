@@ -43,7 +43,7 @@ documentation set that downstream product distributions can build on.
       :doc:`S-Core v1.0 Roadmap <s_core_v_1/roadmap/roadmap>` and PI planning.
 
    .. grid-item-card:: 📖 Process, Methods & Tools
-      :link: process_methods_tools
+      :link: process_methods_tools/index
       :link-type: doc
 
       S-CORE process description, platform standards, and documentation toolchain.
@@ -61,10 +61,10 @@ documentation set that downstream product distributions can build on.
       `Integration Status <https://eclipse-score.github.io/reference_integration/main/status_dashboard.html>`_.
 
    .. grid-item-card:: 🧩 Modules
-      :link: sw_components
+      :link: sw_components/index
       :link-type: doc
 
-      Central overview for all integrated modules. See :doc:`All Modules <sw_components>`.
+      Central overview for all integrated modules. See :doc:`All Modules <sw_components/index>`.
 
    .. grid-item-card:: 📝 Release Notes
       :link: s_core_v_1/releases/releases
@@ -75,10 +75,10 @@ documentation set that downstream product distributions can build on.
 .. toctree::
    :hidden:
 
-   Modules <sw_components>
+   Modules <sw_components/index>
    Verification Reports <verification_report/index>
    Integration Status <https://eclipse-score.github.io/reference_integration/main/status_dashboard.html>
    S-Core v1.0 <s_core_v_1/index>
    Releases <s_core_v_1/releases/releases>
    Integration Process <integration_process/integration_process>
-   Process & Tools <process_methods_tools>
+   Process & Tools <process_methods_tools/index>

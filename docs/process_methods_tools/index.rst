@@ -12,11 +12,14 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-Modules
-=======
+Process, Methods, and Tools
+============================
 
-.. Module documentation is mounted here automatically via the `bundles`
+.. Process, Methods, and Tools documentation is mounted here automatically via the `bundles`
    parameter of the `docs()` macro in the root BUILD file (see
-   `attach_to: "sw_components"`), which wires each module's index into this
-   page's toctree at build time.
+   `attach_to: "process_methods_tools"`), which wires each module's index
+   into this page's toctree at build time.
 
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
