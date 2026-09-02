@@ -22,7 +22,7 @@ docs(
         "@score_persistency//:needs_json",
         "@score_orchestrator//:needs_json",
         "@score_kyron//:needs_json",
-        # "@score_baselibs//:needs_json",  # score_tooling is dev_dependency
+        "@score_baselibs//:needs_json",
         # "@score_communication//:needs_json",  # no docs_sources
         # "@score_lifecycle//:needs_json",  # unreadable images - relative paths issue
         "@score_logging//:needs_json",  # duplicated labels
