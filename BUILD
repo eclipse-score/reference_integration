@@ -21,16 +21,40 @@ docs(
         # Software components
         # "@score_communication//:needs_json",  # no docs_sources
         # "@score_lifecycle//:needs_json",  # unreadable images - relative paths issue
-        # "@score_logging//:needs_json",  # unreadable images - relative paths issue (mw_log_recorders.puml)
-        {"bundle": "@score_persistency//:docs_bundle", "mount_at": "sw_components/score_persistency"},
-        {"bundle": "@score_orchestrator//:docs_bundle", "mount_at": "sw_components/score_orchestrator"},
-        {"bundle": "@score_kyron//:docs_bundle", "mount_at": "sw_components/score_kyron"},
-        {"bundle": "@score_baselibs//:docs_bundle", "mount_at": "sw_components/score_baselibs"},
+        {
+            "bundle": "@score_logging//:docs_bundle",
+            "mount_at": "sw_components/score_logging",
+        },
+        {
+            "bundle": "@score_persistency//:docs_bundle",
+            "mount_at": "sw_components/score_persistency",
+        },
+        {
+            "bundle": "@score_orchestrator//:docs_bundle",
+            "mount_at": "sw_components/score_orchestrator",
+        },
+        {
+            "bundle": "@score_kyron//:docs_bundle",
+            "mount_at": "sw_components/score_kyron",
+        },
+        {
+            "bundle": "@score_baselibs//:docs_bundle",
+            "mount_at": "sw_components/score_baselibs",
+        },
 
         # Process methods and tools (PMT)
-        {"bundle": "@score_platform//:docs_bundle", "mount_at": "process_methods_tools/score_platform"},
-        {"bundle": "@score_process_description//:docs_bundle", "mount_at": "process_methods_tools/score_process_description"},
-        {"bundle": "@score_docs_as_code//:docs_bundle", "mount_at": "process_methods_tools/score_docs_as_code"},
+        {
+            "bundle": "@score_platform//:docs_bundle",
+            "mount_at": "process_methods_tools/score_platform",
+        },
+        {
+            "bundle": "@score_process_description//:docs_bundle",
+            "mount_at": "process_methods_tools/score_process_description",
+        },
+        {
+            "bundle": "@score_docs_as_code//:docs_bundle",
+            "mount_at": "process_methods_tools/score_docs_as_code",
+        },
     ],
     known_good = "known_good.json",
     source_dir = "docs",
