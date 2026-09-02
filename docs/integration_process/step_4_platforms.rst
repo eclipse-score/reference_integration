@@ -118,9 +118,7 @@ There are two patterns under `showcases/ <https://github.com/eclipse-score/refer
 
 * **Standalone** (`showcases/standalone <https://github.com/eclipse-score/reference_integration/tree/main/showcases/standalone>`_) — bundle
   a binary that already exists in your module's repo.
-* **Composed** (e.g.
-  `showcases/orchestration_persistency <https://github.com/eclipse-score/reference_integration/tree/main/showcases/orchestration_persistency>`_)
-  — a small binary defined *here* that combines several modules.
+* **Composed** — a small binary defined *here* that combines several modules.
 
 **1. Define the bundle.** Add a ``score_pkg_bundle`` target. To re-use a binary
 that lives in your module:

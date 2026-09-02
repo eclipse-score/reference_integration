@@ -12,7 +12,7 @@
 # *******************************************************************************
 
 # Generated from known_good.json at 2026-08-21T00:00:00+00:00Z
-# Do not edit manually - use scripts/known_good/update_module_from_known_good.py
+# Do not edit manually - use scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir-modules bazel_common
 
 bazel_dep(name = "score_baselibs")
 git_override(
@@ -49,13 +49,6 @@ git_override(
         "//patches/persistency:003-fix-docs-version.patch",
     ],
     remote = "https://github.com/eclipse-score/persistency.git",
-)
-
-bazel_dep(name = "score_orchestrator")
-git_override(
-    module_name = "score_orchestrator",
-    commit = "c5bcbd39fc6e124a26b1d66abbfc696a3319c2a4",
-    remote = "https://github.com/eclipse-score/orchestrator.git",
 )
 
 bazel_dep(name = "score_kyron")
@@ -103,7 +96,7 @@ git_override(
     commit = "952461ceffff774fb4c125ee023fea0221fcdce2",
     patch_strip = 1,
     patches = [
-        "patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch",
+        "//patches/config_management:001-adapt-proxy-api-and-remove-internal-targets.patch",
     ],
     remote = "https://github.com/eclipse-score/config_management.git",
 )

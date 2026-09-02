@@ -69,16 +69,6 @@
                     "rust_coverage_config": "ferrocene-coverage-per"
                 }
             },
-            "score_orchestrator": {
-                "repo": "https://github.com/eclipse-score/orchestrator.git",
-                "hash": "c5bcbd39fc6e124a26b1d66abbfc696a3319c2a4",
-                "metadata": {
-                    "code_root_path": "//src/...",
-                    "langs": [
-                        "rust"
-                    ]
-                }
-            },
             "score_kyron": {
                 "repo": "https://github.com/eclipse-score/kyron.git",
                 "hash": "cc72f599cc0c04a4e80c12a204f57e59a48d284a",
@@ -142,7 +132,7 @@
                 "repo": "https://github.com/eclipse-score/config_management.git",
                 "hash": "952461ceffff774fb4c125ee023fea0221fcdce2",
                 "bazel_patches": [
-                    "patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch"
+                    "//patches/config_management:001-adapt-proxy-api-and-remove-internal-targets.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/config_management/...",
@@ -195,9 +185,10 @@
                 "repo": "https://github.com/eclipse-score/process_description.git",
                 "hash": "8df530cab5efcb40e9f835ba6e9b61ae2f0175c7"
             },
-            "score_sbom": {
-                "repo": "https://github.com/eclipse-score/sbom-tool.git",
-                "version": "0.0.2"
+            "score_bazel_cpp_toolchains": {
+                "repo": "https://github.com/eclipse-score/bazel_cpp_toolchains.git",
+                "version": "1.0.3",
+                "pin_version": true
             }
         }
     },
