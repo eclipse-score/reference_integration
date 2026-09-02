@@ -1,0 +1,12 @@
+# Generated from known_good.json at 2026-08-21T00:00:00+00:00Z
+# Do not edit manually - use scripts/known_good/update_module_from_known_good.py
+
+sbom_ext = use_extension("@score_sbom//:extensions.bzl", "sbom_metadata")
+sbom_ext.track_module(name = "score_baselibs")
+sbom_ext.track_module(name = "score_communication")
+sbom_ext.track_module(name = "score_persistency")
+sbom_ext.track_module(name = "score_kyron")
+sbom_ext.track_module(name = "score_lifecycle_health")
+sbom_ext.track_module(name = "score_logging")
+sbom_ext.track_module(name = "score_time")
+use_repo(sbom_ext, "sbom_metadata")
