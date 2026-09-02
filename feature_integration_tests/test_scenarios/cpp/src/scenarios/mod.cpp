@@ -13,6 +13,8 @@
 
 #include <scenario.hpp>
 
+#include "scenarios/lifecycle/conditional_launching.h"
+
 #include <vector>
 
 Scenario::Ptr make_multiple_kvs_per_app_scenario();
@@ -38,9 +40,18 @@ ScenarioGroup::Ptr persistency_scenario_group() {
         std::vector<ScenarioGroup::Ptr>{supported_datatypes_group(), default_values_group()});
 }
 
+ScenarioGroup::Ptr lifecycle_scenario_group() {
+    return std::make_shared<ScenarioGroupImpl>(
+        "lifecycle",
+        std::vector<Scenario::Ptr>{
+            make_conditional_launching_scenario(),
+        },
+        std::vector<ScenarioGroup::Ptr>{});
+}
+
 ScenarioGroup::Ptr root_scenario_group() {
     return std::make_shared<ScenarioGroupImpl>(
         "root",
         std::vector<Scenario::Ptr>{},
-        std::vector<ScenarioGroup::Ptr>{persistency_scenario_group()});
+        std::vector<ScenarioGroup::Ptr>{persistency_scenario_group(), lifecycle_scenario_group()});
 }
