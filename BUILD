@@ -20,7 +20,10 @@ docs(
     bundles = [
         # Software components
         # "@score_communication//:needs_json",  # no docs_sources
-        # "@score_lifecycle//:needs_json",  # unreadable images - relative paths issue
+        {
+            "bundle": "@score_lifecycle//:docs_bundle",
+            "mount_at": "sw_components/score_lifecycle",
+        },
         {
             "bundle": "@score_logging//:docs_bundle",
             "mount_at": "sw_components/score_logging",

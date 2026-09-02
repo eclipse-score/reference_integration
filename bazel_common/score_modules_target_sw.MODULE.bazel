@@ -80,6 +80,13 @@ single_version_override(
 bazel_dep(name = "score_lifecycle")
 single_version_override(
     module_name = "score_lifecycle",
+    patch_strip = 1,
+    patches = [
+        "//patches/lifecycle:001-score-tooling-not-dev-dependency.patch",
+        "//patches/lifecycle:002-remove-hedron-compile-commands.patch",
+        "//patches/lifecycle:003-doc-dependencies-not-dev.patch",
+        "//patches/lifecycle:004-lower-quick-start-heading.patch",
+    ],
     version = "0.6.0",
 )
 
