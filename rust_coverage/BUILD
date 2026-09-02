@@ -32,7 +32,7 @@ rust_coverage_report(
         "linux-x86_64",
         "ferrocene-coverage-per",
     ],
-    query = 'kind("rust_test", @score_persistency//score/kvs/...) -@score_persistency//score/kvs/tests:bm_kvs_cpp -@score_persistency//score/kvs/tests/integration_test_scenarios/...',
+    query = 'kind("rust_test", @score_persistency//score/kvs/...) -@score_persistency//score/kvs/tests:bm_kvs_cpp -@score_persistency//score/kvs/tests/integration_test_scenarios/... -@score_persistency//score/kvs/tests/test_cases/...',
     visibility = ["//visibility:public"],
 )
 
