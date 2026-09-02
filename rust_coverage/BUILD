@@ -32,7 +32,7 @@ rust_coverage_report(
         "linux-x86_64",
         "ferrocene-coverage-per",
     ],
-    query = 'kind("rust_test", @score_persistency//score/kvs/...) -@score_persistency//score/kvs/tests:bm_kvs_cpp',
+    query = 'kind("rust_test", @score_persistency//score/kvs/...) -@score_persistency//score/kvs/tests:bm_kvs_cpp -@score_persistency//score/kvs/tests/integration_test_scenarios/...',
     visibility = ["//visibility:public"],
 )
 
@@ -62,7 +62,7 @@ rust_coverage_report(
         "linux-x86_64",
         "ferrocene-coverage",
     ],
-    query = 'kind("rust_test", @score_lifecycle//score/...) -@score_lifecycle//score/health_monitor/src/rust:miri_tests -@score_lifecycle//score/launch_manager/src/daemon/src/common/concurrency:mpmc_concurrent_queue_tsan_test -@score_lifecycle//score/launch_manager/src/daemon/src/common/concurrency:mpsc_bounded_queue_tsan_test',
+    query = 'kind("rust_test", @score_lifecycle//score/...) -@score_lifecycle//score/health_monitor/src/rust:miri_tests',
     visibility = ["//visibility:public"],
 )
 

@@ -53,7 +53,9 @@
                 "repo": "https://github.com/eclipse-score/persistency.git",
                 "bazel_patches": [
                     "//patches/persistency:001-add-mod-need.patch",
-                    "//patches/persistency:002-rename-manual-verification-report-id.patch"
+                    "//patches/persistency:002-rename-manual-verification-report-id.patch",
+                    "//patches/persistency:003-pip-not-dev-dependency.patch",
+                    "//patches/persistency:004-imagefs-not-dev-dependency.patch"
                 ],
                 "metadata": {
                     "extra_test_config": [
@@ -63,7 +65,8 @@
                     ],
                     "code_root_path": "//score/kvs/...",
                     "exclude_test_targets": [
-                        "//score/kvs/tests:bm_kvs_cpp"
+                        "//score/kvs/tests:bm_kvs_cpp",
+                        "//score/kvs/tests/integration_test_scenarios/..."
                     ],
                     "rust_coverage_config": "ferrocene-coverage-per"
                 },
@@ -95,9 +98,7 @@
                 "metadata": {
                     "code_root_path": "//score/...",
                     "exclude_test_targets": [
-                        "//score/health_monitor/src/rust:miri_tests",
-                        "//score/launch_manager/src/daemon/src/common/concurrency:mpmc_concurrent_queue_tsan_test",
-                        "//score/launch_manager/src/daemon/src/common/concurrency:mpsc_bounded_queue_tsan_test"
+                        "//score/health_monitor/src/rust:miri_tests"
                     ]
                 },
                 "version": "0.5.0"
