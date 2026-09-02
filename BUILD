@@ -25,7 +25,7 @@ docs(
         "@score_baselibs//:needs_json",
         # "@score_communication//:needs_json",  # no docs_sources
         # "@score_lifecycle//:needs_json",  # unreadable images - relative paths issue
-        "@score_logging//:needs_json",  # duplicated labels
+        # "@score_logging//:needs_json",  # unreadable images - relative paths issue (mw_log_recorders.puml)
         # Tools
         "@score_platform//:needs_json",
         "@score_process_description//:needs_json",

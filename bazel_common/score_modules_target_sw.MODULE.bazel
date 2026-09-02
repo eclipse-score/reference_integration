@@ -57,12 +57,20 @@ single_version_override(
 bazel_dep(name = "score_orchestrator")
 single_version_override(
     module_name = "score_orchestrator",
+    patch_strip = 1,
+    patches = [
+        "//patches/orchestrator:001-use-format-targets-new-location.patch",
+    ],
     version = "0.1.1",
 )
 
 bazel_dep(name = "score_kyron")
 single_version_override(
     module_name = "score_kyron",
+    patch_strip = 1,
+    patches = [
+        "//patches/kyron:001-use-format-targets-new-location.patch",
+    ],
     version = "0.1.4",
 )
 
@@ -81,6 +89,7 @@ git_override(
         "//patches/logging:002-needs-json-deps-not-dev-dependency.patch",
         "//patches/logging:003-docs-as-code-not-dev-dependency.patch",
         "//patches/logging:004-rules-pkg-not-dev-dependency.patch",
+        "//patches/logging:005-use-format-targets-new-location.patch",
     ],
     remote = "https://github.com/eclipse-score/logging.git",
 )

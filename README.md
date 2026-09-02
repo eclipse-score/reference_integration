@@ -223,7 +223,7 @@ For documentation covering repository workflows, testing frameworks, and platfor
 To generate HTML documentation for all integrated modules:
 
 ```bash
-bazel run //:docs_combo_experimental
+bazel run //:docs
 ```
 
 ## Supported Platforms

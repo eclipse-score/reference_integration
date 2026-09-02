@@ -79,6 +79,9 @@
             },
             "score_orchestrator": {
                 "repo": "https://github.com/eclipse-score/orchestrator.git",
+                "bazel_patches": [
+                    "//patches/orchestrator:001-use-format-targets-new-location.patch"
+                ],
                 "metadata": {
                     "code_root_path": "//src/...",
                     "langs": [
@@ -89,6 +92,9 @@
             },
             "score_kyron": {
                 "repo": "https://github.com/eclipse-score/kyron.git",
+                "bazel_patches": [
+                    "//patches/kyron:001-use-format-targets-new-location.patch"
+                ],
                 "metadata": {
                     "code_root_path": "//src/...",
                     "langs": [
@@ -114,7 +120,8 @@
                 "bazel_patches": [
                     "//patches/logging:002-needs-json-deps-not-dev-dependency.patch",
                     "//patches/logging:003-docs-as-code-not-dev-dependency.patch",
-                    "//patches/logging:004-rules-pkg-not-dev-dependency.patch"
+                    "//patches/logging:004-rules-pkg-not-dev-dependency.patch",
+                    "//patches/logging:005-use-format-targets-new-location.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/mw/log/...",
