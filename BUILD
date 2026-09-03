@@ -19,6 +19,7 @@ load("@score_tooling//third_party/format:macros.bzl", "use_format_targets")
 docs(
     bundles = [
         # Software components
+        # TODO Remove and replace with generation for know_good.json !
         # "@score_communication//:needs_json",  # no docs_sources
         {
             "bundle": "@score_lifecycle//:docs_bundle",
@@ -31,10 +32,6 @@ docs(
         {
             "bundle": "@score_persistency//:docs_bundle",
             "mount_at": "sw_components/score_persistency",
-        },
-        {
-            "bundle": "@score_orchestrator//:docs_bundle",
-            "mount_at": "sw_components/score_orchestrator",
         },
         {
             "bundle": "@score_kyron//:docs_bundle",
