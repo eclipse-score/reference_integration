@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Logging Module View &#8212; REF_INT  documentation</title>
+    <title>Logging Architecture &#8212; REF_INT  documentation</title>
   
   
   
@@ -74,8 +74,8 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../../search.html" />
-    <link rel="next" title="Explicit initialization of logging" href="../../../design_decisions/explicit_init.html" />
-    <link rel="prev" title="Logging Documentation" href="../../../index.html" />
+    <link rel="next" title="Architecture Inspection Checklist" href="chklst_arc_inspection.html" />
+    <link rel="prev" title="Feature" href="../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.1" />
@@ -446,13 +446,20 @@
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../../../score_persistency/index.html">Persistency Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../score_kyron/docs/index.html">Kyron</a></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">Logging Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Logging Module View</a></li>
-
-<li class="toctree-l2"><a class="reference internal" href="../../../design_decisions/explicit_init.html">Explicit initialization of logging</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">Logging</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">Feature</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">Logging Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chklst_arc_inspection.html">Architecture Inspection Checklist</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DR-001-logging.html">Explicit initialization of logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../safety_planning/index.html">Feature Safety Work Products List</a></li>
 </ul>
 </details></li>
-
+<li class="toctree-l2"><a class="reference internal" href="../../../module/index.html">Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../verification_report/module_verification_report.html">Verification Report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/datarouter/index.html">Datarouter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/mw_log/index.html">mw::log Backend</a></li>
+</ul>
+</details></li>
 </ul>
 </div>
 </nav></div>
@@ -497,9 +504,12 @@
     <li class="breadcrumb-item"><a href="../../../../../../sw_components.html" class="nav-link">Modules</a></li>
     
     
-    <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Logging Documentation</a></li>
+    <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Logging</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Logging Module View</span></li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Feature</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Logging Architecture</span></li>
   </ul>
 </nav>
 </div>
@@ -516,18 +526,18 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="logging-module-view">
-<h1>Logging Module View<a class="headerlink" href="#logging-module-view" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-b2bfe0c8">
-<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_mod table" id="mod__logging_repo">
+  <section id="logging-architecture">
+<h1>Logging Architecture<a class="headerlink" href="#logging-architecture" title="Link to this heading">#</a></h1>
+<div class="need_container docutils container" id="SNCB-454f7537">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__logging_module_architecture">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
-<div class="line"><span><span class="needs_title"><span class="needs_data">Logging</span></span></span></div>
+<div class="line"><span><span class="needs_title"><span class="needs_data">Logging Architecture</span></span></span></div>
 </div>
 </td>
 <td class="head_center" colspan="2"><div class="needs_head line-block">
-<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
-<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">YES</span></span></span></div>
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">draft</span></span></span></div>
+<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">NO</span></span></span></div>
 <div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">ASIL_B</span></span></span></div>
 </div>
 </td>
@@ -537,22 +547,22 @@
 </td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
-<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>0</span></div>
+<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
-<div class="line"><span><div class="line">includes: <span class="includes"><span><a class="reference internal" href="../../../components/datarouter/index.html#comp__data_router" title="mod__logging_repo">comp__data_router</a>, <a class="reference internal" href="../../../components/mw/log/index.html#comp__mw_logging" title="mod__logging_repo">comp__mw_logging</a></span></span></div>
+<div class="line"><span><div class="line">realizes: <span class="realizes"><span><a class="reference internal" href="../../../../../score_process/process/process_areas/architecture_design/architecture_workproducts.html#wp__feature_arch" title="doc__logging_module_architecture">wp__feature_arch</a></span></span></div>
 </span></div>
 </div>
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p>The logging module provides a standardized logging framework for C++ and Rust projects using Bazel build system. It includes components for log routing allowing for flexible log management and integration with various logging backends. The module is designed to be extensible and configurable to meet the needs of different applications and environments.</p></td>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
-<div class="line"><span><span class="needs-id"><a class="reference internal" href="#mod__logging_repo" title="mod__logging_repo">mod__logging_repo</a></span></span></div>
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#doc__logging_module_architecture" title="doc__logging_module_architecture">doc__logging_module_architecture</a></span></span></div>
 </div>
 </td>
 <td class="footer" colspan="2"><div class="needs_footer line-block">
-<div class="line"><span><span class="needs_type_name"><span class="needs_data">Module</span></span></span></div>
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Generic Document</span></span></span></div>
 </div>
 </td>
 <td class="footer_right" colspan="2"></td>
@@ -561,56 +571,77 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-07db6fb5">
-<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_mod_view_sta table" id="mod_view_sta__logging__logging_view">
-<tbody>
-<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
-<div class="line"><span><span class="needs_title"><span class="needs_data">Logging module view</span></span></span></div>
-</div>
-</td>
-<td class="head_center" colspan="2"><div class="needs_head line-block">
-<div class="line"><span></span></div>
-<div class="line"><span></span></div>
-<div class="line"><span></span></div>
-</div>
-</td>
-<td class="head_right" colspan="2"><div class="needs_head_right line-block">
-<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
-</div>
-</td>
-</tr>
-<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
-<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>0</span></div>
-</span></span></div>
-<div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="../../../../../score_platform/docs/modules/logging/docs/index.html#mod__logging" title="mod_view_sta__logging__logging_view">mod__logging</a></span></span></div>
-<div class="line">includes: <span class="includes"><span><a class="reference internal" href="../../../components/datarouter/index.html#comp__data_router" title="mod_view_sta__logging__logging_view">comp__data_router</a>, <a class="reference internal" href="../../../components/mw/log/index.html#comp__mw_logging" title="mod_view_sta__logging__logging_view">comp__mw_logging</a></span></span></div>
-</span></div>
-</div>
-</td>
-<td class="meta" colspan="3"></td>
-</tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml" id="needarch-_collections/score_logging/docs/features/logging/architecture/index-0">
-<object data="../../../../../../_images/plantuml-fd68298cb9934e0655de8aee0bd172d832aab57d.svg" type="image/svg+xml" style="width:388px;height:230px;background:#FFFFFF;"></object></p>
-</td>
-</tr>
-<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
-<div class="line"><span><span class="needs-id"><a class="reference internal" href="#mod_view_sta__logging__logging_view" title="mod_view_sta__logging__logging_view">mod_view_sta__logging__logging_view</a></span></span></div>
-</div>
-</td>
-<td class="footer" colspan="2"><div class="needs_footer line-block">
-<div class="line"><span><span class="needs_type_name"><span class="needs_data">Module Architecture Static View</span></span></span></div>
-</div>
-</td>
-<td class="footer_right" colspan="2"></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>The logging feature provides a standardized logging framework for C++ and Rust projects using Bazel build system.</p>
 </section>
-<section id="logging-feature-architecture">
-<h1>Logging Feature Architecture<a class="headerlink" href="#logging-feature-architecture" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-8c3e277a">
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading">#</a></h2>
+<p>The logging feature has two parts: the <code class="docutils literal notranslate"><span class="pre">mw::log</span></code> library that applications
+link against and ship as part of their own binary, and the <code class="docutils literal notranslate"><span class="pre">datarouter</span></code>
+daemon that runs as its own process. Applications never talk to <code class="docutils literal notranslate"><span class="pre">datarouter</span></code>
+directly; <code class="docutils literal notranslate"><span class="pre">mw::log</span></code>’s remote backend writes log records into a shared-memory
+segment and hands control over to <code class="docutils literal notranslate"><span class="pre">datarouter</span></code> through a shared-memory and
+<a class="reference external" href="https://eclipse-score.github.io/communication/latest/message_passing.html">mw::com message-passing</a>
+session; guaranteeing Freedom from interference (FFI) for the application and its
+logging subsystem. Rust applications reach that same remote backend too, via
+the <code class="docutils literal notranslate"><span class="pre">score_log_bridge</span></code> described below, so <code class="docutils literal notranslate"><span class="pre">datarouter</span></code> sees one uniform
+set of sessions regardless of which frontend produced them.</p>
+<section id="mw-log">
+<h3>mw::log<a class="headerlink" href="#mw-log" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">mw::log</span></code> library spans across two repositories:</p>
+<p><code class="docutils literal notranslate"><span class="pre">score_baselibs/score/mw/log</span></code> provides the Cpp frontend API, console backend, static recorder composition and
+the <code class="docutils literal notranslate"><span class="pre">score_log</span></code> Rust facade that gives Rust code the same API surface, modelled on Rust’s own <code class="docutils literal notranslate"><span class="pre">log</span></code> crate.
+This allows <a class="reference external" href="https://eclipse-score.github.io/baselibs/main/">baselibs</a> and <a class="reference external" href="https://eclipse-score.github.io/communication">mw::com</a>
+to log to the same backends as applications, and providing a common logging API for all
+components. The library is linked into applications and shipped as part of their binary.</p>
+<p><code class="docutils literal notranslate"><span class="pre">score_logging/score/mw/log</span></code> provides concrete file, remote/DLT, and slog
+recorders, plus the <code class="docutils literal notranslate"><span class="pre">score_log_bridge</span></code> that implements score_log
+<cite>Log</cite> trait and forwards records over FFI into those same
+recorders, so a Rust application ends up writing through the identical
+remote backend.</p>
+<p>Both repositories own their own safety plan, phase gates, and governance. The
+cross-repository contract is the Recorder interface and static <code class="docutils literal notranslate"><span class="pre">backend_table</span></code>
+registration. The existing C ABI seam is not used for static composition.
+Runtime plugin loading remains experimental and is not a supported
+production capability.</p>
+<p class="plantuml">
+<object data="../../../../../../_images/plantuml-7f53de3e17302ea81b0dfe0f0a0ffe4ecf0522d0.svg" type="image/svg+xml" style="width:2163px;height:391px;background:#FFFFFF;"></object></p>
+</section>
+<section id="datarouter">
+<h3>Datarouter<a class="headerlink" href="#datarouter" title="Link to this heading">#</a></h3>
+<p>The Datarouter is the Diagnostic log and trace (DLT) daemon.
+See <a class="reference internal" href="../../../components/datarouter/index.html"><span class="doc">the Datarouter component</span></a>
+for its requirements and detailed design.</p>
+<p>The diagram highlights the logging components and traces the
+remote DLT path a log message takes once it leaves an application, including
+a Rust application whose <code class="docutils literal notranslate"><span class="pre">score_log_bridge</span></code> registers as a recorder the same
+way the C++ remote backend does and writes into its own shared-memory segment
+for <code class="docutils literal notranslate"><span class="pre">datarouter</span></code> to read.</p>
+<p class="plantuml">
+<object data="../../../../../../_images/plantuml-c20084f2fb8d4969238563d0b515758dac0fa8c3.svg" type="image/svg+xml" style="width:1990px;height:1238px;background:#FFFFFF;"></object></p>
+</section>
+</section>
+<section id="design-constraint">
+<h2>Design Constraint<a class="headerlink" href="#design-constraint" title="Link to this heading">#</a></h2>
+<p>The logging function is not safety relevant (its output can not be used for safety functionality).
+But it must be usable also for safety related applications, hence the design shall guarantee Freedom From Interference (FFI).</p>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h2>
+<p>The requirements for the feature architecture are defined in the <cite>requirements</cite> section of the feature documentation in the project repository.</p>
+<section id="architecture-decomposition">
+<h3>Architecture Decomposition<a class="headerlink" href="#architecture-decomposition" title="Link to this heading">#</a></h3>
+<p>The feature is decomposed into a QM component which delivers the functionality and ASIL components
+providing the interface (divided into frontend and backend) which are included into the context of the using application.
+The frontend interface which is included by the users is deployed in the baselibs module.
+This is to avoid cycylic dependencies, as the other baselibs components want to use logging functions
+but also the logging components want to use baselibs functions.</p>
+</section>
+</section>
+<section id="static-architecture">
+<h2>Static Architecture<a class="headerlink" href="#static-architecture" title="Link to this heading">#</a></h2>
+<div class="need_container docutils container" id="SNCB-0a0ec57a">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_sta table" id="feat_arc_sta__logging__static_view">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -629,18 +660,18 @@
 </td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
-<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>0</span></div>
+<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="../../../../../score_platform/docs/features/analysis-infra/logging/docs/architecture/index.html#feat__logging" title="feat_arc_sta__logging__static_view">feat__logging</a></span></span></div>
 <div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../../../../../score_platform/docs/features/analysis-infra/logging/docs/requirements/mw-fr_logging_req.html#feat_req__logging__log_sources_user_app" title="feat_arc_sta__logging__static_view">feat_req__logging__log_sources_user_app</a></span></span></div>
-<div class="line">includes: <span class="includes"><span><a class="reference internal" href="../../../../../score_platform/docs/modules/logging/logging/docs/architecture/index.html#logic_arc_int__logging__logging" title="feat_arc_sta__logging__static_view">logic_arc_int__logging__logging</a></span></span></div>
+<div class="line">includes: <span class="includes"><span><a class="reference internal" href="../../../../../score_platform/docs/features/analysis-infra/logging/docs/architecture/index.html#logic_arc_int__log_cpp__logging" title="feat_arc_sta__logging__static_view">logic_arc_int__log_cpp__logging</a></span></span></div>
 </span></div>
 </div>
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml" id="needarch-_collections/score_logging/docs/features/logging/architecture/index-1">
-<object data="../../../../../../_images/plantuml-b65c83bcd56f8dea06e40c5ca71088a821fd1c46.svg" type="image/svg+xml" style="width:257px;height:59px;background:#FFFFFF;"></object></p>
+<tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml" id="needarch-_collections/score_logging/docs/features/logging/architecture/index-0">
+<object data="../../../../../../_images/plantuml-becf5e628f13e453340432576b897d0211f39160.svg" type="image/svg+xml" style="width:552px;height:381px;background:#FFFFFF;"></object></p>
 </td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
@@ -658,6 +689,20 @@
 </div>
 </div>
 </section>
+<section id="dynamic-architecture">
+<h2>Dynamic Architecture<a class="headerlink" href="#dynamic-architecture" title="Link to this heading">#</a></h2>
+<p>Simple routing of commands and replies, so dynamic view is not needed.</p>
+</section>
+<section id="logical-interfaces">
+<h2>Logical Interfaces<a class="headerlink" href="#logical-interfaces" title="Link to this heading">#</a></h2>
+<p>The logical interfaces of the feature are defined in the <cite>logical interfaces</cite> section of the feature documentation in the project repository.</p>
+<p>See <a class="reference external" href="https://eclipse-score.github.io/score/main/features/index.html">SCORE Features</a> for more information.</p>
+</section>
+<section id="used-components">
+<h2>Used Components<a class="headerlink" href="#used-components" title="Link to this heading">#</a></h2>
+<p>The components used by the feature are defined in the <cite>components</cite> section of the module documentation.</p>
+</section>
+</section>
 
 
                 </article>
@@ -670,20 +715,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../../../index.html"
+       href="../index.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Logging Documentation</p>
+        <p class="prev-next-title">Feature</p>
       </div>
     </a>
     <a class="right-next"
-       href="../../../design_decisions/explicit_init.html"
+       href="chklst_arc_inspection.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Explicit initialization of logging</p>
+        <p class="prev-next-title">Architecture Inspection Checklist</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -706,10 +751,22 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Logging Module View</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#logging-feature-architecture">Logging Feature Architecture</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#description">Description</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mw-log">mw::log</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#datarouter">Datarouter</a></li>
 </ul>
-
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#design-constraint">Design Constraint</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture-decomposition">Architecture Decomposition</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#static-architecture">Static Architecture</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dynamic-architecture">Dynamic Architecture</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logical-interfaces">Logical Interfaces</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#used-components">Used Components</a></li>
+</ul>
   </nav></div>
 
 </div></div>
