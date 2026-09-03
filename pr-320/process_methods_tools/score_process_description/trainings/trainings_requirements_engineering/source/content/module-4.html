@@ -1,0 +1,863 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Workflows and Work Products &#8212; REF_INT  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../../../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score.css?v=bb63a8e1" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score_needs.css?v=82a1844f" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score_design.css?v=8048e6ee" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/modern.css?v=803738c0" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css?v=f420dc51" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../../../../../_static/documentation_options.js?v=7f41d439"></script>
+    <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../../../../../_static/sphinx-data-viewer/jsonview.bundle.js?v=18cd53c5"></script>
+    <script src="../../../../../../_static/sphinx-data-viewer/jsonview_loader.js?v=f7ff7e7d"></script>
+    <script src="../../../../../../_static/sphinx-needs/libs/html/datatables.min.js?v=8a4aee21"></script>
+    <script src="../../../../../../_static/sphinx-needs/libs/html/datatables_loader.js?v=a2cae175"></script>
+    <script src="../../../../../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js?v=dca66431"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'process_methods_tools/score_process_description/trainings/trainings_requirements_engineering/source/content/module-4';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-score.github.io/reference_integration/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1" />
+  
+    
+    <script src="../../../../../../_static/searchtools.js"></script>
+    <script src="../../../../../../_static/language_data.js"></script>
+    <script src="../../../../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Eclipse S-CORE</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../sw_components/index.html">
+    Modules
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../verification_report/index.html">
+    Verification Reports
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eclipse-score.github.io/reference_integration/main/status_dashboard.html">
+    Integration Status
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../s_core_v_1/index.html">
+    S-Core v1.0
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../s_core_v_1/releases/releases.html">
+    Releases
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../../integration_process/integration_process.html">
+    Integration Process
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../index.html">
+    Process & Tools
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../sw_components/index.html">
+    Modules
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../verification_report/index.html">
+    Verification Reports
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eclipse-score.github.io/reference_integration/main/status_dashboard.html">
+    Integration Status
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../s_core_v_1/index.html">
+    S-Core v1.0
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../s_core_v_1/releases/releases.html">
+    Releases
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../integration_process/integration_process.html">
+    Integration Process
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../index.html">
+    Process & Tools
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Workflows and Work Products</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="workflows-and-work-products">
+<h1>Workflows and Work Products<a class="headerlink" href="#workflows-and-work-products" title="Link to this heading">#</a></h1>
+<p>S-CORE defines six specific workflows for requirements engineering and eight
+formal work products. This module walks through each workflow, its inputs and
+outputs, its responsible parties, and how the work products satisfy the
+applicable standards. The module closes with the end-to-end traceability
+picture.</p>
+<section id="overview-of-the-six-workflows">
+<h2>4.1 Overview of the Six Workflows<a class="headerlink" href="#overview-of-the-six-workflows" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Workflow ID</p></th>
+<th class="head"><p>Workflow name</p></th>
+<th class="head"><p>Responsible</p></th>
+<th class="head"><p>Approved by</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">wf__req_stkh_req</span></code></p></td>
+<td><p>Create/Maintain Stakeholder Requirements and SW-Platform AoU</p></td>
+<td><p>Contributor <code class="docutils literal notranslate"><span class="pre">rl__contributor</span></code></p></td>
+<td><p>Project Lead <code class="docutils literal notranslate"><span class="pre">rl__project_lead</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">wf__req_feat_req</span></code></p></td>
+<td><p>Create/Maintain Feature Requirements</p></td>
+<td><p>Contributor <code class="docutils literal notranslate"><span class="pre">rl__contributor</span></code></p></td>
+<td><p>Project Lead <code class="docutils literal notranslate"><span class="pre">rl__project_lead</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">wf__req_feat_aou</span></code></p></td>
+<td><p>Create/Maintain Feature AoUs</p></td>
+<td><p>Contributor <code class="docutils literal notranslate"><span class="pre">rl__contributor</span></code></p></td>
+<td><p>Project Lead <code class="docutils literal notranslate"><span class="pre">rl__project_lead</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">wf__req_comp_req</span></code></p></td>
+<td><p>Create/Maintain Component Requirements</p></td>
+<td><p>Contributor <code class="docutils literal notranslate"><span class="pre">rl__contributor</span></code></p></td>
+<td><p>Committer <code class="docutils literal notranslate"><span class="pre">rl__committer</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">wf__req_comp_aou</span></code></p></td>
+<td><p>Create/Maintain Component AoUs</p></td>
+<td><p>Contributor <code class="docutils literal notranslate"><span class="pre">rl__contributor</span></code></p></td>
+<td><p>Committer <code class="docutils literal notranslate"><span class="pre">rl__committer</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">wf__req_tool</span></code></p></td>
+<td><p>Create/Maintain Tool/Process Requirements</p></td>
+<td><p>Contributor <code class="docutils literal notranslate"><span class="pre">rl__contributor</span></code></p></td>
+<td><p>Committer <code class="docutils literal notranslate"><span class="pre">rl__committer</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">wf__monitor_verify_requirements</span></code></p></td>
+<td><p>Monitor/Verify Requirements</p></td>
+<td><p>Committer <code class="docutils literal notranslate"><span class="pre">rl__committer</span></code></p></td>
+<td><p>Committer <code class="docutils literal notranslate"><span class="pre">rl__committer</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>All six creation workflows can be initiated as part of a <strong>Change Request</strong> —
+the Change Management process is the single entry point for all content changes
+in S-CORE.</p>
+<p>The <strong>Monitor/Verify Requirements</strong> workflow (<code class="docutils literal notranslate"><span class="pre">wf__monitor_verify_requirements</span></code>)
+is responsible for inspecting the full requirements set. Unlike the creation
+workflows it is owned by the Committer, who checks all requirement levels and
+safety manuals against the inspection checklist (<code class="docutils literal notranslate"><span class="pre">gd_chklst__req_inspection</span></code>).
+Its output is either an updated issue tracker entry or a completed Requirements
+Inspection work product.</p>
+<p>Safety Managers (<code class="docutils literal notranslate"><span class="pre">rl__safety_manager</span></code>) are <em>supported_by</em> in the three stakeholder/feature workflows;
+both Safety and Security Managers (<code class="docutils literal notranslate"><span class="pre">rl__security_manager</span></code>) are <em>supported_by</em> in the two AoU workflows
+at feature and component level.</p>
+</section>
+<section id="workflow-stakeholder-requirements-and-sw-platform-aou">
+<h2>4.2 Workflow: Stakeholder Requirements and SW-Platform AoU<a class="headerlink" href="#workflow-stakeholder-requirements-and-sw-platform-aou" title="Link to this heading">#</a></h2>
+<p><strong>Purpose:</strong> Establish the top-level specification of what the platform must
+contain. This workflow produces the assumed Technical Safety Requirements for
+the SEooC.</p>
+<p><strong>Inputs:</strong> <code class="docutils literal notranslate"><span class="pre">wp__policies</span></code>, <code class="docutils literal notranslate"><span class="pre">wp__issue_track_system</span></code></p>
+<p><strong>Outputs:</strong> <code class="docutils literal notranslate"><span class="pre">wp__requirements_stkh</span></code>, <code class="docutils literal notranslate"><span class="pre">wp__requirements_sw_platform_aou</span></code></p>
+<div class="example docutils">
+<p>A project lead opens a change request: <em>“The platform shall support OTA software
+updates for individual components.”</em> A contributor writes the stakeholder
+requirement and the SW-Platform AoU (the conditions the OEM integrator must
+satisfy to use OTA safely). The project lead reviews and approves the PR.</p>
+</div>
+<p><strong>Key guidance templates available:</strong> <code class="docutils literal notranslate"><span class="pre">gd_temp__req_stkh_req</span></code>,
+<code class="docutils literal notranslate"><span class="pre">gd_temp__req_formulation</span></code></p>
+</section>
+<section id="workflow-feature-requirements">
+<h2>4.3 Workflow: Feature Requirements<a class="headerlink" href="#workflow-feature-requirements" title="Link to this heading">#</a></h2>
+<p><strong>Purpose:</strong> Break down stakeholder requirements into feature-level
+specifications that describe integration behaviour independent of implementation.</p>
+<p><strong>Inputs:</strong> <code class="docutils literal notranslate"><span class="pre">wp__requirements_stkh</span></code>, <code class="docutils literal notranslate"><span class="pre">wp__issue_track_system</span></code></p>
+<p><strong>Output:</strong> <code class="docutils literal notranslate"><span class="pre">wp__requirements_feat</span></code></p>
+<p>Feature requirements are the primary driver of SW Architecture work. The SW
+Architect reads them to derive the feature architecture that allocates
+behaviour to components.</p>
+</section>
+<section id="workflows-aou-requirements">
+<h2>4.4 Workflows: AoU Requirements<a class="headerlink" href="#workflows-aou-requirements" title="Link to this heading">#</a></h2>
+<p>Feature AoUs and Component AoUs are managed by their own workflows because
+they involve additional inputs from architecture work products and feed directly
+into the Safety Manual artefacts:</p>
+<ul class="simple">
+<li><p><strong>Feature AoU</strong> (<code class="docutils literal notranslate"><span class="pre">wf__req_feat_aou</span></code>):</p>
+<ul>
+<li><p>Extra input: <code class="docutils literal notranslate"><span class="pre">wp__feature_arch</span></code></p></li>
+<li><p>Additional output: <code class="docutils literal notranslate"><span class="pre">wp__platform_safety_manual</span></code></p></li>
+</ul>
+</li>
+<li><p><strong>Component AoU</strong> (<code class="docutils literal notranslate"><span class="pre">wf__req_comp_aou</span></code>):</p>
+<ul>
+<li><p>Extra input: <code class="docutils literal notranslate"><span class="pre">wp__component_arch</span></code></p></li>
+<li><p>Additional output: <code class="docutils literal notranslate"><span class="pre">wp__module_safety_manual</span></code></p></li>
+</ul>
+</li>
+</ul>
+<div class="important docutils">
+<p>AoUs cannot be written without the architecture work product because AoUs
+emerge from the safety concept: once the architecture defines the isolation
+boundaries and safety mechanisms, the AoUs state what conditions must hold
+<em>outside</em> those boundaries for the safety concept to be valid.</p>
+</div>
+</section>
+<section id="work-products-and-their-compliance-tags">
+<h2>4.5 Work Products and Their Compliance Tags<a class="headerlink" href="#work-products-and-their-compliance-tags" title="Link to this heading">#</a></h2>
+<p>Each work product carries compliance tags that map it to the specific standard
+clauses it satisfies. Understanding these tags is important for auditors and
+safety managers.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Work Product</p></th>
+<th class="head"><p>ID</p></th>
+<th class="head"><p>Compliance tags</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Stakeholder Requirements</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wp__requirements_stkh</span></code></p></td>
+<td><p>ISO 26262 §8/6.5.1, ISO/SAE 21434 §10.5.1</p></td>
+</tr>
+<tr class="row-odd"><td><p>Feature Requirements</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wp__requirements_feat</span></code></p></td>
+<td><p>ISO 26262 §8/6.5.1, ISO/SAE 21434 §10.5.1</p></td>
+</tr>
+<tr class="row-even"><td><p>Component Requirements</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wp__requirements_comp</span></code></p></td>
+<td><p>ISO 26262 §8/6.5.1, ISO PAS 8926 §4.5.2.1, ISO 26262 analysis annex, ISO/SAE 21434 §10.5.1</p></td>
+</tr>
+<tr class="row-odd"><td><p>SW-Platform AoU</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wp__requirements_sw_platform_aou</span></code></p></td>
+<td><p>ISO 26262 §8/6.5.1, ISO/SAE 21434 §10.5.1–2</p></td>
+</tr>
+<tr class="row-even"><td><p>Feature AoU</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wp__requirements_feat_aou</span></code></p></td>
+<td><p>ISO 26262 §8/6.5.1, ISO/SAE 21434 §10.5.1–2</p></td>
+</tr>
+<tr class="row-odd"><td><p>Component AoU</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wp__requirements_comp_aou</span></code></p></td>
+<td><p>ISO 26262 §8/6.5.1, ISO PAS 8926 §4.5.2.1, ISO/SAE 21434 §10.5.1–2</p></td>
+</tr>
+<tr class="row-even"><td><p>Process/Tool Requirements</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wp__requirements_proc_tool</span></code></p></td>
+<td><p>(internal process lifecycle)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Requirements Inspection</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wp__requirements_inspect</span></code></p></td>
+<td><p>ISO 26262 §8/6.5.3</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The <strong>Requirements Inspection</strong> work product is based on a structured checklist
+and may be integrated into requirements or version management tooling. It
+addresses the ISO 26262 requirement for formal review of SW requirements.</p>
+</section>
+<section id="end-to-end-traceability">
+<h2>4.6 End-to-End Traceability<a class="headerlink" href="#end-to-end-traceability" title="Link to this heading">#</a></h2>
+<p>The S-CORE traceability model connects every requirement from its origin at
+stakeholder level down to the implementation artefacts and verification
+evidence:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Stakeholder Requirements
+      │ derived_from
+      ▼
+Feature Requirements ──────────────────────► Feature AoU
+      │ derived_from
+      ▼
+Component Requirements ────────────────────► Component AoU
+      │ implemented_by (auto)   │ verified_by (auto)
+      ▼                         ▼
+   Source code              Test cases
+</pre></div>
+</div>
+<div class="important docutils">
+<p>The <code class="docutils literal notranslate"><span class="pre">implemented_by</span></code> and <code class="docutils literal notranslate"><span class="pre">verified_by</span></code> links are populated automatically by the
+Docs-as-Code build. This means <strong>the traceability matrix is always regenerated
+from the real artefacts</strong> — it cannot drift from the code. Auditors can trust
+that a requirement shown as “verified by test X” genuinely corresponds to a test
+that references that requirement ID.</p>
+</div>
+</section>
+<section id="using-the-tooling">
+<h2>4.7 Using the Tooling<a class="headerlink" href="#using-the-tooling" title="Link to this heading">#</a></h2>
+<p>The S-CORE Docs-as-Code tool provides:</p>
+<ol class="arabic simple">
+<li><p><strong>Requirement templates</strong> — pre-formatted stubs for each requirement type that enforce the mandatory attribute set.</p></li>
+<li><p><strong>Build-time validation</strong> — attribute completeness, version link consistency, linkage rule enforcement, and safety attribute propagation checks.</p></li>
+<li><p><strong>Coverage reports</strong> — automatically generated views showing which requirements lack <code class="docutils literal notranslate"><span class="pre">implemented_by</span></code> or <code class="docutils literal notranslate"><span class="pre">verified_by</span></code> links (coverage gaps).</p></li>
+<li><p><strong>PR-based review workflow</strong> — all requirement changes go through a pull request; the Committer or Project Lead review is recorded in git history.</p></li>
+</ol>
+<div class="tip docutils">
+<p>The Requirements Engineering concept (<code class="docutils literal notranslate"><span class="pre">doc_concept__req_process</span></code>) and Getting
+Started guide (<code class="docutils literal notranslate"><span class="pre">doc_getstrt__req_process</span></code>) describe the exact steps for creating
+a new requirement, deriving child requirements, and triggering a formal inspection.
+The workflow diagram in the getting started guide maps every step to the
+corresponding workflow ID listed in Section 4.1.</p>
+</div>
+<div class="collapsible docutils">
+<ol class="arabic simple">
+<li><p><strong>Find the requirement ID</strong> in the generated HTML portal or in the RST source.</p></li>
+<li><p><strong>Add the implementation tag</strong> in the source file as a structured comment:
+<code class="docutils literal notranslate"><span class="pre">//</span> <span class="pre">[&lt;requirement_id&gt;]</span></code> (exact syntax depends on the Docs-as-Code version).</p></li>
+<li><p><strong>Add the verification marker</strong> in the test file using the framework-specific
+marker (e.g., a pytest mark or a comment annotation).</p></li>
+<li><p><strong>Run the docs build</strong> (<code class="docutils literal notranslate"><span class="pre">bazel</span> <span class="pre">run</span> <span class="pre">//:docs</span></code>). The build will now populate
+<code class="docutils literal notranslate"><span class="pre">implemented_by</span></code> and <code class="docutils literal notranslate"><span class="pre">verified_by</span></code> in the HTML output.</p></li>
+<li><p><strong>Verify coverage</strong> in the generated requirements traceability report.</p></li>
+</ol>
+</div>
+<div class="quiz docutils">
+<ul class="simple">
+<li><p>q: “A contributor wants to create new Component Requirements. Which approval chain applies?”
+options:</p>
+<ul>
+<li><p>text: “Written by Safety Manager, approved by Project Lead”</p></li>
+<li><p>text: “Written by Contributor, approved by Committer”
+correct: true</p></li>
+<li><p>text: “Written by Committer, approved by Project Lead”</p></li>
+<li><p>text: “Written by Contributor, approved by Safety Manager”
+feedback: &gt;-
+Correct: B. Component Requirements are created by any Contributor and approved
+by a Committer. Project Lead approval is required for Stakeholder and Feature
+level requirements; Committer approval is sufficient for Component level because
+this is an implementation-specific concern.</p></li>
+</ul>
+</li>
+<li><p>q: “Feature AoU requirements have an additional input compared to Feature Requirements. What is it?”
+options:</p>
+<ul>
+<li><p>text: “wp__requirements_stkh (Stakeholder Requirements)”</p></li>
+<li><p>text: “wp__requirements_comp (Component Requirements)”</p></li>
+<li><p>text: “wp__feature_arch (Feature Architecture)”
+correct: true</p></li>
+<li><p>text: “wp__issue_track_system (Issue Tracker)”
+feedback: &gt;-
+Correct: C. AoUs at feature level emerge from the safety concept defined in
+the Feature Architecture. Without the architecture there is no basis for
+determining what boundary conditions must hold outside the software element.</p></li>
+</ul>
+</li>
+<li><p>q: “An auditor asks: ‘How do you guarantee that the traceability matrix between requirements and test cases is up to date?’ What is the correct S-CORE answer?”
+options:</p>
+<ul>
+<li><p>text: “The traceability matrix is maintained manually by the Safety Manager and reviewed quarterly”</p></li>
+<li><p>text: “Traceability is managed in an external ALM tool which is synced monthly”</p></li>
+<li><p>text: “The Docs-as-Code build automatically regenerates the verified_by links from test file markers on every build, so the matrix cannot drift from the actual test artefacts”
+correct: true</p></li>
+<li><p>text: “Developers are required to update the traceability spreadsheet when they add tests”
+feedback: &gt;-
+Correct: C. The ‘verified_by’ attribute is auto-populated by scanning test files
+for the requirement ID marker on every build. This means the traceability matrix
+is always regenerated from the real artefacts — it is impossible for it to show
+a test link that does not exist in the codebase.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-of-the-six-workflows">4.1 Overview of the Six Workflows</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-stakeholder-requirements-and-sw-platform-aou">4.2 Workflow: Stakeholder Requirements and SW-Platform AoU</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-feature-requirements">4.3 Workflow: Feature Requirements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflows-aou-requirements">4.4 Workflows: AoU Requirements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#work-products-and-their-compliance-tags">4.5 Work Products and Their Compliance Tags</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#end-to-end-traceability">4.6 End-to-End Traceability</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-tooling">4.7 Using the Tooling</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

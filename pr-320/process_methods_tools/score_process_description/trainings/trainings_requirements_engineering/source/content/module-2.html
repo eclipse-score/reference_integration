@@ -1,0 +1,831 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Requirement Levels and Types &#8212; REF_INT  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../../../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score.css?v=bb63a8e1" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score_needs.css?v=82a1844f" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score_design.css?v=8048e6ee" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/modern.css?v=803738c0" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css?v=f420dc51" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../../../../../_static/documentation_options.js?v=7f41d439"></script>
+    <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../../../../../_static/sphinx-data-viewer/jsonview.bundle.js?v=18cd53c5"></script>
+    <script src="../../../../../../_static/sphinx-data-viewer/jsonview_loader.js?v=f7ff7e7d"></script>
+    <script src="../../../../../../_static/sphinx-needs/libs/html/datatables.min.js?v=8a4aee21"></script>
+    <script src="../../../../../../_static/sphinx-needs/libs/html/datatables_loader.js?v=a2cae175"></script>
+    <script src="../../../../../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js?v=dca66431"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'process_methods_tools/score_process_description/trainings/trainings_requirements_engineering/source/content/module-2';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-score.github.io/reference_integration/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1" />
+  
+    
+    <script src="../../../../../../_static/searchtools.js"></script>
+    <script src="../../../../../../_static/language_data.js"></script>
+    <script src="../../../../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Eclipse S-CORE</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../sw_components/index.html">
+    Modules
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../verification_report/index.html">
+    Verification Reports
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eclipse-score.github.io/reference_integration/main/status_dashboard.html">
+    Integration Status
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../s_core_v_1/index.html">
+    S-Core v1.0
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../s_core_v_1/releases/releases.html">
+    Releases
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../../integration_process/integration_process.html">
+    Integration Process
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../index.html">
+    Process & Tools
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../sw_components/index.html">
+    Modules
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../verification_report/index.html">
+    Verification Reports
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eclipse-score.github.io/reference_integration/main/status_dashboard.html">
+    Integration Status
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../s_core_v_1/index.html">
+    S-Core v1.0
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../s_core_v_1/releases/releases.html">
+    Releases
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../integration_process/integration_process.html">
+    Integration Process
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../index.html">
+    Process & Tools
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Requirement Levels and Types</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="requirement-levels-and-types">
+<h1>Requirement Levels and Types<a class="headerlink" href="#requirement-levels-and-types" title="Link to this heading">#</a></h1>
+<p>S-CORE defines a five-level requirement hierarchy. Each level has a precise
+meaning, a defined audience, a characteristic abstraction, and specific
+compliance obligations under ISO 26262, ASPICE, and ISO/SAE 21434.
+This module maps the hierarchy and explains when to use each level.</p>
+<section id="the-s-core-requirement-hierarchy">
+<h2>2.1 The S-CORE Requirement Hierarchy<a class="headerlink" href="#the-s-core-requirement-hierarchy" title="Link to this heading">#</a></h2>
+<p>The following diagram summarises the levels and their derivation relationships:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Stakeholder Requirements (SW-Platform level)
+    │
+    ▼
+Feature Requirements  ←→  Feature AoU
+    │
+    ▼
+Component Requirements  ←→  Component AoU
+    │
+    ├── Code (Implemented by)
+    └── Tests (Verified by)
+</pre></div>
+</div>
+<p>Additionally, <strong>Process/Tool Requirements</strong> sit alongside the hierarchy and
+describe the tooling and process activities that support it.</p>
+<p>A child requirement is always <em>derived from</em> its parent. The derivation link
+includes the parent’s version number so that stale links are automatically
+detected during the docs build.</p>
+</section>
+<section id="stakeholder-requirements-wp-requirements-stkh">
+<h2>2.2 Stakeholder Requirements (<code class="docutils literal notranslate"><span class="pre">wp__requirements_stkh</span></code>)<a class="headerlink" href="#stakeholder-requirements-wp-requirements-stkh" title="Link to this heading">#</a></h2>
+<p><strong>Stakeholder Requirements</strong> are defined at the SW-Platform level. They describe
+<strong>what the platform needs to contain</strong> from the perspective of the customer
+(stakeholder), expressed as technical requirements at the highest level of
+abstraction.</p>
+<div class="important docutils">
+<p>In SEooC (Safety Element out of Context) development — which is the S-CORE model
+— Stakeholder Requirements represent the <strong>assumed Technical Safety Requirements</strong>.
+The integrator must verify that these assumptions match their vehicle-level
+safety goals before using the platform.</p>
+</div>
+<div class="example docutils">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">The</span> <span class="n">platform</span> <span class="n">shall</span> <span class="n">support</span> <span class="n">configuration</span> <span class="n">of</span> <span class="n">applications</span> <span class="n">via</span> <span class="n">files</span>
+<span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="n">yaml</span><span class="p">,</span> <span class="n">json</span><span class="p">)</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>This describes a platform-level capability without specifying how it is
+implemented or which component provides it.</p>
+</div>
+<p><strong>Compliance obligations:</strong> ISO 26262 §8 / SWE.1, ISO/SAE 21434 §10.5.1</p>
+</section>
+<section id="feature-requirements-wp-requirements-feat">
+<h2>2.3 Feature Requirements (<code class="docutils literal notranslate"><span class="pre">wp__requirements_feat</span></code>)<a class="headerlink" href="#feature-requirements-wp-requirements-feat" title="Link to this heading">#</a></h2>
+<p><strong>Feature Requirements</strong> are derived from Stakeholder Requirements and describe
+the behaviour of a feature <strong>at platform integration level</strong>, independent of
+which components implement it.</p>
+<p>A “feature” represents a coherent set of requirements that together deliver a
+platform-level capability. Feature requirements are the primary input for
+architects, testers, and integrators.</p>
+<div class="example docutils">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">The</span> <span class="n">feature</span> <span class="n">shall</span> <span class="n">use</span> <span class="n">JSON</span> <span class="n">formatted</span> <span class="n">string</span> <span class="n">according</span> <span class="n">to</span> <span class="n">RFC</span><span class="o">-</span><span class="mi">8259</span> <span class="k">for</span>
+<span class="n">configuration</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>This specifies the format at feature level without naming an implementation component.</p>
+</div>
+<p>Feature requirements also serve as the basis for integration testing on
+platform level.</p>
+<p><strong>Compliance obligations:</strong> ISO 26262 §8 / SWE.1, ISO/SAE 21434 §10.5.1</p>
+</section>
+<section id="component-requirements-wp-requirements-comp">
+<h2>2.4 Component Requirements (<code class="docutils literal notranslate"><span class="pre">wp__requirements_comp</span></code>)<a class="headerlink" href="#component-requirements-wp-requirements-comp" title="Link to this heading">#</a></h2>
+<p><strong>Component Requirements</strong> are derived from Feature Requirements and describe
+component-specific behaviour. They are implementation-facing: they tell a
+developer exactly what a component must do within the context of its feature.</p>
+<div class="example docutils">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">The</span> <span class="n">component</span> <span class="n">shall</span> <span class="n">provide</span> <span class="n">API</span> <span class="n">calls</span> <span class="n">to</span> <span class="n">read</span> <span class="ow">and</span> <span class="n">interpret</span> <span class="n">every</span> <span class="n">field</span> <span class="n">of</span> <span class="n">a</span>
+<span class="n">JSON</span> <span class="n">body</span> <span class="ow">in</span> <span class="n">C</span><span class="o">++.</span>
+</pre></div>
+</div>
+<p>This is unambiguously allocated to a single component and is directly testable
+at unit level.</p>
+</div>
+<p>Component Requirements are the lowest level in the hierarchy and have the most
+direct link to code and test artefacts via the auto-generated <code class="docutils literal notranslate"><span class="pre">implemented_by</span></code>
+and <code class="docutils literal notranslate"><span class="pre">verified_by</span></code> attributes.</p>
+<p><strong>Compliance obligations:</strong> ISO 26262 §8 / SWE.1, ISO PAS 8926 §4.5.2.1,
+ISO 26262 (analysis appendix), ISO/SAE 21434 §10.5.1 + §10.5.2</p>
+</section>
+<section id="assumptions-of-use-aou">
+<h2>2.5 Assumptions of Use (AoU)<a class="headerlink" href="#assumptions-of-use-aou" title="Link to this heading">#</a></h2>
+<p>AoUs can exist at <strong>every level</strong> — SW-Platform, Feature, and Component. They
+define the boundary conditions that the <em>user</em> of the software element must
+fulfil to ensure correct, safe, and secure operation.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>AoU Level</p></th>
+<th class="head"><p>Work Product ID</p></th>
+<th class="head"><p>Audience</p></th>
+<th class="head"><p>Compliance</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>SW-Platform AoU</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wp__requirements_sw_platform_aou</span></code></p></td>
+<td><p>Vehicle integrators using the platform</p></td>
+<td><p>ISO 26262, ISO/SAE 21434 §10.5.1–2</p></td>
+</tr>
+<tr class="row-odd"><td><p>Feature AoU</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wp__requirements_feat_aou</span></code></p></td>
+<td><p>Teams integrating the feature into a product</p></td>
+<td><p>ISO 26262, ISO/SAE 21434 §10.5.1–2</p></td>
+</tr>
+<tr class="row-even"><td><p>Component AoU</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wp__requirements_comp_aou</span></code></p></td>
+<td><p>Developers using the component API</p></td>
+<td><p>ISO 26262, ISO PAS 8926, ISO/SAE 21434 §10.5.1–2</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="example docutils">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">The</span> <span class="n">user</span> <span class="n">shall</span> <span class="n">provide</span> <span class="n">a</span> <span class="n">string</span> <span class="k">as</span> <span class="nb">input</span> <span class="n">which</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">corrupted</span> <span class="n">due</span> <span class="n">to</span> <span class="n">HW</span> <span class="ow">or</span>
+<span class="n">QM</span> <span class="n">SW</span> <span class="n">errors</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>This AoU tells the caller of the JSON configuration component what quality of
+input they must guarantee.</p>
+</div>
+<div class="important docutils">
+<p>Feature and Component AoUs feed directly into the <strong>Platform Safety Manual</strong> and
+<strong>Module Safety Manual</strong> respectively. These manuals are the exportable artefacts
+that document all conditions an integrator must satisfy when deploying S-CORE
+components in a safety-relevant context.</p>
+</div>
+</section>
+<section id="process-and-tool-requirements-wp-requirements-proc-tool">
+<h2>2.6 Process and Tool Requirements (<code class="docutils literal notranslate"><span class="pre">wp__requirements_proc_tool</span></code>)<a class="headerlink" href="#process-and-tool-requirements-wp-requirements-proc-tool" title="Link to this heading">#</a></h2>
+<p><strong>Process/Tool Requirements</strong> describe the activities and tooling constraints
+that support the development process. They are derived from the process
+description and specify what must be done manually versus what must be
+automated (tool-supported).</p>
+<div class="example docutils">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">It</span> <span class="n">shall</span> <span class="n">be</span> <span class="n">checked</span> <span class="n">that</span> <span class="n">safety</span> <span class="n">requirements</span> <span class="p">(</span><span class="n">Safety</span> <span class="o">!=</span> <span class="n">QM</span><span class="p">)</span> <span class="n">can</span> <span class="n">only</span> <span class="n">be</span> <span class="n">linked</span>
+<span class="n">against</span> <span class="n">safety</span> <span class="n">requirements</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>This is a process requirement that drives tool implementation in the
+Docs-as-Code build.</p>
+</div>
+<p>Process Requirements are verified by <strong>reviewing the process description</strong> rather
+than by functional testing.</p>
+</section>
+<section id="requirement-types">
+<h2>2.7 Requirement Types<a class="headerlink" href="#requirement-types" title="Link to this heading">#</a></h2>
+<p>Every requirement — regardless of level — carries a <strong>type</strong> attribute that
+determines how it is verified and how it participates in traceability:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Definition</p></th>
+<th class="head"><p>Verification method</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Functional</strong></p></td>
+<td><p>Describes a behaviour that can be demonstrated by test</p></td>
+<td><p>Unit test, integration test</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Interface</strong></p></td>
+<td><p>Defines an API or protocol; does not itself describe a behaviour</p></td>
+<td><p>Review / analysis</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Process</strong></p></td>
+<td><p>Describes a process activity or constraint; sub-type of Non-Functional</p></td>
+<td><p>Review of process description</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Non-Functional</strong></p></td>
+<td><p>All other quality constraints (performance, capacity, …)</p></td>
+<td><p>Review / analysis</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="important docutils">
+<p>The <code class="docutils literal notranslate"><span class="pre">type</span></code> attribute controls which architecture and safety linkage rules apply.
+For example, safety requirements of type Functional must eventually be linked to
+a test that exercises the functional behaviour. A Process requirement linked to a
+Functional safety requirement would be flagged as a linkage violation.</p>
+</div>
+<div class="collapsible docutils">
+<p>Use the <strong>Interface</strong> type when a requirement defines a contract between two
+parties (e.g., an API signature, a protocol format, a data format) rather than a
+behaviour. Interface requirements are important for safety analysis because they
+define the boundaries across which faults can propagate — they often appear as
+inputs to DFA (Dependent Failure Analysis) and TARA.</p>
+</div>
+<div class="quiz docutils">
+<ul class="simple">
+<li><p>q: “A requirement states: ‘The feature shall use JSON formatted strings according to RFC-8259 for configuration.’ At which requirement level does this belong?”
+options:</p>
+<ul>
+<li><p>text: “Stakeholder Requirements”</p></li>
+<li><p>text: “Feature Requirements”
+correct: true</p></li>
+<li><p>text: “Component Requirements”</p></li>
+<li><p>text: “Process Requirements”
+feedback: &gt;-
+Correct: B. The requirement describes behaviour at feature (platform integration)
+level — it specifies the format the feature uses without naming a specific component.
+Stakeholder requirements would be even more abstract; component requirements would
+name the implementing component and its API.</p></li>
+</ul>
+</li>
+<li><p>q: “An integrator is building a vehicle product using an S-CORE platform component. They receive a document listing the conditions their application must satisfy to use the component safely. What type of requirement is this?”
+options:</p>
+<ul>
+<li><p>text: “Stakeholder Requirements”</p></li>
+<li><p>text: “Process Requirements”</p></li>
+<li><p>text: “Assumptions of Use (AoU)”
+correct: true</p></li>
+<li><p>text: “Functional Requirements”
+feedback: &gt;-
+Correct: C. Assumptions of Use (AoUs) define boundary conditions for the user
+of a software element. They are exportable to integrators precisely so they can
+be incorporated into the integrator’s own requirements management system.</p></li>
+</ul>
+</li>
+<li><p>q: “Which requirement type is verified by reviewing the process description rather than by functional test execution?”
+options:</p>
+<ul>
+<li><p>text: “Functional”</p></li>
+<li><p>text: “Interface”</p></li>
+<li><p>text: “Process”
+correct: true</p></li>
+<li><p>text: “Non-Functional”
+feedback: &gt;-
+Correct: C. Process requirements describe activities in the development process
+and are verified by reviewing the process description (or checking that tooling
+enforces them). They cannot be verified by running a functional test.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-s-core-requirement-hierarchy">2.1 The S-CORE Requirement Hierarchy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stakeholder-requirements-wp-requirements-stkh">2.2 Stakeholder Requirements (<code class="docutils literal notranslate"><span class="pre">wp__requirements_stkh</span></code>)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-requirements-wp-requirements-feat">2.3 Feature Requirements (<code class="docutils literal notranslate"><span class="pre">wp__requirements_feat</span></code>)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#component-requirements-wp-requirements-comp">2.4 Component Requirements (<code class="docutils literal notranslate"><span class="pre">wp__requirements_comp</span></code>)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assumptions-of-use-aou">2.5 Assumptions of Use (AoU)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#process-and-tool-requirements-wp-requirements-proc-tool">2.6 Process and Tool Requirements (<code class="docutils literal notranslate"><span class="pre">wp__requirements_proc_tool</span></code>)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-types">2.7 Requirement Types</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

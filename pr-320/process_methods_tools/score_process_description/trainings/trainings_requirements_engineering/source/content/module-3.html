@@ -1,0 +1,880 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Requirement Attributes and Quality &#8212; REF_INT  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../../../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score.css?v=bb63a8e1" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score_needs.css?v=82a1844f" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/score_design.css?v=8048e6ee" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/sphinx-needs/modern.css?v=803738c0" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css?v=f420dc51" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../../../../../_static/documentation_options.js?v=7f41d439"></script>
+    <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../../../../../_static/sphinx-data-viewer/jsonview.bundle.js?v=18cd53c5"></script>
+    <script src="../../../../../../_static/sphinx-data-viewer/jsonview_loader.js?v=f7ff7e7d"></script>
+    <script src="../../../../../../_static/sphinx-needs/libs/html/datatables.min.js?v=8a4aee21"></script>
+    <script src="../../../../../../_static/sphinx-needs/libs/html/datatables_loader.js?v=a2cae175"></script>
+    <script src="../../../../../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js?v=dca66431"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'process_methods_tools/score_process_description/trainings/trainings_requirements_engineering/source/content/module-3';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-score.github.io/reference_integration/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1" />
+  
+    
+    <script src="../../../../../../_static/searchtools.js"></script>
+    <script src="../../../../../../_static/language_data.js"></script>
+    <script src="../../../../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Eclipse S-CORE</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../sw_components/index.html">
+    Modules
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../verification_report/index.html">
+    Verification Reports
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eclipse-score.github.io/reference_integration/main/status_dashboard.html">
+    Integration Status
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../s_core_v_1/index.html">
+    S-Core v1.0
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../s_core_v_1/releases/releases.html">
+    Releases
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../../integration_process/integration_process.html">
+    Integration Process
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../../index.html">
+    Process & Tools
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../sw_components/index.html">
+    Modules
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../verification_report/index.html">
+    Verification Reports
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eclipse-score.github.io/reference_integration/main/status_dashboard.html">
+    Integration Status
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../s_core_v_1/index.html">
+    S-Core v1.0
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../s_core_v_1/releases/releases.html">
+    Releases
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../../integration_process/integration_process.html">
+    Integration Process
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../../index.html">
+    Process & Tools
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Requirement Attributes and Quality</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="requirement-attributes-and-quality">
+<h1>Requirement Attributes and Quality<a class="headerlink" href="#requirement-attributes-and-quality" title="Link to this heading">#</a></h1>
+<p>A requirement without well-defined attributes is not a requirement — it is a
+wish. S-CORE mandates a specific attribute set for every requirement and
+automates part of its population. This module covers all attributes, versioning
+rules, and the formulation principles that make requirements verifiable.</p>
+<section id="manual-attributes">
+<h2>3.1 Manual Attributes<a class="headerlink" href="#manual-attributes" title="Link to this heading">#</a></h2>
+<p>Every S-CORE requirement must have the following attributes set by the author
+before a pull request can be merged:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute</p></th>
+<th class="head"><p>Values / Format</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Unique ID</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&lt;type_prefix&gt;__&lt;keyword&gt;_&lt;shortname&gt;</span></code></p></td>
+<td><p>Stable identifier used for all traceability links</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Status</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">valid</span></code> | <code class="docutils literal notranslate"><span class="pre">invalid</span></code></p></td>
+<td><p>Only <code class="docutils literal notranslate"><span class="pre">valid</span></code> requirements are accepted in main branch</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Title</strong></p></td>
+<td><p>Free text, expressive</p></td>
+<td><p>Human-readable label</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Description</strong></p></td>
+<td><p>Free text</p></td>
+<td><p>The actual requirement statement</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Version</strong></p></td>
+<td><p>Integer (1, 2, 3, …)</p></td>
+<td><p>Bumped on every <em>significant</em> change</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Rationale / Linkage</strong></p></td>
+<td><p>Free text | derived_from link</p></td>
+<td><p>Stakeholder reqs need a rationale; derived reqs link to parent</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Safety</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">QM</span></code> | <code class="docutils literal notranslate"><span class="pre">ASIL_B</span></code></p></td>
+<td><p>Safety integrity level of this requirement</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Security</strong></p></td>
+<td><p>Boolean / free text</p></td>
+<td><p>Whether the requirement has security relevance</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Type</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Functional</span></code> | <code class="docutils literal notranslate"><span class="pre">Interface</span></code> | <code class="docutils literal notranslate"><span class="pre">Process</span></code> | <code class="docutils literal notranslate"><span class="pre">Non-Functional</span></code></p></td>
+<td><p>Determines verification method and linkage rules</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="important docutils">
+<p>S-CORE intentionally has no <code class="docutils literal notranslate"><span class="pre">draft</span></code> status value. A requirement is either
+<code class="docutils literal notranslate"><span class="pre">valid</span></code> (merged) or it lives in a pull request / feature branch. This forces
+engineers to complete a requirement before integrating it rather than
+accumulating technical debt in the form of unfinished requirements.</p>
+</div>
+</section>
+<section id="the-safety-attribute-in-detail">
+<h2>3.2 The Safety Attribute in Detail<a class="headerlink" href="#the-safety-attribute-in-detail" title="Link to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">safety</span></code> attribute is the cornerstone of ISO 26262 compliance. S-CORE
+currently supports two values:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">QM</span></code></p></td>
+<td><p>Quality Management — no ASIL claim; standard software quality processes apply</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ASIL_B</span></code></p></td>
+<td><p>Automotive Safety Integrity Level B — requires ASIL-B process measures, verification rigour, and traceability</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="important docutils">
+<p>S-CORE does not currently apply ASIL decomposition, so ASIL_A, ASIL_C, and
+ASIL_D are not required. Only QM and ASIL_B are defined. All safety-relevant
+requirements must be classified ASIL_B — a safety-relevant requirement that is
+incorrectly marked QM is a safety defect.</p>
+</div>
+<p>The tooling enforces linkage rules: an ASIL_B requirement may only be linked to
+other ASIL_B requirements or to QM requirements with a documented rationale.</p>
+</section>
+<section id="auto-generated-attributes">
+<h2>3.3 Auto-Generated Attributes<a class="headerlink" href="#auto-generated-attributes" title="Link to this heading">#</a></h2>
+<p>The Docs-as-Code build populates three attributes automatically, eliminating
+manual maintenance overhead and ensuring the attributes are always current:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute</p></th>
+<th class="head"><p>How it is populated</p></th>
+<th class="head"><p>Tool</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Derives</strong></p></td>
+<td><p>Automatically inserted into the parent requirement when a child requirement references it via <code class="docutils literal notranslate"><span class="pre">derived_from</span></code></p></td>
+<td><p>Docs-as-Code</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Implemented by</strong></p></td>
+<td><p>Source files are scanned for a defined tag containing the requirement ID; matching code locations are linked</p></td>
+<td><p>Docs-as-Code</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Verified by</strong></p></td>
+<td><p>Test files are scanned for a defined marker containing the requirement ID; matching test cases are linked</p></td>
+<td><p>Docs-as-Code</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="example docutils">
+<p>A developer adds the following tag in C++ source code:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// [feat__json_config__parse_body]</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">ConfigParser::parseBody</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">json</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>During the docs build, the tool finds this tag, resolves <code class="docutils literal notranslate"><span class="pre">feat__json_config__parse_body</span></code>
+to the corresponding feature requirement, and automatically links the source
+file and line to the <code class="docutils literal notranslate"><span class="pre">implemented_by</span></code> attribute.</p>
+</div>
+<p>This automatic population means that the traceability matrix is always
+regenerated from the actual code and test artefacts — it cannot be manually
+falsified or forgotten.</p>
+</section>
+<section id="requirement-versioning">
+<h2>3.4 Requirement Versioning<a class="headerlink" href="#requirement-versioning" title="Link to this heading">#</a></h2>
+<section id="significant-vs-non-significant-changes">
+<h3>Significant vs. Non-Significant Changes<a class="headerlink" href="#significant-vs-non-significant-changes" title="Link to this heading">#</a></h3>
+<p>Not every edit to a requirement warrants a version increment. S-CORE defines
+precisely which changes are significant:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute</p></th>
+<th class="head"><p>Significant change</p></th>
+<th class="head"><p>Non-significant change</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Description</strong></p></td>
+<td><p>Functional content change or rewrite affecting meaning</p></td>
+<td><p>Typo corrections, layout, notes</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Safety</strong></p></td>
+<td><p>Any change</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Security</strong></p></td>
+<td><p>Any change</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Type</strong></p></td>
+<td><p>Any change</p></td>
+<td><p>—</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="important docutils">
+<p>Child requirements reference their parent requirement with an explicit version number
+(e.g., <code class="docutils literal notranslate"><span class="pre">derived_from:</span> <span class="pre">stkh__platform__config_files[version==2]</span></code>). If the parent
+requirement’s version is later bumped, all child derivation links become stale and
+the docs build emits a warning that <strong>blocks merging</strong> until the child requirements
+are updated. This ensures that a change in a parent requirement always triggers a
+review of all its children.</p>
+</div>
+</section>
+<section id="versioning-sets-of-requirements">
+<h3>Versioning Sets of Requirements<a class="headerlink" href="#versioning-sets-of-requirements" title="Link to this heading">#</a></h3>
+<p>Individual requirement versioning covers single-requirement changes. For
+<strong>baselines</strong> — frozen sets of requirements used as the basis for a release or
+for a safety case — S-CORE uses standard version control tagging: a git tag
+applied to the repository records the exact state of all requirement files.</p>
+</section>
+</section>
+<section id="requirement-quality-and-formulation">
+<h2>3.5 Requirement Quality and Formulation<a class="headerlink" href="#requirement-quality-and-formulation" title="Link to this heading">#</a></h2>
+<p>A well-written requirement has four properties:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Property</p></th>
+<th class="head"><p>Test question</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Atomic</strong></p></td>
+<td><p>Does the requirement describe exactly one thing?</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Verifiable</strong></p></td>
+<td><p>Can we write a test or review criterion that definitively confirms conformance?</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Unambiguous</strong></p></td>
+<td><p>Is there exactly one valid interpretation?</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Traceable</strong></p></td>
+<td><p>Does the requirement link upward to a parent (or have a rationale) and downward to implementation and test?</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="important docutils">
+<p>A note in a requirement (marked as such in the Docs-as-Code tool) is <strong>not part of
+the requirement</strong> itself. Notes provide additional explanation or context but
+must not contain normative content. Reviewers must check that normative
+statements are in the description, not buried in notes.</p>
+</div>
+</section>
+<section id="requirement-reviews">
+<h2>3.6 Requirement Reviews<a class="headerlink" href="#requirement-reviews" title="Link to this heading">#</a></h2>
+<p>Requirements that cannot be checked automatically require a manual inspection.
+The S-CORE process supports two kinds of review:</p>
+<ol class="arabic simple">
+<li><p><strong>Peer review (PR review)</strong> — every requirement passes through a pull request
+where Committers (<code class="docutils literal notranslate"><span class="pre">rl__committer</span></code>) and Project Leads (<code class="docutils literal notranslate"><span class="pre">rl__project_lead</span></code>) review it before it is merged to <code class="docutils literal notranslate"><span class="pre">main</span></code>.</p></li>
+<li><p><strong>Formal inspection</strong> — triggered explicitly when a contributor wants a
+thorough review of a set of requirements. Uses a structured inspection
+checklist (<code class="docutils literal notranslate"><span class="pre">gd_chklst__req_inspection</span></code>) that may be integrated into requirements/version management tooling.</p></li>
+</ol>
+<div class="collapsible docutils">
+<p>The inspection checklist verifies:</p>
+<ul class="simple">
+<li><p>Completeness: all mandatory attributes are populated</p></li>
+<li><p>Consistency: no contradictions between requirements at the same level</p></li>
+<li><p>Feasibility: the requirement can realistically be implemented and tested</p></li>
+<li><p>Traceability: every requirement is derived from a parent or has a documented rationale</p></li>
+<li><p>Safety/security classification: safety attribute is correct relative to safety analysis</p></li>
+<li><p>Formulation quality: atomic, verifiable, unambiguous</p></li>
+</ul>
+</div>
+<div class="quiz docutils">
+<ul class="simple">
+<li><p>q: “A developer edits a requirement’s description to fix a typo and improve layout, with no change to its functional meaning. Should the version attribute be incremented?”
+options:</p>
+<ul>
+<li><p>text: “Yes — any edit to a requirement must increment the version”</p></li>
+<li><p>text: “No — only significant changes (functional content, safety, security, type) trigger a version increment”
+correct: true</p></li>
+<li><p>text: “Yes — the version must be incremented so child links are re-validated”</p></li>
+<li><p>text: “No — versions are only managed by git tags, not per-requirement”
+feedback: &gt;-
+Correct: B. S-CORE explicitly distinguishes significant changes (content changes,
+safety/security/type attribute changes) from non-significant ones (typos, layout,
+notes). Only significant changes require a version bump so that child requirement
+links are re-validated.</p></li>
+</ul>
+</li>
+<li><p>q: “Which attribute is automatically populated by the Docs-as-Code build when test files contain a defined marker with the requirement ID?”
+options:</p>
+<ul>
+<li><p>text: “Derives”</p></li>
+<li><p>text: “Implemented by”</p></li>
+<li><p>text: “Verified by”
+correct: true</p></li>
+<li><p>text: “Status”
+feedback: &gt;-
+Correct: C. The build scans test files for a defined marker containing the
+requirement ID and automatically links matching test cases to the ‘verified_by’
+attribute. This makes the traceability matrix always current without manual
+maintenance.</p></li>
+</ul>
+</li>
+<li><p>q: “A requirement is marked safety=QM but a safety analysis has determined it is ASIL_B relevant. What is the consequence?”
+options:</p>
+<ul>
+<li><p>text: “Nothing — QM and ASIL_B requirements can be freely mixed”</p></li>
+<li><p>text: “The build will flag a linkage violation and the requirement is a safety defect”
+correct: true</p></li>
+<li><p>text: “The requirement is automatically upgraded to ASIL_B at build time”</p></li>
+<li><p>text: “A note is added to the requirement by the tool”
+feedback: &gt;-
+Correct: B. An incorrectly classified safety attribute is a safety defect. The
+S-CORE tooling enforces linkage rules so that ASIL_B requirements may only be
+linked to other ASIL_B requirements (or QM with documented rationale). A wrong
+safety attribute would allow a safety-relevant element to be inadequately
+verified and could invalidate the safety case.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-attributes">3.1 Manual Attributes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-safety-attribute-in-detail">3.2 The Safety Attribute in Detail</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#auto-generated-attributes">3.3 Auto-Generated Attributes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-versioning">3.4 Requirement Versioning</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#significant-vs-non-significant-changes">Significant vs. Non-Significant Changes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#versioning-sets-of-requirements">Versioning Sets of Requirements</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-quality-and-formulation">3.5 Requirement Quality and Formulation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-reviews">3.6 Requirement Reviews</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
