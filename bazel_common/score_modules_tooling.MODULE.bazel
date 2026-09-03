@@ -39,6 +39,10 @@ single_version_override(
 bazel_dep(name = "score_platform")
 single_version_override(
     module_name = "score_platform",
+    patch_strip = 1,
+    patches = [
+        "//patches/platform:001-remove-duplicate-lifecycle-glossary.patch",
+    ],
     version = "0.7.2",
 )
 
