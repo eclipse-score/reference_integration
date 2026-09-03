@@ -15,7 +15,9 @@ import json
 import os
 import re
 import select
+import shutil
 import sys
+import tempfile
 import zipfile
 from dataclasses import dataclass
 from pathlib import Path
@@ -441,6 +443,26 @@ def cpp_coverage(
     return genhtml_result
 
 
+def _bazel_isolation_shim_dir(startup: list[str] | None) -> Path | None:
+    """A dir whose ``bazel`` shadows the real one to inject ``startup`` first.
+
+    ferrocene_report.sh's nested bazel calls resolve ``bazel`` via ``$PATH`` with no flags of
+    their own, so they read the module's own .bazelrc. Shadowing it on ``$PATH`` injects the
+    same isolation the outer call gets, without writing into the module's checkout.
+    """
+    if not startup:
+        return None
+    real_bazel = shutil.which("bazel")
+    if real_bazel is None:
+        raise RuntimeError("QR: no 'bazel' found on PATH to build the isolation shim from")
+    shim_dir = Path(tempfile.mkdtemp(prefix="stage2_bazel_shim_"))
+    shim = shim_dir / "bazel"
+    startup_str = " ".join(f'"{flag}"' for flag in startup)
+    shim.write_text(f'#!/bin/bash\nexec "{real_bazel}" {startup_str} "$@"\n')
+    shim.chmod(0o755)
+    return shim_dir
+
+
 def _resolve_ferrocene_report_script(workspace: Path, startup: list[str] | None) -> Path:
     """The runfiles copy of ``@score_tooling//coverage:ferrocene_report``, not the bare binary.
 
@@ -496,9 +518,8 @@ def rust_coverage(
         # mapping that only exists in ref_int's graph. Run the underlying tool directly with
         # the same query, module-rooted (see rust_coverage_query), instead.
         #
-        # ferrocene_report.sh runs nested bazel calls without startup flags, so they read the
-        # module's own .bazelrc rather than ref_int's Stage-2 rc, and rust coverage fails here.
-        # TODO(next release): forward --bazelrc/--noworkspace_rc upstream in ferrocene_report.sh.
+        # ferrocene_report.sh's nested bazel calls read the module's own .bazelrc; see
+        # _bazel_isolation_shim_dir(). TODO(next release): fix this upstream in ferrocene_report.sh.
         query = rust_coverage_query(module.name)
         config_flags = [c.removeprefix("--config=") for c in stage2_config_flags(module)]
         script = _resolve_ferrocene_report_script(workspace, startup)
@@ -508,7 +529,11 @@ def rust_coverage(
             + [flag for c in config_flags for flag in ("--bazel-config", c)]
             + ["--out-dir", str(output_dir.resolve())]
         )
-        return run_command(run_call, cwd=str(workspace))
+        shim_dir = _bazel_isolation_shim_dir(startup)
+        env = _child_env()
+        if shim_dir is not None:
+            env["PATH"] = str(shim_dir) + os.pathsep + env.get("PATH", "")
+        return run_command(run_call, cwd=str(workspace), env=env)
 
     bazel_call = [
         "bazel",
