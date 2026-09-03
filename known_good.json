@@ -94,18 +94,13 @@
             },
             "score_logging": {
                 "repo": "https://github.com/eclipse-score/logging.git",
-                "hash": "e1bf097cdbf718f993ab7b24ae5f59639ed96bdb",
+                "hash": "6d8fcb3734e3f3307615bae5495d2d3a82b0b8c4",
                 "bazel_patches": [
-                    "//patches/logging:002-needs-json-deps-not-dev-dependency.patch",
-                    "//patches/logging:003-docs-as-code-not-dev-dependency.patch",
-                    "//patches/logging:004-rules-pkg-not-dev-dependency.patch",
-                    "//patches/logging:005-memory-shared-moved-to-communication.patch"
+                    "//patches/logging:006-use-format-targets-compat.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/mw/log/...",
                     "extra_test_config": [
-                        "@score_logging//score/datarouter/build_configuration_flags:persistent_logging=False",
-                        "@score_logging//score/datarouter/build_configuration_flags:persistent_config_feature_enabled=False",
                         "@score_logging//score/datarouter/build_configuration_flags:enable_nonverbose_dlt=False",
                         "@score_logging//score/datarouter/build_configuration_flags:enable_dynamic_configuration=False",
                         "@score_logging//score/datarouter/build_configuration_flags:file_transfer=False",
