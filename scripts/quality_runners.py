@@ -335,7 +335,6 @@ def main() -> bool:
         if "rust" in module.metadata.langs:
             DISABLED_RUST_COVERAGE = [
                 "score_communication",
-                "score_orchestrator",
             ]  # Known issues with coverage extraction for these modules, mostly proc_macro
             if module.name in DISABLED_RUST_COVERAGE:
                 print_centered(f"QR: Skipping rust coverage extraction for module {module.name} due to known issues")

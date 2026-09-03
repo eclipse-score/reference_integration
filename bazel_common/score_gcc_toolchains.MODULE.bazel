@@ -11,8 +11,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-bazel_dep(name = "score_bazel_cpp_toolchains", version = "0.5.4")
-
 gcc = use_extension("@score_bazel_cpp_toolchains//extensions:gcc.bzl", "gcc", dev_dependency = True)
 gcc.toolchain(
     name = "score_gcc_x86_64_toolchain",
@@ -24,7 +22,7 @@ gcc.toolchain(
 gcc.toolchain(
     name = "score_ebclfsa_toolchain",
     runtime_ecosystem = "ebclfsa",
-    sdk_version = "0.1.0",
+    sdk_version = "2.0.0-beta2",
     target_cpu = "aarch64",
     target_os = "linux",
     use_default_package = True,

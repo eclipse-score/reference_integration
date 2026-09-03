@@ -12,7 +12,7 @@
 # *******************************************************************************
 
 # Generated from known_good.json at 2026-08-28T09:19:12Z
-# Do not edit manually - use scripts/known_good/update_module_from_known_good.py
+# Do not edit manually - use scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir-modules bazel_common
 
 bazel_dep(name = "score_baselibs")
 single_version_override(
@@ -58,16 +58,6 @@ single_version_override(
     version = "0.3.5",
 )
 
-bazel_dep(name = "score_orchestrator")
-single_version_override(
-    module_name = "score_orchestrator",
-    patch_strip = 1,
-    patches = [
-        "//patches/orchestrator:001-use-format-targets-new-location.patch",
-    ],
-    version = "0.1.1",
-)
-
 bazel_dep(name = "score_kyron")
 single_version_override(
     module_name = "score_kyron",
@@ -94,14 +84,10 @@ single_version_override(
 bazel_dep(name = "score_logging")
 git_override(
     module_name = "score_logging",
-    commit = "d41fbde4aa447faad3d4d57269255377569cd2fe",
+    commit = "6d8fcb3734e3f3307615bae5495d2d3a82b0b8c4",
     patch_strip = 1,
     patches = [
-        "//patches/logging:002-needs-json-deps-not-dev-dependency.patch",
-        "//patches/logging:003-docs-as-code-not-dev-dependency.patch",
-        "//patches/logging:004-rules-pkg-not-dev-dependency.patch",
-        "//patches/logging:005-use-format-targets-new-location.patch",
-        "//patches/logging:006-include-mw-log-recorders-in-docs.patch",
+        "//patches/logging:006-use-format-targets-compat.patch",
     ],
     remote = "https://github.com/eclipse-score/logging.git",
 )
@@ -125,7 +111,7 @@ git_override(
     commit = "e0489b190ed6d2fa183b9a8063e2dba4f6378505",
     patch_strip = 1,
     patches = [
-        "patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch",
+        "//patches/config_management:001-adapt-proxy-api-and-remove-internal-targets.patch",
     ],
     remote = "https://github.com/eclipse-score/config_management.git",
 )

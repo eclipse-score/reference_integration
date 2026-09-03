@@ -187,7 +187,8 @@ def generate_file_content(
     if timestamp:
         header += (
             f"# Generated from known_good.json at {timestamp}\n"
-            "# Do not edit manually - use scripts/known_good/update_module_from_known_good.py\n"
+            "# Do not edit manually - use scripts/known_good/update_module_from_known_good.py"
+            " --known known_good.json --output-dir-modules bazel_common\n"
             "\n"
         )
     if file_type == "module":
