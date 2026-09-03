@@ -12,7 +12,7 @@
 # *******************************************************************************
 
 # Generated from known_good.json at 2026-08-21T00:00:00+00:00Z
-# Do not edit manually - use scripts/known_good/update_module_from_known_good.py
+# Do not edit manually - use scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir-modules bazel_common
 
 bazel_dep(name = "score_baselibs")
 git_override(
@@ -68,13 +68,10 @@ git_override(
 bazel_dep(name = "score_logging")
 git_override(
     module_name = "score_logging",
-    commit = "e1bf097cdbf718f993ab7b24ae5f59639ed96bdb",
+    commit = "6d8fcb3734e3f3307615bae5495d2d3a82b0b8c4",
     patch_strip = 1,
     patches = [
-        "//patches/logging:002-needs-json-deps-not-dev-dependency.patch",
-        "//patches/logging:003-docs-as-code-not-dev-dependency.patch",
-        "//patches/logging:004-rules-pkg-not-dev-dependency.patch",
-        "//patches/logging:005-memory-shared-moved-to-communication.patch",
+        "//patches/logging:006-use-format-targets-compat.patch",
     ],
     remote = "https://github.com/eclipse-score/logging.git",
 )
@@ -97,7 +94,7 @@ git_override(
     commit = "952461ceffff774fb4c125ee023fea0221fcdce2",
     patch_strip = 1,
     patches = [
-        "patches/config_management/001-adapt-proxy-api-and-remove-internal-targets.patch",
+        "//patches/config_management:001-adapt-proxy-api-and-remove-internal-targets.patch",
     ],
     remote = "https://github.com/eclipse-score/config_management.git",
 )

@@ -12,7 +12,7 @@
 # *******************************************************************************
 
 # Generated from known_good.json at 2026-08-21T00:00:00+00:00Z
-# Do not edit manually - use scripts/known_good/update_module_from_known_good.py
+# Do not edit manually - use scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir-modules bazel_common
 
 bazel_dep(name = "score_crates")
 git_override(
@@ -68,4 +68,10 @@ git_override(
     module_name = "score_process",
     commit = "8df530cab5efcb40e9f835ba6e9b61ae2f0175c7",
     remote = "https://github.com/eclipse-score/process_description.git",
+)
+
+bazel_dep(name = "score_bazel_cpp_toolchains")
+single_version_override(
+    module_name = "score_bazel_cpp_toolchains",
+    version = "1.0.3",
 )
