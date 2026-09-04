@@ -171,14 +171,9 @@ Lifecycle
 Logging
 ~~~~~~~
 
-- **Version:** pinned to commit ``d41fbde`` (previously ``0.2.2``)
+- **Version:** ``0.2.4`` (previously ``0.2.2``)
 - **Release notes**: `Logging releases
   <https://github.com/eclipse-score/logging/releases>`_
-
-.. note::
-
-   Logging is integrated from a development commit; a registry release
-   covering this state is still to be published.
 
 Time
 ~~~~
@@ -332,8 +327,7 @@ Known Issues/Vulnerabilities and Bug Fixes
 ------------------------------------------
 
 - See release notes of every module separately.
-- One module (Logging) is integrated from a development commit rather than the
-  registry; all other modules listed here are already published to the registry.
+- All modules listed here are integrated from published registry releases.
 - The reference integration carries integration patches for Baselibs,
   Communication, Configuration Management, Logging, Time and Tooling. See the
   ``patches/`` directory for details.
