@@ -162,9 +162,19 @@ rust_coverage_report(
 def generate_sbom_module_content(tracked_modules: List[str], timestamp: Optional[str]) -> str:
     """Generate the SBOM extension configuration from known-good target modules."""
     header = (
-        "# Generated from known_good.json"
-        + (f" at {timestamp}" if timestamp else "")
-        + "\n"
+        "# *******************************************************************************\n"
+        "# Copyright (c) 2026 Contributors to the Eclipse Foundation\n"
+        "#\n"
+        "# See the NOTICE file(s) distributed with this work for additional\n"
+        "# information regarding copyright ownership.\n"
+        "#\n"
+        "# This program and the accompanying materials are made available under the\n"
+        "# terms of the Apache License Version 2.0 which is available at\n"
+        "# https://www.apache.org/licenses/LICENSE-2.0\n"
+        "#\n"
+        "# SPDX-License-Identifier: Apache-2.0\n"
+        "# *******************************************************************************\n"
+        "# Generated from known_good.json" + (f" at {timestamp}" if timestamp else "") + "\n"
         "# Do not edit manually - use scripts/known_good/update_module_from_known_good.py\n\n"
     )
     blocks = ['sbom_ext = use_extension("@score_sbom//:extensions.bzl", "sbom_metadata")']
