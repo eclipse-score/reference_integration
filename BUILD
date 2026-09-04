@@ -15,6 +15,14 @@ load("@score_docs_as_code//:docs.bzl", "docs")
 load("@score_tooling//:defs.bzl", "setup_starpls")
 load("@score_tooling//third_party/format:macros.bzl", "use_format_targets")
 
+# Alias causing doc build here being independet of what doc-as-code do.
+# This allows to changge labels of real doc build indepedent of pull_request_target
+# helping being more flexible on releases
+alias(
+    name = "docs_shim",
+    actual = "//:docs_combo",
+)
+
 # Docs-as-code
 docs(
     bundles = [
