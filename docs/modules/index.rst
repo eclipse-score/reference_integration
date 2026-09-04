@@ -15,29 +15,7 @@
 Modules
 =======
 
-SW Modules
-----------
-
 .. toctree::
    :titlesonly:
    :maxdepth: 1
 
-
-
-.. Tooling modules
-.. ---------------
-
-.. .. toctree::
-..    :titlesonly:
-..    :maxdepth: 1
-
-
-.. Process modules
-.. ---------------
-
-.. .. toctree::
-..    :titlesonly:
-..    :maxdepth: 1
-
-
-.. TODO: Generate this from know_good !

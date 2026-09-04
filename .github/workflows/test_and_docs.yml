@@ -81,27 +81,6 @@ jobs:
       - name: Execute Feature Integration Tests
         run: |
           bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit
-      - name: Collect test reports for documentation
-        # The "Build documentation" step below runs bazel with a dedicated
-        # --output_base (for its own disk/repo caches). Bazel recreates the
-        # `bazel-testlogs` convenience symlink for whichever output_base was
-        # used in the *last* invocation, so once the docs build runs, that
-        # symlink no longer points at the test.xml files produced by the
-        # steps above - it points into the (test-free) docs output_base
-        # instead. This silently breaks requirement<->test linking in the
-        # generated docs (0 test.xml found, 0 testcase needs created).
-        # Snapshot the test.xml files into `tests-report/` now (docs-as-code
-        # prefers this directory over `bazel-testlogs`) so they survive the
-        # output_base switch.
-        run: |
-          mkdir -p tests-report
-          while IFS= read -r -d '' f; do
-            rel="${f#bazel-testlogs/}"
-            mkdir -p "tests-report/$(dirname "$rel")"
-            cp "$f" "tests-report/$rel"
-          done < <(find -L bazel-testlogs -name 'test.xml' -print0)
-          echo "Collected $(find tests-report -name 'test.xml' | wc -l) test.xml files into tests-report/"
-        shell: bash
       - name: Publish build summary
         if: always()
         run: |
