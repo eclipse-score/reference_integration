@@ -72,7 +72,6 @@ sbom(
         "//feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios",
         "//feature_integration_tests/test_scenarios/rust:rust_test_scenarios",
         "//showcases/cli:cli",
-        "//showcases/orchestration_persistency:orch_per_example",
         "@score_communication//score/mw/com/example/com-api-example:com-api-example",
         "@score_kyron//examples:main_macro",
         "@score_kyron//examples:safety_task",

@@ -119,13 +119,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload build tools SBOM to release
         uses: softprops/action-gh-release@v1
+        if: github.ref_type == 'tag'
         with:
           files: bazel-bin/build_tools_sbom.spdx.json
-      - name: Install Graphviz
-        uses: eclipse-score/apt-install@main
-        with:
-          packages: graphviz
-          cache: false
       - name: Build documentation
         run: |
           bazel run \
