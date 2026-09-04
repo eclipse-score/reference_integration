@@ -38,11 +38,11 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-needs/modern.css?v=803738c0" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=f420dc51" />
   
@@ -161,7 +161,7 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../sw_components/index.html">
+  <a class="nav-link nav-internal" href="../../modules/index.html">
     Modules
   </a>
 </li>
@@ -330,7 +330,7 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../sw_components/index.html">
+  <a class="nav-link nav-internal" href="../../modules/index.html">
     Modules
   </a>
 </li>
@@ -532,7 +532,7 @@
 <h1>Overall Status<a class="headerlink" href="#overall-status" title="Link to this heading">#</a></h1>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p><strong>Data collected on: 2026-07-15</strong></p>
+<p><strong>Data collected on: 2026-09-04</strong></p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -545,6 +545,37 @@ fully validated.</p>
 <p>This page tracks feature and process status across the SCORE platform modules.
 It is regenerated from live <cite>eclipse-score</cite> GitHub repositories pinned via
 <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>.</p>
+<div class="tip admonition">
+<p class="admonition-title">Changes in this snapshot</p>
+<ul class="simple">
+<li><p>The progress charts now carry a fifth column, <strong>v0.9</strong> — this snapshot
+is measured against the <code class="docutils literal notranslate"><span class="pre">release_candidate_09</span></code> pins, so the v0.8
+column holds the previously published release figures.</p></li>
+<li><p><strong>Kyron</strong> is tracked as a module for the first time (12 module rows
+instead of 11). It ships code, unit tests, Rust coverage, a Clippy gate
+and a large component-integration suite, but has no requirements,
+architecture or detailed-design documents yet.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">score</span></code> repository was <strong>restructured</strong>: component documentation
+moved from <code class="docutils literal notranslate"><span class="pre">docs/modules/&lt;module&gt;/</span></code> into the individual module
+repositories, and <code class="docutils literal notranslate"><span class="pre">docs/features/analysis-infra/logging</span></code> became
+<code class="docutils literal notranslate"><span class="pre">docs/features/log_and_trace/logging</span></code>. All path filters were rebuilt
+against the pinned trees.</p></li>
+<li><p>Several modules migrated their requirements to <strong>TRLC</strong>
+(Communication, Config Management). Where an RST set and a TRLC set
+describe the same feature area, only the larger of the two is counted —
+the duplicate is suppressed to avoid double counting.</p></li>
+<li><p><strong>Time</strong> and <strong>Config Management</strong> are now pinned in <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>,
+so their source links point at a fixed commit instead of <code class="docutils literal notranslate"><span class="pre">main</span></code>.</p></li>
+<li><p><strong>Security/Crypto</strong> and <strong>Some/IP</strong> are <em>not</em> pinned in
+<code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> and therefore no longer part of the reference
+integration CI. Their unit-test and coverage cells are marked
+🔄 <em>Module CI only</em> and link to the workflows in their own repositories.</p></li>
+<li><p>The PA2 feature-requirement total decreased (341 → 297) because the
+Lifecycle feature requirements were consolidated during the
+restructuring (92 → 32); the component-requirement total grew
+strongly (607 → 783).</p></li>
+</ul>
+</div>
 <section id="process-area-1-change-management">
 <span id="overall-status-pa1"></span><h2>Process Area 1 — Change Management<a class="headerlink" href="#process-area-1-change-management" title="Link to this heading">#</a></h2>
 <p class="status-heading rubric">Process Status</p>
@@ -569,9 +600,9 @@ It is regenerated from live <cite>eclipse-score</cite> GitHub repositories pinne
 <div class="impl-status-row">
   <span class="impl-status-label">Rollout status:</span>
   <span class="impl-status-icon">🔄</span>
-  <span class="impl-status-percent">90%</span>
-  <div class="impl-status-bar"><div class="impl-status-fill" style="width:90%"></div></div>
-  <span class="impl-status-detail">10/11 deliverables complete</span>
+  <span class="impl-status-percent">83%</span>
+  <div class="impl-status-bar"><div class="impl-status-fill" style="width:83%"></div></div>
+  <span class="impl-status-detail">10/12 deliverables complete</span>
 </div><div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p><strong>Module</strong></p></th>
@@ -584,6 +615,7 @@ It is regenerated from live <cite>eclipse-score</cite> GitHub repositories pinne
 <blockquote>
 <div><div class="line-block">
 <div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/issues/549">#549</a> — ✅ Accepted [v0.5 Certifiable] — Feature request: common libraries for IPC and Logging</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/issues/757">#757</a> — ✅ Accepted — Feature request for qualified json-parser</div>
 <div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/issues/917">#917</a> — ✅ Accepted [v1.0] — Feature Request for ABI compatible datatypes</div>
 </div>
 </div></blockquote>
@@ -643,7 +675,18 @@ It is regenerated from live <cite>eclipse-score</cite> GitHub repositories pinne
 </div></blockquote>
 </td>
 </tr>
-<tr class="row-odd"><td><p>Security/Crypto</p></td>
+<tr class="row-odd"><td><p>Kyron</p></td>
+<td><p>🔄 In Progress</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/issues/2029">#2029</a> — 🔄 Open — Certified async-runtime</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/issues/2445">#2445</a> — ✅ Accepted [v1.0] — Kyron — S-CORE Release v1.0</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/issues/2894">#2894</a> — ✅ Accepted [v0.8] — Kyron for S-CORE Release v0.8</div>
+</div>
+</div></blockquote>
+</td>
+</tr>
+<tr class="row-even"><td><p>Security/Crypto</p></td>
 <td><p>✅ Accepted</p>
 <blockquote>
 <div><div class="line-block">
@@ -652,7 +695,7 @@ It is regenerated from live <cite>eclipse-score</cite> GitHub repositories pinne
 </div></blockquote>
 </td>
 </tr>
-<tr class="row-even"><td><p>Diagnostic Services</p></td>
+<tr class="row-odd"><td><p>Diagnostic Services</p></td>
 <td><p>✅ Accepted</p>
 <blockquote>
 <div><div class="line-block">
@@ -661,10 +704,10 @@ It is regenerated from live <cite>eclipse-score</cite> GitHub repositories pinne
 </div></blockquote>
 </td>
 </tr>
-<tr class="row-odd"><td><p>NM</p></td>
+<tr class="row-even"><td><p>NM</p></td>
 <td><p>❌ Open</p></td>
 </tr>
-<tr class="row-even"><td><p>Some/IP</p></td>
+<tr class="row-odd"><td><p>Some/IP</p></td>
 <td><p>✅ Accepted</p>
 <blockquote>
 <div><div class="line-block">
@@ -699,18 +742,18 @@ It is regenerated from live <cite>eclipse-score</cite> GitHub repositories pinne
 </table>
 </div>
 <figure class="align-default" id="id1">
-<a class="reference internal image-reference" href="../../_images/pa2_impl_progress.svg"><img alt="PA2 implementation progress" src="../../_images/pa2_impl_progress.svg" style="width: 720px;" />
+<a class="reference internal image-reference" href="../../_images/pa2_impl_progress.svg"><img alt="PA2 implementation progress" src="../../_images/pa2_impl_progress.svg" style="width: 880px;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Total Feature and Component Requirements across the 11 PA2 modules per release (v0.5.0-beta → v0.6.0 → v0.7.0 → v0.8).</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Total Feature and Component Requirements across the 12 tracked modules per release (v0.5.0-beta → v0.6.0 → v0.7.0 → v0.8 → v0.9).</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <div class="impl-status-row">
   <span class="impl-status-label">Rollout status:</span>
   <span class="impl-status-icon">🔄</span>
-  <span class="impl-status-percent">45%</span>
-  <div class="impl-status-bar"><div class="impl-status-fill" style="width:45%"></div></div>
-  <span class="impl-status-detail">15/33 deliverables complete</span>
+  <span class="impl-status-percent">50%</span>
+  <div class="impl-status-bar"><div class="impl-status-fill" style="width:50%"></div></div>
+  <span class="impl-status-detail">18/36 deliverables complete</span>
 </div><div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p><strong>Module</strong></p></th>
@@ -721,66 +764,77 @@ It is regenerated from live <cite>eclipse-score</cite> GitHub repositories pinne
 </thead>
 <tbody>
 <tr class="row-even"><td><p>Baselibs</p></td>
-<td><p>✅ Available (17/17)</p>
+<td><p>✅ Available (14/14)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/baselibs/docs/requirements/index.rst">baselibs</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/baselibs/requirements/index.rst">baselibs</a> (14)</div>
 </div>
 </div></blockquote>
 </td>
-<td><p>✅ Available (112/112 comp_req + 32/32 AoU)</p>
+<td><p>✅ Available (136/136 comp_req + 32/32 AoU)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/abi_compatible_data_types/docs/requirements/index.rst">abi_compatible_data_types</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/bitmanipulation/docs/requirements/index.rst">bitmanipulation</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/concurrency/docs/requirements/index.rst">concurrency</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/containers/docs/requirements/index.rst">containers</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/filesystem/docs/requirements/index.rst">filesystem</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/flatbuffers/docs/requirements/index.rst">flatbuffers</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/json/docs/requirements/index.rst">json</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/json/docs/vajson/requirements/index.rst">vajson</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/language/safecpp/docs/requirements/index.rst">safecpp</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/memory_shared/docs/requirements/index.rst">memory_shared</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/result/docs/requirements/index.rst">result</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/static_reflection_with_serialization/docs/requirements/index.rst">static_reflection_with_serialization</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/utils/docs/requirements/index.rst">utils</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/docs/baselibs/components/abi_compatible_data_types/docs/requirements/index.rst">abi_compatible_data_types</a> (23)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/bitmanipulation/docs/requirements/index.rst">bitmanipulation</a> (6)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/concurrency/docs/requirements/index.rst">concurrency</a> (18)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/containers/docs/requirements/index.rst">containers</a> (5)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/containers_rust/docs/requirements/index.rst">containers_rust</a> (16)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/filesystem/docs/requirements/index.rst">filesystem</a> (7)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/flatbuffers/docs/requirements/index.rst">flatbuffers</a> (6)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/hash/docs/requirements/index.rst">hash</a> (7)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/json/docs/requirements/index.rst">json</a> (8)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/json/docs/vajson/requirements/index.rst">vajson</a> (5)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/language/safecpp/docs/requirements/index.rst">safecpp</a> (6)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/memory/docs/requirements/index.rst">memory</a> (13)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/result/docs/requirements/index.rst">result</a> (7)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/static_reflection_with_serialization/docs/requirements/index.rst">static_reflection_with_serialization</a> (6)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/utils/docs/requirements/index.rst">utils</a> (3)</div>
 </div>
 </div></blockquote>
 </td>
-<td><p>🔄 30% (3/10)</p>
+<td><p>🔄 40% (4/10)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/baselibs/docs/requirements/chklst_req_inspection.rst">baselibs</a></div>
-<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/bitmanipulation/docs/requirements/chklst_req_inspection.rst">bitmanipulation</a></div>
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/concurrency/docs/requirements/chklst_req_inspection.rst">concurrency</a></div>
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/containers/docs/requirements/chklst_req_inspection.rst">containers</a></div>
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/filesystem/docs/requirements/chklst_req_inspection.rst">filesystem</a></div>
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/json/docs/requirements/chklst_req_inspection.rst">json</a></div>
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/language/safecpp/docs/requirements/chklst_req_inspection.rst">safecpp</a></div>
-<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/result/docs/requirements/chklst_req_inspection.rst">result</a></div>
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/static_reflection_with_serialization/docs/requirements/chklst_req_inspection.rst">static_reflection_with_serialization</a></div>
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/utils/docs/requirements/chklst_req_inspection.rst">utils</a></div>
+<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/baselibs/requirements/chklst_req_inspection.rst">baselibs</a></div>
+<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/bitmanipulation/docs/requirements/chklst_req_inspection.rst">bitmanipulation</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/concurrency/docs/requirements/chklst_req_inspection.rst">concurrency</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/containers/docs/requirements/chklst_req_inspection.rst">containers</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/filesystem/docs/requirements/chklst_req_inspection.rst">filesystem</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/json/docs/requirements/chklst_req_inspection.rst">json</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/language/safecpp/docs/requirements/chklst_req_inspection.rst">safecpp</a></div>
+<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/result/docs/requirements/chklst_req_inspection.rst">result</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/static_reflection_with_serialization/docs/requirements/chklst_req_inspection.rst">static_reflection_with_serialization</a></div>
+<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/utils/docs/requirements/chklst_req_inspection.rst">utils</a></div>
 </div>
 </div></blockquote>
 </td>
 </tr>
 <tr class="row-odd"><td><p>Communication</p></td>
-<td><p>✅ Available (53/53)</p>
+<td><p>✅ Available (64/64)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/communication/docs/requirements/index.rst">communication</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/communication/ipc/docs/requirements/index.rst">ipc</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/communication/blob/b22ed6d314313c87eb06ca916efda9a71ec53cc6/score/message_passing/dependability/requirements/feature_requirements.trlc">message_passing</a> (11) [TRLC]</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/communication/ipc/requirements/index.rst">ipc</a> (4)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/communication/requirements/index.rst">communication</a> (49)</div>
 </div>
 </div></blockquote>
 </td>
-<td><p>✅ Available (363/363 comp_req [TRLC] + 33/33 AoU)</p>
+<td><p>✅ Available (363/363 comp_req + 38/38 AoU)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/communication/blob/6b1a78b6303da54c9773d4fae4d8a07a879c9ebb/score/mw/com/dependability/requirements/component_requirements/component_requirements_ipc.trlc">ipc</a> (310) [TRLC]</div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/communication/blob/6b1a78b6303da54c9773d4fae4d8a07a879c9ebb/score/mw/com/dependability/requirements/component_requirements/component_requirements_ipc_fields.trlc">ipc_fields</a> (17) [TRLC]</div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/communication/blob/6b1a78b6303da54c9773d4fae4d8a07a879c9ebb/score/mw/com/dependability/requirements/component_requirements/component_requirements_ipc_methods.trlc">ipc_methods</a> (3) [TRLC]</div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/communication/blob/6b1a78b6303da54c9773d4fae4d8a07a879c9ebb/score/message_passing/dependability/requirements/component_requirements.trlc">message_passing</a> (33) [TRLC]</div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/modules/communication/docs/requirements/aou_req.rst">aou_req</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/communication/blob/b22ed6d314313c87eb06ca916efda9a71ec53cc6/score/message_passing/dependability/requirements/component_requirements.trlc">message_passing</a> (29) [TRLC]</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/communication/blob/b22ed6d314313c87eb06ca916efda9a71ec53cc6/score/message_passing/dependability/requirements/external_component_requirements.trlc">message_passing</a> (4) [TRLC]</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/communication/blob/b22ed6d314313c87eb06ca916efda9a71ec53cc6/score/mw/com/dependability/requirements/component_requirements/component_requirements_ipc.trlc">ipc</a> (98) [TRLC]</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/communication/blob/b22ed6d314313c87eb06ca916efda9a71ec53cc6/score/mw/com/dependability/requirements/component_requirements/component_requirements_ipc_fields.trlc">ipc_fields</a> (17) [TRLC]</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/communication/blob/b22ed6d314313c87eb06ca916efda9a71ec53cc6/score/mw/com/dependability/requirements/component_requirements/component_requirements_ipc_generic_proxy.trlc">ipc_generic_proxy</a> (51) [TRLC]</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/communication/blob/b22ed6d314313c87eb06ca916efda9a71ec53cc6/score/mw/com/dependability/requirements/component_requirements/component_requirements_ipc_generic_skeleton.trlc">ipc_generic_skeleton</a> (32) [TRLC]</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/communication/blob/b22ed6d314313c87eb06ca916efda9a71ec53cc6/score/mw/com/dependability/requirements/component_requirements/component_requirements_ipc_methods.trlc">ipc_methods</a> (3) [TRLC]</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/communication/blob/b22ed6d314313c87eb06ca916efda9a71ec53cc6/score/mw/com/dependability/requirements/component_requirements/component_requirements_ipc_partial_restart.trlc">ipc_partial_restart</a> (11) [TRLC]</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/communication/blob/b22ed6d314313c87eb06ca916efda9a71ec53cc6/score/mw/com/dependability/requirements/component_requirements/component_requirements_ipc_proxy.trlc">ipc_proxy</a> (40) [TRLC]</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/communication/blob/b22ed6d314313c87eb06ca916efda9a71ec53cc6/score/mw/com/dependability/requirements/component_requirements/component_requirements_ipc_skeleton.trlc">ipc_skeleton</a> (26) [TRLC]</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/communication/blob/b22ed6d314313c87eb06ca916efda9a71ec53cc6/score/mw/com/dependability/requirements/component_requirements/component_requirements_ipc_tracing.trlc">ipc_tracing</a> (52) [TRLC]</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/communication/blob/b22ed6d314313c87eb06ca916efda9a71ec53cc6/score/message_passing/dependability/assumed_system/aous.trlc">message_passing</a> (1) [TRLC]</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/communication/blob/b22ed6d314313c87eb06ca916efda9a71ec53cc6/score/mw/com/dependability/safety_analysis/aou.trlc">com</a> (37) [TRLC]</div>
 </div>
 </div></blockquote>
 </td>
@@ -790,40 +844,50 @@ It is regenerated from live <cite>eclipse-score</cite> GitHub repositories pinne
 <td><p>✅ Available (46/46)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/analysis-infra/logging/docs/requirements/mw-fr_logging_req.rst">logging</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/log_and_trace/logging/requirements/index.rst">logging</a> (46)</div>
 </div>
 </div></blockquote>
 </td>
-<td><p>✅ Available (22/22 comp_req)</p>
+<td><p>✅ Available (39/39 comp_req + 5/5 AoU)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/logging/blob/9faad72199cbc2259b1fe4d712c5c769cdfd954e/docs/components/datarouter/requirements.rst">datarouter</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/logging/blob/9faad72199cbc2259b1fe4d712c5c769cdfd954e/docs/components/mw/log/requirements.rst">log</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/mw/log/docs/requirements/index.rst">log</a> (18)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/logging/blob/6d8fcb3734e3f3307615bae5495d2d3a82b0b8c4/docs/components/datarouter/requirements/index.rst">datarouter</a> (6)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/logging/blob/6d8fcb3734e3f3307615bae5495d2d3a82b0b8c4/docs/components/mw_log/requirements/requirements.rst">mw_log</a> (15)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/mw/log/docs/safety_analysis/aou_requirements.rst">log</a> (5)</div>
 </div>
 </div></blockquote>
 </td>
-<td><p>❌ Open</p></td>
+<td><p>🔄 0% (0/3)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/logging/blob/6d8fcb3734e3f3307615bae5495d2d3a82b0b8c4/docs/components/mw_log/requirements/chklst_req_inspection.rst">mw_log</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/log_and_trace/logging/requirements/chklst_req_inspection.rst">logging</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/mw/log/docs/requirements/chklst_req_inspection.rst">log</a></div>
+</div>
+</div></blockquote>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Persistency</p></td>
 <td><p>✅ Available (37/37)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/persistency/requirements/index.rst">persistency</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/persistency/requirements/index.rst">persistency</a> (37)</div>
 </div>
 </div></blockquote>
 </td>
 <td><p>✅ Available (35/35 comp_req)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/71dafa712fb514b4705f1b914e1f72b3e385da5b/score/kvs/docs/requirements/index.rst">kvs</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/score/kvs/docs/requirements/index.rst">kvs</a> (35)</div>
 </div>
 </div></blockquote>
 </td>
 <td><p>✅ Available (2/2)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/persistency/requirements/chklst_req_inspection.rst">persistency</a></div>
-<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/persistency/blob/71dafa712fb514b4705f1b914e1f72b3e385da5b/score/kvs/docs/requirements/chklst_req_inspection.rst">kvs</a></div>
+<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/persistency/requirements/chklst_req_inspection.rst">persistency</a></div>
+<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/persistency/blob/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/score/kvs/docs/requirements/chklst_req_inspection.rst">kvs</a></div>
 </div>
 </div></blockquote>
 </td>
@@ -832,80 +896,134 @@ It is regenerated from live <cite>eclipse-score</cite> GitHub repositories pinne
 <td><p>✅ Available (15/15)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/time/docs/requirements/index.rst">time</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/time/requirements/index.rst">time</a> (15)</div>
 </div>
 </div></blockquote>
 </td>
-<td><p>❌ Open</p></td>
-<td><p>❌ Open</p></td>
-</tr>
-<tr class="row-odd"><td><p>Config Mgmt</p></td>
-<td><p>✅ Available (13/13)</p>
+<td><p>🔄 0% (0/4 AoU)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/configuration/config_mgmt/requirements/index.rst">config_mgmt</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/time/blob/c4f0194a3b496757e5c193ed8618fc3f45a868a5/score/time/docs/requirements/requirements.rst">time</a> (2)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/time/blob/c4f0194a3b496757e5c193ed8618fc3f45a868a5/score/time_daemon/docs/requirements/requirements.rst">time_daemon</a> (2)</div>
 </div>
 </div></blockquote>
 </td>
-<td><p>❌ Open</p></td>
+<td><p>🔄 0% (0/4)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/time/blob/c4f0194a3b496757e5c193ed8618fc3f45a868a5/score/time/docs/requirements/chklst_req_inspection.rst">time</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/time/blob/c4f0194a3b496757e5c193ed8618fc3f45a868a5/score/time_daemon/docs/requirements/chklst_req_inspection.rst">time_daemon</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/time/blob/c4f0194a3b496757e5c193ed8618fc3f45a868a5/score/time_slave/docs/requirements/chklst_req_inspection.rst">time_slave</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/time/blob/c4f0194a3b496757e5c193ed8618fc3f45a868a5/score/ts_client/docs/requirements/chklst_req_inspection.rst">ts_client</a></div>
+</div>
+</div></blockquote>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Config Mgmt</p></td>
+<td><p>✅ Available (20/20)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/config_management/blob/e0489b190ed6d2fa183b9a8063e2dba4f6378505/requirements/feature_requirements/feature_requirements.trlc">config_management</a> (20) [TRLC]</div>
+</div>
+</div></blockquote>
+</td>
+<td><p>✅ Available (47/47 comp_req + 1/1 AoU)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/config_management/blob/e0489b190ed6d2fa183b9a8063e2dba4f6378505/requirements/component_requirements/config_daemon/component_requirements.trlc">config_daemon</a> (30) [TRLC]</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/config_management/blob/e0489b190ed6d2fa183b9a8063e2dba4f6378505/requirements/component_requirements/config_provider/component_requirements.trlc">config_provider</a> (17) [TRLC]</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/config_management/blob/e0489b190ed6d2fa183b9a8063e2dba4f6378505/requirements/safety_analysis/aou.trlc">config_management</a> (1) [TRLC]</div>
+</div>
+</div></blockquote>
+</td>
 <td><p>❌ Open</p></td>
 </tr>
 <tr class="row-even"><td><p>Lifecycle</p></td>
-<td><p>🔄 0% (0/92)</p>
+<td><p>✅ Available (32/32)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/lifecycle/requirements/index.rst">lifecycle</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/lifecycle/requirements/index.rst">lifecycle</a> (32)</div>
 </div>
 </div></blockquote>
 </td>
-<td><p>🔄 0% (0/1 comp_req + 0/1 AoU)</p>
+<td><p>✅ Available (64/64 comp_req + 1/1 AoU)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/lifecycle/blob/654ac348e1cb9327e5c8c4d84fd0028ad3ef2714/score/health_monitor/docs/requirements/index.rst">health_monitor</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/lifecycle/blob/9613f52b1ec1a3f169be79d9e6ef0948c5e19596/score/health_monitor/docs/requirements/index.rst">health_monitor</a> (1)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/lifecycle/blob/9613f52b1ec1a3f169be79d9e6ef0948c5e19596/score/launch_manager/docs/requirements/requirements.rst">launch_manager</a> (63)</div>
 </div>
 </div></blockquote>
 </td>
+<td><p>🔄 0% (0/2)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/lifecycle/blob/9613f52b1ec1a3f169be79d9e6ef0948c5e19596/score/health_monitor/docs/requirements/chklst_req_inspection.rst">health_monitor</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/lifecycle/blob/9613f52b1ec1a3f169be79d9e6ef0948c5e19596/score/launch_manager/docs/requirements/chklst_req_inspection.rst">launch_manager</a></div>
+</div>
+</div></blockquote>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Kyron</p></td>
+<td><p>❌ Open</p></td>
+<td><p>❌ Open</p></td>
 <td><p>❌ Open</p></td>
 </tr>
-<tr class="row-odd"><td><p>Security/Crypto</p></td>
+<tr class="row-even"><td><p>Security/Crypto</p></td>
 <td><p>✅ Available (41/41)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/security_crypto/requirements/index.rst">security_crypto</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/security_crypto/requirements/index.rst">security_crypto</a> (41)</div>
 </div>
 </div></blockquote>
 </td>
-<td><p>❌ Open</p></td>
-<td><p>❌ Open</p></td>
+<td><p>🔄 70% (1/1 comp_req + 6/9 AoU)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_security_crypto/blob/1e438b2d06041b9e1088c2144b865f237e0382c4/score/iav_primula/docs/requirements/requirements.rst">iav_primula</a> (1)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_security_crypto/blob/1e438b2d06041b9e1088c2144b865f237e0382c4/docs/features/crypto/security_analysis/aou_requirements.rst">crypto</a> (3)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_security_crypto/blob/1e438b2d06041b9e1088c2144b865f237e0382c4/score/crypto/docs/requirements/requirements.rst">crypto</a> (2)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_security_crypto/blob/1e438b2d06041b9e1088c2144b865f237e0382c4/score/crypto/docs/security_analysis/aou_requirements.rst">crypto</a> (2)</div>
+</div>
+</div></blockquote>
+</td>
+<td><p>🔄 0% (0/2)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/inc_security_crypto/blob/1e438b2d06041b9e1088c2144b865f237e0382c4/score/crypto/docs/requirements/chklst_req_inspection.rst">crypto</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/inc_security_crypto/blob/1e438b2d06041b9e1088c2144b865f237e0382c4/score/iav_primula/docs/requirements/chklst_req_inspection.rst">iav_primula</a></div>
+</div>
+</div></blockquote>
+</td>
 </tr>
-<tr class="row-even"><td><p>Diagnostic Services</p></td>
+<tr class="row-odd"><td><p>Diagnostic Services</p></td>
 <td><p>✅ Available (22/22)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/diagnostics/requirements/index.rst">diagnostics</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/diagnostics/requirements/index.rst">diagnostics</a> (22)</div>
 </div>
 </div></blockquote>
 </td>
 <td><p>❌ Open</p></td>
 <td><p>❌ Open</p></td>
 </tr>
-<tr class="row-odd"><td><p>NM</p></td>
+<tr class="row-even"><td><p>NM</p></td>
 <td><p>❌ Open</p></td>
 <td><p>❌ Open</p></td>
 <td><p>❌ Open</p></td>
 </tr>
-<tr class="row-even"><td><p>Some/IP</p></td>
-<td><p>✅ Available (5/5)</p>
+<tr class="row-odd"><td><p>Some/IP</p></td>
+<td><p>✅ Available (6/6)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/communication/some_ip_gateway/requirements/index.rst">some_ip_gateway</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_someip_gateway/blob/f701652c307d4d76073e49c2c9c3b74f588ce02d/docs/tc8_conformance/requirements.rst">tc8_conformance</a> (1)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/communication/some_ip_gateway/requirements/index.rst">some_ip_gateway</a> (5)</div>
 </div>
 </div></blockquote>
 </td>
 <td><p>✅ Available (8/8 comp_req)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_someip_gateway/blob/main/docs/tc8_conformance/requirements.rst">tc8_conformance</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_someip_gateway/blob/f701652c307d4d76073e49c2c9c3b74f588ce02d/docs/tc8_conformance/requirements.rst">tc8_conformance</a> (8)</div>
 </div>
 </div></blockquote>
 </td>
@@ -937,18 +1055,18 @@ It is regenerated from live <cite>eclipse-score</cite> GitHub repositories pinne
 </table>
 </div>
 <figure class="align-default" id="id2">
-<a class="reference internal image-reference" href="../../_images/pa3_arch_progress.svg"><img alt="PA3 architecture progress" src="../../_images/pa3_arch_progress.svg" style="width: 720px;" />
+<a class="reference internal image-reference" href="../../_images/pa3_arch_progress.svg"><img alt="PA3 architecture progress" src="../../_images/pa3_arch_progress.svg" style="width: 880px;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 2 </span><span class="caption-text">Total Feature and Component Architecture elements across the 11 PA2 modules per release (v0.5.0-beta → v0.6.0 → v0.7.0 → v0.8).</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 2 </span><span class="caption-text">Total Feature and Component Architecture elements across the 12 tracked modules per release (v0.5.0-beta → v0.6.0 → v0.7.0 → v0.8 → v0.9).</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <div class="impl-status-row">
   <span class="impl-status-label">Rollout status:</span>
   <span class="impl-status-icon">🔄</span>
-  <span class="impl-status-percent">27%</span>
-  <div class="impl-status-bar"><div class="impl-status-fill" style="width:27%"></div></div>
-  <span class="impl-status-detail">9/33 deliverables complete</span>
+  <span class="impl-status-percent">42%</span>
+  <div class="impl-status-bar"><div class="impl-status-fill" style="width:42%"></div></div>
+  <span class="impl-status-detail">15/36 deliverables complete</span>
 </div><div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p><strong>Module</strong></p></th>
@@ -962,43 +1080,47 @@ It is regenerated from live <cite>eclipse-score</cite> GitHub repositories pinne
 <td><p>✅ Available (3/3)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/baselibs/docs/architecture/index.rst">baselibs</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/feature/architecture/index.rst">baselibs</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/docs/features/architecture/index.rst">baselibs</a> (2)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/baselibs/architecture/index.rst">baselibs</a> (1)</div>
 </div>
 </div></blockquote>
 </td>
-<td><p>🔄 97% (139/142)</p>
+<td><p>🔄 99% (197/198)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/abi_compatible_data_types/docs/architecture/index.rst">abi_compatible_data_types</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/bitmanipulation/docs/architecture/index.rst">bitmanipulation</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/concurrency/docs/architecture/index.rst">concurrency</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/containers/docs/architecture/index.rst">containers</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/filesystem/docs/architecture/index.rst">filesystem</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/flatbuffers/docs/architecture/index.rst">flatbuffers</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/json/docs/architecture/index.rst">json</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/json/docs/vajson/architecture/index.rst">vajson</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/language/safecpp/docs/architecture/index.rst">safecpp</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/memory_shared/docs/architecture/index.rst">memory_shared</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/result/docs/architecture/index.rst">result</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/static_reflection_with_serialization/docs/architecture/index.rst">static_reflection_with_serialization</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/utils/docs/architecture/index.rst">utils</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/docs/baselibs/components/abi_compatible_data_types/docs/architecture/index.rst">abi_compatible_data_types</a> (1)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/bitmanipulation/docs/architecture/index.rst">bitmanipulation</a> (12)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/concurrency/docs/architecture/index.rst">concurrency</a> (33)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/containers/docs/architecture/index.rst">containers</a> (9)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/containers_rust/docs/architecture/index.rst">containers_rust</a> (27)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/containers_rust/docs/requirements/index.rst">containers_rust</a> (1)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/filesystem/docs/architecture/index.rst">filesystem</a> (25)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/flatbuffers/docs/architecture/index.rst">flatbuffers</a> (1)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/hash/docs/requirements/index.rst">hash</a> (1)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/json/docs/architecture/index.rst">json</a> (7)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/json/docs/vajson/architecture/index.rst">vajson</a> (1)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/language/safecpp/docs/architecture/index.rst">safecpp</a> (23)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/memory/docs/architecture/index.rst">memory</a> (6)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/result/docs/architecture/index.rst">result</a> (6)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/static_reflection_with_serialization/docs/architecture/index.rst">static_reflection_with_serialization</a> (11)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/utils/docs/architecture/index.rst">utils</a> (6)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/baselibs/architecture/index.rst">baselibs</a> (28)</div>
 </div>
 </div></blockquote>
 </td>
 <td><p>🔄 80% (8/10)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/bitmanipulation/docs/architecture/chklst_arc_inspection.rst">bitmanipulation</a></div>
-<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/concurrency/docs/architecture/chklst_arc_inspection.rst">concurrency</a></div>
-<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/containers/docs/architecture/chklst_arc_inspection.rst">containers</a></div>
-<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/filesystem/docs/architecture/chklst_arc_inspection.rst">filesystem</a></div>
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/json/docs/architecture/chklst_arc_inspection.rst">json</a></div>
-<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/language/safecpp/docs/architecture/chklst_arc_inspection.rst">safecpp</a></div>
-<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/result/docs/architecture/chklst_arc_inspection.rst">result</a></div>
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/static_reflection_with_serialization/docs/architecture/chklst_arc_inspection.rst">static_reflection_with_serialization</a></div>
-<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/utils/docs/architecture/chklst_arc_inspection.rst">utils</a></div>
-<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/feature/architecture/chklst_arc_inspection.rst">baselibs</a></div>
+<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/docs/features/architecture/chklst_arc_inspection.rst">baselibs</a></div>
+<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/bitmanipulation/docs/architecture/chklst_arc_inspection.rst">bitmanipulation</a></div>
+<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/concurrency/docs/architecture/chklst_arc_inspection.rst">concurrency</a></div>
+<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/containers/docs/architecture/chklst_arc_inspection.rst">containers</a></div>
+<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/filesystem/docs/architecture/chklst_arc_inspection.rst">filesystem</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/json/docs/architecture/chklst_arc_inspection.rst">json</a></div>
+<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/language/safecpp/docs/architecture/chklst_arc_inspection.rst">safecpp</a></div>
+<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/result/docs/architecture/chklst_arc_inspection.rst">result</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/static_reflection_with_serialization/docs/architecture/chklst_arc_inspection.rst">static_reflection_with_serialization</a></div>
+<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/utils/docs/architecture/chklst_arc_inspection.rst">utils</a></div>
 </div>
 </div></blockquote>
 </td>
@@ -1007,19 +1129,20 @@ It is regenerated from live <cite>eclipse-score</cite> GitHub repositories pinne
 <td><p>✅ Available (3/3)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/communication/docs/architecture/index.rst">communication</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/communication/ipc/docs/architecture/index.rst">ipc</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/communication/architecture/index.rst">communication</a> (2)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/communication/ipc/architecture/index.rst">ipc</a> (1)</div>
 </div>
 </div></blockquote>
 </td>
-<td><p>✅ Available (16/16)</p>
+<td><p>✅ Available (17/17)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/modules/communication/configuration/docs/architecture/index.rst">configuration</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/modules/communication/frontent/docs/architecture/index.rst">frontent</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/modules/communication/ipc_binding/docs/architecture/index.rst">ipc_binding</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/modules/communication/message_passing/docs/architecture/index.rst">message_passing</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/modules/communication/mock_binding/docs/architecture/index.rst">mock_binding</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/communication/architecture/index.rst">communication</a> (1)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/modules/communication/configuration/docs/architecture/index.rst">configuration</a> (1)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/modules/communication/frontent/docs/architecture/index.rst">frontent</a> (10)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/modules/communication/ipc_binding/docs/architecture/index.rst">ipc_binding</a> (1)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/modules/communication/message_passing/docs/architecture/index.rst">message_passing</a> (3)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/modules/communication/mock_binding/docs/architecture/index.rst">mock_binding</a> (1)</div>
 </div>
 </div></blockquote>
 </td>
@@ -1029,106 +1152,177 @@ It is regenerated from live <cite>eclipse-score</cite> GitHub repositories pinne
 <td><p>✅ Available (2/2)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/analysis-infra/logging/docs/architecture/index.rst">logging</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/logging/blob/9faad72199cbc2259b1fe4d712c5c769cdfd954e/docs/features/logging/architecture/index.rst">logging</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/logging/blob/6d8fcb3734e3f3307615bae5495d2d3a82b0b8c4/docs/features/logging/architecture/index.rst">logging</a> (1)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/log_and_trace/logging/architecture/index.rst">logging</a> (1)</div>
 </div>
 </div></blockquote>
 </td>
-<td><p>✅ Available (3/3)</p>
+<td><p>✅ Available (13/13)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/modules/logging/logging/docs/architecture/index.rst">logging</a></div>
-</div>
-</div></blockquote>
-</td>
-<td><p>❌ Open</p></td>
-</tr>
-<tr class="row-odd"><td><p>Persistency</p></td>
-<td><p>✅ Available (9/9)</p>
-<blockquote>
-<div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/persistency/architecture/index.rst">persistency</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/71dafa712fb514b4705f1b914e1f72b3e385da5b/docs/features/persistency/architecture/index.rst">persistency</a></div>
-</div>
-</div></blockquote>
-</td>
-<td><p>🔄 0% (0/3)</p>
-<blockquote>
-<div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/71dafa712fb514b4705f1b914e1f72b3e385da5b/score/kvs/docs/architecture/index.rst">kvs</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/mw/log/docs/architecture/component_architecture.rst">log</a> (2)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/mw/log/docs/detailed_design/rust_bridge_design.rst">rust_bridge_design</a> (3)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/logging/blob/6d8fcb3734e3f3307615bae5495d2d3a82b0b8c4/docs/components/datarouter/index.rst">datarouter</a> (1)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/logging/blob/6d8fcb3734e3f3307615bae5495d2d3a82b0b8c4/docs/components/mw_log/architecture/component_architecture.rst">mw_log</a> (4)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/log_and_trace/logging/architecture/index.rst">logging</a> (3)</div>
 </div>
 </div></blockquote>
 </td>
 <td><p>🔄 0% (0/2)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/persistency/blob/71dafa712fb514b4705f1b914e1f72b3e385da5b/docs/features/persistency/architecture/chklst_arc_inspection.rst">persistency</a></div>
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/persistency/blob/71dafa712fb514b4705f1b914e1f72b3e385da5b/score/kvs/docs/architecture/chklst_arc_inspection.rst">kvs</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/logging/blob/6d8fcb3734e3f3307615bae5495d2d3a82b0b8c4/docs/features/logging/architecture/chklst_arc_inspection.rst">logging</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/mw/log/docs/architecture/chklst_arc_inspection.rst">log</a></div>
+</div>
+</div></blockquote>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Persistency</p></td>
+<td><p>✅ Available (9/9)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/docs/features/persistency/architecture/index.rst">persistency</a> (8)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/persistency/architecture/index.rst">persistency</a> (1)</div>
+</div>
+</div></blockquote>
+</td>
+<td><p>🔄 40% (2/5)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/docs/features/persistency/architecture/index.rst">persistency</a> (1)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/score/kvs/docs/architecture/index.rst">kvs</a> (3)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/persistency/architecture/index.rst">persistency</a> (1)</div>
+</div>
+</div></blockquote>
+</td>
+<td><p>🔄 0% (0/2)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/persistency/blob/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/docs/features/persistency/architecture/chklst_arc_inspection.rst">persistency</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/persistency/blob/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/score/kvs/docs/architecture/chklst_arc_inspection.rst">kvs</a></div>
 </div>
 </div></blockquote>
 </td>
 </tr>
 <tr class="row-even"><td><p>Time</p></td>
-<td><p>❌ Open</p></td>
-<td><p>❌ Open</p></td>
+<td><p>✅ Available (1/1)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/time/architecture/index.rst">time</a> (1)</div>
+</div>
+</div></blockquote>
+</td>
+<td><p>✅ Available (2/2)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/time/blob/c4f0194a3b496757e5c193ed8618fc3f45a868a5/score/time/docs/index.rst">time</a> (1)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/time/blob/c4f0194a3b496757e5c193ed8618fc3f45a868a5/score/ts_client/docs/index.rst">ts_client</a> (1)</div>
+</div>
+</div></blockquote>
+</td>
 <td><p>❌ Open</p></td>
 </tr>
 <tr class="row-odd"><td><p>Config Mgmt</p></td>
-<td><p>❌ Open</p></td>
+<td><p>✅ Available (1/1)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/configuration/config_mgmt/architecture/index.rst">config_mgmt</a> (1)</div>
+</div>
+</div></blockquote>
+</td>
 <td><p>❌ Open</p></td>
 <td><p>❌ Open</p></td>
 </tr>
 <tr class="row-even"><td><p>Lifecycle</p></td>
-<td><p>🔄 60% (3/5)</p>
+<td><p>✅ Available (7/7)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/lifecycle/architecture/health_monitor.rst">lifecycle</a></div>
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/features/lifecycle/architecture/launch_manager.rst">lifecycle</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/lifecycle/blob/9613f52b1ec1a3f169be79d9e6ef0948c5e19596/docs/features/lifecycle/architecture/health_monitor.rst">health_monitor</a> (2)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/lifecycle/blob/9613f52b1ec1a3f169be79d9e6ef0948c5e19596/docs/features/lifecycle/architecture/index.rst">lifecycle</a> (1)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/lifecycle/blob/9613f52b1ec1a3f169be79d9e6ef0948c5e19596/docs/features/lifecycle/architecture/launch_manager.rst">launch_manager</a> (3)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/lifecycle/architecture/index.rst">lifecycle</a> (1)</div>
 </div>
 </div></blockquote>
 </td>
-<td><p>✅ Available (15/15)</p>
+<td><p>✅ Available (45/45)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/lifecycle/blob/654ac348e1cb9327e5c8c4d84fd0028ad3ef2714/score/health_monitor/docs/architecture/index.rst">health_monitor</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/lifecycle/blob/9613f52b1ec1a3f169be79d9e6ef0948c5e19596/docs/features/lifecycle/architecture/launch_manager_configuration.rst">launch_manager_configuration</a> (1)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/lifecycle/blob/9613f52b1ec1a3f169be79d9e6ef0948c5e19596/score/health_monitor/docs/architecture/index.rst">health_monitor</a> (16)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/lifecycle/blob/9613f52b1ec1a3f169be79d9e6ef0948c5e19596/score/launch_manager/docs/architecture/component_architecture.rst">launch_manager</a> (2)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/lifecycle/architecture/index.rst">lifecycle</a> (26)</div>
 </div>
 </div></blockquote>
 </td>
-<td><p>❌ Open</p></td>
-</tr>
-<tr class="row-odd"><td><p>Security/Crypto</p></td>
-<td><p>❌ Open</p></td>
-<td><p>🔄 0% (0/21)</p>
+<td><p>🔄 0% (0/3)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_security_crypto/blob/main/docs/crypto/architecture/interfaces.rst">crypto</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/lifecycle/blob/9613f52b1ec1a3f169be79d9e6ef0948c5e19596/docs/features/lifecycle/architecture/chklst_arc_inspection.rst">lifecycle</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/lifecycle/blob/9613f52b1ec1a3f169be79d9e6ef0948c5e19596/score/health_monitor/docs/architecture/chklst_arc_inspection.rst">health_monitor</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/lifecycle/blob/9613f52b1ec1a3f169be79d9e6ef0948c5e19596/score/launch_manager/docs/architecture/chklst_arc_inspection.rst">launch_manager</a></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>❌ Open</p></td>
 </tr>
-<tr class="row-even"><td><p>Diagnostic Services</p></td>
-<td><p>❌ Open</p></td>
-<td><p>❌ Open</p></td>
-<td><p>❌ Open</p></td>
-</tr>
-<tr class="row-odd"><td><p>NM</p></td>
+<tr class="row-odd"><td><p>Kyron</p></td>
 <td><p>❌ Open</p></td>
 <td><p>❌ Open</p></td>
 <td><p>❌ Open</p></td>
 </tr>
-<tr class="row-even"><td><p>Some/IP</p></td>
+<tr class="row-even"><td><p>Security/Crypto</p></td>
 <td><p>✅ Available (1/1)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_someip_gateway/blob/main/docs/architecture/features.rst">docs/architecture/features.rst</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/security_crypto/architecture/index.rst">security_crypto</a> (1)</div>
+</div>
+</div></blockquote>
+</td>
+<td><p>🔄 16% (4/25)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_security_crypto/blob/1e438b2d06041b9e1088c2144b865f237e0382c4/score/crypto/docs/architecture/interfaces.rst">crypto</a> (21)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_security_crypto/blob/1e438b2d06041b9e1088c2144b865f237e0382c4/score/iav_primula/docs/architecture/component_architecture.rst">iav_primula</a> (4)</div>
+</div>
+</div></blockquote>
+</td>
+<td><p>🔄 0% (0/3)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/inc_security_crypto/blob/1e438b2d06041b9e1088c2144b865f237e0382c4/docs/features/crypto/architecture/chklst_arc_inspection.rst">crypto</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/inc_security_crypto/blob/1e438b2d06041b9e1088c2144b865f237e0382c4/score/crypto/docs/architecture/chklst_arc_inspection.rst">crypto</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/inc_security_crypto/blob/1e438b2d06041b9e1088c2144b865f237e0382c4/score/iav_primula/docs/architecture/chklst_arc_inspection.rst">iav_primula</a></div>
+</div>
+</div></blockquote>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Diagnostic Services</p></td>
+<td><p>✅ Available (1/1)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/features/diagnostics/architecture/index.rst">diagnostics</a> (1)</div>
+</div>
+</div></blockquote>
+</td>
+<td><p>❌ Open</p></td>
+<td><p>❌ Open</p></td>
+</tr>
+<tr class="row-even"><td><p>NM</p></td>
+<td><p>❌ Open</p></td>
+<td><p>❌ Open</p></td>
+<td><p>❌ Open</p></td>
+</tr>
+<tr class="row-odd"><td><p>Some/IP</p></td>
+<td><p>✅ Available (1/1)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_someip_gateway/blob/f701652c307d4d76073e49c2c9c3b74f588ce02d/docs/architecture/features.rst">inc_someip_gateway</a> (1)</div>
 </div>
 </div></blockquote>
 </td>
 <td><p>✅ Available (4/4)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_someip_gateway/blob/main/docs/architecture/components.rst">docs/architecture/components.rst</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_someip_gateway/blob/f701652c307d4d76073e49c2c9c3b74f588ce02d/docs/architecture/components.rst">inc_someip_gateway</a> (4)</div>
 </div>
 </div></blockquote>
 </td>
@@ -1160,18 +1354,18 @@ It is regenerated from live <cite>eclipse-score</cite> GitHub repositories pinne
 </table>
 </div>
 <figure class="align-default" id="id3">
-<a class="reference internal image-reference" href="../../_images/pa4_impl_progress.svg"><img alt="PA4 implementation progress" src="../../_images/pa4_impl_progress.svg" style="width: 720px;" />
+<a class="reference internal image-reference" href="../../_images/pa4_impl_progress.svg"><img alt="PA4 implementation progress" src="../../_images/pa4_impl_progress.svg" style="width: 880px;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 3 </span><span class="caption-text">Estimated Lines of Code across the 11 PA2 modules per release (v0.5.0-beta → v0.6.0 → v0.7.0 → v0.8).</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 3 </span><span class="caption-text">Estimated Lines of Code across the 12 tracked modules per release (v0.5.0-beta → v0.6.0 → v0.7.0 → v0.8 → v0.9).</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <div class="impl-status-row">
   <span class="impl-status-label">Rollout status:</span>
   <span class="impl-status-icon">🔄</span>
-  <span class="impl-status-percent">45%</span>
-  <div class="impl-status-bar"><div class="impl-status-fill" style="width:45%"></div></div>
-  <span class="impl-status-detail">20/44 deliverables complete</span>
+  <span class="impl-status-percent">46%</span>
+  <div class="impl-status-bar"><div class="impl-status-fill" style="width:46%"></div></div>
+  <span class="impl-status-detail">22/48 deliverables complete</span>
 </div><div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p><strong>Module</strong></p></th>
@@ -1186,30 +1380,36 @@ It is regenerated from live <cite>eclipse-score</cite> GitHub repositories pinne
 <td><p>✅ Available</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/platform_management_plan/software_development.rst">platform_management_plan</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/platform_management_plan/software_development.rst">software_development</a></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>✅ Available (~344,200 LOC)</p>
+<td><p>✅ Available (~322,600 LOC)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs">baselibs</a></div>
+<div class="line">1,667 source files — cpp 178,100, h 96,100, hpp 30,500, rs 16,100</div>
 </div>
 </div></blockquote>
 </td>
-<td><p>❌ Open</p></td>
+<td><p>🔄 Draft (1 design doc(s), 0 <code class="docutils literal notranslate"><span class="pre">dd</span></code> elements)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/json/docs/vajson/detailed_design/CADS.rst">CADS</a></div>
+</div>
+</div></blockquote>
+</td>
 <td><p>🔄 0% (0/9)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/bitmanipulation/docs/detailed_design/chklst_impl_inspection.rst">bitmanipulation</a></div>
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/concurrency/docs/detailed_design/chklst_impl_inspection.rst">concurrency</a></div>
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/containers/docs/detailed_design/chklst_impl_inspection.rst">containers</a></div>
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/filesystem/docs/detailed_design/chklst_impl_inspection.rst">filesystem</a></div>
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/json/docs/detailed_design/chklst_impl_inspection.rst">json</a></div>
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/language/safecpp/docs/detailed_design/chklst_impl_inspection.rst">safecpp</a></div>
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/result/docs/detailed_design/chklst_impl_inspection.rst">result</a></div>
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/static_reflection_with_serialization/docs/detailed_design/chklst_impl_inspection.rst">static_reflection_with_serialization</a></div>
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/components/utils/docs/detailed_design/chklst_impl_inspection.rst">utils</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/bitmanipulation/docs/detailed_design/chklst_impl_inspection.rst">bitmanipulation</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/concurrency/docs/detailed_design/chklst_impl_inspection.rst">concurrency</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/containers/docs/detailed_design/chklst_impl_inspection.rst">containers</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/filesystem/docs/detailed_design/chklst_impl_inspection.rst">filesystem</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/json/docs/detailed_design/chklst_impl_inspection.rst">json</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/language/safecpp/docs/detailed_design/chklst_impl_inspection.rst">safecpp</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/result/docs/detailed_design/chklst_impl_inspection.rst">result</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/static_reflection_with_serialization/docs/detailed_design/chklst_impl_inspection.rst">static_reflection_with_serialization</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/utils/docs/detailed_design/chklst_impl_inspection.rst">utils</a></div>
 </div>
 </div></blockquote>
 </td>
@@ -1218,58 +1418,84 @@ It is regenerated from live <cite>eclipse-score</cite> GitHub repositories pinne
 <td><p>✅ Available</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/platform_management_plan/software_development.rst">platform_management_plan</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/platform_management_plan/software_development.rst">software_development</a></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>✅ Available (~274,000 LOC)</p>
+<td><p>✅ Available (~363,000 LOC)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/communication">communication</a></div>
+<div class="line">1,734 source files — cpp 245,400, h 82,000, py 22,300, rs 13,400</div>
 </div>
 </div></blockquote>
 </td>
-<td><p>❌ Open</p></td>
+<td><p>🔄 Draft (1 design doc(s), 0 <code class="docutils literal notranslate"><span class="pre">dd</span></code> elements)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/modules/communication/lola/docs/detailed_design/index.rst">lola</a></div>
+</div>
+</div></blockquote>
+</td>
 <td><p>❌ Open</p></td>
 </tr>
 <tr class="row-even"><td><p>Logging</p></td>
 <td><p>✅ Available</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/platform_management_plan/software_development.rst">platform_management_plan</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/platform_management_plan/software_development.rst">software_development</a></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>✅ Available (~53,200 LOC)</p>
+<td><p>✅ Available (~79,700 LOC)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/logging">logging</a></div>
+<div class="line">454 source files — cpp 56,100, h 20,200, py 1,800, rs 1,400</div>
 </div>
 </div></blockquote>
 </td>
-<td><p>❌ Open</p></td>
-<td><p>❌ Open</p></td>
+<td><p>🔄 Draft (2 design doc(s), 0 <code class="docutils literal notranslate"><span class="pre">dd</span></code> elements)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/mw/log/docs/detailed_design/index.rst">log</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/logging/blob/6d8fcb3734e3f3307615bae5495d2d3a82b0b8c4/docs/components/mw_log/detailed_design/index.rst">mw_log</a></div>
+</div>
+</div></blockquote>
+</td>
+<td><p>🔄 0% (0/2)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/logging/blob/6d8fcb3734e3f3307615bae5495d2d3a82b0b8c4/docs/components/mw_log/detailed_design/chklst_impl_inspection.rst">mw_log</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/score/mw/log/docs/detailed_design/chklst_impl_inspection.rst">log</a></div>
+</div>
+</div></blockquote>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Persistency</p></td>
 <td><p>✅ Available</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/platform_management_plan/software_development.rst">platform_management_plan</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/platform_management_plan/software_development.rst">software_development</a></div>
 </div>
 </div></blockquote>
 </td>
 <td><p>✅ Available (~18,000 LOC)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/persistency">persistency</a></div>
+<div class="line">76 source files — rs 8,800, cpp 6,000, py 2,000, hpp 1,300</div>
 </div>
 </div></blockquote>
 </td>
-<td><p>❌ Open</p></td>
+<td><p>🔄 Draft (1 design doc(s), 0 <code class="docutils literal notranslate"><span class="pre">dd</span></code> elements)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/score/kvs/docs/detailed_design/index.rst">kvs</a></div>
+</div>
+</div></blockquote>
+</td>
 <td><p>🔄 0% (0/1)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/persistency/blob/71dafa712fb514b4705f1b914e1f72b3e385da5b/score/kvs/docs/detailed_design/chklst_impl_inspection.rst">kvs</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/persistency/blob/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/score/kvs/docs/detailed_design/chklst_impl_inspection.rst">kvs</a></div>
 </div>
 </div></blockquote>
 </td>
@@ -1278,32 +1504,50 @@ It is regenerated from live <cite>eclipse-score</cite> GitHub repositories pinne
 <td><p>✅ Available</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/platform_management_plan/software_development.rst">platform_management_plan</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/platform_management_plan/software_development.rst">software_development</a></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>✅ Available (~25,700 LOC)</p>
+<td><p>✅ Available (~26,600 LOC)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_time">inc_time</a></div>
+<div class="line">239 source files — cpp 16,000, h 9,900, py 700</div>
 </div>
 </div></blockquote>
 </td>
-<td><p>❌ Open</p></td>
-<td><p>❌ Open</p></td>
+<td><p>🔄 Draft (4 design doc(s), 0 <code class="docutils literal notranslate"><span class="pre">dd</span></code> elements)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/time/blob/c4f0194a3b496757e5c193ed8618fc3f45a868a5/score/time/docs/detailed_design/index.rst">time</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/time/blob/c4f0194a3b496757e5c193ed8618fc3f45a868a5/score/time_daemon/docs/detailed_design/index.rst">time_daemon</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/time/blob/c4f0194a3b496757e5c193ed8618fc3f45a868a5/score/time_slave/docs/detailed_design/index.rst">time_slave</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/time/blob/c4f0194a3b496757e5c193ed8618fc3f45a868a5/score/ts_client/docs/detailed_design/index.rst">ts_client</a></div>
+</div>
+</div></blockquote>
+</td>
+<td><p>🔄 0% (0/4)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/time/blob/c4f0194a3b496757e5c193ed8618fc3f45a868a5/score/time/docs/detailed_design/chklst_impl_inspection.rst">time</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/time/blob/c4f0194a3b496757e5c193ed8618fc3f45a868a5/score/time_daemon/docs/detailed_design/chklst_impl_inspection.rst">time_daemon</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/time/blob/c4f0194a3b496757e5c193ed8618fc3f45a868a5/score/time_slave/docs/detailed_design/chklst_impl_inspection.rst">time_slave</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/time/blob/c4f0194a3b496757e5c193ed8618fc3f45a868a5/score/ts_client/docs/detailed_design/chklst_impl_inspection.rst">ts_client</a></div>
+</div>
+</div></blockquote>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Config Mgmt</p></td>
 <td><p>✅ Available</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/platform_management_plan/software_development.rst">platform_management_plan</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/platform_management_plan/software_development.rst">software_development</a></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>✅ Available (~21,200 LOC)</p>
+<td><p>✅ Available (~23,300 LOC)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/config_management">config_management</a></div>
+<div class="line">156 source files — cpp 15,900, h 5,200, py 1,900, hpp 300</div>
 </div>
 </div></blockquote>
 </td>
@@ -1314,43 +1558,101 @@ It is regenerated from live <cite>eclipse-score</cite> GitHub repositories pinne
 <td><p>✅ Available</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/platform_management_plan/software_development.rst">platform_management_plan</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/platform_management_plan/software_development.rst">software_development</a></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>✅ Available (~54,300 LOC)</p>
+<td><p>✅ Available (~68,200 LOC)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/lifecycle">lifecycle</a></div>
+<div class="line">367 source files — cpp 30,400, hpp 18,400, rs 10,400, py 6,200</div>
+</div>
+</div></blockquote>
+</td>
+<td><p>🔄 Draft (2 design doc(s), 0 <code class="docutils literal notranslate"><span class="pre">dd</span></code> elements)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/lifecycle/blob/9613f52b1ec1a3f169be79d9e6ef0948c5e19596/score/health_monitor/docs/detailed_design/index.rst">health_monitor</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/lifecycle/blob/9613f52b1ec1a3f169be79d9e6ef0948c5e19596/score/launch_manager/docs/detailed_design/index.rst">launch_manager</a></div>
+</div>
+</div></blockquote>
+</td>
+<td><p>🔄 0% (0/2)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/lifecycle/blob/9613f52b1ec1a3f169be79d9e6ef0948c5e19596/score/health_monitor/docs/detailed_design/chklst_impl_inspection.rst">health_monitor</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/lifecycle/blob/9613f52b1ec1a3f169be79d9e6ef0948c5e19596/score/launch_manager/docs/detailed_design/chklst_impl_inspection.rst">launch_manager</a></div>
+</div>
+</div></blockquote>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Kyron</p></td>
+<td><p>✅ Available</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/platform_management_plan/software_development.rst">software_development</a></div>
+</div>
+</div></blockquote>
+</td>
+<td><p>✅ Available (~38,600 LOC)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">166 source files — rs 32,100, py 6,500</div>
 </div>
 </div></blockquote>
 </td>
 <td><p>❌ Open</p></td>
 <td><p>❌ Open</p></td>
 </tr>
-<tr class="row-odd"><td><p>Security/Crypto</p></td>
+<tr class="row-even"><td><p>Security/Crypto</p></td>
 <td><p>✅ Available</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/platform_management_plan/software_development.rst">platform_management_plan</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/platform_management_plan/software_development.rst">software_development</a></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>✅ Available (~51,700 LOC)</p>
+<td><p>✅ Available (~82,700 LOC)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_security_crypto">inc_security_crypto</a></div>
+<div class="line">375 source files — hpp 28,300, cpp 27,700, rs 23,800, h 2,100</div>
 </div>
 </div></blockquote>
 </td>
+<td><p>🔄 Draft (2 design doc(s), 0 <code class="docutils literal notranslate"><span class="pre">dd</span></code> elements)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_security_crypto/blob/1e438b2d06041b9e1088c2144b865f237e0382c4/score/crypto/docs/detailed_design/index.rst">crypto</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_security_crypto/blob/1e438b2d06041b9e1088c2144b865f237e0382c4/score/iav_primula/docs/detailed_design/index.rst">iav_primula</a></div>
+</div>
+</div></blockquote>
+</td>
+<td><p>🔄 0% (0/2)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/inc_security_crypto/blob/1e438b2d06041b9e1088c2144b865f237e0382c4/score/crypto/docs/detailed_design/chklst_impl_inspection.rst">crypto</a></div>
+<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/inc_security_crypto/blob/1e438b2d06041b9e1088c2144b865f237e0382c4/score/iav_primula/docs/detailed_design/chklst_impl_inspection.rst">iav_primula</a></div>
+</div>
+</div></blockquote>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Diagnostic Services</p></td>
+<td><p>✅ Available</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/platform_management_plan/software_development.rst">software_development</a></div>
+</div>
+</div></blockquote>
+</td>
+<td><p>❌ Open</p></td>
 <td><p>❌ Open</p></td>
 <td><p>❌ Open</p></td>
 </tr>
-<tr class="row-even"><td><p>Diagnostic Services</p></td>
+<tr class="row-even"><td><p>NM</p></td>
 <td><p>✅ Available</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/platform_management_plan/software_development.rst">platform_management_plan</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/platform_management_plan/software_development.rst">software_development</a></div>
 </div>
 </div></blockquote>
 </td>
@@ -1358,30 +1660,18 @@ It is regenerated from live <cite>eclipse-score</cite> GitHub repositories pinne
 <td><p>❌ Open</p></td>
 <td><p>❌ Open</p></td>
 </tr>
-<tr class="row-odd"><td><p>NM</p></td>
+<tr class="row-odd"><td><p>Some/IP</p></td>
 <td><p>✅ Available</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/platform_management_plan/software_development.rst">platform_management_plan</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/platform_management_plan/software_development.rst">software_development</a></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>❌ Open</p></td>
-<td><p>❌ Open</p></td>
-<td><p>❌ Open</p></td>
-</tr>
-<tr class="row-even"><td><p>Some/IP</p></td>
-<td><p>✅ Available</p>
+<td><p>✅ Available (~37,300 LOC)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/platform_management_plan/software_development.rst">platform_management_plan</a></div>
-</div>
-</div></blockquote>
-</td>
-<td><p>✅ Available (~39,500 LOC)</p>
-<blockquote>
-<div><div class="line-block">
-<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_someip_gateway">inc_someip_gateway</a></div>
+<div class="line">172 source files — cpp 22,400, hpp 10,600, py 2,500, h 1,600</div>
 </div>
 </div></blockquote>
 </td>
@@ -1414,26 +1704,28 @@ It is regenerated from live <cite>eclipse-score</cite> GitHub repositories pinne
 </table>
 </div>
 <figure class="align-default" id="id4">
-<a class="reference internal image-reference" href="../../_images/pa5_verification_progress.svg"><img alt="PA5 verification progress" src="../../_images/pa5_verification_progress.svg" style="width: 1080px;" />
+<a class="reference internal image-reference" href="../../_images/pa5_verification_progress.svg"><img alt="PA5 verification progress" src="../../_images/pa5_verification_progress.svg" style="width: 1260px;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 4 </span><span class="caption-text">Test counts and coverage across the 11 PA2 modules per release (v0.5.0-beta → v0.6.0 → v0.7.0 → v0.8).</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 4 </span><span class="caption-text">Test counts and coverage across the 12 tracked modules per release (v0.5.0-beta → v0.6.0 → v0.7.0 → v0.8 → v0.9).</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <div class="impl-status-row">
   <span class="impl-status-label">Rollout status:</span>
   <span class="impl-status-icon">🔄</span>
-  <span class="impl-status-percent">33%</span>
-  <div class="impl-status-bar"><div class="impl-status-fill" style="width:33%"></div></div>
-  <span class="impl-status-detail">26/77 deliverables complete</span>
+  <span class="impl-status-percent">42%</span>
+  <div class="impl-status-bar"><div class="impl-status-fill" style="width:42%"></div></div>
+  <span class="impl-status-detail">35/84 deliverables complete</span>
 </div><div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>C0/C1 Coverage</strong> data is sourced from the <code class="docutils literal notranslate"><span class="pre">reference_integration</span></code>
 CI (<em>Code Quality &amp; Documentation</em> workflow,
 <code class="docutils literal notranslate"><span class="pre">bazel</span> <span class="pre">coverage</span> <span class="pre">--config=ferrocene-coverage</span></code>). C0 = line coverage,
 C1 = branch coverage. Rust coverage reports line coverage only.
-Modules not yet integrated into the <code class="docutils literal notranslate"><span class="pre">reference_integration</span></code> CI
-(Config Mgmt, Security/Crypto, Some/IP) show ❌ Open.</p>
+Modules that are not pinned in <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> and therefore not
+built by the <code class="docutils literal notranslate"><span class="pre">reference_integration</span></code> CI (Security/Crypto, Some/IP)
+are marked 🔄 <em>Module CI only</em> and link to their own repository
+workflows instead.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -1449,6 +1741,19 @@ tab).</p>
 <code class="docutils literal notranslate"><span class="pre">--config=tsan</span></code>). All listed workflows are zero-tolerance, so a
 passing <code class="docutils literal notranslate"><span class="pre">main</span></code> branch implies <strong>0 sanitizer findings</strong>.</p>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Module Verification Report</strong> additionally lists generated
+traceability evidence where a module produces it. Communication builds
+a <em>L.O.B.S.T.E.R. Traceability Report</em> (LOBSTER 1.0.6, pulled by
+<code class="docutils literal notranslate"><span class="pre">third_party/lobster/lobster.bzl</span></code>) from the <code class="docutils literal notranslate"><span class="pre">dependable_element</span></code>
+Bazel rule in <code class="docutils literal notranslate"><span class="pre">eclipse-score/tooling</span></code>. The report is assembled during
+<code class="docutils literal notranslate"><span class="pre">bazel</span> <span class="pre">build</span> <span class="pre">//docs/sphinx:sphinx_doc</span></code> and published to GitHub Pages
+by <code class="docutils literal notranslate"><span class="pre">deploy_docs.yml</span></code> — it is <strong>not</strong> checked into the repository, so
+it does not appear in the pinned source tree. It currently covers the
+<code class="docutils literal notranslate"><span class="pre">message_passing</span></code> dependable element only; there is no equivalent
+report for LoLa / <code class="docutils literal notranslate"><span class="pre">mw::com</span></code>.</p>
+</div>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p><strong>Module</strong></p></th>
@@ -1463,249 +1768,374 @@ passing <code class="docutils literal notranslate"><span class="pre">main</span>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>Baselibs</p></td>
-<td><p>✅ Available</p>
+<td><p>✅ 23,976 tests</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">25833 tests</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/reference_integration/actions/runs/33764114548">reference CI run</a></div>
+<div class="line">23,926 passed, 50 skipped</div>
 </div>
 </div></blockquote>
 </td>
-<td><p>🔄</p>
+<td><p>🔄 C0 94.9% / C1 61.7% (C++)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><strong>C0:</strong> 94.9%</div>
-<div class="line"><strong>C1:</strong> 61.9% (cpp)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/reference_integration/actions/runs/33764114548">reference CI run</a></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>✅ Available</p>
+<td><p>✅ 6 test cases</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">13 tests</div>
+<div class="line">3 files — <code class="docutils literal notranslate"><span class="pre">examples/integration/</span></code></div>
 </div>
 </div></blockquote>
 </td>
 <td><p>❌ Open</p></td>
-<td><p>✅ 0 findings</p></td>
-<td><p>✅ 0 findings</p></td>
+<td><p>✅ 0 findings</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/.github/workflows/lint.yml">lint.yml</a></div>
+</div>
+</div></blockquote>
+</td>
+<td><p>✅ ASan, LSan, UBSan</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/.github/workflows/sanitizers_linux.yml">sanitizers_linux.yml</a></div>
+</div>
+</div></blockquote>
+</td>
 <td><p>🔄 Draft</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/ce204159f37ee7815907369a8f678583bf102306/docs/baselibs/module/verification/module_verification_report.rst">verification</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/baselibs/blob/33aad37ad3d12591b0d662ee37e430eedb1c273c/docs/verification_report/module_verification_report.rst">module_verification_report</a></div>
 </div>
 </div></blockquote>
 </td>
 </tr>
 <tr class="row-odd"><td><p>Communication</p></td>
-<td><p>✅ Available</p>
+<td><p>✅ 3,530 tests</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">3301 tests</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/reference_integration/actions/runs/33764114548">reference CI run</a></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>🔄</p>
+<td><p>🔄 C0 83.0% / C1 52.6% (C++)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><strong>C0:</strong> 96.22%</div>
-<div class="line"><strong>C1:</strong> 94.19% (cpp)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/reference_integration/actions/runs/33764114548">reference CI run</a></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>✅ Available</p>
+<td><p>✅ 111 test cases</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">63 tests</div>
+<div class="line">234 files — <code class="docutils literal notranslate"><span class="pre">score/mw/com/test/</span></code>, <code class="docutils literal notranslate"><span class="pre">score/mw/com/gateway/transport_layer/sample/test/</span></code>, <code class="docutils literal notranslate"><span class="pre">quality/integration_testing/test/</span></code></div>
 </div>
 </div></blockquote>
 </td>
 <td><p>❌ Open</p></td>
-<td><p>🔄 Configured (no CI)</p></td>
-<td><p>✅ 0 findings</p></td>
+<td><p>✅ 0 findings</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/communication/blob/b22ed6d314313c87eb06ca916efda9a71ec53cc6/.github/workflows/nightly_quality.yml">nightly_quality.yml</a></div>
+</div>
+</div></blockquote>
+</td>
+<td><p>✅ ASan, LSan, TSan, UBSan</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/communication/blob/b22ed6d314313c87eb06ca916efda9a71ec53cc6/.github/workflows/build_and_test_host.yml">build_and_test_host.yml</a></div>
+</div>
+</div></blockquote>
+</td>
 <td><p>🔄 Draft</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/score/blob/24ec6f276cd37755b5dae7f2345913628d56831f/docs/modules/communication/docs/verification/module_verification_report.rst">verification</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/score/blob/6d65a262c2329328cb9cbdd276bb143b417c54a4/docs/modules/communication/docs/verification/module_verification_report.rst">module_verification_report</a></div>
+<div class="line">✅ <a class="reference external" href="https://eclipse-score.github.io/communication/latest/docs/sphinx/dependable_element_message_passing_index/traceability_report/index.html">LOBSTER traceability report (message_passing)</a> — generated by <a class="reference external" href="https://github.com/eclipse-score/communication/blob/b22ed6d314313c87eb06ca916efda9a71ec53cc6/score/message_passing/dependability/BUILD">dependable_element_message_passing</a></div>
 </div>
 </div></blockquote>
 </td>
 </tr>
 <tr class="row-even"><td><p>Logging</p></td>
-<td><p>✅ Available</p>
+<td><p>✅ 334 tests</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">650 tests</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/reference_integration/actions/runs/33764114548">reference CI run</a></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>🔄</p>
+<td><p>🔄 C0 96.6% / C1 75.4% (C++), C0 39.9% (Rust)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><strong>C0:</strong> 96.8%</div>
-<div class="line"><strong>C1:</strong> 74.1% (cpp)</div>
-<div class="line"><strong>Rust line:</strong> 39.86%</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/reference_integration/actions/runs/33764114548">reference CI run</a></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>✅ Available</p>
+<td><p>✅ 8 test cases</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">8 tests</div>
+<div class="line">11 files — <code class="docutils literal notranslate"><span class="pre">score/test/component/</span></code></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>✅ Available</p>
+<td><p>✅ 2 test cases</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">1 test</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">feature_integration_tests/</span></code></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>❌ Open</p></td>
-<td><p>❌ Open</p></td>
-<td><p>❌ Open</p></td>
+<td><p>✅ 0 findings</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/logging/blob/6d8fcb3734e3f3307615bae5495d2d3a82b0b8c4/.github/workflows/clang_tidy.yml">clang_tidy.yml</a></div>
+</div>
+</div></blockquote>
+</td>
+<td><p>✅ ASan, LSan, TSan, UBSan</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/logging/blob/6d8fcb3734e3f3307615bae5495d2d3a82b0b8c4/.github/workflows/sanitizers.yml">sanitizers.yml</a></div>
+</div>
+</div></blockquote>
+</td>
+<td><p>🔄 Draft</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/logging/blob/6d8fcb3734e3f3307615bae5495d2d3a82b0b8c4/docs/verification_report/module_verification_report.rst">module_verification_report</a></div>
+</div>
+</div></blockquote>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Persistency</p></td>
-<td><p>✅ Available</p>
+<td><p>✅ 95 tests</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">95 tests</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/reference_integration/actions/runs/33764114548">reference CI run</a></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>🔄</p>
+<td><p>🔄 C0 94.7% / C1 63.0% (C++), C0 92.7% (Rust)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><strong>C0:</strong> 94.7%</div>
-<div class="line"><strong>C1:</strong> 63.0% (cpp)</div>
-<div class="line"><strong>Rust line:</strong> 92.66%</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/reference_integration/actions/runs/33764114548">reference CI run</a></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>✅ Available</p>
+<td><p>✅ 44 test cases</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">44 tests</div>
+<div class="line">9 files — <code class="docutils literal notranslate"><span class="pre">score/kvs/tests/test_cases/tests/</span></code></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>✅ Available</p>
+<td><p>✅ 50 test cases</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">53 tests</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">feature_integration_tests/</span></code></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>✅ 0 findings</p></td>
+<td><p>✅ 0 findings</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/.github/workflows/clippy.yml">clippy.yml</a></div>
+</div>
+</div></blockquote>
+</td>
 <td><p>❌ Open</p></td>
 <td><p>✅ Available</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">✅ <a class="reference external" href="https://github.com/eclipse-score/persistency/blob/71dafa712fb514b4705f1b914e1f72b3e385da5b/docs/verification_report/module_verification_report.rst">verification</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/docs/verification_report/module_verification_report.rst">module_verification_report</a></div>
 </div>
 </div></blockquote>
 </td>
 </tr>
 <tr class="row-even"><td><p>Time</p></td>
-<td><p>✅ Available</p>
+<td><p>✅ 335 tests</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">314 tests</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/reference_integration/actions/runs/33764114548">reference CI run</a></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>🔄</p>
+<td><p>🔄 C0 90.3% / C1 61.4% (C++)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><strong>C0:</strong> 88.7%</div>
-<div class="line"><strong>C1:</strong> 61.1% (cpp)</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/reference_integration/actions/runs/33764114548">reference CI run</a></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>✅ Available</p>
+<td><p>✅ 7 test cases</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">4 tests</div>
+<div class="line">5 files — <code class="docutils literal notranslate"><span class="pre">score/</span></code></div>
 </div>
 </div></blockquote>
 </td>
 <td><p>❌ Open</p></td>
-<td><p>❌ Open</p></td>
-<td><p>❌ Open</p></td>
+<td><p>🔄 clang-tidy ✅, CodeQL ❌ failing</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/time/blob/c4f0194a3b496757e5c193ed8618fc3f45a868a5/.github/workflows/clang-tidy.yml">clang-tidy.yml</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/time/blob/c4f0194a3b496757e5c193ed8618fc3f45a868a5/.github/workflows/codeql.yml">codeql.yml</a></div>
+</div>
+</div></blockquote>
+</td>
+<td><p>✅ ASan, LSan, UBSan</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/time/blob/c4f0194a3b496757e5c193ed8618fc3f45a868a5/.github/workflows/sanitizers.yml">sanitizers.yml</a></div>
+</div>
+</div></blockquote>
+</td>
 <td><p>❌ Open</p></td>
 </tr>
 <tr class="row-odd"><td><p>Config Mgmt</p></td>
-<td><p>✅ Available</p>
+<td><p>✅ 238 tests</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">190 tests</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/reference_integration/actions/runs/33764114548">reference CI run</a></div>
+</div>
+</div></blockquote>
+</td>
+<td><p>🔄 C0 92.8% / C1 64.1% (C++)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/reference_integration/actions/runs/33764114548">reference CI run</a></div>
 </div>
 </div></blockquote>
 </td>
 <td><p>❌ Open</p></td>
 <td><p>❌ Open</p></td>
-<td><p>❌ Open</p></td>
-<td><p>✅ 0 findings</p></td>
+<td><p>✅ 0 findings</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/config_management/blob/e0489b190ed6d2fa183b9a8063e2dba4f6378505/.github/workflows/static-analysis.yml">static-analysis.yml</a></div>
+</div>
+</div></blockquote>
+</td>
 <td><p>❌ Open</p></td>
 <td><p>❌ Open</p></td>
 </tr>
 <tr class="row-even"><td><p>Lifecycle</p></td>
-<td><p>✅ Available</p>
+<td><p>✅ 478 tests</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">248 tests</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/reference_integration/actions/runs/33764114548">reference CI run</a></div>
+<div class="line">476 passed, 2 skipped</div>
 </div>
 </div></blockquote>
 </td>
-<td><p>🔄</p>
+<td><p>🔄 C0 77.4% / C1 50.7% (C++), C0 53.5% (Rust)</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><strong>C0:</strong> 83.9%</div>
-<div class="line"><strong>C1:</strong> 56.9% (cpp)</div>
-<div class="line"><strong>Rust line:</strong> 53.81%</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/reference_integration/actions/runs/33764114548">reference CI run</a></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>✅ Available</p>
+<td><p>✅ 58 test cases</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">36 tests</div>
+<div class="line">58 files — <code class="docutils literal notranslate"><span class="pre">tests/integration/</span></code></div>
 </div>
 </div></blockquote>
 </td>
 <td><p>❌ Open</p></td>
-<td><p>✅ 0 findings</p></td>
+<td><p>✅ 0 findings</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/lifecycle/blob/9613f52b1ec1a3f169be79d9e6ef0948c5e19596/.github/workflows/on-pr.yml">on-pr.yml</a></div>
+</div>
+</div></blockquote>
+</td>
+<td><p>✅ ASan, LSan, TSan, UBSan</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/lifecycle/blob/9613f52b1ec1a3f169be79d9e6ef0948c5e19596/.github/workflows/on-pr.yml">on-pr.yml</a></div>
+</div>
+</div></blockquote>
+</td>
+<td><p>🔄 Draft</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/lifecycle/blob/9613f52b1ec1a3f169be79d9e6ef0948c5e19596/docs/verification_report/index.rst">verification_report</a></div>
+</div>
+</div></blockquote>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Kyron</p></td>
+<td><p>🔄 3 tests</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/reference_integration/actions/runs/33764114548">reference CI run</a></div>
+<div class="line">bazel-scoped unit tests only</div>
+</div>
+</div></blockquote>
+</td>
+<td><p>🔄 C0 50.4% (Rust)</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/reference_integration/actions/runs/33764114548">reference CI run</a></div>
+</div>
+</div></blockquote>
+</td>
+<td><p>✅ 209 test cases</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">25 files — <code class="docutils literal notranslate"><span class="pre">tests/test_cases/tests/</span></code></div>
+</div>
+</div></blockquote>
+</td>
+<td><p>❌ Open</p></td>
+<td><p>✅ 0 findings</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/kyron/blob/394b232a8db7fb77db0ff16e9c26ec31c7759efd/.github/workflows/lint_fmt_clippy.yml">lint_fmt_clippy.yml</a></div>
+</div>
+</div></blockquote>
+</td>
 <td><p>❌ Open</p></td>
 <td><p>❌ Open</p></td>
 </tr>
-<tr class="row-odd"><td><p>Security/Crypto</p></td>
-<td><p>✅ Available</p>
+<tr class="row-even"><td><p>Security/Crypto</p></td>
+<td><p>🔄 Module CI only</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">5 tests</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_security_crypto/blob/1e438b2d06041b9e1088c2144b865f237e0382c4/.github/workflows/test_linux.yml">test_linux.yml</a></div>
 </div>
 </div></blockquote>
 </td>
 <td><p>❌ Open</p></td>
-<td><p>✅ Available</p>
+<td><p>✅ 10 test cases</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">11 tests</div>
+<div class="line">6 files — <code class="docutils literal notranslate"><span class="pre">score/tests/integration_tests/</span></code></div>
 </div>
 </div></blockquote>
 </td>
 <td><p>❌ Open</p></td>
-<td><p>❌ Open</p></td>
+<td><p>✅ 0 findings</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_security_crypto/blob/1e438b2d06041b9e1088c2144b865f237e0382c4/.github/workflows/on-pr.yml">on-pr.yml</a></div>
+</div>
+</div></blockquote>
+</td>
 <td><p>❌ Open</p></td>
 <td><p>🔄 Draft</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">🔄 <a class="reference external" href="https://github.com/eclipse-score/inc_security_crypto/blob/main/docs/verification_report/module_verification_report.rst">verification</a></div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_security_crypto/blob/1e438b2d06041b9e1088c2144b865f237e0382c4/docs/verification_report/module_verification_report.rst">module_verification_report</a></div>
 </div>
 </div></blockquote>
 </td>
 </tr>
-<tr class="row-even"><td><p>Diagnostic Services</p></td>
+<tr class="row-odd"><td><p>Diagnostic Services</p></td>
 <td><p>❌ Open</p></td>
 <td><p>❌ Open</p></td>
 <td><p>❌ Open</p></td>
@@ -1714,7 +2144,7 @@ passing <code class="docutils literal notranslate"><span class="pre">main</span>
 <td><p>❌ Open</p></td>
 <td><p>❌ Open</p></td>
 </tr>
-<tr class="row-odd"><td><p>NM</p></td>
+<tr class="row-even"><td><p>NM</p></td>
 <td><p>❌ Open</p></td>
 <td><p>❌ Open</p></td>
 <td><p>❌ Open</p></td>
@@ -1723,25 +2153,43 @@ passing <code class="docutils literal notranslate"><span class="pre">main</span>
 <td><p>❌ Open</p></td>
 <td><p>❌ Open</p></td>
 </tr>
-<tr class="row-even"><td><p>Some/IP</p></td>
-<td><p>✅ Available</p>
+<tr class="row-odd"><td><p>Some/IP</p></td>
+<td><p>🔄 Module CI only</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">375 tests</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_someip_gateway/blob/f701652c307d4d76073e49c2c9c3b74f588ce02d/.github/workflows/build_and_test_host.yml">build_and_test_host.yml</a></div>
 </div>
 </div></blockquote>
 </td>
-<td><p>❌ Open</p></td>
-<td><p>✅ Available</p>
+<td><p>🔄 Module CI only</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">21 tests</div>
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_someip_gateway/blob/f701652c307d4d76073e49c2c9c3b74f588ce02d/.github/workflows/coverage.yml">coverage.yml</a></div>
+</div>
+</div></blockquote>
+</td>
+<td><p>✅ 11 test cases</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">8 files — <code class="docutils literal notranslate"><span class="pre">quality/integration_testing/</span></code></div>
 </div>
 </div></blockquote>
 </td>
 <td><p>❌ Open</p></td>
-<td><p>❌ Open</p></td>
-<td><p>❌ Open</p></td>
+<td><p>✅ 0 findings</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_someip_gateway/blob/f701652c307d4d76073e49c2c9c3b74f588ce02d/.github/workflows/static-code-analysis.yml">static-code-analysis.yml</a></div>
+</div>
+</div></blockquote>
+</td>
+<td><p>✅ ASan, LSan, TSan, UBSan</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><a class="reference external" href="https://github.com/eclipse-score/inc_someip_gateway/blob/f701652c307d4d76073e49c2c9c3b74f588ce02d/.github/workflows/build_and_test_host.yml">build_and_test_host.yml</a></div>
+</div>
+</div></blockquote>
+</td>
 <td><p>❌ Open</p></td>
 </tr>
 </tbody>
