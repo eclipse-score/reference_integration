@@ -20,7 +20,7 @@ load("@score_tooling//third_party/format:macros.bzl", "use_format_targets")
 # helping being more flexible on releases
 alias(
     name = "docs_shim",
-    actual = "//:docs_combo",
+    actual = "//:docs",
 )
 
 # Docs-as-code
