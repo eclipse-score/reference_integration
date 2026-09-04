@@ -12,14 +12,25 @@
                         "@score_baselibs//score/json:base_library=nlohmann"
                     ],
                     "exclude_test_targets": [
+                        "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test"
+                    ],
+                    "langs": [
+                        "cpp"
+                    ],
+                    "bazel_config": [
+                        "stage2-gcc",
+                        "stage2-rust",
+                        "stage2-baselibs-flags"
+                    ],
+                    "exclude_test_target_reasons": {
+                        "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test": "Intentionally-failing upstream target (eclipse-score/baselibs#7): asserts an aborts_upon_exception feature no S-CORE toolchain implements; tags=[\"unit\"], so no tag filter removes it."
+                    },
+                    "legacy_exclude_test_targets": [
                         "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test",
                         "//score/containers:dynamic_array_test",
                         "//score/mw/log/configuration:*",
                         "//score/json/examples:*",
                         "//score/flatbuffers:version_reader_test"
-                    ],
-                    "langs": [
-                        "cpp"
                     ]
                 }
             },
@@ -32,11 +43,16 @@
                     "//patches/communication:004-rules-build-error-not-dev-dependency.patch"
                 ],
                 "metadata": {
-                    "code_root_path": "//score/mw/com/impl/...",
+                    "code_root_path": "//...",
                     "extra_test_config": [
                         "@score_communication//score/memory/shared/flags:use_typedshmd=False"
                     ],
-                    "exclude_test_targets": [
+                    "exclude_test_targets": [],
+                    "bazel_config": [
+                        "stage2-rust",
+                        "stage2-baselibs-flags"
+                    ],
+                    "legacy_exclude_test_targets": [
                         "//score/mw/com/impl:unit_test_runtime_single_exec",
                         "//score/mw/com/impl:runtime_test",
                         "//score/mw/com/impl/configuration:config_parser_test",
@@ -66,7 +82,19 @@
                     "exclude_test_targets": [
                         "//src/cpp/tests:bm_kvs_cpp"
                     ],
-                    "rust_coverage_config": "ferrocene-coverage-per"
+                    "rust_coverage_config": "ferrocene-coverage-per",
+                    "bazel_config": [
+                        "stage2-gcc",
+                        "stage2-rust",
+                        "stage2-communication-flags",
+                        "stage2-baselibs-flags"
+                    ],
+                    "exclude_test_target_reasons": {
+                        "//src/cpp/tests:bm_kvs_cpp": "google_benchmark benchmark declared as a cc_test; a timing measurement, not a correctness test, so it is not meaningful in a UT/coverage run."
+                    },
+                    "legacy_exclude_test_targets": [
+                        "//src/cpp/tests:bm_kvs_cpp"
+                    ]
                 }
             },
             "score_kyron": {
@@ -76,6 +104,10 @@
                     "code_root_path": "//src/...",
                     "langs": [
                         "rust"
+                    ],
+                    "bazel_config": [
+                        "stage2-gcc",
+                        "stage2-rust"
                     ]
                 }
             },
@@ -86,6 +118,19 @@
                 "metadata": {
                     "code_root_path": "//score/...",
                     "exclude_test_targets": [
+                        "//score/health_monitor/src/rust:miri_tests",
+                        "//score/launch_manager/src/daemon/src/common/concurrency:mpmc_concurrent_queue_tsan_test"
+                    ],
+                    "bazel_config": [
+                        "stage2-gcc",
+                        "stage2-rust",
+                        "stage2-baselibs-flags"
+                    ],
+                    "exclude_test_target_reasons": {
+                        "//score/health_monitor/src/rust:miri_tests": "miri_test rule (tags=[\"miri\"]); ref_int registers no miri toolchain, so the target fails toolchain resolution during analysis, before any tag filter applies.",
+                        "//score/launch_manager/src/daemon/src/common/concurrency:mpmc_concurrent_queue_tsan_test": "cc_test built with -fsanitize=thread (tags=[\"tsan\",\"no-coverage\"]); gcov-instrumenting a TSAN binary reports false races on the non-atomic __gcov* counters. The no-coverage tag already drops it from the run."
+                    },
+                    "legacy_exclude_test_targets": [
                         "//score/health_monitor/src/rust:miri_tests",
                         "//score/launch_manager/src/daemon/src/common/concurrency:mpmc_concurrent_queue_tsan_test",
                         "//score/launch_manager/src/daemon/src/common/concurrency:mpsc_bounded_queue_tsan_test"
@@ -99,14 +144,21 @@
                     "//patches/logging:006-use-format-targets-compat.patch"
                 ],
                 "metadata": {
-                    "code_root_path": "//score/mw/log/...",
+                    "code_root_path": "//...",
                     "extra_test_config": [
                         "@score_logging//score/datarouter/build_configuration_flags:enable_nonverbose_dlt=False",
                         "@score_logging//score/datarouter/build_configuration_flags:enable_dynamic_configuration=False",
                         "@score_logging//score/datarouter/build_configuration_flags:file_transfer=False",
                         "@score_logging//score/datarouter/build_configuration_flags:use_local_vlan=True"
                     ],
-                    "exclude_test_targets": [
+                    "exclude_test_targets": [],
+                    "bazel_config": [
+                        "stage2-gcc",
+                        "stage2-rust",
+                        "stage2-communication-flags",
+                        "stage2-baselibs-flags"
+                    ],
+                    "legacy_exclude_test_targets": [
                         "//score/mw/log/legacy_non_verbose_api:unit_test"
                     ]
                 }
@@ -115,11 +167,17 @@
                 "repo": "https://github.com/eclipse-score/time.git",
                 "hash": "8c42d34698535dabeaa4782d5ec123256151fb30",
                 "bazel_patches": [
-                    "//patches/time:001-memory-shared-moved-to-communication.patch"
+                    "//patches/time:001-memory-shared-moved-to-communication.patch",
+                    "//patches/time:002-lifecycle-client-moved-to-launch-manager.patch"
                 ],
                 "metadata": {
                     "langs": [
                         "cpp"
+                    ],
+                    "bazel_config": [
+                        "stage2-gcc",
+                        "stage2-communication-flags",
+                        "stage2-baselibs-flags"
                     ]
                 }
             },
@@ -136,13 +194,28 @@
                     ],
                     "exclude_test_targets": [
                         "//score/config_management/config_daemon/code/factory/details:unit_test_mw_com",
+                        "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com",
+                        "//score/config_management/dependability/..."
+                    ],
+                    "langs": [
+                        "cpp"
+                    ],
+                    "exclude_test_target_reasons": {
+                        "//score/config_management/config_daemon/code/factory/details:unit_test_mw_com": "tags=[\"exclusive\"] upstream for LoLa message passing 2.0 sandboxing (Ticket-217341); mw_com service discovery does not come up in Stage 2 and 4 TestFactoryMwImpl cases fail.",
+                        "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com": "tags=[\"exclusive\"] upstream for LoLa message passing 2.0 sandboxing (Ticket-217341); mw_com service discovery does not come up in Stage 2 and ConfigProviderFactoryTest.FoundServiceDuringCreation times out.",
+                        "//score/config_management/dependability/...": "No test rules (component()/dependable_element(), tests=[]); analysis fails because dependability/BUILD references :config_daemon_app_unit and :config_provider_details_unit, declared nowhere in the module."
+                    },
+                    "legacy_exclude_test_targets": [
+                        "//score/config_management/config_daemon/code/factory/details:unit_test_mw_com",
                         "//score/config_management/config_daemon/code/services/details/mw_com:unit_test",
                         "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com",
                         "//score/config_management/config_provider/code/proxies/details:unit_test_mw",
                         "//score/config_management/dependability/..."
                     ],
-                    "langs": [
-                        "cpp"
+                    "bazel_config": [
+                        "stage2-gcc",
+                        "stage2-communication-flags",
+                        "stage2-baselibs-flags"
                     ]
                 }
             }

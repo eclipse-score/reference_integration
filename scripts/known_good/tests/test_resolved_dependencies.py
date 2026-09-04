@@ -39,7 +39,8 @@ from known_good.resolved_dependencies import (  # noqa: E402
     _compare_versions,
     _declared_dep_specs,
     _declared_deps,
-    _workspace_path,
+    workspace_path,
+    module_resolution_hazards,
 )
 
 KNOWN_GOOD = {
@@ -186,11 +187,50 @@ class TestOverwrite:
         assert 'single_version_override(\n    module_name = "score_tooling"' in block
         assert 'version = "1.2.0"' in block
 
-    def test_strips_patches(self, resolved: ResolvedDependencies, module_bazel: Path, flat_graph: DependencyGraph):
-        # bazel_patches reference //patches/... labels that exist only in ref_int's
-        # workspace, so they are stripped from the injected overrides.
+    def test_strips_patches_without_a_patch_source(
+        self, resolved: ResolvedDependencies, module_bazel: Path, flat_graph: DependencyGraph
+    ):
+        # Nothing to re-host from, so they are dropped rather than emitted as dead labels.
         patched = resolved.overwrite(module_bazel, flat_graph, module_under_test="score_persistency", write=False)
         assert "patches/baselibs/001-fix.patch" not in patched
+        assert "patch_strip" not in patched
+
+    def test_transports_patches_from_the_stage1_artifact(
+        self, resolved: ResolvedDependencies, module_bazel: Path, flat_graph: DependencyGraph, tmp_path: Path
+    ):
+        source = tmp_path / "stage1_patches"
+        (source / "patches" / "baselibs").mkdir(parents=True)
+        (source / "patches" / "baselibs" / "001-fix.patch").write_text("--- a\n+++ b\n")
+
+        patched = resolved.overwrite(
+            module_bazel,
+            flat_graph,
+            module_under_test="score_persistency",
+            patch_source=source,
+            write=False,
+        )
+
+        assert 'patches = [\n        "//ref_int_patches:patches/baselibs/001-fix.patch",' in patched
+        assert "patch_strip = 1" in patched
+        staged = module_bazel.parent / "ref_int_patches" / "patches" / "baselibs" / "001-fix.patch"
+        assert staged.read_text() == "--- a\n+++ b\n"
+        assert (module_bazel.parent / "ref_int_patches" / "BUILD").is_file()
+
+    def test_drops_the_whole_set_when_one_patch_is_missing(
+        self, resolved: ResolvedDependencies, module_bazel: Path, flat_graph: DependencyGraph, tmp_path: Path
+    ):
+        empty = tmp_path / "stage1_patches"
+        empty.mkdir()
+
+        patched = resolved.overwrite(
+            module_bazel,
+            flat_graph,
+            module_under_test="score_persistency",
+            patch_source=empty,
+            write=False,
+        )
+
+        assert "001-fix.patch" not in patched
         assert "patch_strip" not in patched
 
     def test_skips_resolved_dep_not_declared(
@@ -530,6 +570,107 @@ class TestFromModGraph:
         assert rd.get("rules_rpm") is None  # commented-out override must not be carried
 
 
+class TestModuleResolutionHazards:
+    """Ways a module resolves a dependency that ref_int's injected pins cannot reach."""
+
+    def test_module_declared_override_is_reported(self):
+        text = 'git_override(\n    module_name = "score_baselibs",\n    commit = "abc1234",\n)\n'
+        assert module_resolution_hazards(text) == ["git_override for score_baselibs"]
+
+    def test_an_overrides_patches_are_counted(self):
+        text = (
+            'single_version_override(\n    module_name = "rules_cc",\n    version = "1.0",\n'
+            '    patches = ["//p:a.patch", "//p:b.patch"],\n)\n'
+        )
+        assert module_resolution_hazards(text) == ["single_version_override for rules_cc with 2 patch(es)"]
+
+    @pytest.mark.parametrize(
+        "rule", ["http_archive", "http_file", "git_repository", "new_git_repository", "local_repository"]
+    )
+    def test_non_bzlmod_fetches_are_reported(self, rule: str):
+        text = f'{rule}(\n    name = "foo",\n)\n'
+        assert module_resolution_hazards(text) == [f"{rule} (fetched outside bzlmod; no override applies)"]
+
+    def test_commented_out_declarations_are_ignored(self):
+        text = '# git_override(\n#     module_name = "rules_rpm",\n# )\n# http_archive(\n#     name = "x",\n# )\n'
+        assert module_resolution_hazards(text) == []
+
+    def test_a_plain_module_reports_nothing(self):
+        assert module_resolution_hazards(MODULE_BAZEL) == []
+
+
+class TestPatchesTravelWithThePin:
+    """A dependency ref_int patches in Stage 1 must be patched in Stage 2 too, or reported."""
+
+    @staticmethod
+    def _graph(tmp_path: Path) -> Path:
+        graph = tmp_path / "graph.json"
+        graph.write_text(json.dumps({"key": "<root>", "name": "ref_int", "version": "", "dependencies": []}))
+        return graph
+
+    def test_git_override_patches_are_collected(self, tmp_path: Path):
+        root = tmp_path / "MODULE.bazel"
+        root.write_text(
+            'git_override(\n    module_name = "score_logging",\n    commit = "abc1234",\n'
+            "    patch_strip = 1,\n"
+            '    patches = [\n        "//patches/logging:002-a.patch",\n        "//patches/logging:003-b.patch",\n    ],\n'
+            '    remote = "https://github.com/eclipse-score/logging.git",\n)\n'
+        )
+        rd = ResolvedDependencies.from_mod_graph(self._graph(tmp_path), [root])
+        assert rd.get("score_logging").bazel_patches == [
+            "//patches/logging:002-a.patch",
+            "//patches/logging:003-b.patch",
+        ]
+
+    def test_single_version_override_patches_are_collected(self, tmp_path: Path):
+        root = tmp_path / "MODULE.bazel"
+        root.write_text(
+            'single_version_override(\n    module_name = "rules_cc",\n    version = "0.2.17",\n'
+            '    patch_strip = 1,\n    patches = ["//patches/rules_cc:001.patch"],\n)\n'
+        )
+        rd = ResolvedDependencies.from_mod_graph(self._graph(tmp_path), [root])
+        assert rd.get("rules_cc").bazel_patches == ["//patches/rules_cc:001.patch"]
+
+    def test_an_override_without_patches_carries_none(self, tmp_path: Path):
+        root = tmp_path / "MODULE.bazel"
+        root.write_text('single_version_override(\n    module_name = "rules_cc",\n    version = "0.2.17",\n)\n')
+        rd = ResolvedDependencies.from_mod_graph(self._graph(tmp_path), [root])
+        assert not rd.get("rules_cc").bazel_patches
+
+    def test_export_patches_copies_the_files_workspace_relative(self, tmp_path: Path):
+        ref_int = tmp_path / "ref_int"
+        (ref_int / "patches" / "logging").mkdir(parents=True)
+        (ref_int / "patches" / "logging" / "002-a.patch").write_text("payload\n")
+        rd = ResolvedDependencies(
+            {
+                "score_logging": Module.from_dict(
+                    "score_logging",
+                    {
+                        "repo": "https://github.com/eclipse-score/logging.git",
+                        "hash": "a" * 40,
+                        "bazel_patches": ["//patches/logging:002-a.patch"],
+                    },
+                )
+            }
+        )
+
+        copied = rd.export_patches(tmp_path / "artifact" / "patches", ref_int)
+
+        assert copied == ["patches/logging/002-a.patch"]
+        assert (tmp_path / "artifact" / "patches" / "patches" / "logging" / "002-a.patch").read_text() == "payload\n"
+
+    def test_export_patches_survives_a_missing_file(self, tmp_path: Path):
+        rd = ResolvedDependencies(
+            {
+                "score_logging": Module.from_dict(
+                    "score_logging",
+                    {"repo": "https://e/x.git", "hash": "a" * 40, "bazel_patches": ["//patches/logging:gone.patch"]},
+                )
+            }
+        )
+        assert rd.export_patches(tmp_path / "out", tmp_path / "ref_int") == []
+
+
 class TestUncarriedOverridesAreNeverSilent:
     """Every override ref_int declares reaches the manifest, or is named in the report.
 
@@ -799,7 +940,7 @@ class TestConflictReportDoesNotAbort:
     def test_agreement_is_not_a_conflict(self, tmp_path: Path):
         rd = self._export(tmp_path, self._graph("protobuf", "29.1", "29.1"))
         assert rd.report["pins"]["protobuf"]["verdict"] == "agree"
-        assert rd.report["counts"]["conflicts"] == 0
+        assert rd.report["counts"]["differs"] == 0
 
     def test_commit_pin_reports_the_conflict_with_null_direction(self, tmp_path: Path):
         # The score_crates shape: no comparable version, but the disagreement must stay visible --
@@ -814,7 +955,7 @@ class TestConflictReportDoesNotAbort:
         assert pin["verdict"] == "differs"
         assert pin["direction"] is None
         assert pin["declared_versions"] == ["0.0.10", "0.0.9"]
-        assert rd.report["counts"]["conflicts"] == 1
+        assert rd.report["counts"]["differs"] == 1
 
     def test_a_bcr_rerelease_is_reported_as_higher(self, tmp_path: Path):
         # ref_int's real googletest pin. Bazel orders 1.17.0.bcr.2 above 1.17.0, so the direction
@@ -1029,9 +1170,9 @@ class TestWorkspacePath:
 
     def test_relative_path_is_anchored_at_the_workspace(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         monkeypatch.setenv("BUILD_WORKSPACE_DIRECTORY", str(tmp_path))
-        assert _workspace_path(Path("_resolved_deps") / MANIFEST_NAME) == tmp_path / "_resolved_deps" / MANIFEST_NAME
+        assert workspace_path(Path("_resolved_deps") / MANIFEST_NAME) == tmp_path / "_resolved_deps" / MANIFEST_NAME
 
     def test_absolute_path_is_taken_as_given(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         monkeypatch.setenv("BUILD_WORKSPACE_DIRECTORY", str(tmp_path / "workspace"))
         absolute = tmp_path / "elsewhere" / "graph.json"
-        assert _workspace_path(absolute) == absolute
+        assert workspace_path(absolute) == absolute

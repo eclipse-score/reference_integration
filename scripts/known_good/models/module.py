@@ -28,14 +28,24 @@ class Metadata:
             code_root_path: Root path to the code directory
             extra_test_config: List of extra test configuration flags
             exclude_test_targets: List of test targets to exclude
+            exclude_test_target_reasons: Why each excluded target is excluded, keyed by
+                    the label as it appears in exclude_test_targets. Every exclusion needs
+                    one: without it nobody can tell a scope-independent exclusion (a
+                    benchmark, a sanitizer target) from a stale workaround for a build
+                    scope that no longer exists.
+            legacy_exclude_test_targets: central-mode-only exclusions. Predate the audit, so
+                    exempt from the wildcard and reason checks; deleted with that runner.
             langs: List of languages supported (e.g., ["cpp", "rust"])
     """
 
     code_root_path: str = "//score/..."
     extra_test_config: list[str] = field(default_factory=lambda: [])
     exclude_test_targets: list[str] = field(default_factory=lambda: [])
+    exclude_test_target_reasons: dict[str, str] = field(default_factory=lambda: {})
+    legacy_exclude_test_targets: list[str] = field(default_factory=lambda: [])
     langs: list[str] = field(default_factory=lambda: ["cpp", "rust"])
-    rust_coverage_config: str | None = "ferrocene-coverage"  # Optional field for Rust coverage configuration
+    rust_coverage_config: str | None = "ferrocene-coverage"
+    bazel_config: list[str] = field(default_factory=lambda: [])
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> Metadata:
@@ -51,8 +61,11 @@ class Metadata:
             code_root_path=data.get("code_root_path", "//score/..."),
             extra_test_config=data.get("extra_test_config", []),
             exclude_test_targets=data.get("exclude_test_targets", []),
+            exclude_test_target_reasons=data.get("exclude_test_target_reasons", {}),
+            legacy_exclude_test_targets=data.get("legacy_exclude_test_targets", []),
             langs=data.get("langs", ["cpp", "rust"]),
             rust_coverage_config=data.get("rust_coverage_config", "ferrocene-coverage"),
+            bazel_config=data.get("bazel_config", []),
         )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -65,8 +78,11 @@ class Metadata:
             "code_root_path": self.code_root_path,
             "extra_test_config": self.extra_test_config,
             "exclude_test_targets": self.exclude_test_targets,
+            "exclude_test_target_reasons": self.exclude_test_target_reasons,
+            "legacy_exclude_test_targets": self.legacy_exclude_test_targets,
             "langs": self.langs,
             "rust_coverage_config": self.rust_coverage_config,
+            "bazel_config": self.bazel_config,
         }
 
 
@@ -97,6 +113,7 @@ class Module:
                                         "code_root_path": "path/to/code/root",
                                         "extra_test_config": [""],
                                         "exclude_test_targets": [""],
+                                        "exclude_test_target_reasons": {"": ""},
                                         "langs": ["cpp", "rust"]
                                 }
                                 If not present, uses default Metadata values.
@@ -124,12 +141,27 @@ class Module:
         metadata_data = module_data.get("metadata")
         if metadata_data is not None:
             metadata = Metadata.from_dict(metadata_data)
-            # Enable once we are able to remove '*' in known_good.json
-            # if any("*" in target for target in metadata.exclude_test_targets):
-            #     raise Exception(
-            #         f"Module {name} has wildcard '*' in exclude_test_targets, which is not allowed. "
-            #         "Please specify explicit test targets to exclude or remove the key if no exclusions are needed."
-            #     )
+            # A wildcard hides how much it excludes: '//score/json/examples:*' silently grows with
+            # every target added to that package, so the report cannot say what was skipped. The
+            # last two were dropped by the Stage-2 exclusion audit, so this can enforce now.
+            wildcards = [target for target in metadata.exclude_test_targets if "*" in target]
+            if wildcards:
+                raise ValueError(
+                    f"Module '{name}' has wildcard exclude_test_targets: {wildcards}. "
+                    "List explicit test targets instead, so the excluded set cannot grow unnoticed."
+                )
+            # Stage 2 runs each module as the Bazel root, which retired the blanket
+            # "invisible dev_dependency" justification. Every exclusion states its own reason.
+            unexplained = [
+                target
+                for target in metadata.exclude_test_targets
+                if not metadata.exclude_test_target_reasons.get(target, "").strip()
+            ]
+            if unexplained:
+                raise ValueError(
+                    f"Module '{name}' excludes test targets with no recorded reason: {unexplained}. "
+                    "Add metadata.exclude_test_target_reasons[<label>] explaining why it cannot run."
+                )
         else:
             # If metadata key is missing, create with defaults
             metadata = Metadata()

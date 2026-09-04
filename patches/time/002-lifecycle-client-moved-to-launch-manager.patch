@@ -1,0 +1,30 @@
+Upstream lifecycle moved src/lifecycle_client_lib to
+score/launch_manager/src/lifecycle_client, re-exported publicly as
+//score/launch_manager:lifecycle_cc. score_time at its pin still names the old path.
+Upstream time main already carries this redirect; retire on the next time pin bump.
+
+diff --git a/score/time_daemon/src/application/BUILD b/score/time_daemon/src/application/BUILD
+index e8019b4..57ade29 100644
+--- a/score/time_daemon/src/application/BUILD
++++ b/score/time_daemon/src/application/BUILD
+@@ -42,7 +42,7 @@ cc_binary(
+         "//score/time_daemon/src/application/svt:svt_handler",
+         "//score/time_daemon/src/common:logging_contexts",
+         "@score_baselibs//score/concurrency",
+-        "@score_lifecycle_health//src/lifecycle_client_lib",
++        "@score_lifecycle_health//score/launch_manager:lifecycle_cc",
+         # "@score_logging//score/mw/log",
+         "@score_baselibs//score/mw/log:console_only_backend",
+     ],
+diff --git a/score/time_slave/src/application/BUILD b/score/time_slave/src/application/BUILD
+index 81d686f..34ed6ef 100644
+--- a/score/time_slave/src/application/BUILD
++++ b/score/time_slave/src/application/BUILD
+@@ -28,6 +28,6 @@ cc_binary(
+         "//score/time_slave/src/gptp:gptp_engine",
+         "//score/ts_client/src:gptp_ipc",
+         "@score_baselibs//score/mw/log:console_only_backend",
+-        "@score_lifecycle_health//src/lifecycle_client_lib",
++        "@score_lifecycle_health//score/launch_manager:lifecycle_cc",
+     ],
+ )

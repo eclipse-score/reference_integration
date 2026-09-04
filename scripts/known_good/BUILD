@@ -22,6 +22,9 @@ py_library(
         ["**/*.py"],
         exclude = ["tests/**"],
     ),
+    # scripts/ on sys.path, so "from known_good...." resolves under 'bazel run' as it does for
+    # "python3 scripts/...". Propagates to every consumer of this library.
+    imports = [".."],
     visibility = ["//visibility:public"],
 )
 
@@ -58,6 +61,25 @@ py_binary(
     name = "resolve_deps",
     srcs = ["resolved_dependencies.py"],
     main = "resolved_dependencies.py",
+    visibility = ["//visibility:public"],
+    deps = [":known_good"],
+)
+
+# The Stage-2 matrix, derived from known_good.json rather than hardcoded in the workflow.
+py_binary(
+    name = "list_modules",
+    srcs = ["list_modules.py"],
+    data = ["//:known_good.json"],
+    main = "list_modules.py",
+    visibility = ["//visibility:public"],
+    deps = [":known_good"],
+)
+
+# The Stage-2 resolution gate: did the module really build against ref_int's pins and patches.
+py_binary(
+    name = "verify_stage2_resolution",
+    srcs = ["verify_stage2_resolution.py"],
+    main = "verify_stage2_resolution.py",
     visibility = ["//visibility:public"],
     deps = [":known_good"],
 )
