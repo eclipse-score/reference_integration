@@ -11,67 +11,76 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Generated from known_good.json at 2026-08-28T09:19:12Z
+# Generated from known_good.json at 2026-09-04T10:34:00+00:00Z
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir-modules bazel_common
 
 bazel_dep(name = "score_crates")
-single_version_override(
+git_override(
     module_name = "score_crates",
-    version = "0.0.11",
+    commit = "4656dda8f04a3d88c8089f63111195840cfbd9e3",
+    remote = "https://github.com/eclipse-score/score-crates.git",
 )
 
 bazel_dep(name = "score_itf")
-single_version_override(
+git_override(
     module_name = "score_itf",
-    version = "0.5.0",
+    commit = "802e0186d373e0d9d67c1c9ccb1ea08952c7ad06",
+    remote = "https://github.com/eclipse-score/itf.git",
 )
 
 bazel_dep(name = "score_tooling")
-single_version_override(
+git_override(
     module_name = "score_tooling",
+    commit = "4736b5655f3a73dd353da1bdbeced5febd669664",
     patch_strip = 1,
     patches = [
         "//patches/tooling:001-expose-aspect-rules-lint-non-dev.patch",
     ],
-    version = "2.0.2",
+    remote = "https://github.com/eclipse-score/tooling.git",
 )
 
 bazel_dep(name = "score_platform")
-single_version_override(
+git_override(
     module_name = "score_platform",
+    commit = "6d65a262c2329328cb9cbdd276bb143b417c54a4",
     patch_strip = 1,
     patches = [
         "//patches/platform:001-remove-duplicate-lifecycle-glossary.patch",
     ],
-    version = "0.7.2",
+    remote = "https://github.com/eclipse-score/score.git",
 )
 
 bazel_dep(name = "score_bazel_platforms")
-single_version_override(
+git_override(
     module_name = "score_bazel_platforms",
-    version = "1.1.0",
+    commit = "607672cdf2f05f21af7113dab0849726dd59bf86",
+    remote = "https://github.com/eclipse-score/bazel_platforms.git",
 )
 
 bazel_dep(name = "score_test_scenarios")
-single_version_override(
+git_override(
     module_name = "score_test_scenarios",
-    version = "0.4.1",
+    commit = "fec712d490ff5d46fae91332bafac4777b300026",
+    remote = "https://github.com/eclipse-score/testing_tools.git",
 )
 
 bazel_dep(name = "score_docs_as_code")
-single_version_override(
+git_override(
     module_name = "score_docs_as_code",
-    version = "8.1.1",
+    commit = "f9d8aff0d113786b8707c10e72e36dbf47ffc25a",
+    remote = "https://github.com/eclipse-score/docs-as-code.git",
 )
 
 bazel_dep(name = "score_process_description")
-single_version_override(
+git_override(
     module_name = "score_process_description",
-    version = "2.1.2",
+    commit = "98d1d5f42dad412a09a888ea25e59c62fa6371ce",
+    remote = "https://github.com/eclipse-score/process_description.git",
 )
 
 bazel_dep(name = "score_bazel_cpp_toolchains")
-single_version_override(
+git_override(
     module_name = "score_bazel_cpp_toolchains",
-    version = "1.0.3",
+    commit = "bd12c5344053f842fae4623dada5716dfb43e61d",
+    remote = "https://github.com/eclipse-score/bazel_cpp_toolchains.git",
 )

@@ -11,12 +11,13 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Generated from known_good.json at 2026-08-28T09:19:12Z
+# Generated from known_good.json at 2026-09-04T10:34:00+00:00Z
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir-modules bazel_common
 
 bazel_dep(name = "score_baselibs")
-single_version_override(
+git_override(
     module_name = "score_baselibs",
+    commit = "33aad37ad3d12591b0d662ee37e430eedb1c273c",
     patch_strip = 1,
     patches = [
         "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
@@ -28,24 +29,26 @@ single_version_override(
         "//patches/baselibs:007-lower-quick-start-heading.patch",
         "//patches/baselibs:008-rename-module-architecture-label.patch",
     ],
-    version = "0.2.12",
+    remote = "https://github.com/eclipse-score/baselibs.git",
 )
 
 bazel_dep(name = "score_communication")
-single_version_override(
+git_override(
     module_name = "score_communication",
+    commit = "b22ed6d314313c87eb06ca916efda9a71ec53cc6",
     patch_strip = 1,
     patches = [
         "//patches/communication:001-expose-comm-examples.patch",
         "//patches/communication:003-module-deps-visibility.patch",
         "//patches/communication:004-rules-build-error-not-dev-dependency.patch",
     ],
-    version = "0.4.0",
+    remote = "https://github.com/eclipse-score/communication.git",
 )
 
 bazel_dep(name = "score_persistency")
-single_version_override(
+git_override(
     module_name = "score_persistency",
+    commit = "9ae529ba9f413976ff5c9948c6490afa51bbfdc3",
     patch_strip = 1,
     patches = [
         "//patches/persistency:001-add-mod-need.patch",
@@ -55,22 +58,24 @@ single_version_override(
         "//patches/persistency:005-googletest-not-dev-dependency.patch",
         "//patches/persistency:006-add-module-index-title.patch",
     ],
-    version = "0.3.5",
+    remote = "https://github.com/eclipse-score/persistency.git",
 )
 
 bazel_dep(name = "score_kyron")
-single_version_override(
+git_override(
     module_name = "score_kyron",
+    commit = "394b232a8db7fb77db0ff16e9c26ec31c7759efd",
     patch_strip = 1,
     patches = [
         "//patches/kyron:001-use-format-targets-new-location.patch",
     ],
-    version = "0.1.4",
+    remote = "https://github.com/eclipse-score/kyron.git",
 )
 
 bazel_dep(name = "score_lifecycle")
-single_version_override(
+git_override(
     module_name = "score_lifecycle",
+    commit = "9613f52b1ec1a3f169be79d9e6ef0948c5e19596",
     patch_strip = 1,
     patches = [
         "//patches/lifecycle:001-score-tooling-not-dev-dependency.patch",
@@ -78,7 +83,7 @@ single_version_override(
         "//patches/lifecycle:003-doc-dependencies-not-dev.patch",
         "//patches/lifecycle:004-lower-quick-start-heading.patch",
     ],
-    version = "0.6.0",
+    remote = "https://github.com/eclipse-score/lifecycle.git",
 )
 
 bazel_dep(name = "score_logging")
@@ -89,9 +94,10 @@ git_override(
 )
 
 bazel_dep(name = "score_time")
-single_version_override(
+git_override(
     module_name = "score_time",
-    version = "0.0.2",
+    commit = "c4f0194a3b496757e5c193ed8618fc3f45a868a5",
+    remote = "https://github.com/eclipse-score/time.git",
 )
 
 bazel_dep(name = "score_config_management")
