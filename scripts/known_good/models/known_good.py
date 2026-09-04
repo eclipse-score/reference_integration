@@ -31,6 +31,7 @@ class KnownGood:
     """
 
     modules: Dict[str, Dict[str, Module]]
+    sbom_tracked_modules: list[str]
     timestamp: str
 
     @classmethod
@@ -48,6 +49,14 @@ class KnownGood:
         """
         modules_dict = data.get("modules", {})
         timestamp = data.get("timestamp", "")
+        sbom_data = data.get("sbom", {})
+        if not isinstance(sbom_data, dict):
+            raise ValueError("Invalid known_good.json (expected 'sbom' object)")
+        sbom_tracked_modules = sbom_data.get("tracked_modules", [])
+        if not isinstance(sbom_tracked_modules, list) or not all(
+            isinstance(module, str) for module in sbom_tracked_modules
+        ):
+            raise ValueError("Invalid known_good.json (expected 'sbom.tracked_modules' string list)")
 
         parsed_modules: Dict[str, Dict[str, Module]] = {}
         for group_name, group_modules in modules_dict.items():
@@ -55,7 +64,19 @@ class KnownGood:
                 modules_list = Module.parse_modules(group_modules)
                 parsed_modules[group_name] = {m.name: m for m in modules_list}
 
-        return cls(modules=parsed_modules, timestamp=timestamp)
+        target_modules = parsed_modules.get("target_sw", {})
+        invalid_modules = sorted(set(sbom_tracked_modules) - set(target_modules))
+        if invalid_modules:
+            raise ValueError(
+                "Invalid known_good.json (SBOM tracked modules must be defined in modules.target_sw): "
+                + ", ".join(invalid_modules)
+            )
+
+        return cls(
+            modules=parsed_modules,
+            sbom_tracked_modules=sbom_tracked_modules,
+            timestamp=timestamp,
+        )
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert KnownGood instance to dictionary for JSON output.
@@ -68,7 +89,11 @@ class KnownGood:
             for group_name, group_modules in self.modules.items()
         }
 
-        return {"modules": modules_output, "timestamp": self.timestamp}
+        return {
+            "modules": modules_output,
+            "sbom": {"tracked_modules": self.sbom_tracked_modules},
+            "timestamp": self.timestamp,
+        }
 
     def write(self, output_path: Path, dry_run: bool = False) -> None:
         """Write known_good data to file or print for dry-run.

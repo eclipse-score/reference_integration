@@ -159,6 +159,20 @@ rust_coverage_report(
     return blocks
 
 
+def generate_sbom_module_content(tracked_modules: List[str], timestamp: Optional[str]) -> str:
+    """Generate the SBOM extension configuration from known-good target modules."""
+    header = (
+        "# Generated from known_good.json"
+        + (f" at {timestamp}" if timestamp else "")
+        + "\n"
+        "# Do not edit manually - use scripts/known_good/update_module_from_known_good.py\n\n"
+    )
+    blocks = ['sbom_ext = use_extension("@score_sbom//:extensions.bzl", "sbom_metadata")']
+    blocks.extend(f'sbom_ext.track_module(name = "{module}")' for module in tracked_modules)
+    blocks.append('use_repo(sbom_ext, "sbom_metadata")')
+    return header + "\n".join(blocks) + "\n"
+
+
 def generate_file_content(
     args: argparse.Namespace,
     modules: List[Module],
@@ -355,6 +369,17 @@ Note:
                 f.write(content_build)
             generated_files.append(output_path_coverage)
             print(f"Generated {output_path_coverage}")
+
+    sbom_output_path = os.path.join(output_dir_modules, "score_sbom.MODULE.bazel")
+    sbom_content = generate_sbom_module_content(known_good.sbom_tracked_modules, known_good.timestamp)
+    if args.dry_run:
+        print(f"\nDry run: would write to {sbom_output_path}\n")
+        print(sbom_content)
+    else:
+        with open(sbom_output_path, "w", encoding="utf-8") as f:
+            f.write(sbom_content)
+        generated_files.append(sbom_output_path)
+        print(f"Generated {sbom_output_path}")
 
     if not args.dry_run and generated_files:
         print(f"\nSuccessfully generated {len(generated_files)} file(s) with {total_module_count} total modules")

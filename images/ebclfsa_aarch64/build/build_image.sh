@@ -37,7 +37,7 @@ if [[ ! -d "$IMAGE_SOURCE" ]]; then
     exit 1
 fi
 
-# Check for .wic file 
+# Check for .wic file
 if ! find "$IMAGE_SOURCE" -maxdepth 1 \( -name "*.wic" -type f -o -name "*.wic" -type l \) | grep -q .; then
     echo "Error: No .wic file found in $IMAGE_SOURCE" >&2
     exit 1

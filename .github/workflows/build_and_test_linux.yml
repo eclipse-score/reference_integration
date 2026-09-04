@@ -32,9 +32,9 @@ jobs:
       - name: Clean disk space
         uses: eclipse-score/more-disk-space@v1
       - name: Checkout repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3.8.0
+        uses: docker/setup-buildx-action@6524bf65af31da8d45b59e8c27de4bd072b392f5 # v3.8.0
       - name: Setup Bazel
         uses: bazel-contrib/setup-bazel@0.18.0
         with:
@@ -42,9 +42,20 @@ jobs:
           disk-cache: ${{ github.workflow }}
           repository-cache: true
           cache-save: ${{ github.event_name == 'push' }}
-      - name: Build image
+      - name: Install uv (required for SBOM license scanning)
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: false
+      - name: Build image and product SBOM
         run: |
-          bazel build --lockfile_mode=error --config=linux-x86_64 //images/linux_x86_64:image
+          bazel build --lockfile_mode=error --config=linux-x86_64 \
+            //images/linux_x86_64:image \
+            //:sbom
       - name: Integration tests
         run: |
           bazel test --lockfile_mode=error --config=linux-x86_64 //feature_integration_tests/itf
+      - name: Upload product SBOM
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+        with:
+          name: sbom-spdx
+          path: bazel-bin/sbom.spdx.json

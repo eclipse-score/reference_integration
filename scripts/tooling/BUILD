@@ -15,6 +15,8 @@ load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 load("@score_tooling//python_basics:defs.bzl", "score_py_pytest")
 
+exports_files(["requirements.txt"])
+
 # In order to update the requirements, change the `requirements.in` file and run
 # `bazel run //scripts/tooling:requirements.update`
 # This will update the `requirements.txt` file
