@@ -120,13 +120,13 @@ Incompatible Changes
    - ``score_process`` was renamed to ``score_process_description``.
 
    In addition, ``score_bazel_platforms`` was raised to its first major version
-   ``1.0.0``, and ``score_docs_as_code`` moved from ``4.6.1`` to ``8.0.1``,
+   ``1.0.0``, and ``score_docs_as_code`` moved from ``4.6.1`` to ``8.1.1``,
    both of which contain breaking changes.
 
 S-CORE Platform scope
 ^^^^^^^^^^^^^^^^^^^^^
 
-- **Version:** ``v0.9.0``
+- **Version:** ``v0.7.2``
 - **Release notes**: `S-CORE platform release notes
   <https://github.com/eclipse-score/score/releases>`_
 
@@ -162,7 +162,7 @@ Persistency
 Lifecycle
 ~~~~~~~~~
 
-- **Version:** ``0.5.0`` (previously ``0.3.0``)
+- **Version:** ``0.6.1`` (previously ``0.3.0``)
 - **Release notes**: `Lifecycle releases
   <https://github.com/eclipse-score/lifecycle/releases>`_
 
@@ -183,26 +183,16 @@ Logging
 Time
 ~~~~
 
-- **Version:** pinned to commit ``4a3a6c5`` (previously ``0.0.1``)
+- **Version:** ``0.0.2`` (previously ``0.0.1``)
 - **Release notes**: `Time releases
   <https://github.com/eclipse-score/time/releases>`_
-
-.. note::
-
-   Time is integrated from a development commit; a registry release
-   covering this state is still to be published.
 
 Configuration Management
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-- **Version:** pinned to commit ``f0d4f67`` (newly integrated)
+- **Version:** ``0.2.0`` (newly integrated)
 - **Release notes**: `Configuration Management releases
   <https://github.com/eclipse-score/config_management/releases>`_
-
-.. note::
-
-   Configuration Management is integrated from a development commit; a
-   registry release covering this state is still to be published.
 
 Orchestrator
 ~~~~~~~~~~~~
@@ -270,7 +260,7 @@ Process description
 Docs-as-code
 ~~~~~~~~~~~~
 
-- **Version:** ``8.0.1`` (previously ``4.6.1``)
+- **Version:** ``8.1.1`` (previously ``4.6.1``)
 - **Release notes**: `docs-as-code releases
   <https://github.com/eclipse-score/docs-as-code/releases>`_
 
@@ -342,8 +332,8 @@ Known Issues/Vulnerabilities and Bug Fixes
 ------------------------------------------
 
 - See release notes of every module separately.
-- Three modules (Logging, Time, Configuration Management) are integrated from
-  development commits rather than registry releases.
+- One module (Logging) is integrated from a development commit rather than the
+  registry; all other modules listed here are already published to the registry.
 - The reference integration carries integration patches for Baselibs,
   Communication, Configuration Management, Logging, Time and Tooling. See the
   ``patches/`` directory for details.

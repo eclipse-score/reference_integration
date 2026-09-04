@@ -88,12 +88,11 @@ single_version_override(
 )
 
 bazel_dep(name = "score_config_management")
-git_override(
+single_version_override(
     module_name = "score_config_management",
-    commit = "e0489b190ed6d2fa183b9a8063e2dba4f6378505",
     patch_strip = 1,
     patches = [
         "//patches/config_management:001-adapt-proxy-api-and-remove-internal-targets.patch",
     ],
-    remote = "https://github.com/eclipse-score/config_management.git",
+    version = "0.2.0",
 )
