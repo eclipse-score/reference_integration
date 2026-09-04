@@ -67,6 +67,14 @@ jobs:
       - name: Checkout repository
         if: ${{ github.event_name != 'pull_request_target' }}
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Build documentation - preflight # If we have doc errors, we dont wait of them 1h +...
+        run: |
+          bazel run \
+            --lockfile_mode=error \
+              //:docs_shim -- \
+              --github_user=${{ github.repository_owner }} \
+              --github_repo=${{ github.event.repository.name }}
+          rm -rf _build/
       - name: Execute Unit Tests with Coverage Analysis
         run: |
           python ./scripts/quality_runners.py
@@ -109,12 +117,9 @@ jobs:
           cache: false
       - name: Build documentation
         run: |
-          bazel --output_base="/home/runner/.cache/bazel/output_base" run \
+          bazel run \
             --lockfile_mode=error \
-            --repo_contents_cache="/home/runner/.cache/bazel/repo_contents" \
-            --repository_cache="/home/runner/.cache/bazel/repo" \
-            --disk_cache="/home/runner/.cache/bazel/disk" \
-              //:docs -- \
+              //:docs_shim -- \
               --github_user=${{ github.repository_owner }} \
               --github_repo=${{ github.event.repository.name }}
 
