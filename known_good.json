@@ -3,9 +3,15 @@
         "target_sw": {
             "score_baselibs": {
                 "repo": "https://github.com/eclipse-score/baselibs.git",
-                "hash": "06f6b9b7d48710438ea4664d84da5143594763cb",
                 "bazel_patches": [
-                    "//patches/baselibs:001-restore-trace-library-mock-visibility.patch"
+                    "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
+                    "//patches/baselibs:002-restore-qnx8-poll-workaround.patch",
+                    "//patches/baselibs:003-score-tooling-not-dev-dependency.patch",
+                    "//patches/baselibs:004-remove-hedron-and-clang-tidy-config.patch",
+                    "//patches/baselibs:005-rename-manual-verification-report-id.patch",
+                    "//patches/baselibs:006-include-cpp-style-guide-in-toctree.patch",
+                    "//patches/baselibs:007-lower-quick-start-heading.patch",
+                    "//patches/baselibs:008-rename-module-architecture-label.patch"
                 ],
                 "metadata": {
                     "extra_test_config": [
@@ -21,11 +27,12 @@
                     "langs": [
                         "cpp"
                     ]
-                }
+                },
+                "version": "0.2.12"
             },
             "score_communication": {
                 "repo": "https://github.com/eclipse-score/communication.git",
-                "hash": "21652a6196c22bdf89e0a0abb34aabeb79eb26a0",
+                "version": "0.4.0",
                 "bazel_patches": [
                     "//patches/communication:001-expose-comm-examples.patch",
                     "//patches/communication:003-module-deps-visibility.patch",
@@ -50,11 +57,13 @@
             },
             "score_persistency": {
                 "repo": "https://github.com/eclipse-score/persistency.git",
-                "hash": "b987d375e54f038c31f9441fa738c747c7a07c75",
                 "bazel_patches": [
-                    "//patches/persistency:001-fix-doc.patch",
-                    "//patches/persistency:002-fix-dev-dep.patch",
-                    "//patches/persistency:003-fix-docs-version.patch"
+                    "//patches/persistency:001-add-mod-need.patch",
+                    "//patches/persistency:002-rename-manual-verification-report-id.patch",
+                    "//patches/persistency:003-pip-not-dev-dependency.patch",
+                    "//patches/persistency:004-imagefs-not-dev-dependency.patch",
+                    "//patches/persistency:005-googletest-not-dev-dependency.patch",
+                    "//patches/persistency:006-add-module-index-title.patch"
                 ],
                 "metadata": {
                     "extra_test_config": [
@@ -62,42 +71,42 @@
                         "@score_baselibs//score/json:base_library=nlohmann",
                         "@score_logging//score/mw/log/flags:KRemote_Logging=False"
                     ],
-                    "code_root_path": "//src/...",
+                    "code_root_path": "//score/kvs/...",
                     "exclude_test_targets": [
-                        "//src/cpp/tests:bm_kvs_cpp"
+                        "//score/kvs/tests:bm_kvs_cpp",
+                        "//score/kvs/tests/integration_test_scenarios/...",
+                        "//score/kvs/tests/test_cases/..."
                     ],
                     "rust_coverage_config": "ferrocene-coverage-per"
-                }
+                },
+                "version": "0.3.5"
             },
             "score_kyron": {
                 "repo": "https://github.com/eclipse-score/kyron.git",
-                "hash": "cc72f599cc0c04a4e80c12a204f57e59a48d284a",
+                "bazel_patches": [
+                    "//patches/kyron:001-use-format-targets-new-location.patch"
+                ],
                 "metadata": {
                     "code_root_path": "//src/...",
                     "langs": [
                         "rust"
                     ]
-                }
+                },
+                "version": "0.1.4"
             },
-            "score_lifecycle_health": {
+            "score_lifecycle": {
                 "repo": "https://github.com/eclipse-score/lifecycle.git",
-                "hash": "23e9849437c578ade99b8ccbf5d09c1835737b3f",
-                "bazel_patches": [],
                 "metadata": {
                     "code_root_path": "//score/...",
                     "exclude_test_targets": [
-                        "//score/health_monitor/src/rust:miri_tests",
-                        "//score/launch_manager/src/daemon/src/common/concurrency:mpmc_concurrent_queue_tsan_test",
-                        "//score/launch_manager/src/daemon/src/common/concurrency:mpsc_bounded_queue_tsan_test"
+                        "//score/health_monitor/src/rust:miri_tests"
                     ]
-                }
+                },
+                "version": "0.6.1"
             },
             "score_logging": {
                 "repo": "https://github.com/eclipse-score/logging.git",
-                "hash": "6d8fcb3734e3f3307615bae5495d2d3a82b0b8c4",
-                "bazel_patches": [
-                    "//patches/logging:006-use-format-targets-compat.patch"
-                ],
+                "bazel_patches": [],
                 "metadata": {
                     "code_root_path": "//score/mw/log/...",
                     "extra_test_config": [
@@ -109,14 +118,13 @@
                     "exclude_test_targets": [
                         "//score/mw/log/legacy_non_verbose_api:unit_test"
                     ]
-                }
+                },
+                "version": "0.2.4"
             },
             "score_time": {
                 "repo": "https://github.com/eclipse-score/time.git",
-                "hash": "8c42d34698535dabeaa4782d5ec123256151fb30",
-                "bazel_patches": [
-                    "//patches/time:001-memory-shared-moved-to-communication.patch"
-                ],
+                "version": "0.0.2",
+                "bazel_patches": [],
                 "metadata": {
                     "langs": [
                         "cpp"
@@ -125,7 +133,7 @@
             },
             "score_config_management": {
                 "repo": "https://github.com/eclipse-score/config_management.git",
-                "hash": "952461ceffff774fb4c125ee023fea0221fcdce2",
+                "version": "0.2.0",
                 "bazel_patches": [
                     "//patches/config_management:001-adapt-proxy-api-and-remove-internal-targets.patch"
                 ],
@@ -139,6 +147,7 @@
                         "//score/config_management/config_daemon/code/services/details/mw_com:unit_test",
                         "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com",
                         "//score/config_management/config_provider/code/proxies/details:unit_test_mw",
+                        "//score/config_management/config_daemon/code:main_function_test",
                         "//score/config_management/dependability/..."
                     ],
                     "langs": [
@@ -150,35 +159,41 @@
         "tooling": {
             "score_crates": {
                 "repo": "https://github.com/eclipse-score/score-crates.git",
-                "hash": "4656dda8f04a3d88c8089f63111195840cfbd9e3"
+                "version": "0.0.11"
             },
             "score_itf": {
                 "repo": "https://github.com/eclipse-score/itf.git",
-                "hash": "802e0186d373e0d9d67c1c9ccb1ea08952c7ad06"
+                "version": "0.5.0"
             },
             "score_tooling": {
                 "repo": "https://github.com/eclipse-score/tooling.git",
-                "hash": "7099e272c3f6114bad17736debd54139601aedd4"
+                "bazel_patches": [
+                    "//patches/tooling:001-expose-aspect-rules-lint-non-dev.patch"
+                ],
+                "version": "2.0.2"
             },
             "score_platform": {
                 "repo": "https://github.com/eclipse-score/score.git",
-                "hash": "24ec6f276cd37755b5dae7f2345913628d56831f"
+                "version": "0.7.2",
+                "bazel_patches": [
+                    "//patches/platform:001-remove-duplicate-lifecycle-glossary.patch"
+                ]
             },
             "score_bazel_platforms": {
                 "repo": "https://github.com/eclipse-score/bazel_platforms.git",
-                "hash": "607672cdf2f05f21af7113dab0849726dd59bf86"
+                "version": "1.1.0"
             },
             "score_test_scenarios": {
                 "repo": "https://github.com/eclipse-score/testing_tools.git",
-                "hash": "fec712d490ff5d46fae91332bafac4777b300026"
+                "version": "0.4.1"
             },
             "score_docs_as_code": {
                 "repo": "https://github.com/eclipse-score/docs-as-code.git",
-                "hash": "f1f20f0579ab5e63513561db0ab055cbec46c987"
+                "version": "8.1.1"
             },
-            "score_process": {
+            "score_process_description": {
                 "repo": "https://github.com/eclipse-score/process_description.git",
-                "hash": "8df530cab5efcb40e9f835ba6e9b61ae2f0175c7"
+                "version": "2.1.2"
             },
             "score_bazel_cpp_toolchains": {
                 "repo": "https://github.com/eclipse-score/bazel_cpp_toolchains.git",
@@ -187,5 +202,5 @@
             }
         }
     },
-    "timestamp": "2026-08-21T00:00:00+00:00Z"
+    "timestamp": "2026-08-28T09:19:12Z"
 }

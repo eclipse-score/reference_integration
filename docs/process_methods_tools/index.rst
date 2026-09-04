@@ -12,37 +12,14 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-Modules
-=======
+Process, Methods, and Tools
+============================
 
-SW Modules
-----------
-
-.. toctree::
-   :titlesonly:
-   :maxdepth: 1
-
-   _collections/score_persistency/index
-   _collections/score_kyron/docs/index
-   _collections/score_logging/docs/index
-
-
-Tooling modules
----------------
+.. Process, Methods, and Tools documentation is mounted here automatically via the `bundles`
+   parameter of the `docs()` macro in the root BUILD file (see
+   `attach_to: "process_methods_tools"`), which wires each module's index
+   into this page's toctree at build time.
 
 .. toctree::
    :titlesonly:
    :maxdepth: 1
-
-   _collections/score_docs_as_code/docs/index
-
-Process modules
----------------
-
-.. toctree::
-   :titlesonly:
-   :maxdepth: 1
-
-   _collections/score_platform/docs/index
-
-.. TODO: Generate this from know_good !

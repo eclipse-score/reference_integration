@@ -1,0 +1,55 @@
+diff --git a/BUILD b/BUILD
+index e827820..d929475 100644
+--- a/BUILD
++++ b/BUILD
+@@ -11,8 +11,6 @@
+ # SPDX-License-Identifier: Apache-2.0
+ # *******************************************************************************
+ 
+-load("@hedron_compile_commands//:refresh_compile_commands.bzl", "refresh_compile_commands")
+-load("@score_bazel_tools_cc//quality:defs.bzl", "quality_clang_tidy_config")
+ load("@score_docs_as_code//:docs.bzl", "docs")
+ load("@score_tooling//:defs.bzl", "copyright_checker", "dash_license_checker")
+ load("@score_tooling//third_party/format:macros.bzl", "use_format_targets")
+@@ -97,17 +95,6 @@ docs(
+     source_dir = "docs",
+ )
+ 
+-# Generate `compile_commands.json`.
+-# Required for `clangd` support.
+-refresh_compile_commands(
+-    name = "generate_compile_commands",
+-    exclude_external_sources = True,
+-    target_compatible_with = ["@platforms//os:linux"],
+-    targets = {
+-        "//...": "",
+-    },
+-)
+-
+ # Generate `rust_project.json`.
+ # Required for `rust-analyzer` support.
+ alias(
+@@ -204,23 +191,3 @@ filegroup(
+     ],
+     visibility = ["//visibility:public"],
+ )
+-
+-quality_clang_tidy_config(
+-    name = "clang_tidy_config",
+-    additional_flags = [],
+-    clang_tidy_binary = "@llvm_toolchain//:clang-tidy",
+-    default_feature = "strict",
+-    dependency_attributes = [
+-        "deps",
+-        "srcs",
+-    ],
+-    excludes = [],
+-    feature_mapping = {
+-        "//:.clang-tidy-minimal": "strict",
+-    },
+-    target_types = [
+-        "cc_library",
+-    ],
+-    unsupported_flags = [],
+-    visibility = ["//visibility:public"],
+-)
