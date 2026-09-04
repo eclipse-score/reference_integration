@@ -74,7 +74,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
-    <link rel="next" title="Logging: architecture and SW design" href="../detailed_design/logging_architecture.html" />
+    <link rel="next" title="Detailed Design" href="../detailed_design/index.html" />
     <link rel="prev" title="Datarouter" href="../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -466,8 +466,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../verification_report/module_verification_report.html">Verification Report</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">Datarouter</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">Datarouter Component Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../detailed_design/logging_architecture.html">Logging: architecture and SW design</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../detailed_design/shm_apis.html">Remote Logging implementation details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../detailed_design/index.html">Detailed Design</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2"><a class="reference internal" href="../../mw_log/index.html">mw::log Backend</a></li>
@@ -544,7 +543,7 @@
                   
   <section id="datarouter-component-requirements">
 <h1>Datarouter Component Requirements<a class="headerlink" href="#datarouter-component-requirements" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-13d255db">
+<div class="need_container docutils container" id="SNCB-41c928fd">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__data_router_requirements">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -589,7 +588,7 @@
 </div>
 <section id="datarouter-services">
 <h2>Datarouter Services<a class="headerlink" href="#datarouter-services" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-56fb71de">
+<div class="need_container docutils container" id="SNCB-ccd4ff39">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__data_router__dlt_server">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -635,7 +634,7 @@ send messages using DLT protocol over UDP multicast transport.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-ff942e0c">
+<div class="need_container docutils container" id="SNCB-73008704">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__data_router__dlt_multiple_channels">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -685,7 +684,7 @@ assignments per application/context.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-23e90cc3">
+<div class="need_container docutils container" id="SNCB-55d048ae">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__data_router__dlt_message_filtering">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -733,7 +732,7 @@ be part of channel configuration file, located in the following path:
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-49c28077">
+<div class="need_container docutils container" id="SNCB-b422457e">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__data_router__dlt_verbose_messages">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -782,7 +781,7 @@ library shall be sent via DLT using verbose mode.</p></td>
 </section>
 <section id="dlt-quotas">
 <h2>DLT Quotas<a class="headerlink" href="#dlt-quotas" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-03e8cd25">
+<div class="need_container docutils container" id="SNCB-1c81b906">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__data_router__dlt_bw_quota_config">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -828,7 +827,7 @@ library shall be sent via DLT using verbose mode.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-90b958c5">
+<div class="need_container docutils container" id="SNCB-ec65ba0e">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__data_router__dlt_quota_bw_reduction">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -899,11 +898,11 @@ configuration file (<a class="reference internal" href="#comp_req__data_router__
       </div>
     </a>
     <a class="right-next"
-       href="../detailed_design/logging_architecture.html"
+       href="../detailed_design/index.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Logging: architecture and SW design</p>
+        <p class="prev-next-title">Detailed Design</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
