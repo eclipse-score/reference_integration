@@ -15,6 +15,9 @@
 Modules
 =======
 
+SW Modules
+----------
+
 .. toctree::
    :titlesonly:
    :maxdepth: 1
@@ -22,3 +25,24 @@ Modules
    _collections/score_persistency/index
    _collections/score_kyron/docs/index
    _collections/score_logging/docs/index
+
+
+Tooling modules
+---------------
+
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   _collections/score_docs_as_code/docs/index
+
+Process modules
+---------------
+
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   _collections/score_platform/docs/index
+
+.. TODO: Generate this from know_good !
