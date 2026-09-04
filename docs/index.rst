@@ -61,10 +61,10 @@ documentation set that downstream product distributions can build on.
       `Integration Status <https://eclipse-score.github.io/reference_integration/main/status_dashboard.html>`_.
 
    .. grid-item-card:: 🧩 Modules
-      :link: sw_components/index
+      :link: modules/index
       :link-type: doc
 
-      Central overview for all integrated modules. See :doc:`All Modules <sw_components/index>`.
+      Central overview for all integrated modules. See :doc:`All Modules <modules/index>`.
 
    .. grid-item-card:: 📝 Release Notes
       :link: s_core_v_1/releases/releases
@@ -75,7 +75,7 @@ documentation set that downstream product distributions can build on.
 .. toctree::
    :hidden:
 
-   Modules <sw_components/index>
+   Modules <modules/index>
    Verification Reports <verification_report/index>
    Integration Status <https://eclipse-score.github.io/reference_integration/main/status_dashboard.html>
    S-Core v1.0 <s_core_v_1/index>

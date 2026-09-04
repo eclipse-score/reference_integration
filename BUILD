@@ -31,23 +31,23 @@ docs(
         # "@score_communication//:needs_json",  # no docs_sources
         {
             "bundle": "@score_lifecycle//:docs_bundle",
-            "mount_at": "sw_components/score_lifecycle",
+            "mount_at": "modules/score_lifecycle",
         },
         {
             "bundle": "@score_logging//:docs_bundle",
-            "mount_at": "sw_components/score_logging",
+            "mount_at": "modules/score_logging",
         },
         {
             "bundle": "@score_persistency//:docs_bundle",
-            "mount_at": "sw_components/score_persistency",
+            "mount_at": "modules/score_persistency",
         },
         {
             "bundle": "@score_kyron//:docs_bundle",
-            "mount_at": "sw_components/score_kyron",
+            "mount_at": "modules/score_kyron",
         },
         {
             "bundle": "@score_baselibs//:docs_bundle",
-            "mount_at": "sw_components/score_baselibs",
+            "mount_at": "modules/score_baselibs",
         },
 
         # Process methods and tools (PMT)

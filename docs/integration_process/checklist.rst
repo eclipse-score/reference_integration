@@ -30,7 +30,7 @@ Use this as a final review before opening your pull request:
        checks green.
    * - 2 · Documentation
      - ``needs_json`` added to ``//:docs`` data and toctree entry in
-       ``sw_components.rst``; ``//:docs_combo`` shows the module.
+       ``modules.rst``; ``//:docs_combo`` shows the module.
    * - 3 · Unit tests (default platform)
      - module compiles and unit tests pass on ``--config=linux-x86_64`` via
        ``quality_runners.py``; ``metadata`` tuned if needed.
