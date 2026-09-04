@@ -22,7 +22,7 @@ rust_coverage_report(
         "linux-x86_64",
         "ferrocene-coverage",
     ],
-    query = 'kind("rust_test", @score_communication//score/mw/com/impl/...)',
+    query = 'kind("rust_test", @score_communication//...)',
     visibility = ["//visibility:public"],
 )
 
@@ -62,6 +62,6 @@ rust_coverage_report(
         "linux-x86_64",
         "ferrocene-coverage",
     ],
-    query = 'kind("rust_test", @score_logging//score/mw/log/...)',
+    query = 'kind("rust_test", @score_logging//...)',
     visibility = ["//visibility:public"],
 )
