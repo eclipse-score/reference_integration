@@ -1,0 +1,43 @@
+diff --git a/docs/verification_report/module_verification_report.rst b/docs/verification_report/module_verification_report.rst
+index 59b80e7..1a3b0e1 100644
+--- a/docs/verification_report/module_verification_report.rst
++++ b/docs/verification_report/module_verification_report.rst
+@@ -15,8 +15,11 @@
+ Verification Report
+ ===================
+ 
++.. Renamed from `doc__persistency_verification_report`: that ID is now used
++   by reference_integration's templated (`:post_template:`) module
++   verification report, which aggregates this manual report's data.
+ .. document:: Persistency Verification Report
+-   :id: doc__persistency_verification_report
++   :id: doc__persistency_manual_verification_report
+    :status: valid
+    :version: 1
+    :safety: ASIL_B
+diff --git a/docs/module/safety_mgt/module_safety_plan.rst b/docs/module/safety_mgt/module_safety_plan.rst
+index 3bab8d9..2568fe1 100644
+--- a/docs/module/safety_mgt/module_safety_plan.rst
++++ b/docs/module/safety_mgt/module_safety_plan.rst
+@@ -113,7 +113,7 @@ Module Workproducts List
+         * - :need:`wp__verification_module_ver_report`
+           - :need:`gd_temp__mod_ver_report`
+           - :ndf:`copy('status', need_id='gd_temp__mod_ver_report')`
+-          - :need:`doc__persistency_verification_report`
++          - :need:`doc__persistency_manual_verification_report`
+ 
+         * - :need:`wp__module_sw_release_note`
+           - :need:`gd_temp__rel_mod_rel_note`
+diff --git a/docs/module/release/release_note.rst b/docs/module/release/release_note.rst
+index cc59ecf..6e3bb25 100644
+--- a/docs/module/release/release_note.rst
++++ b/docs/module/release/release_note.rst
+@@ -84,7 +84,7 @@ Performed Verification
+ ^^^^^^^^^^^^^^^^^^^^^^
+ 
+ This release note is based on the verification as documented in module verification report
+-:need:`doc__persistency_verification_report`.
++:need:`doc__persistency_manual_verification_report`.
+ 
+ Known Issues
+ ------------
