@@ -534,7 +534,7 @@
                   
   <section id="s-core-platform-v0-9-release-note">
 <h1>S-CORE Platform v0.9 release note<a class="headerlink" href="#s-core-platform-v0-9-release-note" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-840f7603">
+<div class="need_container docutils container" id="SNCB-57005af5">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__score_v09_release_note">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -542,7 +542,7 @@
 </div>
 </td>
 <td class="head_center" colspan="2"><div class="needs_head line-block">
-<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">draft</span></span></span></div>
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
 <div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">YES</span></span></span></div>
 <div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">QM</span></span></span></div>
 </div>
@@ -612,22 +612,23 @@ source organization, can not take over any liability for its content.</p>
 integrated into the reference integration for the first time. It provides a
 configuration daemon and a proxy API for platform-wide configuration handling.</p>
 </section>
+</section>
+<section id="improvements">
+<h3>Improvements<a class="headerlink" href="#improvements" title="Link to this heading">#</a></h3>
 <section id="logging-demo-application">
 <h4>Logging Demo Application<a class="headerlink" href="#logging-demo-application" title="Link to this heading">#</a></h4>
 <p>A logging demo application was added to the reference integration, demonstrating
 the use of the <a class="reference external" href="https://github.com/eclipse-score/logging">Logging</a> module in
 an integrated setting.</p>
 </section>
-</section>
-<section id="improvements">
-<h3>Improvements<a class="headerlink" href="#improvements" title="Link to this heading">#</a></h3>
 <section id="integration-strategy-dr-008">
 <h4>Integration Strategy (DR-008)<a class="headerlink" href="#integration-strategy-dr-008" title="Link to this heading">#</a></h4>
 <p>The common integration strategy documented in DR-008, which was aligned during
-v0.8, has been implemented: the reference integration gained a
+v0.8, has been partially implemented: the reference integration gained a
 resolved-dependency override mechanism. This allows the integration to steer
 transitive module dependency resolution centrally from <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>,
-instead of relying on the pinning inside each individual module.</p>
+instead of relying on the pinning inside each individual module. The remaining
+parts of DR-008 are not yet implemented and are planned for a follow-up release.</p>
 </section>
 <section id="reproducible-dependency-pinning">
 <h4>Reproducible Dependency Pinning<a class="headerlink" href="#reproducible-dependency-pinning" title="Link to this heading">#</a></h4>
@@ -645,7 +646,9 @@ yet.</p></li>
 <h4>Build Environment<a class="headerlink" href="#build-environment" title="Link to this heading">#</a></h4>
 <ul class="simple">
 <li><p>Bazel was updated to <code class="docutils literal notranslate"><span class="pre">8.6.0</span></code>.</p></li>
-<li><p>The obsolete AutoSD toolchain usage was removed.</p></li>
+<li><p>The legacy <code class="docutils literal notranslate"><span class="pre">os_autosd_toolchain</span></code> dependency (<code class="docutils literal notranslate"><span class="pre">inc_os_autosd</span></code>) was dropped.
+AutoSD support itself remains part of this release; the AutoSD 10 toolchain is
+now provided by <code class="docutils literal notranslate"><span class="pre">score_toolchains_gcc</span></code>.</p></li>
 </ul>
 </section>
 <section id="documentation">
@@ -762,7 +765,8 @@ needs to be confirmed before this release note is finalized.</p>
 <li><p>Updated Bazel to <code class="docutils literal notranslate"><span class="pre">8.6.0</span></code>.</p></li>
 <li><p>Hardened known-good dependency handling (tag-to-hash resolution fix,
 hash-pinned CI checkouts).</p></li>
-<li><p>Removed the obsolete AutoSD toolchain usage.</p></li>
+<li><p>Dropped the legacy <code class="docutils literal notranslate"><span class="pre">os_autosd_toolchain</span></code> dependency in favour of the
+AutoSD 10 toolchain provided by <code class="docutils literal notranslate"><span class="pre">score_toolchains_gcc</span></code>.</p></li>
 </ul>
 <section id="reference-qnx-image">
 <h5>Reference QNX image<a class="headerlink" href="#reference-qnx-image" title="Link to this heading">#</a></h5>
@@ -773,7 +777,9 @@ hash-pinned CI checkouts).</p></li>
 <section id="reference-red-hat-autosd-linux-image-experimental">
 <h5>Reference Red Hat AutoSD Linux image (Experimental)<a class="headerlink" href="#reference-red-hat-autosd-linux-image-experimental" title="Link to this heading">#</a></h5>
 <ul class="simple">
-<li><p>Removed the obsolete AutoSD toolchain usage from the image build flow.</p></li>
+<li><p>The image is still built and remains part of this release. Only the legacy
+<code class="docutils literal notranslate"><span class="pre">os_autosd_toolchain</span></code> dependency was dropped from the build flow; the
+AutoSD 10 toolchain is now provided by <code class="docutils literal notranslate"><span class="pre">score_toolchains_gcc</span></code>.</p></li>
 </ul>
 </section>
 <section id="reference-elektrobit-corbos-linux-for-safety-applications-linux-image-experimental">
@@ -952,10 +958,10 @@ issue/discussion.
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#changes-to-the-platform">Changes to the Platform</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#new-features">New Features</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-management">Configuration Management</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#logging-demo-application">Logging Demo Application</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#improvements">Improvements</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#logging-demo-application">Logging Demo Application</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-strategy-dr-008">Integration Strategy (DR-008)</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reproducible-dependency-pinning">Reproducible Dependency Pinning</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#build-environment">Build Environment</a></li>
