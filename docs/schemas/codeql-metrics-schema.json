@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eclipse-score.github.io/codeql-metrics-schema.json",
+  "title": "CodeQL Metrics Schema",
+  "description": "Schema for code quality metrics extracted from CodeQL SARIF results",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "generated_by",
+    "overall_metrics",
+    "metrics_by_severity",
+    "metrics_by_rule"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1",
+      "description": "Schema version for backward compatibility"
+    },
+    "generated_by": {
+      "type": "string",
+      "description": "Tool/script that generated this metrics file (e.g., 'extract_codeql_metrics.py')"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when metrics were generated"
+    },
+    "overall_metrics": {
+      "type": "object",
+      "description": "Aggregate metrics across all findings",
+      "additionalProperties": false,
+      "required": [
+        "total_findings",
+        "errors",
+        "warnings",
+        "notes"
+      ],
+      "properties": {
+        "total_findings": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total count of all findings"
+        },
+        "errors": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Count of findings with severity 'error'"
+        },
+        "warnings": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Count of findings with severity 'warning'"
+        },
+        "notes": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Count of findings with severity 'note'"
+        }
+      }
+    },
+    "metrics_by_severity": {
+      "type": "object",
+      "description": "Detailed breakdown by severity level with percentages",
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "$ref": "#/$defs/severityMetrics"
+        },
+        "warning": {
+          "$ref": "#/$defs/severityMetrics"
+        },
+        "note": {
+          "$ref": "#/$defs/severityMetrics"
+        }
+      }
+    },
+    "metrics_by_rule": {
+      "type": "object",
+      "description": "Findings grouped by rule ID, sorted by count (descending). Keys are rule IDs.",
+      "additionalProperties": {
+        "$ref": "#/$defs/ruleMetrics"
+      }
+    }
+  },
+  "$defs": {
+    "severityMetrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "count",
+        "percentage"
+      ],
+      "properties": {
+        "count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of findings at this severity level"
+        },
+        "percentage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Percentage of total findings"
+        }
+      }
+    },
+    "ruleMetrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "count",
+        "severity"
+      ],
+      "properties": {
+        "count": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of findings for this rule"
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "error",
+            "warning",
+            "note"
+          ],
+          "description": "Severity level of findings for this rule"
+        },
+        "rule_name": {
+          "type": "string",
+          "description": "Human-readable rule name/description"
+        },
+        "rule_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to rule documentation (if available)"
+        }
+      }
+    }
+  }
+}

@@ -97,10 +97,40 @@ def _enrich_with_compare_data(entries: list[dict[str, Any]], token: str) -> None
             _LOG.warning("Could not fetch compare data for %s@%s", entry["owner_repo"], entry["branch"])
 
 
-def generate_report(known_good: KnownGood, token: Optional[str] = None) -> str:
+def load_codeql_metrics(metrics_path: Optional[Path] = None) -> Optional[dict]:
+    """Load CodeQL metrics from codeql-metrics.json if available.
+    
+    Args:
+        metrics_path: Optional path to metrics JSON file. If None, looks in current directory.
+    
+    Returns:
+        Parsed metrics dict or None if file not found.
+    """
+    if metrics_path is None:
+        metrics_path = Path("codeql-metrics.json")
+    else:
+        metrics_path = Path(metrics_path)
+    
+    if metrics_path.exists():
+        try:
+            return json.loads(metrics_path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, IOError) as exc:
+            _LOG.warning("Failed to load metrics from %s: %s", metrics_path, exc)
+            return None
+    return None
+
+
+def generate_report(
+    known_good: KnownGood,
+    token: Optional[str] = None,
+    metrics_path: Optional[Path] = None,
+) -> str:
     entries = _collect_entries(known_good)
     if token:
         _enrich_with_compare_data(entries, token)
+    
+    codeql_metrics = load_codeql_metrics(metrics_path)
+    
     env = Environment(
         loader=FileSystemLoader(TEMPLATE_DIR),
         autoescape=select_autoescape(["html"]),
@@ -109,11 +139,20 @@ def generate_report(known_good: KnownGood, token: Optional[str] = None) -> str:
     return tmpl.render(
         modules_json=json.dumps(entries, indent=2),
         timestamp=known_good.timestamp,
+        codeql_metrics=json.dumps(codeql_metrics) if codeql_metrics else None,
     )
 
 
-def write_report(known_good: KnownGood, output_path: Path, token: Optional[str] = None) -> None:
-    Path(output_path).write_text(generate_report(known_good, token), encoding="utf-8")
+def write_report(
+    known_good: KnownGood,
+    output_path: Path,
+    token: Optional[str] = None,
+    metrics_path: Optional[Path] = None,
+) -> None:
+    Path(output_path).write_text(
+        generate_report(known_good, token, metrics_path),
+        encoding="utf-8",
+    )
 
 
 def register(subparsers: argparse._SubParsersAction) -> None:
@@ -130,6 +169,12 @@ def register(subparsers: argparse._SubParsersAction) -> None:
         default="report.html",
         help="Output HTML file path (default: report.html)",
     )
+    parser.add_argument(
+        "--metrics",
+        metavar="FILE",
+        default=None,
+        help="Path to codeql-metrics.json for code quality section (optional)",
+    )
     parser.set_defaults(func=_run)
 
 
@@ -143,9 +188,12 @@ def _run(args: argparse.Namespace) -> int:
 
     token = os.environ.get("GITHUB_TOKEN")
     output = _resolve_path_from_bazel(Path(args.output))
-    write_report(known_good, output, token=token)
+    metrics_path = Path(args.metrics) if args.metrics else None
+    write_report(known_good, output, token=token, metrics_path=metrics_path)
     if token:
         print(f"Report written to {output} (current hashes fetched from GitHub)")
     else:
         print(f"Report written to {output} (set GITHUB_TOKEN to embed current hashes)")
+    if metrics_path and metrics_path.exists():
+        print(f"Code quality metrics loaded from {metrics_path}")
     return 0

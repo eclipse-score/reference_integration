@@ -81,6 +81,22 @@ py_binary(
     visibility = ["//visibility:public"],
 )
 
+py_binary(
+    name = "extract_codeql_metrics",
+    srcs = ["cli/workflow/extract_codeql_metrics.py"],
+    main = "cli/workflow/extract_codeql_metrics.py",
+    visibility = ["//visibility:public"],
+    deps = [":lib"] + all_requirements,
+)
+
+py_binary(
+    name = "generate_misra_report",
+    srcs = ["cli/workflow/generate_misra_report.py"],
+    main = "cli/workflow/generate_misra_report.py",
+    visibility = ["//visibility:public"],
+    deps = [":lib"] + all_requirements,
+)
+
 # Tests target
 score_py_pytest(
     name = "tooling_tests",

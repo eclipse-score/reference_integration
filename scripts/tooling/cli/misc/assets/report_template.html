@@ -247,6 +247,124 @@
     }
     .pat-notice a { color: var(--accent); }
 
+    /* ── Code Quality Section ──────────────────────────────────── */
+    #code-quality-section {
+      max-width: 1400px;
+      margin: 2.5rem auto;
+      padding: 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: none;
+    }
+    #code-quality-section.visible { display: block; }
+
+    .cq-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+    .cq-header h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #e6edf3;
+      margin: 0;
+    }
+    .cq-header .cq-timestamp {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .cq-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .cq-metric-card {
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .cq-metric-card .cq-value {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+    .cq-metric-card.error .cq-value { color: var(--red); }
+    .cq-metric-card.warning .cq-value { color: var(--yellow); }
+    .cq-metric-card.note .cq-value { color: var(--muted); }
+    .cq-metric-card .cq-label {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .cq-metric-card .cq-percent {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.4rem;
+    }
+
+    .cq-rules-section {
+      margin-top: 1.5rem;
+    }
+    .cq-rules-header {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #e6edf3;
+      margin-bottom: 0.8rem;
+    }
+    .cq-rules-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+    .cq-rules-table th {
+      background: #161b22;
+      border: 1px solid var(--border);
+      padding: 0.6rem 0.8rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .cq-rules-table td {
+      border: 1px solid var(--border);
+      padding: 0.6rem 0.8rem;
+      color: var(--text);
+    }
+    .cq-rules-table tr:hover { background: #161b22; }
+    .cq-rule-name { font-weight: 500; }
+    .cq-rule-count {
+      text-align: center;
+      font-weight: 600;
+    }
+    .cq-rule-severity {
+      text-align: center;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      padding: 0.25rem 0.4rem !important;
+      border-radius: 3px;
+      width: fit-content;
+      margin: 0 auto;
+    }
+    .cq-rule-severity.error { background: #f8514922; color: var(--red); }
+    .cq-rule-severity.warning { background: #d2992222; color: var(--yellow); }
+    .cq-rule-severity.note { background: #3fb95022; color: var(--text); }
+
+    .cq-footer {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .cq-footer a { color: var(--accent); text-decoration: none; }
+    .cq-footer a:hover { text-decoration: underline; }
+
     /* ── Footer ───────────────────────────────────────────────── */
     footer {
       max-width: 1400px;
@@ -280,8 +398,36 @@
     <strong>Your PAT is not sent anywhere — it is only kept in the local cache of this page.</strong></span>
   </div>
 
-  <div id="filters"></div>
-  <div id="grid"></div>
+  <div id="code-quality-section">
+    <div class="cq-header">
+      <h2>📊 Code Quality</h2>
+      <div class="cq-timestamp" id="cq-timestamp"></div>
+    </div>
+
+    <div class="cq-metrics-grid" id="cq-metrics-grid">
+      <!-- Filled by JS -->
+    </div>
+
+    <div class="cq-rules-section">
+      <div class="cq-rules-header">Top Violated Rules</div>
+      <table class="cq-rules-table" id="cq-rules-table">
+        <thead>
+          <tr>
+            <th>Rule ID</th>
+            <th>Count</th>
+            <th>Severity</th>
+          </tr>
+        </thead>
+        <tbody id="cq-rules-tbody">
+          <!-- Filled by JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cq-footer">
+      Full CodeQL report available at <a href="codeql-report.html" target="_blank" rel="noopener">codeql-report.html</a>
+    </div>
+  </div>
 
   <footer>
     Commits-behind data fetched live from the GitHub REST API.
@@ -289,6 +435,82 @@
 
   <script>
     const MODULES = {{ modules_json | safe }};
+    const CODEQL_METRICS = {{ codeql_metrics | safe }};
+
+    // ── Code Quality Rendering ────────────────────────────────────────────
+    function renderCodeQuality() {
+      if (!CODEQL_METRICS) return; // No metrics available
+      
+      const section = document.getElementById('code-quality-section');
+      const gridEl = document.getElementById('cq-metrics-grid');
+      const tableBodyEl = document.getElementById('cq-rules-tbody');
+      const timestampEl = document.getElementById('cq-timestamp');
+
+      // Show section
+      section.classList.add('visible');
+
+      // Render timestamp
+      if (CODEQL_METRICS.generated_at) {
+        const dt = new Date(CODEQL_METRICS.generated_at);
+        timestampEl.textContent = `Generated: ${dt.toLocaleString()}`;
+      }
+
+      // Render metrics cards
+      const metrics = CODEQL_METRICS.overall_metrics || {};
+      const severity = CODEQL_METRICS.metrics_by_severity || {};
+
+      // Total findings card
+      gridEl.innerHTML = `
+        <div class="cq-metric-card">
+          <div class="cq-value">${metrics.total_findings || 0}</div>
+          <div class="cq-label">Total Findings</div>
+        </div>
+      `;
+
+      // Severity breakdown cards
+      const severityLevels = ['error', 'warning', 'note'];
+      severityLevels.forEach(level => {
+        if (severity[level]) {
+          const count = severity[level].count || 0;
+          const pct = (severity[level].percentage || 0).toFixed(1);
+          gridEl.innerHTML += `
+            <div class="cq-metric-card ${level}">
+              <div class="cq-value">${count}</div>
+              <div class="cq-label">${level.charAt(0).toUpperCase() + level.slice(1)}</div>
+              <div class="cq-percent">${pct}%</div>
+            </div>
+          `;
+        }
+      });
+
+      // Render top 10 rules
+      const rules = CODEQL_METRICS.metrics_by_rule || {};
+      const sortedRules = Object.entries(rules)
+        .sort((a, b) => (b[1].count || 0) - (a[1].count || 0))
+        .slice(0, 10);
+
+      tableBodyEl.innerHTML = sortedRules.map(([ruleId, data]) => {
+        const severity = data.severity || 'note';
+        const count = data.count || 0;
+        return `
+          <tr>
+            <td class="cq-rule-name">${ruleId}</td>
+            <td class="cq-rule-count">${count}</td>
+            <td>
+              <span class="cq-rule-severity ${severity}">${severity}</span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      if (sortedRules.length === 0) {
+        tableBodyEl.innerHTML = `
+          <tr>
+            <td colspan="3" style="text-align: center; color: var(--muted);">No violations found</td>
+          </tr>
+        `;
+      }
+    }
 
     // ── Token storage ──────────────────────────────────────────────────────
     function getToken()   { return localStorage.getItem('gh_token') || ''; }
@@ -578,6 +800,7 @@
     document.getElementById('refresh-btn').addEventListener('click', () => render(false));
     renderAuthBar();
     render(true);   // use cache on initial page load
+    renderCodeQuality();  // render code quality metrics if available
   </script>
 </body>
 </html>
