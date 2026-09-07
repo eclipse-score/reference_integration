@@ -534,7 +534,7 @@
                   
   <section id="s-core-platform-v0-9-release-note">
 <h1>S-CORE Platform v0.9 release note<a class="headerlink" href="#s-core-platform-v0-9-release-note" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-57005af5">
+<div class="need_container docutils container" id="SNCB-eb6a2fd1">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__score_v09_release_note">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -661,6 +661,12 @@ into the repository.</p>
 <h3>Incompatible Changes<a class="headerlink" href="#incompatible-changes" title="Link to this heading">#</a></h3>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
+<p>The Orchestrator module was removed from the platform, as announced in the
+v0.8 release note. Downstream users depending on <code class="docutils literal notranslate"><span class="pre">score_orchestrator</span></code> need
+to remove that dependency.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
 <p>This release contains two module renames. Downstream users referencing these
 modules in their own <code class="docutils literal notranslate"><span class="pre">MODULE.bazel</span></code> need to adapt their dependencies:</p>
 <ul class="simple">
@@ -734,23 +740,10 @@ Baselibs as an integration patch.</p></li>
 <li><p><strong>Release notes</strong>: <a class="reference external" href="https://github.com/eclipse-score/config_management/releases">Configuration Management releases</a></p></li>
 </ul>
 </section>
-<section id="orchestrator">
-<h4>Orchestrator<a class="headerlink" href="#orchestrator" title="Link to this heading">#</a></h4>
-<ul class="simple">
-<li><p><strong>Version:</strong> <code class="docutils literal notranslate"><span class="pre">0.1.1</span></code> (unchanged)</p></li>
-<li><p><strong>Release notes</strong>: <a class="reference external" href="https://github.com/eclipse-score/orchestrator/releases">Orchestrator releases</a></p></li>
-</ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The v0.8 release note announced that the Orchestrator would be archived in
-v0.9. The module is still integrated at <code class="docutils literal notranslate"><span class="pre">0.1.1</span></code>; the archival decision
-needs to be confirmed before this release note is finalized.</p>
-</div>
-</section>
 <section id="kyron">
 <h4>Kyron<a class="headerlink" href="#kyron" title="Link to this heading">#</a></h4>
 <ul class="simple">
-<li><p><strong>Version:</strong> <code class="docutils literal notranslate"><span class="pre">0.1.3</span></code> (unchanged)</p></li>
+<li><p><strong>Version:</strong> <code class="docutils literal notranslate"><span class="pre">0.1.4</span></code> (previously <code class="docutils literal notranslate"><span class="pre">0.1.3</span></code>)</p></li>
 <li><p><strong>Release notes</strong>: <a class="reference external" href="https://github.com/eclipse-score/kyron/releases">Kyron releases</a></p></li>
 </ul>
 </section>
@@ -980,7 +973,6 @@ issue/discussion.
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Logging</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#time">Time</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Configuration Management</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#orchestrator">Orchestrator</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#kyron">Kyron</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reference-integration">Reference integration</a><ul class="nav section-nav flex-column">
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#reference-qnx-image">Reference QNX image</a></li>
