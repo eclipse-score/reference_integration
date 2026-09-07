@@ -124,7 +124,7 @@ class TestLifecycleStateManagerIf:
     CLI client and validates startup-state evidence from daemon logs.
     """
 
-    @pytest.mark.daemon
+    # @pytest.mark.daemon
     @add_test_properties(
         partially_verifies=[
             "logic_arc_int__lifecycle__controlif",
@@ -169,7 +169,7 @@ class TestLifecycleStateManagerIf:
         assert not ctrl_errors, f"[activate_target] Control-interface IPC errors after activate_target: {ctrl_errors}"
         assert daemon.is_running(), "[activate_target] Daemon terminated unexpectedly after activate_target request."
 
-    @pytest.mark.daemon
+    # @pytest.mark.daemon
     def test_status_query_returns_current_run_target(
         self,
         launch_manager_daemon: dict[str, Any],

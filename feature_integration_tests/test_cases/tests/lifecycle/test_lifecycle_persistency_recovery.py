@@ -387,7 +387,7 @@ class TestLifecyclePersistencyRecoveryContinuity:
         for sid in sorted(snapshot_ids_after_second):
             verify_kvs_snapshot_hash(kvs_dir, instance_id=1, snapshot_id=sid)
 
-    @pytest.mark.daemon
+    # @pytest.mark.daemon
     @add_test_properties(
         partially_verifies=[
             "feat_req__lifecycle__process_failure_react",
