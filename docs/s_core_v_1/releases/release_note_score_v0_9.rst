@@ -17,7 +17,7 @@ S-CORE Platform v0.9 release note
 
 .. document:: S-CORE v0.9 release note
    :id: doc__score_v09_release_note
-   :status: draft
+   :status: valid
    :safety: QM
    :security: YES
    :realizes: wp__platform_sw_release_note
@@ -65,6 +65,9 @@ The `Configuration Management
 integrated into the reference integration for the first time. It provides a
 configuration daemon and a proxy API for platform-wide configuration handling.
 
+Improvements
+------------
+
 Logging Demo Application
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -72,17 +75,15 @@ A logging demo application was added to the reference integration, demonstrating
 the use of the `Logging <https://github.com/eclipse-score/logging>`_ module in
 an integrated setting.
 
-Improvements
-------------
-
 Integration Strategy (DR-008)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The common integration strategy documented in DR-008, which was aligned during
-v0.8, has been implemented: the reference integration gained a
+v0.8, has been partially implemented: the reference integration gained a
 resolved-dependency override mechanism. This allows the integration to steer
 transitive module dependency resolution centrally from ``known_good.json``,
-instead of relying on the pinning inside each individual module.
+instead of relying on the pinning inside each individual module. The remaining
+parts of DR-008 are not yet implemented and are planned for a follow-up release.
 
 Reproducible Dependency Pinning
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -100,7 +101,9 @@ Build Environment
 ~~~~~~~~~~~~~~~~~
 
 - Bazel was updated to ``8.6.0``.
-- The obsolete AutoSD toolchain usage was removed.
+- The legacy ``os_autosd_toolchain`` dependency (``inc_os_autosd``) was dropped.
+  AutoSD support itself remains part of this release; the AutoSD 10 toolchain is
+  now provided by ``score_toolchains_gcc``.
 
 Documentation
 ~~~~~~~~~~~~~
@@ -110,6 +113,12 @@ into the repository.
 
 Incompatible Changes
 --------------------
+
+.. warning::
+
+   The Orchestrator module was removed from the platform, as announced in the
+   v0.8 release note. Downstream users depending on ``score_orchestrator`` need
+   to remove that dependency.
 
 .. warning::
 
@@ -189,23 +198,10 @@ Configuration Management
 - **Release notes**: `Configuration Management releases
   <https://github.com/eclipse-score/config_management/releases>`_
 
-Orchestrator
-~~~~~~~~~~~~
-
-- **Version:** ``0.1.1`` (unchanged)
-- **Release notes**: `Orchestrator releases
-  <https://github.com/eclipse-score/orchestrator/releases>`_
-
-.. note::
-
-   The v0.8 release note announced that the Orchestrator would be archived in
-   v0.9. The module is still integrated at ``0.1.1``; the archival decision
-   needs to be confirmed before this release note is finalized.
-
 Kyron
 ~~~~~
 
-- **Version:** ``0.1.3`` (unchanged)
+- **Version:** ``0.1.4`` (previously ``0.1.3``)
 - **Release notes**: `Kyron releases
   <https://github.com/eclipse-score/kyron/releases>`_
 
@@ -222,7 +218,8 @@ Reference integration
 - Updated Bazel to ``8.6.0``.
 - Hardened known-good dependency handling (tag-to-hash resolution fix,
   hash-pinned CI checkouts).
-- Removed the obsolete AutoSD toolchain usage.
+- Dropped the legacy ``os_autosd_toolchain`` dependency in favour of the
+  AutoSD 10 toolchain provided by ``score_toolchains_gcc``.
 
 Reference QNX image
 +++++++++++++++++++
@@ -232,7 +229,9 @@ Reference QNX image
 Reference Red Hat AutoSD Linux image (Experimental)
 +++++++++++++++++++++++++++++++++++++++++++++++++++
 
-- Removed the obsolete AutoSD toolchain usage from the image build flow.
+- The image is still built and remains part of this release. Only the legacy
+  ``os_autosd_toolchain`` dependency was dropped from the build flow; the
+  AutoSD 10 toolchain is now provided by ``score_toolchains_gcc``.
 
 Reference Elektrobit corbos Linux for Safety Applications Linux image (Experimental)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
