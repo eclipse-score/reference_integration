@@ -303,6 +303,10 @@
   
 
   
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
 </div>
 
     </header>
@@ -546,90 +550,79 @@ requirements/architecture are malformed, unlinked or violate the metamodel, the
 docs build (and therefore CI) fails — so wiring your module in here is what gets
 its process artifacts continuously checked, not just published.</p>
 <p>The integration builds one Sphinx site that merges the docs of every integrated
-module. To pull yours in:</p>
-<ol class="arabic">
-<li><p>Add your module’s <code class="docutils literal notranslate"><span class="pre">needs_json</span></code> to the <code class="docutils literal notranslate"><span class="pre">docs(...)</span></code> rule’s <code class="docutils literal notranslate"><span class="pre">data</span></code> list in
-the top-level <a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/BUILD">BUILD</a> file:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">docs</span><span class="p">(</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;@score_persistency//:needs_json&quot;</span><span class="p">,</span>
-        <span class="c1"># ...</span>
-        <span class="s2">&quot;@score_my_module//:needs_json&quot;</span><span class="p">,</span>
-    <span class="p">],</span>
-    <span class="n">known_good</span> <span class="o">=</span> <span class="s2">&quot;known_good.json&quot;</span><span class="p">,</span>
-    <span class="n">source_dir</span> <span class="o">=</span> <span class="s2">&quot;docs&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p>This requires your module to expose a <code class="docutils literal notranslate"><span class="pre">//:needs_json</span></code> target (i.e. it is a
-docs-as-code module).</p>
-</li>
-<li><p>Add a toctree entry so the module shows up in the navigation. <strong>Which page
-you edit depends on what kind of module it is</strong> — the site groups modules
-into two top-level sections, each backed by its own <code class="docutils literal notranslate"><span class="pre">.rst</span></code> page:</p>
+module, and it does so straight from <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>: <strong>a module that is in
+the integration has its documentation in the site by default</strong>. There is nothing
+to add to the top-level <code class="docutils literal notranslate"><span class="pre">BUILD</span></code> file.</p>
+<p>What happens under the hood: a module that calls docs-as-code’s <code class="docutils literal notranslate"><span class="pre">docs()</span></code> macro
+automatically exposes a public <code class="docutils literal notranslate"><span class="pre">//:docs_bundle</span></code> target.
+<code class="docutils literal notranslate"><span class="pre">scripts/known_good/update_module_from_known_good.py</span></code> turns every module in
+<code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> into one mount entry in
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/bazel_common/docs_bundles.bzl">bazel_common/docs_bundles.bzl</a>,
+which the <code class="docutils literal notranslate"><span class="pre">docs(bundles</span> <span class="pre">=</span> <span class="pre">DOCS_BUNDLES,</span> <span class="pre">...)</span></code> call in the top-level <a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/BUILD">BUILD</a> file
+consumes. <strong>Which of the two site sections your module lands in follows from the
+group it sits in</strong> — no extra declaration, and no toctree to edit: the section
+pages (<code class="docutils literal notranslate"><span class="pre">docs/modules/index.rst</span></code> and <code class="docutils literal notranslate"><span class="pre">docs/process_methods_tools/index.rst</span></code>)
+carry empty toctrees that the mounts fill at build time.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <colgroup>
-<col style="width: 22.0%" />
-<col style="width: 30.0%" />
+<col style="width: 26.0%" />
+<col style="width: 26.0%" />
 <col style="width: 48.0%" />
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p>Section</p></th>
-<th class="head"><p>Page to edit</p></th>
-<th class="head"><p>Put your module here if it is…</p></th>
+<tr class="row-odd"><th class="head"><p>Group in <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code></p></th>
+<th class="head"><p>Mounted under</p></th>
+<th class="head"><p>Your module belongs here if it is…</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><strong>Modules</strong></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/docs/modules.rst">docs/modules.rst</a></p></td>
-<td><p>an S-CORE <strong>software module</strong> that ships in the integration — i.e. it
-lives under <code class="docutils literal notranslate"><span class="pre">modules.target_sw</span></code> in <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> (communication,
-persistency, logging, kyron, baselibs, …). This is the common
-case.</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">modules.target_sw</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">modules/&lt;module_name&gt;</span></code></p></td>
+<td><p>an S-CORE <strong>software module</strong> that ships in the integration
+(communication, persistency, logging, kyron, baselibs, …). This is the
+common case.</p></td>
 </tr>
-<tr class="row-odd"><td><p><strong>Process, Methods &amp; Tools</strong></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/docs/process_methods_tools.rst">docs/process_methods_tools.rst</a></p></td>
-<td><p>a <strong>tooling / process</strong> repo from <code class="docutils literal notranslate"><span class="pre">modules.tooling</span></code> (platform, process,
-docs-as-code) rather than a shipped software module.</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">modules.tooling</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">process_methods_tools/&lt;module_name&gt;</span></code></p></td>
+<td><p>a <strong>tooling / process</strong> repo (platform, process_description,
+docs-as-code, …) rather than a shipped software module.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>For a normal software module, add the entry to the <code class="docutils literal notranslate"><span class="pre">Modules</span></code> toctree in
-<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/docs/modules.rst">docs/modules.rst</a>, next to the existing
-modules:</p>
-<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="gh">Modules</span>
-<span class="gh">=======</span>
-
-<span class="p">..</span> <span class="ow">toctree</span><span class="p">::</span>
-   <span class="nc">:titlesonly:</span>
-   <span class="nc">:maxdepth:</span> 1
-
-   _collections/score_persistency/docs/index
-   _collections/score_logging/docs/index
-   # ...
-   _collections/score_my_module/docs/index
+<p>So for a normal module you do nothing beyond adding it to <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>
+and re-running the generator:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scripts/known_good/update_module_from_known_good.py<span class="w"> </span>--known<span class="w"> </span>known_good.json<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--output-dir-modules<span class="w"> </span>bazel_common
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">_collections/score_my_module/docs/index</span></code> path is <strong>not</strong> a file in this
-repository — the docs build mounts every module’s documentation under
-<code class="docutils literal notranslate"><span class="pre">_collections/&lt;module-repo-name&gt;/</span></code> at build time. So the path must be:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">score_my_module</span></code> — the <strong>module/repository name</strong> as registered in
-<code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> (the <code class="docutils literal notranslate"><span class="pre">&#64;score_my_module</span></code> repo), and</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">docs/index</span></code> — the path of the <strong>documentation root</strong> <em>inside that
-module’s repository</em> (most modules use <code class="docutils literal notranslate"><span class="pre">docs/index</span></code>; match whatever your
-module actually exposes via its <code class="docutils literal notranslate"><span class="pre">needs_json</span></code> docs target).</p></li>
-</ul>
-</li>
-</ol>
+<p>Commit the regenerated files together with your <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> change —
+the <a class="reference internal" href="reference.html#ci-checks"><span class="std std-ref">CI checks</span></a> regenerate them and fail if they drift.</p>
+<section id="opting-a-module-out">
+<h2><span class="section-number">2.1. </span>Opting a module out<a class="headerlink" href="#opting-a-module-out" title="Link to this heading">#</a></h2>
+<p>Some modules expose no <code class="docutils literal notranslate"><span class="pre">//:docs_bundle</span></code>: they do not call <code class="docutils literal notranslate"><span class="pre">docs()</span></code> at all,
+or their root package cannot be loaded from the integration’s dependency graph.
+Mounting those would fail the docs build on a missing target, so they opt out
+explicitly with <code class="docutils literal notranslate"><span class="pre">&quot;docs&quot;:</span> <span class="pre">false</span></code>:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;score_bazel_platforms&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;repo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://github.com/eclipse-score/bazel_platforms.git&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;docs&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;hash&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;607672cdf2f05f21af7113dab0849726dd59bf86&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Treat <code class="docutils literal notranslate"><span class="pre">&quot;docs&quot;:</span> <span class="pre">false</span></code> as a gap to close, not a normal state — the point of the
+default is that documentation and its process checks are opt-out, not opt-in.</p>
+<p>If you need a non-default mount, <code class="docutils literal notranslate"><span class="pre">docs</span></code> also accepts an object with
+<code class="docutils literal notranslate"><span class="pre">bundle</span></code>, <code class="docutils literal notranslate"><span class="pre">mount_at</span></code> and <code class="docutils literal notranslate"><span class="pre">attach_to</span></code> keys, which are passed through to the
+<code class="docutils literal notranslate"><span class="pre">docs()</span></code> macro unchanged.</p>
 <p>Build the full docs locally to verify your module shows up — or use the
 live-preview server which rebuilds on every change:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># one-shot full build incl. all modules</span>
-bazel<span class="w"> </span>run<span class="w"> </span>//:docs_combo
+bazel<span class="w"> </span>run<span class="w"> </span>//:docs
 
 <span class="c1"># live preview in the browser (auto-rebuild)</span>
-bazel<span class="w"> </span>run<span class="w"> </span>//:live_preview_combo_experimental
+bazel<span class="w"> </span>run<span class="w"> </span>//:live_preview
 </pre></div>
 </div>
 <p>The docs are built and published by the <code class="docutils literal notranslate"><span class="pre">test_and_docs</span></code> workflow (see
@@ -646,6 +639,7 @@ across all S-CORE repositories</strong>, hosted centrally in the
 <a class="reference external" href="https://github.com/eclipse-score/cicd-workflows">cicd-workflows</a>
 repository, instead of being duplicated and maintained per repo.</p>
 </div>
+</section>
 </section>
 
 
@@ -682,6 +676,24 @@ repository, instead of being duplicated and maintained per repo.</p>
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#opting-a-module-out">2.1. Opting a module out</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
