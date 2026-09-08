@@ -24,9 +24,7 @@ Persistency Module Verification Report
    :realizes: wp__verification_module_ver_report
    :version: 1
 
-This report is generated from persistency's own needs data (component,
-feature and test-result needs pulled in via ``@score_persistency//:needs_json``)
-using the module verification report template introduced in
-`docs-as-code#763 <https://github.com/eclipse-score/docs-as-code/pull/763>`_.
+This report is generated from persistency's own needs data.
+It uses the module verification report template introduced by docs-as-code.
 It complements persistency's own hand-written verification report,
 :need:`doc__persistency_manual_verification_report`.

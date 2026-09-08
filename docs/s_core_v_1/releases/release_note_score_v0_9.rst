@@ -17,7 +17,7 @@ S-CORE Platform v0.9 release note
 
 .. document:: S-CORE v0.9 release note
    :id: doc__score_v09_release_note
-   :status: draft
+   :status: valid
    :safety: QM
    :security: YES
    :realizes: wp__platform_sw_release_note
@@ -65,6 +65,9 @@ The `Configuration Management
 integrated into the reference integration for the first time. It provides a
 configuration daemon and a proxy API for platform-wide configuration handling.
 
+Improvements
+------------
+
 Logging Demo Application
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -72,17 +75,15 @@ A logging demo application was added to the reference integration, demonstrating
 the use of the `Logging <https://github.com/eclipse-score/logging>`_ module in
 an integrated setting.
 
-Improvements
-------------
-
 Integration Strategy (DR-008)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The common integration strategy documented in DR-008, which was aligned during
-v0.8, has been implemented: the reference integration gained a
+v0.8, has been partially implemented: the reference integration gained a
 resolved-dependency override mechanism. This allows the integration to steer
 transitive module dependency resolution centrally from ``known_good.json``,
-instead of relying on the pinning inside each individual module.
+instead of relying on the pinning inside each individual module. The remaining
+parts of DR-008 are not yet implemented and are planned for a follow-up release.
 
 Reproducible Dependency Pinning
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -100,7 +101,9 @@ Build Environment
 ~~~~~~~~~~~~~~~~~
 
 - Bazel was updated to ``8.6.0``.
-- The obsolete AutoSD toolchain usage was removed.
+- The legacy ``os_autosd_toolchain`` dependency (``inc_os_autosd``) was dropped.
+  AutoSD support itself remains part of this release; the AutoSD 10 toolchain is
+  now provided by ``score_toolchains_gcc``.
 
 Documentation
 ~~~~~~~~~~~~~
@@ -113,6 +116,12 @@ Incompatible Changes
 
 .. warning::
 
+   The Orchestrator module was removed from the platform, as announced in the
+   v0.8 release note. Downstream users depending on ``score_orchestrator`` need
+   to remove that dependency.
+
+.. warning::
+
    This release contains two module renames. Downstream users referencing these
    modules in their own ``MODULE.bazel`` need to adapt their dependencies:
 
@@ -120,13 +129,13 @@ Incompatible Changes
    - ``score_process`` was renamed to ``score_process_description``.
 
    In addition, ``score_bazel_platforms`` was raised to its first major version
-   ``1.0.0``, and ``score_docs_as_code`` moved from ``4.6.1`` to ``8.0.1``,
+   ``1.0.0``, and ``score_docs_as_code`` moved from ``4.6.1`` to ``8.1.1``,
    both of which contain breaking changes.
 
 S-CORE Platform scope
 ^^^^^^^^^^^^^^^^^^^^^
 
-- **Version:** ``v0.9.0``
+- **Version:** ``v0.7.2``
 - **Release notes**: `S-CORE platform release notes
   <https://github.com/eclipse-score/score/releases>`_
 
@@ -162,7 +171,7 @@ Persistency
 Lifecycle
 ~~~~~~~~~
 
-- **Version:** ``0.5.0`` (previously ``0.3.0``)
+- **Version:** ``0.6.1`` (previously ``0.3.0``)
 - **Release notes**: `Lifecycle releases
   <https://github.com/eclipse-score/lifecycle/releases>`_
 
@@ -171,56 +180,28 @@ Lifecycle
 Logging
 ~~~~~~~
 
-- **Version:** pinned to commit ``d41fbde`` (previously ``0.2.2``)
+- **Version:** ``0.2.4`` (previously ``0.2.2``)
 - **Release notes**: `Logging releases
   <https://github.com/eclipse-score/logging/releases>`_
-
-.. note::
-
-   Logging is integrated from a development commit; a registry release
-   covering this state is still to be published.
 
 Time
 ~~~~
 
-- **Version:** pinned to commit ``4a3a6c5`` (previously ``0.0.1``)
+- **Version:** ``0.0.2`` (previously ``0.0.1``)
 - **Release notes**: `Time releases
   <https://github.com/eclipse-score/time/releases>`_
-
-.. note::
-
-   Time is integrated from a development commit; a registry release
-   covering this state is still to be published.
 
 Configuration Management
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-- **Version:** pinned to commit ``f0d4f67`` (newly integrated)
+- **Version:** ``0.2.0`` (newly integrated)
 - **Release notes**: `Configuration Management releases
   <https://github.com/eclipse-score/config_management/releases>`_
-
-.. note::
-
-   Configuration Management is integrated from a development commit; a
-   registry release covering this state is still to be published.
-
-Orchestrator
-~~~~~~~~~~~~
-
-- **Version:** ``0.1.1`` (unchanged)
-- **Release notes**: `Orchestrator releases
-  <https://github.com/eclipse-score/orchestrator/releases>`_
-
-.. note::
-
-   The v0.8 release note announced that the Orchestrator would be archived in
-   v0.9. The module is still integrated at ``0.1.1``; the archival decision
-   needs to be confirmed before this release note is finalized.
 
 Kyron
 ~~~~~
 
-- **Version:** ``0.1.3`` (unchanged)
+- **Version:** ``0.1.4`` (previously ``0.1.3``)
 - **Release notes**: `Kyron releases
   <https://github.com/eclipse-score/kyron/releases>`_
 
@@ -237,7 +218,8 @@ Reference integration
 - Updated Bazel to ``8.6.0``.
 - Hardened known-good dependency handling (tag-to-hash resolution fix,
   hash-pinned CI checkouts).
-- Removed the obsolete AutoSD toolchain usage.
+- Dropped the legacy ``os_autosd_toolchain`` dependency in favour of the
+  AutoSD 10 toolchain provided by ``score_toolchains_gcc``.
 
 Reference QNX image
 +++++++++++++++++++
@@ -247,7 +229,9 @@ Reference QNX image
 Reference Red Hat AutoSD Linux image (Experimental)
 +++++++++++++++++++++++++++++++++++++++++++++++++++
 
-- Removed the obsolete AutoSD toolchain usage from the image build flow.
+- The image is still built and remains part of this release. Only the legacy
+  ``os_autosd_toolchain`` dependency was dropped from the build flow; the
+  AutoSD 10 toolchain is now provided by ``score_toolchains_gcc``.
 
 Reference Elektrobit corbos Linux for Safety Applications Linux image (Experimental)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -270,7 +254,7 @@ Process description
 Docs-as-code
 ~~~~~~~~~~~~
 
-- **Version:** ``8.0.1`` (previously ``4.6.1``)
+- **Version:** ``8.1.1`` (previously ``4.6.1``)
 - **Release notes**: `docs-as-code releases
   <https://github.com/eclipse-score/docs-as-code/releases>`_
 
@@ -342,8 +326,7 @@ Known Issues/Vulnerabilities and Bug Fixes
 ------------------------------------------
 
 - See release notes of every module separately.
-- Three modules (Logging, Time, Configuration Management) are integrated from
-  development commits rather than registry releases.
+- All modules listed here are integrated from published registry releases.
 - The reference integration carries integration patches for Baselibs,
   Communication, Configuration Management, Logging, Time and Tooling. See the
   ``patches/`` directory for details.
