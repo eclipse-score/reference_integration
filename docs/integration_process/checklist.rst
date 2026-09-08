@@ -29,8 +29,8 @@ Use this as a final review before opening your pull request:
        patches referenced if needed; ``known_good_correct`` and ``bzlmod-lock``
        checks green.
    * - 2 · Documentation
-     - ``needs_json`` added to ``//:docs`` data and toctree entry in
-       ``modules.rst``; ``//:docs_combo`` shows the module.
+     - mounted automatically from ``known_good.json`` (no ``"docs": false``);
+       ``bazel run //:docs`` shows the module in its section.
    * - 3 · Unit tests (default platform)
      - module compiles and unit tests pass on ``--config=linux-x86_64`` via
        ``quality_runners.py``; ``metadata`` tuned if needed.

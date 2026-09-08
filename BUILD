@@ -14,6 +14,7 @@
 load("@score_docs_as_code//:docs.bzl", "docs")
 load("@score_tooling//:defs.bzl", "setup_starpls")
 load("@score_tooling//third_party/format:macros.bzl", "use_format_targets")
+load("//bazel_common:docs_bundles.bzl", "DOCS_BUNDLES")
 
 # Alias causing doc build here being independet of what doc-as-code do.
 # This allows to changge labels of real doc build indepedent of pull_request_target
@@ -24,46 +25,14 @@ alias(
 )
 
 # Docs-as-code
+#
+# The bundle mounts are generated from known_good.json into
+# //bazel_common:docs_bundles.bzl: every module is mounted under its group's section
+# (target_sw -> modules/, tooling -> process_methods_tools/) unless it sets
+# '"docs": false' there. Change the module list in known_good.json, not here, and
+# regenerate with scripts/known_good/update_module_from_known_good.py.
 docs(
-    bundles = [
-        # Software components
-        # TODO Remove and replace with generation for know_good.json !
-        # "@score_communication//:needs_json",  # no docs_sources
-        {
-            "bundle": "@score_lifecycle//:docs_bundle",
-            "mount_at": "modules/score_lifecycle",
-        },
-        {
-            "bundle": "@score_logging//:docs_bundle",
-            "mount_at": "modules/score_logging",
-        },
-        {
-            "bundle": "@score_persistency//:docs_bundle",
-            "mount_at": "modules/score_persistency",
-        },
-        {
-            "bundle": "@score_kyron//:docs_bundle",
-            "mount_at": "modules/score_kyron",
-        },
-        {
-            "bundle": "@score_baselibs//:docs_bundle",
-            "mount_at": "modules/score_baselibs",
-        },
-
-        # Process methods and tools (PMT)
-        {
-            "bundle": "@score_platform//:docs_bundle",
-            "mount_at": "process_methods_tools/score_platform",
-        },
-        {
-            "bundle": "@score_process_description//:docs_bundle",
-            "mount_at": "process_methods_tools/score_process_description",
-        },
-        {
-            "bundle": "@score_docs_as_code//:docs_bundle",
-            "mount_at": "process_methods_tools/score_docs_as_code",
-        },
-    ],
+    bundles = DOCS_BUNDLES,
     known_good = "known_good.json",
     source_dir = "docs",
 )

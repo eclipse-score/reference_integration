@@ -119,7 +119,7 @@ The consolidated outputs published by the integration. They are built by
      - Source / target
    * - Consolidated documentation
      - All integrated module docs merged into one Sphinx site.
-     - `BUILD <https://github.com/eclipse-score/reference_integration/blob/main/BUILD>`_ ``docs(...)`` → ``bazel run //:docs_combo``
+     - `BUILD <https://github.com/eclipse-score/reference_integration/blob/main/BUILD>`_ ``docs(...)`` → ``bazel run //:docs``
    * - Platform verification report
      - Per-release requirements/architecture verification, safety analyses and
        per-test-case results.
