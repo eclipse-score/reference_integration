@@ -109,7 +109,7 @@ sbom(
         "@score_docs_as_code//src:requirements_lock",
     ],
     targets = [
-        "//:docs_combo_experimental",
+        "//:docs",
         "//feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios",
         "//scripts/tooling:checkout_repos",
         "//scripts/tooling:recategorize_guidelines",
