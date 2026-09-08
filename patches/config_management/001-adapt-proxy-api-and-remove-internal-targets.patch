@@ -1,3 +1,27 @@
+diff --git a/score/config_management/config_daemon/code/BUILD b/score/config_management/config_daemon/code/BUILD
+index 2917696..2ddcc60 100644
+--- a/score/config_management/config_daemon/code/BUILD
++++ b/score/config_management/config_daemon/code/BUILD
+@@ -76,6 +76,7 @@ cc_binary(
+     deps = [
+         "//score/config_management/config_daemon/code/app/details:app",
+         "//score/config_management/config_daemon/code/factory/details:mw_factory",
++        "@score_lifecycle//score/launch_manager:lifecyclemanager_cc",
+         "@score_lifecycle//score/launch_manager:runapplication_cc",
+     ],
+ )
+diff --git a/score/config_management/config_daemon/code/app/details/BUILD b/score/config_management/config_daemon/code/app/details/BUILD
+index 976bde7..9aeff36 100644
+--- a/score/config_management/config_daemon/code/app/details/BUILD
++++ b/score/config_management/config_daemon/code/app/details/BUILD
+@@ -52,6 +52,7 @@ cc_library(
+         "//score/config_management/config_daemon/code/factory:interface_for_unit_test",
+         "//score/config_management/config_daemon/code/fault_event_reporter",
+         "@score_baselibs//score/scope_exit",
++        "@score_lifecycle//score/launch_manager:application_cc",
+         "@score_lifecycle//score/launch_manager:mock_application_context_cc",
+         "@score_logging//score/mw/log",
+     ],
 diff --git a/score/config_management/config_provider/BUILD b/score/config_management/config_provider/BUILD
 index e0d763b..0dd66b9 100644
 --- a/score/config_management/config_provider/BUILD
@@ -145,27 +169,3 @@ index 5aeca26..123868b 100644
              token,
              memory_resource,
              max_samples_limit,
-diff --git a/score/config_management/config_daemon/code/app/details/BUILD b/score/config_management/config_daemon/code/app/details/BUILD
-index 63e9161..db9b630 100644
---- a/score/config_management/config_daemon/code/app/details/BUILD
-+++ b/score/config_management/config_daemon/code/app/details/BUILD
-@@ -52,6 +52,7 @@ cc_library(
-         "//score/config_management/config_daemon/code/factory:interface_for_unit_test",
-         "//score/config_management/config_daemon/code/fault_event_reporter",
-         "@score_baselibs//score/scope_exit",
-+        "@score_lifecycle_health//score/launch_manager:application_cc",
-         "@score_lifecycle_health//score/launch_manager:applicationcontext_mock_cc",
-         "@score_logging//score/mw/log",
-     ],
-diff --git a/score/config_management/config_daemon/code/BUILD b/score/config_management/config_daemon/code/BUILD
-index b9a1469..7fdb370 100644
---- a/score/config_management/config_daemon/code/BUILD
-+++ b/score/config_management/config_daemon/code/BUILD
-@@ -76,6 +76,7 @@ cc_binary(
-     deps = [
-         "//score/config_management/config_daemon/code/app/details:app",
-         "//score/config_management/config_daemon/code/factory/details:mw_factory",
-+        "@score_lifecycle_health//score/launch_manager:lifecyclemanager_cc",
-         "@score_lifecycle_health//score/launch_manager:runapplication_cc",
-     ],
- )

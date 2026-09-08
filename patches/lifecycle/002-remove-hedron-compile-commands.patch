@@ -1,0 +1,17 @@
+diff --git a/BUILD b/BUILD
+--- a/BUILD
++++ b/BUILD
+@@ -14,1 +14,0 @@
+-load("@hedron_compile_commands//:refresh_compile_commands.bzl", "refresh_compile_commands")
+@@ -20,11 +19,0 @@ load("//:project_config.bzl", "PROJECT_CONFIG")
+-# Generate `compile_commands.json`.
+-# Required for `clangd` support.
+-refresh_compile_commands(
+-    name = "generate_compile_commands",
+-    exclude_external_sources = True,
+-    target_compatible_with = ["@platforms//os:linux"],
+-    targets = {
+-        "//...": "",
+-    },
+-)
+-

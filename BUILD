@@ -13,31 +13,27 @@
 
 load("@score_docs_as_code//:docs.bzl", "docs")
 load("@score_sbom//:defs.bzl", "sbom")
-load("@score_tooling//:defs.bzl", "setup_starpls", "use_format_targets")
+load("@score_tooling//:defs.bzl", "setup_starpls")
+load("@score_tooling//third_party/format:macros.bzl", "use_format_targets")
+load("//bazel_common:docs_bundles.bzl", "DOCS_BUNDLES")
 
 # Alias causing doc build here being independet of what doc-as-code do.
 # This allows to changge labels of real doc build indepedent of pull_request_target
 # helping being more flexible on releases
 alias(
     name = "docs_shim",
-    actual = "//:docs_combo",
+    actual = "//:docs",
 )
 
 # Docs-as-code
+#
+# The bundle mounts are generated from known_good.json into
+# //bazel_common:docs_bundles.bzl: every module is mounted under its group's section
+# (target_sw -> modules/, tooling -> process_methods_tools/) unless it sets
+# '"docs": false' there. Change the module list in known_good.json, not here, and
+# regenerate with scripts/known_good/update_module_from_known_good.py.
 docs(
-    data = [
-        # Software components
-        "@score_persistency//:needs_json",
-        "@score_kyron//:needs_json",
-        # "@score_baselibs//:needs_json",  # score_tooling is dev_dependency
-        # "@score_communication//:needs_json",  # no docs_sources
-        # "@score_lifecycle_health//:needs_json",  # unreadable images - relative paths issue
-        "@score_logging//:needs_json",  # duplicated labels
-        # Tools
-        "@score_platform//:needs_json",
-        "@score_process//:needs_json",
-        "@score_docs_as_code//:needs_json",
-    ],
+    bundles = DOCS_BUNDLES,
     known_good = "known_good.json",
     source_dir = "docs",
 )

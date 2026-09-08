@@ -38,75 +38,72 @@ docs build (and therefore CI) fails — so wiring your module in here is what ge
 its process artifacts continuously checked, not just published.
 
 The integration builds one Sphinx site that merges the docs of every integrated
-module. To pull yours in:
+module, and it does so straight from ``known_good.json``: **a module that is in
+the integration has its documentation in the site by default**. There is nothing
+to add to the top-level ``BUILD`` file.
 
-#. Add your module's ``needs_json`` to the ``docs(...)`` rule's ``data`` list in
-   the top-level `BUILD <https://github.com/eclipse-score/reference_integration/blob/main/BUILD>`_ file:
+What happens under the hood: a module that calls docs-as-code's ``docs()`` macro
+automatically exposes a public ``//:docs_bundle`` target.
+``scripts/known_good/update_module_from_known_good.py`` turns every module in
+``known_good.json`` into one mount entry in
+`bazel_common/docs_bundles.bzl <https://github.com/eclipse-score/reference_integration/blob/main/bazel_common/docs_bundles.bzl>`_,
+which the ``docs(bundles = DOCS_BUNDLES, ...)`` call in the top-level `BUILD
+<https://github.com/eclipse-score/reference_integration/blob/main/BUILD>`_ file
+consumes. **Which of the two site sections your module lands in follows from the
+group it sits in** — no extra declaration, and no toctree to edit: the section
+pages (``docs/modules/index.rst`` and ``docs/process_methods_tools/index.rst``)
+carry empty toctrees that the mounts fill at build time.
 
-   .. code-block:: python
+.. list-table::
+   :header-rows: 1
+   :widths: 26 26 48
 
-      docs(
-          data = [
-              "@score_persistency//:needs_json",
-              # ...
-              "@score_my_module//:needs_json",
-          ],
-          known_good = "known_good.json",
-          source_dir = "docs",
-      )
+   * - Group in ``known_good.json``
+     - Mounted under
+     - Your module belongs here if it is…
+   * - ``modules.target_sw``
+     - ``modules/<module_name>``
+     - an S-CORE **software module** that ships in the integration
+       (communication, persistency, logging, kyron, baselibs, …). This is the
+       common case.
+   * - ``modules.tooling``
+     - ``process_methods_tools/<module_name>``
+     - a **tooling / process** repo (platform, process_description,
+       docs-as-code, …) rather than a shipped software module.
 
-   This requires your module to expose a ``//:needs_json`` target (i.e. it is a
-   docs-as-code module).
+So for a normal module you do nothing beyond adding it to ``known_good.json``
+and re-running the generator:
 
-#. Add a toctree entry so the module shows up in the navigation. **Which page
-   you edit depends on what kind of module it is** — the site groups modules
-   into two top-level sections, each backed by its own ``.rst`` page:
+.. code-block:: bash
 
-   .. list-table::
-      :header-rows: 1
-      :widths: 22 30 48
+   scripts/known_good/update_module_from_known_good.py --known known_good.json \
+       --output-dir-modules bazel_common
 
-      * - Section
-        - Page to edit
-        - Put your module here if it is…
-      * - **Modules**
-        - `docs/sw_components.rst <https://github.com/eclipse-score/reference_integration/blob/main/docs/sw_components.rst>`_
-        - an S-CORE **software module** that ships in the integration — i.e. it
-          lives under ``modules.target_sw`` in ``known_good.json`` (communication,
-          persistency, logging, kyron, baselibs, …). This is the common
-          case.
-      * - **Process, Methods & Tools**
-        - `docs/process_methods_tools.rst <https://github.com/eclipse-score/reference_integration/blob/main/docs/process_methods_tools.rst>`_
-        - a **tooling / process** repo from ``modules.tooling`` (platform, process,
-          docs-as-code) rather than a shipped software module.
+Commit the regenerated files together with your ``known_good.json`` change —
+the :ref:`ci_checks` regenerate them and fail if they drift.
 
-   For a normal software module, add the entry to the ``Modules`` toctree in
-   `docs/sw_components.rst <https://github.com/eclipse-score/reference_integration/blob/main/docs/sw_components.rst>`_, next to the existing
-   modules:
+Opting a module out
+~~~~~~~~~~~~~~~~~~~
 
-   .. code-block:: rst
+Some modules expose no ``//:docs_bundle``: they do not call ``docs()`` at all,
+or their root package cannot be loaded from the integration's dependency graph.
+Mounting those would fail the docs build on a missing target, so they opt out
+explicitly with ``"docs": false``:
 
-      Modules
-      =======
+.. code-block:: json
 
-      .. toctree::
-         :titlesonly:
-         :maxdepth: 1
+   "score_bazel_platforms": {
+       "repo": "https://github.com/eclipse-score/bazel_platforms.git",
+       "docs": false,
+       "hash": "607672cdf2f05f21af7113dab0849726dd59bf86"
+   }
 
-         _collections/score_persistency/docs/index
-         _collections/score_logging/docs/index
-         # ...
-         _collections/score_my_module/docs/index
+Treat ``"docs": false`` as a gap to close, not a normal state — the point of the
+default is that documentation and its process checks are opt-out, not opt-in.
 
-   The ``_collections/score_my_module/docs/index`` path is **not** a file in this
-   repository — the docs build mounts every module's documentation under
-   ``_collections/<module-repo-name>/`` at build time. So the path must be:
-
-   * ``score_my_module`` — the **module/repository name** as registered in
-     ``known_good.json`` (the ``@score_my_module`` repo), and
-   * ``docs/index`` — the path of the **documentation root** *inside that
-     module's repository* (most modules use ``docs/index``; match whatever your
-     module actually exposes via its ``needs_json`` docs target).
+If you need a non-default mount, ``docs`` also accepts an object with
+``bundle``, ``mount_at`` and ``attach_to`` keys, which are passed through to the
+``docs()`` macro unchanged.
 
 Build the full docs locally to verify your module shows up — or use the
 live-preview server which rebuilds on every change:
@@ -114,10 +111,10 @@ live-preview server which rebuilds on every change:
 .. code-block:: bash
 
    # one-shot full build incl. all modules
-   bazel run //:docs_combo
+   bazel run //:docs
 
    # live preview in the browser (auto-rebuild)
-   bazel run //:live_preview_combo_experimental
+   bazel run //:live_preview
 
 The docs are built and published by the ``test_and_docs`` workflow (see
 :ref:`ci_checks`).

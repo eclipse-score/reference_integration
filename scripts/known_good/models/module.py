@@ -21,6 +21,80 @@ from urllib.parse import urlparse
 
 
 @dataclass
+class Docs:
+    """How a module's documentation bundle is mounted into the ref_int docs site.
+
+    Every module is mounted by default: a module that calls docs-as-code's ``docs()``
+    macro automatically exposes a public ``//:docs_bundle``, and the integration wants
+    that documentation in the combined site. A module that does not expose one (it has
+    no ``docs()`` call, or its root package cannot be loaded from ref_int's graph) must
+    opt out with ``"docs": false``, otherwise the docs build fails on a missing target.
+
+    Attributes:
+            enabled: Whether the module's bundle is mounted (default: True).
+            bundle: Bundle label. Defaults to ``@<module_name>//:docs_bundle``.
+            mount_at: Site path to mount at. Defaults to ``<section>/<module_name>``,
+                    where the section is derived from the module's known_good group.
+            attach_to: Optional document to attach the bundle to; passed through to
+                    ``docs()``, which defaults it to the mount_at parent's index.
+    """
+
+    enabled: bool = True
+    bundle: str | None = None
+    mount_at: str | None = None
+    attach_to: str | None = None
+
+    @classmethod
+    def from_value(cls, value: Any) -> Docs:
+        """Create a Docs instance from a known_good.json ``docs`` value.
+
+        Accepts the key being absent (``None``), a bool, or a dict of overrides:
+        ``{"bundle": ..., "mount_at": ..., "attach_to": ...}``.
+
+        Args:
+                value: Raw value of the module's ``docs`` key.
+
+        Returns:
+                Docs instance
+        """
+        if value is None or value is True:
+            return cls()
+        if value is False:
+            return cls(enabled=False)
+        if isinstance(value, dict):
+            unknown = set(value) - {"bundle", "mount_at", "attach_to"}
+            if unknown:
+                raise ValueError(f"Unknown keys in 'docs': {', '.join(sorted(unknown))}")
+            return cls(
+                enabled=True,
+                bundle=value.get("bundle"),
+                mount_at=value.get("mount_at"),
+                attach_to=value.get("attach_to"),
+            )
+        raise ValueError(f"Invalid 'docs' value {value!r} (expected false, true or an object)")
+
+    def to_value(self) -> Any:
+        """Convert to the known_good.json ``docs`` value, or None when it is the default.
+
+        Returns:
+                False when disabled, a dict of overrides when any is set, else None so
+                the key is omitted for the (default) plain-mounted case.
+        """
+        if not self.enabled:
+            return False
+        overrides = {
+            key: value
+            for key, value in (
+                ("bundle", self.bundle),
+                ("mount_at", self.mount_at),
+                ("attach_to", self.attach_to),
+            )
+            if value is not None
+        }
+        return overrides or None
+
+
+@dataclass
 class Metadata:
     """Metadata configuration for a module.
 
@@ -80,6 +154,7 @@ class Module:
     metadata: Metadata = field(default_factory=Metadata)
     branch: str = "main"
     pin_version: bool = False
+    docs: Docs = field(default_factory=Docs)
 
     @classmethod
     def from_dict(cls, name: str, module_data: Dict[str, Any]) -> Module:
@@ -103,6 +178,9 @@ class Module:
                         - branch (str, optional): Git branch name (default: main)
                         - pin_version (bool, optional): If true, module hash is not updated
                                             to latest HEAD by update scripts (default: false)
+                        - docs (bool | dict, optional): Documentation mount for the combined
+                                            docs site. Mounted by default; use false for a
+                                            module that exposes no //:docs_bundle. See Docs.
 
         Returns:
                 Module instance
@@ -137,6 +215,11 @@ class Module:
         branch = module_data.get("branch", "main")
         pin_version = module_data.get("pin_version", False)
 
+        try:
+            docs = Docs.from_value(module_data.get("docs"))
+        except ValueError as e:
+            raise ValueError(f"Module '{name}': {e}") from None
+
         return cls(
             name=name,
             hash=commit_hash,
@@ -146,6 +229,7 @@ class Module:
             metadata=metadata,
             branch=branch,
             pin_version=pin_version,
+            docs=docs,
         )
 
     @classmethod
@@ -208,4 +292,7 @@ class Module:
             result["branch"] = self.branch
         if self.pin_version:
             result["pin_version"] = True
+        docs = self.docs.to_value()
+        if docs is not None:
+            result["docs"] = docs
         return result

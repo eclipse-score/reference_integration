@@ -14,13 +14,16 @@
 """
 Read a known_good.json file and generate a score_modules.MODULE.bazel file
 with `bazel_dep` and `git_override` calls for each module in the JSON.
-It generates also rust_coverage/BUILD file with `rust_coverage_report` for each module with rust impl.
+It generates also rust_coverage/BUILD file with `rust_coverage_report` for each module with rust impl,
+and bazel_common/docs_bundles.bzl with the documentation bundle mounts consumed by the
+`docs()` macro in the root BUILD file.
 
 Usage:
   python3 scripts/known_good/update_module_from_known_good.py \
       --known known_good.json \
       --output-dir-modules bazel_common \
-      --output-dir-coverage rust_coverage
+      --output-dir-coverage rust_coverage \
+      --output-dir-docs-bundles bazel_common
 
 The generated score_modules_NAME_.MODULE.bazel file is included by MODULE.bazel.
 
@@ -32,14 +35,34 @@ import argparse
 import logging
 import os
 import re
+import sys
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from models import Module
-from models.known_good import load_known_good
+# Importable both as a package module (from the tests and the py_library) and runnable as a
+# plain script from the repo root, which is how CI invokes it. Same fallback as
+# resolved_dependencies.py.
+try:
+    from known_good.models import Module
+    from known_good.models.known_good import KnownGood, load_known_good
+except ImportError:
+    _HERE = str(Path(__file__).resolve().parent)
+    if _HERE not in sys.path:
+        sys.path.insert(0, _HERE)
+    from models import Module  # noqa: E402
+    from models.known_good import KnownGood, load_known_good  # noqa: E402
 
 # Configure logging
 logging.basicConfig(level=logging.WARNING, format="%(levelname)s: %(message)s")
+
+# Where each known_good group's documentation is mounted in the combined docs site. The two
+# sections are a property of ref_int's site structure (docs/modules/index.rst and
+# docs/process_methods_tools/index.rst, whose toctrees are filled from these mounts at build
+# time), not of the module set, so the mapping lives here rather than in known_good.json.
+DOCS_SECTION_BY_GROUP = {
+    "target_sw": "modules",
+    "tooling": "process_methods_tools",
+}
 
 
 def generate_git_override_blocks(modules: List[Module], repo_commit_dict: Dict[str, str]) -> List[str]:
@@ -183,6 +206,93 @@ def generate_sbom_module_content(tracked_modules: List[str], timestamp: Optional
     return header + "\n".join(blocks) + "\n"
 
 
+LICENSE_HEADER = (
+    "# *******************************************************************************\n"
+    "# Copyright (c) 2025 Contributors to the Eclipse Foundation\n"
+    "#\n"
+    "# See the NOTICE file(s) distributed with this work for additional\n"
+    "# information regarding copyright ownership.\n"
+    "#\n"
+    "# This program and the accompanying materials are made available under the\n"
+    "# terms of the Apache License Version 2.0 which is available at\n"
+    "# https://www.apache.org/licenses/LICENSE-2.0\n"
+    "#\n"
+    "# SPDX-License-Identifier: Apache-2.0\n"
+    "# *******************************************************************************\n"
+    "\n"
+)
+
+
+def generated_banner(timestamp: str) -> str:
+    """Return the 'do not edit' banner naming the generator, for a generated file."""
+    return (
+        f"# Generated from known_good.json at {timestamp}\n"
+        "# Do not edit manually - use scripts/known_good/update_module_from_known_good.py"
+        " --known known_good.json --output-dir-modules bazel_common\n"
+        "\n"
+    )
+
+
+def generate_docs_bundles_content(known_good: KnownGood, timestamp: Optional[str] = None) -> str:
+    """Generate docs_bundles.bzl: the docs() bundle mounts for the combined docs site.
+
+    Unlike the other generated artifacts this one spans every group, since ref_int builds a
+    single Sphinx site: each group's modules mount under that group's section (see
+    DOCS_SECTION_BY_GROUP). Modules are mounted unless they opt out with ``"docs": false``.
+
+    Args:
+            known_good: Parsed known_good.json.
+            timestamp: known_good.json timestamp, for the generated banner.
+
+    Returns:
+            Content of docs_bundles.bzl
+    """
+    entries: List[str] = []
+    mounted_by: Dict[str, str] = {}
+
+    for group_name, group_modules in known_good.modules.items():
+        section = DOCS_SECTION_BY_GROUP.get(group_name)
+
+        for module in group_modules.values():
+            if not module.docs.enabled:
+                continue
+
+            if section is None:
+                raise SystemExit(
+                    f"Module {module.name} is in group '{group_name}', which has no docs section. "
+                    f"Add it to DOCS_SECTION_BY_GROUP in {Path(__file__).name} (alongside a matching "
+                    f"docs/<section>/index.rst), or set '\"docs\": false' for the group's modules."
+                )
+
+            bundle = module.docs.bundle or f"@{module.name}//:docs_bundle"
+            mount_at = module.docs.mount_at or f"{section}/{module.name}"
+
+            if mount_at in mounted_by:
+                raise SystemExit(
+                    f"Modules {mounted_by[mount_at]} and {module.name} both mount their docs at "
+                    f"'{mount_at}'. Give one an explicit 'docs.mount_at'."
+                )
+            mounted_by[mount_at] = module.name
+
+            lines = ["    {", f'        "bundle": "{bundle}",', f'        "mount_at": "{mount_at}",']
+            if module.docs.attach_to:
+                lines.append(f'        "attach_to": "{module.docs.attach_to}",')
+            lines.append("    },")
+            entries.append("\n".join(lines) + "\n")
+
+    if not entries:
+        raise SystemExit("No modules to mount: every module in known_good.json has 'docs': false")
+
+    header = LICENSE_HEADER
+    if timestamp:
+        header += generated_banner(timestamp)
+
+    return (
+        header + "# Documentation bundle mounts for the docs() macro in the root BUILD file.\n"
+        "DOCS_BUNDLES = [\n" + "".join(entries) + "]\n"
+    )
+
+
 def generate_file_content(
     args: argparse.Namespace,
     modules: List[Module],
@@ -191,30 +301,10 @@ def generate_file_content(
     file_type: str = "module",
 ) -> str:
     """Generate the complete content for score_modules.MODULE.bazel."""
-    # License header
-    header = (
-        "# *******************************************************************************\n"
-        "# Copyright (c) 2025 Contributors to the Eclipse Foundation\n"
-        "#\n"
-        "# See the NOTICE file(s) distributed with this work for additional\n"
-        "# information regarding copyright ownership.\n"
-        "#\n"
-        "# This program and the accompanying materials are made available under the\n"
-        "# terms of the Apache License Version 2.0 which is available at\n"
-        "# https://www.apache.org/licenses/LICENSE-2.0\n"
-        "#\n"
-        "# SPDX-License-Identifier: Apache-2.0\n"
-        "# *******************************************************************************\n"
-        "\n"
-    )
+    header = LICENSE_HEADER
 
     if timestamp:
-        header += (
-            f"# Generated from known_good.json at {timestamp}\n"
-            "# Do not edit manually - use scripts/known_good/update_module_from_known_good.py"
-            " --known known_good.json --output-dir-modules bazel_common\n"
-            "\n"
-        )
+        header += generated_banner(timestamp)
     if file_type == "module":
         if args.override_type == "git":
             blocks = generate_git_override_blocks(modules, repo_commit_dict)
@@ -254,6 +344,7 @@ Examples:
 
 Note:
   - Generates score_modules_{group}.MODULE.bazel for each group
+  - Generates docs_bundles.bzl once, covering every group's documentation mounts
   - To override repository commits, use scripts/known_good/override_known_good_repo.py first.
         """,
     )
@@ -271,6 +362,11 @@ Note:
         "--output-dir-coverage",
         default=Path(__file__).parents[2] / "rust_coverage",
         help="Output directory for BUILD coverage file (default: rust_coverage in repo root)",
+    )
+    parser.add_argument(
+        "--output-dir-docs-bundles",
+        default=Path(__file__).parents[2] / "bazel_common",
+        help="Output directory for docs_bundles.bzl (default: bazel_common in repo root)",
     )
     parser.add_argument(
         "--dry-run",
@@ -379,17 +475,6 @@ Note:
                 f.write(content_build)
             generated_files.append(output_path_coverage)
             print(f"Generated {output_path_coverage}")
-
-    sbom_output_path = os.path.join(output_dir_modules, "score_sbom.MODULE.bazel")
-    sbom_content = generate_sbom_module_content(known_good.sbom_tracked_modules, known_good.timestamp)
-    if args.dry_run:
-        print(f"\nDry run: would write to {sbom_output_path}\n")
-        print(sbom_content)
-    else:
-        with open(sbom_output_path, "w", encoding="utf-8") as f:
-            f.write(sbom_content)
-        generated_files.append(sbom_output_path)
-        print(f"Generated {sbom_output_path}")
 
     if not args.dry_run and generated_files:
         print(f"\nSuccessfully generated {len(generated_files)} file(s) with {total_module_count} total modules")
