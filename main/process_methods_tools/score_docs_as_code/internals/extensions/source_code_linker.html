@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/css/score.css?v=bb63a8e1" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/score.css?v=415257cb" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/score_needs.css?v=82a1844f" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/score_design.css?v=8048e6ee" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -592,8 +592,6 @@ Reads the aggregated JSON, validates and adapts it, and finally injects the link
 <p>Each <code class="docutils literal notranslate"><span class="pre">docs_bundle</span></code> scans the source files selected by its <code class="docutils literal notranslate"><span class="pre">code_targets</span></code>
 attribute. A <em>per bundle JSON cache</em> is then generated and saved; Bazel
 reuses it until its source inputs change.
-<code class="docutils literal notranslate"><span class="pre">scan_code</span></code> remains available for explicit files or filegroups, but is
-deprecated.
 This script <code class="docutils literal notranslate"><span class="pre">scripts_bazel/generate_sourcelinks_cli.py</span></code> finds all codelinks per file, and gathers them into
 one JSON cache per repository.
 It also adds metadata to each needlink that is needed in further steps.</p>
@@ -925,6 +923,7 @@ This is a known inefficiency and will be improved upon later</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>scripts_bazel/
 ├── BUILD   # Declare libraries and filegroups needed for bazel
 ├── generate_sourcelinks_cli.py # Bazel step 1 =&gt; Parses sourcefiles for tags
+├── source_code_link_parser.py # Source-file parser used by the generator
 ├── merge_sourcelinks.py
 └── tests
 │   └── ...
@@ -933,7 +932,6 @@ This is a known inefficiency and will be improved upon later</p>
 <p>The Sphinx extension</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>score_source_code_linker/
 ├── __init__.py                   # Main Sphinx extension; combines CodeLinks + TestLinks
-├── generate_source_code_links_json.py  # Most functionality moved to &#39;scripts_bazel/generate_sourcelinks_cli&#39;
 ├── need_source_links.py         # Data model for combined links
 ├── repo_source_links.py         # Data model for Repo combined links (Final output JSON)
 ├── helpers.py                   # Misc. functions used throughout SCL

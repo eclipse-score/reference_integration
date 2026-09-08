@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/css/score.css?v=bb63a8e1" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/score.css?v=415257cb" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/score_needs.css?v=82a1844f" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/score_design.css?v=8048e6ee" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
@@ -574,6 +574,13 @@ mounted at <code class="docutils literal notranslate"><span class="pre">internal
 bundle would resolve to two different locations, the build fails instead of
 creating colliding docnames or Need IDs. Repeating the same placement is
 deduplicated.</p>
+<p>Source directories are also ownership boundaries. When a mounted bundle lives
+physically below the host’s source directory, the host Sphinx walk excludes the
+bundle subtree and the bundle mount discovers it. When a bundle contains a
+child bundle below its own source directory, the parent mount excludes the
+child subtree and the child mount discovers it. These are directory exclusions,
+so new files remain discoverable during live preview without being discovered
+twice.</p>
 </section>
 <section id="external-modules-and-needs">
 <h2>External modules and Needs<a class="headerlink" href="#external-modules-and-needs" title="Link to this heading">#</a></h2>
