@@ -53,7 +53,7 @@ qnx_ifs(
         "//feature_integration_tests/configs/datarouter:etc_configs",
         "//showcases",
         "@score_logging//score/datarouter",
-        "@score_persistency//tests/test_scenarios/cpp:test_scenarios",
+        "@score_persistency//score/kvs/tests/test_scenarios/cpp:test_scenarios",
     ],
     build_file = "init.build",
     ext_repo_maping = {

@@ -70,7 +70,7 @@ module. To pull yours in:
         - Page to edit
         - Put your module here if it is…
       * - **Modules**
-        - `docs/sw_components.rst <https://github.com/eclipse-score/reference_integration/blob/main/docs/sw_components.rst>`_
+        - `docs/modules.rst <https://github.com/eclipse-score/reference_integration/blob/main/docs/modules.rst>`_
         - an S-CORE **software module** that ships in the integration — i.e. it
           lives under ``modules.target_sw`` in ``known_good.json`` (communication,
           persistency, logging, kyron, baselibs, …). This is the common
@@ -81,7 +81,7 @@ module. To pull yours in:
           docs-as-code) rather than a shipped software module.
 
    For a normal software module, add the entry to the ``Modules`` toctree in
-   `docs/sw_components.rst <https://github.com/eclipse-score/reference_integration/blob/main/docs/sw_components.rst>`_, next to the existing
+   `docs/modules.rst <https://github.com/eclipse-score/reference_integration/blob/main/docs/modules.rst>`_, next to the existing
    modules:
 
    .. code-block:: rst
