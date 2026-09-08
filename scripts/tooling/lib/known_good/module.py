@@ -60,6 +60,12 @@ class Module:
     branch: str = "main"
     pin_version: bool = False
 
+    # Documentation mount for the combined docs site. Absent/True means mounted with
+    # defaults; False opts a module out; a dict carries bundle/mount_at/attach_to
+    # overrides. Kept verbatim so a round-trip through this copy of the model does not
+    # drop what //scripts/known_good generates from it.
+    docs: bool | Dict[str, Any] | None = None
+
     @classmethod
     def from_dict(cls, name: str, data: Dict[str, Any]) -> Module:
         repo = data.get("repo", "")
@@ -86,6 +92,7 @@ class Module:
             metadata=metadata,
             branch=data.get("branch", "main"),
             pin_version=data.get("pin_version", False),
+            docs=data.get("docs"),
         )
 
     @classmethod
@@ -124,4 +131,6 @@ class Module:
             result["branch"] = self.branch
         if self.pin_version:
             result["pin_version"] = True
+        if self.docs is not None:
+            result["docs"] = self.docs
         return result
