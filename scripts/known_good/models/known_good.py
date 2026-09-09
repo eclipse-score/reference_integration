@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import datetime as dt
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict
 
@@ -31,8 +31,8 @@ class KnownGood:
     """
 
     modules: Dict[str, Dict[str, Module]]
-    sbom_tracked_modules: list[str]
     timestamp: str
+    sbom_tracked_modules: list[str] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> KnownGood:
