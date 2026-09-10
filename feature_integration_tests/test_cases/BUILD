@@ -14,6 +14,8 @@ load("@pip_score_venv_test//:requirements.bzl", "all_requirements")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 load("@score_tooling//python_basics:defs.bzl", "score_py_pytest")
 
+exports_files(["requirements.txt.lock"])
+
 # In order to update the requirements, change the `requirements.txt` file and run:
 # `bazel run //feature_integration_tests/test_cases:requirements.update`.
 # This will update the `requirements.txt.lock` file.

@@ -182,6 +182,30 @@ rust_coverage_report(
     return blocks
 
 
+def generate_sbom_module_content(tracked_modules: List[str], timestamp: Optional[str]) -> str:
+    """Generate the SBOM extension configuration from known-good target modules."""
+    header = (
+        "# *******************************************************************************\n"
+        "# Copyright (c) 2026 Contributors to the Eclipse Foundation\n"
+        "#\n"
+        "# See the NOTICE file(s) distributed with this work for additional\n"
+        "# information regarding copyright ownership.\n"
+        "#\n"
+        "# This program and the accompanying materials are made available under the\n"
+        "# terms of the Apache License Version 2.0 which is available at\n"
+        "# https://www.apache.org/licenses/LICENSE-2.0\n"
+        "#\n"
+        "# SPDX-License-Identifier: Apache-2.0\n"
+        "# *******************************************************************************\n"
+        "# Generated from known_good.json" + (f" at {timestamp}" if timestamp else "") + "\n"
+        "# Do not edit manually - use scripts/known_good/update_module_from_known_good.py\n\n"
+    )
+    blocks = ['sbom_ext = use_extension("@score_sbom//:extensions.bzl", "sbom_metadata")']
+    blocks.extend(f'sbom_ext.track_module(name = "{module}")' for module in tracked_modules)
+    blocks.append('use_repo(sbom_ext, "sbom_metadata")')
+    return header + "\n".join(blocks) + "\n"
+
+
 LICENSE_HEADER = (
     "# *******************************************************************************\n"
     "# Copyright (c) 2025 Contributors to the Eclipse Foundation\n"
@@ -451,22 +475,6 @@ Note:
                 f.write(content_build)
             generated_files.append(output_path_coverage)
             print(f"Generated {output_path_coverage}")
-
-    # Docs bundle mounts span every group (one Sphinx site), so they are generated once, after
-    # the per-group loop above.
-    content_docs_bundles = generate_docs_bundles_content(known_good, known_good.timestamp)
-    output_path_docs_bundles = Path(args.output_dir_docs_bundles) / "docs_bundles.bzl"
-
-    if args.dry_run:
-        print(f"\nDry run: would write to {output_path_docs_bundles}\n")
-        print("---- BEGIN GENERATED CONTENT FOR DOCS BUNDLES ----")
-        print(content_docs_bundles, end="")
-        print("---- END GENERATED CONTENT FOR DOCS BUNDLES ----")
-    else:
-        with open(output_path_docs_bundles, "w", encoding="utf-8") as f:
-            f.write(content_docs_bundles)
-        generated_files.append(str(output_path_docs_bundles))
-        print(f"Generated {output_path_docs_bundles}")
 
     if not args.dry_run and generated_files:
         print(f"\nSuccessfully generated {len(generated_files)} file(s) with {total_module_count} total modules")

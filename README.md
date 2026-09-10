@@ -65,6 +65,72 @@ Cross-compile all showcases and assemble the IFS image:
 bazel build --config=qnx-aarch64 //images/qnx_aarch64:image
 ```
 
+### Software Bill of Materials
+
+The root `//:sbom` target generates SPDX 2.3 and CycloneDX 1.6 documents for
+the integrated showcase and feature-test binaries. It consumes `sbom-tool`
+from the local git checkout at `../sbom-tool` in this workspace until the
+module is available in the Bazel registry.
+
+Install Node.js/npm and `@cyclonedx/cdxgen` before building the C++ dependency
+metadata, then run:
+
+```bash
+npm install -g @cyclonedx/cdxgen
+bazel build //:sbom
+```
+
+The generated documents are written below `bazel-bin/` as `sbom.spdx.json` and
+`sbom.cdx.json`. Rust crate metadata is collected automatically from the
+workspace lockfile and the configured `score_crates` module.
+
+### Selecting an SBOM mode
+
+Choose the mode based on what is being qualified:
+
+- **Product mode** is for the software delivered by the integration. It follows
+   the configured showcase and feature-test binaries and includes their runtime
+   dependencies. Use `//:product_sbom` (an alias of `//:sbom`) when you need both
+   SPDX and CycloneDX output for the product scope.
+- **Build-tool qualification mode** is for tools used to build, test, or
+   generate documentation. It is separate from the product scope because these
+   tools are not shipped as product runtime dependencies. Use
+   `//:build_tools_sbom` when collecting ISO 26262 qualification evidence for
+   the development toolchain.
+
+Build-tool mode includes the Python lockfiles used by the workspace tooling and
+docs-as-code, the Sphinx documentation toolchain, the PlantUML integration, and
+the PlantUML JAR itself with a SHA-256 checksum. It emits SPDX only and does
+not run cdxgen or the Rust crate cache collector.
+
+Build the selected mode as follows:
+
+```bash
+# Product/runtime dependencies
+bazel build //:product_sbom
+# Outputs: bazel-bin/product_sbom.spdx.json and bazel-bin/product_sbom.cdx.json
+
+# Build-tool qualification inventory (SPDX JSON)
+bazel build //:build_tools_sbom
+# Output: bazel-bin/build_tools_sbom.spdx.json
+```
+
+While testing the unpublished Python collector branch of `sbom-tool`, resolve
+it with the module override below. Apply the override to whichever mode you are
+building:
+
+```bash
+bazel build //:product_sbom \
+    --override_module=score_sbom=/workspaces/sbom-tool
+
+bazel build //:build_tools_sbom \
+   --override_module=score_sbom=/workspaces/sbom-tool
+```
+
+Once the collector branch is merged, replace this command-line override with
+the merged commit in the root `MODULE.bazel` git override.
+
+## Operating system integrations
 The built IFS image is written to:
 
 ```

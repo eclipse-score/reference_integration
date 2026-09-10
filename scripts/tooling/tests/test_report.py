@@ -32,7 +32,7 @@ class TestGenerateReportStructure:
         assert "</html>" in html
 
     def test_contains_title(self, minimal_known_good):
-        assert "Known Good Status" in generate_report(minimal_known_good, TEMPLATE_DIR)
+        assert "Integration Dashboard" in generate_report(minimal_known_good, TEMPLATE_DIR)
 
     def test_contains_timestamp(self, minimal_known_good):
         html = generate_report(minimal_known_good, TEMPLATE_DIR)
