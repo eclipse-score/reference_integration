@@ -58,7 +58,7 @@ documentation set that downstream product distributions can build on.
 
       Reference Integration workflow and health overview with links to
       :doc:`Integration Process <integration_process/integration_process>` and
-      `Integration Status <https://eclipse-score.github.io/reference_integration/main/status_dashboard.html>`_.
+      `Integration Status <status_dashboard.html>`_.
 
    .. grid-item-card:: 🧩 Modules
       :link: modules/index
