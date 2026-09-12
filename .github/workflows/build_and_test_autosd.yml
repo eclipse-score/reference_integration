@@ -48,7 +48,7 @@ jobs:
           bazelisk-cache: true
           disk-cache: ${{ github.workflow }}
           repository-cache: true
-          cache-save: ${{ github.event_name == 'push' }}
+          cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
       - name: Shows kernel version
         run: |
           uname -a

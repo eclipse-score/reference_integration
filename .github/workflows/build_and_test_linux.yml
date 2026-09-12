@@ -41,7 +41,7 @@ jobs:
           bazelisk-cache: true
           disk-cache: ${{ github.workflow }}
           repository-cache: true
-          cache-save: ${{ github.event_name == 'push' }}
+          cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
       - name: Install uv (required for SBOM license scanning)
         uses: astral-sh/setup-uv@v5
         with:
