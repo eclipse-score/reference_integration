@@ -128,6 +128,30 @@ def _parse_sbom_packages(sbom_path: Path) -> list[dict[str, Any]]:
     return packages
 
 
+def _get_current_branch() -> str:
+    # 1. Try GITHUB_REF_NAME environment variable (standard in GitHub Actions)
+    ref_name = os.environ.get("GITHUB_REF_NAME")
+    if ref_name:
+        return ref_name
+    # 2. Try running git command to get current branch
+    import subprocess
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=True
+        )
+        branch = result.stdout.strip()
+        if branch and branch != "HEAD":
+            return branch
+    except Exception:
+        pass
+    # 3. Default to main
+    return "main"
+
+
 def generate_report(
     known_good: KnownGood,
     token: str | None = None,
@@ -136,6 +160,8 @@ def generate_report(
     entries = _collect_entries(known_good)
     if token:
         _enrich_with_compare_data(entries, token)
+
+    branch = _get_current_branch()
 
     env = Environment(
         loader=FileSystemLoader(TEMPLATE_DIR),
@@ -146,6 +172,7 @@ def generate_report(
         modules_json=json.dumps(entries, indent=2),
         sbom_packages_json=json.dumps(sbom_packages or [], indent=2),
         timestamp=known_good.timestamp,
+        branch=branch,
     )
 
 
