@@ -135,13 +135,14 @@ def _get_current_branch() -> str:
         return ref_name
     # 2. Try running git command to get current branch
     import subprocess
+
     try:
         result = subprocess.run(
             ["git", "rev-parse", "--abbrev-ref", "HEAD"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
-            check=True
+            check=True,
         )
         branch = result.stdout.strip()
         if branch and branch != "HEAD":
