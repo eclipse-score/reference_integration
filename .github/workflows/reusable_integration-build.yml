@@ -110,6 +110,7 @@ jobs:
           disk-cache: ${{ inputs.config }}
           # Share repository cache between workflows.
           repository-cache: true
+          cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
       - name: Update known good commits
         run: |
           echo "::group::write known_good.json from input"

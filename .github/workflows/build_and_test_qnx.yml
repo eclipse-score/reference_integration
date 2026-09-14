@@ -45,7 +45,7 @@ jobs:
           disk-cache: ${{ github.workflow }}
           repository-cache: true
           bazelisk-cache: true
-          cache-save: ${{ github.event_name == 'push' }}
+          cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
       - name: Prepare QNX license
         env:
           SCORE_QNX_LICENSE: ${{ secrets.SCORE_QNX_LICENSE }}
