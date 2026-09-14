@@ -129,8 +129,8 @@ def _parse_sbom_packages(sbom_path: Path) -> list[dict[str, Any]]:
 
 
 def _get_current_branch() -> str:
-    # 1. Try GITHUB_REF_NAME environment variable (standard in GitHub Actions)
-    ref_name = os.environ.get("GITHUB_REF_NAME")
+    # 1. Prefer the pull request head branch, then the standard GitHub Actions ref name
+    ref_name = os.environ.get("GITHUB_HEAD_REF") or os.environ.get("GITHUB_REF_NAME")
     if ref_name:
         return ref_name
     # 2. Try running git command to get current branch
