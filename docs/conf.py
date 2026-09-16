@@ -57,12 +57,6 @@ exclude_patterns = [
     "bazel-*",
     ".venv*",
     "_build",
-    # Baselibs deliberately excludes this from its own docs build (see its
-    # docs/conf.py); keep it excluded here too instead of surfacing it only
-    # in the aggregated reference_integration docs. Scoped to baselibs' mount
-    # point (see bazel_common/docs_bundles.bzl) so it doesn't accidentally
-    # hide a same-named file another module might add later.
-    "modules/score_baselibs/cpp-style-guide.md",
 ]
 
 # Enable markdown rendering
