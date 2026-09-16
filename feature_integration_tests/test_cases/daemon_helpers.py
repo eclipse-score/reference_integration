@@ -49,9 +49,7 @@ _TARGET_ENV_MAP = {
     ),
     "@score_lifecycle_health//scripts/config_mapping:lifecycle_config": "FIT_LIFECYCLE_CONFIG_TOOL_PATH",
     "@score_lifecycle_health//score/launch_manager/src/daemon/src/configuration/config_schema:launch_manager.schema.json": "FIT_LIFECYCLE_CONFIG_SCHEMA_PATH",
-    "@score_lifecycle_health//score/launch_manager/src/daemon/src/configuration/config_schema:lm_flatcfg.fbs": "FIT_LIFECYCLE_LM_SCHEMA_PATH",
-    "@score_lifecycle_health//score/launch_manager/src/daemon/src/alive_monitor/config:hm_flatcfg.fbs": "FIT_LIFECYCLE_HM_SCHEMA_PATH",
-    "@score_lifecycle_health//score/launch_manager/src/daemon/src/alive_monitor/config:hmcore_flatcfg.fbs": "FIT_LIFECYCLE_HMCORE_SCHEMA_PATH",
+    "@score_lifecycle_health//score/launch_manager/src/daemon/src/configuration:lm_flatcfg_fbs": "FIT_LIFECYCLE_LM_SCHEMA_PATH",
     "@flatbuffers//:flatc": "FIT_FLATC_PATH",
 }
 
@@ -361,32 +359,28 @@ def _generate_runtime_config(config_template: str, runtime_root: Path, etc_dir: 
     )
 
     flatc = _resolve_target_path("@flatbuffers//:flatc")
-    buffers = (
-        (
-            "lm_demo",
-            "@score_lifecycle_health//score/launch_manager/src/daemon/src/configuration/config_schema:lm_flatcfg.fbs",
-        ),
-        ("hm_demo", "@score_lifecycle_health//score/launch_manager/src/daemon/src/alive_monitor/config:hm_flatcfg.fbs"),
-        (
-            "hmcore",
-            "@score_lifecycle_health//score/launch_manager/src/daemon/src/alive_monitor/config:hmcore_flatcfg.fbs",
-        ),
+    lm_schema = _resolve_target_path(
+        "@score_lifecycle_health//score/launch_manager/src/daemon/src/configuration:lm_flatcfg_fbs"
     )
-    for name, schema_target in buffers:
-        subprocess.run(
-            [
-                str(flatc),
-                "--binary",
-                "--strict-json",
-                "-o",
-                str(etc_dir),
-                str(_resolve_target_path(schema_target)),
-                str(generated_dir / f"{name}.json"),
-            ],
-            capture_output=True,
-            text=True,
-            check=True,
-        )
+    generated_config = generated_dir / f"{rendered_config.stem}_gen.json"
+    # launch_manager defaults to loading "etc/launch_manager_config.bin", and flatc names its
+    # output after the input file's stem, so the input must be named to match.
+    flatc_input = generated_dir / "launch_manager_config.json"
+    shutil.copy2(generated_config, flatc_input)
+    subprocess.run(
+        [
+            str(flatc),
+            "--binary",
+            "--strict-json",
+            "-o",
+            str(etc_dir),
+            str(lm_schema),
+            str(flatc_input),
+        ],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
 
 
 def start_launch_manager_daemon(
