@@ -20,6 +20,6 @@ cc_binary(
     srcs = ["main.cpp"],
     visibility = ["//feature_integration_tests:__subpackages__"],
     deps = [
-        "@score_lifecycle_health//score/launch_manager:lifecycle_cc",
+        "@score_lifecycle//score/launch_manager:lifecycle_cc",
     ],
 )
