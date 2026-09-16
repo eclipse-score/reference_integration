@@ -220,6 +220,32 @@ class TestWriteReport:
 
 
 # ---------------------------------------------------------------------------
+# generate_report – branch selection and environment variable overrides
+# ---------------------------------------------------------------------------
+
+
+class TestGenerateReportBranchSelection:
+    def test_prefers_github_head_ref(self, monkeypatch, minimal_known_good):
+        monkeypatch.setenv("GITHUB_HEAD_REF", "feature/my-head-branch")
+        monkeypatch.setenv("GITHUB_REF_NAME", "main")
+        html = generate_report(minimal_known_good, TEMPLATE_DIR)
+        assert "https://eclipse-score.github.io/score/feature/my-head-branch/" in html
+
+    def test_falls_back_to_github_ref_name(self, monkeypatch, minimal_known_good):
+        monkeypatch.delenv("GITHUB_HEAD_REF", raising=False)
+        monkeypatch.setenv("GITHUB_REF_NAME", "releases/v1.0")
+        html = generate_report(minimal_known_good, TEMPLATE_DIR)
+        assert "https://eclipse-score.github.io/score/releases/v1.0/" in html
+
+    def test_falls_back_to_git_or_main_when_no_env(self, monkeypatch, minimal_known_good):
+        monkeypatch.delenv("GITHUB_HEAD_REF", raising=False)
+        monkeypatch.delenv("GITHUB_REF_NAME", raising=False)
+        html = generate_report(minimal_known_good, TEMPLATE_DIR)
+        # Verify it falls back to either current git branch or "main"
+        assert "https://eclipse-score.github.io/score/feature/dashboard-branch-links/" in html or "https://eclipse-score.github.io/score/main/" in html
+
+
+# ---------------------------------------------------------------------------
 # Integration: real known_good.json
 # ---------------------------------------------------------------------------
 
