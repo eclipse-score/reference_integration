@@ -548,8 +548,8 @@ class TestHealthMonitoringWithDaemon:
             watchdog_patterns = [
                 rf"Got kRunning timeout for process.*\(\s*{re.escape(app_name)}\s*\)",
                 rf"unexpected termination of process.*\(\s*{re.escape(app_name)}\s*\)",
-                rf"Alive Supervision \(\s*{re.escape(app_name)}_alive_supervision\s*\) switched to FAILED",
-                rf"Alive Supervision \(\s*{re.escape(app_name)}_alive_supervision\s*\) switched to EXPIRED",
+                rf"Alive Supervision \(\s*{re.escape(app_name)}\s*\) switched to FAILED",
+                rf"Alive Supervision \(\s*{re.escape(app_name)}\s*\) switched to EXPIRED",
             ]
             assert any(re.search(pattern, logs) for pattern in watchdog_patterns), (
                 f"No target-specific watchdog diagnostics found for {app_name}.\nDaemon logs:\n{logs}"
