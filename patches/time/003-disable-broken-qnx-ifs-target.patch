@@ -1,0 +1,24 @@
+diff --git a/score/time_slave/tests/reference_integration/qnx/BUILD b/score/time_slave/tests/reference_integration/qnx/BUILD
+--- a/score/time_slave/tests/reference_integration/qnx/BUILD
++++ b/score/time_slave/tests/reference_integration/qnx/BUILD
+@@ -13,5 +13,4 @@
+ 
+ load("@rules_pkg//pkg:mappings.bzl", "pkg_attributes", "pkg_files", "strip_prefix")
+-load("@score_rules_imagefs//rules/qnx:ifs.bzl", "qnx_ifs")
+ 
+ pkg_files(
+@@ -32,14 +31,1 @@
+ )
+-
+-qnx_ifs(
+-    name = "ifs",
+-    srcs = [
+-        ":time_slave_bin",
+-        ":time_slave_etc",
+-    ],
+-    build_file = "init.build",
+-    extra_build_files = ["tools.build"],
+-    tags = ["manual"],
+-    target_compatible_with = ["@platforms//os:qnx"],
+-    visibility = ["//visibility:public"],
+-)
