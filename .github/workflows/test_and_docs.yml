@@ -122,7 +122,7 @@ jobs:
           files: ${{ github.event.repository.name }}_test_reports.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload build tools SBOM to release
+      - name: Upload build tools SBOM
         uses: softprops/action-gh-release@v1
         with:
           files: bazel-bin/build_tools_sbom.spdx.json
