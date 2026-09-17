@@ -85,7 +85,13 @@ git_override(
 bazel_dep(name = "score_time")
 git_override(
     module_name = "score_time",
-    commit = "310c9b63bc21fdc85df840fb8ee400a610667038",
+    commit = "866479f654292155fbfef488fa02c089f3e5d8e1",
+    patch_strip = 1,
+    patches = [
+        "//patches/time:001-fix-docs-mount-cross-references.patch",
+        "//patches/time:002-non-dev-reference-integration-test-deps.patch",
+        "//patches/time:003-disable-broken-qnx-ifs-target.patch",
+    ],
     remote = "https://github.com/eclipse-score/time.git",
 )
 
