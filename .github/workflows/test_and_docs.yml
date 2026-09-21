@@ -122,10 +122,20 @@ jobs:
           files: ${{ github.event.repository.name }}_test_reports.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload build tools SBOM
-        uses: softprops/action-gh-release@v1
+      - name: Upload build tools SBOM (workflow artifact)
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+        with:
+          name: build-tools-sbom-${{ github.event.pull_request.head.sha || github.sha }}
+          path: bazel-bin/build_tools_sbom.spdx.json
+          retention-days: 3
+          if-no-files-found: error
+      - name: Upload build tools SBOM (attach to GitHub Release)
+        uses: softprops/action-gh-release@v2.5.0
+        if: github.ref_type == 'tag'
         with:
           files: bazel-bin/build_tools_sbom.spdx.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build documentation
         run: |
           bazel run \
