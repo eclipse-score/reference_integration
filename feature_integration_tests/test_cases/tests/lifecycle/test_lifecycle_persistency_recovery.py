@@ -416,7 +416,7 @@ class TestLifecyclePersistencyRecoveryContinuity:
            storage itself) before triggering recovery
         3. The supervised app process is force-killed (SIGKILL)
         4. Launch Manager detects the failure and transitions to fallback_run_target
-          5. LCM detects crash and logs 'unexpected termination' followed by a
+        5. LCM detects crash and logs 'unexpected termination' followed by a
               recovery-state transition in the new log content produced after the
               kill, not the whole log, since "fallback" also appears in boot-time
               topology logs regardless of any crash.
