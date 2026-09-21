@@ -31,9 +31,9 @@ import pytest
 
 
 _TARGET_ENV_MAP = {
-    "@score_lifecycle_health//score/launch_manager:launch_manager": "FIT_LAUNCH_MANAGER_PATH",
-    "@score_lifecycle_health//examples/rust_supervised_app:rust_supervised_app": "FIT_RUST_SUPERVISED_APP_PATH",
-    "@score_lifecycle_health//examples/cpp_supervised_app:cpp_supervised_app": "FIT_CPP_SUPERVISED_APP_PATH",
+    "@score_lifecycle//score/launch_manager:launch_manager": "FIT_LAUNCH_MANAGER_PATH",
+    "@score_lifecycle//examples/rust_supervised_app:rust_supervised_app": "FIT_RUST_SUPERVISED_APP_PATH",
+    "@score_lifecycle//examples/cpp_supervised_app:cpp_supervised_app": "FIT_CPP_SUPERVISED_APP_PATH",
     "//feature_integration_tests/configs:lifecycle_daemon_config.json": "FIT_LIFECYCLE_DAEMON_CONFIG_PATH",
     "//feature_integration_tests/configs:lifecycle_daemon_parallel_launch_config.json": (
         "FIT_LIFECYCLE_PARALLEL_LAUNCH_CONFIG_PATH"
@@ -47,9 +47,9 @@ _TARGET_ENV_MAP = {
     "//feature_integration_tests/configs:lifecycle_daemon_retry_exhausts_config.json": (
         "FIT_LIFECYCLE_RETRY_EXHAUSTS_CONFIG_PATH"
     ),
-    "@score_lifecycle_health//scripts/config_mapping:lifecycle_config": "FIT_LIFECYCLE_CONFIG_TOOL_PATH",
-    "@score_lifecycle_health//score/launch_manager/src/daemon/src/configuration/config_schema:launch_manager.schema.json": "FIT_LIFECYCLE_CONFIG_SCHEMA_PATH",
-    "@score_lifecycle_health//score/launch_manager/src/daemon/src/configuration:lm_flatcfg_fbs": "FIT_LIFECYCLE_LM_SCHEMA_PATH",
+    "@score_lifecycle//scripts/config_mapping:lifecycle_config": "FIT_LIFECYCLE_CONFIG_TOOL_PATH",
+    "@score_lifecycle//score/launch_manager/src/daemon/src/configuration/config_schema:launch_manager.schema.json": "FIT_LIFECYCLE_CONFIG_SCHEMA_PATH",
+    "@score_lifecycle//score/launch_manager/src/daemon/src/configuration:lm_flatcfg_fbs": "FIT_LIFECYCLE_LM_SCHEMA_PATH",
     "@flatbuffers//:flatc": "FIT_FLATC_PATH",
 }
 
@@ -64,8 +64,13 @@ def _run(cmd: list[str]) -> str:
         cwd=_repo_root(),
         capture_output=True,
         text=True,
-        check=True,
+        check=False,
     )
+    if completed.returncode != 0:
+        raise RuntimeError(
+            f"Command failed (rc={completed.returncode}): {' '.join(cmd)}\n"
+            f"stdout:\n{completed.stdout}\nstderr:\n{completed.stderr}"
+        )
     return completed.stdout.strip()
 
 
@@ -98,26 +103,17 @@ def _resolve_from_env(target: str) -> Path | None:
 
 
 def _resolve_target_path(target: str) -> Path:
-    """Resolve an executable/file path from a bazel target label."""
+    """Resolve an executable/file path from a bazel target label via its runfile env var."""
     env_resolved = _resolve_from_env(target)
     if env_resolved is not None:
         return env_resolved
 
-    _run(["bazel", "build", target])
-    output = _run(["bazel", "cquery", "--output=files", target])
-    candidates = [line.strip() for line in output.splitlines() if line.strip()]
-    if not candidates:
-        raise RuntimeError(f"No files produced by target: {target}")
-
-    execution_root = Path(_run(["bazel", "info", "execution_root"]))
-    for item in candidates:
-        candidate = Path(item)
-        if not candidate.is_absolute():
-            candidate = execution_root / candidate
-        if candidate.exists():
-            return candidate
-
-    raise RuntimeError(f"No existing artifact found for target: {target}. Candidates: {candidates!r}")
+    env_var = _TARGET_ENV_MAP.get(target)
+    raise RuntimeError(
+        f"Could not resolve target {target!r}: environment variable "
+        f"{env_var!r} is not set or does not point to an existing file. "
+        "Ensure the corresponding data dependency is declared on the test target."
+    )
 
 
 def get_binary_path(target: str) -> Path:
@@ -318,6 +314,8 @@ class ManagedDaemon:
             if self.is_running():
                 os.killpg(os.getpgid(self.process.pid), signal.SIGKILL)
                 self.process.wait(timeout=5)
+        if self.process.stdout is not None:
+            self.process.stdout.close()
         self._thread.join(timeout=1)
 
     def get_logs(self) -> str:
@@ -347,40 +345,118 @@ def _generate_runtime_config(config_template: str, runtime_root: Path, etc_dir: 
     rendered_config.write_text(json.dumps(config), encoding="utf-8")
     generated_dir = etc_dir / "generated"
     generated_dir.mkdir()
-    config_tool = _resolve_target_path("@score_lifecycle_health//scripts/config_mapping:lifecycle_config")
+    config_tool = _resolve_target_path("@score_lifecycle//scripts/config_mapping:lifecycle_config")
     config_schema = _resolve_target_path(
-        "@score_lifecycle_health//score/launch_manager/src/daemon/src/configuration/config_schema:launch_manager.schema.json"
+        "@score_lifecycle//score/launch_manager/src/daemon/src/configuration/config_schema:launch_manager.schema.json"
     )
-    subprocess.run(
+    config_mapping_result = subprocess.run(
         [str(config_tool), str(rendered_config), "--schema", str(config_schema), "-o", str(generated_dir)],
         capture_output=True,
         text=True,
-        check=True,
+        check=False,
     )
+    if config_mapping_result.returncode != 0:
+        raise RuntimeError(
+            f"Command failed (rc={config_mapping_result.returncode}): {config_tool} {rendered_config} "
+            f"--schema {config_schema} -o {generated_dir}\n"
+            f"stdout:\n{config_mapping_result.stdout}\nstderr:\n{config_mapping_result.stderr}"
+        )
 
     flatc = _resolve_target_path("@flatbuffers//:flatc")
     lm_schema = _resolve_target_path(
-        "@score_lifecycle_health//score/launch_manager/src/daemon/src/configuration:lm_flatcfg_fbs"
+        "@score_lifecycle//score/launch_manager/src/daemon/src/configuration:lm_flatcfg_fbs"
     )
     generated_config = generated_dir / f"{rendered_config.stem}_gen.json"
     # launch_manager defaults to loading "etc/launch_manager_config.bin", and flatc names its
     # output after the input file's stem, so the input must be named to match.
     flatc_input = generated_dir / "launch_manager_config.json"
     shutil.copy2(generated_config, flatc_input)
-    subprocess.run(
-        [
-            str(flatc),
-            "--binary",
-            "--strict-json",
-            "-o",
-            str(etc_dir),
-            str(lm_schema),
-            str(flatc_input),
-        ],
+    flatc_cmd = [
+        str(flatc),
+        "--binary",
+        "--strict-json",
+        "-o",
+        str(etc_dir),
+        str(lm_schema),
+        str(flatc_input),
+    ]
+    flatc_result = subprocess.run(
+        flatc_cmd,
         capture_output=True,
         text=True,
-        check=True,
+        check=False,
     )
+    if flatc_result.returncode != 0:
+        raise RuntimeError(
+            f"Command failed (rc={flatc_result.returncode}): {' '.join(flatc_cmd)}\n"
+            f"stdout:\n{flatc_result.stdout}\nstderr:\n{flatc_result.stderr}"
+        )
+
+
+def _spawn_daemon(
+    work_dir: Path,
+    etc_dir: Path,
+    runtime_root: Path,
+    config_template: str,
+    staged_binaries: list[tuple[Path, Path, int]],
+    grant_sandbox_capabilities: bool = False,
+) -> tuple[ManagedDaemon, bool, str]:
+    """Stage launch_manager plus `staged_binaries` (src, dst, mode), render its runtime
+    config, and start it as a supervised subprocess.
+
+    Returns `(daemon, sandbox_privileged, sandbox_privileged_reason)`; the latter two are
+    `(False, "not requested")` unless `grant_sandbox_capabilities` is set. Fails the test via
+    `pytest.fail` if the daemon exits within the startup grace period.
+    """
+    launch_manager = _resolve_target_path("@score_lifecycle//score/launch_manager:launch_manager")
+    lm_dst = work_dir / "launch_manager"
+    shutil.copy2(launch_manager, lm_dst)
+    lm_dst.chmod(0o755)
+
+    if grant_sandbox_capabilities:
+        sandbox_privileged, sandbox_privileged_reason = _grant_sandbox_capabilities(lm_dst)
+    else:
+        sandbox_privileged, sandbox_privileged_reason = False, "not requested"
+
+    for src, dst, mode in staged_binaries:
+        shutil.copy2(src, dst)
+        dst.chmod(mode)
+
+    _generate_runtime_config(config_template, runtime_root, etc_dir)
+
+    env = os.environ.copy()
+    env.setdefault("ECUCFG_ENV_VAR_ROOTFOLDER", str(etc_dir))
+
+    lines: list[str] = []
+    process = subprocess.Popen(
+        [str(lm_dst)],
+        cwd=work_dir,
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        start_new_session=True,
+    )
+
+    def _collect_output() -> None:
+        assert process.stdout is not None
+        for line in process.stdout:
+            line = line.rstrip("\n")
+            if line:
+                lines.append(line)
+
+    thread = threading.Thread(target=_collect_output, daemon=True)
+    thread.start()
+
+    daemon = ManagedDaemon(process=process, _lines=lines, _thread=thread)
+
+    # Give startup a chance to complete and fail early if config is broken.
+    time.sleep(1.0)
+    if not daemon.is_running():
+        logs = daemon.get_logs()
+        pytest.fail(f"launch_manager failed to start. Logs:\n{logs}")
+
+    return daemon, sandbox_privileged, sandbox_privileged_reason
 
 
 def start_launch_manager_daemon(
@@ -404,6 +480,7 @@ def start_launch_manager_daemon(
     """
 
     runtime_root = Path(tempfile.mkdtemp(prefix="lifecycle_fit-", dir=_tmpdir_root()))
+    daemon = None
     try:
         work_dir = tmp_path_factory.mktemp("lm-daemon")
         etc_dir = work_dir / "etc"
@@ -412,71 +489,43 @@ def start_launch_manager_daemon(
         bin_dir = runtime_root / "bin"
         bin_dir.mkdir(parents=True, exist_ok=True)
 
-        launch_manager = _resolve_target_path("@score_lifecycle_health//score/launch_manager:launch_manager")
-        rust_supervised = _resolve_target_path(
-            "@score_lifecycle_health//examples/rust_supervised_app:rust_supervised_app"
+        rust_supervised = _resolve_target_path("@score_lifecycle//examples/rust_supervised_app:rust_supervised_app")
+        cpp_supervised = _resolve_target_path("@score_lifecycle//examples/cpp_supervised_app:cpp_supervised_app")
+        staged_binaries = [
+            (src, bin_dir / src.name, 0o000 if key in blocked_apps else 0o755)
+            for key, src in (("rust", rust_supervised), ("cpp", cpp_supervised))
+        ]
+
+        daemon, sandbox_privileged, sandbox_privileged_reason = _spawn_daemon(
+            work_dir,
+            etc_dir,
+            runtime_root,
+            config_template,
+            staged_binaries,
+            grant_sandbox_capabilities=True,
         )
-        cpp_supervised = _resolve_target_path("@score_lifecycle_health//examples/cpp_supervised_app:cpp_supervised_app")
-
-        lm_dst = work_dir / "launch_manager"
-        shutil.copy2(launch_manager, lm_dst)
-        lm_dst.chmod(0o755)
-        sandbox_privileged, sandbox_privileged_reason = _grant_sandbox_capabilities(lm_dst)
-
-        for key, src in (("rust", rust_supervised), ("cpp", cpp_supervised)):
-            dst = bin_dir / src.name
-            shutil.copy2(src, dst)
-            dst.chmod(0o000 if key in blocked_apps else 0o755)
-
-        _generate_runtime_config(config_template, runtime_root, etc_dir)
-
-        env = os.environ.copy()
-        env.setdefault("ECUCFG_ENV_VAR_ROOTFOLDER", str(etc_dir))
-
-        lines: list[str] = []
-        process = subprocess.Popen(
-            [str(lm_dst)],
-            cwd=work_dir,
-            env=env,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            start_new_session=True,
-        )
-
-        def _collect_output() -> None:
-            assert process.stdout is not None
-            for line in process.stdout:
-                line = line.rstrip("\n")
-                if line:
-                    lines.append(line)
-
-        thread = threading.Thread(target=_collect_output, daemon=True)
-        thread.start()
-
-        daemon = ManagedDaemon(process=process, _lines=lines, _thread=thread)
-
-        # Give startup a chance to complete and fail early if config is broken.
-        time.sleep(1.0)
-        if not daemon.is_running():
-            logs = daemon.get_logs()
-            pytest.skip(f"launch_manager failed to start in this environment. Logs:\n{logs}")
 
         apps = {
             "rust": bin_dir / "rust_supervised_app",
             "cpp": bin_dir / "cpp_supervised_app",
         }
         if wait_for_apps and not _wait_for_apps({k: v for k, v in apps.items() if k not in blocked_apps}):
-            process_snapshot = _run(["ps", "-eo", "pid,args"])
-            daemon.stop()
-            _cleanup_runtime_root(runtime_root)
+            process_snapshot = subprocess.run(
+                ["ps", "-eo", "pid,args"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
             pytest.fail(
                 "Launch Manager did not bring supervised apps to running state within timeout.\n"
                 f"Expected apps: {apps}\n"
                 f"Daemon logs:\n{daemon.get_logs()}\n"
-                f"Process snapshot:\n{process_snapshot}"
+                f"Process snapshot (rc={process_snapshot.returncode}):\n"
+                f"{process_snapshot.stdout}{process_snapshot.stderr}"
             )
     except BaseException:
+        if daemon is not None:
+            daemon.stop()
         _cleanup_runtime_root(runtime_root)
         raise
 
@@ -506,6 +555,7 @@ def start_flaky_retry_daemon(
     what the calling test is checking.
     """
     runtime_root = Path(tempfile.mkdtemp(prefix="lifecycle_fit_retries-", dir=_tmpdir_root()))
+    daemon = None
     try:
         work_dir = tmp_path_factory.mktemp("lm-retry-daemon")
         etc_dir = work_dir / "etc"
@@ -514,55 +564,20 @@ def start_flaky_retry_daemon(
         bin_dir = runtime_root / "bin"
         bin_dir.mkdir(parents=True, exist_ok=True)
 
-        launch_manager = _resolve_target_path("@score_lifecycle_health//score/launch_manager:launch_manager")
         flaky_app = _resolve_target_path(
             "//feature_integration_tests/test_cases/support_apps/flaky_startup_app:flaky_startup_app"
         )
-        lm_dst = work_dir / "launch_manager"
-        shutil.copy2(launch_manager, lm_dst)
-        lm_dst.chmod(0o755)
-
         app_dst = bin_dir / "flaky_startup_app"
-        shutil.copy2(flaky_app, app_dst)
-        app_dst.chmod(0o755)
+        staged_binaries = [(flaky_app, app_dst, 0o755)]
 
         counter_path = runtime_root / "flaky_startup_app.counter"
         if counter_path.exists():
             counter_path.unlink()
 
-        _generate_runtime_config(config_template, runtime_root, etc_dir)
-
-        env = os.environ.copy()
-        env.setdefault("ECUCFG_ENV_VAR_ROOTFOLDER", str(etc_dir))
-
-        lines: list[str] = []
-        process = subprocess.Popen(
-            [str(lm_dst)],
-            cwd=work_dir,
-            env=env,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            start_new_session=True,
-        )
-
-        def _collect_output() -> None:
-            assert process.stdout is not None
-            for line in process.stdout:
-                line = line.rstrip("\n")
-                if line:
-                    lines.append(line)
-
-        thread = threading.Thread(target=_collect_output, daemon=True)
-        thread.start()
-
-        daemon = ManagedDaemon(process=process, _lines=lines, _thread=thread)
-
-        time.sleep(1.0)
-        if not daemon.is_running():
-            logs = daemon.get_logs()
-            pytest.skip(f"launch_manager failed to start in this environment. Logs:\n{logs}")
+        daemon, _, _ = _spawn_daemon(work_dir, etc_dir, runtime_root, config_template, staged_binaries)
     except BaseException:
+        if daemon is not None:
+            daemon.stop()
         _cleanup_runtime_root(runtime_root)
         raise
 
@@ -577,16 +592,26 @@ def start_flaky_retry_daemon(
     }
 
 
+def _stop_daemon(daemon_info: dict[str, Any], app_paths: list[Path]) -> None:
+    """Stop `daemon_info["daemon"]`, pkill each of `app_paths` by cmdline, then clean up
+    its runtime root. Runs unconditionally even if stopping the daemon itself raises.
+    """
+    try:
+        daemon_info["daemon"].stop()
+    finally:
+        for app_path in app_paths:
+            subprocess.run(
+                ["pkill", "-f", pgrep_cmdline_pattern(str(app_path))],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+        _cleanup_runtime_root(daemon_info["runtime_root"])
+
+
 def stop_flaky_retry_daemon(daemon_info: dict[str, Any]) -> None:
     """Tear down a daemon started by `start_flaky_retry_daemon`."""
-    daemon_info["daemon"].stop()
-    subprocess.run(
-        ["pkill", "-f", pgrep_cmdline_pattern(str(daemon_info["app_path"]))],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    _cleanup_runtime_root(daemon_info["runtime_root"])
+    _stop_daemon(daemon_info, [daemon_info["app_path"]])
 
 
 def read_retry_attempt_count(counter_path: Path) -> int:
@@ -599,8 +624,7 @@ def read_retry_attempt_count(counter_path: Path) -> int:
 
 def stop_launch_manager_daemon(daemon_info: dict[str, Any]) -> None:
     """Tear down a daemon started by `start_launch_manager_daemon`."""
-    daemon_info["daemon"].stop()
-    _cleanup_runtime_root(daemon_info["runtime_root"])
+    _stop_daemon(daemon_info, list(daemon_info["apps"].values()))
 
 
 @pytest.fixture(scope="class")
