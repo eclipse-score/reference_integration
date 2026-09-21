@@ -13,4 +13,5 @@
 exports_files([
     "launch_manager_config.json",
     "logging.json",
+    "mw_com_config.json",
 ])
