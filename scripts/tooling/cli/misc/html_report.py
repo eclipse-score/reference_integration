@@ -16,6 +16,7 @@ import argparse
 import json
 import logging
 import os
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any, Optional
@@ -134,8 +135,6 @@ def _get_current_branch() -> str:
     if ref_name:
         return ref_name
     # 2. Try running git command to get current branch
-    import subprocess
-
     try:
         result = subprocess.run(
             ["git", "rev-parse", "--abbrev-ref", "HEAD"],
