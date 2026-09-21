@@ -31,10 +31,10 @@ import pytest
 
 
 _TARGET_ENV_MAP = {
-    "@score_lifecycle_health//score/launch_manager:launch_manager": "FIT_LAUNCH_MANAGER_PATH",
-    "@score_lifecycle_health//examples/rust_supervised_app:rust_supervised_app": "FIT_RUST_SUPERVISED_APP_PATH",
-    "@score_lifecycle_health//examples/cpp_supervised_app:cpp_supervised_app": "FIT_CPP_SUPERVISED_APP_PATH",
-    "@score_lifecycle_health//examples/control_application:lmcontrol": "FIT_LMCONTROL_PATH",
+    "@score_lifecycle//score/launch_manager": "FIT_LAUNCH_MANAGER_PATH",
+    "@score_lifecycle//examples/rust_supervised_app": "FIT_RUST_SUPERVISED_APP_PATH",
+    "@score_lifecycle//examples/cpp_supervised_app": "FIT_CPP_SUPERVISED_APP_PATH",
+    "@score_lifecycle//examples/control_application:lmcontrol": "FIT_LMCONTROL_PATH",
     "//feature_integration_tests/configs:lifecycle_daemon_config.json": "FIT_LIFECYCLE_DAEMON_CONFIG_PATH",
     "//feature_integration_tests/configs:lifecycle_daemon_parallel_launch_config.json": (
         "FIT_LIFECYCLE_PARALLEL_LAUNCH_CONFIG_PATH"
@@ -48,11 +48,9 @@ _TARGET_ENV_MAP = {
     "//feature_integration_tests/configs:lifecycle_daemon_retry_exhausts_config.json": (
         "FIT_LIFECYCLE_RETRY_EXHAUSTS_CONFIG_PATH"
     ),
-    "@score_lifecycle_health//scripts/config_mapping:lifecycle_config": "FIT_LIFECYCLE_CONFIG_TOOL_PATH",
-    "@score_lifecycle_health//score/launch_manager/src/daemon/src/configuration/config_schema:launch_manager.schema.json": "FIT_LIFECYCLE_CONFIG_SCHEMA_PATH",
-    "@score_lifecycle_health//score/launch_manager/src/daemon/src/configuration/config_schema:lm_flatcfg.fbs": "FIT_LIFECYCLE_LM_SCHEMA_PATH",
-    "@score_lifecycle_health//score/launch_manager/src/daemon/src/alive_monitor/config:hm_flatcfg.fbs": "FIT_LIFECYCLE_HM_SCHEMA_PATH",
-    "@score_lifecycle_health//score/launch_manager/src/daemon/src/alive_monitor/config:hmcore_flatcfg.fbs": "FIT_LIFECYCLE_HMCORE_SCHEMA_PATH",
+    "@score_lifecycle//scripts/config_mapping:lifecycle_config": "FIT_LIFECYCLE_CONFIG_TOOL_PATH",
+    "@score_lifecycle//score/launch_manager/src/daemon/src/configuration/config_schema:launch_manager.schema.json": "FIT_LIFECYCLE_CONFIG_SCHEMA_PATH",
+    "@score_lifecycle//score/launch_manager/src/daemon/src/configuration:lm_flatcfg_fbs": "FIT_LIFECYCLE_LM_SCHEMA_PATH",
     "@flatbuffers//:flatc": "FIT_FLATC_PATH",
 }
 
@@ -340,7 +338,7 @@ def _cleanup_runtime_root(runtime_root: Path) -> None:
     shutil.rmtree(runtime_root, ignore_errors=True)
 
 
-def _generate_runtime_config(config_template: str, runtime_root: Path, etc_dir: Path) -> None:
+def _generate_runtime_config(config_template: str, runtime_root: Path, etc_dir: Path) -> Path:
     """Render and serialize an isolated launch-manager config for one daemon."""
     config = json.loads(_resolve_target_path(config_template).read_text(encoding="utf-8"))
     config["defaults"]["deployment_config"]["bin_dir"] = str(runtime_root / "bin")
@@ -358,9 +356,9 @@ def _generate_runtime_config(config_template: str, runtime_root: Path, etc_dir: 
     rendered_config.write_text(json.dumps(config), encoding="utf-8")
     generated_dir = etc_dir / "generated"
     generated_dir.mkdir()
-    config_tool = _resolve_target_path("@score_lifecycle_health//scripts/config_mapping:lifecycle_config")
+    config_tool = _resolve_target_path("@score_lifecycle//scripts/config_mapping:lifecycle_config")
     config_schema = _resolve_target_path(
-        "@score_lifecycle_health//score/launch_manager/src/daemon/src/configuration/config_schema:launch_manager.schema.json"
+        "@score_lifecycle//score/launch_manager/src/daemon/src/configuration/config_schema:launch_manager.schema.json"
     )
     subprocess.run(
         [str(config_tool), str(rendered_config), "--schema", str(config_schema), "-o", str(generated_dir)],
@@ -372,13 +370,8 @@ def _generate_runtime_config(config_template: str, runtime_root: Path, etc_dir: 
     flatc = _resolve_target_path("@flatbuffers//:flatc")
     buffers = (
         (
-            "lm_demo",
-            "@score_lifecycle_health//score/launch_manager/src/daemon/src/configuration/config_schema:lm_flatcfg.fbs",
-        ),
-        ("hm_demo", "@score_lifecycle_health//score/launch_manager/src/daemon/src/alive_monitor/config:hm_flatcfg.fbs"),
-        (
-            "hmcore",
-            "@score_lifecycle_health//score/launch_manager/src/daemon/src/alive_monitor/config:hmcore_flatcfg.fbs",
+            f"{rendered_config.stem}_gen",
+            "@score_lifecycle//score/launch_manager/src/daemon/src/configuration:lm_flatcfg_fbs",
         ),
     )
     for name, schema_target in buffers:
@@ -396,6 +389,8 @@ def _generate_runtime_config(config_template: str, runtime_root: Path, etc_dir: 
             text=True,
             check=True,
         )
+
+    return etc_dir / f"{buffers[0][0]}.bin"
 
 
 def start_launch_manager_daemon(
@@ -427,11 +422,9 @@ def start_launch_manager_daemon(
         bin_dir = runtime_root / "bin"
         bin_dir.mkdir(parents=True, exist_ok=True)
 
-        launch_manager = _resolve_target_path("@score_lifecycle_health//score/launch_manager:launch_manager")
-        rust_supervised = _resolve_target_path(
-            "@score_lifecycle_health//examples/rust_supervised_app:rust_supervised_app"
-        )
-        cpp_supervised = _resolve_target_path("@score_lifecycle_health//examples/cpp_supervised_app:cpp_supervised_app")
+        launch_manager = _resolve_target_path("@score_lifecycle//score/launch_manager")
+        rust_supervised = _resolve_target_path("@score_lifecycle//examples/rust_supervised_app")
+        cpp_supervised = _resolve_target_path("@score_lifecycle//examples/cpp_supervised_app")
 
         lm_dst = work_dir / "launch_manager"
         shutil.copy2(launch_manager, lm_dst)
@@ -439,7 +432,7 @@ def start_launch_manager_daemon(
         sandbox_privileged, sandbox_privileged_reason = _grant_sandbox_capabilities(lm_dst)
 
         try:
-            lm_ctl_binary = _resolve_target_path("@score_lifecycle_health//examples/control_application:lmcontrol")
+            lm_ctl_binary = _resolve_target_path("@score_lifecycle//examples/control_application:lmcontrol")
         except RuntimeError:
             lm_ctl_binary = None
 
@@ -448,14 +441,14 @@ def start_launch_manager_daemon(
             shutil.copy2(src, dst)
             dst.chmod(0o000 if key in blocked_apps else 0o755)
 
-        _generate_runtime_config(config_template, runtime_root, etc_dir)
+        config_path = _generate_runtime_config(config_template, runtime_root, etc_dir)
 
         env = os.environ.copy()
         env.setdefault("ECUCFG_ENV_VAR_ROOTFOLDER", str(etc_dir))
 
         lines: list[str] = []
         process = subprocess.Popen(
-            [str(lm_dst)],
+            [str(lm_dst), "-c", str(config_path)],
             cwd=work_dir,
             env=env,
             stdout=subprocess.PIPE,
@@ -535,7 +528,7 @@ def start_flaky_retry_daemon(
         bin_dir = runtime_root / "bin"
         bin_dir.mkdir(parents=True, exist_ok=True)
 
-        launch_manager = _resolve_target_path("@score_lifecycle_health//score/launch_manager:launch_manager")
+        launch_manager = _resolve_target_path("@score_lifecycle//score/launch_manager")
         flaky_app = _resolve_target_path(
             "//feature_integration_tests/test_cases/support_apps/flaky_startup_app:flaky_startup_app"
         )
@@ -551,14 +544,14 @@ def start_flaky_retry_daemon(
         if counter_path.exists():
             counter_path.unlink()
 
-        _generate_runtime_config(config_template, runtime_root, etc_dir)
+        config_path = _generate_runtime_config(config_template, runtime_root, etc_dir)
 
         env = os.environ.copy()
         env.setdefault("ECUCFG_ENV_VAR_ROOTFOLDER", str(etc_dir))
 
         lines: list[str] = []
         process = subprocess.Popen(
-            [str(lm_dst)],
+            [str(lm_dst), "-c", str(config_path)],
             cwd=work_dir,
             env=env,
             stdout=subprocess.PIPE,
