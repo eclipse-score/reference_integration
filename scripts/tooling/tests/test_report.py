@@ -242,7 +242,10 @@ class TestGenerateReportBranchSelection:
         monkeypatch.delenv("GITHUB_REF_NAME", raising=False)
         html = generate_report(minimal_known_good, TEMPLATE_DIR)
         # Verify it falls back to either current git branch or "main"
-        assert "https://eclipse-score.github.io/score/feature/dashboard-branch-links/" in html or "https://eclipse-score.github.io/score/main/" in html
+        assert (
+            "https://eclipse-score.github.io/score/feature/dashboard-branch-links/" in html
+            or "https://eclipse-score.github.io/score/main/" in html
+        )
 
 
 # ---------------------------------------------------------------------------
