@@ -551,7 +551,7 @@
                   
   <section id="time-sync-client-detailed-design">
 <span id="ts-client-detailed-design"></span><h1>Time Sync Client Detailed Design<a class="headerlink" href="#time-sync-client-detailed-design" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-05324616">
+<div class="need_container docutils container" id="SNCB-5b11c2c4">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__ts_client_detailed_design">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -625,56 +625,16 @@
 <object data="../../../../_images/plantuml-0ce393ae949770426d825716b2b2757e18436b35.svg" type="image/svg+xml" style="width:1546px;height:839px;background:#FFFFFF;"></object></p>
 </div></section>
 </section>
-<section id="units-within-time-sync-client">
-<h2>Units within Time Sync Client<a class="headerlink" href="#units-within-time-sync-client" title="Link to this heading">#</a></h2>
-<section id="gptpipcpublisher-unit">
-<h3>GptpIpcPublisher Unit<a class="headerlink" href="#gptpipcpublisher-unit" title="Link to this heading">#</a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">GptpIpcPublisher</span></code> component creates and manages the POSIX shared memory segment and writes <code class="docutils literal notranslate"><span class="pre">GptpIpcData</span></code> using the seqlock protocol.</p>
-<section id="implementation-requirements">
-<h4>Implementation Requirements<a class="headerlink" href="#implementation-requirements" title="Link to this heading">#</a></h4>
-<p>The <code class="docutils literal notranslate"><span class="pre">GptpIpcPublisher</span></code> has the following requirements:</p>
+<section id="units-within-the-component">
+<h2>Units within the Component<a class="headerlink" href="#units-within-the-component" title="Link to this heading">#</a></h2>
+<p>The relationship between a unit and its parent component is established implicitly
+through the file path. Each component has its own directory, and units residing
+within that directory belong to it. The unit’s attributes and behaviour are documented
+in the source code itself.</p>
 <ul class="simple">
-<li><p>The <code class="docutils literal notranslate"><span class="pre">GptpIpcPublisher</span></code> shall create a POSIX shared memory segment via <code class="docutils literal notranslate"><span class="pre">shm_open()</span></code> with <code class="docutils literal notranslate"><span class="pre">O_CREAT</span></code> flag</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">GptpIpcPublisher</span></code> shall map the shared memory region as <code class="docutils literal notranslate"><span class="pre">GptpIpcRegion</span></code> aligned to 64 bytes</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">GptpIpcPublisher</span></code> shall initialize the magic number field to <code class="docutils literal notranslate"><span class="pre">0x47505450</span></code> (‘GPTP’)</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">GptpIpcPublisher</span></code> shall write <code class="docutils literal notranslate"><span class="pre">GptpIpcData</span></code> using the seqlock protocol:</p>
-<ol class="arabic simple">
-<li><p>Increment <code class="docutils literal notranslate"><span class="pre">seq</span></code> (becomes odd — signals write in progress)</p></li>
-<li><p>Apply a release memory fence</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">memcpy</span></code> the <code class="docutils literal notranslate"><span class="pre">GptpIpcData</span></code> payload</p></li>
-<li><p>Store <code class="docutils literal notranslate"><span class="pre">seq_confirm</span> <span class="pre">=</span> <span class="pre">seq</span> <span class="pre">+</span> <span class="pre">1</span></code></p></li>
-<li><p>Increment <code class="docutils literal notranslate"><span class="pre">seq</span></code> (both <code class="docutils literal notranslate"><span class="pre">seq</span></code> and <code class="docutils literal notranslate"><span class="pre">seq_confirm</span></code> become even — signals write complete)</p></li>
-</ol>
-</li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">GptpIpcPublisher</span></code> shall use the default shared memory name <code class="docutils literal notranslate"><span class="pre">/gptp_ptp_info</span></code> unless overridden</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">GptpIpcPublisher</span></code> shall support <code class="docutils literal notranslate"><span class="pre">Destroy()</span></code> to unmap and unlink the shared memory segment</p></li>
+<li><p><strong>GptpIpcPublisher</strong>: Creates and writes to shared memory using seqlock protocol (see <code class="docutils literal notranslate"><span class="pre">src/gptp_ipc_publisher.h</span></code>)</p></li>
+<li><p><strong>GptpIpcReceiver</strong>: Reads from shared memory with bounded retry on torn reads (see <code class="docutils literal notranslate"><span class="pre">src/gptp_ipc_receiver.h</span></code>)</p></li>
 </ul>
-</section>
-</section>
-<section id="gptpipcreceiver-unit">
-<h3>GptpIpcReceiver Unit<a class="headerlink" href="#gptpipcreceiver-unit" title="Link to this heading">#</a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">GptpIpcReceiver</span></code> component opens the shared memory segment read-only and reads <code class="docutils literal notranslate"><span class="pre">GptpIpcData</span></code> with bounded retry on torn reads.</p>
-<section id="id1">
-<h4>Implementation Requirements<a class="headerlink" href="#id1" title="Link to this heading">#</a></h4>
-<p>The <code class="docutils literal notranslate"><span class="pre">GptpIpcReceiver</span></code> has the following requirements:</p>
-<ul class="simple">
-<li><p>The <code class="docutils literal notranslate"><span class="pre">GptpIpcReceiver</span></code> shall open the POSIX shared memory segment via <code class="docutils literal notranslate"><span class="pre">shm_open()</span></code> with <code class="docutils literal notranslate"><span class="pre">O_RDONLY</span></code> flag</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">GptpIpcReceiver</span></code> shall map the shared memory region as read-only (<code class="docutils literal notranslate"><span class="pre">PROT_READ</span></code>)</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">GptpIpcReceiver</span></code> shall validate the magic number (<code class="docutils literal notranslate"><span class="pre">0x47505450</span></code>) on <code class="docutils literal notranslate"><span class="pre">Init()</span></code></p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">GptpIpcReceiver</span></code> shall read <code class="docutils literal notranslate"><span class="pre">GptpIpcData</span></code> using the seqlock protocol with up to 20 retries:</p>
-<ol class="arabic simple">
-<li><p>Read <code class="docutils literal notranslate"><span class="pre">seq1</span></code> with acquire ordering (must be even, otherwise retry)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">memcpy</span></code> the <code class="docutils literal notranslate"><span class="pre">GptpIpcData</span></code> payload</p></li>
-<li><p>Apply an acquire-release fence</p></li>
-<li><p>Read <code class="docutils literal notranslate"><span class="pre">seq_confirm</span></code> as <code class="docutils literal notranslate"><span class="pre">seq2</span></code> and re-read <code class="docutils literal notranslate"><span class="pre">seq</span></code> as <code class="docutils literal notranslate"><span class="pre">seq3</span></code></p></li>
-<li><p>If <code class="docutils literal notranslate"><span class="pre">seq1</span> <span class="pre">==</span> <span class="pre">seq2</span> <span class="pre">==</span> <span class="pre">seq3</span></code>, the read is consistent; otherwise retry</p></li>
-</ol>
-</li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">GptpIpcReceiver</span></code> shall return <code class="docutils literal notranslate"><span class="pre">std::optional&lt;GptpIpcData&gt;</span></code> (empty if all retries exhausted)</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">GptpIpcReceiver</span></code> shall support <code class="docutils literal notranslate"><span class="pre">Close()</span></code> to unmap the shared memory region</p></li>
-</ul>
-</section>
-</section>
 <section id="seqlock-protocol-workflow">
 <h3>Seqlock Protocol Workflow<a class="headerlink" href="#seqlock-protocol-workflow" title="Link to this heading">#</a></h3>
 <p>The seqlock protocol ensures lock-free communication between publisher and receiver:</p>
@@ -777,15 +737,7 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#class-view">Class View</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#units-within-time-sync-client">Units within Time Sync Client</a><ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gptpipcpublisher-unit">GptpIpcPublisher Unit</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-requirements">Implementation Requirements</a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gptpipcreceiver-unit">GptpIpcReceiver Unit</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Implementation Requirements</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#units-within-the-component">Units within the Component</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seqlock-protocol-workflow">Seqlock Protocol Workflow</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shared-memory-layout">Shared Memory Layout</a></li>
 </ul>
