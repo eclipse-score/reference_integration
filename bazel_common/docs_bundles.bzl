@@ -37,6 +37,10 @@ DOCS_BUNDLES = [
         "mount_at": "modules/score_logging",
     },
     {
+        "bundle": "@score_time//:docs_bundle",
+        "mount_at": "modules/score_time",
+    },
+    {
         "bundle": "@score_itf//:docs_bundle",
         "mount_at": "process_methods_tools/score_itf",
     },

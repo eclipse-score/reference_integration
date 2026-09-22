@@ -476,6 +476,23 @@ Note:
             generated_files.append(output_path_coverage)
             print(f"Generated {output_path_coverage}")
 
+    # Generate docs_bundles.bzl once, covering every group's documentation mounts.
+    content_docs_bundles = generate_docs_bundles_content(known_good, known_good.timestamp)
+    output_dir_docs_bundles = os.path.abspath(args.output_dir_docs_bundles)
+    output_path_docs_bundles = os.path.join(output_dir_docs_bundles, "docs_bundles.bzl")
+
+    if args.dry_run:
+        print(f"\nDry run: would write to {output_path_docs_bundles}\n")
+        print("---- BEGIN GENERATED CONTENT FOR DOCS BUNDLES ----")
+        print(content_docs_bundles)
+        print("---- END GENERATED CONTENT FOR DOCS BUNDLES ----")
+    else:
+        os.makedirs(output_dir_docs_bundles, exist_ok=True)
+        with open(output_path_docs_bundles, "w", encoding="utf-8") as f:
+            f.write(content_docs_bundles)
+        generated_files.append(output_path_docs_bundles)
+        print(f"Generated {output_path_docs_bundles}")
+
     if not args.dry_run and generated_files:
         print(f"\nSuccessfully generated {len(generated_files)} file(s) with {total_module_count} total modules")
 
