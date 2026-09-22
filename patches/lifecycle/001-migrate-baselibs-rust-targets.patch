@@ -1,0 +1,92 @@
+diff --git a/examples/rust_supervised_app/BUILD b/examples/rust_supervised_app/BUILD
+index 9738ceb0b7..2dff53f79c 100644
+--- a/examples/rust_supervised_app/BUILD
++++ b/examples/rust_supervised_app/BUILD
+@@ -36,8 +36,8 @@ rust_binary(
+     deps = [
+         "//score/health_monitor:health_monitoring_rust",
+         "//score/launch_manager:lifecycle_rust",
+-        "@score_baselibs//src/log/score_log",
+-        "@score_baselibs//src/log/stdout_logger",
++        "@score_baselibs//score/log_rust/score_log",
++        "@score_baselibs//score/log_rust/stdout_logger",
+         "@score_crates//:clap",
+         "@score_crates//:libc",
+         "@score_crates//:signal_hook",
+diff --git a/score/health_monitor/src/rust/BUILD b/score/health_monitor/src/rust/BUILD
+index 44ab61c9e2..15b09001f1 100644
+--- a/score/health_monitor/src/rust/BUILD
++++ b/score/health_monitor/src/rust/BUILD
+@@ -14,14 +14,14 @@
+ load("@rules_rust//rust:defs.bzl", "miri_test", "rust_library", "rust_static_library", "rust_test")
+ 
+ COMMON_RUST_DEPS = [
+-    "@score_baselibs//src/containers:containers",
+-    "@score_baselibs//src/thread:thread",
+-    "@score_baselibs//src/log/score_log:score_log",
++    "@score_baselibs//score/containers_rust:containers",
++    "@score_baselibs//score/thread",
++    "@score_baselibs//score/log_rust/score_log",
+     "//score/launch_manager:alive_rust",
+ ]
+ 
+ PROC_MACRO_DEPS = [
+-    "@score_baselibs//src/testing_macros:score_testing_macros",
++    "@score_baselibs//score/testing_macros:score_testing_macros",
+ ]
+ 
+ rust_library(
+@@ -78,7 +78,7 @@ rust_test(
+         "//config:unit_host": ["@platforms//os:linux"],  # see https://github.com/eclipse-score/lifecycle/issues/272
+         "//conditions:default": ["@platforms//:incompatible"],
+     }),
+-    deps = ["@score_baselibs//src/log/stdout_logger"],
++    deps = ["@score_baselibs//score/log_rust/stdout_logger"],
+ )
+ 
+ rust_test(
+@@ -110,7 +110,7 @@ rust_test(
+         "//conditions:default": ["@platforms//:incompatible"],
+     }),
+     deps = [
+-        "@score_baselibs//src/log/stdout_logger",
++        "@score_baselibs//score/log_rust/stdout_logger",
+         "@score_crates//:loom",
+     ],
+ )
+diff --git a/examples/cpp_supervised_app/BUILD b/examples/cpp_supervised_app/BUILD
+index 984f359388..320e13240d 100644
+--- a/examples/cpp_supervised_app/BUILD
++++ b/examples/cpp_supervised_app/BUILD
+@@ -34,6 +34,6 @@ cc_binary(
+     deps = [
+         "//score/health_monitor:health_monitoring_cc",
+         "//score/launch_manager:lifecycle_cc",
+-        "@score_baselibs//src/log/stdout_logger_cpp_init",
++        "@score_baselibs//score/log_rust/stdout_logger_cpp_init",
+     ],
+ )
+diff --git a/score/health_monitor/src/cpp/details/BUILD b/score/health_monitor/src/cpp/details/BUILD
+index 6dbd9e45fa..7ccfa29283 100644
+--- a/score/health_monitor/src/cpp/details/BUILD
++++ b/score/health_monitor/src/cpp/details/BUILD
+@@ -19,6 +19,6 @@ cc_library(
+     visibility = ["//score/health_monitor/src/cpp:__pkg__"],
+     deps = [
+         "@googletest//:gtest",
+-        "@score_baselibs//src/log/stdout_logger_cpp_init",
++        "@score_baselibs//score/log_rust/stdout_logger_cpp_init",
+     ],
+ )
+diff --git a/tests/integration/complex_monitoring/BUILD b/tests/integration/complex_monitoring/BUILD
+index 15306f47ec..7467efa724 100644
+--- a/tests/integration/complex_monitoring/BUILD
++++ b/tests/integration/complex_monitoring/BUILD
+@@ -42,6 +42,6 @@ cc_binary(
+         "//score/launch_manager:lifecycle_cc",
+         "//tests/utils/test_helper",
+         "@googletest//:gtest_main",
+-        "@score_baselibs//src/log/stdout_logger_cpp_init",
++        "@score_baselibs//score/log_rust/stdout_logger_cpp_init",
+     ],
+ )

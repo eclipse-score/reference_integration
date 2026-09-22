@@ -74,6 +74,10 @@ bazel_dep(name = "score_lifecycle")
 git_override(
     module_name = "score_lifecycle",
     commit = "85da2168328d17a3cf53791ebf93534e5ed921fc",
+    patch_strip = 1,
+    patches = [
+        "//patches/lifecycle:001-migrate-baselibs-rust-targets.patch",
+    ],
     remote = "https://github.com/eclipse-score/lifecycle.git",
 )
 
