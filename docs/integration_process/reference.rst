@@ -145,4 +145,4 @@ The consolidated outputs published by the integration. They are built by
      - `docs/s_core_v_1/roadmap/overall_status.rst <https://github.com/eclipse-score/reference_integration/blob/main/docs/s_core_v_1/roadmap/overall_status.rst>`_
    * - Integration status dashboard
      - Live build/health overview of the integration.
-     - `status_dashboard.html <https://eclipse-score.github.io/reference_integration/main/status_dashboard.html>`_
+     - `status_dashboard.html <../status_dashboard.html>`_
