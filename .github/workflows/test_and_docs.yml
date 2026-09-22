@@ -83,7 +83,7 @@ jobs:
       - name: Execute Unit Tests with Coverage Analysis
         run: |
           python ./scripts/quality_runners.py \
-            ${{ github.event_name != 'push' && '--trust-cache' || '' }}
+            ${{ github.event_name != 'push' && github.event_name != 'release' && '--trust-cache' || '' }}
       - name: Execute Feature Integration Tests
         run: |
           bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit
