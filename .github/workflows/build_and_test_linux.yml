@@ -48,7 +48,7 @@ jobs:
           enable-cache: false
       - name: Build image and product SBOM
         run: |
-          bazel build --lockfile_mode=error --config=linux-x86_64 \
+          bazel build --lockfile_mode=error --config=linux-x86_64 --keep_going \
             //images/linux_x86_64:image \
             //:sbom
       - name: Integration tests
