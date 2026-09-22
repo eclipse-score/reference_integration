@@ -59,7 +59,7 @@ def configure_aslr_for_sanitizers() -> None:
         print(f"QR: Could not lower vm.mmap_rnd_bits (continuing anyway): {result.stderr.strip()}")
 
 
-def run_unit_test_with_coverage(module: Module) -> dict[str, str | int]:
+def run_unit_test_with_coverage(module: Module, trust_cache: bool = False) -> dict[str, str | int]:
     print_centered("QR: Running unit tests")
 
     call = (
@@ -72,7 +72,9 @@ def run_unit_test_with_coverage(module: Module) -> dict[str, str | int]:
             "--config=ferrocene-coverage",
             "--test_summary=testcase",
             "--test_output=errors",
-            "--nocache_test_results",
+        ]
+        + ([] if trust_cache else ["--nocache_test_results"])
+        + [
             f"--instrumentation_filter=@{module.name}",
             f"@{module.name}{module.metadata.code_root_path}",
         ]
@@ -302,6 +304,13 @@ def parse_arguments() -> argparse.Namespace:
         default=[],
         help="List of modules to test",
     )
+    parser.add_argument(
+        "--trust-cache",
+        action="store_true",
+        help="Allow Bazel to reuse cached test/coverage results for unchanged modules instead of always "
+        "re-executing them (--nocache_test_results). Intended for fast PR-iteration checks; authoritative "
+        "runs (e.g. on push to main) should NOT set this, so coverage numbers are always freshly measured.",
+    )
     return parser.parse_args()
 
 
@@ -325,7 +334,7 @@ def main() -> bool:
             continue
 
         print_centered(f"QR: Testing module: {module.name}")
-        unit_tests_summary[module.name] = run_unit_test_with_coverage(module=module)
+        unit_tests_summary[module.name] = run_unit_test_with_coverage(module=module, trust_cache=args.trust_cache)
 
         if "cpp" in module.metadata.langs:
             coverage_summary[f"{module.name}_cpp"] = run_cpp_coverage_extraction(
