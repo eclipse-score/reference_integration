@@ -1,0 +1,1546 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Time Daemon Detailed Design &#8212; REF_INT  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/score.css?v=415257cb" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/score_needs.css?v=82a1844f" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/score_design.css?v=8048e6ee" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/modern.css?v=803738c0" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css?v=f420dc51" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../../../_static/documentation_options.js?v=7f41d439"></script>
+    <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../../../_static/sphinx-data-viewer/jsonview.bundle.js?v=18cd53c5"></script>
+    <script src="../../../../_static/sphinx-data-viewer/jsonview_loader.js?v=f7ff7e7d"></script>
+    <script src="../../../../_static/sphinx-needs/libs/html/datatables.min.js?v=8a4aee21"></script>
+    <script src="../../../../_static/sphinx-needs/libs/html/datatables_loader.js?v=a2cae175"></script>
+    <script src="../../../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js?v=dca66431"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'modules/score_time/time_daemon/detailed_design/index';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-score.github.io/reference_integration/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Implementation Inspection Checklist" href="chklst_impl_inspection.html" />
+    <link rel="prev" title="Time Daemon" href="../index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1" />
+  
+    
+    <script src="../../../../_static/searchtools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script src="../../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Eclipse S-CORE</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../../index.html">
+    Modules
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../verification_report/index.html">
+    Verification Reports
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../status_dashboard.html">
+    Integration Status
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../s_core_v_1/index.html">
+    S-Core v1.0
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../s_core_v_1/releases/releases.html">
+    Releases
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../integration_process/integration_process.html">
+    Integration Process
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../process_methods_tools/index.html">
+    Process & Tools
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../../index.html">
+    Modules
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../verification_report/index.html">
+    Verification Reports
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../status_dashboard.html">
+    Integration Status
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../s_core_v_1/index.html">
+    S-Core v1.0
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../s_core_v_1/releases/releases.html">
+    Releases
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../integration_process/integration_process.html">
+    Integration Process
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../process_methods_tools/index.html">
+    Process & Tools
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../score_baselibs/index.html">Base Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../score_persistency/index.html">Persistency Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../score_kyron/index.html">Kyron</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../score_lifecycle/index.html">Lifecycle Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../score_logging/index.html">Logging</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">time_daemon Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../features/index.html">Features</a></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../../module/index.html">Module</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../module/manuals/index.html">Manuals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../time_slave/index.html">Time Slave</a></li>
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="../index.html">Time Daemon</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l4 current active"><a class="current reference internal" href="#">Time Daemon Detailed Design</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../requirements/index.html">Requirements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../manuals/user_manual.html">Time Daemon User Manual</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ts_client/index.html">Time Sync Client</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../time/index.html">Time</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Modules</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">time_daemon Documentation</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../../module/index.html" class="nav-link">Module</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Time Daemon</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Time Daemon Detailed Design</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="time-daemon-detailed-design">
+<span id="id1"></span><h1>Time Daemon Detailed Design<a class="headerlink" href="#time-daemon-detailed-design" title="Link to this heading">#</a></h1>
+<div class="need_container docutils container" id="SNCB-344877ce">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__time_daemon_detailed_design">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Time Daemon Detailed Design</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">draft</span></span></span></div>
+<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">YES</span></span></span></div>
+<div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">ASIL_B</span></span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">time_daemon</span></span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">realizes: <span class="realizes"><span><a class="reference internal" href="../../../../process_methods_tools/score_process_description/process_areas/implementation/implementation_workproducts.html#wp__sw_implementation" title="doc__time_daemon_detailed_design">wp__sw_implementation</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#doc__time_daemon_detailed_design" title="doc__time_daemon_detailed_design">doc__time_daemon_detailed_design</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Generic Document</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading">#</a></h2>
+<section id="use-cases">
+<h3>Use Cases<a class="headerlink" href="#use-cases" title="Link to this heading">#</a></h3>
+<p>TimeDaemon is the non Autosar adaptive process who is intended to get the Vehicle Time from the ptp slave daemon (ptpd or any other), verify and validate the timepoints and distribute time information across the clients.</p>
+<p>More precisely we can specify the following use cases for the time daemon:</p>
+<ol class="arabic simple">
+<li><p>Providing current Vehicle time to different applications</p></li>
+<li><p>Setting the synchronization qualifier (aka Synchronized, Timeout, so on)</p></li>
+<li><p>Providing needed information for diagnostics</p></li>
+<li><p>Providing needed information for addition verification, ex SafeCarTime</p></li>
+</ol>
+<p>The raw architectural diagram is represented below.</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-473a57eeec65344302b97c8751ed0efd3df0338d.svg" type="image/svg+xml" style="width:720px;height:1022px;background:#FFFFFF;"></object></p>
+</div></section>
+</section>
+<section id="rationale-behind-decomposition-into-units">
+<h2>Rationale Behind Decomposition into Units<a class="headerlink" href="#rationale-behind-decomposition-into-units" title="Link to this heading">#</a></h2>
+<p>TimeDaemon is decomposed into six implementation units following SOLID principles
+(Single Responsibility, Open/Closed) and design patterns (Publish-Subscribe, State Machines):</p>
+<ol class="arabic simple">
+<li><p><strong>Application</strong> — Orchestrates initialization and lifecycle of all daemon components</p></li>
+<li><p><strong>Message Broker</strong> — Central publish-subscribe hub for decoupled inter-unit communication</p></li>
+<li><p><strong>ControlFlowDivider</strong> — Separates execution threads to prevent blocking and maintain data flow consistency</p></li>
+<li><p><strong>PTP Machine</strong> — Retrieves raw time data from PTP stack at consistent rates</p></li>
+<li><p><strong>Verification Machine</strong> — Validates and qualifies time data (sync status, jump detection, timeout)</p></li>
+<li><p><strong>IPC Machine</strong> — Exports qualified time snapshots to client applications via shared-memory interface</p></li>
+</ol>
+<p>This separation enables independent testing, reusable implementations (e.g., different PTP stacks),
+and clear responsibility boundaries critical for ASIL_B safety qualification.</p>
+</section>
+<section id="static-diagrams-for-unit-interactions">
+<h2>Static Diagrams for Unit Interactions<a class="headerlink" href="#static-diagrams-for-unit-interactions" title="Link to this heading">#</a></h2>
+<section id="class-view">
+<h3>Class View<a class="headerlink" href="#class-view" title="Link to this heading">#</a></h3>
+<p>Main classes and unit relationships are presented on this diagram:</p>
+<div style="overflow-x: auto; max-width: 100%;"><figure class="align-center">
+<p class="plantuml">
+<object data="../../../../_images/plantuml-a180c3a4511f0be68a0dd309735b44c9191cdda1.svg" type="image/svg+xml" style="width:1804px;height:935px;background:#FFFFFF;"></object></p>
+</figure>
+</div></section>
+<section id="deployment-view">
+<h3>Deployment View<a class="headerlink" href="#deployment-view" title="Link to this heading">#</a></h3>
+<p>The design deployment and process architecture is represented on this diagram:</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-dca23645957979b9c12765a484e4fe6d382a5b73.svg" type="image/svg+xml" style="width:378px;height:899px;background:#FFFFFF;"></object></p>
+</div></section>
+</section>
+<section id="dynamic-diagrams-for-unit-interactions">
+<h2>Dynamic Diagrams for Unit Interactions<a class="headerlink" href="#dynamic-diagrams-for-unit-interactions" title="Link to this heading">#</a></h2>
+<section id="data-and-control-flow">
+<h3>Data and Control Flow<a class="headerlink" href="#data-and-control-flow" title="Link to this heading">#</a></h3>
+<p>The data and control flow between units is presented in the following diagram:</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-158420416470a9ed733136cdaf677a7029fe897e.svg" type="image/svg+xml" style="width:1863px;height:1142px;background:#FFFFFF;"></object></p>
+</div><p>On this view you could see several “workers” scopes:</p>
+<ol class="arabic simple">
+<li><p>PTP retrieving scope</p></li>
+<li><p>PTPTimeInfo handling scope</p></li>
+<li><p>PTPTimeInfo receiving on Application side scope</p></li>
+</ol>
+<p>Each control flow is implemented with the dedicated thread or process and is independent form another ones.</p>
+<section id="control-flows">
+<h4>Control flows<a class="headerlink" href="#control-flows" title="Link to this heading">#</a></h4>
+<section id="ptp-retrieving-scope">
+<h5>PTP retrieving scope<a class="headerlink" href="#ptp-retrieving-scope" title="Link to this heading">#</a></h5>
+<p>This control flow is responsible for the:</p>
+<ol class="arabic simple">
+<li><p>retrieve the latest information from the ptp stack and</p></li>
+<li><p>provide it to the <code class="docutils literal notranslate"><span class="pre">PTPTimeInfo</span> <span class="pre">handling</span></code> control flow</p></li>
+</ol>
+</section>
+<section id="ptptimeinfo-handling-scope">
+<h5>PTPTimeInfo handling scope<a class="headerlink" href="#ptptimeinfo-handling-scope" title="Link to this heading">#</a></h5>
+<p>This control flow is responsible for the:</p>
+<ol class="arabic simple">
+<li><p>Validate the time information, provided by the <code class="docutils literal notranslate"><span class="pre">PTP</span> <span class="pre">retrieving</span></code> workflow and</p></li>
+<li><p>publish it to the <code class="docutils literal notranslate"><span class="pre">Applications</span></code> via some IPC</p></li>
+</ol>
+</section>
+<section id="ptptimeinfo-receiving-on-application-side-scope">
+<h5>PTPTimeInfo receiving on Application side scope<a class="headerlink" href="#ptptimeinfo-receiving-on-application-side-scope" title="Link to this heading">#</a></h5>
+<p>This control flow is responsible for the:</p>
+<ol class="arabic simple">
+<li><p>Propagate the time information from the <code class="docutils literal notranslate"><span class="pre">PTPTimeInfo</span> <span class="pre">handling</span></code> to the business logic of the applications.</p></li>
+</ol>
+</section>
+</section>
+<section id="data-types-or-events">
+<h4>Data types or events<a class="headerlink" href="#data-types-or-events" title="Link to this heading">#</a></h4>
+<p>There are also several data types, which components are communicating to each other:</p>
+<section id="raw-ptp-data">
+<span id="id2"></span><h5>Raw ptp data<a class="headerlink" href="#raw-ptp-data" title="Link to this heading">#</a></h5>
+<p><code class="docutils literal notranslate"><span class="pre">raw_ptp_data</span></code> is the data, which is provided by <code class="docutils literal notranslate"><span class="pre">PTPMachine</span></code> component and is just the raw data from ptp stack. is handled in the “PTP retrieving scope”</p>
+</section>
+<section id="input-ptp-data">
+<span id="id3"></span><h5>Input ptp data<a class="headerlink" href="#input-ptp-data" title="Link to this heading">#</a></h5>
+<p><code class="docutils literal notranslate"><span class="pre">input_ptp_data</span></code> is the same data as <a class="reference internal" href="#raw-ptp-data"><span class="std std-ref">Raw ptp data</span></a> but which is handled already in “PTPTimeInfo handling scope”</p>
+</section>
+<section id="verified-ptp-data">
+<span id="id4"></span><h5>Verified ptp data<a class="headerlink" href="#verified-ptp-data" title="Link to this heading">#</a></h5>
+<p><code class="docutils literal notranslate"><span class="pre">verified_ptp_data</span></code> is the <a class="reference internal" href="#input-ptp-data"><span class="std std-ref">Input ptp data</span></a> which was verified according to the business logic and updated accordingly. This data should be published to the Applications.</p>
+</section>
+</section>
+</section>
+</section>
+<section id="units-within-time-daemon">
+<h2>Units within Time Daemon<a class="headerlink" href="#units-within-time-daemon" title="Link to this heading">#</a></h2>
+<p>The following units comprise TimeDaemon’s internal implementation:</p>
+<section id="application-unit">
+<h3>Application Unit<a class="headerlink" href="#application-unit" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">Application</span></code> component is the main entry point for the <code class="docutils literal notranslate"><span class="pre">TimeDaemon</span></code>. It is responsible for orchestrating the overall lifecycle and initialization of all daemon components.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">TimebaseHandler</span></code> component is an timebase-specific logic implementation. There might be several handlers available in the <code class="docutils literal notranslate"><span class="pre">Application</span></code> per amount of timebases supported. This separation allows for different timebase implementations while maintaining a consistent application structure.</p>
+<section id="implementation-requirements">
+<h4>Implementation Requirements<a class="headerlink" href="#implementation-requirements" title="Link to this heading">#</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">Application</span></code> has the following requirements:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Application</span></code> shall implement the <code class="docutils literal notranslate"><span class="pre">Initialize()</span></code> method to create and initialize all daemon components</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Application</span></code> shall implement the <code class="docutils literal notranslate"><span class="pre">Run()</span></code> method to start all components and wait for termination</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Application</span></code> shall connect components to the <code class="docutils literal notranslate"><span class="pre">MessageBroker</span></code> by setting up all required subscriptions during initialization stage</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Application</span></code> shall support extension for different timebases.</p></li>
+</ul>
+</section>
+<section id="id5">
+<h4>Class view<a class="headerlink" href="#id5" title="Link to this heading">#</a></h4>
+<p>The Class Diagram is presented below:</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-bf8004b56ada3245be627bfc56c4b8002cc0bf81.svg" type="image/svg+xml" style="width:872px;height:584px;background:#FFFFFF;"></object></p>
+</div></section>
+<section id="initialization-flow">
+<h4>Initialization flow<a class="headerlink" href="#initialization-flow" title="Link to this heading">#</a></h4>
+<p>During initialization, the <code class="docutils literal notranslate"><span class="pre">Application</span></code> uses the <code class="docutils literal notranslate"><span class="pre">MachineFactory</span></code> to create, configure and subscribe all components in a specific order:</p>
+<ul class="simple">
+<li><p>Create the <code class="docutils literal notranslate"><span class="pre">MessageBroker</span></code> first, as other components depend on it</p></li>
+<li><p>Create ProactiveMachines (<code class="docutils literal notranslate"><span class="pre">PtpMachine</span></code>, <code class="docutils literal notranslate"><span class="pre">ControlFlowDivider</span></code>) that drive system behavior</p>
+<ul>
+<li><p>Initialize each component</p></li>
+<li><p>Set up MessageBroker subscriptions to component notifications</p></li>
+<li><p>Set up component subscriptions to MessageBroker topics</p></li>
+</ul>
+</li>
+<li><p>Create ReactiveMachines (<code class="docutils literal notranslate"><span class="pre">VerificationMachine</span></code>, <code class="docutils literal notranslate"><span class="pre">IPCMachine</span></code>) that respond to events</p>
+<ul>
+<li><p>Initialize each component</p></li>
+<li><p>Set up MessageBroker subscriptions to component notifications</p></li>
+<li><p>Set up component subscriptions to MessageBroker topics</p></li>
+</ul>
+</li>
+</ul>
+<p>The initialization workflow is represented in the following sequence diagram:</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-deb3f6f1556f575ddf8ce816feda77e847c4f790.svg" type="image/svg+xml" style="width:1133px;height:831px;background:#FFFFFF;"></object></p>
+</div></section>
+<section id="execution-and-shutdown-flow">
+<h4>Execution and shutdown flow<a class="headerlink" href="#execution-and-shutdown-flow" title="Link to this heading">#</a></h4>
+<p>During execution, the <code class="docutils literal notranslate"><span class="pre">Application</span></code>:</p>
+<ul class="simple">
+<li><p>Starts all <code class="docutils literal notranslate"><span class="pre">ProactiveMachines</span></code> in the correct order</p></li>
+<li><p>Monitors the stop token for termination requests</p></li>
+<li><p>When termination is requested, stops all <code class="docutils literal notranslate"><span class="pre">ProactiveMachines</span></code> in reverse order</p></li>
+</ul>
+<p>The execution and shutdown workflow is represented in the following sequence diagram:</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-270f64ae25719d5eda2adc7b4c2d878d03b56df8.svg" type="image/svg+xml" style="width:1103px;height:950px;background:#FFFFFF;"></object></p>
+</div></section>
+</section>
+<section id="message-broker-unit">
+<h3>Message Broker Unit<a class="headerlink" href="#message-broker-unit" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">Message</span> <span class="pre">Broker</span></code> component is the central communication hub that implements the Publish-Subscribe pattern within the <code class="docutils literal notranslate"><span class="pre">TimeDaemon</span></code>. It enables decoupled communication between components by managing topics and distributing messages to interested subscribers.</p>
+<p>The component maintains a registry of topics and their subscribers, delivering messages to all registered subscribers when a component publishes to a topic. This decoupling allows components to evolve independently without direct dependencies on each other.</p>
+<section id="id6">
+<h4>Implementation Requirements<a class="headerlink" href="#id6" title="Link to this heading">#</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">Message</span> <span class="pre">Broker</span></code> has the following requirements:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Message</span> <span class="pre">Broker</span></code> shall maintain a registry of topics and their subscribers</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Message</span> <span class="pre">Broker</span></code> shall allow components to subscribe to topics of interest</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Message</span> <span class="pre">Broker</span></code> shall distribute messages to all subscribers when a topic is published to</p></li>
+</ul>
+</section>
+<section id="id7">
+<h4>Class view<a class="headerlink" href="#id7" title="Link to this heading">#</a></h4>
+<p>The Class Diagram is presented below:</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-617fdce39548f984693858a63abf569f1cc00b66.svg" type="image/svg+xml" style="width:1006px;height:603px;background:#FFFFFF;"></object></p>
+</div></section>
+<section id="id8">
+<h4>Initialization flow<a class="headerlink" href="#id8" title="Link to this heading">#</a></h4>
+<p>During initialization, all machine objects, see <code class="docutils literal notranslate"><span class="pre">BaseMachine</span></code>, the <code class="docutils literal notranslate"><span class="pre">Application</span></code> component needs to subscribe machines to <code class="docutils literal notranslate"><span class="pre">Message</span> <span class="pre">Broker</span></code> to the topics of interest.</p>
+<p>The initialization workflow is represented in the following sequence diagram:</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-df1869c200a393b49c4eb9150797733cc23ad1d1.svg" type="image/svg+xml" style="width:983px;height:741px;background:#FFFFFF;"></object></p>
+</div></section>
+<section id="message-flow">
+<h4>Message flow<a class="headerlink" href="#message-flow" title="Link to this heading">#</a></h4>
+<p>The message flow through the <code class="docutils literal notranslate"><span class="pre">Message</span> <span class="pre">Broker</span></code> is represented in the following sequence diagram:</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-5295df758f1c546eee9263e627d20b97f6556e3c.svg" type="image/svg+xml" style="width:721px;height:448px;background:#FFFFFF;"></object></p>
+</div></section>
+<section id="concurrency-aspects">
+<h4>Concurrency aspects<a class="headerlink" href="#concurrency-aspects" title="Link to this heading">#</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">Message</span> <span class="pre">Broker</span></code> doesn’t provide any synchronization between the publish-callback invoking processes.
+Moreover, the callback invoke will happened in the scope of the thread, where the <code class="docutils literal notranslate"><span class="pre">publish</span></code> method is called.
+To separate the control flows, the <code class="docutils literal notranslate"><span class="pre">ControlFlowDivider</span></code> shall be used.</p>
+</section>
+<section id="scalability">
+<h4>Scalability<a class="headerlink" href="#scalability" title="Link to this heading">#</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">Message</span> <span class="pre">Broker</span></code> can be extended to support configuration-driven subscriptions, where topic relationships are defined in configuration files rather than hardcoded.</p>
+</section>
+</section>
+<section id="controlflowdivider-unit">
+<h3>ControlFlowDivider Unit<a class="headerlink" href="#controlflowdivider-unit" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">ControlFlowDivider</span></code> component is responsible for separating control (execution) flows within the <code class="docutils literal notranslate"><span class="pre">TimeDaemon</span></code> and providing the execution control flow for the data processing. It contains dedicated threads where data is published to the <code class="docutils literal notranslate"><span class="pre">Message</span> <span class="pre">Broker</span></code>, ensuring that blocking operations in one component do not affect the execution of other components and data missing is not affecting the data analysis in processing pipeline.</p>
+<p>This component acts as a crucial intermediary that maintains the responsiveness of the system by decoupling the execution contexts of different operations, particularly between the PTP data retrieval and the time data processing pipelines.</p>
+<section id="id9">
+<h4>Implementation Requirements<a class="headerlink" href="#id9" title="Link to this heading">#</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">ControlFlowDivider</span></code> has the following requirements:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">ControlFlowDivider</span></code> shall provide separate execution threads for different control flows</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">ControlFlowDivider</span></code> shall isolate components from execution time variations in other components</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">ControlFlowDivider</span></code> shall maintain consistent data publishing rates to the subscribers</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">ControlFlowDivider</span></code> shall push the last received data to the subscribers if there is no new data for some time with the predefined rate, to avoid data missing in the processing pipeline</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">ControlFlowDivider</span></code> shall enable periodic processing of the pipeline through consistent event generation</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">ControlFlowDivider</span></code> shall buffer incoming data from fast producers</p></li>
+</ul>
+</section>
+<section id="id10">
+<h4>Class view<a class="headerlink" href="#id10" title="Link to this heading">#</a></h4>
+<p>The Class Diagram is presented below:</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-0772d139727770b371eead220497038b637fa6ef.svg" type="image/svg+xml" style="width:739px;height:884px;background:#FFFFFF;"></object></p>
+</div></section>
+<section id="id11">
+<h4>Initialization flow<a class="headerlink" href="#id11" title="Link to this heading">#</a></h4>
+<p>During initialization, the <code class="docutils literal notranslate"><span class="pre">ControlFlowDivider</span></code> performs the following steps:</p>
+<ul class="simple">
+<li><p>Initialize internal data structures (queue, mutex, condition variable)</p></li>
+<li><p>Create a worker thread to process data independently</p></li>
+<li><p>Start the worker thread which enters a waiting state</p></li>
+</ul>
+<p>The initialization workflow is represented in the following sequence diagram:</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-fe92d6af4dc5d52d680019565f0dc2290da42f50.svg" type="image/svg+xml" style="width:728px;height:650px;background:#FFFFFF;"></object></p>
+</div></section>
+<section id="id12">
+<h4>Message flow<a class="headerlink" href="#id12" title="Link to this heading">#</a></h4>
+<p>When the <code class="docutils literal notranslate"><span class="pre">ControlFlowDivider</span></code> receives new data from the <code class="docutils literal notranslate"><span class="pre">PTP</span> <span class="pre">Machine</span></code> via the <code class="docutils literal notranslate"><span class="pre">Message</span> <span class="pre">Broker</span></code>, it processes it through the following workflow:</p>
+<ol class="arabic simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Message</span> <span class="pre">Broker</span></code> executes the onNewData callback and provides the new data</p></li>
+<li><p>The data is placed in a thread-safe queue and exists from the callback</p></li>
+<li><p>The worker thread wakes up, retrieves the data from the queue and</p></li>
+<li><p>The worker thread publishes the retrieved data to the <a class="reference internal" href="#input-ptp-data"><span class="std std-ref">Input ptp data</span></a> topic</p></li>
+<li><p>if there was no data for some timeout, the worker shall published the empty data to the <a class="reference internal" href="#input-ptp-data"><span class="std std-ref">Input ptp data</span></a> topic.</p></li>
+</ol>
+<p>This separation of control flows ensures that slow or blocking operations in the PTP stack communication do not affect the responsiveness of time data processing in the <code class="docutils literal notranslate"><span class="pre">TimeDaemon</span></code>.</p>
+<p>The execution workflow is represented in the following sequence diagram:</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-60d5b054d8874bcb5164e89873ab01054a574284.svg" type="image/svg+xml" style="width:958px;height:1050px;background:#FFFFFF;"></object></p>
+</div></section>
+</section>
+<section id="ptp-machine-unit">
+<h3>PTP Machine Unit<a class="headerlink" href="#ptp-machine-unit" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">PTP</span> <span class="pre">Machine</span></code> component shall retrieve all needed information from the ptp stack (ex <code class="docutils literal notranslate"><span class="pre">ptpd</span></code>) and provide it to the <code class="docutils literal notranslate"><span class="pre">Message</span> <span class="pre">Broker</span></code> for routing.
+All communication with the ptp stack ight use <code class="docutils literal notranslate"><span class="pre">devctl</span></code> calls, which take some time, thus these calls shall be done in the dedicated thread.</p>
+<section id="id13">
+<h4>Implementation Requirements<a class="headerlink" href="#id13" title="Link to this heading">#</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">PTP</span> <span class="pre">Machine</span></code> has the following requirements:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">PTP</span> <span class="pre">Machine</span></code> shall retrieve the latest time information from the PTP stack (e.g., <code class="docutils literal notranslate"><span class="pre">ptpd</span></code>)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">PTP</span> <span class="pre">Machine</span></code> shall publish retrieved time information to the <code class="docutils literal notranslate"><span class="pre">Message</span> <span class="pre">Broker</span></code> using the defined topic</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">PTP</span> <span class="pre">Machine</span></code> shall format data according to the <code class="docutils literal notranslate"><span class="pre">PtpTimeInfo</span></code> structure required by downstream components</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">PTP</span> <span class="pre">Machine</span></code> shall retrieve time information at a consistent rate to maintain time synchronization</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">PTP</span> <span class="pre">Machine</span></code> shall maintain consistent publishing rates for time data even when experiencing delays in PTP stack communication.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">PTP</span> <span class="pre">Machine</span></code> shall support exchangeability with different PTP stack implementations</p></li>
+</ul>
+</section>
+<section id="id14">
+<h4>Class view<a class="headerlink" href="#id14" title="Link to this heading">#</a></h4>
+<p>The Class Diagram is presented below.</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-3e343146bbc6fafb873ed5fa55fb089f5db3c053.svg" type="image/svg+xml" style="width:701px;height:868px;background:#FFFFFF;"></object></p>
+</div><p>As long as it wraps the particular communication with the ptp stack, the implementations should be easily exchangeable with another one in case of stack change.</p>
+</section>
+<section id="component-initialization">
+<h4>Component initialization<a class="headerlink" href="#component-initialization" title="Link to this heading">#</a></h4>
+<p>During initialization the <code class="docutils literal notranslate"><span class="pre">PTP</span> <span class="pre">Machine</span></code> shall initialize the ptp stack to be able to communicate with it.</p>
+<p>The initialization workflow is described below.</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-6e500c3749a0eb64702ad7ab25882baaffec5edd.svg" type="image/svg+xml" style="width:777px;height:902px;background:#FFFFFF;"></object></p>
+</div></section>
+<section id="publish-new-data">
+<h4>Publish new data<a class="headerlink" href="#publish-new-data" title="Link to this heading">#</a></h4>
+<p>After <code class="docutils literal notranslate"><span class="pre">PTP</span> <span class="pre">Machine</span></code> collects new data from the ptp stack, the component shall publish it to the <code class="docutils literal notranslate"><span class="pre">Message</span> <span class="pre">Broker</span></code> as <a class="reference internal" href="#raw-ptp-data"><span class="std std-ref">Raw ptp data</span></a>.</p>
+<p>The publish workflow is described below.</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-d6d4787931f6f0aa8e36ba25d4eea98995e79a1f.svg" type="image/svg+xml" style="width:841px;height:680px;background:#FFFFFF;"></object></p>
+</div></section>
+</section>
+<section id="shmptpengine-unit">
+<h3>ShmPTPEngine Unit<a class="headerlink" href="#shmptpengine-unit" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">ShmPTPEngine</span></code> component (in <code class="docutils literal notranslate"><span class="pre">score::td::details</span></code>) is a <code class="docutils literal notranslate"><span class="pre">PTP</span> <span class="pre">Machine</span></code> implementation that reads <code class="docutils literal notranslate"><span class="pre">GptpIpcData</span></code> from the shared memory channel written by TimeSlave and converts it into the <code class="docutils literal notranslate"><span class="pre">PtpTimeInfo</span></code> structure expected by the TimeDaemon pipeline.</p>
+<p>It is instantiated as <code class="docutils literal notranslate"><span class="pre">GPTPShmMachine</span></code> — a type alias for <code class="docutils literal notranslate"><span class="pre">PTPMachine&lt;details::ShmPTPEngine&gt;</span></code> — which connects <code class="docutils literal notranslate"><span class="pre">ShmPTPEngine</span></code> to the TimeDaemon’s internal <code class="docutils literal notranslate"><span class="pre">MessageBroker</span></code>.</p>
+<section id="id15">
+<h4>Implementation Requirements<a class="headerlink" href="#id15" title="Link to this heading">#</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">ShmPTPEngine</span></code> has the following requirements:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">ShmPTPEngine</span></code> shall call <code class="docutils literal notranslate"><span class="pre">GptpIpcReceiver::Init(ipc_name)</span></code> during <code class="docutils literal notranslate"><span class="pre">Initialize()</span></code> to open the shared memory channel</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">ShmPTPEngine</span></code> shall call <code class="docutils literal notranslate"><span class="pre">GptpIpcReceiver::Receive()</span></code> in <code class="docutils literal notranslate"><span class="pre">ReadPTPSnapshot()</span></code> to fetch the latest <code class="docutils literal notranslate"><span class="pre">GptpIpcData</span></code></p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">ShmPTPEngine</span></code> shall map all fields of <code class="docutils literal notranslate"><span class="pre">GptpIpcData</span></code> to the corresponding fields of <code class="docutils literal notranslate"><span class="pre">PtpTimeInfo</span></code> (status flags, Sync/FollowUp data, peer-delay data, time references)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">ShmPTPEngine</span></code> shall call <code class="docutils literal notranslate"><span class="pre">GptpIpcReceiver::Close()</span></code> during <code class="docutils literal notranslate"><span class="pre">Deinitialize()</span></code></p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">ShmPTPEngine</span></code> shall be instantiatable with a configurable IPC channel name (default: <code class="docutils literal notranslate"><span class="pre">/gptp_ptp_info</span></code>)</p></li>
+</ul>
+</section>
+<section id="id16">
+<h4>Class View<a class="headerlink" href="#id16" title="Link to this heading">#</a></h4>
+<p>The Class Diagram is presented below:</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-d29a175316e2e1fcbfe7eebacdb7ac70bb9e0fd8.svg" type="image/svg+xml" style="width:1028px;height:1267px;background:#FFFFFF;"></object></p>
+</div></section>
+<section id="initialization">
+<h4>Initialization<a class="headerlink" href="#initialization" title="Link to this heading">#</a></h4>
+<p>During initialization the <code class="docutils literal notranslate"><span class="pre">ShmPTPEngine</span></code> shall open the shared memory channel to be able to read from it.</p>
+<p>The initialization workflow is represented in the following sequence diagram:</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-14093b4fd1931905a60e77ec8880b60fc4769745.svg" type="image/svg+xml" style="width:1434px;height:1023px;background:#FFFFFF;"></object></p>
+</div></section>
+<section id="read-ptp-snapshot">
+<h4>Read PTP Snapshot<a class="headerlink" href="#read-ptp-snapshot" title="Link to this heading">#</a></h4>
+<p>After <code class="docutils literal notranslate"><span class="pre">ShmPTPEngine</span></code> reads the latest <code class="docutils literal notranslate"><span class="pre">GptpIpcData</span></code> from shared memory, it maps it to <code class="docutils literal notranslate"><span class="pre">PtpTimeInfo</span></code> and publishes via the <code class="docutils literal notranslate"><span class="pre">MessageBroker</span></code>.</p>
+<p>The periodic read and publish workflow is described below:</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-14693ec728e73c80b107e90f68d0127abc65a37e.svg" type="image/svg+xml" style="width:1424px;height:907px;background:#FFFFFF;"></object></p>
+</div></section>
+<section id="data-mapping">
+<h4>Data Mapping<a class="headerlink" href="#data-mapping" title="Link to this heading">#</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">ShmPTPEngine::ReadPTPSnapshot()</span></code> performs a field-by-field mapping from <code class="docutils literal notranslate"><span class="pre">GptpIpcData</span></code> to <code class="docutils literal notranslate"><span class="pre">PtpTimeInfo</span></code>:</p>
+<div class="pst-scrollable-table-container"><table class="table" id="id25">
+<caption><span class="caption-number">Table 128 </span><span class="caption-text">GptpIpcData → PtpTimeInfo Mapping</span><a class="headerlink" href="#id25" title="Link to this table">#</a></caption>
+<colgroup>
+<col style="width: 50.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">GptpIpcData</span></code> field</p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">PtpTimeInfo</span></code> field</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ptp_assumed_time</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ptp_assumed_time</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">local_time</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">local_time</span></code> (wrapped in <code class="docutils literal notranslate"><span class="pre">ReferenceClock::time_point</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">rate_deviation</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">rate_deviation</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">status.is_synchronized</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">status.is_synchronized</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">status.is_timeout</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">status.is_timeout</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">status.is_time_jump_future</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">status.is_time_jump_future</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">status.is_time_jump_past</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">status.is_time_jump_past</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">status.is_correct</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">status.is_correct</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sync_fup_data.*</span></code> (9 fields)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sync_fup_data.*</span></code> (direct copy)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pdelay_data.*</span></code> (12 fields)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pdelay_data.*</span></code> (direct copy)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="factory">
+<h4>Factory<a class="headerlink" href="#factory" title="Link to this heading">#</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">CreateGPTPShmMachine(name,</span> <span class="pre">ipc_name)</span></code> is a convenience factory function in <code class="docutils literal notranslate"><span class="pre">score::td</span></code> that creates a configured <code class="docutils literal notranslate"><span class="pre">GPTPShmMachine</span></code> (<code class="docutils literal notranslate"><span class="pre">shared_ptr</span></code>) backed by <code class="docutils literal notranslate"><span class="pre">ShmPTPEngine</span></code>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">machine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CreateGPTPShmMachine</span><span class="p">(</span><span class="s">&quot;shm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/gptp_ptp_info&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="verification-machine-unit">
+<h3>Verification Machine Unit<a class="headerlink" href="#verification-machine-unit" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">Verification</span> <span class="pre">Machine</span></code> component is responsible for validating and qualifying the time information received from the <code class="docutils literal notranslate"><span class="pre">PTP</span> <span class="pre">Machine</span></code>. It applies various validation rules to ensure the time data meets quality requirements before distribution to applications.</p>
+<p>The component implements a pipeline pattern where each stage performs a specific validation and adds appropriate qualifiers to the time data. This modular design allows for easy extension with additional validation steps.</p>
+<section id="id17">
+<h4>Implementation Requirements<a class="headerlink" href="#id17" title="Link to this heading">#</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">Verification</span> <span class="pre">Machine</span></code> has the following requirements:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Verification</span> <span class="pre">Machine</span></code> shall validate and qualify time information received from the PTP Machine</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Verification</span> <span class="pre">Machine</span></code> shall validate if the time base is synchronized state</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Verification</span> <span class="pre">Machine</span></code> shall validate if the time base is in timeout state</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Verification</span> <span class="pre">Machine</span></code> shall validate timestamp for time jumps based on local clock</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Verification</span> <span class="pre">Machine</span></code> shall subscribe to the <a class="reference internal" href="#input-ptp-data"><span class="std std-ref">Input ptp data</span></a> topic via the <code class="docutils literal notranslate"><span class="pre">Message</span> <span class="pre">Broker</span></code></p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Verification</span> <span class="pre">Machine</span></code> shall publish verified time data to the <code class="docutils literal notranslate"><span class="pre">Message</span> <span class="pre">Broker</span></code> using the <a class="reference internal" href="#verified-ptp-data"><span class="std std-ref">Verified ptp data</span></a> topic</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Verification</span> <span class="pre">Machine</span></code> shall support extensibility to add new validation stages in the pipeline</p></li>
+</ul>
+</section>
+<section id="id18">
+<h4>Class view<a class="headerlink" href="#id18" title="Link to this heading">#</a></h4>
+<p>The Class Diagram is presented below.</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-a9ca6f2d6f1a12afe6cc27d749433479480ca3bc.svg" type="image/svg+xml" style="width:997px;height:851px;background:#FFFFFF;"></object></p>
+</div></section>
+<section id="id19">
+<h4>Component initialization<a class="headerlink" href="#id19" title="Link to this heading">#</a></h4>
+<p>During initialization, the <code class="docutils literal notranslate"><span class="pre">Verification</span> <span class="pre">Machine</span></code> performs the following steps:</p>
+<ol class="arabic simple">
+<li><p>Set up the validation pipeline by creating and connecting validation stages</p></li>
+</ol>
+<p>The component shall be subscribed by the <code class="docutils literal notranslate"><span class="pre">Application</span></code> to the <a class="reference internal" href="#input-ptp-data"><span class="std std-ref">Input ptp data</span></a> topic of the <code class="docutils literal notranslate"><span class="pre">MessageBroker</span></code></p>
+<p>The initialization workflow is represented in the following sequence diagram:</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-e5e8387034e6641cf758f7145010a23c47218a4b.svg" type="image/svg+xml" style="width:912px;height:723px;background:#FFFFFF;"></object></p>
+</div></section>
+<section id="data-verification-workflow">
+<h4>Data verification workflow<a class="headerlink" href="#data-verification-workflow" title="Link to this heading">#</a></h4>
+<p>When the <code class="docutils literal notranslate"><span class="pre">Verification</span> <span class="pre">Machine</span></code> receives new PTP data, it processes it through the validation pipeline:</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-930e7333c201d98c573fdbedff7c02d06367a996.svg" type="image/svg+xml" style="width:1128px;height:775px;background:#FFFFFF;"></object></p>
+</div></section>
+</section>
+<section id="ipc-machine-unit">
+<h3>IPC Machine Unit<a class="headerlink" href="#ipc-machine-unit" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">IPC</span> <span class="pre">Machine</span></code> component shall get the <a class="reference internal" href="#verified-ptp-data"><span class="std std-ref">Verified ptp data</span></a> from the <code class="docutils literal notranslate"><span class="pre">Verification</span> <span class="pre">Machine</span></code> and provide it to the <code class="docutils literal notranslate"><span class="pre">VehicleClock</span></code> backend (see <a class="reference internal" href="../../time/index.html"><span class="doc">score::time — Unified Clock Interface</span></a>) through a custom shared memory channel.</p>
+<p>The component provides two sub components: publisher and receiver to be deployed on the TimeDaemon and Application sides accordingly.</p>
+<section id="id20">
+<h4>Implementation Requirements<a class="headerlink" href="#id20" title="Link to this heading">#</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">IPC</span> <span class="pre">Machine</span></code> has the following requirements:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">IPC</span> <span class="pre">Machine</span></code> shall provide verified time data to the <code class="docutils literal notranslate"><span class="pre">VehicleClock</span></code> backend component through a custom shared memory channel</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">IPC</span> <span class="pre">Machine</span></code> shall create and initialize the IPC</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">IPC</span> <span class="pre">Machine</span></code> shall support multiple client applications accessing the same time data</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">IPC</span> <span class="pre">Machine</span></code> shall subscribe to the <a class="reference internal" href="#verified-ptp-data"><span class="std std-ref">Verified ptp data</span></a> topic via the <code class="docutils literal notranslate"><span class="pre">Message</span> <span class="pre">Broker</span></code></p></li>
+</ul>
+</section>
+<section id="id21">
+<h4>Class view<a class="headerlink" href="#id21" title="Link to this heading">#</a></h4>
+<p>The Class Diagram is presented below.</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-9c4d2a9b5c13b29aa92713dc03407ad7f42b0957.svg" type="image/svg+xml" style="width:1001px;height:726px;background:#FFFFFF;"></object></p>
+</div></section>
+<section id="id22">
+<h4>Component initialization<a class="headerlink" href="#id22" title="Link to this heading">#</a></h4>
+<p>Initialization is divided to two parts:</p>
+<ol class="arabic simple">
+<li><p>Initialization on the TimeDaemon side</p></li>
+<li><p>Initialization on the Application side</p></li>
+</ol>
+<p>Important thing, the shared memory IPC publisher shall be created and offered by the <code class="docutils literal notranslate"><span class="pre">TimeDaemon</span></code> before the Application side subscriber can connect. The Application shall retry until the service is found.</p>
+<p>The main workflow is described below.</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-7904b8c305960d42719c65188e5bb8a602a3022a.svg" type="image/svg+xml" style="width:1412px;height:650px;background:#FFFFFF;"></object></p>
+</div><p>The component shall be subscribed during initialization by the <code class="docutils literal notranslate"><span class="pre">Application</span></code> on the <a class="reference internal" href="#verified-ptp-data"><span class="std std-ref">Verified ptp data</span></a> updates from the <code class="docutils literal notranslate"><span class="pre">Message</span> <span class="pre">Broker</span></code></p>
+</section>
+<section id="id23">
+<h4>Publish new data<a class="headerlink" href="#id23" title="Link to this heading">#</a></h4>
+<p>When <code class="docutils literal notranslate"><span class="pre">IPC</span> <span class="pre">Machine</span></code> receives the new <a class="reference internal" href="#verified-ptp-data"><span class="std std-ref">Verified ptp data</span></a> from Message Broker, it shall serialize data and write it to shared memory.</p>
+<p>As long as there are different use cases by using it, like:</p>
+<ol class="arabic simple">
+<li><p>Get current Vehicle time</p></li>
+<li><p>Get data for diagnostics</p></li>
+</ol>
+<p>All <code class="docutils literal notranslate"><span class="pre">PtpTimeInfo</span></code> data (or almost all) shall be published to the subscribed applications.</p>
+<p>The publish workflow is described below.</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-43c82e462c74124cde7f5f3f0c1a05ddc11faefd.svg" type="image/svg+xml" style="width:775px;height:511px;background:#FFFFFF;"></object></p>
+</div></section>
+<section id="receive-data">
+<h4>Receive data<a class="headerlink" href="#receive-data" title="Link to this heading">#</a></h4>
+<p>From Application side the receiver shall read from shared memory via the IPC receiver component and provide the data to the caller.</p>
+<p>The receive workflow is described below.</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-b50708919257c4e8b35a44a54b4bb0bfec3d6e11.svg" type="image/svg+xml" style="width:470px;height:341px;background:#FFFFFF;"></object></p>
+</div></section>
+</section>
+<section id="logging-configuration">
+<h3>Logging configuration<a class="headerlink" href="#logging-configuration" title="Link to this heading">#</a></h3>
+<p>The daemon should have the following logging contexts:</p>
+<div class="pst-scrollable-table-container"><table class="table" id="id26">
+<caption><span class="caption-number">Table 129 </span><span class="caption-text">Logging Contexts</span><a class="headerlink" href="#id26" title="Link to this table">#</a></caption>
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 20.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>component</p></th>
+<th class="head"><p>App/Context ID</p></th>
+<th class="head"><p>Comments</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TimeDaemon</p></td>
+<td><p>TDON</p></td>
+<td><p><strong>T</strong>ime<strong>D</strong>aem<strong>ON</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>Application</p></td>
+<td><p>TDAP</p></td>
+<td><p><strong>T</strong>ime<strong>D</strong>aemon <strong>AP</strong>plication</p></td>
+</tr>
+<tr class="row-even"><td><p>MessageBroker</p></td>
+<td><p>TDMB</p></td>
+<td><p><strong>T</strong>ime<strong>D</strong>aemon <strong>M</strong>essage<strong>B</strong>roker</p></td>
+</tr>
+<tr class="row-odd"><td><p>ControlFlowDivider</p></td>
+<td><p>TDCD</p></td>
+<td><p><strong>T</strong>ime<strong>D</strong>aemon <strong>C</strong>ontrolFlow<strong>D</strong>ivider</p></td>
+</tr>
+<tr class="row-even"><td><p>PTPMachine</p></td>
+<td><p>TDPM</p></td>
+<td><p><strong>T</strong>ime<strong>D</strong>aemon <strong>P</strong>TP<strong>M</strong>achine</p></td>
+</tr>
+<tr class="row-odd"><td><p>ShmPTPEngine</p></td>
+<td><p>GPTP</p></td>
+<td><p><strong>GPTP</strong> Shm adapter (Initialize / ReadPTPSnapshot)</p></td>
+</tr>
+<tr class="row-even"><td><p>VerificationMachine</p></td>
+<td><p>TDVM</p></td>
+<td><p><strong>T</strong>ime<strong>D</strong>aemon <strong>V</strong>erification<strong>M</strong>achine</p></td>
+</tr>
+<tr class="row-odd"><td><p>IPCMachine::receiver</p></td>
+<td><p>TDIR</p></td>
+<td><p><strong>T</strong>ime<strong>D</strong>aemon <strong>I</strong>PCMachine::<strong>R</strong>eceiver</p></td>
+</tr>
+<tr class="row-even"><td><p>IPCMachine::publisher</p></td>
+<td><p>TDIP</p></td>
+<td><p><strong>T</strong>ime<strong>D</strong>aemon <strong>I</strong>PCMachine::<strong>P</strong>ublisher</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="variability">
+<h3>Variability<a class="headerlink" href="#variability" title="Link to this heading">#</a></h3>
+<section id="configuration-files">
+<h4>Configuration files<a class="headerlink" href="#configuration-files" title="Link to this heading">#</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">TimeDaemon</span></code> uses structured configuration files to enable customization of its runtime behavior. These data could be configured:</p>
+<ol class="arabic simple">
+<li><p>Component-specific Configuration:</p>
+<ol class="loweralpha simple">
+<li><p>Each component can have dedicated configuration sections</p></li>
+<li><p>Parameters such as update rates, timeouts, and thresholds can be specified</p></li>
+</ol>
+</li>
+<li><p>Topic Configuration:</p>
+<ol class="loweralpha simple">
+<li><p>Topics for the <code class="docutils literal notranslate"><span class="pre">Message</span> <span class="pre">Broker</span></code> can be defined in configuration</p></li>
+<li><p>Publisher and subscriber relationships can be specified externally</p></li>
+<li><p>Component roles (publisher/subscriber) can be assigned through configuration</p></li>
+</ol>
+</li>
+<li><p>File Format and Structure: The configuration files use JSON format for readability and easy parsing:</p></li>
+</ol>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;message_broker&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;topics&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;raw_ptp_data&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;publishers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;PtpMachine&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;subscribers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;ControlFlowDivider&quot;</span><span class="p">]</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;input_ptp_data&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;publishers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;ControlFlowDivider&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;subscribers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;VerificationMachine&quot;</span><span class="p">]</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;verified_ptp_data&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;publishers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;VerificationMachine&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;subscribers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;IPCMachine&quot;</span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;ptp_machine&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;update_interval_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;ptp_stack_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ptp&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;ptp_stack_parameters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;device&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/dev/ptp0&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;control_flow_divider&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;timeout_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">500</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;publishing_rate_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;verification_machine&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;validation_stages&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;synchronization&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;timejumps&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;timeout&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;timejumps_parameters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;max_backward_jump_ns&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100000</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;timeout_parameters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;threshold_ns&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100000</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;ipc_machine&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;shared_memory_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vehicle_time&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;shared_memory_size&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4096</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id24">
+<h4>Scalability<a class="headerlink" href="#id24" title="Link to this heading">#</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">TimeDaemon</span></code>’s architecture supports scalability in the following ways:</p>
+<section id="component-extensibility">
+<h5>Component Extensibility:<a class="headerlink" href="#component-extensibility" title="Link to this heading">#</a></h5>
+<ol class="arabic simple">
+<li><p>New machine components can be added by implementing the <code class="docutils literal notranslate"><span class="pre">BaseMachine</span></code> interface</p></li>
+<li><p>Additional validation stages can be plugged into the <code class="docutils literal notranslate"><span class="pre">VerificationMachine</span></code> pipeline</p></li>
+<li><p>Alternative IPC mechanisms or communication with ptp stack can be implemented by alternative the <code class="docutils literal notranslate"><span class="pre">IPCMachine</span></code> or <code class="docutils literal notranslate"><span class="pre">PTPMachine</span></code> implementation</p></li>
+</ol>
+</section>
+<section id="example-based-on-qualified-vehicle-time-integration">
+<h5>Example based on Qualified Vehicle Time integration<a class="headerlink" href="#example-based-on-qualified-vehicle-time-integration" title="Link to this heading">#</a></h5>
+<p>The <code class="docutils literal notranslate"><span class="pre">Qualified</span> <span class="pre">Vehicle</span> <span class="pre">Time</span></code> integration extends the standard <code class="docutils literal notranslate"><span class="pre">TimeDaemon</span></code> architecture with:</p>
+<ol class="arabic simple">
+<li><p>A <code class="docutils literal notranslate"><span class="pre">Qualified</span> <span class="pre">Vehicle</span> <span class="pre">Time</span></code> component that performs additional time qualification and provide new topics: <code class="docutils literal notranslate"><span class="pre">qualified_ptp_data</span></code> and <code class="docutils literal notranslate"><span class="pre">diagnostic_sct_data</span></code></p></li>
+<li><p>A dedicated IPC channel for SCT diagnostic data</p></li>
+<li><p>A <code class="docutils literal notranslate"><span class="pre">score::time::qvt</span></code> library for diagnostic applications</p></li>
+</ol>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-032ed61c547eb5d04119e2021abce407c33e4841.svg" type="image/svg+xml" style="width:531px;height:1051px;background:#FFFFFF;"></object></p>
+</div><p>The <code class="docutils literal notranslate"><span class="pre">Qualified</span> <span class="pre">Vehicle</span> <span class="pre">Time</span></code> component is integrated into the existing processing pipeline:</p>
+<ol class="arabic simple">
+<li><p>It subscribes to the <a class="reference internal" href="#verified-ptp-data"><span class="std std-ref">Verified ptp data</span></a> topic from the <code class="docutils literal notranslate"><span class="pre">VerificationMachine</span></code></p></li>
+<li><p>It processes and qualifies the time data with additional QVT-specific checks</p></li>
+<li><p>It publishes two types of data:</p>
+<ol class="loweralpha simple">
+<li><p>Qualified time data to the standard IPC Machine towards clients interested in the qualified Vehicle Time</p></li>
+<li><p>Diagnostic data to a dedicated QVT IPC channel towards Diagnostic and Central Validator notifications</p></li>
+</ol>
+</li>
+</ol>
+<p>The extended data flow with Qualified Vehicle Time integration is shown below:</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-bd32b7cf5de617efbb5d36f8f71f592ddb0fe7f8.svg" type="image/svg+xml" style="width:2661px;height:1681px;background:#FFFFFF;"></object></p>
+</div></section>
+<section id="example-based-on-absolute-time-integration">
+<h5>Example based on Absolute Time integration<a class="headerlink" href="#example-based-on-absolute-time-integration" title="Link to this heading">#</a></h5>
+<p>Another example of the <code class="docutils literal notranslate"><span class="pre">TimeDaemon</span></code> extension is the integration of an <code class="docutils literal notranslate"><span class="pre">Absolute</span> <span class="pre">Time</span></code> source, such as GNSS, to provide absolute time information alongside the relative Vehicle Time from PTP.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Absolute</span> <span class="pre">Time</span></code> integration extends the standard <code class="docutils literal notranslate"><span class="pre">TimeDaemon</span></code> architecture with:</p>
+<ol class="arabic simple">
+<li><p>An <code class="docutils literal notranslate"><span class="pre">SDatMachine</span></code> component that retrieves absolute time from GNSS via SOMEIP or other sources and provide new topics: <code class="docutils literal notranslate"><span class="pre">absolute_time_data</span></code></p></li>
+<li><p>A dedicated verification stage in the <code class="docutils literal notranslate"><span class="pre">VerificationMachine</span></code> for Absolute Time qualification</p></li>
+<li><p>A dedicated IPC channel for Absolute Time data</p></li>
+<li><p>A <code class="docutils literal notranslate"><span class="pre">score::time::abs</span></code> library for applications requiring absolute time on Clients side.</p></li>
+</ol>
+<p>The way how it is integrated is presented below.</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-e9ef24beeeef03bc7ce7906dbe8307cce2e70a5a.svg" type="image/svg+xml" style="width:777px;height:1088px;background:#FFFFFF;"></object></p>
+</div><p>The control and data flow with Absolute Time integration is shown below.</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-1e08ea95f72ffde2b319d9df6f6f906810252897.svg" type="image/svg+xml" style="width:1435px;height:751px;background:#FFFFFF;"></object></p>
+</div></section>
+</section>
+</section>
+<section id="using-in-test-environment">
+<h3>Using in test environment<a class="headerlink" href="#using-in-test-environment" title="Link to this heading">#</a></h3>
+<section id="using-in-itf">
+<h4>Using in ITF<a class="headerlink" href="#using-in-itf" title="Link to this heading">#</a></h4>
+<p>Normal behavior is expected.</p>
+</section>
+<section id="using-in-component-tests-on-the-host">
+<h4>Using in Component Tests on the host<a class="headerlink" href="#using-in-component-tests-on-the-host" title="Link to this heading">#</a></h4>
+<section id="overview">
+<h5>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h5>
+<p>The <code class="docutils literal notranslate"><span class="pre">TimeDaemon</span></code> can be utilized in the <code class="docutils literal notranslate"><span class="pre">Component</span> <span class="pre">Tests</span></code> environment to enable comprehensive testing of time-dependent components without relying on physical PTP hardware.
+This approach allows test cases to manipulate time values and synchronization states to validate application behavior under various timing conditions.</p>
+<p>For the Component tests the <code class="docutils literal notranslate"><span class="pre">PtpMachine::PtpEngine</span></code> library is the only one platform-dependent.
+Thus the <code class="docutils literal notranslate"><span class="pre">TimeDaemon</span></code> components remain largely unchanged except for the <code class="docutils literal notranslate"><span class="pre">PTPMachine</span></code> component, which is replaced with an test-specific implementation that can be controlled via test cases
+This component shall:</p>
+<ol class="arabic simple">
+<li><p>simulate “normal” <code class="docutils literal notranslate"><span class="pre">PTPMachine</span></code> behavior</p></li>
+<li><p>have the communication channel to the test case and react on the manipulations</p></li>
+</ol>
+</section>
+</section>
+</section>
+<section id="next-steps-plugin-system">
+<h3>Next steps: plugin system<a class="headerlink" href="#next-steps-plugin-system" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">TimeDaemon</span></code> could be extended with a flexible plugin system that enables dynamic component loading, configuration, subscription and extension without requiring code changes or recompilation.</p>
+<section id="plugin-architecture">
+<h4>Plugin Architecture<a class="headerlink" href="#plugin-architecture" title="Link to this heading">#</a></h4>
+<p>The plugin system is structured around the following key elements:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Component</span> <span class="pre">Registry</span></code>: A central registry that maintains information about available component implementations</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Component</span> <span class="pre">Factory</span></code>: Creates component instances based on configuration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Plugin</span> <span class="pre">Manager</span></code>: Loads and initializes plugins at runtime</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Configuration-Driven</span> <span class="pre">Assembly</span></code>: Components and their relationships defined in configuration files</p></li>
+</ol>
+</section>
+<section id="component-creation-process">
+<h4>Component Creation Process<a class="headerlink" href="#component-creation-process" title="Link to this heading">#</a></h4>
+<p>During <code class="docutils literal notranslate"><span class="pre">TimeDaemon</span></code> initialization:</p>
+<ol class="arabic simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Plugin</span> <span class="pre">Manager</span></code> loads all specified plugins from configured directories or bazel targets</p></li>
+<li><p>Each plugin registers its component factories with the registry</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Application</span></code> reads the component configuration</p></li>
+<li><p>For each component in the configuration:</p>
+<ol class="loweralpha simple">
+<li><p>The appropriate factory is retrieved from the registry</p></li>
+<li><p>The component is created with its specified parameters</p></li>
+<li><p>Components are connected based on the <code class="docutils literal notranslate"><span class="pre">MessageBroker</span></code> topic configuration</p></li>
+</ol>
+</li>
+</ol>
+</section>
+</section>
+<section id="asil-b-qualification">
+<h3>ASIL-B qualification<a class="headerlink" href="#asil-b-qualification" title="Link to this heading">#</a></h3>
+<p>Clean separation of concerns allows the <code class="docutils literal notranslate"><span class="pre">VehicleClock</span></code> <code class="docutils literal notranslate"><span class="pre">td_impl</span></code> backend as well as <code class="docutils literal notranslate"><span class="pre">TimeDaemon</span></code> to be qualified according to ASIL-B requirements following ISO 26262 standard.</p>
+</section>
+</section>
+<section id="inspection-checklist">
+<h2>Inspection Checklist<a class="headerlink" href="#inspection-checklist" title="Link to this heading">#</a></h2>
+<p>The checklist for verification of the detailed design and code can be found here:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="chklst_impl_inspection.html">Implementation Inspection Checklist</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chklst_impl_inspection.html#purpose">Purpose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chklst_impl_inspection.html#conduct">Conduct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chklst_impl_inspection.html#checklist">Checklist</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Time Daemon</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="chklst_impl_inspection.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Implementation Inspection Checklist</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#description">Description</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-cases">Use Cases</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rationale-behind-decomposition-into-units">Rationale Behind Decomposition into Units</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#static-diagrams-for-unit-interactions">Static Diagrams for Unit Interactions</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#class-view">Class View</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deployment-view">Deployment View</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dynamic-diagrams-for-unit-interactions">Dynamic Diagrams for Unit Interactions</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-and-control-flow">Data and Control Flow</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#control-flows">Control flows</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#ptp-retrieving-scope">PTP retrieving scope</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#ptptimeinfo-handling-scope">PTPTimeInfo handling scope</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#ptptimeinfo-receiving-on-application-side-scope">PTPTimeInfo receiving on Application side scope</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#data-types-or-events">Data types or events</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#raw-ptp-data">Raw ptp data</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#input-ptp-data">Input ptp data</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#verified-ptp-data">Verified ptp data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#units-within-time-daemon">Units within Time Daemon</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#application-unit">Application Unit</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-requirements">Implementation Requirements</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Class view</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#initialization-flow">Initialization flow</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#execution-and-shutdown-flow">Execution and shutdown flow</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#message-broker-unit">Message Broker Unit</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Implementation Requirements</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Class view</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Initialization flow</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#message-flow">Message flow</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#concurrency-aspects">Concurrency aspects</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#scalability">Scalability</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#controlflowdivider-unit">ControlFlowDivider Unit</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Implementation Requirements</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Class view</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Initialization flow</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Message flow</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ptp-machine-unit">PTP Machine Unit</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Implementation Requirements</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Class view</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#component-initialization">Component initialization</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#publish-new-data">Publish new data</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shmptpengine-unit">ShmPTPEngine Unit</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Implementation Requirements</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Class View</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#initialization">Initialization</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#read-ptp-snapshot">Read PTP Snapshot</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#data-mapping">Data Mapping</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#factory">Factory</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verification-machine-unit">Verification Machine Unit</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">Implementation Requirements</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">Class view</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">Component initialization</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#data-verification-workflow">Data verification workflow</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ipc-machine-unit">IPC Machine Unit</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">Implementation Requirements</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">Class view</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">Component initialization</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">Publish new data</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#receive-data">Receive data</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#logging-configuration">Logging configuration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variability">Variability</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-files">Configuration files</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">Scalability</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#component-extensibility">Component Extensibility:</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#example-based-on-qualified-vehicle-time-integration">Example based on Qualified Vehicle Time integration</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#example-based-on-absolute-time-integration">Example based on Absolute Time integration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-in-test-environment">Using in test environment</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#using-in-itf">Using in ITF</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#using-in-component-tests-on-the-host">Using in Component Tests on the host</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps-plugin-system">Next steps: plugin system</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#plugin-architecture">Plugin Architecture</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#component-creation-process">Component Creation Process</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#asil-b-qualification">ASIL-B qualification</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inspection-checklist">Inspection Checklist</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
