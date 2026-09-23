@@ -12,20 +12,7 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-Baselibs Module Verification Report
-====================================
+Integration Status
+==================
 
-.. document:: Baselibs Module Verification Report
-   :id: doc__baselibs_verification_report
-   :post_template: module_verification_report
-   :status: valid
-   :safety: QM
-   :security: NO
-   :realizes: wp__verification_module_ver_report
-   :report_version: v1.0
-   :version: 1
-
-This report is generated from baselibs' own needs data.
-It uses the module verification report template introduced by docs-as-code.
-It complements baselibs' own hand-written verification report,
-:need:`doc__baselibs_manual_verification_report`.
+The generated integration status dashboard is published at this location.

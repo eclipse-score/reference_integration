@@ -25,13 +25,14 @@ Platform Verification Report
 Module Verification Reports
 -----------------------------
 
-* :doc:`Baselibs <modules/baselibs/baselibs_verification_report>`
-* :doc:`Persistency <modules/persistency/persistency_verification_report>`
+* :doc:`Modules <modules/index>`
+
+Feature/Component Diagram (experiment)
+----------------------------------------
 
 .. toctree::
    :titlesonly:
    :hidden:
 
    Platform Verification Report <platform_verification_report>
-   Baselibs <modules/baselibs/baselibs_verification_report>
-   Persistency <modules/persistency/persistency_verification_report>
+   Modules <modules/index>
