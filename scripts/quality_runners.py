@@ -181,10 +181,7 @@ def generate_rust_module_index(module_name: str, output_dir: Path) -> None:
 </html>
 """
     else:
-        links = "\n".join(
-            f'        <li><a href="{t.name}/blanket/index.html">{t.name}</a></li>'
-            for t in targets
-        )
+        links = "\n".join(f'        <li><a href="{t.name}/blanket/index.html">{t.name}</a></li>' for t in targets)
         content = f"""<!DOCTYPE html>
 <html lang="en">
 <head>

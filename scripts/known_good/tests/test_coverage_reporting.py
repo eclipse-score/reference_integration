@@ -53,14 +53,16 @@ def test_generate_markdown_report_with_dashboard_column(tmp_path: Path):
     content = output_path.read_text(encoding="utf-8")
     assert "# Coverage Analysis Summary" in content
     assert "| module | lines | functions | branches | dashboard |" in content
-    assert (
-        '| score_baselibs_cpp | 93.0% | 85.8% | 64.1% | <a href="../coverage/cpp/score_baselibs/index.html">C++ Dashboard</a> |'
-        in content
+    expected_cpp = (
+        "| score_baselibs_cpp | 93.0% | 85.8% | 64.1% | "
+        '<a href="../coverage/cpp/score_baselibs/index.html">C++ Dashboard</a> |'
     )
-    assert (
-        '| score_lifecycle_rust | 88.5% |  |  | <a href="../coverage/rust/score_lifecycle/index.html">Rust Dashboard</a> |'
-        in content
+    assert expected_cpp in content
+    expected_rust = (
+        "| score_lifecycle_rust | 88.5% |  |  | "
+        '<a href="../coverage/rust/score_lifecycle/index.html">Rust Dashboard</a> |'
     )
+    assert expected_rust in content
 
 
 def test_generate_rust_module_index_single_target(tmp_path: Path):
