@@ -38,11 +38,11 @@
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/modern.css?v=803738c0" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css?v=f420dc51" />
   
@@ -175,7 +175,7 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-external" href="https://eclipse-score.github.io/reference_integration/main/status_dashboard.html">
+  <a class="nav-link nav-internal" href="../../../../status_dashboard.html">
     Integration Status
   </a>
 </li>
@@ -303,10 +303,6 @@
   
 
   
-    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
-      <span class="fa-solid fa-outdent"></span>
-    </button>
-  
 </div>
 
     </header>
@@ -348,7 +344,7 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-external" href="https://eclipse-score.github.io/reference_integration/main/status_dashboard.html">
+  <a class="nav-link nav-internal" href="../../../../status_dashboard.html">
     Integration Status
   </a>
 </li>
@@ -552,7 +548,7 @@
                   
   <section id="time-slave-detailed-design">
 <span id="time-slave-detailed-design-index"></span><h1>Time Slave Detailed Design<a class="headerlink" href="#time-slave-detailed-design" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-5506c503">
+<div class="need_container docutils container" id="SNCB-434692d5">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__time_slave_detailed_design">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1340,113 +1336,6 @@ consuming side, are documented in the <a class="reference internal" href="../../
             </div>
             
             
-              
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
-                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#description">Description</a><ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-cases">Use Cases</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rationale-behind-decomposition-into-units">Rationale Behind Decomposition into Units</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#static-diagrams-for-unit-interactions">Static Diagrams for Unit Interactions</a><ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#class-view">Class View</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dynamic-diagrams-for-unit-interactions">Dynamic Diagrams for Unit Interactions</a><ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-and-control-flow">Data and Control Flow</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#control-flows">Control Flows</a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#rxthread-scope">RxThread Scope</a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#pdelaythread-scope">PdelayThread Scope</a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#main-thread-periodic-publish-scope">Main Thread (Periodic Publish) Scope</a></li>
-</ul>
-</li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#data-types-or-events">Data Types or Events</a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#ptpmessage">PTPMessage</a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#syncresult">SyncResult</a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#pdelayresult">PDelayResult</a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#ptptimeinfo">PtpTimeInfo</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#units-within-time-slave">Units Within Time Slave</a><ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#timeslave-application-unit">TimeSlave Application Unit</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-requirements">Implementation Requirements</a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gptpengine-unit">GptpEngine Unit</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Implementation Requirements</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Class View</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#threading-model">Threading Model</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#concurrency-aspects">Concurrency Aspects</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hardware-timestamping-fallback">Hardware timestamping fallback</a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#framecodec-unit">FrameCodec Unit</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Implementation Requirements</a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#messageparser-unit">MessageParser Unit</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Implementation Requirements</a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#syncstatemachine-unit">SyncStateMachine Unit</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Implementation Requirements</a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#peerdelaymeasurer-unit">PeerDelayMeasurer Unit</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#timestamp-definitions">Timestamp Definitions</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Implementation Requirements</a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#phcadjuster-unit">PhcAdjuster Unit</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Implementation Requirements</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fallback-behavior-when-phc-is-unavailable">Fallback Behavior When PHC Is Unavailable</a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#platform-support">Platform Support</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instrumentation">Instrumentation</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#probemanager">ProbeManager</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#recorder">Recorder</a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#logging-configuration">Logging configuration</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variability">Variability</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration">Configuration</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#scalability">Scalability</a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#platform-extensibility">Platform extensibility</a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#protocol-extensibility">Protocol extensibility</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-in-test-environment">Using in Test Environment</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#using-in-itf">Using in ITF</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#using-in-component-tests-on-host">Using in Component Tests on Host</a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inspection-checklist">Inspection Checklist</a></li>
-</ul>
-  </nav></div>
-
-</div></div>
               
             
           </div>
