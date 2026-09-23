@@ -17,12 +17,11 @@
 bazel_dep(name = "score_baselibs")
 git_override(
     module_name = "score_baselibs",
-    commit = "f2af2ddb0688abf3bf7516f87bd740afbf1965f8",
+    commit = "9216215f3a8468f3487884b472e1f325ef36f92b",
     patch_strip = 1,
     patches = [
         "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
         "//patches/baselibs:002-restore-qnx8-poll-workaround.patch",
-        "//patches/baselibs:005-rename-manual-verification-report-id.patch",
         "//patches/baselibs:006-include-cpp-style-guide-in-toctree.patch",
     ],
     remote = "https://github.com/eclipse-score/baselibs.git",
