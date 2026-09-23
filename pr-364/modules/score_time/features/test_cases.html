@@ -1,0 +1,1764 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Test Cases &#8212; REF_INT  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/score.css?v=415257cb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/score_needs.css?v=82a1844f" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/score_design.css?v=8048e6ee" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-needs/modern.css?v=803738c0" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=f420dc51" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../../_static/documentation_options.js?v=7f41d439"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../../_static/sphinx-data-viewer/jsonview.bundle.js?v=18cd53c5"></script>
+    <script src="../../../_static/sphinx-data-viewer/jsonview_loader.js?v=f7ff7e7d"></script>
+    <script src="../../../_static/sphinx-needs/libs/html/datatables.min.js?v=8a4aee21"></script>
+    <script src="../../../_static/sphinx-needs/libs/html/datatables_loader.js?v=a2cae175"></script>
+    <script src="../../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js?v=dca66431"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'modules/score_time/features/test_cases';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-score.github.io/reference_integration/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module" href="../module/index.html" />
+    <link rel="prev" title="Features" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Eclipse S-CORE</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../index.html">
+    Modules
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../verification_report/index.html">
+    Verification Reports
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../status_dashboard.html">
+    Integration Status
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../s_core_v_1/index.html">
+    S-Core v1.0
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../s_core_v_1/releases/releases.html">
+    Releases
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../integration_process/integration_process.html">
+    Integration Process
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../process_methods_tools/index.html">
+    Process & Tools
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../index.html">
+    Modules
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../verification_report/index.html">
+    Verification Reports
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../status_dashboard.html">
+    Integration Status
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../s_core_v_1/index.html">
+    S-Core v1.0
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../s_core_v_1/releases/releases.html">
+    Releases
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../integration_process/integration_process.html">
+    Integration Process
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../process_methods_tools/index.html">
+    Process & Tools
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../score_baselibs/index.html">Base Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../score_persistency/index.html">Persistency Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../score_kyron/index.html">Kyron</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../score_lifecycle/index.html">Lifecycle Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../score_logging/index.html">Logging</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">time_daemon Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">Features</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">Test Cases</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../module/index.html">Module</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Modules</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">time_daemon Documentation</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Features</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Test Cases</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="test-cases">
+<h1>Test Cases<a class="headerlink" href="#test-cases" title="Link to this heading">#</a></h1>
+<p>This page lists verification test cases for the <code class="docutils literal notranslate"><span class="pre">score::time</span></code> module, organized by functional requirement.</p>
+<section id="fr-1-vehicle-time-synchronization">
+<h2>FR-1 Vehicle Time Synchronization<a class="headerlink" href="#fr-1-vehicle-time-synchronization" title="Link to this heading">#</a></h2>
+<section id="tc-fr1-001-gptp-synchronization-establishment-verification">
+<h3>TC-FR1-001 — gPTP Synchronization Establishment Verification<a class="headerlink" href="#tc-fr1-001-gptp-synchronization-establishment-verification" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Log + Packet Capture</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>High</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>Test device is powered on and started</p></li>
+<li><p>A gPTP Time Master is available in the network</p></li>
+<li><p>Wireshark/tcpdump is deployed on test PC or mirror port</p></li>
+<li><p>Device logs are accessible</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Start Wireshark on test PC, filter: eth.type == 0x88F7</p></li>
+<li><p>Start score::time service on target device</p></li>
+<li><p>Wait 60s</p></li>
+<li><p>Check captured gPTP packets in Wireshark</p></li>
+<li><p>Execute log view command on device</p></li>
+<li><p>Record AccuracyQualifier status in logs</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<p><strong>Packet Capture</strong></p>
+<ul class="simple">
+<li><p>✓ Pdelay_Req packets sent by this device are visible</p></li>
+<li><p>✓ Pdelay_Resp, Sync, Follow_Up packets received by this device are visible</p></li>
+<li><p>✓ No Sync packets sent by this device (device is Slave)</p></li>
+</ul>
+<p><strong>Log Verification</strong></p>
+<ul class="simple">
+<li><p>✓ Log shows AccuracyQualifier changed to kSynchronized</p></li>
+<li><p>✓ No persistent ERROR-level logs</p></li>
+</ul>
+</section>
+<section id="tc-fr1-002-gptp-master-disconnection-state-degradation">
+<h3>TC-FR1-002 — gPTP Master Disconnection State Degradation<a class="headerlink" href="#tc-fr1-002-gptp-master-disconnection-state-degradation" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Log Verification</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>High</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>FR-1-001 completed, device is in kSynchronized state</p></li>
+<li><p>Device logs accessible</p></li>
+<li><p>Network connectivity of gPTP Master can be controlled (unplug cable or shut down Master service)</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Confirm AccuracyQualifier == kSynchronized in log, record timestamp</p></li>
+<li><p>Disconnect gPTP Master network</p></li>
+<li><p>Wait 60s (exceeds syncLossTimeout configuration)</p></li>
+<li><p>Check latest AccuracyQualifier status in device log</p></li>
+<li><p>Reconnect Master network</p></li>
+<li><p>Wait 60s</p></li>
+<li><p>Check AccuracyQualifier status in log again</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<p><strong>Disconnection Phase</strong></p>
+<ul class="simple">
+<li><p>✓ Log shows AccuracyQualifier degraded from kSynchronized to kUnstable or kNoTime</p></li>
+<li><p>✓ Sync loss warning/error present in log</p></li>
+</ul>
+<p><strong>Recovery Phase</strong></p>
+<ul class="simple">
+<li><p>✓ Log shows kSynchronized state restored</p></li>
+<li><p>✓ No service crash during entire recovery process</p></li>
+</ul>
+</section>
+<section id="tc-fr1-003-startup-behavior-without-gptp-master">
+<h3>TC-FR1-003 — Startup Behavior Without gPTP Master<a class="headerlink" href="#tc-fr1-003-startup-behavior-without-gptp-master" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Log Verification</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>High</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>No gPTP Time Master in network (or Master is shut down)</p></li>
+<li><p>Device logs accessible</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Confirm no gPTP Master in network</p></li>
+<li><p>Restart score::time service on target device</p></li>
+<li><p>Wait 60s</p></li>
+<li><p>Check AccuracyQualifier status in log</p></li>
+<li><p>Verify service process is still running</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<p><strong>Log Verification</strong></p>
+<ul class="simple">
+<li><p>✓ AccuracyQualifier remains kNoTime</p></li>
+<li><p>✓ Log contains clear sync failure or waiting-for-Master records</p></li>
+</ul>
+<p><strong>Service Stability</strong></p>
+<ul class="simple">
+<li><p>✓ Service process not crashed, running normally</p></li>
+<li><p>✓ No segfault or core dump</p></li>
+</ul>
+</section>
+<section id="tc-fr1-004-device-does-not-send-gptp-sync-packets-slave-role">
+<h3>TC-FR1-004 — Device Does Not Send gPTP Sync Packets (Slave Role)<a class="headerlink" href="#tc-fr1-004-device-does-not-send-gptp-sync-packets-slave-role" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Packet Capture</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Medium</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>gPTP Time Master available in network</p></li>
+<li><p>Wireshark deployed</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Start Wireshark, filter: eth.type == 0x88F7</p></li>
+<li><p>Start score::time service, wait 120s</p></li>
+<li><p>Filter: source MAC is this device, gPTP messageType == Sync (0x0)</p></li>
+<li><p>Count number of such packets</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<p><strong>Packet Capture</strong></p>
+<ul class="simple">
+<li><p>✓ 0 Sync packets actively sent by this device</p></li>
+<li><p>✓ Pdelay_Req packets sent by this device visible (messageType == 0x2)</p></li>
+<li><p>✓ Sync and Follow_Up packets received by this device visible</p></li>
+</ul>
+</section>
+</section>
+<section id="fr-2-vehicle-time-sync-precision">
+<h2>FR-2 Vehicle Time Sync Precision<a class="headerlink" href="#fr-2-vehicle-time-sync-precision" title="Link to this heading">#</a></h2>
+<section id="tc-fr2-001-avb-node-synchronization-accuracy-verification-1-s">
+<h3>TC-FR2-001 — AVB Node Synchronization Accuracy Verification (≤1 μs)<a class="headerlink" href="#tc-fr2-001-avb-node-synchronization-accuracy-verification-1-s" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Performance</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Clock Comparison</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Medium</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>Device is AVB node, gPTP sync completed</p></li>
+<li><p>Reference clock source (GPS or high-precision Master) available</p></li>
+<li><p>Accuracy measurement tool ready</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Wait for AccuracyQualifier == kSynchronized then wait 5 more minutes to stabilize</p></li>
+<li><p>Continuously sample for 10 minutes, record each offset</p></li>
+<li><p>Calculate: max offset, average offset, standard deviation</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ All sample offsets within 10 minutes have absolute value ≤ 1 μs</p></li>
+<li><p>✓ No abnormal jumps (single offset change ≤ 500 ns)</p></li>
+<li><p>✗ Fail if any sample offset &gt; 1 μs</p></li>
+</ul>
+</section>
+<section id="tc-fr2-002-non-avb-node-synchronization-accuracy-verification-500-s">
+<h3>TC-FR2-002 — Non-AVB Node Synchronization Accuracy Verification (≤500 μs)<a class="headerlink" href="#tc-fr2-002-non-avb-node-synchronization-accuracy-verification-500-s" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Performance</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Clock Comparison</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Medium</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>Device is non-AVB node, gPTP sync completed</p></li>
+<li><p>Reference clock available</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Wait for sync to stabilize (AccuracyQualifier == kSynchronized, then wait 2 more minutes)</p></li>
+<li><p>Continuously sample for 5 minutes, record each offset</p></li>
+<li><p>Calculate max offset</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ All sample offsets have absolute value ≤ 500 μs</p></li>
+<li><p>✓ Most samples ≤ 200 μs (target range 200–500 μs)</p></li>
+<li><p>✗ Fail if offset &gt; 500 μs</p></li>
+</ul>
+</section>
+</section>
+<section id="fr-3-vehicle-time-base-api">
+<h2>FR-3 Vehicle Time Base API<a class="headerlink" href="#fr-3-vehicle-time-base-api" title="Link to this heading">#</a></h2>
+<section id="tc-fr3-001-vehicle-time-now-can-be-read-normally">
+<h3>TC-FR3-001 — Vehicle Time Now() Can Be Read Normally<a class="headerlink" href="#tc-fr3-001-vehicle-time-now-can-be-read-normally" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Test Tool</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>High</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>gPTP sync completed (AccuracyQualifier == kSynchronized)</p></li>
+<li><p>Test client tool deployed</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Call IVehicleTime::Now(), record return value T1</p></li>
+<li><p>Wait 1s</p></li>
+<li><p>Call Now() again, record T2</p></li>
+<li><p>Calculate T2 - T1</p></li>
+<li><p>Execute 10 consecutive times</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ Each call succeeds without error code</p></li>
+<li><p>✓ T2 &gt; T1 (monotonically increasing)</p></li>
+<li><p>✓ T2 - T1 in range [950ms, 1050ms] (error ≤5%)</p></li>
+<li><p>✓ No crash or exception in all 10 calls</p></li>
+</ul>
+</section>
+<section id="tc-fr3-002-vehicle-time-has-nanosecond-resolution">
+<h3>TC-FR3-002 — Vehicle Time Has Nanosecond Resolution<a class="headerlink" href="#tc-fr3-002-vehicle-time-has-nanosecond-resolution" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Test Tool</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>High</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>gPTP sync completed</p></li>
+<li><p>Test client tool available</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Rapidly call Now() 10 consecutive times</p></li>
+<li><p>Record complete time value returned each time (including nanosecond portion)</p></li>
+<li><p>Check difference between adjacent return values</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ Return value contains non-zero nanosecond field</p></li>
+<li><p>✓ Difference between adjacent calls &gt; 0 (time is advancing)</p></li>
+<li><p>✓ Difference value consistent with actual call interval, precision at microsecond level</p></li>
+</ul>
+</section>
+<section id="tc-fr3-003-vehicle-time-aligned-with-gptp-master-clock">
+<h3>TC-FR3-003 — Vehicle Time Aligned with gPTP Master Clock<a class="headerlink" href="#tc-fr3-003-vehicle-time-aligned-with-gptp-master-clock" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Test Tool + Clock Comparison</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>High</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>gPTP sync completed</p></li>
+<li><p>Current gPTP Master time is known</p></li>
+<li><p>Test tool available</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Read current time T_master from gPTP Master device</p></li>
+<li><p>Immediately read IVehicleTime::Now() from local device to get T_local</p></li>
+<li><p>Calculate <code class="docutils literal notranslate"><span class="pre">abs(T_local</span> <span class="pre">-</span> <span class="pre">T_master)</span></code></p></li>
+<li><p>Repeat 5 times</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ <code class="docutils literal notranslate"><span class="pre">abs(T_local</span> <span class="pre">-</span> <span class="pre">T_master)</span></code> is within acceptable range (accounting for read operation latency)</p></li>
+<li><p>✓ 5 results are stable, no random jumps</p></li>
+</ul>
+</section>
+</section>
+<section id="fr-4-vehicle-time-base-accuracy-qualifier">
+<h2>FR-4 Vehicle Time Base Accuracy Qualifier<a class="headerlink" href="#fr-4-vehicle-time-base-accuracy-qualifier" title="Link to this heading">#</a></h2>
+<section id="tc-fr4-001-accuracyqualifier-state-knotime">
+<h3>TC-FR4-001 — AccuracyQualifier State: kNoTime<a class="headerlink" href="#tc-fr4-001-accuracyqualifier-state-knotime" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Test Tool + Log Verification</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>High</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>No gPTP Master in network</p></li>
+<li><p>score::time service just started (first run, never synced)</p></li>
+<li><p>Test tool available</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Start score::time service in environment without Master</p></li>
+<li><p>Wait 10s</p></li>
+<li><p>Query GetAccuracyQualifier() return value</p></li>
+<li><p>Simultaneously check state record in log</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ GetAccuracyQualifier() returns kNoTime</p></li>
+<li><p>✓ Corresponding kNoTime state record present in log</p></li>
+<li><p>✓ Now() can still be called in this state (no crash)</p></li>
+</ul>
+</section>
+<section id="tc-fr4-002-accuracyqualifier-state-ksynchronized">
+<h3>TC-FR4-002 — AccuracyQualifier State: kSynchronized<a class="headerlink" href="#tc-fr4-002-accuracyqualifier-state-ksynchronized" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Test Tool + Log Verification</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>High</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>Stable gPTP Master available in network</p></li>
+<li><p>Test tool available</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Start score::time service, connect to gPTP Master</p></li>
+<li><p>After 60s query GetAccuracyQualifier()</p></li>
+<li><p>View log to confirm state transition (kNoTime → kUnstable → kSynchronized)</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ GetAccuracyQualifier() returns kSynchronized after 60s</p></li>
+<li><p>✓ State transition process visible in log</p></li>
+<li><p>✓ State transition order is reasonable</p></li>
+</ul>
+</section>
+<section id="tc-fr4-003-accuracyqualifier-state-ktimejumpdetected">
+<h3>TC-FR4-003 — AccuracyQualifier State: kTimeJumpDetected<a class="headerlink" href="#tc-fr4-003-accuracyqualifier-state-ktimejumpdetected" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Test Tool + Log Verification</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Medium</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>Device is in kSynchronized state</p></li>
+<li><p>Large clock jump can be injected (&gt; threshold)</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Confirm current state is kSynchronized</p></li>
+<li><p>Inject large time jump (local clock offset from Master &gt; jump detection threshold, e.g., &gt; 1ms)</p></li>
+<li><p>Immediately query GetAccuracyQualifier()</p></li>
+<li><p>Query again after 30s</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ GetAccuracyQualifier() returns kTimeJumpDetected after jump injection</p></li>
+<li><p>✓ Clock jump detection record present in log</p></li>
+<li><p>✓ System recovers from kTimeJumpDetected after 30s</p></li>
+</ul>
+</section>
+<section id="tc-fr4-004-accuracyqualifier-state-kunstable">
+<h3>TC-FR4-004 — AccuracyQualifier State: kUnstable<a class="headerlink" href="#tc-fr4-004-accuracyqualifier-state-kunstable" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Test Tool + Log Verification</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Medium</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>gPTP Master signal quality can be degraded (e.g., via network emulator to introduce jitter)</p></li>
+<li><p>Test tool available</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Device is in kSynchronized state</p></li>
+<li><p>Introduce persistent high jitter or intermittent packet loss to gPTP network</p></li>
+<li><p>Wait 20s, query GetAccuracyQualifier()</p></li>
+<li><p>Restore network quality, wait 60s, query again</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ GetAccuracyQualifier() returns kUnstable during degradation period</p></li>
+<li><p>✓ Log contains accuracy instability records</p></li>
+<li><p>✓ State returns to kSynchronized after network recovery</p></li>
+</ul>
+</section>
+</section>
+<section id="fr-5-vehicle-time-base-time-point-qualifier">
+<h2>FR-5 Vehicle Time Base Time Point Qualifier<a class="headerlink" href="#fr-5-vehicle-time-base-time-point-qualifier" title="Link to this heading">#</a></h2>
+<section id="tc-fr5-001-timepointqualifier-asil-safety-level-query">
+<h3>TC-FR5-001 — TimePointQualifier ASIL Safety Level Query<a class="headerlink" href="#tc-fr5-001-timepointqualifier-asil-safety-level-query" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Test Tool</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Medium</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>score::time service running</p></li>
+<li><p>ASIL-B safety clock source configured</p></li>
+<li><p>Test tool available</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Query GetTimePointQualifier() when safety clock source is normal</p></li>
+<li><p>Simulate safety clock source failure (or degrade to QM source)</p></li>
+<li><p>Query GetTimePointQualifier() again</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ Returns kASIL_B when safety clock source is normal</p></li>
+<li><p>✓ Degrades to kQM after safety clock source failure</p></li>
+<li><p>✓ State changes are logged</p></li>
+</ul>
+</section>
+</section>
+<section id="fr-6-vehicle-time-control-flow">
+<h2>FR-6 Vehicle Time Control Flow<a class="headerlink" href="#fr-6-vehicle-time-control-flow" title="Link to this heading">#</a></h2>
+<section id="tc-fr6-001-now-call-performance-low-latency">
+<h3>TC-FR6-001 — Now() Call Performance (Low Latency)<a class="headerlink" href="#tc-fr6-001-now-call-performance-low-latency" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Performance</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Test Tool</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Medium</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>score::time service running</p></li>
+<li><p>Test tool supports high-frequency calls and timing statistics</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Continuously call IVehicleTime::Now() 1000 times</p></li>
+<li><p>Record each call latency</p></li>
+<li><p>Calculate: average latency, P99 latency, max latency</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ Average call latency &lt; 1 μs</p></li>
+<li><p>✓ P99 latency &lt; 5 μs</p></li>
+<li><p>✓ No single call exceeds 100 μs (no kernel syscall blocking)</p></li>
+</ul>
+<p>Note: If latency is significantly high (&gt;10 μs average), shared memory mechanism may not be working</p>
+</section>
+</section>
+<section id="fr-7-vehicle-time-synchronization-logging">
+<h2>FR-7 Vehicle Time Synchronization Logging<a class="headerlink" href="#fr-7-vehicle-time-synchronization-logging" title="Link to this heading">#</a></h2>
+<section id="tc-fr7-001-sync-state-change-log-recording">
+<h3>TC-FR7-001 — Sync State Change Log Recording<a class="headerlink" href="#tc-fr7-001-sync-state-change-log-recording" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Manual Acceptance</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Log Verification</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>High</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>Device logs accessible</p></li>
+<li><p>Network environment controllable (can disconnect/restore gPTP Master)</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Clear or mark current log position</p></li>
+<li><p>Disconnect gPTP Master network, wait 30s</p></li>
+<li><p>Restore Master network, wait 60s</p></li>
+<li><p>View log, search keywords: AccuracyQualifier, sync, kSynchronized, kNoTime, kUnstable</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ Log contains AccuracyQualifier state change records (with timestamp)</p></li>
+<li><p>✓ Degradation log present when Master disconnects</p></li>
+<li><p>✓ Re-sync log present when Master restores</p></li>
+<li><p>✓ Log timestamp format is correct</p></li>
+</ul>
+</section>
+<section id="tc-fr7-002-sync-statistics-log-offset-frequency">
+<h3>TC-FR7-002 — Sync Statistics Log (Offset/Frequency)<a class="headerlink" href="#tc-fr7-002-sync-statistics-log-offset-frequency" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Manual Acceptance</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Log Verification</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Medium</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>Device in sync state, logs accessible</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Run for 10 minutes, view periodic sync statistics in log</p></li>
+<li><p>Search keywords: offset, rate, correction, pDelay</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ Log contains periodically recorded clock offset values</p></li>
+<li><p>✓ Rate correction (rateCorrection) or path delay (pDelay) logs present</p></li>
+<li><p>✓ Values within reasonable range, no abnormal values</p></li>
+</ul>
+</section>
+<section id="tc-fr7-003-logging-does-not-block-sync-main-process">
+<h3>TC-FR7-003 — Logging Does Not Block Sync Main Process<a class="headerlink" href="#tc-fr7-003-logging-does-not-block-sync-main-process" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Manual Acceptance</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Log Verification + Clock Comparison</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Low</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>Device in sync state</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Monitor both log output and sync accuracy (offset) simultaneously</p></li>
+<li><p>Measure sync accuracy during high-frequency log output (debug level)</p></li>
+<li><p>Disable verbose logging, measure accuracy again</p></li>
+<li><p>Compare accuracy difference between the two modes</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ Sync accuracy not significantly degraded with verbose logging enabled (offset increase &lt; 50 μs)</p></li>
+<li><p>✓ Log thread does not affect real-time performance of sync main thread</p></li>
+</ul>
+</section>
+</section>
+<section id="fr-8-score-time-external-synchronization">
+<h2>FR-8 score::time External Synchronization<a class="headerlink" href="#fr-8-score-time-external-synchronization" title="Link to this heading">#</a></h2>
+<section id="tc-fr8-001-ntp-sync-source-configuration-and-connection">
+<h3>TC-FR8-001 — NTP Sync Source Configuration and Connection<a class="headerlink" href="#tc-fr8-001-ntp-sync-source-configuration-and-connection" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Log Verification</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Medium</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>NTP Server accessible in network</p></li>
+<li><p>score::time NTP function configuration enabled</p></li>
+<li><p>Logs accessible</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Configure NTP Server address</p></li>
+<li><p>Restart score::time service</p></li>
+<li><p>Wait 120s</p></li>
+<li><p>Check NTP sync status in log (search: NTP, AbsoluteTime, synchronized)</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ Log shows NTP sync success record</p></li>
+<li><p>✓ No persistent NTP connection failure errors in log</p></li>
+<li><p>✓ AbsoluteTime-related log has state update records</p></li>
+</ul>
+</section>
+<section id="tc-fr8-002-fallback-behavior-when-ntp-server-unreachable">
+<h3>TC-FR8-002 — Fallback Behavior When NTP Server Unreachable<a class="headerlink" href="#tc-fr8-002-fallback-behavior-when-ntp-server-unreachable" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Log Verification</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Medium</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>NTP function enabled</p></li>
+<li><p>NTP Server address configured as unreachable</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Configure NTP Server to unreachable address (e.g., 192.0.2.1)</p></li>
+<li><p>Restart service, wait 120s</p></li>
+<li><p>Check AbsoluteTime AccuracyQualifier status in log</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ Log contains NTP connection failure record</p></li>
+<li><p>✓ IAbsoluteTime AccuracyQualifier does not enter synchronized state</p></li>
+<li><p>✓ Service does not crash, continues providing other functions</p></li>
+</ul>
+</section>
+</section>
+<section id="fr-9-absolute-time-base-api">
+<h2>FR-9 Absolute Time Base API<a class="headerlink" href="#fr-9-absolute-time-base-api" title="Link to this heading">#</a></h2>
+<section id="tc-fr9-001-iabsolutetime-now-returns-utc-time">
+<h3>TC-FR9-001 — IAbsoluteTime::Now() Returns UTC Time<a class="headerlink" href="#tc-fr9-001-iabsolutetime-now-returns-utc-time" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Test Tool</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Medium</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>NTP sync completed</p></li>
+<li><p>Test tool available</p></li>
+<li><p>Accurate UTC time known (confirmed via phone or other device)</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Call IAbsoluteTime::Now()</p></li>
+<li><p>Record returned UTC time</p></li>
+<li><p>Compare with UTC time displayed on reference device</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ Return value is valid UTC timestamp (UNIX Epoch format, not 0)</p></li>
+<li><p>✓ Offset from reference UTC time &lt; 1s (NTP accuracy range)</p></li>
+<li><p>✓ Time value monotonically increasing across multiple calls</p></li>
+</ul>
+</section>
+</section>
+<section id="fr-10-absolute-time-base-accuracy-qualifier">
+<h2>FR-10 Absolute Time Base Accuracy Qualifier<a class="headerlink" href="#fr-10-absolute-time-base-accuracy-qualifier" title="Link to this heading">#</a></h2>
+<section id="tc-fr10-001-absolute-time-accuracyqualifier-state-verification">
+<h3>TC-FR10-001 — Absolute Time AccuracyQualifier State Verification<a class="headerlink" href="#tc-fr10-001-absolute-time-accuracyqualifier-state-verification" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Test Tool + Log Verification</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Medium</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>Test tool available</p></li>
+<li><p>NTP sync state controllable</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Query IAbsoluteTime GetAccuracyQualifier() when NTP not synced, record state</p></li>
+<li><p>Query again after NTP sync completed</p></li>
+<li><p>View log records of absolute time accuracy</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ Returns appropriate low accuracy level when NTP not synced</p></li>
+<li><p>✓ Accuracy level improves after NTP sync</p></li>
+<li><p>✓ Accuracy level changes are logged</p></li>
+</ul>
+</section>
+</section>
+<section id="fr-11-absolute-time-base-security-qualifier">
+<h2>FR-11 Absolute Time Base Security Qualifier<a class="headerlink" href="#fr-11-absolute-time-base-security-qualifier" title="Link to this heading">#</a></h2>
+<section id="tc-fr11-001-absolute-time-securityqualifier-state-verification">
+<h3>TC-FR11-001 — Absolute Time SecurityQualifier State Verification<a class="headerlink" href="#tc-fr11-001-absolute-time-securityqualifier-state-verification" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Test Tool + Log Verification</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Medium</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>Test tool available</p></li>
+<li><p>Different security level clock sources can be simulated</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Query IAbsoluteTime GetSecurityQualifier() when using unauthenticated NTP source</p></li>
+<li><p>Query again when using authenticated/secure NTP source</p></li>
+<li><p>View security level records in log</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<p>Security levels (low to high): <code class="docutils literal notranslate"><span class="pre">NoTimeAvailable</span></code>, <code class="docutils literal notranslate"><span class="pre">NotTrustworthy</span></code>, <code class="docutils literal notranslate"><span class="pre">Trustworthy</span></code>, <code class="docutils literal notranslate"><span class="pre">VeryTrustworthy</span></code></p>
+<ul class="simple">
+<li><p>✓ Returns corresponding security level for different security sources</p></li>
+<li><p>✓ State changes are logged</p></li>
+</ul>
+</section>
+</section>
+<section id="fr-12-absolute-time-synchronization-status-log">
+<h2>FR-12 Absolute Time Synchronization Status Log<a class="headerlink" href="#fr-12-absolute-time-synchronization-status-log" title="Link to this heading">#</a></h2>
+<section id="tc-fr12-001-absolute-time-sync-log-recording">
+<h3>TC-FR12-001 — Absolute Time Sync Log Recording<a class="headerlink" href="#tc-fr12-001-absolute-time-sync-log-recording" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Manual Acceptance</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Log Verification</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Low</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>NTP sync function enabled</p></li>
+<li><p>Logs accessible</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Perform NTP sync operation (restart service to re-sync)</p></li>
+<li><p>View log, search: AbsoluteTime, NTP, UTC</p></li>
+<li><p>Check log content completeness</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ Log contains NTP sync start/completion records</p></li>
+<li><p>✓ Absolute time accuracy level change records present</p></li>
+<li><p>✓ Security level status records present</p></li>
+<li><p>✓ Log format includes timestamp</p></li>
+</ul>
+</section>
+</section>
+<section id="fr-13-high-precision-clock-api">
+<h2>FR-13 High Precision Clock API<a class="headerlink" href="#fr-13-high-precision-clock-api" title="Link to this heading">#</a></h2>
+<section id="tc-fr13-001-highprecisionclock-now-returns-high-precision-time">
+<h3>TC-FR13-001 — HighPrecisionClock::Now() Returns High Precision Time<a class="headerlink" href="#tc-fr13-001-highprecisionclock-now-returns-high-precision-time" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Test Tool</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Medium</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>Test tool available</p></li>
+<li><p>System clock (CLOCK_REALTIME) synchronized</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Call HighPrecisionClockImpl::Now()</p></li>
+<li><p>Record returned time value (precise to nanoseconds)</p></li>
+<li><p>Compare with system clock_gettime(CLOCK_REALTIME) return value</p></li>
+<li><p>Call 10 consecutive times, confirm monotonicity</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ Return value differs from system CLOCK_REALTIME time by &lt; 1ms</p></li>
+<li><p>✓ Return value has nanosecond precision</p></li>
+<li><p>✓ 10 consecutive calls are monotonically increasing</p></li>
+<li><p>✓ No call failures</p></li>
+</ul>
+</section>
+<section id="tc-fr13-002-time-relationship-between-highprecisionclock-and-vehicletime">
+<h3>TC-FR13-002 — Time Relationship Between HighPrecisionClock and VehicleTime<a class="headerlink" href="#tc-fr13-002-time-relationship-between-highprecisionclock-and-vehicletime" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Test Tool</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Low</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>gPTP sync completed</p></li>
+<li><p>Test tool can read both interfaces simultaneously</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Simultaneously call HighPrecisionClockImpl::Now() and IVehicleTime::Now()</p></li>
+<li><p>Calculate difference between them</p></li>
+<li><p>Repeat 5 times</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ Difference is stable (fixed offset, not randomly varying)</p></li>
+<li><p>✓ Variance of difference &lt; 100 μs (indicating both synced to same clock domain)</p></li>
+</ul>
+</section>
+</section>
+<section id="fr-14-monotonic-clock-api">
+<h2>FR-14 Monotonic Clock API<a class="headerlink" href="#fr-14-monotonic-clock-api" title="Link to this heading">#</a></h2>
+<section id="tc-fr14-001-monotonicclock-now-monotonicity-verification">
+<h3>TC-FR14-001 — MonotonicClock::Now() Monotonicity Verification<a class="headerlink" href="#tc-fr14-001-monotonicclock-now-monotonicity-verification" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Test Tool</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>High</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>Test tool available</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Call MonotonicClockImpl::Now() 20 times at 100ms intervals</p></li>
+<li><p>Record each return value</p></li>
+<li><p>Check if sequence is strictly increasing</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ All 20 return values strictly increasing (T[i+1] &gt; T[i])</p></li>
+<li><p>✓ Adjacent differences approximately 100ms (error &lt; 5%)</p></li>
+<li><p>✓ No wraparound or jumps</p></li>
+</ul>
+</section>
+<section id="tc-fr14-002-monotonicclock-maintains-monotonicity-during-system-clock-adjustment">
+<h3>TC-FR14-002 — MonotonicClock Maintains Monotonicity During System Clock Adjustment<a class="headerlink" href="#tc-fr14-002-monotonicclock-maintains-monotonicity-during-system-clock-adjustment" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Test Tool</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>High</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>Test tool available</p></li>
+<li><p>Permission to adjust system clock (date -s or chronyc makestep)</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Start continuous sampling of MonotonicClock::Now() at 50ms intervals</p></li>
+<li><p>Execute system time jump during sampling (e.g., advance clock by 5s)</p></li>
+<li><p>Continue sampling for 30s</p></li>
+<li><p>Check monotonicity of complete sample sequence</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ Entire sample sequence (including during clock jump) is strictly monotonically increasing</p></li>
+<li><p>✓ MonotonicClock is not affected by system clock adjustment</p></li>
+</ul>
+</section>
+<section id="tc-fr14-003-monotonicclock-corresponds-to-clock-monotonic">
+<h3>TC-FR14-003 — MonotonicClock Corresponds to CLOCK_MONOTONIC<a class="headerlink" href="#tc-fr14-003-monotonicclock-corresponds-to-clock-monotonic" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Test Tool</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Medium</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>Test tool available</p></li>
+<li><p>Can read system CLOCK_MONOTONIC at the same time</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Simultaneously call MonotonicClockImpl::Now() and system clock_gettime(CLOCK_MONOTONIC)</p></li>
+<li><p>Compare two return values</p></li>
+<li><p>Repeat 5 times</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ Two values approximately equal (difference &lt; 1ms)</p></li>
+<li><p>✓ Both increase at the same rate</p></li>
+</ul>
+</section>
+</section>
+<section id="fr-15-score-time-mocking-apis">
+<h2>FR-15 score::time Mocking APIs<a class="headerlink" href="#fr-15-score-time-mocking-apis" title="Link to this heading">#</a></h2>
+<section id="tc-fr15-001-manualvehicletime-can-set-time-manually">
+<h3>TC-FR15-001 — ManualVehicleTime Can Set Time Manually<a class="headerlink" href="#tc-fr15-001-manualvehicletime-can-set-time-manually" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Test Tool</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Medium</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>score::time service started in Mock mode (ManualVehicleTime implementation)</p></li>
+<li><p>Test tool available</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Set ManualVehicleTime to specified time T_set (e.g., 2024-01-01 12:00:00)</p></li>
+<li><p>Call IVehicleTime::Now(), record T_read</p></li>
+<li><p>Wait 1s, call Now() again, record T_read2</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ T_read == T_set (allow &lt; 1ms error)</p></li>
+<li><p>✓ T_read2 == T_set (time does not advance automatically unless manually advanced)</p></li>
+<li><p>✓ Does not depend on real gPTP network</p></li>
+</ul>
+</section>
+<section id="tc-fr15-002-manualvehicletime-time-can-be-manually-advanced">
+<h3>TC-FR15-002 — ManualVehicleTime Time Can Be Manually Advanced<a class="headerlink" href="#tc-fr15-002-manualvehicletime-time-can-be-manually-advanced" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Test Tool</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Medium</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>Mock mode started, ManualVehicleTime initial time set</p></li>
+<li><p>Test tool available</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Record current ManualVehicleTime value T0</p></li>
+<li><p>Advance time by +500ms via test tool</p></li>
+<li><p>Call Now(), record T1</p></li>
+<li><p>Advance by +1s more</p></li>
+<li><p>Call Now(), record T2</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ T1 - T0 == 500ms (error &lt; 1ms)</p></li>
+<li><p>✓ T2 - T1 == 1s (error &lt; 1ms)</p></li>
+<li><p>✓ Time advancement is controllable, not affected by system clock</p></li>
+</ul>
+</section>
+<section id="tc-fr15-003-manualvehicletime-accuracyqualifier-can-be-set-manually">
+<h3>TC-FR15-003 — ManualVehicleTime AccuracyQualifier Can Be Set Manually<a class="headerlink" href="#tc-fr15-003-manualvehicletime-accuracyqualifier-can-be-set-manually" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Test Tool</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Medium</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>Mock mode started</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Set AccuracyQualifier to kNoTime, confirm with GetAccuracyQualifier()</p></li>
+<li><p>Set to kSynchronized, confirm again</p></li>
+<li><p>Set to kUnstable, confirm again</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ All 3 settings take effect, GetAccuracyQualifier() return value matches set value</p></li>
+<li><p>✓ State switching causes no crash</p></li>
+</ul>
+</section>
+<section id="tc-fr15-004-manualabsolutetime-can-set-utc-time">
+<h3>TC-FR15-004 — ManualAbsoluteTime Can Set UTC Time<a class="headerlink" href="#tc-fr15-004-manualabsolutetime-can-set-utc-time" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>System Function</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Test Tool</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Low</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>Mock mode started (ManualAbsoluteTime implementation)</p></li>
+<li><p>Test tool available</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Set ManualAbsoluteTime to specified UTC time</p></li>
+<li><p>Call IAbsoluteTime::Now(), verify return value</p></li>
+<li><p>Set SecurityQualifier to Trustworthy, verify GetSecurityQualifier() return value</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ IAbsoluteTime::Now() returns the set UTC time</p></li>
+<li><p>✓ GetSecurityQualifier() returns Trustworthy</p></li>
+<li><p>✓ Function decoupled from real NTP sync behavior</p></li>
+</ul>
+</section>
+<section id="tc-fr15-005-manualmonotonicclock-isolation-in-unit-tests">
+<h3>TC-FR15-005 — ManualMonotonicClock Isolation in Unit Tests<a class="headerlink" href="#tc-fr15-005-manualmonotonicclock-isolation-in-unit-tests" title="Link to this heading">#</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Manual Acceptance</p>
+</dd>
+<dt class="field-even">Method<span class="colon">:</span></dt>
+<dd class="field-even"><p>Test Tool</p>
+</dd>
+<dt class="field-odd">Priority<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Low</p>
+</dd>
+</dl>
+<p><strong>Preconditions</strong></p>
+<ol class="arabic simple">
+<li><p>Unit test framework configured to use Mock implementation</p></li>
+<li><p>No real hardware environment required</p></li>
+</ol>
+<p><strong>Test Steps</strong></p>
+<ol class="arabic simple">
+<li><p>Run unit tests using ManualMonotonicClock</p></li>
+<li><p>Manually set and advance time in tests, verify time-related logic</p></li>
+<li><p>Confirm tests do not depend on system time</p></li>
+</ol>
+<p><strong>Expected Result</strong></p>
+<ul class="simple">
+<li><p>✓ Unit tests pass without gPTP/NTP network environment</p></li>
+<li><p>✓ Test execution time not affected by system clock</p></li>
+<li><p>✓ Mock object behavior consistent with interface specification</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Features</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../module/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Module</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
