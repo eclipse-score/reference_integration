@@ -308,8 +308,10 @@ def parse_arguments() -> argparse.Namespace:
         "--trust-cache",
         action="store_true",
         help="Allow Bazel to reuse cached test/coverage results for unchanged modules instead of always "
-        "re-executing them (--nocache_test_results). Intended for fast PR-iteration checks; authoritative "
-        "runs (e.g. on push to main) should NOT set this, so coverage numbers are always freshly measured.",
+        "re-executing them (--nocache_test_results). Note that --nocache_test_results suppresses not only "
+        "reading but also writing test results into the disk-cache, so omitting --trust-cache on a run that "
+        "populates a shared cache makes that cache useless for subsequent runs. Omit it only for "
+        "authoritative runs whose artifacts are published (e.g. release).",
     )
     return parser.parse_args()
 

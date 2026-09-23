@@ -81,9 +81,16 @@ jobs:
               --github_repo=${{ github.event.repository.name }}
           rm -rf _build/
       - name: Execute Unit Tests with Coverage Analysis
+        # Only tag runs are authoritative and re-execute every test from scratch, because they
+        # attach the test-report ZIP and the SBOM as official release assets. The condition is
+        # deliberately the same one those upload steps use, so the two can never drift apart.
+        # Every other event (including push to main) trusts the cache: --nocache_test_results
+        # suppresses not only reading but also WRITING test results into the disk-cache, so a
+        # push run without --trust-cache would save a cache that contains zero test results,
+        # leaving every later PR run with nothing to hit.
         run: |
           python ./scripts/quality_runners.py \
-            ${{ github.event_name != 'push' && github.event_name != 'release' && '--trust-cache' || '' }}
+            ${{ github.ref_type != 'tag' && '--trust-cache' || '' }}
       - name: Execute Feature Integration Tests
         run: |
           bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit
