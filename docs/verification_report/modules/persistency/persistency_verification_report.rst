@@ -22,6 +22,7 @@ Persistency Module Verification Report
    :safety: QM
    :security: NO
    :realizes: wp__verification_module_ver_report
+   :report_version: v1.0
    :version: 1
 
 This report is generated from persistency's own needs data.
