@@ -18,9 +18,14 @@ from dataclasses import dataclass
 from pathlib import Path
 from pprint import pprint
 from subprocess import PIPE, Popen, run
+from typing import Any
 
-from known_good.models.known_good import load_known_good
-from known_good.models.module import Module
+try:
+    from known_good.models.known_good import load_known_good
+    from known_good.models.module import Module
+except ModuleNotFoundError:
+    from scripts.known_good.models.known_good import load_known_good
+    from scripts.known_good.models.module import Module
 
 
 @dataclass
@@ -92,22 +97,24 @@ def run_unit_test_with_coverage(module: Module, trust_cache: bool = False) -> di
     return {**summary, "exit_code": result.exit_code}
 
 
-def run_cpp_coverage_extraction(module: Module, output_path: Path) -> int:
+def run_cpp_coverage_extraction(module: Module, output_path: Path) -> dict[str, str | int]:
     print_centered("QR: Running cpp coverage analysis")
 
     result_cpp = cpp_coverage(module, output_path)
     summary = extract_coverage_summary(result_cpp.stdout)
+    dashboard_link = f'<a href="../coverage/cpp/{module.name}/index.html">C++ Dashboard</a>'
 
-    return {**summary, "exit_code": result_cpp.exit_code}
+    return {**summary, "dashboard": dashboard_link, "exit_code": result_cpp.exit_code}
 
 
-def run_rust_coverage_extraction(module: Module, output_path: Path) -> int:
+def run_rust_coverage_extraction(module: Module, output_path: Path) -> dict[str, str | int]:
     print_centered("QR: Running rust coverage analysis")
 
     result_rust = rust_coverage(module, output_path)
     summary = extract_coverage_summary(result_rust.stdout)
+    dashboard_link = f'<a href="../coverage/rust/{module.name}/index.html">Rust Dashboard</a>'
 
-    return {**summary, "exit_code": result_rust.exit_code}
+    return {**summary, "dashboard": dashboard_link, "exit_code": result_rust.exit_code}
 
 
 def cpp_coverage(module: Module, artifact_dir: Path) -> ProcessResult:
@@ -115,11 +122,21 @@ def cpp_coverage(module: Module, artifact_dir: Path) -> ProcessResult:
 
     # Run genhtml to generate the HTML report and get the summary
     # Create dedicated output directory for this module's coverage reports
-    output_dir = artifact_dir / "cpp" / module.name
+    output_dir = (artifact_dir / "cpp" / module.name).resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
     # Find input locations
     bazel_coverage_output_directory = run_command(["bazel", "info", "output_path"]).stdout.strip()
     bazel_source_directory = run_command(["bazel", "info", "output_base"]).stdout.strip()
+
+    # Check lcov version (lcov 1.x vs 2.x+)
+    version_res = run_command(["genhtml", "-v"])
+    match = re.search(r"version\s+(\d+)\.", version_res.stdout)
+    is_lcov_2_plus = match is not None and int(match.group(1)) >= 2
+
+    if is_lcov_2_plus:
+        ignore_errors = "--ignore-errors=negative,negative,source,source"
+    else:
+        ignore_errors = "--ignore-errors=source,source"
 
     genhtml_call = [
         "genhtml",
@@ -129,34 +146,284 @@ def cpp_coverage(module: Module, artifact_dir: Path) -> ProcessResult:
         "--legend",
         "--function-coverage",
         "--branch-coverage",
-        "--ignore-errors=negative,negative,source,source",
-        "--synthesize-missing",
+        ignore_errors,
     ]
-    genhtml_result = run_command(genhtml_call, cwd=bazel_source_directory)
+    if is_lcov_2_plus:
+        genhtml_call.append("--synthesize-missing")
 
-    return genhtml_result
+    return run_command(genhtml_call, cwd=bazel_source_directory)
+
+
+def generate_rust_module_index(module_name: str, output_dir: Path) -> None:
+    """Generate an index.html in the module's rust coverage directory linking to target reports."""
+    targets = []
+    if output_dir.is_dir():
+        for target_dir in sorted(output_dir.iterdir()):
+            if target_dir.is_dir() and (target_dir / "blanket" / "index.html").is_file():
+                targets.append(target_dir)
+
+    if not targets:
+        return
+
+    # If there is only one target, redirect directly to its blanket report
+    if len(targets) == 1:
+        rel_path = f"{targets[0].name}/blanket/index.html"
+        content = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url={rel_path}">
+    <title>Rust Coverage - {module_name}</title>
+</head>
+<body>
+    <p>Redirecting to <a href="{rel_path}">coverage report</a>...</p>
+</body>
+</html>
+"""
+    else:
+        links = "\n".join(
+            f'        <li><a href="{t.name}/blanket/index.html">{t.name}</a></li>'
+            for t in targets
+        )
+        content = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rust Coverage - {module_name}</title>
+    <style>
+        body {{
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 2rem;
+        }}
+        h1 {{ font-size: 1.5rem; }}
+        ul {{ list-style-type: none; padding-left: 0; }}
+        li {{ margin: 0.5rem 0; }}
+        a {{ color: #0066cc; text-decoration: none; }}
+        a:hover {{ text-decoration: underline; }}
+    </style>
+</head>
+<body>
+    <h1>Rust Coverage Reports: {module_name}</h1>
+    <p>Select a test target to view detailed coverage:</p>
+    <ul>
+{links}
+    </ul>
+    <p><a href="../../index.html">&larr; Back to Coverage Portal</a></p>
+</body>
+</html>
+"""
+    (output_dir / "index.html").write_text(content, encoding="utf-8")
+
+
+def generate_coverage_portal(
+    coverage_dir: Path,
+    coverage_summary: dict[str, dict[str, Any]],
+) -> None:
+    """Generate a top-level index.html in the coverage output directory listing all dashboards."""
+    cpp_modules = []
+    rust_modules = []
+
+    for key, data in coverage_summary.items():
+        if key.endswith("_cpp"):
+            mod_name = key[:-4]
+            cpp_modules.append((mod_name, data))
+        elif key.endswith("_rust"):
+            mod_name = key[:-5]
+            rust_modules.append((mod_name, data))
+
+    def make_rows(modules: list[tuple[str, dict[str, Any]]], lang: str) -> str:
+        rows = []
+        for mod_name, data in sorted(modules, key=lambda x: x[0]):
+            lines = data.get("lines", "-") or "-"
+            functions = data.get("functions", "-") or "-"
+            branches = data.get("branches", "-") or "-"
+            rows.append(
+                f"""        <tr>
+            <td><strong>{mod_name}</strong></td>
+            <td>{lines}</td>
+            <td>{functions}</td>
+            <td>{branches}</td>
+            <td><a class="btn" href="{lang}/{mod_name}/index.html">View Dashboard &rarr;</a></td>
+        </tr>"""
+            )
+        return "\n".join(rows) if rows else "<tr><td colspan='5'>No reports generated.</td></tr>"
+
+    cpp_rows = make_rows(cpp_modules, "cpp")
+    rust_rows = make_rows(rust_modules, "rust")
+
+    portal_html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Code Coverage Dashboards - S-CORE Reference Integration</title>
+    <style>
+        :root {{
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --primary: #2563eb;
+            --border: #e2e8f0;
+        }}
+        body {{
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background: var(--bg);
+            color: var(--text);
+        }}
+        .container {{
+            max-width: 1100px;
+            margin: 0 auto;
+        }}
+        header {{
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+        }}
+        h1 {{
+            margin: 0 0 0.5rem 0;
+            font-size: 1.75rem;
+            color: #0f172a;
+        }}
+        p.subtitle {{
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }}
+        .nav-back {{
+            margin-top: 0.75rem;
+            display: inline-block;
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }}
+        .nav-back:hover {{
+            text-decoration: underline;
+        }}
+        .card {{
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }}
+        .card-header {{
+            padding: 1rem 1.5rem;
+            background: #f1f5f9;
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }}
+        table {{
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }}
+        th, td {{
+            padding: 0.75rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }}
+        th {{
+            background: #fafafa;
+            color: var(--muted);
+            font-weight: 600;
+        }}
+        tr:last-child td {{
+            border-bottom: none;
+        }}
+        .btn {{
+            display: inline-block;
+            background: var(--primary);
+            color: #fff;
+            padding: 0.35rem 0.75rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }}
+        .btn:hover {{
+            background: #1d4ed8;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Code Coverage Dashboards</h1>
+            <p class="subtitle">S-CORE Reference Integration CI Test Execution & Verification Reports</p>
+            <a class="nav-back" href="../index.html">&larr; Return to Documentation Site</a>
+        </header>
+
+        <div class="card">
+            <div class="card-header">C++ Modules (genhtml / lcov)</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Module</th>
+                        <th>Line Coverage</th>
+                        <th>Function Coverage</th>
+                        <th>Branch Coverage</th>
+                        <th>Dashboard</th>
+                    </tr>
+                </thead>
+                <tbody>
+{cpp_rows}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <div class="card-header">Rust Modules (Ferrocene / Blanket)</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Module</th>
+                        <th>Line Coverage</th>
+                        <th>Function Coverage</th>
+                        <th>Branch Coverage</th>
+                        <th>Dashboard</th>
+                    </tr>
+                </thead>
+                <tbody>
+{rust_rows}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+"""
+    coverage_dir.mkdir(parents=True, exist_ok=True)
+    (coverage_dir / "index.html").write_text(portal_html, encoding="utf-8")
 
 
 def rust_coverage(module: Module, artifact_dir: Path) -> ProcessResult:
     # .profraw files are already generated in UT step
 
-    # Run bazel covverage target
+    # Run bazel coverage target
     # Create dedicated output directory for this module's coverage reports
-    output_dir = artifact_dir / "rust" / module.name
+    output_dir = (artifact_dir / "rust" / module.name).resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
 
     bazel_call = [
         "bazel",
         "run",
         f"//rust_coverage:rust_coverage_{module.name}",
+        "--",
+        "--out-dir",
+        str(output_dir),
     ]
     bazel_result = run_command(bazel_call)
+    generate_rust_module_index(module.name, output_dir)
 
     return bazel_result
 
 
 def generate_markdown_report(
-    data: dict[str, dict[str, int]],
+    data: dict[str, dict[str, int | str]],
     title: str,
     columns: list[str],
     output_path: Path = Path("unit_test_summary.md"),
@@ -366,9 +633,10 @@ def main() -> bool:
     generate_markdown_report(
         coverage_summary,
         title="Coverage Analysis Summary",
-        columns=["module", "lines", "functions", "branches"],
+        columns=["module", "lines", "functions", "branches", "dashboard"],
         output_path=path_to_docs / "coverage_summary.md",
     )
+    generate_coverage_portal(args.coverage_output_dir, coverage_summary)
     print_centered("QR: COVERAGE ANALYSIS SUMMARY", fillchar="=")
     pprint(coverage_summary, width=120)
 
