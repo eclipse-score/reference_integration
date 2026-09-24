@@ -174,6 +174,9 @@ def generate_markdown_report(
     output_path.write_text(md)
 
 
+STATUS_LABELS = {"pass": "✅ pass", "FAILED": "❌ FAILED", "skipped": "⚪ skipped"}
+
+
 def with_status(data: dict[str, dict[str, int]]) -> dict[str, dict[str, int]]:
     """Derive a readable status column from the exit code each runner reports.
 
@@ -181,9 +184,16 @@ def with_status(data: dict[str, dict[str, int]]) -> dict[str, dict[str, int]]:
     indistinguishable from one that simply has no tests: both show up as all
     zeroes, and ``failed`` even claims zero failures. An explicit status set by
     the caller (``skipped``) wins over the derived one.
+
+    The emoji carries the colour: Markdown offers no way to colour a table cell
+    that survives both GitHub and the Sphinx build of these same files. The word
+    stays next to it so the table is still readable where emoji are not.
     """
     return {
-        name: {**stats, "status": stats.get("status") or ("pass" if stats.get("exit_code", 0) == 0 else "FAILED")}
+        name: {
+            **stats,
+            "status": STATUS_LABELS[stats.get("status") or ("pass" if stats.get("exit_code", 0) == 0 else "FAILED")],
+        }
         for name, stats in data.items()
     }
 
