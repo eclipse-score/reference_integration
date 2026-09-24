@@ -16,7 +16,6 @@ import select
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from pprint import pprint
 from subprocess import PIPE, Popen, run
 
 from known_good.models.known_good import load_known_good
@@ -173,6 +172,51 @@ def generate_markdown_report(
 
     md = "\n".join([title, header, separator] + rows + [""])
     output_path.write_text(md)
+
+
+def with_status(data: dict[str, dict[str, int]]) -> dict[str, dict[str, int]]:
+    """Derive a readable status column from the exit code each runner reports.
+
+    Without it a module whose Bazel invocation aborted during analysis is
+    indistinguishable from one that simply has no tests: both show up as all
+    zeroes, and ``failed`` even claims zero failures.
+    """
+    return {
+        name: {**stats, "status": "pass" if stats.get("exit_code", 0) == 0 else "FAILED"}
+        for name, stats in data.items()
+    }
+
+
+def report_failures(unit_tests: dict[str, dict[str, int]], coverage: dict[str, dict[str, int]]) -> list[str]:
+    """Name every module that failed, via annotations and a final summary block.
+
+    ``::error`` annotations are rendered by GitHub above the step list of the
+    run, so the failing module is visible without opening the log at all.
+    """
+    failed = sorted(name for name, stats in unit_tests.items() if stats.get("exit_code", 0) != 0)
+
+    for name in failed:
+        print(
+            f"::error title=Unit tests failed::{name}: bazel exited with "
+            f"{unit_tests[name]['exit_code']} and produced no test results"
+        )
+    for name, stats in coverage.items():
+        if stats.get("exit_code", 0) != 0:
+            print(f"::error title=Coverage failed::{name}: coverage extraction did not succeed")
+
+    print_centered("QR: UNIT TEST EXECUTION SUMMARY", fillchar="=")
+    for name, stats in sorted(unit_tests.items()):
+        if stats.get("exit_code", 0) == 0:
+            print(f"  pass    {name:<26} {stats['passed']:>6} passed, {stats['skipped']:>3} skipped")
+    for name in failed:
+        print(f"  FAILED  {name:<26} bazel exit code {unit_tests[name]['exit_code']}, no results")
+
+    if failed:
+        print_centered(
+            f"QR: {len(failed)} of {len(unit_tests)} MODULES FAILED: {', '.join(failed)}",
+            fillchar="=",
+        )
+    return failed
 
 
 def extract_ut_summary(logs: str) -> dict[str, int]:
@@ -338,6 +382,14 @@ def main() -> bool:
         print_centered(f"QR: Testing module: {module.name}")
         unit_tests_summary[module.name] = run_unit_test_with_coverage(module=module, trust_cache=args.trust_cache)
 
+        # Coverage extraction reads the .dat file Bazel leaves in a fixed
+        # location. When the test run failed, that file is still the one the
+        # previous module produced, so genhtml would silently report another
+        # module's numbers under this module's name.
+        if unit_tests_summary[module.name]["exit_code"] != 0:
+            print_centered(f"QR: Skipping coverage for {module.name}: unit test run failed")
+            continue
+
         if "cpp" in module.metadata.langs:
             coverage_summary[f"{module.name}_cpp"] = run_cpp_coverage_extraction(
                 module=module, output_path=args.coverage_output_dir
@@ -357,22 +409,19 @@ def main() -> bool:
         print_centered(f"QR: Finished testing module: {module.name}")
 
     generate_markdown_report(
-        unit_tests_summary,
+        with_status(unit_tests_summary),
         title="Unit Test Execution Summary",
-        columns=["module", "passed", "failed", "skipped", "total"],
+        columns=["module", "status", "passed", "failed", "skipped", "total"],
         output_path=path_to_docs / "unit_test_summary.md",
     )
-    print_centered("QR: UNIT TEST EXECUTION SUMMARY", fillchar="=")
-    pprint(unit_tests_summary, width=120)
-
     generate_markdown_report(
-        coverage_summary,
+        with_status(coverage_summary),
         title="Coverage Analysis Summary",
-        columns=["module", "lines", "functions", "branches"],
+        columns=["module", "status", "lines", "functions", "branches"],
         output_path=path_to_docs / "coverage_summary.md",
     )
-    print_centered("QR: COVERAGE ANALYSIS SUMMARY", fillchar="=")
-    pprint(coverage_summary, width=120)
+
+    report_failures(unit_tests_summary, coverage_summary)
 
     # Check all exit codes and return non-zero if any test or coverage extraction failed
     return any(r["exit_code"] != 0 for r in {**unit_tests_summary, **coverage_summary}.values())
