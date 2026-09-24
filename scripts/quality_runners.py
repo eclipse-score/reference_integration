@@ -117,6 +117,12 @@ def run_rust_coverage_extraction(module: Module, output_path: Path) -> dict[str,
     return {**summary, "dashboard": dashboard_link, "exit_code": result_rust.exit_code}
 
 
+def is_lcov_2_plus_version(version_str: str) -> bool:
+    """Check if the lcov/genhtml version string indicates version 2.0 or higher."""
+    match = re.search(r"version\s+(\d+)\.", version_str, re.IGNORECASE)
+    return match is not None and int(match.group(1)) >= 2
+
+
 def cpp_coverage(module: Module, artifact_dir: Path) -> ProcessResult:
     # .dat files are already generated in UT step
 
@@ -129,9 +135,9 @@ def cpp_coverage(module: Module, artifact_dir: Path) -> ProcessResult:
     bazel_source_directory = run_command(["bazel", "info", "output_base"]).stdout.strip()
 
     # Check lcov version (lcov 1.x vs 2.x+)
-    version_res = run_command(["genhtml", "-v"])
-    match = re.search(r"version\s+(\d+)\.", version_res.stdout)
-    is_lcov_2_plus = match is not None and int(match.group(1)) >= 2
+    version_res = run_command(["genhtml", "--version"])
+    version_output = f"{version_res.stdout}\n{version_res.stderr}"
+    is_lcov_2_plus = is_lcov_2_plus_version(version_output)
 
     if is_lcov_2_plus:
         ignore_errors = "--ignore-errors=negative,negative,source,source"

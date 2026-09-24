@@ -19,6 +19,7 @@ try:
         generate_coverage_portal,
         generate_markdown_report,
         generate_rust_module_index,
+        is_lcov_2_plus_version,
     )
 except ModuleNotFoundError:
     from quality_runners import (
@@ -27,6 +28,7 @@ except ModuleNotFoundError:
         generate_coverage_portal,
         generate_markdown_report,
         generate_rust_module_index,
+        is_lcov_2_plus_version,
     )
 
 
@@ -150,3 +152,14 @@ def test_extract_coverage_summary_rust():
     assert summary["lines"] == "87.50%"
     assert summary["functions"] == ""
     assert summary["branches"] == ""
+
+
+def test_is_lcov_2_plus_version():
+    assert not is_lcov_2_plus_version("genhtml: LCOV version 1.14")
+    assert not is_lcov_2_plus_version("genhtml: LCOV version 1.16")
+    assert is_lcov_2_plus_version("genhtml: LCOV version 2.0-4ubuntu2")
+    assert is_lcov_2_plus_version("genhtml: LCOV version 2.0-1")
+    assert is_lcov_2_plus_version("genhtml: LCOV version 2.1")
+    assert is_lcov_2_plus_version("genhtml: LCOV version 3.0")
+    assert not is_lcov_2_plus_version("read_config: /etc/lcovrc\ngenhtml: ERROR: No filename specified")
+    assert not is_lcov_2_plus_version("")
