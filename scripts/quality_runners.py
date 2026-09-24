@@ -179,10 +179,11 @@ def with_status(data: dict[str, dict[str, int]]) -> dict[str, dict[str, int]]:
 
     Without it a module whose Bazel invocation aborted during analysis is
     indistinguishable from one that simply has no tests: both show up as all
-    zeroes, and ``failed`` even claims zero failures.
+    zeroes, and ``failed`` even claims zero failures. An explicit status set by
+    the caller (``skipped``) wins over the derived one.
     """
     return {
-        name: {**stats, "status": "pass" if stats.get("exit_code", 0) == 0 else "FAILED"}
+        name: {**stats, "status": stats.get("status") or ("pass" if stats.get("exit_code", 0) == 0 else "FAILED")}
         for name, stats in data.items()
     }
 
@@ -201,7 +202,9 @@ def report_failures(unit_tests: dict[str, dict[str, int]], coverage: dict[str, d
             f"{unit_tests[name]['exit_code']} and produced no test results"
         )
     for name, stats in coverage.items():
-        if stats.get("exit_code", 0) != 0:
+        # A coverage run that was skipped is already covered by the unit test
+        # annotation for the same module; annotating it again is just noise.
+        if stats.get("exit_code", 0) != 0 and stats.get("status") != "skipped":
             print(f"::error title=Coverage failed::{name}: coverage extraction did not succeed")
 
     print_centered("QR: UNIT TEST EXECUTION SUMMARY", fillchar="=")
@@ -388,6 +391,8 @@ def main() -> bool:
         # module's numbers under this module's name.
         if unit_tests_summary[module.name]["exit_code"] != 0:
             print_centered(f"QR: Skipping coverage for {module.name}: unit test run failed")
+            for lang in module.metadata.langs:
+                coverage_summary[f"{module.name}_{lang}"] = {"exit_code": 1, "status": "skipped"}
             continue
 
         if "cpp" in module.metadata.langs:
