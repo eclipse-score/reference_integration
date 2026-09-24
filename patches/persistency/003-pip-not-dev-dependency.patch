@@ -1,7 +1,7 @@
 diff --git a/MODULE.bazel b/MODULE.bazel
 --- a/MODULE.bazel
 +++ b/MODULE.bazel
-@@ -53,10 +53,10 @@ python.toolchain(
+@@ -50,13 +50,13 @@ python.toolchain(
      python_version = PYTHON_VERSION,
  )
  
@@ -15,11 +15,13 @@ diff --git a/MODULE.bazel b/MODULE.bazel
  )
 -use_repo(pip, "pip_score_venv_test")
 +use_repo(pip, "pip_score_persistency_venv_test")
+ 
+ # C++ toolchain configuration
+ gcc = use_extension("@score_bazel_cpp_toolchains//extensions:gcc.bzl", "gcc", dev_dependency = True)
 diff --git a/score/kvs/tests/test_cases/BUILD b/score/kvs/tests/test_cases/BUILD
 --- a/score/kvs/tests/test_cases/BUILD
 +++ b/score/kvs/tests/test_cases/BUILD
-@@ -9,7 +9,7 @@
- # https://www.apache.org/licenses/LICENSE-2.0
+@@ -10,7 +10,7 @@
  #
  # SPDX-License-Identifier: Apache-2.0
  # *******************************************************************************
@@ -27,3 +29,4 @@ diff --git a/score/kvs/tests/test_cases/BUILD b/score/kvs/tests/test_cases/BUILD
 +load("@pip_score_persistency_venv_test//:requirements.bzl", "all_requirements")
  load("@rules_python//python:pip.bzl", "compile_pip_requirements")
  load("@score_tooling//python_basics:defs.bzl", "score_py_pytest", "score_virtualenv")
+ 
