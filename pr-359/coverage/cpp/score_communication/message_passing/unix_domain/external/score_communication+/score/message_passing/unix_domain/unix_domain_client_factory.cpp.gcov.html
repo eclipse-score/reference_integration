@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - message_passing/unix_domain/external/score_communication+/score/message_passing/unix_domain/unix_domain_client_factory.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../index.html">top level</a> - <a href="index.html">message_passing/unix_domain/external/score_communication+/score/message_passing/unix_domain</a> - unix_domain_client_factory.cpp<span style="font-size: 80%;"> (source / <a href="unix_domain_client_factory.cpp.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryLo">40.0&nbsp;%</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">4</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:37:31</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryLo">50.0&nbsp;%</td>
+            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntry">2</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryHi">-</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2025 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : #include &quot;score/message_passing/unix_domain/unix_domain_client_factory.h&quot;</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : </span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : #include &quot;score/message_passing/client_connection.h&quot;</span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #include &quot;score/message_passing/unix_domain/unix_domain_engine.h&quot;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : </span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : namespace score::message_passing</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : {</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : </span>
+<span id="L21"><span class="lineNum">      21</span>                 :<span class="tlaUNC tlaBgUNC">           0 : UnixDomainClientFactory::UnixDomainClientFactory(score::cpp::pmr::memory_resource* const resource) noexcept</span></span>
+<span id="L22"><span class="lineNum">      22</span>                 :<span class="tlaUNC">           0 :     : UnixDomainClientFactory{score::cpp::pmr::make_shared&lt;UnixDomainEngine&gt;(resource, resource)}</span></span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : {</span>
+<span id="L24"><span class="lineNum">      24</span>                 :<span class="tlaUNC">           0 : }</span></span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : </span>
+<span id="L26"><span class="lineNum">      26</span>                 :<span class="tlaGNC tlaBgGNC">          81 : UnixDomainClientFactory::UnixDomainClientFactory(const std::shared_ptr&lt;UnixDomainEngine&gt; engine) noexcept</span></span>
+<span id="L27"><span class="lineNum">      27</span>                 :<span class="tlaGNC">          81 :     : engine_{engine}</span></span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : {</span>
+<span id="L29"><span class="lineNum">      29</span>                 :<span class="tlaGNC">          81 : }</span></span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : </span>
+<span id="L31"><span class="lineNum">      31</span>                 :<span class="tlaGNC">          74 : UnixDomainClientFactory::~UnixDomainClientFactory() noexcept {}</span></span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : </span>
+<span id="L33"><span class="lineNum">      33</span>                 :<span class="tlaUNC tlaBgUNC">           0 : score::cpp::pmr::unique_ptr&lt;IClientConnection&gt; UnixDomainClientFactory::Create(</span></span>
+<span id="L34"><span class="lineNum">      34</span>                 :             :     const ServiceProtocolConfig&amp; protocol_config,</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             :     const ClientConfig&amp; client_config) noexcept</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             : {</span>
+<span id="L37"><span class="lineNum">      37</span>                 :<span class="tlaUNC">           0 :     return score::cpp::pmr::make_unique&lt;detail::ClientConnection&gt;(</span></span>
+<span id="L38"><span class="lineNum">      38</span>                 :<span class="tlaUNC">           0 :         engine_-&gt;GetMemoryResource(), engine_, protocol_config, client_config);</span></span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : }</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : </span>
+<span id="L41"><span class="lineNum">      41</span>                 :             : }  // namespace score::message_passing</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

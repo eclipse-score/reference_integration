@@ -1,0 +1,187 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - mw/com/impl/bindings/lola/messaging/external/score_communication+/score/mw/com/impl/bindings/lola/messaging/node_identifier_copier.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../../../../../../../../../index.html">top level</a> - <a href="index.html">mw/com/impl/bindings/lola/messaging/external/score_communication+/score/mw/com/impl/bindings/lola/messaging</a> - node_identifier_copier.h<span style="font-size: 80%;"> (source / <a href="node_identifier_copier.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">17</td>
+            <td class="headerCovTableEntry">17</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:37:31</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">1</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryMed">83.3&nbsp;%</td>
+            <td class="headerCovTableEntry">12</td>
+            <td class="headerCovTableEntry">10</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2025 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : #ifndef SCORE_MW_COM_IMPL_BINDINGS_LOLA_NODE_IDENTIFIER_COPIER_H</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #define SCORE_MW_COM_IMPL_BINDINGS_LOLA_NODE_IDENTIFIER_COPIER_H</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : </span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/element_fq_id.h&quot;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : </span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : #include &lt;score/assert.hpp&gt;</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : </span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : #include &lt;array&gt;</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : #include &lt;shared_mutex&gt;</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : </span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : namespace score::mw::com::impl::lola</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : {</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : </span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : using NodeIdTmpBufferType = std::array&lt;pid_t, 20&gt;;</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : </span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : /// \brief Copies node identifiers (pid) contained within (container) values of a map into a given buffer under</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : ///        read-lock</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : /// \details</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : /// \tparam MapType Type of the Map. It is implicitly expected, that the key of MapType is of type ElementFqId and</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : ///         the mapped_type is a std::set (or at least some forward iterable container type, which supports</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : ///         lower_bound()), which contains values, which directly or indirectly contain a node identifier (pid_t)</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : ///</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             : /// \param event_id fully qualified event id for lookup in _src_map_</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             : /// \param src_map map, where key_type = ElementFqId and mapped_type is some forward iterable container</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             : /// \param src_map_mutex mutex to be used to lock the map during copying.</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             : /// \param dest_buffer buffer, where to copy the node identifiers</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : /// \param start start identifier (pid_t) where to start search with.</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : ///</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             : /// \return pair containing number of node identifiers, which have been copied and a bool, whether further ids could</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             : ///         have been copied, if buffer would have been larger.</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             : template &lt;typename MapType&gt;</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             : // Suppress &quot;AUTOSAR C++14 A15-5-3&quot; rule findings. This rule states: &quot;The std::terminate() function shall not be</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             : // called implicitly&quot;. std::terminate() is implicitly called from 'dest_buffer.at()' in case the index goes outside</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             : // the array's range, as we starts from index zero and we check that the buffer size is greater than zero and later</span>
+<span id="L47"><span class="lineNum">      47</span>                 :             : // we compare the index with the buffer's size, so no way for the index to go outside array's range and throw</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             : // std::out_of_range which leds to std::terminate().</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             : // coverity[autosar_cpp14_a15_5_3_violation : FALSE]</span>
+<span id="L50"><span class="lineNum">      50</span>                 :<span class="tlaGNC tlaBgGNC">          14 : std::pair&lt;std::uint8_t, bool&gt; CopyNodeIdentifiers(ElementFqId event_id,</span></span>
+<span id="L51"><span class="lineNum">      51</span>                 :             :                                                   MapType&amp; src_map,</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             :                                                   std::shared_mutex&amp; src_map_mutex,</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             :                                                   NodeIdTmpBufferType&amp; dest_buffer,</span>
+<span id="L54"><span class="lineNum">      54</span>                 :             :                                                   pid_t start) noexcept</span>
+<span id="L55"><span class="lineNum">      55</span>                 :             : {</span>
+<span id="L56"><span class="lineNum">      56</span>                 :<span class="tlaGNC">          14 :     std::uint8_t num_nodeids_copied{0U};</span></span>
+<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">          14 :     bool further_ids_avail{false};</span></span>
+<span id="L58"><span class="lineNum">      58</span>                 :             :     // Suppress &quot;AUTOSAR C++14 M0-1-3&quot; rule findings. This rule states: &quot;There shall be no dead code&quot;.</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             :     //  This is a RAII Pattern, which binds the life cycle of a resource that must be acquired before use.</span>
+<span id="L60"><span class="lineNum">      60</span>                 :             :     // coverity[autosar_cpp14_m0_1_3_violation]</span>
+<span id="L61"><span class="lineNum">      61</span>                 :<span class="tlaGNC">          14 :     std::shared_lock&lt;std::shared_mutex&gt; read_lock(src_map_mutex);</span></span>
+<span id="L62"><span class="lineNum">      62</span>         [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          14 :     if (src_map.empty() == false)</span></span>
+<span id="L63"><span class="lineNum">      63</span>                 :             :     {</span>
+<span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC">          14 :         auto search = src_map.find(event_id);</span></span>
+<span id="L65"><span class="lineNum">      65</span>         [<span class="tlaGBC" title="Branch 0 was taken 13 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          14 :         if (search != src_map.end())</span></span>
+<span id="L66"><span class="lineNum">      66</span>                 :             :         {</span>
+<span id="L67"><span class="lineNum">      67</span>                 :             :             // we copy the target_node_identifiers to a tmp-array under lock ...</span>
+<span id="L68"><span class="lineNum">      68</span>         [<span class="tlaGBC" title="Branch 0 was taken 138 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 8 times"> + </span>]:<span class="tlaGNC">         146 :             for (auto iter = search-&gt;second.lower_bound(start); iter != search-&gt;second.cend(); iter++)</span></span>
+<span id="L69"><span class="lineNum">      69</span>                 :             :             {</span>
+<span id="L70"><span class="lineNum">      70</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 138 times"> + </span>]:<span class="tlaGNC">         138 :                 SCORE_LANGUAGE_FUTURECPP_ASSERT_PRD_MESSAGE(</span></span>
+<span id="L71"><span class="lineNum">      71</span>                 :             :                     dest_buffer.size() &gt; 0U, &quot;HandlerBase::CopyNodeIdentifiers destination buffer has size zero!&quot;);</span>
+<span id="L72"><span class="lineNum">      72</span>                 :             :                 // Suppress &quot;AUTOSAR C++14 M5-0-3&quot; rule findings. This rule states: &quot;A cvalue expression shall</span>
+<span id="L73"><span class="lineNum">      73</span>                 :             :                 // not be implicitly converted to a different underlying type&quot;</span>
+<span id="L74"><span class="lineNum">      74</span>                 :             :                 // That return `pid_t` type as a result. Tolerated implicit conversion as underlying types are the</span>
+<span id="L75"><span class="lineNum">      75</span>                 :             :                 // same coverity</span>
+<span id="L76"><span class="lineNum">      76</span>                 :             :                 // coverity[autosar_cpp14_m5_0_3_violation]</span>
+<span id="L77"><span class="lineNum">      77</span>                 :<span class="tlaGNC">         138 :                 dest_buffer.at(num_nodeids_copied) = *iter;</span></span>
+<span id="L78"><span class="lineNum">      78</span>                 :<span class="tlaGNC">         138 :                 num_nodeids_copied++;</span></span>
+<span id="L79"><span class="lineNum">      79</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 133 times"> + </span>]:<span class="tlaGNC">         138 :                 if (num_nodeids_copied == dest_buffer.size())</span></span>
+<span id="L80"><span class="lineNum">      80</span>                 :             :                 {</span>
+<span id="L81"><span class="lineNum">      81</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">           5 :                     if (std::distance(iter, search-&gt;second.cend()) &gt; 1)</span></span>
+<span id="L82"><span class="lineNum">      82</span>                 :             :                     {</span>
+<span id="L83"><span class="lineNum">      83</span>                 :<span class="tlaGNC">           3 :                         further_ids_avail = true;</span></span>
+<span id="L84"><span class="lineNum">      84</span>                 :             :                     }</span>
+<span id="L85"><span class="lineNum">      85</span>                 :<span class="tlaGNC">           5 :                     break;</span></span>
+<span id="L86"><span class="lineNum">      86</span>                 :             :                 }</span>
+<span id="L87"><span class="lineNum">      87</span>                 :             :             }</span>
+<span id="L88"><span class="lineNum">      88</span>                 :             :         }</span>
+<span id="L89"><span class="lineNum">      89</span>                 :             :     }</span>
+<span id="L90"><span class="lineNum">      90</span>                 :<span class="tlaGNC">          14 :     return {num_nodeids_copied, further_ids_avail};</span></span>
+<span id="L91"><span class="lineNum">      91</span>                 :<span class="tlaGNC">          14 : }</span></span>
+<span id="L92"><span class="lineNum">      92</span>                 :             : </span>
+<span id="L93"><span class="lineNum">      93</span>                 :             : }  // namespace score::mw::com::impl::lola</span>
+<span id="L94"><span class="lineNum">      94</span>                 :             : </span>
+<span id="L95"><span class="lineNum">      95</span>                 :             : #endif  // SCORE_MW_COM_IMPL_BINDINGS_LOLA_NODE_IDENTIFIER_COPIER_H</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

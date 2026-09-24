@@ -1,0 +1,378 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - mw/com/impl/bindings/lola/external/score_communication+/score/mw/com/impl/bindings/lola/transaction_log_set.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../../../../../../../index.html">top level</a> - <a href="index.html">mw/com/impl/bindings/lola/external/score_communication+/score/mw/com/impl/bindings/lola</a> - transaction_log_set.h<span style="font-size: 80%;"> (source / <a href="transaction_log_set.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">23</td>
+            <td class="headerCovTableEntry">23</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:37:31</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">9</td>
+            <td class="headerCovTableEntry">9</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryLo">50.0&nbsp;%</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">1</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2025 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : #ifndef SCORE_MW_COM_IMPL_BINDINGS_LOLA_TRANSACTION_LOG_SET_H</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #define SCORE_MW_COM_IMPL_BINDINGS_LOLA_TRANSACTION_LOG_SET_H</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : </span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #include &quot;score/containers/dynamic_array.h&quot;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/consumer_event_data_control_local_view.h&quot;</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/provider_event_data_control_local_view.h&quot;</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/transaction_log.h&quot;</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/transaction_log_id.h&quot;</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/transaction_log_index.h&quot;</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/transaction_log_local_view.h&quot;</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/transaction_log_registration_guard.h&quot;</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : #include &quot;score/mw/com/impl/configuration/lola_event_instance_deployment.h&quot;</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : #include &quot;score/mw/com/impl/util/copyable_atomic.h&quot;</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : </span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : #include &quot;score/memory/shared/polymorphic_offset_ptr_allocator.h&quot;</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : #include &quot;score/result/result.h&quot;</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : </span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : #include &lt;atomic&gt;</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : </span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : namespace score::mw::com::impl::lola</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : {</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : </span>
+<span id="L35"><span class="lineNum">      35</span>                 :             : /// \brief A TransactionLogSet instance keeps track of all the TransactionLogs for all the Proxy service elements</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             : ///        corresponding to a specific Skeleton service element. It also tracks a separate TransactionLog for the</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             : ///        Skeleton service element in case tracing is enabled for the given service element.</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             : /// \details</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : /// Synchronisation: The TransactionLogSet consists of elements (of type TransactionLogNode) of a DynamicArray</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : /// containing: A TransactionLogId and a TransactionLog.</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             : /// Each TransactionLog will be used by a single Proxy service element in a single thread. However, proxies in different</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             : /// processes/threads can concurrently try to allocate such an element (i.e. a transaction log represented by a</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             : /// TransactionLogNode) for their use during Subscribe/RegisterProxyElement.</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             : /// Therefore, the allocation of such an element in the DynamicArray has to be synchronized.</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             : /// This is achieved by a lock-free/atomics based approach. The transaction_log_id_ member of a TransactionLogNode is an</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             : /// atomic, which serves the synchronization purpose. It will be initialized with kInvalidTransactionLogId and</span>
+<span id="L47"><span class="lineNum">      47</span>                 :             : /// concurrent proxies will try to allocate such a TransactionLogNode via compare_exchange to its own TransactionLogId</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             : /// (uid).</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             : /// Once such an allocation was successful, the proxy thread will uniquely work on this TransactionLogNode until it</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             : /// releases it again in Unsubscribe/Unregister.</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             : /// Note, that there can be also a concurrency of proxies within the same process, all working with the same,</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             : /// TransactionLogId, which happens in the seldom case, that there are multiple proxies for the very same service</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             : /// instance within one process. Their potential concurrency, when trying to rollback transaction logs with the same</span>
+<span id="L54"><span class="lineNum">      54</span>                 :             : /// TransactionLogId is synchronized via transaction_log_mutex_, which is a process local standard mutex.</span>
+<span id="L55"><span class="lineNum">      55</span>                 :             : ///</span>
+<span id="L56"><span class="lineNum">      56</span>                 :             : /// We use a DynamicArray instead of a map because we need to set the maximum size of the data structure (i.e. one</span>
+<span id="L57"><span class="lineNum">      57</span>                 :             : /// element per Proxy service element) and this is either not possible or not trivial with a hash map. Also the</span>
+<span id="L58"><span class="lineNum">      58</span>                 :             : /// implementation of the lock-free algo, which needs a fast/repeated iteration over all elements would have been</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             : /// harder. We think that iterating over this DynamicArray should be very quick due to the limited size of the</span>
+<span id="L60"><span class="lineNum">      60</span>                 :             : /// DynamicArray and CPU caching (similar to the control DynamicArray in EventDataControl).</span>
+<span id="L61"><span class="lineNum">      61</span>                 :             : class TransactionLogSet</span>
+<span id="L62"><span class="lineNum">      62</span>                 :             : {</span>
+<span id="L63"><span class="lineNum">      63</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A11-3-1&quot;, The rule declares: &quot;Friend declarations shall not be used&quot;.</span>
+<span id="L64"><span class="lineNum">      64</span>                 :             :     // The &quot;TransactionLogSetAttorney&quot; class is a helper, which sets the internal state of &quot;TransactionLogSet&quot; accessing</span>
+<span id="L65"><span class="lineNum">      65</span>                 :             :     // private members and used for testing purposes only.</span>
+<span id="L66"><span class="lineNum">      66</span>                 :             :     // coverity[autosar_cpp14_a11_3_1_violation]</span>
+<span id="L67"><span class="lineNum">      67</span>                 :             :     friend class TransactionLogSetAttorney;</span>
+<span id="L68"><span class="lineNum">      68</span>                 :             : </span>
+<span id="L69"><span class="lineNum">      69</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A11-3-1&quot;, The rule declares: &quot;Friend declarations shall not be used&quot;.</span>
+<span id="L70"><span class="lineNum">      70</span>                 :             :     // The &quot;TransactionLogRegistrationGuard&quot; is responsible for unregistering a TransactionLog that was registered with</span>
+<span id="L71"><span class="lineNum">      71</span>                 :             :     // the TransactionLogSet. To make the semantics clearer, we make Unregister private so that a user cannot</span>
+<span id="L72"><span class="lineNum">      72</span>                 :             :     // accidentally call it themselves.</span>
+<span id="L73"><span class="lineNum">      73</span>                 :             :     // coverity[autosar_cpp14_a11_3_1_violation]</span>
+<span id="L74"><span class="lineNum">      74</span>                 :             :     friend TransactionLogRegistrationGuard;</span>
+<span id="L75"><span class="lineNum">      75</span>                 :             : </span>
+<span id="L76"><span class="lineNum">      76</span>                 :             :   public:</span>
+<span id="L77"><span class="lineNum">      77</span>                 :             :     /// \brief Struct that stores the status of a given TransactionLog</span>
+<span id="L78"><span class="lineNum">      78</span>                 :             :     class TransactionLogNode</span>
+<span id="L79"><span class="lineNum">      79</span>                 :             :     {</span>
+<span id="L80"><span class="lineNum">      80</span>                 :             :       public:</span>
+<span id="L81"><span class="lineNum">      81</span>                 :<span class="tlaGNC tlaBgGNC">        2150 :         TransactionLogNode(const std::size_t number_of_slots, memory::shared::ManagedMemoryResource&amp; resource)</span></span>
+<span id="L82"><span class="lineNum">      82</span>                 :<span class="tlaGNC">        2150 :             : needs_rollback_{false},</span></span>
+<span id="L83"><span class="lineNum">      83</span>                 :<span class="tlaGNC">        2150 :               transaction_log_id_{kInvalidTransactionLogId},</span></span>
+<span id="L84"><span class="lineNum">      84</span>                 :<span class="tlaGNC">        2150 :               transaction_log_(number_of_slots, resource)</span></span>
+<span id="L85"><span class="lineNum">      85</span>                 :             :         {</span>
+<span id="L86"><span class="lineNum">      86</span>                 :<span class="tlaGNC">        2150 :         }</span></span>
+<span id="L87"><span class="lineNum">      87</span>                 :             : </span>
+<span id="L88"><span class="lineNum">      88</span>                 :<span class="tlaGNC">        1931 :         bool IsActive() const</span></span>
+<span id="L89"><span class="lineNum">      89</span>                 :             :         {</span>
+<span id="L90"><span class="lineNum">      90</span>                 :<span class="tlaGNC">        3862 :             return (transaction_log_id_.GetUnderlying().load() != kInvalidTransactionLogId);</span></span>
+<span id="L91"><span class="lineNum">      91</span>                 :             :         }</span>
+<span id="L92"><span class="lineNum">      92</span>                 :             : </span>
+<span id="L93"><span class="lineNum">      93</span>                 :<span class="tlaGNC">         300 :         bool NeedsRollback() const</span></span>
+<span id="L94"><span class="lineNum">      94</span>                 :             :         {</span>
+<span id="L95"><span class="lineNum">      95</span>                 :<span class="tlaGNC">         300 :             return needs_rollback_;</span></span>
+<span id="L96"><span class="lineNum">      96</span>                 :             :         }</span>
+<span id="L97"><span class="lineNum">      97</span>                 :             : </span>
+<span id="L98"><span class="lineNum">      98</span>                 :             :         /// \brief tries to acquire a given TransactionLogNode for the given transaction_log_id</span>
+<span id="L99"><span class="lineNum">      99</span>                 :             :         /// \return false, if it was not assigned a kInvalidTransactionLogId before and therefore the change failed.</span>
+<span id="L100"><span class="lineNum">     100</span>                 :             :         bool TryAcquire(TransactionLogId transaction_log_id);</span>
+<span id="L101"><span class="lineNum">     101</span>                 :             : </span>
+<span id="L102"><span class="lineNum">     102</span>                 :             :         /// \brief Checks, whether the instance is currently assigned to transaction_log_id</span>
+<span id="L103"><span class="lineNum">     103</span>                 :             :         bool TryAcquireForRead(TransactionLogId transaction_log_id);</span>
+<span id="L104"><span class="lineNum">     104</span>                 :             : </span>
+<span id="L105"><span class="lineNum">     105</span>                 :<span class="tlaGNC">         454 :         void Release()</span></span>
+<span id="L106"><span class="lineNum">     106</span>                 :             :         {</span>
+<span id="L107"><span class="lineNum">     107</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 454 times"> + </span>]:<span class="tlaGNC">         908 :             SCORE_LANGUAGE_FUTURECPP_ASSERT_PRD_MESSAGE(</span></span>
+<span id="L108"><span class="lineNum">     108</span>                 :             :                 transaction_log_id_.GetUnderlying().load() != kInvalidTransactionLogId,</span>
+<span id="L109"><span class="lineNum">     109</span>                 :             :                 &quot;Trying to Release() TransactionLogNode, which was not acquired.&quot;);</span>
+<span id="L110"><span class="lineNum">     110</span>                 :<span class="tlaGNC">         454 :             transaction_log_id_.GetUnderlying().store(kInvalidTransactionLogId);</span></span>
+<span id="L111"><span class="lineNum">     111</span>                 :<span class="tlaGNC">         454 :         }</span></span>
+<span id="L112"><span class="lineNum">     112</span>                 :             : </span>
+<span id="L113"><span class="lineNum">     113</span>                 :<span class="tlaGNC">         430 :         void MarkNeedsRollback(const bool needs_rollback)</span></span>
+<span id="L114"><span class="lineNum">     114</span>                 :             :         {</span>
+<span id="L115"><span class="lineNum">     115</span>                 :<span class="tlaGNC">         430 :             needs_rollback_.GetUnderlying() = needs_rollback;</span></span>
+<span id="L116"><span class="lineNum">     116</span>                 :<span class="tlaGNC">         430 :         }</span></span>
+<span id="L117"><span class="lineNum">     117</span>                 :             : </span>
+<span id="L118"><span class="lineNum">     118</span>                 :<span class="tlaGNC">         295 :         TransactionLogId GetTransactionLogId() const</span></span>
+<span id="L119"><span class="lineNum">     119</span>                 :             :         {</span>
+<span id="L120"><span class="lineNum">     120</span>                 :<span class="tlaGNC">         295 :             return transaction_log_id_;</span></span>
+<span id="L121"><span class="lineNum">     121</span>                 :             :         }</span>
+<span id="L122"><span class="lineNum">     122</span>                 :             : </span>
+<span id="L123"><span class="lineNum">     123</span>                 :             :         // Suppress &quot;AUTOSAR C++14 A9-3-1&quot; rule finding: &quot;Member functions shall not return non-const “raw” pointers or</span>
+<span id="L124"><span class="lineNum">     124</span>                 :             :         // references to private or protected data owned by the class.&quot;.</span>
+<span id="L125"><span class="lineNum">     125</span>                 :             :         // To avoid overhead such as shared_ptr in the result, a non-const reference to the instance is returned</span>
+<span id="L126"><span class="lineNum">     126</span>                 :             :         // instead. This instance exposes another sub-API that can change its state and therefore also the state of</span>
+<span id="L127"><span class="lineNum">     127</span>                 :             :         // instance holder. API callers get the reference and use it in place without leaving the scope, so the</span>
+<span id="L128"><span class="lineNum">     128</span>                 :             :         // reference remains valid.</span>
+<span id="L129"><span class="lineNum">     129</span>                 :             :         // coverity[autosar_cpp14_a9_3_1_violation]</span>
+<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">        1223 :         TransactionLog&amp; GetTransactionLog() &amp;</span></span>
+<span id="L131"><span class="lineNum">     131</span>                 :             :         {</span>
+<span id="L132"><span class="lineNum">     132</span>                 :             :             // coverity[autosar_cpp14_a9_3_1_violation] see above</span>
+<span id="L133"><span class="lineNum">     133</span>                 :<span class="tlaGNC">        1223 :             return transaction_log_;</span></span>
+<span id="L134"><span class="lineNum">     134</span>                 :             :         }</span>
+<span id="L135"><span class="lineNum">     135</span>                 :             : </span>
+<span id="L136"><span class="lineNum">     136</span>                 :             :         // Since the TransactionLogNode is copyable / moveable, we can't store the TransactionLogLocalView in the</span>
+<span id="L137"><span class="lineNum">     137</span>                 :             :         // TransactionLogNode itself as it will be invalidated whenever the TransactionLogNode (and the containing</span>
+<span id="L138"><span class="lineNum">     138</span>                 :             :         // TransactionLog which the view points to) is copied / moved. Since this function is only called during</span>
+<span id="L139"><span class="lineNum">     139</span>                 :             :         // rollback and registration, it's not called highly frequently so creating a new view every time should not</span>
+<span id="L140"><span class="lineNum">     140</span>                 :             :         // impact performance.</span>
+<span id="L141"><span class="lineNum">     141</span>                 :<span class="tlaGNC">         919 :         TransactionLogLocalView GetTransactionLogLocalView()</span></span>
+<span id="L142"><span class="lineNum">     142</span>                 :             :         {</span>
+<span id="L143"><span class="lineNum">     143</span>                 :<span class="tlaGNC">         919 :             return TransactionLogLocalView{transaction_log_};</span></span>
+<span id="L144"><span class="lineNum">     144</span>                 :             :         }</span>
+<span id="L145"><span class="lineNum">     145</span>                 :             : </span>
+<span id="L146"><span class="lineNum">     146</span>                 :             :         void Reset();</span>
+<span id="L147"><span class="lineNum">     147</span>                 :             : </span>
+<span id="L148"><span class="lineNum">     148</span>                 :             :       private:</span>
+<span id="L149"><span class="lineNum">     149</span>                 :             :         /// \brief Whether or not the TransactionLog was created before a process crash.</span>
+<span id="L150"><span class="lineNum">     150</span>                 :             :         ///</span>
+<span id="L151"><span class="lineNum">     151</span>                 :             :         /// Will be set on Proxy::Create by the first Proxy in the same process with the same transaction_log_id. Will</span>
+<span id="L152"><span class="lineNum">     152</span>                 :             :         /// be cleared once Rollback is called on transaction_log.</span>
+<span id="L153"><span class="lineNum">     153</span>                 :             :         CopyableAtomic&lt;bool&gt; needs_rollback_;</span>
+<span id="L154"><span class="lineNum">     154</span>                 :             : </span>
+<span id="L155"><span class="lineNum">     155</span>                 :             :         /// \brief Expresses, who (which proxy process) currently owns this transaction log. An (initially set) value</span>
+<span id="L156"><span class="lineNum">     156</span>                 :             :         ///        of kInvalidTransactionLogId means, that it is not yet owned by anybody.</span>
+<span id="L157"><span class="lineNum">     157</span>                 :             :         /// \details This is an atomic as our lock-free synchronization mechanism to synchronize access to</span>
+<span id="L158"><span class="lineNum">     158</span>                 :             :         ///          TransactionLogSet#proxy_transaction_logs_ is built upon this atomic!</span>
+<span id="L159"><span class="lineNum">     159</span>                 :             :         CopyableAtomic&lt;TransactionLogId&gt; transaction_log_id_;</span>
+<span id="L160"><span class="lineNum">     160</span>                 :             :         TransactionLog transaction_log_;</span>
+<span id="L161"><span class="lineNum">     161</span>                 :             :     };</span>
+<span id="L162"><span class="lineNum">     162</span>                 :             : </span>
+<span id="L163"><span class="lineNum">     163</span>                 :             :     /// \brief Sentinel index value used to identify the skeleton_tracing_transaction_log_</span>
+<span id="L164"><span class="lineNum">     164</span>                 :             :     ///</span>
+<span id="L165"><span class="lineNum">     165</span>                 :             :     /// This value will be returned by RegisterSkeletonTransactionLog() and when passed to GetTransactionLog(), the</span>
+<span id="L166"><span class="lineNum">     166</span>                 :             :     /// skeleton_tracing_transaction_log_ will be returned. We do this rather than having an additional</span>
+<span id="L167"><span class="lineNum">     167</span>                 :             :     /// GetTransactionLog overload for returned skeleton_tracing_transaction_log_ so that calling code can be agnostic</span>
+<span id="L168"><span class="lineNum">     168</span>                 :             :     /// to whether they're dealing with a proxy or skeleton transaction log.</span>
+<span id="L169"><span class="lineNum">     169</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A0-1-1&quot;, The rule states: &quot;A project shall not contain instances of non-volatile</span>
+<span id="L170"><span class="lineNum">     170</span>                 :             :     // variables being given values that are not subsequently used&quot;</span>
+<span id="L171"><span class="lineNum">     171</span>                 :             :     // Variable is used in the implementation file (cpp).</span>
+<span id="L172"><span class="lineNum">     172</span>                 :             :     // coverity[autosar_cpp14_a0_1_1_violation : FALSE]</span>
+<span id="L173"><span class="lineNum">     173</span>                 :             :     static constexpr const TransactionLogIndex kSkeletonIndexSentinel{std::numeric_limits&lt;TransactionLogIndex&gt;::max()};</span>
+<span id="L174"><span class="lineNum">     174</span>                 :             : </span>
+<span id="L175"><span class="lineNum">     175</span>                 :             :     /// \brief Constructor</span>
+<span id="L176"><span class="lineNum">     176</span>                 :             :     /// \param max_number_of_logs The maximum number of logs that can be registered via Register().</span>
+<span id="L177"><span class="lineNum">     177</span>                 :             :     /// \param number_of_slots number of slots each of the transaction logs within the TransactionLogSet will contain.</span>
+<span id="L178"><span class="lineNum">     178</span>                 :             :     ///        It is deduced by the number_of_slots, the skeleton created for the related event/field service element.</span>
+<span id="L179"><span class="lineNum">     179</span>                 :             :     /// \param proxy The MemoryResourceProxy that will be used by the DynamicArray of transaction logs</span>
+<span id="L180"><span class="lineNum">     180</span>                 :             :     TransactionLogSet(const TransactionLogIndex max_number_of_logs,</span>
+<span id="L181"><span class="lineNum">     181</span>                 :             :                       const std::size_t number_of_slots,</span>
+<span id="L182"><span class="lineNum">     182</span>                 :             :                       memory::shared::ManagedMemoryResource&amp; resource);</span>
+<span id="L183"><span class="lineNum">     183</span>                 :<span class="tlaGNC">         605 :     ~TransactionLogSet() noexcept = default;</span></span>
+<span id="L184"><span class="lineNum">     184</span>                 :             : </span>
+<span id="L185"><span class="lineNum">     185</span>                 :             :     TransactionLogSet(const TransactionLogSet&amp;) = delete;</span>
+<span id="L186"><span class="lineNum">     186</span>                 :             :     TransactionLogSet&amp; operator=(const TransactionLogSet&amp;) = delete;</span>
+<span id="L187"><span class="lineNum">     187</span>                 :             :     TransactionLogSet(TransactionLogSet&amp;&amp;) noexcept = delete;</span>
+<span id="L188"><span class="lineNum">     188</span>                 :             :     TransactionLogSet&amp; operator=(TransactionLogSet&amp;&amp; other) noexcept = delete;</span>
+<span id="L189"><span class="lineNum">     189</span>                 :             : </span>
+<span id="L190"><span class="lineNum">     190</span>                 :             :     void MarkTransactionLogsNeedRollback(const TransactionLogId&amp; transaction_log_id);</span>
+<span id="L191"><span class="lineNum">     191</span>                 :             : </span>
+<span id="L192"><span class="lineNum">     192</span>                 :             :     /// \brief Rolls back all Proxy TransactionLogs corresponding to the provided TransactionLogId.</span>
+<span id="L193"><span class="lineNum">     193</span>                 :             :     /// \return Returns an a blank result if the rollback succeeded or did not need to be done (because there's no</span>
+<span id="L194"><span class="lineNum">     194</span>                 :             :     ///         TransactionLog associated with the provided TransactionLogId or another Proxy instance with the same</span>
+<span id="L195"><span class="lineNum">     195</span>                 :             :     ///         TransactionLogId in the same process already performed the rollback), otherwise, an error.</span>
+<span id="L196"><span class="lineNum">     196</span>                 :             :     ///</span>
+<span id="L197"><span class="lineNum">     197</span>                 :             :     /// Multiple instances of the same Proxy service element will have the same transaction_log_id. Therefore, the first</span>
+<span id="L198"><span class="lineNum">     198</span>                 :             :     /// call to RollbackProxyTransactions per process will rollback _all_ the TransactionLogs corresponding to</span>
+<span id="L199"><span class="lineNum">     199</span>                 :             :     /// transaction_log_id. Any further calls to RollbackProxyTransactions within the same process will not perform any</span>
+<span id="L200"><span class="lineNum">     200</span>                 :             :     /// rollbacks. This prevents one thread calling RollbackProxyTransactions and then registering a new TransactionLog.</span>
+<span id="L201"><span class="lineNum">     201</span>                 :             :     /// Then another thread with the same transaction_log_id calls RollbackProxyTransactions which would rollback and</span>
+<span id="L202"><span class="lineNum">     202</span>                 :             :     /// destroy the newly created TransactionLog.</span>
+<span id="L203"><span class="lineNum">     203</span>                 :             :     Result&lt;void&gt; RollbackProxyTransactions(</span>
+<span id="L204"><span class="lineNum">     204</span>                 :             :         const TransactionLogId&amp; transaction_log_id,</span>
+<span id="L205"><span class="lineNum">     205</span>                 :             :         const TransactionLogLocalView::DereferenceSlotCallback dereference_slot_callback,</span>
+<span id="L206"><span class="lineNum">     206</span>                 :             :         const TransactionLogLocalView::DereferenceSlotCallback unsubscribe_callback);</span>
+<span id="L207"><span class="lineNum">     207</span>                 :             : </span>
+<span id="L208"><span class="lineNum">     208</span>                 :             :     /// \brief If a Skeleton TransactionLog exists, performs a rollback on it.</span>
+<span id="L209"><span class="lineNum">     209</span>                 :             :     Result&lt;void&gt; RollbackSkeletonTracingTransactions(</span>
+<span id="L210"><span class="lineNum">     210</span>                 :             :         const TransactionLogLocalView::DereferenceSlotCallback dereference_slot_callback);</span>
+<span id="L211"><span class="lineNum">     211</span>                 :             : </span>
+<span id="L212"><span class="lineNum">     212</span>                 :             :     /// \brief Creates a new transaction log in the DynamicArray of transaction logs.</span>
+<span id="L213"><span class="lineNum">     213</span>                 :             :     ///</span>
+<span id="L214"><span class="lineNum">     214</span>                 :             :     /// \param transaction_log_id The TransactionLogId corresponding to the ProxyEvent which is registering the</span>
+<span id="L215"><span class="lineNum">     215</span>                 :             :     ///        TransactionLog.</span>
+<span id="L216"><span class="lineNum">     216</span>                 :             :     /// \param consumer_event_data_control_local_view The ConsumerEventDataControlLocalView used by the Proxy service</span>
+<span id="L217"><span class="lineNum">     217</span>                 :             :     /// element</span>
+<span id="L218"><span class="lineNum">     218</span>                 :             :     ///        which registered a TransactionLog. A cached TransactionLogLocalView will be injected into this</span>
+<span id="L219"><span class="lineNum">     219</span>                 :             :     ///        ConsumerEventDataControlLocalView which it uses for recording reference transactions.</span>
+<span id="L220"><span class="lineNum">     220</span>                 :             :     /// \return Returns TransactionLogRegistrationGuard which holds the index of the registered transaction log and will</span>
+<span id="L221"><span class="lineNum">     221</span>                 :             :     ///         call TransactionLogSet::Unregister() and destroy the cached TransactionLogLocalView on destruction.</span>
+<span id="L222"><span class="lineNum">     222</span>                 :             :     ///</span>
+<span id="L223"><span class="lineNum">     223</span>                 :             :     /// Will terminate if transaction_log_id already exists within the DynamicArray of transaction logs.</span>
+<span id="L224"><span class="lineNum">     224</span>                 :             :     score::Result&lt;TransactionLogRegistrationGuard&gt; RegisterProxyElement(</span>
+<span id="L225"><span class="lineNum">     225</span>                 :             :         const TransactionLogId&amp; transaction_log_id,</span>
+<span id="L226"><span class="lineNum">     226</span>                 :             :         ConsumerEventDataControlLocalView&lt;&gt;&amp; consumer_event_data_control_local_view);</span>
+<span id="L227"><span class="lineNum">     227</span>                 :             : </span>
+<span id="L228"><span class="lineNum">     228</span>                 :             :     /// \brief Creates a new skeleton tracing transaction log</span>
+<span id="L229"><span class="lineNum">     229</span>                 :             :     ///</span>
+<span id="L230"><span class="lineNum">     230</span>                 :             :     /// \param consumer_event_data_control_local_view The ConsumerEventDataControlLocalView used by the SkeletonEvent</span>
+<span id="L231"><span class="lineNum">     231</span>                 :             :     ///        which registered a TransactionLog. A cached TransactionLogLocalView will be injected into this</span>
+<span id="L232"><span class="lineNum">     232</span>                 :             :     ///        ConsumerEventDataControlLocalView which it uses for recording reference transactions. This is a</span>
+<span id="L233"><span class="lineNum">     233</span>                 :             :     ///        ConsumerEventDataControlLocalView even though it's provided by a Skeleton since it is used for</span>
+<span id="L234"><span class="lineNum">     234</span>                 :             :     ///        referencing slots on the Skeleton side (so it behaves like a ProxyEvent within the SkeletonEvent).</span>
+<span id="L235"><span class="lineNum">     235</span>                 :             :     ///        It's used by tracing (to lock a slot which is currently being traced) and for a SkeletonField's getter</span>
+<span id="L236"><span class="lineNum">     236</span>                 :             :     ///        (to lock a slot while getter reads the latest value).</span>
+<span id="L237"><span class="lineNum">     237</span>                 :             :     /// \return Returns TransactionLogRegistrationGuard which holds a special sentinel index value which will return the</span>
+<span id="L238"><span class="lineNum">     238</span>                 :             :     ///         registered skeleton transaction log when passing the sentinel value to GetTransactionLog.</span>
+<span id="L239"><span class="lineNum">     239</span>                 :             :     ///         The guard will call TransactionLogSet::Unregister() and destroy the cached TransactionLogLocalView on</span>
+<span id="L240"><span class="lineNum">     240</span>                 :             :     ///         destruction.</span>
+<span id="L241"><span class="lineNum">     241</span>                 :             :     ///</span>
+<span id="L242"><span class="lineNum">     242</span>                 :             :     /// Will terminate if a skeleton transaction log was already registered.</span>
+<span id="L243"><span class="lineNum">     243</span>                 :             :     TransactionLogRegistrationGuard RegisterSkeletonTransactionLog(</span>
+<span id="L244"><span class="lineNum">     244</span>                 :             :         ConsumerEventDataControlLocalView&lt;&gt;&amp; consumer_event_data_control_local_view);</span>
+<span id="L245"><span class="lineNum">     245</span>                 :             : </span>
+<span id="L246"><span class="lineNum">     246</span>                 :             :     /// \brief Returns a reference to a TransactionLog corresponding to the provided index.</span>
+<span id="L247"><span class="lineNum">     247</span>                 :             :     ///</span>
+<span id="L248"><span class="lineNum">     248</span>                 :             :     /// Must not be called concurrently with Unregister() with the same transaction_log_index.</span>
+<span id="L249"><span class="lineNum">     249</span>                 :             :     TransactionLog&amp; GetTransactionLog(const TransactionLogIndex transaction_log_index);</span>
+<span id="L250"><span class="lineNum">     250</span>                 :             : </span>
+<span id="L251"><span class="lineNum">     251</span>                 :             :   private:</span>
+<span id="L252"><span class="lineNum">     252</span>                 :             :     using TransactionLogCollection =</span>
+<span id="L253"><span class="lineNum">     253</span>                 :             :         score::containers::DynamicArray&lt;TransactionLogNode,</span>
+<span id="L254"><span class="lineNum">     254</span>                 :             :                                         memory::shared::PolymorphicOffsetPtrAllocator&lt;TransactionLogNode&gt;&gt;;</span>
+<span id="L255"><span class="lineNum">     255</span>                 :             : </span>
+<span id="L256"><span class="lineNum">     256</span>                 :             :     /// \brief Deletes the element (by resetting its TransactionLogId to initial/unused state) in the DynamicArray of</span>
+<span id="L257"><span class="lineNum">     257</span>                 :             :     ///        transaction logs corresponding to the provided index.</span>
+<span id="L258"><span class="lineNum">     258</span>                 :             :     ///</span>
+<span id="L259"><span class="lineNum">     259</span>                 :             :     /// Must not be called concurrently with GetTransactionLog() with the same transaction_log_index. This function is</span>
+<span id="L260"><span class="lineNum">     260</span>                 :             :     /// private and can only be called by the TransactionLogRegistrationGuard, which is returned by RegisterProxyElement</span>
+<span id="L261"><span class="lineNum">     261</span>                 :             :     /// and RegisterSkeletonTransactionLog.</span>
+<span id="L262"><span class="lineNum">     262</span>                 :             :     void Unregister(const TransactionLogIndex transaction_log_index);</span>
+<span id="L263"><span class="lineNum">     263</span>                 :             : </span>
+<span id="L264"><span class="lineNum">     264</span>                 :             :     /// \brief Returns iterators to all TransactionLogNodes for the given target_transaction_log_id, which needs roll</span>
+<span id="L265"><span class="lineNum">     265</span>                 :             :     /// back.</span>
+<span id="L266"><span class="lineNum">     266</span>                 :             :     /// \param target_transaction_log_id transaction log id to be searched for</span>
+<span id="L267"><span class="lineNum">     267</span>                 :             :     /// \return vector of iterators</span>
+<span id="L268"><span class="lineNum">     268</span>                 :             :     std::vector&lt;TransactionLogSet::TransactionLogCollection::iterator&gt; FindTransactionLogNodesToBeRolledBack(</span>
+<span id="L269"><span class="lineNum">     269</span>                 :             :         const TransactionLogId&amp; target_transaction_log_id);</span>
+<span id="L270"><span class="lineNum">     270</span>                 :             : </span>
+<span id="L271"><span class="lineNum">     271</span>                 :             :     /// \brief Acquires next available/free transaction log from the proxy transaction logs.</span>
+<span id="L272"><span class="lineNum">     272</span>                 :             :     /// \param transaction_log_id</span>
+<span id="L273"><span class="lineNum">     273</span>                 :             :     /// \return if slot could be acquired, the returned optional contains a pair of an iterator to the allocated slot</span>
+<span id="L274"><span class="lineNum">     274</span>                 :             :     ///         (TransactionLogNode) and its index, otherwise an empty optional</span>
+<span id="L275"><span class="lineNum">     275</span>                 :             :     std::optional&lt;std::pair&lt;TransactionLogSet::TransactionLogCollection::iterator, TransactionLogIndex&gt;&gt;</span>
+<span id="L276"><span class="lineNum">     276</span>                 :             :     AcquireNextAvailableSlot(TransactionLogId transaction_log_id);</span>
+<span id="L277"><span class="lineNum">     277</span>                 :             : </span>
+<span id="L278"><span class="lineNum">     278</span>                 :             :     static bool IsSkeletonElementTransactionLogIndex(const TransactionLogIndex transaction_log_index);</span>
+<span id="L279"><span class="lineNum">     279</span>                 :             : </span>
+<span id="L280"><span class="lineNum">     280</span>                 :             :     TransactionLogCollection proxy_transaction_logs_;</span>
+<span id="L281"><span class="lineNum">     281</span>                 :             :     TransactionLogNode skeleton_tracing_transaction_log_;</span>
+<span id="L282"><span class="lineNum">     282</span>                 :             : };</span>
+<span id="L283"><span class="lineNum">     283</span>                 :             : </span>
+<span id="L284"><span class="lineNum">     284</span>                 :             : }  // namespace score::mw::com::impl::lola</span>
+<span id="L285"><span class="lineNum">     285</span>                 :             : </span>
+<span id="L286"><span class="lineNum">     286</span>                 :             : #endif  // SCORE_MW_COM_IMPL_BINDINGS_LOLA_TRANSACTION_LOG_SET_H</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

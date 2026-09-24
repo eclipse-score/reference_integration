@@ -1,0 +1,490 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - mw/com/impl/bindings/lola/messaging/external/score_communication+/score/mw/com/impl/bindings/lola/messaging/message_passing_service_instance.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../../../../../../../../../index.html">top level</a> - <a href="index.html">mw/com/impl/bindings/lola/messaging/external/score_communication+/score/mw/com/impl/bindings/lola/messaging</a> - message_passing_service_instance.h<span style="font-size: 80%;"> (source / <a href="message_passing_service_instance.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">17</td>
+            <td class="headerCovTableEntry">17</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:37:31</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">3</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">10</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2025 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : #ifndef SCORE_MW_COM_IMPL_BINDINGS_LOLA_MESSAGE_PASSING_SERVICE_INSTANCE_H</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #define SCORE_MW_COM_IMPL_BINDINGS_LOLA_MESSAGE_PASSING_SERVICE_INSTANCE_H</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : </span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/messaging/asil_specific_cfg.h&quot;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/messaging/i_message_passing_service.h&quot;</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/messaging/i_message_passing_service_instance.h&quot;</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/messaging/message_passing_client_cache.h&quot;</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/proxy_instance_identifier.h&quot;</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/skeleton_instance_identifier.h&quot;</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : </span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : #include &quot;score/language/safecpp/scoped_function/scope.h&quot;</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : #include &quot;score/message_passing/i_client_factory.h&quot;</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : #include &quot;score/message_passing/i_server.h&quot;</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : #include &quot;score/message_passing/i_server_factory.h&quot;</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : </span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : // TODO: PMR</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : #include &quot;score/concurrency/thread_pool.h&quot;</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : </span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : #include &lt;score/span.hpp&gt;</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : </span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : // TODO: PMR</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : #include &lt;array&gt;</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             : #include &lt;atomic&gt;</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             : #include &lt;cstdint&gt;</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             : #include &lt;iterator&gt;</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             : #include &lt;memory&gt;</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : #include &lt;set&gt;</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : #include &lt;shared_mutex&gt;</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             : #include &lt;unordered_map&gt;</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             : #include &lt;utility&gt;</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             : #include &lt;vector&gt;</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             : </span>
+<span id="L45"><span class="lineNum">      45</span>                 :             : namespace score::mw::com::impl::lola</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             : {</span>
+<span id="L47"><span class="lineNum">      47</span>                 :             : </span>
+<span id="L48"><span class="lineNum">      48</span>                 :             : class MessagePassingServiceInstanceAttorney;</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             : </span>
+<span id="L50"><span class="lineNum">      50</span>                 :             : class MessagePassingServiceInstance : public IMessagePassingServiceInstance</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             : {</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             :   public:</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             :     // required exclusively for testing purposes</span>
+<span id="L54"><span class="lineNum">      54</span>                 :             :     // coverity[autosar_cpp14_a11_3_1_violation]</span>
+<span id="L55"><span class="lineNum">      55</span>                 :             :     friend class MessagePassingServiceInstanceAttorney;</span>
+<span id="L56"><span class="lineNum">      56</span>                 :             : </span>
+<span id="L57"><span class="lineNum">      57</span>                 :             :     MessagePassingServiceInstance(const ClientQualityType asil_level,</span>
+<span id="L58"><span class="lineNum">      58</span>                 :             :                                   const AsilSpecificCfg&amp; config,</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             :                                   score::message_passing::IServerFactory&amp; server_factory,</span>
+<span id="L60"><span class="lineNum">      60</span>                 :             :                                   score::message_passing::IClientFactory&amp; client_factory,</span>
+<span id="L61"><span class="lineNum">      61</span>                 :             :                                   score::concurrency::Executor&amp; local_event_executor) noexcept;</span>
+<span id="L62"><span class="lineNum">      62</span>                 :             : </span>
+<span id="L63"><span class="lineNum">      63</span>                 :             :     MessagePassingServiceInstance(const MessagePassingServiceInstance&amp;) = delete;</span>
+<span id="L64"><span class="lineNum">      64</span>                 :             :     MessagePassingServiceInstance(MessagePassingServiceInstance&amp;&amp;) = delete;</span>
+<span id="L65"><span class="lineNum">      65</span>                 :             :     MessagePassingServiceInstance&amp; operator=(const MessagePassingServiceInstance&amp;) = delete;</span>
+<span id="L66"><span class="lineNum">      66</span>                 :             :     MessagePassingServiceInstance&amp; operator=(MessagePassingServiceInstance&amp;&amp;) = delete;</span>
+<span id="L67"><span class="lineNum">      67</span>                 :             : </span>
+<span id="L68"><span class="lineNum">      68</span>                 :<span class="tlaGNC tlaBgGNC">         264 :     ~MessagePassingServiceInstance() noexcept override = default;</span></span>
+<span id="L69"><span class="lineNum">      69</span>                 :             : </span>
+<span id="L70"><span class="lineNum">      70</span>                 :             :     void NotifyEvent(const ElementFqId event_id) noexcept override;</span>
+<span id="L71"><span class="lineNum">      71</span>                 :             : </span>
+<span id="L72"><span class="lineNum">      72</span>                 :             :     IMessagePassingService::HandlerRegistrationNoType RegisterEventNotification(</span>
+<span id="L73"><span class="lineNum">      73</span>                 :             :         const ElementFqId event_id,</span>
+<span id="L74"><span class="lineNum">      74</span>                 :             :         std::weak_ptr&lt;ScopedEventReceiveHandler&gt; callback,</span>
+<span id="L75"><span class="lineNum">      75</span>                 :             :         const pid_t target_node_id) noexcept override;</span>
+<span id="L76"><span class="lineNum">      76</span>                 :             : </span>
+<span id="L77"><span class="lineNum">      77</span>                 :             :     void ReregisterEventNotification(const ElementFqId event_id, const pid_t target_node_id) noexcept override;</span>
+<span id="L78"><span class="lineNum">      78</span>                 :             : </span>
+<span id="L79"><span class="lineNum">      79</span>                 :             :     void UnregisterEventNotification(const ElementFqId event_id,</span>
+<span id="L80"><span class="lineNum">      80</span>                 :             :                                      const IMessagePassingService::HandlerRegistrationNoType registration_no,</span>
+<span id="L81"><span class="lineNum">      81</span>                 :             :                                      const pid_t target_node_id) noexcept override;</span>
+<span id="L82"><span class="lineNum">      82</span>                 :             : </span>
+<span id="L83"><span class="lineNum">      83</span>                 :             :     Result&lt;void&gt; RegisterOnServiceMethodSubscribedHandler(</span>
+<span id="L84"><span class="lineNum">      84</span>                 :             :         const SkeletonInstanceIdentifier skeleton_instance_identifier,</span>
+<span id="L85"><span class="lineNum">      85</span>                 :             :         IMessagePassingService::ServiceMethodSubscribedHandler subscribed_callback,</span>
+<span id="L86"><span class="lineNum">      86</span>                 :             :         IMessagePassingService::AllowedConsumerUids allowed_proxy_uids) override;</span>
+<span id="L87"><span class="lineNum">      87</span>                 :             : </span>
+<span id="L88"><span class="lineNum">      88</span>                 :             :     Result&lt;void&gt; RegisterOnServiceMethodUnsubscribedHandler(</span>
+<span id="L89"><span class="lineNum">      89</span>                 :             :         const SkeletonInstanceIdentifier skeleton_instance_identifier,</span>
+<span id="L90"><span class="lineNum">      90</span>                 :             :         IMessagePassingService::ServiceMethodUnsubscribedHandler unsubscribed_callback) override;</span>
+<span id="L91"><span class="lineNum">      91</span>                 :             : </span>
+<span id="L92"><span class="lineNum">      92</span>                 :             :     Result&lt;void&gt; RegisterMethodCallHandler(const ProxyMethodInstanceIdentifier proxy_method_instance_identifier,</span>
+<span id="L93"><span class="lineNum">      93</span>                 :             :                                            IMessagePassingService::MethodCallHandler method_call_callback,</span>
+<span id="L94"><span class="lineNum">      94</span>                 :             :                                            const uid_t allowed_proxy_uid) override;</span>
+<span id="L95"><span class="lineNum">      95</span>                 :             : </span>
+<span id="L96"><span class="lineNum">      96</span>                 :             :     void UnregisterOnServiceMethodSubscribedHandler(</span>
+<span id="L97"><span class="lineNum">      97</span>                 :             :         const SkeletonInstanceIdentifier skeleton_instance_identifier) override;</span>
+<span id="L98"><span class="lineNum">      98</span>                 :             : </span>
+<span id="L99"><span class="lineNum">      99</span>                 :             :     void UnregisterOnServiceMethodUnsubscribedHandler(</span>
+<span id="L100"><span class="lineNum">     100</span>                 :             :         const SkeletonInstanceIdentifier skeleton_instance_identifier) override;</span>
+<span id="L101"><span class="lineNum">     101</span>                 :             : </span>
+<span id="L102"><span class="lineNum">     102</span>                 :             :     void UnregisterMethodCallHandler(const ProxyMethodInstanceIdentifier proxy_method_instance_identifier) override;</span>
+<span id="L103"><span class="lineNum">     103</span>                 :             : </span>
+<span id="L104"><span class="lineNum">     104</span>                 :             :     void NotifyOutdatedNodeId(const pid_t outdated_node_id, const pid_t target_node_id) noexcept override;</span>
+<span id="L105"><span class="lineNum">     105</span>                 :             : </span>
+<span id="L106"><span class="lineNum">     106</span>                 :             :     /// \brief Registers a callback for event notification existence changes.</span>
+<span id="L107"><span class="lineNum">     107</span>                 :             :     /// \details This callback is invoked when the existence of event notification registrations changes:</span>
+<span id="L108"><span class="lineNum">     108</span>                 :             :     ///          with 'true' when the first event notification is registered and with 'false' when the last event</span>
+<span id="L109"><span class="lineNum">     109</span>                 :             :     ///          notification is unregistered. This allows SkeletonEvent to optimise performance by skipping</span>
+<span id="L110"><span class="lineNum">     110</span>                 :             :     ///          NotifyEvent() calls when no event notifications are registered. The callback is invoked synchronously</span>
+<span id="L111"><span class="lineNum">     111</span>                 :             :     ///          during event notification registration/unregistration. If event notifications are already registered</span>
+<span id="L112"><span class="lineNum">     112</span>                 :             :     ///          when this method is called, the callback is invoked immediately with 'true'.</span>
+<span id="L113"><span class="lineNum">     113</span>                 :             :     /// \param event_id The event to monitor for event notification existence changes.</span>
+<span id="L114"><span class="lineNum">     114</span>                 :             :     /// \param callback The callback to invoke when event notification existence changes.</span>
+<span id="L115"><span class="lineNum">     115</span>                 :             :     void RegisterEventNotificationExistenceChangedCallback(</span>
+<span id="L116"><span class="lineNum">     116</span>                 :             :         const ElementFqId event_id,</span>
+<span id="L117"><span class="lineNum">     117</span>                 :             :         IMessagePassingService::HandlerStatusChangeCallback callback) noexcept override;</span>
+<span id="L118"><span class="lineNum">     118</span>                 :             : </span>
+<span id="L119"><span class="lineNum">     119</span>                 :             :     /// \brief Unregisters the callback for event notification existence changes.</span>
+<span id="L120"><span class="lineNum">     120</span>                 :             :     /// \details After unregistration, no further callbacks will be invoked for event notification</span>
+<span id="L121"><span class="lineNum">     121</span>                 :             :     ///          existence changes of this event.</span>
+<span id="L122"><span class="lineNum">     122</span>                 :             :     /// \param event_id The event to stop monitoring.</span>
+<span id="L123"><span class="lineNum">     123</span>                 :             :     void UnregisterEventNotificationExistenceChangedCallback(const ElementFqId event_id) noexcept override;</span>
+<span id="L124"><span class="lineNum">     124</span>                 :             : </span>
+<span id="L125"><span class="lineNum">     125</span>                 :             :     Result&lt;void&gt; SubscribeServiceMethod(const SkeletonInstanceIdentifier&amp; skeleton_instance_identifier,</span>
+<span id="L126"><span class="lineNum">     126</span>                 :             :                                         const ProxyInstanceIdentifier&amp; proxy_instance_identifier,</span>
+<span id="L127"><span class="lineNum">     127</span>                 :             :                                         const pid_t target_node_id) override;</span>
+<span id="L128"><span class="lineNum">     128</span>                 :             : </span>
+<span id="L129"><span class="lineNum">     129</span>                 :             :     Result&lt;void&gt; UnsubscribeServiceMethod(const SkeletonInstanceIdentifier&amp; skeleton_instance_identifier,</span>
+<span id="L130"><span class="lineNum">     130</span>                 :             :                                           const ProxyInstanceIdentifier&amp; proxy_instance_identifier,</span>
+<span id="L131"><span class="lineNum">     131</span>                 :             :                                           const pid_t target_node_id) override;</span>
+<span id="L132"><span class="lineNum">     132</span>                 :             : </span>
+<span id="L133"><span class="lineNum">     133</span>                 :             :     Result&lt;void&gt; CallMethod(const ProxyMethodInstanceIdentifier&amp; proxy_method_instance_identifier,</span>
+<span id="L134"><span class="lineNum">     134</span>                 :             :                             const std::size_t queue_position,</span>
+<span id="L135"><span class="lineNum">     135</span>                 :             :                             const pid_t target_node_id) override;</span>
+<span id="L136"><span class="lineNum">     136</span>                 :             : </span>
+<span id="L137"><span class="lineNum">     137</span>                 :             :   private:</span>
+<span id="L138"><span class="lineNum">     138</span>                 :             :     enum class MessageType : std::uint8_t</span>
+<span id="L139"><span class="lineNum">     139</span>                 :             :     {</span>
+<span id="L140"><span class="lineNum">     140</span>                 :             :         kRegisterEventNotifier = 1,  //&lt; event notifier registration message sent by proxy_events</span>
+<span id="L141"><span class="lineNum">     141</span>                 :             :         kUnregisterEventNotifier,    //&lt; event notifier un-registration message sent by proxy_events</span>
+<span id="L142"><span class="lineNum">     142</span>                 :             :         kNotifyEvent,                //&lt; event update notification message sent by skeleton_events</span>
+<span id="L143"><span class="lineNum">     143</span>                 :             :         kOutdatedNodeId,  //&lt; outdated node id message (sent from a LoLa process in the role as consumer to the</span>
+<span id="L144"><span class="lineNum">     144</span>                 :             :                           // producer)</span>
+<span id="L145"><span class="lineNum">     145</span>                 :             :     };</span>
+<span id="L146"><span class="lineNum">     146</span>                 :             : </span>
+<span id="L147"><span class="lineNum">     147</span>                 :             :     enum class MessageWithReplyType : std::uint8_t</span>
+<span id="L148"><span class="lineNum">     148</span>                 :             :     {</span>
+<span id="L149"><span class="lineNum">     149</span>                 :             :         kSubscribeServiceMethod = 1U,</span>
+<span id="L150"><span class="lineNum">     150</span>                 :             :         kCallMethod,</span>
+<span id="L151"><span class="lineNum">     151</span>                 :             :         kUnsubscribeServiceMethod,</span>
+<span id="L152"><span class="lineNum">     152</span>                 :             :     };</span>
+<span id="L153"><span class="lineNum">     153</span>                 :             : </span>
+<span id="L154"><span class="lineNum">     154</span>                 :             :     struct RegisteredNotificationHandler</span>
+<span id="L155"><span class="lineNum">     155</span>                 :             :     {</span>
+<span id="L156"><span class="lineNum">     156</span>                 :             :         // Suppress &quot;AUTOSAR C++14 M11-0-1&quot; rule findings. This rule states: &quot;Member data in non-POD class types</span>
+<span id="L157"><span class="lineNum">     157</span>                 :             :         // shall be private.&quot;. We need these data elements to be organized into a coherent organized data structure.</span>
+<span id="L158"><span class="lineNum">     158</span>                 :             :         // coverity[autosar_cpp14_m11_0_1_violation]</span>
+<span id="L159"><span class="lineNum">     159</span>                 :             :         std::weak_ptr&lt;ScopedEventReceiveHandler&gt; handler;</span>
+<span id="L160"><span class="lineNum">     160</span>                 :             :         // coverity[autosar_cpp14_m11_0_1_violation]</span>
+<span id="L161"><span class="lineNum">     161</span>                 :             :         IMessagePassingService::HandlerRegistrationNoType register_no{};</span>
+<span id="L162"><span class="lineNum">     162</span>                 :             :     };</span>
+<span id="L163"><span class="lineNum">     163</span>                 :             : </span>
+<span id="L164"><span class="lineNum">     164</span>                 :             :     /// \brief Counter for registered event receive notifications for the given (target) node.</span>
+<span id="L165"><span class="lineNum">     165</span>                 :             :     struct NodeCounter</span>
+<span id="L166"><span class="lineNum">     166</span>                 :             :     {</span>
+<span id="L167"><span class="lineNum">     167</span>                 :             :         // While true that pid_t is not a fixed width integer it is required by the POSIX standard here.</span>
+<span id="L168"><span class="lineNum">     168</span>                 :             :         // coverity[autosar_cpp14_a9_6_1_violation]</span>
+<span id="L169"><span class="lineNum">     169</span>                 :             :         pid_t node_id;</span>
+<span id="L170"><span class="lineNum">     170</span>                 :             :         std::uint16_t counter;</span>
+<span id="L171"><span class="lineNum">     171</span>                 :             :     };</span>
+<span id="L172"><span class="lineNum">     172</span>                 :             : </span>
+<span id="L173"><span class="lineNum">     173</span>                 :             :     // false-positive: is used to define the size of buffer for handlers</span>
+<span id="L174"><span class="lineNum">     174</span>                 :             :     // coverity[autosar_cpp14_a0_1_1_violation]</span>
+<span id="L175"><span class="lineNum">     175</span>                 :             :     static constexpr std::uint8_t kMaxReceiveHandlersPerEvent{5U};</span>
+<span id="L176"><span class="lineNum">     176</span>                 :             : </span>
+<span id="L177"><span class="lineNum">     177</span>                 :             :     // false-positive: is used to define the size of tmp array for node IDs</span>
+<span id="L178"><span class="lineNum">     178</span>                 :             :     // coverity[autosar_cpp14_a0_1_1_violation]</span>
+<span id="L179"><span class="lineNum">     179</span>                 :             :     static constexpr std::uint8_t NodeIdTmpBufferSize{20U};</span>
+<span id="L180"><span class="lineNum">     180</span>                 :             : </span>
+<span id="L181"><span class="lineNum">     181</span>                 :             :     // TODO: PMR</span>
+<span id="L182"><span class="lineNum">     182</span>                 :             :     using EventUpdateNotifierMapType = std::unordered_map&lt;ElementFqId, std::vector&lt;RegisteredNotificationHandler&gt;&gt;;</span>
+<span id="L183"><span class="lineNum">     183</span>                 :             :     using EventUpdateNodeIdMapType = std::unordered_map&lt;ElementFqId, std::set&lt;pid_t&gt;&gt;;</span>
+<span id="L184"><span class="lineNum">     184</span>                 :             :     using EventUpdateRegistrationCountMapType = std::unordered_map&lt;ElementFqId, NodeCounter&gt;;</span>
+<span id="L185"><span class="lineNum">     185</span>                 :             : </span>
+<span id="L186"><span class="lineNum">     186</span>                 :             :     using SubscribeServiceMethodMapType = std::unordered_map&lt;</span>
+<span id="L187"><span class="lineNum">     187</span>                 :             :         SkeletonInstanceIdentifier,</span>
+<span id="L188"><span class="lineNum">     188</span>                 :             :         std::pair&lt;IMessagePassingService::ServiceMethodSubscribedHandler, IMessagePassingService::AllowedConsumerUids&gt;&gt;;</span>
+<span id="L189"><span class="lineNum">     189</span>                 :             :     using CallMethodMapType =</span>
+<span id="L190"><span class="lineNum">     190</span>                 :             :         std::unordered_map&lt;ProxyMethodInstanceIdentifier, std::pair&lt;IMessagePassingService::MethodCallHandler, uid_t&gt;&gt;;</span>
+<span id="L191"><span class="lineNum">     191</span>                 :             : </span>
+<span id="L192"><span class="lineNum">     192</span>                 :             :     /// \brief tmp buffer for copying ids under lock.</span>
+<span id="L193"><span class="lineNum">     193</span>                 :             :     /// \todo Make its size configurable?</span>
+<span id="L194"><span class="lineNum">     194</span>                 :             :     using NodeIdTmpBufferType = std::array&lt;pid_t, NodeIdTmpBufferSize&gt;;</span>
+<span id="L195"><span class="lineNum">     195</span>                 :             : </span>
+<span id="L196"><span class="lineNum">     196</span>                 :             :     message_passing::MessageCallback CreateSendMessageWithReplyCallback();</span>
+<span id="L197"><span class="lineNum">     197</span>                 :             : </span>
+<span id="L198"><span class="lineNum">     198</span>                 :             :     void MessageCallback(const pid_t sender_pid, const score::cpp::span&lt;const std::uint8_t&gt; message) noexcept;</span>
+<span id="L199"><span class="lineNum">     199</span>                 :             :     score::Result&lt;void&gt; MessageCallbackWithReply(const uid_t sender_uid,</span>
+<span id="L200"><span class="lineNum">     200</span>                 :             :                                                  const pid_t sender_pid,</span>
+<span id="L201"><span class="lineNum">     201</span>                 :             :                                                  const score::cpp::span&lt;const std::uint8_t&gt; message);</span>
+<span id="L202"><span class="lineNum">     202</span>                 :             :     void HandleNotifyEventMsg(const score::cpp::span&lt;const std::uint8_t&gt; payload, const pid_t sender_node_id) noexcept;</span>
+<span id="L203"><span class="lineNum">     203</span>                 :             :     void HandleRegisterNotificationMsg(const score::cpp::span&lt;const std::uint8_t&gt; payload,</span>
+<span id="L204"><span class="lineNum">     204</span>                 :             :                                        const pid_t sender_node_id) noexcept;</span>
+<span id="L205"><span class="lineNum">     205</span>                 :             :     void HandleUnregisterNotificationMsg(const score::cpp::span&lt;const std::uint8_t&gt; payload,</span>
+<span id="L206"><span class="lineNum">     206</span>                 :             :                                          const pid_t sender_node_id) noexcept;</span>
+<span id="L207"><span class="lineNum">     207</span>                 :             :     void HandleOutdatedNodeIdMsg(const score::cpp::span&lt;const std::uint8_t&gt; payload,</span>
+<span id="L208"><span class="lineNum">     208</span>                 :             :                                  const pid_t sender_node_id) noexcept;</span>
+<span id="L209"><span class="lineNum">     209</span>                 :             :     score::Result&lt;void&gt; HandleSubscribeServiceMethodMsg(const score::cpp::span&lt;const std::uint8_t&gt; payload,</span>
+<span id="L210"><span class="lineNum">     210</span>                 :             :                                                         const uid_t sender_uid,</span>
+<span id="L211"><span class="lineNum">     211</span>                 :             :                                                         const pid_t sender_node_id);</span>
+<span id="L212"><span class="lineNum">     212</span>                 :             :     score::Result&lt;void&gt; HandleUnsubscribeServiceMethodMsg(const score::cpp::span&lt;const std::uint8_t&gt; payload,</span>
+<span id="L213"><span class="lineNum">     213</span>                 :             :                                                           const pid_t sender_node_id);</span>
+<span id="L214"><span class="lineNum">     214</span>                 :             :     score::Result&lt;void&gt; HandleCallMethodMsg(const score::cpp::span&lt;const std::uint8_t&gt; payload, const uid_t sender_uid);</span>
+<span id="L215"><span class="lineNum">     215</span>                 :             : </span>
+<span id="L216"><span class="lineNum">     216</span>                 :             :     std::uint32_t NotifyEventLocally(const ElementFqId event_id) noexcept;</span>
+<span id="L217"><span class="lineNum">     217</span>                 :             :     void NotifyEventRemote(const ElementFqId event_id) noexcept;</span>
+<span id="L218"><span class="lineNum">     218</span>                 :             :     void RegisterEventNotificationRemote(const ElementFqId event_id, const pid_t target_node_id) noexcept;</span>
+<span id="L219"><span class="lineNum">     219</span>                 :             :     void UnregisterEventNotificationRemote(const ElementFqId event_id,</span>
+<span id="L220"><span class="lineNum">     220</span>                 :             :                                            const IMessagePassingService::HandlerRegistrationNoType registration_no,</span>
+<span id="L221"><span class="lineNum">     221</span>                 :             :                                            const pid_t target_node_id) noexcept;</span>
+<span id="L222"><span class="lineNum">     222</span>                 :             :     void SendRegisterEventNotificationMessage(const ElementFqId event_id, const pid_t target_node_id) noexcept;</span>
+<span id="L223"><span class="lineNum">     223</span>                 :             : </span>
+<span id="L224"><span class="lineNum">     224</span>                 :             :     score::Result&lt;void&gt; CallSubscribeServiceMethodLocally(</span>
+<span id="L225"><span class="lineNum">     225</span>                 :             :         const SkeletonInstanceIdentifier&amp; skeleton_instance_identifier,</span>
+<span id="L226"><span class="lineNum">     226</span>                 :             :         const ProxyInstanceIdentifier&amp; proxy_instance_identifier,</span>
+<span id="L227"><span class="lineNum">     227</span>                 :             :         const uid_t proxy_uid,</span>
+<span id="L228"><span class="lineNum">     228</span>                 :             :         const pid_t proxy_pid);</span>
+<span id="L229"><span class="lineNum">     229</span>                 :             : </span>
+<span id="L230"><span class="lineNum">     230</span>                 :             :     score::Result&lt;void&gt; CallUnsubscribeServiceMethodLocally(</span>
+<span id="L231"><span class="lineNum">     231</span>                 :             :         const SkeletonInstanceIdentifier&amp; skeleton_instance_identifier,</span>
+<span id="L232"><span class="lineNum">     232</span>                 :             :         const ProxyInstanceIdentifier&amp; proxy_instance_identifier);</span>
+<span id="L233"><span class="lineNum">     233</span>                 :             : </span>
+<span id="L234"><span class="lineNum">     234</span>                 :             :     score::Result&lt;void&gt; CallServiceMethodLocally(const ProxyMethodInstanceIdentifier&amp; proxy_method_instance_identifier,</span>
+<span id="L235"><span class="lineNum">     235</span>                 :             :                                                  const std::size_t queue_position,</span>
+<span id="L236"><span class="lineNum">     236</span>                 :             :                                                  const uid_t proxy_uid);</span>
+<span id="L237"><span class="lineNum">     237</span>                 :             : </span>
+<span id="L238"><span class="lineNum">     238</span>                 :             :     Result&lt;void&gt; CallSubscribeServiceMethodRemotely(const SkeletonInstanceIdentifier&amp; skeleton_instance_identifier,</span>
+<span id="L239"><span class="lineNum">     239</span>                 :             :                                                     const ProxyInstanceIdentifier&amp; proxy_instance_identifier,</span>
+<span id="L240"><span class="lineNum">     240</span>                 :             :                                                     const pid_t target_node_id);</span>
+<span id="L241"><span class="lineNum">     241</span>                 :             : </span>
+<span id="L242"><span class="lineNum">     242</span>                 :             :     Result&lt;void&gt; CallUnsubscribeServiceMethodRemotely(const SkeletonInstanceIdentifier&amp; skeleton_instance_identifier,</span>
+<span id="L243"><span class="lineNum">     243</span>                 :             :                                                       const ProxyInstanceIdentifier&amp; proxy_instance_identifier,</span>
+<span id="L244"><span class="lineNum">     244</span>                 :             :                                                       const pid_t target_node_id);</span>
+<span id="L245"><span class="lineNum">     245</span>                 :             : </span>
+<span id="L246"><span class="lineNum">     246</span>                 :             :     Result&lt;void&gt; CallServiceMethodRemotely(const ProxyMethodInstanceIdentifier&amp; proxy_method_instance_identifier,</span>
+<span id="L247"><span class="lineNum">     247</span>                 :             :                                            const std::size_t queue_position,</span>
+<span id="L248"><span class="lineNum">     248</span>                 :             :                                            const pid_t target_node_id);</span>
+<span id="L249"><span class="lineNum">     249</span>                 :             : </span>
+<span id="L250"><span class="lineNum">     250</span>                 :             :     /// \brief Function to convert ClientQualityType to a QualityType</span>
+<span id="L251"><span class="lineNum">     251</span>                 :             :     ///</span>
+<span id="L252"><span class="lineNum">     252</span>                 :             :     /// (which encodes the client's QualityType plus whether the current process is an ASIL-B process communicating with</span>
+<span id="L253"><span class="lineNum">     253</span>                 :             :     /// a QM client)</span>
+<span id="L254"><span class="lineNum">     254</span>                 :             :     QualityType GetPartnerQualityType() const;</span>
+<span id="L255"><span class="lineNum">     255</span>                 :             : </span>
+<span id="L256"><span class="lineNum">     256</span>                 :             :     score::cpp::pmr::unique_ptr&lt;score::message_passing::IServer&gt; server_;</span>
+<span id="L257"><span class="lineNum">     257</span>                 :             : </span>
+<span id="L258"><span class="lineNum">     258</span>                 :             :     /// \brief Copies node identifiers (pid) contained within (container) values of a map into a given buffer under</span>
+<span id="L259"><span class="lineNum">     259</span>                 :             :     ///        read-lock</span>
+<span id="L260"><span class="lineNum">     260</span>                 :             :     /// \details</span>
+<span id="L261"><span class="lineNum">     261</span>                 :             :     /// \tparam MapType Type of the Map. It is implicitly expected, that the key of MapType is of type ElementFqId</span>
+<span id="L262"><span class="lineNum">     262</span>                 :             :     /// and</span>
+<span id="L263"><span class="lineNum">     263</span>                 :             :     ///         the mapped_type is a std::set (or at least some forward iterable container type, which supports</span>
+<span id="L264"><span class="lineNum">     264</span>                 :             :     ///         lower_bound()), which contains values, which directly or indirectly contain a node identifier</span>
+<span id="L265"><span class="lineNum">     265</span>                 :             :     ///         (pid_t)</span>
+<span id="L266"><span class="lineNum">     266</span>                 :             :     ///</span>
+<span id="L267"><span class="lineNum">     267</span>                 :             :     /// \param event_id fully qualified event id for lookup in _src_map_</span>
+<span id="L268"><span class="lineNum">     268</span>                 :             :     /// \param src_map map, where key_type = ElementFqId and mapped_type is some forward iterable container</span>
+<span id="L269"><span class="lineNum">     269</span>                 :             :     /// \param src_map_mutex mutex to be used to lock the map during copying.</span>
+<span id="L270"><span class="lineNum">     270</span>                 :             :     /// \param dest_buffer buffer, where to copy the node identifiers</span>
+<span id="L271"><span class="lineNum">     271</span>                 :             :     /// \param start start identifier (pid_t) where to start search with.</span>
+<span id="L272"><span class="lineNum">     272</span>                 :             :     ///</span>
+<span id="L273"><span class="lineNum">     273</span>                 :             :     /// \return pair containing number of node identifiers, which have been copied and a bool, whether further ids</span>
+<span id="L274"><span class="lineNum">     274</span>                 :             :     /// could</span>
+<span id="L275"><span class="lineNum">     275</span>                 :             :     ///         have been copied, if buffer would have been larger.</span>
+<span id="L276"><span class="lineNum">     276</span>                 :             : </span>
+<span id="L277"><span class="lineNum">     277</span>                 :             :     template &lt;typename MapType&gt;</span>
+<span id="L278"><span class="lineNum">     278</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A15-5-3&quot; rule findings. This rule states: &quot;The std::terminate() function shall not be</span>
+<span id="L279"><span class="lineNum">     279</span>                 :             :     // called implicitly&quot;.</span>
+<span id="L280"><span class="lineNum">     280</span>                 :             :     // This is a false positive: .at() could throw if the index is outside of the range of the container but it is</span>
+<span id="L281"><span class="lineNum">     281</span>                 :             :     // checked before accessing the dest_buffer that the function will break as soon as the index is equal to the</span>
+<span id="L282"><span class="lineNum">     282</span>                 :             :     // buffersize. So an access out of the range and consequently a call to std::terminate() is not possible.</span>
+<span id="L283"><span class="lineNum">     283</span>                 :             :     // coverity[autosar_cpp14_a15_5_3_violation : FALSE]</span>
+<span id="L284"><span class="lineNum">     284</span>                 :<span class="tlaGNC">          18 :     static std::pair&lt;std::uint8_t, bool&gt; CopyNodeIdentifiers(ElementFqId event_id,</span></span>
+<span id="L285"><span class="lineNum">     285</span>                 :             :                                                              MapType&amp; src_map,</span>
+<span id="L286"><span class="lineNum">     286</span>                 :             :                                                              std::shared_mutex&amp; src_map_mutex,</span>
+<span id="L287"><span class="lineNum">     287</span>                 :             :                                                              NodeIdTmpBufferType&amp; dest_buffer,</span>
+<span id="L288"><span class="lineNum">     288</span>                 :             :                                                              pid_t start) noexcept</span>
+<span id="L289"><span class="lineNum">     289</span>                 :             :     {</span>
+<span id="L290"><span class="lineNum">     290</span>                 :<span class="tlaGNC">          18 :         std::uint8_t num_nodeids_copied{0U};</span></span>
+<span id="L291"><span class="lineNum">     291</span>                 :<span class="tlaGNC">          18 :         bool further_ids_avail{false};</span></span>
+<span id="L292"><span class="lineNum">     292</span>                 :             :         // Suppress &quot;AUTOSAR C++14 M0-1-3&quot; rule findings. This rule states: &quot;There shall be no dead code&quot;.</span>
+<span id="L293"><span class="lineNum">     293</span>                 :             :         //  This is a RAII Pattern, which binds the life cycle of a resource that must be acquired before use.</span>
+<span id="L294"><span class="lineNum">     294</span>                 :             :         // coverity[autosar_cpp14_m0_1_3_violation]</span>
+<span id="L295"><span class="lineNum">     295</span>                 :<span class="tlaGNC">          18 :         std::shared_lock&lt;std::shared_mutex&gt; read_lock(src_map_mutex);</span></span>
+<span id="L296"><span class="lineNum">     296</span>         [<span class="tlaGBC" title="Branch 0 was taken 11 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 7 times"> + </span>]:<span class="tlaGNC">          18 :         if (src_map.empty() == false)</span></span>
+<span id="L297"><span class="lineNum">     297</span>                 :             :         {</span>
+<span id="L298"><span class="lineNum">     298</span>                 :<span class="tlaGNC">          11 :             auto search = src_map.find(event_id);</span></span>
+<span id="L299"><span class="lineNum">     299</span>         [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          11 :             if (search != src_map.end())</span></span>
+<span id="L300"><span class="lineNum">     300</span>                 :             :             {</span>
+<span id="L301"><span class="lineNum">     301</span>                 :             :                 // we copy the target_node_identifiers to a tmp-array under lock ...</span>
+<span id="L302"><span class="lineNum">     302</span>         [<span class="tlaGBC" title="Branch 0 was taken 45 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 8 times"> + </span>]:<span class="tlaGNC">          53 :                 for (auto iter = search-&gt;second.lower_bound(start); iter != search-&gt;second.cend(); iter++)</span></span>
+<span id="L303"><span class="lineNum">     303</span>                 :             :                 {</span>
+<span id="L304"><span class="lineNum">     304</span>                 :             :                     // Suppress &quot;AUTOSAR C++14 M5-0-3&quot; rule findings. This rule states: &quot;A cvalue expression shall</span>
+<span id="L305"><span class="lineNum">     305</span>                 :             :                     // not be implicitly converted to a different underlying type&quot;</span>
+<span id="L306"><span class="lineNum">     306</span>                 :             :                     // That return `pid_t` type as a result. Tolerated implicit conversion as underlying types are</span>
+<span id="L307"><span class="lineNum">     307</span>                 :             :                     // the same</span>
+<span id="L308"><span class="lineNum">     308</span>                 :             :                     // coverity[autosar_cpp14_m5_0_3_violation : FALSE]</span>
+<span id="L309"><span class="lineNum">     309</span>                 :<span class="tlaGNC">          45 :                     dest_buffer.at(num_nodeids_copied) = *iter;</span></span>
+<span id="L310"><span class="lineNum">     310</span>                 :<span class="tlaGNC">          45 :                     num_nodeids_copied++;</span></span>
+<span id="L311"><span class="lineNum">     311</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 43 times"> + </span>]:<span class="tlaGNC">          45 :                     if (num_nodeids_copied == dest_buffer.size())</span></span>
+<span id="L312"><span class="lineNum">     312</span>                 :             :                     {</span>
+<span id="L313"><span class="lineNum">     313</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           2 :                         if (std::distance(iter, search-&gt;second.cend()) &gt; 1)</span></span>
+<span id="L314"><span class="lineNum">     314</span>                 :             :                         {</span>
+<span id="L315"><span class="lineNum">     315</span>                 :<span class="tlaGNC">           1 :                             further_ids_avail = true;</span></span>
+<span id="L316"><span class="lineNum">     316</span>                 :             :                         }</span>
+<span id="L317"><span class="lineNum">     317</span>                 :<span class="tlaGNC">           2 :                         break;</span></span>
+<span id="L318"><span class="lineNum">     318</span>                 :             :                     }</span>
+<span id="L319"><span class="lineNum">     319</span>                 :             :                 }</span>
+<span id="L320"><span class="lineNum">     320</span>                 :             :             }</span>
+<span id="L321"><span class="lineNum">     321</span>                 :             :         }</span>
+<span id="L322"><span class="lineNum">     322</span>                 :<span class="tlaGNC">          18 :         return {num_nodeids_copied, further_ids_avail};</span></span>
+<span id="L323"><span class="lineNum">     323</span>                 :<span class="tlaGNC">          18 :     }</span></span>
+<span id="L324"><span class="lineNum">     324</span>                 :             : </span>
+<span id="L325"><span class="lineNum">     325</span>                 :             :     std::atomic&lt;IMessagePassingService::HandlerRegistrationNoType&gt; cur_registration_no_;</span>
+<span id="L326"><span class="lineNum">     326</span>                 :             :     ClientQualityType asil_level_;</span>
+<span id="L327"><span class="lineNum">     327</span>                 :             :     MessagePassingClientCache client_cache_;</span>
+<span id="L328"><span class="lineNum">     328</span>                 :             : </span>
+<span id="L329"><span class="lineNum">     329</span>                 :             :     // TODO: refactor for PMR/static</span>
+<span id="L330"><span class="lineNum">     330</span>                 :             : </span>
+<span id="L331"><span class="lineNum">     331</span>                 :             :     /// \brief map holding per event_id a list of notification/receive handlers registered by local proxy-event</span>
+<span id="L332"><span class="lineNum">     332</span>                 :             :     ///        instances, which need to be called, when the event with given _event_id_ is updated.</span>
+<span id="L333"><span class="lineNum">     333</span>                 :             :     EventUpdateNotifierMapType event_update_handlers_;</span>
+<span id="L334"><span class="lineNum">     334</span>                 :             : </span>
+<span id="L335"><span class="lineNum">     335</span>                 :             :     std::shared_mutex event_update_handlers_mutex_;</span>
+<span id="L336"><span class="lineNum">     336</span>                 :             : </span>
+<span id="L337"><span class="lineNum">     337</span>                 :             :     /// \brief map holding per event_id a callback to notify when handler registration status changes.</span>
+<span id="L338"><span class="lineNum">     338</span>                 :             :     /// \details This allows SkeletonEvent instances to be notified when they transition from having</span>
+<span id="L339"><span class="lineNum">     339</span>                 :             :     ///          no handlers to having at least one handler (or vice versa), avoiding unnecessary lock</span>
+<span id="L340"><span class="lineNum">     340</span>                 :             :     ///          overhead in the main path when no handlers are registered.</span>
+<span id="L341"><span class="lineNum">     341</span>                 :             :     std::unordered_map&lt;ElementFqId, IMessagePassingService::HandlerStatusChangeCallback&gt;</span>
+<span id="L342"><span class="lineNum">     342</span>                 :             :         handler_status_change_callbacks_;</span>
+<span id="L343"><span class="lineNum">     343</span>                 :             : </span>
+<span id="L344"><span class="lineNum">     344</span>                 :             :     std::shared_mutex handler_status_change_callbacks_mutex_;</span>
+<span id="L345"><span class="lineNum">     345</span>                 :             : </span>
+<span id="L346"><span class="lineNum">     346</span>                 :             :     /// \brief map holding per event_id a list of remote LoLa nodes, which need to be informed, when the event with</span>
+<span id="L347"><span class="lineNum">     347</span>                 :             :     ///        given _event_id_ is updated.</span>
+<span id="L348"><span class="lineNum">     348</span>                 :             :     /// \note This is the symmetric data structure to event_update_handlers_, in case the proxy-event registering</span>
+<span id="L349"><span class="lineNum">     349</span>                 :             :     ///       a receive handler is located in a different LoLa process.</span>
+<span id="L350"><span class="lineNum">     350</span>                 :             :     EventUpdateNodeIdMapType event_update_interested_nodes_;</span>
+<span id="L351"><span class="lineNum">     351</span>                 :             : </span>
+<span id="L352"><span class="lineNum">     352</span>                 :             :     std::shared_mutex event_update_interested_nodes_mutex_;</span>
+<span id="L353"><span class="lineNum">     353</span>                 :             : </span>
+<span id="L354"><span class="lineNum">     354</span>                 :             :     /// \brief map holding per event_id a node counter, how many local proxy-event instances have registered a</span>
+<span id="L355"><span class="lineNum">     355</span>                 :             :     ///       receive-handler for this event at the given node. This map only contains events provided by remote</span>
+<span id="L356"><span class="lineNum">     356</span>                 :             :     ///       LoLa processes.</span>
+<span id="L357"><span class="lineNum">     357</span>                 :             :     /// \note we maintain this data structure for performance reasons: We do NOT send for every</span>
+<span id="L358"><span class="lineNum">     358</span>                 :             :     ///       RegisterEventNotification() call for a &quot;remote&quot; event X by a local proxy-event-instance a message</span>
+<span id="L359"><span class="lineNum">     359</span>                 :             :     ///       to the given node redundantly! We rather do a smart (de)multiplexing here by counting the local</span>
+<span id="L360"><span class="lineNum">     360</span>                 :             :     ///       registrars! If the counter goes from 0 to 1, we send a RegisterNotificationMessage to the remote node</span>
+<span id="L361"><span class="lineNum">     361</span>                 :             :     ///       and we send an UnregisterNotificationMessage to the remote node, when the counter gets decremented to</span>
+<span id="L362"><span class="lineNum">     362</span>                 :             :     ///       0 again.</span>
+<span id="L363"><span class="lineNum">     363</span>                 :             :     EventUpdateRegistrationCountMapType event_update_remote_registrations_;</span>
+<span id="L364"><span class="lineNum">     364</span>                 :             : </span>
+<span id="L365"><span class="lineNum">     365</span>                 :             :     std::shared_mutex event_update_remote_registrations_mutex_;</span>
+<span id="L366"><span class="lineNum">     366</span>                 :             : </span>
+<span id="L367"><span class="lineNum">     367</span>                 :             :     SubscribeServiceMethodMapType subscribe_service_method_handlers_;</span>
+<span id="L368"><span class="lineNum">     368</span>                 :             : </span>
+<span id="L369"><span class="lineNum">     369</span>                 :             :     std::shared_mutex subscribe_service_method_handlers_mutex_;</span>
+<span id="L370"><span class="lineNum">     370</span>                 :             : </span>
+<span id="L371"><span class="lineNum">     371</span>                 :             :     using UnsubscribeServiceMethodMapType =</span>
+<span id="L372"><span class="lineNum">     372</span>                 :             :         std::unordered_map&lt;SkeletonInstanceIdentifier, IMessagePassingService::ServiceMethodUnsubscribedHandler&gt;;</span>
+<span id="L373"><span class="lineNum">     373</span>                 :             : </span>
+<span id="L374"><span class="lineNum">     374</span>                 :             :     UnsubscribeServiceMethodMapType unsubscribe_service_method_handlers_;</span>
+<span id="L375"><span class="lineNum">     375</span>                 :             : </span>
+<span id="L376"><span class="lineNum">     376</span>                 :             :     std::shared_mutex unsubscribe_service_method_handlers_mutex_;</span>
+<span id="L377"><span class="lineNum">     377</span>                 :             : </span>
+<span id="L378"><span class="lineNum">     378</span>                 :             :     CallMethodMapType call_method_handlers_;</span>
+<span id="L379"><span class="lineNum">     379</span>                 :             : </span>
+<span id="L380"><span class="lineNum">     380</span>                 :             :     std::shared_mutex call_method_handlers_mutex_;</span>
+<span id="L381"><span class="lineNum">     381</span>                 :             : </span>
+<span id="L382"><span class="lineNum">     382</span>                 :             :     /// \brief executor for processing local event update notification.</span>
+<span id="L383"><span class="lineNum">     383</span>                 :             :     /// \detail local update notification leads to a user provided receive handler callout, whose</span>
+<span id="L384"><span class="lineNum">     384</span>                 :             :     ///         runtime is unknown, so we decouple with worker threads.</span>
+<span id="L385"><span class="lineNum">     385</span>                 :             :     score::concurrency::Executor&amp; executor_;</span>
+<span id="L386"><span class="lineNum">     386</span>                 :             : </span>
+<span id="L387"><span class="lineNum">     387</span>                 :             :     /// \brief Scope controlling the lifetime of message_callback_scoped_function_</span>
+<span id="L388"><span class="lineNum">     388</span>                 :             :     /// \details When the scope is reset when object is destroyed, the scoped function becomes invalid</span>
+<span id="L389"><span class="lineNum">     389</span>                 :             :     ///          and will not execute, preventing race conditions during destruction</span>
+<span id="L390"><span class="lineNum">     390</span>                 :             :     score::safecpp::Scope&lt;&gt; message_callback_scope_;  // scope should always be the last attribute.</span>
+<span id="L391"><span class="lineNum">     391</span>                 :             : </span>
+<span id="L392"><span class="lineNum">     392</span>                 :             :     pid_t self_pid_;</span>
+<span id="L393"><span class="lineNum">     393</span>                 :             :     uid_t self_uid_;</span>
+<span id="L394"><span class="lineNum">     394</span>                 :             : };</span>
+<span id="L395"><span class="lineNum">     395</span>                 :             : </span>
+<span id="L396"><span class="lineNum">     396</span>                 :             : }  // namespace score::mw::com::impl::lola</span>
+<span id="L397"><span class="lineNum">     397</span>                 :             : </span>
+<span id="L398"><span class="lineNum">     398</span>                 :             : #endif  // SCORE_MW_COM_IMPL_BINDINGS_LOLA_MESSAGE_PASSING_SERVICE_INSTANCE_H</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

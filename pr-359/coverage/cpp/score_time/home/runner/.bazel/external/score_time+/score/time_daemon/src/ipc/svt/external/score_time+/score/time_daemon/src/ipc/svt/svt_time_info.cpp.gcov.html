@@ -1,0 +1,331 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - home/runner/.bazel/external/score_time+/score/time_daemon/src/ipc/svt/external/score_time+/score/time_daemon/src/ipc/svt/svt_time_info.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../../../../../../../../../../../index.html">top level</a> - <a href="index.html">/home/runner/.bazel/external/score_time+/score/time_daemon/src/ipc/svt/external/score_time+/score/time_daemon/src/ipc/svt</a> - svt_time_info.cpp<span style="font-size: 80%;"> (source / <a href="svt_time_info.cpp.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">91.2&nbsp;%</td>
+            <td class="headerCovTableEntry">137</td>
+            <td class="headerCovTableEntry">125</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:39:20</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryLo">73.3&nbsp;%</td>
+            <td class="headerCovTableEntry">15</td>
+            <td class="headerCovTableEntry">11</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryHi">98.5&nbsp;%</td>
+            <td class="headerCovTableEntry">132</td>
+            <td class="headerCovTableEntry">130</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2026 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : #include &quot;score/time_daemon/src/ipc/svt/svt_time_info.h&quot;</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : </span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : #include &lt;score/assert.hpp&gt;</span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : </span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #include &lt;algorithm&gt;</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : #include &lt;cmath&gt;</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : #include &lt;limits&gt;</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : #include &lt;tuple&gt;</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : </span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : namespace score</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : {</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : namespace td</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : {</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : namespace svt</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : {</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : </span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : namespace</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : {</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : </span>
+<span id="L32"><span class="lineNum">      32</span>                 :<span class="tlaGNC tlaBgGNC">          43 : bool NearlyEqual(const double first, const double second) noexcept</span></span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : {</span>
+<span id="L34"><span class="lineNum">      34</span>                 :<span class="tlaGNC">          43 :     const double diff = std::fabs(first - second);</span></span>
+<span id="L35"><span class="lineNum">      35</span>                 :<span class="tlaGNC">          43 :     return diff &lt;= std::numeric_limits&lt;double&gt;::epsilon();</span></span>
+<span id="L36"><span class="lineNum">      36</span>                 :             : }</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             : </span>
+<span id="L38"><span class="lineNum">      38</span>                 :             : }  // namespace</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : </span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : /// \brief Comparing operators:</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             : </span>
+<span id="L42"><span class="lineNum">      42</span>                 :<span class="tlaGNC">          16 : bool operator==(const TimeBaseStatus&amp; first, const TimeBaseStatus&amp; second) noexcept</span></span>
+<span id="L43"><span class="lineNum">      43</span>                 :             : {</span>
+<span id="L44"><span class="lineNum">      44</span>                 :<span class="tlaGNC">          16 :     const bool same_sync = (first.is_synchronized == second.is_synchronized);</span></span>
+<span id="L45"><span class="lineNum">      45</span>                 :<span class="tlaGNC">          16 :     const bool same_timeout = (first.is_timeout == second.is_timeout);</span></span>
+<span id="L46"><span class="lineNum">      46</span>                 :<span class="tlaGNC">          16 :     const bool same_jump_future = (first.is_time_jump_future == second.is_time_jump_future);</span></span>
+<span id="L47"><span class="lineNum">      47</span>                 :<span class="tlaGNC">          16 :     const bool same_jump_past = (first.is_time_jump_past == second.is_time_jump_past);</span></span>
+<span id="L48"><span class="lineNum">      48</span>                 :<span class="tlaGNC">          16 :     const bool same_correct = (first.is_correct == second.is_correct);</span></span>
+<span id="L49"><span class="lineNum">      49</span>                 :             : </span>
+<span id="L50"><span class="lineNum">      50</span>   [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 13 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span> :<span class="tlaGNC">          16 :     return (same_sync &amp;&amp; same_timeout &amp;&amp; same_jump_future &amp;&amp; same_jump_past &amp;&amp; same_correct);</span></span>
+<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 12 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 6 was taken 11 times"> + </span><span class="tlaGBC" title="Branch 7 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 8 was taken 9 times"> + </span> 
+<span class="lineNum">        </span>             <span class="tlaGBC" title="Branch 9 was taken 2 times"> + </span>]
+<span id="L51"><span class="lineNum">      51</span>                 :             : }</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             : </span>
+<span id="L53"><span class="lineNum">      53</span>                 :<span class="tlaGNC">          20 : bool operator==(const SyncFupSnapshot&amp; first, const SyncFupSnapshot&amp; second) noexcept</span></span>
+<span id="L54"><span class="lineNum">      54</span>                 :             : {</span>
+<span id="L55"><span class="lineNum">      55</span>                 :<span class="tlaGNC">          20 :     const bool same_precise_origin_timestamp = (first.precise_origin_timestamp == second.precise_origin_timestamp);</span></span>
+<span id="L56"><span class="lineNum">      56</span>                 :<span class="tlaGNC">          20 :     const bool same_reference_global_timestamp =</span></span>
+<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">          20 :         (first.reference_global_timestamp == second.reference_global_timestamp);</span></span>
+<span id="L58"><span class="lineNum">      58</span>                 :<span class="tlaGNC">          20 :     const bool same_reference_local_timestamp = (first.reference_local_timestamp == second.reference_local_timestamp);</span></span>
+<span id="L59"><span class="lineNum">      59</span>                 :<span class="tlaGNC">          20 :     const bool same_sync_ingress_timestamp = (first.sync_ingress_timestamp == second.sync_ingress_timestamp);</span></span>
+<span id="L60"><span class="lineNum">      60</span>                 :<span class="tlaGNC">          20 :     const bool same_correction_field = (first.correction_field == second.correction_field);</span></span>
+<span id="L61"><span class="lineNum">      61</span>                 :<span class="tlaGNC">          20 :     const bool same_sequence_id = (first.sequence_id == second.sequence_id);</span></span>
+<span id="L62"><span class="lineNum">      62</span>                 :<span class="tlaGNC">          20 :     const bool same_pdelay = (first.pdelay == second.pdelay);</span></span>
+<span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC">          20 :     const bool same_port_number = (first.port_number == second.port_number);</span></span>
+<span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC">          20 :     const bool same_clock_identity = (first.clock_identity == second.clock_identity);</span></span>
+<span id="L65"><span class="lineNum">      65</span>   [<span class="tlaGBC" title="Branch 0 was taken 18 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 2 was taken 17 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span> :<span class="tlaGNC">          19 :     return (same_precise_origin_timestamp &amp;&amp; same_reference_global_timestamp &amp;&amp; same_reference_local_timestamp &amp;&amp;</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 16 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 1 time"> + </span>]
+<span id="L66"><span class="lineNum">      66</span>   [<span class="tlaGBC" title="Branch 0 was taken 15 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 2 was taken 13 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 2 times"> + </span> :<span class="tlaGNC">          16 :             same_sync_ingress_timestamp &amp;&amp; same_correction_field &amp;&amp; same_sequence_id &amp;&amp; same_pdelay &amp;&amp;</span></span>
+<span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 12 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 6 was taken 11 times"> + </span><span class="tlaGBC" title="Branch 7 was taken 1 time"> + </span>]
+<span id="L67"><span class="lineNum">      67</span>   [<span class="tlaGBC" title="Branch 0 was taken 19 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 2 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 2 times"> + </span>]:<span class="tlaGNC">          39 :             same_port_number &amp;&amp; same_clock_identity);</span></span>
+<span id="L68"><span class="lineNum">      68</span>                 :             : }</span>
+<span id="L69"><span class="lineNum">      69</span>                 :             : </span>
+<span id="L70"><span class="lineNum">      70</span>                 :<span class="tlaGNC">          10 : bool operator!=(const SyncFupSnapshot&amp; first, const SyncFupSnapshot&amp; second) noexcept</span></span>
+<span id="L71"><span class="lineNum">      71</span>                 :             : {</span>
+<span id="L72"><span class="lineNum">      72</span>                 :<span class="tlaGNC">          10 :     return !(first == second);</span></span>
+<span id="L73"><span class="lineNum">      73</span>                 :             : }</span>
+<span id="L74"><span class="lineNum">      74</span>                 :             : </span>
+<span id="L75"><span class="lineNum">      75</span>                 :<span class="tlaGNC">          23 : bool operator==(const PDelayDataSnapshot&amp; first, const PDelayDataSnapshot&amp; second) noexcept</span></span>
+<span id="L76"><span class="lineNum">      76</span>                 :             : {</span>
+<span id="L77"><span class="lineNum">      77</span>                 :<span class="tlaGNC">          23 :     const bool same_request_origin_timestamp = (first.request_origin_timestamp == second.request_origin_timestamp);</span></span>
+<span id="L78"><span class="lineNum">      78</span>                 :<span class="tlaGNC">          23 :     const bool same_request_receipt_timestamp = (first.request_receipt_timestamp == second.request_receipt_timestamp);</span></span>
+<span id="L79"><span class="lineNum">      79</span>                 :<span class="tlaGNC">          23 :     const bool same_response_origin_timestamp = (first.response_origin_timestamp == second.response_origin_timestamp);</span></span>
+<span id="L80"><span class="lineNum">      80</span>                 :<span class="tlaGNC">          23 :     const bool same_response_receipt_timestamp =</span></span>
+<span id="L81"><span class="lineNum">      81</span>                 :<span class="tlaGNC">          23 :         (first.response_receipt_timestamp == second.response_receipt_timestamp);</span></span>
+<span id="L82"><span class="lineNum">      82</span>                 :<span class="tlaGNC">          23 :     const bool same_reference_global_timestamp =</span></span>
+<span id="L83"><span class="lineNum">      83</span>                 :<span class="tlaGNC">          23 :         (first.reference_global_timestamp == second.reference_global_timestamp);</span></span>
+<span id="L84"><span class="lineNum">      84</span>                 :<span class="tlaGNC">          23 :     const bool same_reference_local_timestamp = (first.reference_local_timestamp == second.reference_local_timestamp);</span></span>
+<span id="L85"><span class="lineNum">      85</span>                 :<span class="tlaGNC">          23 :     const bool same_sequence_id = (first.sequence_id == second.sequence_id);</span></span>
+<span id="L86"><span class="lineNum">      86</span>                 :<span class="tlaGNC">          23 :     const bool same_pdelay = (first.pdelay == second.pdelay);</span></span>
+<span id="L87"><span class="lineNum">      87</span>                 :<span class="tlaGNC">          23 :     const bool same_req_port_number = (first.req_port_number == second.req_port_number);</span></span>
+<span id="L88"><span class="lineNum">      88</span>                 :<span class="tlaGNC">          23 :     const bool same_req_clock_identity = (first.req_clock_identity == second.req_clock_identity);</span></span>
+<span id="L89"><span class="lineNum">      89</span>                 :<span class="tlaGNC">          23 :     const bool same_resp_port_number = (first.resp_port_number == second.resp_port_number);</span></span>
+<span id="L90"><span class="lineNum">      90</span>                 :<span class="tlaGNC">          23 :     const bool same_resp_clock_identity = (first.resp_clock_identity == second.resp_clock_identity);</span></span>
+<span id="L91"><span class="lineNum">      91</span>   [<span class="tlaGBC" title="Branch 0 was taken 21 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 2 was taken 20 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span> :<span class="tlaGNC">          22 :     return (same_request_origin_timestamp &amp;&amp; same_request_receipt_timestamp &amp;&amp; same_response_origin_timestamp &amp;&amp;</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 19 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 1 time"> + </span>]
+<span id="L92"><span class="lineNum">      92</span>   [<span class="tlaGBC" title="Branch 0 was taken 18 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 2 was taken 17 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span> :<span class="tlaGNC">          19 :             same_response_receipt_timestamp &amp;&amp; same_reference_global_timestamp &amp;&amp; same_reference_local_timestamp &amp;&amp;</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 15 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 2 times"> + </span>]
+<span id="L93"><span class="lineNum">      93</span>   [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 2 was taken 13 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span> :<span class="tlaGNC">          15 :             same_sequence_id &amp;&amp; same_pdelay &amp;&amp; same_req_port_number &amp;&amp; same_req_clock_identity &amp;&amp;</span></span>
+<span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 12 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 6 was taken 11 times"> + </span><span class="tlaGBC" title="Branch 7 was taken 1 time"> + </span>]
+<span id="L94"><span class="lineNum">      94</span>   [<span class="tlaGBC" title="Branch 0 was taken 22 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 2 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 2 times"> + </span>]:<span class="tlaGNC">          45 :             same_resp_port_number &amp;&amp; same_resp_clock_identity);</span></span>
+<span id="L95"><span class="lineNum">      95</span>                 :             : }</span>
+<span id="L96"><span class="lineNum">      96</span>                 :             : </span>
+<span id="L97"><span class="lineNum">      97</span>                 :<span class="tlaGNC">          13 : bool operator!=(const PDelayDataSnapshot&amp; first, const PDelayDataSnapshot&amp; second) noexcept</span></span>
+<span id="L98"><span class="lineNum">      98</span>                 :             : {</span>
+<span id="L99"><span class="lineNum">      99</span>                 :<span class="tlaGNC">          13 :     return !(first == second);</span></span>
+<span id="L100"><span class="lineNum">     100</span>                 :             : }</span>
+<span id="L101"><span class="lineNum">     101</span>                 :             : </span>
+<span id="L102"><span class="lineNum">     102</span>                 :<span class="tlaGNC">           8 : bool operator==(const TimeBaseSnapshot&amp; first, const TimeBaseSnapshot&amp; second) noexcept</span></span>
+<span id="L103"><span class="lineNum">     103</span>                 :             : {</span>
+<span id="L104"><span class="lineNum">     104</span>                 :<span class="tlaGNC">           8 :     const bool same_local = (first.local_time == second.local_time);</span></span>
+<span id="L105"><span class="lineNum">     105</span>                 :<span class="tlaGNC">           8 :     const bool same_ptp = (first.ptp_assumed_time == second.ptp_assumed_time);</span></span>
+<span id="L106"><span class="lineNum">     106</span>                 :<span class="tlaGNC">           8 :     const bool same_status = (first.status == second.status);</span></span>
+<span id="L107"><span class="lineNum">     107</span>                 :<span class="tlaGNC">           8 :     const bool same_sync = (first.sync_fup_data == second.sync_fup_data);</span></span>
+<span id="L108"><span class="lineNum">     108</span>                 :<span class="tlaGNC">           8 :     const bool same_pdelay = (first.pdelay_data == second.pdelay_data);</span></span>
+<span id="L109"><span class="lineNum">     109</span>                 :<span class="tlaGNC">           8 :     const bool same_rate_deviation = NearlyEqual(first.rate_deviation, second.rate_deviation);</span></span>
+<span id="L110"><span class="lineNum">     110</span>                 :             : </span>
+<span id="L111"><span class="lineNum">     111</span>   [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 2 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span> :<span class="tlaGNC">           8 :     return (same_local &amp;&amp; same_ptp &amp;&amp; same_status &amp;&amp; same_sync &amp;&amp; same_pdelay &amp;&amp; same_rate_deviation);</span></span>
+<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 6 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 7 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 8 was taken 3 times"> + </span> 
+<span class="lineNum">        </span>       <span class="tlaGBC" title="Branch 9 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 10 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 11 was taken 2 times"> + </span>]
+<span id="L112"><span class="lineNum">     112</span>                 :             : }</span>
+<span id="L113"><span class="lineNum">     113</span>                 :             : </span>
+<span id="L114"><span class="lineNum">     114</span>                 :<span class="tlaGNC">           7 : bool operator!=(const TimeBaseSnapshot&amp; first, const TimeBaseSnapshot&amp; second) noexcept</span></span>
+<span id="L115"><span class="lineNum">     115</span>                 :             : {</span>
+<span id="L116"><span class="lineNum">     116</span>                 :<span class="tlaGNC">           7 :     return !(first == second);</span></span>
+<span id="L117"><span class="lineNum">     117</span>                 :             : }</span>
+<span id="L118"><span class="lineNum">     118</span>                 :             : </span>
+<span id="L119"><span class="lineNum">     119</span>                 :<span class="tlaGNC">           2 : void TimeBaseSnapshot::CreateFrom(const PtpTimeInfo&amp; info)</span></span>
+<span id="L120"><span class="lineNum">     120</span>                 :             : {</span>
+<span id="L121"><span class="lineNum">     121</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">           2 :     SCORE_LANGUAGE_FUTURECPP_ASSERT_PRD_MESSAGE(info.ptp_assumed_time.count() &gt;= 0,</span></span>
+<span id="L122"><span class="lineNum">     122</span>                 :             :                                                 &quot;score::td: CreateFrom(): ptp_assumed_time is negative&quot;);</span>
+<span id="L123"><span class="lineNum">     123</span>                 :<span class="tlaGNC">           2 :     ptp_assumed_time = static_cast&lt;uint64_t&gt;(info.ptp_assumed_time.count());</span></span>
+<span id="L124"><span class="lineNum">     124</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">           2 :     SCORE_LANGUAGE_FUTURECPP_ASSERT_PRD_MESSAGE(info.local_time.time_since_epoch().count() &gt;= 0,</span></span>
+<span id="L125"><span class="lineNum">     125</span>                 :             :                                                 &quot;score::td: CreateFrom(): local_time is negative&quot;);</span>
+<span id="L126"><span class="lineNum">     126</span>                 :<span class="tlaGNC">           2 :     local_time = static_cast&lt;uint64_t&gt;(info.local_time.time_since_epoch().count());</span></span>
+<span id="L127"><span class="lineNum">     127</span>                 :<span class="tlaGNC">           2 :     rate_deviation = info.rate_deviation;</span></span>
+<span id="L128"><span class="lineNum">     128</span>                 :<span class="tlaGNC">           2 :     status.is_correct = info.status.is_correct;</span></span>
+<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">           2 :     status.is_synchronized = info.status.is_synchronized;</span></span>
+<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">           2 :     status.is_timeout = info.status.is_timeout;</span></span>
+<span id="L131"><span class="lineNum">     131</span>                 :<span class="tlaGNC">           2 :     status.is_time_jump_future = info.status.is_time_jump_future;</span></span>
+<span id="L132"><span class="lineNum">     132</span>                 :<span class="tlaGNC">           2 :     status.is_time_jump_past = info.status.is_time_jump_past;</span></span>
+<span id="L133"><span class="lineNum">     133</span>                 :             : </span>
+<span id="L134"><span class="lineNum">     134</span>                 :<span class="tlaGNC">           2 :     sync_fup_data.clock_identity = info.sync_fup_data.clock_identity;</span></span>
+<span id="L135"><span class="lineNum">     135</span>                 :<span class="tlaGNC">           2 :     sync_fup_data.correction_field = info.sync_fup_data.correction_field;</span></span>
+<span id="L136"><span class="lineNum">     136</span>                 :<span class="tlaGNC">           2 :     sync_fup_data.port_number = info.sync_fup_data.port_number;</span></span>
+<span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC">           2 :     sync_fup_data.precise_origin_timestamp = info.sync_fup_data.precise_origin_timestamp;</span></span>
+<span id="L138"><span class="lineNum">     138</span>                 :<span class="tlaGNC">           2 :     sync_fup_data.reference_global_timestamp = info.sync_fup_data.reference_global_timestamp;</span></span>
+<span id="L139"><span class="lineNum">     139</span>                 :<span class="tlaGNC">           2 :     sync_fup_data.reference_local_timestamp = info.sync_fup_data.reference_local_timestamp;</span></span>
+<span id="L140"><span class="lineNum">     140</span>                 :<span class="tlaGNC">           2 :     sync_fup_data.sequence_id = info.sync_fup_data.sequence_id;</span></span>
+<span id="L141"><span class="lineNum">     141</span>                 :<span class="tlaGNC">           2 :     sync_fup_data.sync_ingress_timestamp = info.sync_fup_data.sync_ingress_timestamp;</span></span>
+<span id="L142"><span class="lineNum">     142</span>                 :<span class="tlaGNC">           2 :     sync_fup_data.pdelay = info.sync_fup_data.pdelay;</span></span>
+<span id="L143"><span class="lineNum">     143</span>                 :             : </span>
+<span id="L144"><span class="lineNum">     144</span>                 :<span class="tlaGNC">           2 :     pdelay_data.req_clock_identity = info.pdelay_data.req_clock_identity;</span></span>
+<span id="L145"><span class="lineNum">     145</span>                 :<span class="tlaGNC">           2 :     pdelay_data.req_port_number = info.pdelay_data.req_port_number;</span></span>
+<span id="L146"><span class="lineNum">     146</span>                 :<span class="tlaGNC">           2 :     pdelay_data.request_origin_timestamp = info.pdelay_data.request_origin_timestamp;</span></span>
+<span id="L147"><span class="lineNum">     147</span>                 :<span class="tlaGNC">           2 :     pdelay_data.request_receipt_timestamp = info.pdelay_data.request_receipt_timestamp;</span></span>
+<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">           2 :     pdelay_data.response_origin_timestamp = info.pdelay_data.response_origin_timestamp;</span></span>
+<span id="L149"><span class="lineNum">     149</span>                 :<span class="tlaGNC">           2 :     pdelay_data.response_receipt_timestamp = info.pdelay_data.response_receipt_timestamp;</span></span>
+<span id="L150"><span class="lineNum">     150</span>                 :<span class="tlaGNC">           2 :     pdelay_data.reference_global_timestamp = info.pdelay_data.reference_global_timestamp;</span></span>
+<span id="L151"><span class="lineNum">     151</span>                 :<span class="tlaGNC">           2 :     pdelay_data.reference_local_timestamp = info.pdelay_data.reference_local_timestamp;</span></span>
+<span id="L152"><span class="lineNum">     152</span>                 :<span class="tlaGNC">           2 :     pdelay_data.sequence_id = info.pdelay_data.sequence_id;</span></span>
+<span id="L153"><span class="lineNum">     153</span>                 :<span class="tlaGNC">           2 :     pdelay_data.pdelay = info.pdelay_data.pdelay;</span></span>
+<span id="L154"><span class="lineNum">     154</span>                 :<span class="tlaGNC">           2 :     pdelay_data.resp_clock_identity = info.pdelay_data.resp_clock_identity;</span></span>
+<span id="L155"><span class="lineNum">     155</span>                 :<span class="tlaGNC">           2 :     pdelay_data.resp_port_number = info.pdelay_data.resp_port_number;</span></span>
+<span id="L156"><span class="lineNum">     156</span>                 :<span class="tlaGNC">           2 : }</span></span>
+<span id="L157"><span class="lineNum">     157</span>                 :             : </span>
+<span id="L158"><span class="lineNum">     158</span>                 :<span class="tlaGNC">          35 : bool operator==(const TimeBaseSnapshot&amp; ipcdata, const PtpTimeInfo&amp; data) noexcept</span></span>
+<span id="L159"><span class="lineNum">     159</span>                 :             : {</span>
+<span id="L160"><span class="lineNum">     160</span>                 :<span class="tlaGNC">          35 :     const bool same_local = (ipcdata.local_time == static_cast&lt;uint64_t&gt;(data.local_time.time_since_epoch().count()));</span></span>
+<span id="L161"><span class="lineNum">     161</span>                 :             : </span>
+<span id="L162"><span class="lineNum">     162</span>                 :<span class="tlaGNC">          35 :     const bool same_ptp = (ipcdata.ptp_assumed_time == static_cast&lt;uint64_t&gt;(data.ptp_assumed_time.count()));</span></span>
+<span id="L163"><span class="lineNum">     163</span>                 :             : </span>
+<span id="L164"><span class="lineNum">     164</span>                 :<span class="tlaGNC">         103 :     const bool same_status = (ipcdata.status.is_correct == data.status.is_correct &amp;&amp;</span></span>
+<span id="L165"><span class="lineNum">     165</span>         [<span class="tlaGBC" title="Branch 0 was taken 32 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          33 :                               ipcdata.status.is_synchronized == data.status.is_synchronized &amp;&amp;</span></span>
+<span id="L166"><span class="lineNum">     166</span>         [<span class="tlaGBC" title="Branch 0 was taken 31 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          32 :                               ipcdata.status.is_timeout == data.status.is_timeout &amp;&amp;</span></span>
+<span id="L167"><span class="lineNum">     167</span>   [<span class="tlaGBC" title="Branch 0 was taken 33 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 30 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">          98 :                               ipcdata.status.is_time_jump_future == data.status.is_time_jump_future &amp;&amp;</span></span>
+<span id="L168"><span class="lineNum">     168</span>         [<span class="tlaGBC" title="Branch 0 was taken 29 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          30 :                               ipcdata.status.is_time_jump_past == data.status.is_time_jump_past);</span></span>
+<span id="L169"><span class="lineNum">     169</span>                 :             : </span>
+<span id="L170"><span class="lineNum">     170</span>                 :<span class="tlaGNC">          35 :     const bool same_sync =</span></span>
+<span id="L171"><span class="lineNum">     171</span>                 :<span class="tlaGNC">          69 :         (ipcdata.sync_fup_data.clock_identity == data.sync_fup_data.clock_identity &amp;&amp;</span></span>
+<span id="L172"><span class="lineNum">     172</span>         [<span class="tlaGBC" title="Branch 0 was taken 33 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          34 :          ipcdata.sync_fup_data.correction_field == data.sync_fup_data.correction_field &amp;&amp;</span></span>
+<span id="L173"><span class="lineNum">     173</span>         [<span class="tlaGBC" title="Branch 0 was taken 32 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          33 :          ipcdata.sync_fup_data.port_number == data.sync_fup_data.port_number &amp;&amp;</span></span>
+<span id="L174"><span class="lineNum">     174</span>         [<span class="tlaGBC" title="Branch 0 was taken 31 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          32 :          ipcdata.sync_fup_data.precise_origin_timestamp == data.sync_fup_data.precise_origin_timestamp &amp;&amp;</span></span>
+<span id="L175"><span class="lineNum">     175</span>         [<span class="tlaGBC" title="Branch 0 was taken 30 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          31 :          ipcdata.sync_fup_data.reference_global_timestamp == data.sync_fup_data.reference_global_timestamp &amp;&amp;</span></span>
+<span id="L176"><span class="lineNum">     176</span>         [<span class="tlaGBC" title="Branch 0 was taken 29 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          30 :          ipcdata.sync_fup_data.reference_local_timestamp == data.sync_fup_data.reference_local_timestamp &amp;&amp;</span></span>
+<span id="L177"><span class="lineNum">     177</span>         [<span class="tlaGBC" title="Branch 0 was taken 27 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">          29 :          ipcdata.sync_fup_data.sequence_id == data.sync_fup_data.sequence_id &amp;&amp;</span></span>
+<span id="L178"><span class="lineNum">     178</span>   [<span class="tlaGBC" title="Branch 0 was taken 34 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 2 was taken 26 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">          95 :          ipcdata.sync_fup_data.sync_ingress_timestamp == data.sync_fup_data.sync_ingress_timestamp &amp;&amp;</span></span>
+<span id="L179"><span class="lineNum">     179</span>         [<span class="tlaGBC" title="Branch 0 was taken 25 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          26 :          ipcdata.sync_fup_data.pdelay == data.sync_fup_data.pdelay);</span></span>
+<span id="L180"><span class="lineNum">     180</span>                 :             : </span>
+<span id="L181"><span class="lineNum">     181</span>                 :<span class="tlaGNC">          35 :     const bool same_pdelay =</span></span>
+<span id="L182"><span class="lineNum">     182</span>                 :<span class="tlaGNC">          69 :         (ipcdata.pdelay_data.req_clock_identity == data.pdelay_data.req_clock_identity &amp;&amp;</span></span>
+<span id="L183"><span class="lineNum">     183</span>         [<span class="tlaGBC" title="Branch 0 was taken 33 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          34 :          ipcdata.pdelay_data.req_port_number == data.pdelay_data.req_port_number &amp;&amp;</span></span>
+<span id="L184"><span class="lineNum">     184</span>         [<span class="tlaGBC" title="Branch 0 was taken 32 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          33 :          ipcdata.pdelay_data.request_origin_timestamp == data.pdelay_data.request_origin_timestamp &amp;&amp;</span></span>
+<span id="L185"><span class="lineNum">     185</span>         [<span class="tlaGBC" title="Branch 0 was taken 31 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          32 :          ipcdata.pdelay_data.request_receipt_timestamp == data.pdelay_data.request_receipt_timestamp &amp;&amp;</span></span>
+<span id="L186"><span class="lineNum">     186</span>         [<span class="tlaGBC" title="Branch 0 was taken 30 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          31 :          ipcdata.pdelay_data.response_origin_timestamp == data.pdelay_data.response_origin_timestamp &amp;&amp;</span></span>
+<span id="L187"><span class="lineNum">     187</span>         [<span class="tlaGBC" title="Branch 0 was taken 29 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          30 :          ipcdata.pdelay_data.response_receipt_timestamp == data.pdelay_data.response_receipt_timestamp &amp;&amp;</span></span>
+<span id="L188"><span class="lineNum">     188</span>         [<span class="tlaGBC" title="Branch 0 was taken 28 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          29 :          ipcdata.pdelay_data.reference_global_timestamp == data.pdelay_data.reference_global_timestamp &amp;&amp;</span></span>
+<span id="L189"><span class="lineNum">     189</span>         [<span class="tlaGBC" title="Branch 0 was taken 27 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          28 :          ipcdata.pdelay_data.reference_local_timestamp == data.pdelay_data.reference_local_timestamp &amp;&amp;</span></span>
+<span id="L190"><span class="lineNum">     190</span>         [<span class="tlaGBC" title="Branch 0 was taken 25 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">          27 :          ipcdata.pdelay_data.sequence_id == data.pdelay_data.sequence_id &amp;&amp;</span></span>
+<span id="L191"><span class="lineNum">     191</span>         [<span class="tlaGBC" title="Branch 0 was taken 24 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          25 :          ipcdata.pdelay_data.pdelay == data.pdelay_data.pdelay &amp;&amp;</span></span>
+<span id="L192"><span class="lineNum">     192</span>   [<span class="tlaGBC" title="Branch 0 was taken 34 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 2 was taken 23 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">          92 :          ipcdata.pdelay_data.resp_clock_identity == data.pdelay_data.resp_clock_identity &amp;&amp;</span></span>
+<span id="L193"><span class="lineNum">     193</span>         [<span class="tlaGBC" title="Branch 0 was taken 22 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          23 :          ipcdata.pdelay_data.resp_port_number == data.pdelay_data.resp_port_number);</span></span>
+<span id="L194"><span class="lineNum">     194</span>                 :             : </span>
+<span id="L195"><span class="lineNum">     195</span>                 :<span class="tlaGNC">          35 :     const bool same_rate_deviation = NearlyEqual(ipcdata.rate_deviation, data.rate_deviation);</span></span>
+<span id="L196"><span class="lineNum">     196</span>                 :             : </span>
+<span id="L197"><span class="lineNum">     197</span>   [<span class="tlaGBC" title="Branch 0 was taken 34 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 2 was taken 33 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span> :<span class="tlaGNC">          35 :     return (same_local &amp;&amp; same_ptp &amp;&amp; same_status &amp;&amp; same_sync &amp;&amp; same_pdelay &amp;&amp; same_rate_deviation);</span></span>
+<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 27 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 6 was taken 17 times"> + </span><span class="tlaGBC" title="Branch 7 was taken 10 times"> + </span><span class="tlaGBC" title="Branch 8 was taken 4 times"> + </span> 
+<span class="lineNum">        </span>       <span class="tlaGBC" title="Branch 9 was taken 13 times"> + </span><span class="tlaGBC" title="Branch 10 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 11 was taken 2 times"> + </span>]
+<span id="L198"><span class="lineNum">     198</span>                 :             : }</span>
+<span id="L199"><span class="lineNum">     199</span>                 :             : </span>
+<span id="L200"><span class="lineNum">     200</span>                 :<span class="tlaGNC">          33 : bool operator!=(const TimeBaseSnapshot&amp; ipcdata, const PtpTimeInfo&amp; data) noexcept</span></span>
+<span id="L201"><span class="lineNum">     201</span>                 :             : {</span>
+<span id="L202"><span class="lineNum">     202</span>                 :<span class="tlaGNC">          33 :     return !(ipcdata == data);</span></span>
+<span id="L203"><span class="lineNum">     203</span>                 :             : }</span>
+<span id="L204"><span class="lineNum">     204</span>                 :             : </span>
+<span id="L205"><span class="lineNum">     205</span>                 :             : /// \brief  gtest compatibility:</span>
+<span id="L206"><span class="lineNum">     206</span>                 :<span class="tlaUNC tlaBgUNC">           0 : void PrintTo(const TimeBaseStatus&amp; status, std::ostream* os)</span></span>
+<span id="L207"><span class="lineNum">     207</span>                 :             : {</span>
+<span id="L208"><span class="lineNum">     208</span>                 :<span class="tlaUNC">           0 :     std::ignore = PrintTo(status, *os);</span></span>
+<span id="L209"><span class="lineNum">     209</span>                 :<span class="tlaUNC">           0 : }</span></span>
+<span id="L210"><span class="lineNum">     210</span>                 :             : </span>
+<span id="L211"><span class="lineNum">     211</span>                 :<span class="tlaUNC">           0 : void PrintTo(const SyncFupSnapshot&amp; data, std::ostream* os)</span></span>
+<span id="L212"><span class="lineNum">     212</span>                 :             : {</span>
+<span id="L213"><span class="lineNum">     213</span>                 :<span class="tlaUNC">           0 :     std::ignore = PrintTo(data, *os);</span></span>
+<span id="L214"><span class="lineNum">     214</span>                 :<span class="tlaUNC">           0 : }</span></span>
+<span id="L215"><span class="lineNum">     215</span>                 :             : </span>
+<span id="L216"><span class="lineNum">     216</span>                 :<span class="tlaUNC">           0 : void PrintTo(const PDelayDataSnapshot&amp; data, std::ostream* os)</span></span>
+<span id="L217"><span class="lineNum">     217</span>                 :             : {</span>
+<span id="L218"><span class="lineNum">     218</span>                 :<span class="tlaUNC">           0 :     std::ignore = PrintTo(data, *os);</span></span>
+<span id="L219"><span class="lineNum">     219</span>                 :<span class="tlaUNC">           0 : }</span></span>
+<span id="L220"><span class="lineNum">     220</span>                 :             : </span>
+<span id="L221"><span class="lineNum">     221</span>                 :<span class="tlaUNC">           0 : void PrintTo(const TimeBaseSnapshot&amp; info, std::ostream* os)</span></span>
+<span id="L222"><span class="lineNum">     222</span>                 :             : {</span>
+<span id="L223"><span class="lineNum">     223</span>                 :<span class="tlaUNC">           0 :     std::ignore = PrintTo(info, *os);</span></span>
+<span id="L224"><span class="lineNum">     224</span>                 :<span class="tlaUNC">           0 : }</span></span>
+<span id="L225"><span class="lineNum">     225</span>                 :             : </span>
+<span id="L226"><span class="lineNum">     226</span>                 :             : }  // namespace svt</span>
+<span id="L227"><span class="lineNum">     227</span>                 :             : }  // namespace td</span>
+<span id="L228"><span class="lineNum">     228</span>                 :             : }  // namespace score</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - mw/com/impl/external/score_communication+/score/mw/com/impl/runtime.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../../../index.html">top level</a> - <a href="index.html">mw/com/impl/external/score_communication+/score/mw/com/impl</a> - runtime.h<span style="font-size: 80%;"> (source / <a href="runtime.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntry">6</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:37:31</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">1</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntry">4</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2025 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : #ifndef SCORE_MW_COM_IMPL_RUNTIME_H</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #define SCORE_MW_COM_IMPL_RUNTIME_H</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : </span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #include &quot;score/concurrency/long_running_threads_container.h&quot;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #include &quot;score/mw/com/impl/binding_type.h&quot;</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : #include &quot;score/mw/com/impl/configuration/configuration.h&quot;</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : #include &quot;score/mw/com/impl/i_runtime.h&quot;</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : #include &quot;score/mw/com/impl/instance_identifier.h&quot;</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : #include &quot;score/mw/com/impl/instance_specifier.h&quot;</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : #include &quot;score/mw/com/impl/service_discovery.h&quot;</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : #include &quot;score/mw/com/impl/tracing/configuration/tracing_filter_config.h&quot;</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : #include &quot;score/mw/com/impl/tracing/i_tracing_runtime.h&quot;</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : #include &quot;score/mw/com/runtime_configuration.h&quot;</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : </span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : #include &lt;score/assert.hpp&gt;</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : #include &lt;score/span.hpp&gt;</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : #include &lt;optional&gt;</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : </span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : #include &lt;memory&gt;</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : #include &lt;mutex&gt;</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : #include &lt;unordered_map&gt;</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : #include &lt;vector&gt;</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             : </span>
+<span id="L36"><span class="lineNum">      36</span>                 :             : namespace score::mw::com::impl</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             : {</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             : </span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : /**</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             :  * \brief Runtime/entry point to our ara::com implementation.</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             :  *</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             :  * This is a singleton class, which cares for initialization of the entire ara::com subsystem.</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             :  * Initialization is done based on configuration files (manifests), which have been handed over via cmdline to</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             :  * the application.</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             :  *</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             :  * AUTOSAR AP currently does &lt;b&gt;not&lt;/b&gt; demand the existence of a Runtime class or singleton, but already hints on it</span>
+<span id="L47"><span class="lineNum">      47</span>                 :             :  * being a maybe future extension. (SWS Communication Management 20-11 chapter 7.1.2 Design decisions).</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             :  *</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             :  * It only demands a static method/func within namespace score::mw::com::runtime</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             :  *</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             :  * \details The singleton implementation is based on a Meyers singleton, which gets returned by getInstanceInternal().</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             :  *          This singleton instance needs to get initialized with a Configuration object.</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             :  *          The various overloads of static Initialize() functions differ regarding where/how the configuration is</span>
+<span id="L54"><span class="lineNum">      54</span>                 :             :  *          loaded/provided. All those Initialize() overloads effectively set the static member initialization_config_,</span>
+<span id="L55"><span class="lineNum">      55</span>                 :             :  *          which then gets finally moved into the Meyers singleton instance in the call to getInstanceInternal().</span>
+<span id="L56"><span class="lineNum">      56</span>                 :             :  *          The public getInstance() Method has two functionalities:</span>
+<span id="L57"><span class="lineNum">      57</span>                 :             :  *          - decide, whether the real Runtime singleton (our Meyers singleton) shall be returned or a mock, if one was</span>
+<span id="L58"><span class="lineNum">      58</span>                 :             :  *            injected.</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             :  *          - if it decides to return the real Runtime singleton via getInstanceInternal(), it checks first if already a</span>
+<span id="L60"><span class="lineNum">      60</span>                 :             :  *            valid configuration has been set/loaded via one of the Initialize() overloads and if not, tries to load</span>
+<span id="L61"><span class="lineNum">      61</span>                 :             :  *            if from default path, before it delegates to getInstanceInternal().</span>
+<span id="L62"><span class="lineNum">      62</span>                 :             :  */</span>
+<span id="L63"><span class="lineNum">      63</span>                 :             : class Runtime final : public IRuntime</span>
+<span id="L64"><span class="lineNum">      64</span>                 :             : {</span>
+<span id="L65"><span class="lineNum">      65</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A11-3-1&quot;, The rule states: &quot;Friend declarations shall not be used&quot;.</span>
+<span id="L66"><span class="lineNum">      66</span>                 :             :     // Design decision: The &quot;*Attorney&quot; class is a test-only helper, which accesses private members of this class to</span>
+<span id="L67"><span class="lineNum">      67</span>                 :             :     // verify internal invariants (e.g. that the ctor wires InstanceIdentifier to the configuration_ member).</span>
+<span id="L68"><span class="lineNum">      68</span>                 :             :     // coverity[autosar_cpp14_a11_3_1_violation]</span>
+<span id="L69"><span class="lineNum">      69</span>                 :             :     friend class RuntimeAttorney;</span>
+<span id="L70"><span class="lineNum">      70</span>                 :             : </span>
+<span id="L71"><span class="lineNum">      71</span>                 :             :   public:</span>
+<span id="L72"><span class="lineNum">      72</span>                 :             :     /// \brief static initializer for the runtime. Must be called once per process, which intends to use ara::com</span>
+<span id="L73"><span class="lineNum">      73</span>                 :             :     ///        functionality.</span>
+<span id="L74"><span class="lineNum">      74</span>                 :             :     /// \attention Multiple calls to one of the Initialize() overloads shall be avoided. They may have no effect after</span>
+<span id="L75"><span class="lineNum">      75</span>                 :             :     ///            once our Runtime singleton has been created via getInstance()/getInstanceInternal()</span>
+<span id="L76"><span class="lineNum">      76</span>                 :             :     /// \param runtime_configuration object containing configuration needed to initialize the Runtime</span>
+<span id="L77"><span class="lineNum">      77</span>                 :             :     static void Initialize(const runtime::RuntimeConfiguration&amp; runtime_configuration);</span>
+<span id="L78"><span class="lineNum">      78</span>                 :             : </span>
+<span id="L79"><span class="lineNum">      79</span>                 :             :     /// \brief Extends mw::com subsystem with the given add-on configuration.</span>
+<span id="L80"><span class="lineNum">      80</span>                 :             :     /// \details This call is optional and shall allow loading additional mw::com configuration files in order to extend</span>
+<span id="L81"><span class="lineNum">      81</span>                 :             :     /// already loaded configurations.</span>
+<span id="L82"><span class="lineNum">      82</span>                 :             :     /// \attention This function will call std::terminate() in case no initial configuration has been loaded yet, or</span>
+<span id="L83"><span class="lineNum">      83</span>                 :             :     /// that the configuration is incompatible to the previously loaded one.</span>
+<span id="L84"><span class="lineNum">      84</span>                 :             :     /// \param runtime_configuration object containing service definitions which should be added to existing set</span>
+<span id="L85"><span class="lineNum">      85</span>                 :             :     static Result&lt;void&gt; InitializeRuntimeAddonConfiguration(const runtime::RuntimeConfiguration&amp; runtime_configuration);</span>
+<span id="L86"><span class="lineNum">      86</span>                 :             : </span>
+<span id="L87"><span class="lineNum">      87</span>                 :             :     /// \brief Extends mw::com subsystem with the given add-on configuration provided as a JSON object.</span>
+<span id="L88"><span class="lineNum">      88</span>                 :             :     /// \details This call is optional and shall allow loading additional mw::com configuration as an in-memory JSON</span>
+<span id="L89"><span class="lineNum">      89</span>                 :             :     /// object in order to extend already loaded configurations.</span>
+<span id="L90"><span class="lineNum">      90</span>                 :             :     /// \attention This function will call std::terminate() in case no initial configuration has been loaded yet, or</span>
+<span id="L91"><span class="lineNum">      91</span>                 :             :     /// that the configuration is incompatible to the previously loaded one.</span>
+<span id="L92"><span class="lineNum">      92</span>                 :             :     /// \param json object containing service definitions which should be added to existing set</span>
+<span id="L93"><span class="lineNum">      93</span>                 :             :     static Result&lt;void&gt; InitializeRuntimeAddonConfiguration(score::json::Any json);</span>
+<span id="L94"><span class="lineNum">      94</span>                 :             : </span>
+<span id="L95"><span class="lineNum">      95</span>                 :             :     /// \brief get singleton.</span>
+<span id="L96"><span class="lineNum">      96</span>                 :             :     /// \details Might return either reference to a real Runtime instance or to a mock.</span>
+<span id="L97"><span class="lineNum">      97</span>                 :             :     /// \return singleton ref.</span>
+<span id="L98"><span class="lineNum">      98</span>                 :             :     static IRuntime&amp; getInstance();</span>
+<span id="L99"><span class="lineNum">      99</span>                 :             : </span>
+<span id="L100"><span class="lineNum">     100</span>                 :             :     /// \brief Inject a mock instance as the runtime singleton. Injecting a nullptr will withdraw the mock again.</span>
+<span id="L101"><span class="lineNum">     101</span>                 :             :     /// \details If a mock instance is injected, a call to getInstance() will just return the mock and no implicit call</span>
+<span id="L102"><span class="lineNum">     102</span>                 :             :     ///          to Initialize() will be done. I.e. any config parsing will be completely bypassed.</span>
+<span id="L103"><span class="lineNum">     103</span>                 :             :     static void InjectMock(IRuntime* const mock) noexcept;</span>
+<span id="L104"><span class="lineNum">     104</span>                 :             : </span>
+<span id="L105"><span class="lineNum">     105</span>                 :             :     /// \brief ctor for singleton instance. Should only be used internally.</span>
+<span id="L106"><span class="lineNum">     106</span>                 :             :     /// \details we make this ctor public (although it somehow breaks the singleton pattern) since this</span>
+<span id="L107"><span class="lineNum">     107</span>                 :             :     ///          impl::Runtime isn't user facing and just internally used. Having a public ctor eases life</span>
+<span id="L108"><span class="lineNum">     108</span>                 :             :     ///          in so many places!</span>
+<span id="L109"><span class="lineNum">     109</span>                 :             :     /// \param config configuration, which was build up during Runtime::Initialize().</span>
+<span id="L110"><span class="lineNum">     110</span>                 :             :     explicit Runtime(std::pair&lt;Configuration&amp;&amp;, std::optional&lt;tracing::TracingFilterConfig&gt;&amp;&amp;&gt; configs);</span>
+<span id="L111"><span class="lineNum">     111</span>                 :             : </span>
+<span id="L112"><span class="lineNum">     112</span>                 :             :     /// \brief Runtime is not copyable/copy-assignable since it shall have singleton semantic.</span>
+<span id="L113"><span class="lineNum">     113</span>                 :             :     Runtime(const Runtime&amp;) = delete;</span>
+<span id="L114"><span class="lineNum">     114</span>                 :             :     Runtime&amp; operator=(const Runtime&amp;) &amp; = delete;</span>
+<span id="L115"><span class="lineNum">     115</span>                 :             :     Runtime(Runtime&amp;&amp;) noexcept = delete;</span>
+<span id="L116"><span class="lineNum">     116</span>                 :             :     Runtime&amp; operator=(Runtime&amp;&amp;) &amp; noexcept = delete;</span>
+<span id="L117"><span class="lineNum">     117</span>                 :             : </span>
+<span id="L118"><span class="lineNum">     118</span>                 :             :     ~Runtime() noexcept override;</span>
+<span id="L119"><span class="lineNum">     119</span>                 :             : </span>
+<span id="L120"><span class="lineNum">     120</span>                 :             :     /// \brief Implements score::mw::com::runtime::ResolveInstanceIds</span>
+<span id="L121"><span class="lineNum">     121</span>                 :             :     /// \param specifier specifier for which resolution shall be done.</span>
+<span id="L122"><span class="lineNum">     122</span>                 :             :     /// \return resolved instance identifiers for given _specifier_</span>
+<span id="L123"><span class="lineNum">     123</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A10-3-1&quot; rule finding: Virtual function declaration shall contain exactly one of the</span>
+<span id="L124"><span class="lineNum">     124</span>                 :             :     // three specifiers: (1) virtual, (2) override, (3) final. Gcc compiler bug leads to a compiler warning if</span>
+<span id="L125"><span class="lineNum">     125</span>                 :             :     // override is not added, even if final keyword is there. (https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78010)</span>
+<span id="L126"><span class="lineNum">     126</span>                 :             :     // coverity[autosar_cpp14_a10_3_1_violation]</span>
+<span id="L127"><span class="lineNum">     127</span>                 :             :     std::vector&lt;InstanceIdentifier&gt; resolve(const InstanceSpecifier&amp; specifier) const override final;</span>
+<span id="L128"><span class="lineNum">     128</span>                 :             : </span>
+<span id="L129"><span class="lineNum">     129</span>                 :             :     /// \brief see IRuntime::GetBindingRuntime</span>
+<span id="L130"><span class="lineNum">     130</span>                 :             :     // coverity[autosar_cpp14_a10_3_1_violation]</span>
+<span id="L131"><span class="lineNum">     131</span>                 :             :     IBindingRuntime* GetBindingRuntime(const BindingType binding) const noexcept override final;</span>
+<span id="L132"><span class="lineNum">     132</span>                 :             : </span>
+<span id="L133"><span class="lineNum">     133</span>                 :             :     // coverity[autosar_cpp14_a10_3_1_violation]</span>
+<span id="L134"><span class="lineNum">     134</span>                 :             :     IServiceDiscovery&amp; GetServiceDiscovery() &amp; noexcept override final;</span>
+<span id="L135"><span class="lineNum">     135</span>                 :             : </span>
+<span id="L136"><span class="lineNum">     136</span>                 :             :     /// \brief see IRuntime::GetTracingFilterConfig</span>
+<span id="L137"><span class="lineNum">     137</span>                 :             :     // coverity[autosar_cpp14_a10_3_1_violation]</span>
+<span id="L138"><span class="lineNum">     138</span>                 :             :     const tracing::ITracingFilterConfig* GetTracingFilterConfig() const override final;</span>
+<span id="L139"><span class="lineNum">     139</span>                 :             : </span>
+<span id="L140"><span class="lineNum">     140</span>                 :             :     /// \brief see IRuntime::GetTracingRuntime</span>
+<span id="L141"><span class="lineNum">     141</span>                 :             :     // coverity[autosar_cpp14_a10_3_1_violation]</span>
+<span id="L142"><span class="lineNum">     142</span>                 :             :     tracing::ITracingRuntime* GetTracingRuntime() const noexcept override final;</span>
+<span id="L143"><span class="lineNum">     143</span>                 :             : </span>
+<span id="L144"><span class="lineNum">     144</span>                 :             :   private:</span>
+<span id="L145"><span class="lineNum">     145</span>                 :             :     /// \return static Runtime (the real one - not a mock!) configured based on the configuration set by one of the</span>
+<span id="L146"><span class="lineNum">     146</span>                 :             :     ///         static Initialize() overloads.</span>
+<span id="L147"><span class="lineNum">     147</span>                 :             :     /// \pre the internal static initialization_config_ has to be initialized with a Configuration.</span>
+<span id="L148"><span class="lineNum">     148</span>                 :             :     static Runtime&amp; getInstanceInternal();</span>
+<span id="L149"><span class="lineNum">     149</span>                 :             : </span>
+<span id="L150"><span class="lineNum">     150</span>                 :             :     /// \brief Extend loaded configuration with the Configuration provided as a parameter. Returns an error if</span>
+<span id="L151"><span class="lineNum">     151</span>                 :             :     /// configurations are incompatible or there is no regular (complete) configuration loaded yet.</span>
+<span id="L152"><span class="lineNum">     152</span>                 :             :     static Result&lt;void&gt; HandleAddonConfiguration(const Configuration&amp; config) noexcept;</span>
+<span id="L153"><span class="lineNum">     153</span>                 :             : </span>
+<span id="L154"><span class="lineNum">     154</span>                 :             :     /// \brief Merges the service types and instances into the already loaded configuration. Returns an error if one of</span>
+<span id="L155"><span class="lineNum">     155</span>                 :             :     /// those entries in the given configuration already exists in this configuration.</span>
+<span id="L156"><span class="lineNum">     156</span>                 :             :     Result&lt;void&gt; MergeAdditionalConfiguration(const Configuration&amp; additional_configuration) noexcept;</span>
+<span id="L157"><span class="lineNum">     157</span>                 :             : </span>
+<span id="L158"><span class="lineNum">     158</span>                 :             :     /// \brief pointer to a mock to be used (set via InjectMock())</span>
+<span id="L159"><span class="lineNum">     159</span>                 :             :     static score::mw::com::impl::IRuntime* mock_;</span>
+<span id="L160"><span class="lineNum">     160</span>                 :             : </span>
+<span id="L161"><span class="lineNum">     161</span>                 :             :     /// \brief mutex to synchronize potentially concurrent calls to initialization logic of Runtime.</span>
+<span id="L162"><span class="lineNum">     162</span>                 :             :     static std::mutex mutex_;</span>
+<span id="L163"><span class="lineNum">     163</span>                 :             : </span>
+<span id="L164"><span class="lineNum">     164</span>                 :             :     /// \brief flag, whether the runtime is now locked in the sense, that the singleton has been already created</span>
+<span id="L165"><span class="lineNum">     165</span>                 :             :     ///        with a given configuration.</span>
+<span id="L166"><span class="lineNum">     166</span>                 :             :     static bool runtime_initialization_locked_;</span>
+<span id="L167"><span class="lineNum">     167</span>                 :             : </span>
+<span id="L168"><span class="lineNum">     168</span>                 :             :     /// \brief static configuration set by one of the static Initialize() overloads. Will then finally get moved into</span>
+<span id="L169"><span class="lineNum">     169</span>                 :             :     ///        the singleton instance member configuration_.</span>
+<span id="L170"><span class="lineNum">     170</span>                 :             :     static std::optional&lt;Configuration&gt; initialization_config_;</span>
+<span id="L171"><span class="lineNum">     171</span>                 :             : </span>
+<span id="L172"><span class="lineNum">     172</span>                 :             :     /// \brief configuration</span>
+<span id="L173"><span class="lineNum">     173</span>                 :             :     ///</span>
+<span id="L174"><span class="lineNum">     174</span>                 :             :     /// This is the stable, process-lifetime configuration owned by the Runtime singleton.</span>
+<span id="L175"><span class="lineNum">     175</span>                 :             :     ///</span>
+<span id="L176"><span class="lineNum">     176</span>                 :             :     /// \details The Runtime constructor registers a pointer to this member via InstanceIdentifier::SetConfiguration()</span>
+<span id="L177"><span class="lineNum">     177</span>                 :             :     /// so that the InstanceIdentifier deserialization API (InstanceIdentifier::Create) adds reconstructed deployments</span>
+<span id="L178"><span class="lineNum">     178</span>                 :             :     /// into this configuration.</span>
+<span id="L179"><span class="lineNum">     179</span>                 :             :     Configuration configuration_;</span>
+<span id="L180"><span class="lineNum">     180</span>                 :             : </span>
+<span id="L181"><span class="lineNum">     181</span>                 :             :     /// \brief Tracing configuration parsed from json</span>
+<span id="L182"><span class="lineNum">     182</span>                 :             :     ///</span>
+<span id="L183"><span class="lineNum">     183</span>                 :             :     /// Will be filled only if tracing is enabled in the configuration_ and the tracing json file can be found and</span>
+<span id="L184"><span class="lineNum">     184</span>                 :             :     /// successfully parsed.</span>
+<span id="L185"><span class="lineNum">     185</span>                 :             :     std::optional&lt;tracing::TracingFilterConfig&gt; tracing_filter_configuration_;</span>
+<span id="L186"><span class="lineNum">     186</span>                 :             : </span>
+<span id="L187"><span class="lineNum">     187</span>                 :             :     /// \brief Runtimes for specific bindings (e.g. LoLa, SomeIP etc.)</span>
+<span id="L188"><span class="lineNum">     188</span>                 :             :     std::unordered_map&lt;BindingType, std::unique_ptr&lt;IBindingRuntime&gt;&gt; binding_runtimes_;</span>
+<span id="L189"><span class="lineNum">     189</span>                 :             : </span>
+<span id="L190"><span class="lineNum">     190</span>                 :             :     /// \brief Tracing Runtime which encapsulates all calls to GenericTraceLibrary.</span>
+<span id="L191"><span class="lineNum">     191</span>                 :             :     ///        This pointer will only be set to a value when a tracing_filter_configuration_ is set.</span>
+<span id="L192"><span class="lineNum">     192</span>                 :             :     std::unique_ptr&lt;tracing::ITracingRuntime&gt; tracing_runtime_;</span>
+<span id="L193"><span class="lineNum">     193</span>                 :             : </span>
+<span id="L194"><span class="lineNum">     194</span>                 :             :     /// \brief Service Discovery</span>
+<span id="L195"><span class="lineNum">     195</span>                 :             :     ServiceDiscovery service_discovery_;</span>
+<span id="L196"><span class="lineNum">     196</span>                 :             : </span>
+<span id="L197"><span class="lineNum">     197</span>                 :             :     /// \brief Executor for long-running tasks, that is handed down to binding-specific runtimes to be also used in</span>
+<span id="L198"><span class="lineNum">     198</span>                 :             :     ///        their context</span>
+<span id="L199"><span class="lineNum">     199</span>                 :             :     ///        Should stay last attribute so that it is destructed first</span>
+<span id="L200"><span class="lineNum">     200</span>                 :             :     concurrency::LongRunningThreadsContainer long_running_threads_;</span>
+<span id="L201"><span class="lineNum">     201</span>                 :             : };</span>
+<span id="L202"><span class="lineNum">     202</span>                 :             : </span>
+<span id="L203"><span class="lineNum">     203</span>                 :             : template &lt;typename RuntimeBinding&gt;</span>
+<span id="L204"><span class="lineNum">     204</span>                 :<span class="tlaGNC tlaBgGNC">        4207 : RuntimeBinding&amp; GetBindingRuntime(const BindingType binding_type)</span></span>
+<span id="L205"><span class="lineNum">     205</span>                 :             : {</span>
+<span id="L206"><span class="lineNum">     206</span>                 :<span class="tlaGNC">        4207 :     auto&amp; runtime = Runtime::getInstance();</span></span>
+<span id="L207"><span class="lineNum">     207</span>                 :<span class="tlaGNC">        4207 :     auto* const i_runtime_binding = runtime.GetBindingRuntime(binding_type);</span></span>
+<span id="L208"><span class="lineNum">     208</span>         [<span class="tlaGBC" title="Branch 0 was taken 4200 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 7 times"> + </span>]:<span class="tlaGNC">        4207 :     auto* const runtime_binding = dynamic_cast&lt;RuntimeBinding*&gt;(i_runtime_binding);</span></span>
+<span id="L209"><span class="lineNum">     209</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 4200 times"> + </span>]:<span class="tlaGNC">        4207 :     SCORE_LANGUAGE_FUTURECPP_ASSERT_PRD_MESSAGE(runtime_binding != nullptr, &quot;Runtime binding does not exist.&quot;);</span></span>
+<span id="L210"><span class="lineNum">     210</span>                 :<span class="tlaGNC">        4200 :     return *runtime_binding;</span></span>
+<span id="L211"><span class="lineNum">     211</span>                 :             : }</span>
+<span id="L212"><span class="lineNum">     212</span>                 :             : </span>
+<span id="L213"><span class="lineNum">     213</span>                 :             : }  // namespace score::mw::com::impl</span>
+<span id="L214"><span class="lineNum">     214</span>                 :             : </span>
+<span id="L215"><span class="lineNum">     215</span>                 :             : #endif  // SCORE_MW_COM_IMPL_RUNTIME_H</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - mw/com/impl/bindings/lola/external/score_communication+/score/mw/com/impl/bindings/lola/generic_proxy_event.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../../../../../../../index.html">top level</a> - <a href="index.html">mw/com/impl/bindings/lola/external/score_communication+/score/mw/com/impl/bindings/lola</a> - generic_proxy_event.cpp<span style="font-size: 80%;"> (source / <a href="generic_proxy_event.cpp.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">74</td>
+            <td class="headerCovTableEntry">74</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:37:31</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">18</td>
+            <td class="headerCovTableEntry">18</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryLo">62.5&nbsp;%</td>
+            <td class="headerCovTableEntry">32</td>
+            <td class="headerCovTableEntry">20</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2025 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : ///</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : /// @file</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : /// @copyright Copyright (C) 2023, Bayerische Motoren Werke Aktiengesellschaft (BMW AG)</span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : ///</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : </span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/generic_proxy_event.h&quot;</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : </span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : #include &quot;score/language/safecpp/safe_math/safe_math.h&quot;</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : #include &quot;score/memory/shared/pointer_arithmetic_util.h&quot;</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : #include &quot;score/mw/log/logging.h&quot;</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : </span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : #include &lt;score/assert.hpp&gt;</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : </span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : namespace score::mw::com::impl::lola</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : {</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : </span>
+<span id="L29"><span class="lineNum">      29</span>                 :<span class="tlaGNC tlaBgGNC">          48 : GenericProxyEvent::GenericProxyEvent(Proxy&amp; parent, const ElementFqId element_fq_id, const std::string_view event_name)</span></span>
+<span id="L30"><span class="lineNum">      30</span>                 :             :     : GenericProxyEventBinding{},</span>
+<span id="L31"><span class="lineNum">      31</span>                 :<span class="tlaGNC">          48 :       proxy_event_common_{parent, element_fq_id, event_name},</span></span>
+<span id="L32"><span class="lineNum">      32</span>   [<span class="tlaGBC" title="Branch 0 was taken 46 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 46 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          48 :       meta_info_{parent.GetEventMetaInfo(element_fq_id)}</span></span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : {</span>
+<span id="L34"><span class="lineNum">      34</span>                 :<span class="tlaGNC">          46 :     parent.RegisterEvent(event_name, *this);</span></span>
+<span id="L35"><span class="lineNum">      35</span>                 :<span class="tlaGNC">          46 : }</span></span>
+<span id="L36"><span class="lineNum">      36</span>                 :             : </span>
+<span id="L37"><span class="lineNum">      37</span>                 :<span class="tlaGNC">          33 : Result&lt;void&gt; GenericProxyEvent::Subscribe(const std::size_t max_sample_count) noexcept</span></span>
+<span id="L38"><span class="lineNum">      38</span>                 :             : {</span>
+<span id="L39"><span class="lineNum">      39</span>                 :<span class="tlaGNC">          33 :     return proxy_event_common_.Subscribe(max_sample_count);</span></span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : }</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             : </span>
+<span id="L42"><span class="lineNum">      42</span>                 :<span class="tlaGNC">          48 : void GenericProxyEvent::Unsubscribe() noexcept</span></span>
+<span id="L43"><span class="lineNum">      43</span>                 :             : {</span>
+<span id="L44"><span class="lineNum">      44</span>                 :<span class="tlaGNC">          48 :     proxy_event_common_.Unsubscribe();</span></span>
+<span id="L45"><span class="lineNum">      45</span>                 :<span class="tlaGNC">          48 : }</span></span>
+<span id="L46"><span class="lineNum">      46</span>                 :             : </span>
+<span id="L47"><span class="lineNum">      47</span>                 :<span class="tlaGNC">          15 : SubscriptionState GenericProxyEvent::GetSubscriptionState() const noexcept</span></span>
+<span id="L48"><span class="lineNum">      48</span>                 :             : {</span>
+<span id="L49"><span class="lineNum">      49</span>                 :<span class="tlaGNC">          15 :     return proxy_event_common_.GetSubscriptionState();</span></span>
+<span id="L50"><span class="lineNum">      50</span>                 :             : }</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             : </span>
+<span id="L52"><span class="lineNum">      52</span>                 :<span class="tlaGNC">           5 : inline Result&lt;std::size_t&gt; GenericProxyEvent::GetNumNewSamplesAvailable() const</span></span>
+<span id="L53"><span class="lineNum">      53</span>                 :             : {</span>
+<span id="L54"><span class="lineNum">      54</span>                 :             :     /// In case of LoLa binding we can also dispatch to GetNumNewSamplesAvailableImpl() in case of kSubscriptionPending!</span>
+<span id="L55"><span class="lineNum">      55</span>                 :             :     /// Because a pre-condition to kSubscriptionPending is that we once had a successful subscription... and then we can</span>
+<span id="L56"><span class="lineNum">      56</span>                 :             :     /// always access the samples even if the provider went down.</span>
+<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">           5 :     const auto subscription_state = proxy_event_common_.GetSubscriptionState();</span></span>
+<span id="L58"><span class="lineNum">      58</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 4 times"> + </span>]:<span class="tlaGNC">           5 :     if (subscription_state == SubscriptionState::kNotSubscribed)</span></span>
+<span id="L59"><span class="lineNum">      59</span>                 :             :     {</span>
+<span id="L60"><span class="lineNum">      60</span>                 :<span class="tlaGNC">           2 :         return MakeUnexpected(ComErrc::kNotSubscribed,</span></span>
+<span id="L61"><span class="lineNum">      61</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :                               &quot;Attempt to call GetNumNewSamplesAvailable without successful subscription.&quot;);</span></span>
+<span id="L62"><span class="lineNum">      62</span>                 :             :     }</span>
+<span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC">           4 :     return GetNumNewSamplesAvailableImpl();</span></span>
+<span id="L64"><span class="lineNum">      64</span>                 :             : }</span>
+<span id="L65"><span class="lineNum">      65</span>                 :             : </span>
+<span id="L66"><span class="lineNum">      66</span>                 :<span class="tlaGNC">          13 : inline Result&lt;std::size_t&gt; GenericProxyEvent::GetNewSamples(Callback&amp;&amp; receiver, TrackerGuardFactory&amp; tracker)</span></span>
+<span id="L67"><span class="lineNum">      67</span>                 :             : {</span>
+<span id="L68"><span class="lineNum">      68</span>                 :             :     /// In case of LoLa binding we can also dispatch to GetNewSamplesImpl() in case of kSubscriptionPending!</span>
+<span id="L69"><span class="lineNum">      69</span>                 :             :     /// Because a pre-condition to kSubscriptionPending is that we once had a successful subscription... and then we can</span>
+<span id="L70"><span class="lineNum">      70</span>                 :             :     /// always access the samples even if the provider went down.</span>
+<span id="L71"><span class="lineNum">      71</span>                 :<span class="tlaGNC">          13 :     const auto subscription_state = proxy_event_common_.GetSubscriptionState();</span></span>
+<span id="L72"><span class="lineNum">      72</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 12 times"> + </span>]:<span class="tlaGNC">          13 :     if (subscription_state == SubscriptionState::kNotSubscribed)</span></span>
+<span id="L73"><span class="lineNum">      73</span>                 :             :     {</span>
+<span id="L74"><span class="lineNum">      74</span>                 :<span class="tlaGNC">           2 :         return MakeUnexpected(ComErrc::kNotSubscribed,</span></span>
+<span id="L75"><span class="lineNum">      75</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :                               &quot;Attempt to call GetNewSamples without successful subscription.&quot;);</span></span>
+<span id="L76"><span class="lineNum">      76</span>                 :             :     }</span>
+<span id="L77"><span class="lineNum">      77</span>                 :<span class="tlaGNC">          12 :     return GetNewSamplesImpl(std::move(receiver), tracker);</span></span>
+<span id="L78"><span class="lineNum">      78</span>                 :             : }</span>
+<span id="L79"><span class="lineNum">      79</span>                 :             : </span>
+<span id="L80"><span class="lineNum">      80</span>                 :<span class="tlaGNC">           1 : std::size_t GenericProxyEvent::GetSampleSize() const noexcept</span></span>
+<span id="L81"><span class="lineNum">      81</span>                 :             : {</span>
+<span id="L82"><span class="lineNum">      82</span>                 :<span class="tlaGNC">           1 :     return meta_info_.data_type_info_.Size();</span></span>
+<span id="L83"><span class="lineNum">      83</span>                 :             : }</span>
+<span id="L84"><span class="lineNum">      84</span>                 :             : </span>
+<span id="L85"><span class="lineNum">      85</span>                 :<span class="tlaGNC">           2 : memory::DataTypeSizeInfo GenericProxyEvent::GetDataTypeSizeInfo() const</span></span>
+<span id="L86"><span class="lineNum">      86</span>                 :             : {</span>
+<span id="L87"><span class="lineNum">      87</span>                 :<span class="tlaGNC">           2 :     return meta_info_.data_type_info_;</span></span>
+<span id="L88"><span class="lineNum">      88</span>                 :             : }</span>
+<span id="L89"><span class="lineNum">      89</span>                 :             : </span>
+<span id="L90"><span class="lineNum">      90</span>                 :<span class="tlaGNC">           1 : bool GenericProxyEvent::HasSerializedFormat() const noexcept</span></span>
+<span id="L91"><span class="lineNum">      91</span>                 :             : {</span>
+<span id="L92"><span class="lineNum">      92</span>                 :             :     // our shared-memory based binding does no serialization at all!</span>
+<span id="L93"><span class="lineNum">      93</span>                 :<span class="tlaGNC">           1 :     return false;</span></span>
+<span id="L94"><span class="lineNum">      94</span>                 :             : }</span>
+<span id="L95"><span class="lineNum">      95</span>                 :             : </span>
+<span id="L96"><span class="lineNum">      96</span>                 :<span class="tlaGNC">           4 : Result&lt;void&gt; GenericProxyEvent::SetReceiveHandler(std::weak_ptr&lt;ScopedEventReceiveHandler&gt; handler) noexcept</span></span>
+<span id="L97"><span class="lineNum">      97</span>                 :             : {</span>
+<span id="L98"><span class="lineNum">      98</span>                 :<span class="tlaGNC">           4 :     return proxy_event_common_.SetReceiveHandler(std::move(handler));</span></span>
+<span id="L99"><span class="lineNum">      99</span>                 :             : }</span>
+<span id="L100"><span class="lineNum">     100</span>                 :             : </span>
+<span id="L101"><span class="lineNum">     101</span>                 :<span class="tlaGNC">           2 : Result&lt;void&gt; GenericProxyEvent::UnsetReceiveHandler() noexcept</span></span>
+<span id="L102"><span class="lineNum">     102</span>                 :             : {</span>
+<span id="L103"><span class="lineNum">     103</span>                 :<span class="tlaGNC">           2 :     return proxy_event_common_.UnsetReceiveHandler();</span></span>
+<span id="L104"><span class="lineNum">     104</span>                 :             : }</span>
+<span id="L105"><span class="lineNum">     105</span>                 :             : </span>
+<span id="L106"><span class="lineNum">     106</span>                 :<span class="tlaGNC">           3 : Result&lt;void&gt; GenericProxyEvent::SetSubscriptionStateChangeHandler(SubscriptionStateChangeHandler handler) noexcept</span></span>
+<span id="L107"><span class="lineNum">     107</span>                 :             : {</span>
+<span id="L108"><span class="lineNum">     108</span>                 :<span class="tlaGNC">           3 :     return proxy_event_common_.SetSubscriptionStateChangeHandler(std::move(handler));</span></span>
+<span id="L109"><span class="lineNum">     109</span>                 :             : }</span>
+<span id="L110"><span class="lineNum">     110</span>                 :             : </span>
+<span id="L111"><span class="lineNum">     111</span>                 :<span class="tlaGNC">           1 : Result&lt;void&gt; GenericProxyEvent::UnsetSubscriptionStateChangeHandler() noexcept</span></span>
+<span id="L112"><span class="lineNum">     112</span>                 :             : {</span>
+<span id="L113"><span class="lineNum">     113</span>                 :<span class="tlaGNC">           1 :     return proxy_event_common_.UnsetSubscriptionStateChangeHandler();</span></span>
+<span id="L114"><span class="lineNum">     114</span>                 :             : }</span>
+<span id="L115"><span class="lineNum">     115</span>                 :             : </span>
+<span id="L116"><span class="lineNum">     116</span>                 :<span class="tlaGNC">           1 : ElementFqId GenericProxyEvent::GetElementFQId() const noexcept</span></span>
+<span id="L117"><span class="lineNum">     117</span>                 :             : {</span>
+<span id="L118"><span class="lineNum">     118</span>                 :<span class="tlaGNC">           1 :     return proxy_event_common_.GetElementFQId();</span></span>
+<span id="L119"><span class="lineNum">     119</span>                 :             : }</span>
+<span id="L120"><span class="lineNum">     120</span>                 :             : </span>
+<span id="L121"><span class="lineNum">     121</span>                 :<span class="tlaGNC">           2 : std::optional&lt;std::uint16_t&gt; GenericProxyEvent::GetMaxSampleCount() const noexcept</span></span>
+<span id="L122"><span class="lineNum">     122</span>                 :             : {</span>
+<span id="L123"><span class="lineNum">     123</span>                 :<span class="tlaGNC">           2 :     return proxy_event_common_.GetMaxSampleCount();</span></span>
+<span id="L124"><span class="lineNum">     124</span>                 :             : }</span>
+<span id="L125"><span class="lineNum">     125</span>                 :             : </span>
+<span id="L126"><span class="lineNum">     126</span>                 :<span class="tlaGNC">           4 : Result&lt;std::size_t&gt; GenericProxyEvent::GetNumNewSamplesAvailableImpl() const</span></span>
+<span id="L127"><span class="lineNum">     127</span>                 :             : {</span>
+<span id="L128"><span class="lineNum">     128</span>                 :<span class="tlaGNC">           4 :     return proxy_event_common_.GetNumNewSamplesAvailable();</span></span>
+<span id="L129"><span class="lineNum">     129</span>                 :             : }</span>
+<span id="L130"><span class="lineNum">     130</span>                 :             : </span>
+<span id="L131"><span class="lineNum">     131</span>                 :             : // Suppress &quot;AUTOSAR C++14 A15-5-3&quot; rule findings. This rule states: &quot;The std::terminate() function shall not be called</span>
+<span id="L132"><span class="lineNum">     132</span>                 :             : // implicitly&quot;. std::terminate() is implicitly called from '.value()' in case it doesn't have a value but as we check</span>
+<span id="L133"><span class="lineNum">     133</span>                 :             : // before with 'has_value()' so no way for throwing std::bad_optional_access which leds to std::terminate().</span>
+<span id="L134"><span class="lineNum">     134</span>                 :             : // coverity[autosar_cpp14_a15_5_3_violation : FALSE]</span>
+<span id="L135"><span class="lineNum">     135</span>                 :<span class="tlaGNC">          12 : Result&lt;std::size_t&gt; GenericProxyEvent::GetNewSamplesImpl(Callback&amp;&amp; receiver, TrackerGuardFactory&amp; tracker)</span></span>
+<span id="L136"><span class="lineNum">     136</span>                 :             : {</span>
+<span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC">          12 :     const auto max_sample_count = tracker.GetNumAvailableGuards();</span></span>
+<span id="L138"><span class="lineNum">     138</span>                 :             : </span>
+<span id="L139"><span class="lineNum">     139</span>         [<span class="tlaGBC" title="Branch 0 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          12 :     const auto slot_indices = proxy_event_common_.GetNewSamplesSlotIndices(max_sample_count);</span></span>
+<span id="L140"><span class="lineNum">     140</span>                 :             : </span>
+<span id="L141"><span class="lineNum">     141</span>                 :<span class="tlaGNC">          12 :     auto&amp; event_data_control_local = proxy_event_common_.GetConsumerEventDataControlLocal();</span></span>
+<span id="L142"><span class="lineNum">     142</span>                 :             : </span>
+<span id="L143"><span class="lineNum">     143</span>                 :<span class="tlaGNC">          12 :     const std::size_t sample_size = meta_info_.data_type_info_.Size();</span></span>
+<span id="L144"><span class="lineNum">     144</span>                 :<span class="tlaGNC">          12 :     const std::size_t sample_alignment = meta_info_.data_type_info_.Alignment();</span></span>
+<span id="L145"><span class="lineNum">     145</span>                 :             :     const std::size_t aligned_size =</span>
+<span id="L146"><span class="lineNum">     146</span>                 :<span class="tlaGNC">          12 :         memory::shared::CalculateAlignedSize(sample_size, static_cast&lt;std::size_t&gt;(sample_alignment));</span></span>
+<span id="L147"><span class="lineNum">     147</span>                 :             : </span>
+<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">          12 :     const std::size_t max_number_of_sample_slots = event_data_control_local.GetMaxSampleSlots();</span></span>
+<span id="L149"><span class="lineNum">     149</span>                 :<span class="tlaGNC">          12 :     const auto event_slots_raw_array_size = safe_math::Multiply(aligned_size, max_number_of_sample_slots);</span></span>
+<span id="L150"><span class="lineNum">     150</span>                 :             : </span>
+<span id="L151"><span class="lineNum">     151</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 11 times"> + </span>]:<span class="tlaGNC">          12 :     if (!event_slots_raw_array_size.has_value())</span></span>
+<span id="L152"><span class="lineNum">     152</span>                 :             :     {</span>
+<span id="L153"><span class="lineNum">     153</span>                 :<span class="tlaGNC">           1 :         score::mw::log::LogFatal(&quot;lola&quot;) &lt;&lt; &quot;Could not calculate the event slots raw array size. Terminating.&quot;;</span></span>
+<span id="L154"><span class="lineNum">     154</span>                 :<span class="tlaGNC">           1 :         std::terminate();</span></span>
+<span id="L155"><span class="lineNum">     155</span>                 :             :     }</span>
+<span id="L156"><span class="lineNum">     156</span>                 :             : </span>
+<span id="L157"><span class="lineNum">     157</span>   [<span class="tlaGBC" title="Branch 0 was taken 11 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 11 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          11 :     const void* const event_slots_raw_array = meta_info_.event_slots_raw_array_.get(event_slots_raw_array_size.value());</span></span>
+<span id="L158"><span class="lineNum">     158</span>                 :             : </span>
+<span id="L159"><span class="lineNum">     159</span>                 :             :     // AMP assert that the event_slots_raw_array address is according to sample_alignment</span>
+<span id="L160"><span class="lineNum">     160</span>   [<span class="tlaGBC" title="Branch 0 was taken 25 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 14 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 11 times"> + </span>]:<span class="tlaGNC">          25 :     for (auto slot_it = slot_indices.begin; slot_it != slot_indices.end; ++slot_it)</span></span>
+<span id="L161"><span class="lineNum">     161</span>                 :             :     {</span>
+<span id="L162"><span class="lineNum">     162</span>                 :<span class="tlaGNC">          14 :         const auto slot_index = *slot_it;</span></span>
+<span id="L163"><span class="lineNum">     163</span>                 :             : </span>
+<span id="L164"><span class="lineNum">     164</span>                 :             :         // NOLINTBEGIN(cppcoreguidelines-pro-bounds-pointer-arithmetic) The pointer event_slots_raw_array points</span>
+<span id="L165"><span class="lineNum">     165</span>                 :             :         // to the memory managed by a DynamicArray which has been type erased. The DynamicArray wraps a regular pointer</span>
+<span id="L166"><span class="lineNum">     166</span>                 :             :         // array so elements may be accessed by using offsets to regular pointers to elements. Therefore, the pointer</span>
+<span id="L167"><span class="lineNum">     167</span>                 :             :         // arithmetic is being done on memory which can be treated as an array.</span>
+<span id="L168"><span class="lineNum">     168</span>                 :             :         // Suppress &quot;AUTOSAR C++14 M5-2-8&quot; rule: &quot;An object with integer type or pointer to void type shall not be</span>
+<span id="L169"><span class="lineNum">     169</span>                 :             :         // converted to an object with pointer type.&quot;.</span>
+<span id="L170"><span class="lineNum">     170</span>                 :             :         // Casting to uint8_t pointer is as minimum byte size for pointer arithmetic to address a certain chunk of</span>
+<span id="L171"><span class="lineNum">     171</span>                 :             :         // memory.</span>
+<span id="L172"><span class="lineNum">     172</span>                 :             :         // coverity[autosar_cpp14_m5_2_8_violation]</span>
+<span id="L173"><span class="lineNum">     173</span>                 :<span class="tlaGNC">          14 :         const auto* const event_slots_array = static_cast&lt;const std::uint8_t*&gt;(event_slots_raw_array);</span></span>
+<span id="L174"><span class="lineNum">     174</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 14 times"> + </span>]:<span class="tlaGNC">          14 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION_PRD_MESSAGE(nullptr != event_slots_array, &quot;Null event slot array&quot;);</span></span>
+<span id="L175"><span class="lineNum">     175</span>                 :             :         // Suppress &quot;AUTOSAR C++14 A5-3-2&quot; rule finding. This rule states: &quot;Null pointers shall not be dereferenced.&quot;.</span>
+<span id="L176"><span class="lineNum">     176</span>                 :             :         // Suppress &quot;AUTOSAR C++14 M5-0-15&quot; rule finding. This rule states: &quot;Array indexing shall be the only form of</span>
+<span id="L177"><span class="lineNum">     177</span>                 :             :         // pointer arithmetic.&quot;.</span>
+<span id="L178"><span class="lineNum">     178</span>                 :             :         // Suppress &quot;AUTOSAR C++14 A4-7-1&quot; rule finding. This rule states: &quot;An integer expression shall not lead to</span>
+<span id="L179"><span class="lineNum">     179</span>                 :             :         // data loss.&quot;. The result of the integer operation will be stored in a std::size_t which is the biggest integer</span>
+<span id="L180"><span class="lineNum">     180</span>                 :             :         // type.</span>
+<span id="L181"><span class="lineNum">     181</span>                 :             :         // coverity[autosar_cpp14_a5_3_2_violation] The check above ensures that array is not NULL</span>
+<span id="L182"><span class="lineNum">     182</span>                 :             :         // coverity[autosar_cpp14_m5_0_15_violation] False-positive, get access through array indexing</span>
+<span id="L183"><span class="lineNum">     183</span>                 :             :         // coverity[autosar_cpp14_a4_7_1_violation]</span>
+<span id="L184"><span class="lineNum">     184</span>                 :<span class="tlaGNC">          14 :         const auto* const object_start_address = &amp;event_slots_array[aligned_size * slot_index];</span></span>
+<span id="L185"><span class="lineNum">     185</span>                 :             :         /* NOLINTEND(cppcoreguidelines-pro-bounds-pointer-arithmetic) deviation ends here */</span>
+<span id="L186"><span class="lineNum">     186</span>                 :             : </span>
+<span id="L187"><span class="lineNum">     187</span>                 :<span class="tlaGNC">          14 :         const EventSlotStatus event_slot_status{event_data_control_local[slot_index]};</span></span>
+<span id="L188"><span class="lineNum">     188</span>                 :<span class="tlaGNC">          14 :         const EventSlotStatus::EventTimeStamp sample_timestamp{event_slot_status.GetTimeStamp()};</span></span>
+<span id="L189"><span class="lineNum">     189</span>                 :             : </span>
+<span id="L190"><span class="lineNum">     190</span>                 :<span class="tlaGNC">          14 :         SamplePtr&lt;void&gt; sample{object_start_address, event_data_control_local, slot_index};</span></span>
+<span id="L191"><span class="lineNum">     191</span>                 :             : </span>
+<span id="L192"><span class="lineNum">     192</span>                 :<span class="tlaGNC">          14 :         auto guard = std::move(*tracker.TakeGuard());</span></span>
+<span id="L193"><span class="lineNum">     193</span>                 :<span class="tlaGNC">          14 :         auto sample_binding_independent = this-&gt;MakeSamplePtr(std::move(sample), std::move(guard));</span></span>
+<span id="L194"><span class="lineNum">     194</span>                 :             : </span>
+<span id="L195"><span class="lineNum">     195</span>                 :             :         // Suppress &quot;AUTOSAR C++14 A18-9-2&quot; rule finding: &quot;Forwarding values to other functions shall be done via:</span>
+<span id="L196"><span class="lineNum">     196</span>                 :             :         // (1) std::move if the value is an rvalue reference, (2) std::forward if the value is forwarding</span>
+<span id="L197"><span class="lineNum">     197</span>                 :             :         // reference&quot;.</span>
+<span id="L198"><span class="lineNum">     198</span>                 :             :         // First parameter is moved but moving the second one doesn't add any benefit as the copy-constructor is called</span>
+<span id="L199"><span class="lineNum">     199</span>                 :             :         // implicitly instead of move constructor.</span>
+<span id="L200"><span class="lineNum">     200</span>                 :             :         // Suppress &quot;AUTOSAR C++14 A15-4-2&quot; rule finding. This rule states: &quot;I a function is declared to be</span>
+<span id="L201"><span class="lineNum">     201</span>                 :             :         // noexcept, noexcept(true) or noexcept(&lt;true condition&gt;), then it shall not exit with an exception&quot;</span>
+<span id="L202"><span class="lineNum">     202</span>                 :             :         // we can't add noexcept to score::cpp::callback signature.</span>
+<span id="L203"><span class="lineNum">     203</span>                 :             :         // coverity[autosar_cpp14_a18_9_2_violation]</span>
+<span id="L204"><span class="lineNum">     204</span>                 :             :         // coverity[autosar_cpp14_a15_4_2_violation]</span>
+<span id="L205"><span class="lineNum">     205</span>         [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          14 :         receiver(std::move(sample_binding_independent), sample_timestamp);</span></span>
+<span id="L206"><span class="lineNum">     206</span>                 :<span class="tlaGNC">          14 :     }</span></span>
+<span id="L207"><span class="lineNum">     207</span>                 :             : </span>
+<span id="L208"><span class="lineNum">     208</span>         [<span class="tlaGBC" title="Branch 0 was taken 11 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          11 :     const auto num_collected_slots = static_cast&lt;std::size_t&gt;(std::distance(slot_indices.begin, slot_indices.end));</span></span>
+<span id="L209"><span class="lineNum">     209</span>         [<span class="tlaGBC" title="Branch 0 was taken 11 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          22 :     return num_collected_slots;</span></span>
+<span id="L210"><span class="lineNum">     210</span>                 :             : }</span>
+<span id="L211"><span class="lineNum">     211</span>                 :             : </span>
+<span id="L212"><span class="lineNum">     212</span>                 :<span class="tlaGNC">          52 : void GenericProxyEvent::NotifyServiceInstanceChangedAvailability(bool is_available, pid_t new_event_source_pid) noexcept</span></span>
+<span id="L213"><span class="lineNum">     213</span>                 :             : {</span>
+<span id="L214"><span class="lineNum">     214</span>                 :<span class="tlaGNC">          52 :     proxy_event_common_.NotifyServiceInstanceChangedAvailability(is_available, new_event_source_pid);</span></span>
+<span id="L215"><span class="lineNum">     215</span>                 :<span class="tlaGNC">          52 : }</span></span>
+<span id="L216"><span class="lineNum">     216</span>                 :             : </span>
+<span id="L217"><span class="lineNum">     217</span>                 :             : }  // namespace score::mw::com::impl::lola</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

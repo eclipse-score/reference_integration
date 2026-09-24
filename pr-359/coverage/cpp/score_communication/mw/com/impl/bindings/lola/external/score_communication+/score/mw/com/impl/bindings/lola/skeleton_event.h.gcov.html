@@ -1,0 +1,361 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - mw/com/impl/bindings/lola/external/score_communication+/score/mw/com/impl/bindings/lola/skeleton_event.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../../../../../../../index.html">top level</a> - <a href="index.html">mw/com/impl/bindings/lola/external/score_communication+/score/mw/com/impl/bindings/lola</a> - skeleton_event.h<span style="font-size: 80%;"> (source / <a href="skeleton_event.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">93.3&nbsp;%</td>
+            <td class="headerCovTableEntry">60</td>
+            <td class="headerCovTableEntry">56</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:37:31</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryLo">32.7&nbsp;%</td>
+            <td class="headerCovTableEntry">55</td>
+            <td class="headerCovTableEntry">18</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryLo">70.6&nbsp;%</td>
+            <td class="headerCovTableEntry">34</td>
+            <td class="headerCovTableEntry">24</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2025 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : #ifndef SCORE_MW_COM_IMPL_BINDINGS_LOLA_SKELETON_EVENT_H</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #define SCORE_MW_COM_IMPL_BINDINGS_LOLA_SKELETON_EVENT_H</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : </span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #include &quot;score/mw/com/impl/binding_type.h&quot;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/element_fq_id.h&quot;</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/event_data_control_composite.h&quot;</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/event_data_storage.h&quot;</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/i_runtime.h&quot;</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/provider_event_data_control_local_view.h&quot;</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/sample_allocatee_ptr.h&quot;</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/sample_ptr.h&quot;</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/skeleton.h&quot;</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/skeleton_event_common.h&quot;</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : #include &quot;score/mw/com/impl/bindings/lola/skeleton_event_properties.h&quot;</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : #include &quot;score/mw/com/impl/com_error.h&quot;</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : #include &quot;score/mw/com/impl/configuration/quality_type.h&quot;</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : #include &quot;score/mw/com/impl/plumbing/sample_allocatee_ptr.h&quot;</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : #include &quot;score/mw/com/impl/plumbing/sample_ptr.h&quot;</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : #include &quot;score/mw/com/impl/runtime.h&quot;</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : #include &quot;score/mw/com/impl/skeleton_event_binding.h&quot;</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : #include &quot;score/mw/com/impl/tracing/skeleton_event_tracing_data.h&quot;</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : </span>
+<span id="L35"><span class="lineNum">      35</span>                 :             : #include &quot;score/result/result.h&quot;</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             : #include &lt;score/assert.hpp&gt;</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             : #include &lt;score/utility.hpp&gt;</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             : </span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : #include &lt;cstdint&gt;</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : #include &lt;optional&gt;</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             : #include &lt;string_view&gt;</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             : #include &lt;utility&gt;</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             : </span>
+<span id="L44"><span class="lineNum">      44</span>                 :             : namespace score::mw::com::impl::lola</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             : {</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             : </span>
+<span id="L47"><span class="lineNum">      47</span>                 :             : /// \brief Represents a binding specific instance (LoLa) of an event within a skeleton. It can be used to send events</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             : /// via Shared Memory. It will be created via a Factory Method, that will instantiate this class based on deployment</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             : /// values.</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             : ///</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             : /// This class is _not_ user-facing.</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             : ///</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             : /// All operations on this class are _not_ thread-safe, in a manner that they shall not be invoked in parallel by</span>
+<span id="L54"><span class="lineNum">      54</span>                 :             : /// different threads.</span>
+<span id="L55"><span class="lineNum">      55</span>                 :             : template &lt;typename SampleType&gt;</span>
+<span id="L56"><span class="lineNum">      56</span>                 :             : class SkeletonEvent final : public SkeletonEventBinding&lt;SampleType&gt;</span>
+<span id="L57"><span class="lineNum">      57</span>                 :             : {</span>
+<span id="L58"><span class="lineNum">      58</span>                 :             :     template &lt;typename T&gt;</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A11-3-1&quot;, The rule declares: &quot;Friend declarations shall not be used&quot;.</span>
+<span id="L60"><span class="lineNum">      60</span>                 :             :     // Design dessision: The &quot;*Attorney&quot; class is a helper, which sets the internal state of this class accessing</span>
+<span id="L61"><span class="lineNum">      61</span>                 :             :     // private members and used for testing purposes only.</span>
+<span id="L62"><span class="lineNum">      62</span>                 :             :     // coverity[autosar_cpp14_a11_3_1_violation]</span>
+<span id="L63"><span class="lineNum">      63</span>                 :             :     friend class SkeletonEventAttorney;</span>
+<span id="L64"><span class="lineNum">      64</span>                 :             : </span>
+<span id="L65"><span class="lineNum">      65</span>                 :             :   public:</span>
+<span id="L66"><span class="lineNum">      66</span>                 :             :     using typename SkeletonEventBindingBase::SubscribeTraceCallback;</span>
+<span id="L67"><span class="lineNum">      67</span>                 :             :     using typename SkeletonEventBindingBase::UnsubscribeTraceCallback;</span>
+<span id="L68"><span class="lineNum">      68</span>                 :             : </span>
+<span id="L69"><span class="lineNum">      69</span>                 :             :     SkeletonEvent(Skeleton&amp; parent,</span>
+<span id="L70"><span class="lineNum">      70</span>                 :             :                   const ElementFqId element_fq_id,</span>
+<span id="L71"><span class="lineNum">      71</span>                 :             :                   const std::string_view event_name,</span>
+<span id="L72"><span class="lineNum">      72</span>                 :             :                   const SkeletonEventProperties properties,</span>
+<span id="L73"><span class="lineNum">      73</span>                 :             :                   impl::tracing::SkeletonEventTracingData skeleton_event_tracing_data) noexcept;</span>
+<span id="L74"><span class="lineNum">      74</span>                 :             : </span>
+<span id="L75"><span class="lineNum">      75</span>                 :             :     SkeletonEvent(const SkeletonEvent&amp;) = delete;</span>
+<span id="L76"><span class="lineNum">      76</span>                 :             :     SkeletonEvent(SkeletonEvent&amp;&amp;) noexcept = delete;</span>
+<span id="L77"><span class="lineNum">      77</span>                 :             :     SkeletonEvent&amp; operator=(const SkeletonEvent&amp;) &amp; = delete;</span>
+<span id="L78"><span class="lineNum">      78</span>                 :             :     SkeletonEvent&amp; operator=(SkeletonEvent&amp;&amp;) &amp; noexcept = delete;</span>
+<span id="L79"><span class="lineNum">      79</span>                 :             : </span>
+<span id="L80"><span class="lineNum">      80</span>                 :<span class="tlaGNC tlaBgGNC">         123 :     ~SkeletonEvent() noexcept override = default;</span></span>
+<span id="L81"><span class="lineNum">      81</span>                 :             : </span>
+<span id="L82"><span class="lineNum">      82</span>                 :             :     /// \brief Sends a value by _copy_ towards a consumer. It will allocate the necessary space and then copy the value</span>
+<span id="L83"><span class="lineNum">      83</span>                 :             :     /// into Shared Memory.</span>
+<span id="L84"><span class="lineNum">      84</span>                 :             :     Result&lt;void&gt; Send(const SampleType&amp; value,</span>
+<span id="L85"><span class="lineNum">      85</span>                 :             :                       std::optional&lt;typename SkeletonEventBinding&lt;SampleType&gt;::SendTraceCallback&gt; send_trace_callback,</span>
+<span id="L86"><span class="lineNum">      86</span>                 :             :                       SampleAllocateeGuard guard) noexcept override;</span>
+<span id="L87"><span class="lineNum">      87</span>                 :             : </span>
+<span id="L88"><span class="lineNum">      88</span>                 :             :     Result&lt;void&gt; Send(impl::SampleAllocateePtr&lt;SampleType&gt; sample,</span>
+<span id="L89"><span class="lineNum">      89</span>                 :             :                       std::optional&lt;typename SkeletonEventBinding&lt;SampleType&gt;::SendTraceCallback&gt;</span>
+<span id="L90"><span class="lineNum">      90</span>                 :             :                           send_trace_callback) noexcept override;</span>
+<span id="L91"><span class="lineNum">      91</span>                 :             : </span>
+<span id="L92"><span class="lineNum">      92</span>                 :             :     Result&lt;impl::SampleAllocateePtr&lt;SampleType&gt;&gt; Allocate(SampleAllocateeGuard guard) noexcept override;</span>
+<span id="L93"><span class="lineNum">      93</span>                 :             : </span>
+<span id="L94"><span class="lineNum">      94</span>                 :             :     Result&lt;impl::SamplePtr&lt;SampleType&gt;&gt; GetLatestSample(QualityType quality_type) override;</span>
+<span id="L95"><span class="lineNum">      95</span>                 :             : </span>
+<span id="L96"><span class="lineNum">      96</span>                 :             :     /// @requirement SWS_CM_00700</span>
+<span id="L97"><span class="lineNum">      97</span>                 :             :     Result&lt;void&gt; PrepareOffer() noexcept override;</span>
+<span id="L98"><span class="lineNum">      98</span>                 :             : </span>
+<span id="L99"><span class="lineNum">      99</span>                 :             :     void PrepareStopOffer() noexcept override;</span>
+<span id="L100"><span class="lineNum">     100</span>                 :             : </span>
+<span id="L101"><span class="lineNum">     101</span>                 :<span class="tlaGNC">           7 :     BindingType GetBindingType() const noexcept override</span></span>
+<span id="L102"><span class="lineNum">     102</span>                 :             :     {</span>
+<span id="L103"><span class="lineNum">     103</span>                 :<span class="tlaGNC">           7 :         return BindingType::kLoLa;</span></span>
+<span id="L104"><span class="lineNum">     104</span>                 :             :     }</span>
+<span id="L105"><span class="lineNum">     105</span>                 :             : </span>
+<span id="L106"><span class="lineNum">     106</span>                 :<span class="tlaUNC tlaBgUNC">           0 :     void SetSkeletonEventTracingData(impl::tracing::SkeletonEventTracingData tracing_data) noexcept override</span></span>
+<span id="L107"><span class="lineNum">     107</span>                 :             :     {</span>
+<span id="L108"><span class="lineNum">     108</span>                 :<span class="tlaUNC">           0 :         skeleton_event_common_.SetSkeletonEventTracingData(tracing_data);</span></span>
+<span id="L109"><span class="lineNum">     109</span>                 :<span class="tlaUNC">           0 :     }</span></span>
+<span id="L110"><span class="lineNum">     110</span>                 :             : </span>
+<span id="L111"><span class="lineNum">     111</span>                 :             :   private:</span>
+<span id="L112"><span class="lineNum">     112</span>                 :             :     EventDataStorage&lt;SampleType&gt;* event_data_storage_;</span>
+<span id="L113"><span class="lineNum">     113</span>                 :             :     SkeletonEventCommon&lt;SampleType&gt; skeleton_event_common_;</span>
+<span id="L114"><span class="lineNum">     114</span>                 :             : };</span>
+<span id="L115"><span class="lineNum">     115</span>                 :             : </span>
+<span id="L116"><span class="lineNum">     116</span>                 :             : template &lt;typename SampleType&gt;</span>
+<span id="L117"><span class="lineNum">     117</span>                 :<span class="tlaGNC tlaBgGNC">          67 : SkeletonEvent&lt;SampleType&gt;::SkeletonEvent(Skeleton&amp; parent,</span></span>
+<span id="L118"><span class="lineNum">     118</span>                 :             :                                          const ElementFqId element_fq_id,</span>
+<span id="L119"><span class="lineNum">     119</span>                 :             :                                          const std::string_view event_name,</span>
+<span id="L120"><span class="lineNum">     120</span>                 :             :                                          const SkeletonEventProperties properties,</span>
+<span id="L121"><span class="lineNum">     121</span>                 :             :                                          impl::tracing::SkeletonEventTracingData skeleton_event_tracing_data) noexcept</span>
+<span id="L122"><span class="lineNum">     122</span>                 :             :     : SkeletonEventBinding&lt;SampleType&gt;{},</span>
+<span id="L123"><span class="lineNum">     123</span>                 :<span class="tlaGNC">          67 :       event_data_storage_{nullptr},</span></span>
+<span id="L124"><span class="lineNum">     124</span>                 :<span class="tlaGNC">          67 :       skeleton_event_common_{parent, event_name, properties, element_fq_id, skeleton_event_tracing_data}</span></span>
+<span id="L125"><span class="lineNum">     125</span>                 :             : {</span>
+<span id="L126"><span class="lineNum">     126</span>                 :<span class="tlaGNC">          67 : }</span></span>
+<span id="L127"><span class="lineNum">     127</span>                 :             : </span>
+<span id="L128"><span class="lineNum">     128</span>                 :             : template &lt;typename SampleType&gt;</span>
+<span id="L129"><span class="lineNum">     129</span>                 :             : // Suppress &quot;AUTOSAR C++14 A15-5-3&quot; rule findings. This rule states: &quot;The std::terminate() function shall not be called</span>
+<span id="L130"><span class="lineNum">     130</span>                 :             : // implicitly&quot;. std::terminate() is implicitly called from 'allocated_slot_result.value()' in case the</span>
+<span id="L131"><span class="lineNum">     131</span>                 :             : // 'allocated_slot_result' doesn't have value but as we check before with 'has_value()' so no way for throwing</span>
+<span id="L132"><span class="lineNum">     132</span>                 :             : // std::bad_optional_access which leds to std::terminate().</span>
+<span id="L133"><span class="lineNum">     133</span>                 :             : // coverity[autosar_cpp14_a15_5_3_violation : FALSE]</span>
+<span id="L134"><span class="lineNum">     134</span>                 :<span class="tlaGNC">          22 : Result&lt;void&gt; SkeletonEvent&lt;SampleType&gt;::Send(</span></span>
+<span id="L135"><span class="lineNum">     135</span>                 :             :     const SampleType&amp; value,</span>
+<span id="L136"><span class="lineNum">     136</span>                 :             :     std::optional&lt;typename SkeletonEventBinding&lt;SampleType&gt;::SendTraceCallback&gt; send_trace_callback,</span>
+<span id="L137"><span class="lineNum">     137</span>                 :             :     SampleAllocateeGuard guard) noexcept</span>
+<span id="L138"><span class="lineNum">     138</span>                 :             : {</span>
+<span id="L139"><span class="lineNum">     139</span>                 :<span class="tlaGNC">          22 :     auto allocated_slot_result = Allocate(std::move(guard));</span></span>
+<span id="L140"><span class="lineNum">     140</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 20 times"> + </span>]:<span class="tlaGNC">          22 :     if (!(allocated_slot_result.has_value()))</span></span>
+<span id="L141"><span class="lineNum">     141</span>                 :             :     {</span>
+<span id="L142"><span class="lineNum">     142</span>                 :<span class="tlaGNC">           2 :         return MakeUnexpected(ComErrc::kSampleAllocationFailure, &quot;Could not allocate slot&quot;);</span></span>
+<span id="L143"><span class="lineNum">     143</span>                 :             :     }</span>
+<span id="L144"><span class="lineNum">     144</span>                 :<span class="tlaGNC">          20 :     auto allocated_slot = std::move(allocated_slot_result).value();</span></span>
+<span id="L145"><span class="lineNum">     145</span>                 :<span class="tlaGNC">          20 :     *allocated_slot = value;</span></span>
+<span id="L146"><span class="lineNum">     146</span>                 :             : </span>
+<span id="L147"><span class="lineNum">     147</span>                 :<span class="tlaGNC">          20 :     return Send(std::move(allocated_slot), std::move(send_trace_callback));</span></span>
+<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">          22 : }</span></span>
+<span id="L149"><span class="lineNum">     149</span>                 :             : </span>
+<span id="L150"><span class="lineNum">     150</span>                 :             : template &lt;typename SampleType&gt;</span>
+<span id="L151"><span class="lineNum">     151</span>                 :<span class="tlaGNC">          29 : Result&lt;void&gt; SkeletonEvent&lt;SampleType&gt;::Send(</span></span>
+<span id="L152"><span class="lineNum">     152</span>                 :             :     impl::SampleAllocateePtr&lt;SampleType&gt; sample,</span>
+<span id="L153"><span class="lineNum">     153</span>                 :             :     std::optional&lt;typename SkeletonEventBinding&lt;SampleType&gt;::SendTraceCallback&gt; send_trace_callback) noexcept</span>
+<span id="L154"><span class="lineNum">     154</span>                 :             : {</span>
+<span id="L155"><span class="lineNum">     155</span>                 :<span class="tlaGNC">          29 :     const auto send_result = skeleton_event_common_.Send(sample);</span></span>
+<span id="L156"><span class="lineNum">     156</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 29 times"> + </span>]:<span class="tlaGNC">          29 :     if (!send_result.has_value())</span></span>
+<span id="L157"><span class="lineNum">     157</span>                 :             :     {</span>
+<span id="L158"><span class="lineNum">     158</span>                 :<span class="tlaUNC tlaBgUNC">           0 :         return MakeUnexpected&lt;void&gt;(send_result.error());</span></span>
+<span id="L159"><span class="lineNum">     159</span>                 :             :     }</span>
+<span id="L160"><span class="lineNum">     160</span>                 :             : </span>
+<span id="L161"><span class="lineNum">     161</span>         [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 23 times"> + </span>]:<span class="tlaGNC tlaBgGNC">          29 :     if (send_trace_callback.has_value())</span></span>
+<span id="L162"><span class="lineNum">     162</span>                 :             :     {</span>
+<span id="L163"><span class="lineNum">     163</span>                 :<span class="tlaGNC">           6 :         (*send_trace_callback)(sample);</span></span>
+<span id="L164"><span class="lineNum">     164</span>                 :             :     }</span>
+<span id="L165"><span class="lineNum">     165</span>                 :<span class="tlaGNC">          29 :     return send_result;</span></span>
+<span id="L166"><span class="lineNum">     166</span>                 :             : }</span>
+<span id="L167"><span class="lineNum">     167</span>                 :             : </span>
+<span id="L168"><span class="lineNum">     168</span>                 :             : template &lt;typename SampleType&gt;</span>
+<span id="L169"><span class="lineNum">     169</span>                 :             : // Suppress &quot;AUTOSAR C++14 A15-5-3&quot; rule findings. This rule states: &quot;The std::terminate() function shall not be called</span>
+<span id="L170"><span class="lineNum">     170</span>                 :             : // implicitly&quot;. std::terminate() is implicitly called from '.value()' in case it doesn't have value but as we check</span>
+<span id="L171"><span class="lineNum">     171</span>                 :             : // before with 'has_value()' so no way for throwing std::bad_optional_access, which leads to std::terminate().</span>
+<span id="L172"><span class="lineNum">     172</span>                 :             : // coverity[autosar_cpp14_a15_5_3_violation : FALSE]</span>
+<span id="L173"><span class="lineNum">     173</span>                 :<span class="tlaGNC">          54 : Result&lt;impl::SampleAllocateePtr&lt;SampleType&gt;&gt; SkeletonEvent&lt;SampleType&gt;::Allocate(SampleAllocateeGuard guard) noexcept</span></span>
+<span id="L174"><span class="lineNum">     174</span>                 :             : {</span>
+<span id="L175"><span class="lineNum">     175</span>                 :<span class="tlaGNC">          54 :     const auto allocated_slot_result = skeleton_event_common_.AllocateSlot();</span></span>
+<span id="L176"><span class="lineNum">     176</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 49 times"> + </span>]:<span class="tlaGNC">          54 :     if (!allocated_slot_result.has_value())</span></span>
+<span id="L177"><span class="lineNum">     177</span>                 :             :     {</span>
+<span id="L178"><span class="lineNum">     178</span>                 :<span class="tlaGNC">           5 :         return MakeUnexpected&lt;impl::SampleAllocateePtr&lt;SampleType&gt;&gt;(allocated_slot_result.error());</span></span>
+<span id="L179"><span class="lineNum">     179</span>                 :             :     }</span>
+<span id="L180"><span class="lineNum">     180</span>                 :             : </span>
+<span id="L181"><span class="lineNum">     181</span>                 :<span class="tlaGNC">          49 :     const auto slot_index = allocated_slot_result.value();</span></span>
+<span id="L182"><span class="lineNum">     182</span>                 :             : </span>
+<span id="L183"><span class="lineNum">     183</span>                 :             :     // The ConsumerEventDataControlLocalView stored inside SampleAllocateePtr is only used by the send-tracing path.</span>
+<span id="L184"><span class="lineNum">     184</span>                 :             :     //  Tracing is a diagnostic/monitoring feature with no safety requirement, so QM is sufficient.</span>
+<span id="L185"><span class="lineNum">     185</span>                 :             :     //  GetConsumerEventDataControlLocalView(kASIL_B) is a separate code path introduced specifically for</span>
+<span id="L186"><span class="lineNum">     186</span>                 :             :     //  GetLatestSample().</span>
+<span id="L187"><span class="lineNum">     187</span>                 :             :     return MakeSampleAllocateePtr(</span>
+<span id="L188"><span class="lineNum">     188</span>                 :<span class="tlaGNC">          98 :         SampleAllocateePtr&lt;SampleType&gt;(</span></span>
+<span id="L189"><span class="lineNum">     189</span>                 :<span class="tlaGNC">          49 :             &amp;event_data_storage_-&gt;at(static_cast&lt;std::uint64_t&gt;(slot_index)),</span></span>
+<span id="L190"><span class="lineNum">     190</span>                 :             :             skeleton_event_common_.GetEventDataControlComposite(),</span>
+<span id="L191"><span class="lineNum">     191</span>                 :             :             skeleton_event_common_.GetConsumerEventDataControlLocalView(QualityType::kASIL_QM),</span>
+<span id="L192"><span class="lineNum">     192</span>                 :             :             slot_index),</span>
+<span id="L193"><span class="lineNum">     193</span>                 :<span class="tlaGNC">         147 :         std::move(guard));</span></span>
+<span id="L194"><span class="lineNum">     194</span>                 :             : }</span>
+<span id="L195"><span class="lineNum">     195</span>                 :             : </span>
+<span id="L196"><span class="lineNum">     196</span>                 :             : template &lt;typename SampleType&gt;</span>
+<span id="L197"><span class="lineNum">     197</span>                 :<span class="tlaGNC">          23 : Result&lt;impl::SamplePtr&lt;SampleType&gt;&gt; SkeletonEvent&lt;SampleType&gt;::GetLatestSample(QualityType quality_type)</span></span>
+<span id="L198"><span class="lineNum">     198</span>                 :             : {</span>
+<span id="L199"><span class="lineNum">     199</span>         [<span class="tlaGBC" title="Branch 0 was taken 23 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          23 :     const QualityType event_quality_type = skeleton_event_common_.GetParent().GetInstanceQualityType();</span></span>
+<span id="L200"><span class="lineNum">     200</span>   [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 16 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 6 times"> + </span>]:<span class="tlaGNC">          23 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION_PRD_MESSAGE(</span></span>
+<span id="L201"><span class="lineNum">     201</span>                 :             :         !((event_quality_type == QualityType::kASIL_QM) &amp;&amp; (quality_type == QualityType::kASIL_B)),</span>
+<span id="L202"><span class="lineNum">     202</span>                 :             :         &quot;ASIL-B event support ASIL-QM and ASIL-B quality types, but ASIL-QM event support only ASIL-QM quality type.&quot;);</span>
+<span id="L203"><span class="lineNum">     203</span>                 :             : </span>
+<span id="L204"><span class="lineNum">     204</span>                 :<span class="tlaGNC">          22 :     auto guard = skeleton_event_common_.AllocateGetterGuard();</span></span>
+<span id="L205"><span class="lineNum">     205</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 17 times"> + </span>]:<span class="tlaGNC">          22 :     if (!guard.has_value())</span></span>
+<span id="L206"><span class="lineNum">     206</span>                 :             :     {</span>
+<span id="L207"><span class="lineNum">     207</span>                 :             :         ::score::mw::log::LogError(&quot;lola&quot;)</span>
+<span id="L208"><span class="lineNum">     208</span>                 :<span class="tlaGNC">           5 :             &lt;&lt; &quot;GetLatestSample called while a SamplePtr from a previous call is still alive&quot;;</span></span>
+<span id="L209"><span class="lineNum">     209</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          10 :         return MakeUnexpected(ComErrc::kMaxSamplesReached);</span></span>
+<span id="L210"><span class="lineNum">     210</span>                 :             :     }</span>
+<span id="L211"><span class="lineNum">     211</span>                 :             : </span>
+<span id="L212"><span class="lineNum">     212</span>         [<span class="tlaGBC" title="Branch 0 was taken 17 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          17 :     auto&amp; consumer_event_data_control_local = skeleton_event_common_.GetConsumerEventDataControlLocalView(quality_type);</span></span>
+<span id="L213"><span class="lineNum">     213</span>                 :             : </span>
+<span id="L214"><span class="lineNum">     214</span>                 :             :     // ReferenceNextEvent returns the slot with the highest timestamp in the exclusive range (min, max).</span>
+<span id="L215"><span class="lineNum">     215</span>                 :             :     // We pass 0 and TIMESTAMP_MAX to span the entire valid timestamp range, so it always returns the</span>
+<span id="L216"><span class="lineNum">     216</span>                 :             :     // most recently written sample regardless of its timestamp.</span>
+<span id="L217"><span class="lineNum">     217</span>         [<span class="tlaGBC" title="Branch 0 was taken 17 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          17 :     const auto slot_result = consumer_event_data_control_local.ReferenceNextEvent(EventSlotStatus::EventTimeStamp{0U},</span></span>
+<span id="L218"><span class="lineNum">     218</span>                 :             :                                                                                   EventSlotStatus::TIMESTAMP_MAX);</span>
+<span id="L219"><span class="lineNum">     219</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 14 times"> + </span>]:<span class="tlaGNC">          17 :     if (!slot_result.has_value())</span></span>
+<span id="L220"><span class="lineNum">     220</span>                 :             :     {</span>
+<span id="L221"><span class="lineNum">     221</span>                 :<span class="tlaGNC">           3 :         ::score::mw::log::LogError(&quot;lola&quot;) &lt;&lt; &quot;ReferenceNextEvent did not return a slot index&quot;;</span></span>
+<span id="L222"><span class="lineNum">     222</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           6 :         return MakeUnexpected(ComErrc::kBindingFailure);</span></span>
+<span id="L223"><span class="lineNum">     223</span>                 :             :     }</span>
+<span id="L224"><span class="lineNum">     224</span>                 :             : </span>
+<span id="L225"><span class="lineNum">     225</span>                 :             :     return impl::SamplePtr&lt;SampleType&gt;{</span>
+<span id="L226"><span class="lineNum">     226</span>         [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          14 :         lola::SamplePtr&lt;SampleType&gt;{&amp;event_data_storage_-&gt;at(static_cast&lt;std::uint64_t&gt;(*slot_result)),</span></span>
+<span id="L227"><span class="lineNum">     227</span>                 :             :                                     consumer_event_data_control_local,</span>
+<span id="L228"><span class="lineNum">     228</span>         [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          14 :                                     slot_result.value()},</span></span>
+<span id="L229"><span class="lineNum">     229</span>         [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          14 :         std::move(*guard)};</span></span>
+<span id="L230"><span class="lineNum">     230</span>                 :<span class="tlaGNC">          22 : }</span></span>
+<span id="L231"><span class="lineNum">     231</span>                 :             : </span>
+<span id="L232"><span class="lineNum">     232</span>                 :             : template &lt;typename SampleType&gt;</span>
+<span id="L233"><span class="lineNum">     233</span>                 :             : // Suppress &quot;AUTOSAR C++14 A15-5-3&quot; rule findings. This rule states: &quot;The std::terminate() function shall not be called</span>
+<span id="L234"><span class="lineNum">     234</span>                 :             : // implicitly&quot;. This is a false positive, all results which are accessed with '.value()' that could implicitly call</span>
+<span id="L235"><span class="lineNum">     235</span>                 :             : // 'std::terminate()' (in case it doesn't have value) has a check in advance using '.has_value()', so no way for</span>
+<span id="L236"><span class="lineNum">     236</span>                 :             : // throwing std::bad_optional_access which leds to std::terminate(). This suppression should be removed after fixing</span>
+<span id="L237"><span class="lineNum">     237</span>                 :             : // [Ticket-173043](broken_link_j/Ticket-173043)</span>
+<span id="L238"><span class="lineNum">     238</span>                 :             : // coverity[autosar_cpp14_a15_5_3_violation : FALSE]</span>
+<span id="L239"><span class="lineNum">     239</span>                 :<span class="tlaGNC">          64 : Result&lt;void&gt; SkeletonEvent&lt;SampleType&gt;::PrepareOffer() noexcept</span></span>
+<span id="L240"><span class="lineNum">     240</span>                 :             : {</span>
+<span id="L241"><span class="lineNum">     241</span>                 :             :     // Invariant: after a successful PrepareOffer(), event_data_storage_ is guaranteed to be non-null.</span>
+<span id="L242"><span class="lineNum">     242</span>                 :             :     // All methods that require event_data_storage_ (e.g. GetLatestSample) rely on this invariant.</span>
+<span id="L243"><span class="lineNum">     243</span>                 :<span class="tlaGNC">         128 :     const auto registration_result = skeleton_event_common_.GetParent().template Register&lt;SampleType&gt;(</span></span>
+<span id="L244"><span class="lineNum">     244</span>                 :<span class="tlaGNC">          64 :         skeleton_event_common_.GetElementFQId(), skeleton_event_common_.GetEventProperties());</span></span>
+<span id="L245"><span class="lineNum">     245</span>                 :<span class="tlaGNC">          64 :     event_data_storage_ = &amp;registration_result.event_data_storage;</span></span>
+<span id="L246"><span class="lineNum">     246</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 64 times"> + </span>]:<span class="tlaGNC">          64 :     SCORE_LANGUAGE_FUTURECPP_ASSERT_PRD_MESSAGE(event_data_storage_ != nullptr,</span></span>
+<span id="L247"><span class="lineNum">     247</span>                 :             :                                                 &quot;event_data_storage_ must be non-null after PrepareOffer&quot;);</span>
+<span id="L248"><span class="lineNum">     248</span>                 :             : </span>
+<span id="L249"><span class="lineNum">     249</span>                 :<span class="tlaGNC">          64 :     skeleton_event_common_.PrepareOfferCommon(registration_result.event_control_qm,</span></span>
+<span id="L250"><span class="lineNum">     250</span>                 :<span class="tlaGNC">          64 :                                               registration_result.event_control_asil_b);</span></span>
+<span id="L251"><span class="lineNum">     251</span>                 :             : </span>
+<span id="L252"><span class="lineNum">     252</span>                 :<span class="tlaGNC">          63 :     return {};</span></span>
+<span id="L253"><span class="lineNum">     253</span>                 :             : }</span>
+<span id="L254"><span class="lineNum">     254</span>                 :             : </span>
+<span id="L255"><span class="lineNum">     255</span>                 :             : template &lt;typename SampleType&gt;</span>
+<span id="L256"><span class="lineNum">     256</span>                 :             : // Suppress &quot;AUTOSAR C++14 A15-5-3&quot; rule findings. This rule states: &quot;The std::terminate() function shall not be called</span>
+<span id="L257"><span class="lineNum">     257</span>                 :             : // implicitly&quot;. This is a false positive, all results which are accessed with '.value()' that could implicitly call</span>
+<span id="L258"><span class="lineNum">     258</span>                 :             : // 'std::terminate()' (in case it doesn't have value) has a check in advance using '.has_value()', so no way for</span>
+<span id="L259"><span class="lineNum">     259</span>                 :             : // throwing std::bad_optional_access which leds to std::terminate(). This suppression should be removed after fixing</span>
+<span id="L260"><span class="lineNum">     260</span>                 :             : // [Ticket-173043](broken_link_j/Ticket-173043)</span>
+<span id="L261"><span class="lineNum">     261</span>                 :             : // coverity[autosar_cpp14_a15_5_3_violation : FALSE]</span>
+<span id="L262"><span class="lineNum">     262</span>                 :<span class="tlaGNC">          24 : void SkeletonEvent&lt;SampleType&gt;::PrepareStopOffer() noexcept</span></span>
+<span id="L263"><span class="lineNum">     263</span>                 :             : {</span>
+<span id="L264"><span class="lineNum">     264</span>                 :<span class="tlaGNC">          24 :     skeleton_event_common_.PrepareStopOfferCommon();</span></span>
+<span id="L265"><span class="lineNum">     265</span>                 :<span class="tlaGNC">          24 : }</span></span>
+<span id="L266"><span class="lineNum">     266</span>                 :             : </span>
+<span id="L267"><span class="lineNum">     267</span>                 :             : }  // namespace score::mw::com::impl::lola</span>
+<span id="L268"><span class="lineNum">     268</span>                 :             : </span>
+<span id="L269"><span class="lineNum">     269</span>                 :             : #endif  // SCORE_MW_COM_IMPL_BINDINGS_LOLA_SKELETON_EVENT_H</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

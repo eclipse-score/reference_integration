@@ -1,0 +1,482 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - kvs/external/score_persistency+/score/kvs/kvs.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../index.html">top level</a> - <a href="index.html">kvs/external/score_persistency+/score/kvs</a> - kvs.hpp<span style="font-size: 80%;"> (source / <a href="kvs.hpp.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntry">8</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:37:40</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">2</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryHi">-</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2025 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : #ifndef SCORE_LIB_KVS_KVS_HPP</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #define SCORE_LIB_KVS_KVS_HPP</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : </span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #include &quot;internal/error.hpp&quot;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #include &quot;kvsvalue.hpp&quot;</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : #include &quot;score/filesystem/filesystem.h&quot;</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : #include &quot;score/json/json_parser.h&quot;</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : #include &quot;score/json/json_writer.h&quot;</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : #include &quot;score/mw/log/logger.h&quot;</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : #include &quot;score/result/result.h&quot;</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : #include &lt;atomic&gt;</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : #include &lt;mutex&gt;</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : #include &lt;optional&gt;</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : #include &lt;stdexcept&gt;</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : #include &lt;string&gt;</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : #include &lt;unordered_map&gt;</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : #include &lt;vector&gt;</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : </span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : #define KVS_MAX_SNAPSHOTS 3</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : </span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : namespace score::mw::per::kvs</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : {</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             : </span>
+<span id="L36"><span class="lineNum">      36</span>                 :             : struct InstanceId</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             : {</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             :     size_t id;</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : </span>
+<span id="L40"><span class="lineNum">      40</span>                 :             :     /* Constructor to initialize 'id' */</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             :     /* Not explicit to allow implicit construction e.g. function(0) instead function(InstanceId(0))</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             :      */</span>
+<span id="L43"><span class="lineNum">      43</span>                 :<span class="tlaGNC tlaBgGNC">           6 :     InstanceId(size_t id)</span></span>
+<span id="L44"><span class="lineNum">      44</span>                 :<span class="tlaGNC">           6 :     {</span></span>
+<span id="L45"><span class="lineNum">      45</span>                 :<span class="tlaGNC">           6 :         this-&gt;id = id;</span></span>
+<span id="L46"><span class="lineNum">      46</span>                 :<span class="tlaGNC">           6 :     }</span></span>
+<span id="L47"><span class="lineNum">      47</span>                 :             : };</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             : </span>
+<span id="L49"><span class="lineNum">      49</span>                 :             : struct SnapshotId</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             : {</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             :     size_t id;</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             : </span>
+<span id="L53"><span class="lineNum">      53</span>                 :             :     /* Constructor to initialize 'id'*/</span>
+<span id="L54"><span class="lineNum">      54</span>                 :             :     /* Not explicit to allow implicit construction e.g. function(0) instead function(SnapshotId(0))</span>
+<span id="L55"><span class="lineNum">      55</span>                 :             :      */</span>
+<span id="L56"><span class="lineNum">      56</span>                 :<span class="tlaGNC">          16 :     SnapshotId(size_t id)</span></span>
+<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">          16 :     {</span></span>
+<span id="L58"><span class="lineNum">      58</span>                 :<span class="tlaGNC">          16 :         this-&gt;id = id;</span></span>
+<span id="L59"><span class="lineNum">      59</span>                 :<span class="tlaGNC">          16 :     }</span></span>
+<span id="L60"><span class="lineNum">      60</span>                 :             : };</span>
+<span id="L61"><span class="lineNum">      61</span>                 :             : </span>
+<span id="L62"><span class="lineNum">      62</span>                 :             : /* Need-Defaults flag*/</span>
+<span id="L63"><span class="lineNum">      63</span>                 :             : enum class OpenNeedDefaults</span>
+<span id="L64"><span class="lineNum">      64</span>                 :             : {</span>
+<span id="L65"><span class="lineNum">      65</span>                 :             :     Optional = 0, /* Optional: Use an empty defaults Storage if not available*/</span>
+<span id="L66"><span class="lineNum">      66</span>                 :             :     Required = 1  /* Required: Defaults must be available*/</span>
+<span id="L67"><span class="lineNum">      67</span>                 :             : };</span>
+<span id="L68"><span class="lineNum">      68</span>                 :             : </span>
+<span id="L69"><span class="lineNum">      69</span>                 :             : /* Need-KVS flag*/</span>
+<span id="L70"><span class="lineNum">      70</span>                 :             : enum class OpenNeedKvs</span>
+<span id="L71"><span class="lineNum">      71</span>                 :             : {</span>
+<span id="L72"><span class="lineNum">      72</span>                 :             :     Optional = 0, /* Optional: Use an empty KVS if no KVS is available*/</span>
+<span id="L73"><span class="lineNum">      73</span>                 :             :     Required = 1  /* Required: KVS must be already exist*/</span>
+<span id="L74"><span class="lineNum">      74</span>                 :             : };</span>
+<span id="L75"><span class="lineNum">      75</span>                 :             : </span>
+<span id="L76"><span class="lineNum">      76</span>                 :             : /* Need-File flag */</span>
+<span id="L77"><span class="lineNum">      77</span>                 :             : enum class OpenJsonNeedFile</span>
+<span id="L78"><span class="lineNum">      78</span>                 :             : {</span>
+<span id="L79"><span class="lineNum">      79</span>                 :             :     Optional = 0, /* Optional: If the file doesn't exist, start with empty data */</span>
+<span id="L80"><span class="lineNum">      80</span>                 :             :     Required = 1  /* Required: The file must already exist */</span>
+<span id="L81"><span class="lineNum">      81</span>                 :             : };</span>
+<span id="L82"><span class="lineNum">      82</span>                 :             : </span>
+<span id="L83"><span class="lineNum">      83</span>                 :             : /**</span>
+<span id="L84"><span class="lineNum">      84</span>                 :             :  * @class Kvs</span>
+<span id="L85"><span class="lineNum">      85</span>                 :             :  * @brief A thread-safe key-value store (KVS) CPP Class.</span>
+<span id="L86"><span class="lineNum">      86</span>                 :             :  *</span>
+<span id="L87"><span class="lineNum">      87</span>                 :             :  * The Kvs class provides an interface for managing a key-value store with features such as:</span>
+<span id="L88"><span class="lineNum">      88</span>                 :             :  * - Support for default values.</span>
+<span id="L89"><span class="lineNum">      89</span>                 :             :  * - Snapshot management for persistence and restoration.</span>
+<span id="L90"><span class="lineNum">      90</span>                 :             :  *</span>
+<span id="L91"><span class="lineNum">      91</span>                 :             :  *</span>
+<span id="L92"><span class="lineNum">      92</span>                 :             :  * Public Methods:</span>
+<span id="L93"><span class="lineNum">      93</span>                 :             :  * - `open`: Opens the KVS with a specified instance ID and flags.</span>
+<span id="L94"><span class="lineNum">      94</span>                 :             :  * - `reset`: Resets the KVS to its initial state.</span>
+<span id="L95"><span class="lineNum">      95</span>                 :             :  * - `get_all_keys`: Retrieves all keys stored in the KVS (only written keys, not defaults).</span>
+<span id="L96"><span class="lineNum">      96</span>                 :             :  * - `key_exists`: Checks if a specific key exists in the KVS (only written keys).</span>
+<span id="L97"><span class="lineNum">      97</span>                 :             :  * - `get_value`: Retrieves the value associated with a specific key (returns default if not</span>
+<span id="L98"><span class="lineNum">      98</span>                 :             :  * written).</span>
+<span id="L99"><span class="lineNum">      99</span>                 :             :  * - `get_default_value`: Retrieves the default value associated with a specific key.</span>
+<span id="L100"><span class="lineNum">     100</span>                 :             :  * - `reset_key`: Resets a key to its default value if available.</span>
+<span id="L101"><span class="lineNum">     101</span>                 :             :  * - `is_value_default`: Checks if a default value exists for a specific key.</span>
+<span id="L102"><span class="lineNum">     102</span>                 :             :  * - `set_value`: Sets the value for a specific key in the KVS.</span>
+<span id="L103"><span class="lineNum">     103</span>                 :             :  * - `remove_key`: Removes a specific key from the KVS.</span>
+<span id="L104"><span class="lineNum">     104</span>                 :             :  * - `flush`: Flushes the KVS to storage.</span>
+<span id="L105"><span class="lineNum">     105</span>                 :             :  * - `flush_default`: Flushes the default values to storage.</span>
+<span id="L106"><span class="lineNum">     106</span>                 :             :  * - `snapshot_count`: Retrieves the number of available snapshots.</span>
+<span id="L107"><span class="lineNum">     107</span>                 :             :  * - `snapshot_max_count`: Retrieves the maximum number of snapshots allowed.</span>
+<span id="L108"><span class="lineNum">     108</span>                 :             :  * - `snapshot_restore`: Restores the KVS from a specified snapshot.</span>
+<span id="L109"><span class="lineNum">     109</span>                 :             :  * - `get_kvs_filename`: Retrieves the filename (path) associated with a snapshot.</span>
+<span id="L110"><span class="lineNum">     110</span>                 :             :  * - `get_hash_filename`: Retrieves the hashname (path) associated with a snapshot.</span>
+<span id="L111"><span class="lineNum">     111</span>                 :             :  *</span>
+<span id="L112"><span class="lineNum">     112</span>                 :             :  * Private Methods:</span>
+<span id="L113"><span class="lineNum">     113</span>                 :             :  * - `snapshot_rotate`: Rotates the snapshots, ensuring that the maximum count is maintained.</span>
+<span id="L114"><span class="lineNum">     114</span>                 :             :  * - `parse_json_data`: Parses JSON data into an unordered map of key-value pairs.</span>
+<span id="L115"><span class="lineNum">     115</span>                 :             :  * - `open_json`: Opens a JSON file and returns its contents as an unordered map of key-value pairs.</span>
+<span id="L116"><span class="lineNum">     116</span>                 :             :  * - `write_json_data`: Writes the provided data to a JSON file.</span>
+<span id="L117"><span class="lineNum">     117</span>                 :             :  *</span>
+<span id="L118"><span class="lineNum">     118</span>                 :             :  * Private Members:</span>
+<span id="L119"><span class="lineNum">     119</span>                 :             :  * - `kvs_mutex`: A mutex for ensuring thread safety.</span>
+<span id="L120"><span class="lineNum">     120</span>                 :             :  * - `kvs`: An unordered map for storing key-value pairs.</span>
+<span id="L121"><span class="lineNum">     121</span>                 :             :  * - `default_mutex`: A mutex for default value operations.</span>
+<span id="L122"><span class="lineNum">     122</span>                 :             :  * - `default_values`: An unordered map for storing optional default values.</span>
+<span id="L123"><span class="lineNum">     123</span>                 :             :  * - `filename_prefix`: A path prefix for filenames associated with snapshots.</span>
+<span id="L124"><span class="lineNum">     124</span>                 :             :  * - `filesystem`: A unique pointer to a filesystem handler for file operations.</span>
+<span id="L125"><span class="lineNum">     125</span>                 :             :  * - `parser`: A unique pointer to a JSON parser for reading KVS data.</span>
+<span id="L126"><span class="lineNum">     126</span>                 :             :  * - `writer`: A unique pointer to a JSON writer for writing KVS data.</span>
+<span id="L127"><span class="lineNum">     127</span>                 :             :  *</span>
+<span id="L128"><span class="lineNum">     128</span>                 :             :  * ----------------Notice----------------</span>
+<span id="L129"><span class="lineNum">     129</span>                 :             :  * - Blank should be used instead of void for Result class</span>
+<span id="L130"><span class="lineNum">     130</span>                 :             :  * Refer: &quot;Blank and score::ResultBlank shall be used for `T` instead of `void`&quot; in result.h</span>
+<span id="L131"><span class="lineNum">     131</span>                 :             :  * A KVS Object is not copyable, but it can be moved.</span>
+<span id="L132"><span class="lineNum">     132</span>                 :             :  *</span>
+<span id="L133"><span class="lineNum">     133</span>                 :             :  */</span>
+<span id="L134"><span class="lineNum">     134</span>                 :             : </span>
+<span id="L135"><span class="lineNum">     135</span>                 :             : class Kvs final</span>
+<span id="L136"><span class="lineNum">     136</span>                 :             : {</span>
+<span id="L137"><span class="lineNum">     137</span>                 :             :   public:</span>
+<span id="L138"><span class="lineNum">     138</span>                 :             :     // Deleted copy constructor and assignment operator to prevent copying</span>
+<span id="L139"><span class="lineNum">     139</span>                 :             :     Kvs(const Kvs&amp;) = delete;</span>
+<span id="L140"><span class="lineNum">     140</span>                 :             :     Kvs&amp; operator=(const Kvs&amp;) = delete;</span>
+<span id="L141"><span class="lineNum">     141</span>                 :             : </span>
+<span id="L142"><span class="lineNum">     142</span>                 :             :     // Default move constructor and assignment operator</span>
+<span id="L143"><span class="lineNum">     143</span>                 :             :     Kvs(Kvs&amp;&amp; other) noexcept;</span>
+<span id="L144"><span class="lineNum">     144</span>                 :             :     Kvs&amp; operator=(Kvs&amp;&amp; other) noexcept;</span>
+<span id="L145"><span class="lineNum">     145</span>                 :             : </span>
+<span id="L146"><span class="lineNum">     146</span>                 :             :     /**</span>
+<span id="L147"><span class="lineNum">     147</span>                 :             :      * @brief Opens the key-value store with the specified instance ID and flags.</span>
+<span id="L148"><span class="lineNum">     148</span>                 :             :      *</span>
+<span id="L149"><span class="lineNum">     149</span>                 :             :      * This function initializes and opens the key-value store (KVS) for a given instance ID.</span>
+<span id="L150"><span class="lineNum">     150</span>                 :             :      * It allows the caller to specify whether default values and an existing KVS are required</span>
+<span id="L151"><span class="lineNum">     151</span>                 :             :      * or optional during the opening process.</span>
+<span id="L152"><span class="lineNum">     152</span>                 :             :      *</span>
+<span id="L153"><span class="lineNum">     153</span>                 :             :      * @param id The instance ID of the KVS. This uniquely identifies the KVS instance.</span>
+<span id="L154"><span class="lineNum">     154</span>                 :             :      * @param need_defaults A flag of type OpenNeedDefaults indicating whether default values</span>
+<span id="L155"><span class="lineNum">     155</span>                 :             :      *                      are required or optional.</span>
+<span id="L156"><span class="lineNum">     156</span>                 :             :      *                      - OpenNeedDefaults::Required: Default values must be available.</span>
+<span id="L157"><span class="lineNum">     157</span>                 :             :      *                      - OpenNeedDefaults::Optional: Default values are optional.</span>
+<span id="L158"><span class="lineNum">     158</span>                 :             :      * @param need_kvs A flag of type OpenNeedKvs indicating whether the KVS is required or</span>
+<span id="L159"><span class="lineNum">     159</span>                 :             :      * optional.</span>
+<span id="L160"><span class="lineNum">     160</span>                 :             :      *                 - OpenNeedKvs::Required: The KVS must already exist.</span>
+<span id="L161"><span class="lineNum">     161</span>                 :             :      *                 - OpenNeedKvs::Optional: An empty KVS will be used if no KVS exists.</span>
+<span id="L162"><span class="lineNum">     162</span>                 :             :      * @param dir The directory path where the KVS files are located. It is passed as an rvalue</span>
+<span id="L163"><span class="lineNum">     163</span>                 :             :      * reference to avoid unnecessary copying. Use &quot;&quot; or &quot;.&quot; for the current directory.</span>
+<span id="L164"><span class="lineNum">     164</span>                 :             :      * @return A Result object containing either:</span>
+<span id="L165"><span class="lineNum">     165</span>                 :             :      *         - A Kvs object if the operation is successful.</span>
+<span id="L166"><span class="lineNum">     166</span>                 :             :      *         - An ErrorCode if an error occurs during the operation.</span>
+<span id="L167"><span class="lineNum">     167</span>                 :             :      *</span>
+<span id="L168"><span class="lineNum">     168</span>                 :             :      * IMPORTANT: Instead of using the Kvs::open method directly, it is recommended to use the</span>
+<span id="L169"><span class="lineNum">     169</span>                 :             :      * KvsBuilder class.</span>
+<span id="L170"><span class="lineNum">     170</span>                 :             :      *</span>
+<span id="L171"><span class="lineNum">     171</span>                 :             :      */</span>
+<span id="L172"><span class="lineNum">     172</span>                 :             :     static score::Result&lt;Kvs&gt; open(const InstanceId&amp; instance_id,</span>
+<span id="L173"><span class="lineNum">     173</span>                 :             :                                    OpenNeedDefaults need_defaults,</span>
+<span id="L174"><span class="lineNum">     174</span>                 :             :                                    OpenNeedKvs need_kvs,</span>
+<span id="L175"><span class="lineNum">     175</span>                 :             :                                    const std::string&amp;&amp; dir);</span>
+<span id="L176"><span class="lineNum">     176</span>                 :             : </span>
+<span id="L177"><span class="lineNum">     177</span>                 :             :     /**</span>
+<span id="L178"><span class="lineNum">     178</span>                 :             :      * @brief Resets a key-value-storage to its initial state</span>
+<span id="L179"><span class="lineNum">     179</span>                 :             :      *</span>
+<span id="L180"><span class="lineNum">     180</span>                 :             :      */</span>
+<span id="L181"><span class="lineNum">     181</span>                 :             :     score::ResultBlank reset();</span>
+<span id="L182"><span class="lineNum">     182</span>                 :             : </span>
+<span id="L183"><span class="lineNum">     183</span>                 :             :     /**</span>
+<span id="L184"><span class="lineNum">     184</span>                 :             :      * @brief Retrieves all keys stored in the key-value store.</span>
+<span id="L185"><span class="lineNum">     185</span>                 :             :      *        Important: It only retrieves the written keys, no default keys are returned.</span>
+<span id="L186"><span class="lineNum">     186</span>                 :             :      *</span>
+<span id="L187"><span class="lineNum">     187</span>                 :             :      * @return score::Result&lt;std::vector&lt;std::string_view&gt;&gt;</span>
+<span id="L188"><span class="lineNum">     188</span>                 :             :      *         A score::Result object containing a vector of all written keys on success,</span>
+<span id="L189"><span class="lineNum">     189</span>                 :             :      *         or an Errorcode on failure.</span>
+<span id="L190"><span class="lineNum">     190</span>                 :             :      */</span>
+<span id="L191"><span class="lineNum">     191</span>                 :             :     score::Result&lt;std::vector&lt;std::string&gt;&gt; get_all_keys();</span>
+<span id="L192"><span class="lineNum">     192</span>                 :             : </span>
+<span id="L193"><span class="lineNum">     193</span>                 :             :     /**</span>
+<span id="L194"><span class="lineNum">     194</span>                 :             :      * @brief Checks if a key exists in the key-value store. If the key was never written it will</span>
+<span id="L195"><span class="lineNum">     195</span>                 :             :      * always return false even if a default value for the key is available.</span>
+<span id="L196"><span class="lineNum">     196</span>                 :             :      *</span>
+<span id="L197"><span class="lineNum">     197</span>                 :             :      * @param key The key to check for existence, provided as a std::string_view.</span>
+<span id="L198"><span class="lineNum">     198</span>                 :             :      * @return score::Result&lt;bool&gt;</span>
+<span id="L199"><span class="lineNum">     199</span>                 :             :      *         - On success: A score::Result containing `true` if the key exists, or `false` if it</span>
+<span id="L200"><span class="lineNum">     200</span>                 :             :      * does not.</span>
+<span id="L201"><span class="lineNum">     201</span>                 :             :      *         - On failure: A score::Result containing an appropriate ErrorCode.</span>
+<span id="L202"><span class="lineNum">     202</span>                 :             :      */</span>
+<span id="L203"><span class="lineNum">     203</span>                 :             :     score::Result&lt;bool&gt; key_exists(const std::string_view key);</span>
+<span id="L204"><span class="lineNum">     204</span>                 :             : </span>
+<span id="L205"><span class="lineNum">     205</span>                 :             :     /**</span>
+<span id="L206"><span class="lineNum">     206</span>                 :             :      * @brief Retrieves the value associated with the specified key from the key-value store.</span>
+<span id="L207"><span class="lineNum">     207</span>                 :             :      *        If no Key was written, it returns the default value if available.</span>
+<span id="L208"><span class="lineNum">     208</span>                 :             :      *</span>
+<span id="L209"><span class="lineNum">     209</span>                 :             :      * @param key The key for which the value is to be retrieved. It is passed as a string view to</span>
+<span id="L210"><span class="lineNum">     210</span>                 :             :      * avoid unnecessary copying.</span>
+<span id="L211"><span class="lineNum">     211</span>                 :             :      * @return A score::Result object containing either the retrieved value (KvsValue) or an</span>
+<span id="L212"><span class="lineNum">     212</span>                 :             :      * ErrorCode if the operation fails.</span>
+<span id="L213"><span class="lineNum">     213</span>                 :             :      */</span>
+<span id="L214"><span class="lineNum">     214</span>                 :             :     score::Result&lt;KvsValue&gt; get_value(const std::string_view key);</span>
+<span id="L215"><span class="lineNum">     215</span>                 :             : </span>
+<span id="L216"><span class="lineNum">     216</span>                 :             :     /**</span>
+<span id="L217"><span class="lineNum">     217</span>                 :             :      * @brief Retrieves the default value associated with the specified key.</span>
+<span id="L218"><span class="lineNum">     218</span>                 :             :      *</span>
+<span id="L219"><span class="lineNum">     219</span>                 :             :      * This function attempts to fetch the default value for a given key from the</span>
+<span id="L220"><span class="lineNum">     220</span>                 :             :      * key-value store. If the key exists, the corresponding value is returned.</span>
+<span id="L221"><span class="lineNum">     221</span>                 :             :      * Otherwise, an error code is provided to indicate the failure reason.</span>
+<span id="L222"><span class="lineNum">     222</span>                 :             :      *</span>
+<span id="L223"><span class="lineNum">     223</span>                 :             :      * @param key The key for which the default value is to be retrieved.</span>
+<span id="L224"><span class="lineNum">     224</span>                 :             :      *            It is passed as a string view to avoid unnecessary string copies.</span>
+<span id="L225"><span class="lineNum">     225</span>                 :             :      *</span>
+<span id="L226"><span class="lineNum">     226</span>                 :             :      * @return A score::Result object containing either the default value (KvsValue) if</span>
+<span id="L227"><span class="lineNum">     227</span>                 :             :      *         the operation is successful, or an ErrorCode indicating the error</span>
+<span id="L228"><span class="lineNum">     228</span>                 :             :      *         if the operation fails.</span>
+<span id="L229"><span class="lineNum">     229</span>                 :             :      */</span>
+<span id="L230"><span class="lineNum">     230</span>                 :             :     score::Result&lt;KvsValue&gt; get_default_value(const std::string_view key);</span>
+<span id="L231"><span class="lineNum">     231</span>                 :             : </span>
+<span id="L232"><span class="lineNum">     232</span>                 :             :     /**</span>
+<span id="L233"><span class="lineNum">     233</span>                 :             :      * @brief Resets a specified key to its default value.</span>
+<span id="L234"><span class="lineNum">     234</span>                 :             :      *</span>
+<span id="L235"><span class="lineNum">     235</span>                 :             :      * This function attempts to reset a key to its default value.</span>
+<span id="L236"><span class="lineNum">     236</span>                 :             :      * If no default value is available, it returns an ErrorCode and doesn't delete the key.</span>
+<span id="L237"><span class="lineNum">     237</span>                 :             :      * If no key was ever written, but a default value is available it returns successful.</span>
+<span id="L238"><span class="lineNum">     238</span>                 :             :      * If a key was written and it has a default value, it deletes the written key.</span>
+<span id="L239"><span class="lineNum">     239</span>                 :             :      *</span>
+<span id="L240"><span class="lineNum">     240</span>                 :             :      * @param key The key to be reset to the default value</span>
+<span id="L241"><span class="lineNum">     241</span>                 :             :      *</span>
+<span id="L242"><span class="lineNum">     242</span>                 :             :      * @return A score::Result object that indicates the success or failure of the operation.</span>
+<span id="L243"><span class="lineNum">     243</span>                 :             :      *         - On success: Returns a blank score::Result.</span>
+<span id="L244"><span class="lineNum">     244</span>                 :             :      *         - On failure: Returns an ErrorCode describing the error.</span>
+<span id="L245"><span class="lineNum">     245</span>                 :             :      */</span>
+<span id="L246"><span class="lineNum">     246</span>                 :             :     score::ResultBlank reset_key(const std::string_view key);</span>
+<span id="L247"><span class="lineNum">     247</span>                 :             : </span>
+<span id="L248"><span class="lineNum">     248</span>                 :             :     /**</span>
+<span id="L249"><span class="lineNum">     249</span>                 :             :      * @brief Checks if the specified key wasn't set yet and uses its default value.</span>
+<span id="L250"><span class="lineNum">     250</span>                 :             :      *</span>
+<span id="L251"><span class="lineNum">     251</span>                 :             :      * This function determines whether the given key is associated with a default</span>
+<span id="L252"><span class="lineNum">     252</span>                 :             :      * value in the key-value store.</span>
+<span id="L253"><span class="lineNum">     253</span>                 :             :      *</span>
+<span id="L254"><span class="lineNum">     254</span>                 :             :      * @param key The key to check, provided as a string view.</span>
+<span id="L255"><span class="lineNum">     255</span>                 :             :      * @return score::Result&lt;bool&gt;</span>
+<span id="L256"><span class="lineNum">     256</span>                 :             :      *         - On success: Returns a score::Result&lt;bool&gt; containing bool if the default value</span>
+<span id="L257"><span class="lineNum">     257</span>                 :             :      * exists.</span>
+<span id="L258"><span class="lineNum">     258</span>                 :             :      *         - On failure: Returns a score::Result containing an appropriate ErrorCode.</span>
+<span id="L259"><span class="lineNum">     259</span>                 :             :      */</span>
+<span id="L260"><span class="lineNum">     260</span>                 :             :     score::Result&lt;bool&gt; is_value_default(const std::string_view key) const;</span>
+<span id="L261"><span class="lineNum">     261</span>                 :             : </span>
+<span id="L262"><span class="lineNum">     262</span>                 :             :     /**</span>
+<span id="L263"><span class="lineNum">     263</span>                 :             :      * @brief Stores a key-value pair in the key-value store.</span>
+<span id="L264"><span class="lineNum">     264</span>                 :             :      *</span>
+<span id="L265"><span class="lineNum">     265</span>                 :             :      * @param key The key associated with the value to be stored.</span>
+<span id="L266"><span class="lineNum">     266</span>                 :             :      *            It is represented as a string view to avoid unnecessary copying.</span>
+<span id="L267"><span class="lineNum">     267</span>                 :             :      * @param value The value to be stored, represented as a KvsValue object.</span>
+<span id="L268"><span class="lineNum">     268</span>                 :             :      *</span>
+<span id="L269"><span class="lineNum">     269</span>                 :             :      * @return A score::Result object that indicates the success or failure of the operation.</span>
+<span id="L270"><span class="lineNum">     270</span>                 :             :      *         - On success: Returns a blank score::Result.</span>
+<span id="L271"><span class="lineNum">     271</span>                 :             :      *         - On failure: Returns an ErrorCode describing the error.</span>
+<span id="L272"><span class="lineNum">     272</span>                 :             :      */</span>
+<span id="L273"><span class="lineNum">     273</span>                 :             :     score::ResultBlank set_value(const std::string_view key, const KvsValue&amp; value);</span>
+<span id="L274"><span class="lineNum">     274</span>                 :             : </span>
+<span id="L275"><span class="lineNum">     275</span>                 :             :     /**</span>
+<span id="L276"><span class="lineNum">     276</span>                 :             :      * @brief Removes a key-value pair from the store based on the specified key.</span>
+<span id="L277"><span class="lineNum">     277</span>                 :             :      *</span>
+<span id="L278"><span class="lineNum">     278</span>                 :             :      * @param key The key of the key-value pair to be removed. It is passed as a</span>
+<span id="L279"><span class="lineNum">     279</span>                 :             :      *            std::string_view to avoid unnecessary copying.</span>
+<span id="L280"><span class="lineNum">     280</span>                 :             :      * @return A score::Result object that indicates the success or failure of the operation.</span>
+<span id="L281"><span class="lineNum">     281</span>                 :             :      *         - On success: Returns a blank score::Result.</span>
+<span id="L282"><span class="lineNum">     282</span>                 :             :      *         - On failure: Returns an ErrorCode describing the error.</span>
+<span id="L283"><span class="lineNum">     283</span>                 :             :      */</span>
+<span id="L284"><span class="lineNum">     284</span>                 :             :     score::ResultBlank remove_key(const std::string_view key);</span>
+<span id="L285"><span class="lineNum">     285</span>                 :             : </span>
+<span id="L286"><span class="lineNum">     286</span>                 :             :     /**</span>
+<span id="L287"><span class="lineNum">     287</span>                 :             :      * @brief Flushes the key-value store, ensuring that all pending changes</span>
+<span id="L288"><span class="lineNum">     288</span>                 :             :      *        are written to the underlying storage.</span>
+<span id="L289"><span class="lineNum">     289</span>                 :             :      *</span>
+<span id="L290"><span class="lineNum">     290</span>                 :             :      * @return A score::Result object that indicates the success or failure of the operation.</span>
+<span id="L291"><span class="lineNum">     291</span>                 :             :      *         - On success: Returns a blank score::Result.</span>
+<span id="L292"><span class="lineNum">     292</span>                 :             :      *         - On failure: Returns an ErrorCode describing the error.</span>
+<span id="L293"><span class="lineNum">     293</span>                 :             :      */</span>
+<span id="L294"><span class="lineNum">     294</span>                 :             :     score::ResultBlank flush();</span>
+<span id="L295"><span class="lineNum">     295</span>                 :             : </span>
+<span id="L296"><span class="lineNum">     296</span>                 :             :     /**</span>
+<span id="L297"><span class="lineNum">     297</span>                 :             :      * @brief Retrieves the number of snapshots currently stored in the key-value store.</span>
+<span id="L298"><span class="lineNum">     298</span>                 :             :      *</span>
+<span id="L299"><span class="lineNum">     299</span>                 :             :      * @return A score::Result object that indicates the success or failure of the operation.</span>
+<span id="L300"><span class="lineNum">     300</span>                 :             :      *         - On success: The total count of snapshots as a size_t value.</span>
+<span id="L301"><span class="lineNum">     301</span>                 :             :      *         - On failure: Returns an ErrorCode describing the error.</span>
+<span id="L302"><span class="lineNum">     302</span>                 :             :      */</span>
+<span id="L303"><span class="lineNum">     303</span>                 :             :     score::Result&lt;size_t&gt; snapshot_count() const;</span>
+<span id="L304"><span class="lineNum">     304</span>                 :             : </span>
+<span id="L305"><span class="lineNum">     305</span>                 :             :     /**</span>
+<span id="L306"><span class="lineNum">     306</span>                 :             :      * @brief Retrieves the maximum number of snapshots that can be stored.</span>
+<span id="L307"><span class="lineNum">     307</span>                 :             :      *</span>
+<span id="L308"><span class="lineNum">     308</span>                 :             :      * This function returns the upper limit on the number of snapshots</span>
+<span id="L309"><span class="lineNum">     309</span>                 :             :      * that the key-value store can maintain at any given time.</span>
+<span id="L310"><span class="lineNum">     310</span>                 :             :      *</span>
+<span id="L311"><span class="lineNum">     311</span>                 :             :      * @return The maximum count of snapshots as a size_t value.</span>
+<span id="L312"><span class="lineNum">     312</span>                 :             :      */</span>
+<span id="L313"><span class="lineNum">     313</span>                 :             :     size_t snapshot_max_count() const;</span>
+<span id="L314"><span class="lineNum">     314</span>                 :             : </span>
+<span id="L315"><span class="lineNum">     315</span>                 :             :     /**</span>
+<span id="L316"><span class="lineNum">     316</span>                 :             :      * @brief Restores the state of the key-value store from a specified snapshot.</span>
+<span id="L317"><span class="lineNum">     317</span>                 :             :      *</span>
+<span id="L318"><span class="lineNum">     318</span>                 :             :      * This function attempts to restore the key-value store to the state</span>
+<span id="L319"><span class="lineNum">     319</span>                 :             :      * captured in the snapshot identified by the given snapshot ID. If the</span>
+<span id="L320"><span class="lineNum">     320</span>                 :             :      * restoration process fails, an appropriate error code is returned.</span>
+<span id="L321"><span class="lineNum">     321</span>                 :             :      *</span>
+<span id="L322"><span class="lineNum">     322</span>                 :             :      * @param snapshot_id The identifier of the snapshot to restore from.</span>
+<span id="L323"><span class="lineNum">     323</span>                 :             :      * @return score::ResultBlank</span>
+<span id="L324"><span class="lineNum">     324</span>                 :             :      *         - On success: An empty score::Result indicating the restoration was successful.</span>
+<span id="L325"><span class="lineNum">     325</span>                 :             :      *         - On failure: An error code describing the reason for the failure.</span>
+<span id="L326"><span class="lineNum">     326</span>                 :             :      */</span>
+<span id="L327"><span class="lineNum">     327</span>                 :             :     score::ResultBlank snapshot_restore(const SnapshotId&amp; snapshot_id);</span>
+<span id="L328"><span class="lineNum">     328</span>                 :             : </span>
+<span id="L329"><span class="lineNum">     329</span>                 :             :     /**</span>
+<span id="L330"><span class="lineNum">     330</span>                 :             :      * @brief Retrieves the filename associated with a given snapshot ID in the key-value store.</span>
+<span id="L331"><span class="lineNum">     331</span>                 :             :      *</span>
+<span id="L332"><span class="lineNum">     332</span>                 :             :      * @param snapshot_id The identifier of the snapshot for which the filename is to be retrieved.</span>
+<span id="L333"><span class="lineNum">     333</span>                 :             :      * @return score::ResultBlank</span>
+<span id="L334"><span class="lineNum">     334</span>                 :             :      *         - On success: A score::filesystem::Path with the filename (path) associated with the</span>
+<span id="L335"><span class="lineNum">     335</span>                 :             :      * snapshot ID.</span>
+<span id="L336"><span class="lineNum">     336</span>                 :             :      *         - On failure: An error code describing the reason for the failure.</span>
+<span id="L337"><span class="lineNum">     337</span>                 :             :      */</span>
+<span id="L338"><span class="lineNum">     338</span>                 :             :     score::Result&lt;score::filesystem::Path&gt; get_kvs_filename(const SnapshotId&amp; snapshot_id) const;</span>
+<span id="L339"><span class="lineNum">     339</span>                 :             : </span>
+<span id="L340"><span class="lineNum">     340</span>                 :             :     /**</span>
+<span id="L341"><span class="lineNum">     341</span>                 :             :      * @brief Retrieves the filename of the hash file associated with a given snapshot ID.</span>
+<span id="L342"><span class="lineNum">     342</span>                 :             :      *</span>
+<span id="L343"><span class="lineNum">     343</span>                 :             :      * This function returns a string view representing the filename of the hash file</span>
+<span id="L344"><span class="lineNum">     344</span>                 :             :      * corresponding to the provided snapshot ID. The hash file is typically used to</span>
+<span id="L345"><span class="lineNum">     345</span>                 :             :      * store metadata or integrity information for the snapshot.</span>
+<span id="L346"><span class="lineNum">     346</span>                 :             :      *</span>
+<span id="L347"><span class="lineNum">     347</span>                 :             :      * @param snapshot_id The identifier of the snapshot for which the hash filename is requested.</span>
+<span id="L348"><span class="lineNum">     348</span>                 :             :      * @return score::ResultBlank</span>
+<span id="L349"><span class="lineNum">     349</span>                 :             :      *         - On success: A score::filesystem::Path with the filename (path) of the hash file</span>
+<span id="L350"><span class="lineNum">     350</span>                 :             :      * associated with the snapshot ID.</span>
+<span id="L351"><span class="lineNum">     351</span>                 :             :      *         - On failure: An error code describing the reason for the failure.</span>
+<span id="L352"><span class="lineNum">     352</span>                 :             :      */</span>
+<span id="L353"><span class="lineNum">     353</span>                 :             :     score::Result&lt;score::filesystem::Path&gt; get_hash_filename(const SnapshotId&amp; snapshot_id) const;</span>
+<span id="L354"><span class="lineNum">     354</span>                 :             : </span>
+<span id="L355"><span class="lineNum">     355</span>                 :             :   private:</span>
+<span id="L356"><span class="lineNum">     356</span>                 :             :     /* Private constructor to prevent direct instantiation */</span>
+<span id="L357"><span class="lineNum">     357</span>                 :             :     Kvs();</span>
+<span id="L358"><span class="lineNum">     358</span>                 :             : </span>
+<span id="L359"><span class="lineNum">     359</span>                 :             :     /* Internal storage and configuration details.*/</span>
+<span id="L360"><span class="lineNum">     360</span>                 :             :     std::mutex kvs_mutex;</span>
+<span id="L361"><span class="lineNum">     361</span>                 :             :     std::unordered_map&lt;std::string, KvsValue&gt; kvs;</span>
+<span id="L362"><span class="lineNum">     362</span>                 :             : </span>
+<span id="L363"><span class="lineNum">     363</span>                 :             :     /* Optional default values */</span>
+<span id="L364"><span class="lineNum">     364</span>                 :             :     std::unordered_map&lt;std::string, KvsValue&gt; default_values;</span>
+<span id="L365"><span class="lineNum">     365</span>                 :             : </span>
+<span id="L366"><span class="lineNum">     366</span>                 :             :     /* Filename prefix */</span>
+<span id="L367"><span class="lineNum">     367</span>                 :             :     score::filesystem::Path filename_prefix;</span>
+<span id="L368"><span class="lineNum">     368</span>                 :             : </span>
+<span id="L369"><span class="lineNum">     369</span>                 :             :     /* Filesystem handling */</span>
+<span id="L370"><span class="lineNum">     370</span>                 :             :     std::unique_ptr&lt;score::filesystem::Filesystem&gt; filesystem;</span>
+<span id="L371"><span class="lineNum">     371</span>                 :             : </span>
+<span id="L372"><span class="lineNum">     372</span>                 :             :     /* Json handling */</span>
+<span id="L373"><span class="lineNum">     373</span>                 :             :     std::unique_ptr&lt;score::json::IJsonParser&gt; parser;</span>
+<span id="L374"><span class="lineNum">     374</span>                 :             :     std::unique_ptr&lt;score::json::IJsonWriter&gt; writer;</span>
+<span id="L375"><span class="lineNum">     375</span>                 :             : </span>
+<span id="L376"><span class="lineNum">     376</span>                 :             :     /* Logging */</span>
+<span id="L377"><span class="lineNum">     377</span>                 :             :     std::unique_ptr&lt;score::mw::log::Logger&gt; logger;</span>
+<span id="L378"><span class="lineNum">     378</span>                 :             : </span>
+<span id="L379"><span class="lineNum">     379</span>                 :             :     /* Private Methods */</span>
+<span id="L380"><span class="lineNum">     380</span>                 :             :     score::ResultBlank snapshot_rotate();</span>
+<span id="L381"><span class="lineNum">     381</span>                 :             :     score::Result&lt;std::unordered_map&lt;std::string, KvsValue&gt;&gt; parse_json_data(const std::string&amp; data);</span>
+<span id="L382"><span class="lineNum">     382</span>                 :             :     score::Result&lt;std::unordered_map&lt;std::string, KvsValue&gt;&gt; open_json(const score::filesystem::Path&amp; prefix,</span>
+<span id="L383"><span class="lineNum">     383</span>                 :             :                                                                        OpenJsonNeedFile need_file);</span>
+<span id="L384"><span class="lineNum">     384</span>                 :             :     score::ResultBlank write_json_data(const std::string&amp; buf);</span>
+<span id="L385"><span class="lineNum">     385</span>                 :             :     score::ResultBlank write_and_sync(const std::string&amp; path, const void* data, std::size_t size);</span>
+<span id="L386"><span class="lineNum">     386</span>                 :             : };</span>
+<span id="L387"><span class="lineNum">     387</span>                 :             : </span>
+<span id="L388"><span class="lineNum">     388</span>                 :             : } /* namespace score::mw::per::kvs */</span>
+<span id="L389"><span class="lineNum">     389</span>                 :             : </span>
+<span id="L390"><span class="lineNum">     390</span>                 :             : #endif /* SCORE_LIB_KVS_KVS_HPP */</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

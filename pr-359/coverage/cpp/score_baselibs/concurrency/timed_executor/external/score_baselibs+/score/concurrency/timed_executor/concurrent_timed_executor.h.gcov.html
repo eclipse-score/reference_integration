@@ -1,0 +1,335 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - concurrency/timed_executor/external/score_baselibs+/score/concurrency/timed_executor/concurrent_timed_executor.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../index.html">top level</a> - <a href="index.html">concurrency/timed_executor/external/score_baselibs+/score/concurrency/timed_executor</a> - concurrent_timed_executor.h<span style="font-size: 80%;"> (source / <a href="concurrent_timed_executor.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">98.7&nbsp;%</td>
+            <td class="headerCovTableEntry">77</td>
+            <td class="headerCovTableEntry">76</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:33:47</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryLo">73.3&nbsp;%</td>
+            <td class="headerCovTableEntry">30</td>
+            <td class="headerCovTableEntry">22</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryLo">57.4&nbsp;%</td>
+            <td class="headerCovTableEntry">94</td>
+            <td class="headerCovTableEntry">54</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2025 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : #ifndef SCORE_LIB_CONCURRENCY_CONCURRENT_TIMED_EXECUTOR_H</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #define SCORE_LIB_CONCURRENCY_CONCURRENT_TIMED_EXECUTOR_H</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : </span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #include &quot;score/concurrency/condition_variable.h&quot;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #include &quot;score/concurrency/executor.h&quot;</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : #include &quot;score/concurrency/timed_executor/timed_executor.h&quot;</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : #include &quot;score/concurrency/timed_executor/timed_task.h&quot;</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : </span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : #include &lt;score/assert.hpp&gt;</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : #include &lt;score/deque.hpp&gt;</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : #include &lt;score/jthread.hpp&gt;</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : #include &lt;score/memory.hpp&gt;</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : #include &lt;score/memory_resource.hpp&gt;</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : #include &lt;score/set.hpp&gt;</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : #include &lt;score/stop_token.hpp&gt;</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : #include &lt;score/type_traits.hpp&gt;</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : #include &lt;score/vector.hpp&gt;</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : </span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : #include &lt;algorithm&gt;</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : #include &lt;chrono&gt;</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : #include &lt;cstddef&gt;</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : #include &lt;functional&gt;</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             : #include &lt;mutex&gt;</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             : #include &lt;queue&gt;</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             : #include &lt;type_traits&gt;</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             : </span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : namespace score::concurrency</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : {</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             : </span>
+<span id="L42"><span class="lineNum">      42</span>                 :             : /// @brief This executor tries to implement an earliest start-time first algorithm.</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             : /// @noted Running tasks will _not_ get interrupted. If the concurrency level is to low, this means that tasks will</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             : /// not get executed according to their schedule. After all, this is only a best effort approach, since the OS is at</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             : /// the end the deciding factor, what gets scheduled when.</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             : template &lt;class Clock&gt;</span>
+<span id="L47"><span class="lineNum">      47</span>                 :             : class ConcurrentTimedExecutor final : public TimedExecutor&lt;Clock&gt;</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             : {</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             :   public:</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             :     using TimePoint = std::chrono::time_point&lt;Clock&gt;;</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             : </span>
+<span id="L52"><span class="lineNum">      52</span>                 :<span class="tlaGNC tlaBgGNC">          15 :     explicit ConcurrentTimedExecutor(score::cpp::pmr::memory_resource* memory_resource,</span></span>
+<span id="L53"><span class="lineNum">      53</span>                 :             :                                      score::cpp::pmr::unique_ptr&lt;Executor&gt; executor)</span>
+<span id="L54"><span class="lineNum">      54</span>         [<span class="tlaGBC" title="Branch 0 was taken 15 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          15 :         : TimedExecutor&lt;Clock&gt;{memory_resource}, executor_{std::move(executor)}, queue_{}, free_{}, waiting_{}, mutex_{}</span></span>
+<span id="L55"><span class="lineNum">      55</span>                 :             :     {</span>
+<span id="L56"><span class="lineNum">      56</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 15 times"> + </span>]:<span class="tlaGNC">          15 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION_PRD(executor_ != nullptr);</span></span>
+<span id="L57"><span class="lineNum">      57</span>         [<span class="tlaGBC" title="Branch 0 was taken 23 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 15 times"> + </span>]:<span class="tlaGNC">          38 :         for (std::size_t counter{0U}; counter &lt; executor_-&gt;MaxConcurrencyLevel(); counter++)</span></span>
+<span id="L58"><span class="lineNum">      58</span>                 :             :         {</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             :             // it's alright since the conditional variable is moved to the functor</span>
+<span id="L60"><span class="lineNum">      60</span>                 :             :             // coverity[autosar_cpp14_a18_5_8_violation]</span>
+<span id="L61"><span class="lineNum">      61</span>         [<span class="tlaGBC" title="Branch 0 was taken 23 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          23 :             auto conditional_variable =</span></span>
+<span id="L62"><span class="lineNum">      62</span>                 :             :                 score::cpp::pmr::make_shared&lt;concurrency::InterruptibleConditionalVariable&gt;(memory_resource);</span>
+<span id="L63"><span class="lineNum">      63</span>                 :             : </span>
+<span id="L64"><span class="lineNum">      64</span>                 :             :             // capturing `this` is fine, since executor_ will be destroyed upon destruction of `this`</span>
+<span id="L65"><span class="lineNum">      65</span>         [<span class="tlaGBC" title="Branch 0 was taken 23 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          46 :             executor_-&gt;Post(</span></span>
+<span id="L66"><span class="lineNum">      66</span>                 :<span class="tlaGNC">          28 :                 [this, conditional_variable = std::move(conditional_variable)](const score::cpp::stop_token token) {</span></span>
+<span id="L67"><span class="lineNum">      67</span>                 :             :                     // GCOV_EXCL_START: false-positive, covered by ConcurrentTimedExecutorFixture</span>
+<span id="L68"><span class="lineNum">      68</span>   [<span class="tlaGBC" title="Branch 0 was taken 18 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          23 :                     while (not token.stop_requested())</span></span>
+<span id="L69"><span class="lineNum">      69</span>                 :             :                     // GCOV_EXCL_STOP</span>
+<span id="L70"><span class="lineNum">      70</span>                 :             :                     {</span>
+<span id="L71"><span class="lineNum">      71</span>   [<span class="tlaGBC" title="Branch 0 was taken 18 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          18 :                         Work(token, conditional_variable);</span></span>
+<span id="L72"><span class="lineNum">      72</span>                 :             :                     }</span>
+<span id="L73"><span class="lineNum">      73</span>                 :             :                 });</span>
+<span id="L74"><span class="lineNum">      74</span>                 :             :         }</span>
+<span id="L75"><span class="lineNum">      75</span>                 :<span class="tlaGNC">          38 :     }</span></span>
+<span id="L76"><span class="lineNum">      76</span>                 :             : </span>
+<span id="L77"><span class="lineNum">      77</span>                 :             :     ConcurrentTimedExecutor(const ConcurrentTimedExecutor&amp;) = delete;</span>
+<span id="L78"><span class="lineNum">      78</span>                 :             :     ConcurrentTimedExecutor(ConcurrentTimedExecutor&amp;&amp;) noexcept = delete;</span>
+<span id="L79"><span class="lineNum">      79</span>                 :             :     ConcurrentTimedExecutor&amp; operator=(const ConcurrentTimedExecutor&amp;) = delete;</span>
+<span id="L80"><span class="lineNum">      80</span>                 :             :     ConcurrentTimedExecutor&amp; operator=(ConcurrentTimedExecutor&amp;&amp;) noexcept = delete;</span>
+<span id="L81"><span class="lineNum">      81</span>                 :             : </span>
+<span id="L82"><span class="lineNum">      82</span>                 :<span class="tlaGNC">          15 :     ~ConcurrentTimedExecutor() noexcept override</span></span>
+<span id="L83"><span class="lineNum">      83</span>                 :             :     {</span>
+<span id="L84"><span class="lineNum">      84</span>                 :<span class="tlaGNC">          15 :         executor_.reset();</span></span>
+<span id="L85"><span class="lineNum">      85</span>                 :<span class="tlaGNC">          15 :     }</span></span>
+<span id="L86"><span class="lineNum">      86</span>                 :             : </span>
+<span id="L87"><span class="lineNum">      87</span>                 :<span class="tlaGNC">           1 :     [[nodiscard]] std::size_t MaxConcurrencyLevel() const noexcept override</span></span>
+<span id="L88"><span class="lineNum">      88</span>                 :             :     {</span>
+<span id="L89"><span class="lineNum">      89</span>                 :<span class="tlaGNC">           1 :         return executor_-&gt;MaxConcurrencyLevel();</span></span>
+<span id="L90"><span class="lineNum">      90</span>                 :             :     }</span>
+<span id="L91"><span class="lineNum">      91</span>                 :             : </span>
+<span id="L92"><span class="lineNum">      92</span>                 :<span class="tlaGNC">           2 :     [[nodiscard]] bool ShutdownRequested() const noexcept override</span></span>
+<span id="L93"><span class="lineNum">      93</span>                 :             :     {</span>
+<span id="L94"><span class="lineNum">      94</span>                 :<span class="tlaGNC">           2 :         return executor_-&gt;ShutdownRequested();</span></span>
+<span id="L95"><span class="lineNum">      95</span>                 :             :     }</span>
+<span id="L96"><span class="lineNum">      96</span>                 :             : </span>
+<span id="L97"><span class="lineNum">      97</span>                 :<span class="tlaGNC">           1 :     void Shutdown() noexcept override</span></span>
+<span id="L98"><span class="lineNum">      98</span>                 :             :     {</span>
+<span id="L99"><span class="lineNum">      99</span>                 :<span class="tlaGNC">           1 :         executor_-&gt;Shutdown();</span></span>
+<span id="L100"><span class="lineNum">     100</span>                 :<span class="tlaGNC">           1 :     }</span></span>
+<span id="L101"><span class="lineNum">     101</span>                 :             : </span>
+<span id="L102"><span class="lineNum">     102</span>                 :             :   protected:</span>
+<span id="L103"><span class="lineNum">     103</span>                 :<span class="tlaGNC">          15 :     void Enqueue(score::cpp::pmr::unique_ptr&lt;TimedTask&lt;Clock&gt;&gt; task) override</span></span>
+<span id="L104"><span class="lineNum">     104</span>                 :             :     {</span>
+<span id="L105"><span class="lineNum">     105</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 15 times"> + </span>]:<span class="tlaGNC">          15 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION_PRD_MESSAGE(task != nullptr,</span></span>
+<span id="L106"><span class="lineNum">     106</span>                 :             :                                                           &quot;Contract violation, nullptr as task provided&quot;);</span>
+<span id="L107"><span class="lineNum">     107</span>                 :             : </span>
+<span id="L108"><span class="lineNum">     108</span>                 :<span class="tlaGNC">          15 :         const auto next_execution_point = task-&gt;GetNextExecutionPoint();</span></span>
+<span id="L109"><span class="lineNum">     109</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 15 times"> + </span>]:<span class="tlaGNC">          15 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION_PRD_MESSAGE(next_execution_point.has_value(),</span></span>
+<span id="L110"><span class="lineNum">     110</span>                 :             :                                                           &quot;Contract violation, no next execution point given.&quot;);</span>
+<span id="L111"><span class="lineNum">     111</span>                 :             : </span>
+<span id="L112"><span class="lineNum">     112</span>                 :             :         // coverity[autosar_cpp14_a8_5_3_violation] false-positive: not auto</span>
+<span id="L113"><span class="lineNum">     113</span>         [<span class="tlaGBC" title="Branch 0 was taken 15 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          15 :         std::unique_lock lock{mutex_};</span></span>
+<span id="L114"><span class="lineNum">     114</span>   [<span class="tlaGBC" title="Branch 0 was taken 15 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 15 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          15 :         ScheduleAtInternal(std::move(lock), next_execution_point.value(), std::move(task));</span></span>
+<span id="L115"><span class="lineNum">     115</span>                 :<span class="tlaGNC">          15 :     }</span></span>
+<span id="L116"><span class="lineNum">     116</span>                 :             : </span>
+<span id="L117"><span class="lineNum">     117</span>                 :             :   private:</span>
+<span id="L118"><span class="lineNum">     118</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A11-3-1&quot; rule finding. This rule states:&quot;Friend declarations shall not be used.&quot;.</span>
+<span id="L119"><span class="lineNum">     119</span>                 :             :     // Justification:</span>
+<span id="L120"><span class="lineNum">     120</span>                 :             :     // We break encapsulation for unit tests, in order to ensure reliable / non-flaky unit tests.</span>
+<span id="L121"><span class="lineNum">     121</span>                 :             :     // It is impossible to implement the tests in a meaningful way having a thread inbetween.</span>
+<span id="L122"><span class="lineNum">     122</span>                 :             :     // Because then it is unclear when the `tick` has been finished. It would be even worse to make the `Work()`</span>
+<span id="L123"><span class="lineNum">     123</span>                 :             :     // function public, thus we decided to make the fixture a friend.</span>
+<span id="L124"><span class="lineNum">     124</span>                 :             :     // coverity[autosar_cpp14_a11_3_1_violation]</span>
+<span id="L125"><span class="lineNum">     125</span>                 :             :     friend class ConcurrentTimedExecutorFixture;</span>
+<span id="L126"><span class="lineNum">     126</span>                 :             : </span>
+<span id="L127"><span class="lineNum">     127</span>                 :             :     // false-positive: used as executors task main body</span>
+<span id="L128"><span class="lineNum">     128</span>                 :             :     // coverity[autosar_cpp14_a0_1_3_violation]</span>
+<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">          28 :     void Work(const score::cpp::stop_token token,</span></span>
+<span id="L130"><span class="lineNum">     130</span>                 :             :               std::shared_ptr&lt;concurrency::InterruptibleConditionalVariable&gt; conditional_variable)</span>
+<span id="L131"><span class="lineNum">     131</span>                 :             :     {</span>
+<span id="L132"><span class="lineNum">     132</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 28 times"> + </span>]:<span class="tlaGNC">          28 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION_PRD(conditional_variable != nullptr);</span></span>
+<span id="L133"><span class="lineNum">     133</span>                 :             :         score::cpp::pmr::unique_ptr&lt;TimedTask&lt;Clock&gt;&gt;</span>
+<span id="L134"><span class="lineNum">     134</span>                 :<span class="tlaGNC">          28 :             task{};  // LCOV_EXCL_LINE tested via EnsureTaskIsRetrievedAndExecuted</span></span>
+<span id="L135"><span class="lineNum">     135</span>                 :             :         {</span>
+<span id="L136"><span class="lineNum">     136</span>                 :             :             // coverity[autosar_cpp14_a8_5_3_violation] false-positive: not auto</span>
+<span id="L137"><span class="lineNum">     137</span>         [<span class="tlaGBC" title="Branch 0 was taken 28 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          28 :             std::unique_lock lock{mutex_};</span></span>
+<span id="L138"><span class="lineNum">     138</span>         [<span class="tlaGBC" title="Branch 0 was taken 28 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          28 :             score::cpp::ignore = free_.emplace(conditional_variable);</span></span>
+<span id="L139"><span class="lineNum">     139</span>   [<span class="tlaGBC" title="Branch 0 was taken 28 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 25 times"> + </span>]:<span class="tlaGNC">          58 :             if (not conditional_variable-&gt;wait(mutex_, token, [this]() {</span></span>
+<span id="L140"><span class="lineNum">     140</span>                 :<span class="tlaGNC">          30 :                     return not queue_.empty();</span></span>
+<span id="L141"><span class="lineNum">     141</span>                 :             :                 }))</span>
+<span id="L142"><span class="lineNum">     142</span>                 :             :             {</span>
+<span id="L143"><span class="lineNum">     143</span>                 :<span class="tlaGNC">           3 :                 return;  // got interrupted, shutdown the worker thread</span></span>
+<span id="L144"><span class="lineNum">     144</span>                 :             :             }</span>
+<span id="L145"><span class="lineNum">     145</span>         [<span class="tlaGBC" title="Branch 0 was taken 25 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          25 :             score::cpp::ignore = free_.erase(conditional_variable);</span></span>
+<span id="L146"><span class="lineNum">     146</span>                 :             : </span>
+<span id="L147"><span class="lineNum">     147</span>                 :<span class="tlaGNC">          25 :             auto time_task_pair = std::move(queue_.front());</span></span>
+<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">          25 :             const auto next_execution_point = time_task_pair.first;</span></span>
+<span id="L149"><span class="lineNum">     149</span>                 :<span class="tlaGNC">          25 :             task = std::move(time_task_pair.second);</span></span>
+<span id="L150"><span class="lineNum">     150</span>                 :<span class="tlaGNC">          25 :             queue_.pop_front();</span></span>
+<span id="L151"><span class="lineNum">     151</span>                 :             : </span>
+<span id="L152"><span class="lineNum">     152</span>   [<span class="tlaGBC" title="Branch 0 was taken 25 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 7 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 18 times"> + </span>]:<span class="tlaGNC">          25 :             if (Clock::now() &lt; next_execution_point)</span></span>
+<span id="L153"><span class="lineNum">     153</span>                 :             :             {</span>
+<span id="L154"><span class="lineNum">     154</span>                 :             :                 // since we have no good way to figure out if a new task was added, we do not care about spurious</span>
+<span id="L155"><span class="lineNum">     155</span>                 :             :                 // wake-ups</span>
+<span id="L156"><span class="lineNum">     156</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           7 :                 score::cpp::ignore = waiting_.emplace(next_execution_point, conditional_variable);</span></span>
+<span id="L157"><span class="lineNum">     157</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           7 :                 score::cpp::ignore = conditional_variable-&gt;wait_until(mutex_, token, next_execution_point);</span></span>
+<span id="L158"><span class="lineNum">     158</span>   [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           7 :                 score::cpp::ignore = waiting_.erase(std::make_pair(next_execution_point, conditional_variable));</span></span>
+<span id="L159"><span class="lineNum">     159</span>                 :             : </span>
+<span id="L160"><span class="lineNum">     160</span>                 :             :                 // we always add back to the queue, this handles spurious wake-ups and ensures that if a task</span>
+<span id="L161"><span class="lineNum">     161</span>                 :             :                 // with a shorter next_execution_point has been added while waiting, that this will be executed first</span>
+<span id="L162"><span class="lineNum">     162</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           7 :                 ScheduleAtInternal(std::move(lock), next_execution_point, std::move(task));</span></span>
+<span id="L163"><span class="lineNum">     163</span>                 :<span class="tlaGNC">           7 :                 return;</span></span>
+<span id="L164"><span class="lineNum">     164</span>                 :             :             }</span>
+<span id="L165"><span class="lineNum">     165</span>   [<span class="tlaGBC" title="Branch 0 was taken 18 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 7 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 18 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 10 times"> + </span>]:<span class="tlaGNC">          35 :         }</span></span>
+<span id="L166"><span class="lineNum">     166</span>                 :             : </span>
+<span id="L167"><span class="lineNum">     167</span>                 :             :         {</span>
+<span id="L168"><span class="lineNum">     168</span>                 :             :             // coverity[autosar_cpp14_m0_1_9_violation] false-positive: callback is stored into the token</span>
+<span id="L169"><span class="lineNum">     169</span>         [<span class="tlaGBC" title="Branch 0 was taken 18 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          20 :             [[maybe_unused]] score::cpp::stop_callback cb{token, [&amp;task]() noexcept {</span></span>
+<span id="L170"><span class="lineNum">     170</span>                 :<span class="tlaGNC">           1 :                                                               score::cpp::ignore = task-&gt;GetStopSource().request_stop();</span></span>
+<span id="L171"><span class="lineNum">     171</span>                 :             :                                                           }};</span>
+<span id="L172"><span class="lineNum">     172</span>         [<span class="tlaGBC" title="Branch 0 was taken 18 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          18 :             std::invoke(*task, task-&gt;GetStopSource().get_token());</span></span>
+<span id="L173"><span class="lineNum">     173</span>                 :<span class="tlaGNC">          18 :         }</span></span>
+<span id="L174"><span class="lineNum">     174</span>                 :             : </span>
+<span id="L175"><span class="lineNum">     175</span>                 :<span class="tlaGNC">          18 :         auto next_possible_execution_point = task-&gt;GetNextExecutionPoint();</span></span>
+<span id="L176"><span class="lineNum">     176</span>         [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 10 times"> + </span>]:<span class="tlaGNC">          18 :         if (next_possible_execution_point.has_value())</span></span>
+<span id="L177"><span class="lineNum">     177</span>                 :             :         {</span>
+<span id="L178"><span class="lineNum">     178</span>                 :             :             // here we ensure the contract of ScheduleAtInternal, that task has a next execution point</span>
+<span id="L179"><span class="lineNum">     179</span>                 :             :             // coverity[autosar_cpp14_a8_5_3_violation] false-positive: not auto</span>
+<span id="L180"><span class="lineNum">     180</span>         [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           8 :             std::unique_lock lock{mutex_};</span></span>
+<span id="L181"><span class="lineNum">     181</span>   [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           8 :             ScheduleAtInternal(std::move(lock), next_possible_execution_point.value(), std::move(task));</span></span>
+<span id="L182"><span class="lineNum">     182</span>                 :<span class="tlaGNC">           8 :         }</span></span>
+<span id="L183"><span class="lineNum">     183</span>         [<span class="tlaGBC" title="Branch 0 was taken 18 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 10 times"> + </span>]:<span class="tlaGNC">          28 :     }</span></span>
+<span id="L184"><span class="lineNum">     184</span>                 :             : </span>
+<span id="L185"><span class="lineNum">     185</span>                 :<span class="tlaGNC">          30 :     void ScheduleAtInternal(std::unique_lock&lt;std::mutex&gt; lock,</span></span>
+<span id="L186"><span class="lineNum">     186</span>                 :             :                             const TimePoint time_point,</span>
+<span id="L187"><span class="lineNum">     187</span>                 :             :                             score::cpp::pmr::unique_ptr&lt;TimedTask&lt;Clock&gt;&gt; task)</span>
+<span id="L188"><span class="lineNum">     188</span>                 :             :     {</span>
+<span id="L189"><span class="lineNum">     189</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 30 times"> + </span>]:<span class="tlaGNC">          30 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION_PRD(lock.owns_lock());</span></span>
+<span id="L190"><span class="lineNum">     190</span>                 :             : </span>
+<span id="L191"><span class="lineNum">     191</span>         [<span class="tlaGBC" title="Branch 0 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          30 :         const auto iterator = std::lower_bound(queue_.begin(),</span></span>
+<span id="L192"><span class="lineNum">     192</span>                 :             :                                                queue_.end(),</span>
+<span id="L193"><span class="lineNum">     193</span>         [<span class="tlaGBC" title="Branch 0 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          30 :                                                std::make_pair(time_point, nullptr),</span></span>
+<span id="L194"><span class="lineNum">     194</span>                 :<span class="tlaGNC">          17 :                                                [](const auto&amp; lhs, const auto&amp; rhs) noexcept -&gt; bool {</span></span>
+<span id="L195"><span class="lineNum">     195</span>                 :<span class="tlaGNC">          17 :                                                    return lhs.first &lt; rhs.first;</span></span>
+<span id="L196"><span class="lineNum">     196</span>                 :             :                                                });</span>
+<span id="L197"><span class="lineNum">     197</span>   [<span class="tlaGBC" title="Branch 0 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          30 :         score::cpp::ignore = queue_.insert(iterator, std::make_pair(time_point, std::move(task)));</span></span>
+<span id="L198"><span class="lineNum">     198</span>         [<span class="tlaGBC" title="Branch 0 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          30 :         score::cpp::ignore = WakeUp(std::move(lock), time_point);</span></span>
+<span id="L199"><span class="lineNum">     199</span>                 :<span class="tlaGNC">          30 :     }</span></span>
+<span id="L200"><span class="lineNum">     200</span>                 :             : </span>
+<span id="L201"><span class="lineNum">     201</span>                 :             :     /// \details When adding new tasks to the executor (also if they are rescheduled), we have to consider that there</span>
+<span id="L202"><span class="lineNum">     202</span>                 :             :     /// are multiple threads sleeping and thus waiting already. We do not want to wakeup all threads (`notify_all`) on</span>
+<span id="L203"><span class="lineNum">     203</span>                 :             :     /// one condition variable, since this would lead to a lot of mutex contention. But we cannot wake up only one</span>
+<span id="L204"><span class="lineNum">     204</span>                 :             :     /// thread, since this could lead to cases where threads are waiting for tasks that are executed way later, then</span>
+<span id="L205"><span class="lineNum">     205</span>                 :             :     /// tasks that have shortly been added. That's why this method identifies, which threads wait until which point, and</span>
+<span id="L206"><span class="lineNum">     206</span>                 :             :     /// wakes up the first (most close thread). After that, it's task get's readded (rescheduled) and in this another</span>
+<span id="L207"><span class="lineNum">     207</span>                 :             :     /// thread might be woken up. This way wen ensure that all needed threads are woken up, but only as much as</span>
+<span id="L208"><span class="lineNum">     208</span>                 :             :     /// necessary.</span>
+<span id="L209"><span class="lineNum">     209</span>                 :<span class="tlaGNC">          30 :     std::unique_lock&lt;std::mutex&gt; WakeUp(std::unique_lock&lt;std::mutex&gt; lock, TimePoint time_point)</span></span>
+<span id="L210"><span class="lineNum">     210</span>                 :             :     {</span>
+<span id="L211"><span class="lineNum">     211</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 30 times"> + </span>]:<span class="tlaGNC">          30 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION_PRD(lock.owns_lock());</span></span>
+<span id="L212"><span class="lineNum">     212</span>                 :             : </span>
+<span id="L213"><span class="lineNum">     213</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 30 times"> + </span>]:<span class="tlaGNC">          30 :         if (not free_.empty())</span></span>
+<span id="L214"><span class="lineNum">     214</span>                 :             :         {</span>
+<span id="L215"><span class="lineNum">     215</span>                 :<span class="tlaUNC tlaBgUNC">           0 :             free_.begin()-&gt;get()-&gt;notify_one();</span></span>
+<span id="L216"><span class="lineNum">     216</span>                 :             :         }</span>
+<span id="L217"><span class="lineNum">     217</span>                 :             :         else</span>
+<span id="L218"><span class="lineNum">     218</span>                 :             :         {</span>
+<span id="L219"><span class="lineNum">     219</span>         [<span class="tlaGBC" title="Branch 0 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">          30 :             auto it = std::lower_bound(waiting_.begin(),</span></span>
+<span id="L220"><span class="lineNum">     220</span>                 :             :                                        waiting_.end(),</span>
+<span id="L221"><span class="lineNum">     221</span>         [<span class="tlaGBC" title="Branch 0 was taken 30 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          30 :                                        std::make_pair(time_point, nullptr),</span></span>
+<span id="L222"><span class="lineNum">     222</span>                 :<span class="tlaGNC">           1 :                                        [](const auto&amp; lhs, const auto&amp; rhs) noexcept -&gt; bool {</span></span>
+<span id="L223"><span class="lineNum">     223</span>                 :<span class="tlaGNC">           1 :                                            return lhs.first &lt; rhs.first;</span></span>
+<span id="L224"><span class="lineNum">     224</span>                 :             :                                        });</span>
+<span id="L225"><span class="lineNum">     225</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 29 times"> + </span>]:<span class="tlaGNC">          30 :             if (it != waiting_.cend())</span></span>
+<span id="L226"><span class="lineNum">     226</span>                 :             :             {</span>
+<span id="L227"><span class="lineNum">     227</span>                 :<span class="tlaGNC">           1 :                 it-&gt;second-&gt;notify_one();</span></span>
+<span id="L228"><span class="lineNum">     228</span>                 :             :             }</span>
+<span id="L229"><span class="lineNum">     229</span>                 :             :         }</span>
+<span id="L230"><span class="lineNum">     230</span>                 :             : </span>
+<span id="L231"><span class="lineNum">     231</span>                 :<span class="tlaGNC">          30 :         return lock;</span></span>
+<span id="L232"><span class="lineNum">     232</span>                 :             :     }</span>
+<span id="L233"><span class="lineNum">     233</span>                 :             : </span>
+<span id="L234"><span class="lineNum">     234</span>                 :             :     score::cpp::pmr::unique_ptr&lt;Executor&gt; executor_;</span>
+<span id="L235"><span class="lineNum">     235</span>                 :             :     score::cpp::pmr::deque&lt;std::pair&lt;TimePoint, score::cpp::pmr::unique_ptr&lt;TimedTask&lt;Clock&gt;&gt;&gt;&gt; queue_;</span>
+<span id="L236"><span class="lineNum">     236</span>                 :             :     score::cpp::pmr::set&lt;std::shared_ptr&lt;concurrency::InterruptibleConditionalVariable&gt;&gt; free_;</span>
+<span id="L237"><span class="lineNum">     237</span>                 :             :     score::cpp::pmr::set&lt;std::pair&lt;TimePoint, std::shared_ptr&lt;concurrency::InterruptibleConditionalVariable&gt;&gt;&gt; waiting_;</span>
+<span id="L238"><span class="lineNum">     238</span>                 :             :     std::mutex mutex_;</span>
+<span id="L239"><span class="lineNum">     239</span>                 :             : };</span>
+<span id="L240"><span class="lineNum">     240</span>                 :             : </span>
+<span id="L241"><span class="lineNum">     241</span>                 :             : }  // namespace score::concurrency</span>
+<span id="L242"><span class="lineNum">     242</span>                 :             : </span>
+<span id="L243"><span class="lineNum">     243</span>                 :             : #endif  // SCORE_LIB_CONCURRENCY_NON_CONCURRENT_TIMED_EXECUTOR_H</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

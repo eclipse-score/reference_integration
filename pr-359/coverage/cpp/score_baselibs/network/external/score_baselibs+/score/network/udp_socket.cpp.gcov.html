@@ -1,0 +1,394 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - network/external/score_baselibs+/score/network/udp_socket.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../index.html">top level</a> - <a href="index.html">network/external/score_baselibs+/score/network</a> - udp_socket.cpp<span style="font-size: 80%;"> (source / <a href="udp_socket.cpp.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">94.9&nbsp;%</td>
+            <td class="headerCovTableEntry">98</td>
+            <td class="headerCovTableEntry">93</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:33:47</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">93.3&nbsp;%</td>
+            <td class="headerCovTableEntry">15</td>
+            <td class="headerCovTableEntry">14</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryMed">81.2&nbsp;%</td>
+            <td class="headerCovTableEntry">32</td>
+            <td class="headerCovTableEntry">26</td>
+          </tr>
+                  <tr><td><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2025 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : #include &quot;score/network/udp_socket.h&quot;</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : </span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : #include &quot;score/os/fcntl.h&quot;</span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #include &quot;score/os/socket.h&quot;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #include &quot;score/os/unistd.h&quot;</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : </span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : #include &lt;score/assert.hpp&gt;</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : #include &lt;score/vector.hpp&gt;</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : </span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : #include &lt;tuple&gt;</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : </span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : // Note 1</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : // we need a reinterpret_cast to convert from sockaddr_in to sockaddr.</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : // sockaddr is what is expected by the bind call.</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : </span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : namespace</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : {</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : constexpr std::int32_t INVALID_SOCKET_ID = -1;</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : </span>
+<span id="L32"><span class="lineNum">      32</span>                 :<span class="tlaGNC tlaBgGNC">          77 : void CloseFileDescriptorIfValidAndIgnoreError(</span></span>
+<span id="L33"><span class="lineNum">      33</span>                 :             :     const score::cpp::expected&lt;std::int32_t, score::os::Error&gt;&amp; file_descriptor)</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : {</span>
+<span id="L35"><span class="lineNum">      35</span>   [<span class="tlaGBC" title="Branch 0 was taken 77 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 26 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 51 times"> + </span> :<span class="tlaGNC">          77 :     if (file_descriptor.has_value() &amp;&amp; (file_descriptor.value() != INVALID_SOCKET_ID))</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 26 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 51 times"> + </span>]
+<span id="L36"><span class="lineNum">      36</span>                 :             :     {</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             :         // We need to decide how to proceed in case of error on close. At least we should display a log but then</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             :         // we need to decide if we do it on std::cerr/cout or to ara::log. We could also template the class with an</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             :         // ostream or any kind of injection of the ostream to be used.</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             :         // Additionally, we might want to consider some action for some of the errors like EINTR.</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             :         // Suppressed here because usage of banned OSAL method in OSAL modules is allowed.&quot;</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             :         // NOLINTNEXTLINE(score-banned-function) see comment above</span>
+<span id="L43"><span class="lineNum">      43</span>         [<span class="tlaGBC" title="Branch 0 was taken 26 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          26 :         std::ignore = score::os::Unistd::instance().close(file_descriptor.value());</span></span>
+<span id="L44"><span class="lineNum">      44</span>                 :             :     }</span>
+<span id="L45"><span class="lineNum">      45</span>                 :<span class="tlaGNC">          77 : }</span></span>
+<span id="L46"><span class="lineNum">      46</span>                 :             : }  // namespace</span>
+<span id="L47"><span class="lineNum">      47</span>                 :             : </span>
+<span id="L48"><span class="lineNum">      48</span>                 :<span class="tlaGNC">          19 : score::cpp::expected&lt;sockaddr_in, score::os::Error&gt; score::os::GetSockAddrInFromIpAndPort(</span></span>
+<span id="L49"><span class="lineNum">      49</span>                 :             :     const score::os::Ipv4Address&amp; address,</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             :     const std::uint16_t port)</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             : {</span>
+<span id="L52"><span class="lineNum">      52</span>                 :<span class="tlaGNC">          19 :     sockaddr_in sockaddr_in{};</span></span>
+<span id="L53"><span class="lineNum">      53</span>                 :<span class="tlaGNC">          19 :     sockaddr_in.sin_family = AF_INET;</span></span>
+<span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC">          19 :     sockaddr_in.sin_port = htons(port);</span></span>
+<span id="L55"><span class="lineNum">      55</span>                 :             : </span>
+<span id="L56"><span class="lineNum">      56</span>                 :             :     // JUSTIFICATION_BEGIN</span>
+<span id="L57"><span class="lineNum">      57</span>                 :             :     // \ID                score-qnx-banned-builtin</span>
+<span id="L58"><span class="lineNum">      58</span>                 :             :     // \RELATED_RULES     spp-quality-clang-tidy-qnx8-banned-builtins, posix-usage-check</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             :     // \DESCRIPTION       The POSIX API inet_aton() is used to convert an IPv4 address string into its binary</span>
+<span id="L60"><span class="lineNum">      60</span>                 :             :     //                    representation (in_addr). The QNX 7/8 implementation internally maps this function</span>
+<span id="L61"><span class="lineNum">      61</span>                 :             :     //                    to __inet_aton, which triggers the BMW-QNX banned-builtin warning. This is a false</span>
+<span id="L62"><span class="lineNum">      62</span>                 :             :     //                    positive because inet_aton() does not depend on low-level builtins such as MMX/SSE</span>
+<span id="L63"><span class="lineNum">      63</span>                 :             :     //                    or compiler intrinsics; it is a deterministic and bounded library call.</span>
+<span id="L64"><span class="lineNum">      64</span>                 :             :     // \COUNTERMEASURE    The input is prevalidated by higher-level address utilities before conversion.</span>
+<span id="L65"><span class="lineNum">      65</span>                 :             :     //                    The function is reentrant, side-effect-free, and compliant with POSIX.</span>
+<span id="L66"><span class="lineNum">      66</span>                 :             :     //                    The usage has been reviewed and approved for both QM and ASIL network modules.</span>
+<span id="L67"><span class="lineNum">      67</span>                 :             :     // JUSTIFICATION_END</span>
+<span id="L68"><span class="lineNum">      68</span>                 :             : </span>
+<span id="L69"><span class="lineNum">      69</span>                 :             :     // coverity[score-qnx-banned-builtin] see above justification</span>
+<span id="L70"><span class="lineNum">      70</span>                 :             :     // NOLINTNEXTLINE(score-qnx-banned-builtin): see above justification</span>
+<span id="L71"><span class="lineNum">      71</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 19 times"> + </span>]:<span class="tlaGNC">          19 :     if (::inet_aton(address.ToString().c_str(), &amp;sockaddr_in.sin_addr) == 0)  // LCOV_EXCL_BR_LINE: justification below</span></span>
+<span id="L72"><span class="lineNum">      72</span>                 :             :     {</span>
+<span id="L73"><span class="lineNum">      73</span>                 :             :         // Manual analysis: According to the QNX documentation, ::inet_aton fails when given an invalid string.</span>
+<span id="L74"><span class="lineNum">      74</span>                 :             :         // However, this is impossible to test through unit tests because, in the case of an invalid string,</span>
+<span id="L75"><span class="lineNum">      75</span>                 :             :         // the score::os::Ipv4Address constructor sets the default address to `0.0.0.0`, preventing ::inet_aton from</span>
+<span id="L76"><span class="lineNum">      76</span>                 :             :         // failing.</span>
+<span id="L77"><span class="lineNum">      77</span>                 :<span class="tlaUNC tlaBgUNC">           0 :         return score::cpp::make_unexpected(</span></span>
+<span id="L78"><span class="lineNum">      78</span>                 :<span class="tlaUNC">           0 :             score::os::Error::createFromErrno(EINVAL));  // LCOV_EXCL_LINE: justification above</span></span>
+<span id="L79"><span class="lineNum">      79</span>                 :             :     }</span>
+<span id="L80"><span class="lineNum">      80</span>                 :             : </span>
+<span id="L81"><span class="lineNum">      81</span>                 :<span class="tlaGNC tlaBgGNC">          19 :     return sockaddr_in;</span></span>
+<span id="L82"><span class="lineNum">      82</span>                 :             : }</span>
+<span id="L83"><span class="lineNum">      83</span>                 :             : </span>
+<span id="L84"><span class="lineNum">      84</span>                 :<span class="tlaGNC">          26 : score::os::UdpSocket::UdpSocket(std::int32_t file_descriptor) noexcept : file_descriptor_{file_descriptor} {}</span></span>
+<span id="L85"><span class="lineNum">      85</span>                 :             : </span>
+<span id="L86"><span class="lineNum">      86</span>                 :<span class="tlaGNC">          76 : score::os::UdpSocket::~UdpSocket() noexcept</span></span>
+<span id="L87"><span class="lineNum">      87</span>                 :             : {</span>
+<span id="L88"><span class="lineNum">      88</span>                 :<span class="tlaGNC">          76 :     CloseFileDescriptorIfValidAndIgnoreError(file_descriptor_);</span></span>
+<span id="L89"><span class="lineNum">      89</span>                 :<span class="tlaGNC">          76 : }</span></span>
+<span id="L90"><span class="lineNum">      90</span>                 :             : </span>
+<span id="L91"><span class="lineNum">      91</span>                 :<span class="tlaGNC">          29 : score::cpp::expected&lt;score::os::UdpSocket, score::os::Error&gt; score::os::UdpSocket::Make() noexcept</span></span>
+<span id="L92"><span class="lineNum">      92</span>                 :             : {</span>
+<span id="L93"><span class="lineNum">      93</span>                 :             :     auto file_descriptor_expected =</span>
+<span id="L94"><span class="lineNum">      94</span>                 :<span class="tlaGNC">          29 :         score::os::Socket::instance().socket(score::os::Socket::Domain::kIPv4, SOCK_DGRAM, 0);</span></span>
+<span id="L95"><span class="lineNum">      95</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 28 times"> + </span>]:<span class="tlaGNC">          29 :     if (!file_descriptor_expected.has_value())</span></span>
+<span id="L96"><span class="lineNum">      96</span>                 :             :     {</span>
+<span id="L97"><span class="lineNum">      97</span>                 :<span class="tlaGNC">           1 :         return score::cpp::make_unexpected(file_descriptor_expected.error());</span></span>
+<span id="L98"><span class="lineNum">      98</span>                 :             :     }</span>
+<span id="L99"><span class="lineNum">      99</span>                 :             : </span>
+<span id="L100"><span class="lineNum">     100</span>                 :<span class="tlaGNC">          28 :     auto flags_exp = score::os::Fcntl::instance().fcntl(file_descriptor_expected.value(),</span></span>
+<span id="L101"><span class="lineNum">     101</span>                 :             :                                                         score::os::Fcntl::Command::kFileGetStatusFlags);</span>
+<span id="L102"><span class="lineNum">     102</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 27 times"> + </span>]:<span class="tlaGNC">          28 :     if (!flags_exp.has_value())</span></span>
+<span id="L103"><span class="lineNum">     103</span>                 :             :     {</span>
+<span id="L104"><span class="lineNum">     104</span>                 :<span class="tlaGNC">           1 :         return score::cpp::make_unexpected(flags_exp.error());</span></span>
+<span id="L105"><span class="lineNum">     105</span>                 :             :     }</span>
+<span id="L106"><span class="lineNum">     106</span>                 :             : </span>
+<span id="L107"><span class="lineNum">     107</span>                 :<span class="tlaGNC">          54 :     auto ret = score::os::Fcntl::instance().fcntl(file_descriptor_expected.value(),</span></span>
+<span id="L108"><span class="lineNum">     108</span>                 :             :                                                   score::os::Fcntl::Command::kFileSetStatusFlags,</span>
+<span id="L109"><span class="lineNum">     109</span>                 :<span class="tlaGNC">          27 :                                                   flags_exp.value() | score::os::Fcntl::Open::kNonBlocking);</span></span>
+<span id="L110"><span class="lineNum">     110</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 26 times"> + </span>]:<span class="tlaGNC">          27 :     if (!ret.has_value())</span></span>
+<span id="L111"><span class="lineNum">     111</span>                 :             :     {</span>
+<span id="L112"><span class="lineNum">     112</span>                 :<span class="tlaGNC">           1 :         return score::cpp::make_unexpected(ret.error());</span></span>
+<span id="L113"><span class="lineNum">     113</span>                 :             :     }</span>
+<span id="L114"><span class="lineNum">     114</span>                 :             : </span>
+<span id="L115"><span class="lineNum">     115</span>                 :<span class="tlaGNC">          26 :     UdpSocket socket{file_descriptor_expected.value()};</span></span>
+<span id="L116"><span class="lineNum">     116</span>                 :<span class="tlaGNC">          26 :     return socket;</span></span>
+<span id="L117"><span class="lineNum">     117</span>                 :<span class="tlaGNC">          26 : }</span></span>
+<span id="L118"><span class="lineNum">     118</span>                 :             : </span>
+<span id="L119"><span class="lineNum">     119</span>                 :<span class="tlaGNC">          50 : score::os::UdpSocket::UdpSocket(UdpSocket&amp;&amp; other) noexcept : file_descriptor_{other.file_descriptor_}</span></span>
+<span id="L120"><span class="lineNum">     120</span>                 :             : {</span>
+<span id="L121"><span class="lineNum">     121</span>                 :<span class="tlaGNC">          50 :     other.file_descriptor_ = INVALID_SOCKET_ID;</span></span>
+<span id="L122"><span class="lineNum">     122</span>                 :<span class="tlaGNC">          50 : }</span></span>
+<span id="L123"><span class="lineNum">     123</span>                 :             : </span>
+<span id="L124"><span class="lineNum">     124</span>                 :<span class="tlaGNC">           1 : score::os::UdpSocket&amp; score::os::UdpSocket::operator=(UdpSocket&amp;&amp; other) noexcept</span></span>
+<span id="L125"><span class="lineNum">     125</span>                 :             : {</span>
+<span id="L126"><span class="lineNum">     126</span>                 :<span class="tlaGNC">           1 :     CloseFileDescriptorIfValidAndIgnoreError(this-&gt;file_descriptor_);</span></span>
+<span id="L127"><span class="lineNum">     127</span>                 :             : </span>
+<span id="L128"><span class="lineNum">     128</span>                 :<span class="tlaGNC">           1 :     this-&gt;file_descriptor_ = other.file_descriptor_;</span></span>
+<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">           1 :     other.file_descriptor_ = INVALID_SOCKET_ID;</span></span>
+<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">           1 :     return *this;</span></span>
+<span id="L131"><span class="lineNum">     131</span>                 :             : }</span>
+<span id="L132"><span class="lineNum">     132</span>                 :             : </span>
+<span id="L133"><span class="lineNum">     133</span>                 :<span class="tlaGNC">           1 : std::int32_t score::os::UdpSocket::GetFileDescriptor() const noexcept</span></span>
+<span id="L134"><span class="lineNum">     134</span>                 :             : {</span>
+<span id="L135"><span class="lineNum">     135</span>                 :<span class="tlaGNC">           1 :     return this-&gt;file_descriptor_;</span></span>
+<span id="L136"><span class="lineNum">     136</span>                 :             : }</span>
+<span id="L137"><span class="lineNum">     137</span>                 :             : </span>
+<span id="L138"><span class="lineNum">     138</span>                 :<span class="tlaGNC">          16 : score::cpp::expected_blank&lt;score::os::Error&gt; score::os::UdpSocket::Bind(const Ipv4Address&amp; address,</span></span>
+<span id="L139"><span class="lineNum">     139</span>                 :             :                                                                         std::uint16_t port) noexcept</span>
+<span id="L140"><span class="lineNum">     140</span>                 :             : {</span>
+<span id="L141"><span class="lineNum">     141</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 15 times"> + </span>]:<span class="tlaGNC">          16 :     if (!address.IsValid())</span></span>
+<span id="L142"><span class="lineNum">     142</span>                 :             :     {</span>
+<span id="L143"><span class="lineNum">     143</span>                 :<span class="tlaGNC">           1 :         return score::cpp::make_unexpected(score::os::Error::createFromErrno(EINVAL));</span></span>
+<span id="L144"><span class="lineNum">     144</span>                 :             :     }</span>
+<span id="L145"><span class="lineNum">     145</span>                 :             : </span>
+<span id="L146"><span class="lineNum">     146</span>                 :<span class="tlaGNC">          15 :     auto src_expected = GetSockAddrInFromIpAndPort(address, port);</span></span>
+<span id="L147"><span class="lineNum">     147</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 15 times"> + </span>]:<span class="tlaGNC">          15 :     if (!src_expected.has_value())  // LCOV_EXCL_BR_LINE: Justification below</span></span>
+<span id="L148"><span class="lineNum">     148</span>                 :             :     {</span>
+<span id="L149"><span class="lineNum">     149</span>                 :             :         // Manual analysis: According to the QNX documentation, ::inet_aton fails when given an invalid string.</span>
+<span id="L150"><span class="lineNum">     150</span>                 :             :         // However, this is impossible to test through unit tests because, in the case of an invalid string,</span>
+<span id="L151"><span class="lineNum">     151</span>                 :             :         // the score::os::Ipv4Address constructor sets the default address to `0.0.0.0`, preventing ::inet_aton from</span>
+<span id="L152"><span class="lineNum">     152</span>                 :             :         // failing.</span>
+<span id="L153"><span class="lineNum">     153</span>                 :<span class="tlaUNC tlaBgUNC">           0 :         return score::cpp::make_unexpected(src_expected.error());  // LCOV_EXCL_LINE: Justification above</span></span>
+<span id="L154"><span class="lineNum">     154</span>                 :             :     }</span>
+<span id="L155"><span class="lineNum">     155</span>                 :<span class="tlaGNC tlaBgGNC">          15 :     const sockaddr_in src = src_expected.value();</span></span>
+<span id="L156"><span class="lineNum">     156</span>                 :             : </span>
+<span id="L157"><span class="lineNum">     157</span>                 :             :     // NOLINTBEGIN(cppcoreguidelines-pro-type-reinterpret-cast) see Note 1</span>
+<span id="L158"><span class="lineNum">     158</span>                 :             :     // In the following line we need a reinterpret_cast to convert from sockaddr_in to sockaddr.</span>
+<span id="L159"><span class="lineNum">     159</span>                 :             :     // sockaddr is what is expected by the bind call.</span>
+<span id="L160"><span class="lineNum">     160</span>                 :             :     // Even though reinterpret_cast should be avoided, in this case is how you are supposed to do it</span>
+<span id="L161"><span class="lineNum">     161</span>                 :             :     // with the posix API.</span>
+<span id="L162"><span class="lineNum">     162</span>                 :             :     // See https://pubs.opengroup.org/onlinepubs/009695399/basedefs/netinet/in.h.html</span>
+<span id="L163"><span class="lineNum">     163</span>                 :             :     // coverity[autosar_cpp14_a5_2_4_violation] : safe reinterpret_cast, see justification above</span>
+<span id="L164"><span class="lineNum">     164</span>                 :<span class="tlaGNC">          15 :     const auto addr = reinterpret_cast&lt;const struct sockaddr*&gt;(&amp;src);</span></span>
+<span id="L165"><span class="lineNum">     165</span>                 :             :     // NOLINTEND(cppcoreguidelines-pro-type-reinterpret-cast) see Note 1</span>
+<span id="L166"><span class="lineNum">     166</span>                 :<span class="tlaGNC">          15 :     return score::os::Socket::instance().bind(file_descriptor_, addr, sizeof(*addr));</span></span>
+<span id="L167"><span class="lineNum">     167</span>                 :             : }</span>
+<span id="L168"><span class="lineNum">     168</span>                 :             : </span>
+<span id="L169"><span class="lineNum">     169</span>                 :<span class="tlaGNC">           3 : score::cpp::expected&lt;ssize_t, score::os::Error&gt; score::os::UdpSocket::TryReceive(unsigned char* const buffer,</span></span>
+<span id="L170"><span class="lineNum">     170</span>                 :             :                                                                                  const std::size_t length) noexcept</span>
+<span id="L171"><span class="lineNum">     171</span>                 :             : {</span>
+<span id="L172"><span class="lineNum">     172</span>                 :<span class="tlaGNC">           3 :     return Socket::instance().recvfrom(file_descriptor_, buffer, length, Socket::MessageFlag::kNone, nullptr, nullptr);</span></span>
+<span id="L173"><span class="lineNum">     173</span>                 :             : }</span>
+<span id="L174"><span class="lineNum">     174</span>                 :             : </span>
+<span id="L175"><span class="lineNum">     175</span>                 :             : score::cpp::expected&lt;std::tuple&lt;ssize_t, score::os::Ipv4Address&gt;, score::os::Error&gt;</span>
+<span id="L176"><span class="lineNum">     176</span>                 :<span class="tlaGNC">           4 : score::os::UdpSocket::TryReceiveWithAddress(unsigned char* const buffer, const std::size_t length) noexcept</span></span>
+<span id="L177"><span class="lineNum">     177</span>                 :             : {</span>
+<span id="L178"><span class="lineNum">     178</span>                 :<span class="tlaGNC">           4 :     sockaddr_in source_address{};</span></span>
+<span id="L179"><span class="lineNum">     179</span>                 :<span class="tlaGNC">           4 :     socklen_t address_length = sizeof(source_address);</span></span>
+<span id="L180"><span class="lineNum">     180</span>                 :             : </span>
+<span id="L181"><span class="lineNum">     181</span>                 :<span class="tlaGNC">           4 :     auto result = Socket::instance().recvfrom(file_descriptor_,</span></span>
+<span id="L182"><span class="lineNum">     182</span>                 :             :                                               buffer,</span>
+<span id="L183"><span class="lineNum">     183</span>                 :             :                                               length,</span>
+<span id="L184"><span class="lineNum">     184</span>                 :             :                                               Socket::MessageFlag::kNone,</span>
+<span id="L185"><span class="lineNum">     185</span>                 :             :                                               // NOLINTBEGIN(cppcoreguidelines-pro-type-reinterpret-cast) see Note 1</span>
+<span id="L186"><span class="lineNum">     186</span>                 :             :                                               // coverity[autosar_cpp14_a5_2_4_violation] : safe reinterpret_cast</span>
+<span id="L187"><span class="lineNum">     187</span>                 :             :                                               reinterpret_cast&lt;struct sockaddr*&gt;(&amp;source_address),</span>
+<span id="L188"><span class="lineNum">     188</span>                 :             :                                               // NOLINTEND(cppcoreguidelines-pro-type-reinterpret-cast) see Note 1</span>
+<span id="L189"><span class="lineNum">     189</span>                 :             :                                               &amp;address_length);</span>
+<span id="L190"><span class="lineNum">     190</span>                 :             : </span>
+<span id="L191"><span class="lineNum">     191</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           4 :     if (result.has_value() == true)</span></span>
+<span id="L192"><span class="lineNum">     192</span>                 :             :     {</span>
+<span id="L193"><span class="lineNum">     193</span>                 :<span class="tlaGNC">           3 :         const ssize_t numBytes = *result;</span></span>
+<span id="L194"><span class="lineNum">     194</span>                 :<span class="tlaGNC">           3 :         const Ipv4Address senderAddress = Ipv4Address::CreateFromUint32NetOrder(source_address.sin_addr.s_addr);</span></span>
+<span id="L195"><span class="lineNum">     195</span>                 :<span class="tlaGNC">           3 :         return std::make_tuple(numBytes, senderAddress);</span></span>
+<span id="L196"><span class="lineNum">     196</span>                 :             :     }</span>
+<span id="L197"><span class="lineNum">     197</span>                 :             :     else</span>
+<span id="L198"><span class="lineNum">     198</span>                 :             :     {</span>
+<span id="L199"><span class="lineNum">     199</span>                 :<span class="tlaGNC">           1 :         return score::cpp::make_unexpected(Error::createFromErrno());</span></span>
+<span id="L200"><span class="lineNum">     200</span>                 :             :     }</span>
+<span id="L201"><span class="lineNum">     201</span>                 :             : }</span>
+<span id="L202"><span class="lineNum">     202</span>                 :             : </span>
+<span id="L203"><span class="lineNum">     203</span>                 :             : score::cpp::expected&lt;score::cpp::pmr::vector&lt;std::tuple&lt;ssize_t, score::os::Ipv4Address&gt;&gt;, score::os::Error&gt;</span>
+<span id="L204"><span class="lineNum">     204</span>                 :<span class="tlaGNC">           2 : score::os::UdpSocket::TryReceiveMultipleMessagesWithAddress(unsigned char* const recv_bufs,</span></span>
+<span id="L205"><span class="lineNum">     205</span>                 :             :                                                             const std::size_t recv_buffer_size,</span>
+<span id="L206"><span class="lineNum">     206</span>                 :             :                                                             const std::size_t vlen,</span>
+<span id="L207"><span class="lineNum">     207</span>                 :             :                                                             const std::size_t msg_length) noexcept</span>
+<span id="L208"><span class="lineNum">     208</span>                 :             : {</span>
+<span id="L209"><span class="lineNum">     209</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">           2 :     SCORE_LANGUAGE_FUTURECPP_ASSERT_PRD(!((vlen * msg_length) &gt; recv_buffer_size));</span></span>
+<span id="L210"><span class="lineNum">     210</span>                 :<span class="tlaGNC">           2 :     score::cpp::pmr::vector&lt;struct mmsghdr&gt; msgs(vlen);</span></span>
+<span id="L211"><span class="lineNum">     211</span>                 :<span class="tlaGNC">           2 :     score::cpp::pmr::vector&lt;struct iovec&gt; iovecs(vlen);</span></span>
+<span id="L212"><span class="lineNum">     212</span>                 :<span class="tlaGNC">           2 :     score::cpp::pmr::vector&lt;struct sockaddr_in&gt; sock_from(vlen);</span></span>
+<span id="L213"><span class="lineNum">     213</span>                 :<span class="tlaGNC">           2 :     constexpr struct timespec* const timeout = nullptr;</span></span>
+<span id="L214"><span class="lineNum">     214</span>                 :             : </span>
+<span id="L215"><span class="lineNum">     215</span>                 :             :     // NOLINTBEGIN(score-banned-function) Suppressed here because usage of this OSAL method is on banned list</span>
+<span id="L216"><span class="lineNum">     216</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A12-0-2&quot; The rule states: &quot;Bitwise operations and operations that assume data</span>
+<span id="L217"><span class="lineNum">     217</span>                 :             :     // representation in memory shall not be performed on objects.&quot; The object being initialized using memset</span>
+<span id="L218"><span class="lineNum">     218</span>                 :             :     // (score::cpp::pmr::vector) uses sequential memory and can be initialized using memset. This low-level operation</span>
+<span id="L219"><span class="lineNum">     219</span>                 :             :     // is necessary for performance optimization.</span>
+<span id="L220"><span class="lineNum">     220</span>                 :             :     // coverity[autosar_cpp14_a12_0_2_violation]</span>
+<span id="L221"><span class="lineNum">     221</span>                 :<span class="tlaGNC">           2 :     std::memset(msgs.data(), 0, msgs.size() * sizeof(struct mmsghdr));</span></span>
+<span id="L222"><span class="lineNum">     222</span>                 :             :     // NOLINTEND(score-banned-function) Suppressed here because usage of this OSAL method is on banned list</span>
+<span id="L223"><span class="lineNum">     223</span>                 :<span class="tlaGNC">           2 :     constexpr const std::size_t iov_len = 1U;</span></span>
+<span id="L224"><span class="lineNum">     224</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">           6 :     for (auto i = 0U; i &lt; vlen; ++i)</span></span>
+<span id="L225"><span class="lineNum">     225</span>                 :             :     {</span>
+<span id="L226"><span class="lineNum">     226</span>                 :             :         // NOLINTBEGIN(cppcoreguidelines-pro-type-union-access, cppcoreguidelines-pro-bounds-pointer-arithmetic) iovec</span>
+<span id="L227"><span class="lineNum">     227</span>                 :             :         // is unchangable, It's (POSIX standard)</span>
+<span id="L228"><span class="lineNum">     228</span>                 :             :         // coverity[autosar_cpp14_m5_0_15_violation] : safe use of pointer arithmetic</span>
+<span id="L229"><span class="lineNum">     229</span>                 :<span class="tlaGNC">           4 :         iovecs[i].iov_base = static_cast&lt;void*&gt;(&amp;recv_bufs[i * msg_length]);</span></span>
+<span id="L230"><span class="lineNum">     230</span>                 :             :         // NOLINTEND(cppcoreguidelines-pro-type-union-access, cppcoreguidelines-pro-bounds-pointer-arithmetic)</span>
+<span id="L231"><span class="lineNum">     231</span>                 :<span class="tlaGNC">           4 :         iovecs[i].iov_len = msg_length;</span></span>
+<span id="L232"><span class="lineNum">     232</span>                 :<span class="tlaGNC">           4 :         msgs[i].msg_hdr.msg_iov = &amp;iovecs[i];</span></span>
+<span id="L233"><span class="lineNum">     233</span>                 :<span class="tlaGNC">           4 :         msgs[i].msg_hdr.msg_iovlen = iov_len;</span></span>
+<span id="L234"><span class="lineNum">     234</span>                 :<span class="tlaGNC">           4 :         msgs[i].msg_hdr.msg_name = &amp;sock_from[i];</span></span>
+<span id="L235"><span class="lineNum">     235</span>                 :<span class="tlaGNC">           4 :         msgs[i].msg_hdr.msg_namelen = sizeof(struct sockaddr_in);</span></span>
+<span id="L236"><span class="lineNum">     236</span>                 :             :     }</span>
+<span id="L237"><span class="lineNum">     237</span>                 :             : </span>
+<span id="L238"><span class="lineNum">     238</span>                 :<span class="tlaGNC">           2 :     const auto response_result = Socket::instance().recvmmsg(</span></span>
+<span id="L239"><span class="lineNum">     239</span>                 :             :         file_descriptor_, msgs.data(), static_cast&lt;unsigned int&gt;(vlen), Socket::MessageFlag::kNone, timeout);</span>
+<span id="L240"><span class="lineNum">     240</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           2 :     if (response_result.has_value() == true)</span></span>
+<span id="L241"><span class="lineNum">     241</span>                 :             :     {</span>
+<span id="L242"><span class="lineNum">     242</span>                 :<span class="tlaGNC">           1 :         score::cpp::pmr::vector&lt;std::tuple&lt;ssize_t, score::os::Ipv4Address&gt;&gt; result;</span></span>
+<span id="L243"><span class="lineNum">     243</span>                 :             : </span>
+<span id="L244"><span class="lineNum">     244</span>                 :<span class="tlaGNC">           1 :         const auto n_msgs = response_result.value();</span></span>
+<span id="L245"><span class="lineNum">     245</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           3 :         for (auto i = 0U; i &lt; n_msgs; ++i)</span></span>
+<span id="L246"><span class="lineNum">     246</span>                 :             :         {</span>
+<span id="L247"><span class="lineNum">     247</span>                 :             :             // Suppress &quot;AUTOSAR C++14 M5-2-8&quot; rule. The rule declares:</span>
+<span id="L248"><span class="lineNum">     248</span>                 :             :             // An object with integer type or pointer to void type shall not be converted to an object with pointer</span>
+<span id="L249"><span class="lineNum">     249</span>                 :             :             // type. Here, msgs contains Ipv4 addresses, msg_name is start address of sockaddr and safe to convert to</span>
+<span id="L250"><span class="lineNum">     250</span>                 :             :             // target.</span>
+<span id="L251"><span class="lineNum">     251</span>                 :             :             // coverity[autosar_cpp14_m5_2_8_violation]</span>
+<span id="L252"><span class="lineNum">     252</span>                 :<span class="tlaGNC">           2 :             const auto* const sock_addr = static_cast&lt;sockaddr_in*&gt;(msgs[i].msg_hdr.msg_name);</span></span>
+<span id="L253"><span class="lineNum">     253</span>                 :<span class="tlaGNC">           2 :             Ipv4Address sender_address = score::os::Ipv4Address::CreateFromUint32NetOrder(sock_addr-&gt;sin_addr.s_addr);</span></span>
+<span id="L254"><span class="lineNum">     254</span>                 :<span class="tlaGNC">           2 :             result.emplace_back(msgs[i].msg_len, std::move(sender_address));</span></span>
+<span id="L255"><span class="lineNum">     255</span>                 :             :         }</span>
+<span id="L256"><span class="lineNum">     256</span>                 :<span class="tlaGNC">           1 :         return result;</span></span>
+<span id="L257"><span class="lineNum">     257</span>                 :<span class="tlaGNC">           1 :     }</span></span>
+<span id="L258"><span class="lineNum">     258</span>                 :             :     else</span>
+<span id="L259"><span class="lineNum">     259</span>                 :             :     {</span>
+<span id="L260"><span class="lineNum">     260</span>                 :<span class="tlaGNC">           1 :         return score::cpp::make_unexpected(Error::createFromErrno());</span></span>
+<span id="L261"><span class="lineNum">     261</span>                 :             :     }</span>
+<span id="L262"><span class="lineNum">     262</span>                 :<span class="tlaGNC">           2 : }</span></span>
+<span id="L263"><span class="lineNum">     263</span>                 :             : </span>
+<span id="L264"><span class="lineNum">     264</span>                 :<span class="tlaGNC">           4 : score::cpp::expected&lt;ssize_t, score::os::Error&gt; score::os::UdpSocket::TrySendTo(const Ipv4Address&amp; recipient,</span></span>
+<span id="L265"><span class="lineNum">     265</span>                 :             :                                                                                 const std::uint16_t port,</span>
+<span id="L266"><span class="lineNum">     266</span>                 :             :                                                                                 const unsigned char* const buffer,</span>
+<span id="L267"><span class="lineNum">     267</span>                 :             :                                                                                 const std::size_t length) noexcept</span>
+<span id="L268"><span class="lineNum">     268</span>                 :             : {</span>
+<span id="L269"><span class="lineNum">     269</span>                 :<span class="tlaGNC">           4 :     auto recipient_sockaddr_in_expected = GetSockAddrInFromIpAndPort(recipient, port);</span></span>
+<span id="L270"><span class="lineNum">     270</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 4 times"> + </span>]:<span class="tlaGNC">           4 :     if (!recipient_sockaddr_in_expected.has_value())  // LCOV_EXCL_BR_LINE: Justification below</span></span>
+<span id="L271"><span class="lineNum">     271</span>                 :             :     {</span>
+<span id="L272"><span class="lineNum">     272</span>                 :             :         // Manual analysis: According to the QNX documentation, ::inet_aton fails when given an invalid string.</span>
+<span id="L273"><span class="lineNum">     273</span>                 :             :         // However, this is impossible to test through unit tests because, in the case of an invalid string,</span>
+<span id="L274"><span class="lineNum">     274</span>                 :             :         // the score::os::Ipv4Address constructor sets the default address to `0.0.0.0`, preventing ::inet_aton from</span>
+<span id="L275"><span class="lineNum">     275</span>                 :             :         // failing.</span>
+<span id="L276"><span class="lineNum">     276</span>                 :<span class="tlaUNC tlaBgUNC">           0 :         return score::cpp::make_unexpected(</span></span>
+<span id="L277"><span class="lineNum">     277</span>                 :<span class="tlaUNC">           0 :             recipient_sockaddr_in_expected.error());  // LCOV_EXCL_LINE: Justification above</span></span>
+<span id="L278"><span class="lineNum">     278</span>                 :             :     }</span>
+<span id="L279"><span class="lineNum">     279</span>                 :<span class="tlaGNC tlaBgGNC">           4 :     const sockaddr_in recipient_sockaddr_in = recipient_sockaddr_in_expected.value();</span></span>
+<span id="L280"><span class="lineNum">     280</span>                 :             : </span>
+<span id="L281"><span class="lineNum">     281</span>                 :             :     // NOLINTBEGIN(cppcoreguidelines-pro-type-reinterpret-cast) see Note 1</span>
+<span id="L282"><span class="lineNum">     282</span>                 :             :     // In the following line we need a reinterpret_cast to convert from sockaddr_in to sockaddr.</span>
+<span id="L283"><span class="lineNum">     283</span>                 :             :     // sockaddr is what is expected by the bind call.</span>
+<span id="L284"><span class="lineNum">     284</span>                 :             :     // Even though reinterpret_cast should be avoided, in this case is how you are supposed to do it</span>
+<span id="L285"><span class="lineNum">     285</span>                 :             :     // with the posix API.</span>
+<span id="L286"><span class="lineNum">     286</span>                 :             :     // See https://pubs.opengroup.org/onlinepubs/009695399/basedefs/netinet/in.h.html</span>
+<span id="L287"><span class="lineNum">     287</span>                 :             :     // coverity[autosar_cpp14_a5_2_4_violation] : safe reinterpret_cast, see justification above</span>
+<span id="L288"><span class="lineNum">     288</span>                 :<span class="tlaGNC">           4 :     const auto recipient_sockaddr = reinterpret_cast&lt;const struct sockaddr*&gt;(&amp;recipient_sockaddr_in);</span></span>
+<span id="L289"><span class="lineNum">     289</span>                 :             :     // NOLINTEND(cppcoreguidelines-pro-type-reinterpret-cast) see Note 1</span>
+<span id="L290"><span class="lineNum">     290</span>                 :             : </span>
+<span id="L291"><span class="lineNum">     291</span>                 :<span class="tlaGNC">           4 :     return Socket::instance().sendto(</span></span>
+<span id="L292"><span class="lineNum">     292</span>                 :<span class="tlaGNC">           4 :         file_descriptor_, buffer, length, Socket::MessageFlag::kNone, recipient_sockaddr, sizeof(*recipient_sockaddr));</span></span>
+<span id="L293"><span class="lineNum">     293</span>                 :             : }</span>
+<span id="L294"><span class="lineNum">     294</span>                 :             : </span>
+<span id="L295"><span class="lineNum">     295</span>                 :<span class="tlaGNC">           2 : score::cpp::expected_blank&lt;score::os::Error&gt; score::os::UdpSocket::SetSocketOption(const std::int32_t level,</span></span>
+<span id="L296"><span class="lineNum">     296</span>                 :             :                                                                                    const std::int32_t optname,</span>
+<span id="L297"><span class="lineNum">     297</span>                 :             :                                                                                    const void* optval,</span>
+<span id="L298"><span class="lineNum">     298</span>                 :             :                                                                                    const socklen_t optlen) noexcept</span>
+<span id="L299"><span class="lineNum">     299</span>                 :             : {</span>
+<span id="L300"><span class="lineNum">     300</span>                 :<span class="tlaGNC">           2 :     return score::os::Socket::instance().setsockopt(this-&gt;file_descriptor_, level, optname, optval, optlen);</span></span>
+<span id="L301"><span class="lineNum">     301</span>                 :             : }</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

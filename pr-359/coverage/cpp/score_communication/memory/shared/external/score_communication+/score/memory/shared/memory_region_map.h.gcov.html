@@ -1,0 +1,265 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - memory/shared/external/score_communication+/score/memory/shared/memory_region_map.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../index.html">top level</a> - <a href="index.html">memory/shared/external/score_communication+/score/memory/shared</a> - memory_region_map.h<span style="font-size: 80%;"> (source / <a href="memory_region_map.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">2</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:37:31</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryLo">50.0&nbsp;%</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">1</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryHi">-</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2025 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : #ifndef SCORE_LIB_MEMORY_SHARED_MEMORYREGIONMAP_H</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #define SCORE_LIB_MEMORY_SHARED_MEMORYREGIONMAP_H</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : </span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #include &quot;score/concurrency/atomic_indirector.h&quot;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #include &quot;score/memory/shared/memory_region_bounds.h&quot;</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : </span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : #include &lt;array&gt;</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : #include &lt;atomic&gt;</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : #include &lt;cstddef&gt;</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : #include &lt;cstdint&gt;</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : #include &lt;functional&gt;</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : #include &lt;limits&gt;</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : #include &lt;map&gt;</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : #include &lt;optional&gt;</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : #include &lt;utility&gt;</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : </span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : namespace score::memory::shared</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : {</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : </span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : namespace test</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : {</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : // Suppress &quot;AUTOSAR C++14 M3-2-3&quot; rule finding: &quot;A type, object or function that is used in multiple translation units</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             : // shall be declared in one and only one file.&quot;.</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             : // The forward declaration of MemoryRegionMapAttorney is necessary to avoid cyclic dependencies and to ensure that the</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             : // MemoryRegionMapAttorney class can be declared without requiring the full definition of MemoryRegionMapAttorney. This</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             : // forward declaration does not violate the AUTOSAR C++14 M3-2-3 guideline as it is a common practice to handle</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : // dependencies in large codebases. The full definition of MemoryRegionMapAttorney will be provided elsewhere in the</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : // codebase.</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             : // coverity[autosar_cpp14_m3_2_3_violation]</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             : class MemoryRegionMapAttorney;</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             : }  // namespace test</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             : </span>
+<span id="L45"><span class="lineNum">      45</span>                 :             : namespace detail</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             : {</span>
+<span id="L47"><span class="lineNum">      47</span>                 :             : </span>
+<span id="L48"><span class="lineNum">      48</span>                 :             : /// \brief A map for memory regions, which provides lock-free access to one writer and multiple concurrent readers</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             : /// \details The non-const public APIs for writer access (insert new region, removal of a region, clearing regions)</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             : ///          are not thread-safe/re-entrant. I.e. access from multiple writers needs to be serialized. Opposed to that,</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             : ///          multiple readers can concurrently access the map also parallel to a writer.</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             : ///          Lock-Free algo is based on multi-versioning/swap mechanism in conjunction with atomics.</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             : ///          Detailed description can be found here:</span>
+<span id="L54"><span class="lineNum">      54</span>                 :             : ///          score/memory/design/shared_memory/Readme.md - chapter Bounds_Checking_Performance</span>
+<span id="L55"><span class="lineNum">      55</span>                 :             : </span>
+<span id="L56"><span class="lineNum">      56</span>                 :             : template &lt;template &lt;class&gt; class AtomicIndirectorType = concurrency::AtomicIndirectorReal&gt;</span>
+<span id="L57"><span class="lineNum">      57</span>                 :             : // Suppress &quot;AUTOSAR C++14 M3-2-3&quot; rule finding: &quot;A type, object or function that is used in multiple translation units</span>
+<span id="L58"><span class="lineNum">      58</span>                 :             : // shall be declared in one and only one file.&quot;.</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             : // this is false positive. MemoryRegionMapImpl is declared only once.</span>
+<span id="L60"><span class="lineNum">      60</span>                 :             : // coverity[autosar_cpp14_m3_2_3_violation : FALSE]</span>
+<span id="L61"><span class="lineNum">      61</span>                 :             : class MemoryRegionMapImpl final</span>
+<span id="L62"><span class="lineNum">      62</span>                 :             : {</span>
+<span id="L63"><span class="lineNum">      63</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A11-3-1&quot; rule finding: &quot;Friend declarations shall not be used.&quot;.</span>
+<span id="L64"><span class="lineNum">      64</span>                 :             :     // The 'friend' class is employed to encapsulate non-public members.</span>
+<span id="L65"><span class="lineNum">      65</span>                 :             :     // This design choice protects end users from implementation details</span>
+<span id="L66"><span class="lineNum">      66</span>                 :             :     // and prevents incorrect usage. Friend classes provide controlled</span>
+<span id="L67"><span class="lineNum">      67</span>                 :             :     // access to private members, utilized internally, ensuring that</span>
+<span id="L68"><span class="lineNum">      68</span>                 :             :     // end users cannot access implementation specifics.</span>
+<span id="L69"><span class="lineNum">      69</span>                 :             :     // This is for testing only</span>
+<span id="L70"><span class="lineNum">      70</span>                 :             :     // coverity[autosar_cpp14_a11_3_1_violation]</span>
+<span id="L71"><span class="lineNum">      71</span>                 :             :     friend test::MemoryRegionMapAttorney;</span>
+<span id="L72"><span class="lineNum">      72</span>                 :             : </span>
+<span id="L73"><span class="lineNum">      73</span>                 :             :   public:</span>
+<span id="L74"><span class="lineNum">      74</span>                 :             :     MemoryRegionMapImpl() noexcept;</span>
+<span id="L75"><span class="lineNum">      75</span>                 :             : </span>
+<span id="L76"><span class="lineNum">      76</span>                 :             :     /// \brief Searches within the existing/known memory regions for a region, which contains the given pointer/address.</span>
+<span id="L77"><span class="lineNum">      77</span>                 :             :     /// \param pointer ptr/address to be checked</span>
+<span id="L78"><span class="lineNum">      78</span>                 :             :     /// \return either a pair of start-address/end-address of the region which contains the pointer or an empty value</span>
+<span id="L79"><span class="lineNum">      79</span>                 :             :     ///         if there is no known region containing this pointer.</span>
+<span id="L80"><span class="lineNum">      80</span>                 :             :     std::optional&lt;MemoryRegionBounds&gt; GetBoundsFromAddress(const std::uintptr_t pointer) const noexcept;</span>
+<span id="L81"><span class="lineNum">      81</span>                 :             : </span>
+<span id="L82"><span class="lineNum">      82</span>                 :             :     /// \brief Creates a new regions version based on the latest version and adds the given region to it and then marks</span>
+<span id="L83"><span class="lineNum">      83</span>                 :             :     ///        it as the latest regions version. Only adds the provided range if it doesn't overlap with another range</span>
+<span id="L84"><span class="lineNum">      84</span>                 :             :     ///        that was already added via UpdateKnownRegions</span>
+<span id="L85"><span class="lineNum">      85</span>                 :             :     /// \param memory_range_start</span>
+<span id="L86"><span class="lineNum">      86</span>                 :             :     /// \param memory_range_end</span>
+<span id="L87"><span class="lineNum">      87</span>                 :             :     /// \return true, if the range was inserted. Otherwise, false.</span>
+<span id="L88"><span class="lineNum">      88</span>                 :             :     bool UpdateKnownRegion(const std::uintptr_t memory_range_start, const std::uintptr_t memory_range_end) noexcept;</span>
+<span id="L89"><span class="lineNum">      89</span>                 :             : </span>
+<span id="L90"><span class="lineNum">      90</span>                 :             :     /// \brief Removes the region with the given start address from the current/latest regions version and creates a new</span>
+<span id="L91"><span class="lineNum">      91</span>                 :             :     ///        regions version from it and marks it as the latest one.</span>
+<span id="L92"><span class="lineNum">      92</span>                 :             :     /// \param memory_range_start</span>
+<span id="L93"><span class="lineNum">      93</span>                 :             :     void RemoveKnownRegion(const std::uintptr_t memory_range_start) noexcept;</span>
+<span id="L94"><span class="lineNum">      94</span>                 :             : </span>
+<span id="L95"><span class="lineNum">      95</span>                 :             :     /// \brief Creates a new regions version, which is empty (contains no regions) and marks it as the latest regions</span>
+<span id="L96"><span class="lineNum">      96</span>                 :             :     /// version.</span>
+<span id="L97"><span class="lineNum">      97</span>                 :             :     /// \deprecated This func is only called/used by MemoryResourceRegistry::clear(), which is marked as deprecated.</span>
+<span id="L98"><span class="lineNum">      98</span>                 :             :     void ClearKnownRegions() noexcept;</span>
+<span id="L99"><span class="lineNum">      99</span>                 :             : </span>
+<span id="L100"><span class="lineNum">     100</span>                 :             :     /// \brief returns the size (number of regions) of the latest/newest known region version</span>
+<span id="L101"><span class="lineNum">     101</span>                 :             :     /// \return size/number of known regions.</span>
+<span id="L102"><span class="lineNum">     102</span>                 :             :     std::size_t GetSize() const noexcept;</span>
+<span id="L103"><span class="lineNum">     103</span>                 :             : </span>
+<span id="L104"><span class="lineNum">     104</span>                 :             :   private:</span>
+<span id="L105"><span class="lineNum">     105</span>                 :             :     using RegionVersionRefCountType = std::uint32_t;</span>
+<span id="L106"><span class="lineNum">     106</span>                 :             : </span>
+<span id="L107"><span class="lineNum">     107</span>                 :             :     /// \brief RAII style wrapper around an acquired atomic ref-counter, which assures refcount decrement on</span>
+<span id="L108"><span class="lineNum">     108</span>                 :             :     /// destruction.</span>
+<span id="L109"><span class="lineNum">     109</span>                 :             :     class AcquiredRefcountIndex final</span>
+<span id="L110"><span class="lineNum">     110</span>                 :             :     {</span>
+<span id="L111"><span class="lineNum">     111</span>                 :             :       public:</span>
+<span id="L112"><span class="lineNum">     112</span>                 :             :         AcquiredRefcountIndex(const std::uint8_t refcount_index,</span>
+<span id="L113"><span class="lineNum">     113</span>                 :             :                               std::atomic&lt;RegionVersionRefCountType&gt;&amp; ref_count) noexcept;</span>
+<span id="L114"><span class="lineNum">     114</span>                 :             :         ~AcquiredRefcountIndex() noexcept;</span>
+<span id="L115"><span class="lineNum">     115</span>                 :             :         AcquiredRefcountIndex(const AcquiredRefcountIndex&amp; other) noexcept = delete;</span>
+<span id="L116"><span class="lineNum">     116</span>                 :             :         /// \brief although the contained atomic isn't movable, our wrapper needs to be movable as we intend to use it</span>
+<span id="L117"><span class="lineNum">     117</span>                 :             :         ///        with e.g. std::optional. So we implement specific move logic here!</span>
+<span id="L118"><span class="lineNum">     118</span>                 :             :         AcquiredRefcountIndex(AcquiredRefcountIndex&amp;&amp; other) noexcept;</span>
+<span id="L119"><span class="lineNum">     119</span>                 :             :         AcquiredRefcountIndex&amp; operator=(const AcquiredRefcountIndex&amp; other) &amp; = delete;</span>
+<span id="L120"><span class="lineNum">     120</span>                 :             :         AcquiredRefcountIndex&amp; operator=(AcquiredRefcountIndex&amp;&amp; other) &amp; = delete;</span>
+<span id="L121"><span class="lineNum">     121</span>                 :             : </span>
+<span id="L122"><span class="lineNum">     122</span>                 :<span class="tlaGNC tlaBgGNC">     1198911 :         std::uint8_t GetIndex() const noexcept</span></span>
+<span id="L123"><span class="lineNum">     123</span>                 :             :         {</span>
+<span id="L124"><span class="lineNum">     124</span>                 :<span class="tlaGNC">     1198911 :             return index_;</span></span>
+<span id="L125"><span class="lineNum">     125</span>                 :             :         }</span>
+<span id="L126"><span class="lineNum">     126</span>                 :             : </span>
+<span id="L127"><span class="lineNum">     127</span>                 :             :       private:</span>
+<span id="L128"><span class="lineNum">     128</span>                 :             :         std::uint8_t index_;</span>
+<span id="L129"><span class="lineNum">     129</span>                 :             :         std::reference_wrapper&lt;std::atomic&lt;RegionVersionRefCountType&gt;&gt; ref_count_;</span>
+<span id="L130"><span class="lineNum">     130</span>                 :             :         bool owns_resource_;</span>
+<span id="L131"><span class="lineNum">     131</span>                 :             :     };</span>
+<span id="L132"><span class="lineNum">     132</span>                 :             :     static constexpr const RegionVersionRefCountType INVALID_REF_COUNT_INTERVAL_END{</span>
+<span id="L133"><span class="lineNum">     133</span>                 :             :         std::numeric_limits&lt;RegionVersionRefCountType&gt;::max()};</span>
+<span id="L134"><span class="lineNum">     134</span>                 :             :     static constexpr const RegionVersionRefCountType INVALID_REF_COUNT_INTERVAL_START{INVALID_REF_COUNT_INTERVAL_END /</span>
+<span id="L135"><span class="lineNum">     135</span>                 :             :                                                                                       2U};</span>
+<span id="L136"><span class="lineNum">     136</span>                 :             :     static constexpr const RegionVersionRefCountType INITIAL_REF_COUNT_VALUE{INVALID_REF_COUNT_INTERVAL_START};</span>
+<span id="L137"><span class="lineNum">     137</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A0-1-1&quot; rule finding: &quot;A project shall not contain instances of non-volatile variables</span>
+<span id="L138"><span class="lineNum">     138</span>                 :             :     // being given values that are not subsequently used.&quot;.</span>
+<span id="L139"><span class="lineNum">     139</span>                 :             :     // Rationale: False positive - variable is used below.</span>
+<span id="L140"><span class="lineNum">     140</span>                 :             :     // coverity[autosar_cpp14_a0_1_1_violation : FALSE]</span>
+<span id="L141"><span class="lineNum">     141</span>                 :             :     static constexpr const std::uint8_t VERSION_COUNT{10U};</span>
+<span id="L142"><span class="lineNum">     142</span>                 :             :     static_assert(</span>
+<span id="L143"><span class="lineNum">     143</span>                 :             :         VERSION_COUNT &lt;= 255U,</span>
+<span id="L144"><span class="lineNum">     144</span>                 :             :         &quot;VERSION_COUNT needs to be smaller than 255 as our latest_known_region_version_ tracker is an uint8 &quot;);</span>
+<span id="L145"><span class="lineNum">     145</span>                 :             : </span>
+<span id="L146"><span class="lineNum">     146</span>                 :             :     /// \brief Increases the usage refcount of the latest regions version.</span>
+<span id="L147"><span class="lineNum">     147</span>                 :             :     /// \return returns the index (version) of the regions version, were it successfully incremented the refcount or an</span>
+<span id="L148"><span class="lineNum">     148</span>                 :             :     /// std::nullopt in case the refcount increment failed (which is a clear error/problem)</span>
+<span id="L149"><span class="lineNum">     149</span>                 :             :     auto AcquireLatestRegionVersionForRead() const noexcept -&gt; std::optional&lt;AcquiredRefcountIndex&gt;;</span>
+<span id="L150"><span class="lineNum">     150</span>                 :             : </span>
+<span id="L151"><span class="lineNum">     151</span>                 :             :     /// \brief Searches for an unused regions version and acquires/blocks it for overwriting with a newer version.</span>
+<span id="L152"><span class="lineNum">     152</span>                 :             :     /// \return returns the index (version) of the regions version, which got locked or an std::nullopt in case the</span>
+<span id="L153"><span class="lineNum">     153</span>                 :             :     /// refcount increment failed (which is a clear error/problem)</span>
+<span id="L154"><span class="lineNum">     154</span>                 :             :     std::optional&lt;std::uint8_t&gt; AcquireRegionVersionForOverwrite() noexcept;</span>
+<span id="L155"><span class="lineNum">     155</span>                 :             : </span>
+<span id="L156"><span class="lineNum">     156</span>                 :             :     /// \brief We have an array of different versions of known regions to support our lock-free CAS based read access</span>
+<span id="L157"><span class="lineNum">     157</span>                 :             :     std::array&lt;std::map&lt;std::uintptr_t, std::uintptr_t&gt;, VERSION_COUNT&gt; known_regions_versions_{};</span>
+<span id="L158"><span class="lineNum">     158</span>                 :             : </span>
+<span id="L159"><span class="lineNum">     159</span>                 :             :     /// \brief refcounters for the different versions of known regions in known_regions_versions_</span>
+<span id="L160"><span class="lineNum">     160</span>                 :             :     mutable std::array&lt;std::atomic&lt;RegionVersionRefCountType&gt;, VERSION_COUNT&gt; known_regions_versions_refcounts_{};</span>
+<span id="L161"><span class="lineNum">     161</span>                 :             :     static_assert(VERSION_COUNT &gt; 0U, &quot;known_regions_versions_refcounts_ must store at least 1 version!&quot;);</span>
+<span id="L162"><span class="lineNum">     162</span>                 :             : </span>
+<span id="L163"><span class="lineNum">     163</span>                 :             :     /// \brief index into known_regions_versions_, which represents the latest/newest version of known regions</span>
+<span id="L164"><span class="lineNum">     164</span>                 :             :     std::atomic_uint8_t latest_known_region_version_{0U};</span>
+<span id="L165"><span class="lineNum">     165</span>                 :             : };</span>
+<span id="L166"><span class="lineNum">     166</span>                 :             : </span>
+<span id="L167"><span class="lineNum">     167</span>                 :             : }  // namespace detail</span>
+<span id="L168"><span class="lineNum">     168</span>                 :             : </span>
+<span id="L169"><span class="lineNum">     169</span>                 :             : using MemoryRegionMap = detail::MemoryRegionMapImpl&lt;&gt;;</span>
+<span id="L170"><span class="lineNum">     170</span>                 :             : </span>
+<span id="L171"><span class="lineNum">     171</span>                 :             : }  // namespace score::memory::shared</span>
+<span id="L172"><span class="lineNum">     172</span>                 :             : </span>
+<span id="L173"><span class="lineNum">     173</span>                 :             : #endif  // SCORE_LIB_MEMORY_SHARED_MEMORYREGIONMAP_H</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

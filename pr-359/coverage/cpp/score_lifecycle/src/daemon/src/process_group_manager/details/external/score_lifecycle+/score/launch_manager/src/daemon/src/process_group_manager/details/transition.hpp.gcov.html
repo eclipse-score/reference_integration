@@ -1,0 +1,574 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - src/daemon/src/process_group_manager/details/external/score_lifecycle+/score/launch_manager/src/daemon/src/process_group_manager/details/transition.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../../../../../../../../index.html">top level</a> - <a href="index.html">src/daemon/src/process_group_manager/details/external/score_lifecycle+/score/launch_manager/src/daemon/src/process_group_manager/details</a> - transition.hpp<span style="font-size: 80%;"> (source / <a href="transition.hpp.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">99.2&nbsp;%</td>
+            <td class="headerCovTableEntry">120</td>
+            <td class="headerCovTableEntry">119</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:38:41</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">65</td>
+            <td class="headerCovTableEntry">65</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryMed">75.5&nbsp;%</td>
+            <td class="headerCovTableEntry">94</td>
+            <td class="headerCovTableEntry">71</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2026 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : #ifndef SCORE_LCM_TRANSITION_HPP</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #define SCORE_LCM_TRANSITION_HPP</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : </span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #include &quot;score/mw/launch_manager/common/concurrency/fixed_size_queue.hpp&quot;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #include &quot;score/mw/launch_manager/common/constants.hpp&quot;</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : #include &quot;score/mw/launch_manager/process_group_manager/details/component_of.hpp&quot;</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : #include &quot;score/mw/launch_manager/process_group_manager/details/dependency_graph.hpp&quot;</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : #include &quot;score/mw/launch_manager/process_group_manager/details/icomponent.hpp&quot;</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : </span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : #include &lt;score/assert.hpp&gt;</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : </span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : #include &lt;algorithm&gt;</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : #include &lt;bitset&gt;</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : #include &lt;cstddef&gt;</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : #include &lt;cstdint&gt;</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : #include &lt;iterator&gt;</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : #include &lt;optional&gt;</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : #include &lt;type_traits&gt;</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : #include &lt;utility&gt;</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : #include &lt;vector&gt;</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : </span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : namespace score::mw::lifecycle</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             : {</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             : </span>
+<span id="L37"><span class="lineNum">      37</span>                 :             : /// @brief What should happen to a ready node right now.</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             : enum class Action : std::uint8_t</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : {</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             :     Stop,   ///&lt; deactivate the node</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             :     Start,  ///&lt; activate the node</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             : };</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             : </span>
+<span id="L44"><span class="lineNum">      44</span>                 :             : /// @brief Contains a node that is ready to be activated/deactivated</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             : template &lt;typename Key&gt;</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             : struct ReadyNode</span>
+<span id="L47"><span class="lineNum">      47</span>                 :             : {</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             :     Key node;</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             :     Action action;</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             : };</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             : </span>
+<span id="L52"><span class="lineNum">      52</span>                 :             : template &lt;typename T&gt;</span>
+<span id="L53"><span class="lineNum">      53</span>                 :<span class="tlaGNC tlaBgGNC">          49 : inline bool operator==(const ReadyNode&lt;T&gt;&amp; lhs, const ReadyNode&lt;T&gt;&amp; rhs)</span></span>
+<span id="L54"><span class="lineNum">      54</span>                 :             : {</span>
+<span id="L55"><span class="lineNum">      55</span>   [<span class="tlaGBC" title="Branch 0 was taken 35 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 14 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 35 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          49 :     return lhs.node == rhs.node &amp;&amp; lhs.action == rhs.action;</span></span>
+<span id="L56"><span class="lineNum">      56</span>                 :             : }</span>
+<span id="L57"><span class="lineNum">      57</span>                 :             : template &lt;typename T&gt;</span>
+<span id="L58"><span class="lineNum">      58</span>                 :             : inline bool operator!=(const ReadyNode&lt;T&gt;&amp; lhs, const ReadyNode&lt;T&gt;&amp; rhs)</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             : {</span>
+<span id="L60"><span class="lineNum">      60</span>                 :             :     return !(lhs == rhs);</span>
+<span id="L61"><span class="lineNum">      61</span>                 :             : }</span>
+<span id="L62"><span class="lineNum">      62</span>                 :             : </span>
+<span id="L63"><span class="lineNum">      63</span>                 :             : template &lt;typename T, typename Key&gt;</span>
+<span id="L64"><span class="lineNum">      64</span>                 :             : class TransitionBuilder;</span>
+<span id="L65"><span class="lineNum">      65</span>                 :             : </span>
+<span id="L66"><span class="lineNum">      66</span>                 :             : namespace detail</span>
+<span id="L67"><span class="lineNum">      67</span>                 :             : {</span>
+<span id="L68"><span class="lineNum">      68</span>                 :             : /// @brief True iff componentOf(U&amp;) is callable (via ADL) and yields a reference convertible to</span>
+<span id="L69"><span class="lineNum">      69</span>                 :             : /// IComponent&amp;. Used to enforce the requirement of the Transition&lt;T&gt; template parameter.</span>
+<span id="L70"><span class="lineNum">      70</span>                 :             : template &lt;typename U, typename = void&gt;</span>
+<span id="L71"><span class="lineNum">      71</span>                 :             : struct is_component_type : std::false_type</span>
+<span id="L72"><span class="lineNum">      72</span>                 :             : {</span>
+<span id="L73"><span class="lineNum">      73</span>                 :             : };</span>
+<span id="L74"><span class="lineNum">      74</span>                 :             : </span>
+<span id="L75"><span class="lineNum">      75</span>                 :             : template &lt;typename U&gt;</span>
+<span id="L76"><span class="lineNum">      76</span>                 :             : struct is_component_type&lt;U, std::void_t&lt;decltype(componentOf(std::declval&lt;U&amp;&gt;()))&gt;&gt;</span>
+<span id="L77"><span class="lineNum">      77</span>                 :             :     : std::is_convertible&lt;decltype(componentOf(std::declval&lt;U&amp;&gt;())), internal::IComponent&amp;&gt;</span>
+<span id="L78"><span class="lineNum">      78</span>                 :             : {</span>
+<span id="L79"><span class="lineNum">      79</span>                 :             : };</span>
+<span id="L80"><span class="lineNum">      80</span>                 :             : }  // namespace detail</span>
+<span id="L81"><span class="lineNum">      81</span>                 :             : </span>
+<span id="L82"><span class="lineNum">      82</span>                 :             : /// @brief The Transition computes the nodes to activate/deactivate when</span>
+<span id="L83"><span class="lineNum">      83</span>                 :             : ///        transitioning between states in the graph.</span>
+<span id="L84"><span class="lineNum">      84</span>                 :             : /// @details The Transition computes the nodes that need to be deactivated</span>
+<span id="L85"><span class="lineNum">      85</span>                 :             : ///          (those nodes not reachable from the target state) and those that</span>
+<span id="L86"><span class="lineNum">      86</span>                 :             : ///          need to be activated (those reachable from the target that are</span>
+<span id="L87"><span class="lineNum">      87</span>                 :             : ///          not yet active).</span>
+<span id="L88"><span class="lineNum">      88</span>                 :             : ///</span>
+<span id="L89"><span class="lineNum">      89</span>                 :             : template &lt;typename Key, typename T&gt;</span>
+<span id="L90"><span class="lineNum">      90</span>                 :             : class Transition</span>
+<span id="L91"><span class="lineNum">      91</span>                 :             : {</span>
+<span id="L92"><span class="lineNum">      92</span>                 :             :     // The transition is split into two phases:</span>
+<span id="L93"><span class="lineNum">      93</span>                 :             :     // - Stopping Phase: Every node that is currently running (@ref stopped() is false) and is</span>
+<span id="L94"><span class="lineNum">      94</span>                 :             :     //   not part of the target subgraph is deactivated. The stop set is derived from live component state across</span>
+<span id="L95"><span class="lineNum">      95</span>                 :             :     //   the whole graph rather than from a source subgraph, so it also captures nodes left running by a previously</span>
+<span id="L96"><span class="lineNum">      96</span>                 :             :     //   aborted transition. Once all nodes in the Stopping phase are finished, the transition moves to the Starting</span>
+<span id="L97"><span class="lineNum">      97</span>                 :             :     //   phase.</span>
+<span id="L98"><span class="lineNum">      98</span>                 :             :     // - Starting Phase: The nodes that need to be activated are processed next. Once all nodes in the</span>
+<span id="L99"><span class="lineNum">      99</span>                 :             :     //   Starting phase are finished, the transition is complete.</span>
+<span id="L100"><span class="lineNum">     100</span>                 :             :     //</span>
+<span id="L101"><span class="lineNum">     101</span>                 :             :     // The template parameter is expected to be a type that can be used to retrieve the corresponding IComponent</span>
+<span id="L102"><span class="lineNum">     102</span>                 :             :     // instance via the componentOf() function, which is expected to be defined for the type T.</span>
+<span id="L103"><span class="lineNum">     103</span>                 :             : </span>
+<span id="L104"><span class="lineNum">     104</span>                 :             :     static_assert(</span>
+<span id="L105"><span class="lineNum">     105</span>                 :             :         detail::is_component_type&lt;T&gt;::value,</span>
+<span id="L106"><span class="lineNum">     106</span>                 :             :         &quot;Transition&lt;T&gt; requires an ADL-findable componentOf(T&amp;) that returns a reference &quot;</span>
+<span id="L107"><span class="lineNum">     107</span>                 :             :         &quot;to IComponent&amp;.&quot;);</span>
+<span id="L108"><span class="lineNum">     108</span>                 :             : </span>
+<span id="L109"><span class="lineNum">     109</span>                 :             :     static_assert(</span>
+<span id="L110"><span class="lineNum">     110</span>                 :             :         std::is_trivially_copyable_v&lt;Key&gt;,</span>
+<span id="L111"><span class="lineNum">     111</span>                 :             :         &quot;This class takes copies of keys so they should be trivially copyable&quot;);</span>
+<span id="L112"><span class="lineNum">     112</span>                 :             : </span>
+<span id="L113"><span class="lineNum">     113</span>                 :             :     friend class TransitionBuilder&lt;Key, T&gt;;</span>
+<span id="L114"><span class="lineNum">     114</span>                 :             : </span>
+<span id="L115"><span class="lineNum">     115</span>                 :             :   public:</span>
+<span id="L116"><span class="lineNum">     116</span>                 :             :     /// @brief Pop the next ready node, or std::nullopt if none is ready right now</span>
+<span id="L117"><span class="lineNum">     117</span>                 :             :     /// @details Unlike a getter, this CONSUMES: a node is returned at most once and</span>
+<span id="L118"><span class="lineNum">     118</span>                 :             :     /// is gone from the frontier the moment it's returned. Safe to interleave</span>
+<span id="L119"><span class="lineNum">     119</span>                 :             :     /// with onNodeFinished() — nodes onNodeFinished() appends are queued behind</span>
+<span id="L120"><span class="lineNum">     120</span>                 :             :     /// whatever's already pending, never lost, regardless of consumption order.</span>
+<span id="L121"><span class="lineNum">     121</span>                 :<span class="tlaGNC">         156 :     std::optional&lt;ReadyNode&lt;Key&gt;&gt; nextReady()</span></span>
+<span id="L122"><span class="lineNum">     122</span>                 :             :     {</span>
+<span id="L123"><span class="lineNum">     123</span>         [<span class="tlaGBC" title="Branch 0 was taken 76 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 80 times"> + </span>]:<span class="tlaGNC">         156 :         if (state_.next_nodes.empty())</span></span>
+<span id="L124"><span class="lineNum">     124</span>                 :             :         {</span>
+<span id="L125"><span class="lineNum">     125</span>                 :<span class="tlaGNC">          76 :             return std::nullopt;</span></span>
+<span id="L126"><span class="lineNum">     126</span>                 :             :         }</span>
+<span id="L127"><span class="lineNum">     127</span>         [<span class="tlaGBC" title="Branch 0 was taken 80 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          80 :         return ReadyNode&lt;Key&gt;{state_.next_nodes.tryPop().value(), currentAction()};</span></span>
+<span id="L128"><span class="lineNum">     128</span>                 :             :     }</span>
+<span id="L129"><span class="lineNum">     129</span>                 :             : </span>
+<span id="L130"><span class="lineNum">     130</span>                 :             :     /// @brief Input iterator that drains the transition via nextReady().</span>
+<span id="L131"><span class="lineNum">     131</span>                 :             :     /// @details Holds only a pointer + a cached ReadyNode — no allocation.</span>
+<span id="L132"><span class="lineNum">     132</span>                 :             :     /// CONSUMING: advancing pops from the shared frontier, so only one traversal (e.g. one range-for)</span>
+<span id="L133"><span class="lineNum">     133</span>                 :             :     /// should be in flight at a time; a second `begin()` continues where the</span>
+<span id="L134"><span class="lineNum">     134</span>                 :             :     /// first left off, it does not restart.</span>
+<span id="L135"><span class="lineNum">     135</span>                 :             :     class Iterator</span>
+<span id="L136"><span class="lineNum">     136</span>                 :             :     {</span>
+<span id="L137"><span class="lineNum">     137</span>                 :             :       public:</span>
+<span id="L138"><span class="lineNum">     138</span>                 :             :         using value_type = ReadyNode&lt;Key&gt;;</span>
+<span id="L139"><span class="lineNum">     139</span>                 :             :         using reference = ReadyNode&lt;Key&gt;;</span>
+<span id="L140"><span class="lineNum">     140</span>                 :             :         using difference_type = std::ptrdiff_t;</span>
+<span id="L141"><span class="lineNum">     141</span>                 :             :         using iterator_category = std::input_iterator_tag;</span>
+<span id="L142"><span class="lineNum">     142</span>                 :             :         using pointer = void;</span>
+<span id="L143"><span class="lineNum">     143</span>                 :             : </span>
+<span id="L144"><span class="lineNum">     144</span>                 :<span class="tlaGNC">          74 :         Iterator() = default;  // end sentinel: owner_ == nullptr</span></span>
+<span id="L145"><span class="lineNum">     145</span>                 :<span class="tlaGNC">          74 :         explicit Iterator(Transition* owner) : owner_(owner)</span></span>
+<span id="L146"><span class="lineNum">     146</span>                 :             :         {</span>
+<span id="L147"><span class="lineNum">     147</span>                 :<span class="tlaGNC">          74 :             advance();</span></span>
+<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">          74 :         }</span></span>
+<span id="L149"><span class="lineNum">     149</span>                 :             : </span>
+<span id="L150"><span class="lineNum">     150</span>                 :<span class="tlaGNC">          77 :         ReadyNode&lt;Key&gt; operator*() const</span></span>
+<span id="L151"><span class="lineNum">     151</span>                 :             :         {</span>
+<span id="L152"><span class="lineNum">     152</span>                 :<span class="tlaGNC">          77 :             return *current_;</span></span>
+<span id="L153"><span class="lineNum">     153</span>                 :             :         }</span>
+<span id="L154"><span class="lineNum">     154</span>                 :<span class="tlaGNC">          77 :         Iterator&amp; operator++()</span></span>
+<span id="L155"><span class="lineNum">     155</span>                 :             :         {</span>
+<span id="L156"><span class="lineNum">     156</span>                 :<span class="tlaGNC">          77 :             advance();</span></span>
+<span id="L157"><span class="lineNum">     157</span>                 :<span class="tlaGNC">          77 :             return *this;</span></span>
+<span id="L158"><span class="lineNum">     158</span>                 :             :         }</span>
+<span id="L159"><span class="lineNum">     159</span>                 :<span class="tlaGNC">         151 :         bool operator==(const Iterator&amp; other) const</span></span>
+<span id="L160"><span class="lineNum">     160</span>                 :             :         {</span>
+<span id="L161"><span class="lineNum">     161</span>                 :<span class="tlaGNC">         151 :             return current_.has_value() == other.current_.has_value();</span></span>
+<span id="L162"><span class="lineNum">     162</span>                 :             :         }</span>
+<span id="L163"><span class="lineNum">     163</span>                 :<span class="tlaGNC">         151 :         bool operator!=(const Iterator&amp; other) const</span></span>
+<span id="L164"><span class="lineNum">     164</span>                 :             :         {</span>
+<span id="L165"><span class="lineNum">     165</span>                 :<span class="tlaGNC">         151 :             return !(*this == other);</span></span>
+<span id="L166"><span class="lineNum">     166</span>                 :             :         }</span>
+<span id="L167"><span class="lineNum">     167</span>                 :             : </span>
+<span id="L168"><span class="lineNum">     168</span>                 :             :       private:</span>
+<span id="L169"><span class="lineNum">     169</span>                 :<span class="tlaGNC">         151 :         void advance()</span></span>
+<span id="L170"><span class="lineNum">     170</span>                 :             :         {</span>
+<span id="L171"><span class="lineNum">     171</span>   [<span class="tlaGBC" title="Branch 0 was taken 151 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 151 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">         151 :             current_ = owner_ ? owner_-&gt;nextReady() : std::nullopt;</span></span>
+<span id="L172"><span class="lineNum">     172</span>                 :<span class="tlaGNC">         151 :         }</span></span>
+<span id="L173"><span class="lineNum">     173</span>                 :             : </span>
+<span id="L174"><span class="lineNum">     174</span>                 :             :         Transition* owner_ = nullptr;</span>
+<span id="L175"><span class="lineNum">     175</span>                 :             :         std::optional&lt;ReadyNode&lt;Key&gt;&gt; current_;</span>
+<span id="L176"><span class="lineNum">     176</span>                 :             :     };</span>
+<span id="L177"><span class="lineNum">     177</span>                 :             : </span>
+<span id="L178"><span class="lineNum">     178</span>                 :<span class="tlaGNC">          74 :     Iterator begin()</span></span>
+<span id="L179"><span class="lineNum">     179</span>                 :             :     {</span>
+<span id="L180"><span class="lineNum">     180</span>                 :<span class="tlaGNC">          74 :         return Iterator{this};</span></span>
+<span id="L181"><span class="lineNum">     181</span>                 :             :     }</span>
+<span id="L182"><span class="lineNum">     182</span>                 :<span class="tlaGNC">          74 :     Iterator end()</span></span>
+<span id="L183"><span class="lineNum">     183</span>                 :             :     {</span>
+<span id="L184"><span class="lineNum">     184</span>                 :<span class="tlaGNC">          74 :         return Iterator{};</span></span>
+<span id="L185"><span class="lineNum">     185</span>                 :             :     }</span>
+<span id="L186"><span class="lineNum">     186</span>                 :             : </span>
+<span id="L187"><span class="lineNum">     187</span>                 :             :     /// @brief Mark @p node finished and refresh the list of ready nodes</span>
+<span id="L188"><span class="lineNum">     188</span>                 :             :     /// @details A successor becomes ready when:</span>
+<span id="L189"><span class="lineNum">     189</span>                 :             :     ///   activation:   it is part of the target subgraph, and every dependency it</span>
+<span id="L190"><span class="lineNum">     190</span>                 :             :     ///                 has is active()</span>
+<span id="L191"><span class="lineNum">     191</span>                 :             :     ///   deactivation: every dependent it has is stopped()</span>
+<span id="L192"><span class="lineNum">     192</span>                 :<span class="tlaGNC">          66 :     void onNodeFinished(Key node)</span></span>
+<span id="L193"><span class="lineNum">     193</span>                 :             :     {</span>
+<span id="L194"><span class="lineNum">     194</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 66 times"> + </span>]:<span class="tlaGNC">          66 :         SCORE_LANGUAGE_FUTURECPP_ASSERT(isValidNode(node));</span></span>
+<span id="L195"><span class="lineNum">     195</span>                 :             : </span>
+<span id="L196"><span class="lineNum">     196</span>                 :<span class="tlaGNC">          66 :         --state_.pending;  // completion counter; only detects done-ness, never gates order</span></span>
+<span id="L197"><span class="lineNum">     197</span>                 :             : </span>
+<span id="L198"><span class="lineNum">     198</span>         [<span class="tlaGBC" title="Branch 0 was taken 33 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 33 times"> + </span>]:<span class="tlaGNC">          66 :         if (state_.pending == 0)  // active phase drained</span></span>
+<span id="L199"><span class="lineNum">     199</span>                 :             :         {</span>
+<span id="L200"><span class="lineNum">     200</span>         [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 23 times"> + </span>]:<span class="tlaGNC">          33 :             if (state_.phase == Phase::Stopping)</span></span>
+<span id="L201"><span class="lineNum">     201</span>                 :             :             {</span>
+<span id="L202"><span class="lineNum">     202</span>                 :<span class="tlaGNC">          10 :                 advanceToStarting();  // sets up the starting-phase heads</span></span>
+<span id="L203"><span class="lineNum">     203</span>                 :             :             }</span>
+<span id="L204"><span class="lineNum">     204</span>                 :             :             else</span>
+<span id="L205"><span class="lineNum">     205</span>                 :             :             {</span>
+<span id="L206"><span class="lineNum">     206</span>                 :<span class="tlaGNC">          23 :                 state_.phase = Phase::Done;</span></span>
+<span id="L207"><span class="lineNum">     207</span>                 :             :             }</span>
+<span id="L208"><span class="lineNum">     208</span>                 :<span class="tlaGNC">          33 :             return;</span></span>
+<span id="L209"><span class="lineNum">     209</span>                 :             :         }</span>
+<span id="L210"><span class="lineNum">     210</span>                 :             : </span>
+<span id="L211"><span class="lineNum">     211</span>                 :             :         // Still within the phase: append the finished node's neighbours in the</span>
+<span id="L212"><span class="lineNum">     212</span>                 :             :         // phase's direction, filtered by readiness, behind whatever's already</span>
+<span id="L213"><span class="lineNum">     213</span>                 :             :         // waiting to be dispatched.</span>
+<span id="L214"><span class="lineNum">     214</span>         [<span class="tlaGBC" title="Branch 0 was taken 19 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 14 times"> + </span>]:<span class="tlaGNC">          33 :         const auto&amp; successors = state_.phase == Phase::Starting ? graph_.dependents(node) : graph_.dependsOn(node);</span></span>
+<span id="L215"><span class="lineNum">     215</span>         [<span class="tlaGBC" title="Branch 0 was taken 37 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 33 times"> + </span>]:<span class="tlaGNC">          70 :         for (const Key s : successors)</span></span>
+<span id="L216"><span class="lineNum">     216</span>                 :             :         {</span>
+<span id="L217"><span class="lineNum">     217</span>   [<span class="tlaGBC" title="Branch 0 was taken 37 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 28 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 9 times"> + </span> :<span class="tlaGNC">          37 :             if (isReady(s) &amp;&amp; !state_.node_information.at(s).enqueued_)</span></span>
+<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 28 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 28 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span><span class="tlaGBC" title="Branch 8 was taken 28 times"> + </span> 
+<span class="lineNum">        </span>             <span class="tlaGBC" title="Branch 9 was taken 9 times"> + </span>]
+<span id="L218"><span class="lineNum">     218</span>                 :             :             {</span>
+<span id="L219"><span class="lineNum">     219</span>         [<span class="tlaGBC" title="Branch 0 was taken 28 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          28 :                 state_.node_information[s].enqueued_ = true;</span></span>
+<span id="L220"><span class="lineNum">     220</span>   [<span class="tlaGBC" title="Branch 0 was taken 28 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 28 times"> + </span>]:<span class="tlaGNC">          28 :                 SCORE_LANGUAGE_FUTURECPP_ASSERT_MESSAGE(</span></span>
+<span id="L221"><span class="lineNum">     221</span>                 :             :                     state_.next_nodes.push(s), &quot;Transition queue should never exceed capacity&quot;);</span>
+<span id="L222"><span class="lineNum">     222</span>                 :             :             }</span>
+<span id="L223"><span class="lineNum">     223</span>                 :             :         }</span>
+<span id="L224"><span class="lineNum">     224</span>                 :             :     }</span>
+<span id="L225"><span class="lineNum">     225</span>                 :             : </span>
+<span id="L226"><span class="lineNum">     226</span>                 :             :     /// @return True once every node participating in this transition has reached</span>
+<span id="L227"><span class="lineNum">     227</span>                 :             :     /// its terminal state.</span>
+<span id="L228"><span class="lineNum">     228</span>                 :<span class="tlaGNC">          52 :     bool isFinished() const</span></span>
+<span id="L229"><span class="lineNum">     229</span>                 :             :     {</span>
+<span id="L230"><span class="lineNum">     230</span>                 :<span class="tlaGNC">          52 :         return state_.phase == Phase::Done;</span></span>
+<span id="L231"><span class="lineNum">     231</span>                 :             :     }</span>
+<span id="L232"><span class="lineNum">     232</span>                 :             : </span>
+<span id="L233"><span class="lineNum">     233</span>                 :             :   private:</span>
+<span id="L234"><span class="lineNum">     234</span>                 :             :     /// @brief True iff @p node is a valid index into the underlying graph, i.e. in [0, size()).</span>
+<span id="L235"><span class="lineNum">     235</span>                 :<span class="tlaGNC">         103 :     bool isValidNode(Key node) const</span></span>
+<span id="L236"><span class="lineNum">     236</span>                 :             :     {</span>
+<span id="L237"><span class="lineNum">     237</span>         [<span class="tlaGBC" title="Branch 0 was taken 103 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         103 :         return graph_.find(node) != graph_.end();</span></span>
+<span id="L238"><span class="lineNum">     238</span>                 :             :     }</span>
+<span id="L239"><span class="lineNum">     239</span>                 :             : </span>
+<span id="L240"><span class="lineNum">     240</span>                 :             :     /// @brief Construct a reusable Transition for the given graph.</span>
+<span id="L241"><span class="lineNum">     241</span>                 :             :     /// @details All the memory needed for a transition is allocated here, so that no further allocations are</span>
+<span id="L242"><span class="lineNum">     242</span>                 :             :     /// needed while the transition is in flight. The same transition object is then reused for multiple transitions by</span>
+<span id="L243"><span class="lineNum">     243</span>                 :             :     /// calling @ref setupTransition() with a new target node.</span>
+<span id="L244"><span class="lineNum">     244</span>                 :<span class="tlaGNC">          47 :     explicit Transition(DependencyGraph&lt;Key, T&gt;&amp; graph) : state_(graph.capacity()), graph_(graph)</span></span>
+<span id="L245"><span class="lineNum">     245</span>                 :             :     {</span>
+<span id="L246"><span class="lineNum">     246</span>                 :<span class="tlaGNC">          47 :     }</span></span>
+<span id="L247"><span class="lineNum">     247</span>                 :             : </span>
+<span id="L248"><span class="lineNum">     248</span>                 :             :     /// @brief Set up a fresh transition to @p target.</span>
+<span id="L249"><span class="lineNum">     249</span>                 :             :     /// @details Starts in the Stopping Phase: every node currently running and not needed by @p target is</span>
+<span id="L250"><span class="lineNum">     250</span>                 :             :     /// deactivated (derived from live component state across the whole graph, so nodes left running by a previous</span>
+<span id="L251"><span class="lineNum">     251</span>                 :             :     /// aborted transition are captured too). Then moves to the Starting Phase to bring up @p target.</span>
+<span id="L252"><span class="lineNum">     252</span>                 :<span class="tlaGNC">          37 :     void setupTransition(Key target)</span></span>
+<span id="L253"><span class="lineNum">     253</span>                 :             :     {</span>
+<span id="L254"><span class="lineNum">     254</span>                 :             :         // Sets up or resets our stored info for this transition</span>
+<span id="L255"><span class="lineNum">     255</span>   [<span class="tlaGBC" title="Branch 0 was taken 186 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 186 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 37 times"> + </span>]:<span class="tlaGNC">         223 :         for (const auto&amp; [key, value] : graph_)</span></span>
+<span id="L256"><span class="lineNum">     256</span>                 :             :         {</span>
+<span id="L257"><span class="lineNum">     257</span>                 :             :             // If the key is not present in the map, this will default construct into it</span>
+<span id="L258"><span class="lineNum">     258</span>         [<span class="tlaGBC" title="Branch 0 was taken 186 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         186 :             NodeInfo&amp; info = state_.node_information[key];</span></span>
+<span id="L259"><span class="lineNum">     259</span>                 :<span class="tlaGNC">         186 :             info.enqueued_ = false;</span></span>
+<span id="L260"><span class="lineNum">     260</span>                 :<span class="tlaGNC">         186 :             info.in_target_subgraph_ = false;</span></span>
+<span id="L261"><span class="lineNum">     261</span>                 :             :         }</span>
+<span id="L262"><span class="lineNum">     262</span>                 :             : </span>
+<span id="L263"><span class="lineNum">     263</span>                 :<span class="tlaGNC">          37 :         state_.target_root = target;</span></span>
+<span id="L264"><span class="lineNum">     264</span>                 :<span class="tlaGNC">          37 :         clearNextNodes();</span></span>
+<span id="L265"><span class="lineNum">     265</span>                 :<span class="tlaGNC">          37 :         state_.pending = 0;</span></span>
+<span id="L266"><span class="lineNum">     266</span>                 :<span class="tlaGNC">          37 :         state_.phase = Phase::Stopping;</span></span>
+<span id="L267"><span class="lineNum">     267</span>                 :<span class="tlaGNC">          37 :         setupDeactivation(target);</span></span>
+<span id="L268"><span class="lineNum">     268</span>         [<span class="tlaGBC" title="Branch 0 was taken 26 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 11 times"> + </span>]:<span class="tlaGNC">          37 :         if (state_.pending == 0)</span></span>
+<span id="L269"><span class="lineNum">     269</span>                 :             :         {</span>
+<span id="L270"><span class="lineNum">     270</span>                 :<span class="tlaGNC">          26 :             advanceToStarting();</span></span>
+<span id="L271"><span class="lineNum">     271</span>                 :             :         }</span>
+<span id="L272"><span class="lineNum">     272</span>                 :<span class="tlaGNC">          37 :     }</span></span>
+<span id="L273"><span class="lineNum">     273</span>                 :             : </span>
+<span id="L274"><span class="lineNum">     274</span>                 :             :     enum class Phase : std::uint8_t</span>
+<span id="L275"><span class="lineNum">     275</span>                 :             :     {</span>
+<span id="L276"><span class="lineNum">     276</span>                 :             :         Stopping,  ///&lt; Deactivating nodes exclusive to the `source` state</span>
+<span id="L277"><span class="lineNum">     277</span>                 :             :         Starting,  ///&lt; Activating new nodes that are exclusive to the `target` state</span>
+<span id="L278"><span class="lineNum">     278</span>                 :             :         Done,      ///&lt; every participating node has reached its terminal state</span>
+<span id="L279"><span class="lineNum">     279</span>                 :             :     };</span>
+<span id="L280"><span class="lineNum">     280</span>                 :             : </span>
+<span id="L281"><span class="lineNum">     281</span>                 :             :     struct NodeInfo</span>
+<span id="L282"><span class="lineNum">     282</span>                 :             :     {</span>
+<span id="L283"><span class="lineNum">     283</span>                 :             :         /// @brief True if the node is in the subgraph of nodes we wish to process</span>
+<span id="L284"><span class="lineNum">     284</span>                 :             :         /// @details in_target_subgraph[i] is true iff node is reachable from target_root (i.e. belongs to the subgraph</span>
+<span id="L285"><span class="lineNum">     285</span>                 :             :         /// about to be running). Recomputed at every setup. Serves two purposes:</span>
+<span id="L286"><span class="lineNum">     286</span>                 :             :         ///   stopping:  the nodes excluded from the whole-graph stop scan, and the</span>
+<span id="L287"><span class="lineNum">     287</span>                 :             :         ///              nodes onNodeFinished must never (re)stop.</span>
+<span id="L288"><span class="lineNum">     288</span>                 :             :         ///   starting:  nodes that are directly or indirectly depended on by</span>
+<span id="L289"><span class="lineNum">     289</span>                 :             :         ///              the target_root.</span>
+<span id="L290"><span class="lineNum">     290</span>                 :             :         bool in_target_subgraph_{false};</span>
+<span id="L291"><span class="lineNum">     291</span>                 :             : </span>
+<span id="L292"><span class="lineNum">     292</span>                 :             :         /// @brief True if the node has been enqueued for the current transition phase</span>
+<span id="L293"><span class="lineNum">     293</span>                 :             :         /// @deprecated This is a workaround for the case where two processes are started in parallel and their events</span>
+<span id="L294"><span class="lineNum">     294</span>                 :             :         /// processed in sequence. Both onNodeFinished() calls detect that all dependents are ready and try to enqueue</span>
+<span id="L295"><span class="lineNum">     295</span>                 :             :         /// successors. Detection of dependency readiness should be reworked to remove this. See #427</span>
+<span id="L296"><span class="lineNum">     296</span>                 :             :         bool enqueued_{false};</span>
+<span id="L297"><span class="lineNum">     297</span>                 :             :     };</span>
+<span id="L298"><span class="lineNum">     298</span>                 :             : </span>
+<span id="L299"><span class="lineNum">     299</span>                 :             :     struct State</span>
+<span id="L300"><span class="lineNum">     300</span>                 :             :     {</span>
+<span id="L301"><span class="lineNum">     301</span>                 :             :         /// @brief The destination subgraph's root (the `target` endpoint)</span>
+<span id="L302"><span class="lineNum">     302</span>                 :             :         Key target_root{};</span>
+<span id="L303"><span class="lineNum">     303</span>                 :             : </span>
+<span id="L304"><span class="lineNum">     304</span>                 :             :         /// @brief The nodes that are ready to be activated/deactivated in the current phase, in the order they were</span>
+<span id="L305"><span class="lineNum">     305</span>                 :             :         /// discovered.</span>
+<span id="L306"><span class="lineNum">     306</span>                 :             :         internal::FixedSizeQueue&lt;Key&gt; next_nodes;</span>
+<span id="L307"><span class="lineNum">     307</span>                 :             :         std::size_t pending = 0;    // nodes still to reach terminal state in this phase</span>
+<span id="L308"><span class="lineNum">     308</span>                 :             :         Phase phase = Phase::Done;  // active vs deactivation vs finished</span>
+<span id="L309"><span class="lineNum">     309</span>                 :             : </span>
+<span id="L310"><span class="lineNum">     310</span>                 :             :         /// @brief Information we need to maintain about graph nodes for the current transition</span>
+<span id="L311"><span class="lineNum">     311</span>                 :             :         std::unordered_map&lt;Key, NodeInfo&gt; node_information;</span>
+<span id="L312"><span class="lineNum">     312</span>                 :             : </span>
+<span id="L313"><span class="lineNum">     313</span>                 :<span class="tlaGNC">          47 :         explicit State(std::size_t nodes) : next_nodes(nodes)</span></span>
+<span id="L314"><span class="lineNum">     314</span>                 :             :         {</span>
+<span id="L315"><span class="lineNum">     315</span>         [<span class="tlaGBC" title="Branch 0 was taken 47 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          47 :             node_information.reserve(nodes);</span></span>
+<span id="L316"><span class="lineNum">     316</span>                 :<span class="tlaGNC">          47 :         }</span></span>
+<span id="L317"><span class="lineNum">     317</span>                 :             :     };</span>
+<span id="L318"><span class="lineNum">     318</span>                 :             : </span>
+<span id="L319"><span class="lineNum">     319</span>                 :             :     /// @brief Check if the node is active</span>
+<span id="L320"><span class="lineNum">     320</span>                 :<span class="tlaGNC">         147 :     bool active(Key i)</span></span>
+<span id="L321"><span class="lineNum">     321</span>                 :             :     {</span>
+<span id="L322"><span class="lineNum">     322</span>                 :<span class="tlaGNC">         147 :         return componentOf(graph_[i]).active();</span></span>
+<span id="L323"><span class="lineNum">     323</span>                 :             :     }</span>
+<span id="L324"><span class="lineNum">     324</span>                 :             : </span>
+<span id="L325"><span class="lineNum">     325</span>                 :             :     /// @brief Check if the node is stopped</span>
+<span id="L326"><span class="lineNum">     326</span>                 :<span class="tlaGNC">         153 :     bool stopped(Key i)</span></span>
+<span id="L327"><span class="lineNum">     327</span>                 :             :     {</span>
+<span id="L328"><span class="lineNum">     328</span>                 :<span class="tlaGNC">         153 :         return !componentOf(graph_[i]).active();</span></span>
+<span id="L329"><span class="lineNum">     329</span>                 :             :     }</span>
+<span id="L330"><span class="lineNum">     330</span>                 :             : </span>
+<span id="L331"><span class="lineNum">     331</span>                 :             :     /// @brief Check if all dependencies of the given node are active</span>
+<span id="L332"><span class="lineNum">     332</span>                 :<span class="tlaGNC">          85 :     bool allDepsActive(Key i)</span></span>
+<span id="L333"><span class="lineNum">     333</span>                 :             :     {</span>
+<span id="L334"><span class="lineNum">     334</span>                 :<span class="tlaGNC">          85 :         const auto&amp; d = graph_.dependsOn(i);</span></span>
+<span id="L335"><span class="lineNum">     335</span>                 :<span class="tlaGNC">          85 :         return std::all_of(d.begin(), d.end(), [this](Key dep) {</span></span>
+<span id="L336"><span class="lineNum">     336</span>                 :<span class="tlaGNC">          55 :             return active(dep);</span></span>
+<span id="L337"><span class="lineNum">     337</span>                 :<span class="tlaGNC">          85 :         });</span></span>
+<span id="L338"><span class="lineNum">     338</span>                 :             :     }</span>
+<span id="L339"><span class="lineNum">     339</span>                 :             : </span>
+<span id="L340"><span class="lineNum">     340</span>                 :             :     /// @brief Check if all dependents of the given node are stopped</span>
+<span id="L341"><span class="lineNum">     341</span>                 :<span class="tlaGNC">          38 :     bool allDependentsStopped(Key i)</span></span>
+<span id="L342"><span class="lineNum">     342</span>                 :             :     {</span>
+<span id="L343"><span class="lineNum">     343</span>                 :<span class="tlaGNC">          38 :         const auto&amp; d = graph_.dependents(i);</span></span>
+<span id="L344"><span class="lineNum">     344</span>                 :<span class="tlaGNC">          38 :         return std::all_of(d.begin(), d.end(), [this](Key dep) {</span></span>
+<span id="L345"><span class="lineNum">     345</span>                 :<span class="tlaGNC">          28 :             return stopped(dep);</span></span>
+<span id="L346"><span class="lineNum">     346</span>                 :<span class="tlaGNC">          38 :         });</span></span>
+<span id="L347"><span class="lineNum">     347</span>                 :             :     }</span>
+<span id="L348"><span class="lineNum">     348</span>                 :             : </span>
+<span id="L349"><span class="lineNum">     349</span>                 :             :     State state_;</span>
+<span id="L350"><span class="lineNum">     350</span>                 :             :     DependencyGraph&lt;Key, T&gt;&amp; graph_;</span>
+<span id="L351"><span class="lineNum">     351</span>                 :             : </span>
+<span id="L352"><span class="lineNum">     352</span>                 :             :     /// @brief The action based on whether the transition is in the Stopping or Starting phase</span>
+<span id="L353"><span class="lineNum">     353</span>                 :<span class="tlaGNC">          80 :     Action currentAction() const</span></span>
+<span id="L354"><span class="lineNum">     354</span>                 :             :     {</span>
+<span id="L355"><span class="lineNum">     355</span>         [<span class="tlaGBC" title="Branch 0 was taken 55 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 25 times"> + </span>]:<span class="tlaGNC">          80 :         return state_.phase == Phase::Starting ? Action::Start : Action::Stop;</span></span>
+<span id="L356"><span class="lineNum">     356</span>                 :             :     }</span>
+<span id="L357"><span class="lineNum">     357</span>                 :             : </span>
+<span id="L358"><span class="lineNum">     358</span>                 :             :     /// @brief Check if the node is ready to be activated/deactivated in the current phase.</span>
+<span id="L359"><span class="lineNum">     359</span>                 :<span class="tlaGNC">          37 :     bool isReady(Key s)</span></span>
+<span id="L360"><span class="lineNum">     360</span>                 :             :     {</span>
+<span id="L361"><span class="lineNum">     361</span>                 :<span class="tlaGNC">          37 :         return state_.phase == Phase::Starting</span></span>
+<span id="L362"><span class="lineNum">     362</span>   [<span class="tlaGBC" title="Branch 0 was taken 21 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 16 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 19 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 2 times"> + </span> :<span class="tlaGNC">          53 :                    ? (state_.node_information.at(s).in_target_subgraph_ &amp;&amp; !active(s) &amp;&amp; allDepsActive(s))</span></span>
+<span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 19 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 15 times"> + </span><span class="tlaGBC" title="Branch 7 was taken 4 times"> + </span>]
+<span id="L363"><span class="lineNum">     363</span>   [<span class="tlaGBC" title="Branch 0 was taken 13 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 13 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          53 :                    : (!state_.node_information.at(s).in_target_subgraph_ &amp;&amp; !stopped(s) &amp;&amp; allDependentsStopped(s));</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 13 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
+<span id="L364"><span class="lineNum">     364</span>                 :             :     }</span>
+<span id="L365"><span class="lineNum">     365</span>                 :             : </span>
+<span id="L366"><span class="lineNum">     366</span>                 :<span class="tlaGNC">          73 :     void clearNextNodes()</span></span>
+<span id="L367"><span class="lineNum">     367</span>                 :             :     {</span>
+<span id="L368"><span class="lineNum">     368</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 73 times"> + </span>]:<span class="tlaGNC">          73 :         while (!state_.next_nodes.empty())</span></span>
+<span id="L369"><span class="lineNum">     369</span>                 :             :         {</span>
+<span id="L370"><span class="lineNum">     370</span>                 :<span class="tlaUNC tlaBgUNC">           0 :             static_cast&lt;void&gt;(state_.next_nodes.tryPop());</span></span>
+<span id="L371"><span class="lineNum">     371</span>                 :             :         }</span>
+<span id="L372"><span class="lineNum">     372</span>                 :<span class="tlaGNC tlaBgGNC">          73 :     }</span></span>
+<span id="L373"><span class="lineNum">     373</span>                 :             : </span>
+<span id="L374"><span class="lineNum">     374</span>                 :             :     /// @brief Leave the Stopping phase for the Starting phase.</span>
+<span id="L375"><span class="lineNum">     375</span>                 :             :     /// @details Sets up activation of the `target` subgraph; if there is nothing to start (everything is</span>
+<span id="L376"><span class="lineNum">     376</span>                 :             :     /// already active()), the transition is finished.</span>
+<span id="L377"><span class="lineNum">     377</span>                 :<span class="tlaGNC">          36 :     void advanceToStarting()</span></span>
+<span id="L378"><span class="lineNum">     378</span>                 :             :     {</span>
+<span id="L379"><span class="lineNum">     379</span>                 :<span class="tlaGNC">          36 :         state_.phase = Phase::Starting;</span></span>
+<span id="L380"><span class="lineNum">     380</span>                 :<span class="tlaGNC">          36 :         state_.pending = 0;</span></span>
+<span id="L381"><span class="lineNum">     381</span>                 :<span class="tlaGNC">          36 :         clearNextNodes();</span></span>
+<span id="L382"><span class="lineNum">     382</span>         [<span class="tlaGBC" title="Branch 0 was taken 181 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 36 times"> + </span>]:<span class="tlaGNC">         217 :         for (auto&amp; [key, value] : state_.node_information)</span></span>
+<span id="L383"><span class="lineNum">     383</span>                 :             :         {</span>
+<span id="L384"><span class="lineNum">     384</span>                 :<span class="tlaGNC">         181 :             value.enqueued_ = false;</span></span>
+<span id="L385"><span class="lineNum">     385</span>                 :             :         }</span>
+<span id="L386"><span class="lineNum">     386</span>                 :             : </span>
+<span id="L387"><span class="lineNum">     387</span>                 :<span class="tlaGNC">          36 :         setupActivation(state_.target_root);</span></span>
+<span id="L388"><span class="lineNum">     388</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 34 times"> + </span>]:<span class="tlaGNC">          36 :         if (state_.pending == 0)</span></span>
+<span id="L389"><span class="lineNum">     389</span>                 :             :         {</span>
+<span id="L390"><span class="lineNum">     390</span>                 :<span class="tlaGNC">           2 :             state_.phase = Phase::Done;</span></span>
+<span id="L391"><span class="lineNum">     391</span>                 :             :         }</span>
+<span id="L392"><span class="lineNum">     392</span>                 :<span class="tlaGNC">          36 :     }</span></span>
+<span id="L393"><span class="lineNum">     393</span>                 :             : </span>
+<span id="L394"><span class="lineNum">     394</span>                 :             :     /// @brief Setup the starting phase of the transition</span>
+<span id="L395"><span class="lineNum">     395</span>                 :             :     /// @details This will traverse the target subgraph and initialize the following bookkeeping structures:</span>
+<span id="L396"><span class="lineNum">     396</span>                 :             :     /// - in_target_subgraph: marks the nodes that are part of the target subgraph</span>
+<span id="L397"><span class="lineNum">     397</span>                 :             :     /// - next_nodes: the list of nodes that are ready to be activated (those whose dependencies are all active)</span>
+<span id="L398"><span class="lineNum">     398</span>                 :             :     /// - pending: the count of nodes that are still to be activated</span>
+<span id="L399"><span class="lineNum">     399</span>                 :<span class="tlaGNC">          36 :     void setupActivation(Key root)</span></span>
+<span id="L400"><span class="lineNum">     400</span>                 :             :     {</span>
+<span id="L401"><span class="lineNum">     401</span>                 :<span class="tlaGNC">          36 :         graph_.traverse(root, [this](Key i) -&gt; const std::vector&lt;Key&gt;&amp; {</span></span>
+<span id="L402"><span class="lineNum">     402</span>                 :<span class="tlaGNC">          73 :             state_.node_information[i].in_target_subgraph_ = true;</span></span>
+<span id="L403"><span class="lineNum">     403</span>         [<span class="tlaGBC" title="Branch 0 was taken 66 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 7 times"> + </span>]:<span class="tlaGNC">          73 :             if (!active(i))</span></span>
+<span id="L404"><span class="lineNum">     404</span>                 :             :             {</span>
+<span id="L405"><span class="lineNum">     405</span>                 :<span class="tlaGNC">          66 :                 ++state_.pending;</span></span>
+<span id="L406"><span class="lineNum">     406</span>         [<span class="tlaGBC" title="Branch 0 was taken 40 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 26 times"> + </span>]:<span class="tlaGNC">          66 :                 if (allDepsActive(i))</span></span>
+<span id="L407"><span class="lineNum">     407</span>                 :             :                 {</span>
+<span id="L408"><span class="lineNum">     408</span>                 :<span class="tlaGNC">          40 :                     state_.next_nodes.push(i);</span></span>
+<span id="L409"><span class="lineNum">     409</span>                 :             :                 }</span>
+<span id="L410"><span class="lineNum">     410</span>                 :             :             }</span>
+<span id="L411"><span class="lineNum">     411</span>                 :<span class="tlaGNC">          73 :             return graph_.dependsOn(i);</span></span>
+<span id="L412"><span class="lineNum">     412</span>                 :             :         });</span>
+<span id="L413"><span class="lineNum">     413</span>                 :<span class="tlaGNC">          36 :     }</span></span>
+<span id="L414"><span class="lineNum">     414</span>                 :             : </span>
+<span id="L415"><span class="lineNum">     415</span>                 :             :     /// @brief Setup the Stopping phase of the transition</span>
+<span id="L416"><span class="lineNum">     416</span>                 :             :     /// @details First traverses the target subgraph to initialize:</span>
+<span id="L417"><span class="lineNum">     417</span>                 :             :     /// - in_target_subgraph: marks the nodes that are part of the target subgraph (must stay running)</span>
+<span id="L418"><span class="lineNum">     418</span>                 :             :     /// Then scans the complete graph to initialize:</span>
+<span id="L419"><span class="lineNum">     419</span>                 :             :     /// - pending: the count of running nodes that must be deactivated</span>
+<span id="L420"><span class="lineNum">     420</span>                 :             :     /// - next_nodes: those already ready to be deactivated (dependents all stopped)</span>
+<span id="L421"><span class="lineNum">     421</span>                 :             :     /// The stop set is every node that is currently running (@ref stopped() is false) and is not in the target</span>
+<span id="L422"><span class="lineNum">     422</span>                 :             :     /// subgraph. Deriving it from live component state rather than from a source root makes it independent of how the</span>
+<span id="L423"><span class="lineNum">     423</span>                 :             :     /// previous transition ended, so nodes left running by an aborted transition — even ones outside any assumed</span>
+<span id="L424"><span class="lineNum">     424</span>                 :             :     /// source subgraph — are still stopped.</span>
+<span id="L425"><span class="lineNum">     425</span>                 :<span class="tlaGNC">          37 :     void setupDeactivation(Key target)</span></span>
+<span id="L426"><span class="lineNum">     426</span>                 :             :     {</span>
+<span id="L427"><span class="lineNum">     427</span>                 :<span class="tlaGNC">          37 :         graph_.traverse(target, [this](Key i) -&gt; const std::vector&lt;Key&gt;&amp; {</span></span>
+<span id="L428"><span class="lineNum">     428</span>                 :<span class="tlaGNC">          74 :             state_.node_information[i].in_target_subgraph_ = true;</span></span>
+<span id="L429"><span class="lineNum">     429</span>                 :<span class="tlaGNC">          74 :             return graph_.dependsOn(i);</span></span>
+<span id="L430"><span class="lineNum">     430</span>                 :             :         });</span>
+<span id="L431"><span class="lineNum">     431</span>                 :             : </span>
+<span id="L432"><span class="lineNum">     432</span>         [<span class="tlaGBC" title="Branch 0 was taken 186 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 37 times"> + </span>]:<span class="tlaGNC">         223 :         for (const auto&amp; [key, value] : state_.node_information)</span></span>
+<span id="L433"><span class="lineNum">     433</span>                 :             :         {</span>
+<span id="L434"><span class="lineNum">     434</span>   [<span class="tlaGBC" title="Branch 0 was taken 112 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 74 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 112 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         186 :             if (!value.in_target_subgraph_ &amp;&amp; !stopped(key))</span></span>
+<span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 25 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 87 times"> + </span><span class="tlaGBC" title="Branch 6 was taken 25 times"> + </span><span class="tlaGBC" title="Branch 7 was taken 161 times"> + </span>]
+<span id="L435"><span class="lineNum">     435</span>                 :             :             {</span>
+<span id="L436"><span class="lineNum">     436</span>                 :<span class="tlaGNC">          25 :                 ++state_.pending;</span></span>
+<span id="L437"><span class="lineNum">     437</span>   [<span class="tlaGBC" title="Branch 0 was taken 25 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 12 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 13 times"> + </span>]:<span class="tlaGNC">          25 :                 if (allDependentsStopped(key))</span></span>
+<span id="L438"><span class="lineNum">     438</span>                 :             :                 {</span>
+<span id="L439"><span class="lineNum">     439</span>         [<span class="tlaGBC" title="Branch 0 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          12 :                     state_.next_nodes.push(key);</span></span>
+<span id="L440"><span class="lineNum">     440</span>                 :             :                 }</span>
+<span id="L441"><span class="lineNum">     441</span>                 :             :             }</span>
+<span id="L442"><span class="lineNum">     442</span>                 :             :         }</span>
+<span id="L443"><span class="lineNum">     443</span>                 :<span class="tlaGNC">          37 :     }</span></span>
+<span id="L444"><span class="lineNum">     444</span>                 :             : };</span>
+<span id="L445"><span class="lineNum">     445</span>                 :             : </span>
+<span id="L446"><span class="lineNum">     446</span>                 :             : /// @brief The TransitionBuilder owns the single Transition object for a given graph, which is reused for each</span>
+<span id="L447"><span class="lineNum">     447</span>                 :             : /// Transition.</span>
+<span id="L448"><span class="lineNum">     448</span>                 :             : /// @details The builder only supports a single transition at a time. It is</span>
+<span id="L449"><span class="lineNum">     449</span>                 :             : /// expected that whenever a new transition is created, the previous one is no longer in use.</span>
+<span id="L450"><span class="lineNum">     450</span>                 :             : /// The reason is that Memory is only allocated during initialization and then reused for each transition.</span>
+<span id="L451"><span class="lineNum">     451</span>                 :             : template &lt;typename Key, typename T&gt;</span>
+<span id="L452"><span class="lineNum">     452</span>                 :             : class TransitionBuilder final</span>
+<span id="L453"><span class="lineNum">     453</span>                 :             : {</span>
+<span id="L454"><span class="lineNum">     454</span>                 :             :   public:</span>
+<span id="L455"><span class="lineNum">     455</span>                 :<span class="tlaGNC">          47 :     explicit TransitionBuilder(DependencyGraph&lt;Key, T&gt;&amp; graph) : transition_(graph)</span></span>
+<span id="L456"><span class="lineNum">     456</span>                 :             :     {</span>
+<span id="L457"><span class="lineNum">     457</span>                 :<span class="tlaGNC">          47 :     }</span></span>
+<span id="L458"><span class="lineNum">     458</span>                 :             : </span>
+<span id="L459"><span class="lineNum">     459</span>                 :             :     /// @brief A transition to @p target</span>
+<span id="L460"><span class="lineNum">     460</span>                 :             :     /// @details First deactivates every node currently running that is not needed by @p target (keeping anything</span>
+<span id="L461"><span class="lineNum">     461</span>                 :             :     /// shared with @p target active), then activates all nodes reachable from @p target. The stop set is derived from</span>
+<span id="L462"><span class="lineNum">     462</span>                 :             :     /// live component state, so this recovers correctly even when a previous transition was aborted mid-flight.</span>
+<span id="L463"><span class="lineNum">     463</span>                 :<span class="tlaGNC">          37 :     Transition&lt;Key, T&gt;&amp; createTransition(Key target)</span></span>
+<span id="L464"><span class="lineNum">     464</span>                 :             :     {</span>
+<span id="L465"><span class="lineNum">     465</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 37 times"> + </span>]:<span class="tlaGNC">          37 :         SCORE_LANGUAGE_FUTURECPP_ASSERT(transition_.isValidNode(target));</span></span>
+<span id="L466"><span class="lineNum">     466</span>                 :<span class="tlaGNC">          37 :         transition_.setupTransition(target);</span></span>
+<span id="L467"><span class="lineNum">     467</span>                 :<span class="tlaGNC">          37 :         return transition_;</span></span>
+<span id="L468"><span class="lineNum">     468</span>                 :             :     }</span>
+<span id="L469"><span class="lineNum">     469</span>                 :             : </span>
+<span id="L470"><span class="lineNum">     470</span>                 :             :   private:</span>
+<span id="L471"><span class="lineNum">     471</span>                 :             :     /// @brief The single reusable transition</span>
+<span id="L472"><span class="lineNum">     472</span>                 :             :     Transition&lt;Key, T&gt; transition_;</span>
+<span id="L473"><span class="lineNum">     473</span>                 :             : };</span>
+<span id="L474"><span class="lineNum">     474</span>                 :             : </span>
+<span id="L475"><span class="lineNum">     475</span>                 :             : }  // namespace score::mw::lifecycle</span>
+<span id="L476"><span class="lineNum">     476</span>                 :             : </span>
+<span id="L477"><span class="lineNum">     477</span>                 :             : #endif  // SCORE_LCM_TRANSITION_HPP</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

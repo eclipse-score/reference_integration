@@ -1,0 +1,332 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - file_recorder/external/score_logging+/score/mw/log/detail/file_recorder/dlt_message_builder.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../../index.html">top level</a> - <a href="index.html">file_recorder/external/score_logging+/score/mw/log/detail/file_recorder</a> - dlt_message_builder.cpp<span style="font-size: 80%;"> (source / <a href="dlt_message_builder.cpp.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">96.0&nbsp;%</td>
+            <td class="headerCovTableEntry">100</td>
+            <td class="headerCovTableEntry">96</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:39:03</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">10</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryMed">87.5&nbsp;%</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntry">7</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2025 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : #include &quot;score/mw/log/detail/file_recorder/dlt_message_builder.h&quot;</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : </span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : #include &quot;score/os/utils/high_resolution_steady_clock.h&quot;</span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #include &quot;score/mw/log/detail/common/dlt_format.h&quot;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #include &quot;score/mw/log/detail/file_recorder/svp_time.h&quot;</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : #include &quot;score/mw/log/log_level.h&quot;</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : </span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : #include &quot;static_reflection_with_serialization/serialization/for_logging.h&quot;</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : #include &quot;static_reflection_with_serialization/visitor/visit.h&quot;</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : #include &quot;static_reflection_with_serialization/visitor/visit_as_struct.h&quot;</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : </span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : #include &lt;arpa/inet.h&gt;</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : #include &lt;chrono&gt;</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : #include &lt;iostream&gt;</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : #include &lt;type_traits&gt;</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : </span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : namespace</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : {</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : </span>
+<span id="L32"><span class="lineNum">      32</span>                 :<span class="tlaGNC tlaBgGNC">           5 : void ConstructDltStorageHeader(score::mw::log::detail::DltStorageHeader&amp; storagehdr,</span></span>
+<span id="L33"><span class="lineNum">      33</span>                 :             :                                const std::uint32_t secs,</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             :                                const std::int32_t microsecs) noexcept</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             : {</span>
+<span id="L36"><span class="lineNum">      36</span>                 :<span class="tlaGNC">           5 :     storagehdr.pattern[0] = static_cast&lt;std::uint8_t&gt;('D');</span></span>
+<span id="L37"><span class="lineNum">      37</span>                 :<span class="tlaGNC">           5 :     storagehdr.pattern[1] = static_cast&lt;std::uint8_t&gt;('L');</span></span>
+<span id="L38"><span class="lineNum">      38</span>                 :<span class="tlaGNC">           5 :     storagehdr.pattern[2] = static_cast&lt;std::uint8_t&gt;('T');</span></span>
+<span id="L39"><span class="lineNum">      39</span>                 :<span class="tlaGNC">           5 :     storagehdr.pattern[3] = 0x01UL;</span></span>
+<span id="L40"><span class="lineNum">      40</span>                 :<span class="tlaGNC">           5 :     storagehdr.seconds = secs;</span></span>
+<span id="L41"><span class="lineNum">      41</span>                 :<span class="tlaGNC">           5 :     storagehdr.microseconds = microsecs;</span></span>
+<span id="L42"><span class="lineNum">      42</span>                 :<span class="tlaGNC">           5 :     storagehdr.ecu[0] = static_cast&lt;std::uint8_t&gt;('E');</span></span>
+<span id="L43"><span class="lineNum">      43</span>                 :<span class="tlaGNC">           5 :     storagehdr.ecu[1] = static_cast&lt;std::uint8_t&gt;('C');</span></span>
+<span id="L44"><span class="lineNum">      44</span>                 :<span class="tlaGNC">           5 :     storagehdr.ecu[2] = static_cast&lt;std::uint8_t&gt;('U');</span></span>
+<span id="L45"><span class="lineNum">      45</span>                 :<span class="tlaGNC">           5 :     storagehdr.ecu[3] = static_cast&lt;std::uint8_t&gt;('\0');</span></span>
+<span id="L46"><span class="lineNum">      46</span>                 :<span class="tlaGNC">           5 : }</span></span>
+<span id="L47"><span class="lineNum">      47</span>                 :             : </span>
+<span id="L48"><span class="lineNum">      48</span>                 :<span class="tlaGNC">           5 : void ConstructDltStandardHeaderExtra(score::mw::log::detail::DltStandardHeaderExtra&amp; standard_extra_header,</span></span>
+<span id="L49"><span class="lineNum">      49</span>                 :             :                                      const score::mw::log::detail::LoggingIdentifier&amp; ecu,</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             :                                      const std::uint32_t tmsp) noexcept</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             : {</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             :     static_assert(sizeof(decltype(standard_extra_header.ecu)) == sizeof(decltype(ecu.data)),</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             :                   &quot;Types storing logging ID should be the same.&quot;);</span>
+<span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC">           5 :     std::ignore = std::copy(ecu.data.begin(), ecu.data.end(), standard_extra_header.ecu.begin());</span></span>
+<span id="L55"><span class="lineNum">      55</span>                 :             :     // htonl is library function which uses c-style conversion</span>
+<span id="L56"><span class="lineNum">      56</span>                 :             :     // coverity[autosar_cpp14_a5_2_2_violation]</span>
+<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">           5 :     standard_extra_header.tmsp = htonl(tmsp);</span></span>
+<span id="L58"><span class="lineNum">      58</span>                 :<span class="tlaGNC">           5 : }</span></span>
+<span id="L59"><span class="lineNum">      59</span>                 :             : </span>
+<span id="L60"><span class="lineNum">      60</span>                 :<span class="tlaGNC">           5 : void ConstructDltExtendedHeader(score::mw::log::detail::DltExtendedHeader&amp; extended_header,</span></span>
+<span id="L61"><span class="lineNum">      61</span>                 :             :                                 const score::mw::log::LogLevel log_level,</span>
+<span id="L62"><span class="lineNum">      62</span>                 :             :                                 const std::uint8_t number_of_arguments,</span>
+<span id="L63"><span class="lineNum">      63</span>                 :             :                                 const score::mw::log::detail::LoggingIdentifier&amp; app_id,</span>
+<span id="L64"><span class="lineNum">      64</span>                 :             :                                 const score::mw::log::detail::LoggingIdentifier&amp; ctx_id) noexcept</span>
+<span id="L65"><span class="lineNum">      65</span>                 :             : {</span>
+<span id="L66"><span class="lineNum">      66</span>                 :             :     static_assert(sizeof(std::uint32_t) &gt; sizeof(log_level), &quot;Casting to a more capable type expected&quot;);</span>
+<span id="L67"><span class="lineNum">      67</span>                 :<span class="tlaGNC">           5 :     const std::uint32_t level_normalized = static_cast&lt;std::uint32_t&gt;(log_level) &amp; static_cast&lt;std::uint32_t&gt;(0b111UL);</span></span>
+<span id="L68"><span class="lineNum">      68</span>                 :<span class="tlaGNC">           5 :     const std::uint32_t message_info = (score::mw::log::detail::kDltTypeLOG &lt;&lt; score::mw::log::detail::kDltMsinMstpShift) |</span></span>
+<span id="L69"><span class="lineNum">      69</span>                 :<span class="tlaGNC">           5 :                                        (level_normalized &lt;&lt; score::mw::log::detail::kDltMsinMtinShift) |</span></span>
+<span id="L70"><span class="lineNum">      70</span>                 :             :                                        (score::mw::log::detail::kDltMsinVerb);</span>
+<span id="L71"><span class="lineNum">      71</span>                 :             :     //  static_cast operation within uint8_t range</span>
+<span id="L72"><span class="lineNum">      72</span>                 :<span class="tlaGNC">           5 :     extended_header.msin = static_cast&lt;std::uint8_t&gt;(message_info);</span></span>
+<span id="L73"><span class="lineNum">      73</span>                 :<span class="tlaGNC">           5 :     extended_header.noar = number_of_arguments;</span></span>
+<span id="L74"><span class="lineNum">      74</span>                 :             :     static_assert(sizeof(decltype(extended_header.apid)) == sizeof(decltype(app_id.data)),</span>
+<span id="L75"><span class="lineNum">      75</span>                 :             :                   &quot;Types storing logging ID should be the same.&quot;);</span>
+<span id="L76"><span class="lineNum">      76</span>                 :<span class="tlaGNC">           5 :     std::ignore = std::copy(app_id.data.begin(), app_id.data.end(), extended_header.apid.begin());</span></span>
+<span id="L77"><span class="lineNum">      77</span>                 :             :     static_assert(sizeof(decltype(extended_header.ctid)) == sizeof(decltype(ctx_id.data)),</span>
+<span id="L78"><span class="lineNum">      78</span>                 :             :                   &quot;Types storing logging ID should be the same.&quot;);</span>
+<span id="L79"><span class="lineNum">      79</span>                 :<span class="tlaGNC">           5 :     std::ignore = std::copy(ctx_id.data.begin(), ctx_id.data.end(), extended_header.ctid.begin());</span></span>
+<span id="L80"><span class="lineNum">      80</span>                 :<span class="tlaGNC">           5 : }</span></span>
+<span id="L81"><span class="lineNum">      81</span>                 :             : </span>
+<span id="L82"><span class="lineNum">      82</span>                 :<span class="tlaGNC">           5 : void ConstructStorageVerbosePacket(score::mw::log::detail::VerbosePayload&amp; header_payload,</span></span>
+<span id="L83"><span class="lineNum">      83</span>                 :             :                                    const score::mw::log::detail::LogEntry&amp; entry,</span>
+<span id="L84"><span class="lineNum">      84</span>                 :             :                                    const score::mw::log::detail::LoggingIdentifier&amp; ecu,</span>
+<span id="L85"><span class="lineNum">      85</span>                 :             :                                    const std::uint8_t message_count,</span>
+<span id="L86"><span class="lineNum">      86</span>                 :             :                                    const score::mw::log::detail::SVPTime&amp; svp_time) noexcept</span>
+<span id="L87"><span class="lineNum">      87</span>                 :             : {</span>
+<span id="L88"><span class="lineNum">      88</span>                 :             :     // truncate the message to max size if the msg size is exceeding the available buffer size</span>
+<span id="L89"><span class="lineNum">      89</span>                 :             :     static_assert(score::mw::log::detail::kDltMessageSize &gt;</span>
+<span id="L90"><span class="lineNum">      90</span>                 :             :                       (score::mw::log::detail::kDltStorageHeaderSize + score::mw::log::detail::kDltHeaderSize),</span>
+<span id="L91"><span class="lineNum">      91</span>                 :             :                   &quot;DLT constant values causes undefined behavior&quot;);</span>
+<span id="L92"><span class="lineNum">      92</span>                 :             :     const std::size_t size =</span>
+<span id="L93"><span class="lineNum">      93</span>                 :<span class="tlaGNC">           5 :         std::min(entry.payload.size(),</span></span>
+<span id="L94"><span class="lineNum">      94</span>                 :<span class="tlaGNC">           5 :                  score::mw::log::detail::kDltMessageSize -</span></span>
+<span id="L95"><span class="lineNum">      95</span>                 :<span class="tlaGNC">           5 :                      (score::mw::log::detail::kDltStorageHeaderSize + score::mw::log::detail::kDltHeaderSize));</span></span>
+<span id="L96"><span class="lineNum">      96</span>                 :             :     static_assert(score::mw::log::detail::kDltMessageSize &lt;= std::numeric_limits&lt;std::uint16_t&gt;::max(),</span>
+<span id="L97"><span class="lineNum">      97</span>                 :             :                   &quot;Maximum size of DLT message is too big&quot;);</span>
+<span id="L98"><span class="lineNum">      98</span>                 :             :     //  'size' is truncated to allocate header without overflowing uint16_t value</span>
+<span id="L99"><span class="lineNum">      99</span>                 :<span class="tlaGNC">           5 :     const auto header_size = static_cast&lt;std::uint16_t&gt;(score::mw::log::detail::kDltHeaderSize + size);</span></span>
+<span id="L100"><span class="lineNum">     100</span>                 :             : </span>
+<span id="L101"><span class="lineNum">     101</span>                 :<span class="tlaGNC">           5 :     score::mw::log::detail::DltStorageHeader storage_header{};</span></span>
+<span id="L102"><span class="lineNum">     102</span>                 :<span class="tlaGNC">           5 :     ConstructDltStorageHeader(storage_header, svp_time.sec, svp_time.ms);</span></span>
+<span id="L103"><span class="lineNum">     103</span>                 :             : </span>
+<span id="L104"><span class="lineNum">     104</span>                 :<span class="tlaGNC">          10 :     std::ignore = header_payload.Put([&amp;storage_header](const score::cpp::span&lt;score::mw::log::detail::Byte&gt; destination) {</span></span>
+<span id="L105"><span class="lineNum">     105</span>                 :<span class="tlaGNC">           5 :         const auto destination_size = static_cast&lt;std::size_t&gt;(destination.size());</span></span>
+<span id="L106"><span class="lineNum">     106</span>                 :<span class="tlaGNC">           5 :         const auto copy_size = std::min(destination_size, sizeof(storage_header));</span></span>
+<span id="L107"><span class="lineNum">     107</span>                 :             :         // NOLINTNEXTLINE(score-banned-function) memcpy is needed here</span>
+<span id="L108"><span class="lineNum">     108</span>                 :<span class="tlaGNC">           5 :         std::ignore = std::memcpy(destination.data(), &amp;storage_header, copy_size);</span></span>
+<span id="L109"><span class="lineNum">     109</span>                 :<span class="tlaGNC">           5 :         return copy_size;</span></span>
+<span id="L110"><span class="lineNum">     110</span>                 :<span class="tlaGNC">           5 :     });</span></span>
+<span id="L111"><span class="lineNum">     111</span>                 :             : </span>
+<span id="L112"><span class="lineNum">     112</span>                 :<span class="tlaGNC">           5 :     score::mw::log::detail::DltVerboseHeader dlt_header{};</span></span>
+<span id="L113"><span class="lineNum">     113</span>                 :<span class="tlaGNC">           5 :     ::score::mw::log::detail::ConstructDltStandardHeaderTypes(dlt_header.standard, header_size, message_count, true);</span></span>
+<span id="L114"><span class="lineNum">     114</span>                 :<span class="tlaGNC">           5 :     ConstructDltStandardHeaderExtra(dlt_header.extra, ecu, svp_time.timestamp);</span></span>
+<span id="L115"><span class="lineNum">     115</span>                 :             : </span>
+<span id="L116"><span class="lineNum">     116</span>                 :<span class="tlaGNC">           5 :     ConstructDltExtendedHeader(dlt_header.extended, entry.log_level, entry.num_of_args, entry.app_id, entry.ctx_id);</span></span>
+<span id="L117"><span class="lineNum">     117</span>                 :             : </span>
+<span id="L118"><span class="lineNum">     118</span>                 :<span class="tlaGNC">          10 :     std::ignore = header_payload.Put([&amp;dlt_header](const score::cpp::span&lt;score::mw::log::detail::Byte&gt; destination) {</span></span>
+<span id="L119"><span class="lineNum">     119</span>                 :<span class="tlaGNC">           5 :         const auto copy_size = std::min(static_cast&lt;std::size_t&gt;(destination.size()), sizeof(dlt_header));</span></span>
+<span id="L120"><span class="lineNum">     120</span>                 :             :         // NOLINTNEXTLINE(score-banned-function) memcpy is needed here</span>
+<span id="L121"><span class="lineNum">     121</span>                 :<span class="tlaGNC">           5 :         std::ignore = std::memcpy(destination.data(), &amp;dlt_header, copy_size);</span></span>
+<span id="L122"><span class="lineNum">     122</span>                 :<span class="tlaGNC">           5 :         return copy_size;</span></span>
+<span id="L123"><span class="lineNum">     123</span>                 :<span class="tlaGNC">           5 :     });</span></span>
+<span id="L124"><span class="lineNum">     124</span>                 :<span class="tlaGNC">           5 : }</span></span>
+<span id="L125"><span class="lineNum">     125</span>                 :             : </span>
+<span id="L126"><span class="lineNum">     126</span>                 :             : }  //  anonymous namespace</span>
+<span id="L127"><span class="lineNum">     127</span>                 :             : </span>
+<span id="L128"><span class="lineNum">     128</span>                 :             : namespace score</span>
+<span id="L129"><span class="lineNum">     129</span>                 :             : {</span>
+<span id="L130"><span class="lineNum">     130</span>                 :             : namespace mw</span>
+<span id="L131"><span class="lineNum">     131</span>                 :             : {</span>
+<span id="L132"><span class="lineNum">     132</span>                 :             : namespace log</span>
+<span id="L133"><span class="lineNum">     133</span>                 :             : {</span>
+<span id="L134"><span class="lineNum">     134</span>                 :             : namespace detail</span>
+<span id="L135"><span class="lineNum">     135</span>                 :             : {</span>
+<span id="L136"><span class="lineNum">     136</span>                 :             : </span>
+<span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC">           6 : void ConstructDltStandardHeaderTypes(DltStandardHeader&amp; standard,</span></span>
+<span id="L138"><span class="lineNum">     138</span>                 :             :                                      const std::uint16_t msg_size,</span>
+<span id="L139"><span class="lineNum">     139</span>                 :             :                                      const std::uint8_t message_count,</span>
+<span id="L140"><span class="lineNum">     140</span>                 :             :                                      const bool use_extended_header) noexcept</span>
+<span id="L141"><span class="lineNum">     141</span>                 :             : {</span>
+<span id="L142"><span class="lineNum">     142</span>                 :             :     //  static_cast allowed due to flags values within uint8_t range</span>
+<span id="L143"><span class="lineNum">     143</span>                 :<span class="tlaGNC">           6 :     standard.htyp = static_cast&lt;std::uint8_t&gt;(kDltHtypWEID | kDltHtypWTMS | kDltHtypVERS);</span></span>
+<span id="L144"><span class="lineNum">     144</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           6 :     if (use_extended_header)</span></span>
+<span id="L145"><span class="lineNum">     145</span>                 :             :     {</span>
+<span id="L146"><span class="lineNum">     146</span>                 :<span class="tlaGNC">           5 :         standard.htyp |= static_cast&lt;std::uint8_t&gt;(kDltHtypUEH);</span></span>
+<span id="L147"><span class="lineNum">     147</span>                 :             :     }</span>
+<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">           6 :     standard.mcnt = message_count;</span></span>
+<span id="L149"><span class="lineNum">     149</span>                 :             :     // htons is library function which uses c-style conversion</span>
+<span id="L150"><span class="lineNum">     150</span>                 :             :     // coverity[autosar_cpp14_a5_2_2_violation]</span>
+<span id="L151"><span class="lineNum">     151</span>                 :<span class="tlaGNC">           6 :     standard.len = htons(msg_size);</span></span>
+<span id="L152"><span class="lineNum">     152</span>                 :<span class="tlaGNC">           6 : }</span></span>
+<span id="L153"><span class="lineNum">     153</span>                 :             : </span>
+<span id="L154"><span class="lineNum">     154</span>                 :             : using TimestampT = score::os::HighResolutionSteadyClock::time_point;</span>
+<span id="L155"><span class="lineNum">     155</span>                 :             : using SystimeT = std::chrono::system_clock::time_point;</span>
+<span id="L156"><span class="lineNum">     156</span>                 :             : using DltDurationT = std::chrono::duration&lt;std::uint32_t, std::ratio&lt;1, 10000&gt;&gt;;</span>
+<span id="L157"><span class="lineNum">     157</span>                 :             : </span>
+<span id="L158"><span class="lineNum">     158</span>                 :<span class="tlaGNC">           7 : DltMessageBuilder::DltMessageBuilder(const std::string_view ecu_id) noexcept</span></span>
+<span id="L159"><span class="lineNum">     159</span>                 :             :     : IMessageBuilder(),</span>
+<span id="L160"><span class="lineNum">     160</span>                 :<span class="tlaGNC">           7 :       header_payload_(kMaxDltHeaderSize, header_memory_),</span></span>
+<span id="L161"><span class="lineNum">     161</span>                 :<span class="tlaGNC">           7 :       parsing_phase_{ParsingPhase::kHeader},</span></span>
+<span id="L162"><span class="lineNum">     162</span>                 :<span class="tlaGNC">           7 :       ecu_id_{ecu_id},</span></span>
+<span id="L163"><span class="lineNum">     163</span>                 :<span class="tlaGNC">          14 :       message_count_{0U}</span></span>
+<span id="L164"><span class="lineNum">     164</span>                 :             : {</span>
+<span id="L165"><span class="lineNum">     165</span>                 :<span class="tlaGNC">           7 : }</span></span>
+<span id="L166"><span class="lineNum">     166</span>                 :             : </span>
+<span id="L167"><span class="lineNum">     167</span>                 :<span class="tlaGNC">           5 : void DltMessageBuilder::SetNextMessage(LogRecord&amp; log_record) noexcept</span></span>
+<span id="L168"><span class="lineNum">     168</span>                 :             : {</span>
+<span id="L169"><span class="lineNum">     169</span>                 :<span class="tlaGNC">           5 :     log_record_ = log_record;</span></span>
+<span id="L170"><span class="lineNum">     170</span>                 :             : </span>
+<span id="L171"><span class="lineNum">     171</span>                 :<span class="tlaGNC">           5 :     const auto&amp; entry = log_record.GetLogEntry();</span></span>
+<span id="L172"><span class="lineNum">     172</span>                 :<span class="tlaGNC">           5 :     const auto time_stamp = TimestampT::clock::now().time_since_epoch();</span></span>
+<span id="L173"><span class="lineNum">     173</span>                 :<span class="tlaGNC">           5 :     const auto time_epoch = SystimeT::clock::now().time_since_epoch();</span></span>
+<span id="L174"><span class="lineNum">     174</span>                 :             : </span>
+<span id="L175"><span class="lineNum">     175</span>                 :             :     using SecsU32 = std::chrono::duration&lt;std::uint32_t, std::ratio&lt;1&gt;&gt;;</span>
+<span id="L176"><span class="lineNum">     176</span>                 :<span class="tlaGNC">           5 :     const std::uint32_t seconds = std::chrono::duration_cast&lt;SecsU32&gt;(time_epoch).count();</span></span>
+<span id="L177"><span class="lineNum">     177</span>                 :<span class="tlaGNC">           5 :     const auto secs_remainder = time_epoch - std::chrono::seconds(seconds);</span></span>
+<span id="L178"><span class="lineNum">     178</span>                 :             : </span>
+<span id="L179"><span class="lineNum">     179</span>                 :             :     using MicrosecsI32 = std::chrono::duration&lt;std::int32_t, std::micro&gt;;</span>
+<span id="L180"><span class="lineNum">     180</span>                 :<span class="tlaGNC">           5 :     const std::int32_t microsecs = std::chrono::duration_cast&lt;MicrosecsI32&gt;(secs_remainder).count();</span></span>
+<span id="L181"><span class="lineNum">     181</span>                 :<span class="tlaGNC">           5 :     const std::uint32_t timestamp = std::chrono::duration_cast&lt;DltDurationT&gt;(time_stamp).count();</span></span>
+<span id="L182"><span class="lineNum">     182</span>                 :             : </span>
+<span id="L183"><span class="lineNum">     183</span>                 :             :     /*</span>
+<span id="L184"><span class="lineNum">     184</span>                 :             :     Deviation from AUTOSAR C++14 Rule A4-7-1</span>
+<span id="L185"><span class="lineNum">     185</span>                 :             :     - An integer expression shall not lead to data loss</span>
+<span id="L186"><span class="lineNum">     186</span>                 :             :     Justification:</span>
+<span id="L187"><span class="lineNum">     187</span>                 :             :     - Message Counter overflow is intended by design by DLT protocol. It is just an information about sequence of DLT</span>
+<span id="L188"><span class="lineNum">     188</span>                 :             :     messages and overflow does not lead to any data loss.</span>
+<span id="L189"><span class="lineNum">     189</span>                 :             :     */</span>
+<span id="L190"><span class="lineNum">     190</span>                 :             :     // coverity[autosar_cpp14_a4_7_1_violation] see above</span>
+<span id="L191"><span class="lineNum">     191</span>                 :<span class="tlaGNC">           5 :     const auto dlt_payload_message_count_value = message_count_.fetch_add(1UL);</span></span>
+<span id="L192"><span class="lineNum">     192</span>                 :<span class="tlaGNC">           5 :     ConstructStorageVerbosePacket(header_payload_,</span></span>
+<span id="L193"><span class="lineNum">     193</span>                 :             :                                   entry,</span>
+<span id="L194"><span class="lineNum">     194</span>                 :<span class="tlaGNC">           5 :                                   score::mw::log::detail::LoggingIdentifier{ecu_id_.GetStringView()},</span></span>
+<span id="L195"><span class="lineNum">     195</span>                 :             :                                   dlt_payload_message_count_value,</span>
+<span id="L196"><span class="lineNum">     196</span>                 :<span class="tlaGNC">           5 :                                   score::mw::log::detail::SVPTime{timestamp, seconds, microsecs});</span></span>
+<span id="L197"><span class="lineNum">     197</span>                 :<span class="tlaGNC">           5 : }</span></span>
+<span id="L198"><span class="lineNum">     198</span>                 :             : </span>
+<span id="L199"><span class="lineNum">     199</span>                 :<span class="tlaGNC">          10 : score::cpp::optional&lt;score::cpp::span&lt;const std::uint8_t&gt;&gt; DltMessageBuilder::GetNextSpan() noexcept</span></span>
+<span id="L200"><span class="lineNum">     200</span>                 :             : {</span>
+<span id="L201"><span class="lineNum">     201</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 8 times"> + </span>]:<span class="tlaGNC">          10 :     if (!log_record_.has_value())</span></span>
+<span id="L202"><span class="lineNum">     202</span>                 :             :     {</span>
+<span id="L203"><span class="lineNum">     203</span>                 :<span class="tlaGNC">           2 :         return {};</span></span>
+<span id="L204"><span class="lineNum">     204</span>                 :             :     }</span>
+<span id="L205"><span class="lineNum">     205</span>                 :             : </span>
+<span id="L206"><span class="lineNum">     206</span>                 :<span class="tlaGNC">           8 :     score::cpp::optional&lt;score::cpp::span&lt;const std::uint8_t&gt;&gt; return_result = {};</span></span>
+<span id="L207"><span class="lineNum">     207</span>                 :             : </span>
+<span id="L208"><span class="lineNum">     208</span>                 :<span class="tlaGNC">           8 :     detail::VerbosePayload&amp; verbose_payload = log_record_.value().get().GetVerbosePayload();</span></span>
+<span id="L209"><span class="lineNum">     209</span>   [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           8 :     switch (parsing_phase_)  // LCOV_EXCL_BR_LINE: exclude the &quot;default&quot; branch.</span></span>
+<span id="L210"><span class="lineNum">     210</span>                 :             :     {</span>
+<span id="L211"><span class="lineNum">     211</span>                 :<span class="tlaGNC">           5 :         case ParsingPhase::kHeader:</span></span>
+<span id="L212"><span class="lineNum">     212</span>                 :<span class="tlaGNC">           5 :             parsing_phase_ = ParsingPhase::kPayload;</span></span>
+<span id="L213"><span class="lineNum">     213</span>                 :<span class="tlaGNC">           5 :             return_result = header_payload_.GetSpan();</span></span>
+<span id="L214"><span class="lineNum">     214</span>                 :<span class="tlaGNC">           5 :             break;</span></span>
+<span id="L215"><span class="lineNum">     215</span>                 :<span class="tlaGNC">           2 :         case ParsingPhase::kPayload:</span></span>
+<span id="L216"><span class="lineNum">     216</span>                 :<span class="tlaGNC">           2 :             parsing_phase_ = ParsingPhase::kReinitialize;</span></span>
+<span id="L217"><span class="lineNum">     217</span>                 :<span class="tlaGNC">           2 :             return_result = verbose_payload.GetSpan();</span></span>
+<span id="L218"><span class="lineNum">     218</span>                 :<span class="tlaGNC">           2 :             break;</span></span>
+<span id="L219"><span class="lineNum">     219</span>                 :<span class="tlaGNC">           1 :         case ParsingPhase::kReinitialize:</span></span>
+<span id="L220"><span class="lineNum">     220</span>                 :<span class="tlaGNC">           1 :             parsing_phase_ = ParsingPhase::kHeader;</span></span>
+<span id="L221"><span class="lineNum">     221</span>                 :<span class="tlaGNC">           1 :             header_payload_.Reset();</span></span>
+<span id="L222"><span class="lineNum">     222</span>                 :<span class="tlaGNC">           1 :             verbose_payload.Reset();</span></span>
+<span id="L223"><span class="lineNum">     223</span>                 :<span class="tlaGNC">           1 :             log_record_.reset();</span></span>
+<span id="L224"><span class="lineNum">     224</span>                 :<span class="tlaGNC">           1 :             break;</span></span>
+<span id="L225"><span class="lineNum">     225</span>                 :             :         // LCOV_EXCL_START</span>
+<span id="L226"><span class="lineNum">     226</span>                 :             :         // This part of the code should never be reached due to logic in processing state transition in other switch</span>
+<span id="L227"><span class="lineNum">     227</span>                 :             :         // cases</span>
+<span id="L228"><span class="lineNum">     228</span>                 :<span class="tlaUNC tlaBgUNC">           0 :         default:</span></span>
+<span id="L229"><span class="lineNum">     229</span>                 :<span class="tlaUNC">           0 :             std::cerr &lt;&lt; &quot;Enum ParsingPhase contains wrong value\n&quot;;</span></span>
+<span id="L230"><span class="lineNum">     230</span>                 :<span class="tlaUNC">           0 :             return_result = score::cpp::nullopt;</span></span>
+<span id="L231"><span class="lineNum">     231</span>                 :<span class="tlaUNC">           0 :             break;</span></span>
+<span id="L232"><span class="lineNum">     232</span>                 :             :             // LCOV_EXCL_STOP</span>
+<span id="L233"><span class="lineNum">     233</span>                 :             :     }</span>
+<span id="L234"><span class="lineNum">     234</span>                 :<span class="tlaGNC tlaBgGNC">           8 :     return return_result;</span></span>
+<span id="L235"><span class="lineNum">     235</span>                 :             : }</span>
+<span id="L236"><span class="lineNum">     236</span>                 :             : </span>
+<span id="L237"><span class="lineNum">     237</span>                 :             : }  // namespace detail</span>
+<span id="L238"><span class="lineNum">     238</span>                 :             : }  // namespace log</span>
+<span id="L239"><span class="lineNum">     239</span>                 :             : }  // namespace mw</span>
+<span id="L240"><span class="lineNum">     240</span>                 :             : }  // namespace score</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

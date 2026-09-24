@@ -1,0 +1,242 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - hash/code/core/external/score_baselibs+/score/hash/code/core/typed_hash.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../../../index.html">top level</a> - <a href="index.html">hash/code/core/external/score_baselibs+/score/hash/code/core</a> - typed_hash.h<span style="font-size: 80%;"> (source / <a href="typed_hash.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">24</td>
+            <td class="headerCovTableEntry">24</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:33:47</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">17</td>
+            <td class="headerCovTableEntry">17</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryLo">57.1&nbsp;%</td>
+            <td class="headerCovTableEntry">28</td>
+            <td class="headerCovTableEntry">16</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2026 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : </span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #ifndef SCORE_LIB_TYPED_HASH_H</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : #define SCORE_LIB_TYPED_HASH_H</span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : </span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #include &quot;score/hash/code/core/hash.h&quot;</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : </span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : namespace score</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : {</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : namespace hash</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : {</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : </span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : /// @brief TypedHash is a Hash-like object with a specific algorithm.</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : ///</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : /// @tparam Algorithm The algorithm used by the hash. It is used when deserializing the hash from JSON and from string.</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : template &lt;HashAlgorithm Algorithm&gt;</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : class TypedHash final</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : {</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             :   public:</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             :     /// @brief Constructs a TypedHash from its raw binary values</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             :     explicit TypedHash(Hash::ByteVector raw_hash);</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : </span>
+<span id="L34"><span class="lineNum">      34</span>                 :             :     /// @brief Creates a TypedHash object from a Hexadecimal string.</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             :     ///</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             :     /// @param hex_repr The hexadecimal string representation of the hash.</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             :     /// @return Result object that either contains a valid TypedHash or an error explaining why the string was not</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             :     /// valid.</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             :     static Result&lt;TypedHash&gt; FromString(const std::string_view&amp; hex_repr);</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : </span>
+<span id="L41"><span class="lineNum">      41</span>                 :             :     /// @brief Creates a TypedHash object from a JSON Any object.</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             :     ///</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             :     /// @return Result object that either contains a valid TypedHash or an error explaining why the JSON Any was not</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             :     /// valid.</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             :     [[nodiscard]] static score::Result&lt;TypedHash&gt; FromAny(score::json::Any any);</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             : </span>
+<span id="L47"><span class="lineNum">      47</span>                 :             :     /// @brief Converts the TypedHash object to a JSON Any object.</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             :     [[nodiscard]] score::json::Any ToAny() const;</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             : </span>
+<span id="L50"><span class="lineNum">      50</span>                 :             :     /// @brief Converts the TypedHash object to a Hash object.</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             :     [[nodiscard]] score::hash::Hash ToHash() const;</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             : </span>
+<span id="L53"><span class="lineNum">      53</span>                 :             :     /// @brief Retreives the raw hash value.</span>
+<span id="L54"><span class="lineNum">      54</span>                 :             :     ///</span>
+<span id="L55"><span class="lineNum">      55</span>                 :             :     /// @return score::cpp::span with the pointer holding the hash value.</span>
+<span id="L56"><span class="lineNum">      56</span>                 :             :     score::cpp::span&lt;const std::uint8_t&gt; GetBytes() const&amp; noexcept;</span>
+<span id="L57"><span class="lineNum">      57</span>                 :             : </span>
+<span id="L58"><span class="lineNum">      58</span>                 :             :     /// @brief Returns the TypedHash value's Hexadecimal string representation.</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             :     /// @return String with the Hexadecimal representation.</span>
+<span id="L60"><span class="lineNum">      60</span>                 :             :     score::cpp::pmr::string ToString() const;</span>
+<span id="L61"><span class="lineNum">      61</span>                 :             : </span>
+<span id="L62"><span class="lineNum">      62</span>                 :             :     /// @brief Returns the algorithm being represented by the hash instance.</span>
+<span id="L63"><span class="lineNum">      63</span>                 :             :     /// @return Algorithm in use</span>
+<span id="L64"><span class="lineNum">      64</span>                 :             :     HashAlgorithm GetAlgorithm() const noexcept;</span>
+<span id="L65"><span class="lineNum">      65</span>                 :             : </span>
+<span id="L66"><span class="lineNum">      66</span>                 :             :     /// @brief Compares if two hashes use the same algorithm and if their content matches</span>
+<span id="L67"><span class="lineNum">      67</span>                 :             :     /// @return true, if both use the same algorithm and have the same content, false otherwise</span>
+<span id="L68"><span class="lineNum">      68</span>                 :             :     template &lt;HashAlgorithm Alg&gt;</span>
+<span id="L69"><span class="lineNum">      69</span>                 :             :     friend bool operator==(const TypedHash&lt;Alg&gt;&amp; lhs, const TypedHash&lt;Alg&gt;&amp; rhs) noexcept;</span>
+<span id="L70"><span class="lineNum">      70</span>                 :             :     template &lt;HashAlgorithm Alg&gt;</span>
+<span id="L71"><span class="lineNum">      71</span>                 :             :     friend bool operator!=(const TypedHash&lt;Alg&gt;&amp; lhs, const TypedHash&lt;Alg&gt;&amp; rhs) noexcept;</span>
+<span id="L72"><span class="lineNum">      72</span>                 :             : </span>
+<span id="L73"><span class="lineNum">      73</span>                 :             :   private:</span>
+<span id="L74"><span class="lineNum">      74</span>                 :             :     Hash hash_;</span>
+<span id="L75"><span class="lineNum">      75</span>                 :             : };</span>
+<span id="L76"><span class="lineNum">      76</span>                 :             : </span>
+<span id="L77"><span class="lineNum">      77</span>                 :             : template &lt;HashAlgorithm Algorithm&gt;</span>
+<span id="L78"><span class="lineNum">      78</span>         [<span class="tlaGBC" title="Branch 0 was taken 11 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">          11 : TypedHash&lt;Algorithm&gt;::TypedHash(Hash::ByteVector raw_hash) : hash_{Algorithm, std::move(raw_hash)}</span></span>
+<span id="L79"><span class="lineNum">      79</span>                 :             : {</span>
+<span id="L80"><span class="lineNum">      80</span>                 :<span class="tlaGNC">          11 : }</span></span>
+<span id="L81"><span class="lineNum">      81</span>                 :             : </span>
+<span id="L82"><span class="lineNum">      82</span>                 :             : template &lt;HashAlgorithm Algorithm&gt;</span>
+<span id="L83"><span class="lineNum">      83</span>                 :<span class="tlaGNC">           3 : Result&lt;TypedHash&lt;Algorithm&gt;&gt; TypedHash&lt;Algorithm&gt;::FromString(const std::string_view&amp; hex_repr)</span></span>
+<span id="L84"><span class="lineNum">      84</span>                 :             : {</span>
+<span id="L85"><span class="lineNum">      85</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           3 :     auto hash = Hash::FromString(Algorithm, hex_repr);</span></span>
+<span id="L86"><span class="lineNum">      86</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           3 :     if (hash.has_value())</span></span>
+<span id="L87"><span class="lineNum">      87</span>                 :             :     {</span>
+<span id="L88"><span class="lineNum">      88</span>                 :<span class="tlaGNC">           2 :         const auto bytes = hash-&gt;GetBytes();</span></span>
+<span id="L89"><span class="lineNum">      89</span>   [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           4 :         return TypedHash{Hash::ByteVector{std::cbegin(bytes), std::cend(bytes)}};</span></span>
+<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span><span class="tlaGBC" title="Branch 8 was taken 2 times"> + </span> 
+<span class="lineNum">        </span>             <span class="tlaUNC" title="Branch 9 was not taken"> - </span>]
+<span id="L90"><span class="lineNum">      90</span>                 :             :     }</span>
+<span id="L91"><span class="lineNum">      91</span>                 :<span class="tlaGNC">           1 :     return score::MakeUnexpected&lt;TypedHash&gt;(hash.error());</span></span>
+<span id="L92"><span class="lineNum">      92</span>                 :             : }</span>
+<span id="L93"><span class="lineNum">      93</span>                 :             : </span>
+<span id="L94"><span class="lineNum">      94</span>                 :             : template &lt;HashAlgorithm Algorithm&gt;</span>
+<span id="L95"><span class="lineNum">      95</span>                 :<span class="tlaGNC">           3 : score::Result&lt;TypedHash&lt;Algorithm&gt;&gt; TypedHash&lt;Algorithm&gt;::FromAny(score::json::Any any)</span></span>
+<span id="L96"><span class="lineNum">      96</span>                 :             : {</span>
+<span id="L97"><span class="lineNum">      97</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           3 :     if (const auto hash_string = any.As&lt;std::string_view&gt;(); hash_string.has_value())</span></span>
+<span id="L98"><span class="lineNum">      98</span>                 :             :     {</span>
+<span id="L99"><span class="lineNum">      99</span>   [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           2 :         return FromString(hash_string.value());</span></span>
+<span id="L100"><span class="lineNum">     100</span>                 :             :     }</span>
+<span id="L101"><span class="lineNum">     101</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :     return score::MakeUnexpected(score::json::Error::kParsingError, &quot;Expected hex string&quot;);</span></span>
+<span id="L102"><span class="lineNum">     102</span>                 :             : }</span>
+<span id="L103"><span class="lineNum">     103</span>                 :             : </span>
+<span id="L104"><span class="lineNum">     104</span>                 :             : template &lt;HashAlgorithm Algorithm&gt;</span>
+<span id="L105"><span class="lineNum">     105</span>                 :<span class="tlaGNC">           2 : score::json::Any TypedHash&lt;Algorithm&gt;::ToAny() const</span></span>
+<span id="L106"><span class="lineNum">     106</span>                 :             : {</span>
+<span id="L107"><span class="lineNum">     107</span>   [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           2 :     return score::json::Any{std::string{hash_.ToString()}};</span></span>
+<span id="L108"><span class="lineNum">     108</span>                 :             : }</span>
+<span id="L109"><span class="lineNum">     109</span>                 :             : </span>
+<span id="L110"><span class="lineNum">     110</span>                 :             : template &lt;HashAlgorithm Algorithm&gt;</span>
+<span id="L111"><span class="lineNum">     111</span>                 :<span class="tlaGNC">           1 : score::hash::Hash TypedHash&lt;Algorithm&gt;::ToHash() const</span></span>
+<span id="L112"><span class="lineNum">     112</span>                 :             : {</span>
+<span id="L113"><span class="lineNum">     113</span>                 :<span class="tlaGNC">           1 :     return hash_;</span></span>
+<span id="L114"><span class="lineNum">     114</span>                 :             : }</span>
+<span id="L115"><span class="lineNum">     115</span>                 :             : </span>
+<span id="L116"><span class="lineNum">     116</span>                 :             : template &lt;HashAlgorithm Algorithm&gt;</span>
+<span id="L117"><span class="lineNum">     117</span>                 :<span class="tlaGNC">           2 : score::cpp::span&lt;const std::uint8_t&gt; TypedHash&lt;Algorithm&gt;::GetBytes() const&amp; noexcept</span></span>
+<span id="L118"><span class="lineNum">     118</span>                 :             : {</span>
+<span id="L119"><span class="lineNum">     119</span>                 :<span class="tlaGNC">           2 :     return hash_.GetBytes();</span></span>
+<span id="L120"><span class="lineNum">     120</span>                 :             : }</span>
+<span id="L121"><span class="lineNum">     121</span>                 :             : </span>
+<span id="L122"><span class="lineNum">     122</span>                 :             : template &lt;HashAlgorithm Algorithm&gt;</span>
+<span id="L123"><span class="lineNum">     123</span>                 :<span class="tlaGNC">           2 : score::cpp::pmr::string TypedHash&lt;Algorithm&gt;::ToString() const</span></span>
+<span id="L124"><span class="lineNum">     124</span>                 :             : {</span>
+<span id="L125"><span class="lineNum">     125</span>                 :<span class="tlaGNC">           2 :     return hash_.ToString();</span></span>
+<span id="L126"><span class="lineNum">     126</span>                 :             : }</span>
+<span id="L127"><span class="lineNum">     127</span>                 :             : </span>
+<span id="L128"><span class="lineNum">     128</span>                 :             : template &lt;HashAlgorithm Algorithm&gt;</span>
+<span id="L129"><span class="lineNum">     129</span>                 :             : HashAlgorithm TypedHash&lt;Algorithm&gt;::GetAlgorithm() const noexcept</span>
+<span id="L130"><span class="lineNum">     130</span>                 :             : {</span>
+<span id="L131"><span class="lineNum">     131</span>                 :             :     return hash_.GetAlgorithm();</span>
+<span id="L132"><span class="lineNum">     132</span>                 :             : }</span>
+<span id="L133"><span class="lineNum">     133</span>                 :             : </span>
+<span id="L134"><span class="lineNum">     134</span>                 :             : template &lt;HashAlgorithm Alg&gt;</span>
+<span id="L135"><span class="lineNum">     135</span>                 :<span class="tlaGNC">           3 : bool operator==(const TypedHash&lt;Alg&gt;&amp; lhs, const TypedHash&lt;Alg&gt;&amp; rhs) noexcept</span></span>
+<span id="L136"><span class="lineNum">     136</span>                 :             : {</span>
+<span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC">           3 :     return lhs.hash_ == rhs.hash_;</span></span>
+<span id="L138"><span class="lineNum">     138</span>                 :             : }</span>
+<span id="L139"><span class="lineNum">     139</span>                 :             : template &lt;HashAlgorithm Alg&gt;</span>
+<span id="L140"><span class="lineNum">     140</span>                 :<span class="tlaGNC">           1 : bool operator!=(const TypedHash&lt;Alg&gt;&amp; lhs, const TypedHash&lt;Alg&gt;&amp; rhs) noexcept</span></span>
+<span id="L141"><span class="lineNum">     141</span>                 :             : {</span>
+<span id="L142"><span class="lineNum">     142</span>                 :<span class="tlaGNC">           1 :     return !(lhs == rhs);</span></span>
+<span id="L143"><span class="lineNum">     143</span>                 :             : }</span>
+<span id="L144"><span class="lineNum">     144</span>                 :             : </span>
+<span id="L145"><span class="lineNum">     145</span>                 :             : }  // namespace hash</span>
+<span id="L146"><span class="lineNum">     146</span>                 :             : }  // namespace score</span>
+<span id="L147"><span class="lineNum">     147</span>                 :             : </span>
+<span id="L148"><span class="lineNum">     148</span>                 :             : #endif  // SCORE_LIB_TYPED_HASH_H</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

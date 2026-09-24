@@ -1,0 +1,562 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - memory/shared/external/score_communication+/score/memory/shared/shared_memory_resource.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../index.html">top level</a> - <a href="index.html">memory/shared/external/score_communication+/score/memory/shared</a> - shared_memory_resource.h<span style="font-size: 80%;"> (source / <a href="shared_memory_resource.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">7</td>
+            <td class="headerCovTableEntry">7</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:37:31</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntry">4</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryHi">-</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2025 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : #ifndef SCORE_LIB_MEMORY_SHARED_SHARED_MEMORY_RESOURCE_H</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #define SCORE_LIB_MEMORY_SHARED_SHARED_MEMORY_RESOURCE_H</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : </span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #include &quot;score/memory/shared/i_shared_memory_resource.h&quot;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #include &quot;score/memory/shared/lock_file.h&quot;</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : #include &quot;score/memory/shared/memory_resource_proxy.h&quot;</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : #include &quot;score/memory/shared/pointer_arithmetic_util.h&quot;</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : #include &quot;score/memory/shared/typedshm/typedshm_wrapper/typed_memory.h&quot;</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : #include &quot;score/os/errno.h&quot;</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : #include &quot;score/os/fcntl.h&quot;</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : #include &quot;score/os/mman.h&quot;</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : #include &quot;score/os/stat.h&quot;</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : </span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : #include &lt;score/expected.hpp&gt;</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : #include &lt;score/memory_resource.hpp&gt;</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : </span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : #include &lt;sys/types.h&gt;</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : #include &lt;atomic&gt;</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : #include &lt;cstddef&gt;</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : #include &lt;cstdint&gt;</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : #include &lt;memory&gt;</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : #include &lt;string&gt;</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             : #include &lt;variant&gt;</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             : </span>
+<span id="L37"><span class="lineNum">      37</span>                 :             : namespace score::memory::shared</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             : {</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : namespace test</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : {</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             : class SharedMemoryResourceTestAttorney;</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             : }</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             : </span>
+<span id="L44"><span class="lineNum">      44</span>                 :             : // Violated Autosar rule A10-1-1 which says: &quot;Class shall not be derived from more than one base class which is not an</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             : // interface class&quot;. But technically current inheritance complies that rule, because base class is pure and another</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             : // one intended to maintain &quot;enable_shared_from_this&quot; concept.</span>
+<span id="L47"><span class="lineNum">      47</span>                 :             : //  NOLINTNEXTLINE(fuchsia-multiple-inheritance): Inherited the pure class and enable_shared_from_this</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             : class SharedMemoryResource : public ISharedMemoryResource, public std::enable_shared_from_this&lt;SharedMemoryResource&gt;</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             : {</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             :   public:</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             :     ~SharedMemoryResource() override;</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             :     /**</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             :      * \brief The SharedMemoryResource shall not be copyable, since</span>
+<span id="L54"><span class="lineNum">      54</span>                 :             :      *        it holds a file descriptor. Any copy logic would destroy</span>
+<span id="L55"><span class="lineNum">      55</span>                 :             :      *        the single access logic for this descriptor.</span>
+<span id="L56"><span class="lineNum">      56</span>                 :             :      */</span>
+<span id="L57"><span class="lineNum">      57</span>                 :             :     SharedMemoryResource(const SharedMemoryResource&amp;) = delete;</span>
+<span id="L58"><span class="lineNum">      58</span>                 :             :     SharedMemoryResource&amp; operator=(const SharedMemoryResource&amp;) = delete;</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             :     SharedMemoryResource(SharedMemoryResource&amp;&amp; other) = delete;</span>
+<span id="L60"><span class="lineNum">      60</span>                 :             :     SharedMemoryResource&amp; operator=(SharedMemoryResource&amp;&amp;) = delete;</span>
+<span id="L61"><span class="lineNum">      61</span>                 :             : </span>
+<span id="L62"><span class="lineNum">      62</span>                 :             :     // coverity[autosar_cpp14_m7_3_1_violation] false-positive: class method (Ticket-234468)</span>
+<span id="L63"><span class="lineNum">      63</span>                 :             :     const MemoryResourceProxy* getMemoryResourceProxy() noexcept override;</span>
+<span id="L64"><span class="lineNum">      64</span>                 :             : </span>
+<span id="L65"><span class="lineNum">      65</span>                 :             :     /**</span>
+<span id="L66"><span class="lineNum">      66</span>                 :             :      * @brief Get the start address of the memory region that this memory resource is managing</span>
+<span id="L67"><span class="lineNum">      67</span>                 :             :      * @return void* start address of memory resource (e.g. mmap result)</span>
+<span id="L68"><span class="lineNum">      68</span>                 :             :      */</span>
+<span id="L69"><span class="lineNum">      69</span>                 :             :     void* getBaseAddress() const noexcept override;</span>
+<span id="L70"><span class="lineNum">      70</span>                 :             : </span>
+<span id="L71"><span class="lineNum">      71</span>                 :             :     /**</span>
+<span id="L72"><span class="lineNum">      72</span>                 :             :      * @brief Get the start address of the region available to a user of this SharedMemoryResource.</span>
+<span id="L73"><span class="lineNum">      73</span>                 :             :      * @detail The SharedMemoryResource stores a control block at the start of the memory region. This function will</span>
+<span id="L74"><span class="lineNum">      74</span>                 :             :      *         return the address after the control block to which the user can freely write.</span>
+<span id="L75"><span class="lineNum">      75</span>                 :             :      * @return void* start address of memory resource after control block</span>
+<span id="L76"><span class="lineNum">      76</span>                 :             :      */</span>
+<span id="L77"><span class="lineNum">      77</span>                 :             :     void* getUsableBaseAddress() const noexcept override;</span>
+<span id="L78"><span class="lineNum">      78</span>                 :             : </span>
+<span id="L79"><span class="lineNum">      79</span>                 :             :     /**</span>
+<span id="L80"><span class="lineNum">      80</span>                 :             :      * @brief brief Get the number of bytes allocated by the user in the memory region.</span>
+<span id="L81"><span class="lineNum">      81</span>                 :             :      *        Does not include any house keeping data (such as a control block) allocated by the memory resource.</span>
+<span id="L82"><span class="lineNum">      82</span>                 :             :      * @return number of bytes already allocated by the user</span>
+<span id="L83"><span class="lineNum">      83</span>                 :             :      */</span>
+<span id="L84"><span class="lineNum">      84</span>                 :             :     std::size_t GetUserAllocatedBytes() const noexcept override;</span>
+<span id="L85"><span class="lineNum">      85</span>                 :             : </span>
+<span id="L86"><span class="lineNum">      86</span>                 :             :     /**</span>
+<span id="L87"><span class="lineNum">      87</span>                 :             :      * @brief Determines whether memory resource should bypass bounds checking when calling</span>
+<span id="L88"><span class="lineNum">      88</span>                 :             :      * MemoryResourceRegistry::GetBoundsFromIdentifier with a memory identifier.</span>
+<span id="L89"><span class="lineNum">      89</span>                 :             :      * @return true if bounds checking should be performed on resource, otherwise, false.</span>
+<span id="L90"><span class="lineNum">      90</span>                 :             :      */</span>
+<span id="L91"><span class="lineNum">      91</span>                 :<span class="tlaGNC tlaBgGNC">         136 :     bool IsOffsetPtrBoundsCheckBypassingEnabled() const noexcept override</span></span>
+<span id="L92"><span class="lineNum">      92</span>                 :             :     {</span>
+<span id="L93"><span class="lineNum">      93</span>                 :<span class="tlaGNC">         136 :         return false;</span></span>
+<span id="L94"><span class="lineNum">      94</span>                 :             :     }</span>
+<span id="L95"><span class="lineNum">      95</span>                 :             : </span>
+<span id="L96"><span class="lineNum">      96</span>                 :             :     /**</span>
+<span id="L97"><span class="lineNum">      97</span>                 :             :      * @brief Gets the path of the named shared memory region in the filesystem.</span>
+<span id="L98"><span class="lineNum">      98</span>                 :             :      * @details If this shared memory region was created using SharedMemoryFactory::Open, SharedMemoryFactory::Create or</span>
+<span id="L99"><span class="lineNum">      99</span>                 :             :      * SharedMemoryFactory::CreateOrOpen it is a named shared memory region because a file system path needs to be</span>
+<span id="L100"><span class="lineNum">     100</span>                 :             :      * given. getPath will return exactly the path that was given to the previously mentioned functions. If this shared</span>
+<span id="L101"><span class="lineNum">     101</span>                 :             :      * memory region was created using SharedMemoryFactory::CreateAnonymous it is an anonymous shared memory region. No</span>
+<span id="L102"><span class="lineNum">     102</span>                 :             :      * path was given at creation time, thus, getPath will return nullptr.</span>
+<span id="L103"><span class="lineNum">     103</span>                 :             :      * @return std::string* path of shared memory region in case of named shared memory region, nullptr in case of</span>
+<span id="L104"><span class="lineNum">     104</span>                 :             :      * anonymous shared memory region.</span>
+<span id="L105"><span class="lineNum">     105</span>                 :             :      */</span>
+<span id="L106"><span class="lineNum">     106</span>                 :             :     const std::string* getPath() const noexcept override;</span>
+<span id="L107"><span class="lineNum">     107</span>                 :             : </span>
+<span id="L108"><span class="lineNum">     108</span>                 :             :     /**</span>
+<span id="L109"><span class="lineNum">     109</span>                 :             :      * @brief Gives the identifier of the shared-memory region.</span>
+<span id="L110"><span class="lineNum">     110</span>                 :             :      * @details For anonymous and named shared-memory resources the identifier differs. They are in the form of &quot;id:</span>
+<span id="L111"><span class="lineNum">     111</span>                 :             :      * &lt;id&gt;&quot; or `&quot;file: &lt;path&gt;&quot;, respectively.</span>
+<span id="L112"><span class="lineNum">     112</span>                 :             :      * @returns A view of the identifier.</span>
+<span id="L113"><span class="lineNum">     113</span>                 :             :      */</span>
+<span id="L114"><span class="lineNum">     114</span>                 :             :     std::string_view GetIdentifier() const noexcept override;</span>
+<span id="L115"><span class="lineNum">     115</span>                 :             : </span>
+<span id="L116"><span class="lineNum">     116</span>                 :             :     /**</span>
+<span id="L117"><span class="lineNum">     117</span>                 :             :      * @brief Gets the file descriptor of the shared-memory region in the filesystem.</span>
+<span id="L118"><span class="lineNum">     118</span>                 :             :      * @return FileDescriptor file descriptor of shared-memory region</span>
+<span id="L119"><span class="lineNum">     119</span>                 :             :      */</span>
+<span id="L120"><span class="lineNum">     120</span>                 :             :     // coverity[autosar_cpp14_m7_3_1_violation] false-positive: class method (Ticket-234468)</span>
+<span id="L121"><span class="lineNum">     121</span>                 :             :     FileDescriptor GetFileDescriptor() const noexcept override;</span>
+<span id="L122"><span class="lineNum">     122</span>                 :             : </span>
+<span id="L123"><span class="lineNum">     123</span>                 :             :     /**</span>
+<span id="L124"><span class="lineNum">     124</span>                 :             :      * @brief Checks whether the shared-memory region is located in the typed memory or not.</span>
+<span id="L125"><span class="lineNum">     125</span>                 :             :      * @return bool is_shm_in_typed_memory_ which is true if shared-memory region is located in the typed</span>
+<span id="L126"><span class="lineNum">     126</span>                 :             :      * memory, false otherwise.</span>
+<span id="L127"><span class="lineNum">     127</span>                 :             :      *</span>
+<span id="L128"><span class="lineNum">     128</span>                 :             :      */</span>
+<span id="L129"><span class="lineNum">     129</span>                 :             :     bool IsShmInTypedMemory() const noexcept override;</span>
+<span id="L130"><span class="lineNum">     130</span>                 :             : </span>
+<span id="L131"><span class="lineNum">     131</span>                 :             :   protected:</span>
+<span id="L132"><span class="lineNum">     132</span>                 :             :     /// \brief Constructor of the class SharedMemoryResource.</span>
+<span id="L133"><span class="lineNum">     133</span>                 :             :     /// \details Constructor should only be used by SharedMemoryResource::Create, SharedMemoryResource::Open or</span>
+<span id="L134"><span class="lineNum">     134</span>                 :             :     /// SharedMemoryResource::CreateOrOpen</span>
+<span id="L135"><span class="lineNum">     135</span>                 :             :     /// \param input_path path of the memory region: a string that describes a regular file path name that will be</span>
+<span id="L136"><span class="lineNum">     136</span>                 :             :     /// created under /dev/shmem.</span>
+<span id="L137"><span class="lineNum">     137</span>                 :             :     /// \param acl_factory a factory of IAccessControlList object that is applied on the created shared memory</span>
+<span id="L138"><span class="lineNum">     138</span>                 :             :     /// resource.</span>
+<span id="L139"><span class="lineNum">     139</span>                 :             :     /// \param typed_memory_ptr std::shared_ptr to TypedMemory object: When this ptr is not equal to nullptr, it is</span>
+<span id="L140"><span class="lineNum">     140</span>                 :             :     /// responsible of allocating the memory in the typed region, otherwise it is a nullptr by default and memory can be</span>
+<span id="L141"><span class="lineNum">     141</span>                 :             :     /// allocated in the system os.</span>
+<span id="L142"><span class="lineNum">     142</span>                 :             :     SharedMemoryResource(std::string input_path,</span>
+<span id="L143"><span class="lineNum">     143</span>                 :             :                          AccessControlListFactory acl_factory,</span>
+<span id="L144"><span class="lineNum">     144</span>                 :             :                          std::shared_ptr&lt;score::memory::shared::TypedMemory&gt; typed_memory_ptr);</span>
+<span id="L145"><span class="lineNum">     145</span>                 :             : </span>
+<span id="L146"><span class="lineNum">     146</span>                 :             :     /// \brief Constructor of the class SharedMemoryResource.</span>
+<span id="L147"><span class="lineNum">     147</span>                 :             :     /// \details Constructor should only be used by SharedMemoryResource::CreateAnonymous</span>
+<span id="L148"><span class="lineNum">     148</span>                 :             :     /// \param shared_memory_resource_id an ECU wide unique identifier for the created memory region.</span>
+<span id="L149"><span class="lineNum">     149</span>                 :             :     /// \param acl_factory a factory of IAccessControlList object that is applied on the created shared memory</span>
+<span id="L150"><span class="lineNum">     150</span>                 :             :     /// resource.</span>
+<span id="L151"><span class="lineNum">     151</span>                 :             :     /// \param typed_memory_ptr std::shared_ptr to TypedMemory object: When this ptr is not equal to nullptr, it is</span>
+<span id="L152"><span class="lineNum">     152</span>                 :             :     /// responsible of allocating the memory in the typed region, otherwise it is a nullptr by default and memory can be</span>
+<span id="L153"><span class="lineNum">     153</span>                 :             :     /// allocated in the system os.</span>
+<span id="L154"><span class="lineNum">     154</span>                 :             :     SharedMemoryResource(std::uint64_t shared_memory_resource_id,</span>
+<span id="L155"><span class="lineNum">     155</span>                 :             :                          AccessControlListFactory acl_factory,</span>
+<span id="L156"><span class="lineNum">     156</span>                 :             :                          std::shared_ptr&lt;score::memory::shared::TypedMemory&gt; typed_memory_ptr);</span>
+<span id="L157"><span class="lineNum">     157</span>                 :             : </span>
+<span id="L158"><span class="lineNum">     158</span>                 :             :     SharedMemoryResource(std::variant&lt;std::string, std::uint64_t&gt; identifier,</span>
+<span id="L159"><span class="lineNum">     159</span>                 :             :                          AccessControlListFactory acl_factory,</span>
+<span id="L160"><span class="lineNum">     160</span>                 :             :                          std::shared_ptr&lt;TypedMemory&gt; typed_memory_ptr);</span>
+<span id="L161"><span class="lineNum">     161</span>                 :             : </span>
+<span id="L162"><span class="lineNum">     162</span>                 :             :   private:</span>
+<span id="L163"><span class="lineNum">     163</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A11-3-1&quot; rule finding: &quot;Friend declarations shall not be used.&quot;.</span>
+<span id="L164"><span class="lineNum">     164</span>                 :             :     // The 'friend' class is employed to encapsulate non-public members.</span>
+<span id="L165"><span class="lineNum">     165</span>                 :             :     // This design choice protects end users from implementation details</span>
+<span id="L166"><span class="lineNum">     166</span>                 :             :     // and prevents incorrect usage. Friend classes provide controlled</span>
+<span id="L167"><span class="lineNum">     167</span>                 :             :     // access to private members, utilized internally, ensuring that</span>
+<span id="L168"><span class="lineNum">     168</span>                 :             :     // end users cannot access implementation specifics.</span>
+<span id="L169"><span class="lineNum">     169</span>                 :             :     // coverity[autosar_cpp14_a11_3_1_violation]</span>
+<span id="L170"><span class="lineNum">     170</span>                 :             :     friend class SharedMemoryFactoryImpl;</span>
+<span id="L171"><span class="lineNum">     171</span>                 :             :     // coverity[autosar_cpp14_a11_3_1_violation]</span>
+<span id="L172"><span class="lineNum">     172</span>                 :             :     friend class test::SharedMemoryResourceTestAttorney;</span>
+<span id="L173"><span class="lineNum">     173</span>                 :             : </span>
+<span id="L174"><span class="lineNum">     174</span>                 :             :     /// \brief Returns the space in shared-memory, which the SharedMemoryResource needs itself for its</span>
+<span id="L175"><span class="lineNum">     175</span>                 :             :     /// book-keeping/control.</span>
+<span id="L176"><span class="lineNum">     176</span>                 :             :     /// \details SharedMemoryResource itself populates the start of its shared-memory object with a</span>
+<span id="L177"><span class="lineNum">     177</span>                 :             :     /// ControlBlock to keep track of free space/already allocated memory. So when a SharedMemoryResource gets created</span>
+<span id="L178"><span class="lineNum">     178</span>                 :             :     /// via the SharedMemoryFactory::Create() method, the caller is responsible for handing over the space to reserve</span>
+<span id="L179"><span class="lineNum">     179</span>                 :             :     /// for the SharedMemoryResource in total. So he needs to know, what size the SharedMemoryResource needs itself!</span>
+<span id="L180"><span class="lineNum">     180</span>                 :             :     /// This is the reason for the existence of this func.</span>
+<span id="L181"><span class="lineNum">     181</span>                 :             :     /// The function returns a worst case size: The ControlBlock itself needs a specific alignment and the start of user</span>
+<span id="L182"><span class="lineNum">     182</span>                 :             :     /// allocated data behind the control block starts also at an (worst case -&gt; alignof(std::max_align_t)) aligned</span>
+<span id="L183"><span class="lineNum">     183</span>                 :             :     /// address. Since we don't specify the address in mmap() calls, the shared-memory object will be created at a page</span>
+<span id="L184"><span class="lineNum">     184</span>                 :             :     /// boundary anyhow. So we don't have to care for the alignment (add any potential padding) for the ControlBlock.</span>
+<span id="L185"><span class="lineNum">     185</span>                 :             :     /// \return returns the size the SharedMemoryResource needs itself (independent from ay user data later stored in</span>
+<span id="L186"><span class="lineNum">     186</span>                 :             :     ///         the SharedMemoryResource).</span>
+<span id="L187"><span class="lineNum">     187</span>                 :<span class="tlaGNC">          72 :     static constexpr std::size_t GetNeededManagementSpace() noexcept</span></span>
+<span id="L188"><span class="lineNum">     188</span>                 :             :     {</span>
+<span id="L189"><span class="lineNum">     189</span>                 :<span class="tlaGNC">          72 :         return CalculateAlignedSize(sizeof(ControlBlock), alignof(std::max_align_t));</span></span>
+<span id="L190"><span class="lineNum">     190</span>                 :             :     }</span>
+<span id="L191"><span class="lineNum">     191</span>                 :             : </span>
+<span id="L192"><span class="lineNum">     192</span>                 :             :     /**</span>
+<span id="L193"><span class="lineNum">     193</span>                 :             :      * @brief Get the end address of the shared memory region that this SharedMemoryResource is managing</span>
+<span id="L194"><span class="lineNum">     194</span>                 :             :      * @return void* end address of memory resource</span>
+<span id="L195"><span class="lineNum">     195</span>                 :             :      */</span>
+<span id="L196"><span class="lineNum">     196</span>                 :             :     const void* getEndAddress() const noexcept override;</span>
+<span id="L197"><span class="lineNum">     197</span>                 :             : </span>
+<span id="L198"><span class="lineNum">     198</span>                 :             :     void reserveSharedMemory() const noexcept;</span>
+<span id="L199"><span class="lineNum">     199</span>                 :             :     // coverity[autosar_cpp14_m7_3_1_violation] false-positive: class method (Ticket-234468)</span>
+<span id="L200"><span class="lineNum">     200</span>                 :             :     void ApplyPermissions(const UserPermissions&amp;) noexcept;</span>
+<span id="L201"><span class="lineNum">     201</span>                 :             :     /// \brief Compensate any access-right changes the umask may have inflicted.</span>
+<span id="L202"><span class="lineNum">     202</span>                 :             :     /// \details After creation of shared-mem object its access rights might have to be adapted as during creation the</span>
+<span id="L203"><span class="lineNum">     203</span>                 :             :     ///        process umask might have interfered. Typically the umask is set to '002' -&gt; masks out write-access by</span>
+<span id="L204"><span class="lineNum">     204</span>                 :             :     ///        others.</span>
+<span id="L205"><span class="lineNum">     205</span>                 :             :     /// \param target_rights  target access rights, we want to achieve.</span>
+<span id="L206"><span class="lineNum">     206</span>                 :             :     void CompensateUmask(const os::Stat::Mode target_rights) const noexcept;</span>
+<span id="L207"><span class="lineNum">     207</span>                 :             : </span>
+<span id="L208"><span class="lineNum">     208</span>                 :             :     void mapMemoryIntoProcess() noexcept;</span>
+<span id="L209"><span class="lineNum">     209</span>                 :             :     /// \brief initializes the control block, which will be located directly at the start address of the</span>
+<span id="L210"><span class="lineNum">     210</span>                 :             :     ///        SharedMemoryResource (see GetBaseAddress()).</span>
+<span id="L211"><span class="lineNum">     211</span>                 :             :     /// \details It initializes the start member, which points at the location, from where the first (user) memory</span>
+<span id="L212"><span class="lineNum">     212</span>                 :             :     /// allocation within this SharedMemoryResource will take place. This will be directly after the control block</span>
+<span id="L213"><span class="lineNum">     213</span>                 :             :     /// itself at the first address behind the control block, which is maximum/worst-case aligned.</span>
+<span id="L214"><span class="lineNum">     214</span>                 :             :     void initializeControlBlock() noexcept;</span>
+<span id="L215"><span class="lineNum">     215</span>                 :             : </span>
+<span id="L216"><span class="lineNum">     216</span>                 :             :     /// \brief Acquires a lock file to prevent racing with concurrent CreateImpl calls.</span>
+<span id="L217"><span class="lineNum">     217</span>                 :             :     /// \details Creates a lock file and retries until successful or a timeout is reached. If the lock file cannot be</span>
+<span id="L218"><span class="lineNum">     218</span>                 :             :     /// acquired within the timeout, the process terminates. The caller must keep the returned LockFile alive for the</span>
+<span id="L219"><span class="lineNum">     219</span>                 :             :     /// duration of the critical section (e.g. shm_open + fstat + mmap) to ensure mutual exclusion with CreateImpl.</span>
+<span id="L220"><span class="lineNum">     220</span>                 :             :     /// \return The acquired LockFile. The function never returns std::nullopt; it either succeeds or terminates.</span>
+<span id="L221"><span class="lineNum">     221</span>                 :             :     std::optional&lt;LockFile&gt; acquireLockFile() const;</span>
+<span id="L222"><span class="lineNum">     222</span>                 :             : </span>
+<span id="L223"><span class="lineNum">     223</span>                 :             :     /// \brief Acquires a lock file and then opens an existing shared-memory object.</span>
+<span id="L224"><span class="lineNum">     224</span>                 :             :     /// \details The lock file is held across the entire shm_open + fstat + mmap sequence to prevent a concurrent</span>
+<span id="L225"><span class="lineNum">     225</span>                 :             :     /// CreateImpl from initializing the same SHM region while this function is reading it.</span>
+<span id="L226"><span class="lineNum">     226</span>                 :             :     /// \return Empty result on success, score::os::Error on failure (e.g. shared-memory object does not exist).</span>
+<span id="L227"><span class="lineNum">     227</span>                 :             :     // coverity[autosar_cpp14_m7_3_1_violation] false-positive: class method (Ticket-234468)</span>
+<span id="L228"><span class="lineNum">     228</span>                 :             :     score::cpp::expected_blank&lt;score::os::Error&gt; acquireLockAndOpenSharedMemory();</span>
+<span id="L229"><span class="lineNum">     229</span>                 :             : </span>
+<span id="L230"><span class="lineNum">     230</span>                 :             :     void loadInternalsFromSharedMemory() noexcept;</span>
+<span id="L231"><span class="lineNum">     231</span>                 :             :     void initializeInternalsInSharedMemory() noexcept;</span>
+<span id="L232"><span class="lineNum">     232</span>                 :             :     void deinitalizeInternalsInSharedMemory() noexcept;</span>
+<span id="L233"><span class="lineNum">     233</span>                 :             : </span>
+<span id="L234"><span class="lineNum">     234</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A15-5-3&quot; rule finding. This rule states: &quot;The std::terminate()</span>
+<span id="L235"><span class="lineNum">     235</span>                 :             :     // function shall not be called implicitly&quot;.</span>
+<span id="L236"><span class="lineNum">     236</span>                 :             :     // Rationale: getSharedPtr() may throw an exception if the SharedMemoryResource was not previously shared by a</span>
+<span id="L237"><span class="lineNum">     237</span>                 :             :     // std::shared_ptr. We always use static factory methods (Create, Open, etc) which return</span>
+<span id="L238"><span class="lineNum">     238</span>                 :             :     // shared_ptr&lt;SharedMemoryResource&gt; to create a SharedMemoryResource so this exception will never be thrown.</span>
+<span id="L239"><span class="lineNum">     239</span>                 :             :     // coverity[autosar_cpp14_a15_5_3_violation]</span>
+<span id="L240"><span class="lineNum">     240</span>                 :             :     // coverity[autosar_cpp14_m7_3_1_violation] false-positive: class method (Ticket-234468)</span>
+<span id="L241"><span class="lineNum">     241</span>                 :             :     // coverity[autosar_cpp14_a0_1_3_violation] false-positive: used in CreateImpl</span>
+<span id="L242"><span class="lineNum">     242</span>                 :<span class="tlaGNC">          72 :     std::shared_ptr&lt;SharedMemoryResource&gt; getSharedPtr()</span></span>
+<span id="L243"><span class="lineNum">     243</span>                 :             :     {</span>
+<span id="L244"><span class="lineNum">     244</span>                 :<span class="tlaGNC">          72 :         return shared_from_this();</span></span>
+<span id="L245"><span class="lineNum">     245</span>                 :             :     }</span>
+<span id="L246"><span class="lineNum">     246</span>                 :             : </span>
+<span id="L247"><span class="lineNum">     247</span>                 :             :     uid_t getOwnerUid() const noexcept;</span>
+<span id="L248"><span class="lineNum">     248</span>                 :             : </span>
+<span id="L249"><span class="lineNum">     249</span>                 :             :     static std::string GetLockFilePath(const std::string&amp; input_path) noexcept;</span>
+<span id="L250"><span class="lineNum">     250</span>                 :             : </span>
+<span id="L251"><span class="lineNum">     251</span>                 :             :     /// \brief Creates shared-mem-object under the path (path_).</span>
+<span id="L252"><span class="lineNum">     252</span>                 :             :     /// \param input_path path of the memory region: a string that describes a regular file path name that will be</span>
+<span id="L253"><span class="lineNum">     253</span>                 :             :     /// created under /dev/shmem.</span>
+<span id="L254"><span class="lineNum">     254</span>                 :             :     /// \param user_space_to_reserve the shm-object is created/mapped with the given size plus</span>
+<span id="L255"><span class="lineNum">     255</span>                 :             :     /// some additional bytes needed</span>
+<span id="L256"><span class="lineNum">     256</span>                 :             :     ///        for internal bookkeeping/management!</span>
+<span id="L257"><span class="lineNum">     257</span>                 :             :     /// \param initialize_callback callback to initialize the user portion of the shm-object</span>
+<span id="L258"><span class="lineNum">     258</span>                 :             :     ///        (after internal management space)</span>
+<span id="L259"><span class="lineNum">     259</span>                 :             :     /// \param permissions access permissions to be applied to the created shm-object.</span>
+<span id="L260"><span class="lineNum">     260</span>                 :             :     /// \param acl_factory a factory of IAccessControlList object that is applied on the created shared memory resource.</span>
+<span id="L261"><span class="lineNum">     261</span>                 :             :     /// \param typed_memory_ptr std::unique_ptr to TypedMemory object: When this ptr is not equal to nullptr, it is</span>
+<span id="L262"><span class="lineNum">     262</span>                 :             :     /// responsible of allocating the memory in the typed region, otherwise it is a nullptr by default and memory can be</span>
+<span id="L263"><span class="lineNum">     263</span>                 :             :     /// allocated in the system os.</span>
+<span id="L264"><span class="lineNum">     264</span>                 :             :     /// \return in case of error an score::os::Error is returned.</span>
+<span id="L265"><span class="lineNum">     265</span>                 :             :     // coverity[autosar_cpp14_m7_3_1_violation] false-positive: class method (Ticket-234468)</span>
+<span id="L266"><span class="lineNum">     266</span>                 :             :     static score::cpp::expected&lt;std::shared_ptr&lt;SharedMemoryResource&gt;, score::os::Error&gt; Create(</span>
+<span id="L267"><span class="lineNum">     267</span>                 :             :         std::string input_path,</span>
+<span id="L268"><span class="lineNum">     268</span>                 :             :         const std::size_t user_space_to_reserve,</span>
+<span id="L269"><span class="lineNum">     269</span>                 :             :         InitializeCallback initialize_callback,</span>
+<span id="L270"><span class="lineNum">     270</span>                 :             :         const UserPermissions&amp; permissions,</span>
+<span id="L271"><span class="lineNum">     271</span>                 :             :         AccessControlListFactory acl_factory,</span>
+<span id="L272"><span class="lineNum">     272</span>                 :             :         std::shared_ptr&lt;score::memory::shared::TypedMemory&gt; typed_memory_ptr = nullptr);</span>
+<span id="L273"><span class="lineNum">     273</span>                 :             : </span>
+<span id="L274"><span class="lineNum">     274</span>                 :             :     /// \brief Creates anonymous shared-mem-object.</span>
+<span id="L275"><span class="lineNum">     275</span>                 :             :     /// \attention This implementation only works in QNX environment because typed memory is only implemented for QNX</span>
+<span id="L276"><span class="lineNum">     276</span>                 :             :     /// and anonymous shared memory allocation in system memory uses QNX specific shm_open() parameters. In non-QNX</span>
+<span id="L277"><span class="lineNum">     277</span>                 :             :     /// environment this function will return error ENOTSUP.</span>
+<span id="L278"><span class="lineNum">     278</span>                 :             :     /// \param shared_memory_resource_id an ECU wide unique identifier for the created memory region.</span>
+<span id="L279"><span class="lineNum">     279</span>                 :             :     /// \param user_space_to_reserve the shm-object is created/mapped with the given size plus</span>
+<span id="L280"><span class="lineNum">     280</span>                 :             :     /// some additional bytes needed</span>
+<span id="L281"><span class="lineNum">     281</span>                 :             :     ///        for internal bookkeeping/management!</span>
+<span id="L282"><span class="lineNum">     282</span>                 :             :     /// \param initialize_callback callback to initialize the user portion of the shm-object</span>
+<span id="L283"><span class="lineNum">     283</span>                 :             :     ///        (after internal management space)</span>
+<span id="L284"><span class="lineNum">     284</span>                 :             :     /// \param permissions access permissions to be applied to the created shm-object.</span>
+<span id="L285"><span class="lineNum">     285</span>                 :             :     /// \param acl_factory a factory of IAccessControlList object that is applied on the created shared memory resource.</span>
+<span id="L286"><span class="lineNum">     286</span>                 :             :     /// \param typed_memory_ptr std::unique_ptr to TypedMemory object: When this ptr is not equal to nullptr, it is</span>
+<span id="L287"><span class="lineNum">     287</span>                 :             :     /// responsible of allocating the memory in the typed region, otherwise it is a nullptr by default and memory can be</span>
+<span id="L288"><span class="lineNum">     288</span>                 :             :     /// allocated in the system os.</span>
+<span id="L289"><span class="lineNum">     289</span>                 :             :     /// \return in case of error an score::os::Error is returned.</span>
+<span id="L290"><span class="lineNum">     290</span>                 :             :     // coverity[autosar_cpp14_m7_3_1_violation] false-positive: class method (Ticket-234468)</span>
+<span id="L291"><span class="lineNum">     291</span>                 :             :     static score::cpp::expected&lt;std::shared_ptr&lt;SharedMemoryResource&gt;, score::os::Error&gt; CreateAnonymous(</span>
+<span id="L292"><span class="lineNum">     292</span>                 :             :         std::uint64_t shared_memory_resource_id,</span>
+<span id="L293"><span class="lineNum">     293</span>                 :             :         const std::size_t user_space_to_reserve,</span>
+<span id="L294"><span class="lineNum">     294</span>                 :             :         InitializeCallback initialize_callback,</span>
+<span id="L295"><span class="lineNum">     295</span>                 :             :         const UserPermissions&amp; permissions,</span>
+<span id="L296"><span class="lineNum">     296</span>                 :             :         AccessControlListFactory acl_factory,</span>
+<span id="L297"><span class="lineNum">     297</span>                 :             :         std::shared_ptr&lt;score::memory::shared::TypedMemory&gt; typed_memory_ptr);</span>
+<span id="L298"><span class="lineNum">     298</span>                 :             : </span>
+<span id="L299"><span class="lineNum">     299</span>                 :             :     /// \brief Creates shared-mem-object under the path (path_) if it not yet exists or opens it otherwise.</span>
+<span id="L300"><span class="lineNum">     300</span>                 :             :     /// \param input_path path of the memory region: a string that describes a regular file path name that will be</span>
+<span id="L301"><span class="lineNum">     301</span>                 :             :     /// created under /dev/shmem.</span>
+<span id="L302"><span class="lineNum">     302</span>                 :             :     /// \param user_space_to_reserve in case a create is done the shm-object is created/mapped with the given size plus</span>
+<span id="L303"><span class="lineNum">     303</span>                 :             :     ///        some additional bytes needed for internal bookkeeping/management! In case an open is done this parameter</span>
+<span id="L304"><span class="lineNum">     304</span>                 :             :     ///        is ignored and the shm-object gets mapped into address space with the size of the underlying shm-object</span>
+<span id="L305"><span class="lineNum">     305</span>                 :             :     ///        file!</span>
+<span id="L306"><span class="lineNum">     306</span>                 :             :     /// \param initialize_callback in case a create is done, callback to initialize the user portion of the shm-object</span>
+<span id="L307"><span class="lineNum">     307</span>                 :             :     ///        (after internal management space)</span>
+<span id="L308"><span class="lineNum">     308</span>                 :             :     /// \param permissions access permissions to be applied to the created shm-object.</span>
+<span id="L309"><span class="lineNum">     309</span>                 :             :     /// \param acl_factory a factory of IAccessControlList object that is applied on the created shared memory resource.</span>
+<span id="L310"><span class="lineNum">     310</span>                 :             :     /// \param typed_memory_ptr std::shared_ptr to TypedMemory object: When this ptr is not equal to nullptr, it is</span>
+<span id="L311"><span class="lineNum">     311</span>                 :             :     /// responsible of allocating the memory in the typed region, otherwise it is a nullptr by default and memory can be</span>
+<span id="L312"><span class="lineNum">     312</span>                 :             :     /// allocated in the system os.</span>
+<span id="L313"><span class="lineNum">     313</span>                 :             :     /// \return in case of error an score::os::Error is returned.</span>
+<span id="L314"><span class="lineNum">     314</span>                 :             :     // coverity[autosar_cpp14_m7_3_1_violation] false-positive: class method (Ticket-234468)</span>
+<span id="L315"><span class="lineNum">     315</span>                 :             :     static score::cpp::expected&lt;std::shared_ptr&lt;SharedMemoryResource&gt;, score::os::Error&gt; CreateOrOpen(</span>
+<span id="L316"><span class="lineNum">     316</span>                 :             :         std::string input_path,</span>
+<span id="L317"><span class="lineNum">     317</span>                 :             :         const std::size_t user_space_to_reserve,</span>
+<span id="L318"><span class="lineNum">     318</span>                 :             :         InitializeCallback initialize_callback,</span>
+<span id="L319"><span class="lineNum">     319</span>                 :             :         const UserPermissions&amp; permissions,</span>
+<span id="L320"><span class="lineNum">     320</span>                 :             :         AccessControlListFactory acl_factory,</span>
+<span id="L321"><span class="lineNum">     321</span>                 :             :         std::shared_ptr&lt;score::memory::shared::TypedMemory&gt; typed_memory_ptr);</span>
+<span id="L322"><span class="lineNum">     322</span>                 :             : </span>
+<span id="L323"><span class="lineNum">     323</span>                 :             :     /// \brief Opens shared-mem-object under the path (path_) and maps it into memory with the length of the underlying</span>
+<span id="L324"><span class="lineNum">     324</span>                 :             :     ///        shm-object file.</span>
+<span id="L325"><span class="lineNum">     325</span>                 :             :     /// \param input_path path of the memory region: a string that describes a regular file path name that will be</span>
+<span id="L326"><span class="lineNum">     326</span>                 :             :     /// created under /dev/shmem.</span>
+<span id="L327"><span class="lineNum">     327</span>                 :             :     /// \param is_read_write</span>
+<span id="L328"><span class="lineNum">     328</span>                 :             :     /// \param permissions access permissions to be applied to the created shm-object.</span>
+<span id="L329"><span class="lineNum">     329</span>                 :             :     /// \param acl_factory a factory of IAccessControlList object that is applied on the created shared memory resource.</span>
+<span id="L330"><span class="lineNum">     330</span>                 :             :     /// \param typed_memory_ptr std::unique_ptr to TypedMemory object: When this ptr is not equal to nullptr, it is</span>
+<span id="L331"><span class="lineNum">     331</span>                 :             :     /// responsible of allocating the memory in the typed region, otherwise it is a nullptr by default and memory can be</span>
+<span id="L332"><span class="lineNum">     332</span>                 :             :     /// allocated in the system os.</span>
+<span id="L333"><span class="lineNum">     333</span>                 :             :     /// \return in case of error an score::os::Error is returned.</span>
+<span id="L334"><span class="lineNum">     334</span>                 :             :     // coverity[autosar_cpp14_m7_3_1_violation] false-positive: class method (Ticket-234468)</span>
+<span id="L335"><span class="lineNum">     335</span>                 :             :     static score::cpp::expected&lt;std::shared_ptr&lt;SharedMemoryResource&gt;, score::os::Error&gt; Open(</span>
+<span id="L336"><span class="lineNum">     336</span>                 :             :         std::string input_path,</span>
+<span id="L337"><span class="lineNum">     337</span>                 :             :         const bool is_read_write,</span>
+<span id="L338"><span class="lineNum">     338</span>                 :             :         AccessControlListFactory acl_factory,</span>
+<span id="L339"><span class="lineNum">     339</span>                 :             :         std::shared_ptr&lt;score::memory::shared::TypedMemory&gt; typed_memory_ptr) noexcept;</span>
+<span id="L340"><span class="lineNum">     340</span>                 :             : </span>
+<span id="L341"><span class="lineNum">     341</span>                 :             :     /// \brief Called by SharedMemoryResource::Create() after calling the constructor.</span>
+<span id="L342"><span class="lineNum">     342</span>                 :             :     /// \return in case of error an score::os::Error is returned.</span>
+<span id="L343"><span class="lineNum">     343</span>                 :             :     // coverity[autosar_cpp14_m7_3_1_violation] false-positive: class method (Ticket-234468)</span>
+<span id="L344"><span class="lineNum">     344</span>                 :             :     score::cpp::expected_blank&lt;score::os::Error&gt; CreateImpl(const std::size_t user_space_to_reserve,</span>
+<span id="L345"><span class="lineNum">     345</span>                 :             :                                                             const InitializeCallback initialize_callback,</span>
+<span id="L346"><span class="lineNum">     346</span>                 :             :                                                             const UserPermissions&amp; permissions);</span>
+<span id="L347"><span class="lineNum">     347</span>                 :             : </span>
+<span id="L348"><span class="lineNum">     348</span>                 :             :     /// \brief Called by SharedMemoryResource::CreateOrOpen() after calling the constructor.</span>
+<span id="L349"><span class="lineNum">     349</span>                 :             :     /// \return in case of error an score::os::Error is returned.</span>
+<span id="L350"><span class="lineNum">     350</span>                 :             :     // coverity[autosar_cpp14_m7_3_1_violation] false-positive: class method (Ticket-234468)</span>
+<span id="L351"><span class="lineNum">     351</span>                 :             :     score::cpp::expected_blank&lt;score::os::Error&gt; CreateOrOpenImpl(const std::size_t user_space_to_reserve,</span>
+<span id="L352"><span class="lineNum">     352</span>                 :             :                                                                   InitializeCallback initialize_callback,</span>
+<span id="L353"><span class="lineNum">     353</span>                 :             :                                                                   const UserPermissions&amp; permissions);</span>
+<span id="L354"><span class="lineNum">     354</span>                 :             : </span>
+<span id="L355"><span class="lineNum">     355</span>                 :             :     /// \brief Called by SharedMemoryResource::Open() after calling the constructor.</span>
+<span id="L356"><span class="lineNum">     356</span>                 :             :     /// \details Despite being an &quot;open&quot; operation, this method creates a temporary lock file to prevent a race</span>
+<span id="L357"><span class="lineNum">     357</span>                 :             :     /// condition with concurrent CreateImpl calls. The lock file is NOT the shared-memory object, it is an</span>
+<span id="L358"><span class="lineNum">     358</span>                 :             :     /// synchronization artifact (located at &lt;shm_path&gt;_lock) that is automatically removed when the LockFile goes out</span>
+<span id="L359"><span class="lineNum">     359</span>                 :             :     /// of scope. The shared-memory object itself is only opened (not created) via shm_open without O_CREAT.</span>
+<span id="L360"><span class="lineNum">     360</span>                 :             :     /// \note Creating the lock file in the Open path is intentional and required: without it, a concurrent CreateImpl</span>
+<span id="L361"><span class="lineNum">     361</span>                 :             :     /// could begin initializing the SHM region between Open's lock-check and shm_open, causing Open to read</span>
+<span id="L362"><span class="lineNum">     362</span>                 :             :     /// partially-initialized memory.</span>
+<span id="L363"><span class="lineNum">     363</span>                 :             :     /// \return in case of error an score::os::Error is returned.</span>
+<span id="L364"><span class="lineNum">     364</span>                 :             :     // coverity[autosar_cpp14_m7_3_1_violation] false-positive: class method (Ticket-234468)</span>
+<span id="L365"><span class="lineNum">     365</span>                 :             :     score::cpp::expected_blank&lt;score::os::Error&gt; OpenImpl(const bool is_read_write);</span>
+<span id="L366"><span class="lineNum">     366</span>                 :             : </span>
+<span id="L367"><span class="lineNum">     367</span>                 :             :     /// \brief UnlinkFilesystemEntry() should be used by the skeleton to unlink the shared memory region so that</span>
+<span id="L368"><span class="lineNum">     368</span>                 :             :     /// no process can open it anymore. This will not deallocate the shared memory region, that is done in</span>
+<span id="L369"><span class="lineNum">     369</span>                 :             :     /// ~SharedMemoryResource() when the last process with the shared memory region open closes its file descriptor. If</span>
+<span id="L370"><span class="lineNum">     370</span>                 :             :     /// UnlinkFilesystemEntry() is not called, then the shared memory region will never be closed.</span>
+<span id="L371"><span class="lineNum">     371</span>                 :             :     void UnlinkFilesystemEntry() const noexcept override;</span>
+<span id="L372"><span class="lineNum">     372</span>                 :             : </span>
+<span id="L373"><span class="lineNum">     373</span>                 :             :     // coverity[autosar_cpp14_m7_3_1_violation] false-positive: class method (Ticket-234468)</span>
+<span id="L374"><span class="lineNum">     374</span>                 :             :     static ::score::os::Stat::Mode calcStatModeForPermissions(const UserPermissions&amp; permissions) noexcept;</span>
+<span id="L375"><span class="lineNum">     375</span>                 :             : </span>
+<span id="L376"><span class="lineNum">     376</span>                 :             :     class ControlBlock</span>
+<span id="L377"><span class="lineNum">     377</span>                 :             :     {</span>
+<span id="L378"><span class="lineNum">     378</span>                 :             :       public:</span>
+<span id="L379"><span class="lineNum">     379</span>                 :<span class="tlaGNC">          72 :         explicit ControlBlock(const std::size_t id) noexcept : alreadyAllocatedBytes{}, memoryResourceProxy{id} {}</span></span>
+<span id="L380"><span class="lineNum">     380</span>                 :             : </span>
+<span id="L381"><span class="lineNum">     381</span>                 :             :         // Suppress &quot;AUTOSAR C++14 M11-0-1&quot; rule findings. This rule states: &quot;Member data in non-POD class types shall</span>
+<span id="L382"><span class="lineNum">     382</span>                 :             :         // be private.&quot;.</span>
+<span id="L383"><span class="lineNum">     383</span>                 :             :         // Rationale: There are no class invariants to maintain which could be violated by directly accessing these</span>
+<span id="L384"><span class="lineNum">     384</span>                 :             :         // member variables.</span>
+<span id="L385"><span class="lineNum">     385</span>                 :             :         // coverity[autosar_cpp14_m11_0_1_violation]</span>
+<span id="L386"><span class="lineNum">     386</span>                 :             :         std::atomic&lt;std::size_t&gt; alreadyAllocatedBytes;</span>
+<span id="L387"><span class="lineNum">     387</span>                 :             :         // coverity[autosar_cpp14_m11_0_1_violation]</span>
+<span id="L388"><span class="lineNum">     388</span>                 :             :         MemoryResourceProxy memoryResourceProxy;</span>
+<span id="L389"><span class="lineNum">     389</span>                 :             :     };</span>
+<span id="L390"><span class="lineNum">     390</span>                 :             : </span>
+<span id="L391"><span class="lineNum">     391</span>                 :             :     FileDescriptor file_descriptor_;</span>
+<span id="L392"><span class="lineNum">     392</span>                 :             :     uid_t file_owner_uid_;</span>
+<span id="L393"><span class="lineNum">     393</span>                 :             :     std::optional&lt;std::string&gt; lock_file_path_;</span>
+<span id="L394"><span class="lineNum">     394</span>                 :             :     std::size_t virtual_address_space_to_reserve_;</span>
+<span id="L395"><span class="lineNum">     395</span>                 :             :     std::shared_ptr&lt;score::memory::shared::TypedMemory&gt; typed_memory_ptr_;</span>
+<span id="L396"><span class="lineNum">     396</span>                 :             :     ::score::os::Fcntl::Open opening_mode_;</span>
+<span id="L397"><span class="lineNum">     397</span>                 :             :     ::score::os::Mman::Protection map_mode_;</span>
+<span id="L398"><span class="lineNum">     398</span>                 :             :     void* base_address_;</span>
+<span id="L399"><span class="lineNum">     399</span>                 :             :     ControlBlock* control_block_;</span>
+<span id="L400"><span class="lineNum">     400</span>                 :             :     AccessControlListFactory acl_factory_;</span>
+<span id="L401"><span class="lineNum">     401</span>                 :             :     bool is_shm_in_typed_memory_;</span>
+<span id="L402"><span class="lineNum">     402</span>                 :             :     // Will contain `&quot;file: &quot; + path` in case of named shared memory resource</span>
+<span id="L403"><span class="lineNum">     403</span>                 :             :     // Will contain `&quot;id: &quot; + std::to_str(shared_memory_resource_id)` in case of anonymous shared memory resource</span>
+<span id="L404"><span class="lineNum">     404</span>                 :             :     std::string log_identification_;</span>
+<span id="L405"><span class="lineNum">     405</span>                 :             :     // Will contain `hash(path)` in case of named shared memory resource</span>
+<span id="L406"><span class="lineNum">     406</span>                 :             :     // Will contain shared_memory_resource_id in case of anonymous shared memory resource</span>
+<span id="L407"><span class="lineNum">     407</span>                 :             :     std::uint64_t memory_identifier_;</span>
+<span id="L408"><span class="lineNum">     408</span>                 :             :     // std::variant will contain the path (std::string) in case of named shared memory resource</span>
+<span id="L409"><span class="lineNum">     409</span>                 :             :     // std::variant will contain shared_memory_resource_id (std::uint64_t) in case of anonymous shared memory resource</span>
+<span id="L410"><span class="lineNum">     410</span>                 :             :     std::variant&lt;std::string, std::uint64_t&gt; shared_memory_resource_identifier_;</span>
+<span id="L411"><span class="lineNum">     411</span>                 :             :     void* start_;</span>
+<span id="L412"><span class="lineNum">     412</span>                 :             : </span>
+<span id="L413"><span class="lineNum">     413</span>                 :             :     void* do_allocate(const std::size_t bytes, const std::size_t alignment) override;</span>
+<span id="L414"><span class="lineNum">     414</span>                 :             :     template &lt;template &lt;class&gt; class AtomicIndirectorType&gt;</span>
+<span id="L415"><span class="lineNum">     415</span>                 :             :     void* do_allocate_with_indirector(const std::size_t bytes, const std::size_t alignment);</span>
+<span id="L416"><span class="lineNum">     416</span>                 :             :     void do_deallocate(void*, std::size_t bytes, std::size_t alignment) override;</span>
+<span id="L417"><span class="lineNum">     417</span>                 :             :     // coverity[autosar_cpp14_m7_3_1_violation] false-positive: class method (Ticket-234468)</span>
+<span id="L418"><span class="lineNum">     418</span>                 :             :     bool do_is_equal(const memory_resource&amp; other) const noexcept override;</span>
+<span id="L419"><span class="lineNum">     419</span>                 :             : </span>
+<span id="L420"><span class="lineNum">     420</span>                 :             :     // coverity[autosar_cpp14_m7_3_1_violation] false-positive: class method (Ticket-234468)</span>
+<span id="L421"><span class="lineNum">     421</span>                 :             :     score::cpp::expected_blank&lt;score::os::Error&gt; CreateLockFileForNamedSharedMemory(std::optional&lt;LockFile&gt;&amp; lock_file);</span>
+<span id="L422"><span class="lineNum">     422</span>                 :             :     // coverity[autosar_cpp14_m7_3_1_violation] false-positive: class method (Ticket-234468)</span>
+<span id="L423"><span class="lineNum">     423</span>                 :             :     void AllocateInTypedMemory(const UserPermissions&amp; permissions, os::Fcntl::Open&amp; flags) noexcept;</span>
+<span id="L424"><span class="lineNum">     424</span>                 :             : </span>
+<span id="L425"><span class="lineNum">     425</span>                 :             :     /// \brief Open shared memory from CreateImpl context</span>
+<span id="L426"><span class="lineNum">     426</span>                 :             :     /// \details This method is meant to be called exclusively from SharedMemoryResource::CreateImpl. It behaves</span>
+<span id="L427"><span class="lineNum">     427</span>                 :             :     ///          differently depending on the following use-cases:</span>
+<span id="L428"><span class="lineNum">     428</span>                 :             :     ///          - named shared memory in system memory: A shared memory object is created and opened. The flags</span>
+<span id="L429"><span class="lineNum">     429</span>                 :             :     ///            parameter must contain `Fcntl::Open::kCreate`</span>
+<span id="L430"><span class="lineNum">     430</span>                 :             :     ///          - named shared memory in typed memory: A shared memory object (previously created by a call to</span>
+<span id="L431"><span class="lineNum">     431</span>                 :             :     ///            SharedMemoryResource::AllocateInTypedMemory) is opened. The flags parameter must not contain</span>
+<span id="L432"><span class="lineNum">     432</span>                 :             :     ///            `Fcntl::Open::kCreate`</span>
+<span id="L433"><span class="lineNum">     433</span>                 :             :     ///          - anonymous shared memory in system memory: A shared memory object is created and opened. The flags</span>
+<span id="L434"><span class="lineNum">     434</span>                 :             :     ///            parameter is ignored</span>
+<span id="L435"><span class="lineNum">     435</span>                 :             :     ///          - anonymous shared memory in typed memory: This method essentially does nothing because the shared</span>
+<span id="L436"><span class="lineNum">     436</span>                 :             :     ///            memory is already opened by the call to AllocateAndOpenAnonymousTypedMemory inside</span>
+<span id="L437"><span class="lineNum">     437</span>                 :             :     ///            SharedMemoryResource::AllocateInTypedMemory method. The reason for this is that typed memory client</span>
+<span id="L438"><span class="lineNum">     438</span>                 :             :     ///            API returns a shm_handle_t which is only available on QNX. Thus, allocating and opening both are</span>
+<span id="L439"><span class="lineNum">     439</span>                 :             :     ///            encapsulated in TypedMemoryImpl::AllocateAndOpenAnonymousTypedMemory to keep SharedMemoryResource</span>
+<span id="L440"><span class="lineNum">     440</span>                 :             :     ///            class clean from &quot;#if defined __QNX__&quot;. The flags parameter is ignored</span>
+<span id="L441"><span class="lineNum">     441</span>                 :             :     /// \param flags Fcntl::Open flags used for creating / opening the shared memory. See details section for further</span>
+<span id="L442"><span class="lineNum">     442</span>                 :             :     ///              explanation</span>
+<span id="L443"><span class="lineNum">     443</span>                 :             :     /// \param mode Stat::Mode used for creating / opening the shared memory</span>
+<span id="L444"><span class="lineNum">     444</span>                 :             :     /// \todo This method needs refactoring</span>
+<span id="L445"><span class="lineNum">     445</span>                 :             :     /// \return Empty result in case of success, score::os::Error in case of error.</span>
+<span id="L446"><span class="lineNum">     446</span>                 :             :     // coverity[autosar_cpp14_m7_3_1_violation] false-positive: class method (Ticket-234468)</span>
+<span id="L447"><span class="lineNum">     447</span>                 :             :     score::cpp::expected_blank&lt;score::os::Error&gt; OpenSharedMemory(const os::Fcntl::Open&amp; flags,</span>
+<span id="L448"><span class="lineNum">     448</span>                 :             :                                                                   os::Stat::Mode mode) noexcept;</span>
+<span id="L449"><span class="lineNum">     449</span>                 :             :     void SealAnonymousOrReserveNamedSharedMemory() noexcept;</span>
+<span id="L450"><span class="lineNum">     450</span>                 :             : };</span>
+<span id="L451"><span class="lineNum">     451</span>                 :             : </span>
+<span id="L452"><span class="lineNum">     452</span>                 :             : namespace detail</span>
+<span id="L453"><span class="lineNum">     453</span>                 :             : {</span>
+<span id="L454"><span class="lineNum">     454</span>                 :             : </span>
+<span id="L455"><span class="lineNum">     455</span>                 :             : /// \brief Implementation of a simplistic monotonic allocation algo as used by do_allocate().</span>
+<span id="L456"><span class="lineNum">     456</span>                 :             : /// \param alloc_start address where allocation can start (start of free buffer space)</span>
+<span id="L457"><span class="lineNum">     457</span>                 :             : /// \param alloc_end address where allocation shall end (end of free buffer space)</span>
+<span id="L458"><span class="lineNum">     458</span>                 :             : /// \param bytes how many bytes to allocate</span>
+<span id="L459"><span class="lineNum">     459</span>                 :             : /// \param alignment</span>
+<span id="L460"><span class="lineNum">     460</span>                 :             : /// \return If allocation is successful a valid pointer is returned, otherwise a nullptr</span>
+<span id="L461"><span class="lineNum">     461</span>                 :             : void* do_allocation_algorithm(const void* const alloc_start,</span>
+<span id="L462"><span class="lineNum">     462</span>                 :             :                               const void* const alloc_end,</span>
+<span id="L463"><span class="lineNum">     463</span>                 :             :                               const std::size_t bytes,</span>
+<span id="L464"><span class="lineNum">     464</span>                 :             :                               const std::size_t alignment) noexcept;</span>
+<span id="L465"><span class="lineNum">     465</span>                 :             : </span>
+<span id="L466"><span class="lineNum">     466</span>                 :             : }  // namespace detail</span>
+<span id="L467"><span class="lineNum">     467</span>                 :             : </span>
+<span id="L468"><span class="lineNum">     468</span>                 :             : }  // namespace score::memory::shared</span>
+<span id="L469"><span class="lineNum">     469</span>                 :             : </span>
+<span id="L470"><span class="lineNum">     470</span>                 :             : #endif  // SCORE_LIB_MEMORY_SHARED_SHARED_MEMORY_RESOURCE_H</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

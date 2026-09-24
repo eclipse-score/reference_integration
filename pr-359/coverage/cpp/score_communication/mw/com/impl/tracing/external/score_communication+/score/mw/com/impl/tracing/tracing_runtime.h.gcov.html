@@ -1,0 +1,292 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - mw/com/impl/tracing/external/score_communication+/score/mw/com/impl/tracing/tracing_runtime.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../../../../../index.html">top level</a> - <a href="index.html">mw/com/impl/tracing/external/score_communication+/score/mw/com/impl/tracing</a> - tracing_runtime.h<span style="font-size: 80%;"> (source / <a href="tracing_runtime.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryLo">0.0&nbsp;%</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:37:31</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryLo">0.0&nbsp;%</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryHi">-</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2025 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : #ifndef SCORE_MW_COM_IMPL_TRACING_TRACING_RUNTIME_H</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #define SCORE_MW_COM_IMPL_TRACING_TRACING_RUNTIME_H</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : </span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #include &quot;score/mw/com/impl/binding_type.h&quot;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #include &quot;score/mw/com/impl/tracing/configuration/proxy_event_trace_point_type.h&quot;</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : #include &quot;score/mw/com/impl/tracing/configuration/proxy_field_trace_point_type.h&quot;</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : #include &quot;score/mw/com/impl/tracing/configuration/skeleton_event_trace_point_type.h&quot;</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : #include &quot;score/mw/com/impl/tracing/configuration/skeleton_field_trace_point_type.h&quot;</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : #include &quot;score/mw/com/impl/tracing/i_binding_tracing_runtime.h&quot;</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : #include &quot;score/mw/com/impl/tracing/i_tracing_runtime.h&quot;</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : </span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : #include &lt;atomic&gt;</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : #include &lt;cstddef&gt;</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : #include &lt;cstdint&gt;</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : #include &lt;unordered_map&gt;</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : #include &lt;variant&gt;</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : </span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : namespace score::mw::com::impl::tracing</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : {</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : </span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : namespace detail_tracing_runtime</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : {</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             : </span>
+<span id="L36"><span class="lineNum">      36</span>                 :             : class TracingRuntimeAtomicState</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             : {</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             :   public:</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             :     TracingRuntimeAtomicState() noexcept;</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             :     TracingRuntimeAtomicState(const TracingRuntimeAtomicState&amp;) = delete;</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             :     TracingRuntimeAtomicState(TracingRuntimeAtomicState&amp;&amp; other) noexcept;</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             :     ~TracingRuntimeAtomicState() noexcept = default;</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             :     TracingRuntimeAtomicState&amp; operator=(const TracingRuntimeAtomicState&amp;) = delete;</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             :     TracingRuntimeAtomicState&amp; operator=(TracingRuntimeAtomicState&amp;&amp; other) noexcept;</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             : </span>
+<span id="L46"><span class="lineNum">      46</span>                 :             :     /// \brief consecutive trace-call failure counter, gets initialized to 0 on construction</span>
+<span id="L47"><span class="lineNum">      47</span>                 :             :     // Suppress &quot;AUTOSAR C++14 M11-0-1&quot; rule finding. This rule states: &quot;Member data in non-POD class types shall be</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             :     // private.&quot;. There is no need for too much overhead of having getter and setter for the private members, and</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             :     // nothing violated by defining it as public.</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             :     // coverity[autosar_cpp14_m11_0_1_violation]</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             :     std::atomic_uint32_t consecutive_failure_counter;</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             :     /// \brief flag, whether tracing is enabled. Gets initially set to true (we are only creating TracingRuntime in case</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             :     ///        tracing is globally enabled and we have a valid filter config for it. But during runtime this flag can</span>
+<span id="L54"><span class="lineNum">      54</span>                 :             :     ///        be switched to false, because of tracing subsystem errors and then it stays with false for the rest of</span>
+<span id="L55"><span class="lineNum">      55</span>                 :             :     ///        the life-cycle.</span>
+<span id="L56"><span class="lineNum">      56</span>                 :             :     // coverity[autosar_cpp14_m11_0_1_violation]</span>
+<span id="L57"><span class="lineNum">      57</span>                 :             :     std::atomic_bool is_tracing_enabled;</span>
+<span id="L58"><span class="lineNum">      58</span>                 :             : };</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             : </span>
+<span id="L60"><span class="lineNum">      60</span>                 :             : }  // namespace detail_tracing_runtime</span>
+<span id="L61"><span class="lineNum">      61</span>                 :             : </span>
+<span id="L62"><span class="lineNum">      62</span>                 :             : // Suppress &quot;AUTOSAR C++14 M3-2-3&quot; rule finding. This rule states: &quot;A type, object or function that is used in multiple</span>
+<span id="L63"><span class="lineNum">      63</span>                 :             : // translation units shall be declared in one and only one file.&quot;.</span>
+<span id="L64"><span class="lineNum">      64</span>                 :             : // This is false positive. Function is declared only once.</span>
+<span id="L65"><span class="lineNum">      65</span>                 :             : // coverity[autosar_cpp14_m3_2_3_violation : FALSE]</span>
+<span id="L66"><span class="lineNum">      66</span>                 :             : class TracingRuntime : public ITracingRuntime</span>
+<span id="L67"><span class="lineNum">      67</span>                 :             : {</span>
+<span id="L68"><span class="lineNum">      68</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A11-3-1&quot;, The rule states: &quot;Friend declarations shall not be used.&quot;</span>
+<span id="L69"><span class="lineNum">      69</span>                 :             :     // This is used for testing purposes.</span>
+<span id="L70"><span class="lineNum">      70</span>                 :             :     // coverity[autosar_cpp14_a11_3_1_violation]</span>
+<span id="L71"><span class="lineNum">      71</span>                 :             :     friend class TracingRuntimeAttorney;</span>
+<span id="L72"><span class="lineNum">      72</span>                 :             : </span>
+<span id="L73"><span class="lineNum">      73</span>                 :             :   public:</span>
+<span id="L74"><span class="lineNum">      74</span>                 :             :     /// how many consecutive non-recoverable errors in trace-calls shall lead to disabling of tracing.</span>
+<span id="L75"><span class="lineNum">      75</span>                 :             :     /// @todo In the future we will make this value configurable via mw_com_config.json.</span>
+<span id="L76"><span class="lineNum">      76</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A0-1-1&quot;, The rule states: &quot;A project shall not contain instances of non-volatile</span>
+<span id="L77"><span class="lineNum">      77</span>                 :             :     // variables being given values that are not subsequently used&quot;</span>
+<span id="L78"><span class="lineNum">      78</span>                 :             :     // Variable is used in the implementation file (cpp) and tracing_runtime_test.</span>
+<span id="L79"><span class="lineNum">      79</span>                 :             :     // coverity[autosar_cpp14_a0_1_1_violation : FALSE]</span>
+<span id="L80"><span class="lineNum">      80</span>                 :             :     constexpr static std::uint32_t MAX_CONSECUTIVE_ACCEPTABLE_TRACE_FAILURES{std::numeric_limits&lt;uint32_t&gt;::max()};</span>
+<span id="L81"><span class="lineNum">      81</span>                 :             : </span>
+<span id="L82"><span class="lineNum">      82</span>                 :             :     explicit TracingRuntime(</span>
+<span id="L83"><span class="lineNum">      83</span>                 :             :         std::unordered_map&lt;BindingType, IBindingTracingRuntime*&gt;&amp;&amp; binding_tracing_runtimes) noexcept;</span>
+<span id="L84"><span class="lineNum">      84</span>                 :             : </span>
+<span id="L85"><span class="lineNum">      85</span>                 :             :     /// \brief TracingRuntime shall not be copyable/copy-assignable</span>
+<span id="L86"><span class="lineNum">      86</span>                 :             :     TracingRuntime(const TracingRuntime&amp; other) = delete;</span>
+<span id="L87"><span class="lineNum">      87</span>                 :             :     TracingRuntime(TracingRuntime&amp;&amp; other) noexcept = default;</span>
+<span id="L88"><span class="lineNum">      88</span>                 :<span class="tlaUNC tlaBgUNC">           0 :     ~TracingRuntime() noexcept override = default;</span></span>
+<span id="L89"><span class="lineNum">      89</span>                 :             : </span>
+<span id="L90"><span class="lineNum">      90</span>                 :             :     TracingRuntime&amp; operator=(const TracingRuntime&amp; other) = delete;</span>
+<span id="L91"><span class="lineNum">      91</span>                 :             :     TracingRuntime&amp; operator=(TracingRuntime&amp;&amp; other) noexcept = default;</span>
+<span id="L92"><span class="lineNum">      92</span>                 :             : </span>
+<span id="L93"><span class="lineNum">      93</span>                 :             :     void DisableTracing() noexcept override;</span>
+<span id="L94"><span class="lineNum">      94</span>                 :             : </span>
+<span id="L95"><span class="lineNum">      95</span>                 :             :     bool IsTracingEnabled() override;</span>
+<span id="L96"><span class="lineNum">      96</span>                 :             : </span>
+<span id="L97"><span class="lineNum">      97</span>                 :             :     ServiceElementTracingData RegisterServiceElement(const BindingType binding_type,</span>
+<span id="L98"><span class="lineNum">      98</span>                 :             :                                                      std::uint8_t number_of_ipc_tracing_slots) noexcept override;</span>
+<span id="L99"><span class="lineNum">      99</span>                 :             : </span>
+<span id="L100"><span class="lineNum">     100</span>                 :             :     void SetDataLossFlag(const BindingType binding_type) noexcept override;</span>
+<span id="L101"><span class="lineNum">     101</span>                 :             : </span>
+<span id="L102"><span class="lineNum">     102</span>                 :             :     void RegisterShmObject(const BindingType binding_type,</span>
+<span id="L103"><span class="lineNum">     103</span>                 :             :                            const ServiceElementInstanceIdentifierView service_element_instance_identifier_view,</span>
+<span id="L104"><span class="lineNum">     104</span>                 :             :                            const memory::shared::ISharedMemoryResource::FileDescriptor shm_object_fd,</span>
+<span id="L105"><span class="lineNum">     105</span>                 :             :                            void* const shm_memory_start_address) override;</span>
+<span id="L106"><span class="lineNum">     106</span>                 :             : </span>
+<span id="L107"><span class="lineNum">     107</span>                 :             :     void UnregisterShmObject(BindingType binding_type,</span>
+<span id="L108"><span class="lineNum">     108</span>                 :             :                              ServiceElementInstanceIdentifierView service_element_instance_identifier_view) override;</span>
+<span id="L109"><span class="lineNum">     109</span>                 :             : </span>
+<span id="L110"><span class="lineNum">     110</span>                 :             :     /// \brief Trace call for data residing in shared-memory being handled async via TraceDoneCallback. So this API</span>
+<span id="L111"><span class="lineNum">     111</span>                 :             :     ///        is only called by SkeletonEvents/Fields emitting data (send/update).</span>
+<span id="L112"><span class="lineNum">     112</span>                 :             :     /// \details The implementation builds up the AraComMetaInfo and ShmChunkList for the call to GenericTraceAPI::Trace</span>
+<span id="L113"><span class="lineNum">     113</span>                 :             :     ///          from the given arguments. I.e. based on the given service_element_instance_identifier it builds up the</span>
+<span id="L114"><span class="lineNum">     114</span>                 :             :     ///          AraComMetaInfo and based on shm_data_ptr (which is an absolute pointer), it finds</span>
+<span id="L115"><span class="lineNum">     115</span>                 :             :     ///          out, which shm-object is affected and builds up the ShmChunkList accordingly.</span>
+<span id="L116"><span class="lineNum">     116</span>                 :             :     ///          Since we currently do not support dynamic data types, the ShmChunkLists used by mw::com/LoLa only</span>
+<span id="L117"><span class="lineNum">     117</span>                 :             :     ///          consist of one ShmChunk! When we introduce support for dynamic data types, we may have to revisit this</span>
+<span id="L118"><span class="lineNum">     118</span>                 :             :     ///          interface.</span>
+<span id="L119"><span class="lineNum">     119</span>                 :             :     /// \param binding_type identification of binding, which does the call.</span>
+<span id="L120"><span class="lineNum">     120</span>                 :             :     /// \param trace_context_id trace context id for this trace call. The async TraceDoneCallBack will use this id to</span>
+<span id="L121"><span class="lineNum">     121</span>                 :             :     ///        notify, that tracing of the related data has been done.</span>
+<span id="L122"><span class="lineNum">     122</span>                 :             :     /// \param service_element_instance_identifier identification of service element and instance in which context the</span>
+<span id="L123"><span class="lineNum">     123</span>                 :             :     ///        call happens.</span>
+<span id="L124"><span class="lineNum">     124</span>                 :             :     /// \param trace_point_type type of trace point</span>
+<span id="L125"><span class="lineNum">     125</span>                 :             :     /// \param trace_point_data_id data identification of the data being traced (in LoLa this is the timestamp of an</span>
+<span id="L126"><span class="lineNum">     126</span>                 :             :     ///        event-slot.</span>
+<span id="L127"><span class="lineNum">     127</span>                 :             :     /// \param sample_ptr sample pointer of the event/field data to be traced. As long as it lives, it blocks the slot</span>
+<span id="L128"><span class="lineNum">     128</span>                 :             :     ///        from being reused. Should be destrucetd in the context of the trace done callback to free slot again.</span>
+<span id="L129"><span class="lineNum">     129</span>                 :             :     /// \param shm_data_ptr address of/pointer to the data residing in shm.</span>
+<span id="L130"><span class="lineNum">     130</span>                 :             :     /// \param shm_data_size size of the data, where shm_data_ptr points to</span>
+<span id="L131"><span class="lineNum">     131</span>                 :             :     /// \return blank in case of success, else either an error with code TraceErrorDisableAllTracePoints or</span>
+<span id="L132"><span class="lineNum">     132</span>                 :             :     ///         TraceErrorDisableTracePointInstance</span>
+<span id="L133"><span class="lineNum">     133</span>                 :             :     Result&lt;void&gt; Trace(const BindingType binding_type,</span>
+<span id="L134"><span class="lineNum">     134</span>                 :             :                        const ServiceElementTracingData service_element_tracing_data,</span>
+<span id="L135"><span class="lineNum">     135</span>                 :             :                        const ServiceElementInstanceIdentifierView service_element_instance_identifier,</span>
+<span id="L136"><span class="lineNum">     136</span>                 :             :                        const TracePointType trace_point_type,</span>
+<span id="L137"><span class="lineNum">     137</span>                 :             :                        const TracePointDataId trace_point_data_id,</span>
+<span id="L138"><span class="lineNum">     138</span>                 :             :                        TypeErasedSamplePtr sample_ptr,</span>
+<span id="L139"><span class="lineNum">     139</span>                 :             :                        const void* const shm_data_ptr,</span>
+<span id="L140"><span class="lineNum">     140</span>                 :             :                        const std::size_t shm_data_size) override;</span>
+<span id="L141"><span class="lineNum">     141</span>                 :             : </span>
+<span id="L142"><span class="lineNum">     142</span>                 :             :     /// \brief Trace call for data residing locally (not in shared-memory) being synchronously copied for tracing.</span>
+<span id="L143"><span class="lineNum">     143</span>                 :             :     /// \param binding_type identification of binding, which does the call.</span>
+<span id="L144"><span class="lineNum">     144</span>                 :             :     /// \param service_element_instance_identifier identification of service element and instance in which context the</span>
+<span id="L145"><span class="lineNum">     145</span>                 :             :     ///        call happens.</span>
+<span id="L146"><span class="lineNum">     146</span>                 :             :     /// \param trace_point_type type of trace point</span>
+<span id="L147"><span class="lineNum">     147</span>                 :             :     /// \param trace_point_data_id optional data identification. Only trace_point_type, which deals with data reception</span>
+<span id="L148"><span class="lineNum">     148</span>                 :             :     ///        needs to set this id. (e.g. a ProxyEventTracePointType::GET_NEW_SAMPLES_CALLBACK would use it)</span>
+<span id="L149"><span class="lineNum">     149</span>                 :             :     /// \param local_data_ptr pointer to local data</span>
+<span id="L150"><span class="lineNum">     150</span>                 :             :     /// \param local_data_size size of the data, where local_data_ptr points to</span>
+<span id="L151"><span class="lineNum">     151</span>                 :             :     /// \return blank in case of success, else either an error with code TraceErrorDisableAllTracePoints or</span>
+<span id="L152"><span class="lineNum">     152</span>                 :             :     ///         TraceErrorDisableTracePointInstance</span>
+<span id="L153"><span class="lineNum">     153</span>                 :             :     Result&lt;void&gt; Trace(const BindingType binding_type,</span>
+<span id="L154"><span class="lineNum">     154</span>                 :             :                        const ServiceElementInstanceIdentifierView service_element_instance_identifier,</span>
+<span id="L155"><span class="lineNum">     155</span>                 :             :                        const TracePointType trace_point_type,</span>
+<span id="L156"><span class="lineNum">     156</span>                 :             :                        const std::optional&lt;TracePointDataId&gt; trace_point_data_id,</span>
+<span id="L157"><span class="lineNum">     157</span>                 :             :                        const void* const local_data_ptr,</span>
+<span id="L158"><span class="lineNum">     158</span>                 :             :                        const std::size_t local_data_size) override;</span>
+<span id="L159"><span class="lineNum">     159</span>                 :             : </span>
+<span id="L160"><span class="lineNum">     160</span>                 :             :     IBindingTracingRuntime&amp; GetBindingTracingRuntime(const BindingType binding_type) const noexcept override;</span>
+<span id="L161"><span class="lineNum">     161</span>                 :             : </span>
+<span id="L162"><span class="lineNum">     162</span>                 :             :   private:</span>
+<span id="L163"><span class="lineNum">     163</span>                 :             :     detail_tracing_runtime::TracingRuntimeAtomicState atomic_state_;</span>
+<span id="L164"><span class="lineNum">     164</span>                 :             : </span>
+<span id="L165"><span class="lineNum">     165</span>                 :             :     /// \brief Updates internal state, whether to e.g. to disable tracing, because of non-recoverable trace error or</span>
+<span id="L166"><span class="lineNum">     166</span>                 :             :     ///        to many consecutive recoverable errors. Will be called after each call to Trace with the given result.</span>
+<span id="L167"><span class="lineNum">     167</span>                 :             :     /// \param trace_call_result result of last call to Generic Trace API trace method.</span>
+<span id="L168"><span class="lineNum">     168</span>                 :             :     /// \return Result to be forwarded to the caller of Trace()</span>
+<span id="L169"><span class="lineNum">     169</span>                 :             :     Result&lt;void&gt; ProcessTraceCallResult(const ServiceElementInstanceIdentifierView&amp; service_element_instance_identifier,</span>
+<span id="L170"><span class="lineNum">     170</span>                 :             :                                         const analysis::tracing::TraceResult&amp; trace_call_result,</span>
+<span id="L171"><span class="lineNum">     171</span>                 :             :                                         IBindingTracingRuntime&amp; binding_tracing_runtime) noexcept;</span>
+<span id="L172"><span class="lineNum">     172</span>                 :             : </span>
+<span id="L173"><span class="lineNum">     173</span>                 :             :     Result&lt;analysis::tracing::ShmObjectHandle&gt; GetRegisteredShmObject(</span>
+<span id="L174"><span class="lineNum">     174</span>                 :             :         IBindingTracingRuntime&amp; binding_runtime,</span>
+<span id="L175"><span class="lineNum">     175</span>                 :             :         const ServiceElementInstanceIdentifierView service_element_instance_identifier);</span>
+<span id="L176"><span class="lineNum">     176</span>                 :             : </span>
+<span id="L177"><span class="lineNum">     177</span>                 :             :     std::unordered_map&lt;BindingType, IBindingTracingRuntime*&gt; binding_tracing_runtimes_;</span>
+<span id="L178"><span class="lineNum">     178</span>                 :             : </span>
+<span id="L179"><span class="lineNum">     179</span>                 :             :     /// \brief Threshold for switching from LogInfo to LogDebug level during consecutive failures</span>
+<span id="L180"><span class="lineNum">     180</span>                 :             :     /// \details After this many consecutive (limited by 10 for the moment) &quot;no tracing slot available&quot; failures,</span>
+<span id="L181"><span class="lineNum">     181</span>                 :             :     ///          subsequent failure messages will be logged at LogDebug level instead of LogInfo to reduce DLT</span>
+<span id="L182"><span class="lineNum">     182</span>                 :             :     ///          bandwidth.</span>
+<span id="L183"><span class="lineNum">     183</span>                 :             :     static constexpr std::uint8_t kDebounceAfter{10U};</span>
+<span id="L184"><span class="lineNum">     184</span>                 :             : </span>
+<span id="L185"><span class="lineNum">     185</span>                 :             :     /// \brief Counter for consecutive &quot;no tracing slot available&quot; failures</span>
+<span id="L186"><span class="lineNum">     186</span>                 :             :     /// \details Tracks consecutive getting available slots failures. Incremented on each failure, reset to 0 when</span>
+<span id="L187"><span class="lineNum">     187</span>                 :             :     ///          tracing slot becomes available again. Used with kDebounceAfter threshold to determine when to switch</span>
+<span id="L188"><span class="lineNum">     188</span>                 :             :     ///          log levels from LogInfo to LogDebug.</span>
+<span id="L189"><span class="lineNum">     189</span>                 :             :     std::uint8_t debounce_counter_;</span>
+<span id="L190"><span class="lineNum">     190</span>                 :             : </span>
+<span id="L191"><span class="lineNum">     191</span>                 :             :     /// \brief Flag to track if this is the first time debouncing becomes active</span>
+<span id="L192"><span class="lineNum">     192</span>                 :             :     /// \details Initially true. Set to false when debounce_counter_ first exceeds kDebounceAfter threshold. Used to log</span>
+<span id="L193"><span class="lineNum">     193</span>                 :             :     ///          a one-time LogInfo message about switching to LogDebug level before the transition. Remains false for</span>
+<span id="L194"><span class="lineNum">     194</span>                 :             :     ///          the lifetime of the TracingRuntime instance once debouncing has activated.</span>
+<span id="L195"><span class="lineNum">     195</span>                 :             :     bool first_debounce_;</span>
+<span id="L196"><span class="lineNum">     196</span>                 :             : };</span>
+<span id="L197"><span class="lineNum">     197</span>                 :             : </span>
+<span id="L198"><span class="lineNum">     198</span>                 :             : }  // namespace score::mw::com::impl::tracing</span>
+<span id="L199"><span class="lineNum">     199</span>                 :             : </span>
+<span id="L200"><span class="lineNum">     200</span>                 :             : #endif  // SCORE_MW_COM_IMPL_TRACING_TRACING_RUNTIME_H</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

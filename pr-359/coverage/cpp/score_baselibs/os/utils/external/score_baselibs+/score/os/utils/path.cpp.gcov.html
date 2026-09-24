@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - os/utils/external/score_baselibs+/score/os/utils/path.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../index.html">top level</a> - <a href="index.html">os/utils/external/score_baselibs+/score/os/utils</a> - path.cpp<span style="font-size: 80%;"> (source / <a href="path.cpp.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">15</td>
+            <td class="headerCovTableEntry">15</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:33:47</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntry">5</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryMed">75.0&nbsp;%</td>
+            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntry">3</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2025 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : </span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #include &quot;score/os/utils/path.h&quot;</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : #include &quot;score/os/libgen.h&quot;</span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #include &quot;score/os/utils/path_impl.h&quot;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : </span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : /* LCOV_EXCL_START: false positive, covered by test case &quot;get_base_name.man_page_examples&quot; */</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : // Suppress &quot;AUTOSAR C++14 A15-5-3&quot; rule findings: &quot;The std::terminate() function shall not be called implicitly&quot;.</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : // Rationale_a15_5_3_violation: Calling std::terminate() if any exceptions are thrown is expected as per safety</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : // requirements</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : // coverity[autosar_cpp14_a15_5_3_violation]</span>
+<span id="L23"><span class="lineNum">      23</span>                 :<span class="tlaGNC tlaBgGNC">          10 : std::string score::os::PathImpl::get_base_name(const std::string&amp; path) const noexcept</span></span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : {</span>
+<span id="L25"><span class="lineNum">      25</span>                 :<span class="tlaGNC">          10 :     std::string mutable_path{path};</span></span>
+<span id="L26"><span class="lineNum">      26</span>                 :             :     // FIXME: Make it RVO: broken_link_j/Ticket-139258</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             :     // NOLINTNEXTLINE(score-no-unnamed-temporary-objects) see comment above</span>
+<span id="L28"><span class="lineNum">      28</span>                 :<span class="tlaGNC">          10 :     return std::string{score::os::Libgen::instance().base_name(&amp;(*mutable_path.begin()))};</span></span>
+<span id="L29"><span class="lineNum">      29</span>                 :<span class="tlaGNC">          10 : }</span></span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : /* LCOV_EXCL_STOP */</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : </span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : // coverity[autosar_cpp14_a15_5_3_violation] refer Rationale_a15_5_3_violation</span>
+<span id="L33"><span class="lineNum">      33</span>                 :<span class="tlaGNC">          34 : std::string score::os::PathImpl::get_parent_dir(const std::string&amp; path) const noexcept</span></span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : {</span>
+<span id="L35"><span class="lineNum">      35</span>                 :<span class="tlaGNC">          34 :     std::string mutable_path{path};</span></span>
+<span id="L36"><span class="lineNum">      36</span>                 :             :     // FIXME: Make it RVO: broken_link_j/Ticket-139258</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             :     // NOLINTNEXTLINE(score-no-unnamed-temporary-objects) see comment above</span>
+<span id="L38"><span class="lineNum">      38</span>                 :<span class="tlaGNC">          34 :     return std::string{score::os::Libgen::instance().dirname(&amp;(*mutable_path.begin()))};</span></span>
+<span id="L39"><span class="lineNum">      39</span>                 :<span class="tlaGNC">          34 : }</span></span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : </span>
+<span id="L41"><span class="lineNum">      41</span>                 :<span class="tlaGNC">          14 : score::os::Path&amp; score::os::Path::instance() noexcept</span></span>
+<span id="L42"><span class="lineNum">      42</span>                 :             : {</span>
+<span id="L43"><span class="lineNum">      43</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 13 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          14 :     static score::os::PathImpl instance;  // LCOV_EXCL_BR_LINE</span></span>
+<span id="L44"><span class="lineNum">      44</span>                 :             :     // all branches are generated by certified compiler,</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             :     //  no additional check necessary</span>
+<span id="L46"><span class="lineNum">      46</span>                 :<span class="tlaGNC">          14 :     return select_instance(instance);</span></span>
+<span id="L47"><span class="lineNum">      47</span>                 :             : }</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             : </span>
+<span id="L49"><span class="lineNum">      49</span>                 :<span class="tlaGNC">           4 : std::unique_ptr&lt;score::os::Path&gt; score::os::Path::Default() noexcept</span></span>
+<span id="L50"><span class="lineNum">      50</span>                 :             : {</span>
+<span id="L51"><span class="lineNum">      51</span>                 :<span class="tlaGNC">           4 :     return std::make_unique&lt;PathImpl&gt;();</span></span>
+<span id="L52"><span class="lineNum">      52</span>                 :             : }</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             : /* KW_SUPPRESS_START:MISRA.PPARAM.NEEDS.CONST, MISRA.VAR.NEEDS.CONST: */</span>
+<span id="L54"><span class="lineNum">      54</span>                 :             : /* score::cpp::pmr::make_unique takes non-const memory_resource */</span>
+<span id="L55"><span class="lineNum">      55</span>                 :<span class="tlaGNC">          22 : score::cpp::pmr::unique_ptr&lt;score::os::Path&gt; score::os::Path::Default(</span></span>
+<span id="L56"><span class="lineNum">      56</span>                 :             :     score::cpp::pmr::memory_resource* memory_resource) noexcept</span>
+<span id="L57"><span class="lineNum">      57</span>                 :             : /* KW_SUPPRESS_END:MISRA.PPARAM.NEEDS.CONST, MISRA.VAR.NEEDS.CONST */</span>
+<span id="L58"><span class="lineNum">      58</span>                 :             : {</span>
+<span id="L59"><span class="lineNum">      59</span>                 :<span class="tlaGNC">          22 :     return score::cpp::pmr::make_unique&lt;PathImpl&gt;(memory_resource);</span></span>
+<span id="L60"><span class="lineNum">      60</span>                 :             : }</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

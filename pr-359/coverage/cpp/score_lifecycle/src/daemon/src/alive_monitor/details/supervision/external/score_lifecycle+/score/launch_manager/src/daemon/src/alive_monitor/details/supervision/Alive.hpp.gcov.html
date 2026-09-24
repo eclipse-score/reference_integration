@@ -1,0 +1,448 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - src/daemon/src/alive_monitor/details/supervision/external/score_lifecycle+/score/launch_manager/src/daemon/src/alive_monitor/details/supervision/Alive.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../../../../../../../../../../index.html">top level</a> - <a href="index.html">src/daemon/src/alive_monitor/details/supervision/external/score_lifecycle+/score/launch_manager/src/daemon/src/alive_monitor/details/supervision</a> - Alive.hpp<span style="font-size: 80%;"> (source / <a href="Alive.hpp.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntry">4</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:38:41</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">2</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryHi">-</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2025 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : </span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #ifndef ALIVE_HPP_INCLUDED</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : #define ALIVE_HPP_INCLUDED</span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : </span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #include &lt;cstdint&gt;</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : #include &lt;variant&gt;</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : </span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : #include &quot;score/mw/launch_manager/alive_monitor/details/common/Observer.hpp&quot;</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : #include &quot;score/mw/launch_manager/alive_monitor/details/common/TimeSortingBuffer.hpp&quot;</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : #include &quot;score/mw/launch_manager/alive_monitor/details/ifappl/Checkpoint.hpp&quot;</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : #include &quot;score/mw/launch_manager/alive_monitor/details/ifexm/ObservableEvent.hpp&quot;</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : #include &quot;score/mw/launch_manager/alive_monitor/details/supervision/ISupervision.hpp&quot;</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : #include &quot;score/mw/launch_manager/alive_monitor/details/timers/Timers_OsClock.hpp&quot;</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : #include &quot;score/mw/launch_manager/configuration/config.hpp&quot;</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : #include &quot;score/mw/launch_manager/recovery_client/irecovery_client.h&quot;</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : </span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : namespace score::mw::lifecycle::internal::saf::supervision</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : {</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : </span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : using configuration::ComponentAliveSupervision;</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : </span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : /// @brief Alive Supervision</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             : /// @details Alive Supervision contains the logic for health monitoring - Alive supervision</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             : /* RULECHECKER_comment(0, 11, check_source_character_set, &quot;Special character in comment is mandatory\</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             :     due to sphinx-need syntax.&quot;, false) */</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             : /// @verbatim embed:rst:leading-slashes</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : /// The Alive Supervision state machine implementation is a combination of Adaptive Autosar</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : /// Alive Supervision (correct, incorrect, debouncing) and Local Supervision requirements (de/activation).</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             : /// The resulting state machine is documented here:</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             : ///</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             : ///     - :ref:`Alive Supervision - State Machine&lt;supervision-state-machine-overview&gt;`</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             : ///     - :ref:`Alive timing diagram for normal reference cycle&lt;alive-timing-evaluation-normal-ref-cycle&gt;`</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             : ///     - :ref:`Alive timing diagram for small reference cycle&lt;alive-timing-evaluation-small-ref-cycle&gt;`</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             : ///     - :ref:`Alive timing diagram for large reference cycle&lt;alive-timing-evaluation-large-ref-cycle&gt;`</span>
+<span id="L47"><span class="lineNum">      47</span>                 :             : ///</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             : /// @endverbatim</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             : /* RULECHECKER_comment(0, 3, check_multiple_non_interface_bases, &quot;Observable and Observer are tolerated\</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             :     exceptions of this rule.&quot;, false) */</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             : class Alive : public ISupervision,</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             :               public saf::common::Observable&lt;Alive&gt;,</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             :               public saf::common::Observer&lt;ifappl::Checkpoint&gt;,</span>
+<span id="L54"><span class="lineNum">      54</span>                 :             :               public saf::common::Observer&lt;ifexm::ObservableEvent&gt;</span>
+<span id="L55"><span class="lineNum">      55</span>                 :             : {</span>
+<span id="L56"><span class="lineNum">      56</span>                 :             :   public:</span>
+<span id="L57"><span class="lineNum">      57</span>                 :             :     /// @brief No Default Constructor</span>
+<span id="L58"><span class="lineNum">      58</span>                 :             :     Alive() = delete;</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             : </span>
+<span id="L60"><span class="lineNum">      60</span>                 :             :     /// @brief Default Move Constructor</span>
+<span id="L61"><span class="lineNum">      61</span>                 :             :     /* RULECHECKER_comment(0, 7, check_min_instructions, &quot;Default constructor is not provided\</span>
+<span id="L62"><span class="lineNum">      62</span>                 :             :        a function body&quot;, true_no_defect) */</span>
+<span id="L63"><span class="lineNum">      63</span>                 :             :     /* RULECHECKER_comment(0, 5, check_incomplete_data_member_construction, &quot;Default constructor is not provided\</span>
+<span id="L64"><span class="lineNum">      64</span>                 :             :        the member initializer&quot;, false) */</span>
+<span id="L65"><span class="lineNum">      65</span>                 :             :     /* RULECHECKER_comment(0, 3, check_copy_in_move_constructor, &quot;Default constructor is not provided\</span>
+<span id="L66"><span class="lineNum">      66</span>                 :             :        the member initializer&quot;, false) */</span>
+<span id="L67"><span class="lineNum">      67</span>                 :             :     Alive(Alive&amp;&amp;) = default;</span>
+<span id="L68"><span class="lineNum">      68</span>                 :             :     /// @brief No Move Assignment</span>
+<span id="L69"><span class="lineNum">      69</span>                 :             :     Alive&amp; operator=(Alive&amp;&amp;) = delete;</span>
+<span id="L70"><span class="lineNum">      70</span>                 :             :     /// @brief No Copy Constructor</span>
+<span id="L71"><span class="lineNum">      71</span>                 :             :     Alive(const Alive&amp;) = delete;</span>
+<span id="L72"><span class="lineNum">      72</span>                 :             :     /// @brief No Copy Assignment</span>
+<span id="L73"><span class="lineNum">      73</span>                 :             :     Alive&amp; operator=(const Alive&amp;) = delete;</span>
+<span id="L74"><span class="lineNum">      74</span>                 :             : </span>
+<span id="L75"><span class="lineNum">      75</span>                 :             :     /// @brief Constructor</span>
+<span id="L76"><span class="lineNum">      76</span>                 :             :     /// @param [in] id Id of the component to monitor</span>
+<span id="L77"><span class="lineNum">      77</span>                 :             :     /// @param [in] f_aliveCfg_r    Alive Supervision configuration structure</span>
+<span id="L78"><span class="lineNum">      78</span>                 :             :     /// @param [in] recovery_client Client to notify in case of a supervision failure</span>
+<span id="L79"><span class="lineNum">      79</span>                 :             :     /// @param [in] checkpoint_r Checkpoint for the supervision to observe</span>
+<span id="L80"><span class="lineNum">      80</span>                 :             :     /// @param [in] bufferSize Size of the internal buffer: the maximum number of events to evaluate the supervision can</span>
+<span id="L81"><span class="lineNum">      81</span>                 :             :     /// store without losing data</span>
+<span id="L82"><span class="lineNum">      82</span>                 :             :     /// @warning    Constructor may throw std::exceptions</span>
+<span id="L83"><span class="lineNum">      83</span>                 :             :     explicit Alive(</span>
+<span id="L84"><span class="lineNum">      84</span>                 :             :         const IdentifierHash id,</span>
+<span id="L85"><span class="lineNum">      85</span>                 :             :         const ComponentAliveSupervision&amp; f_aliveCfg_r,</span>
+<span id="L86"><span class="lineNum">      86</span>                 :             :         const std::shared_ptr&lt;IRecoveryClient&gt; recovery_client,</span>
+<span id="L87"><span class="lineNum">      87</span>                 :             :         saf::ifappl::Checkpoint&amp; checkpoint_r,</span>
+<span id="L88"><span class="lineNum">      88</span>                 :             :         const uint16_t bufferSize) noexcept(false);</span>
+<span id="L89"><span class="lineNum">      89</span>                 :             : </span>
+<span id="L90"><span class="lineNum">      90</span>                 :             :     /// @brief Destructor</span>
+<span id="L91"><span class="lineNum">      91</span>                 :             :     /* RULECHECKER_comment(0, 3, check_min_instructions, &quot;Default destructor is not provided\</span>
+<span id="L92"><span class="lineNum">      92</span>                 :             :        a function body&quot;, true_no_defect) */</span>
+<span id="L93"><span class="lineNum">      93</span>                 :<span class="tlaGNC tlaBgGNC">          14 :     ~Alive() override = default;</span></span>
+<span id="L94"><span class="lineNum">      94</span>                 :             : </span>
+<span id="L95"><span class="lineNum">      95</span>                 :             :     /// @brief Status enumeration</span>
+<span id="L96"><span class="lineNum">      96</span>                 :             :     enum class EStatus : uint32_t</span>
+<span id="L97"><span class="lineNum">      97</span>                 :             :     {</span>
+<span id="L98"><span class="lineNum">      98</span>                 :             :         /// @brief Supervision is active and no failure is present.</span>
+<span id="L99"><span class="lineNum">      99</span>                 :             :         kOk = 0U,</span>
+<span id="L100"><span class="lineNum">     100</span>                 :             :         /// @brief A failure was detected but still within tolerance/debouncing.</span>
+<span id="L101"><span class="lineNum">     101</span>                 :             :         kFailed = 1U,</span>
+<span id="L102"><span class="lineNum">     102</span>                 :             :         /// @brief A failure was detected and qualified.</span>
+<span id="L103"><span class="lineNum">     103</span>                 :             :         kExpired = 2U,</span>
+<span id="L104"><span class="lineNum">     104</span>                 :             :         /// @brief Supervision is not active.</span>
+<span id="L105"><span class="lineNum">     105</span>                 :             :         kDeactivated = 4U</span>
+<span id="L106"><span class="lineNum">     106</span>                 :             :     };</span>
+<span id="L107"><span class="lineNum">     107</span>                 :             : </span>
+<span id="L108"><span class="lineNum">     108</span>                 :             :     /// @brief Update checkpoint data</span>
+<span id="L109"><span class="lineNum">     109</span>                 :             :     /// @details Checkpoints are pushed into time sorting buffer.</span>
+<span id="L110"><span class="lineNum">     110</span>                 :             :     /// @param [in] f_observable_r     Checkpoint object which has sent the update</span>
+<span id="L111"><span class="lineNum">     111</span>                 :             :     void updateData(const ifappl::Checkpoint&amp; f_observable_r) noexcept(true) override;</span>
+<span id="L112"><span class="lineNum">     112</span>                 :             : </span>
+<span id="L113"><span class="lineNum">     113</span>                 :             :     /// @brief Update data received for observable events</span>
+<span id="L114"><span class="lineNum">     114</span>                 :             :     /// @details Activation event or deactivation event is inserted into buffer if observable event and process group</span>
+<span id="L115"><span class="lineNum">     115</span>                 :             :     /// state changed.</span>
+<span id="L116"><span class="lineNum">     116</span>                 :             :     /// @param [in] f_observable_r     Process state object which has sent the update</span>
+<span id="L117"><span class="lineNum">     117</span>                 :             :     void updateData(const ifexm::ObservableEvent&amp; f_observable_r) noexcept(true) override;</span>
+<span id="L118"><span class="lineNum">     118</span>                 :             : </span>
+<span id="L119"><span class="lineNum">     119</span>                 :             :     /// @copydoc ISupervision::evaluate()</span>
+<span id="L120"><span class="lineNum">     120</span>                 :             :     void evaluate(const std::chrono::nanoseconds f_syncTimestamp) override;</span>
+<span id="L121"><span class="lineNum">     121</span>                 :             : </span>
+<span id="L122"><span class="lineNum">     122</span>                 :             :     /// @brief Get Supervision status</span>
+<span id="L123"><span class="lineNum">     123</span>                 :             :     /// @return     Status of Supervision</span>
+<span id="L124"><span class="lineNum">     124</span>                 :             :     EStatus getStatus(void) const noexcept(true);</span>
+<span id="L125"><span class="lineNum">     125</span>                 :             : </span>
+<span id="L126"><span class="lineNum">     126</span>                 :             :     /// @brief Get timestamp of supervision event</span>
+<span id="L127"><span class="lineNum">     127</span>                 :             :     /// @return     Timestamp of checkpoint supervision event</span>
+<span id="L128"><span class="lineNum">     128</span>                 :             :     std::chrono::nanoseconds getTimestamp(void) const noexcept(true);</span>
+<span id="L129"><span class="lineNum">     129</span>                 :             : </span>
+<span id="L130"><span class="lineNum">     130</span>                 :             :     /// @brief Check whether a recovery request failed to enqueue (ring buffer full)</span>
+<span id="L131"><span class="lineNum">     131</span>                 :             :     /// @return True if sendRecoveryRequest failed</span>
+<span id="L132"><span class="lineNum">     132</span>                 :             :     bool hasRecoveryEnqueueFailed(void) const noexcept;</span>
+<span id="L133"><span class="lineNum">     133</span>                 :             : </span>
+<span id="L134"><span class="lineNum">     134</span>                 :             :   private:</span>
+<span id="L135"><span class="lineNum">     135</span>                 :             :     /// @brief The pointer is only stored for the identification of a checkpoint observer. It can be further used for</span>
+<span id="L136"><span class="lineNum">     136</span>                 :             :     /// accessing const members only.</span>
+<span id="L137"><span class="lineNum">     137</span>                 :             :     using CheckpointIdentifier = const score::mw::lifecycle::internal::saf::ifappl::Checkpoint*;</span>
+<span id="L138"><span class="lineNum">     138</span>                 :             : </span>
+<span id="L139"><span class="lineNum">     139</span>                 :             :     /// @brief Time sorted checkpoint snapshot</span>
+<span id="L140"><span class="lineNum">     140</span>                 :             :     struct CheckpointSnapshot final</span>
+<span id="L141"><span class="lineNum">     141</span>                 :             :     {</span>
+<span id="L142"><span class="lineNum">     142</span>                 :             :         /// @brief Checkpoint identifier</span>
+<span id="L143"><span class="lineNum">     143</span>                 :             :         // cppcheck-suppress unusedStructMember</span>
+<span id="L144"><span class="lineNum">     144</span>                 :             :         CheckpointIdentifier identifier_p{nullptr};</span>
+<span id="L145"><span class="lineNum">     145</span>                 :             :         /// @brief timestamp of checkpoint</span>
+<span id="L146"><span class="lineNum">     146</span>                 :             :         std::chrono::nanoseconds timestamp{std::chrono::nanoseconds::max()};</span>
+<span id="L147"><span class="lineNum">     147</span>                 :             :     };</span>
+<span id="L148"><span class="lineNum">     148</span>                 :             : </span>
+<span id="L149"><span class="lineNum">     149</span>                 :             :     /// @brief Time sorted supervision event snapshot (activation / deactivation event)</span>
+<span id="L150"><span class="lineNum">     150</span>                 :             :     struct SupervisionEventSnapshot final</span>
+<span id="L151"><span class="lineNum">     151</span>                 :             :     {</span>
+<span id="L152"><span class="lineNum">     152</span>                 :             :         /// @brief Timestamp of the supervision event</span>
+<span id="L153"><span class="lineNum">     153</span>                 :             :         std::chrono::nanoseconds timestamp{std::chrono::nanoseconds::max()};</span>
+<span id="L154"><span class="lineNum">     154</span>                 :             :         /// @brief Supervision event type that triggered this snapshot</span>
+<span id="L155"><span class="lineNum">     155</span>                 :             :         // cppcheck-suppress unusedStructMember</span>
+<span id="L156"><span class="lineNum">     156</span>                 :             :         score::mw::lifecycle::SupervisionEventType eventType{score::mw::lifecycle::SupervisionEventType::kDeactivation};</span>
+<span id="L157"><span class="lineNum">     157</span>                 :             :     };</span>
+<span id="L158"><span class="lineNum">     158</span>                 :             : </span>
+<span id="L159"><span class="lineNum">     159</span>                 :             :     /// @brief Sync snapshot stores sync timestamp in the time sorting buffer</span>
+<span id="L160"><span class="lineNum">     160</span>                 :             :     using SyncSnapshot = std::chrono::nanoseconds;</span>
+<span id="L161"><span class="lineNum">     161</span>                 :             : </span>
+<span id="L162"><span class="lineNum">     162</span>                 :             :     /// @brief Defines one element of time sorted update event</span>
+<span id="L163"><span class="lineNum">     163</span>                 :             :     using TimeSortedUpdateEvent = std::variant&lt;SupervisionEventSnapshot, CheckpointSnapshot, SyncSnapshot&gt;;</span>
+<span id="L164"><span class="lineNum">     164</span>                 :             : </span>
+<span id="L165"><span class="lineNum">     165</span>                 :             :     /// @brief Enumeration of supervision update events</span>
+<span id="L166"><span class="lineNum">     166</span>                 :             :     enum class EUpdateEventType : std::uint8_t</span>
+<span id="L167"><span class="lineNum">     167</span>                 :             :     {</span>
+<span id="L168"><span class="lineNum">     168</span>                 :             :         kNoChange = 0U,      ///&lt; update event for no change in activation/deactivation</span>
+<span id="L169"><span class="lineNum">     169</span>                 :             :         kActivation = 1U,    ///&lt; update event for activation of supervision</span>
+<span id="L170"><span class="lineNum">     170</span>                 :             :         kDeactivation = 2U,  ///&lt; update event for deactivation of supervision</span>
+<span id="L171"><span class="lineNum">     171</span>                 :             :         kCheckpoint = 3U,    ///&lt; update event for reported checkpoint</span>
+<span id="L172"><span class="lineNum">     172</span>                 :             :         kEvaluation = 4U,    ///&lt; artificial update event for evaluation of supervision (relevant for Alive only)</span>
+<span id="L173"><span class="lineNum">     173</span>                 :             :         kSync = 5U           ///&lt; artificial update event for synchronization (relevant for Alive only)</span>
+<span id="L174"><span class="lineNum">     174</span>                 :             :     };</span>
+<span id="L175"><span class="lineNum">     175</span>                 :             : </span>
+<span id="L176"><span class="lineNum">     176</span>                 :             :     /// @brief Get timestamp of current update event</span>
+<span id="L177"><span class="lineNum">     177</span>                 :             :     /// @param [in] f_updateEvent    Sorted update event (e.g, Activation, Deactivation, Checkpoint, ...) from Buffer</span>
+<span id="L178"><span class="lineNum">     178</span>                 :             :     /// @return                      Timestamp of update event</span>
+<span id="L179"><span class="lineNum">     179</span>                 :             :     static std::chrono::nanoseconds getTimestampOfUpdateEvent(const TimeSortedUpdateEvent f_updateEvent) noexcept(true);</span>
+<span id="L180"><span class="lineNum">     180</span>                 :             : </span>
+<span id="L181"><span class="lineNum">     181</span>                 :             :     /// @brief Check and trigger transition out of state Deactivated</span>
+<span id="L182"><span class="lineNum">     182</span>                 :             :     /// @param [in] f_updateEventType       Type of update event (e.g, Activation, Deactivation, Checkpoint, ...)</span>
+<span id="L183"><span class="lineNum">     183</span>                 :             :     /// @param [in] f_updateEventTimestamp  Timestamp of update event</span>
+<span id="L184"><span class="lineNum">     184</span>                 :             :     void checkTransitionsOutOfDeactivated(</span>
+<span id="L185"><span class="lineNum">     185</span>                 :             :         const EUpdateEventType f_updateEventType,</span>
+<span id="L186"><span class="lineNum">     186</span>                 :             :         const std::chrono::nanoseconds f_updateEventTimestamp) noexcept(true);</span>
+<span id="L187"><span class="lineNum">     187</span>                 :             : </span>
+<span id="L188"><span class="lineNum">     188</span>                 :             :     /// @brief Check and trigger common transitions to state Deactivated</span>
+<span id="L189"><span class="lineNum">     189</span>                 :             :     /// @param [in] f_updateEventType       Type of update event (e.g, Activation, Deactivation, Checkpoint, ...)</span>
+<span id="L190"><span class="lineNum">     190</span>                 :             :     /// @param [in] f_updateEventTimestamp  Timestamp of update event</span>
+<span id="L191"><span class="lineNum">     191</span>                 :             :     void checkTransitionsToDeactivated(</span>
+<span id="L192"><span class="lineNum">     192</span>                 :             :         const EUpdateEventType f_updateEventType,</span>
+<span id="L193"><span class="lineNum">     193</span>                 :             :         const std::chrono::nanoseconds f_updateEventTimestamp) noexcept(true);</span>
+<span id="L194"><span class="lineNum">     194</span>                 :             : </span>
+<span id="L195"><span class="lineNum">     195</span>                 :             :     /// @brief Check and trigger transition out of state Ok</span>
+<span id="L196"><span class="lineNum">     196</span>                 :             :     /// @param [in] f_updateEventType       Type of update event (e.g, Activation, Deactivation, Checkpoint, ...)</span>
+<span id="L197"><span class="lineNum">     197</span>                 :             :     /// @param [in] f_updateEventTimestamp  Timestamp of update event</span>
+<span id="L198"><span class="lineNum">     198</span>                 :             :     void checkTransitionsOutOfOk(</span>
+<span id="L199"><span class="lineNum">     199</span>                 :             :         const EUpdateEventType f_updateEventType,</span>
+<span id="L200"><span class="lineNum">     200</span>                 :             :         const std::chrono::nanoseconds f_updateEventTimestamp) noexcept(true);</span>
+<span id="L201"><span class="lineNum">     201</span>                 :             : </span>
+<span id="L202"><span class="lineNum">     202</span>                 :             :     /// @brief Check and trigger transition out of state Failed</span>
+<span id="L203"><span class="lineNum">     203</span>                 :             :     /// @param [in] f_updateEventType       Type of update event (e.g, Activation, Deactivation, Checkpoint, ...)</span>
+<span id="L204"><span class="lineNum">     204</span>                 :             :     /// @param [in] f_updateEventTimestamp  Timestamp of update event</span>
+<span id="L205"><span class="lineNum">     205</span>                 :             :     void checkTransitionsOutOfFailed(</span>
+<span id="L206"><span class="lineNum">     206</span>                 :             :         const EUpdateEventType f_updateEventType,</span>
+<span id="L207"><span class="lineNum">     207</span>                 :             :         const std::chrono::nanoseconds f_updateEventTimestamp) noexcept(true);</span>
+<span id="L208"><span class="lineNum">     208</span>                 :             : </span>
+<span id="L209"><span class="lineNum">     209</span>                 :             :     /// @brief Get the type of current update events for alive supervision (including evaluation event)</span>
+<span id="L210"><span class="lineNum">     210</span>                 :             :     /// @param [in] f_isEvaluationEvent  Flag for indicating evaluation event</span>
+<span id="L211"><span class="lineNum">     211</span>                 :             :     /// @param [in] f_updateEvent        Sorted update event (e.g, Activation, Deactivation, Checkpoint, ...) from</span>
+<span id="L212"><span class="lineNum">     212</span>                 :             :     /// Buffer</span>
+<span id="L213"><span class="lineNum">     213</span>                 :             :     /// @return                     type of update event</span>
+<span id="L214"><span class="lineNum">     214</span>                 :             :     EUpdateEventType getAliveEventType(bool f_isEvaluationEvent, const TimeSortedUpdateEvent f_updateEvent) noexcept(</span>
+<span id="L215"><span class="lineNum">     215</span>                 :             :         true);</span>
+<span id="L216"><span class="lineNum">     216</span>                 :             : </span>
+<span id="L217"><span class="lineNum">     217</span>                 :             :     /// @brief Detect evaluation event for alive supervision</span>
+<span id="L218"><span class="lineNum">     218</span>                 :             :     /// @details If reference cycle end is reached, evaluation event is triggered. Otherwise original event from history</span>
+<span id="L219"><span class="lineNum">     219</span>                 :             :     /// buffer is processed for evaluation.</span>
+<span id="L220"><span class="lineNum">     220</span>                 :             :     /// @param [in] f_timestampOfUpdateEvent   Timestamp of current update event</span>
+<span id="L221"><span class="lineNum">     221</span>                 :             :     /// @param [in] f_updateEvent   Sorted update event (e.g, Activation, Deactivation, Checkpoint, ...) from Buffer</span>
+<span id="L222"><span class="lineNum">     222</span>                 :             :     /// @return                     True: evaluation event is set, False: no evaluation event</span>
+<span id="L223"><span class="lineNum">     223</span>                 :             :     bool detectEvaluationEvent(</span>
+<span id="L224"><span class="lineNum">     224</span>                 :             :         const std::chrono::nanoseconds f_timestampOfUpdateEvent,</span>
+<span id="L225"><span class="lineNum">     225</span>                 :             :         const TimeSortedUpdateEvent f_updateEvent) const noexcept(true);</span>
+<span id="L226"><span class="lineNum">     226</span>                 :             : </span>
+<span id="L227"><span class="lineNum">     227</span>                 :             :     /// @brief Evaluate alive supervision after reference cycle in Ok state</span>
+<span id="L228"><span class="lineNum">     228</span>                 :             :     void evaluateRefCycleOutOfOk(void) noexcept(true);</span>
+<span id="L229"><span class="lineNum">     229</span>                 :             : </span>
+<span id="L230"><span class="lineNum">     230</span>                 :             :     /// @brief Evaluate alive supervision after reference cycle in Failed state</span>
+<span id="L231"><span class="lineNum">     231</span>                 :             :     void evaluateRefCycleOutOfFailed(void) noexcept(true);</span>
+<span id="L232"><span class="lineNum">     232</span>                 :             : </span>
+<span id="L233"><span class="lineNum">     233</span>                 :             :     /// @brief Store sync event in time sorting buffer</span>
+<span id="L234"><span class="lineNum">     234</span>                 :             :     /// @param [in] f_syncTimestamp   synchronization timestamp</span>
+<span id="L235"><span class="lineNum">     235</span>                 :             :     void storeSyncEvent(const std::chrono::nanoseconds f_syncTimestamp);</span>
+<span id="L236"><span class="lineNum">     236</span>                 :             : </span>
+<span id="L237"><span class="lineNum">     237</span>                 :             :     /// @brief Handle data loss reaction</span>
+<span id="L238"><span class="lineNum">     238</span>                 :             :     void handleDataLossReaction(void) noexcept(true);</span>
+<span id="L239"><span class="lineNum">     239</span>                 :             : </span>
+<span id="L240"><span class="lineNum">     240</span>                 :             :     /// @brief Switch to state Deactivate</span>
+<span id="L241"><span class="lineNum">     241</span>                 :             :     void switchToDeactivated(void) noexcept(true);</span>
+<span id="L242"><span class="lineNum">     242</span>                 :             : </span>
+<span id="L243"><span class="lineNum">     243</span>                 :             :     /// @brief Switch to state Ok</span>
+<span id="L244"><span class="lineNum">     244</span>                 :             :     void switchToOk(void) noexcept(true);</span>
+<span id="L245"><span class="lineNum">     245</span>                 :             : </span>
+<span id="L246"><span class="lineNum">     246</span>                 :             :     /// @brief Switch to state Failed</span>
+<span id="L247"><span class="lineNum">     247</span>                 :             :     void switchToFailed(void) noexcept(true);</span>
+<span id="L248"><span class="lineNum">     248</span>                 :             : </span>
+<span id="L249"><span class="lineNum">     249</span>                 :             :     /// @brief Reasons for Alive state transitions</span>
+<span id="L250"><span class="lineNum">     250</span>                 :             :     enum class EReason : std::uint8_t</span>
+<span id="L251"><span class="lineNum">     251</span>                 :             :     {</span>
+<span id="L252"><span class="lineNum">     252</span>                 :             :         kDataLoss,                 ///&lt; Checkpoint data was lost, e.g. due to full buffer</span>
+<span id="L253"><span class="lineNum">     253</span>                 :             :         kFailedToleranceExceeded,  ///&lt; More failed cycles than the configured tolerance</span>
+<span id="L254"><span class="lineNum">     254</span>                 :             :         kDataCorruption,           ///&lt; Checkpoint data was corrupted</span>
+<span id="L255"><span class="lineNum">     255</span>                 :             :         kOverflow                  ///&lt; Overflow appeared, e.g. failed cycle counter or timestamp overflowed</span>
+<span id="L256"><span class="lineNum">     256</span>                 :             :     };</span>
+<span id="L257"><span class="lineNum">     257</span>                 :             : </span>
+<span id="L258"><span class="lineNum">     258</span>                 :             :     /// @brief Reasons for Data loss</span>
+<span id="L259"><span class="lineNum">     259</span>                 :             :     enum class EDataLossReason : std::uint8_t</span>
+<span id="L260"><span class="lineNum">     260</span>                 :             :     {</span>
+<span id="L261"><span class="lineNum">     261</span>                 :             :         kNoDataLoss,   ///&lt; No data loss appeared</span>
+<span id="L262"><span class="lineNum">     262</span>                 :             :         kBufferFull,   ///&lt; Time sorted buffer is full</span>
+<span id="L263"><span class="lineNum">     263</span>                 :             :         kSharedMemory  ///&lt; Data loss in shared memory occurred</span>
+<span id="L264"><span class="lineNum">     264</span>                 :             :     };</span>
+<span id="L265"><span class="lineNum">     265</span>                 :             : </span>
+<span id="L266"><span class="lineNum">     266</span>                 :             :     /// @brief Switch to state Expired</span>
+<span id="L267"><span class="lineNum">     267</span>                 :             :     /// @param [in] reason    Reason for switch to Expired</span>
+<span id="L268"><span class="lineNum">     268</span>                 :             :     void switchToExpired(EReason reason) noexcept(true);</span>
+<span id="L269"><span class="lineNum">     269</span>                 :             : </span>
+<span id="L270"><span class="lineNum">     270</span>                 :             :     /// @brief Set Next Alive Supervision Cycle</span>
+<span id="L271"><span class="lineNum">     271</span>                 :             :     void setNextCycle(void) noexcept(true);</span>
+<span id="L272"><span class="lineNum">     272</span>                 :             : </span>
+<span id="L273"><span class="lineNum">     273</span>                 :             :     /// @brief Minimum Indication Error</span>
+<span id="L274"><span class="lineNum">     274</span>                 :             :     /// @return     True if Minimum indication was violated otherwise false</span>
+<span id="L275"><span class="lineNum">     275</span>                 :             :     bool isMinError(void) const noexcept(true);</span>
+<span id="L276"><span class="lineNum">     276</span>                 :             : </span>
+<span id="L277"><span class="lineNum">     277</span>                 :             :     /// @brief Maximum Indication Error</span>
+<span id="L278"><span class="lineNum">     278</span>                 :             :     /// @return     True if Maximum indication was violated otherwise false</span>
+<span id="L279"><span class="lineNum">     279</span>                 :             :     bool isMaxError(void) const noexcept(true);</span>
+<span id="L280"><span class="lineNum">     280</span>                 :             : </span>
+<span id="L281"><span class="lineNum">     281</span>                 :             :     /// @brief Logs the details about the current cycle in FAILED or EXPIRED</span>
+<span id="L282"><span class="lineNum">     282</span>                 :             :     void logExpiredFailedStateDetails() const noexcept(true);</span>
+<span id="L283"><span class="lineNum">     283</span>                 :             : </span>
+<span id="L284"><span class="lineNum">     284</span>                 :             :     /// @brief Increment indication count and check for overflow</span>
+<span id="L285"><span class="lineNum">     285</span>                 :             :     /// @details If overflow appears, status is set to EXPIRED</span>
+<span id="L286"><span class="lineNum">     286</span>                 :             :     /// @param [in] f_updateEventTimestamp  Timestamp of last update event which lead to increment of indication count</span>
+<span id="L287"><span class="lineNum">     287</span>                 :             :     void incIndicationCount(const std::chrono::nanoseconds f_updateEventTimestamp) noexcept(true);</span>
+<span id="L288"><span class="lineNum">     288</span>                 :             : </span>
+<span id="L289"><span class="lineNum">     289</span>                 :             :     /// @brief Set reference cycle timestamps if no overflow appears</span>
+<span id="L290"><span class="lineNum">     290</span>                 :             :     /// @details Set referenceCycleStart to the provided param and referenceCycleEnd to f_baseValue +</span>
+<span id="L291"><span class="lineNum">     291</span>                 :             :     /// k_aliveReferenceCycle. If overflow would appear status is set to EXPIRED.</span>
+<span id="L292"><span class="lineNum">     292</span>                 :             :     /// @param [in] f_baseValue Value to set reference referenceCycleStart</span>
+<span id="L293"><span class="lineNum">     293</span>                 :             :     /// @return true on overflow and vice versa</span>
+<span id="L294"><span class="lineNum">     294</span>                 :             :     bool setReferenceCycleTimestamps(std::chrono::nanoseconds f_baseValue) noexcept(true);</span>
+<span id="L295"><span class="lineNum">     295</span>                 :             : </span>
+<span id="L296"><span class="lineNum">     296</span>                 :             :     /// @brief Alive reference cycle in [nano seconds]</span>
+<span id="L297"><span class="lineNum">     297</span>                 :             :     const std::chrono::nanoseconds k_aliveReferenceCycle;</span>
+<span id="L298"><span class="lineNum">     298</span>                 :             : </span>
+<span id="L299"><span class="lineNum">     299</span>                 :             :     /// @brief Minimum allowed alive indications</span>
+<span id="L300"><span class="lineNum">     300</span>                 :             :     const uint32_t k_minAliveIndications;</span>
+<span id="L301"><span class="lineNum">     301</span>                 :             : </span>
+<span id="L302"><span class="lineNum">     302</span>                 :             :     /// @brief Maximum allowed alive indications</span>
+<span id="L303"><span class="lineNum">     303</span>                 :             :     const uint64_t k_maxAliveIndications;</span>
+<span id="L304"><span class="lineNum">     304</span>                 :             : </span>
+<span id="L305"><span class="lineNum">     305</span>                 :             :     /// @brief Disabled status for checking minimum alive indications</span>
+<span id="L306"><span class="lineNum">     306</span>                 :             :     const bool k_isMinCheckDisabled;</span>
+<span id="L307"><span class="lineNum">     307</span>                 :             : </span>
+<span id="L308"><span class="lineNum">     308</span>                 :             :     /// @brief Disabled status for checking maximum alive indications</span>
+<span id="L309"><span class="lineNum">     309</span>                 :             :     const bool k_isMaxCheckDisabled;</span>
+<span id="L310"><span class="lineNum">     310</span>                 :             : </span>
+<span id="L311"><span class="lineNum">     311</span>                 :             :     /// @brief Failed supervision cycle tolerance (debouncing of alive failure)</span>
+<span id="L312"><span class="lineNum">     312</span>                 :             :     const uint32_t k_failedSupervisionCyclesTolerance;</span>
+<span id="L313"><span class="lineNum">     313</span>                 :             : </span>
+<span id="L314"><span class="lineNum">     314</span>                 :             :     /// @brief Recovery client invoked when supervision expires (null means recovery is disabled)</span>
+<span id="L315"><span class="lineNum">     315</span>                 :             :     std::shared_ptr&lt;score::mw::lifecycle::IRecoveryClient&gt; recoveryClient_p;</span>
+<span id="L316"><span class="lineNum">     316</span>                 :             : </span>
+<span id="L317"><span class="lineNum">     317</span>                 :             :     /// @brief Identifier of the supervised process, sent via recovery client when supervision expires</span>
+<span id="L318"><span class="lineNum">     318</span>                 :             :     const score::mw::lifecycle::IdentifierHash processIdentifier_;</span>
+<span id="L319"><span class="lineNum">     319</span>                 :             : </span>
+<span id="L320"><span class="lineNum">     320</span>                 :             :     /// @brief Set to true when sendRecoveryRequest fails (ring buffer full)</span>
+<span id="L321"><span class="lineNum">     321</span>                 :             :     bool recoveryEnqueueFailed_{false};</span>
+<span id="L322"><span class="lineNum">     322</span>                 :             : </span>
+<span id="L323"><span class="lineNum">     323</span>                 :             :     /// @brief Data loss reason</span>
+<span id="L324"><span class="lineNum">     324</span>                 :             :     EDataLossReason dataLossReason{EDataLossReason::kNoDataLoss};</span>
+<span id="L325"><span class="lineNum">     325</span>                 :             : </span>
+<span id="L326"><span class="lineNum">     326</span>                 :             :     /// @brief status of Alive supervision</span>
+<span id="L327"><span class="lineNum">     327</span>                 :             :     EStatus aliveStatus{EStatus::kDeactivated};</span>
+<span id="L328"><span class="lineNum">     328</span>                 :             : </span>
+<span id="L329"><span class="lineNum">     329</span>                 :             :     /// @brief alive reference cycle start time in [nano seconds]</span>
+<span id="L330"><span class="lineNum">     330</span>                 :<span class="tlaGNC">           7 :     std::chrono::nanoseconds referenceCycleStart{0U};</span></span>
+<span id="L331"><span class="lineNum">     331</span>                 :             : </span>
+<span id="L332"><span class="lineNum">     332</span>                 :             :     /// @brief alive reference cycle end time in [nano seconds]</span>
+<span id="L333"><span class="lineNum">     333</span>                 :             :     std::chrono::nanoseconds referenceCycleEnd{std::chrono::nanoseconds::max()};</span>
+<span id="L334"><span class="lineNum">     334</span>                 :             : </span>
+<span id="L335"><span class="lineNum">     335</span>                 :             :     /// @brief Number of indications that belong to the current alive reference cycle</span>
+<span id="L336"><span class="lineNum">     336</span>                 :             :     uint32_t indicationCount{0U};</span>
+<span id="L337"><span class="lineNum">     337</span>                 :             : </span>
+<span id="L338"><span class="lineNum">     338</span>                 :             :     /// @brief Number of failed alive supervision cycles</span>
+<span id="L339"><span class="lineNum">     339</span>                 :             :     uint32_t failedSupervisionCycles{0U};</span>
+<span id="L340"><span class="lineNum">     340</span>                 :             : </span>
+<span id="L341"><span class="lineNum">     341</span>                 :             :     /// @brief Timestamp in which state change is detected in [nano seconds]</span>
+<span id="L342"><span class="lineNum">     342</span>                 :             :     /// @details This timestamp is updated whenever assessment is done or data loss has occurred.</span>
+<span id="L343"><span class="lineNum">     343</span>                 :<span class="tlaGNC">           7 :     std::chrono::nanoseconds eventTimestamp{0U};</span></span>
+<span id="L344"><span class="lineNum">     344</span>                 :             : </span>
+<span id="L345"><span class="lineNum">     345</span>                 :             :     /// @brief Sync timestamp from current evaluation [nano seconds]</span>
+<span id="L346"><span class="lineNum">     346</span>                 :             :     /// @details This is required for eventTimestamp in case of data loss</span>
+<span id="L347"><span class="lineNum">     347</span>                 :<span class="tlaGNC">           7 :     std::chrono::nanoseconds lastSyncTimestamp{0U};</span></span>
+<span id="L348"><span class="lineNum">     348</span>                 :             : </span>
+<span id="L349"><span class="lineNum">     349</span>                 :             :     /// @brief Time sorting buffer for update events in alive supervision</span>
+<span id="L350"><span class="lineNum">     350</span>                 :             :     /// @details This buffer sorts all process events and checkpoint events in the same buffer.</span>
+<span id="L351"><span class="lineNum">     351</span>                 :             :     score::mw::lifecycle::internal::saf::common::TimeSortingBuffer&lt;TimeSortedUpdateEvent&gt; timeSortingUpdateEventBuffer;</span>
+<span id="L352"><span class="lineNum">     352</span>                 :             : };</span>
+<span id="L353"><span class="lineNum">     353</span>                 :             : </span>
+<span id="L354"><span class="lineNum">     354</span>                 :             : }  // namespace score::mw::lifecycle::internal::saf::supervision</span>
+<span id="L355"><span class="lineNum">     355</span>                 :             : </span>
+<span id="L356"><span class="lineNum">     356</span>                 :             : #endif</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

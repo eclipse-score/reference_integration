@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - language/safecpp/safe_math/details/external/score_baselibs+/score/language/safecpp/safe_math/details/floating_point_environment.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../../../../../index.html">top level</a> - <a href="index.html">language/safecpp/safe_math/details/external/score_baselibs+/score/language/safecpp/safe_math/details</a> - floating_point_environment.h<span style="font-size: 80%;"> (source / <a href="floating_point_environment.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntry">8</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:33:47</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">18</td>
+            <td class="headerCovTableEntry">18</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">2</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2025 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : #ifndef SCORE_LIB_SAFE_MATH_DETAILS_FLOATING_POINT_ENVIRONMENT_H</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #define SCORE_LIB_SAFE_MATH_DETAILS_FLOATING_POINT_ENVIRONMENT_H</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : </span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #include &quot;score/language/safecpp/safe_math/return_mode.h&quot;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #include &quot;score/result/result.h&quot;</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : </span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : #include &lt;cstdlib&gt;</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : #include &lt;type_traits&gt;</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : </span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : namespace score::safe_math::details</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : {</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : </span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : /// Testing for errors of floating-point operations is difficult to do when not programming for a specific hardware.</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : /// This class is intended to wrap this in a simple and safe interface. One necessary simplification is that we do not</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : /// differ between errors since the hardware is not forced to provide support all and may map cases to different errors</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : /// which would make this library hardware-specific if we differ between errors.</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : class FloatingPointEnvironment</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : {</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             :   public:</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             :     FloatingPointEnvironment();</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             :     ~FloatingPointEnvironment();</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : </span>
+<span id="L35"><span class="lineNum">      35</span>                 :             :     FloatingPointEnvironment(const FloatingPointEnvironment&amp;) = delete;</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             :     FloatingPointEnvironment&amp; operator=(const FloatingPointEnvironment&amp;) = delete;</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             :     FloatingPointEnvironment(FloatingPointEnvironment&amp;&amp;) = delete;</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             :     FloatingPointEnvironment&amp; operator=(FloatingPointEnvironment&amp;&amp;) = delete;</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : </span>
+<span id="L40"><span class="lineNum">      40</span>                 :             :     /// Performs the calculation and returns its result if no error occurred, or the error.</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             :     /// \tparam T Return type of the calculation</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             :     /// \tparam F Type of calculation</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             :     /// \param calculation The calculation to perform</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             :     /// \return The result or error</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             :     template &lt;ReturnMode return_mode = kDefaultReturnMode, class F, class T = std::invoke_result_t&lt;F&gt;&gt;</span>
+<span id="L46"><span class="lineNum">      46</span>                 :<span class="tlaGNC tlaBgGNC">          85 :     static auto CalculateAndVerify(const F&amp; calculation) noexcept -&gt; ModeBasedReturnType&lt;T, return_mode&gt;</span></span>
+<span id="L47"><span class="lineNum">      47</span>                 :             :     {</span>
+<span id="L48"><span class="lineNum">      48</span>                 :<span class="tlaGNC">          85 :         FloatingPointEnvironment floating_point_environment{};</span></span>
+<span id="L49"><span class="lineNum">      49</span>                 :<span class="tlaGNC">          85 :         const T result = calculation();</span></span>
+<span id="L50"><span class="lineNum">      50</span>                 :             : </span>
+<span id="L51"><span class="lineNum">      51</span>                 :<span class="tlaGNC">          85 :         score::Result&lt;void&gt; potential_error = floating_point_environment.Test();</span></span>
+<span id="L52"><span class="lineNum">      52</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 82 times"> + </span>]:<span class="tlaGNC">          85 :         if (!potential_error.has_value())</span></span>
+<span id="L53"><span class="lineNum">      53</span>                 :             :         {</span>
+<span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC">           3 :             return HandleError&lt;T, return_mode&gt;(score::MakeUnexpected&lt;T&gt;(potential_error.error()));</span></span>
+<span id="L55"><span class="lineNum">      55</span>                 :             :         }</span>
+<span id="L56"><span class="lineNum">      56</span>                 :<span class="tlaGNC">          82 :         return result;</span></span>
+<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">          84 :     }</span></span>
+<span id="L58"><span class="lineNum">      58</span>                 :             : </span>
+<span id="L59"><span class="lineNum">      59</span>                 :             :     score::Result&lt;void&gt; Test() const noexcept;</span>
+<span id="L60"><span class="lineNum">      60</span>                 :             : </span>
+<span id="L61"><span class="lineNum">      61</span>                 :             :     void Clear() noexcept;</span>
+<span id="L62"><span class="lineNum">      62</span>                 :             : };</span>
+<span id="L63"><span class="lineNum">      63</span>                 :             : </span>
+<span id="L64"><span class="lineNum">      64</span>                 :             : }  // namespace score::safe_math::details</span>
+<span id="L65"><span class="lineNum">      65</span>                 :             : </span>
+<span id="L66"><span class="lineNum">      66</span>                 :             : #endif  // SCORE_LIB_SAFE_MATH_DETAILS_FLOATING_POINT_ENVIRONMENT_H</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

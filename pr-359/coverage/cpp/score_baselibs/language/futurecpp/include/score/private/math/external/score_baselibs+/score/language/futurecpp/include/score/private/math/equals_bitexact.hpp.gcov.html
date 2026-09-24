@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - language/futurecpp/include/score/private/math/external/score_baselibs+/score/language/futurecpp/include/score/private/math/equals_bitexact.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../../../../../../../../../index.html">top level</a> - <a href="index.html">language/futurecpp/include/score/private/math/external/score_baselibs+/score/language/futurecpp/include/score/private/math</a> - equals_bitexact.hpp<span style="font-size: 80%;"> (source / <a href="equals_bitexact.hpp.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">2</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:33:47</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">10</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryHi">-</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2016 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : </span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : ///</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : /// \file</span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : /// \copyright Copyright (c) 2016 Contributors to the Eclipse Foundation</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : ///</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : </span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : // IWYU pragma: private</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : </span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : #ifndef SCORE_LANGUAGE_FUTURECPP_PRIVATE_MATH_EQUALS_BITEXACT_HPP</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : #define SCORE_LANGUAGE_FUTURECPP_PRIVATE_MATH_EQUALS_BITEXACT_HPP</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : </span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : namespace score::cpp</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : {</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : </span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : /// \brief Checks floats for bit exact equality.</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : ///</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : /// Sometimes it is necessary to compare on bit exact equality of floating point values. If the compiler treats warnings</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : /// as errors and the warning &quot;float-equal&quot; is enabled, then such a comparison triggers a hard compile time error.</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : /// This function allows to test for bit exact floating point values.</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : ///</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : /// Note: Mostly comparing floating point values with an epsilon or ULP is the way to go. Use the this function only if</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : /// you know the consequences of bit exact comparison.</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             : ///</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             : /// \tparam T Floating point type.</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             : /// \param lhs First float value that is compared.</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             : /// \param rhs Second float value that is compared.</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : /// \return True, if the two floats compare bit exact, false otherwise.</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : // performance-unnecessary-value-param: T is specified as floating point type, thus performance is not suffering</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             : template &lt;typename T&gt;</span>
+<span id="L42"><span class="lineNum">      42</span>                 :<span class="tlaGNC tlaBgGNC">         697 : constexpr bool equals_bitexact(const T lhs, const T rhs) noexcept // NOLINT(performance-unnecessary-value-param)</span></span>
+<span id="L43"><span class="lineNum">      43</span>                 :             : {</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             : #if defined(__GNUC__) || defined(__clang__)</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             : #pragma GCC diagnostic push</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             : #pragma GCC diagnostic ignored &quot;-Wfloat-equal&quot;</span>
+<span id="L47"><span class="lineNum">      47</span>                 :             : #else</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             : #error &quot;unknown compiler&quot;</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             : #endif</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             :     // Suppress &quot;Floating point expression `lhs` is compared using operator `==`&quot;. The goal of this function is exactly</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             :     // to provide a tooling-agnostic way to compare floating point values on exact equality. So similar to suppress</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             :     // compiler warning also allow static code analysis</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             :     // coverity[misra_cpp_2023_dir_0_3_1_violation : SUPPRESS]</span>
+<span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC">         697 :     return lhs == rhs;</span></span>
+<span id="L55"><span class="lineNum">      55</span>                 :             : #if defined(__GNUC__) || defined(__clang__)</span>
+<span id="L56"><span class="lineNum">      56</span>                 :             : #pragma GCC diagnostic pop</span>
+<span id="L57"><span class="lineNum">      57</span>                 :             : #endif</span>
+<span id="L58"><span class="lineNum">      58</span>                 :             : }</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             : </span>
+<span id="L60"><span class="lineNum">      60</span>                 :             : } // namespace score::cpp</span>
+<span id="L61"><span class="lineNum">      61</span>                 :             : </span>
+<span id="L62"><span class="lineNum">      62</span>                 :             : #endif // SCORE_LANGUAGE_FUTURECPP_PRIVATE_MATH_EQUALS_BITEXACT_HPP</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

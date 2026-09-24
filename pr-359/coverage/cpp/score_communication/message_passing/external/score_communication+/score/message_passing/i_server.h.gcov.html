@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - message_passing/external/score_communication+/score/message_passing/i_server.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../index.html">top level</a> - <a href="index.html">message_passing/external/score_communication+/score/message_passing</a> - i_server.h<span style="font-size: 80%;"> (source / <a href="i_server.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">2</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:37:31</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryLo">66.7&nbsp;%</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">2</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryHi">-</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2025 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : #ifndef SCORE_LIB_MESSAGE_PASSING_I_SERVER_H</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #define SCORE_LIB_MESSAGE_PASSING_I_SERVER_H</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : </span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #include &quot;score/message_passing/server_types.h&quot;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : </span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : #include &quot;score/os/errno.h&quot;</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : </span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : namespace score::message_passing</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : {</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : </span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : /// \brief Interface of a Message Passing Server.</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : /// \details The interface is providing the server side of asynchronous client-server IPC communication.</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : ///          One server can communicate with multiple clients, each in its own associated session. Multiple</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : ///          sessions from multiple clients per one client process (pid) toward the same server are possible.</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : ///          The callbacks are called on unspecified threads, but it's guaranteed that all the callbacks belonging to</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : ///          the same session are serialized.</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : class IServer</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : {</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             :   public:</span>
+<span id="L32"><span class="lineNum">      32</span>                 :<span class="tlaGNC tlaBgGNC">         163 :     virtual ~IServer() = default;</span></span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : </span>
+<span id="L34"><span class="lineNum">      34</span>                 :             :     /// \brief An IServer shall not be copyable or movable</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             :     IServer(const IServer&amp;) = delete;</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             :     IServer(IServer&amp;&amp;) = delete;</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             :     IServer&amp; operator=(const IServer&amp;) = delete;</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             :     IServer&amp; operator=(IServer&amp;&amp;) = delete;</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : </span>
+<span id="L40"><span class="lineNum">      40</span>                 :             :     /// \brief Sets up the callbacks for connection, disconnection and message reception notifications.</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             :     /// \details The callbacks lifetime (or rather the lifetime of the system state captured in the callbacks by</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             :     ///          reference) needs to end not earlier than after StopListening() (or the destructor) has returned.</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             :     ///          The callbacks other than the ConnectCallback are only used for the connections where UserData</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             :     ///          is not an instance of score::cpp::pmr::unique_ptr&lt;IConnectionHandler&gt;.</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             :     ///          For score::cpp::pmr::unique_ptr&lt;IConnectionHandler&gt; connection, the corresponding IConnectionHandler's</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             :     ///          callback methods are used instead.</span>
+<span id="L47"><span class="lineNum">      47</span>                 :             :     // NOLINTNEXTLINE(google-default-arguments) TODO:</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             :     virtual score::cpp::expected_blank&lt;score::os::Error&gt; StartListening(</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             :         ConnectCallback connect_callback,</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             :         DisconnectCallback disconnect_callback = DisconnectCallback{},</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             :         MessageCallback sent_callback = MessageCallback{},</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             :         MessageCallback sent_with_reply_callback = MessageCallback{}) noexcept = 0;</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             :     /// \brief Releases the callbacks abd closes all the still running server connections.</span>
+<span id="L54"><span class="lineNum">      54</span>                 :             :     /// \details The resources associated with the callbacks can be released/reused after the function returns.</span>
+<span id="L55"><span class="lineNum">      55</span>                 :             :     ///          The function may block until a currently running callback finishes, so it shall not be called from</span>
+<span id="L56"><span class="lineNum">      56</span>                 :             :     ///          any of the server callbacks.</span>
+<span id="L57"><span class="lineNum">      57</span>                 :             :     virtual void StopListening() noexcept = 0;</span>
+<span id="L58"><span class="lineNum">      58</span>                 :             : </span>
+<span id="L59"><span class="lineNum">      59</span>                 :             :   protected:</span>
+<span id="L60"><span class="lineNum">      60</span>                 :<span class="tlaGNC">         167 :     IServer() noexcept = default;</span></span>
+<span id="L61"><span class="lineNum">      61</span>                 :             : };</span>
+<span id="L62"><span class="lineNum">      62</span>                 :             : </span>
+<span id="L63"><span class="lineNum">      63</span>                 :             : }  // namespace score::message_passing</span>
+<span id="L64"><span class="lineNum">      64</span>                 :             : </span>
+<span id="L65"><span class="lineNum">      65</span>                 :             : #endif  // SCORE_LIB_MESSAGE_PASSING_I_SERVER_H</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

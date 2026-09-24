@@ -1,0 +1,501 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - src/daemon/src/process_group_manager/details/external/score_lifecycle+/score/launch_manager/src/daemon/src/process_group_manager/details/graph.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../../../../../../../../index.html">top level</a> - <a href="index.html">src/daemon/src/process_group_manager/details/external/score_lifecycle+/score/launch_manager/src/daemon/src/process_group_manager/details</a> - graph.hpp<span style="font-size: 80%;"> (source / <a href="graph.hpp.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">1</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:38:41</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">-</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryHi">-</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2025 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : </span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #ifndef GRAPH_HPP_INCLUDED</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : #define GRAPH_HPP_INCLUDED</span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : </span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #include &lt;atomic&gt;</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : #include &lt;chrono&gt;</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : #include &lt;memory&gt;</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : #include &lt;mutex&gt;</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : #include &lt;string_view&gt;</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : #include &lt;unordered_map&gt;</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : #include &lt;utility&gt;</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : #include &lt;variant&gt;</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : #include &lt;vector&gt;</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : </span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : #include &quot;score/mw/launch_manager/common/concurrency/mpmc_concurrent_queue.hpp&quot;</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : #include &quot;score/mw/launch_manager/common/identifier_hash.hpp&quot;</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : #include &quot;score/mw/launch_manager/configuration/config.hpp&quot;</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : #include &quot;score/mw/launch_manager/control/control_client_channel.hpp&quot;</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : #include &quot;score/mw/launch_manager/osal/semaphore.hpp&quot;</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : #include &quot;score/mw/launch_manager/process_group_manager/details/component_event.hpp&quot;</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : #include &quot;score/mw/launch_manager/process_group_manager/details/component_of.hpp&quot;</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : #include &quot;score/mw/launch_manager/process_group_manager/details/component_task.hpp&quot;</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             : #include &quot;score/mw/launch_manager/process_group_manager/details/dependency_graph.hpp&quot;</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             : #include &quot;score/mw/launch_manager/process_group_manager/details/itransition_result_publisher.hpp&quot;</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             : #include &quot;score/mw/launch_manager/process_group_manager/details/process_handling.hpp&quot;</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             : #include &quot;score/mw/launch_manager/process_group_manager/details/process_info_node.hpp&quot;</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : #include &quot;score/mw/launch_manager/process_group_manager/details/run_target.hpp&quot;</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : #include &quot;score/mw/launch_manager/process_group_manager/details/transition.hpp&quot;</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             : #include &quot;score/mw/launch_manager/process_group_manager/iprocess.hpp&quot;</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             : #include &lt;score/stop_token.hpp&gt;</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             : </span>
+<span id="L44"><span class="lineNum">      44</span>                 :             : namespace score::mw::lifecycle::internal</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             : {</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             : </span>
+<span id="L47"><span class="lineNum">      47</span>                 :             : using WorkerQueue =</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             :     MPMCConcurrentQueue&lt;std::optional&lt;ComponentTask&gt;, static_cast&lt;std::size_t&gt;(ProcessLimits::kMaxProcesses)&gt;;</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             : </span>
+<span id="L50"><span class="lineNum">      50</span>                 :             : /// @brief Config members needed to build the graph</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             : struct GraphConfig</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             : {</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             :     /// @brief Components that run targets may depend on</span>
+<span id="L54"><span class="lineNum">      54</span>                 :             :     std::vector&lt;configuration::ComponentConfig&gt; components_;</span>
+<span id="L55"><span class="lineNum">      55</span>                 :             :     /// @brief Run targets that can be activated</span>
+<span id="L56"><span class="lineNum">      56</span>                 :             :     std::vector&lt;configuration::RunTargetConfig&gt; run_targets_;</span>
+<span id="L57"><span class="lineNum">      57</span>                 :             :     /// @brief Information about the run target transitioned to in the event of an error</span>
+<span id="L58"><span class="lineNum">      58</span>                 :             :     configuration::FallbackRunTargetConfig fallback_run_target_;</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             :     /// @brief Name of the first run target to launch</span>
+<span id="L60"><span class="lineNum">      60</span>                 :             :     std::string initial_run_target_;</span>
+<span id="L61"><span class="lineNum">      61</span>                 :             : };</span>
+<span id="L62"><span class="lineNum">      62</span>                 :             : </span>
+<span id="L63"><span class="lineNum">      63</span>                 :             : /// @brief GraphState - the graph/process group state.</span>
+<span id="L64"><span class="lineNum">      64</span>                 :             : /// @details Enumeration representing the state of the graph.</span>
+<span id="L65"><span class="lineNum">      65</span>                 :             : /// @note The allowed/disallowed states are managed by</span>
+<span id="L66"><span class="lineNum">      66</span>                 :             : /// the private method setState, which ensures valid transitions</span>
+<span id="L67"><span class="lineNum">      67</span>                 :             : /// between states. Invalid transitions are replaced by a valid new state.</span>
+<span id="L68"><span class="lineNum">      68</span>                 :             : /// The state transition logic is implemented in the setState method.</span>
+<span id="L69"><span class="lineNum">      69</span>                 :             : /// @verbatim</span>
+<span id="L70"><span class="lineNum">      70</span>                 :             : ///    Old state    .  Requested State  .  New state</span>
+<span id="L71"><span class="lineNum">      71</span>                 :             : /// ----------------+-------------------+----------------</span>
+<span id="L72"><span class="lineNum">      72</span>                 :             : /// kSuccess        | kInTransition     | kInTransition</span>
+<span id="L73"><span class="lineNum">      73</span>                 :             : /// kSuccess        | kAborting         | kUndefinedState</span>
+<span id="L74"><span class="lineNum">      74</span>                 :             : /// kSuccess        | kUndefinedState   | kUndefinedState</span>
+<span id="L75"><span class="lineNum">      75</span>                 :             : /// kSuccess        | kCancelled        | kUndefinedState</span>
+<span id="L76"><span class="lineNum">      76</span>                 :             : /// ----------------+-------------------+----------------</span>
+<span id="L77"><span class="lineNum">      77</span>                 :             : /// kInTransition   | kSuccess          | kSuccess</span>
+<span id="L78"><span class="lineNum">      78</span>                 :             : /// kInTransition   | kAborting         | kAborting</span>
+<span id="L79"><span class="lineNum">      79</span>                 :             : /// kInTransition   | kUndefinedState   | kAborting</span>
+<span id="L80"><span class="lineNum">      80</span>                 :             : /// kInTransition   | kCancelled        | kCancelled</span>
+<span id="L81"><span class="lineNum">      81</span>                 :             : /// ----------------+-------------------+----------------</span>
+<span id="L82"><span class="lineNum">      82</span>                 :             : /// kAborting       | kSuccess          | kUndefinedState</span>
+<span id="L83"><span class="lineNum">      83</span>                 :             : /// kAborting       | kInTransition     | kAborting</span>
+<span id="L84"><span class="lineNum">      84</span>                 :             : /// kAborting       | kUndefinedState   | kUndefinedState</span>
+<span id="L85"><span class="lineNum">      85</span>                 :             : /// kAborting       | kCancelled        | kCancelled</span>
+<span id="L86"><span class="lineNum">      86</span>                 :             : /// ----------------+-------------------+----------------</span>
+<span id="L87"><span class="lineNum">      87</span>                 :             : /// kCancelled      | kSuccess          | kUndefinedState</span>
+<span id="L88"><span class="lineNum">      88</span>                 :             : /// kCancelled      | kInTransition     | kCancelled</span>
+<span id="L89"><span class="lineNum">      89</span>                 :             : /// kCancelled      | kAborting         | kCancelled</span>
+<span id="L90"><span class="lineNum">      90</span>                 :             : /// kCancelled      | kUndefinedState   | kUndefinedState</span>
+<span id="L91"><span class="lineNum">      91</span>                 :             : /// ----------------+-------------------+----------------</span>
+<span id="L92"><span class="lineNum">      92</span>                 :             : /// kUndefinedState | kSuccess          | kUndefinedState</span>
+<span id="L93"><span class="lineNum">      93</span>                 :             : /// kUndefinedState | kInTransition     | kInTransition</span>
+<span id="L94"><span class="lineNum">      94</span>                 :             : /// kUndefinedState | kAborting         | kUndefinedState</span>
+<span id="L95"><span class="lineNum">      95</span>                 :             : /// kUndefinedState | kCancelled        | kUndefinedState</span>
+<span id="L96"><span class="lineNum">      96</span>                 :             : /// @endverbatim</span>
+<span id="L97"><span class="lineNum">      97</span>                 :             : enum class GraphState : std::uint_least8_t</span>
+<span id="L98"><span class="lineNum">      98</span>                 :             : {</span>
+<span id="L99"><span class="lineNum">      99</span>                 :             :     ///@brief Graph is not running and process group state is known</span>
+<span id="L100"><span class="lineNum">     100</span>                 :             :     kSuccess = 0U,</span>
+<span id="L101"><span class="lineNum">     101</span>                 :             : </span>
+<span id="L102"><span class="lineNum">     102</span>                 :             :     ///@brief Graph is running, process group state is in transition</span>
+<span id="L103"><span class="lineNum">     103</span>                 :             :     kInTransition = 1U,</span>
+<span id="L104"><span class="lineNum">     104</span>                 :             : </span>
+<span id="L105"><span class="lineNum">     105</span>                 :             :     ///@brief Graph is running but has been aborted due to error, process group state is not known</span>
+<span id="L106"><span class="lineNum">     106</span>                 :             :     kAborting = 2U,</span>
+<span id="L107"><span class="lineNum">     107</span>                 :             : </span>
+<span id="L108"><span class="lineNum">     108</span>                 :             :     ///@brief Graph is running but has been cancelled because a new process group state transition is pending</span>
+<span id="L109"><span class="lineNum">     109</span>                 :             :     kCancelled = 3U,</span>
+<span id="L110"><span class="lineNum">     110</span>                 :             : </span>
+<span id="L111"><span class="lineNum">     111</span>                 :             :     ///@brief Graph is not running but process group state is not known</span>
+<span id="L112"><span class="lineNum">     112</span>                 :             :     kUndefinedState = 4U</span>
+<span id="L113"><span class="lineNum">     113</span>                 :             : };</span>
+<span id="L114"><span class="lineNum">     114</span>                 :             : </span>
+<span id="L115"><span class="lineNum">     115</span>                 :             : /// @details Allowed transitions:</span>
+<span id="L116"><span class="lineNum">     116</span>                 :             : /// -------------------</span>
+<span id="L117"><span class="lineNum">     117</span>                 :             : /// kSuccess        -&gt; kInTransition</span>
+<span id="L118"><span class="lineNum">     118</span>                 :             : /// kInTransition   -&gt; kSuccess</span>
+<span id="L119"><span class="lineNum">     119</span>                 :             : /// kInTransition   -&gt; kAborting</span>
+<span id="L120"><span class="lineNum">     120</span>                 :             : /// kInTransition   -&gt; kUndefinedState</span>
+<span id="L121"><span class="lineNum">     121</span>                 :             : /// kInTransition   -&gt; kCancelled</span>
+<span id="L122"><span class="lineNum">     122</span>                 :             : /// kAborting       -&gt; kUndefinedState</span>
+<span id="L123"><span class="lineNum">     123</span>                 :             : /// kSuccess        -&gt; kUndefinedState</span>
+<span id="L124"><span class="lineNum">     124</span>                 :             : /// kUndefinedState -&gt; kInTransition</span>
+<span id="L125"><span class="lineNum">     125</span>                 :             : ///</span>
+<span id="L126"><span class="lineNum">     126</span>                 :             : /// Disallowed transitions:             Replaced by</span>
+<span id="L127"><span class="lineNum">     127</span>                 :             : /// ------------------------------------------------</span>
+<span id="L128"><span class="lineNum">     128</span>                 :             : /// kSuccess        -&gt; kAborting        kUndefinedState</span>
+<span id="L129"><span class="lineNum">     129</span>                 :             : /// kInTransition   -&gt; kUndefinedState  kAborting</span>
+<span id="L130"><span class="lineNum">     130</span>                 :             : /// kAborting       -&gt; kSuccess         kUndefinedState</span>
+<span id="L131"><span class="lineNum">     131</span>                 :             : /// kAborting       -&gt; kInTransition    kAborting</span>
+<span id="L132"><span class="lineNum">     132</span>                 :             : /// kUndefinedState -&gt; kSuccess         kUndefinedState</span>
+<span id="L133"><span class="lineNum">     133</span>                 :             : /// kUndefinedState -&gt; kAborting        kUndefinedState</span>
+<span id="L134"><span class="lineNum">     134</span>                 :             : // coverity[autosar_cpp14_m3_4_1_violation:INTENTIONAL] The value is used in a global context.</span>
+<span id="L135"><span class="lineNum">     135</span>                 :             : // clang-format off</span>
+<span id="L136"><span class="lineNum">     136</span>                 :             : static constexpr GraphState state_results[][static_cast&lt;uint&gt;(GraphState::kUndefinedState) + 1U] = {</span>
+<span id="L137"><span class="lineNum">     137</span>                 :             :     //from kSuccess                     kInTransition               kAborting                 kCancelled                      kUndefinedState              to new_state</span>
+<span id="L138"><span class="lineNum">     138</span>                 :             :     {GraphState::kSuccess, GraphState::kSuccess, GraphState::kUndefinedState, GraphState::kUndefinedState,GraphState::kUndefinedState},  // kSuccess</span>
+<span id="L139"><span class="lineNum">     139</span>                 :             :     {GraphState::kInTransition, GraphState::kInTransition, GraphState::kAborting, GraphState::kCancelled, GraphState::kInTransition},  // kInTransition</span>
+<span id="L140"><span class="lineNum">     140</span>                 :             :     {GraphState::kUndefinedState, GraphState::kAborting, GraphState::kAborting, GraphState::kCancelled, GraphState::kUndefinedState},  // kAborting</span>
+<span id="L141"><span class="lineNum">     141</span>                 :             :     {GraphState::kUndefinedState, GraphState::kCancelled, GraphState::kCancelled, GraphState::kCancelled, GraphState::kUndefinedState},  // kCancelled</span>
+<span id="L142"><span class="lineNum">     142</span>                 :             :     {GraphState::kUndefinedState, GraphState::kAborting, GraphState::kUndefinedState, GraphState::kUndefinedState, GraphState::kUndefinedState}  // kUndefinedState</span>
+<span id="L143"><span class="lineNum">     143</span>                 :             : };</span>
+<span id="L144"><span class="lineNum">     144</span>                 :             : // clang-format on</span>
+<span id="L145"><span class="lineNum">     145</span>                 :             : </span>
+<span id="L146"><span class="lineNum">     146</span>                 :             : /// @brief Manages the processes and state transitions for a single process group.</span>
+<span id="L147"><span class="lineNum">     147</span>                 :             : ///</span>
+<span id="L148"><span class="lineNum">     148</span>                 :             : /// Each Graph holds a set of ProcessInfoNode instances (one per process) arranged in a</span>
+<span id="L149"><span class="lineNum">     149</span>                 :             : /// dependency graph. During a state transition the Graph stops processes that are no longer</span>
+<span id="L150"><span class="lineNum">     150</span>                 :             : /// needed and starts the ones required for the new state, respecting dependency order. If</span>
+<span id="L151"><span class="lineNum">     151</span>                 :             : /// the transition completes without errors the graph enters kSuccess. Otherwise it enters</span>
+<span id="L152"><span class="lineNum">     152</span>                 :             : /// kUndefinedState.</span>
+<span id="L153"><span class="lineNum">     153</span>                 :             : class Graph final</span>
+<span id="L154"><span class="lineNum">     154</span>                 :             : {</span>
+<span id="L155"><span class="lineNum">     155</span>                 :             :   public:</span>
+<span id="L156"><span class="lineNum">     156</span>                 :             :     /// @brief All currently supported component implementations.</span>
+<span id="L157"><span class="lineNum">     157</span>                 :             :     using Component = std::variant&lt;ProcessInfoNode, RunTarget&gt;;</span>
+<span id="L158"><span class="lineNum">     158</span>                 :             : </span>
+<span id="L159"><span class="lineNum">     159</span>                 :             :     static constexpr std::string_view off_state_name{&quot;Off&quot;};</span>
+<span id="L160"><span class="lineNum">     160</span>                 :             :     static constexpr std::string_view recovery_state_name{&quot;fallback&quot;};</span>
+<span id="L161"><span class="lineNum">     161</span>                 :             : </span>
+<span id="L162"><span class="lineNum">     162</span>                 :             :     /// @brief Constructor to initialize a Graph object.</span>
+<span id="L163"><span class="lineNum">     163</span>                 :             :     /// @param max_num_nodes Maximum number of nodes this graph can hold.</span>
+<span id="L164"><span class="lineNum">     164</span>                 :             :     /// @param configuration Configuration containing run target and component information.</span>
+<span id="L165"><span class="lineNum">     165</span>                 :             :     /// @param job_queue Queue to push component jobs to for multithreaded processing.</span>
+<span id="L166"><span class="lineNum">     166</span>                 :             :     /// @param process_handling The interfaces used to start, stop and report on the OS processes.</span>
+<span id="L167"><span class="lineNum">     167</span>                 :             :     /// @param transition_result_receiver Object to notify when the initial transition is complete.</span>
+<span id="L168"><span class="lineNum">     168</span>                 :             :     Graph(</span>
+<span id="L169"><span class="lineNum">     169</span>                 :             :         uint32_t max_num_nodes,</span>
+<span id="L170"><span class="lineNum">     170</span>                 :             :         GraphConfig&amp; configuration,</span>
+<span id="L171"><span class="lineNum">     171</span>                 :             :         std::shared_ptr&lt;WorkerQueue&gt; job_queue,</span>
+<span id="L172"><span class="lineNum">     172</span>                 :             :         ProcessHandling process_handling,</span>
+<span id="L173"><span class="lineNum">     173</span>                 :             :         ITransitionResultPublisher* transition_result_receiver);</span>
+<span id="L174"><span class="lineNum">     174</span>                 :             : </span>
+<span id="L175"><span class="lineNum">     175</span>                 :             :     /// @brief Destructor to clean up resources used by the Graph object.</span>
+<span id="L176"><span class="lineNum">     176</span>                 :             :     ~Graph();</span>
+<span id="L177"><span class="lineNum">     177</span>                 :             : </span>
+<span id="L178"><span class="lineNum">     178</span>                 :             :     /// @brief Copy constructor (deleted).</span>
+<span id="L179"><span class="lineNum">     179</span>                 :             :     Graph(const Graph&amp;) = delete;</span>
+<span id="L180"><span class="lineNum">     180</span>                 :             : </span>
+<span id="L181"><span class="lineNum">     181</span>                 :             :     /// @brief Copy assignment operator (deleted).</span>
+<span id="L182"><span class="lineNum">     182</span>                 :             :     Graph&amp; operator=(const Graph&amp;) = delete;</span>
+<span id="L183"><span class="lineNum">     183</span>                 :             : </span>
+<span id="L184"><span class="lineNum">     184</span>                 :             :     /// @brief Move constructor(deleted).</span>
+<span id="L185"><span class="lineNum">     185</span>                 :             :     Graph(Graph&amp;&amp;) noexcept = delete;</span>
+<span id="L186"><span class="lineNum">     186</span>                 :             : </span>
+<span id="L187"><span class="lineNum">     187</span>                 :             :     /// @brief Move assignment operator(deleted).</span>
+<span id="L188"><span class="lineNum">     188</span>                 :             :     Graph&amp; operator=(Graph&amp;&amp;) noexcept = delete;</span>
+<span id="L189"><span class="lineNum">     189</span>                 :             : </span>
+<span id="L190"><span class="lineNum">     190</span>                 :             :     /// @brief Applies a ComponentEvent to this graph.</span>
+<span id="L191"><span class="lineNum">     191</span>                 :             :     /// @param event The event to process.</span>
+<span id="L192"><span class="lineNum">     192</span>                 :             :     void handleComponentEvent(const ComponentEvent&amp; event);</span>
+<span id="L193"><span class="lineNum">     193</span>                 :             : </span>
+<span id="L194"><span class="lineNum">     194</span>                 :             :     /// @brief Cancel the current transition because a new state has been requested.</span>
+<span id="L195"><span class="lineNum">     195</span>                 :             :     /// Sets the graph state to kCancelled and posts a kSetStateCancelled pending event.</span>
+<span id="L196"><span class="lineNum">     196</span>                 :             :     /// If no jobs are in progress, transitions immediately to kUndefinedState.</span>
+<span id="L197"><span class="lineNum">     197</span>                 :             :     void cancel();</span>
+<span id="L198"><span class="lineNum">     198</span>                 :             : </span>
+<span id="L199"><span class="lineNum">     199</span>                 :             :     /// @brief Begin transitioning this process group to the given state.</span>
+<span id="L200"><span class="lineNum">     200</span>                 :             :     /// @return False if pg_state is not a recognized run target in this graph's configuration; the</span>
+<span id="L201"><span class="lineNum">     201</span>                 :             :     /// transition is not started in that case. True otherwise.</span>
+<span id="L202"><span class="lineNum">     202</span>                 :             :     /// @param pg_state The target process group state.</span>
+<span id="L203"><span class="lineNum">     203</span>                 :             :     bool startTransition(IdentifierHash pg_state);</span>
+<span id="L204"><span class="lineNum">     204</span>                 :             : </span>
+<span id="L205"><span class="lineNum">     205</span>                 :             :     /// @return True if pg_state is a run target known to this graph's configuration.</span>
+<span id="L206"><span class="lineNum">     206</span>                 :             :     /// @param pg_state The process group state to check.</span>
+<span id="L207"><span class="lineNum">     207</span>                 :             :     bool isValidRunTarget(IdentifierHash pg_state);</span>
+<span id="L208"><span class="lineNum">     208</span>                 :             : </span>
+<span id="L209"><span class="lineNum">     209</span>                 :             :     /// @brief Begin the initial machine group startup transition.</span>
+<span id="L210"><span class="lineNum">     210</span>                 :             :     /// Behaves like startTransition but also reports the initial state transition result</span>
+<span id="L211"><span class="lineNum">     211</span>                 :             :     /// to the ProcessGroupManager on failure.</span>
+<span id="L212"><span class="lineNum">     212</span>                 :             :     /// @param pg_state The initial machine group startup state.</span>
+<span id="L213"><span class="lineNum">     213</span>                 :             :     void startInitialTransition(IdentifierHash pg_state);</span>
+<span id="L214"><span class="lineNum">     214</span>                 :             : </span>
+<span id="L215"><span class="lineNum">     215</span>                 :             :     /// @brief Begin transitioning this process group to the &quot;Off&quot; state.</span>
+<span id="L216"><span class="lineNum">     216</span>                 :             :     /// Stops all processes in the group even if no explicit &quot;Off&quot; state is configured.</span>
+<span id="L217"><span class="lineNum">     217</span>                 :             :     /// @return True if the transition was started. False if the graph could not enter kInTransition.</span>
+<span id="L218"><span class="lineNum">     218</span>                 :             :     bool startTransitionToOffState();</span>
+<span id="L219"><span class="lineNum">     219</span>                 :             : </span>
+<span id="L220"><span class="lineNum">     220</span>                 :             :     /// @return True if the graph is currently transitioning to the Off state.</span>
+<span id="L221"><span class="lineNum">     221</span>                 :             :     bool isTransitioningToOff() const;</span>
+<span id="L222"><span class="lineNum">     222</span>                 :             : </span>
+<span id="L223"><span class="lineNum">     223</span>                 :             :     /// @return The current graph state.</span>
+<span id="L224"><span class="lineNum">     224</span>                 :             :     GraphState getState() const;</span>
+<span id="L225"><span class="lineNum">     225</span>                 :             : </span>
+<span id="L226"><span class="lineNum">     226</span>                 :             :     /// @param process_index Index of the process node to retrieve.</span>
+<span id="L227"><span class="lineNum">     227</span>                 :             :     /// @return The ProcessInfoNode at the given index, or nullptr if out of bounds or if the node</span>
+<span id="L228"><span class="lineNum">     228</span>                 :             :     /// at that index is a RunTarget rather than a ProcessInfoNode.</span>
+<span id="L229"><span class="lineNum">     229</span>                 :             :     ProcessInfoNode* getProcessInfoNode(IdentifierHash process_index);</span>
+<span id="L230"><span class="lineNum">     230</span>                 :             : </span>
+<span id="L231"><span class="lineNum">     231</span>                 :             :     /// @return The identifier of the process group managed by this graph.</span>
+<span id="L232"><span class="lineNum">     232</span>                 :             :     IdentifierHash getProcessGroupName();</span>
+<span id="L233"><span class="lineNum">     233</span>                 :             : </span>
+<span id="L234"><span class="lineNum">     234</span>                 :             :     /// @return The current target state of the process group. Only meaningful when</span>
+<span id="L235"><span class="lineNum">     235</span>                 :             :     /// getState() returns GraphState::kSuccess.</span>
+<span id="L236"><span class="lineNum">     236</span>                 :             :     IdentifierHash getProcessGroupState();</span>
+<span id="L237"><span class="lineNum">     237</span>                 :             : </span>
+<span id="L238"><span class="lineNum">     238</span>                 :             :     /// @return The ProcessInfoNode that has a ControlClientChannel, or nullptr if none exists.</span>
+<span id="L239"><span class="lineNum">     239</span>                 :             :     const ProcessInfoNode* findControlClient();</span>
+<span id="L240"><span class="lineNum">     240</span>                 :             : </span>
+<span id="L241"><span class="lineNum">     241</span>                 :             :     /// @brief Sets the control client that is managing state transitions for this process group.</span>
+<span id="L242"><span class="lineNum">     242</span>                 :             :     /// @param control_client_id The identifier of the new state manager.</span>
+<span id="L243"><span class="lineNum">     243</span>                 :             :     void setStateManager(ControlClientID&amp; control_client_id);</span>
+<span id="L244"><span class="lineNum">     244</span>                 :             : </span>
+<span id="L245"><span class="lineNum">     245</span>                 :             :     /// @brief Update the details for the cancel message to match the current state.</span>
+<span id="L246"><span class="lineNum">     246</span>                 :             :     void updateCancelMessage();</span>
+<span id="L247"><span class="lineNum">     247</span>                 :             : </span>
+<span id="L248"><span class="lineNum">     248</span>                 :             :     /// @return Information about the control client managing this process group's state.</span>
+<span id="L249"><span class="lineNum">     249</span>                 :             :     ControlClientID getStateManager();</span>
+<span id="L250"><span class="lineNum">     250</span>                 :             : </span>
+<span id="L251"><span class="lineNum">     251</span>                 :             :     /// @return The error code set by the last process that caused an unexpected termination.</span>
+<span id="L252"><span class="lineNum">     252</span>                 :             :     uint32_t getLastExecutionError();</span>
+<span id="L253"><span class="lineNum">     253</span>                 :             : </span>
+<span id="L254"><span class="lineNum">     254</span>                 :             :     /// @brief Stores an error code representing the last execution failure.</span>
+<span id="L255"><span class="lineNum">     255</span>                 :             :     /// @param code The error code to store.</span>
+<span id="L256"><span class="lineNum">     256</span>                 :             :     void setLastExecutionError(uint32_t code);</span>
+<span id="L257"><span class="lineNum">     257</span>                 :             : </span>
+<span id="L258"><span class="lineNum">     258</span>                 :             :     /// @brief Replaces the pending state with new_state and returns the previous pending state.</span>
+<span id="L259"><span class="lineNum">     259</span>                 :             :     /// @param new_state The new pending state to set.</span>
+<span id="L260"><span class="lineNum">     260</span>                 :             :     /// @return The previous pending state.</span>
+<span id="L261"><span class="lineNum">     261</span>                 :             :     IdentifierHash setPendingState(IdentifierHash new_state);</span>
+<span id="L262"><span class="lineNum">     262</span>                 :             : </span>
+<span id="L263"><span class="lineNum">     263</span>                 :             :     /// @return The pending state, or an empty hash if no state is pending.</span>
+<span id="L264"><span class="lineNum">     264</span>                 :             :     IdentifierHash getPendingState();</span>
+<span id="L265"><span class="lineNum">     265</span>                 :             : </span>
+<span id="L266"><span class="lineNum">     266</span>                 :             :     /// @return The pending event code, or kNotSet if there is none.</span>
+<span id="L267"><span class="lineNum">     267</span>                 :             :     ControlClientCode getPendingEvent();</span>
+<span id="L268"><span class="lineNum">     268</span>                 :             : </span>
+<span id="L269"><span class="lineNum">     269</span>                 :             :     /// @brief Clears the pending event, but only if its current value matches expected.</span>
+<span id="L270"><span class="lineNum">     270</span>                 :             :     /// @param expected The event code to compare against.</span>
+<span id="L271"><span class="lineNum">     271</span>                 :             :     void clearPendingEvent(ControlClientCode expected);</span>
+<span id="L272"><span class="lineNum">     272</span>                 :             : </span>
+<span id="L273"><span class="lineNum">     273</span>                 :             :     /// @brief Stores a pending event code and notifies the ProcessGroupManager to process it.</span>
+<span id="L274"><span class="lineNum">     274</span>                 :             :     /// @param event The event code to store.</span>
+<span id="L275"><span class="lineNum">     275</span>                 :             :     void setPendingEvent(ControlClientCode event);</span>
+<span id="L276"><span class="lineNum">     276</span>                 :             : </span>
+<span id="L277"><span class="lineNum">     277</span>                 :             :     /// @return The cancel message prepared when updateCancelMessage() was called.</span>
+<span id="L278"><span class="lineNum">     278</span>                 :             :     ControlClientMessage&amp; getCancelMessage();</span>
+<span id="L279"><span class="lineNum">     279</span>                 :             : </span>
+<span id="L280"><span class="lineNum">     280</span>                 :             :     /// @brief A utility function that converts codes to strings for logging purposes</span>
+<span id="L281"><span class="lineNum">     281</span>                 :             :     /// @param state The state to convert</span>
+<span id="L282"><span class="lineNum">     282</span>                 :             :     /// @return A string representing the state</span>
+<span id="L283"><span class="lineNum">     283</span>                 :             :     static std::string_view toString(GraphState state);</span>
+<span id="L284"><span class="lineNum">     284</span>                 :             : </span>
+<span id="L285"><span class="lineNum">     285</span>                 :             :     /// @brief Records the current time as the start of a state transition request.</span>
+<span id="L286"><span class="lineNum">     286</span>                 :             :     void setRequestStartTime();</span>
+<span id="L287"><span class="lineNum">     287</span>                 :             : </span>
+<span id="L288"><span class="lineNum">     288</span>                 :             :     /// @return The timestamp recorded at the start of the current state transition request.</span>
+<span id="L289"><span class="lineNum">     289</span>                 :             :     std::chrono::time_point&lt;std::chrono::steady_clock&gt; getRequestStartTime();</span>
+<span id="L290"><span class="lineNum">     290</span>                 :             : </span>
+<span id="L291"><span class="lineNum">     291</span>                 :             :     /// @brief For forced shutdown, kill all leftover processes</span>
+<span id="L292"><span class="lineNum">     292</span>                 :             :     void forceKillProcesses();</span>
+<span id="L293"><span class="lineNum">     293</span>                 :             : </span>
+<span id="L294"><span class="lineNum">     294</span>                 :             :     /// @brief Returns the configured transition timeout for the Off state</span>
+<span id="L295"><span class="lineNum">     295</span>                 :             :     /// @details This is the timeout configured for the RunTarget named &quot;Off&quot; in the configuration, or a default value</span>
+<span id="L296"><span class="lineNum">     296</span>                 :             :     /// if not configured.</span>
+<span id="L297"><span class="lineNum">     297</span>                 :             :     /// @return The timeout in milliseconds, or zero if there is no configured timeout.</span>
+<span id="L298"><span class="lineNum">     298</span>                 :             :     std::chrono::milliseconds getOffStateTransitionTimeout() const;</span>
+<span id="L299"><span class="lineNum">     299</span>                 :             : </span>
+<span id="L300"><span class="lineNum">     300</span>                 :             :   private:</span>
+<span id="L301"><span class="lineNum">     301</span>                 :             :     /// @brief Reports that a node has finished executing, enqueuing successors or updating the graph state if a</span>
+<span id="L302"><span class="lineNum">     302</span>                 :             :     /// transition has finished.</span>
+<span id="L303"><span class="lineNum">     303</span>                 :             :     void nodeExecuted(IdentifierHash node, score::cpp::expected_blank&lt;IComponent::ComponentError&gt; error);</span>
+<span id="L304"><span class="lineNum">     304</span>                 :             : </span>
+<span id="L305"><span class="lineNum">     305</span>                 :             :     /// @brief Abort the current transition due to a process error.</span>
+<span id="L306"><span class="lineNum">     306</span>                 :             :     /// @deprecated @param code The execution error for the process that caused the abort.</span>
+<span id="L307"><span class="lineNum">     307</span>                 :             :     /// @param reason The process error that triggered the abort.</span>
+<span id="L308"><span class="lineNum">     308</span>                 :             :     void abort(uint32_t code, IComponent::ComponentError reason);</span>
+<span id="L309"><span class="lineNum">     309</span>                 :             : </span>
+<span id="L310"><span class="lineNum">     310</span>                 :             :     /// @brief Sets the current state of the graph.</span>
+<span id="L311"><span class="lineNum">     311</span>                 :             :     /// @param new_state The new state to set for the graph.</span>
+<span id="L312"><span class="lineNum">     312</span>                 :             :     /// @returns False if the requested state was not set</span>
+<span id="L313"><span class="lineNum">     313</span>                 :             :     bool setState(GraphState new_state);</span>
+<span id="L314"><span class="lineNum">     314</span>                 :             : </span>
+<span id="L315"><span class="lineNum">     315</span>                 :             :     /// @brief Pushes the given task onto the worker queue while the graph is in transition.</span>
+<span id="L316"><span class="lineNum">     316</span>                 :             :     /// Retries on timeout.</span>
+<span id="L317"><span class="lineNum">     317</span>                 :             :     /// @param task The task to enqueue.</span>
+<span id="L318"><span class="lineNum">     318</span>                 :             :     void tryQueueNode(ComponentTask task);</span>
+<span id="L319"><span class="lineNum">     319</span>                 :             : </span>
+<span id="L320"><span class="lineNum">     320</span>                 :             :     /// @brief Every node that is ready to execute is either executed in place (RunTarget) or queued for execution</span>
+<span id="L321"><span class="lineNum">     321</span>                 :             :     /// (ProcessInfoNode).</span>
+<span id="L322"><span class="lineNum">     322</span>                 :             :     void queueReadyNodes();</span>
+<span id="L323"><span class="lineNum">     323</span>                 :             : </span>
+<span id="L324"><span class="lineNum">     324</span>                 :             :     /// @brief Executes a RunTarget's activation/deactivation in place</span>
+<span id="L325"><span class="lineNum">     325</span>                 :             :     /// @details Since a RunTarget is a virtual node with no work to do</span>
+<span id="L326"><span class="lineNum">     326</span>                 :             :     /// and reports its completion to the current transition immediately.</span>
+<span id="L327"><span class="lineNum">     327</span>                 :             :     void updateRunTargetInPlace(RunTarget&amp; run_target, ComponentTaskType task_type);</span>
+<span id="L328"><span class="lineNum">     328</span>                 :             : </span>
+<span id="L329"><span class="lineNum">     329</span>                 :             :     /// @brief Common tail of a transition that finished without error: moves the graph to</span>
+<span id="L330"><span class="lineNum">     330</span>                 :             :     /// kSuccess, posts kSetStateSuccess, and reports initial-state-transition success if this</span>
+<span id="L331"><span class="lineNum">     331</span>                 :             :     /// was the initial transition.</span>
+<span id="L332"><span class="lineNum">     332</span>                 :             :     void finalizeTransitionSuccess();</span>
+<span id="L333"><span class="lineNum">     333</span>                 :             : </span>
+<span id="L334"><span class="lineNum">     334</span>                 :             :     /// @brief Finalizes a failed or cancelled transition after the last in-flight job</span>
+<span id="L335"><span class="lineNum">     335</span>                 :             :     /// completes. Moves the graph state to kUndefinedState and posts the appropriate event.</span>
+<span id="L336"><span class="lineNum">     336</span>                 :             :     /// @param current_state The graph state when the last job completed (not kInTransition).</span>
+<span id="L337"><span class="lineNum">     337</span>                 :             :     void handleNonTransitionExecution(GraphState current_state);</span>
+<span id="L338"><span class="lineNum">     338</span>                 :             : </span>
+<span id="L339"><span class="lineNum">     339</span>                 :             :     /// @brief Number of jobs that have been queued but are not yet executed</span>
+<span id="L340"><span class="lineNum">     340</span>                 :             :     int32_t jobs_in_progress_{0};</span>
+<span id="L341"><span class="lineNum">     341</span>                 :             : </span>
+<span id="L342"><span class="lineNum">     342</span>                 :             :     /// @brief Nodes for all unique processes in this process group, plus a virtual RunTarget node</span>
+<span id="L343"><span class="lineNum">     343</span>                 :             :     /// per configured ProcessGroupState.</span>
+<span id="L344"><span class="lineNum">     344</span>                 :             :     DependencyGraph&lt;IdentifierHash, Component&gt; nodes_;</span>
+<span id="L345"><span class="lineNum">     345</span>                 :             : </span>
+<span id="L346"><span class="lineNum">     346</span>                 :             :     /// @brief Builder for creating the transition object for the current state transition.</span>
+<span id="L347"><span class="lineNum">     347</span>                 :             :     TransitionBuilder&lt;IdentifierHash, Component&gt; transition_builder_;</span>
+<span id="L348"><span class="lineNum">     348</span>                 :             : </span>
+<span id="L349"><span class="lineNum">     349</span>                 :             :     /// @brief The currently active transition or nullptr before the first one starts.</span>
+<span id="L350"><span class="lineNum">     350</span>                 :             :     Transition&lt;IdentifierHash, Component&gt;* current_transition_{nullptr};</span>
+<span id="L351"><span class="lineNum">     351</span>                 :             : </span>
+<span id="L352"><span class="lineNum">     352</span>                 :             :     /// @brief Current state of the graph.</span>
+<span id="L353"><span class="lineNum">     353</span>                 :             :     GraphState state_{GraphState::kSuccess};</span>
+<span id="L354"><span class="lineNum">     354</span>                 :             : </span>
+<span id="L355"><span class="lineNum">     355</span>                 :             :     /// @brief the requested (target) Process Group State</span>
+<span id="L356"><span class="lineNum">     356</span>                 :             :     ProcessGroupStateID requested_state_{};</span>
+<span id="L357"><span class="lineNum">     357</span>                 :             : </span>
+<span id="L358"><span class="lineNum">     358</span>                 :             :     /// @brief Mutex protecting concurrent access to requested_state_.pg_state_name_.</span>
+<span id="L359"><span class="lineNum">     359</span>                 :             :     mutable std::mutex requested_state_mutex_{};</span>
+<span id="L360"><span class="lineNum">     360</span>                 :             : </span>
+<span id="L361"><span class="lineNum">     361</span>                 :             :     /// @brief Config pointer to set up graph nodes</span>
+<span id="L362"><span class="lineNum">     362</span>                 :             :     GraphConfig&amp; configuration_;</span>
+<span id="L363"><span class="lineNum">     363</span>                 :             : </span>
+<span id="L364"><span class="lineNum">     364</span>                 :             :     /// @brief Queue to push component tasks to</span>
+<span id="L365"><span class="lineNum">     365</span>                 :             :     std::shared_ptr&lt;WorkerQueue&gt; job_queue_;</span>
+<span id="L366"><span class="lineNum">     366</span>                 :             : </span>
+<span id="L367"><span class="lineNum">     367</span>                 :             :     /// @brief The interfaces passed to the process nodes to control their OS processes</span>
+<span id="L368"><span class="lineNum">     368</span>                 :             :     ProcessHandling process_handling_;</span>
+<span id="L369"><span class="lineNum">     369</span>                 :             : </span>
+<span id="L370"><span class="lineNum">     370</span>                 :             :     /// @brief Class to receive information about the initial state transition result</span>
+<span id="L371"><span class="lineNum">     371</span>                 :             :     ITransitionResultPublisher* transition_result_receiver_;</span>
+<span id="L372"><span class="lineNum">     372</span>                 :             : </span>
+<span id="L373"><span class="lineNum">     373</span>                 :             :     /// @brief The state manager node for this process group</span>
+<span id="L374"><span class="lineNum">     374</span>                 :             :     ControlClientID last_state_manager_{};</span>
+<span id="L375"><span class="lineNum">     375</span>                 :             : </span>
+<span id="L376"><span class="lineNum">     376</span>                 :             :     /// @brief The last execution error set on an unexpected termination</span>
+<span id="L377"><span class="lineNum">     377</span>                 :             :     uint32_t last_execution_error_{0U};</span>
+<span id="L378"><span class="lineNum">     378</span>                 :             : </span>
+<span id="L379"><span class="lineNum">     379</span>                 :             :     /// @brief Set the true if this is the MainPG and this is the initial state transition</span>
+<span id="L380"><span class="lineNum">     380</span>                 :             :     bool is_initial_state_transition_{false};</span>
+<span id="L381"><span class="lineNum">     381</span>                 :             : </span>
+<span id="L382"><span class="lineNum">     382</span>                 :             :     /// @brief The pending state transition, if any</span>
+<span id="L383"><span class="lineNum">     383</span>                 :             :     IdentifierHash pending_state_{&quot;&quot;};</span>
+<span id="L384"><span class="lineNum">     384</span>                 :             : </span>
+<span id="L385"><span class="lineNum">     385</span>                 :             :     /// @brief Any pending event to report</span>
+<span id="L386"><span class="lineNum">     386</span>                 :             :     ControlClientCode event_{ControlClientCode::kNotSet};</span>
+<span id="L387"><span class="lineNum">     387</span>                 :             : </span>
+<span id="L388"><span class="lineNum">     388</span>                 :             :     /// @brief Reason that tha graph was aborted</span>
+<span id="L389"><span class="lineNum">     389</span>                 :             :     ControlClientCode abort_code_{ControlClientCode::kNotSet};</span>
+<span id="L390"><span class="lineNum">     390</span>                 :             : </span>
+<span id="L391"><span class="lineNum">     391</span>                 :             :     /// @brief The message to send when a transition is cancelled</span>
+<span id="L392"><span class="lineNum">     392</span>                 :             :     ControlClientMessage cancel_message_{};</span>
+<span id="L393"><span class="lineNum">     393</span>                 :             : </span>
+<span id="L394"><span class="lineNum">     394</span>                 :             :     /// @brief Constant for Off state.</span>
+<span id="L395"><span class="lineNum">     395</span>                 :             :     const IdentifierHash off_state_{&quot;Off&quot;};</span>
+<span id="L396"><span class="lineNum">     396</span>                 :             : </span>
+<span id="L397"><span class="lineNum">     397</span>                 :             :     /// @brief Stores the timestamp based on the system clock when starting a request</span>
+<span id="L398"><span class="lineNum">     398</span>                 :             :     std::chrono::time_point&lt;std::chrono::steady_clock&gt; request_start_time_{};</span>
+<span id="L399"><span class="lineNum">     399</span>                 :             : </span>
+<span id="L400"><span class="lineNum">     400</span>                 :             :     /// @brief Stop token generator for transitions.</span>
+<span id="L401"><span class="lineNum">     401</span>                 :             :     score::cpp::stop_source stop_source_;</span>
+<span id="L402"><span class="lineNum">     402</span>                 :             : </span>
+<span id="L403"><span class="lineNum">     403</span>                 :             :     /// @brief Transition timeout for Off state</span>
+<span id="L404"><span class="lineNum">     404</span>                 :<span class="tlaGNC tlaBgGNC">          30 :     std::chrono::milliseconds off_state_transition_timeout_{0};</span></span>
+<span id="L405"><span class="lineNum">     405</span>                 :             : };</span>
+<span id="L406"><span class="lineNum">     406</span>                 :             : </span>
+<span id="L407"><span class="lineNum">     407</span>                 :             : }  // namespace score::mw::lifecycle::internal</span>
+<span id="L408"><span class="lineNum">     408</span>                 :             : </span>
+<span id="L409"><span class="lineNum">     409</span>                 :             : #endif  /// GRAPH_HPP_INCLUDED</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

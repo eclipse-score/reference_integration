@@ -1,0 +1,595 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - home/runner/.bazel/external/flatbuffers+/include/flatbuffers/external/flatbuffers+/include/flatbuffers/base.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../../../../../index.html">top level</a> - <a href="index.html">/home/runner/.bazel/external/flatbuffers+/include/flatbuffers/external/flatbuffers+/include/flatbuffers</a> - base.h<span style="font-size: 80%;"> (source / <a href="base.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">10</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:33:47</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">22</td>
+            <td class="headerCovTableEntry">22</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryHi">-</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : #ifndef FLATBUFFERS_BASE_H_</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             : #define FLATBUFFERS_BASE_H_</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             : </span>
+<span id="L4"><span class="lineNum">       4</span>                 :             : // clang-format off</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             : </span>
+<span id="L6"><span class="lineNum">       6</span>                 :             : // If activate should be declared and included first.</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             : #if defined(FLATBUFFERS_MEMORY_LEAK_TRACKING) &amp;&amp; \</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :     defined(_MSC_VER) &amp;&amp; defined(_DEBUG)</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :   // The _CRTDBG_MAP_ALLOC inside &lt;crtdbg.h&gt; will replace</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :   // calloc/free (etc) to its debug version using #define directives.</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :   #define _CRTDBG_MAP_ALLOC</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :   #include &lt;stdlib.h&gt;</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             :   #include &lt;crtdbg.h&gt;</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             :   // Replace operator new by trace-enabled version.</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             :   #define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)</span>
+<span id="L16"><span class="lineNum">      16</span>                 :             :   #define new DEBUG_NEW</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #endif</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : </span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : #if !defined(FLATBUFFERS_ASSERT)</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : #include &lt;assert.h&gt;</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : #define FLATBUFFERS_ASSERT assert</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : #elif defined(FLATBUFFERS_ASSERT_INCLUDE)</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : // Include file with forward declaration</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : #include FLATBUFFERS_ASSERT_INCLUDE</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : #endif</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : </span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : #ifndef ARDUINO</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : #include &lt;cstdint&gt;</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : #endif</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : </span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : #include &lt;cstddef&gt;</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : #include &lt;cstdlib&gt;</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : #include &lt;cstring&gt;</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : </span>
+<span id="L35"><span class="lineNum">      35</span>                 :             : #if defined(ARDUINO) &amp;&amp; !defined(ARDUINOSTL_M_H) &amp;&amp; defined(__AVR__)</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             :   #include &lt;utility.h&gt;</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             : #else</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             :   #include &lt;utility&gt;</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : #endif</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : </span>
+<span id="L41"><span class="lineNum">      41</span>                 :             : #include &lt;string&gt;</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             : #include &lt;type_traits&gt;</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             : #include &lt;vector&gt;</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             : #include &lt;set&gt;</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             : #include &lt;algorithm&gt;</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             : #include &lt;limits&gt;</span>
+<span id="L47"><span class="lineNum">      47</span>                 :             : #include &lt;iterator&gt;</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             : #include &lt;memory&gt;</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             : </span>
+<span id="L50"><span class="lineNum">      50</span>                 :             : #if defined(__unix__) &amp;&amp; !defined(FLATBUFFERS_LOCALE_INDEPENDENT)</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             :   #include &lt;unistd.h&gt;</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             : #endif</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             : </span>
+<span id="L54"><span class="lineNum">      54</span>                 :             : #ifdef __ANDROID__</span>
+<span id="L55"><span class="lineNum">      55</span>                 :             :   #include &lt;android/api-level.h&gt;</span>
+<span id="L56"><span class="lineNum">      56</span>                 :             : #endif</span>
+<span id="L57"><span class="lineNum">      57</span>                 :             : </span>
+<span id="L58"><span class="lineNum">      58</span>                 :             : #if defined(__ICCARM__)</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             : #include &lt;intrinsics.h&gt;</span>
+<span id="L60"><span class="lineNum">      60</span>                 :             : #endif</span>
+<span id="L61"><span class="lineNum">      61</span>                 :             : </span>
+<span id="L62"><span class="lineNum">      62</span>                 :             : // Note the __clang__ check is needed, because clang presents itself</span>
+<span id="L63"><span class="lineNum">      63</span>                 :             : // as an older GNUC compiler (4.2).</span>
+<span id="L64"><span class="lineNum">      64</span>                 :             : // Clang 3.3 and later implement all of the ISO C++ 2011 standard.</span>
+<span id="L65"><span class="lineNum">      65</span>                 :             : // Clang 3.4 and later implement all of the ISO C++ 2014 standard.</span>
+<span id="L66"><span class="lineNum">      66</span>                 :             : // http://clang.llvm.org/cxx_status.html</span>
+<span id="L67"><span class="lineNum">      67</span>                 :             : </span>
+<span id="L68"><span class="lineNum">      68</span>                 :             : // Note the MSVC value '__cplusplus' may be incorrect:</span>
+<span id="L69"><span class="lineNum">      69</span>                 :             : // The '__cplusplus' predefined macro in the MSVC stuck at the value 199711L,</span>
+<span id="L70"><span class="lineNum">      70</span>                 :             : // indicating (erroneously!) that the compiler conformed to the C++98 Standard.</span>
+<span id="L71"><span class="lineNum">      71</span>                 :             : // This value should be correct starting from MSVC2017-15.7-Preview-3.</span>
+<span id="L72"><span class="lineNum">      72</span>                 :             : // The '__cplusplus' will be valid only if MSVC2017-15.7-P3 and the `/Zc:__cplusplus` switch is set.</span>
+<span id="L73"><span class="lineNum">      73</span>                 :             : // Workaround (for details see MSDN):</span>
+<span id="L74"><span class="lineNum">      74</span>                 :             : // Use the _MSC_VER and _MSVC_LANG definition instead of the __cplusplus  for compatibility.</span>
+<span id="L75"><span class="lineNum">      75</span>                 :             : // The _MSVC_LANG macro reports the Standard version regardless of the '/Zc:__cplusplus' switch.</span>
+<span id="L76"><span class="lineNum">      76</span>                 :             : </span>
+<span id="L77"><span class="lineNum">      77</span>                 :             : #if defined(__GNUC__) &amp;&amp; !defined(__clang__)</span>
+<span id="L78"><span class="lineNum">      78</span>                 :             :   #define FLATBUFFERS_GCC (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)</span>
+<span id="L79"><span class="lineNum">      79</span>                 :             : #else</span>
+<span id="L80"><span class="lineNum">      80</span>                 :             :   #define FLATBUFFERS_GCC 0</span>
+<span id="L81"><span class="lineNum">      81</span>                 :             : #endif</span>
+<span id="L82"><span class="lineNum">      82</span>                 :             : </span>
+<span id="L83"><span class="lineNum">      83</span>                 :             : #if defined(__clang__)</span>
+<span id="L84"><span class="lineNum">      84</span>                 :             :   #define FLATBUFFERS_CLANG (__clang_major__ * 10000 + __clang_minor__ * 100 + __clang_patchlevel__)</span>
+<span id="L85"><span class="lineNum">      85</span>                 :             : #else</span>
+<span id="L86"><span class="lineNum">      86</span>                 :             :   #define FLATBUFFERS_CLANG 0</span>
+<span id="L87"><span class="lineNum">      87</span>                 :             : #endif</span>
+<span id="L88"><span class="lineNum">      88</span>                 :             : </span>
+<span id="L89"><span class="lineNum">      89</span>                 :             : /// @cond FLATBUFFERS_INTERNAL</span>
+<span id="L90"><span class="lineNum">      90</span>                 :             : #if __cplusplus &lt;= 199711L &amp;&amp; \</span>
+<span id="L91"><span class="lineNum">      91</span>                 :             :     (!defined(_MSC_VER) || _MSC_VER &lt; 1600) &amp;&amp; \</span>
+<span id="L92"><span class="lineNum">      92</span>                 :             :     (!defined(__GNUC__) || \</span>
+<span id="L93"><span class="lineNum">      93</span>                 :             :       (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ &lt; 40400))</span>
+<span id="L94"><span class="lineNum">      94</span>                 :             :   #error A C++11 compatible compiler with support for the auto typing is \</span>
+<span id="L95"><span class="lineNum">      95</span>                 :             :          required for FlatBuffers.</span>
+<span id="L96"><span class="lineNum">      96</span>                 :             :   #error __cplusplus _MSC_VER __GNUC__  __GNUC_MINOR__  __GNUC_PATCHLEVEL__</span>
+<span id="L97"><span class="lineNum">      97</span>                 :             : #endif</span>
+<span id="L98"><span class="lineNum">      98</span>                 :             : </span>
+<span id="L99"><span class="lineNum">      99</span>                 :             : #if !defined(__clang__) &amp;&amp; \</span>
+<span id="L100"><span class="lineNum">     100</span>                 :             :     defined(__GNUC__) &amp;&amp; \</span>
+<span id="L101"><span class="lineNum">     101</span>                 :             :     (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ &lt; 40600)</span>
+<span id="L102"><span class="lineNum">     102</span>                 :             :   // Backwards compatibility for g++ 4.4, and 4.5 which don't have the nullptr</span>
+<span id="L103"><span class="lineNum">     103</span>                 :             :   // and constexpr keywords. Note the __clang__ check is needed, because clang</span>
+<span id="L104"><span class="lineNum">     104</span>                 :             :   // presents itself as an older GNUC compiler.</span>
+<span id="L105"><span class="lineNum">     105</span>                 :             :   #ifndef nullptr_t</span>
+<span id="L106"><span class="lineNum">     106</span>                 :             :     const class nullptr_t {</span>
+<span id="L107"><span class="lineNum">     107</span>                 :             :     public:</span>
+<span id="L108"><span class="lineNum">     108</span>                 :             :       template&lt;class T&gt; inline operator T*() const { return 0; }</span>
+<span id="L109"><span class="lineNum">     109</span>                 :             :     private:</span>
+<span id="L110"><span class="lineNum">     110</span>                 :             :       void operator&amp;() const;</span>
+<span id="L111"><span class="lineNum">     111</span>                 :             :     } nullptr = {};</span>
+<span id="L112"><span class="lineNum">     112</span>                 :             :   #endif</span>
+<span id="L113"><span class="lineNum">     113</span>                 :             :   #ifndef constexpr</span>
+<span id="L114"><span class="lineNum">     114</span>                 :             :     #define constexpr const</span>
+<span id="L115"><span class="lineNum">     115</span>                 :             :   #endif</span>
+<span id="L116"><span class="lineNum">     116</span>                 :             : #endif</span>
+<span id="L117"><span class="lineNum">     117</span>                 :             : </span>
+<span id="L118"><span class="lineNum">     118</span>                 :             : // The wire format uses a little endian encoding (since that's efficient for</span>
+<span id="L119"><span class="lineNum">     119</span>                 :             : // the common platforms).</span>
+<span id="L120"><span class="lineNum">     120</span>                 :             : #if defined(__s390x__)</span>
+<span id="L121"><span class="lineNum">     121</span>                 :             :   #define FLATBUFFERS_LITTLEENDIAN 0</span>
+<span id="L122"><span class="lineNum">     122</span>                 :             : #endif // __s390x__</span>
+<span id="L123"><span class="lineNum">     123</span>                 :             : #if !defined(FLATBUFFERS_LITTLEENDIAN)</span>
+<span id="L124"><span class="lineNum">     124</span>                 :             :   #if defined(__GNUC__) || defined(__clang__) || defined(__ICCARM__)</span>
+<span id="L125"><span class="lineNum">     125</span>                 :             :     #if (defined(__BIG_ENDIAN__) || \</span>
+<span id="L126"><span class="lineNum">     126</span>                 :             :          (defined(__BYTE_ORDER__) &amp;&amp; __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__))</span>
+<span id="L127"><span class="lineNum">     127</span>                 :             :       #define FLATBUFFERS_LITTLEENDIAN 0</span>
+<span id="L128"><span class="lineNum">     128</span>                 :             :     #else</span>
+<span id="L129"><span class="lineNum">     129</span>                 :             :       #define FLATBUFFERS_LITTLEENDIAN 1</span>
+<span id="L130"><span class="lineNum">     130</span>                 :             :     #endif // __BIG_ENDIAN__</span>
+<span id="L131"><span class="lineNum">     131</span>                 :             :   #elif defined(_MSC_VER)</span>
+<span id="L132"><span class="lineNum">     132</span>                 :             :     #if defined(_M_PPC)</span>
+<span id="L133"><span class="lineNum">     133</span>                 :             :       #define FLATBUFFERS_LITTLEENDIAN 0</span>
+<span id="L134"><span class="lineNum">     134</span>                 :             :     #else</span>
+<span id="L135"><span class="lineNum">     135</span>                 :             :       #define FLATBUFFERS_LITTLEENDIAN 1</span>
+<span id="L136"><span class="lineNum">     136</span>                 :             :     #endif</span>
+<span id="L137"><span class="lineNum">     137</span>                 :             :   #else</span>
+<span id="L138"><span class="lineNum">     138</span>                 :             :     #error Unable to determine endianness, define FLATBUFFERS_LITTLEENDIAN.</span>
+<span id="L139"><span class="lineNum">     139</span>                 :             :   #endif</span>
+<span id="L140"><span class="lineNum">     140</span>                 :             : #endif // !defined(FLATBUFFERS_LITTLEENDIAN)</span>
+<span id="L141"><span class="lineNum">     141</span>                 :             : </span>
+<span id="L142"><span class="lineNum">     142</span>                 :             : #define FLATBUFFERS_VERSION_MAJOR 25</span>
+<span id="L143"><span class="lineNum">     143</span>                 :             : #define FLATBUFFERS_VERSION_MINOR 12</span>
+<span id="L144"><span class="lineNum">     144</span>                 :             : #define FLATBUFFERS_VERSION_REVISION 19</span>
+<span id="L145"><span class="lineNum">     145</span>                 :             : #define FLATBUFFERS_STRING_EXPAND(X) #X</span>
+<span id="L146"><span class="lineNum">     146</span>                 :             : #define FLATBUFFERS_STRING(X) FLATBUFFERS_STRING_EXPAND(X)</span>
+<span id="L147"><span class="lineNum">     147</span>                 :             : namespace flatbuffers {</span>
+<span id="L148"><span class="lineNum">     148</span>                 :             :   // Returns version as string  &quot;MAJOR.MINOR.REVISION&quot;.</span>
+<span id="L149"><span class="lineNum">     149</span>                 :             :   const char* FLATBUFFERS_VERSION();</span>
+<span id="L150"><span class="lineNum">     150</span>                 :             : }</span>
+<span id="L151"><span class="lineNum">     151</span>                 :             : </span>
+<span id="L152"><span class="lineNum">     152</span>                 :             : #if (!defined(_MSC_VER) || _MSC_VER &gt; 1600) &amp;&amp; \</span>
+<span id="L153"><span class="lineNum">     153</span>                 :             :     (!defined(__GNUC__) || (__GNUC__ * 100 + __GNUC_MINOR__ &gt;= 407)) || \</span>
+<span id="L154"><span class="lineNum">     154</span>                 :             :     defined(__clang__)</span>
+<span id="L155"><span class="lineNum">     155</span>                 :             :   #define FLATBUFFERS_FINAL_CLASS final</span>
+<span id="L156"><span class="lineNum">     156</span>                 :             :   #define FLATBUFFERS_OVERRIDE override</span>
+<span id="L157"><span class="lineNum">     157</span>                 :             :   #define FLATBUFFERS_EXPLICIT_CPP11 explicit</span>
+<span id="L158"><span class="lineNum">     158</span>                 :             :   #define FLATBUFFERS_VTABLE_UNDERLYING_TYPE : ::flatbuffers::voffset_t</span>
+<span id="L159"><span class="lineNum">     159</span>                 :             : #else</span>
+<span id="L160"><span class="lineNum">     160</span>                 :             :   #define FLATBUFFERS_FINAL_CLASS</span>
+<span id="L161"><span class="lineNum">     161</span>                 :             :   #define FLATBUFFERS_OVERRIDE</span>
+<span id="L162"><span class="lineNum">     162</span>                 :             :   #define FLATBUFFERS_EXPLICIT_CPP11</span>
+<span id="L163"><span class="lineNum">     163</span>                 :             :   #define FLATBUFFERS_VTABLE_UNDERLYING_TYPE</span>
+<span id="L164"><span class="lineNum">     164</span>                 :             : #endif</span>
+<span id="L165"><span class="lineNum">     165</span>                 :             : </span>
+<span id="L166"><span class="lineNum">     166</span>                 :             : #if (!defined(_MSC_VER) || _MSC_VER &gt;= 1900) &amp;&amp; \</span>
+<span id="L167"><span class="lineNum">     167</span>                 :             :     (!defined(__GNUC__) || (__GNUC__ * 100 + __GNUC_MINOR__ &gt;= 406)) || \</span>
+<span id="L168"><span class="lineNum">     168</span>                 :             :     (defined(__cpp_constexpr) &amp;&amp; __cpp_constexpr &gt;= 200704)</span>
+<span id="L169"><span class="lineNum">     169</span>                 :             :   #define FLATBUFFERS_CONSTEXPR constexpr</span>
+<span id="L170"><span class="lineNum">     170</span>                 :             :   #define FLATBUFFERS_CONSTEXPR_CPP11 constexpr</span>
+<span id="L171"><span class="lineNum">     171</span>                 :             :   #define FLATBUFFERS_CONSTEXPR_DEFINED</span>
+<span id="L172"><span class="lineNum">     172</span>                 :             : #else</span>
+<span id="L173"><span class="lineNum">     173</span>                 :             :   #define FLATBUFFERS_CONSTEXPR const</span>
+<span id="L174"><span class="lineNum">     174</span>                 :             :   #define FLATBUFFERS_CONSTEXPR_CPP11</span>
+<span id="L175"><span class="lineNum">     175</span>                 :             : #endif</span>
+<span id="L176"><span class="lineNum">     176</span>                 :             : </span>
+<span id="L177"><span class="lineNum">     177</span>                 :             : #if (defined(__cplusplus) &amp;&amp; __cplusplus &gt;= 201402L) || \</span>
+<span id="L178"><span class="lineNum">     178</span>                 :             :     (defined(__cpp_constexpr) &amp;&amp; __cpp_constexpr &gt;= 201304)</span>
+<span id="L179"><span class="lineNum">     179</span>                 :             :   #define FLATBUFFERS_CONSTEXPR_CPP14 FLATBUFFERS_CONSTEXPR_CPP11</span>
+<span id="L180"><span class="lineNum">     180</span>                 :             : #else</span>
+<span id="L181"><span class="lineNum">     181</span>                 :             :   #define FLATBUFFERS_CONSTEXPR_CPP14</span>
+<span id="L182"><span class="lineNum">     182</span>                 :             : #endif</span>
+<span id="L183"><span class="lineNum">     183</span>                 :             : </span>
+<span id="L184"><span class="lineNum">     184</span>                 :             : #if (defined(__GXX_EXPERIMENTAL_CXX0X__) &amp;&amp; (__GNUC__ * 100 + __GNUC_MINOR__ &gt;= 406)) || \</span>
+<span id="L185"><span class="lineNum">     185</span>                 :             :     (defined(_MSC_FULL_VER) &amp;&amp; (_MSC_FULL_VER &gt;= 190023026)) || \</span>
+<span id="L186"><span class="lineNum">     186</span>                 :             :     defined(__clang__)</span>
+<span id="L187"><span class="lineNum">     187</span>                 :             :   #define FLATBUFFERS_NOEXCEPT noexcept</span>
+<span id="L188"><span class="lineNum">     188</span>                 :             : #else</span>
+<span id="L189"><span class="lineNum">     189</span>                 :             :   #define FLATBUFFERS_NOEXCEPT</span>
+<span id="L190"><span class="lineNum">     190</span>                 :             : #endif</span>
+<span id="L191"><span class="lineNum">     191</span>                 :             : </span>
+<span id="L192"><span class="lineNum">     192</span>                 :             : // NOTE: the FLATBUFFERS_DELETE_FUNC macro may change the access mode to</span>
+<span id="L193"><span class="lineNum">     193</span>                 :             : // private, so be sure to put it at the end or reset access mode explicitly.</span>
+<span id="L194"><span class="lineNum">     194</span>                 :             : #if (!defined(_MSC_VER) || _MSC_FULL_VER &gt;= 180020827) &amp;&amp; \</span>
+<span id="L195"><span class="lineNum">     195</span>                 :             :     (!defined(__GNUC__) || (__GNUC__ * 100 + __GNUC_MINOR__ &gt;= 404)) || \</span>
+<span id="L196"><span class="lineNum">     196</span>                 :             :     defined(__clang__)</span>
+<span id="L197"><span class="lineNum">     197</span>                 :             :   #define FLATBUFFERS_DELETE_FUNC(func) func = delete</span>
+<span id="L198"><span class="lineNum">     198</span>                 :             : #else</span>
+<span id="L199"><span class="lineNum">     199</span>                 :             :   #define FLATBUFFERS_DELETE_FUNC(func) private: func</span>
+<span id="L200"><span class="lineNum">     200</span>                 :             : #endif</span>
+<span id="L201"><span class="lineNum">     201</span>                 :             : </span>
+<span id="L202"><span class="lineNum">     202</span>                 :             : #if (!defined(_MSC_VER) || _MSC_VER &gt;= 1900) &amp;&amp; \</span>
+<span id="L203"><span class="lineNum">     203</span>                 :             :     (!defined(__GNUC__) || (__GNUC__ * 100 + __GNUC_MINOR__ &gt;= 409)) || \</span>
+<span id="L204"><span class="lineNum">     204</span>                 :             :     defined(__clang__)</span>
+<span id="L205"><span class="lineNum">     205</span>                 :             :   #define FLATBUFFERS_DEFAULT_DECLARATION</span>
+<span id="L206"><span class="lineNum">     206</span>                 :             : #endif</span>
+<span id="L207"><span class="lineNum">     207</span>                 :             : </span>
+<span id="L208"><span class="lineNum">     208</span>                 :             : // Check if we can use template aliases</span>
+<span id="L209"><span class="lineNum">     209</span>                 :             : // Not possible if Microsoft Compiler before 2012</span>
+<span id="L210"><span class="lineNum">     210</span>                 :             : // Possible is the language feature __cpp_alias_templates is defined well</span>
+<span id="L211"><span class="lineNum">     211</span>                 :             : // Or possible if the C++ std is C+11 or newer</span>
+<span id="L212"><span class="lineNum">     212</span>                 :             : #if (defined(_MSC_VER) &amp;&amp; _MSC_VER &gt; 1700 /* MSVC2012 */) \</span>
+<span id="L213"><span class="lineNum">     213</span>                 :             :     || (defined(__cpp_alias_templates) &amp;&amp; __cpp_alias_templates &gt;= 200704) \</span>
+<span id="L214"><span class="lineNum">     214</span>                 :             :     || (defined(__cplusplus) &amp;&amp; __cplusplus &gt;= 201103L)</span>
+<span id="L215"><span class="lineNum">     215</span>                 :             :   #define FLATBUFFERS_TEMPLATES_ALIASES</span>
+<span id="L216"><span class="lineNum">     216</span>                 :             : #endif</span>
+<span id="L217"><span class="lineNum">     217</span>                 :             : </span>
+<span id="L218"><span class="lineNum">     218</span>                 :             : #ifndef FLATBUFFERS_HAS_STRING_VIEW</span>
+<span id="L219"><span class="lineNum">     219</span>                 :             :   // Only provide flatbuffers::string_view if __has_include can be used</span>
+<span id="L220"><span class="lineNum">     220</span>                 :             :   // to detect a header that provides an implementation</span>
+<span id="L221"><span class="lineNum">     221</span>                 :             :   #if defined(__has_include)</span>
+<span id="L222"><span class="lineNum">     222</span>                 :             :     // Check for std::string_view (in c++17)</span>
+<span id="L223"><span class="lineNum">     223</span>                 :             :     #if __has_include(&lt;string_view&gt;) &amp;&amp; (__cplusplus &gt;= 201606 || (defined(_HAS_CXX17) &amp;&amp; _HAS_CXX17))</span>
+<span id="L224"><span class="lineNum">     224</span>                 :             :       #include &lt;string_view&gt;</span>
+<span id="L225"><span class="lineNum">     225</span>                 :             :       namespace flatbuffers {</span>
+<span id="L226"><span class="lineNum">     226</span>                 :             :         typedef std::string_view string_view;</span>
+<span id="L227"><span class="lineNum">     227</span>                 :             :       }</span>
+<span id="L228"><span class="lineNum">     228</span>                 :             :       #define FLATBUFFERS_HAS_STRING_VIEW 1</span>
+<span id="L229"><span class="lineNum">     229</span>                 :             :     // Check for std::experimental::string_view (in c++14, compiler-dependent)</span>
+<span id="L230"><span class="lineNum">     230</span>                 :             :     #elif __has_include(&lt;experimental/string_view&gt;) &amp;&amp; (__cplusplus &gt;= 201411)</span>
+<span id="L231"><span class="lineNum">     231</span>                 :             :       #include &lt;experimental/string_view&gt;</span>
+<span id="L232"><span class="lineNum">     232</span>                 :             :       namespace flatbuffers {</span>
+<span id="L233"><span class="lineNum">     233</span>                 :             :         typedef std::experimental::string_view string_view;</span>
+<span id="L234"><span class="lineNum">     234</span>                 :             :       }</span>
+<span id="L235"><span class="lineNum">     235</span>                 :             :       #define FLATBUFFERS_HAS_STRING_VIEW 1</span>
+<span id="L236"><span class="lineNum">     236</span>                 :             :     // Check for absl::string_view</span>
+<span id="L237"><span class="lineNum">     237</span>                 :             :     #elif __has_include(&quot;absl/strings/string_view.h&quot;) &amp;&amp; \</span>
+<span id="L238"><span class="lineNum">     238</span>                 :             :           __has_include(&quot;absl/base/config.h&quot;) &amp;&amp; \</span>
+<span id="L239"><span class="lineNum">     239</span>                 :             :           (__cplusplus &gt;= 201411)</span>
+<span id="L240"><span class="lineNum">     240</span>                 :             :       #include &quot;absl/base/config.h&quot;</span>
+<span id="L241"><span class="lineNum">     241</span>                 :             :       #if !defined(ABSL_USES_STD_STRING_VIEW)</span>
+<span id="L242"><span class="lineNum">     242</span>                 :             :         #include &quot;absl/strings/string_view.h&quot;</span>
+<span id="L243"><span class="lineNum">     243</span>                 :             :         namespace flatbuffers {</span>
+<span id="L244"><span class="lineNum">     244</span>                 :             :           typedef absl::string_view string_view;</span>
+<span id="L245"><span class="lineNum">     245</span>                 :             :         }</span>
+<span id="L246"><span class="lineNum">     246</span>                 :             :         #define FLATBUFFERS_HAS_STRING_VIEW 1</span>
+<span id="L247"><span class="lineNum">     247</span>                 :             :       #endif</span>
+<span id="L248"><span class="lineNum">     248</span>                 :             :     #endif</span>
+<span id="L249"><span class="lineNum">     249</span>                 :             :   #endif // __has_include</span>
+<span id="L250"><span class="lineNum">     250</span>                 :             : #endif // !FLATBUFFERS_HAS_STRING_VIEW</span>
+<span id="L251"><span class="lineNum">     251</span>                 :             : </span>
+<span id="L252"><span class="lineNum">     252</span>                 :             : #ifndef FLATBUFFERS_GENERAL_HEAP_ALLOC_OK</span>
+<span id="L253"><span class="lineNum">     253</span>                 :             :   // Allow heap allocations to be used</span>
+<span id="L254"><span class="lineNum">     254</span>                 :             :   #define FLATBUFFERS_GENERAL_HEAP_ALLOC_OK 1</span>
+<span id="L255"><span class="lineNum">     255</span>                 :             : #endif // !FLATBUFFERS_GENERAL_HEAP_ALLOC_OK</span>
+<span id="L256"><span class="lineNum">     256</span>                 :             : </span>
+<span id="L257"><span class="lineNum">     257</span>                 :             : #ifndef FLATBUFFERS_HAS_NEW_STRTOD</span>
+<span id="L258"><span class="lineNum">     258</span>                 :             :   // Modern (C++11) strtod and strtof functions are available for use.</span>
+<span id="L259"><span class="lineNum">     259</span>                 :             :   // 1) nan/inf strings as argument of strtod;</span>
+<span id="L260"><span class="lineNum">     260</span>                 :             :   // 2) hex-float  as argument of  strtod/strtof.</span>
+<span id="L261"><span class="lineNum">     261</span>                 :             :   #if (defined(_MSC_VER) &amp;&amp; _MSC_VER &gt;= 1900) || \</span>
+<span id="L262"><span class="lineNum">     262</span>                 :             :       (defined(__GNUC__) &amp;&amp; (__GNUC__ * 100 + __GNUC_MINOR__ &gt;= 409)) || \</span>
+<span id="L263"><span class="lineNum">     263</span>                 :             :       (defined(__clang__))</span>
+<span id="L264"><span class="lineNum">     264</span>                 :             :     #define FLATBUFFERS_HAS_NEW_STRTOD 1</span>
+<span id="L265"><span class="lineNum">     265</span>                 :             :   #endif</span>
+<span id="L266"><span class="lineNum">     266</span>                 :             : #endif // !FLATBUFFERS_HAS_NEW_STRTOD</span>
+<span id="L267"><span class="lineNum">     267</span>                 :             : </span>
+<span id="L268"><span class="lineNum">     268</span>                 :             : #ifndef FLATBUFFERS_LOCALE_INDEPENDENT</span>
+<span id="L269"><span class="lineNum">     269</span>                 :             :   // Enable locale independent functions {strtof_l, strtod_l,strtoll_l,</span>
+<span id="L270"><span class="lineNum">     270</span>                 :             :   // strtoull_l} on platforms that support them.</span>
+<span id="L271"><span class="lineNum">     271</span>                 :             :   #if (defined(_MSC_VER) &amp;&amp; _MSC_VER &gt;= 1800) || \</span>
+<span id="L272"><span class="lineNum">     272</span>                 :             :       (defined(__ANDROID__) &amp;&amp; defined(__ANDROID_API__) &amp;&amp; __ANDROID_API__&gt;= 26) || \</span>
+<span id="L273"><span class="lineNum">     273</span>                 :             :       (defined(_XOPEN_VERSION) &amp;&amp; (_XOPEN_VERSION &gt;= 700)) &amp;&amp; \</span>
+<span id="L274"><span class="lineNum">     274</span>                 :             :       !defined(__Fuchsia__)</span>
+<span id="L275"><span class="lineNum">     275</span>                 :             :     #define FLATBUFFERS_LOCALE_INDEPENDENT 1</span>
+<span id="L276"><span class="lineNum">     276</span>                 :             :   #else</span>
+<span id="L277"><span class="lineNum">     277</span>                 :             :     #define FLATBUFFERS_LOCALE_INDEPENDENT 0</span>
+<span id="L278"><span class="lineNum">     278</span>                 :             :   #endif</span>
+<span id="L279"><span class="lineNum">     279</span>                 :             : #endif  // !FLATBUFFERS_LOCALE_INDEPENDENT</span>
+<span id="L280"><span class="lineNum">     280</span>                 :             : </span>
+<span id="L281"><span class="lineNum">     281</span>                 :             : // Suppress Undefined Behavior Sanitizer (recoverable only). Usage:</span>
+<span id="L282"><span class="lineNum">     282</span>                 :             : // - FLATBUFFERS_SUPPRESS_UBSAN(&quot;undefined&quot;)</span>
+<span id="L283"><span class="lineNum">     283</span>                 :             : // - FLATBUFFERS_SUPPRESS_UBSAN(&quot;signed-integer-overflow&quot;)</span>
+<span id="L284"><span class="lineNum">     284</span>                 :             : #if defined(__clang__) &amp;&amp; (__clang_major__ &gt; 3 || (__clang_major__ == 3 &amp;&amp; __clang_minor__ &gt;=7))</span>
+<span id="L285"><span class="lineNum">     285</span>                 :             :   #define FLATBUFFERS_SUPPRESS_UBSAN(type) __attribute__((no_sanitize(type)))</span>
+<span id="L286"><span class="lineNum">     286</span>                 :             : #elif defined(__GNUC__) &amp;&amp; (__GNUC__ * 100 + __GNUC_MINOR__ &gt;= 409)</span>
+<span id="L287"><span class="lineNum">     287</span>                 :             :   #define FLATBUFFERS_SUPPRESS_UBSAN(type) __attribute__((no_sanitize_undefined))</span>
+<span id="L288"><span class="lineNum">     288</span>                 :             : #else</span>
+<span id="L289"><span class="lineNum">     289</span>                 :             :   #define FLATBUFFERS_SUPPRESS_UBSAN(type)</span>
+<span id="L290"><span class="lineNum">     290</span>                 :             : #endif</span>
+<span id="L291"><span class="lineNum">     291</span>                 :             : </span>
+<span id="L292"><span class="lineNum">     292</span>                 :             : namespace flatbuffers {</span>
+<span id="L293"><span class="lineNum">     293</span>                 :             :   // This is constexpr function used for checking compile-time constants.</span>
+<span id="L294"><span class="lineNum">     294</span>                 :             :   // Avoid `#pragma warning(disable: 4127) // C4127: expression is constant`.</span>
+<span id="L295"><span class="lineNum">     295</span>                 :             :   template&lt;typename T&gt; FLATBUFFERS_CONSTEXPR inline bool IsConstTrue(T t) {</span>
+<span id="L296"><span class="lineNum">     296</span>                 :             :     return !!t;</span>
+<span id="L297"><span class="lineNum">     297</span>                 :             :   }</span>
+<span id="L298"><span class="lineNum">     298</span>                 :             : }</span>
+<span id="L299"><span class="lineNum">     299</span>                 :             : </span>
+<span id="L300"><span class="lineNum">     300</span>                 :             : // Enable C++ attribute [[]] if std:c++17 or higher.</span>
+<span id="L301"><span class="lineNum">     301</span>                 :             : #if ((__cplusplus &gt;= 201703L) \</span>
+<span id="L302"><span class="lineNum">     302</span>                 :             :     || (defined(_MSVC_LANG) &amp;&amp;  (_MSVC_LANG &gt;= 201703L)))</span>
+<span id="L303"><span class="lineNum">     303</span>                 :             :   // All attributes unknown to an implementation are ignored without causing an error.</span>
+<span id="L304"><span class="lineNum">     304</span>                 :             :   #define FLATBUFFERS_ATTRIBUTE(attr) attr</span>
+<span id="L305"><span class="lineNum">     305</span>                 :             : </span>
+<span id="L306"><span class="lineNum">     306</span>                 :             :   #define FLATBUFFERS_FALLTHROUGH() [[fallthrough]]</span>
+<span id="L307"><span class="lineNum">     307</span>                 :             : #else</span>
+<span id="L308"><span class="lineNum">     308</span>                 :             :   #define FLATBUFFERS_ATTRIBUTE(attr)</span>
+<span id="L309"><span class="lineNum">     309</span>                 :             : </span>
+<span id="L310"><span class="lineNum">     310</span>                 :             :   #if FLATBUFFERS_CLANG &gt;= 30800</span>
+<span id="L311"><span class="lineNum">     311</span>                 :             :     #define FLATBUFFERS_FALLTHROUGH() [[clang::fallthrough]]</span>
+<span id="L312"><span class="lineNum">     312</span>                 :             :   #elif FLATBUFFERS_GCC &gt;= 70300</span>
+<span id="L313"><span class="lineNum">     313</span>                 :             :     #define FLATBUFFERS_FALLTHROUGH() [[gnu::fallthrough]]</span>
+<span id="L314"><span class="lineNum">     314</span>                 :             :   #else</span>
+<span id="L315"><span class="lineNum">     315</span>                 :             :     #define FLATBUFFERS_FALLTHROUGH()</span>
+<span id="L316"><span class="lineNum">     316</span>                 :             :   #endif</span>
+<span id="L317"><span class="lineNum">     317</span>                 :             : #endif</span>
+<span id="L318"><span class="lineNum">     318</span>                 :             : </span>
+<span id="L319"><span class="lineNum">     319</span>                 :             : /// @endcond</span>
+<span id="L320"><span class="lineNum">     320</span>                 :             : </span>
+<span id="L321"><span class="lineNum">     321</span>                 :             : /// @file</span>
+<span id="L322"><span class="lineNum">     322</span>                 :             : namespace flatbuffers {</span>
+<span id="L323"><span class="lineNum">     323</span>                 :             : </span>
+<span id="L324"><span class="lineNum">     324</span>                 :             : /// @cond FLATBUFFERS_INTERNAL</span>
+<span id="L325"><span class="lineNum">     325</span>                 :             : // Our default offset / size type, 32bit on purpose on 64bit systems.</span>
+<span id="L326"><span class="lineNum">     326</span>                 :             : // Also, using a consistent offset type maintains compatibility of serialized</span>
+<span id="L327"><span class="lineNum">     327</span>                 :             : // offset values between 32bit and 64bit systems.</span>
+<span id="L328"><span class="lineNum">     328</span>                 :             : typedef uint32_t uoffset_t;</span>
+<span id="L329"><span class="lineNum">     329</span>                 :             : typedef uint64_t uoffset64_t;</span>
+<span id="L330"><span class="lineNum">     330</span>                 :             : </span>
+<span id="L331"><span class="lineNum">     331</span>                 :             : // Signed offsets for references that can go in both directions.</span>
+<span id="L332"><span class="lineNum">     332</span>                 :             : typedef int32_t soffset_t;</span>
+<span id="L333"><span class="lineNum">     333</span>                 :             : typedef int64_t soffset64_t;</span>
+<span id="L334"><span class="lineNum">     334</span>                 :             : </span>
+<span id="L335"><span class="lineNum">     335</span>                 :             : // Offset/index used in v-tables, can be changed to uint8_t in</span>
+<span id="L336"><span class="lineNum">     336</span>                 :             : // format forks to save a bit of space if desired.</span>
+<span id="L337"><span class="lineNum">     337</span>                 :             : typedef uint16_t voffset_t;</span>
+<span id="L338"><span class="lineNum">     338</span>                 :             : </span>
+<span id="L339"><span class="lineNum">     339</span>                 :             : typedef uintmax_t largest_scalar_t;</span>
+<span id="L340"><span class="lineNum">     340</span>                 :             : </span>
+<span id="L341"><span class="lineNum">     341</span>                 :             : // In 32bits, this evaluates to 2GB - 1</span>
+<span id="L342"><span class="lineNum">     342</span>                 :             : #define FLATBUFFERS_MAX_BUFFER_SIZE (std::numeric_limits&lt;::flatbuffers::soffset_t&gt;::max)()</span>
+<span id="L343"><span class="lineNum">     343</span>                 :             : #define FLATBUFFERS_MAX_64_BUFFER_SIZE (std::numeric_limits&lt;::flatbuffers::soffset64_t&gt;::max)()</span>
+<span id="L344"><span class="lineNum">     344</span>                 :             : </span>
+<span id="L345"><span class="lineNum">     345</span>                 :             : // The minimum size buffer that can be a valid flatbuffer.</span>
+<span id="L346"><span class="lineNum">     346</span>                 :             : // Includes the offset to the root table (uoffset_t), the offset to the vtable</span>
+<span id="L347"><span class="lineNum">     347</span>                 :             : // of the root table (soffset_t), the size of the vtable (uint16_t), and the</span>
+<span id="L348"><span class="lineNum">     348</span>                 :             : // size of the referring table (uint16_t).</span>
+<span id="L349"><span class="lineNum">     349</span>                 :             : #define FLATBUFFERS_MIN_BUFFER_SIZE sizeof(::flatbuffers::uoffset_t) + \</span>
+<span id="L350"><span class="lineNum">     350</span>                 :             :   sizeof(::flatbuffers::soffset_t) + sizeof(uint16_t) + sizeof(uint16_t)</span>
+<span id="L351"><span class="lineNum">     351</span>                 :             : </span>
+<span id="L352"><span class="lineNum">     352</span>                 :             : // We support aligning the contents of buffers up to this size.</span>
+<span id="L353"><span class="lineNum">     353</span>                 :             : #ifndef FLATBUFFERS_MAX_ALIGNMENT</span>
+<span id="L354"><span class="lineNum">     354</span>                 :             :   #define FLATBUFFERS_MAX_ALIGNMENT 32</span>
+<span id="L355"><span class="lineNum">     355</span>                 :             : #endif</span>
+<span id="L356"><span class="lineNum">     356</span>                 :             : </span>
+<span id="L357"><span class="lineNum">     357</span>                 :             : /// @brief The length of a FlatBuffer file header.</span>
+<span id="L358"><span class="lineNum">     358</span>                 :             : static const size_t kFileIdentifierLength = 4;</span>
+<span id="L359"><span class="lineNum">     359</span>                 :             : </span>
+<span id="L360"><span class="lineNum">     360</span>                 :             : inline bool VerifyAlignmentRequirements(size_t align, size_t min_align = 1) {</span>
+<span id="L361"><span class="lineNum">     361</span>                 :             :   return (min_align &lt;= align) &amp;&amp; (align &lt;= (FLATBUFFERS_MAX_ALIGNMENT)) &amp;&amp;</span>
+<span id="L362"><span class="lineNum">     362</span>                 :             :          (align &amp; (align - 1)) == 0;  // must be power of 2</span>
+<span id="L363"><span class="lineNum">     363</span>                 :             : }</span>
+<span id="L364"><span class="lineNum">     364</span>                 :             : </span>
+<span id="L365"><span class="lineNum">     365</span>                 :             : #if defined(_MSC_VER)</span>
+<span id="L366"><span class="lineNum">     366</span>                 :             :   #pragma warning(push)</span>
+<span id="L367"><span class="lineNum">     367</span>                 :             :   #pragma warning(disable: 4127) // C4127: conditional expression is constant</span>
+<span id="L368"><span class="lineNum">     368</span>                 :             : #endif</span>
+<span id="L369"><span class="lineNum">     369</span>                 :             : </span>
+<span id="L370"><span class="lineNum">     370</span>                 :             : template&lt;typename T&gt; T EndianSwap(T t) {</span>
+<span id="L371"><span class="lineNum">     371</span>                 :             :   #if defined(_MSC_VER)</span>
+<span id="L372"><span class="lineNum">     372</span>                 :             :     #define FLATBUFFERS_BYTESWAP16 _byteswap_ushort</span>
+<span id="L373"><span class="lineNum">     373</span>                 :             :     #define FLATBUFFERS_BYTESWAP32 _byteswap_ulong</span>
+<span id="L374"><span class="lineNum">     374</span>                 :             :     #define FLATBUFFERS_BYTESWAP64 _byteswap_uint64</span>
+<span id="L375"><span class="lineNum">     375</span>                 :             :   #elif defined(__ICCARM__)</span>
+<span id="L376"><span class="lineNum">     376</span>                 :             :     #define FLATBUFFERS_BYTESWAP16 __REV16</span>
+<span id="L377"><span class="lineNum">     377</span>                 :             :     #define FLATBUFFERS_BYTESWAP32 __REV</span>
+<span id="L378"><span class="lineNum">     378</span>                 :             :     #define FLATBUFFERS_BYTESWAP64(x) \</span>
+<span id="L379"><span class="lineNum">     379</span>                 :             :        ((__REV(static_cast&lt;uint32_t&gt;(x &gt;&gt; 32U))) | (static_cast&lt;uint64_t&gt;(__REV(static_cast&lt;uint32_t&gt;(x)))) &lt;&lt; 32U)</span>
+<span id="L380"><span class="lineNum">     380</span>                 :             :   #else</span>
+<span id="L381"><span class="lineNum">     381</span>                 :             :     #if defined(__GNUC__) &amp;&amp; __GNUC__ * 100 + __GNUC_MINOR__ &lt; 408 &amp;&amp; !defined(__clang__)</span>
+<span id="L382"><span class="lineNum">     382</span>                 :             :       // __builtin_bswap16 was missing prior to GCC 4.8.</span>
+<span id="L383"><span class="lineNum">     383</span>                 :             :       #define FLATBUFFERS_BYTESWAP16(x) \</span>
+<span id="L384"><span class="lineNum">     384</span>                 :             :         static_cast&lt;uint16_t&gt;(__builtin_bswap32(static_cast&lt;uint32_t&gt;(x) &lt;&lt; 16))</span>
+<span id="L385"><span class="lineNum">     385</span>                 :             :     #else</span>
+<span id="L386"><span class="lineNum">     386</span>                 :             :       #define FLATBUFFERS_BYTESWAP16 __builtin_bswap16</span>
+<span id="L387"><span class="lineNum">     387</span>                 :             :     #endif</span>
+<span id="L388"><span class="lineNum">     388</span>                 :             :     #define FLATBUFFERS_BYTESWAP32 __builtin_bswap32</span>
+<span id="L389"><span class="lineNum">     389</span>                 :             :     #define FLATBUFFERS_BYTESWAP64 __builtin_bswap64</span>
+<span id="L390"><span class="lineNum">     390</span>                 :             :   #endif</span>
+<span id="L391"><span class="lineNum">     391</span>                 :             :   if (sizeof(T) == 1) {   // Compile-time if-then's.</span>
+<span id="L392"><span class="lineNum">     392</span>                 :             :     return t;</span>
+<span id="L393"><span class="lineNum">     393</span>                 :             :   } else if (sizeof(T) == 2) {</span>
+<span id="L394"><span class="lineNum">     394</span>                 :             :     union { T t; uint16_t i; } u = { t };</span>
+<span id="L395"><span class="lineNum">     395</span>                 :             :     u.i = FLATBUFFERS_BYTESWAP16(u.i);</span>
+<span id="L396"><span class="lineNum">     396</span>                 :             :     return u.t;</span>
+<span id="L397"><span class="lineNum">     397</span>                 :             :   } else if (sizeof(T) == 4) {</span>
+<span id="L398"><span class="lineNum">     398</span>                 :             :     union { T t; uint32_t i; } u = { t };</span>
+<span id="L399"><span class="lineNum">     399</span>                 :             :     u.i = FLATBUFFERS_BYTESWAP32(u.i);</span>
+<span id="L400"><span class="lineNum">     400</span>                 :             :     return u.t;</span>
+<span id="L401"><span class="lineNum">     401</span>                 :             :   } else if (sizeof(T) == 8) {</span>
+<span id="L402"><span class="lineNum">     402</span>                 :             :     union { T t; uint64_t i; } u = { t };</span>
+<span id="L403"><span class="lineNum">     403</span>                 :             :     u.i = FLATBUFFERS_BYTESWAP64(u.i);</span>
+<span id="L404"><span class="lineNum">     404</span>                 :             :     return u.t;</span>
+<span id="L405"><span class="lineNum">     405</span>                 :             :   } else {</span>
+<span id="L406"><span class="lineNum">     406</span>                 :             :     FLATBUFFERS_ASSERT(0);</span>
+<span id="L407"><span class="lineNum">     407</span>                 :             :     return t;</span>
+<span id="L408"><span class="lineNum">     408</span>                 :             :   }</span>
+<span id="L409"><span class="lineNum">     409</span>                 :             : }</span>
+<span id="L410"><span class="lineNum">     410</span>                 :             : </span>
+<span id="L411"><span class="lineNum">     411</span>                 :             : #if defined(_MSC_VER)</span>
+<span id="L412"><span class="lineNum">     412</span>                 :             :   #pragma warning(pop)</span>
+<span id="L413"><span class="lineNum">     413</span>                 :             : #endif</span>
+<span id="L414"><span class="lineNum">     414</span>                 :             : </span>
+<span id="L415"><span class="lineNum">     415</span>                 :             : </span>
+<span id="L416"><span class="lineNum">     416</span>                 :<span class="tlaGNC tlaBgGNC">       17855 : template&lt;typename T&gt; T EndianScalar(T t) {</span></span>
+<span id="L417"><span class="lineNum">     417</span>                 :             :   #if FLATBUFFERS_LITTLEENDIAN</span>
+<span id="L418"><span class="lineNum">     418</span>                 :<span class="tlaGNC">       17855 :     return t;</span></span>
+<span id="L419"><span class="lineNum">     419</span>                 :             :   #else</span>
+<span id="L420"><span class="lineNum">     420</span>                 :             :     return EndianSwap(t);</span>
+<span id="L421"><span class="lineNum">     421</span>                 :             :   #endif</span>
+<span id="L422"><span class="lineNum">     422</span>                 :             : }</span>
+<span id="L423"><span class="lineNum">     423</span>                 :             : </span>
+<span id="L424"><span class="lineNum">     424</span>                 :             : template&lt;typename T&gt;</span>
+<span id="L425"><span class="lineNum">     425</span>                 :             : // UBSAN: C++ aliasing type rules, see std::bit_cast&lt;&gt; for details.</span>
+<span id="L426"><span class="lineNum">     426</span>                 :             : FLATBUFFERS_SUPPRESS_UBSAN(&quot;alignment&quot;)</span>
+<span id="L427"><span class="lineNum">     427</span>                 :<span class="tlaGNC">       14243 : T ReadScalar(const void *p) {</span></span>
+<span id="L428"><span class="lineNum">     428</span>                 :<span class="tlaGNC">       14243 :   return EndianScalar(*reinterpret_cast&lt;const T *&gt;(p));</span></span>
+<span id="L429"><span class="lineNum">     429</span>                 :             : }</span>
+<span id="L430"><span class="lineNum">     430</span>                 :             : </span>
+<span id="L431"><span class="lineNum">     431</span>                 :             : // See https://github.com/google/flatbuffers/issues/5950</span>
+<span id="L432"><span class="lineNum">     432</span>                 :             : </span>
+<span id="L433"><span class="lineNum">     433</span>                 :             : #if (FLATBUFFERS_GCC &gt;= 100000) &amp;&amp; (FLATBUFFERS_GCC &lt; 110000)</span>
+<span id="L434"><span class="lineNum">     434</span>                 :             :   #pragma GCC diagnostic push</span>
+<span id="L435"><span class="lineNum">     435</span>                 :             :   #pragma GCC diagnostic ignored &quot;-Wstringop-overflow&quot;</span>
+<span id="L436"><span class="lineNum">     436</span>                 :             : #endif</span>
+<span id="L437"><span class="lineNum">     437</span>                 :             : </span>
+<span id="L438"><span class="lineNum">     438</span>                 :             : template&lt;typename T&gt;</span>
+<span id="L439"><span class="lineNum">     439</span>                 :             : // UBSAN: C++ aliasing type rules, see std::bit_cast&lt;&gt; for details.</span>
+<span id="L440"><span class="lineNum">     440</span>                 :             : FLATBUFFERS_SUPPRESS_UBSAN(&quot;alignment&quot;)</span>
+<span id="L441"><span class="lineNum">     441</span>                 :<span class="tlaGNC">        1204 : void WriteScalar(void *p, T t) {</span></span>
+<span id="L442"><span class="lineNum">     442</span>                 :<span class="tlaGNC">        1204 :   *reinterpret_cast&lt;T *&gt;(p) = EndianScalar(t);</span></span>
+<span id="L443"><span class="lineNum">     443</span>                 :<span class="tlaGNC">        1204 : }</span></span>
+<span id="L444"><span class="lineNum">     444</span>                 :             : </span>
+<span id="L445"><span class="lineNum">     445</span>                 :             : template&lt;typename T&gt; struct Offset;</span>
+<span id="L446"><span class="lineNum">     446</span>                 :             : template&lt;typename T&gt; FLATBUFFERS_SUPPRESS_UBSAN(&quot;alignment&quot;) void WriteScalar(void *p, Offset&lt;T&gt; t) {</span>
+<span id="L447"><span class="lineNum">     447</span>                 :             :   *reinterpret_cast&lt;uoffset_t *&gt;(p) = EndianScalar(t.o);</span>
+<span id="L448"><span class="lineNum">     448</span>                 :             : }</span>
+<span id="L449"><span class="lineNum">     449</span>                 :             : </span>
+<span id="L450"><span class="lineNum">     450</span>                 :             : #if (FLATBUFFERS_GCC &gt;= 100000) &amp;&amp; (FLATBUFFERS_GCC &lt; 110000)</span>
+<span id="L451"><span class="lineNum">     451</span>                 :             :   #pragma GCC diagnostic pop</span>
+<span id="L452"><span class="lineNum">     452</span>                 :             : #endif</span>
+<span id="L453"><span class="lineNum">     453</span>                 :             : </span>
+<span id="L454"><span class="lineNum">     454</span>                 :             : // Computes how many bytes you'd have to pad to be able to write an</span>
+<span id="L455"><span class="lineNum">     455</span>                 :             : // &quot;scalar_size&quot; scalar if the buffer had grown to &quot;buf_size&quot; (downwards in</span>
+<span id="L456"><span class="lineNum">     456</span>                 :             : // memory).</span>
+<span id="L457"><span class="lineNum">     457</span>                 :             : FLATBUFFERS_SUPPRESS_UBSAN(&quot;unsigned-integer-overflow&quot;)</span>
+<span id="L458"><span class="lineNum">     458</span>                 :<span class="tlaGNC">        2045 : inline size_t PaddingBytes(size_t buf_size, size_t scalar_size) {</span></span>
+<span id="L459"><span class="lineNum">     459</span>                 :<span class="tlaGNC">        2045 :   return ((~buf_size) + 1) &amp; (scalar_size - 1);</span></span>
+<span id="L460"><span class="lineNum">     460</span>                 :             : }</span>
+<span id="L461"><span class="lineNum">     461</span>                 :             : </span>
+<span id="L462"><span class="lineNum">     462</span>                 :             : #if !defined(_MSC_VER)</span>
+<span id="L463"><span class="lineNum">     463</span>                 :             :   #pragma GCC diagnostic push</span>
+<span id="L464"><span class="lineNum">     464</span>                 :             :   #pragma GCC diagnostic ignored &quot;-Wfloat-equal&quot;</span>
+<span id="L465"><span class="lineNum">     465</span>                 :             : #endif</span>
+<span id="L466"><span class="lineNum">     466</span>                 :             : // Generic 'operator==' with conditional specialisations.</span>
+<span id="L467"><span class="lineNum">     467</span>                 :             : // T e - new value of a scalar field.</span>
+<span id="L468"><span class="lineNum">     468</span>                 :             : // T def - default of scalar (is known at compile-time).</span>
+<span id="L469"><span class="lineNum">     469</span>                 :<span class="tlaGNC">         415 : template&lt;typename T&gt; inline bool IsTheSameAs(T e, T def) { return e == def; }</span></span>
+<span id="L470"><span class="lineNum">     470</span>                 :             : #if !defined(_MSC_VER)</span>
+<span id="L471"><span class="lineNum">     471</span>                 :             :   #pragma GCC diagnostic pop</span>
+<span id="L472"><span class="lineNum">     472</span>                 :             : #endif</span>
+<span id="L473"><span class="lineNum">     473</span>                 :             : </span>
+<span id="L474"><span class="lineNum">     474</span>                 :             : #if defined(FLATBUFFERS_NAN_DEFAULTS) &amp;&amp; \</span>
+<span id="L475"><span class="lineNum">     475</span>                 :             :     defined(FLATBUFFERS_HAS_NEW_STRTOD) &amp;&amp; (FLATBUFFERS_HAS_NEW_STRTOD &gt; 0)</span>
+<span id="L476"><span class="lineNum">     476</span>                 :             : // Like `operator==(e, def)` with weak NaN if T=(float|double).</span>
+<span id="L477"><span class="lineNum">     477</span>                 :             : template&lt;typename T&gt; inline bool IsFloatTheSameAs(T e, T def) {</span>
+<span id="L478"><span class="lineNum">     478</span>                 :             :   return (e == def) || ((def != def) &amp;&amp; (e != e));</span>
+<span id="L479"><span class="lineNum">     479</span>                 :             : }</span>
+<span id="L480"><span class="lineNum">     480</span>                 :             : template&lt;&gt; inline bool IsTheSameAs&lt;float&gt;(float e, float def) {</span>
+<span id="L481"><span class="lineNum">     481</span>                 :             :   return IsFloatTheSameAs(e, def);</span>
+<span id="L482"><span class="lineNum">     482</span>                 :             : }</span>
+<span id="L483"><span class="lineNum">     483</span>                 :             : template&lt;&gt; inline bool IsTheSameAs&lt;double&gt;(double e, double def) {</span>
+<span id="L484"><span class="lineNum">     484</span>                 :             :   return IsFloatTheSameAs(e, def);</span>
+<span id="L485"><span class="lineNum">     485</span>                 :             : }</span>
+<span id="L486"><span class="lineNum">     486</span>                 :             : #endif</span>
+<span id="L487"><span class="lineNum">     487</span>                 :             : </span>
+<span id="L488"><span class="lineNum">     488</span>                 :             : // Check 'v' is out of closed range [low; high].</span>
+<span id="L489"><span class="lineNum">     489</span>                 :             : // Workaround for GCC warning [-Werror=type-limits]:</span>
+<span id="L490"><span class="lineNum">     490</span>                 :             : // comparison is always true due to limited range of data type.</span>
+<span id="L491"><span class="lineNum">     491</span>                 :             : template&lt;typename T&gt;</span>
+<span id="L492"><span class="lineNum">     492</span>                 :             : inline bool IsOutRange(const T &amp;v, const T &amp;low, const T &amp;high) {</span>
+<span id="L493"><span class="lineNum">     493</span>                 :             :   return (v &lt; low) || (high &lt; v);</span>
+<span id="L494"><span class="lineNum">     494</span>                 :             : }</span>
+<span id="L495"><span class="lineNum">     495</span>                 :             : </span>
+<span id="L496"><span class="lineNum">     496</span>                 :             : // Check 'v' is in closed range [low; high].</span>
+<span id="L497"><span class="lineNum">     497</span>                 :             : template&lt;typename T&gt;</span>
+<span id="L498"><span class="lineNum">     498</span>                 :             : inline bool IsInRange(const T &amp;v, const T &amp;low, const T &amp;high) {</span>
+<span id="L499"><span class="lineNum">     499</span>                 :             :   return !IsOutRange(v, low, high);</span>
+<span id="L500"><span class="lineNum">     500</span>                 :             : }</span>
+<span id="L501"><span class="lineNum">     501</span>                 :             : </span>
+<span id="L502"><span class="lineNum">     502</span>                 :             : }  // namespace flatbuffers</span>
+<span id="L503"><span class="lineNum">     503</span>                 :             : #endif  // FLATBUFFERS_BASE_H_</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

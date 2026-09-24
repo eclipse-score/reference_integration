@@ -1,0 +1,596 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - containers/external/score_baselibs+/score/containers/non_relocatable_vector.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../index.html">top level</a> - <a href="index.html">containers/external/score_baselibs+/score/containers</a> - non_relocatable_vector.h<span style="font-size: 80%;"> (source / <a href="non_relocatable_vector.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">99.0&nbsp;%</td>
+            <td class="headerCovTableEntry">99</td>
+            <td class="headerCovTableEntry">98</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:33:47</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">146</td>
+            <td class="headerCovTableEntry">146</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryLo">61.7&nbsp;%</td>
+            <td class="headerCovTableEntry">60</td>
+            <td class="headerCovTableEntry">37</td>
+          </tr>
+                  <tr><td><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2025 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : #ifndef SCORE_LIB_CONTAINERS_NON_RELOCATABLE_VECTOR_H</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #define SCORE_LIB_CONTAINERS_NON_RELOCATABLE_VECTOR_H</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : </span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #include &lt;score/assert.hpp&gt;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #include &lt;score/utility.hpp&gt;</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : </span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : #include &lt;cstddef&gt;</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : #include &lt;cstring&gt;</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : #include &lt;iterator&gt;</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : #include &lt;memory&gt;</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : #include &lt;type_traits&gt;</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : #include &lt;utility&gt;</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : </span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : namespace score::containers</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : {</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : </span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : namespace test</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : {</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : template &lt;typename ElementType, typename Allocator&gt;</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : class NonRelocatableVectorAttorney;</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : }</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : </span>
+<span id="L35"><span class="lineNum">      35</span>                 :             : namespace detail</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             : {</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             : </span>
+<span id="L38"><span class="lineNum">      38</span>                 :             : template &lt;class T&gt;</span>
+<span id="L39"><span class="lineNum">      39</span>                 :<span class="tlaGNC tlaBgGNC">        1697 : constexpr T* to_address(T* p)</span></span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : {</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             : // Suppress &quot;AUTOSAR C++14 A16-0-1&quot;, The rule states:</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             : // &quot;The pre-processor shall only be used for unconditional and conditional file</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             : // inclusion and include guards, and using the following directives: (1) #ifndef,</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             : // (2) #ifdef, (3) #if, (4) #if defined, (5) #elif, (6) #else, (7) #define, (8) #endif,</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             : // (9) #include.&quot;</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             : // This check is needed as to_address is available in C++ version 20 and above.</span>
+<span id="L47"><span class="lineNum">      47</span>                 :             : // coverity[autosar_cpp14_a16_0_1_violation]</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             : #if __cplusplus &lt; 202002L</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             :     // to_address is provided in C++20</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             :     static_assert(!std::is_function_v&lt;T&gt;);</span>
+<span id="L51"><span class="lineNum">      51</span>                 :<span class="tlaGNC">        1697 :     return p;</span></span>
+<span id="L52"><span class="lineNum">      52</span>                 :             : // Suppress &quot;AUTOSAR C++14 A16-0-1&quot;</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             : // This check is needed as to_address is available in C++ version 20 and above.</span>
+<span id="L54"><span class="lineNum">      54</span>                 :             : // coverity[autosar_cpp14_a16_0_1_violation]</span>
+<span id="L55"><span class="lineNum">      55</span>                 :             : #else</span>
+<span id="L56"><span class="lineNum">      56</span>                 :             :     return std::to_address(p);</span>
+<span id="L57"><span class="lineNum">      57</span>                 :             : // Suppress &quot;AUTOSAR C++14 A16-0-1&quot;</span>
+<span id="L58"><span class="lineNum">      58</span>                 :             : // This check is needed as to_address is available in C++ version 20 and above.</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             : // coverity[autosar_cpp14_a16_0_1_violation]</span>
+<span id="L60"><span class="lineNum">      60</span>                 :             : #endif</span>
+<span id="L61"><span class="lineNum">      61</span>                 :             : }</span>
+<span id="L62"><span class="lineNum">      62</span>                 :             : </span>
+<span id="L63"><span class="lineNum">      63</span>                 :             : template &lt;class T&gt;</span>
+<span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC">        1045 : constexpr auto to_address(const T&amp; p)</span></span>
+<span id="L65"><span class="lineNum">      65</span>                 :             : {</span>
+<span id="L66"><span class="lineNum">      66</span>                 :             : // Suppress &quot;AUTOSAR C++14 A16-0-1&quot;</span>
+<span id="L67"><span class="lineNum">      67</span>                 :             : // This check is needed as to_address is available in C++ version 20 and above.</span>
+<span id="L68"><span class="lineNum">      68</span>                 :             : // coverity[autosar_cpp14_a16_0_1_violation]</span>
+<span id="L69"><span class="lineNum">      69</span>                 :             : #if __cplusplus &lt; 202002L</span>
+<span id="L70"><span class="lineNum">      70</span>                 :             :     // to_address is provided in C++20</span>
+<span id="L71"><span class="lineNum">      71</span>                 :<span class="tlaGNC">        1045 :     return to_address(p.operator-&gt;());</span></span>
+<span id="L72"><span class="lineNum">      72</span>                 :             : // Suppress &quot;AUTOSAR C++14 A16-0-1&quot;</span>
+<span id="L73"><span class="lineNum">      73</span>                 :             : // This check is needed as to_address is available in C++ version 20 and above.</span>
+<span id="L74"><span class="lineNum">      74</span>                 :             : // coverity[autosar_cpp14_a16_0_1_violation]</span>
+<span id="L75"><span class="lineNum">      75</span>                 :             : #else</span>
+<span id="L76"><span class="lineNum">      76</span>                 :             :     return std::to_address(p);</span>
+<span id="L77"><span class="lineNum">      77</span>                 :             : // Suppress &quot;AUTOSAR C++14 A16-0-1&quot;</span>
+<span id="L78"><span class="lineNum">      78</span>                 :             : // This check is needed as to_address is available in C++ version 20 and above.</span>
+<span id="L79"><span class="lineNum">      79</span>                 :             : // coverity[autosar_cpp14_a16_0_1_violation]</span>
+<span id="L80"><span class="lineNum">      80</span>                 :             : #endif</span>
+<span id="L81"><span class="lineNum">      81</span>                 :             : }</span>
+<span id="L82"><span class="lineNum">      82</span>                 :             : </span>
+<span id="L83"><span class="lineNum">      83</span>                 :             : }  // namespace detail</span>
+<span id="L84"><span class="lineNum">      84</span>                 :             : </span>
+<span id="L85"><span class="lineNum">      85</span>                 :             : /// \brief Fixed-capacity vector whose capacity is set on construction and never changed.</span>
+<span id="L86"><span class="lineNum">      86</span>                 :             : ///</span>
+<span id="L87"><span class="lineNum">      87</span>                 :             : /// The NonRelocatableVector is a std::vector-like structure which guarantees that no reallocation will ever be made (so</span>
+<span id="L88"><span class="lineNum">      88</span>                 :             : /// pointers or references to elements will never be invalidated. Memory for the capacity specified is allocated on</span>
+<span id="L89"><span class="lineNum">      89</span>                 :             : /// construction and each element is initialised when inserting an element (e.g. via emplace_back).</span>
+<span id="L90"><span class="lineNum">      90</span>                 :             : ///</span>
+<span id="L91"><span class="lineNum">      91</span>                 :             : /// \details The implementation also provides some &quot;performance optimizations&quot; in its iterator handling:</span>
+<span id="L92"><span class="lineNum">      92</span>                 :             : /// It makes sure to return &quot;raw-pointers&quot; as its begin/end-iterators. E.g. independent from the pointer-type, the</span>
+<span id="L93"><span class="lineNum">      93</span>                 :             : /// underlying Allocator provides, it doesn't return these pointer-types 1:1 as begin/end iterator, but returns</span>
+<span id="L94"><span class="lineNum">      94</span>                 :             : /// raw-pointers instead. This is a performance benefit, when we use DynamicArray in shared-memory, where we use</span>
+<span id="L95"><span class="lineNum">      95</span>                 :             : /// score::memory::shared::PolymorphicOffsetPtrAllocator as our allocator, which creates fancy OffsetPtr.</span>
+<span id="L96"><span class="lineNum">      96</span>                 :             : /// Dereferencing an OffsetPtr is expensive as it applies bounds-checking for safety-reasons. But when iterating over</span>
+<span id="L97"><span class="lineNum">      97</span>                 :             : /// a DynamicArray residing in shared-memory, doing a bounds-check for every element is unnecessary. Only the 1st/last</span>
+<span id="L98"><span class="lineNum">      98</span>                 :             : /// OffsetPtr needs to be checked. This is exactly the iterator optimization applied here: Only the start/end gets</span>
+<span id="L99"><span class="lineNum">      99</span>                 :             : /// bounds-checked and if this is successful a raw-pointer is handed out as an iterator.</span>
+<span id="L100"><span class="lineNum">     100</span>                 :             : template &lt;typename ElementType, typename Allocator = std::allocator&lt;ElementType&gt;&gt;</span>
+<span id="L101"><span class="lineNum">     101</span>                 :             : class NonRelocatableVector</span>
+<span id="L102"><span class="lineNum">     102</span>                 :             : {</span>
+<span id="L103"><span class="lineNum">     103</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A11-3-1&quot; rule finding: &quot;Friend declarations shall not be used.&quot;.</span>
+<span id="L104"><span class="lineNum">     104</span>                 :             :     // The 'friend' class is employed to encapsulate non-public members. Friend classes provide controlled access to</span>
+<span id="L105"><span class="lineNum">     105</span>                 :             :     // private members, utilized internally, ensuring that end users cannot access implementation specifics. In this</span>
+<span id="L106"><span class="lineNum">     106</span>                 :             :     // case, it is used for testing only in order to simulate corruption of the underlying pointer type to the dynamic</span>
+<span id="L107"><span class="lineNum">     107</span>                 :             :     // storage, which definitely should not be in the public interface.</span>
+<span id="L108"><span class="lineNum">     108</span>                 :             :     // coverity[autosar_cpp14_a11_3_1_violation]</span>
+<span id="L109"><span class="lineNum">     109</span>                 :             :     friend class test::NonRelocatableVectorAttorney&lt;ElementType, Allocator&gt;;</span>
+<span id="L110"><span class="lineNum">     110</span>                 :             : </span>
+<span id="L111"><span class="lineNum">     111</span>                 :             :   public:</span>
+<span id="L112"><span class="lineNum">     112</span>                 :             :     using value_type = ElementType;</span>
+<span id="L113"><span class="lineNum">     113</span>                 :             :     using reference = ElementType&amp;;</span>
+<span id="L114"><span class="lineNum">     114</span>                 :             :     using const_reference = const ElementType&amp;;</span>
+<span id="L115"><span class="lineNum">     115</span>                 :             :     using iterator = ElementType*;</span>
+<span id="L116"><span class="lineNum">     116</span>                 :             :     using const_iterator = const ElementType*;</span>
+<span id="L117"><span class="lineNum">     117</span>                 :             :     using difference_type =</span>
+<span id="L118"><span class="lineNum">     118</span>                 :             :         typename std::pointer_traits&lt;typename std::allocator_traits&lt;Allocator&gt;::pointer&gt;::difference_type;</span>
+<span id="L119"><span class="lineNum">     119</span>                 :             :     using size_type = std::size_t;</span>
+<span id="L120"><span class="lineNum">     120</span>                 :             : </span>
+<span id="L121"><span class="lineNum">     121</span>                 :             :     /// \brief Constructor which reserves memory for the provided number of elements</span>
+<span id="L122"><span class="lineNum">     122</span>                 :             :     /// \param number_of_elements_to_reserve The capacity of the underlying array</span>
+<span id="L123"><span class="lineNum">     123</span>                 :             :     /// \param alloc allocator instance to be used, defaults to default constructed allocator of type Allocator</span>
+<span id="L124"><span class="lineNum">     124</span>                 :<span class="tlaGNC">         128 :     explicit NonRelocatableVector(const size_type number_of_elements_to_reserve, Allocator alloc = Allocator())</span></span>
+<span id="L125"><span class="lineNum">     125</span>                 :<span class="tlaGNC">         128 :         : non_relocatable_vector_{allocate_array(number_of_elements_to_reserve, alloc)},</span></span>
+<span id="L126"><span class="lineNum">     126</span>                 :<span class="tlaGNC">         128 :           alloc_{std::move(alloc)},</span></span>
+<span id="L127"><span class="lineNum">     127</span>                 :<span class="tlaGNC">         128 :           size_{0U},</span></span>
+<span id="L128"><span class="lineNum">     128</span>                 :<span class="tlaGNC">         128 :           capacity_{number_of_elements_to_reserve}</span></span>
+<span id="L129"><span class="lineNum">     129</span>                 :             :     {</span>
+<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">         128 :     }</span></span>
+<span id="L131"><span class="lineNum">     131</span>                 :             : </span>
+<span id="L132"><span class="lineNum">     132</span>                 :             :     NonRelocatableVector(const NonRelocatableVector&amp; other);</span>
+<span id="L133"><span class="lineNum">     133</span>                 :             :     NonRelocatableVector(NonRelocatableVector&amp;&amp; other) noexcept;</span>
+<span id="L134"><span class="lineNum">     134</span>                 :             : </span>
+<span id="L135"><span class="lineNum">     135</span>                 :             :     NonRelocatableVector&amp; operator=(const NonRelocatableVector&amp; other) = delete;</span>
+<span id="L136"><span class="lineNum">     136</span>                 :             :     NonRelocatableVector&amp; operator=(NonRelocatableVector&amp;&amp; other) noexcept;</span>
+<span id="L137"><span class="lineNum">     137</span>                 :             : </span>
+<span id="L138"><span class="lineNum">     138</span>                 :             :     ~NonRelocatableVector() noexcept;</span>
+<span id="L139"><span class="lineNum">     139</span>                 :             : </span>
+<span id="L140"><span class="lineNum">     140</span>                 :             :     template &lt;typename... Args&gt;</span>
+<span id="L141"><span class="lineNum">     141</span>                 :             :     auto emplace_back(Args&amp;&amp;... args) -&gt; ElementType&amp;;</span>
+<span id="L142"><span class="lineNum">     142</span>                 :             : </span>
+<span id="L143"><span class="lineNum">     143</span>                 :             :     ElementType&amp; at(const size_type index);</span>
+<span id="L144"><span class="lineNum">     144</span>                 :             : </span>
+<span id="L145"><span class="lineNum">     145</span>                 :             :     const ElementType&amp; at(const size_type index) const;</span>
+<span id="L146"><span class="lineNum">     146</span>                 :             : </span>
+<span id="L147"><span class="lineNum">     147</span>                 :             :     ElementType&amp; operator[](const size_type index);</span>
+<span id="L148"><span class="lineNum">     148</span>                 :             : </span>
+<span id="L149"><span class="lineNum">     149</span>                 :             :     const ElementType&amp; operator[](const size_type index) const;</span>
+<span id="L150"><span class="lineNum">     150</span>                 :             : </span>
+<span id="L151"><span class="lineNum">     151</span>                 :<span class="tlaGNC">          96 :     size_type size() const noexcept</span></span>
+<span id="L152"><span class="lineNum">     152</span>                 :             :     {</span>
+<span id="L153"><span class="lineNum">     153</span>                 :<span class="tlaGNC">          96 :         return size_;</span></span>
+<span id="L154"><span class="lineNum">     154</span>                 :             :     }</span>
+<span id="L155"><span class="lineNum">     155</span>                 :             : </span>
+<span id="L156"><span class="lineNum">     156</span>                 :<span class="tlaGNC">          16 :     size_type capacity() const noexcept</span></span>
+<span id="L157"><span class="lineNum">     157</span>                 :             :     {</span>
+<span id="L158"><span class="lineNum">     158</span>                 :<span class="tlaGNC">          16 :         return capacity_;</span></span>
+<span id="L159"><span class="lineNum">     159</span>                 :             :     }</span>
+<span id="L160"><span class="lineNum">     160</span>                 :             : </span>
+<span id="L161"><span class="lineNum">     161</span>                 :             :     value_type* data();</span>
+<span id="L162"><span class="lineNum">     162</span>                 :             : </span>
+<span id="L163"><span class="lineNum">     163</span>                 :             :     const value_type* data() const;</span>
+<span id="L164"><span class="lineNum">     164</span>                 :             : </span>
+<span id="L165"><span class="lineNum">     165</span>                 :             :     /// \brief returns iterator (pointer) to the 1st element of the dynamic array</span>
+<span id="L166"><span class="lineNum">     166</span>                 :             :     /// \attention The returned iterator (pointer) isn't suited to be placed into shared-memory! I.e. even if the</span>
+<span id="L167"><span class="lineNum">     167</span>                 :             :     /// underlying allocator is a shared-memory enabled alloc providing fancy/offset-ptr, the returned iterator is</span>
+<span id="L168"><span class="lineNum">     168</span>                 :             :     /// semantically a raw-pointer.</span>
+<span id="L169"><span class="lineNum">     169</span>                 :             :     iterator begin();</span>
+<span id="L170"><span class="lineNum">     170</span>                 :             :     const_iterator begin() const;</span>
+<span id="L171"><span class="lineNum">     171</span>                 :             :     const_iterator cbegin() const;</span>
+<span id="L172"><span class="lineNum">     172</span>                 :             : </span>
+<span id="L173"><span class="lineNum">     173</span>                 :             :     /// \brief returns past the end iterator (pointer) of the dynamic array</span>
+<span id="L174"><span class="lineNum">     174</span>                 :             :     iterator end();</span>
+<span id="L175"><span class="lineNum">     175</span>                 :             :     const_iterator end() const;</span>
+<span id="L176"><span class="lineNum">     176</span>                 :             :     const_iterator cend() const;</span>
+<span id="L177"><span class="lineNum">     177</span>                 :             : </span>
+<span id="L178"><span class="lineNum">     178</span>                 :             :   private:</span>
+<span id="L179"><span class="lineNum">     179</span>                 :             :     using pointer = typename std::allocator_traits&lt;Allocator&gt;::pointer;</span>
+<span id="L180"><span class="lineNum">     180</span>                 :             : </span>
+<span id="L181"><span class="lineNum">     181</span>                 :             :     static pointer allocate_array(size_type number_of_elements, Allocator&amp; allocator);</span>
+<span id="L182"><span class="lineNum">     182</span>                 :             : </span>
+<span id="L183"><span class="lineNum">     183</span>                 :             :     iterator GetPastTheEndIterator() const;</span>
+<span id="L184"><span class="lineNum">     184</span>                 :             : </span>
+<span id="L185"><span class="lineNum">     185</span>                 :             :     /// \brief Gets an iterator to the first element of the array. Returns nullptr if size_ == 0</span>
+<span id="L186"><span class="lineNum">     186</span>                 :             :     ///</span>
+<span id="L187"><span class="lineNum">     187</span>                 :             :     /// Function is static to ensure that no member variables are modified by another process (in case the</span>
+<span id="L188"><span class="lineNum">     188</span>                 :             :     /// NonRelocatableVector is in shared memory) while getting the iterator</span>
+<span id="L189"><span class="lineNum">     189</span>                 :             :     static auto GetFirstElement(const pointer dynamic_array, const std::size_t non_relocatable_vector_size) -&gt; iterator;</span>
+<span id="L190"><span class="lineNum">     190</span>                 :             : </span>
+<span id="L191"><span class="lineNum">     191</span>                 :             :     /// \brief Gets an iterator to the last element of the array. Returns nullptr if size_ == 0</span>
+<span id="L192"><span class="lineNum">     192</span>                 :             :     ///</span>
+<span id="L193"><span class="lineNum">     193</span>                 :             :     /// Function is static to ensure that no member variables are modified by another process (in case the</span>
+<span id="L194"><span class="lineNum">     194</span>                 :             :     /// NonRelocatableVector is in shared memory) while getting the iterator</span>
+<span id="L195"><span class="lineNum">     195</span>                 :             :     static auto GetLastElement(const pointer dynamic_array, const std::size_t non_relocatable_vector_size) -&gt; iterator;</span>
+<span id="L196"><span class="lineNum">     196</span>                 :             : </span>
+<span id="L197"><span class="lineNum">     197</span>                 :<span class="tlaGNC">          17 :     constexpr void swap(NonRelocatableVector&lt;ElementType, Allocator&gt;&amp; other) noexcept</span></span>
+<span id="L198"><span class="lineNum">     198</span>                 :             :     {</span>
+<span id="L199"><span class="lineNum">     199</span>                 :             :         // Use std::swap if no other swap is found using ADL</span>
+<span id="L200"><span class="lineNum">     200</span>                 :             :         using std::swap;</span>
+<span id="L201"><span class="lineNum">     201</span>                 :             : </span>
+<span id="L202"><span class="lineNum">     202</span>                 :<span class="tlaGNC">          17 :         swap(size_, other.size_);</span></span>
+<span id="L203"><span class="lineNum">     203</span>                 :<span class="tlaGNC">          17 :         swap(alloc_, other.alloc_);</span></span>
+<span id="L204"><span class="lineNum">     204</span>                 :<span class="tlaGNC">          17 :         swap(non_relocatable_vector_, other.non_relocatable_vector_);</span></span>
+<span id="L205"><span class="lineNum">     205</span>                 :<span class="tlaGNC">          17 :         swap(capacity_, other.capacity_);</span></span>
+<span id="L206"><span class="lineNum">     206</span>                 :<span class="tlaGNC">          17 :     }</span></span>
+<span id="L207"><span class="lineNum">     207</span>                 :             : </span>
+<span id="L208"><span class="lineNum">     208</span>                 :<span class="tlaGNC">           8 :     friend constexpr void swap(NonRelocatableVector&lt;ElementType, Allocator&gt;&amp; lhs,</span></span>
+<span id="L209"><span class="lineNum">     209</span>                 :             :                                NonRelocatableVector&lt;ElementType, Allocator&gt;&amp; rhs) noexcept</span>
+<span id="L210"><span class="lineNum">     210</span>                 :             :     {</span>
+<span id="L211"><span class="lineNum">     211</span>                 :<span class="tlaGNC">           8 :         lhs.swap(rhs);</span></span>
+<span id="L212"><span class="lineNum">     212</span>                 :<span class="tlaGNC">           8 :     }</span></span>
+<span id="L213"><span class="lineNum">     213</span>                 :             : </span>
+<span id="L214"><span class="lineNum">     214</span>                 :             :     typename std::allocator_traits&lt;Allocator&gt;::pointer non_relocatable_vector_;</span>
+<span id="L215"><span class="lineNum">     215</span>                 :             :     Allocator alloc_;</span>
+<span id="L216"><span class="lineNum">     216</span>                 :             :     size_type size_;</span>
+<span id="L217"><span class="lineNum">     217</span>                 :             :     size_type capacity_;</span>
+<span id="L218"><span class="lineNum">     218</span>                 :             : };</span>
+<span id="L219"><span class="lineNum">     219</span>                 :             : </span>
+<span id="L220"><span class="lineNum">     220</span>                 :             : template &lt;typename ElementType, typename Allocator&gt;</span>
+<span id="L221"><span class="lineNum">     221</span>                 :             : // false-positive: size_t and pointer is trivial, standard allocator move is noexcept</span>
+<span id="L222"><span class="lineNum">     222</span>                 :             : // coverity[autosar_cpp14_a15_5_3_violation]</span>
+<span id="L223"><span class="lineNum">     223</span>                 :             : // coverity[autosar_cpp14_a12_8_1_violation] false-positive</span>
+<span id="L224"><span class="lineNum">     224</span>                 :<span class="tlaGNC">          12 : NonRelocatableVector&lt;ElementType, Allocator&gt;::NonRelocatableVector(NonRelocatableVector&amp;&amp; other) noexcept</span></span>
+<span id="L225"><span class="lineNum">     225</span>                 :             :     // coverity[autosar_cpp14_a12_8_4_violation] false-positive: no copy semantic is used</span>
+<span id="L226"><span class="lineNum">     226</span>                 :<span class="tlaGNC">          12 :     : non_relocatable_vector_{std::move(other.non_relocatable_vector_)},</span></span>
+<span id="L227"><span class="lineNum">     227</span>                 :<span class="tlaGNC">          12 :       alloc_{std::move(other.alloc_)},</span></span>
+<span id="L228"><span class="lineNum">     228</span>                 :<span class="tlaGNC">          12 :       size_{std::move(other.size_)},</span></span>
+<span id="L229"><span class="lineNum">     229</span>                 :<span class="tlaGNC">          12 :       capacity_{std::move(other.capacity_)}</span></span>
+<span id="L230"><span class="lineNum">     230</span>                 :             : {</span>
+<span id="L231"><span class="lineNum">     231</span>                 :<span class="tlaGNC">          12 :     other.non_relocatable_vector_ = nullptr;</span></span>
+<span id="L232"><span class="lineNum">     232</span>                 :<span class="tlaGNC">          12 : }</span></span>
+<span id="L233"><span class="lineNum">     233</span>                 :             : </span>
+<span id="L234"><span class="lineNum">     234</span>                 :             : template &lt;typename ElementType, typename Allocator&gt;</span>
+<span id="L235"><span class="lineNum">     235</span>                 :<span class="tlaGNC">          12 : NonRelocatableVector&lt;ElementType, Allocator&gt;::NonRelocatableVector(const NonRelocatableVector&amp; other)</span></span>
+<span id="L236"><span class="lineNum">     236</span>                 :<span class="tlaGNC">          12 :     : non_relocatable_vector_{nullptr}, alloc_{other.alloc_}, size_{other.size_}, capacity_{other.capacity_}</span></span>
+<span id="L237"><span class="lineNum">     237</span>                 :             : {</span>
+<span id="L238"><span class="lineNum">     238</span>                 :             :     using alloc_traits = std::allocator_traits&lt;Allocator&gt;;</span>
+<span id="L239"><span class="lineNum">     239</span>         [<span class="tlaGBC" title="Branch 0 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          12 :     auto storage = allocate_array(capacity_, alloc_);</span></span>
+<span id="L240"><span class="lineNum">     240</span>                 :             : </span>
+<span id="L241"><span class="lineNum">     241</span>                 :             :     // To avoid costly bounds checking when dereferencing cur_pointer (if the allocator is using OffsetPtr), we iterate</span>
+<span id="L242"><span class="lineNum">     242</span>                 :             :     // over raw pointers to the allocated storage.</span>
+<span id="L243"><span class="lineNum">     243</span>         [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          12 :     auto cur_pointer = detail::to_address(storage);</span></span>
+<span id="L244"><span class="lineNum">     244</span>         [<span class="tlaGBC" title="Branch 0 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          12 :     auto source_it = other.cbegin();</span></span>
+<span id="L245"><span class="lineNum">     245</span>                 :             : </span>
+<span id="L246"><span class="lineNum">     246</span>         [<span class="tlaGBC" title="Branch 0 was taken 84 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 12 times"> + </span>]:<span class="tlaGNC">          96 :     for (size_t i = 0U; i &lt; size_; i++)</span></span>
+<span id="L247"><span class="lineNum">     247</span>                 :             :     {</span>
+<span id="L248"><span class="lineNum">     248</span>                 :             :         // Suppress &quot;AUTOSAR C++14 A5-3-2&quot; rule finding.</span>
+<span id="L249"><span class="lineNum">     249</span>                 :             :         // This rule states: &quot;Null pointers shall not be dereferenced.&quot;.</span>
+<span id="L250"><span class="lineNum">     250</span>                 :             :         // Justification: The above check ensures the memory is allocated and not null.</span>
+<span id="L251"><span class="lineNum">     251</span>                 :             :         // Therefore, dereferencing &quot;cur_pointer&quot; is safe.</span>
+<span id="L252"><span class="lineNum">     252</span>                 :             :         // coverity[autosar_cpp14_a5_3_2_violation]</span>
+<span id="L253"><span class="lineNum">     253</span>                 :<span class="tlaGNC">          84 :         alloc_traits::construct(alloc_, cur_pointer, *source_it);</span></span>
+<span id="L254"><span class="lineNum">     254</span>                 :<span class="tlaGNC">          84 :         source_it++;</span></span>
+<span id="L255"><span class="lineNum">     255</span>         [<span class="tlaGBC" title="Branch 0 was taken 84 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          84 :         std::advance(cur_pointer, 1);</span></span>
+<span id="L256"><span class="lineNum">     256</span>                 :             :     }</span>
+<span id="L257"><span class="lineNum">     257</span>                 :             : </span>
+<span id="L258"><span class="lineNum">     258</span>                 :<span class="tlaGNC">          12 :     non_relocatable_vector_ = storage;</span></span>
+<span id="L259"><span class="lineNum">     259</span>                 :<span class="tlaGNC">          12 : }</span></span>
+<span id="L260"><span class="lineNum">     260</span>                 :             : </span>
+<span id="L261"><span class="lineNum">     261</span>                 :             : template &lt;typename ElementType, typename Allocator&gt;</span>
+<span id="L262"><span class="lineNum">     262</span>                 :             : // false-positive: size_t and pointer is trivial, standard allocator move is noexcept</span>
+<span id="L263"><span class="lineNum">     263</span>                 :             : // coverity[autosar_cpp14_a15_5_3_violation]</span>
+<span id="L264"><span class="lineNum">     264</span>                 :             : // coverity[autosar_cpp14_a6_2_1_violation] false-positive: no side effects</span>
+<span id="L265"><span class="lineNum">     265</span>                 :<span class="tlaGNC">           9 : auto NonRelocatableVector&lt;ElementType, Allocator&gt;::operator=(NonRelocatableVector&amp;&amp; other) noexcept</span></span>
+<span id="L266"><span class="lineNum">     266</span>                 :             :     -&gt; NonRelocatableVector&amp;</span>
+<span id="L267"><span class="lineNum">     267</span>                 :             : {</span>
+<span id="L268"><span class="lineNum">     268</span>         [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           9 :     if (this != &amp;other)</span></span>
+<span id="L269"><span class="lineNum">     269</span>                 :             :     {</span>
+<span id="L270"><span class="lineNum">     270</span>                 :<span class="tlaGNC">           9 :         swap(other);</span></span>
+<span id="L271"><span class="lineNum">     271</span>                 :             :     }</span>
+<span id="L272"><span class="lineNum">     272</span>                 :<span class="tlaGNC">           9 :     return *this;</span></span>
+<span id="L273"><span class="lineNum">     273</span>                 :             : }</span>
+<span id="L274"><span class="lineNum">     274</span>                 :             : </span>
+<span id="L275"><span class="lineNum">     275</span>                 :             : template &lt;typename ElementType, typename Allocator&gt;</span>
+<span id="L276"><span class="lineNum">     276</span>                 :<span class="tlaGNC">         140 : inline auto NonRelocatableVector&lt;ElementType, Allocator&gt;::allocate_array(size_type number_of_elements,</span></span>
+<span id="L277"><span class="lineNum">     277</span>                 :             :                                                                          Allocator&amp; allocator) -&gt; pointer</span>
+<span id="L278"><span class="lineNum">     278</span>                 :             : {</span>
+<span id="L279"><span class="lineNum">     279</span>         [<span class="tlaGBC" title="Branch 0 was taken 93 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         140 :     auto storage = std::allocator_traits&lt;Allocator&gt;::allocate(allocator, number_of_elements);</span></span>
+<span id="L280"><span class="lineNum">     280</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 140 times"> + </span>]:<span class="tlaGNC">         140 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION_PRD_MESSAGE(nullptr != storage, &quot;no memory allocated&quot;);</span></span>
+<span id="L281"><span class="lineNum">     281</span>                 :<span class="tlaGNC">         140 :     return storage;</span></span>
+<span id="L282"><span class="lineNum">     282</span>                 :             : }</span>
+<span id="L283"><span class="lineNum">     283</span>                 :             : </span>
+<span id="L284"><span class="lineNum">     284</span>                 :             : template &lt;typename ElementType, typename Allocator&gt;</span>
+<span id="L285"><span class="lineNum">     285</span>                 :<span class="tlaGNC">         152 : NonRelocatableVector&lt;ElementType, Allocator&gt;::~NonRelocatableVector() noexcept</span></span>
+<span id="L286"><span class="lineNum">     286</span>                 :             : {</span>
+<span id="L287"><span class="lineNum">     287</span>         [<span class="tlaGBC" title="Branch 0 was taken 12 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 140 times"> + </span>]:<span class="tlaGNC">         152 :     if (non_relocatable_vector_ == nullptr)</span></span>
+<span id="L288"><span class="lineNum">     288</span>                 :             :     {</span>
+<span id="L289"><span class="lineNum">     289</span>                 :<span class="tlaGNC">          12 :         return;</span></span>
+<span id="L290"><span class="lineNum">     290</span>                 :             :     }</span>
+<span id="L291"><span class="lineNum">     291</span>                 :             :     using alloc_traits = std::allocator_traits&lt;decltype(alloc_)&gt;;</span>
+<span id="L292"><span class="lineNum">     292</span>                 :<span class="tlaGNC">         140 :     auto cur_pointer = non_relocatable_vector_;</span></span>
+<span id="L293"><span class="lineNum">     293</span>         [<span class="tlaGBC" title="Branch 0 was taken 872 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 140 times"> + </span>]:<span class="tlaGNC">        1012 :     for (size_type i = 0U; i &lt; size_; i++)</span></span>
+<span id="L294"><span class="lineNum">     294</span>                 :             :     {</span>
+<span id="L295"><span class="lineNum">     295</span>                 :<span class="tlaGNC">         872 :         alloc_traits::destroy(alloc_, detail::to_address(cur_pointer));</span></span>
+<span id="L296"><span class="lineNum">     296</span>                 :<span class="tlaGNC">         872 :         std::advance(cur_pointer, 1);</span></span>
+<span id="L297"><span class="lineNum">     297</span>                 :             :     }</span>
+<span id="L298"><span class="lineNum">     298</span>                 :<span class="tlaGNC">         140 :     alloc_traits::deallocate(alloc_, non_relocatable_vector_, capacity_);</span></span>
+<span id="L299"><span class="lineNum">     299</span>         [<span class="tlaGBC" title="Branch 0 was taken 50 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span>]:<span class="tlaGNC">         152 : }</span></span>
+<span id="L300"><span class="lineNum">     300</span>                 :             : </span>
+<span id="L301"><span class="lineNum">     301</span>                 :             : template &lt;typename ElementType, typename Allocator&gt;</span>
+<span id="L302"><span class="lineNum">     302</span>                 :             : template &lt;typename... Args&gt;</span>
+<span id="L303"><span class="lineNum">     303</span>                 :<span class="tlaGNC">         796 : auto NonRelocatableVector&lt;ElementType, Allocator&gt;::emplace_back(Args&amp;&amp;... args) -&gt; ElementType&amp;</span></span>
+<span id="L304"><span class="lineNum">     304</span>                 :             : {</span>
+<span id="L305"><span class="lineNum">     305</span>         [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 788 times"> + </span>]:<span class="tlaGNC">         796 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION_PRD_MESSAGE(</span></span>
+<span id="L306"><span class="lineNum">     306</span>                 :             :         size_ &lt; capacity_,</span>
+<span id="L307"><span class="lineNum">     307</span>                 :             :         &quot;Capacity of vector set in constructor has already been reached. Cannot emplace another element.&quot;);</span>
+<span id="L308"><span class="lineNum">     308</span>                 :             : </span>
+<span id="L309"><span class="lineNum">     309</span>         [<span class="tlaGBC" title="Branch 0 was taken 482 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         788 :     auto* current_storage_pointer = detail::to_address(non_relocatable_vector_);</span></span>
+<span id="L310"><span class="lineNum">     310</span>         [<span class="tlaGBC" title="Branch 0 was taken 76 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         788 :     std::advance(current_storage_pointer, static_cast&lt;difference_type&gt;(size_));</span></span>
+<span id="L311"><span class="lineNum">     311</span>         [<span class="tlaGBC" title="Branch 0 was taken 224 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         788 :     std::allocator_traits&lt;Allocator&gt;::construct(alloc_, current_storage_pointer, std::forward&lt;Args&gt;(args)...);</span></span>
+<span id="L312"><span class="lineNum">     312</span>                 :<span class="tlaGNC">         788 :     size_ += 1U;</span></span>
+<span id="L313"><span class="lineNum">     313</span>                 :<span class="tlaGNC">         788 :     return *current_storage_pointer;</span></span>
+<span id="L314"><span class="lineNum">     314</span>                 :             : }</span>
+<span id="L315"><span class="lineNum">     315</span>                 :             : </span>
+<span id="L316"><span class="lineNum">     316</span>                 :             : template &lt;typename ElementType, typename Allocator&gt;</span>
+<span id="L317"><span class="lineNum">     317</span>                 :             : // coverity[autosar_cpp14_a15_5_3_violation] only precondition may throw, which is intentional</span>
+<span id="L318"><span class="lineNum">     318</span>                 :<span class="tlaGNC">         404 : inline ElementType&amp; NonRelocatableVector&lt;ElementType, Allocator&gt;::at(const size_type index)</span></span>
+<span id="L319"><span class="lineNum">     319</span>                 :             : {</span>
+<span id="L320"><span class="lineNum">     320</span>                 :             :     // check that this element is in shared memory.</span>
+<span id="L321"><span class="lineNum">     321</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 404 times"> + </span>]:<span class="tlaGNC">         404 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION_PRD_MESSAGE(index &lt; size_, &quot;index out of bounds&quot;);</span></span>
+<span id="L322"><span class="lineNum">     322</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A9-3-1&quot; rule finding. This rule states: &quot;An object shall not be accessed outside of</span>
+<span id="L323"><span class="lineNum">     323</span>                 :             :     // its lifetime.&quot;. Suppress &quot;AUTOSAR C++14 A9-3-1&quot; rule finding. This rule states:&quot;Member functions shall not</span>
+<span id="L324"><span class="lineNum">     324</span>                 :             :     // return non-const “raw” pointers or references to private or protected data owned by the class.&quot;. Suppress</span>
+<span id="L325"><span class="lineNum">     325</span>                 :             :     // &quot;AUTOSAR C++14 M7-5-1&quot; rule finding. This rule states: &quot;A function shall not return a reference or a pointer</span>
+<span id="L326"><span class="lineNum">     326</span>                 :             :     // to an automatic variable (including parameters), defined within the function.&quot;. Suppress &quot;AUTOSAR C++14</span>
+<span id="L327"><span class="lineNum">     327</span>                 :             :     // M7-5-2&quot; rule finding. This rule states: &quot;The address of an object with automatic storage shall not be</span>
+<span id="L328"><span class="lineNum">     328</span>                 :             :     // assigned to another object that may persist after the first object has ceased to exist.&quot;. Justification: As</span>
+<span id="L329"><span class="lineNum">     329</span>                 :             :     // with a normal container, an underlying item should be accessible as a non-const reference from outside by</span>
+<span id="L330"><span class="lineNum">     330</span>                 :             :     // index. The result reference remains valid as long as the NonRelocatableVector instance is alive.</span>
+<span id="L331"><span class="lineNum">     331</span>                 :             :     // coverity[autosar_cpp14_a3_8_1_violation]</span>
+<span id="L332"><span class="lineNum">     332</span>                 :             :     // coverity[autosar_cpp14_a9_3_1_violation]</span>
+<span id="L333"><span class="lineNum">     333</span>                 :             :     // coverity[autosar_cpp14_m7_5_1_violation]</span>
+<span id="L334"><span class="lineNum">     334</span>                 :             :     // coverity[autosar_cpp14_m7_5_2_violation]</span>
+<span id="L335"><span class="lineNum">     335</span>   [<span class="tlaGBC" title="Branch 0 was taken 202 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 202 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">         404 :     return *(std::next(non_relocatable_vector_, static_cast&lt;difference_type&gt;(index)));</span></span>
+<span id="L336"><span class="lineNum">     336</span>                 :             : }</span>
+<span id="L337"><span class="lineNum">     337</span>                 :             : </span>
+<span id="L338"><span class="lineNum">     338</span>                 :             : template &lt;typename ElementType, typename Allocator&gt;</span>
+<span id="L339"><span class="lineNum">     339</span>                 :             : inline const ElementType&amp; NonRelocatableVector&lt;ElementType, Allocator&gt;::at(const size_type index) const</span>
+<span id="L340"><span class="lineNum">     340</span>                 :             : {</span>
+<span id="L341"><span class="lineNum">     341</span>                 :             :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION_PRD_MESSAGE(index &lt; size_, &quot;index out of bounds&quot;);</span>
+<span id="L342"><span class="lineNum">     342</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A3-8-1&quot; rule finding.</span>
+<span id="L343"><span class="lineNum">     343</span>                 :             :     // This rule states: &quot;An object shall not be accessed outside of its lifetime.&quot;.</span>
+<span id="L344"><span class="lineNum">     344</span>                 :             :     // Suppress &quot;AUTOSAR C++14 M7-5-1&quot; rule finding.</span>
+<span id="L345"><span class="lineNum">     345</span>                 :             :     // This rule states:&quot;A function shall not return a reference or a pointer to an automatic</span>
+<span id="L346"><span class="lineNum">     346</span>                 :             :     // variable (including parameters), defined within the function.&quot;.</span>
+<span id="L347"><span class="lineNum">     347</span>                 :             :     // Suppress &quot;AUTOSAR C++14 M7-5-2&quot; rule finding. This rule states: &quot;The address of an object with automatic</span>
+<span id="L348"><span class="lineNum">     348</span>                 :             :     // storage shall not be assigned to another object that may persist after the first object has ceased to</span>
+<span id="L349"><span class="lineNum">     349</span>                 :             :     // exist.&quot;. Justification: The index is checked to be within bounds, ensuring the object is within its lifetime;</span>
+<span id="L350"><span class="lineNum">     350</span>                 :             :     // As with a normal container, an underlying item should be accessible by reference from outside by index.</span>
+<span id="L351"><span class="lineNum">     351</span>                 :             :     // coverity[autosar_cpp14_a3_8_1_violation]</span>
+<span id="L352"><span class="lineNum">     352</span>                 :             :     // coverity[autosar_cpp14_m7_5_1_violation]</span>
+<span id="L353"><span class="lineNum">     353</span>                 :             :     // coverity[autosar_cpp14_m7_5_2_violation]</span>
+<span id="L354"><span class="lineNum">     354</span>                 :             :     return *(std::next(non_relocatable_vector_, static_cast&lt;difference_type&gt;(index)));</span>
+<span id="L355"><span class="lineNum">     355</span>                 :             : }</span>
+<span id="L356"><span class="lineNum">     356</span>                 :             : </span>
+<span id="L357"><span class="lineNum">     357</span>                 :             : template &lt;typename ElementType, typename Allocator&gt;</span>
+<span id="L358"><span class="lineNum">     358</span>                 :             : inline ElementType&amp; NonRelocatableVector&lt;ElementType, Allocator&gt;::operator[](const size_type index)</span>
+<span id="L359"><span class="lineNum">     359</span>                 :             : {</span>
+<span id="L360"><span class="lineNum">     360</span>                 :             :     return this-&gt;at(index);</span>
+<span id="L361"><span class="lineNum">     361</span>                 :             : }</span>
+<span id="L362"><span class="lineNum">     362</span>                 :             : </span>
+<span id="L363"><span class="lineNum">     363</span>                 :             : template &lt;typename ElementType, typename Allocator&gt;</span>
+<span id="L364"><span class="lineNum">     364</span>                 :             : inline const ElementType&amp; NonRelocatableVector&lt;ElementType, Allocator&gt;::operator[](const size_type index) const</span>
+<span id="L365"><span class="lineNum">     365</span>                 :             : {</span>
+<span id="L366"><span class="lineNum">     366</span>                 :             :     return this-&gt;at(index);</span>
+<span id="L367"><span class="lineNum">     367</span>                 :             : }</span>
+<span id="L368"><span class="lineNum">     368</span>                 :             : </span>
+<span id="L369"><span class="lineNum">     369</span>                 :             : template &lt;typename ElementType, typename Allocator&gt;</span>
+<span id="L370"><span class="lineNum">     370</span>                 :<span class="tlaGNC">           2 : inline auto NonRelocatableVector&lt;ElementType, Allocator&gt;::data() -&gt; value_type*</span></span>
+<span id="L371"><span class="lineNum">     371</span>                 :             : {</span>
+<span id="L372"><span class="lineNum">     372</span>                 :             :     // If the NonRelocatableVector is in shared memory, then non_relocatable_vector_ may be corrupted by another</span>
+<span id="L373"><span class="lineNum">     373</span>                 :             :     // process while this function is running. Therefore, we make a stack copy of it at the start of the function</span>
+<span id="L374"><span class="lineNum">     374</span>                 :             :     // and use that copy for all checks and for generating the final iterator. Theoretically, the size_ variable</span>
+<span id="L375"><span class="lineNum">     375</span>                 :             :     // could also be corrupted. However, in that case, the bounds checking will not be affected.</span>
+<span id="L376"><span class="lineNum">     376</span>                 :<span class="tlaGNC">           2 :     const auto non_relocatable_vector_copy = non_relocatable_vector_;</span></span>
+<span id="L377"><span class="lineNum">     377</span>                 :             : </span>
+<span id="L378"><span class="lineNum">     378</span>                 :             :     // Certain allocators use pointers which perform bounds checking (e.g. PolymorphicOffsetPtrAllocator and</span>
+<span id="L379"><span class="lineNum">     379</span>                 :             :     // OffsetPtrs). For these, it's important that we can get both the first and last elements of the underlying</span>
+<span id="L380"><span class="lineNum">     380</span>                 :             :     // array without terminating. Since the array is contiguous, then as long as the first and last elements are</span>
+<span id="L381"><span class="lineNum">     381</span>                 :             :     // within the correct bounds, the whole array is.</span>
+<span id="L382"><span class="lineNum">     382</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :     score::cpp::ignore = GetLastElement(non_relocatable_vector_copy, size_);</span></span>
+<span id="L383"><span class="lineNum">     383</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           4 :     return GetFirstElement(non_relocatable_vector_copy, size_);</span></span>
+<span id="L384"><span class="lineNum">     384</span>                 :             : }</span>
+<span id="L385"><span class="lineNum">     385</span>                 :             : </span>
+<span id="L386"><span class="lineNum">     386</span>                 :             : template &lt;typename ElementType, typename Allocator&gt;</span>
+<span id="L387"><span class="lineNum">     387</span>                 :<span class="tlaGNC">          12 : inline auto NonRelocatableVector&lt;ElementType, Allocator&gt;::data() const -&gt; const value_type*</span></span>
+<span id="L388"><span class="lineNum">     388</span>                 :             : {</span>
+<span id="L389"><span class="lineNum">     389</span>                 :             :     // If the NonRelocatableVector is in shared memory, then non_relocatable_vector_ may be corrupted by another</span>
+<span id="L390"><span class="lineNum">     390</span>                 :             :     // process while this function is running. Therefore, we make a stack copy of it at the start of the function</span>
+<span id="L391"><span class="lineNum">     391</span>                 :             :     // and use that copy for all checks and for generating the final iterator. Theoretically, the size_ variable</span>
+<span id="L392"><span class="lineNum">     392</span>                 :             :     // could also be corrupted. However, in that case, the bounds checking will not be affected.</span>
+<span id="L393"><span class="lineNum">     393</span>                 :<span class="tlaGNC">          12 :     const auto non_relocatable_vector_copy = non_relocatable_vector_;</span></span>
+<span id="L394"><span class="lineNum">     394</span>                 :             : </span>
+<span id="L395"><span class="lineNum">     395</span>                 :             :     // Certain allocators use pointers which perform bounds checking (e.g. PolymorphicOffsetPtrAllocator and</span>
+<span id="L396"><span class="lineNum">     396</span>                 :             :     // OffsetPtrs). For these, it's important that we can get both the first and last elements of the underlying</span>
+<span id="L397"><span class="lineNum">     397</span>                 :             :     // array without terminating. Since the array is contiguous, then as long as the first and last elements are</span>
+<span id="L398"><span class="lineNum">     398</span>                 :             :     // within the correct bounds, the whole array is.</span>
+<span id="L399"><span class="lineNum">     399</span>         [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          12 :     score::cpp::ignore = GetLastElement(non_relocatable_vector_copy, size_);</span></span>
+<span id="L400"><span class="lineNum">     400</span>         [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          21 :     return GetFirstElement(non_relocatable_vector_copy, size_);</span></span>
+<span id="L401"><span class="lineNum">     401</span>                 :             : }</span>
+<span id="L402"><span class="lineNum">     402</span>                 :             : </span>
+<span id="L403"><span class="lineNum">     403</span>                 :             : template &lt;typename ElementType, typename Allocator&gt;</span>
+<span id="L404"><span class="lineNum">     404</span>                 :<span class="tlaGNC">           1 : auto NonRelocatableVector&lt;ElementType, Allocator&gt;::begin() -&gt; iterator</span></span>
+<span id="L405"><span class="lineNum">     405</span>                 :             : {</span>
+<span id="L406"><span class="lineNum">     406</span>                 :<span class="tlaGNC">           1 :     return this-&gt;data();</span></span>
+<span id="L407"><span class="lineNum">     407</span>                 :             : }</span>
+<span id="L408"><span class="lineNum">     408</span>                 :             : </span>
+<span id="L409"><span class="lineNum">     409</span>                 :             : template &lt;typename ElementType, typename Allocator&gt;</span>
+<span id="L410"><span class="lineNum">     410</span>                 :<span class="tlaGNC">          12 : auto NonRelocatableVector&lt;ElementType, Allocator&gt;::cbegin() const -&gt; const_iterator</span></span>
+<span id="L411"><span class="lineNum">     411</span>                 :             : {</span>
+<span id="L412"><span class="lineNum">     412</span>                 :<span class="tlaGNC">          12 :     return this-&gt;data();</span></span>
+<span id="L413"><span class="lineNum">     413</span>                 :             : }</span>
+<span id="L414"><span class="lineNum">     414</span>                 :             : </span>
+<span id="L415"><span class="lineNum">     415</span>                 :             : template &lt;typename ElementType, typename Allocator&gt;</span>
+<span id="L416"><span class="lineNum">     416</span>                 :             : auto NonRelocatableVector&lt;ElementType, Allocator&gt;::begin() const -&gt; const_iterator</span>
+<span id="L417"><span class="lineNum">     417</span>                 :             : {</span>
+<span id="L418"><span class="lineNum">     418</span>                 :             :     return this-&gt;data();</span>
+<span id="L419"><span class="lineNum">     419</span>                 :             : }</span>
+<span id="L420"><span class="lineNum">     420</span>                 :             : </span>
+<span id="L421"><span class="lineNum">     421</span>                 :             : template &lt;typename ElementType, typename Allocator&gt;</span>
+<span id="L422"><span class="lineNum">     422</span>                 :<span class="tlaGNC">           1 : inline auto NonRelocatableVector&lt;ElementType, Allocator&gt;::end() -&gt; iterator</span></span>
+<span id="L423"><span class="lineNum">     423</span>                 :             : {</span>
+<span id="L424"><span class="lineNum">     424</span>                 :<span class="tlaGNC">           1 :     return GetPastTheEndIterator();</span></span>
+<span id="L425"><span class="lineNum">     425</span>                 :             : }</span>
+<span id="L426"><span class="lineNum">     426</span>                 :             : </span>
+<span id="L427"><span class="lineNum">     427</span>                 :             : template &lt;typename ElementType, typename Allocator&gt;</span>
+<span id="L428"><span class="lineNum">     428</span>                 :             : auto NonRelocatableVector&lt;ElementType, Allocator&gt;::end() const -&gt; const_iterator</span>
+<span id="L429"><span class="lineNum">     429</span>                 :             : {</span>
+<span id="L430"><span class="lineNum">     430</span>                 :             :     return static_cast&lt;const_iterator&gt;(GetPastTheEndIterator());</span>
+<span id="L431"><span class="lineNum">     431</span>                 :             : }</span>
+<span id="L432"><span class="lineNum">     432</span>                 :             : </span>
+<span id="L433"><span class="lineNum">     433</span>                 :             : template &lt;typename ElementType, typename Allocator&gt;</span>
+<span id="L434"><span class="lineNum">     434</span>                 :             : auto NonRelocatableVector&lt;ElementType, Allocator&gt;::cend() const -&gt; const_iterator</span>
+<span id="L435"><span class="lineNum">     435</span>                 :             : {</span>
+<span id="L436"><span class="lineNum">     436</span>                 :             :     return static_cast&lt;const_iterator&gt;(GetPastTheEndIterator());</span>
+<span id="L437"><span class="lineNum">     437</span>                 :             : }</span>
+<span id="L438"><span class="lineNum">     438</span>                 :             : </span>
+<span id="L439"><span class="lineNum">     439</span>                 :             : template &lt;typename ElementType, typename Allocator&gt;</span>
+<span id="L440"><span class="lineNum">     440</span>                 :<span class="tlaGNC">           1 : inline auto NonRelocatableVector&lt;ElementType, Allocator&gt;::GetPastTheEndIterator() const -&gt; iterator</span></span>
+<span id="L441"><span class="lineNum">     441</span>                 :             : {</span>
+<span id="L442"><span class="lineNum">     442</span>                 :             :     // If the NonRelocatableVector is in shared memory, then non_relocatable_vector_ may be corrupted by another</span>
+<span id="L443"><span class="lineNum">     443</span>                 :             :     // process while this function is running. Therefore, we make a stack copy of it at the start of the function</span>
+<span id="L444"><span class="lineNum">     444</span>                 :             :     // and use that copy for all checks and for generating the final iterator.</span>
+<span id="L445"><span class="lineNum">     445</span>                 :<span class="tlaGNC">           1 :     const auto non_relocatable_vector_copy = non_relocatable_vector_;</span></span>
+<span id="L446"><span class="lineNum">     446</span>                 :             : </span>
+<span id="L447"><span class="lineNum">     447</span>                 :             :     // Certain allocators use pointers which perform bounds checking (e.g. PolymorphicOffsetPtrAllocator and</span>
+<span id="L448"><span class="lineNum">     448</span>                 :             :     // OffsetPtrs). For these, it's important that we can get both the first and last elements of the underlying</span>
+<span id="L449"><span class="lineNum">     449</span>                 :             :     // array without terminating. Since the array is contiguous, then as long as the first and last elements are</span>
+<span id="L450"><span class="lineNum">     450</span>                 :             :     // within the correct bounds, the whole array is.</span>
+<span id="L451"><span class="lineNum">     451</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :     score::cpp::ignore = GetFirstElement(non_relocatable_vector_copy, size_);</span></span>
+<span id="L452"><span class="lineNum">     452</span>                 :             : </span>
+<span id="L453"><span class="lineNum">     453</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :     auto last_element_raw_iterator = GetLastElement(non_relocatable_vector_copy, size_);</span></span>
+<span id="L454"><span class="lineNum">     454</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           1 :     if (last_element_raw_iterator == nullptr)</span></span>
+<span id="L455"><span class="lineNum">     455</span>                 :             :     {</span>
+<span id="L456"><span class="lineNum">     456</span>                 :<span class="tlaUNC tlaBgUNC">           0 :         return nullptr;</span></span>
+<span id="L457"><span class="lineNum">     457</span>                 :             :     }</span>
+<span id="L458"><span class="lineNum">     458</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">           1 :     auto past_the_end_raw_iterator = std::next(last_element_raw_iterator, 1);</span></span>
+<span id="L459"><span class="lineNum">     459</span>                 :             : </span>
+<span id="L460"><span class="lineNum">     460</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A3-8-1&quot; rule finding.</span>
+<span id="L461"><span class="lineNum">     461</span>                 :             :     // This rule states: &quot;An object shall not be accessed outside of its lifetime.&quot;.</span>
+<span id="L462"><span class="lineNum">     462</span>                 :             :     // Suppress &quot;AUTOSAR C++14 M7-5-1&quot; rule finding.</span>
+<span id="L463"><span class="lineNum">     463</span>                 :             :     // This rule states: &quot;A function shall not return a reference or a pointer to an automatic</span>
+<span id="L464"><span class="lineNum">     464</span>                 :             :     // variable (including parameters), defined within the function.&quot;.</span>
+<span id="L465"><span class="lineNum">     465</span>                 :             :     // Justification: The local variable &quot;past_the_end_pointer&quot; is a pointer to an internal member.</span>
+<span id="L466"><span class="lineNum">     466</span>                 :             :     // This does not cause the object to outlive its intended scope.</span>
+<span id="L467"><span class="lineNum">     467</span>                 :             :     // coverity[autosar_cpp14_a3_8_1_violation]</span>
+<span id="L468"><span class="lineNum">     468</span>                 :             :     // coverity[autosar_cpp14_m7_5_1_violation]</span>
+<span id="L469"><span class="lineNum">     469</span>                 :<span class="tlaGNC">           1 :     return ::score::containers::detail::to_address(past_the_end_raw_iterator);</span></span>
+<span id="L470"><span class="lineNum">     470</span>                 :             : }</span>
+<span id="L471"><span class="lineNum">     471</span>                 :             : </span>
+<span id="L472"><span class="lineNum">     472</span>                 :             : template &lt;typename ElementType, typename Allocator&gt;</span>
+<span id="L473"><span class="lineNum">     473</span>                 :             : // coverity[autosar_cpp14_a0_1_3_violation] false-positive: used in data(), GetPastTheEndIterator()</span>
+<span id="L474"><span class="lineNum">     474</span>                 :<span class="tlaGNC">          15 : inline auto NonRelocatableVector&lt;ElementType, Allocator&gt;::GetFirstElement(const pointer dynamic_array,</span></span>
+<span id="L475"><span class="lineNum">     475</span>                 :             :                                                                           const std::size_t non_relocatable_vector_size)</span>
+<span id="L476"><span class="lineNum">     476</span>                 :             :     -&gt; iterator</span>
+<span id="L477"><span class="lineNum">     477</span>                 :             : {</span>
+<span id="L478"><span class="lineNum">     478</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 12 times"> + </span>]:<span class="tlaGNC">          15 :     if (non_relocatable_vector_size == 0U)</span></span>
+<span id="L479"><span class="lineNum">     479</span>                 :             :     {</span>
+<span id="L480"><span class="lineNum">     480</span>                 :<span class="tlaGNC">           3 :         return nullptr;</span></span>
+<span id="L481"><span class="lineNum">     481</span>                 :             :     }</span>
+<span id="L482"><span class="lineNum">     482</span>                 :<span class="tlaGNC">          12 :     return ::score::containers::detail::to_address(dynamic_array);</span></span>
+<span id="L483"><span class="lineNum">     483</span>                 :             : }</span>
+<span id="L484"><span class="lineNum">     484</span>                 :             : </span>
+<span id="L485"><span class="lineNum">     485</span>                 :             : template &lt;typename ElementType, typename Allocator&gt;</span>
+<span id="L486"><span class="lineNum">     486</span>                 :             : // coverity[autosar_cpp14_a0_1_3_violation] false-positive: used in data(), GetPastTheEndIterator()</span>
+<span id="L487"><span class="lineNum">     487</span>                 :<span class="tlaGNC">          15 : inline auto NonRelocatableVector&lt;ElementType, Allocator&gt;::GetLastElement(const pointer dynamic_array,</span></span>
+<span id="L488"><span class="lineNum">     488</span>                 :             :                                                                          const std::size_t non_relocatable_vector_size)</span>
+<span id="L489"><span class="lineNum">     489</span>                 :             :     -&gt; iterator</span>
+<span id="L490"><span class="lineNum">     490</span>                 :             : {</span>
+<span id="L491"><span class="lineNum">     491</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 12 times"> + </span>]:<span class="tlaGNC">          15 :     if (non_relocatable_vector_size == 0U)</span></span>
+<span id="L492"><span class="lineNum">     492</span>                 :             :     {</span>
+<span id="L493"><span class="lineNum">     493</span>                 :<span class="tlaGNC">           3 :         return nullptr;</span></span>
+<span id="L494"><span class="lineNum">     494</span>                 :             :     }</span>
+<span id="L495"><span class="lineNum">     495</span>                 :             :     // cast is safe due to 0 check</span>
+<span id="L496"><span class="lineNum">     496</span>                 :             :     // coverity[autosar_cpp14_m5_0_9_violation]</span>
+<span id="L497"><span class="lineNum">     497</span>                 :             :     auto last_element_fancy_pointer =</span>
+<span id="L498"><span class="lineNum">     498</span>         [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          12 :         std::next(dynamic_array, static_cast&lt;difference_type&gt;(non_relocatable_vector_size - 1U));</span></span>
+<span id="L499"><span class="lineNum">     499</span>         [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          12 :     return ::score::containers::detail::to_address(last_element_fancy_pointer);</span></span>
+<span id="L500"><span class="lineNum">     500</span>                 :             : }</span>
+<span id="L501"><span class="lineNum">     501</span>                 :             : </span>
+<span id="L502"><span class="lineNum">     502</span>                 :             : }  // namespace score::containers</span>
+<span id="L503"><span class="lineNum">     503</span>                 :             : </span>
+<span id="L504"><span class="lineNum">     504</span>                 :             : #endif  // SCORE_LIB_CONTAINERS_NON_RELOCATABLE_VECTOR_H</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - mw/com/impl/external/score_communication+/score/mw/com/impl/enable_reference_to_moveable_from_this.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../../../index.html">top level</a> - <a href="index.html">mw/com/impl/external/score_communication+/score/mw/com/impl</a> - enable_reference_to_moveable_from_this.h<span style="font-size: 80%;"> (source / <a href="enable_reference_to_moveable_from_this.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">13</td>
+            <td class="headerCovTableEntry">13</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:37:31</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryMed">82.9&nbsp;%</td>
+            <td class="headerCovTableEntry">41</td>
+            <td class="headerCovTableEntry">34</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">2</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2026 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : #ifndef SCORE_MW_COM_IMPL_ENABLE_REFERENCE_TO_MOVEABLE_FROM_THIS_H</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #define SCORE_MW_COM_IMPL_ENABLE_REFERENCE_TO_MOVEABLE_FROM_THIS_H</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : </span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #include &quot;score/mw/com/impl/reference_to_moveable.h&quot;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : </span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : namespace score::mw::com::impl</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : {</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : </span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : /// \brief Class that should be inherited by moveable class T to allow it to hand out references to itself while</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : /// allowing these references to be updated when the moveable class T is moved.</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : //</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : /// See the test file for this class for an example of how to use this class.</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : ///</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : /// Reason for this class: In various places in our codebase, we have the issue in which we hand out a reference to a</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : /// class which is moveable. If the class is moved, then we need to update this reference. E.g. SkeletonBase stores a</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : /// map of references to its service elements. Each service element therefore must store a reference to the SkeletonBase</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : /// and update the reference to itself when it's moved. The SkeletonBase must also update the reference to itself within</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : /// each service element when it is moved.</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : ///</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : /// To avoid such complexity, this commit introduces a class EnableReferenceToMoveableFromThis which will be inherited</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : /// by each service element. This stores a ReferenceToMoveable which is stored on the heap so a reference to it will</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : /// never be invalidated. The ReferenceToMoveable will be updated when the service element is moved. A</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             : /// ReferenceToMoveable::Reference is provided to SkeletonBase from which it can get a reference to the service element,</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             : /// even if it's been moved. With this approach, the service element doesn't need to store a reference to the parent</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             : /// SkeletonBase so the parent SkeletonBase doesn't need to inform the service element when it moves.</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             : ///</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : /// NOTE: This class is not thread safe. It is the responsibility of the user to ensure that the reference is not</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : /// accessed while the moveable class (and therefore this class) is being moved. In our current architecture, this is</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             : /// not an issue as we only allow single threaded access to Skeleton / Proxy objects and their service elements, so we</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             : /// will never be accessing the references while a Skeleton or Proxy object is being moved.</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             : template &lt;typename T&gt;</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             : class EnableReferenceToMoveableFromThis</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             : {</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             :   public:</span>
+<span id="L47"><span class="lineNum">      47</span>                 :<span class="tlaGNC tlaBgGNC">        2090 :     EnableReferenceToMoveableFromThis() : ptr_wrapper_{*this} {}</span></span>
+<span id="L48"><span class="lineNum">      48</span>                 :             : </span>
+<span id="L49"><span class="lineNum">      49</span>                 :<span class="tlaGNC">        2260 :     virtual ~EnableReferenceToMoveableFromThis() = default;</span></span>
+<span id="L50"><span class="lineNum">      50</span>                 :             : </span>
+<span id="L51"><span class="lineNum">      51</span>                 :             :     EnableReferenceToMoveableFromThis(EnableReferenceToMoveableFromThis&amp; other) noexcept = delete;</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             :     EnableReferenceToMoveableFromThis&amp; operator=(EnableReferenceToMoveableFromThis&amp; other) &amp; noexcept = delete;</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             : </span>
+<span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC">         192 :     EnableReferenceToMoveableFromThis(EnableReferenceToMoveableFromThis&amp;&amp; other) noexcept</span></span>
+<span id="L55"><span class="lineNum">      55</span>                 :<span class="tlaGNC">         192 :         : ptr_wrapper_{std::move(other.ptr_wrapper_)}</span></span>
+<span id="L56"><span class="lineNum">      56</span>                 :             :     {</span>
+<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">         192 :         ptr_wrapper_.Update(*this);</span></span>
+<span id="L58"><span class="lineNum">      58</span>                 :<span class="tlaGNC">         192 :     }</span></span>
+<span id="L59"><span class="lineNum">      59</span>                 :<span class="tlaGNC">          30 :     EnableReferenceToMoveableFromThis&amp; operator=(EnableReferenceToMoveableFromThis&amp;&amp; other) &amp; noexcept</span></span>
+<span id="L60"><span class="lineNum">      60</span>                 :             :     {</span>
+<span id="L61"><span class="lineNum">      61</span>         [<span class="tlaGBC" title="Branch 0 was taken 22 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 8 times"> + </span>]:<span class="tlaGNC">          30 :         if (this != &amp;other)</span></span>
+<span id="L62"><span class="lineNum">      62</span>                 :             :         {</span>
+<span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC">          22 :             ptr_wrapper_ = std::move(other.ptr_wrapper_);</span></span>
+<span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC">          22 :             ptr_wrapper_.Update(*this);</span></span>
+<span id="L65"><span class="lineNum">      65</span>                 :             :         }</span>
+<span id="L66"><span class="lineNum">      66</span>                 :<span class="tlaGNC">          30 :         return *this;</span></span>
+<span id="L67"><span class="lineNum">      67</span>                 :             :     }</span>
+<span id="L68"><span class="lineNum">      68</span>                 :             : </span>
+<span id="L69"><span class="lineNum">      69</span>                 :<span class="tlaGNC">         886 :     typename ReferenceToMoveable&lt;T&gt;::Reference&amp; GetReferenceToMoveable()</span></span>
+<span id="L70"><span class="lineNum">      70</span>                 :             :     {</span>
+<span id="L71"><span class="lineNum">      71</span>                 :<span class="tlaGNC">         886 :         return ptr_wrapper_.Get();</span></span>
+<span id="L72"><span class="lineNum">      72</span>                 :             :     }</span>
+<span id="L73"><span class="lineNum">      73</span>                 :             : </span>
+<span id="L74"><span class="lineNum">      74</span>                 :             :   private:</span>
+<span id="L75"><span class="lineNum">      75</span>                 :             :     ReferenceToMoveable&lt;T&gt; ptr_wrapper_;</span>
+<span id="L76"><span class="lineNum">      76</span>                 :             : };</span>
+<span id="L77"><span class="lineNum">      77</span>                 :             : </span>
+<span id="L78"><span class="lineNum">      78</span>                 :             : }  // namespace score::mw::com::impl</span>
+<span id="L79"><span class="lineNum">      79</span>                 :             : </span>
+<span id="L80"><span class="lineNum">      80</span>                 :             : #endif  // SCORE_MW_COM_IMPL_ENABLE_REFERENCE_TO_MOVEABLE_FROM_THIS_H</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

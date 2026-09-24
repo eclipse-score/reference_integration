@@ -1,0 +1,176 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - language/safecpp/scoped_function/details/external/score_baselibs+/score/language/safecpp/scoped_function/details/scoped_function_invoker.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../../../../../index.html">top level</a> - <a href="index.html">language/safecpp/scoped_function/details/external/score_baselibs+/score/language/safecpp/scoped_function/details</a> - scoped_function_invoker.h<span style="font-size: 80%;"> (source / <a href="scoped_function_invoker.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">10</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:33:47</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryLo">73.3&nbsp;%</td>
+            <td class="headerCovTableEntry">90</td>
+            <td class="headerCovTableEntry">66</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryLo">55.0&nbsp;%</td>
+            <td class="headerCovTableEntry">100</td>
+            <td class="headerCovTableEntry">55</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2025 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : #ifndef SCORE_LANGUAGE_SAFECPP_SCOPED_FUNCTION_DETAILS_SCOPED_FUNCTION_INVOKER_H</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #define SCORE_LANGUAGE_SAFECPP_SCOPED_FUNCTION_DETAILS_SCOPED_FUNCTION_INVOKER_H</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : </span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #include &quot;score/language/safecpp/scoped_function/details/call_and_return_modified.h&quot;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : </span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : #include &lt;score/assert.hpp&gt;</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : </span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : namespace score::safecpp::details</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : {</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : </span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : template &lt;bool NoExcept, class FunctionType&gt;</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : class ScopedFunctionInvoker;</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : </span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : template &lt;bool NoExcept, class ReturnType, class... Args&gt;</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : class ScopedFunctionInvoker&lt;NoExcept, ReturnType(Args...)&gt;</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : {</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             :   public:</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             :     template &lt;class ScopedFunction&gt;</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             :     using CallableType = ReturnType (*)(ScopedFunction&amp;, Args...) noexcept(NoExcept);</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : </span>
+<span id="L33"><span class="lineNum">      33</span>                 :             :     template &lt;class ScopedFunction&gt;</span>
+<span id="L34"><span class="lineNum">      34</span>                 :<span class="tlaGNC tlaBgGNC">         229 :     [[nodiscard]] static CallableType&lt;ScopedFunction&gt; ActualInvoker() noexcept</span></span>
+<span id="L35"><span class="lineNum">      35</span>                 :             :     {</span>
+<span id="L36"><span class="lineNum">      36</span>                 :<span class="tlaGNC">         676 :         return [](ScopedFunction&amp; base_scoped_function, Args... args) noexcept(NoExcept) -&gt; ReturnType {</span></span>
+<span id="L37"><span class="lineNum">      37</span>                 :             :             // LCOV_EXCL_BR_START False Positive:</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             :             // 1. The return statement inside the following if statement is covered as the report shows - this implies</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             :             // that the &quot;true&quot; path was taken</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             :             // 2. Test cases exist which test all possible combinations:</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             :             //      Scope State and Callable ok</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             :             //      Scope State Empty, Callable Ok</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             :             //      Scope State ok, Callable Empty</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             :             //      Scope State Empty, Callable Empty</span>
+<span id="L45"><span class="lineNum">      45</span>   [<span class="tlaGBC" title="Branch 0 was taken 52 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 51 times"> + </span> :<span class="tlaGNC">         229 :             if ((base_scoped_function.scope_state_ == nullptr) || (base_scoped_function.callable_ == nullptr))</span></span>
+<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 51 times"> + </span><span class="tlaGBC" title="Branch 6 was taken 41 times"> + </span><span class="tlaGBC" title="Branch 7 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 8 was taken 1 time"> + </span> 
+<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 9 was taken 40 times"> + </span><span class="tlaGBC" title="Branch 10 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 11 was taken 40 times"> + </span><span class="tlaGBC" title="Branch 12 was taken 22 times"> + </span><span class="tlaUNC" title="Branch 13 was not taken"> - </span> 
+<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 14 was not taken"> - </span><span class="tlaGBC" title="Branch 15 was taken 22 times"> + </span><span class="tlaUNC" title="Branch 16 was not taken"> - </span><span class="tlaGBC" title="Branch 17 was taken 22 times"> + </span><span class="tlaGBC" title="Branch 18 was taken 35 times"> + </span> 
+<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 19 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 20 was not taken"> - </span><span class="tlaGBC" title="Branch 21 was taken 35 times"> + </span><span class="tlaGBC" title="Branch 22 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 23 was taken 35 times"> + </span> 
+<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 24 was taken 22 times"> + </span><span class="tlaUNC" title="Branch 25 was not taken"> - </span><span class="tlaUNC" title="Branch 26 was not taken"> - </span><span class="tlaGBC" title="Branch 27 was taken 22 times"> + </span><span class="tlaUNC" title="Branch 28 was not taken"> - </span> 
+<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 29 was taken 22 times"> + </span><span class="tlaGBC" title="Branch 30 was taken 31 times"> + </span><span class="tlaGBC" title="Branch 31 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 32 was not taken"> - </span><span class="tlaGBC" title="Branch 33 was taken 31 times"> + </span> 
+<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 34 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 35 was taken 31 times"> + </span><span class="tlaGBC" title="Branch 36 was taken 18 times"> + </span><span class="tlaUNC" title="Branch 37 was not taken"> - </span><span class="tlaUNC" title="Branch 38 was not taken"> - </span> 
+<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 39 was taken 18 times"> + </span><span class="tlaUNC" title="Branch 40 was not taken"> - </span><span class="tlaGBC" title="Branch 41 was taken 18 times"> + </span><span class="tlaUNC" title="Branch 42 was not taken"> - </span><span class="tlaUNC" title="Branch 43 was not taken"> - </span> 
+<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 44 was not taken"> - </span><span class="tlaUNC" title="Branch 45 was not taken"> - </span><span class="tlaUNC" title="Branch 46 was not taken"> - </span><span class="tlaUNC" title="Branch 47 was not taken"> - </span><span class="tlaGBC" title="Branch 48 was taken 1 time"> + </span> 
+<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 49 was not taken"> - </span><span class="tlaUNC" title="Branch 50 was not taken"> - </span><span class="tlaGBC" title="Branch 51 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 52 was not taken"> - </span><span class="tlaGBC" title="Branch 53 was taken 1 time"> + </span> 
+<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 54 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 55 was not taken"> - </span><span class="tlaUNC" title="Branch 56 was not taken"> - </span><span class="tlaGBC" title="Branch 57 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 58 was not taken"> - </span> 
+<span class="lineNum">        </span>             <span class="tlaGBC" title="Branch 59 was taken 1 time"> + </span>]
+<span id="L46"><span class="lineNum">      46</span>                 :             :             {</span>
+<span id="L47"><span class="lineNum">      47</span>                 :<span class="tlaGNC">           8 :                 return {};</span></span>
+<span id="L48"><span class="lineNum">      48</span>                 :             :             }</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             :             // LCOV_EXCL_BR_STOP</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             : </span>
+<span id="L51"><span class="lineNum">      51</span>                 :<span class="tlaGNC">         727 :             auto wrapped_callable = [&amp;base_scoped_function, &amp;args...]() {</span></span>
+<span id="L52"><span class="lineNum">      52</span>   [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 36 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 27 times"> + </span> :<span class="tlaGNC">         185 :                 SCORE_LANGUAGE_FUTURECPP_PRECONDITION_PRD(base_scoped_function.callable_ != nullptr);</span></span>
+<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaGBC" title="Branch 5 was taken 22 times"> + </span><span class="tlaUNC" title="Branch 6 was not taken"> - </span><span class="tlaGBC" title="Branch 7 was taken 31 times"> + </span><span class="tlaUNC" title="Branch 8 was not taken"> - </span> 
+<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 9 was taken 22 times"> + </span><span class="tlaUNC" title="Branch 10 was not taken"> - </span><span class="tlaGBC" title="Branch 11 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 12 was not taken"> - </span><span class="tlaGBC" title="Branch 13 was taken 18 times"> + </span> 
+<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 14 was not taken"> - </span><span class="tlaUNC" title="Branch 15 was not taken"> - </span><span class="tlaUNC" title="Branch 16 was not taken"> - </span><span class="tlaGBC" title="Branch 17 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 18 was not taken"> - </span> 
+<span class="lineNum">        </span>             <span class="tlaGBC" title="Branch 19 was taken 1 time"> + </span>]
+<span id="L53"><span class="lineNum">      53</span>                 :<span class="tlaGNC">         185 :                 return details::CallAndReturnModified&lt;Args...&gt;(*(base_scoped_function.callable_),</span></span>
+<span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC">         185 :                                                                std::forward&lt;Args&gt;(args)...);</span></span>
+<span id="L55"><span class="lineNum">      55</span>                 :             :             };</span>
+<span id="L56"><span class="lineNum">      56</span>                 :             : </span>
+<span id="L57"><span class="lineNum">      57</span>   [<span class="tlaGBC" title="Branch 0 was taken 51 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 39 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         221 :             return base_scoped_function.scope_state_-&gt;InvokeIfNotExpired(wrapped_callable);</span></span>
+<span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 22 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 35 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span><span class="tlaGBC" title="Branch 8 was taken 22 times"> + </span> 
+<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 9 was not taken"> - </span><span class="tlaGBC" title="Branch 10 was taken 31 times"> + </span><span class="tlaUNC" title="Branch 11 was not taken"> - </span><span class="tlaGBC" title="Branch 12 was taken 18 times"> + </span><span class="tlaUNC" title="Branch 13 was not taken"> - </span> 
+<span class="lineNum">        </span> <span class="tlaUNC" title="Branch 14 was not taken"> - </span><span class="tlaUNC" title="Branch 15 was not taken"> - </span><span class="tlaGBC" title="Branch 16 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 17 was not taken"> - </span><span class="tlaGBC" title="Branch 18 was taken 1 time"> + </span> 
+<span class="lineNum">        </span>             <span class="tlaUNC" title="Branch 19 was not taken"> - </span>]
+<span id="L58"><span class="lineNum">      58</span>                 :<span class="tlaGNC">         229 :         };</span></span>
+<span id="L59"><span class="lineNum">      59</span>                 :             :     }</span>
+<span id="L60"><span class="lineNum">      60</span>                 :             : };</span>
+<span id="L61"><span class="lineNum">      61</span>                 :             : </span>
+<span id="L62"><span class="lineNum">      62</span>                 :             : }  // namespace score::safecpp::details</span>
+<span id="L63"><span class="lineNum">      63</span>                 :             : </span>
+<span id="L64"><span class="lineNum">      64</span>                 :             : #endif  // SCORE_LANGUAGE_SAFECPP_SCOPED_FUNCTION_DETAILS_SCOPED_FUNCTION_INVOKER_H</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

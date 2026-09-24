@@ -1,0 +1,258 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - _coverage_report.dat - language/safecpp/safe_math/details/division/external/score_baselibs+/score/language/safecpp/safe_math/details/division/division.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../../../../../../../index.html">top level</a> - <a href="index.html">language/safecpp/safe_math/details/division/external/score_baselibs+/score/language/safecpp/safe_math/details/division</a> - division.h<span style="font-size: 80%;"> (source / <a href="division.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">_coverage_report.dat</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">30</td>
+            <td class="headerCovTableEntry">30</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-24 13:33:47</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">94.7&nbsp;%</td>
+            <td class="headerCovTableEntry">76</td>
+            <td class="headerCovTableEntry">72</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntry">8</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">             Branch data     Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>                 :             : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>                 :             :  * Copyright (c) 2025 Contributors to the Eclipse Foundation</span>
+<span id="L3"><span class="lineNum">       3</span>                 :             :  *</span>
+<span id="L4"><span class="lineNum">       4</span>                 :             :  * See the NOTICE file(s) distributed with this work for additional</span>
+<span id="L5"><span class="lineNum">       5</span>                 :             :  * information regarding copyright ownership.</span>
+<span id="L6"><span class="lineNum">       6</span>                 :             :  *</span>
+<span id="L7"><span class="lineNum">       7</span>                 :             :  * This program and the accompanying materials are made available under the</span>
+<span id="L8"><span class="lineNum">       8</span>                 :             :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L9"><span class="lineNum">       9</span>                 :             :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L10"><span class="lineNum">      10</span>                 :             :  *</span>
+<span id="L11"><span class="lineNum">      11</span>                 :             :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
+<span id="L13"><span class="lineNum">      13</span>                 :             : #ifndef SCORE_LIB_SAFE_MATH_DETAILS_DIVISION_DIVISION_H</span>
+<span id="L14"><span class="lineNum">      14</span>                 :             : #define SCORE_LIB_SAFE_MATH_DETAILS_DIVISION_DIVISION_H</span>
+<span id="L15"><span class="lineNum">      15</span>                 :             : </span>
+<span id="L16"><span class="lineNum">      16</span>                 :             : #include &quot;score/language/safecpp/safe_math/details/absolute/absolute.h&quot;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #include &quot;score/language/safecpp/safe_math/details/cast/cast.h&quot;</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : #include &quot;score/language/safecpp/safe_math/details/floating_point_environment.h&quot;</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : #include &quot;score/language/safecpp/safe_math/details/negate/negate.h&quot;</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : #include &quot;score/language/safecpp/safe_math/details/type_traits/type_traits.h&quot;</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : #include &quot;score/language/safecpp/safe_math/error.h&quot;</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : #include &quot;score/language/safecpp/safe_math/return_mode.h&quot;</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : </span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : #include &quot;score/result/result.h&quot;</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : </span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : #include &lt;cstdlib&gt;</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : #include &lt;limits&gt;</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : #include &lt;type_traits&gt;</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : </span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : namespace score::safe_math</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : {</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : </span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : // We use this template trick to make an intelligent default choice for the return type while allowing a user to</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : // specify the return type without having to specify the parameter types.</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             : template &lt;ReturnMode return_mode = kDefaultReturnMode,</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             :           class TempR = void,</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             :           class LHS,</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             :           class RHS,</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             :           class R = prefer_first_type_t&lt;TempR, LHS&gt;,</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             :           typename std::enable_if_t&lt;std::is_integral&lt;LHS&gt;::value &amp;&amp; std::is_integral&lt;RHS&gt;::value &amp;&amp;</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             :                                         std::is_integral&lt;R&gt;::value,</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             :                                     bool&gt; = true&gt;</span>
+<span id="L43"><span class="lineNum">      43</span>                 :<span class="tlaGNC tlaBgGNC">        1650 : auto Divide(LHS lhs, RHS rhs) noexcept -&gt; ModeBasedReturnType&lt;R, return_mode&gt;</span></span>
+<span id="L44"><span class="lineNum">      44</span>                 :             : {</span>
+<span id="L45"><span class="lineNum">      45</span>         [<span class="tlaGBC" title="Branch 0 was taken 400 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1250 times"> + </span>]:<span class="tlaGNC">        1650 :     if (CmpEqual(rhs, 0))</span></span>
+<span id="L46"><span class="lineNum">      46</span>                 :             :     {</span>
+<span id="L47"><span class="lineNum">      47</span>                 :<span class="tlaGNC">         400 :         return HandleError&lt;R, return_mode&gt;(score::MakeUnexpected(ErrorCode::kDivideByZero));</span></span>
+<span id="L48"><span class="lineNum">      48</span>                 :             :     }</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             : </span>
+<span id="L50"><span class="lineNum">      50</span>                 :             :     using UnsignedLHS = std::make_unsigned_t&lt;LHS&gt;;</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             :     using UnsignedRHS = std::make_unsigned_t&lt;RHS&gt;;</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             :     using CommonType = bigger_type_t&lt;UnsignedLHS, UnsignedRHS&gt;;</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             : </span>
+<span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC">        1250 :     const auto abs_lhs = static_cast&lt;CommonType&gt;(Abs(lhs));</span></span>
+<span id="L55"><span class="lineNum">      55</span>                 :<span class="tlaGNC">        1250 :     const auto abs_rhs = static_cast&lt;CommonType&gt;(Abs(rhs));</span></span>
+<span id="L56"><span class="lineNum">      56</span>                 :             : </span>
+<span id="L57"><span class="lineNum">      57</span>         [<span class="tlaGBC" title="Branch 0 was taken 401 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 849 times"> + </span>]:<span class="tlaGNC">        1250 :     if ((abs_lhs % abs_rhs) != 0U)</span></span>
+<span id="L58"><span class="lineNum">      58</span>                 :             :     {</span>
+<span id="L59"><span class="lineNum">      59</span>                 :<span class="tlaGNC">         401 :         return HandleError&lt;R, return_mode&gt;(score::MakeUnexpected(ErrorCode::kImplicitRounding));</span></span>
+<span id="L60"><span class="lineNum">      60</span>                 :             :     }</span>
+<span id="L61"><span class="lineNum">      61</span>                 :<span class="tlaGNC">         849 :     const auto result = static_cast&lt;CommonType&gt;(abs_lhs / abs_rhs);</span></span>
+<span id="L62"><span class="lineNum">      62</span>                 :             : </span>
+<span id="L63"><span class="lineNum">      63</span>         [<span class="tlaGBC" title="Branch 0 was taken 785 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 64 times"> + </span>]:<span class="tlaGNC">         849 :     if (CmpLess(lhs, 0) == CmpLess(rhs, 0))</span></span>
+<span id="L64"><span class="lineNum">      64</span>                 :             :     {</span>
+<span id="L65"><span class="lineNum">      65</span>                 :<span class="tlaGNC">         785 :         return Cast&lt;return_mode, R&gt;(result);</span></span>
+<span id="L66"><span class="lineNum">      66</span>                 :             :     }</span>
+<span id="L67"><span class="lineNum">      67</span>                 :             :     else</span>
+<span id="L68"><span class="lineNum">      68</span>                 :             :     {</span>
+<span id="L69"><span class="lineNum">      69</span>                 :<span class="tlaGNC">          64 :         return Negate&lt;return_mode, R&gt;(result);</span></span>
+<span id="L70"><span class="lineNum">      70</span>                 :             :     }</span>
+<span id="L71"><span class="lineNum">      71</span>                 :             : }</span>
+<span id="L72"><span class="lineNum">      72</span>                 :             : </span>
+<span id="L73"><span class="lineNum">      73</span>                 :             : template &lt;ReturnMode return_mode = kDefaultReturnMode,</span>
+<span id="L74"><span class="lineNum">      74</span>                 :             :           class TempR = void,</span>
+<span id="L75"><span class="lineNum">      75</span>                 :             :           class FloatingLHS,</span>
+<span id="L76"><span class="lineNum">      76</span>                 :             :           class FloatingRHS,</span>
+<span id="L77"><span class="lineNum">      77</span>                 :             :           class R = prefer_first_type_t&lt;TempR, bigger_type_t&lt;FloatingLHS, FloatingRHS&gt;&gt;,</span>
+<span id="L78"><span class="lineNum">      78</span>                 :             :           typename std::enable_if_t&lt;std::is_floating_point&lt;FloatingLHS&gt;::value &amp;&amp;</span>
+<span id="L79"><span class="lineNum">      79</span>                 :             :                                         std::is_floating_point&lt;FloatingRHS&gt;::value &amp;&amp; std::is_floating_point&lt;R&gt;::value,</span>
+<span id="L80"><span class="lineNum">      80</span>                 :             :                                     bool&gt; = true&gt;</span>
+<span id="L81"><span class="lineNum">      81</span>                 :<span class="tlaGNC">          32 : auto Divide(FloatingLHS lhs_floating, FloatingRHS rhs_floating) noexcept -&gt; ModeBasedReturnType&lt;R, return_mode&gt;</span></span>
+<span id="L82"><span class="lineNum">      82</span>                 :             : {</span>
+<span id="L83"><span class="lineNum">      83</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 27 times"> + </span>]:<span class="tlaGNC">          32 :     if (rhs_floating == 0.0)</span></span>
+<span id="L84"><span class="lineNum">      84</span>                 :             :     {</span>
+<span id="L85"><span class="lineNum">      85</span>                 :             :         // This goes against IEEE 754 but is the mathematical correct solution.</span>
+<span id="L86"><span class="lineNum">      86</span>                 :<span class="tlaGNC">           5 :         return HandleError&lt;R, return_mode&gt;(score::MakeUnexpected(ErrorCode::kDivideByZero));</span></span>
+<span id="L87"><span class="lineNum">      87</span>                 :             :     }</span>
+<span id="L88"><span class="lineNum">      88</span>                 :             : </span>
+<span id="L89"><span class="lineNum">      89</span>                 :             :     static_assert(std::numeric_limits&lt;FloatingLHS&gt;::is_iec559 &amp;&amp; std::numeric_limits&lt;FloatingRHS&gt;::is_iec559,</span>
+<span id="L90"><span class="lineNum">      90</span>                 :             :                   &quot;Operands must adhere to IEEE 754 for ensured accuracy of results&quot;);</span>
+<span id="L91"><span class="lineNum">      91</span>                 :             : </span>
+<span id="L92"><span class="lineNum">      92</span>                 :<span class="tlaGNC">          27 :     return details::FloatingPointEnvironment::CalculateAndVerify&lt;return_mode&gt;(</span></span>
+<span id="L93"><span class="lineNum">      93</span>                 :             :         // Suppress &quot;AUTOSAR C++14 A7-1-7&quot;, The rule states: &quot;Each expression statement and identifier</span>
+<span id="L94"><span class="lineNum">      94</span>                 :             :         // declaration shall be placed on a separate line.&quot; The code here is present in single line to avoid</span>
+<span id="L95"><span class="lineNum">      95</span>                 :             :         // clang format failure.</span>
+<span id="L96"><span class="lineNum">      96</span>                 :             :         // coverity[autosar_cpp14_a7_1_7_violation]</span>
+<span id="L97"><span class="lineNum">      97</span>                 :<span class="tlaGNC">          81 :         [lhs_floating, rhs_floating]() {</span></span>
+<span id="L98"><span class="lineNum">      98</span>                 :<span class="tlaGNC">          27 :             return lhs_floating / rhs_floating;</span></span>
+<span id="L99"><span class="lineNum">      99</span>                 :<span class="tlaGNC">          27 :         });</span></span>
+<span id="L100"><span class="lineNum">     100</span>                 :             : }</span>
+<span id="L101"><span class="lineNum">     101</span>                 :             : </span>
+<span id="L102"><span class="lineNum">     102</span>                 :             : template &lt;ReturnMode return_mode = kDefaultReturnMode,</span>
+<span id="L103"><span class="lineNum">     103</span>                 :             :           class TempR = void,</span>
+<span id="L104"><span class="lineNum">     104</span>                 :             :           class FloatingLHS,</span>
+<span id="L105"><span class="lineNum">     105</span>                 :             :           class IntegralRHS,</span>
+<span id="L106"><span class="lineNum">     106</span>                 :             :           class R = prefer_first_type_t&lt;TempR, FloatingLHS&gt;,</span>
+<span id="L107"><span class="lineNum">     107</span>                 :             :           typename std::enable_if_t&lt;std::is_floating_point&lt;FloatingLHS&gt;::value &amp;&amp;</span>
+<span id="L108"><span class="lineNum">     108</span>                 :             :                                         std::is_integral&lt;IntegralRHS&gt;::value &amp;&amp; std::is_floating_point&lt;R&gt;::value,</span>
+<span id="L109"><span class="lineNum">     109</span>                 :             :                                     bool&gt; = true&gt;</span>
+<span id="L110"><span class="lineNum">     110</span>                 :             : // Suppress &quot;UNCAUGHT_EXCEPT&quot; rule findings. This rule states: &quot;Called function throws an exception of type</span>
+<span id="L111"><span class="lineNum">     111</span>                 :             : // std::bad_variant_access&quot;.</span>
+<span id="L112"><span class="lineNum">     112</span>                 :             : // Rationale: There is no code path where the exception would be thrown.</span>
+<span id="L113"><span class="lineNum">     113</span>                 :             : // Suppress &quot;AUTOSAR C++14 A15-5-3&quot; rule findings. This rule states: &quot;The std::terminate() function shall not be called</span>
+<span id="L114"><span class="lineNum">     114</span>                 :             : // implicitly.&quot;.</span>
+<span id="L115"><span class="lineNum">     115</span>                 :             : // Rationale: There is no code path where std::terminate would be implicitly called.</span>
+<span id="L116"><span class="lineNum">     116</span>                 :             : // coverity[fun_call_w_exception]</span>
+<span id="L117"><span class="lineNum">     117</span>                 :             : // coverity[uncaught_exception]</span>
+<span id="L118"><span class="lineNum">     118</span>                 :             : // coverity[autosar_cpp14_a15_5_3_violation]</span>
+<span id="L119"><span class="lineNum">     119</span>                 :<span class="tlaGNC">          12 : auto Divide(FloatingLHS lhs_floating, IntegralRHS rhs_integral) noexcept -&gt; ModeBasedReturnType&lt;R, return_mode&gt;</span></span>
+<span id="L120"><span class="lineNum">     120</span>                 :             : {</span>
+<span id="L121"><span class="lineNum">     121</span>                 :<span class="tlaGNC">          12 :     const auto rhs_floating = Cast&lt;return_mode, R&gt;(rhs_integral);</span></span>
+<span id="L122"><span class="lineNum">     122</span>                 :             : </span>
+<span id="L123"><span class="lineNum">     123</span>                 :<span class="tlaGNC">          18 :     const auto divide = [&amp;lhs_floating](R rhs_casted) noexcept -&gt; ModeBasedReturnType&lt;R, return_mode&gt; {</span></span>
+<span id="L124"><span class="lineNum">     124</span>                 :<span class="tlaGNC">           7 :         return Divide&lt;return_mode, R&gt;(lhs_floating, rhs_casted);</span></span>
+<span id="L125"><span class="lineNum">     125</span>                 :             :     };</span>
+<span id="L126"><span class="lineNum">     126</span>                 :<span class="tlaGNC">          11 :     return PerformActionBasedOnReturnMode&lt;return_mode, R&gt;(divide, rhs_floating);</span></span>
+<span id="L127"><span class="lineNum">     127</span>                 :             : }</span>
+<span id="L128"><span class="lineNum">     128</span>                 :             : </span>
+<span id="L129"><span class="lineNum">     129</span>                 :             : template &lt;ReturnMode return_mode = kDefaultReturnMode,</span>
+<span id="L130"><span class="lineNum">     130</span>                 :             :           class TempR = void,</span>
+<span id="L131"><span class="lineNum">     131</span>                 :             :           class IntegralLHS,</span>
+<span id="L132"><span class="lineNum">     132</span>                 :             :           class FloatingRHS,</span>
+<span id="L133"><span class="lineNum">     133</span>                 :             :           class R = prefer_first_type_t&lt;TempR, FloatingRHS&gt;,</span>
+<span id="L134"><span class="lineNum">     134</span>                 :             :           typename std::enable_if_t&lt;std::is_integral&lt;IntegralLHS&gt;::value &amp;&amp;</span>
+<span id="L135"><span class="lineNum">     135</span>                 :             :                                         std::is_floating_point&lt;FloatingRHS&gt;::value &amp;&amp; std::is_floating_point&lt;R&gt;::value,</span>
+<span id="L136"><span class="lineNum">     136</span>                 :             :                                     bool&gt; = true&gt;</span>
+<span id="L137"><span class="lineNum">     137</span>                 :             : // Suppress &quot;UNCAUGHT_EXCEPT&quot; rule findings. This rule states: &quot;Called function throws an exception of type</span>
+<span id="L138"><span class="lineNum">     138</span>                 :             : // std::bad_variant_access&quot;.</span>
+<span id="L139"><span class="lineNum">     139</span>                 :             : // Rationale: There is no code path where the exception would be thrown.</span>
+<span id="L140"><span class="lineNum">     140</span>                 :             : // Suppress &quot;AUTOSAR C++14 A15-5-3&quot; rule findings. This rule states: &quot;The std::terminate() function shall not be called</span>
+<span id="L141"><span class="lineNum">     141</span>                 :             : // implicitly.&quot;.</span>
+<span id="L142"><span class="lineNum">     142</span>                 :             : // Rationale: There is no code path where std::terminate would be implicitly called.</span>
+<span id="L143"><span class="lineNum">     143</span>                 :             : // coverity[fun_call_w_exception]</span>
+<span id="L144"><span class="lineNum">     144</span>                 :             : // coverity[uncaught_exception]</span>
+<span id="L145"><span class="lineNum">     145</span>                 :             : // coverity[autosar_cpp14_a15_5_3_violation]</span>
+<span id="L146"><span class="lineNum">     146</span>                 :<span class="tlaGNC">          17 : auto Divide(IntegralLHS lhs_integral, FloatingRHS rhs_floating) noexcept -&gt; ModeBasedReturnType&lt;R, return_mode&gt;</span></span>
+<span id="L147"><span class="lineNum">     147</span>                 :             : {</span>
+<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">          17 :     const auto lhs_floating = Cast&lt;return_mode, R&gt;(lhs_integral);</span></span>
+<span id="L149"><span class="lineNum">     149</span>                 :             : </span>
+<span id="L150"><span class="lineNum">     150</span>                 :<span class="tlaGNC">          28 :     const auto divide = [&amp;rhs_floating](R lhs_casted) noexcept -&gt; ModeBasedReturnType&lt;R, return_mode&gt; {</span></span>
+<span id="L151"><span class="lineNum">     151</span>                 :<span class="tlaGNC">          12 :         return Divide&lt;return_mode, R&gt;(lhs_casted, rhs_floating);</span></span>
+<span id="L152"><span class="lineNum">     152</span>                 :             :     };</span>
+<span id="L153"><span class="lineNum">     153</span>                 :<span class="tlaGNC">          16 :     return PerformActionBasedOnReturnMode&lt;return_mode, R&gt;(divide, lhs_floating);</span></span>
+<span id="L154"><span class="lineNum">     154</span>                 :             : }</span>
+<span id="L155"><span class="lineNum">     155</span>                 :             : </span>
+<span id="L156"><span class="lineNum">     156</span>                 :             : // Type-first convenience overload: allows specifying only the return type (TempR) without explicitly restating the</span>
+<span id="L157"><span class="lineNum">     157</span>                 :             : // default ReturnMode.</span>
+<span id="L158"><span class="lineNum">     158</span>                 :             : template &lt;class TempR, class LHS, class RHS&gt;</span>
+<span id="L159"><span class="lineNum">     159</span>                 :<span class="tlaGNC">           2 : auto Divide(LHS lhs, RHS rhs) noexcept -&gt; decltype(Divide&lt;kDefaultReturnMode, TempR&gt;(lhs, rhs))</span></span>
+<span id="L160"><span class="lineNum">     160</span>                 :             : {</span>
+<span id="L161"><span class="lineNum">     161</span>                 :<span class="tlaGNC">           2 :     return Divide&lt;kDefaultReturnMode, TempR&gt;(lhs, rhs);</span></span>
+<span id="L162"><span class="lineNum">     162</span>                 :             : }</span>
+<span id="L163"><span class="lineNum">     163</span>                 :             : </span>
+<span id="L164"><span class="lineNum">     164</span>                 :             : }  // namespace score::safe_math</span>
+<span id="L165"><span class="lineNum">     165</span>                 :             : </span>
+<span id="L166"><span class="lineNum">     166</span>                 :             : #endif  // SCORE_LIB_SAFE_MATH_DETAILS_DIVISION_DIVISION_H</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>
