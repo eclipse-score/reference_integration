@@ -57,7 +57,20 @@ jobs:
         with:
           bazelisk-cache: true
           disk-cache: ${{ github.workflow }}
-          repository-cache: true
+          # This list feeds the cache key hash of BOTH the repository cache and
+          # the disk cache (see config.js: diskCache.files spreads
+          # repositoryCacheFiles). The default is MODULE.bazel + WORKSPACE* only,
+          # which never changes when we bump a module - so the key never rotates,
+          # and setup-bazel skips the save on an exact key hit. Result: both
+          # caches freeze on their first entry and go stale without ever failing.
+          # Keep this list in sync with anything that invalidates Bazel action
+          # keys or the set of fetched module sources.
+          repository-cache: |
+            - MODULE.bazel
+            - known_good.json
+            - bazel_common/*.MODULE.bazel
+            - patches/**
+            - .bazelrc
           cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
       - name: Set up Python 3
         uses: actions/setup-python@v5
