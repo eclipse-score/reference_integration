@@ -57,7 +57,20 @@ jobs:
         with:
           bazelisk-cache: true
           disk-cache: ${{ github.workflow }}
-          repository-cache: true
+          # This list feeds the cache key hash of BOTH the repository cache and
+          # the disk cache (see config.js: diskCache.files spreads
+          # repositoryCacheFiles). The default is MODULE.bazel + WORKSPACE* only,
+          # which never changes when we bump a module - so the key never rotates,
+          # and setup-bazel skips the save on an exact key hit. Result: both
+          # caches freeze on their first entry and go stale without ever failing.
+          # Keep this list in sync with anything that invalidates Bazel action
+          # keys or the set of fetched module sources.
+          repository-cache: |
+            - MODULE.bazel
+            - known_good.json
+            - bazel_common/*.MODULE.bazel
+            - patches/**
+            - .bazelrc
           cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
       - name: Set up Python 3
         uses: actions/setup-python@v5
@@ -81,9 +94,16 @@ jobs:
               --github_repo=${{ github.event.repository.name }}
           rm -rf _build/
       - name: Execute Unit Tests with Coverage Analysis
+        # Only tag runs are authoritative and re-execute every test from scratch, because they
+        # attach the test-report ZIP and the SBOM as official release assets. The condition is
+        # deliberately the same one those upload steps use, so the two can never drift apart.
+        # Every other event (including push to main) trusts the cache: --nocache_test_results
+        # suppresses not only reading but also WRITING test results into the disk-cache, so a
+        # push run without --trust-cache would save a cache that contains zero test results,
+        # leaving every later PR run with nothing to hit.
         run: |
           python ./scripts/quality_runners.py \
-            ${{ github.event_name != 'push' && github.event_name != 'release' && '--trust-cache' || '' }}
+            ${{ github.ref_type != 'tag' && '--trust-cache' || '' }}
       - name: Execute Feature Integration Tests
         run: |
           bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit
