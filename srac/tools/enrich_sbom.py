@@ -34,6 +34,11 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--assertion", required=True, type=Path, help="SRAC assertion sidecar")
     parser.add_argument("--sbom", required=True, type=Path, help="SPDX 2.x or CycloneDX SBOM")
+    parser.add_argument(
+        "--known-good",
+        type=Path,
+        help="S-CORE known_good.json used to resolve modules emitted with version 'unknown'",
+    )
     parser.add_argument("--output", required=True, type=Path, help="enrichment report to write")
     return parser.parse_args()
 
@@ -44,7 +49,8 @@ def main() -> int:
     errors = validate_assertion(assertion)
     if errors:
         raise ValueError("Invalid SRAC assertion: " + "; ".join(errors))
-    report = build_enrichment_report(assertion, _read_json(args.sbom))
+    known_good = _read_json(args.known_good) if args.known_good else None
+    report = build_enrichment_report(assertion, _read_json(args.sbom), known_good)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("w", encoding="utf-8", newline="\n") as stream:
         json.dump(report, stream, indent=2)

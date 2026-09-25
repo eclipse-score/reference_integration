@@ -17,6 +17,7 @@ from __future__ import annotations
 from collections.abc import Iterable, Mapping
 from copy import deepcopy
 from typing import Any
+from urllib.parse import urlparse
 
 SCHEMA_VERSION = "0.1-draft"
 RELEVANCE_VALUES = {"safety-related", "not-safety-related", "undetermined"}
@@ -112,6 +113,69 @@ def _purl_matches(subject_purl: str, candidate_purl: str, subject_version: str) 
     return subject_base == candidate_base and candidate_version == expected_version
 
 
+def _normalize_repository(repository: str) -> str:
+    normalized = repository.strip().rstrip("/")
+    if normalized.endswith(".git"):
+        normalized = normalized[:-4]
+    return normalized.lower()
+
+
+def _known_good_binding(
+    assertion: Mapping[str, Any], known_good: Mapping[str, Any] | None
+) -> dict[str, str] | None:
+    """Resolve an assertion subject to one exact S-CORE known-good module."""
+
+    if known_good is None:
+        return None
+    subject = assertion["subject"]
+    repository = subject.get("repository")
+    if not _is_non_empty_string(repository):
+        return None
+    expected_repository = _normalize_repository(str(repository))
+    expected_hash = str(subject["version"])
+    modules = known_good.get("modules")
+    if not isinstance(modules, Mapping):
+        return None
+
+    bindings: list[dict[str, str]] = []
+    for group in modules.values():
+        if not isinstance(group, Mapping):
+            continue
+        for module_name, module in group.items():
+            if not isinstance(module_name, str) or not isinstance(module, Mapping):
+                continue
+            module_repository = module.get("repo")
+            module_hash = module.get("hash")
+            if not _is_non_empty_string(module_repository) or not _is_non_empty_string(module_hash):
+                continue
+            if (
+                _normalize_repository(str(module_repository)) == expected_repository
+                and str(module_hash) == expected_hash
+            ):
+                bindings.append(
+                    {
+                        "module": module_name,
+                        "repository": str(module_repository),
+                        "hash": str(module_hash),
+                    }
+                )
+    return bindings[0] if len(bindings) == 1 else None
+
+
+def _known_good_candidate_matches(candidate: Mapping[str, Any], binding: Mapping[str, str]) -> bool:
+    """Match an ``unknown`` SBOM module only when known-good supplies its identity."""
+
+    if candidate.get("name") != binding["module"] or candidate.get("version") != "unknown":
+        return False
+    candidate_base, candidate_version = _purl_identity(str(candidate.get("purl", "")))
+    repository = urlparse(_normalize_repository(binding["repository"]))
+    repository_parts = repository.path.strip("/").split("/")
+    if len(repository_parts) != 2:
+        return False
+    expected_base = f"pkg:github/{repository_parts[0]}/{binding['module']}"
+    return candidate_base.lower() == expected_base.lower() and candidate_version == "unknown"
+
+
 def _spdx_components(sbom: Mapping[str, Any]) -> Iterable[dict[str, Any]]:
     for package in sbom.get("packages", []):
         if not isinstance(package, Mapping):
@@ -159,7 +223,11 @@ def _cyclonedx_components(sbom: Mapping[str, Any]) -> Iterable[dict[str, Any]]:
             }
 
 
-def match_assertion_to_sbom(assertion: Mapping[str, Any], sbom: Mapping[str, Any]) -> list[dict[str, Any]]:
+def _matches_and_binding(
+    assertion: Mapping[str, Any],
+    sbom: Mapping[str, Any],
+    known_good: Mapping[str, Any] | None,
+) -> tuple[list[dict[str, Any]], dict[str, str] | None]:
     """Find SBOM components representing the assertion subject.
 
     The component subpath in the assertion PURL is intentionally ignored for
@@ -175,24 +243,46 @@ def match_assertion_to_sbom(assertion: Mapping[str, Any], sbom: Mapping[str, Any
     subject_version = str(subject["version"])
 
     if str(sbom.get("spdxVersion", "")).startswith("SPDX-2."):
-        candidates = _spdx_components(sbom)
+        candidates = list(_spdx_components(sbom))
     elif sbom.get("bomFormat") == "CycloneDX":
-        candidates = _cyclonedx_components(sbom)
+        candidates = list(_cyclonedx_components(sbom))
     else:
         raise ValueError("Unsupported SBOM format; expected SPDX 2.x or CycloneDX")
 
-    return [
+    direct_matches = [
         candidate
         for candidate in candidates
         if _purl_matches(subject_purl, str(candidate["purl"]), subject_version)
     ]
+    if direct_matches:
+        return direct_matches, None
+
+    binding = _known_good_binding(assertion, known_good)
+    if binding is None:
+        return [], None
+    return [candidate for candidate in candidates if _known_good_candidate_matches(candidate, binding)], binding
 
 
-def build_enrichment_report(assertion: Mapping[str, Any], sbom: Mapping[str, Any]) -> dict[str, Any]:
+def match_assertion_to_sbom(
+    assertion: Mapping[str, Any],
+    sbom: Mapping[str, Any],
+    known_good: Mapping[str, Any] | None = None,
+) -> list[dict[str, Any]]:
+    """Find SBOM components representing the assertion subject."""
+
+    matches, _ = _matches_and_binding(assertion, sbom, known_good)
+    return matches
+
+
+def build_enrichment_report(
+    assertion: Mapping[str, Any],
+    sbom: Mapping[str, Any],
+    known_good: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
     """Build a sidecar report without modifying the source SBOM."""
 
-    matches = match_assertion_to_sbom(assertion, sbom)
-    return {
+    matches, binding = _matches_and_binding(assertion, sbom, known_good)
+    report = {
         "schemaVersion": SCHEMA_VERSION,
         "sourceFormat": "SPDX" if "spdxVersion" in sbom else "CycloneDX",
         "assertionId": assertion["assertionId"],
@@ -200,3 +290,9 @@ def build_enrichment_report(assertion: Mapping[str, Any], sbom: Mapping[str, Any
         "matchedComponents": matches,
         "matchStatus": "matched" if matches else "unmatched",
     }
+    if matches and binding is not None:
+        report["bindingEvidence"] = {
+            "strategy": "score-known-good",
+            **binding,
+        }
+    return report

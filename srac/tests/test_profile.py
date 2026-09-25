@@ -19,6 +19,7 @@ import pytest
 from srac.tools.profile import build_enrichment_report, match_assertion_to_sbom, validate_assertion
 
 SRAC_ROOT = Path(__file__).parents[1]
+REPOSITORY_ROOT = SRAC_ROOT.parent
 
 
 @pytest.fixture
@@ -115,3 +116,102 @@ def test_different_version_does_not_match(assertion: dict) -> None:
 
     assert report["matchStatus"] == "unmatched"
     assert report["matchedComponents"] == []
+
+
+def test_known_good_resolves_real_sbom_unknown_version(assertion: dict) -> None:
+    sbom = {
+        "spdxVersion": "SPDX-2.3",
+        "packages": [
+            {
+                "SPDXID": "SPDXRef-score-persistency-unknown",
+                "name": "score_persistency",
+                "versionInfo": "unknown",
+                "externalRefs": [
+                    {
+                        "referenceType": "purl",
+                        "referenceLocator": "pkg:github/eclipse-score/score_persistency@unknown",
+                    }
+                ],
+            }
+        ],
+    }
+    known_good = {
+        "modules": {
+            "target_sw": {
+                "score_persistency": {
+                    "repo": "https://github.com/eclipse-score/persistency.git",
+                    "hash": assertion["subject"]["version"],
+                }
+            }
+        }
+    }
+
+    report = build_enrichment_report(assertion, sbom, known_good)
+
+    assert report["matchStatus"] == "matched"
+    assert report["bindingEvidence"] == {
+        "strategy": "score-known-good",
+        "module": "score_persistency",
+        "repository": "https://github.com/eclipse-score/persistency.git",
+        "hash": assertion["subject"]["version"],
+    }
+
+
+def test_known_good_hash_mismatch_does_not_resolve_unknown_version(assertion: dict) -> None:
+    sbom = {
+        "spdxVersion": "SPDX-2.3",
+        "packages": [
+            {
+                "SPDXID": "SPDXRef-score-persistency-unknown",
+                "name": "score_persistency",
+                "versionInfo": "unknown",
+                "externalRefs": [
+                    {
+                        "referenceType": "purl",
+                        "referenceLocator": "pkg:github/eclipse-score/score_persistency@unknown",
+                    }
+                ],
+            }
+        ],
+    }
+    known_good = {
+        "modules": {
+            "target_sw": {
+                "score_persistency": {
+                    "repo": "https://github.com/eclipse-score/persistency.git",
+                    "hash": "different-version",
+                }
+            }
+        }
+    }
+
+    assert build_enrichment_report(assertion, sbom, known_good)["matchStatus"] == "unmatched"
+
+
+def test_checked_in_persistency_pilot_matches_real_sbom(assertion: dict) -> None:
+    sbom = json.loads(
+        (SRAC_ROOT / "pilot" / "persistency-kvs" / "input" / "reference-integration.spdx.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    known_good = json.loads((REPOSITORY_ROOT / "known_good.json").read_text(encoding="utf-8"))
+    expected_report = json.loads(
+        (SRAC_ROOT / "pilot" / "persistency-kvs" / "output" / "persistency-kvs.srac-report.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    report = build_enrichment_report(assertion, sbom, known_good)
+
+    assert report == expected_report
+    assert report["matchStatus"] == "matched"
+    assert report["matchedComponents"] == [
+        {
+            "format": "SPDX-2.3",
+            "identifier": "SPDXRef-score-persistency-unknown",
+            "name": "score_persistency",
+            "version": "unknown",
+            "purl": "pkg:github/eclipse-score/score_persistency@unknown",
+        }
+    ]
+    assert report["bindingEvidence"]["hash"] == assertion["subject"]["version"]

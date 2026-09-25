@@ -36,7 +36,10 @@ score_py_pytest(
     srcs = glob(["tests/**/*.py"]),
     data = [
         "examples/persistency-kvs.srac.json",
+        "pilot/persistency-kvs/input/reference-integration.spdx.json",
+        "pilot/persistency-kvs/output/persistency-kvs.srac-report.json",
         "schema/srac.schema.json",
+        "//:known_good.json",
     ],
     pytest_config = "//:pyproject.toml",
     deps = [":profile"],
@@ -44,5 +47,7 @@ score_py_pytest(
 
 exports_files([
     "examples/persistency-kvs.srac.json",
+    "pilot/persistency-kvs/input/reference-integration.spdx.json",
+    "pilot/persistency-kvs/output/persistency-kvs.srac-report.json",
     "schema/srac.schema.json",
 ])

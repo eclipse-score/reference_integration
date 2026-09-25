@@ -20,6 +20,7 @@ component owner and safety reviewer provide a decision.
 - `tools/profile.py`: self-contained core validation and PURL/version matching.
 - `tools/enrich_sbom.py`: CLI that emits a separate enrichment report without changing the source SBOM.
 - `mappings/`: proposed SPDX 2.3 and CycloneDX 1.6 carrier mappings.
+- `pilot/persistency-kvs/`: real official SBOM input, provenance, reproducible commands and enrichment output.
 - `tests/`: validation and matching tests.
 
 ## Run the tests
@@ -37,16 +38,20 @@ bazel build //:product_sbom
 bazel run //srac:enrich_sbom -- \
   --assertion srac/examples/persistency-kvs.srac.json \
   --sbom bazel-bin/product_sbom.spdx.json \
+  --known-good known_good.json \
   --output /tmp/persistency-kvs.srac-report.json
 ```
 
 The command returns `0` when at least one component matches and `1` when the assertion remains unmatched. An unmatched result is
-expected until the subject PURL/version is aligned with the exact identity emitted by the current `sbom-tool` output.
+expected unless the assertion PURL/version matches directly or `known_good.json` securely resolves an `unknown` S-CORE module
+identity. See `pilot/persistency-kvs/README.md` for the completed end-to-end example.
 
 ## Deliberate limitations
 
 - The PoC does not modify `sbom-tool` or the generated SPDX/CycloneDX document.
 - The join is module-level. `subject.componentPath` preserves the intended KVS scope until target-level identities are available.
+- A module emitted with version `unknown` is never matched by name alone; its repository and commit must resolve exactly through
+  `known_good.json`.
 - `tools/profile.py` enforces the schema's core constraints without adding a runtime dependency. A production integration should
   use a complete JSON Schema Draft 2020-12 validator.
 - No safety relevance or classification becomes authoritative without review through the existing S-CORE process.
