@@ -11,6 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 import argparse
+import os
 import re
 import select
 import sys
@@ -159,7 +160,7 @@ def generate_markdown_report(
     title: str,
     columns: list[str],
     output_path: Path = Path("unit_test_summary.md"),
-) -> None:
+) -> str:
     # Build header and separator
     title = f"# {title}\n"
     header = "| " + " | ".join(columns) + " |"
@@ -172,6 +173,22 @@ def generate_markdown_report(
 
     md = "\n".join([title, header, separator] + rows + [""])
     output_path.write_text(md)
+    return md
+
+
+def append_to_step_summary(*blocks: str) -> None:
+    """Mirror the reports into the job summary GitHub shows above the log.
+
+    Writing straight from the data keeps what gets published tied to this run.
+    The markdown files are still needed by the documentation build, but nothing
+    reads them back, so a stale or hand-edited copy cannot be mistaken for a
+    result. Outside of Actions the variable is unset and this does nothing.
+    """
+    step_summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    if not step_summary:
+        return
+    with open(step_summary, "a", encoding="utf-8") as handle:
+        handle.write("\n".join(blocks))
 
 
 STATUS_LABELS = {"pass": "✅ pass", "FAILED": "❌ FAILED", "skipped": "⚪ skipped"}
@@ -423,18 +440,19 @@ def main() -> bool:
 
         print_centered(f"QR: Finished testing module: {module.name}")
 
-    generate_markdown_report(
+    unit_tests_md = generate_markdown_report(
         with_status(unit_tests_summary),
         title="Unit Test Execution Summary",
         columns=["module", "status", "passed", "failed", "skipped", "total"],
         output_path=path_to_docs / "unit_test_summary.md",
     )
-    generate_markdown_report(
+    coverage_md = generate_markdown_report(
         with_status(coverage_summary),
         title="Coverage Analysis Summary",
         columns=["module", "status", "lines", "functions", "branches"],
         output_path=path_to_docs / "coverage_summary.md",
     )
+    append_to_step_summary(unit_tests_md, coverage_md)
 
     report_failures(unit_tests_summary, coverage_summary)
 

@@ -89,11 +89,6 @@ jobs:
         # push run without --trust-cache would save a cache that contains zero test results,
         # leaving every later PR run with nothing to hit.
         run: |
-          # pull_request_target checks out the PR branch, so these two files could
-          # be planted by the PR itself. They are published to the job summary and
-          # to a PR comment, so make sure nothing but this run can write them.
-          rm -f docs/verification_report/unit_test_summary.md \
-                docs/verification_report/coverage_summary.md
           python ./scripts/quality_runners.py \
             ${{ github.ref_type != 'tag' && '--trust-cache' || '' }}
       - name: Execute Feature Integration Tests
@@ -106,51 +101,6 @@ jobs:
       - name: Build build tools SBOM
         run: |
           bazel build --lockfile_mode=error //:build_tools_sbom
-      - name: Publish build summary
-        if: always()
-        run: |
-          if [ -f docs/verification_report/unit_test_summary.md ]; then
-            cat docs/verification_report/unit_test_summary.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "No build summary file found (docs/verification_report/unit_test_summary.md)" >> "$GITHUB_STEP_SUMMARY"
-          fi
-          echo "" >> "$GITHUB_STEP_SUMMARY" # Add a newline for better formatting
-          if [ -f docs/verification_report/coverage_summary.md ]; then
-            cat docs/verification_report/coverage_summary.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "No coverage summary file found (docs/verification_report/coverage_summary.md)" >> "$GITHUB_STEP_SUMMARY"
-          fi
-      # The job summary above only shows up behind the "Details" link of the check.
-      # Mirror it into a single comment on the pull request so that a failing module
-      # is named in the conversation itself. The comment is rewritten on every run
-      # instead of appended, so a PR never collects more than one of them.
-      - name: Comment test summary on pull request
-        if: ${{ always() && github.event_name == 'pull_request_target' }}
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('fs')
-            const marker = '<!-- quality-runners-summary -->'
-            const read = (p) => fs.existsSync(p) ? fs.readFileSync(p, 'utf8') : `_${p} was not produced._`
-            const { owner, repo } = context.repo
-            const issue_number = context.payload.pull_request.number
-            const runUrl =
-              `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`
-            const body = [
-              marker,
-              read('docs/verification_report/unit_test_summary.md'),
-              read('docs/verification_report/coverage_summary.md'),
-              `[Full log of this run](${runUrl})`,
-            ].join('\n\n')
-            const comments = await github.paginate(github.rest.issues.listComments, {
-              owner, repo, issue_number,
-            })
-            const previous = comments.find((c) => c.body.includes(marker))
-            if (previous) {
-              await github.rest.issues.updateComment({ owner, repo, comment_id: previous.id, body })
-            } else {
-              await github.rest.issues.createComment({ owner, repo, issue_number, body })
-            }
       - name: Create archive of test reports
         if: github.ref_type == 'tag'
         run: |
