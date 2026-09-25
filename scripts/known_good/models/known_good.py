@@ -23,17 +23,17 @@ from typing import Any, Dict
 from .module import Module
 
 
-def _validate_disabled_modules(
-    parsed_modules: Dict[str, Dict[str, Module]],
-    sbom_tracked_modules: list[str],
-) -> None:
+def _validate_disabled_modules(parsed_modules: Dict[str, Dict[str, Module]]) -> None:
     """Reject a disabled module that the rest of the configuration still depends on.
 
     Disabling a module only removes it from the *generated* artifacts. Anything that
     names it elsewhere keeps naming a module that no longer exists, and Bazel reports
-    that far from here - a ``--@score_x//...`` flag for an absent module fails *every*
-    invocation, including ``bazel query``. Failing here instead names the exact
-    entries that have to go with it.
+    that far from here, so failing here instead names the exact entries that have to
+    go with it.
+
+    ``sbom.tracked_modules`` is deliberately *not* rejected here: that list states what
+    the integration ships, so the generator filters disabled modules out of it rather
+    than demanding a second edit that would have to be undone on re-enabling.
     """
     disabled = {
         name: module
@@ -45,10 +45,6 @@ def _validate_disabled_modules(
         return
 
     problems: list[str] = []
-
-    still_tracked = sorted(set(sbom_tracked_modules) & set(disabled))
-    if still_tracked:
-        problems.append("listed in sbom.tracked_modules: " + ", ".join(still_tracked) + " (remove them from that list)")
 
     # metadata labels of *enabled* modules that point into a disabled module, e.g.
     # score_persistency's extra_test_config referencing "@score_logging//...".
@@ -120,7 +116,7 @@ class KnownGood:
                 + ", ".join(invalid_modules)
             )
 
-        _validate_disabled_modules(parsed_modules, sbom_tracked_modules)
+        _validate_disabled_modules(parsed_modules)
 
         return cls(
             modules=parsed_modules,
@@ -146,6 +142,19 @@ class KnownGood:
             for name, module in group_modules.items()
             if not module.enabled
         }
+
+    @property
+    def enabled_sbom_modules(self) -> list[str]:
+        """``sbom.tracked_modules`` minus the modules that are currently disabled.
+
+        The SBOM must describe what the integration actually builds, so a disabled
+        module has to drop out of it. Filtering here rather than demanding the entry
+        be deleted keeps ``sbom.tracked_modules`` a stable statement of intent: it
+        does not have to be edited when a module is disabled, nor restored when it
+        is enabled again.
+        """
+        disabled = set(self.disabled_modules)
+        return [name for name in self.sbom_tracked_modules if name not in disabled]
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert KnownGood instance to dictionary for JSON output.

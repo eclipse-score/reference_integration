@@ -25,11 +25,14 @@ _SCRIPTS_DIR = Path(__file__).resolve().parents[2]
 if str(_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS_DIR))
 
+from known_good.check_disabled_modules import collect_edges  # noqa: E402
 from known_good.models.known_good import KnownGood  # noqa: E402
 from known_good.models.module import Module  # noqa: E402
 from known_good.update_module_from_known_good import (  # noqa: E402
-    check_bazelrc_for_disabled_modules,
+    check_bazelrc_fragments,
+    check_bazelrc_has_no_module_flags,
     generate_docs_bundles_content,
+    generate_module_flags_content,
 )
 
 _HASH = "0" * 40
@@ -130,15 +133,20 @@ def test_disabled_module_is_not_mounted_in_the_docs():
     assert "score_logging" not in content
 
 
-def test_disabled_module_may_not_stay_in_the_sbom():
-    """The SBOM would otherwise claim a module the build no longer contains."""
-    with pytest.raises(ValueError, match="sbom.tracked_modules"):
-        KnownGood.from_dict(
-            _raw_known_good(
-                {"score_logging": _raw("score_logging", enabled=False, disabled_reason="blocked")},
-                sbom=["score_logging"],
-            )
+def test_disabled_module_is_dropped_from_the_sbom():
+    """The SBOM is filtered, not rejected: an SBOM entry alone must not block disabling."""
+    known = KnownGood.from_dict(
+        _raw_known_good(
+            {
+                "score_baselibs": _raw("score_baselibs"),
+                "score_logging": _raw("score_logging", enabled=False, disabled_reason="blocked"),
+            },
+            sbom=["score_baselibs", "score_logging"],
         )
+    )
+
+    assert known.sbom_tracked_modules == ["score_baselibs", "score_logging"]
+    assert known.enabled_sbom_modules == ["score_baselibs"]
 
 
 def test_metadata_reference_to_a_disabled_module_is_rejected():
@@ -157,20 +165,8 @@ def test_metadata_reference_to_a_disabled_module_is_rejected():
         )
 
 
-def test_bazelrc_flag_for_a_disabled_module_is_rejected(tmp_path):
-    """The worst failure mode: such a flag breaks every bazel invocation, even 'query'."""
-    known = KnownGood(
-        modules={"target_sw": {"score_logging": _module("score_logging", enabled=False, disabled_reason="blocked")}},
-        timestamp="2026-01-01T00:00:00Z",
-    )
-    bazelrc = tmp_path / ".bazelrc"
-    bazelrc.write_text("build --@score_logging//score/datarouter:enabled=true\n", encoding="utf-8")
-
-    with pytest.raises(SystemExit, match="still referenced by .bazelrc"):
-        check_bazelrc_for_disabled_modules(known, bazelrc)
-
-
-def test_bazelrc_check_ignores_comments_and_enabled_modules(tmp_path):
+def test_module_flags_file_imports_only_enabled_fragments(tmp_path):
+    """The generated import list is the whole deactivation mechanism for .bazelrc flags."""
     known = KnownGood(
         modules={
             "target_sw": {
@@ -180,10 +176,90 @@ def test_bazelrc_check_ignores_comments_and_enabled_modules(tmp_path):
         },
         timestamp="2026-01-01T00:00:00Z",
     )
+    (tmp_path / "score_baselibs.bazelrc").write_text("build --@score_baselibs//a:b=1\n", encoding="utf-8")
+    (tmp_path / "score_logging.bazelrc").write_text("build --@score_logging//c:d=2\n", encoding="utf-8")
+
+    content = generate_module_flags_content(known, tmp_path, "2026-01-01T00:00:00Z")
+
+    assert "score_baselibs.bazelrc" in content
+    assert "score_logging" not in content
+
+
+def test_module_flags_file_skips_modules_without_a_fragment(tmp_path):
+    """Most modules carry no flags at all; they must not produce a dangling import."""
+    known = KnownGood(
+        modules={"target_sw": {"score_time": _module("score_time")}},
+        timestamp="2026-01-01T00:00:00Z",
+    )
+
+    content = generate_module_flags_content(known, tmp_path, "2026-01-01T00:00:00Z")
+
+    assert "score_time" not in content
+
+
+def test_module_flag_in_the_root_bazelrc_is_rejected(tmp_path):
+    """The worst failure mode: such a flag breaks every bazel invocation, even 'query'."""
+    bazelrc = tmp_path / ".bazelrc"
+    bazelrc.write_text("build --@score_logging//score/datarouter:enabled=true\n", encoding="utf-8")
+
+    with pytest.raises(SystemExit, match="must not live in .bazelrc"):
+        check_bazelrc_has_no_module_flags(bazelrc, tmp_path / "bazelrc")
+
+
+def test_root_bazelrc_check_ignores_comments(tmp_path):
     bazelrc = tmp_path / ".bazelrc"
     bazelrc.write_text(
-        "# build --@score_logging//score/datarouter:enabled=true\nbuild --@score_baselibs//score/foo:enabled=true\n",
+        "# build --@score_logging//score/datarouter:enabled=true\nbuild --config=_common\n",
         encoding="utf-8",
     )
 
-    check_bazelrc_for_disabled_modules(known, bazelrc)
+    check_bazelrc_has_no_module_flags(bazelrc, tmp_path / "bazelrc")
+
+
+def test_fragment_holding_another_modules_flag_is_rejected(tmp_path):
+    """Grouping by owning repository is what makes removal by deletion correct."""
+    known = KnownGood(
+        modules={
+            "target_sw": {
+                "score_baselibs": _module("score_baselibs"),
+                "score_logging": _module("score_logging"),
+            }
+        },
+        timestamp="2026-01-01T00:00:00Z",
+    )
+    (tmp_path / "score_baselibs.bazelrc").write_text("build --@score_logging//c:d=2\n", encoding="utf-8")
+
+    with pytest.raises(SystemExit, match="score_logging"):
+        check_bazelrc_fragments(known, tmp_path)
+
+
+def test_fragment_without_a_matching_module_is_rejected(tmp_path):
+    """An orphan fragment is a flag nobody can ever disable again."""
+    known = KnownGood(
+        modules={"target_sw": {"score_baselibs": _module("score_baselibs")}},
+        timestamp="2026-01-01T00:00:00Z",
+    )
+    (tmp_path / "score_gone.bazelrc").write_text("build --@score_gone//a:b=1\n", encoding="utf-8")
+
+    with pytest.raises(SystemExit, match="score_gone"):
+        check_bazelrc_fragments(known, tmp_path)
+
+
+def test_mod_graph_walk_finds_who_pulls_a_module_back_in():
+    """Dropping our bazel_dep does not remove a module another module still requires."""
+    graph = {
+        "key": "reference_integration@_",
+        "root": True,
+        "dependencies": [
+            {
+                "key": "score_persistency@_",
+                "dependencies": [{"key": "score_logging@0.2.4", "dependencies": []}],
+            }
+        ],
+    }
+
+    present, consumers = collect_edges(graph)
+
+    assert "score_logging" in present
+    assert "reference_integration" not in present
+    assert consumers["score_logging"] == {"score_persistency"}

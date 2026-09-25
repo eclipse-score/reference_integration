@@ -35,3 +35,10 @@ jobs:
               git diff
               exit 1
           fi
+      # Dropping a module's bazel_dep does not remove it from the build: any module that
+      # declares its own dependency on it makes Bazel fall back to the registry, silently
+      # swapping the pinned commit for a released version. This resolves the real graph and
+      # fails if that happened. It exits before touching Bazel when nothing is disabled, so
+      # it costs nothing on an ordinary pull request.
+      - name: Verify disabled modules are really gone
+        run: scripts/known_good/check_disabled_modules.py --known known_good.json

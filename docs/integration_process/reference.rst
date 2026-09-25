@@ -210,26 +210,93 @@ coverage target, no documentation mount, no unit-test run and no SBOM entry.
 The generator prints every disabled module and its reason on each run, so the
 state cannot decay into an unnoticed permanent one.
 
+.. _module_specific_bazelrc_flags:
+
+Module-specific ``.bazelrc`` flags
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A ``--@score_module//path:flag=value`` line is the most hostile thing that can
+outlive its module. Bazel resolves it on *every* invocation, so a flag naming a
+repository that is no longer in the graph breaks the entire workspace — not just
+the build, but ``bazel query`` and ``bazel mod`` as well, which are exactly the
+commands needed to diagnose the problem.
+
+Such flags therefore do not live in the root ``.bazelrc``. Each is placed in the
+fragment of the module whose **repository it names**:
+
+.. code-block:: text
+
+   bazel_common/bazelrc/score_baselibs.bazelrc
+   bazel_common/bazelrc/score_logging.bazelrc
+   ...
+
+Grouping by owning repository, rather than by the ``--config`` the flag belongs
+to, is what makes deactivation a deletion: every line that becomes unresolvable
+when a module leaves sits in that module's file and in no other. A single
+fragment may contribute to several configs.
+
+``update_module_from_known_good.py`` generates
+``bazel_common/module_flags.bazelrc``, a plain list of ``import`` lines covering
+the enabled modules that have a fragment. The root ``.bazelrc`` imports that one
+file from its ``build:_common`` block. A disabled module is simply absent from
+the generated list, so its flags are gone without its fragment being touched —
+and come back unchanged when the module is re-enabled.
+
+The generator refuses to proceed if a ``--@score_*//`` flag appears in the root
+``.bazelrc``, if a fragment holds a flag belonging to a different module, or if
+a fragment exists for a module that is not in ``known_good.json``.
+
+.. _disabled_module_registry_fallback:
+
+Why disabling is not always possible
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Removing a module's ``bazel_dep`` removes **this repository's** request for it.
+It does not remove the module from the build. If any other module declares its
+own dependency — ``score_persistency`` requires ``score_logging``, for instance
+— Bazel still needs it, cannot find an override any more, and resolves it from
+the registry instead: at a released version, not the commit ``known_good.json``
+pinned. The build succeeds. It just builds code nobody selected, and nothing in
+the output says so.
+
+Disabling is therefore only permitted when no enabled module requires the
+module. ``scripts/known_good/check_disabled_modules.py`` enforces this in CI by
+resolving the real graph and failing with the list of modules that pull a
+disabled one back in. It exits before invoking Bazel when nothing is disabled,
+so it is free on an ordinary pull request.
+
+At the time of writing only ``score_config_management``, ``score_kyron`` and
+``score_time`` are leaves that can be disabled on their own. Anything else has
+to be disabled together with its consumers, which is usually the point at which
+staging the CI (:ref:`staged_ci`) is the better answer.
+
 What the flag does not do
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The flag governs the **generated** artefacts only. Anything that names the
 module by hand keeps naming a module that no longer exists, and Bazel reports
-that far away from ``known_good.json``. Two such references are checked
-explicitly and abort the regeneration with the offending lines:
+that far away from ``known_good.json``. These references are handled explicitly:
 
 .. list-table::
    :header-rows: 1
    :widths: 40 60
 
    * - Reference
-     - Why it must go with the module
-   * - ``--@module//...`` flags in ``.bazelrc``
-     - Bazel resolves them on *every* invocation, including ``bazel query``, so
-       the whole workspace becomes unusable.
-   * - ``extra_test_config`` / ``exclude_test_targets`` of another module, and
-       ``sbom.tracked_modules``
-     - The entry would point into a module the build no longer contains.
+     - How it is handled
+   * - ``--@module//...`` flags
+     - Removed automatically, because they live in the module's own
+       ``.bazelrc`` fragment (see above). A stray flag in the root ``.bazelrc``
+       aborts the regeneration.
+   * - ``sbom.tracked_modules``
+     - Filtered automatically. The entry stays in ``known_good.json`` and the
+       generator reports which modules it dropped from the SBOM.
+   * - ``extra_test_config`` / ``exclude_test_targets`` of another module
+     - Aborts the regeneration with the offending entry: it points into a
+       module the build no longer contains, and only a human can decide whether
+       to drop the flag or keep the module.
+   * - A ``bazel_dep`` in another enabled module
+     - Aborts in CI (see above). There is no way to express this in
+       ``known_good.json``.
 
 Other references are **not** detected automatically and have to be removed by
 hand — hand-written ``BUILD`` files such as ``images/*/BUILD``,

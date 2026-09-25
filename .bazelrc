@@ -27,22 +27,18 @@ build --tool_java_language_version=17
 build --java_runtime_version=remotejdk_17
 build --tool_java_runtime_version=remotejdk_17
 
-build:_common --@score_baselibs//score/json:base_library=nlohmann
-build:_common --@score_communication//score/memory/shared/flags:use_typedshmd=False
-build:_common --@score_baselibs//score/log_rust:safety_level=qm
-build:_common --@score_config_management//score/config_management/config_daemon/code:score_variant=true
-build:_common --@score_baselibs//score/analysis/tracing/generic_trace_library:implementation=@score_baselibs//score/analysis/tracing/generic_trace_library/stub_implementation
 build:_common --cxxopt=-Wno-error=mismatched-new-delete
 build:_common --host_platform=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
 build:_common --extra_toolchains=@score_gcc_x86_64_toolchain//:x86_64-linux-gcc_12.2.0
 build:_common --extra_toolchains=//bazel/toolchains:score_ref_int_libclang_toolchain
 
-# Flags needed by datarouter
-build:_common --@score_logging//score/datarouter/build_configuration_flags:enable_nonverbose_dlt=False
-build:_common --@score_logging//score/datarouter/build_configuration_flags:enable_dynamic_configuration=False
-build:_common --@score_logging//score/datarouter/build_configuration_flags:file_transfer=False
-build:_common --@score_logging//score/datarouter/build_configuration_flags:use_local_vlan=True
-build:_common --@score_logging//score/datarouter/build_configuration_flags:dlt_output_enable=True
+# Module-specific flags (--@score_<module>//...) do NOT belong in this file: they can
+# only be resolved while that module is part of the integration, so a module disabled
+# in known_good.json would leave a flag naming an absent repository behind and break
+# every bazel invocation, including 'bazel query'. They live in
+# bazel_common/bazelrc/<module>.bazelrc instead; the file imported below is generated
+# from known_good.json and pulls in only the enabled modules' fragments.
+import %workspace%/bazel_common/module_flags.bazelrc
 
 # ─── QNX common flags (shared by all QNX configs) ────────────────────────────
 build:_qnx_common --host_platform=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
@@ -99,10 +95,9 @@ test:ferrocene-coverage --run_under=@score_tooling//coverage:llvm_profile_wrappe
 build:ferrocene-coverage --remote_download_all
 
 # Persistency specific flags
+# The module-specific --@score_baselibs//... and --@score_logging//... flags of this
+# config live in bazel_common/bazelrc/{score_baselibs,score_logging}.bazelrc.
 build:ferrocene-coverage-per --config=ferrocene-coverage
-build:ferrocene-coverage-per --@score_baselibs//score/log_rust:safety_level=qm
-build:ferrocene-coverage-per --@score_baselibs//score/json:base_library=nlohmann
-build:ferrocene-coverage-per --@score_logging//score/mw/log/flags:KRemote_Logging=False
 
 # Output only failed test logs
 test --test_output=errors

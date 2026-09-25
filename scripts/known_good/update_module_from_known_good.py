@@ -222,6 +222,15 @@ LICENSE_HEADER = (
     "\n"
 )
 
+# The root .bazelrc carries only this short notice, not the full SPDX block; the
+# generated fragment importer matches it so the file looks like what it sits next to.
+BAZELRC_LICENSE_HEADER = (
+    "#\n"
+    "# See the NOTICE file(s) distributed with this work for additional\n"
+    "# information regarding copyright ownership.\n"
+    "#\n"
+)
+
 
 def generated_banner(timestamp: str) -> str:
     """Return the 'do not edit' banner naming the generator, for a generated file."""
@@ -325,36 +334,103 @@ def generate_file_content(
     return header + "\n".join(blocks)
 
 
-def check_bazelrc_for_disabled_modules(known_good: KnownGood, bazelrc_path: Path) -> None:
-    """Abort when .bazelrc still carries a flag belonging to a disabled module.
+BAZELRC_FRAGMENT_DIR = "bazelrc"
+MODULE_FLAGS_FILENAME = "module_flags.bazelrc"
+_MODULE_FLAG_RE = re.compile(r"--@(score_[A-Za-z0-9_]+)//")
 
-    This is the failure mode that makes disabling a module look broken rather than
-    configured. A ``--@score_logging//...:flag=value`` line for a module Bazel no
-    longer knows about fails *every* invocation - ``build``, ``test``, even
-    ``query`` - with an opaque "no repository visible" error far away from
-    known_good.json. Named here, the fix is obvious: delete or move those lines.
 
-    Only the disabled modules are checked; verifying that every *enabled* module's
-    flags exist is a different job, already done by rc_label_consistency.py.
+def generate_module_flags_content(known_good: KnownGood, fragment_dir: Path, timestamp: Optional[str]) -> str:
+    """Generate the .bazelrc that imports each enabled module's flag fragment.
+
+    Module-specific flags (``--@score_x//...``) cannot live in the root .bazelrc:
+    Bazel resolves them on *every* invocation, including ``bazel query``, so a module
+    disabled in known_good.json would leave behind a flag naming a repository that is
+    no longer visible to the root module and break the whole workspace. Routing them
+    through a generated import list means they appear and disappear with the module.
+
+    ``import`` is used rather than ``try-import`` on purpose: a fragment listed here
+    belongs to an enabled module, so a missing file is a real error, not something to
+    swallow silently.
     """
-    disabled = known_good.disabled_modules
-    if not disabled or not bazelrc_path.is_file():
+    header = BAZELRC_LICENSE_HEADER
+    header += "# Generated from known_good.json" + (f" at {timestamp}" if timestamp else "") + "\n"
+    header += (
+        "# Do not edit manually - use scripts/known_good/update_module_from_known_good.py\n"
+        "#\n"
+        f"# Each line imports one enabled module's flag fragment from {fragment_dir.name}/.\n"
+        "# A module disabled in known_good.json is simply absent here, so its flags are gone\n"
+        "# without its fragment file having to be touched.\n\n"
+    )
+
+    lines = []
+    for group_modules in known_good.modules.values():
+        for module in group_modules.values():
+            if not module.enabled:
+                continue
+            if not (fragment_dir / f"{module.name}.bazelrc").is_file():
+                continue
+            lines.append(f"import %workspace%/{fragment_dir.parent.name}/{fragment_dir.name}/{module.name}.bazelrc")
+
+    if not lines:
+        return header + "# No enabled module contributes Bazel flags.\n"
+    return header + "\n".join(sorted(lines)) + "\n"
+
+
+def check_bazelrc_has_no_module_flags(bazelrc_path: Path, fragment_dir: Path) -> None:
+    """Keep module-specific flags out of the root .bazelrc.
+
+    Without this the convention silently decays: the first ``--@score_x//...`` line
+    added back to .bazelrc reintroduces exactly the failure the fragments exist to
+    prevent, and nothing would notice until a module is disabled.
+    """
+    if not bazelrc_path.is_file():
         return
 
     offenders: List[str] = []
     for lineno, line in enumerate(bazelrc_path.read_text(encoding="utf-8").splitlines(), start=1):
         if line.lstrip().startswith("#"):
             continue
-        for name in disabled:
-            if f"@{name}//" in line:
-                offenders.append(f"{bazelrc_path.name}:{lineno}: {line.strip()}")
+        match = _MODULE_FLAG_RE.search(line)
+        if match:
+            offenders.append(f"{bazelrc_path.name}:{lineno}: {line.strip()}  (belongs in {match.group(1)}.bazelrc)")
 
     if offenders:
         raise SystemExit(
-            "ERROR: disabled modules are still referenced by .bazelrc.\n"
-            "Bazel resolves these flags on every invocation, so the workspace would be\n"
-            "unusable. Remove or comment out these lines together with the module:\n  " + "\n  ".join(offenders)
+            f"ERROR: module-specific flags must not live in {bazelrc_path.name}.\n"
+            "Bazel resolves them on every invocation, so they would break the workspace as\n"
+            "soon as the module is disabled in known_good.json. Move them to\n"
+            f"{fragment_dir}/<module>.bazelrc:\n  " + "\n  ".join(offenders)
         )
+
+
+def check_bazelrc_fragments(known_good: KnownGood, fragment_dir: Path) -> None:
+    """Report fragments whose module is unknown, and flags sitting in the wrong file.
+
+    Both are silent failure modes otherwise: an orphaned fragment is never imported,
+    and a flag in the wrong fragment survives disabling the module it belongs to.
+    """
+    if not fragment_dir.is_dir():
+        return
+
+    all_modules = {name for group_modules in known_good.modules.values() for name in group_modules}
+    problems: List[str] = []
+
+    for fragment in sorted(fragment_dir.glob("*.bazelrc")):
+        module_name = fragment.stem
+        if module_name not in all_modules:
+            problems.append(f"{fragment.name}: no module of that name in known_good.json")
+            continue
+        for lineno, line in enumerate(fragment.read_text(encoding="utf-8").splitlines(), start=1):
+            if line.lstrip().startswith("#"):
+                continue
+            for referenced in set(_MODULE_FLAG_RE.findall(line)):
+                if referenced != module_name:
+                    problems.append(
+                        f"{fragment.name}:{lineno}: flag belongs to '{referenced}', move it to {referenced}.bazelrc"
+                    )
+
+    if problems:
+        raise SystemExit(f"ERROR: inconsistent Bazel flag fragments in {fragment_dir}:\n  " + "\n  ".join(problems))
 
 
 def report_disabled_modules(known_good: KnownGood) -> None:
@@ -477,7 +553,10 @@ Note:
     generated_files = []
     total_module_count = 0
 
-    check_bazelrc_for_disabled_modules(known_good, Path(known_path).parent / ".bazelrc")
+    fragment_dir = Path(output_dir_modules) / BAZELRC_FRAGMENT_DIR
+
+    check_bazelrc_has_no_module_flags(Path(known_path).parent / ".bazelrc", fragment_dir)
+    check_bazelrc_fragments(known_good, fragment_dir)
     report_disabled_modules(known_good)
 
     for group_name, group_modules in known_good.modules.items():
@@ -547,6 +626,41 @@ Note:
             f.write(content_docs_bundles)
         generated_files.append(output_path_docs_bundles)
         print(f"Generated {output_path_docs_bundles}")
+
+    # Generate the SBOM extension config. Disabled modules drop out of sbom.tracked_modules
+    # automatically: the SBOM has to describe what is actually built, and requiring a second
+    # manual edit would mean a stale SBOM the moment someone forgets to undo it.
+    tracked = known_good.enabled_sbom_modules
+    dropped = [name for name in known_good.sbom_tracked_modules if name not in tracked]
+    content_sbom = generate_sbom_module_content(tracked, known_good.timestamp)
+    output_path_sbom = os.path.join(output_dir_modules, "score_sbom.MODULE.bazel")
+
+    if args.dry_run:
+        print(f"\nDry run: would write to {output_path_sbom}\n")
+        print("---- BEGIN GENERATED CONTENT FOR SBOM ----")
+        print(content_sbom)
+        print("---- END GENERATED CONTENT FOR SBOM ----")
+    else:
+        with open(output_path_sbom, "w", encoding="utf-8") as f:
+            f.write(content_sbom)
+        generated_files.append(output_path_sbom)
+        suffix = f" ({len(dropped)} dropped: {', '.join(dropped)})" if dropped else ""
+        print(f"Generated {output_path_sbom} with {len(tracked)} tracked module(s){suffix}")
+
+    # Generate the importer for the per-module Bazel flag fragments.
+    content_module_flags = generate_module_flags_content(known_good, fragment_dir, known_good.timestamp)
+    output_path_module_flags = os.path.join(output_dir_modules, MODULE_FLAGS_FILENAME)
+
+    if args.dry_run:
+        print(f"\nDry run: would write to {output_path_module_flags}\n")
+        print("---- BEGIN GENERATED CONTENT FOR MODULE FLAGS ----")
+        print(content_module_flags)
+        print("---- END GENERATED CONTENT FOR MODULE FLAGS ----")
+    else:
+        with open(output_path_module_flags, "w", encoding="utf-8") as f:
+            f.write(content_module_flags)
+        generated_files.append(output_path_module_flags)
+        print(f"Generated {output_path_module_flags}")
 
     if not args.dry_run and generated_files:
         print(f"\nSuccessfully generated {len(generated_files)} file(s) with {total_module_count} total modules")
