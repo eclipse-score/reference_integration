@@ -31,11 +31,16 @@
             "score_communication": {
                 "repo": "https://github.com/eclipse-score/communication.git",
                 "docs": false,
-                "hash": "313f1178628189d267c8cd0d75971bdac04c20ee",
+                "hash": "5023ef743abaac98c23f3c378f36f45b5f04da6f",
                 "bazel_patches": [
                     "//patches/communication:001-expose-comm-examples.patch",
                     "//patches/communication:003-module-deps-visibility.patch",
-                    "//patches/communication:004-rules-build-error-not-dev-dependency.patch"
+                    "//patches/communication:004-rules-build-error-not-dev-dependency.patch",
+                    "//patches/communication:005-score-rules-imagefs-not-dev-dependency.patch",
+                    "//patches/communication:006-rules-pkg-not-dev-dependency.patch",
+                    "//patches/communication:007-rules-oci-not-dev-dependency.patch",
+                    "//patches/communication:008-score-itf-not-dev-dependency.patch",
+                    "//patches/communication:009-score-cpp-policies-not-dev-dependency.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/mw/com/impl/...",
@@ -48,6 +53,11 @@
                         "//score/mw/com/impl/configuration:config_parser_test",
                         "//score/mw/com/impl/configuration:configuration_test",
                         "//score/mw/com/impl/configuration:configuration_json_parsing_strategy_test",
+                        "//score/mw/com/impl/test/check_values_created_from_config/integration_test:test_check_values_created_from_config",
+                        "//score/mw/com/impl/test/methods/semi_dynamic_methods/integration_test:semi_dynamic_methods_different_processes_test",
+                        "//score/mw/com/impl/test/methods/semi_dynamic_methods/integration_test:semi_dynamic_methods_same_process_test",
+                        "//score/mw/com/impl/test/reserving_skeleton_slots/integration_test:reserving_skeleton_slots",
+                        "//score/mw/com/impl/test/shared_memory_storage/integration_test:shared_memory_storage",
                         "//score/mw/com/impl/tracing/configuration:tracing_filter_config_parser_test",
                         "//score/mw/com/impl/tracing:tracing_runtime_test",
                         "//score/mw/com/impl/bindings/lola/tracing:tracing_runtime_test"
@@ -57,12 +67,7 @@
                         "rust"
                     ],
                     "rust_coverage_config": "ferrocene-coverage"
-                },
-                "bazel_patches": [
-                    "//patches/communication:001-expose-comm-examples.patch",
-                    "//patches/communication:003-module-deps-visibility.patch",
-                    "//patches/communication:004-rules-build-error-not-dev-dependency.patch"
-                ]
+                }
             },
             "score_persistency": {
                 "repo": "https://github.com/eclipse-score/persistency.git",
