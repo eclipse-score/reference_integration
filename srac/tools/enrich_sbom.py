@@ -15,11 +15,12 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
 
-from srac.tools.profile import build_enrichment_report, validate_assertion
+from srac.tools.profile import build_enrichment_report, validate_assertion, validate_report
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -28,6 +29,14 @@ def _read_json(path: Path) -> dict[str, Any]:
     if not isinstance(document, dict):
         raise ValueError(f"{path} must contain a JSON object")
     return document
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def parse_args() -> argparse.Namespace:
@@ -40,6 +49,7 @@ def parse_args() -> argparse.Namespace:
         help="S-CORE known_good.json used to resolve modules emitted with version 'unknown'",
     )
     parser.add_argument("--output", required=True, type=Path, help="enrichment report to write")
+    parser.add_argument("--checksum-output", type=Path, help="optional SHA-256 checksum file for the report")
     return parser.parse_args()
 
 
@@ -50,11 +60,24 @@ def main() -> int:
     if errors:
         raise ValueError("Invalid SRAC assertion: " + "; ".join(errors))
     known_good = _read_json(args.known_good) if args.known_good else None
-    report = build_enrichment_report(assertion, _read_json(args.sbom), known_good)
+    integrity = {
+        "algorithm": "SHA-256",
+        "assertionSha256": _sha256(args.assertion),
+        "sbomSha256": _sha256(args.sbom),
+    }
+    if args.known_good:
+        integrity["knownGoodSha256"] = _sha256(args.known_good)
+    report = build_enrichment_report(assertion, _read_json(args.sbom), known_good, integrity)
+    report_errors = validate_report(report)
+    if report_errors:
+        raise ValueError("Invalid SRAC enrichment report: " + "; ".join(report_errors))
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("w", encoding="utf-8", newline="\n") as stream:
         json.dump(report, stream, indent=2)
         stream.write("\n")
+    if args.checksum_output:
+        args.checksum_output.parent.mkdir(parents=True, exist_ok=True)
+        args.checksum_output.write_text(f"{_sha256(args.output)}  {args.output.name}\n", encoding="utf-8", newline="\n")
     return 0 if report["matchStatus"] == "matched" else 1
 
 

@@ -16,11 +16,13 @@ component owner and safety reviewer provide a decision.
 ## Contents
 
 - `schema/srac.schema.json`: draft JSON Schema for the minimum profile.
+- `schema/srac-report.schema.json`: draft JSON Schema for the generated enrichment report.
 - `examples/persistency-kvs.srac.json`: non-authoritative KVS example.
 - `tools/profile.py`: self-contained core validation and PURL/version matching.
 - `tools/enrich_sbom.py`: CLI that emits a separate enrichment report without changing the source SBOM.
 - `mappings/`: proposed SPDX 2.3 and CycloneDX 1.6 carrier mappings.
-- `pilot/persistency-kvs/`: real official SBOM input, provenance, reproducible commands and enrichment output.
+- `pilot/persistency-kvs/`: real official SBOM input, provenance, reproducible commands, enrichment output and an
+  unapproved component-classification evidence draft.
 - `tests/`: validation and matching tests.
 
 ## Run the tests
@@ -39,12 +41,17 @@ bazel run //srac:enrich_sbom -- \
   --assertion srac/examples/persistency-kvs.srac.json \
   --sbom bazel-bin/product_sbom.spdx.json \
   --known-good known_good.json \
-  --output /tmp/persistency-kvs.srac-report.json
+  --output /tmp/persistency-kvs.srac-report.json \
+  --checksum-output /tmp/persistency-kvs.srac-report.sha256
 ```
 
 The command returns `0` when at least one component matches and `1` when the assertion remains unmatched. An unmatched result is
 expected unless the assertion PURL/version matches directly or `known_good.json` securely resolves an `unknown` S-CORE module
 identity. See `pilot/persistency-kvs/README.md` for the completed end-to-end example.
+
+The report copies the safety relevance, classification, assertion status and reviewer from the assertion. It does not calculate,
+approve or strengthen those values. SHA-256 digests bind the report to the exact assertion, SBOM and known-good inputs; a separate
+checksum file protects the serialized report itself.
 
 ## Deliberate limitations
 

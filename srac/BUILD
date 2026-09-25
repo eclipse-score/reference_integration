@@ -38,6 +38,7 @@ score_py_pytest(
         "examples/persistency-kvs.srac.json",
         "pilot/persistency-kvs/input/reference-integration.spdx.json",
         "pilot/persistency-kvs/output/persistency-kvs.srac-report.json",
+        "schema/srac-report.schema.json",
         "schema/srac.schema.json",
         "//:known_good.json",
     ],
@@ -49,5 +50,7 @@ exports_files([
     "examples/persistency-kvs.srac.json",
     "pilot/persistency-kvs/input/reference-integration.spdx.json",
     "pilot/persistency-kvs/output/persistency-kvs.srac-report.json",
+    "pilot/persistency-kvs/output/persistency-kvs.srac-report.sha256",
+    "schema/srac-report.schema.json",
     "schema/srac.schema.json",
 ])

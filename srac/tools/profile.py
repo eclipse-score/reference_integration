@@ -14,15 +14,18 @@
 
 from __future__ import annotations
 
+import re
 from collections.abc import Iterable, Mapping
 from copy import deepcopy
 from typing import Any
 from urllib.parse import urlparse
 
 SCHEMA_VERSION = "0.1-draft"
+TOOL_VERSION = "0.1.0-draft"
 RELEVANCE_VALUES = {"safety-related", "not-safety-related", "undetermined"}
 CLASSIFICATION_VALUES = {"QM", "ASIL-A", "ASIL-B", "ASIL-C", "ASIL-D", "not-assigned"}
 ASSERTION_STATUS_VALUES = {"draft", "under-review", "reviewed", "approved", "superseded", "withdrawn"}
+SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 
 
 def _is_non_empty_string(value: object) -> bool:
@@ -93,6 +96,49 @@ def validate_assertion(document: Mapping[str, Any]) -> list[str]:
         errors.append("assertion.author.name must be a non-empty string")
     if not _is_non_empty_string(assertion.get("created")):
         errors.append("assertion.created must be a non-empty date-time string")
+    return errors
+
+
+def validate_report(document: Mapping[str, Any]) -> list[str]:
+    """Validate the core constraints expressed by ``srac-report.schema.json``."""
+
+    errors: list[str] = []
+    if document.get("schemaVersion") != SCHEMA_VERSION:
+        errors.append(f"schemaVersion must be {SCHEMA_VERSION!r}")
+    if document.get("sourceFormat") not in {"SPDX", "CycloneDX"}:
+        errors.append("sourceFormat must be 'SPDX' or 'CycloneDX'")
+    if document.get("matchStatus") not in {"matched", "unmatched"}:
+        errors.append("matchStatus must be 'matched' or 'unmatched'")
+    if not isinstance(document.get("matchedComponents"), list):
+        errors.append("matchedComponents must be an array")
+
+    safety = _require_mapping(document, "safetyAssessment", errors)
+    if safety.get("source") != "assertion":
+        errors.append("safetyAssessment.source must be 'assertion'")
+    if safety.get("safetyRelevance") not in RELEVANCE_VALUES:
+        errors.append(f"safetyAssessment.safetyRelevance must be one of {sorted(RELEVANCE_VALUES)}")
+    if safety.get("classification") not in CLASSIFICATION_VALUES:
+        errors.append(f"safetyAssessment.classification must be one of {sorted(CLASSIFICATION_VALUES)}")
+    if safety.get("assertionStatus") not in ASSERTION_STATUS_VALUES:
+        errors.append(f"safetyAssessment.assertionStatus must be one of {sorted(ASSERTION_STATUS_VALUES)}")
+
+    generator = _require_mapping(document, "generator", errors)
+    for key in ("name", "version"):
+        if not _is_non_empty_string(generator.get(key)):
+            errors.append(f"generator.{key} must be a non-empty string")
+
+    integrity = _require_mapping(document, "integrity", errors)
+    if integrity.get("algorithm") != "SHA-256":
+        errors.append("integrity.algorithm must be 'SHA-256'")
+    for key in ("assertionSha256", "sbomSha256"):
+        value = integrity.get(key)
+        if not isinstance(value, str) or SHA256_PATTERN.fullmatch(value) is None:
+            errors.append(f"integrity.{key} must be a lowercase SHA-256 digest")
+    known_good_digest = integrity.get("knownGoodSha256")
+    if known_good_digest is not None and (
+        not isinstance(known_good_digest, str) or SHA256_PATTERN.fullmatch(known_good_digest) is None
+    ):
+        errors.append("integrity.knownGoodSha256 must be a lowercase SHA-256 digest")
     return errors
 
 
@@ -274,6 +320,7 @@ def build_enrichment_report(
     assertion: Mapping[str, Any],
     sbom: Mapping[str, Any],
     known_good: Mapping[str, Any] | None = None,
+    integrity: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
     """Build a sidecar report without modifying the source SBOM."""
 
@@ -283,8 +330,20 @@ def build_enrichment_report(
         "sourceFormat": "SPDX" if "spdxVersion" in sbom else "CycloneDX",
         "assertionId": assertion["assertionId"],
         "subject": deepcopy(assertion["subject"]),
+        "safetyAssessment": {
+            "source": "assertion",
+            "safetyRelevance": assertion["safetyRelevance"]["status"],
+            "classification": assertion["safetyRelevance"]["classification"],
+            "assertionStatus": assertion["assertion"]["status"],
+            "reviewer": deepcopy(assertion["assertion"].get("reviewer")),
+        },
         "matchedComponents": matches,
         "matchStatus": "matched" if matches else "unmatched",
+        "generator": {
+            "name": "srac.tools.enrich_sbom",
+            "version": TOOL_VERSION,
+        },
+        "integrity": dict(integrity or {}),
     }
     if matches and binding is not None:
         report["bindingEvidence"] = {

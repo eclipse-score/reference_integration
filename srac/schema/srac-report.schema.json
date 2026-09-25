@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eclipse.dev/score/schemas/srac/0.1/srac-report.schema.json",
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "title": "Draft S-CORE SRAC enrichment report",
+  "description": "Experimental report joining an SRAC assertion to an SBOM component. Safety fields are copied from the assertion and are not independently assessed by the generator.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "sourceFormat",
+    "assertionId",
+    "subject",
+    "safetyAssessment",
+    "matchedComponents",
+    "matchStatus",
+    "generator",
+    "integrity"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "0.1-draft"},
+    "sourceFormat": {"enum": ["SPDX", "CycloneDX"]},
+    "assertionId": {"type": "string", "minLength": 1},
+    "subject": {"type": "object"},
+    "safetyAssessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "safetyRelevance", "classification", "assertionStatus", "reviewer"],
+      "properties": {
+        "source": {"const": "assertion"},
+        "safetyRelevance": {"enum": ["safety-related", "not-safety-related", "undetermined"]},
+        "classification": {"enum": ["QM", "ASIL-A", "ASIL-B", "ASIL-C", "ASIL-D", "not-assigned"]},
+        "assertionStatus": {"enum": ["draft", "under-review", "reviewed", "approved", "superseded", "withdrawn"]},
+        "reviewer": {
+          "anyOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "required": ["name"],
+              "properties": {
+                "name": {"type": "string", "minLength": 1},
+                "uri": {"type": "string", "format": "uri"}
+              }
+            }
+          ]
+        }
+      }
+    },
+    "matchedComponents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["format", "identifier", "name", "version", "purl"],
+        "properties": {
+          "format": {"type": "string", "minLength": 1},
+          "identifier": {"type": ["string", "null"]},
+          "name": {"type": ["string", "null"]},
+          "version": {"type": ["string", "null"]},
+          "purl": {"type": "string", "pattern": "^pkg:"}
+        }
+      }
+    },
+    "matchStatus": {"enum": ["matched", "unmatched"]},
+    "bindingEvidence": {
+      "type": "object",
+      "required": ["strategy", "module", "repository", "hash"],
+      "properties": {
+        "strategy": {"const": "score-known-good"},
+        "module": {"type": "string", "minLength": 1},
+        "repository": {"type": "string", "format": "uri"},
+        "hash": {"type": "string", "pattern": "^[0-9a-fA-F]{40}$"}
+      }
+    },
+    "generator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": {"const": "srac.tools.enrich_sbom"},
+        "version": {"type": "string", "minLength": 1}
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "assertionSha256", "sbomSha256"],
+      "properties": {
+        "algorithm": {"const": "SHA-256"},
+        "assertionSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "sbomSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "knownGoodSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

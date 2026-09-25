@@ -48,7 +48,8 @@ python -m srac.tools.enrich_sbom \
   --assertion srac/examples/persistency-kvs.srac.json \
   --sbom srac/pilot/persistency-kvs/input/reference-integration.spdx.json \
   --known-good known_good.json \
-  --output srac/pilot/persistency-kvs/output/persistency-kvs.srac-report.json
+  --output srac/pilot/persistency-kvs/output/persistency-kvs.srac-report.json \
+  --checksum-output srac/pilot/persistency-kvs/output/persistency-kvs.srac-report.sha256
 ```
 
 Expected result:
@@ -59,7 +60,15 @@ matched identifier: SPDXRef-score-persistency-unknown
 binding strategy: score-known-good
 known-good module: score_persistency
 known-good hash: 9ae529ba9f413976ff5c9948c6490afa51bbfdc3
+safety relevance: undetermined (copied from assertion)
+classification: not-assigned (copied from assertion)
+assertion status: draft (copied from assertion)
+reviewer: null (copied from assertion)
 ```
 
 Omitting `--known-good`, changing its Persistency hash, or changing the assertion version produces `matchStatus: unmatched`
 and a non-zero command exit. This prevents an `unknown` SBOM version from being accepted on name alone.
+
+The report embeds SHA-256 digests of the assertion, SBOM and known-good inputs. The adjacent `.sha256` file contains the digest of
+the report itself. `safety-assessment-draft.md` inventories available classification evidence without making or approving a
+safety decision.
