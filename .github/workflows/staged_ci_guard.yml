@@ -1,0 +1,62 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+#
+# Staged CI Guard
+#
+# Companion to the 'staged-ci' label. While that label is present on a pull
+# request, the expensive platform and quality jobs skip themselves so a
+# "come together" integration PR can be validated cheaply first (module
+# resolution + documentation) before an hour of image builds is spent.
+#
+# GitHub reports a job skipped via `if:` as *skipped*, and branch protection
+# treats a skipped required check as satisfied. Without this guard a staged PR
+# would therefore be mergeable even though none of the heavy checks ever ran.
+# This job always runs and fails while the label is set, so the label must be
+# removed - and the full pipeline must pass - before a merge is possible.
+#
+# Make this check REQUIRED in the repository's branch-protection settings,
+# otherwise it does not protect anything.
+name: Staged CI Guard
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, labeled, unlabeled]
+  merge_group:
+    types: [checks_requested]
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: ${{ github.ref_name != 'main' && !startsWith(github.ref_name, 'release/') }}
+jobs:
+  staged-ci-guard:
+    name: Staged CI Guard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Block merge while CI is staged
+        if: contains(github.event.pull_request.labels.*.name, 'staged-ci')
+        run: |
+          {
+            echo "### :no_entry: CI is staged"
+            echo
+            echo "The \`staged-ci\` label is set on this pull request, so the"
+            echo "platform builds, unit tests, coverage, feature integration"
+            echo "tests and CodeQL scan were **skipped**."
+            echo
+            echo "Remove the \`staged-ci\` label to run the full pipeline."
+            echo "This check blocks the merge until then."
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::error::The 'staged-ci' label is set - the full CI pipeline has not run. Remove the label before merging."
+          exit 1
+      - name: Confirm full pipeline is enabled
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'staged-ci') }}
+        run: echo "No 'staged-ci' label - the full CI pipeline runs for this change."

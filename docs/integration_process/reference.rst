@@ -78,6 +78,11 @@ declared in the workflows.
      - Code-quality checks, builds the docs and reports, publishes to Pages.
      - **yes**
      - wire docs in Step 2, reports in Step 7
+   * - `staged_ci_guard.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/staged_ci_guard.yml>`_
+     - Fails while the ``staged-ci`` label is set, so a pull request with
+       skipped heavy checks cannot be merged (see :ref:`staged_ci`).
+     - **yes**
+     - none
    * - `check_release_approvals.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/check_release_approvals.yml>`_
      - Enforces required approvals on PRs targeting ``releases/*`` branches.
      - release branches only
@@ -101,6 +106,69 @@ declared in the workflows.
      - no
      - add runtime targets to
        `ci/showcase_targets_run.txt <https://github.com/eclipse-score/reference_integration/blob/main/ci/showcase_targets_run.txt>`_
+
+.. _staged_ci:
+
+Staged CI for integration pull requests
+---------------------------------------
+
+A "come together" pull request that bumps every module hash in
+``known_good.json`` at once often fails for a reason that is visible long before
+the hour-long image builds finish — a module no longer resolves, a target was
+renamed, a documentation mount broke. Waiting for the full pipeline on every
+push wastes both runner time and the integrator's time.
+
+Adding the ``staged-ci`` label to such a pull request skips the expensive jobs
+and leaves only the cheap, ``known_good.json``-derived validation running:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 46 27 27
+
+   * - Check
+     - with ``staged-ci``
+     - without the label
+   * - ``known_good_correct``, ``bzlmod-lock``, ``format``, ``copyright``
+     - runs
+     - runs
+   * - ``test_and_docs.yml`` — documentation preflight
+     - runs
+     - runs
+   * - ``test_and_docs.yml`` — unit tests, coverage, feature integration tests
+     - skipped
+     - runs
+   * - ``build_and_test_{linux,qnx,autosd,ebclfsa}.yml``
+     - skipped
+     - runs
+   * - ``codeql-multiple-repo-scan.yml``
+     - skipped
+     - runs
+   * - ``staged_ci_guard.yml``
+     - **fails** (blocks merge)
+     - passes
+
+Workflow
+~~~~~~~~
+
+#. Add the ``staged-ci`` label when opening the integration pull request.
+#. Iterate until the documentation preflight and the generator checks are green.
+#. Remove the label. The full pipeline runs, and ``Staged CI Guard`` turns green.
+#. Merge once everything passes.
+
+The label only takes effect on the next workflow run, which is why every gated
+workflow listens for the ``labeled`` and ``unlabeled`` pull-request events.
+
+.. note::
+
+   ``Staged CI Guard`` must be configured as a **required** status check in the
+   repository's branch-protection settings. GitHub reports a job skipped via an
+   ``if:`` condition as *skipped* and treats a skipped required check as
+   satisfied — without the guard, a staged pull request would be mergeable even
+   though none of the heavy checks ever ran.
+
+   Staging is a manual override for a supervised integration pull request, not a
+   way to merge unvalidated changes. The full pipeline still has to pass before
+   the merge.
 
 .. _reports:
 
