@@ -275,6 +275,10 @@ def test_persistency_evidence_metrics_are_pinned_and_non_authoritative() -> None
 
     assert metrics["subject"]["revision"] == "9ae529ba9f413976ff5c9948c6490afa51bbfdc3"
     assert metrics["unsafeRust"]["unsafeKeywordOccurrences"] == 0
+    assert metrics["interfaceComplexity"]["cpp"]["callableInterfaces"] == 46
+    assert metrics["interfaceComplexity"]["cpp"]["parameterMaximum"] == 4
+    assert metrics["interfaceComplexity"]["rust"]["callableInterfaces"] == 46
+    assert metrics["interfaceComplexity"]["rust"]["parameterMaximum"] == 3
     assert metrics["requirementsTraceability"]["componentRequirements"] == 35
     assert metrics["requirementsTraceability"]["requirementsDirectlyReferencedByPythonTestMetadata"] == 15
     assert len(metrics["requirementsTraceability"]["directlyReferenced"]) == 15
@@ -284,3 +288,8 @@ def test_persistency_evidence_metrics_are_pinned_and_non_authoritative() -> None
     )
     assert metrics["coverage"]["workflowRun"].endswith("/32867923248")
     assert metrics["coverage"]["configuredThresholdPercent"] == 0
+
+    traceability = (SRAC_ROOT / "pilot" / "persistency-kvs" / "requirements-traceability.md").read_text(
+        encoding="utf-8"
+    )
+    assert traceability.count("| `comp_req__kvs__") == 35

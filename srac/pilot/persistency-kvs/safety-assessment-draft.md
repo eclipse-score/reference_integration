@@ -39,8 +39,8 @@ still to be defined.
 | Non-comment source lines | 964 production lines across 10 files | 3,078 library lines across 11 files | Pending | Measured with pygount 3.2.0; component expert to confirm scope |
 | Unsafe Rust with and without safety notes | Not applicable | 0 `unsafe` keyword occurrences across all 29 Rust files under `score/kvs` | Pending | Textual scan with ripgrep 15.2.0; not a memory-safety proof |
 | Function and line coverage | Combined workflow result: 92.31% functions; 87.89% effective lines | Combined workflow result: 92.31% functions; 87.89% effective lines | Pending | Workflow reports a combined C++/Rust/tool scope; per-language values are not established |
-| Public function interfaces | Measurement pending | Measurement pending | Pending | Component expert |
-| Function parameters | Measurement pending | Measurement pending | Pending | Component expert |
+| Public function interfaces | 46 callables in public root headers | 46 exported functions/public-trait methods | Pending | Component expert to confirm inclusions and exclusions |
+| Function parameters | 42 total; maximum 4; mean 0.91 | 77 total including receivers; maximum 3; mean 1.67 | Pending | Parsed with tree-sitter; component expert to confirm metric interpretation |
 
 Proposed `C` result: **Pending component expert**.
 
@@ -57,6 +57,10 @@ that those 20 requirements are completely unverified: inspections, unit tests or
 The 21 trace-decorated Python test classes exercise both the C++ and Rust scenarios. The source tree also contains 94 C++
 GoogleTest macro occurrences, 248 Rust test-attribute occurrences and 44 Python test functions. These are inventory counts, not
 independent test-result counts.
+
+The complete 35-row result, including every full and partial test-class reference, is recorded in
+`requirements-traceability.md`. Four requirements have at least one full-verification trace, 11 additional requirements have only
+partial traces, and 20 have no direct integration-test metadata trace.
 
 The existing [requirements inspection record](https://github.com/eclipse-score/persistency/blob/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/score/kvs/docs/requirements/chklst_req_inspection.rst#L105)
 states that the inspection stopped because the requirement set needed rework. That open finding must be resolved or dispositioned
@@ -89,7 +93,7 @@ classification and approval are linked as evidence.
 1. Confirm the assessment scope and intended safety context.
 2. Name the responsible Persistency component expert/committer and Safety Manager.
 3. Resolve or disposition the recorded requirements-inspection findings and review the 20 direct trace gaps.
-4. Confirm the measured source scope, public-interface count and function-parameter measures.
+4. Confirm the measured source and interface scopes and decide how constructors, receivers and trait methods affect `C`.
 5. Decide the required coverage threshold and whether combined coverage is sufficient or per-language evidence is required.
 6. Determine `P`, `C` and `CLAS_OUT` with rationale.
 7. Record Safety Manager approval and the formal review artifact.
