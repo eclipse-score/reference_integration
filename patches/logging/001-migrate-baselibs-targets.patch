@@ -1,0 +1,47 @@
+diff --git a/score/datarouter/error/BUILD b/score/datarouter/error/BUILD
+index 714d0f3..ef3c4d1 100644
+--- a/score/datarouter/error/BUILD
++++ b/score/datarouter/error/BUILD
+@@ -25,7 +25,7 @@ cc_library(
+     features = COMPILER_WARNING_FEATURES,
+     visibility = ["@score_logging//score/datarouter:__subpackages__"],
+     deps = [
+-        "@score_baselibs//score/memory:string_literal",
+         "@score_baselibs//score/result",
++        "@score_baselibs//score/string_manipulation:string_literal",
+     ],
+ )
+diff --git a/score/mw/log/rust/score_log_bridge/BUILD b/score/mw/log/rust/score_log_bridge/BUILD
+index 5274d1b..ade0725 100644
+--- a/score/mw/log/rust/score_log_bridge/BUILD
++++ b/score/mw/log/rust/score_log_bridge/BUILD
+@@ -73,7 +73,7 @@ rust_library(
+     visibility = ["//visibility:public"],
+     deps = [
+         ":adapter",
+-        "@score_baselibs//src/log/score_log",
++        "@score_baselibs//score/log_rust/score_log",
+     ],
+ )
+ 
+@@ -127,6 +127,6 @@ rust_binary(
+     visibility = ["//visibility:public"],
+     deps = [
+         ":score_log_bridge",
+-        "@score_baselibs//src/log/score_log",
++        "@score_baselibs//score/log_rust/score_log",
+     ],
+ )
+diff --git a/score/mw/log/rust/score_log_bridge_cpp_init/BUILD b/score/mw/log/rust/score_log_bridge_cpp_init/BUILD
+index d8d0ee5..f3e28b5 100644
+--- a/score/mw/log/rust/score_log_bridge_cpp_init/BUILD
++++ b/score/mw/log/rust/score_log_bridge_cpp_init/BUILD
+@@ -51,7 +51,7 @@ rust_static_library(
+     visibility = ["//visibility:private"],
+     deps = [
+         "//score/mw/log/rust/score_log_bridge",
+-        "@score_baselibs//src/log/score_log",
++        "@score_baselibs//score/log_rust/score_log",
+     ],
+ )
+ 
