@@ -24,7 +24,7 @@ All evidence links below are pinned to the assessed revision.
 | P3 | Functional and architectural specification available | [component architecture](https://github.com/eclipse-score/persistency/tree/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/score/kvs/docs/architecture), [architecture inspection checklist](https://github.com/eclipse-score/persistency/blob/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/score/kvs/docs/architecture/chklst_arc_inspection.rst) | Pending | Pending component expert |
 | P4 | Design specification available | [KVS detailed design](https://github.com/eclipse-score/persistency/tree/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/score/kvs/docs/detailed_design), [implementation inspection checklist](https://github.com/eclipse-score/persistency/blob/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/score/kvs/docs/detailed_design/chklst_impl_inspection.rst) | Pending | Pending component expert |
 | P5 | Configuration specification and data available where applicable | [KVS Bazel definition](https://github.com/eclipse-score/persistency/blob/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/score/kvs/BUILD), [integration-test configuration](https://github.com/eclipse-score/persistency/tree/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/score/kvs/tests/test_cases/config) | Pending | Applicability and completeness pending component expert |
-| P6 | Verification measures, tests and reports available | [C++ tests](https://github.com/eclipse-score/persistency/tree/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/score/kvs/tests), [Rust tests](https://github.com/eclipse-score/persistency/tree/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/score/kvs/rust_kvs/tests), [coverage configuration](https://github.com/eclipse-score/persistency/tree/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/quality/coverage) | Pending | Test results and coverage values must be attached |
+| P6 | Verification measures, tests and reports available | [C++ tests](https://github.com/eclipse-score/persistency/tree/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/score/kvs/tests), [Rust tests](https://github.com/eclipse-score/persistency/tree/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/score/kvs/rust_kvs/tests), [successful pinned coverage run](https://github.com/eclipse-score/persistency/actions/runs/32867923248) | Pending | Effective coverage: 87.89% lines (3934/4476), 93.51% branches (404/432); configured threshold is currently 0% |
 
 Proposed `P` result: **Pending component expert**.
 
@@ -36,13 +36,31 @@ still to be defined.
 
 | Measure | C++ evidence/value | Rust evidence/value | NH/HM/NM | Owner |
 |---|---|---|---|---|
-| Non-comment source lines | Measurement pending | Measurement pending | Pending | Component expert |
-| Unsafe Rust with and without safety notes | Not applicable | Measurement and review pending | Pending | Component expert |
-| Function and line coverage | Report attachment pending | Report attachment pending | Pending | Verification owner |
+| Non-comment source lines | 964 production lines across 10 files | 3,078 library lines across 11 files | Pending | Measured with pygount 3.2.0; component expert to confirm scope |
+| Unsafe Rust with and without safety notes | Not applicable | 0 `unsafe` keyword occurrences across all 29 Rust files under `score/kvs` | Pending | Textual scan with ripgrep 15.2.0; not a memory-safety proof |
+| Function and line coverage | Combined workflow result: 92.31% functions; 87.89% effective lines | Combined workflow result: 92.31% functions; 87.89% effective lines | Pending | Workflow reports a combined C++/Rust/tool scope; per-language values are not established |
 | Public function interfaces | Measurement pending | Measurement pending | Pending | Component expert |
 | Function parameters | Measurement pending | Measurement pending | Pending | Component expert |
 
 Proposed `C` result: **Pending component expert**.
+
+The raw measurements and their scopes are recorded in `evidence-metrics.json`. A component expert must confirm which source and
+interface boundaries apply to the official complexity determination before assigning `NH`, `HM` or `NM`.
+
+## Requirements-to-test traceability snapshot
+
+At the pinned revision, the requirements document defines 35 `comp_req__kvs__*` component requirements. The Python component
+integration-test metadata directly references 15 distinct component requirements through `fully_verifies` or
+`partially_verifies`; 20 requirements have no direct reference in that metadata. This is a source-level trace scan, not a claim
+that those 20 requirements are completely unverified: inspections, unit tests or other verification mechanisms may apply.
+
+The 21 trace-decorated Python test classes exercise both the C++ and Rust scenarios. The source tree also contains 94 C++
+GoogleTest macro occurrences, 248 Rust test-attribute occurrences and 44 Python test functions. These are inventory counts, not
+independent test-result counts.
+
+The existing [requirements inspection record](https://github.com/eclipse-score/persistency/blob/9ae529ba9f413976ff5c9948c6490afa51bbfdc3/score/kvs/docs/requirements/chklst_req_inspection.rst#L105)
+states that the inspection stopped because the requirement set needed rework. That open finding must be resolved or dispositioned
+before the requirements evidence can support an approved classification.
 
 ## Step 3 — classification outcome
 
@@ -70,8 +88,9 @@ classification and approval are linked as evidence.
 
 1. Confirm the assessment scope and intended safety context.
 2. Name the responsible Persistency component expert/committer and Safety Manager.
-3. Attach revision-specific test and coverage results for both implementations.
-4. Measure the complexity indicators and review unsafe Rust safety notes.
-5. Determine `P`, `C` and `CLAS_OUT` with rationale.
-6. Record Safety Manager approval and the formal review artifact.
-7. Update and regenerate the SRAC assertion and report only after approval.
+3. Resolve or disposition the recorded requirements-inspection findings and review the 20 direct trace gaps.
+4. Confirm the measured source scope, public-interface count and function-parameter measures.
+5. Decide the required coverage threshold and whether combined coverage is sufficient or per-language evidence is required.
+6. Determine `P`, `C` and `CLAS_OUT` with rationale.
+7. Record Safety Manager approval and the formal review artifact.
+8. Update and regenerate the SRAC assertion and report only after approval.

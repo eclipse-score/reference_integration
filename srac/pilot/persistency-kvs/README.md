@@ -71,4 +71,5 @@ and a non-zero command exit. This prevents an `unknown` SBOM version from being 
 
 The report embeds SHA-256 digests of the assertion, SBOM and known-good inputs. The adjacent `.sha256` file contains the digest of
 the report itself. `safety-assessment-draft.md` inventories available classification evidence without making or approving a
-safety decision.
+safety decision. `evidence-metrics.json` records reproducible source, test, traceability and pinned-workflow measurements used by
+that draft.
