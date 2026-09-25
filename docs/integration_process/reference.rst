@@ -170,6 +170,75 @@ workflow listens for the ``labeled`` and ``unlabeled`` pull-request events.
    way to merge unvalidated changes. The full pipeline still has to pass before
    the merge.
 
+.. _disabling_a_module:
+
+Temporarily disabling a module
+------------------------------
+
+Staging CI buys time to look at a failure; it does not remove the failure. When
+a single module blocks the whole integration — an upstream change that will not
+land before the next cycle, a broken dependency, a test that cannot pass yet —
+that module can be taken out of the integration without losing its pinned state.
+
+Add ``"enabled": false`` together with a mandatory ``"disabled_reason"`` to its
+entry in ``known_good.json``:
+
+.. code-block:: json
+
+   "score_example": {
+     "repo": "https://github.com/eclipse-score/example.git",
+     "hash": "0123456789abcdef0123456789abcdef01234567",
+     "enabled": false,
+     "disabled_reason": "blocked by eclipse-score/example#123, re-enable after it lands",
+     "metadata": { }
+   }
+
+The hash, the ``bazel_patches`` list and the metadata stay in the file, so
+re-enabling the module is a two-line revert rather than a reconstruction from
+the git history. Deleting the entry instead would discard exactly the state the
+next integrator needs.
+
+After the edit, regenerate the Bazel fragments as usual (Step 1) and commit them
+together with the ``known_good.json`` change:
+
+.. code-block:: bash
+
+   python3 scripts/known_good/update_module_from_known_good.py
+
+A disabled module then contributes no ``bazel_dep``/``git_override`` entry, no
+coverage target, no documentation mount, no unit-test run and no SBOM entry.
+The generator prints every disabled module and its reason on each run, so the
+state cannot decay into an unnoticed permanent one.
+
+What the flag does not do
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The flag governs the **generated** artefacts only. Anything that names the
+module by hand keeps naming a module that no longer exists, and Bazel reports
+that far away from ``known_good.json``. Two such references are checked
+explicitly and abort the regeneration with the offending lines:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 40 60
+
+   * - Reference
+     - Why it must go with the module
+   * - ``--@module//...`` flags in ``.bazelrc``
+     - Bazel resolves them on *every* invocation, including ``bazel query``, so
+       the whole workspace becomes unusable.
+   * - ``extra_test_config`` / ``exclude_test_targets`` of another module, and
+       ``sbom.tracked_modules``
+     - The entry would point into a module the build no longer contains.
+
+Other references are **not** detected automatically and have to be removed by
+hand — hand-written ``BUILD`` files such as ``images/*/BUILD``,
+``showcases/standalone/BUILD`` and the feature-integration test scenarios, plus
+any test in ``feature_integration_tests/itf/`` that exercises the module. In
+practice the flag is therefore sufficient for a module that only contributes
+documentation, coverage and unit tests, and is only the first step for a module
+that is wired into the images, the showcases or the integration tests.
+
 .. _reports:
 
 Reports

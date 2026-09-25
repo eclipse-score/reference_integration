@@ -329,8 +329,16 @@ def main() -> bool:
 
     if args.modules_to_test:
         print_centered(f"QR: User requested tests only for specified modules: {', '.join(args.modules_to_test)}")
+        # Without this, asking for a disabled module yields a silent green run, which reads
+        # exactly like "the tests passed".
+        requested_but_disabled = sorted(set(args.modules_to_test) & set(known.disabled_modules))
+        if requested_but_disabled:
+            raise SystemExit(
+                "QR: refusing to run: these modules are disabled in known_good.json and have no "
+                f"tests to run: {', '.join(requested_but_disabled)}"
+            )
 
-    for module in known.modules["target_sw"].values():
+    for module in known.enabled_modules("target_sw").values():
         if args.modules_to_test and module.name not in args.modules_to_test:
             print_centered(f"QR: Skipping module {module.name}")
             continue

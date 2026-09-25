@@ -254,6 +254,9 @@ def generate_docs_bundles_content(known_good: KnownGood, timestamp: Optional[str
         section = DOCS_SECTION_BY_GROUP.get(group_name)
 
         for module in group_modules.values():
+            if not module.enabled:
+                continue
+
             if not module.docs.enabled:
                 continue
 
@@ -281,7 +284,7 @@ def generate_docs_bundles_content(known_good: KnownGood, timestamp: Optional[str
             entries.append("\n".join(lines) + "\n")
 
     if not entries:
-        raise SystemExit("No modules to mount: every module in known_good.json has 'docs': false")
+        raise SystemExit("No modules to mount: every module in known_good.json is disabled or has 'docs': false")
 
     header = LICENSE_HEADER
     if timestamp:
@@ -320,6 +323,53 @@ def generate_file_content(
         raise SystemExit("No valid modules to generate git_override blocks")
 
     return header + "\n".join(blocks)
+
+
+def check_bazelrc_for_disabled_modules(known_good: KnownGood, bazelrc_path: Path) -> None:
+    """Abort when .bazelrc still carries a flag belonging to a disabled module.
+
+    This is the failure mode that makes disabling a module look broken rather than
+    configured. A ``--@score_logging//...:flag=value`` line for a module Bazel no
+    longer knows about fails *every* invocation - ``build``, ``test``, even
+    ``query`` - with an opaque "no repository visible" error far away from
+    known_good.json. Named here, the fix is obvious: delete or move those lines.
+
+    Only the disabled modules are checked; verifying that every *enabled* module's
+    flags exist is a different job, already done by rc_label_consistency.py.
+    """
+    disabled = known_good.disabled_modules
+    if not disabled or not bazelrc_path.is_file():
+        return
+
+    offenders: List[str] = []
+    for lineno, line in enumerate(bazelrc_path.read_text(encoding="utf-8").splitlines(), start=1):
+        if line.lstrip().startswith("#"):
+            continue
+        for name in disabled:
+            if f"@{name}//" in line:
+                offenders.append(f"{bazelrc_path.name}:{lineno}: {line.strip()}")
+
+    if offenders:
+        raise SystemExit(
+            "ERROR: disabled modules are still referenced by .bazelrc.\n"
+            "Bazel resolves these flags on every invocation, so the workspace would be\n"
+            "unusable. Remove or comment out these lines together with the module:\n  " + "\n  ".join(offenders)
+        )
+
+
+def report_disabled_modules(known_good: KnownGood) -> None:
+    """Print the disabled modules and why, so a regeneration never hides them."""
+    disabled = known_good.disabled_modules
+    if not disabled:
+        return
+
+    print(f"\nDISABLED: {len(disabled)} module(s) excluded from the integration:")
+    for name, module in sorted(disabled.items()):
+        print(f"  - {name}: {module.disabled_reason}")
+    print(
+        "These modules contribute no Bazel override, coverage target, docs mount,\n"
+        "unit tests or SBOM entry. Re-enable them by removing 'enabled': false.\n"
+    )
 
 
 def main() -> None:
@@ -427,8 +477,13 @@ Note:
     generated_files = []
     total_module_count = 0
 
+    check_bazelrc_for_disabled_modules(known_good, Path(known_path).parent / ".bazelrc")
+    report_disabled_modules(known_good)
+
     for group_name, group_modules in known_good.modules.items():
-        modules = list(group_modules.values())
+        # A disabled module must not reach any generated artifact: no bazel_dep/override, no
+        # coverage target, no docs mount. Filtering here covers every generator below at once.
+        modules = [module for module in group_modules.values() if module.enabled]
 
         if not modules:
             logging.warning(f"Skipping empty group: {group_name}")

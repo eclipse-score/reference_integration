@@ -23,6 +23,54 @@ from typing import Any, Dict
 from .module import Module
 
 
+def _validate_disabled_modules(
+    parsed_modules: Dict[str, Dict[str, Module]],
+    sbom_tracked_modules: list[str],
+) -> None:
+    """Reject a disabled module that the rest of the configuration still depends on.
+
+    Disabling a module only removes it from the *generated* artifacts. Anything that
+    names it elsewhere keeps naming a module that no longer exists, and Bazel reports
+    that far from here - a ``--@score_x//...`` flag for an absent module fails *every*
+    invocation, including ``bazel query``. Failing here instead names the exact
+    entries that have to go with it.
+    """
+    disabled = {
+        name: module
+        for group_modules in parsed_modules.values()
+        for name, module in group_modules.items()
+        if not module.enabled
+    }
+    if not disabled:
+        return
+
+    problems: list[str] = []
+
+    still_tracked = sorted(set(sbom_tracked_modules) & set(disabled))
+    if still_tracked:
+        problems.append("listed in sbom.tracked_modules: " + ", ".join(still_tracked) + " (remove them from that list)")
+
+    # metadata labels of *enabled* modules that point into a disabled module, e.g.
+    # score_persistency's extra_test_config referencing "@score_logging//...".
+    for group_modules in parsed_modules.values():
+        for module in group_modules.values():
+            if not module.enabled:
+                continue
+            labels = list(module.metadata.extra_test_config) + list(module.metadata.exclude_test_targets)
+            for label in labels:
+                for name in disabled:
+                    if label.startswith(f"@{name}//"):
+                        problems.append(
+                            f"module '{module.name}' still references disabled module '{name}' "
+                            f"via metadata entry '{label}'"
+                        )
+
+    if problems:
+        raise ValueError(
+            "Invalid known_good.json (disabled modules are still referenced):\n  - " + "\n  - ".join(problems)
+        )
+
+
 @dataclass
 class KnownGood:
     """Known good configuration with modules and metadata.
@@ -72,11 +120,32 @@ class KnownGood:
                 + ", ".join(invalid_modules)
             )
 
+        _validate_disabled_modules(parsed_modules, sbom_tracked_modules)
+
         return cls(
             modules=parsed_modules,
             sbom_tracked_modules=sbom_tracked_modules,
             timestamp=timestamp,
         )
+
+    def enabled_modules(self, group: str) -> Dict[str, Module]:
+        """The modules of ``group`` that take part in the integration.
+
+        Every consumer of the module list wants this rather than ``modules[group]``:
+        a module with ``"enabled": false`` must not reach the generated Bazel
+        fragments, the coverage targets, the docs mounts or the test runner.
+        """
+        return {name: module for name, module in self.modules.get(group, {}).items() if module.enabled}
+
+    @property
+    def disabled_modules(self) -> Dict[str, Module]:
+        """Every disabled module across all groups, keyed by name."""
+        return {
+            name: module
+            for group_modules in self.modules.values()
+            for name, module in group_modules.items()
+            if not module.enabled
+        }
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert KnownGood instance to dictionary for JSON output.
