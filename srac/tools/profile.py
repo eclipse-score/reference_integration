@@ -120,9 +120,7 @@ def _normalize_repository(repository: str) -> str:
     return normalized.lower()
 
 
-def _known_good_binding(
-    assertion: Mapping[str, Any], known_good: Mapping[str, Any] | None
-) -> dict[str, str] | None:
+def _known_good_binding(assertion: Mapping[str, Any], known_good: Mapping[str, Any] | None) -> dict[str, str] | None:
     """Resolve an assertion subject to one exact S-CORE known-good module."""
 
     if known_good is None:
@@ -250,9 +248,7 @@ def _matches_and_binding(
         raise ValueError("Unsupported SBOM format; expected SPDX 2.x or CycloneDX")
 
     direct_matches = [
-        candidate
-        for candidate in candidates
-        if _purl_matches(subject_purl, str(candidate["purl"]), subject_version)
+        candidate for candidate in candidates if _purl_matches(subject_purl, str(candidate["purl"]), subject_version)
     ]
     if direct_matches:
         return direct_matches, None

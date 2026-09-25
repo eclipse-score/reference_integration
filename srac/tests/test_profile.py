@@ -58,9 +58,7 @@ def test_matches_spdx_module_purl_while_preserving_component_scope(assertion: di
                     {
                         "referenceCategory": "PACKAGE-MANAGER",
                         "referenceType": "purl",
-                        "referenceLocator": (
-                            "pkg:github/eclipse-score/persistency@" + assertion["subject"]["version"]
-                        ),
+                        "referenceLocator": ("pkg:github/eclipse-score/persistency@" + assertion["subject"]["version"]),
                     }
                 ],
             }
