@@ -30,8 +30,14 @@ It uses the platform verification report template introduced by docs-as-code,
 which gathers every Feature in the current build and renders its Requirements,
 Architecture and Inspection statistics.
 
+* :doc:`Unit Tests Summary <unit_test_summary>`
+* :doc:`Coverage Analysis Summary <coverage_summary>`
+* :doc:`Code Coverage Dashboards <coverage_dashboards>`
+
 .. toctree::
    :titlesonly:
 
    Unit Tests Summary <unit_test_summary>
    Coverage Analysis Summary <coverage_summary>
+   Code Coverage Dashboards <coverage_dashboards>
+

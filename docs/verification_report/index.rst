@@ -21,6 +21,7 @@ Platform Verification Report
 -----------------------------
 
 * :doc:`Platform Verification Report <platform_verification_report>`
+* :doc:`Code Coverage Dashboards <coverage_dashboards>`
 
 Module Verification Reports
 -----------------------------
@@ -35,4 +36,5 @@ Feature/Component Diagram (experiment)
    :hidden:
 
    Platform Verification Report <platform_verification_report>
+   Code Coverage Dashboards <coverage_dashboards>
    Modules <modules/index>

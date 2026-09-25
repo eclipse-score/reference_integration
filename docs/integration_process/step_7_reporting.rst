@@ -78,7 +78,10 @@ output per module and **exports the results** in three forms:
 * **Detailed HTML coverage reports.** The per-module ``genhtml`` / Rust coverage
   HTML is written under the coverage output directory
   (``artifacts/coverage/cpp/<module>`` and ``artifacts/coverage/rust/<module>``
-  by default; override with ``--coverage-output-dir``).
+  by default; override with ``--coverage-output-dir``). In CI, these dashboards
+  and a central coverage portal are published directly with the documentation site
+  under ``/coverage/`` and linked from :ref:`coverage_dashboards` and
+  `docs/verification_report/coverage_summary.md <https://github.com/eclipse-score/reference_integration/blob/main/docs/verification_report/coverage_summary.md>`_.
 * **CI job summary.** In CI the ``test_and_docs`` workflow additionally appends
   the two markdown summaries to the GitHub Actions **job summary**
   (``$GITHUB_STEP_SUMMARY``), so the pass/fail and coverage tables are visible
