@@ -713,8 +713,75 @@ the merge.</p>
 </div>
 </section>
 </section>
+<section id="temporarily-disabling-a-module">
+<span id="disabling-a-module"></span><h2><span class="section-number">10.3. </span>Temporarily disabling a module<a class="headerlink" href="#temporarily-disabling-a-module" title="Link to this heading">#</a></h2>
+<p>Staging CI buys time to look at a failure; it does not remove the failure. When
+a single module blocks the whole integration — an upstream change that will not
+land before the next cycle, a broken dependency, a test that cannot pass yet —
+that module can be taken out of the integration without losing its pinned state.</p>
+<p>Add <code class="docutils literal notranslate"><span class="pre">&quot;enabled&quot;:</span> <span class="pre">false</span></code> together with a mandatory <code class="docutils literal notranslate"><span class="pre">&quot;disabled_reason&quot;</span></code> to its
+entry in <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;score_example&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;repo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://github.com/eclipse-score/example.git&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;hash&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0123456789abcdef0123456789abcdef01234567&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;disabled_reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;blocked by eclipse-score/example#123, re-enable after it lands&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The hash, the <code class="docutils literal notranslate"><span class="pre">bazel_patches</span></code> list and the metadata stay in the file, so
+re-enabling the module is a two-line revert rather than a reconstruction from
+the git history. Deleting the entry instead would discard exactly the state the
+next integrator needs.</p>
+<p>After the edit, regenerate the Bazel fragments as usual (Step 1) and commit them
+together with the <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> change:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>scripts/known_good/update_module_from_known_good.py
+</pre></div>
+</div>
+<p>A disabled module then contributes no <code class="docutils literal notranslate"><span class="pre">bazel_dep</span></code>/<code class="docutils literal notranslate"><span class="pre">git_override</span></code> entry, no
+coverage target, no documentation mount, no unit-test run and no SBOM entry.
+The generator prints every disabled module and its reason on each run, so the
+state cannot decay into an unnoticed permanent one.</p>
+<section id="what-the-flag-does-not-do">
+<h3><span class="section-number">10.3.1. </span>What the flag does not do<a class="headerlink" href="#what-the-flag-does-not-do" title="Link to this heading">#</a></h3>
+<p>The flag governs the <strong>generated</strong> artefacts only. Anything that names the
+module by hand keeps naming a module that no longer exists, and Bazel reports
+that far away from <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>. Two such references are checked
+explicitly and abort the regeneration with the offending lines:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<colgroup>
+<col style="width: 40.0%" />
+<col style="width: 60.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Reference</p></th>
+<th class="head"><p>Why it must go with the module</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--&#64;module//...</span></code> flags in <code class="docutils literal notranslate"><span class="pre">.bazelrc</span></code></p></td>
+<td><p>Bazel resolves them on <em>every</em> invocation, including <code class="docutils literal notranslate"><span class="pre">bazel</span> <span class="pre">query</span></code>, so
+the whole workspace becomes unusable.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">extra_test_config</span></code> / <code class="docutils literal notranslate"><span class="pre">exclude_test_targets</span></code> of another module, and
+<code class="docutils literal notranslate"><span class="pre">sbom.tracked_modules</span></code></p></td>
+<td><p>The entry would point into a module the build no longer contains.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Other references are <strong>not</strong> detected automatically and have to be removed by
+hand — hand-written <code class="docutils literal notranslate"><span class="pre">BUILD</span></code> files such as <code class="docutils literal notranslate"><span class="pre">images/*/BUILD</span></code>,
+<code class="docutils literal notranslate"><span class="pre">showcases/standalone/BUILD</span></code> and the feature-integration test scenarios, plus
+any test in <code class="docutils literal notranslate"><span class="pre">feature_integration_tests/itf/</span></code> that exercises the module. In
+practice the flag is therefore sufficient for a module that only contributes
+documentation, coverage and unit tests, and is only the first step for a module
+that is wired into the images, the showcases or the integration tests.</p>
+</section>
+</section>
 <section id="reports">
-<span id="id2"></span><h2><span class="section-number">10.3. </span>Reports<a class="headerlink" href="#reports" title="Link to this heading">#</a></h2>
+<span id="id2"></span><h2><span class="section-number">10.4. </span>Reports<a class="headerlink" href="#reports" title="Link to this heading">#</a></h2>
 <p>The consolidated outputs published by the integration. They are built by
 <code class="docutils literal notranslate"><span class="pre">test_and_docs.yml</span></code> and rendered into the documentation site.</p>
 <div class="pst-scrollable-table-container"><table class="table">
@@ -825,7 +892,11 @@ per-test-case results.</p></td>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow">10.2.1. Workflow</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reports">10.3. Reports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#temporarily-disabling-a-module">10.3. Temporarily disabling a module</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-flag-does-not-do">10.3.1. What the flag does not do</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reports">10.4. Reports</a></li>
 </ul>
   </nav></div>
 
