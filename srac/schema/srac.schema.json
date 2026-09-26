@@ -1,0 +1,245 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eclipse.dev/score/schemas/srac/0.2/srac.schema.json",
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "title": "Draft S-CORE Safety Relevance Assertion Capability profile",
+  "description": "Experimental profile for the SRAC sidecar proof of concept. This is not an approved S-CORE specification.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "assertionId", "subject", "safetyRelevance", "rationale", "evidence", "assertion"],
+  "properties": {
+    "schemaVersion": {"const": "0.2-draft"},
+    "assertionId": {"type": "string", "minLength": 1},
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "purl", "version"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "purl": {"type": "string", "pattern": "^pkg:"},
+        "version": {"type": "string", "minLength": 1},
+        "repository": {"type": "string", "format": "uri"},
+        "componentPath": {"type": "string", "minLength": 1}
+      }
+    },
+    "safetyRelevance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "classification"],
+      "properties": {
+        "status": {"enum": ["safety-related", "not-safety-related", "undetermined"]},
+        "classification": {
+          "description": "Human-facing S-CORE classification. When impactAnalysis.safetyIntegrityLevel is present, the validator requires its equivalent SPDX vocabulary value.",
+          "enum": ["QM", "ASIL-A", "ASIL-B", "ASIL-C", "ASIL-D", "not-assigned"]
+        }
+      }
+    },
+    "rationale": {"type": "string", "minLength": 1},
+    "requirements": {"type": "array", "items": {"$ref": "#/$defs/reference"}, "uniqueItems": true},
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/reference"}
+    },
+    "impactAnalysis": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/impactAnalysis"}
+    },
+    "assertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "author", "created"],
+      "properties": {
+        "status": {"enum": ["draft", "under-review", "reviewed", "approved", "superseded", "withdrawn"]},
+        "author": {"$ref": "#/$defs/party"},
+        "reviewer": {"anyOf": [{"$ref": "#/$defs/party"}, {"type": "null"}]},
+        "created": {"type": "string", "format": "date-time"},
+        "updated": {"type": "string", "format": "date-time"}
+      }
+    }
+  },
+  "$defs": {
+    "party": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "uri": {"type": "string", "format": "uri"}
+      }
+    },
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "uri"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "type": {"type": "string", "minLength": 1},
+        "uri": {"type": "string", "format": "uri"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"}
+      }
+    },
+    "impactAnalysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "trigger",
+        "impactAnalysisStatus",
+        "impactedElement",
+        "addedElement",
+        "modifiedElement",
+        "removedElement",
+        "decisions"
+      ],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "trigger": {"$ref": "#/$defs/analysisTrigger"},
+        "impactAnalysisStatus": {
+          "enum": ["new", "inProgress", "complete", "stopped", "duplicate", "other"]
+        },
+        "impactLevel": {
+          "enum": [
+            "noCriticalImpact",
+            "safetyImpact",
+            "securityImpact",
+            "safetyAndSecurityImpact",
+            "qualityImpact",
+            "availabilityImpact",
+            "customerSatisfactionImpact",
+            "other"
+          ]
+        },
+        "safetyIntegrityLevel": {
+          "description": "SPDX SafetyIntegrityLevelType spelling of safetyRelevance.classification; both values must be equivalent.",
+          "enum": [
+            "qm",
+            "asilA",
+            "asilB",
+            "asilC",
+            "asilD",
+            "sil1",
+            "sil2",
+            "sil3",
+            "sil4",
+            "dalA",
+            "dalB",
+            "dalC",
+            "dalD",
+            "dalE",
+            "other",
+            "noAssertion"
+          ]
+        },
+        "impactAnalysisProcess": {"$ref": "#/$defs/uriReference"},
+        "rationale": {"type": "string", "minLength": 1},
+        "impactedElement": {"$ref": "#/$defs/elementIdentifiers"},
+        "addedElement": {"$ref": "#/$defs/elementIdentifiers"},
+        "modifiedElement": {"$ref": "#/$defs/elementIdentifiers"},
+        "removedElement": {"$ref": "#/$defs/elementIdentifiers"},
+        "decisions": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/decision"}
+        },
+        "requirementVerification": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/requirementVerification"}
+        },
+        "bundle": {"$ref": "#/$defs/bundle"}
+      }
+    },
+    "analysisTrigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "uri"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "type": {"type": "string", "minLength": 1},
+        "uri": {"type": "string", "format": "uri"}
+      }
+    },
+    "uriReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["uri"],
+      "properties": {
+        "uri": {"type": "string", "format": "uri"}
+      }
+    },
+    "elementIdentifiers": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decisionType", "decisionStatus", "appliesTo", "originatedBy", "rationale"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "decisionType": {
+          "enum": [
+            "approve",
+            "approveConditionally",
+            "reject",
+            "defer",
+            "delegate",
+            "requestChange",
+            "requestInformation",
+            "noAction",
+            "close",
+            "duplicate",
+            "other"
+          ]
+        },
+        "decisionStatus": {
+          "enum": ["proposed", "requested", "inProgress", "recorded", "superseded", "withdrawn", "enteredInError", "other"]
+        },
+        "appliesTo": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "originatedBy": {
+          "anyOf": [{"$ref": "#/$defs/party"}, {"type": "null"}]
+        },
+        "rationale": {"type": "string", "minLength": 1}
+      }
+    },
+    "requirementVerification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "verifies", "evidence"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "verifies": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "evidence": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "rationale": {"type": "string", "minLength": 1}
+      }
+    },
+    "bundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "rootElement"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "rootElement": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}

@@ -84,6 +84,12 @@ The generated documents are written below `bazel-bin/` as `sbom.spdx.json` and
 `sbom.cdx.json`. Rust crate metadata is collected automatically from the
 workspace lockfile and the configured `score_crates` module.
 
+#### Experimental SRAC sidecar pilot
+
+The [`srac/`](srac/) directory contains an experimental, non-authoritative Safety Relevance Assertion Capability sidecar profile.
+The pilot validates a draft assertion, matches it to SPDX or CycloneDX components by PURL and version, and emits a separate
+enrichment report without modifying the generated SBOM. The included KVS example does not assign or claim a safety classification.
+
 ### Selecting an SBOM mode
 
 Choose the mode based on what is being qualified:
