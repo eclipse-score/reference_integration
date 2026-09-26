@@ -36,6 +36,7 @@ score_py_pytest(
     srcs = glob(["tests/**/*.py"]),
     data = [
         "examples/persistency-kvs.srac.json",
+        "examples/synthetic-safety-related.srac.json",
         "pilot/persistency-kvs/evidence-metrics.json",
         "pilot/persistency-kvs/input/reference-integration.spdx.json",
         "pilot/persistency-kvs/output/persistency-kvs.srac-report.json",
@@ -50,6 +51,7 @@ score_py_pytest(
 
 exports_files([
     "examples/persistency-kvs.srac.json",
+    "examples/synthetic-safety-related.srac.json",
     "pilot/persistency-kvs/evidence-metrics.json",
     "pilot/persistency-kvs/input/reference-integration.spdx.json",
     "pilot/persistency-kvs/output/persistency-kvs.srac-report.json",

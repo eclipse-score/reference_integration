@@ -18,6 +18,8 @@ component owner and safety reviewer provide a decision.
 - `schema/srac.schema.json`: draft JSON Schema for the minimum profile.
 - `schema/srac-report.schema.json`: draft JSON Schema for the generated enrichment report.
 - `examples/persistency-kvs.srac.json`: non-authoritative KVS example.
+- `examples/synthetic-safety-related.srac.json`: wholly synthetic, illustrative example showing a populated
+  `safety-related` / `ASIL-B` / `reviewed` assertion flow. It is not a claim about any real component or product.
 - `tools/profile.py`: self-contained core validation and PURL/version matching.
 - `tools/enrich_sbom.py`: CLI that emits a separate enrichment report without changing the source SBOM.
 - `mappings/`: proposed SPDX 2.3 and CycloneDX 1.6 carrier mappings.

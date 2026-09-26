@@ -32,6 +32,11 @@ def assertion() -> dict:
     return json.loads((SRAC_ROOT / "examples" / "persistency-kvs.srac.json").read_text(encoding="utf-8"))
 
 
+@pytest.fixture
+def synthetic_reviewed_assertion() -> dict:
+    return json.loads((SRAC_ROOT / "examples" / "synthetic-safety-related.srac.json").read_text(encoding="utf-8"))
+
+
 def test_example_satisfies_core_profile(assertion: dict) -> None:
     assert validate_assertion(assertion) == []
 
@@ -67,6 +72,46 @@ def test_report_carries_unapproved_safety_state_from_assertion(assertion: dict) 
         "classification": "not-assigned",
         "assertionStatus": "draft",
         "reviewer": None,
+    }
+    assert validate_report(report) == []
+
+
+def test_synthetic_reviewed_example_shows_complete_safety_related_flow(
+    synthetic_reviewed_assertion: dict,
+) -> None:
+    assert validate_assertion(synthetic_reviewed_assertion) == []
+    assert "Synthetic and illustrative example only" in synthetic_reviewed_assertion["rationale"]
+
+    sbom = {
+        "bomFormat": "CycloneDX",
+        "specVersion": "1.6",
+        "components": [
+            {
+                "bom-ref": "synthetic-brake-monitor",
+                "name": "synthetic-brake-monitor",
+                "version": "1.0.0",
+                "purl": "pkg:generic/synthetic-brake-monitor@1.0.0",
+            }
+        ],
+    }
+    integrity = {
+        "algorithm": "SHA-256",
+        "assertionSha256": "a" * 64,
+        "sbomSha256": "b" * 64,
+    }
+
+    report = build_enrichment_report(synthetic_reviewed_assertion, sbom, integrity=integrity)
+
+    assert report["matchStatus"] == "matched"
+    assert report["safetyAssessment"] == {
+        "source": "assertion",
+        "safetyRelevance": "safety-related",
+        "classification": "ASIL-B",
+        "assertionStatus": "reviewed",
+        "reviewer": {
+            "name": "Synthetic Example Safety Reviewer",
+            "uri": "https://example.com/srac/people/synthetic-reviewer",
+        },
     }
     assert validate_report(report) == []
 
