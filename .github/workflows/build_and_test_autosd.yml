@@ -13,7 +13,7 @@
 name: AutoSD - Build & Integration Test
 on:
   pull_request:
-    types: [opened, reopened, synchronize]
+    types: [opened, reopened, synchronize, labeled, unlabeled]
   merge_group:
     types: [checks_requested]
   push:
@@ -25,6 +25,8 @@ concurrency:
   cancel-in-progress: ${{ github.ref_name != 'main' && !startsWith(github.ref_name, 'release/') }}
 jobs:
   build:
+    # Skipped while the 'staged-ci' label is set; see staged_ci_guard.yml.
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'staged-ci') }}
     strategy:
       matrix:
         platform:

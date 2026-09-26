@@ -1,0 +1,23 @@
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# Module-specific Bazel flags for score_baselibs.
+#
+# These flags name labels inside @score_baselibs, so they can only be resolved while
+# that module is part of the integration. Keeping them here rather than in the root
+# .bazelrc means they disappear together with the module when it is disabled in
+# known_good.json - a --@score_baselibs//... flag for an absent module would otherwise
+# break every bazel invocation, including 'bazel query'.
+#
+# Imported via bazel_common/module_flags.bazelrc, which is generated from
+# known_good.json. Do not import this file directly.
+
+build:_common --@score_baselibs//score/json:base_library=nlohmann
+build:_common --@score_baselibs//score/log_rust:safety_level=qm
+build:_common --@score_baselibs//score/analysis/tracing/generic_trace_library:implementation=@score_baselibs//score/analysis/tracing/generic_trace_library/stub_implementation
+
+# Persistency-specific coverage config (see rust_coverage_config of score_persistency
+# in known_good.json). The flags belong to score_baselibs, so they live here.
+build:ferrocene-coverage-per --@score_baselibs//score/log_rust:safety_level=qm
+build:ferrocene-coverage-per --@score_baselibs//score/json:base_library=nlohmann

@@ -155,6 +155,8 @@ class Module:
     branch: str = "main"
     pin_version: bool = False
     docs: Docs = field(default_factory=Docs)
+    enabled: bool = True
+    disabled_reason: str | None = None
 
     @classmethod
     def from_dict(cls, name: str, module_data: Dict[str, Any]) -> Module:
@@ -181,6 +183,15 @@ class Module:
                         - docs (bool | dict, optional): Documentation mount for the combined
                                             docs site. Mounted by default; use false for a
                                             module that exposes no //:docs_bundle. See Docs.
+                        - enabled (bool, optional): Whether the module takes part in the
+                                            integration at all (default: true). Set to false to
+                                            temporarily drop a module that blocks the
+                                            integration; every generated artifact then omits
+                                            it. Requires 'disabled_reason'.
+                        - disabled_reason (str, optional): Why the module is disabled and what
+                                            has to happen to re-enable it. Mandatory whenever
+                                            'enabled' is false, so a disabled module can never
+                                            become a silent permanent state.
 
         Returns:
                 Module instance
@@ -220,6 +231,22 @@ class Module:
         except ValueError as e:
             raise ValueError(f"Module '{name}': {e}") from None
 
+        enabled = module_data.get("enabled", True)
+        if not isinstance(enabled, bool):
+            raise ValueError(f"Module '{name}': invalid 'enabled' value {enabled!r} (expected true or false)")
+
+        disabled_reason = module_data.get("disabled_reason")
+        if not enabled and not disabled_reason:
+            raise ValueError(
+                f"Module '{name}' is disabled but has no 'disabled_reason'. State why it is disabled "
+                "and what has to happen to re-enable it, so the next integrator does not have to "
+                "guess whether this is temporary or permanent."
+            )
+        if enabled and disabled_reason:
+            raise ValueError(
+                f"Module '{name}' has a 'disabled_reason' but is enabled. Remove the reason, or set \"enabled\": false."
+            )
+
         return cls(
             name=name,
             hash=commit_hash,
@@ -230,6 +257,8 @@ class Module:
             branch=branch,
             pin_version=pin_version,
             docs=docs,
+            enabled=enabled,
+            disabled_reason=disabled_reason,
         )
 
     @classmethod
@@ -292,6 +321,9 @@ class Module:
             result["branch"] = self.branch
         if self.pin_version:
             result["pin_version"] = True
+        if not self.enabled:
+            result["enabled"] = False
+            result["disabled_reason"] = self.disabled_reason
         docs = self.docs.to_value()
         if docs is not None:
             result["docs"] = docs
