@@ -40,6 +40,8 @@ score_py_pytest(
         "pilot/persistency-kvs/evidence-metrics.json",
         "pilot/persistency-kvs/input/reference-integration.spdx.json",
         "pilot/persistency-kvs/output/persistency-kvs.srac-report.json",
+        "pilot/persistency-kvs/output/persistency-kvs.srac-report.sha256",
+        "pilot/persistency-kvs/provenance.json",
         "pilot/persistency-kvs/requirements-traceability.md",
         "schema/srac.schema.json",
         "schema/srac-report.schema.json",
