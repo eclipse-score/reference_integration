@@ -77,6 +77,14 @@ SAFETY_INTEGRITY_LEVEL_VALUES = {
     "other",
     "noAssertion",
 }
+CLASSIFICATION_TO_SAFETY_INTEGRITY_LEVEL = {
+    "QM": "qm",
+    "ASIL-A": "asilA",
+    "ASIL-B": "asilB",
+    "ASIL-C": "asilC",
+    "ASIL-D": "asilD",
+    "not-assigned": "noAssertion",
+}
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 
 
@@ -118,7 +126,24 @@ def _validate_identifier_list(value: object, path: str, errors: list[str], *, re
             errors.append(f"{path}[{index}] must be a non-empty string")
 
 
-def _validate_impact_analysis(value: object, path: str, errors: list[str]) -> None:
+def _validate_resolved_identifiers(
+    value: object, path: str, errors: list[str], resolvable_ids: set[str] | None
+) -> None:
+    if resolvable_ids is None or not isinstance(value, list):
+        return
+    for index, identifier in enumerate(value):
+        if _is_non_empty_string(identifier) and identifier not in resolvable_ids:
+            errors.append(f"{path}[{index}] references {identifier!r}, which does not resolve to an assertion element")
+
+
+def _validate_impact_analysis(
+    value: object,
+    path: str,
+    errors: list[str],
+    *,
+    classification: object = None,
+    resolvable_ids: set[str] | None = None,
+) -> None:
     if not isinstance(value, list):
         errors.append(f"{path} must be an array")
         return
@@ -146,6 +171,16 @@ def _validate_impact_analysis(value: object, path: str, errors: list[str]) -> No
         safety_integrity_level = item.get("safetyIntegrityLevel")
         if safety_integrity_level is not None and safety_integrity_level not in SAFETY_INTEGRITY_LEVEL_VALUES:
             errors.append(f"{item_path}.safetyIntegrityLevel must be one of {sorted(SAFETY_INTEGRITY_LEVEL_VALUES)}")
+        expected_safety_integrity_level = CLASSIFICATION_TO_SAFETY_INTEGRITY_LEVEL.get(classification)
+        if (
+            safety_integrity_level is not None
+            and expected_safety_integrity_level is not None
+            and safety_integrity_level != expected_safety_integrity_level
+        ):
+            errors.append(
+                f"{item_path}.safetyIntegrityLevel must be {expected_safety_integrity_level!r} "
+                f"when safety relevance classification is {classification!r}"
+            )
 
         process = item.get("impactAnalysisProcess")
         if process is not None and (not isinstance(process, Mapping) or not _is_non_empty_string(process.get("uri"))):
@@ -153,6 +188,7 @@ def _validate_impact_analysis(value: object, path: str, errors: list[str]) -> No
 
         for key in ("impactedElement", "addedElement", "modifiedElement", "removedElement"):
             _validate_identifier_list(item.get(key), f"{item_path}.{key}", errors)
+            _validate_resolved_identifiers(item.get(key), f"{item_path}.{key}", errors, resolvable_ids)
 
         decisions = item.get("decisions")
         if not isinstance(decisions, list):
@@ -168,6 +204,9 @@ def _validate_impact_analysis(value: object, path: str, errors: list[str]) -> No
             if decision.get("decisionStatus") not in DECISION_STATUS_VALUES:
                 errors.append(f"{decision_path}.decisionStatus must be one of {sorted(DECISION_STATUS_VALUES)}")
             _validate_identifier_list(decision.get("appliesTo"), f"{decision_path}.appliesTo", errors, require_one=True)
+            _validate_resolved_identifiers(
+                decision.get("appliesTo"), f"{decision_path}.appliesTo", errors, resolvable_ids
+            )
             originated_by = decision.get("originatedBy")
             if originated_by is not None and (
                 not isinstance(originated_by, Mapping) or not _is_non_empty_string(originated_by.get("name"))
@@ -194,8 +233,20 @@ def _validate_impact_analysis(value: object, path: str, errors: list[str]) -> No
                         errors,
                         require_one=True,
                     )
+                    _validate_resolved_identifiers(
+                        verification_item.get("verifies"),
+                        f"{verification_path}.verifies",
+                        errors,
+                        resolvable_ids,
+                    )
                     _validate_identifier_list(
                         verification_item.get("evidence"), f"{verification_path}.evidence", errors
+                    )
+                    _validate_resolved_identifiers(
+                        verification_item.get("evidence"),
+                        f"{verification_path}.evidence",
+                        errors,
+                        resolvable_ids,
                     )
 
         bundle = item.get("bundle")
@@ -208,6 +259,38 @@ def _validate_impact_analysis(value: object, path: str, errors: list[str]) -> No
                 _validate_identifier_list(
                     bundle.get("rootElement"), f"{item_path}.bundle.rootElement", errors, require_one=True
                 )
+                _validate_resolved_identifiers(
+                    bundle.get("rootElement"), f"{item_path}.bundle.rootElement", errors, resolvable_ids
+                )
+
+
+def _assertion_element_ids(document: Mapping[str, Any], errors: list[str]) -> set[str]:
+    identifiers: list[str] = []
+    for key in ("requirements", "evidence"):
+        value = document.get(key)
+        if isinstance(value, list):
+            identifiers.extend(
+                str(item["id"]) for item in value if isinstance(item, Mapping) and _is_non_empty_string(item.get("id"))
+            )
+    impact_analysis = document.get("impactAnalysis")
+    if isinstance(impact_analysis, list):
+        for analysis in impact_analysis:
+            if not isinstance(analysis, Mapping):
+                continue
+            if _is_non_empty_string(analysis.get("id")):
+                identifiers.append(str(analysis["id"]))
+            for key in ("decisions", "requirementVerification"):
+                value = analysis.get(key)
+                if isinstance(value, list):
+                    identifiers.extend(
+                        str(item["id"])
+                        for item in value
+                        if isinstance(item, Mapping) and _is_non_empty_string(item.get("id"))
+                    )
+    duplicates = sorted({identifier for identifier in identifiers if identifiers.count(identifier) > 1})
+    for identifier in duplicates:
+        errors.append(f"assertion element id {identifier!r} is defined more than once")
+    return set(identifiers)
 
 
 def validate_assertion(document: Mapping[str, Any]) -> list[str]:
@@ -243,7 +326,13 @@ def validate_assertion(document: Mapping[str, Any]) -> list[str]:
         _validate_references(document["requirements"], "requirements", errors, require_one=False)
     _validate_references(document.get("evidence"), "evidence", errors, require_one=True)
     if "impactAnalysis" in document:
-        _validate_impact_analysis(document["impactAnalysis"], "impactAnalysis", errors)
+        _validate_impact_analysis(
+            document["impactAnalysis"],
+            "impactAnalysis",
+            errors,
+            classification=relevance.get("classification"),
+            resolvable_ids=_assertion_element_ids(document, errors),
+        )
 
     assertion = _require_mapping(document, "assertion", errors)
     if assertion.get("status") not in ASSERTION_STATUS_VALUES:
@@ -279,7 +368,9 @@ def validate_report(document: Mapping[str, Any]) -> list[str]:
     if safety.get("assertionStatus") not in ASSERTION_STATUS_VALUES:
         errors.append(f"safetyAssessment.assertionStatus must be one of {sorted(ASSERTION_STATUS_VALUES)}")
     if "impactAnalysis" in document:
-        _validate_impact_analysis(document["impactAnalysis"], "impactAnalysis", errors)
+        _validate_impact_analysis(
+            document["impactAnalysis"], "impactAnalysis", errors, classification=safety.get("classification")
+        )
 
     generator = _require_mapping(document, "generator", errors)
     for key in ("name", "version"):

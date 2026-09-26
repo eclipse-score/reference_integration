@@ -34,3 +34,8 @@ subject to upstream review.
 `trigger.type` remains a compact sidecar label because SPDX `AnalysisTrigger` intentionally has no trigger-type vocabulary.
 `decisions[].appliesTo` is the compact sidecar form of one or more Core `hasInput` relationships. The enrichment report copies the
 entire block as-is and never infers a status, impact level, decision, reviewer or verification outcome.
+
+The sidecar keeps both S-CORE's human-facing classification (`QM`, `ASIL-A` through `ASIL-D`, `not-assigned`) and SPDX's
+`SafetyIntegrityLevelType` spelling (`qm`, `asilA` through `asilD`, `noAssertion`) because they serve different serializations.
+They are not independent assertions: validation requires `QM` ↔ `qm`, `ASIL-A` ↔ `asilA`, `ASIL-B` ↔ `asilB`, `ASIL-C` ↔
+`asilC`, `ASIL-D` ↔ `asilD`, and `not-assigned` ↔ `noAssertion` whenever the SPDX-aligned field is present.

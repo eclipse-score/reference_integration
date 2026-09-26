@@ -29,7 +29,10 @@
       "properties": {
         "source": {"const": "assertion"},
         "safetyRelevance": {"enum": ["safety-related", "not-safety-related", "undetermined"]},
-        "classification": {"enum": ["QM", "ASIL-A", "ASIL-B", "ASIL-C", "ASIL-D", "not-assigned"]},
+        "classification": {
+          "description": "Human-facing S-CORE classification. When impactAnalysis.safetyIntegrityLevel is present, the validator requires its equivalent SPDX vocabulary value.",
+          "enum": ["QM", "ASIL-A", "ASIL-B", "ASIL-C", "ASIL-D", "not-assigned"]
+        },
         "assertionStatus": {"enum": ["draft", "under-review", "reviewed", "approved", "superseded", "withdrawn"]},
         "reviewer": {
           "anyOf": [
@@ -152,6 +155,7 @@
           ]
         },
         "safetyIntegrityLevel": {
+          "description": "SPDX SafetyIntegrityLevelType spelling of safetyAssessment.classification; both values must be equivalent.",
           "enum": [
             "qm",
             "asilA",

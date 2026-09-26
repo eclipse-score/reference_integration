@@ -200,6 +200,50 @@ def test_impact_analysis_rejects_values_outside_spdx_vocabularies(
     assert any(error.startswith(expected_error) for error in validate_assertion(invalid))
 
 
+@pytest.mark.parametrize(
+    "field_path",
+    [
+        ("impactedElement",),
+        ("addedElement",),
+        ("modifiedElement",),
+        ("removedElement",),
+        ("decisions", 0, "appliesTo"),
+        ("requirementVerification", 0, "verifies"),
+        ("requirementVerification", 0, "evidence"),
+        ("bundle", "rootElement"),
+    ],
+)
+def test_impact_analysis_rejects_unresolved_element_references(
+    synthetic_reviewed_assertion: dict,
+    field_path: tuple[str | int, ...],
+) -> None:
+    invalid = deepcopy(synthetic_reviewed_assertion)
+    target = invalid["impactAnalysis"][0]
+    for key in field_path:
+        target = target[key]
+    target.append("does-not-exist")
+
+    assert any("references 'does-not-exist', which does not resolve" in error for error in validate_assertion(invalid))
+
+
+def test_impact_analysis_rejects_sil_that_disagrees_with_classification(
+    synthetic_reviewed_assertion: dict,
+) -> None:
+    invalid = deepcopy(synthetic_reviewed_assertion)
+    invalid["safetyRelevance"]["classification"] = "ASIL-D"
+
+    assert (
+        "impactAnalysis[0].safetyIntegrityLevel must be 'asilD' when safety relevance classification is 'ASIL-D'"
+    ) in validate_assertion(invalid)
+
+
+def test_assertion_rejects_duplicate_element_ids(synthetic_reviewed_assertion: dict) -> None:
+    invalid = deepcopy(synthetic_reviewed_assertion)
+    invalid["evidence"][0]["id"] = "synthetic-req-001"
+
+    assert "assertion element id 'synthetic-req-001' is defined more than once" in validate_assertion(invalid)
+
+
 def test_matches_spdx_module_purl_while_preserving_component_scope(assertion: dict) -> None:
     sbom = {
         "spdxVersion": "SPDX-2.3",

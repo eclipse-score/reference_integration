@@ -64,6 +64,12 @@ When present, `impactAnalysis` is also copied verbatim for both matched and unma
 between component matching and an engineering decision: the tool can bind records, but it never supplies the trigger conclusion,
 impact level, decision authority, verification result or completion status.
 
+All identifiers used by impact scope, decisions, verification and publication roots must resolve within the assertion to a
+requirement, evidence item, impact analysis, decision or requirement verification. IDs share one namespace and duplicate IDs are
+invalid. `safetyRelevance.classification` retains the human-facing S-CORE spelling (`ASIL-B`), while
+`impactAnalysis.safetyIntegrityLevel` uses SPDX `SafetyIntegrityLevelType` spelling (`asilB`). The validator enforces their exact
+mapping; neither field can silently override the other.
+
 ## Deliberate limitations
 
 - The PoC does not modify `sbom-tool` or the generated SPDX/CycloneDX document.
