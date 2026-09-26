@@ -73,3 +73,7 @@ The report embeds SHA-256 digests of the assertion, SBOM and known-good inputs. 
 the report itself. `safety-assessment-draft.md` inventories available classification evidence without making or approving a
 safety decision. `evidence-metrics.json` records reproducible source, test, traceability and pinned-workflow measurements used by
 that draft. `requirements-traceability.md` expands the traceability measurement into one row per component requirement.
+
+The hashes are calculated from the repository's canonical LF bytes. `.gitattributes` forces LF for `known_good.json` and every
+file under `srac/`, so regeneration produces the same report on Linux and Windows regardless of the user's `core.autocrlf`
+setting.

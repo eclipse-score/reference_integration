@@ -233,6 +233,7 @@ def test_checked_in_persistency_pilot_matches_real_sbom(assertion: dict) -> None
 
     assert report == expected_report
     assert validate_report(report) == []
+    assert report["integrity"]["knownGoodSha256"] == _sha256(known_good_path)
     assert report["matchStatus"] == "matched"
     assert report["matchedComponents"] == [
         {
@@ -244,6 +245,20 @@ def test_checked_in_persistency_pilot_matches_real_sbom(assertion: dict) -> None
         }
     ]
     assert report["bindingEvidence"]["hash"] == assertion["subject"]["version"]
+
+
+def test_checked_in_pilot_integrity_matches_live_lf_files() -> None:
+    pilot_root = SRAC_ROOT / "pilot" / "persistency-kvs"
+    report_path = pilot_root / "output" / "persistency-kvs.srac-report.json"
+    checksum_path = pilot_root / "output" / "persistency-kvs.srac-report.sha256"
+    known_good_path = REPOSITORY_ROOT / "known_good.json"
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    provenance = json.loads((pilot_root / "provenance.json").read_text(encoding="utf-8"))
+
+    assert report["integrity"]["knownGoodSha256"] == _sha256(known_good_path)
+    assert provenance["integrity"]["knownGoodSha256"] == _sha256(known_good_path)
+    assert provenance["integrity"]["reportSha256"] == _sha256(report_path)
+    assert checksum_path.read_text(encoding="utf-8") == f"{_sha256(report_path)}  {report_path.name}\n"
 
 
 def test_invalid_report_digest_is_rejected(assertion: dict) -> None:
