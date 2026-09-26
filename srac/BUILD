@@ -32,7 +32,7 @@ py_binary(
 )
 
 score_py_pytest(
-    name = "tests",
+    name = "srac_tests",
     srcs = glob(["tests/**/*.py"]),
     data = [
         "examples/persistency-kvs.srac.json",

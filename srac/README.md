@@ -35,7 +35,7 @@ component owner and safety reviewer provide a decision.
 ## Run the tests
 
 ```bash
-bazel test //srac:tests
+bazel test //srac:srac_tests
 ```
 
 ## Match the example to an SBOM
