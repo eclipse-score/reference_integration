@@ -103,6 +103,18 @@ def test_synthetic_reviewed_example_shows_complete_safety_related_flow(
     report = build_enrichment_report(synthetic_reviewed_assertion, sbom, integrity=integrity)
 
     assert report["matchStatus"] == "matched"
+    assert report["impactAnalysis"] == synthetic_reviewed_assertion["impactAnalysis"]
+    analysis = report["impactAnalysis"][0]
+    assert analysis["impactAnalysisStatus"] == "complete"
+    assert analysis["impactLevel"] == "safetyImpact"
+    assert analysis["safetyIntegrityLevel"] == "asilB"
+    assert analysis["decisions"][0]["originatedBy"]["name"] == "Synthetic Example Safety Reviewer"
+    assert analysis["requirementVerification"][0]["verifies"] == ["synthetic-req-001"]
+    assert analysis["bundle"]["rootElement"] == [
+        "synthetic-sia-configuration-change-001",
+        "synthetic-decision-approve-001",
+        "synthetic-verification-001",
+    ]
     assert report["safetyAssessment"] == {
         "source": "assertion",
         "safetyRelevance": "safety-related",
@@ -114,6 +126,78 @@ def test_synthetic_reviewed_example_shows_complete_safety_related_flow(
         },
     }
     assert validate_report(report) == []
+
+
+def test_unmatched_report_still_carries_impact_analysis_without_reinterpreting_it(
+    synthetic_reviewed_assertion: dict,
+) -> None:
+    sbom = {
+        "bomFormat": "CycloneDX",
+        "specVersion": "1.6",
+        "components": [
+            {
+                "bom-ref": "different-component",
+                "name": "different-component",
+                "version": "2.0.0",
+                "purl": "pkg:generic/different-component@2.0.0",
+            }
+        ],
+    }
+    report = build_enrichment_report(
+        synthetic_reviewed_assertion,
+        sbom,
+        integrity={
+            "algorithm": "SHA-256",
+            "assertionSha256": "a" * 64,
+            "sbomSha256": "b" * 64,
+        },
+    )
+
+    assert report["matchStatus"] == "unmatched"
+    assert report["matchedComponents"] == []
+    assert report["impactAnalysis"] == synthetic_reviewed_assertion["impactAnalysis"]
+    assert validate_report(report) == []
+
+
+@pytest.mark.parametrize(
+    ("field_path", "invalid_value", "expected_error"),
+    [
+        (
+            ("impactAnalysisStatus",),
+            "pending",
+            "impactAnalysis[0].impactAnalysisStatus must be one of",
+        ),
+        (("impactLevel",), "critical", "impactAnalysis[0].impactLevel must be one of"),
+        (
+            ("safetyIntegrityLevel",),
+            "ASIL-B",
+            "impactAnalysis[0].safetyIntegrityLevel must be one of",
+        ),
+        (
+            ("decisions", 0, "decisionType"),
+            "accept",
+            "impactAnalysis[0].decisions[0].decisionType must be one of",
+        ),
+        (
+            ("decisions", 0, "decisionStatus"),
+            "approved",
+            "impactAnalysis[0].decisions[0].decisionStatus must be one of",
+        ),
+    ],
+)
+def test_impact_analysis_rejects_values_outside_spdx_vocabularies(
+    synthetic_reviewed_assertion: dict,
+    field_path: tuple[str | int, ...],
+    invalid_value: str,
+    expected_error: str,
+) -> None:
+    invalid = deepcopy(synthetic_reviewed_assertion)
+    target = invalid["impactAnalysis"][0]
+    for key in field_path[:-1]:
+        target = target[key]
+    target[field_path[-1]] = invalid_value
+
+    assert any(error.startswith(expected_error) for error in validate_assertion(invalid))
 
 
 def test_matches_spdx_module_purl_while_preserving_component_scope(assertion: dict) -> None:
@@ -290,6 +374,7 @@ def test_checked_in_persistency_pilot_matches_real_sbom(assertion: dict) -> None
         }
     ]
     assert report["bindingEvidence"]["hash"] == assertion["subject"]["version"]
+    assert "impactAnalysis" not in report
 
 
 def test_checked_in_pilot_integrity_matches_live_lf_files() -> None:
@@ -297,10 +382,14 @@ def test_checked_in_pilot_integrity_matches_live_lf_files() -> None:
     report_path = pilot_root / "output" / "persistency-kvs.srac-report.json"
     checksum_path = pilot_root / "output" / "persistency-kvs.srac-report.sha256"
     known_good_path = REPOSITORY_ROOT / "known_good.json"
+    assertion_path = SRAC_ROOT / "examples" / "persistency-kvs.srac.json"
+    sbom_path = pilot_root / "input" / "reference-integration.spdx.json"
     report = json.loads(report_path.read_text(encoding="utf-8"))
     provenance = json.loads((pilot_root / "provenance.json").read_text(encoding="utf-8"))
 
     assert report["integrity"]["knownGoodSha256"] == _sha256(known_good_path)
+    assert provenance["integrity"]["assertionSha256"] == _sha256(assertion_path)
+    assert provenance["sha256"] == _sha256(sbom_path)
     assert provenance["integrity"]["knownGoodSha256"] == _sha256(known_good_path)
     assert provenance["integrity"]["reportSha256"] == _sha256(report_path)
     assert checksum_path.read_text(encoding="utf-8") == f"{_sha256(report_path)}  {report_path.name}\n"
@@ -322,10 +411,15 @@ def test_invalid_report_digest_is_rejected(assertion: dict) -> None:
 
 def test_report_schema_is_checked_in() -> None:
     schema = json.loads((SRAC_ROOT / "schema" / "srac-report.schema.json").read_text(encoding="utf-8"))
+    assertion_schema = json.loads((SRAC_ROOT / "schema" / "srac.schema.json").read_text(encoding="utf-8"))
 
     assert schema["$schema"] == "https://json-schema.org/draft/2020-12/schema"
+    assert schema["properties"]["schemaVersion"] == {"const": "0.2-draft"}
+    assert "impactAnalysis" in schema["properties"]
     assert "safetyAssessment" in schema["required"]
     assert "integrity" in schema["required"]
+    assert assertion_schema["properties"]["schemaVersion"] == {"const": "0.2-draft"}
+    assert "impactAnalysis" in assertion_schema["properties"]
 
 
 def test_persistency_evidence_metrics_are_pinned_and_non_authoritative() -> None:

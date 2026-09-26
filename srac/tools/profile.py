@@ -20,11 +20,63 @@ from copy import deepcopy
 from typing import Any
 from urllib.parse import urlparse
 
-SCHEMA_VERSION = "0.1-draft"
-TOOL_VERSION = "0.1.0-draft"
+SCHEMA_VERSION = "0.2-draft"
+TOOL_VERSION = "0.2.0-draft"
 RELEVANCE_VALUES = {"safety-related", "not-safety-related", "undetermined"}
 CLASSIFICATION_VALUES = {"QM", "ASIL-A", "ASIL-B", "ASIL-C", "ASIL-D", "not-assigned"}
 ASSERTION_STATUS_VALUES = {"draft", "under-review", "reviewed", "approved", "superseded", "withdrawn"}
+IMPACT_ANALYSIS_STATUS_VALUES = {"new", "inProgress", "complete", "stopped", "duplicate", "other"}
+IMPACT_LEVEL_VALUES = {
+    "noCriticalImpact",
+    "safetyImpact",
+    "securityImpact",
+    "safetyAndSecurityImpact",
+    "qualityImpact",
+    "availabilityImpact",
+    "customerSatisfactionImpact",
+    "other",
+}
+DECISION_TYPE_VALUES = {
+    "approve",
+    "approveConditionally",
+    "reject",
+    "defer",
+    "delegate",
+    "requestChange",
+    "requestInformation",
+    "noAction",
+    "close",
+    "duplicate",
+    "other",
+}
+DECISION_STATUS_VALUES = {
+    "proposed",
+    "requested",
+    "inProgress",
+    "recorded",
+    "superseded",
+    "withdrawn",
+    "enteredInError",
+    "other",
+}
+SAFETY_INTEGRITY_LEVEL_VALUES = {
+    "qm",
+    "asilA",
+    "asilB",
+    "asilC",
+    "asilD",
+    "sil1",
+    "sil2",
+    "sil3",
+    "sil4",
+    "dalA",
+    "dalB",
+    "dalC",
+    "dalD",
+    "dalE",
+    "other",
+    "noAssertion",
+}
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 
 
@@ -53,6 +105,109 @@ def _validate_references(value: object, path: str, errors: list[str], *, require
         for key in ("id", "type", "uri"):
             if not _is_non_empty_string(item.get(key)):
                 errors.append(f"{path}[{index}].{key} must be a non-empty string")
+
+
+def _validate_identifier_list(value: object, path: str, errors: list[str], *, require_one: bool = False) -> None:
+    if not isinstance(value, list):
+        errors.append(f"{path} must be an array")
+        return
+    if require_one and not value:
+        errors.append(f"{path} must contain at least one item")
+    for index, item in enumerate(value):
+        if not _is_non_empty_string(item):
+            errors.append(f"{path}[{index}] must be a non-empty string")
+
+
+def _validate_impact_analysis(value: object, path: str, errors: list[str]) -> None:
+    if not isinstance(value, list):
+        errors.append(f"{path} must be an array")
+        return
+    for index, item in enumerate(value):
+        item_path = f"{path}[{index}]"
+        if not isinstance(item, Mapping):
+            errors.append(f"{item_path} must be an object")
+            continue
+        if not _is_non_empty_string(item.get("id")):
+            errors.append(f"{item_path}.id must be a non-empty string")
+
+        trigger = item.get("trigger")
+        if not isinstance(trigger, Mapping):
+            errors.append(f"{item_path}.trigger must be an object")
+        else:
+            for key in ("type", "uri"):
+                if not _is_non_empty_string(trigger.get(key)):
+                    errors.append(f"{item_path}.trigger.{key} must be a non-empty string")
+
+        if item.get("impactAnalysisStatus") not in IMPACT_ANALYSIS_STATUS_VALUES:
+            errors.append(f"{item_path}.impactAnalysisStatus must be one of {sorted(IMPACT_ANALYSIS_STATUS_VALUES)}")
+        impact_level = item.get("impactLevel")
+        if impact_level is not None and impact_level not in IMPACT_LEVEL_VALUES:
+            errors.append(f"{item_path}.impactLevel must be one of {sorted(IMPACT_LEVEL_VALUES)}")
+        safety_integrity_level = item.get("safetyIntegrityLevel")
+        if safety_integrity_level is not None and safety_integrity_level not in SAFETY_INTEGRITY_LEVEL_VALUES:
+            errors.append(f"{item_path}.safetyIntegrityLevel must be one of {sorted(SAFETY_INTEGRITY_LEVEL_VALUES)}")
+
+        process = item.get("impactAnalysisProcess")
+        if process is not None and (not isinstance(process, Mapping) or not _is_non_empty_string(process.get("uri"))):
+            errors.append(f"{item_path}.impactAnalysisProcess.uri must be a non-empty string")
+
+        for key in ("impactedElement", "addedElement", "modifiedElement", "removedElement"):
+            _validate_identifier_list(item.get(key), f"{item_path}.{key}", errors)
+
+        decisions = item.get("decisions")
+        if not isinstance(decisions, list):
+            errors.append(f"{item_path}.decisions must be an array")
+            continue
+        for decision_index, decision in enumerate(decisions):
+            decision_path = f"{item_path}.decisions[{decision_index}]"
+            if not isinstance(decision, Mapping):
+                errors.append(f"{decision_path} must be an object")
+                continue
+            if decision.get("decisionType") not in DECISION_TYPE_VALUES:
+                errors.append(f"{decision_path}.decisionType must be one of {sorted(DECISION_TYPE_VALUES)}")
+            if decision.get("decisionStatus") not in DECISION_STATUS_VALUES:
+                errors.append(f"{decision_path}.decisionStatus must be one of {sorted(DECISION_STATUS_VALUES)}")
+            _validate_identifier_list(decision.get("appliesTo"), f"{decision_path}.appliesTo", errors, require_one=True)
+            originated_by = decision.get("originatedBy")
+            if originated_by is not None and (
+                not isinstance(originated_by, Mapping) or not _is_non_empty_string(originated_by.get("name"))
+            ):
+                errors.append(f"{decision_path}.originatedBy.name must be a non-empty string or null")
+            if not _is_non_empty_string(decision.get("rationale")):
+                errors.append(f"{decision_path}.rationale must be a non-empty string")
+
+        verification = item.get("requirementVerification")
+        if verification is not None:
+            if not isinstance(verification, list):
+                errors.append(f"{item_path}.requirementVerification must be an array")
+            else:
+                for verification_index, verification_item in enumerate(verification):
+                    verification_path = f"{item_path}.requirementVerification[{verification_index}]"
+                    if not isinstance(verification_item, Mapping):
+                        errors.append(f"{verification_path} must be an object")
+                        continue
+                    if not _is_non_empty_string(verification_item.get("id")):
+                        errors.append(f"{verification_path}.id must be a non-empty string")
+                    _validate_identifier_list(
+                        verification_item.get("verifies"),
+                        f"{verification_path}.verifies",
+                        errors,
+                        require_one=True,
+                    )
+                    _validate_identifier_list(
+                        verification_item.get("evidence"), f"{verification_path}.evidence", errors
+                    )
+
+        bundle = item.get("bundle")
+        if bundle is not None:
+            if not isinstance(bundle, Mapping):
+                errors.append(f"{item_path}.bundle must be an object")
+            else:
+                if not _is_non_empty_string(bundle.get("id")):
+                    errors.append(f"{item_path}.bundle.id must be a non-empty string")
+                _validate_identifier_list(
+                    bundle.get("rootElement"), f"{item_path}.bundle.rootElement", errors, require_one=True
+                )
 
 
 def validate_assertion(document: Mapping[str, Any]) -> list[str]:
@@ -87,6 +242,8 @@ def validate_assertion(document: Mapping[str, Any]) -> list[str]:
     if "requirements" in document:
         _validate_references(document["requirements"], "requirements", errors, require_one=False)
     _validate_references(document.get("evidence"), "evidence", errors, require_one=True)
+    if "impactAnalysis" in document:
+        _validate_impact_analysis(document["impactAnalysis"], "impactAnalysis", errors)
 
     assertion = _require_mapping(document, "assertion", errors)
     if assertion.get("status") not in ASSERTION_STATUS_VALUES:
@@ -121,6 +278,8 @@ def validate_report(document: Mapping[str, Any]) -> list[str]:
         errors.append(f"safetyAssessment.classification must be one of {sorted(CLASSIFICATION_VALUES)}")
     if safety.get("assertionStatus") not in ASSERTION_STATUS_VALUES:
         errors.append(f"safetyAssessment.assertionStatus must be one of {sorted(ASSERTION_STATUS_VALUES)}")
+    if "impactAnalysis" in document:
+        _validate_impact_analysis(document["impactAnalysis"], "impactAnalysis", errors)
 
     generator = _require_mapping(document, "generator", errors)
     for key in ("name", "version"):
@@ -350,4 +509,6 @@ def build_enrichment_report(
             "strategy": "score-known-good",
             **binding,
         }
+    if "impactAnalysis" in assertion:
+        report["impactAnalysis"] = deepcopy(assertion["impactAnalysis"])
     return report

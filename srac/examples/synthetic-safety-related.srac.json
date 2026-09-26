@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "0.1-draft",
+  "schemaVersion": "0.2-draft",
   "assertionId": "srac-synthetic-illustrative-safety-related-001",
   "subject": {
     "name": "synthetic-brake-monitor",
@@ -30,6 +30,70 @@
       "id": "synthetic-test-report-001",
       "type": "verification-report",
       "uri": "https://example.com/srac/synthetic-brake-monitor/evidence/synthetic-test-report-001"
+    }
+  ],
+  "impactAnalysis": [
+    {
+      "id": "synthetic-sia-configuration-change-001",
+      "trigger": {
+        "id": "synthetic-trigger-configuration-change-001",
+        "type": "configuration-change",
+        "uri": "https://example.com/srac/synthetic-brake-monitor/changes/configuration-change-001"
+      },
+      "impactAnalysisStatus": "complete",
+      "impactLevel": "safetyImpact",
+      "safetyIntegrityLevel": "asilB",
+      "impactAnalysisProcess": {
+        "uri": "https://example.com/srac/processes/synthetic-change-impact-analysis"
+      },
+      "rationale": "Synthetic analysis concluded that the configuration change affects the illustrative ASIL-B requirement and requires its verification to be repeated before publication.",
+      "impactedElement": [
+        "synthetic-req-001",
+        "synthetic-test-report-001"
+      ],
+      "addedElement": [
+        "synthetic-verification-001"
+      ],
+      "modifiedElement": [
+        "synthetic-req-001"
+      ],
+      "removedElement": [],
+      "decisions": [
+        {
+          "id": "synthetic-decision-approve-001",
+          "decisionType": "approve",
+          "decisionStatus": "recorded",
+          "appliesTo": [
+            "synthetic-req-001",
+            "synthetic-verification-001"
+          ],
+          "originatedBy": {
+            "name": "Synthetic Example Safety Reviewer",
+            "uri": "https://example.com/srac/people/synthetic-reviewer"
+          },
+          "rationale": "Synthetic reviewer accepted the changed requirement after the illustrative verification completed successfully."
+        }
+      ],
+      "requirementVerification": [
+        {
+          "id": "synthetic-verification-001",
+          "verifies": [
+            "synthetic-req-001"
+          ],
+          "evidence": [
+            "synthetic-test-report-001"
+          ],
+          "rationale": "Synthetic verification demonstrates the RequirementVerification and verifiedBy mapping; it is not real test evidence."
+        }
+      ],
+      "bundle": {
+        "id": "synthetic-srac-publication-bundle-001",
+        "rootElement": [
+          "synthetic-sia-configuration-change-001",
+          "synthetic-decision-approve-001",
+          "synthetic-verification-001"
+        ]
+      }
     }
   ],
   "assertion": {

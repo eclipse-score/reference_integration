@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://eclipse.dev/score/schemas/srac/0.1/srac-report.schema.json",
+  "$id": "https://eclipse.dev/score/schemas/srac/0.2/srac-report.schema.json",
   "$comment": "SPDX-License-Identifier: Apache-2.0",
   "title": "Draft S-CORE SRAC enrichment report",
   "description": "Experimental report joining an SRAC assertion to an SBOM component. Safety fields are copied from the assertion and are not independently assessed by the generator.",
@@ -18,7 +18,7 @@
     "integrity"
   ],
   "properties": {
-    "schemaVersion": {"const": "0.1-draft"},
+    "schemaVersion": {"const": "0.2-draft"},
     "sourceFormat": {"enum": ["SPDX", "CycloneDX"]},
     "assertionId": {"type": "string", "minLength": 1},
     "subject": {"type": "object"},
@@ -45,6 +45,10 @@
           ]
         }
       }
+    },
+    "impactAnalysis": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/impactAnalysis"}
     },
     "matchedComponents": {
       "type": "array",
@@ -89,6 +93,174 @@
         "assertionSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "sbomSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "knownGoodSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  },
+  "$defs": {
+    "party": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "uri": {"type": "string", "format": "uri"}
+      }
+    },
+    "elementIdentifiers": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "impactAnalysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "trigger",
+        "impactAnalysisStatus",
+        "impactedElement",
+        "addedElement",
+        "modifiedElement",
+        "removedElement",
+        "decisions"
+      ],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "trigger": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "uri"],
+          "properties": {
+            "id": {"type": "string", "minLength": 1},
+            "type": {"type": "string", "minLength": 1},
+            "uri": {"type": "string", "format": "uri"}
+          }
+        },
+        "impactAnalysisStatus": {
+          "enum": ["new", "inProgress", "complete", "stopped", "duplicate", "other"]
+        },
+        "impactLevel": {
+          "enum": [
+            "noCriticalImpact",
+            "safetyImpact",
+            "securityImpact",
+            "safetyAndSecurityImpact",
+            "qualityImpact",
+            "availabilityImpact",
+            "customerSatisfactionImpact",
+            "other"
+          ]
+        },
+        "safetyIntegrityLevel": {
+          "enum": [
+            "qm",
+            "asilA",
+            "asilB",
+            "asilC",
+            "asilD",
+            "sil1",
+            "sil2",
+            "sil3",
+            "sil4",
+            "dalA",
+            "dalB",
+            "dalC",
+            "dalD",
+            "dalE",
+            "other",
+            "noAssertion"
+          ]
+        },
+        "impactAnalysisProcess": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["uri"],
+          "properties": {"uri": {"type": "string", "format": "uri"}}
+        },
+        "rationale": {"type": "string", "minLength": 1},
+        "impactedElement": {"$ref": "#/$defs/elementIdentifiers"},
+        "addedElement": {"$ref": "#/$defs/elementIdentifiers"},
+        "modifiedElement": {"$ref": "#/$defs/elementIdentifiers"},
+        "removedElement": {"$ref": "#/$defs/elementIdentifiers"},
+        "decisions": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/decision"}
+        },
+        "requirementVerification": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/requirementVerification"}
+        },
+        "bundle": {"$ref": "#/$defs/bundle"}
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decisionType", "decisionStatus", "appliesTo", "originatedBy", "rationale"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "decisionType": {
+          "enum": [
+            "approve",
+            "approveConditionally",
+            "reject",
+            "defer",
+            "delegate",
+            "requestChange",
+            "requestInformation",
+            "noAction",
+            "close",
+            "duplicate",
+            "other"
+          ]
+        },
+        "decisionStatus": {
+          "enum": ["proposed", "requested", "inProgress", "recorded", "superseded", "withdrawn", "enteredInError", "other"]
+        },
+        "appliesTo": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "originatedBy": {
+          "anyOf": [{"$ref": "#/$defs/party"}, {"type": "null"}]
+        },
+        "rationale": {"type": "string", "minLength": 1}
+      }
+    },
+    "requirementVerification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "verifies", "evidence"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "verifies": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "evidence": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "rationale": {"type": "string", "minLength": 1}
+      }
+    },
+    "bundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "rootElement"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "rootElement": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        }
       }
     }
   }

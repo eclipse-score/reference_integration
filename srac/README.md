@@ -4,6 +4,10 @@ This directory contains an experimental Safety Relevance Assertion Capability (S
 reference integration. It is not an approved S-CORE specification, does not assign a safety classification, and does not replace
 the safety case or existing lifecycle work products.
 
+The `0.2-draft` profile also carries an optional system-impact workflow. It records the trigger, analysis status and scope,
+impact outcome, per-element decisions, requirement verification and publication bundle. The enrichment tool copies that workflow
+without calculating, approving or changing any decision.
+
 ## Goal
 
 The pilot tests whether a small, versioned assertion can be matched deterministically to a component in an SPDX or CycloneDX
@@ -19,7 +23,8 @@ component owner and safety reviewer provide a decision.
 - `schema/srac-report.schema.json`: draft JSON Schema for the generated enrichment report.
 - `examples/persistency-kvs.srac.json`: non-authoritative KVS example.
 - `examples/synthetic-safety-related.srac.json`: wholly synthetic, illustrative example showing a populated
-  `safety-related` / `ASIL-B` / `reviewed` assertion flow. It is not a claim about any real component or product.
+  `safety-related` / `ASIL-B` / `reviewed` assertion and all seven impact-analysis workflow steps. It is not a claim about any
+  real component or product.
 - `tools/profile.py`: self-contained core validation and PURL/version matching.
 - `tools/enrich_sbom.py`: CLI that emits a separate enrichment report without changing the source SBOM.
 - `mappings/`: proposed SPDX 2.3 and CycloneDX 1.6 carrier mappings.
@@ -55,6 +60,10 @@ The report copies the safety relevance, classification, assertion status and rev
 approve or strengthen those values. SHA-256 digests bind the report to the exact assertion, SBOM and known-good inputs; a separate
 checksum file protects the serialized report itself.
 
+When present, `impactAnalysis` is also copied verbatim for both matched and unmatched reports. This preserves the distinction
+between component matching and an engineering decision: the tool can bind records, but it never supplies the trigger conclusion,
+impact level, decision authority, verification result or completion status.
+
 ## Deliberate limitations
 
 - The PoC does not modify `sbom-tool` or the generated SPDX/CycloneDX document.
@@ -64,6 +73,8 @@ checksum file protects the serialized report itself.
 - `tools/profile.py` enforces the schema's core constraints without adding a runtime dependency. A production integration should
   use a complete JSON Schema Draft 2020-12 validator.
 - No safety relevance or classification becomes authoritative without review through the existing S-CORE process.
+- The KVS example intentionally has no `impactAnalysis` entry yet. Its current known-good pin is a baseline, not evidence that a
+  pin bump occurred. A real configuration-change trigger should be added when such a bump is proposed and linked to its actual PR.
 
 ## Proposed follow-up
 
