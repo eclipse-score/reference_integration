@@ -35,6 +35,16 @@ jobs:
               git diff
               exit 1
           fi
+      # Only needed by the disabled-module check below, which resolves the real module
+      # graph. Installing bazelisk is cheap; nothing invokes Bazel unless a module is
+      # actually disabled, so an ordinary pull request pays for the setup step alone.
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.18.0
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}
+          repository-cache: true
+          cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
       # Dropping a module's bazel_dep does not remove it from the build: any module that
       # declares its own dependency on it makes Bazel fall back to the registry, silently
       # swapping the pinned commit for a released version. This resolves the real graph and
