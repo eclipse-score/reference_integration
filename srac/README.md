@@ -28,6 +28,7 @@ component owner and safety reviewer provide a decision.
   real component or product.
 - `tools/profile.py`: self-contained core validation and PURL/version matching.
 - `tools/enrich_sbom.py`: CLI that emits a separate enrichment report without changing the source SBOM.
+- `TESTING.md`: consolidated independent test procedure, expected results and reporting template.
 - `mappings/`: proposed SPDX 2.3 and CycloneDX 1.6 carrier mappings.
 - `pilot/persistency-kvs/`: real official SBOM input, provenance, reproducible commands, enrichment output and an
   unapproved component-classification evidence draft.
@@ -36,6 +37,9 @@ component owner and safety reviewer provide a decision.
 - `tests/`: validation and matching tests.
 
 ## Run the tests
+
+See [`TESTING.md`](TESTING.md) for the complete independent test procedure, manual positive and negative scenarios, integrity
+checks and the test-report template.
 
 ```bash
 bazel test //srac:srac_tests
