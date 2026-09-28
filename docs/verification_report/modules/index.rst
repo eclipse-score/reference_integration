@@ -20,16 +20,19 @@ respective module's own needs data using the module verification report
 template introduced by docs-as-code.
 
 * :doc:`Baselibs </modules/score_baselibs/verification_report/module_verification_report>`
-* :doc:`Persistency <persistency/persistency_verification_report>`
+* :doc:`Lifecycle </modules/score_lifecycle/verification_report/index>`
 * :doc:`Logging </modules/score_logging/verification_report/module_verification_report>`
+* :doc:`Persistency <persistency/persistency_verification_report>`
 
-Logging maintains its templated report in its own repository, so it is linked
-here directly from the mounted module documentation instead of being redefined
-in this repository.
+Baselibs, Lifecycle and Logging maintain their templated report in their own
+repository, so they are linked here directly from the mounted module
+documentation instead of being redefined in this repository.
 
 .. toctree::
    :titlesonly:
    :hidden:
 
    Baselibs </modules/score_baselibs/verification_report/module_verification_report>
+   Lifecycle </modules/score_lifecycle/verification_report/index>
+   Logging </modules/score_logging/verification_report/module_verification_report>
    Persistency <persistency/persistency_verification_report>
