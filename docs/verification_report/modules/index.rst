@@ -19,7 +19,7 @@ This page lists the per-module verification reports, each generated from the
 respective module's own needs data using the module verification report
 template introduced by docs-as-code.
 
-* :doc:`Baselibs <baselibs/baselibs_verification_report>`
+* :doc:`Baselibs </modules/score_baselibs/verification_report/module_verification_report>`
 * :doc:`Persistency <persistency/persistency_verification_report>`
 * :doc:`Logging </modules/score_logging/verification_report/module_verification_report>`
 
@@ -31,5 +31,5 @@ in this repository.
    :titlesonly:
    :hidden:
 
-   Baselibs <baselibs/baselibs_verification_report>
+   Baselibs </modules/score_baselibs/verification_report/module_verification_report>
    Persistency <persistency/persistency_verification_report>

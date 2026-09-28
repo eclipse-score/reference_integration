@@ -6,7 +6,6 @@
                 "bazel_patches": [
                     "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
                     "//patches/baselibs:002-restore-qnx8-poll-workaround.patch",
-                    "//patches/baselibs:005-rename-manual-verification-report-id.patch",
                     "//patches/baselibs:006-include-cpp-style-guide-in-toctree.patch"
                 ],
                 "metadata": {
@@ -26,7 +25,7 @@
                         "cpp"
                     ]
                 },
-                "hash": "8f58bd34fb5218ddd909f87cadc3d7f17ca38ef7"
+                "hash": "9216215f3a8468f3487884b472e1f325ef36f92b"
             },
             "score_communication": {
                 "repo": "https://github.com/eclipse-score/communication.git",
@@ -35,7 +34,8 @@
                 "bazel_patches": [
                     "//patches/communication:001-expose-comm-examples.patch",
                     "//patches/communication:003-module-deps-visibility.patch",
-                    "//patches/communication:004-rules-build-error-not-dev-dependency.patch"
+                    "//patches/communication:004-rules-build-error-not-dev-dependency.patch",
+                    "//patches/communication:005-migrate-baselibs-rust-targets.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/mw/com/impl/...",
@@ -57,12 +57,7 @@
                         "rust"
                     ],
                     "rust_coverage_config": "ferrocene-coverage"
-                },
-                "bazel_patches": [
-                    "//patches/communication:001-expose-comm-examples.patch",
-                    "//patches/communication:003-module-deps-visibility.patch",
-                    "//patches/communication:004-rules-build-error-not-dev-dependency.patch"
-                ]
+                }
             },
             "score_persistency": {
                 "repo": "https://github.com/eclipse-score/persistency.git",
@@ -72,7 +67,8 @@
                     "//patches/persistency:003-pip-not-dev-dependency.patch",
                     "//patches/persistency:004-imagefs-not-dev-dependency.patch",
                     "//patches/persistency:005-googletest-not-dev-dependency.patch",
-                    "//patches/persistency:006-add-module-index-title.patch"
+                    "//patches/persistency:006-add-module-index-title.patch",
+                    "//patches/persistency:007-migrate-baselibs-rust-targets.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/kvs/...",
@@ -81,7 +77,6 @@
                         "@score_baselibs//score/json:base_library=nlohmann",
                         "@score_logging//score/mw/log/flags:KRemote_Logging=False"
                     ],
-                    "code_root_path": "//score/kvs/...",
                     "exclude_test_targets": [
                         "//score/kvs/tests:bm_kvs_cpp",
                         "//score/kvs/tests/integration_test_scenarios/...",
@@ -105,6 +100,9 @@
             },
             "score_lifecycle": {
                 "repo": "https://github.com/eclipse-score/lifecycle.git",
+                "bazel_patches": [
+                    "//patches/lifecycle:001-migrate-baselibs-rust-targets.patch"
+                ],
                 "metadata": {
                     "code_root_path": "//score/...",
                     "extra_test_config": [],
@@ -116,7 +114,9 @@
             },
             "score_logging": {
                 "repo": "https://github.com/eclipse-score/logging.git",
-                "bazel_patches": [],
+                "bazel_patches": [
+                    "//patches/logging:001-migrate-baselibs-targets.patch"
+                ],
                 "metadata": {
                     "code_root_path": "//score/mw/log/...",
                     "extra_test_config": [
@@ -152,7 +152,8 @@
                 "docs": false,
                 "hash": "e0489b190ed6d2fa183b9a8063e2dba4f6378505",
                 "bazel_patches": [
-                    "//patches/config_management:001-adapt-proxy-api-and-remove-internal-targets.patch"
+                    "//patches/config_management:001-adapt-proxy-api-and-remove-internal-targets.patch",
+                    "//patches/config_management:002-migrate-baselibs-targets.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/config_management/...",
@@ -171,10 +172,7 @@
                         "cpp"
                     ],
                     "rust_coverage_config": "ferrocene-coverage"
-                },
-                "bazel_patches": [
-                    "//patches/config_management:001-adapt-proxy-api-and-remove-internal-targets.patch"
-                ]
+                }
             }
         },
         "tooling": {
