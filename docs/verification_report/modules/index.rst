@@ -15,18 +15,12 @@
 Module Verification Reports
 ============================
 
-This page lists the per-module verification reports, each generated from the
-respective module's own needs data using the module verification report
-template introduced by docs-as-code.
+This page lists the per-module verification reports.
 
 * :doc:`Baselibs </modules/score_baselibs/verification_report/module_verification_report>`
 * :doc:`Lifecycle </modules/score_lifecycle/verification_report/index>`
 * :doc:`Logging </modules/score_logging/verification_report/module_verification_report>`
 * :doc:`Persistency <persistency/persistency_verification_report>`
-
-Baselibs, Lifecycle and Logging maintain their templated report in their own
-repository, so they are linked here directly from the mounted module
-documentation instead of being redefined in this repository.
 
 .. toctree::
    :titlesonly:
