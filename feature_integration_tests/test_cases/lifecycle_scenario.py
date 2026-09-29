@@ -11,14 +11,13 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 """
-Helpers and base scenario classes for lifecycle feature integration tests.
+Base classes for lifecycle FITs.
 
-``LifecycleScenario`` is a ``FitScenario`` subclass that supplies the shared
-``temp_dir`` fixture so individual test classes do not have to duplicate it.
+``LifecycleScenario``: ``FitScenario`` base for the scenario-binary tests
+(test_conditional_launching_scenario.py); adds the class-scoped ``temp_dir`` fixture.
 
-``RetryDaemonScenario`` provides the equivalent class-scoped-fixture convention
-for the flaky-retry daemon tests, which don't fit ``FitScenario`` (no scenario
-binary, `command`, or `version` parametrization involved).
+``RetryDaemonScenario``: base for the flaky-retry daemon tests (test_retry_exhaustion.py),
+which run no scenario binary; adds the class-scoped ``retry_daemon`` fixture.
 """
 
 from collections.abc import Generator
@@ -30,11 +29,7 @@ from fit_scenario import FitScenario, temp_dir_common
 
 
 class LifecycleScenario(FitScenario):
-    """
-    Base class for lifecycle feature integration tests.
-
-    Provides the ``temp_dir`` fixture shared by all lifecycle test classes.
-    """
+    """Base for lifecycle scenario-binary test classes; provides ``temp_dir``."""
 
     @pytest.fixture(scope="class")
     def temp_dir(
@@ -43,7 +38,7 @@ class LifecycleScenario(FitScenario):
         version: str,
     ) -> Generator[Path, None, None]:
         """
-        Provide a temporary working directory for the lifecycle tests.
+        Per-class, per-version temporary directory for the scenario run.
 
         Parameters
         ----------
@@ -56,18 +51,17 @@ class LifecycleScenario(FitScenario):
 
 
 class RetryDaemonScenario:
-    """
-    Base class for flaky-retry launch_manager daemon lifecycle tests.
+    """Base for flaky-retry daemon test classes.
 
-    Subclasses set ``crashes_before_success``; the
-    ``retry_daemon`` fixture starts one launch_manager instance per test class
-    against `flaky_startup_app` and tears it down afterwards.
+    Subclasses set ``crashes_before_success``; ``retry_daemon`` starts one launch_manager per
+    class via ``daemon_helpers.start_flaky_retry_daemon`` and tears it down afterwards.
     """
 
     crashes_before_success: int
 
     @pytest.fixture(scope="class")
     def retry_daemon(self, tmp_path_factory: pytest.TempPathFactory) -> Generator[dict[str, Any], None, None]:
+        # Lazy import: the scenario-lifecycle targets import this module without shipping daemon_helpers.py.
         from daemon_helpers import start_flaky_retry_daemon, stop_flaky_retry_daemon
 
         daemon_info = start_flaky_retry_daemon(tmp_path_factory, self.crashes_before_success)

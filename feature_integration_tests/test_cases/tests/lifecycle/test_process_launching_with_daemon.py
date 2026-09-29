@@ -11,28 +11,20 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 """
-Feature integration tests for lifecycle with running Launch Manager daemon.
+Lifecycle FITs against a real launch_manager supervising rust_supervised_app and cpp_supervised_app.
 
-These tests validate actual supervision and lifecycle management behavior
-by running test applications under a real Launch Manager daemon instance.
+`version` selects which of the two supervised apps a test inspects; both always run under the
+same daemon. Run via Bazel (the helpers resolve binaries from the target's FIT_*_PATH env vars):
 
-To run these tests:
-
-    # Run both Rust and C++ variants
-    pytest feature_integration_tests/test_cases/tests/lifecycle/test_process_launching_with_daemon.py -v
-
-    # Run only Rust variant
-    pytest feature_integration_tests/test_cases/tests/lifecycle/test_process_launching_with_daemon.py -v -k rust
-
-    # Run only C++ variant
-    pytest feature_integration_tests/test_cases/tests/lifecycle/test_process_launching_with_daemon.py -v -k cpp
+    bazel test //feature_integration_tests/test_cases:fit_lifecycle_daemon
+    bazel test //feature_integration_tests/test_cases:fit_lifecycle_daemon --test_arg=-k --test_arg=rust
 """
 
 import json
+import os
 import re
 import subprocess
 import time
-import os
 from pathlib import Path
 from typing import Any
 
@@ -54,25 +46,19 @@ pytestmark = [
 
 
 class TestProcessLaunchingWithDaemon:
-    """
-    Verify lifecycle management with running Launch Manager daemon.
-
-    These tests demonstrate end-to-end integration including:
-    - Process launching under supervision
-    - Execution state reporting to the daemon
-    - Process monitoring and health checks
-    - Recovery actions on failure
-    """
+    """Launch-parameter checks (args, env, uid/gid, scheduling, non-root) against one daemon per
+    `version`, provided by the class-scoped `launch_manager_daemon` fixture. Tests here must not
+    start their own daemon (fixed shm names; see daemon_helpers._live_daemons)."""
 
     @staticmethod
     def _proc_cmdline(pid: str) -> list[str]:
-        """Read process cmdline from /proc and split NUL-separated arguments."""
+        """Return `/proc/<pid>/cmdline` as a list of arguments."""
         raw = Path(f"/proc/{pid}/cmdline").read_bytes()
         return [arg.decode("utf-8") for arg in raw.split(b"\0") if arg]
 
     @staticmethod
     def _proc_environ(pid: str) -> dict[str, str]:
-        """Read process environment from /proc as a key/value mapping."""
+        """Return `/proc/<pid>/environ` as a dict (via the privileged `cat` when staged)."""
         raw = read_proc_file(pid, "environ")
         env: dict[str, str] = {}
         for item in raw.split(b"\0"):
@@ -86,7 +72,7 @@ class TestProcessLaunchingWithDaemon:
 
     @staticmethod
     def _proc_status_ids(pid: str) -> tuple[int, int] | None:
-        """Read effective uid/gid from /proc status for a process."""
+        """Return the effective `(uid, gid)` from `/proc/<pid>/status`, or None if unreadable."""
         try:
             lines = Path(f"/proc/{pid}/status").read_text(encoding="utf-8").splitlines()
         except OSError:
@@ -105,7 +91,7 @@ class TestProcessLaunchingWithDaemon:
 
     @staticmethod
     def _proc_sched_policy_and_priority(pid: str) -> tuple[str, int] | None:
-        """Read scheduler policy and RT priority from chrt output for a process."""
+        """Return `(policy, priority)` parsed from `chrt -p <pid>`, or None on failure."""
         result = subprocess.run(["chrt", "-p", pid], capture_output=True, text=True, check=False)
         if result.returncode != 0:
             return None
@@ -127,8 +113,7 @@ class TestProcessLaunchingWithDaemon:
             return None
         return policy, priority
 
-    # Dependency-gating coverage (rust-on-cpp startup order) lives in
-    # test_conditional_launching.py; not duplicated here.
+    # Dependency gating (rust waits for cpp) is covered in test_conditional_launching.py.
 
     @add_test_properties(
         partially_verifies=["feat_req__lifecycle__launch_support"],
@@ -140,7 +125,8 @@ class TestProcessLaunchingWithDaemon:
         launch_manager_daemon: dict[str, Any],
         version: str,
     ) -> None:
-        """Verify startup run target includes multiple processes and both are launched."""
+        """Both processes in the Startup run target's `depends_on` are running (pgrep) and the
+        daemon is still up. `version` is unused: the check covers both apps."""
         config_path = Path(__file__).resolve().parents[3] / "configs" / "lifecycle_daemon_config.json"
         config = json.loads(config_path.read_text(encoding="utf-8"))
         startup_deps = config["run_targets"]["Startup"]["depends_on"]
@@ -171,11 +157,8 @@ class TestProcessLaunchingWithDaemon:
         launch_manager_daemon: dict[str, Any],
         version: str,
     ) -> None:
-        """Verify launched process cmdline includes every configured lifecycle argument.
-
-        Expected args are read from the config itself, not hardcoded, so the test
-        tracks config drift.
-        """
+        """Every configured `process_arguments` entry is present in the live app's cmdline.
+        Expected values come from the config, so the test tracks config changes."""
         daemon_info = launch_manager_daemon
         app_name = "rust_supervised_app" if version == "rust" else "cpp_supervised_app"
         app_path = str(daemon_info["apps"][version])
@@ -208,11 +191,8 @@ class TestProcessLaunchingWithDaemon:
         launch_manager_daemon: dict[str, Any],
         version: str,
     ) -> None:
-        """Verify launched process environment matches every configured environment variable.
-
-        Expected variables are read from the config itself, not hardcoded, so the
-        test tracks config drift.
-        """
+        """Every configured `environmental_variables` entry has the configured value in the live
+        app's /proc environ. Expected values come from the config."""
         daemon_info = launch_manager_daemon
         app_name = "rust_supervised_app" if version == "rust" else "cpp_supervised_app"
         app_path = str(daemon_info["apps"][version])
@@ -234,38 +214,19 @@ class TestProcessLaunchingWithDaemon:
                 f"{key} mismatch for {app_name}: expected {expected_value!r}, got {proc_env.get(key)!r}"
             )
 
-    def test_config_defines_uid_gid_scheduling_and_priority(self, version: str) -> None:
-        """Sanity-check the lifecycle config's shape for launch user/group and scheduling defaults.
-
-        No requirement tag here: this only confirms the config file is well-formed, not
-        that launch_manager applies it - that's covered by
-        test_launched_process_uid_gid_matches_config_when_applied and
-        test_launched_process_scheduling_matches_config_when_applied below, which inspect
-        the real launched process. `version` is unused but required by the class-scope
-        parametrize on this class.
-        """
-        config_path = Path(__file__).resolve().parents[3] / "configs" / "lifecycle_daemon_config.json"
-        config = json.loads(config_path.read_text(encoding="utf-8"))
-
-        sandbox = config["defaults"]["deployment_config"]["sandbox"]
-        assert isinstance(sandbox.get("uid"), int), "Expected integer uid in sandbox defaults"
-        assert isinstance(sandbox.get("gid"), int), "Expected integer gid in sandbox defaults"
-        assert isinstance(sandbox.get("scheduling_priority"), int), "Expected integer scheduling priority"
-        assert isinstance(sandbox.get("scheduling_policy"), str), "Expected scheduling policy string"
-
-    # Not decorated with @add_test_properties: this test is unconditionally skipped in CI/CD
-    # (see below), so it never actually exercises feat_req__lifecycle__uid_gid_support and
-    # shouldn't claim to verify it until it can run there.
-    # Skipped in CI/CD (both rust/cpp): requires launch_manager to gain cap_setuid/cap_setgid via
-    # setcap, which needs both FIT_ENABLE_SETCAP=1 (unset in the GitHub Actions workflow) and
-    # unsandboxed execution (linux-sandbox's PR_SET_NO_NEW_PRIVS makes the grant inert at exec
-    # time even if setcap itself succeeds). See feature_integration_tests/README.md for details.
+    # No requirement claim (feat_req__lifecycle__uid_gid_support): skips in CI, which neither sets
+    # FIT_ENABLE_SETCAP=1 nor runs unsandboxed, both needed for the setcap grant. See README.md.
     def test_launched_process_uid_gid_matches_config_when_applied(
         self,
         launch_manager_daemon: dict[str, Any],
         version: str,
     ) -> None:
-        """Verify launched process runs with configured effective uid/gid when runtime applies sandbox identity."""
+        """With capabilities granted, the live app's effective uid equals the rendered sandbox uid
+        and differs from the runner's. Skips without the grant, or if the uid was not remapped.
+
+        Limitation: the rendered gid is the runner's own (see `_generate_runtime_config`), so the
+        gid assertion cannot prove setgid() was applied.
+        """
         daemon_info = launch_manager_daemon
         if not daemon_info["sandbox_privileged"]:
             pytest.skip(
@@ -284,7 +245,7 @@ class TestProcessLaunchingWithDaemon:
         expected_uid = int(sandbox["uid"])
         expected_gid = int(sandbox["gid"])
         if expected_uid == os.getuid():
-            # Only when the cap_kill grant failed (uid not remapped); matching uids would pass
+            # Happens when the kill/cat copies could not be staged (uid not remapped); matching uids pass
             # whether or not launch_manager applied the sandbox identity.
             pytest.skip(
                 f"Sandbox uid {expected_uid} equals the test runner's own uid; cannot distinguish an "
@@ -303,6 +264,7 @@ class TestProcessLaunchingWithDaemon:
         assert effective_uid == expected_uid, (
             f"Effective uid mismatch for {app_name}: expected {expected_uid}, got {effective_uid}"
         )
+        # Consistency check only: passes whether or not setgid() was applied (gid == runner's).
         assert effective_gid == expected_gid, (
             f"Effective gid mismatch for {app_name}: expected {expected_gid}, got {effective_gid}"
         )
@@ -311,19 +273,14 @@ class TestProcessLaunchingWithDaemon:
             "identity was not actually applied"
         )
 
-    # Not decorated with @add_test_properties: this test is unconditionally skipped in CI/CD
-    # (see below), so it never actually exercises feat_req__lifecycle__launch_priority_support /
-    # feat_req__lifecycle__scheduling_policy and shouldn't claim to verify them until it can run there.
-    # Skipped in CI/CD (both rust/cpp): requires launch_manager to gain cap_sys_nice via setcap,
-    # which needs both FIT_ENABLE_SETCAP=1 (unset in the GitHub Actions workflow) and unsandboxed
-    # execution (linux-sandbox's PR_SET_NO_NEW_PRIVS makes the grant inert at exec time even if
-    # setcap itself succeeds). See feature_integration_tests/README.md for details.
+    # No requirement claim (launch_priority_support / scheduling_policy): skips in CI, see above.
     def test_launched_process_scheduling_matches_config_when_applied(
         self,
         launch_manager_daemon: dict[str, Any],
         version: str,
     ) -> None:
-        """Verify launched process uses configured scheduler policy and priority when applied."""
+        """With capabilities granted, the live app's `chrt` policy and priority equal the rendered
+        sandbox values. Skips without the grant (the config is then downgraded to SCHED_OTHER)."""
         daemon_info = launch_manager_daemon
         if not daemon_info["sandbox_privileged"]:
             pytest.skip(
@@ -334,8 +291,8 @@ class TestProcessLaunchingWithDaemon:
         app_name = "rust_supervised_app" if version == "rust" else "cpp_supervised_app"
         app_path = str(daemon_info["apps"][version])
 
-        config_path = Path(__file__).resolve().parents[3] / "configs" / "lifecycle_daemon_config.json"
-        config = json.loads(config_path.read_text(encoding="utf-8"))
+        # The rendered config, not the source JSON, like the uid/gid test above.
+        config = json.loads(daemon_info["runtime_config"].read_text(encoding="utf-8"))
         component_sandbox = config["components"][app_name].get("deployment_config", {}).get("sandbox")
         sandbox = component_sandbox or config["defaults"]["deployment_config"]["sandbox"]
         configured_policy = sandbox["scheduling_policy"]
@@ -344,8 +301,7 @@ class TestProcessLaunchingWithDaemon:
         started = wait_until(lambda: is_running(app_path), timeout_s=8.0)
         assert started, f"{app_name} was not launched before scheduling verification"
 
-        # Pid can go stale between resolution and the chrt call if the app restarts;
-        # retry against a fresh pid rather than failing on that race.
+        # Retry with a fresh pid in case the app restarted between pgrep and chrt.
         sched = None
         pid = None
         for _ in range(20):
@@ -369,22 +325,16 @@ class TestProcessLaunchingWithDaemon:
             f"Scheduling priority mismatch for {app_name}: expected {configured_priority}, got {rt_priority}"
         )
 
-    # Not decorated with @add_test_properties: like the two tests above, this is unconditionally
-    # skipped in CI/CD (no cap_sys_nice grant), so it never actually exercises
-    # feat_req__lifecycle__scheduling_policy / feat_req__lifecycle__launch_priority_support there.
+    # No requirement claim: skips in CI, see above.
     def test_scheduling_policy_is_non_default_and_applied(
         self,
         launch_manager_daemon: dict[str, Any],
         version: str,
     ) -> None:
-        """Verify the launched process's scheduling policy differs from launch_manager's own.
-
-        Both apps carry a non-default sandbox policy (`rust_supervised_app`: `SCHED_RR`/`10`,
-        `cpp_supervised_app`: `SCHED_FIFO`/`20`) vs. the OS default `SCHED_OTHER`/`0` that
-        launch_manager itself runs under. Comparing the launched app against the daemon's own
-        scheduling, rather than against a fixed constant, proves the policy was actually applied
-        rather than coincidentally matching the process's inherited default.
-        """
+        """With capabilities granted, the live app's `(policy, priority)` differs from
+        launch_manager's own, so it was set by launch_manager rather than inherited. The config
+        gives rust SCHED_RR/10 and cpp SCHED_FIFO/20; the daemon runs SCHED_OTHER/0. Skips
+        without the grant."""
         daemon_info = launch_manager_daemon
         if not daemon_info["sandbox_privileged"]:
             pytest.skip(
@@ -430,14 +380,21 @@ class TestProcessLaunchingWithDaemon:
         launch_manager_daemon: dict[str, Any],
         version: str,
     ) -> None:
-        """Verify launch setup executes without root privileges in this integration setup."""
+        """launch_manager itself runs with a non-root effective uid and still launches the app
+        (the requirement: LM can be started as non-root). Also checks the app is non-root.
+
+        Limitation: covers only a plain non-root start (optionally with file capabilities), not
+        any other "security policy" mechanism.
+        """
         daemon_info = launch_manager_daemon
         daemon = daemon_info["daemon"]
         app_name = "rust_supervised_app" if version == "rust" else "cpp_supervised_app"
         app_path = str(daemon_info["apps"][version])
 
-        assert os.geteuid() != 0, "Test environment unexpectedly runs as root"
-        assert daemon.pid() > 0, "Launch Manager daemon pid should be available"
+        assert daemon.is_running(), "Launch Manager daemon is not running"
+        daemon_ids = self._proc_status_ids(str(daemon.pid()))
+        assert daemon_ids is not None, f"Could not read /proc status for launch_manager pid={daemon.pid()}"
+        assert daemon_ids[0] != 0, "launch_manager is running as root"
 
         started = wait_until(lambda: is_running(app_path), timeout_s=8.0)
         assert started, f"{app_name} was not launched before non-root verification"
@@ -451,11 +408,10 @@ class TestProcessLaunchingWithDaemon:
 
 
 class TestSupervisedAppRecovery:
-    """Kill-and-restart recovery against a dedicated launch_manager instance.
+    """Kill-and-recover against a dedicated daemon per `version`.
 
-    Kept out of TestProcessLaunchingWithDaemon so its own daemon never overlaps that class's
-    `launch_manager_daemon` fixture: concurrent daemons collide on launch_manager's fixed
-    POSIX shm names (see daemon_helpers._live_daemons).
+    Separate class so its daemon never overlaps the `launch_manager_daemon` fixture (fixed shm
+    names; see daemon_helpers._live_daemons).
     """
 
     @add_test_properties(
@@ -471,14 +427,14 @@ class TestSupervisedAppRecovery:
         tmp_path_factory: pytest.TempPathFactory,
         version: str,
     ) -> None:
-        """Verify daemon restarts a killed supervised app in place per the retry policy.
+        """SIGKILL the running app; launch_manager must log its unexpected termination and bring
+        it back (new pid) without restarting the other, healthy app or dying itself.
 
-        Also confirms the other supervised app is left untouched, proving recovery
-        went through `ready_recovery_action.restart` rather than a run-target switch.
-
-        Does not claim `feat_req__lifecycle__retries_configurable`: this only exercises a
-        single restart within the configured attempt budget, it never varies or exhausts
-        `number_of_attempts`, so the "configurable" half of that requirement is unverified.
+        The recovery that runs is the run target's `recovery_action` (switch to
+        `fallback_run_target`, which contains both apps), not `ready_recovery_action.restart`,
+        which only covers startup failures. Limitation: the test does not assert which recovery
+        action ran, only that the app recovered. Does not claim `retries_configurable`
+        (see test_retry_exhaustion.py).
         """
         daemon_info = start_launch_manager_daemon(tmp_path_factory)
         try:
@@ -504,34 +460,27 @@ class TestSupervisedAppRecovery:
                 timeout_s=12.0,
             )
             assert restarted, f"{app_name} was not restarted after forced termination"
+            termination_logged = re.search(
+                rf"unexpected termination of process\s+{re.escape(app_name)}\b", daemon.get_logs()
+            )
+            assert termination_logged, (
+                f"launch_manager did not log the abnormal termination of {app_name}.\nDaemon logs:\n{daemon.get_logs()}"
+            )
 
             assert daemon.is_running(), "Launch Manager daemon should still be running after recovery"
 
             other_new_pid = first_pid(other_app_path)
             assert other_new_pid == other_old_pid, (
-                "The other supervised app was relaunched too, indicating recovery switched the "
-                "whole run target instead of retrying only the failed app per the configured "
-                "restart policy"
+                "The other, healthy supervised app was relaunched too; recovery should only relaunch the failed app"
             )
         finally:
             stop_launch_manager_daemon(daemon_info)
 
 
 class TestParallelLaunch:
-    """Verify genuinely parallel launch of independent components.
-
-    Runs its own launch_manager instance (rather than the shared class-scoped
-    `launch_manager_daemon` fixture used by TestProcessLaunchingWithDaemon), for two reasons:
-
-    1. It renders the config with `independent_apps=True` (no depends_on between the
-       two apps), unlike the shared fixture's config - that's the whole point.
-    2. It is a separate class, so the shared fixture is torn down before this daemon starts;
-       overlapping daemons collide on launch_manager's fixed POSIX shm names.
-
-    Parametrized on `version` only because the module-level `pytestmark` applies it
-    to every class in this file; parallel launch itself is independent of which
-    scenario variant is under test elsewhere, so `version` is unused here.
-    """
+    """Parallel launch of independent components, with its own daemons rendered with
+    `independent_apps=True`. `version` is unused (module-level parametrize), so the test runs
+    twice with identical behaviour."""
 
     @add_test_properties(
         partially_verifies=["feat_req__lifecycle__parallel_launch_support"],
@@ -543,24 +492,13 @@ class TestParallelLaunch:
         tmp_path_factory: pytest.TempPathFactory,
         version: str,
     ) -> None:
-        """Verify two independent components launch in parallel, not one-after-the-other.
-
-        `lifecycle_daemon_config.json` has rust_supervised_app depend on
-        cpp_supervised_app, so it cannot demonstrate parallel launch - both apps
-        eventually running there is equally consistent with strict serialization.
-
-        Renders that config with `independent_apps=True`, so neither app depends on
-        the other, and stalls one app at a time: it is replaced by a
-        stub that runs but never reports Running, so a serialized launcher would sit
-        on it for the full `ready_timeout` (10 s, plus retries) before starting the
-        next. The other app must be up within 4 s of daemon startup -
-        well under one `ready_timeout` - regardless of which one is stalled, so the
-        pass window cannot be met by strictly sequential launch in either order.
-
-        `version` is unused but required by the module-scope parametrize.
+        """With no `depends_on` between the apps and one of them stalled (runs, never reports
+        Running), the other must be running within 4 s of the 1 s startup window. A serialized
+        launcher would wait out `ready_timeout` (10 s) on the stalled app first. Both stall
+        orders are tried, and the stalled stub must also be running (it was launched, not skipped).
         """
         ready_timeout_s = 10.0  # rendered over the base config's 2.0 s
-        parallel_window_s = 4.0  # + ~1 s daemon startup grace, still well under ready_timeout
+        parallel_window_s = 4.0  # plus the 1 s startup window, still well under ready_timeout
         assert parallel_window_s < ready_timeout_s / 2
         for stalled, other in (("cpp", "rust"), ("rust", "cpp")):
             daemon_info = start_launch_manager_daemon(
@@ -573,36 +511,34 @@ class TestParallelLaunch:
             try:
                 stalled_path = str(daemon_info["apps"][stalled])
                 other_path = str(daemon_info["apps"][other])
-                other_started = wait_until(lambda: is_running(other_path), timeout_s=parallel_window_s)
+                other_started = wait_until(lambda p=other_path: is_running(p), timeout_s=parallel_window_s)
                 assert other_started, (
                     f"{other}_supervised_app did not start within {parallel_window_s}s while "
                     f"{stalled}_supervised_app was stalled (ready_timeout={ready_timeout_s}s), even "
                     "though neither depends on the other - launch is serialized, not parallel"
                 )
-                # Rules out a vacuous pass: the stalled stub must be up too, i.e. both were
-                # in flight concurrently rather than the stub simply never being launched.
+                # Both in flight at once: rules out the stalled stub never being launched.
                 assert is_running(stalled_path), f"stalled {stalled}_supervised_app stub was never launched"
             finally:
                 stop_launch_manager_daemon(daemon_info)
 
 
 class TestHealthMonitoringWithDaemon:
-    """Health monitoring / watchdog tests with daemon."""
+    """Alive-supervision (watchdog) detection, with its own daemon per `version`."""
 
+    # No `smart_watchdog_config` claim: alive supervision is configured only in `defaults`, and
+    # the test neither configures it per process nor varies it.
     @add_test_properties(
-        partially_verifies=[
-            "feat_req__lifecycle__liveliness_detection",
-            "feat_req__lifecycle__smart_watchdog_config",
-        ],
+        partially_verifies=["feat_req__lifecycle__liveliness_detection"],
         test_type="requirements-based",
         derivation_technique="requirements-analysis",
     )
     def test_watchdog_detection(self, tmp_path_factory: pytest.TempPathFactory, version: str) -> None:
-        """Verify watchdog detects an unresponsive app (stopped, not reporting health) and reacts.
+        """SIGSTOP the app so it stops reporting alive indications; launch_manager must log its
+        Alive Supervision switching to FAILED or EXPIRED within 8 s.
 
-        Uses its own daemon per version: the rust run's watchdog failure triggers recovery
-        (restart, then a run-target switch), so a shared daemon would hand the cpp run a
-        restarting or relaunched app.
+        Limitation: checks detection only, not the reaction that follows. Uses its own daemon
+        so the recovery triggered by one version's failure cannot affect the other's run.
         """
         daemon_info = start_launch_manager_daemon(tmp_path_factory)
         try:
@@ -615,10 +551,8 @@ class TestHealthMonitoringWithDaemon:
         daemon = daemon_info["daemon"]
         app_name = "rust_supervised_app" if version == "rust" else "cpp_supervised_app"
 
-        # Stop the supervised process to emulate a non-reporting workload.
         app_path = str(daemon_info["apps"][version])
-        # start_launch_manager_daemon already waited for Running, so a missing process here
-        # means it died under supervision - a genuine failure, not a skip.
+        # start_launch_manager_daemon already waited for the app, so a missing process is a failure.
         pid = first_pid(app_path)
         assert pid is not None, f"{app_name} died before the watchdog check"
 
@@ -626,19 +560,10 @@ class TestHealthMonitoringWithDaemon:
         sent, reason = signal_process(pid, "-STOP", sandbox_privileged=sandbox_privileged)
         assert sent, f"Could not signal {app_name} (pid={pid}): {reason}"
         try:
-            watchdog_patterns = [
-                rf"Got kRunning timeout for process.*\(\s*{re.escape(app_name)}\s*\)",
-                rf"unexpected termination of process.*\(\s*{re.escape(app_name)}\s*\)",
-                rf"Alive Supervision \(\s*{re.escape(app_name)}\s*\) switched to FAILED",
-                rf"Alive Supervision \(\s*{re.escape(app_name)}\s*\) switched to EXPIRED",
-            ]
+            # Only alive-supervision verdicts count; a startup timeout or crash is not liveliness detection.
+            liveliness_lost = rf"Alive Supervision \(\s*{re.escape(app_name)}\s*\) switched to (FAILED|EXPIRED)"
             # Poll rather than sleep: detection latency varies under CI load.
-            detected = wait_until(
-                lambda: any(re.search(pattern, daemon.get_logs()) for pattern in watchdog_patterns),
-                timeout_s=8.0,
-            )
-            assert detected, (
-                f"No target-specific watchdog diagnostics found for {app_name}.\nDaemon logs:\n{daemon.get_logs()}"
-            )
+            detected = wait_until(lambda: re.search(liveliness_lost, daemon.get_logs()), timeout_s=8.0)
+            assert detected, f"No Alive Supervision failure logged for {app_name}.\nDaemon logs:\n{daemon.get_logs()}"
         finally:
             signal_process(pid, "-CONT", sandbox_privileged=sandbox_privileged)
