@@ -85,14 +85,6 @@ jobs:
         with:
           packages: graphviz
           cache: false
-      - name: Build documentation - preflight # If we have doc errors, we dont wait of them 1h +...
-        run: |
-          bazel run \
-            --lockfile_mode=error \
-              //:docs_shim -- \
-              --github_user=${{ github.repository_owner }} \
-              --github_repo=${{ github.event.repository.name }}
-          rm -rf _build/
       - name: Execute Unit Tests with Coverage Analysis
         # Only tag runs are authoritative and re-execute every test from scratch, because they
         # attach the test-report ZIP and the SBOM as official release assets. The condition is
