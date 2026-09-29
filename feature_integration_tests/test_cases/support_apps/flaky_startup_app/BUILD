@@ -12,8 +12,8 @@
 # *******************************************************************************
 load("@rules_cc//cc:defs.bzl", "cc_binary")
 
-# Plain "Native" supervised app (no launch_manager lifecycle API integration) used
-# only to deterministically drive ready_recovery_action.restart in
+# "Reporting" supervised app (calls report_running() via lifecycle_cc) used only to
+# deterministically drive ready_recovery_action.restart in
 # lifecycle_daemon_retry_config.json. See main.cpp for behavior.
 cc_binary(
     name = "flaky_startup_app",

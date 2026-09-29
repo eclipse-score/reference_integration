@@ -47,15 +47,10 @@ bool env_condition_met(const std::string& name) {
     return std::getenv(name.c_str()) != nullptr;
 }
 
-// Best-effort check whether a process matching `process_name` is currently running, by scanning
-// /proc/<pid>/comm (the kernel-truncated 15-char command name) and /proc/<pid>/cmdline (the full
-// argv[0], which covers names comm truncates).
+// True if some process's /proc/<pid>/comm (15-char truncated) or argv[0] basename equals
+// `process_name`. Best effort: a process exiting mid-scan counts as "not found this pass".
 bool process_condition_met(const std::string& process_name) {
-    // Iterating /proc races with processes exiting mid-scan (ENOENT on a just-vanished pid's
-    // subdirectory); std::filesystem surfaces that as filesystem_error even with the
-    // non-throwing error_code constructor, since only construction/increment on the top-level
-    // directory is covered, not opening files underneath. Treat it as "not found this pass"
-    // rather than letting a race abort the whole wait loop.
+    // Iteration can still throw filesystem_error when a pid vanishes, despite the error_code overload.
     try {
         std::error_code ec;
         for (const auto& entry : std::filesystem::directory_iterator(
@@ -79,9 +74,7 @@ bool process_condition_met(const std::string& process_name) {
             if (!argv0.empty()) {
                 const auto argv0_end = argv0.find('\0');
                 const std::string first_arg = argv0.substr(0, argv0_end);
-                // Compare the basename only (portion after the last '/'), not a raw suffix of
-                // the full path: a plain suffix match would also accept e.g. "/usr/bin/oversleep"
-                // as satisfying process_name="sleep".
+                // Basename, not suffix: "/usr/bin/oversleep" must not match "sleep".
                 const auto slash_pos = first_arg.find_last_of('/');
                 const std::string basename =
                     slash_pos == std::string::npos ? first_arg : first_arg.substr(slash_pos + 1);
@@ -97,42 +90,42 @@ bool process_condition_met(const std::string& process_name) {
 }
 
 template <typename Converter>
-std::vector<std::string> parse_string_array_field(const std::string& input,
-                                                  const std::string& field_name,
-                                                  Converter convert) {
+std::optional<std::vector<std::string>> parse_string_array_field(const std::string& input,
+                                                                 const std::string& field_name,
+                                                                 Converter convert) {
     std::vector<std::string> values;
 
     const score::json::JsonParser parser;
     const auto root_any_res = parser.FromBuffer(input);
     if (!root_any_res.has_value()) {
-        return values;
+        return std::nullopt;
     }
 
     const auto root_object_res = root_any_res.value().As<score::json::Object>();
     if (!root_object_res.has_value()) {
-        return values;
+        return std::nullopt;
     }
 
     const auto& root = root_object_res.value().get();
     const auto test_it = root.find("test");
     if (test_it == root.end()) {
-        return values;
+        return std::nullopt;
     }
 
     const auto test_object_res = test_it->second.As<score::json::Object>();
     if (!test_object_res.has_value()) {
-        return values;
+        return std::nullopt;
     }
 
     const auto& test = test_object_res.value().get();
     const auto field_it = test.find(field_name);
     if (field_it == test.end()) {
-        return values;
+        return std::nullopt;
     }
 
     const auto array_res = field_it->second.As<score::json::List>();
     if (!array_res.has_value()) {
-        return values;
+        return std::nullopt;
     }
 
     for (const auto& element : array_res.value().get()) {
@@ -146,7 +139,7 @@ std::vector<std::string> parse_string_array_field(const std::string& input,
     return values;
 }
 
-std::vector<std::string> parse_wait_conditions(const std::string& input) {
+std::optional<std::vector<std::string>> parse_wait_conditions(const std::string& input) {
     return parse_string_array_field(input, "wait_conditions", [](const score::json::Any& element) {
         const auto value = element.As<std::string>();
         if (!value.has_value()) {
@@ -156,6 +149,9 @@ std::vector<std::string> parse_wait_conditions(const std::string& input) {
     });
 }
 
+// FIT stub (not launch_manager): validates `test.wait_conditions`, then polls each condition every
+// `polling_interval_ms` until all are met or `timeout_ms` expires. A met condition stays latched,
+// even if it later becomes false. Mirrors the Rust scenario, including its error messages.
 class ConditionalLaunching : public Scenario {
 public:
     std::string name() const override { return "conditional_launching"; }
@@ -169,7 +165,7 @@ public:
 
         uint64_t polling_interval = 50;
         uint64_t timeout = 5000;
-        const auto wait_conditions = parse_wait_conditions(input);
+        const auto wait_conditions_res = parse_wait_conditions(input);
 
         const auto root_object_res = root_any_res.value().As<score::json::Object>();
         if (root_object_res.has_value()) {
@@ -199,9 +195,15 @@ public:
             }
         }
 
+        // Same messages as the Rust scenario: "missing" and "empty" are distinct errors.
+        if (!wait_conditions_res.has_value()) {
+            throw std::runtime_error(
+                "Wait conditions were not provided: missing 'test.wait_conditions' in scenario input");
+        }
+        const auto& wait_conditions = *wait_conditions_res;
         if (wait_conditions.empty()) {
             throw std::runtime_error(
-                "Wait conditions were not provided: missing or empty 'test.wait_conditions' in scenario input");
+                "Wait conditions were not provided: empty 'test.wait_conditions' in scenario input");
         }
 
         log_info("Testing conditional launching");

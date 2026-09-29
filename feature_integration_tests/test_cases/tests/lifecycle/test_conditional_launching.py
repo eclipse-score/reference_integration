@@ -11,10 +11,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 """
-Feature integration tests for conditional launching against a real Launch Manager.
-
-Unlike scenario-stub checks, these tests validate behavior from an actual
-launch_manager process started with lifecycle daemon configuration.
+Dependency-based launching FITs against a real launch_manager on lifecycle_daemon_config.json,
+where rust_supervised_app `depends_on` cpp_supervised_app. (test_conditional_launching_scenario.py
+only tests the FIT's own scenario stub.)
 """
 
 import json
@@ -33,7 +32,7 @@ from test_properties import add_test_properties
 
 @pytest.mark.parametrize("version", ["rust", "cpp"], scope="class")
 class TestConditionalLaunchingWithDaemon:
-    """Verify dependency-based conditional launching with real daemon behavior."""
+    """Startup launch of each supervised app, per `version`, via the class-scoped fixture."""
 
     @add_test_properties(
         partially_verifies=["feat_req__lifecycle__launch_support"],
@@ -41,7 +40,7 @@ class TestConditionalLaunchingWithDaemon:
         derivation_technique="requirements-analysis",
     )
     def test_startup_launches_conditioned_processes(self, launch_manager_daemon: dict[str, Any], version: str) -> None:
-        """Verify supervised processes are launched as part of conditional startup."""
+        """The `version` app is running (pgrep) within 8 s of daemon start."""
         daemon_info = launch_manager_daemon
         app_name = "rust_supervised_app" if version == "rust" else "cpp_supervised_app"
         app_path = str(daemon_info["apps"][version])
@@ -50,48 +49,17 @@ class TestConditionalLaunchingWithDaemon:
         assert started, f"{app_name} was not launched in conditional startup"
 
 
-class TestConditionalLaunchingDependencyOrdering:
-    """Verify cpp-before-rust ordering is declared in config.
-
-    Not parametrized on `version`: inspects the static config only, independent of
-    the scenario variant under test elsewhere.
-
-    Real ordering/gating evidence lives in
-    TestConditionalLaunchingBlocksOnMissingDependency below - a start-tick
-    comparison used to live here but was near-vacuous (both processes launch
-    within the same ~10ms tick regardless of ordering) and was removed.
-    """
-
-    def test_dependency_is_declared_in_lifecycle_config(self) -> None:
-        """Verify runtime configuration defines rust conditional dependency on cpp."""
-        config_path = Path(__file__).resolve().parents[3] / "configs" / "lifecycle_daemon_config.json"
-        config = json.loads(config_path.read_text(encoding="utf-8"))
-
-        rust_component = config["components"]["rust_supervised_app"]["component_properties"]
-        depends_on = rust_component.get("depends_on", [])
-        assert "cpp_supervised_app" in depends_on, (
-            "Expected rust_supervised_app to depend on cpp_supervised_app in lifecycle daemon config"
-        )
-
-
 class TestConditionalLaunchingBlocksOnMissingDependency:
-    """Verify rust startup is actually gated on cpp, not merely correlated with it.
+    """rust startup is gated on cpp, observed by withholding cpp.
 
-    Runs its own launch_manager instance (rather than the shared class-scoped
-    `launch_manager_daemon` fixture) with cpp_supervised_app withheld, so it can
-    observe the negative case: rust must not start while its dependency cannot.
-    It lives in its own class so the class-scoped fixture is torn down first: overlapping
-    daemons collide on launch_manager's fixed POSIX shm names (daemon_helpers._live_daemons).
-
-    Not parametrized on `version`: dependency gating is independent of which
-    scenario variant is under test elsewhere, so this runs exactly once.
+    Own daemon, in its own class so the class-scoped fixture is torn down first (fixed shm
+    names; see daemon_helpers._live_daemons). Not parametrized: runs once.
     """
 
     @add_test_properties(
         partially_verifies=[
             "feat_req__lifecycle__waitfor_support",
             "feat_req__lifecycle__dependency_check",
-            "feat_req__lifecycle__cond_process_start",
             "feat_req__lifecycle__process_ordering",
             "feat_req__lifecycle__define_swc_dependencies",
         ],
@@ -101,7 +69,23 @@ class TestConditionalLaunchingBlocksOnMissingDependency:
     def test_rust_stays_down_until_cpp_dependency_becomes_available(
         self, tmp_path_factory: pytest.TempPathFactory
     ) -> None:
-        """Verify rust does not start while cpp is withheld, and does once cpp is unblocked."""
+        """While cpp is non-executable, rust must stay down for 4 s and the daemon must log the cpp
+        launch failure at least twice (it keeps retrying rather than aborting). After cpp is made
+        executable, cpp and then rust must be running within 8 s each.
+
+        Limitations: "running" is pgrep process existence; rust has a single dependency, so
+        `dependency_check` ("all dependencies") cannot be told apart from "any dependency".
+        No `cond_process_start` claim: that requirement is about starting on the return value
+        of earlier processes, which this config does not use.
+        """
+        # Precondition: without this edge the negative check below would pass vacuously.
+        config_path = Path(__file__).resolve().parents[3] / "configs" / "lifecycle_daemon_config.json"
+        config = json.loads(config_path.read_text(encoding="utf-8"))
+        rust_depends_on = config["components"]["rust_supervised_app"]["component_properties"].get("depends_on", [])
+        assert "cpp_supervised_app" in rust_depends_on, (
+            "Expected rust_supervised_app to depend on cpp_supervised_app in lifecycle daemon config"
+        )
+
         daemon_info = start_launch_manager_daemon(
             tmp_path_factory,
             blocked_apps=frozenset({"cpp"}),
@@ -111,15 +95,14 @@ class TestConditionalLaunchingBlocksOnMissingDependency:
             cpp_path = daemon_info["apps"]["cpp"]
             rust_path = str(daemon_info["apps"]["rust"])
 
-            # cpp cannot execute (mode 0o000): rust must not appear while it is withheld.
+            # cpp is mode 0000, so its exec fails: rust must not appear meanwhile.
             rust_started_early = wait_until(lambda: is_running(rust_path), timeout_s=4.0)
             assert not rust_started_early, (
                 "rust_supervised_app started even though its cpp_supervised_app dependency "
                 "was withheld (non-executable); dependency gating was not enforced"
             )
 
-            # Repeated, path-specific launch failures demonstrate the daemon keeps
-            # processing the unavailable dependency rather than aborting once.
+            # >= 2 path-specific launch failures: the daemon keeps retrying cpp, not giving up once.
             cpp_launch_failure = f"File does not exist or is not executable: {cpp_path}"
             failures_observed = wait_until(
                 lambda: daemon_info["daemon"].get_logs().count(cpp_launch_failure) >= 2,
@@ -132,8 +115,7 @@ class TestConditionalLaunchingBlocksOnMissingDependency:
                 )
             )
 
-            # Once cpp becomes executable and reaches Running, its dependent rust app
-            # should be released as well.
+            # Unblock cpp: it, then its dependent rust, must start.
             cpp_path.chmod(0o755)
             cpp_started = wait_until(lambda: is_running(cpp_path), timeout_s=8.0)
             assert cpp_started, "cpp_supervised_app did not start after becoming executable"

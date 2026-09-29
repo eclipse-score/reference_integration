@@ -22,7 +22,9 @@ from daemon_helpers import start_launch_manager_daemon, stop_launch_manager_daem
 
 @pytest.fixture(scope="class")
 def launch_manager_daemon(tmp_path_factory: pytest.TempPathFactory) -> dict[str, Any]:
-    """Start a real launch_manager process with generated flatbuffer config."""
+    """One launch_manager (with both supervised apps running) per test class and `version`
+    param; see `daemon_helpers.start_launch_manager_daemon`. Tests using it must not start
+    another daemon."""
     daemon_info = start_launch_manager_daemon(tmp_path_factory)
     try:
         yield daemon_info

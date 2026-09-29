@@ -18,6 +18,9 @@ use std::time::{Duration, Instant};
 use test_scenarios_rust::scenario::Scenario;
 use tracing::info;
 
+/// FIT stub (not launch_manager): validates `test.wait_conditions`, then polls each condition every
+/// `polling_interval_ms` until all are met or `timeout_ms` expires. A met condition stays latched,
+/// even if it later becomes false.
 pub struct ConditionalLaunching;
 
 fn path_condition_met(path: &str) -> bool {
@@ -28,9 +31,8 @@ fn env_condition_met(name: &str) -> bool {
     std::env::var_os(name).is_some()
 }
 
-/// Best-effort check whether a process matching `process_name` is currently running, by
-/// scanning /proc/<pid>/comm (kernel-truncated to 15 chars) and /proc/<pid>/cmdline (full
-/// argv[0], which covers names `comm` truncates).
+/// True if some process's /proc/<pid>/comm (15-char truncated) or argv[0] basename equals
+/// `process_name`. Best effort: unreadable entries are skipped.
 fn process_condition_met(process_name: &str) -> bool {
     let Ok(entries) = fs::read_dir("/proc") else {
         return false;
@@ -52,8 +54,7 @@ fn process_condition_met(process_name: &str) -> bool {
         if let Ok(cmdline) = fs::read(entry.path().join("cmdline")) {
             let argv0 = cmdline.split(|&b| b == 0).next().unwrap_or(&[]);
             if let Ok(argv0) = std::str::from_utf8(argv0) {
-                // Compare the basename only: a raw suffix match on the full path would also
-                // accept e.g. "/usr/bin/oversleep" as satisfying process_name="sleep".
+                // Basename, not suffix: "/usr/bin/oversleep" must not match "sleep".
                 let basename = argv0.rsplit('/').next().unwrap_or(argv0);
                 if basename == process_name {
                     return true;
