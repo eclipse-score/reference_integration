@@ -24,7 +24,6 @@ from typing import Any
 import pytest
 from daemon_helpers import (
     is_running,
-    launch_manager_daemon,
     start_launch_manager_daemon,
     stop_launch_manager_daemon,
     wait_until,
@@ -81,8 +80,8 @@ class TestConditionalLaunchingBlocksOnMissingDependency:
     Runs its own launch_manager instance (rather than the shared class-scoped
     `launch_manager_daemon` fixture) with cpp_supervised_app withheld, so it can
     observe the negative case: rust must not start while its dependency cannot.
-    It uses a unique runtime root and generated configuration beneath
-    `TEST_TMPDIR`, so it is independent of other lifecycle daemon instances.
+    It lives in its own class so the class-scoped fixture is torn down first: overlapping
+    daemons collide on launch_manager's fixed POSIX shm names (daemon_helpers._live_daemons).
 
     Not parametrized on `version`: dependency gating is independent of which
     scenario variant is under test elsewhere, so this runs exactly once.

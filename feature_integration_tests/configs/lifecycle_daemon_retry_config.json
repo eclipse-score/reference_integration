@@ -44,7 +44,7 @@
                 "binary_name": "flaky_startup_app",
                 "process_arguments": [
                     "__FIT_RUNTIME_ROOT__/flaky_startup_app.counter",
-                    "2"
+                    "__FIT_CRASHES_BEFORE_SUCCESS__"
                 ]
             },
             "deployment_config": {
@@ -63,7 +63,12 @@
         "Startup": {
             "depends_on": [
                 "flaky_startup_app"
-            ]
+            ],
+            "recovery_action": {
+                "switch_run_target": {
+                    "run_target": "fallback_run_target"
+                }
+            }
         }
     },
     "initial_run_target": "Startup",

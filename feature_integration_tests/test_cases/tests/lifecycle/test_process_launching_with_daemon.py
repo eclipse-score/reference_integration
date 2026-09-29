@@ -40,7 +40,6 @@ import pytest
 from daemon_helpers import (
     first_pid,
     is_running,
-    launch_manager_daemon,
     pgrep_cmdline_pattern,
     signal_process,
     start_launch_manager_daemon,
@@ -254,11 +253,9 @@ class TestProcessLaunchingWithDaemon:
         assert isinstance(sandbox.get("scheduling_priority"), int), "Expected integer scheduling priority"
         assert isinstance(sandbox.get("scheduling_policy"), str), "Expected scheduling policy string"
 
-    @add_test_properties(
-        partially_verifies=["feat_req__lifecycle__uid_gid_support"],
-        test_type="requirements-based",
-        derivation_technique="requirements-analysis",
-    )
+    # Not decorated with @add_test_properties: this test is unconditionally skipped in CI/CD
+    # (see below), so it never actually exercises feat_req__lifecycle__uid_gid_support and
+    # shouldn't claim to verify it until it can run there.
     # Skipped in CI/CD (both rust/cpp): requires launch_manager to gain cap_setuid/cap_setgid via
     # setcap, which needs both FIT_ENABLE_SETCAP=1 (unset in the GitHub Actions workflow) and
     # unsandboxed execution (linux-sandbox's PR_SET_NO_NEW_PRIVS makes the grant inert at exec
@@ -300,15 +297,19 @@ class TestProcessLaunchingWithDaemon:
         assert effective_gid == expected_gid, (
             f"Effective gid mismatch for {app_name}: expected {expected_gid}, got {effective_gid}"
         )
+        # Only meaningful when the configured sandbox uid actually differs from the runner's own
+        # uid; some local/dev configs (e.g. lifecycle_daemon_config.json's uid 1001) coincide with
+        # a common dev-user uid, in which case effective_uid == os.getuid() even when the sandbox
+        # identity was genuinely applied, and this check can't tell the two cases apart.
+        if expected_uid != os.getuid():
+            assert effective_uid != os.getuid(), (
+                f"{app_name} is running as the test runner's own uid ({effective_uid}); sandbox "
+                "identity was not actually applied"
+            )
 
-    @add_test_properties(
-        partially_verifies=[
-            "feat_req__lifecycle__launch_priority_support",
-            "feat_req__lifecycle__scheduling_policy",
-        ],
-        test_type="requirements-based",
-        derivation_technique="requirements-analysis",
-    )
+    # Not decorated with @add_test_properties: this test is unconditionally skipped in CI/CD
+    # (see below), so it never actually exercises feat_req__lifecycle__launch_priority_support /
+    # feat_req__lifecycle__scheduling_policy and shouldn't claim to verify them until it can run there.
     # Skipped in CI/CD (both rust/cpp): requires launch_manager to gain cap_sys_nice via setcap,
     # which needs both FIT_ENABLE_SETCAP=1 (unset in the GitHub Actions workflow) and unsandboxed
     # execution (linux-sandbox's PR_SET_NO_NEW_PRIVS makes the grant inert at exec time even if
@@ -331,7 +332,8 @@ class TestProcessLaunchingWithDaemon:
 
         config_path = Path(__file__).resolve().parents[3] / "configs" / "lifecycle_daemon_config.json"
         config = json.loads(config_path.read_text(encoding="utf-8"))
-        sandbox = config["defaults"]["deployment_config"]["sandbox"]
+        component_sandbox = config["components"][app_name].get("deployment_config", {}).get("sandbox")
+        sandbox = component_sandbox or config["defaults"]["deployment_config"]["sandbox"]
         configured_policy = sandbox["scheduling_policy"]
         configured_priority = int(sandbox["scheduling_priority"])
 
@@ -364,6 +366,59 @@ class TestProcessLaunchingWithDaemon:
         )
 
     @add_test_properties(
+        partially_verifies=["feat_req__lifecycle__scheduling_policy", "feat_req__lifecycle__launch_priority_support"],
+        test_type="requirements-based",
+        derivation_technique="requirements-analysis",
+    )
+    def test_scheduling_policy_is_non_default_and_applied(
+        self,
+        launch_manager_daemon: dict[str, Any],
+        version: str,
+    ) -> None:
+        """Verify the launched process's scheduling policy differs from launch_manager's own.
+
+        Both apps carry a non-default sandbox policy (`rust_supervised_app`: `SCHED_RR`/`10`,
+        `cpp_supervised_app`: `SCHED_FIFO`/`20`) vs. the OS default `SCHED_OTHER`/`0` that
+        launch_manager itself runs under. Comparing the launched app against the daemon's own
+        scheduling, rather than against a fixed constant, proves the policy was actually applied
+        rather than coincidentally matching the process's inherited default.
+        """
+        daemon_info = launch_manager_daemon
+        if not daemon_info["sandbox_privileged"]:
+            pytest.skip(
+                "launch_manager was not granted cap_sys_nice in this environment; "
+                f"scheduling policy cannot be applied. Reason: {daemon_info['sandbox_privileged_reason']}"
+            )
+
+        app_name = "rust_supervised_app" if version == "rust" else "cpp_supervised_app"
+        app_path = str(daemon_info["apps"][version])
+
+        started = wait_until(lambda: is_running(app_path), timeout_s=8.0)
+        assert started, f"{app_name} was not launched before scheduling verification"
+
+        daemon_sched = self._proc_sched_policy_and_priority(str(daemon_info["daemon"].pid()))
+        assert daemon_sched is not None, "Could not read scheduling metadata via chrt for launch_manager"
+
+        pid = None
+        app_sched = None
+        for _ in range(20):
+            pid = first_pid(app_path)
+            if pid is None:
+                time.sleep(0.1)
+                continue
+            app_sched = self._proc_sched_policy_and_priority(pid)
+            if app_sched is not None:
+                break
+            time.sleep(0.1)
+        assert pid is not None, f"Could not resolve PID for {app_name}"
+        assert app_sched is not None, f"Could not read scheduling metadata via chrt for {app_name} pid={pid}"
+
+        assert app_sched != daemon_sched, (
+            f"{app_name}'s scheduling {app_sched} matches launch_manager's own {daemon_sched}; "
+            "sandbox scheduling policy was not actually applied"
+        )
+
+    @add_test_properties(
         partially_verifies=["feat_req__lifecycle__secpol_non_root"],
         test_type="requirements-based",
         derivation_technique="requirements-analysis",
@@ -391,6 +446,15 @@ class TestProcessLaunchingWithDaemon:
         assert proc_ids is not None, f"Could not read /proc status uid/gid for {app_name} pid={pid}"
         effective_uid, _ = proc_ids
         assert effective_uid != 0, f"{app_name} is unexpectedly running as root"
+
+
+class TestSupervisedAppRecovery:
+    """Kill-and-restart recovery against a dedicated launch_manager instance.
+
+    Kept out of TestProcessLaunchingWithDaemon so its own daemon never overlaps that class's
+    `launch_manager_daemon` fixture: concurrent daemons collide on launch_manager's fixed
+    POSIX shm names (see daemon_helpers._live_daemons).
+    """
 
     @add_test_properties(
         partially_verifies=[
@@ -457,10 +521,10 @@ class TestParallelLaunch:
     Runs its own launch_manager instance (rather than the shared class-scoped
     `launch_manager_daemon` fixture used by TestProcessLaunchingWithDaemon), for two reasons:
 
-    1. `lifecycle_daemon_parallel_launch_config.json` has no depends_on between the
-       two apps, unlike the shared fixture's config - that's the whole point.
-     2. Every daemon receives an independent runtime directory and generated config
-         beneath `TEST_TMPDIR`, so it cannot interfere with the shared fixture.
+    1. It renders the config with `independent_apps=True` (no depends_on between the
+       two apps), unlike the shared fixture's config - that's the whole point.
+    2. It is a separate class, so the shared fixture is torn down before this daemon starts;
+       overlapping daemons collide on launch_manager's fixed POSIX shm names.
 
     Parametrized on `version` only because the module-level `pytestmark` applies it
     to every class in this file; parallel launch itself is independent of which
@@ -483,29 +547,39 @@ class TestParallelLaunch:
         cpp_supervised_app, so it cannot demonstrate parallel launch - both apps
         eventually running there is equally consistent with strict serialization.
 
-        Runs against `lifecycle_daemon_parallel_launch_config.json`, where neither
-        app depends on the other, and withholds one app's binary (non-executable) at
-        a time. If launch order were still serialized (e.g. alphabetically or by
-        declaration order), withholding the first-launched app would also block the
-        second. The other app reaching Running regardless of which one is withheld
-        shows launch does not wait on the withheld one, i.e. genuine parallel launch.
+        Renders that config with `independent_apps=True`, so neither app depends on
+        the other, and stalls one app at a time: it is replaced by a
+        stub that runs but never reports Running, so a serialized launcher would sit
+        on it for the full `ready_timeout` (10 s, plus retries) before starting the
+        next. The other app must be up within 4 s of daemon startup -
+        well under one `ready_timeout` - regardless of which one is stalled, so the
+        pass window cannot be met by strictly sequential launch in either order.
 
         `version` is unused but required by the module-scope parametrize.
         """
-        for blocked, other in (("cpp", "rust"), ("rust", "cpp")):
+        ready_timeout_s = 10.0  # rendered over the base config's 2.0 s
+        parallel_window_s = 4.0  # + ~1 s daemon startup grace, still well under ready_timeout
+        assert parallel_window_s < ready_timeout_s / 2
+        for stalled, other in (("cpp", "rust"), ("rust", "cpp")):
             daemon_info = start_launch_manager_daemon(
                 tmp_path_factory,
-                blocked_apps=frozenset({blocked}),
+                stalled_apps=frozenset({stalled}),
                 wait_for_apps=False,
-                config_template="//feature_integration_tests/configs:lifecycle_daemon_parallel_launch_config.json",
+                independent_apps=True,
+                ready_timeout_s=ready_timeout_s,
             )
             try:
+                stalled_path = str(daemon_info["apps"][stalled])
                 other_path = str(daemon_info["apps"][other])
-                other_started = wait_until(lambda: is_running(other_path), timeout_s=8.0)
+                other_started = wait_until(lambda: is_running(other_path), timeout_s=parallel_window_s)
                 assert other_started, (
-                    f"{other}_supervised_app did not start while {blocked}_supervised_app was "
-                    "withheld, even though neither depends on the other - launch is not parallel"
+                    f"{other}_supervised_app did not start within {parallel_window_s}s while "
+                    f"{stalled}_supervised_app was stalled (ready_timeout={ready_timeout_s}s), even "
+                    "though neither depends on the other - launch is serialized, not parallel"
                 )
+                # Rules out a vacuous pass: the stalled stub must be up too, i.e. both were
+                # in flight concurrently rather than the stub simply never being launched.
+                assert is_running(stalled_path), f"stalled {stalled}_supervised_app stub was never launched"
             finally:
                 stop_launch_manager_daemon(daemon_info)
 
@@ -534,25 +608,28 @@ class TestHealthMonitoringWithDaemon:
             text=True,
             check=False,
         )
-        if result.returncode != 0:
-            pytest.skip(f"{app_name} not active; activate Running run target before watchdog check")
+        # The fixture already waited for the app to reach Running, so a missing process here
+        # means it died under supervision - a genuine failure, not a skip.
+        assert result.returncode == 0, f"{app_name} died before the watchdog check"
 
         pid = result.stdout.strip().split("\n")[0]
         sandbox_privileged = launch_manager_daemon["sandbox_privileged"]
         sent, reason = signal_process(pid, "-STOP", sandbox_privileged=sandbox_privileged)
         assert sent, f"Could not signal {app_name} (pid={pid}): {reason}"
         try:
-            # Allow supervision/watchdog loop to detect stalled process.
-            time.sleep(4.0)
-            logs = daemon.get_logs()
             watchdog_patterns = [
                 rf"Got kRunning timeout for process.*\(\s*{re.escape(app_name)}\s*\)",
                 rf"unexpected termination of process.*\(\s*{re.escape(app_name)}\s*\)",
                 rf"Alive Supervision \(\s*{re.escape(app_name)}\s*\) switched to FAILED",
                 rf"Alive Supervision \(\s*{re.escape(app_name)}\s*\) switched to EXPIRED",
             ]
-            assert any(re.search(pattern, logs) for pattern in watchdog_patterns), (
-                f"No target-specific watchdog diagnostics found for {app_name}.\nDaemon logs:\n{logs}"
+            # Poll rather than sleep: detection latency varies under CI load.
+            detected = wait_until(
+                lambda: any(re.search(pattern, daemon.get_logs()) for pattern in watchdog_patterns),
+                timeout_s=8.0,
+            )
+            assert detected, (
+                f"No target-specific watchdog diagnostics found for {app_name}.\nDaemon logs:\n{daemon.get_logs()}"
             )
         finally:
             signal_process(pid, "-CONT", sandbox_privileged=sandbox_privileged)

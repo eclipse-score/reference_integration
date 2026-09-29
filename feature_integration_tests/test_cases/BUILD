@@ -158,8 +158,8 @@ score_py_pytest(
         "conftest.py",
         "daemon_helpers.py",
         "test_properties.py",
+        "tests/lifecycle/conftest.py",
         "//feature_integration_tests/configs:lifecycle_daemon_config.json",
-        "//feature_integration_tests/configs:lifecycle_daemon_parallel_launch_config.json",
         "@flatbuffers//:flatc",
         "@score_lifecycle//examples/control_application:control_daemon",
         "@score_lifecycle//examples/control_application:lmcontrol",
@@ -178,7 +178,6 @@ score_py_pytest(
         "FIT_LIFECYCLE_CONFIG_TOOL_PATH": "$(rootpath @score_lifecycle//scripts/config_mapping:lifecycle_config)",
         "FIT_LIFECYCLE_DAEMON_CONFIG_PATH": "$(rootpath //feature_integration_tests/configs:lifecycle_daemon_config.json)",
         "FIT_LIFECYCLE_LM_SCHEMA_PATH": "$(rootpath @score_lifecycle//score/launch_manager/src/daemon/src/configuration:lm_flatcfg_fbs)",
-        "FIT_LIFECYCLE_PARALLEL_LAUNCH_CONFIG_PATH": "$(rootpath //feature_integration_tests/configs:lifecycle_daemon_parallel_launch_config.json)",
         "FIT_RUST_SUPERVISED_APP_PATH": "$(rootpath @score_lifecycle//examples/rust_supervised_app)",
         "RUST_BACKTRACE": "1",
     },
@@ -189,6 +188,9 @@ score_py_pytest(
     # skip themselves accordingly (see daemon_helpers._grant_sandbox_capabilities). Everything
     # else only signals same-uid processes and needs no privilege escalation. FIT_ENABLE_SETCAP=1
     # is for local/manual runs outside the sandbox where the sestcap grant can actually take effect.
+    # "exclusive": launch_manager uses fixed POSIX shm names on the host-wide /dev/shm, so it must
+    # not run concurrently with another launch_manager-driven test target.
+    tags = ["exclusive"],
     deps = all_requirements,
 )
 
@@ -207,9 +209,10 @@ score_py_pytest(
     data = [
         "conftest.py",
         "daemon_helpers.py",
+        "fit_scenario.py",
+        "lifecycle_scenario.py",
         "test_properties.py",
-        "//feature_integration_tests/configs:lifecycle_daemon_retry_exhausts_config.json",
-        "//feature_integration_tests/configs:lifecycle_daemon_retry_recovers_config.json",
+        "//feature_integration_tests/configs:lifecycle_daemon_retry_config.json",
         "//feature_integration_tests/test_cases/support_apps/flaky_startup_app",
         "@flatbuffers//:flatc",
         "@score_lifecycle//score/launch_manager",
@@ -224,10 +227,11 @@ score_py_pytest(
         "FIT_LIFECYCLE_CONFIG_SCHEMA_PATH": "$(rootpath @score_lifecycle//score/launch_manager/src/daemon/src/configuration/config_schema:launch_manager.schema.json)",
         "FIT_LIFECYCLE_CONFIG_TOOL_PATH": "$(rootpath @score_lifecycle//scripts/config_mapping:lifecycle_config)",
         "FIT_LIFECYCLE_LM_SCHEMA_PATH": "$(rootpath @score_lifecycle//score/launch_manager/src/daemon/src/configuration:lm_flatcfg_fbs)",
-        "FIT_LIFECYCLE_RETRY_EXHAUSTS_CONFIG_PATH": "$(rootpath //feature_integration_tests/configs:lifecycle_daemon_retry_exhausts_config.json)",
-        "FIT_LIFECYCLE_RETRY_RECOVERS_CONFIG_PATH": "$(rootpath //feature_integration_tests/configs:lifecycle_daemon_retry_recovers_config.json)",
+        "FIT_LIFECYCLE_RETRY_CONFIG_PATH": "$(rootpath //feature_integration_tests/configs:lifecycle_daemon_retry_config.json)",
     },
     pytest_config = "//:pyproject.toml",
+    # See fit_lifecycle_daemon: launch_manager's fixed /dev/shm names forbid concurrent targets.
+    tags = ["exclusive"],
     deps = all_requirements,
 )
 
