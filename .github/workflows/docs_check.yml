@@ -1,0 +1,68 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+# Fast documentation check: builds the docs only to surface warnings and errors
+# early, without waiting for the test suite in test_and_docs.yml. Nothing is
+# deployed from here - the published docs come from test_and_docs.yml.
+name: Documentation check
+permissions:
+  contents: read
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+  push:
+    branches:
+      - main
+  merge_group:
+    types: [checks_requested]
+# Do not flood CI with unneeded previous runs in PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: ${{ github.ref_name != 'main' && !startsWith(github.ref_name, 'release/') }}
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+jobs:
+  docs-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clean disk space
+        uses: eclipse-score/more-disk-space@v1.1
+        with:
+          level: 4
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.18.0
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}
+          # Keep in sync with test_and_docs.yml - see the comment there on why
+          # the default file list never rotates the cache key.
+          repository-cache: |
+            - MODULE.bazel
+            - known_good.json
+            - bazel_common/*.MODULE.bazel
+            - patches/**
+            - .bazelrc
+          cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+      - name: Install Graphviz
+        uses: eclipse-score/apt-install@main
+        with:
+          packages: graphviz
+          cache: false
+      - name: Build documentation
+        run: |
+          bazel run \
+            --lockfile_mode=error \
+              //:docs_shim -- \
+              --github_user=${{ github.repository_owner }} \
+              --github_repo=${{ github.event.repository.name }}
