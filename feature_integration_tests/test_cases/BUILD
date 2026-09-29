@@ -140,10 +140,8 @@ test_suite(
     ],
 )
 
-# Daemon-driven lifecycle tests (test_conditional_launching.py, test_process_launching_with_daemon.py)
-# exercise launch_manager against both supervised apps together and don't depend on which
-# scenario-binary language variant is under test elsewhere, so they run once here rather than
-# being routed - and silently deselected - by the rust/cpp scenario-binary language marker.
+# Daemon-driven lifecycle tests against a real launch_manager. No -m rust/cpp filter: these tests
+# don't use the scenario binaries, and some carry no language marker, so a filter would deselect them.
 score_py_pytest(
     name = "fit_lifecycle_daemon",
     timeout = "long",
@@ -161,8 +159,6 @@ score_py_pytest(
         "tests/lifecycle/conftest.py",
         "//feature_integration_tests/configs:lifecycle_daemon_config.json",
         "@flatbuffers//:flatc",
-        "@score_lifecycle//examples/control_application:control_daemon",
-        "@score_lifecycle//examples/control_application:lmcontrol",
         "@score_lifecycle//examples/cpp_supervised_app",
         "@score_lifecycle//examples/rust_supervised_app",
         "@score_lifecycle//score/launch_manager",
@@ -183,13 +179,11 @@ score_py_pytest(
     },
     env_inherit = ["FIT_ENABLE_SETCAP"],
     pytest_config = "//:pyproject.toml",
-    # Runs sandboxed: PR_SET_NO_NEW_PRIVS blocks setuid (sudo) / file-capability (setcap) escalation
-    # at exec time, so sandbox_privileged is always False here and the uid/gid/scheduling tests
-    # skip themselves accordingly (see daemon_helpers._grant_sandbox_capabilities). Everything
-    # else only signals same-uid processes and needs no privilege escalation. FIT_ENABLE_SETCAP=1
-    # is for local/manual runs outside the sandbox where the sestcap grant can actually take effect.
-    # "exclusive": launch_manager uses fixed POSIX shm names on the host-wide /dev/shm, so it must
-    # not run concurrently with another launch_manager-driven test target.
+    # Under the default linux-sandbox, PR_SET_NO_NEW_PRIVS makes the setcap grant inert, so the
+    # uid/gid/scheduling tests skip (as in CI). They run only with --spawn_strategy=local and
+    # --test_env=FIT_ENABLE_SETCAP=1 (see README.md).
+    # "exclusive": launch_manager uses fixed POSIX shm names on the host-wide /dev/shm, so no other
+    # launch_manager-driven target may run concurrently.
     tags = ["exclusive"],
     deps = all_requirements,
 )

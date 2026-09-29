@@ -48,32 +48,30 @@ bazel run //feature_integration_tests/test_scenarios/rust:rust_test_scenarios --
 bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit --test_output=streamed
 ```
 
-To run the lifecycle tests directly with `pytest` and build the scenario binaries on demand:
+To run the lifecycle scenario-stub tests directly with `pytest` and build the scenario binaries on demand:
 
 ```sh
-python3 -m pytest feature_integration_tests/test_cases/tests/lifecycle/ \
-  --build-scenarios \
-  -m rust \
-  --rust-target-name=//feature_integration_tests/test_scenarios/rust:rust_test_scenarios \
-  -q -v
+python3 -m pytest feature_integration_tests/test_cases/tests/lifecycle/test_conditional_launching_scenario.py \
+  --build-scenarios -m rust -q -v
 
-python3 -m pytest feature_integration_tests/test_cases/tests/lifecycle/ \
-  --build-scenarios \
-  -m cpp \
-  -q -v
+python3 -m pytest feature_integration_tests/test_cases/tests/lifecycle/test_conditional_launching_scenario.py \
+  --build-scenarios -m cpp -q -v
 ```
 
-The Rust override is required because plain `--build-scenarios` defaults to
-`//feature_integration_tests/test_scenarios/rust:rust_test_scenarios`, while the
-lifecycle tests need the reduced lifecycle-only Rust target.
+The daemon-driven lifecycle tests (`test_conditional_launching.py`, `test_process_launching_with_daemon.py`,
+`test_retry_exhaustion.py`) resolve `launch_manager`, the supervised apps and the config tools from the
+`FIT_*_PATH` variables set by their Bazel targets, and carry no `rust`/`cpp` marker, so run them via
+`bazel test //feature_integration_tests/test_cases:fit_lifecycle_daemon` / `:fit_lifecycle_retries`
+rather than plain `pytest -m rust|cpp` (which would deselect them).
 
 #### Sandbox uid/gid and scheduling-policy tests
 
 Some lifecycle daemon tests (`test_launched_process_uid_gid_matches_config_when_applied`,
-`test_launched_process_scheduling_matches_config_when_applied`) verify that `launch_manager`
+`test_launched_process_scheduling_matches_config_when_applied`,
+`test_scheduling_policy_is_non_default_and_applied`) verify that `launch_manager`
 applies the sandbox `uid`/`gid` and scheduling policy from
 `feature_integration_tests/configs/lifecycle_daemon_config.json`. This requires granting
-`launch_manager` the `cap_setuid,cap_setgid,cap_sys_nice` file capabilities via `setcap`, which
+`launch_manager` the `cap_setuid,cap_setgid,cap_sys_nice,cap_kill` file capabilities via `setcap`, which
 in turn requires `CAP_SETFCAP` — not available to a non-root test runner by default, so these
 tests opt in via the `FIT_ENABLE_SETCAP` env var (backed by a passwordless sudoers rule scoped
 to the `setcap` binary, e.g. `<user> ALL=(root) NOPASSWD: /usr/sbin/setcap`, with no trailing
@@ -84,7 +82,7 @@ passed via `--test_env` (not `--action_env`, which only affects build actions). 
 the full suite are relevant:
 
 ```sh
-# Default: matches CI/CD exactly (sandboxed, no FIT_ENABLE_SETCAP) — the two capability tests skip.
+# Default: matches CI/CD exactly (sandboxed, no FIT_ENABLE_SETCAP) — the three capability tests skip.
 bazel test --config=linux-x86_64 --nocache_test_results //feature_integration_tests/test_cases:fit \
   --test_output=all --test_arg=-rs --test_verbose_timeout_warnings
 
@@ -123,8 +121,9 @@ provision a passwordless `sudo setcap` rule. As a result, the following subtests
 
 - `test_process_launching_with_daemon.py::TestProcessLaunchingWithDaemon::test_launched_process_uid_gid_matches_config_when_applied[rust|cpp]`
 - `test_process_launching_with_daemon.py::TestProcessLaunchingWithDaemon::test_launched_process_scheduling_matches_config_when_applied[rust|cpp]`
+- `test_process_launching_with_daemon.py::TestProcessLaunchingWithDaemon::test_scheduling_policy_is_non_default_and_applied[rust|cpp]`
 
-Reason: both depend on `launch_manager` successfully gaining `cap_setuid,cap_setgid,cap_sys_nice`
+Reason: all three depend on `launch_manager` successfully gaining `cap_setuid,cap_setgid,cap_sys_nice`
 via `setcap` (see `daemon_helpers._grant_sandbox_capabilities`), which fails in CI for two
 independent reasons, either sufficient on its own:
 
@@ -135,7 +134,7 @@ independent reasons, either sufficient on its own:
    never attempt the `sudo -n setcap` path; and the CI runner has no passwordless sudoers entry for
    `setcap` regardless.
 
-This is by design: `_grant_sandbox_capabilities` degrades gracefully (never raises) and the two
+This is by design: `_grant_sandbox_capabilities` degrades gracefully (never raises) and the three
 capability-dependent subtests self-skip with a diagnostic reason instead of failing the build. All
 other subtests in `fit_lifecycle_daemon` only check same-uid process behavior and require no
 privilege escalation, so they run and pass normally in CI.

@@ -29,7 +29,6 @@ from typing import Any
 
 import pytest
 
-
 _TARGET_ENV_MAP = {
     "@score_lifecycle//score/launch_manager:launch_manager": "FIT_LAUNCH_MANAGER_PATH",
     "@score_lifecycle//examples/rust_supervised_app:rust_supervised_app": "FIT_RUST_SUPERVISED_APP_PATH",
@@ -44,26 +43,6 @@ _TARGET_ENV_MAP = {
     "@score_lifecycle//score/launch_manager/src/daemon/src/configuration:lm_flatcfg_fbs": "FIT_LIFECYCLE_LM_SCHEMA_PATH",
     "@flatbuffers//:flatc": "FIT_FLATC_PATH",
 }
-
-
-def _repo_root() -> Path:
-    return Path(__file__).resolve().parents[2]
-
-
-def _run(cmd: list[str]) -> str:
-    completed = subprocess.run(
-        cmd,
-        cwd=_repo_root(),
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    if completed.returncode != 0:
-        raise RuntimeError(
-            f"Command failed (rc={completed.returncode}): {' '.join(cmd)}\n"
-            f"stdout:\n{completed.stdout}\nstderr:\n{completed.stderr}"
-        )
-    return completed.stdout.strip()
 
 
 def _resolve_from_env(target: str) -> Path | None:
@@ -108,17 +87,14 @@ def _resolve_target_path(target: str) -> Path:
     )
 
 
-def get_binary_path(target: str) -> Path:
-    """Compatibility helper used by daemon tests for bazel labels."""
-    return _resolve_target_path(target)
-
-
 def pgrep_cmdline_pattern(binary_path: str) -> str:
     """Build POSIX ERE pattern matching binary with optional arguments."""
     return rf"^{re.escape(binary_path)}([[:space:]]|$)"
 
 
 def is_running(binary_path: str | Path) -> bool:
+    """True if some process's cmdline starts with `binary_path` (pgrep). This is process
+    existence only, not launch_manager's reported Running state."""
     result = subprocess.run(
         ["pgrep", "-f", pgrep_cmdline_pattern(str(binary_path))],
         capture_output=True,
@@ -129,6 +105,7 @@ def is_running(binary_path: str | Path) -> bool:
 
 
 def first_pid(binary_path: str | Path) -> str | None:
+    """First pgrep match for `binary_path` (see `is_running`), or None."""
     result = subprocess.run(
         ["pgrep", "-f", pgrep_cmdline_pattern(str(binary_path))],
         capture_output=True,
@@ -142,6 +119,7 @@ def first_pid(binary_path: str | Path) -> str | None:
 
 
 def wait_until(predicate, timeout_s: float, interval_s: float = 0.2) -> bool:
+    """Poll `predicate` until it is truthy (True) or `timeout_s` elapses (False)."""
     deadline = time.time() + timeout_s
     while time.time() < deadline:
         if predicate():
@@ -150,29 +128,25 @@ def wait_until(predicate, timeout_s: float, interval_s: float = 0.2) -> bool:
     return False
 
 
-# cap_kill: once the sandbox uid differs from the runner's (see `_generate_runtime_config`),
-# launch_manager (still running as the runner uid) needs it to terminate/restart its own children.
+# cap_setuid/cap_setgid: apply sandbox uid/gid; cap_sys_nice: apply non-SCHED_OTHER policies;
+# cap_kill: launch_manager (runner uid) must signal children running as `_SANDBOX_UID`.
 _SETCAP_CAPS = "cap_setuid,cap_setgid,cap_sys_nice,cap_kill+ep"
 
-# Sandbox uid used when capabilities are granted. It must differ from the runner's own uid,
-# otherwise the uid/gid test cannot tell an applied sandbox identity from an inherited one
-# (the config's 1001 is also the default first-user / GitHub-hosted-runner uid).
+# Sandbox uid substituted when capabilities are granted. Must differ from the runner's uid, else
+# the uid test cannot tell an applied identity from an inherited one (config's 1001 is commonly
+# the runner's own uid). The gid is NOT remapped to a distinct value: see `_generate_runtime_config`.
 _SANDBOX_UID = 65533
 
-# Copies of `kill` (cap_kill) and `cat` (cap_sys_ptrace + cap_dac_read_search), staged when capabilities are granted,
-# so the runner can signal apps running under `_SANDBOX_UID` and read their /proc/<pid>/environ
-# using only the setcap sudoers rule (no sudo kill).
+# Capability-granted copies of `kill` (cap_kill) and `cat` (cap_sys_ptrace, cap_dac_read_search),
+# staged per daemon by `_spawn_daemon` and deleted by `_teardown`. They let the runner signal apps
+# running as `_SANDBOX_UID` and read their /proc/<pid>/environ with only the setcap sudoers rule.
 _privileged_kill: Path | None = None
 _privileged_cat: Path | None = None
 
 
 def _mount_nosuid(path: Path) -> bool:
-    """Best-effort check whether `path` lives on a filesystem mounted `nosuid`.
-
-    A `nosuid` mount silently strips file capabilities at exec time even when `setcap`
-    itself reports success, which otherwise looks identical to "grant never happened"
-    from the caller's point of view.
-    """
+    """Best-effort check (via `findmnt`) whether `path` is on a `nosuid` mount, which drops
+    file capabilities at exec time. Used only to enrich a failed-grant diagnostic."""
     try:
         findmnt = shutil.which("findmnt")
         if findmnt is None:
@@ -193,25 +167,17 @@ def _grant_sandbox_capabilities(
     caps: str = _SETCAP_CAPS,
     required: tuple[str, ...] = ("cap_setuid", "cap_setgid"),
 ) -> tuple[bool, str]:
-    """Best-effort grant of the capabilities launch_manager needs to apply sandbox uid/gid
-    and scheduling policy without running as root. Returns `(granted, reason)`: `granted`
-    is a *verified* result (re-read via `getcap`, not just the setcap exit code) so tests
-    can key off a real, established precondition instead of assuming root; `reason` is a
-    human-readable diagnostic that is safe to surface directly in a pytest.skip() message.
+    """Best-effort `setcap caps binary_path`. Never raises.
 
-    Requires CAP_SETFCAP to write the capability xattr, which a non-root test runner does not
-    have by default. Set FIT_ENABLE_SETCAP=1 to opt into a `sudo -n setcap` attempt, backed by
-    a passwordless sudoers rule scoped to the setcap binary (e.g. `<user> ALL=(root) NOPASSWD:
-    /usr/sbin/setcap`, with NO trailing arguments pinned — the target path is a fresh tmp_path
-    on every test run, so a rule that also pins the argument list will never match). Without
-    the flag, only a plain (non-sudo) setcap is tried, which only succeeds if the runner is
-    already root.
+    Returns `(granted, reason)`. `granted` is True only if `getcap` reads back every cap in
+    `required` (when `getcap` is available); `reason` is a diagnostic suitable for a skip message.
 
-    Under `bazel test`, undeclared env vars (like FIT_ENABLE_SETCAP) do not reach the test
-    process unless passed via `--test_env=FIT_ENABLE_SETCAP=1` (NOT `--action_env`, which only
-    affects build actions). `bazel run` inherits the invoking shell's environment directly, so
-    `--action_env` is a no-op for this variable there; it is only needed to force a rebuild
-    when it affects action inputs, which it does not here.
+    Tries `sudo -n setcap` first when FIT_ENABLE_SETCAP=1 (needs a passwordless sudoers rule for
+    the setcap binary with no pinned arguments), then plain `setcap` (succeeds only as root).
+    Under `bazel test` the variable must be passed with `--test_env`, and the grant is inert
+    inside linux-sandbox (PR_SET_NO_NEW_PRIVS) even when setcap succeeds.
+
+    Limitation: only `required` is verified; the other caps in `caps` are assumed granted with it.
     """
     if shutil.which("setcap") is None:
         return False, "setcap binary not found on PATH"
@@ -264,11 +230,11 @@ def _grant_sandbox_capabilities(
 
 
 def signal_process(pid: str, sig: str, *, sandbox_privileged: bool) -> tuple[bool, str]:
-    """Send `sig` (e.g. "-9", "-STOP", "-CONT") to `pid`, escalating via sudo if needed.
+    """Send `sig` (e.g. "-9", "-STOP", "-CONT") to `pid`. Returns `(sent, reason)`; never raises.
 
-    Under sandbox capabilities, supervised apps run as `_SANDBOX_UID`, not the runner's own
-    uid, so a plain `kill` fails. Falls back to the cap_kill `kill` copy staged by
-    `_spawn_daemon`, then to `sudo -n kill` when `FIT_ENABLE_SETCAP=1`.
+    Tries plain `kill`, then (if `sandbox_privileged`) the staged cap_kill copy, then
+    `sudo -n kill` when FIT_ENABLE_SETCAP=1. The sudo fallback only works with a sudoers rule
+    for `kill`, which the documented setup does not provide.
     """
     attempts: list[list[str]] = [["kill", sig, pid]]
     if sandbox_privileged and _privileged_kill is not None:
@@ -304,7 +270,7 @@ def _tmpdir_root() -> Path:
 
 @dataclass
 class ManagedDaemon:
-    """A subprocess wrapper with line-buffered output collection."""
+    """A launch_manager subprocess plus the stdout/stderr lines its reader thread collected."""
 
     process: subprocess.Popen[str]
     _lines: list[str]
@@ -317,6 +283,8 @@ class ManagedDaemon:
         return self.process.pid
 
     def stop(self) -> None:
+        """SIGTERM the daemon's process group, SIGKILL after 5 s. Does not reach supervised
+        apps, which launch_manager moves into their own process groups (see `_teardown`)."""
         if self.is_running():
             os.killpg(os.getpgid(self.process.pid), signal.SIGTERM)
             deadline = time.time() + 5.0
@@ -327,11 +295,11 @@ class ManagedDaemon:
                 self.process.wait(timeout=5)
 
     def close_output(self) -> None:
-        """Join the stdout reader and close the pipe.
+        """Join the stdout reader (1 s) and close the pipe.
 
-        Launched apps inherit the daemon's stdout pipe and can outlive it, so call this only
-        after the apps are killed too; otherwise the reader is still blocked in read() holding
-        the buffer lock and close() would deadlock.
+        Call only after the supervised apps are dead: they inherit the pipe, so the reader sees
+        EOF only then. If the reader is still alive the pipe is left open (leaked) rather than
+        closed under it, which would deadlock.
         """
         self._thread.join(timeout=1)
         if self.process.stdout is not None and not self._thread.is_alive():
@@ -357,27 +325,23 @@ def _generate_runtime_config(
     ready_timeout_s: float | None = None,
     crashes_before_success: int | None = None,
 ) -> None:
-    """Render and serialize an isolated launch-manager config for one daemon.
+    """Render `config_template` for one daemon and serialize it to `etc_dir`.
 
-    Test variants are rendered from one template here rather than kept as copied config
-    files, so they cannot drift from the content other tests assert on:
-    `independent_apps` drops every component's `depends_on`, `ready_timeout_s` overrides
-    `defaults.deployment_config.ready_timeout`, and `crashes_before_success` fills the
-    `__FIT_CRASHES_BEFORE_SUCCESS__` process argument.
+    Writes the rendered JSON to `etc_dir/lifecycle_config.json` (tests read expected values from
+    it) and the flatbuffer to `etc_dir/launch_manager_config.bin` via the upstream config mapper
+    and `flatc`. Raises RuntimeError with the tool's output if either step fails.
 
-    Non-`SCHED_OTHER` scheduling policies need `CAP_SYS_NICE`; unlike the uid/gid sandbox
-    fields, launch_manager treats a failed `sched_setscheduler()` as fatal for the component
-    (triggering its `recovery_action` instead of just leaving the policy unapplied), which
-    would otherwise crash-loop every component in the config - not just the one a given test
-    cares about - whenever the capability grant wasn't obtained. When `sandbox_privileged` is
-    `False`, downgrade any configured non-default scheduling policy back to the harmless
-    `SCHED_OTHER`/`0` so the daemon still starts cleanly; scheduling-specific tests already key
-    off `sandbox_privileged` themselves and skip rather than assert against it in that case.
-
-    `remap_sandbox_uid` rewrites every sandbox uid to `_SANDBOX_UID` and gid to the runner's own
-    gid (so the group bits of the runner-owned runtime dirs still grant access), and opens
-    `runtime_root` to that group. Read the rendered `etc_dir / "lifecycle_config.json"` for the
-    ids actually applied.
+    Rendering always sets `bin_dir` to `runtime_root/bin` and the flaky-app counter path; optional
+    variants (rendered, not kept as copied config files, so they cannot drift):
+    - `independent_apps`: drop every component's `depends_on`.
+    - `ready_timeout_s`: override `defaults.deployment_config.ready_timeout`.
+    - `crashes_before_success`: fill the `__FIT_CRASHES_BEFORE_SUCCESS__` argument.
+    - `remap_sandbox_uid`: set every sandbox uid to `_SANDBOX_UID` and gid to the runner's gid,
+      and chmod `runtime_root` 0750. Limitation: the gid then equals the runner's, so a gid
+      check cannot prove setgid() was applied.
+    - `sandbox_privileged=False`: downgrade non-`SCHED_OTHER` policies to `SCHED_OTHER`/0.
+      launch_manager treats a failed sched_setscheduler() as fatal for the component, so without
+      CAP_SYS_NICE every such component would crash-loop.
     """
     config = json.loads(_resolve_target_path(config_template).read_text(encoding="utf-8"))
     config["defaults"]["deployment_config"]["bin_dir"] = str(runtime_root / "bin")
@@ -459,16 +423,16 @@ def _generate_runtime_config(
         )
 
 
-# launch_manager creates POSIX shm objects with deterministic names ("/ipc_shared_mem<N>",
-# "/_nudge~._.~me_") using O_CREAT|O_EXCL. POSIX shm lives on the host-wide /dev/shm tmpfs
-# (not isolated by `unshare -i`), so a second daemon started before the first has shm_unlink'ed
-# gets EEXIST and silently never launches its components. Daemon lifetimes must not overlap:
-# within a process this registry enforces it; across Bazel test processes the lifecycle
-# targets are tagged "exclusive".
+# launch_manager creates POSIX shm objects with fixed names ("/ipc_shared_mem<N>", "/_nudge~._.~me_")
+# using O_CREAT|O_EXCL on the host-wide /dev/shm (not isolated by `unshare -i`). A second daemon
+# started before the first has unlinked them gets EEXIST and silently launches nothing. So daemon
+# lifetimes must not overlap: this registry enforces it within one pytest process; across Bazel
+# test processes the lifecycle targets are tagged "exclusive".
 _live_daemons: list[ManagedDaemon] = []
 
 
 def _assert_no_live_daemon() -> None:
+    """Fail the test if a daemon started by this process is still running."""
     _live_daemons[:] = [d for d in _live_daemons if d.is_running()]
     if _live_daemons:
         pytest.fail(
@@ -487,20 +451,24 @@ def _spawn_daemon(
     grant_sandbox_capabilities: bool = False,
     **config_options: Any,
 ) -> tuple[ManagedDaemon, bool, str]:
-    """Stage launch_manager plus `staged_binaries` (src, dst, mode), render its runtime
-    config (`config_options` are passed to `_generate_runtime_config`), and start it as a
-    supervised subprocess.
+    """Copy launch_manager (0700) and `staged_binaries` (src, dst, mode) into place, render the
+    config (`config_options` go to `_generate_runtime_config`), and start launch_manager in its
+    own session with stdout+stderr collected by a reader thread.
 
-    Returns `(daemon, sandbox_privileged, sandbox_privileged_reason)`; the latter two are
-    `(False, "not requested")` unless `grant_sandbox_capabilities` is set. Fails the test via
-    `pytest.fail` if the daemon exits within the startup grace period, or if another daemon
-    started by this process is still alive (see `_live_daemons`).
+    With `grant_sandbox_capabilities`, tries to setcap launch_manager; if that succeeds it also
+    stages the privileged `kill`/`cat` copies, and only when both are staged remaps the sandbox
+    uid. Returns `(daemon, sandbox_privileged, sandbox_privileged_reason)`.
+
+    `pytest.fail`s if another daemon from this process is alive or if launch_manager exits within
+    the 1 s startup window; in the latter case (or any exception after Popen) it tears down the
+    daemon itself, since the caller never receives it.
     """
     _assert_no_live_daemon()
     launch_manager = _resolve_target_path("@score_lifecycle//score/launch_manager:launch_manager")
     lm_dst = work_dir / "launch_manager"
     shutil.copy2(launch_manager, lm_dst)
-    lm_dst.chmod(0o755)
+    # 0700: once granted cap_setuid it must not be executable by other local users.
+    lm_dst.chmod(0o700)
 
     global _privileged_kill, _privileged_cat
     _privileged_kill = _privileged_cat = None
@@ -509,13 +477,15 @@ def _spawn_daemon(
     else:
         sandbox_privileged, sandbox_privileged_reason = False, "not requested"
     if sandbox_privileged:
-        # Only move apps off the runner's uid if the runner can still signal them and read
-        # their /proc/<pid>/environ afterwards.
+        # Remap the uid only if the runner can still signal the apps and read their environ.
         kill_tool, kill_reason = _stage_privileged_tool(work_dir, "kill", ("cap_kill",))
         cat_tool, cat_reason = _stage_privileged_tool(work_dir, "cat", ("cap_sys_ptrace", "cap_dac_read_search"))
         if kill_tool is not None and cat_tool is not None:
             _privileged_kill, _privileged_cat = kill_tool, cat_tool
         else:
+            for tool in (kill_tool, cat_tool):
+                if tool is not None:
+                    tool.unlink()
             sandbox_privileged_reason += f"; sandbox uid not remapped: {kill_reason}; {cat_reason}"
 
     for src, dst, mode in staged_binaries:
@@ -558,11 +528,10 @@ def _spawn_daemon(
     daemon = ManagedDaemon(process=process, _lines=lines, _thread=thread)
     _live_daemons.append(daemon)
 
-    # The caller never receives `daemon` if this raises, so tear it down here (daemon, any
-    # app it already launched, and its output pipe) rather than leaving a detached
-    # launch_manager running and blocking every later start via _live_daemons.
+    # The caller never receives `daemon` if this raises, so tear it down here; otherwise a
+    # detached launch_manager keeps running and blocks every later start via _live_daemons.
     try:
-        # Give startup a chance to complete and fail early if config is broken.
+        # Startup window: a broken config makes launch_manager exit within it.
         time.sleep(1.0)
         if not daemon.is_running():
             pytest.fail(f"launch_manager failed to start. Logs:\n{daemon.get_logs()}")
@@ -581,24 +550,20 @@ def start_launch_manager_daemon(
     independent_apps: bool = False,
     ready_timeout_s: float | None = None,
 ) -> dict[str, Any]:
-    """Start a real launch_manager process with generated flatbuffer config.
+    """Start launch_manager on lifecycle_daemon_config.json with rust_ and cpp_supervised_app.
 
-    `blocked_apps` names ("rust"/"cpp") are copied into place but left
-    non-executable, so launch_manager cannot start them until the caller
-    chmod's them back to 0o755. Used to exercise the dependency-gating
-    negative path: assert the dependent app stays down while its
-    dependency is withheld, then unblock and assert it starts - and, with
-    `independent_apps=True` (no depends_on between the two apps), the inverse:
-    assert the other app starts anyway, proving it isn't gated at all.
-    `independent_apps`/`ready_timeout_s` are rendered onto lifecycle_daemon_config.json
-    (see `_generate_runtime_config`).
+    Always attempts the sandbox capability grant (see `_spawn_daemon`); check the returned
+    `sandbox_privileged` before asserting on uid/gid/scheduling.
+    - `blocked_apps` ("rust"/"cpp"): staged with mode 0000, so exec fails until the caller
+      chmods them 0755. Used to withhold a dependency.
+    - `stalled_apps`: replaced by a stub that runs but never reports Running, so launch_manager
+      waits out `ready_timeout` on it.
+    - `independent_apps`, `ready_timeout_s`: rendered into the config (`_generate_runtime_config`).
+    - `wait_for_apps`: `pytest.fail` unless every non-blocked app is running within 8 s.
+      Limitation: "running" means a matching process exists (pgrep), not launch_manager's Running state.
 
-    `stalled_apps` names are replaced by a shell stub that runs but never reports
-    Running, so launch_manager spends the full `ready_timeout` (and retries) on
-    them - unlike a blocked app, whose exec fails immediately.
-
-    Each invocation receives its own directory beneath `TEST_TMPDIR`, but must not overlap
-    another live daemon (including the class-scoped fixture): see `_live_daemons`.
+    Uses a fresh runtime root under `TEST_TMPDIR`; must not overlap another live daemon.
+    Returns the daemon info dict consumed by `stop_launch_manager_daemon`.
     """
 
     runtime_root = Path(tempfile.mkdtemp(prefix="lifecycle_fit-", dir=_tmpdir_root()))
@@ -618,8 +583,8 @@ def start_launch_manager_daemon(
         rust_supervised = _resolve_target_path("@score_lifecycle//examples/rust_supervised_app:rust_supervised_app")
         cpp_supervised = _resolve_target_path("@score_lifecycle//examples/cpp_supervised_app:cpp_supervised_app")
         stall_stub = work_dir / "stall_stub.sh"
-        # `exec -a "$0"` keeps the staged app path as argv[0], so is_running()/pkill's anchored
-        # cmdline pattern still matches the stub; a single exec'd process also dies on SIGTERM.
+        # `exec -a "$0"` keeps the staged app path as argv[0], so the anchored pgrep/pkill pattern
+        # matches the stub, and it stays a single process that dies on SIGTERM.
         stall_stub.write_text('#!/bin/bash\nexec -a "$0" sleep infinity\n', encoding="utf-8")
         staged_binaries = [
             (
@@ -656,7 +621,7 @@ def start_launch_manager_daemon(
                 f"{process_snapshot.stdout}{process_snapshot.stderr}"
             )
     except BaseException:
-        # An app that did reach Running (e.g. on the wait timeout) outlives the daemon.
+        # Kill apps too: any that already started outlive the daemon (own process group).
         _teardown(daemon, list(apps.values()), runtime_root)
         raise
 
@@ -676,14 +641,12 @@ def start_flaky_retry_daemon(
     tmp_path_factory: pytest.TempPathFactory,
     crashes_before_success: int,
 ) -> dict[str, Any]:
-    """Start launch_manager against the single-component lifecycle_daemon_retry_config.json.
+    """Start launch_manager on lifecycle_daemon_retry_config.json with only `flaky_startup_app`.
 
-    Drives `flaky_startup_app` (see support_apps/flaky_startup_app/main.cpp), which
-    aborts on its first `crashes_before_success` startup attempts and stays running
-    from then on, so `ready_recovery_action.restart.number_of_attempts` can be
-    exercised deterministically instead of relying on a real, racy startup failure.
-    Does not wait for the app to reach Running: whether it ever does is exactly
-    what the calling test is checking.
+    The app aborts on its first `crashes_before_success` launches and then stays up, counting
+    every launch in `counter_path`, so tests can observe `number_of_attempts` deterministically.
+    No capability grant is requested. Does not wait for the app: whether it ever runs is what
+    the caller checks. Returns the daemon info dict consumed by `stop_flaky_retry_daemon`.
     """
     runtime_root = Path(tempfile.mkdtemp(prefix="lifecycle_fit_retries-", dir=_tmpdir_root()))
     bin_dir = runtime_root / "bin"
@@ -701,9 +664,8 @@ def start_flaky_retry_daemon(
         )
         staged_binaries = [(flaky_app, app_dst, 0o755)]
 
+        # runtime_root is a fresh mkdtemp, so the counter starts at 0.
         counter_path = runtime_root / "flaky_startup_app.counter"
-        if counter_path.exists():
-            counter_path.unlink()
 
         daemon, _, _ = _spawn_daemon(
             work_dir,
@@ -725,15 +687,17 @@ def start_flaky_retry_daemon(
         "counter_path": counter_path,
         "crashes_before_success": crashes_before_success,
         "runtime_root": runtime_root,
+        "runtime_config": etc_dir / "lifecycle_config.json",
     }
 
 
 def _teardown(daemon: ManagedDaemon | None, app_paths: list[Path], runtime_root: Path) -> None:
-    """Stop `daemon` (if started), pkill each of `app_paths` by cmdline, close the daemon's
-    output pipe, then clean up `runtime_root`. Every step runs even if an earlier one raises.
+    """Stop `daemon` (if any), SIGKILL each of `app_paths` by cmdline, close the daemon's output,
+    delete the privileged tool copies and remove `runtime_root`. Each step runs even if an
+    earlier one raises.
 
-    Supervised apps setpgid() into their own process group, so stopping the daemon's group
-    never reaches them; they must be killed explicitly.
+    Apps are killed explicitly because they run in their own process groups, which `stop()`
+    does not reach.
     """
     try:
         if daemon is not None:
@@ -745,15 +709,26 @@ def _teardown(daemon: ManagedDaemon | None, app_paths: list[Path], runtime_root:
             if daemon is not None:
                 daemon.close_output()
         finally:
+            _drop_privileged_tools()
             _cleanup_runtime_root(runtime_root)
 
 
-def _stage_privileged_tool(work_dir: Path, name: str, caps: tuple[str, ...]) -> tuple[Path | None, str]:
-    """Copy the external `name` binary into `work_dir` and grant it `caps` via the same setcap
-    path as launch_manager. Returns `(path, reason)`; `path` is None if the grant failed.
+def _drop_privileged_tools() -> None:
+    """Delete the capability-granted `kill`/`cat` copies. `work_dir` is not removed (pytest keeps
+    recent basetemps), so they would otherwise stay on disk."""
+    global _privileged_kill, _privileged_cat
+    for tool in (_privileged_kill, _privileged_cat):
+        if tool is not None:
+            tool.unlink(missing_ok=True)
+    _privileged_kill = _privileged_cat = None
 
-    The copy keeps its basename (procps `kill` is multi-call and dispatches on argv[0]) and is
-    mode 0700: only the runner can execute it, and the runner can already `sudo -n setcap`.
+
+def _stage_privileged_tool(work_dir: Path, name: str, caps: tuple[str, ...]) -> tuple[Path | None, str]:
+    """Copy the `name` binary from PATH to `work_dir/privileged/name` (mode 0700, runner only) and
+    grant it `caps` via `_grant_sandbox_capabilities`. Returns `(path, reason)`; `path` is None
+    if the grant was not verified (the copy is then left for the caller to delete).
+
+    The basename is kept because procps `kill` dispatches on argv[0].
     """
     src = shutil.which(name)
     if src is None:
@@ -769,18 +744,24 @@ def _stage_privileged_tool(work_dir: Path, name: str, caps: tuple[str, ...]) -> 
 def read_proc_file(pid: str, name: str) -> bytes:
     """Read `/proc/<pid>/<name>`, via the privileged `cat` copy when one is staged.
 
-    Files like `environ` need ptrace access, and after its setuid() the app is non-dumpable so
-    its /proc files are root-owned 0400; the runner lacks both once the app runs as `_SANDBOX_UID`.
+    Needed for files like `environ`: once the app runs as `_SANDBOX_UID` it is non-dumpable and
+    the runner lacks ptrace access to it. Raises RuntimeError (with stderr) if `cat` fails.
     """
     path = f"/proc/{pid}/{name}"
     if _privileged_cat is None:
         return Path(path).read_bytes()
-    return subprocess.run([str(_privileged_cat), path], capture_output=True, check=True).stdout
+    result = subprocess.run([str(_privileged_cat), path], capture_output=True, check=False)
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"Command failed (rc={result.returncode}): {_privileged_cat} {path}\n"
+            f"stderr:\n{result.stderr.decode(errors='replace')}"
+        )
+    return result.stdout
 
 
 def _kill_app(app_path: Path) -> None:
-    """SIGKILL every process whose cmdline matches `app_path`, via the cap_kill `kill` copy
-    when one is staged (apps running as `_SANDBOX_UID` ignore a plain pkill: EPERM)."""
+    """SIGKILL every process whose cmdline starts with `app_path`. Uses the cap_kill `kill` copy
+    when staged, since a plain pkill gets EPERM for apps running as `_SANDBOX_UID`. Best effort."""
     if _privileged_kill is None:
         subprocess.run(
             ["pkill", "-9", "-f", pgrep_cmdline_pattern(str(app_path))], capture_output=True, text=True, check=False

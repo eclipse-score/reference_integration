@@ -10,19 +10,12 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-"""Scenario-level smoke tests for the conditional-launching test-scenario binary.
+"""Tests of the FIT's own conditional-launching scenario binary (rust and cpp), not of launch_manager.
 
-These exercise the bespoke wait-condition poller in test_scenarios/{rust,cpp}/.../lifecycle/
-conditional_launching.{rs,cpp} directly: preconditions (a path, an env var, a running process)
-are really established or really withheld, so the assertions verify that *this stub* observes
-and enforces them, not merely that it echoes back what was configured.
-
-This is a fact about the FIT's own test code, not about launch_manager - no test here starts
-or drives an actual launch_manager instance, so none of them verify a `feat_req__lifecycle__*`
-requirement of the lifecycle module. That verification belongs to the daemon-driven tests in
-test_conditional_launching.py / test_process_launching_with_daemon.py, or a future test that
-exercises this same wait-condition logic through launch_manager's real config. Hence no add
-`@add_test_properties(partially_verifies=[...])` claims have been added to classes in this file.
+The scenario polls `path:`, `env:` and `process:` wait conditions; these tests really create or
+withhold each condition and check what the stub reports. No test here drives launch_manager, so
+none carries a `partially_verifies` claim: lifecycle requirement coverage lives in
+test_conditional_launching.py and test_process_launching_with_daemon.py.
 """
 
 import os
@@ -45,7 +38,7 @@ _CONDITION_PROCESS_NAME = "sleep"
 
 
 class TestConditionalLaunchingScenario(LifecycleScenario):
-    """Verify the scenario actually waits for and detects satisfied conditions."""
+    """All three conditions are really satisfied before the scenario starts."""
 
     @pytest.fixture(scope="class")
     def scenario_name(self) -> str:
@@ -57,13 +50,8 @@ class TestConditionalLaunchingScenario(LifecycleScenario):
 
     @pytest.fixture(scope="class", autouse=True)
     def satisfied_preconditions(self, flag_path: Path) -> Generator[None, None, None]:
-        """Really establish the preconditions the scenario is told to wait for.
-
-        The flag file is created up front (path condition already met), the env var is
-        set in this process (inherited by the scenario subprocess), and a real `sleep`
-        process is kept alive for the duration of the scenario run (process condition).
-        Torn down afterwards so this class does not leak state into later tests.
-        """
+        """Create the flag file, set the env var (inherited by the scenario) and keep a `sleep`
+        process alive for the class; all three are undone afterwards."""
         flag_path.write_text("ready", encoding="utf-8")
         os.environ[_CONDITION_ENV_VAR] = "1"
         process = subprocess.Popen([_CONDITION_PROCESS_NAME, "30"])
@@ -77,8 +65,7 @@ class TestConditionalLaunchingScenario(LifecycleScenario):
 
     @pytest.fixture(scope="class")
     def test_config(self, flag_path: Path, satisfied_preconditions: None) -> dict[str, Any]:
-        # Depends on `satisfied_preconditions` explicitly (rather than relying on autouse
-        # ordering) so preconditions are guaranteed established before `results` executes.
+        # Explicit dependency so the preconditions exist before `results` runs the scenario.
         return {
             "test": {
                 "wait_conditions": [
@@ -96,7 +83,7 @@ class TestConditionalLaunchingScenario(LifecycleScenario):
         results: ScenarioResult,
         version: str,
     ) -> None:
-        """Verify the scenario succeeds once path/env/process conditions are all really met."""
+        """The scenario exits successfully."""
         assert results.return_code == ResultCode.SUCCESS, (
             f"Expected success with satisfied preconditions, got: {results}"
         )
@@ -107,7 +94,7 @@ class TestConditionalLaunchingScenario(LifecycleScenario):
         flag_path: Path,
         version: str,
     ) -> None:
-        """Verify the scenario reports each condition as satisfied, not just configured."""
+        """The scenario logs "Condition satisfied" for each condition and "All dependencies satisfied"."""
         expected_messages = [
             f"Condition satisfied: path:{flag_path}",
             f"Condition satisfied: env:{_CONDITION_ENV_VAR}",
@@ -118,23 +105,20 @@ class TestConditionalLaunchingScenario(LifecycleScenario):
             log = logs_info_level.find_log("message", value=expected)
             assert log is not None, f"Expected scenario to log: {expected}"
 
-    def test_timeout_and_polling_interval_are_honored(
+    def test_timeout_and_polling_interval_are_logged(
         self,
         logs_info_level: Any,
         version: str,
     ) -> None:
-        """Verify the scenario logs the configured wait timing values."""
+        """The scenario logs the configured polling interval and timeout. Only the logged values
+        are checked; that polling actually uses them is covered by the late-condition test."""
         assert logs_info_level.find_log("message", value="Polling interval: 50ms") is not None
         assert logs_info_level.find_log("message", value="Condition timeout: 2000ms") is not None
 
 
 class TestConditionalLaunchingScenarioTimesOutOnUnmetConditions(LifecycleScenario):
-    """Verify the scenario fails when its wait conditions are never satisfied.
-
-    Without this, an implementation that always reports success regardless of whether
-    a path exists, an env var is set, or a process is running would still pass the
-    happy-path test above.
-    """
+    """No condition is ever satisfied: the scenario must fail with a timeout. Catches a stub that
+    reports success without checking the conditions."""
 
     @pytest.fixture(scope="class")
     def scenario_name(self) -> str:
@@ -162,8 +146,7 @@ class TestConditionalLaunchingScenarioTimesOutOnUnmetConditions(LifecycleScenari
         return True
 
     def test_scenario_fails_when_conditions_stay_unmet(self, results: ScenarioResult, version: str) -> None:
-        """Verify the scenario reports failure - and specifically a wait-condition timeout,
-        not merely any nonzero exit - when conditions are never satisfied."""
+        """Non-success exit with a wait-condition timeout ("Timed out" ... "condition") on stderr."""
         assert results.return_code != ResultCode.SUCCESS, (
             f"Expected failure when wait conditions are never satisfied, got: {results}"
         )
@@ -174,14 +157,8 @@ class TestConditionalLaunchingScenarioTimesOutOnUnmetConditions(LifecycleScenari
 
 
 class TestConditionalLaunchingScenarioDetectsConditionArrivingLate(LifecycleScenario):
-    """Verify the scenario is actually re-checking the condition over time (real polling),
-    rather than only ever observing the condition's state at process start (t=0) or its
-    absence at the very end (timeout).
-
-    Without this, an implementation that checks the condition exactly once - either at
-    the very start or only right before giving up - would still pass both the
-    already-satisfied test and the never-satisfied timeout test above.
-    """
+    """The path condition becomes true 0.5 s into a 3 s wait. Catches a stub that checks only once
+    (at start or at timeout) instead of polling."""
 
     _DELAY_BEFORE_CONDITION_MET_S = 0.5
     _TIMEOUT_MS = 3000
@@ -212,19 +189,10 @@ class TestConditionalLaunchingScenarioDetectsConditionArrivingLate(LifecycleScen
         execution_timeout: float,
         flag_path: Path,
     ) -> Generator[ScenarioResult, None, None]:
-        # Overrides the base class-scoped `results` fixture so the condition is armed before
-        # the command runs. The base fixture is also pulled in by the autouse `print_to_report`
-        # fixture ahead of the test body, so starting the trigger inside the test method itself
-        # is too late: the base fixture would already have run the command to completion and
-        # timed out before the test method ever executes.
-        #
-        # Use a separate subprocess to write the flag after the configured delay instead of a
-        # `threading.Timer`. Under heavy Bazel load, thread creation and scheduling can itself
-        # consume a meaningful slice of the delay budget, and the test is specifically checking
-        # that a condition becomes true mid-wait, not that a Python timer thread can fire before
-        # the OS reschedules it. A tiny helper subprocess makes the delay deterministic and
-        # independent of the test runner's thread scheduler while still exercising the real
-        # polling logic in the scenario under test.
+        # Overrides the base `results` fixture so the delayed flag writer starts together with the
+        # scenario; the autouse report fixture runs `results` before the test body, so arming it
+        # in the test would be too late. A helper subprocess (not a Python timer thread) writes
+        # the flag, so the delay does not depend on the test runner's thread scheduling.
         start = time.monotonic()
         trigger = subprocess.Popen(
             [
@@ -241,9 +209,7 @@ class TestConditionalLaunchingScenarioDetectsConditionArrivingLate(LifecycleScen
         )
         try:
             result = self._run_command(command, execution_timeout)
-            # A pytest fixture's `self` and a test method's `self` are different instances of
-            # the test class, so state can't be handed off via an instance attribute; stash it
-            # on the class object instead, which both share.
+            # Fixture and test get different instances, so share the timing via the class.
             type(self)._elapsed_s = time.monotonic() - start
         finally:
             trigger.terminate()
@@ -260,9 +226,7 @@ class TestConditionalLaunchingScenarioDetectsConditionArrivingLate(LifecycleScen
         results: ScenarioResult,
         version: str,
     ) -> None:
-        """Verify the scenario succeeds shortly after the condition becomes true mid-wait,
-        not merely at t=0 or by coincidentally still being true once the full timeout
-        elapses."""
+        """Success no earlier than the 0.5 s delay and well before the 3 s timeout."""
         result = results
         elapsed_s = self._elapsed_s
 
@@ -280,8 +244,7 @@ class TestConditionalLaunchingScenarioDetectsConditionArrivingLate(LifecycleScen
 
 
 class TestConditionalLaunchingScenarioRejectsUnsupportedPrefix(LifecycleScenario):
-    """Verify an unsupported wait-condition prefix is rejected as invalid configuration,
-    distinct from a legitimate condition that simply times out unmet."""
+    """An unknown wait-condition prefix is a configuration error, reported without waiting."""
 
     @pytest.fixture(scope="class")
     def scenario_name(self) -> str:
@@ -307,15 +270,11 @@ class TestConditionalLaunchingScenarioRejectsUnsupportedPrefix(LifecycleScenario
 
     @pytest.fixture(scope="class")
     def results(self, command: list[str], execution_timeout: float) -> ScenarioResult:
-        # Overrides the base class-scoped `results` fixture to time the single command
-        # invocation. Without this override, the test body's own `self._run_command(...)`
-        # call would run the scenario binary a *second* time on top of the one the autouse
-        # `print_to_report` -> `logs` -> `results` chain already ran ahead of the test.
+        # Overrides the base `results` fixture to time the one scenario run (a second run in the
+        # test body would execute the binary twice). Fixture and test get different instances,
+        # so the timing is shared via the class.
         start = time.monotonic()
         result = self._run_command(command, execution_timeout)
-        # A pytest fixture's `self` and a test method's `self` are different instances of
-        # the test class, so state can't be handed off via an instance attribute; stash it
-        # on the class object instead, which both share.
         type(self)._elapsed_s = time.monotonic() - start
         return result
 
@@ -324,8 +283,7 @@ class TestConditionalLaunchingScenarioRejectsUnsupportedPrefix(LifecycleScenario
         results: ScenarioResult,
         version: str,
     ) -> None:
-        """Verify validation rejects the condition outright, before entering the wait loop,
-        rather than only surfacing the same error after waiting out the full timeout."""
+        """Non-success exit with "Unsupported wait condition prefix" on stderr, in under half the timeout."""
         result = results
         elapsed_s = self._elapsed_s
 
@@ -343,14 +301,8 @@ class TestConditionalLaunchingScenarioRejectsUnsupportedPrefix(LifecycleScenario
 
 
 class TestConditionalLaunchingScenarioRejectsEmptyConditions(LifecycleScenario):
-    """Verify an empty wait_conditions list is rejected as invalid configuration up front,
-    distinct from a legitimate condition that simply times out unmet.
-
-    Without this, a future refactor of parse_wait_conditions/parse_string_array_field could
-    silently start treating an empty list as "nothing to wait for, immediate success" instead
-    of a configuration error - a regression this test would otherwise be the only thing to
-    catch, since the happy-path and unsupported-prefix tests never exercise this branch.
-    """
+    """An empty `wait_conditions` list is a configuration error (not "nothing to wait for"),
+    reported without waiting."""
 
     @pytest.fixture(scope="class")
     def scenario_name(self) -> str:
@@ -376,9 +328,7 @@ class TestConditionalLaunchingScenarioRejectsEmptyConditions(LifecycleScenario):
 
     @pytest.fixture(scope="class")
     def results(self, command: list[str], execution_timeout: float) -> ScenarioResult:
-        # See TestConditionalLaunchingScenarioRejectsUnsupportedPrefix.results: overrides the
-        # base class-scoped `results` fixture so the test body doesn't run the scenario binary
-        # a second time on top of the one the autouse fixture chain already ran.
+        # Same override as TestConditionalLaunchingScenarioRejectsUnsupportedPrefix.results.
         start = time.monotonic()
         result = self._run_command(command, execution_timeout)
         type(self)._elapsed_s = time.monotonic() - start
@@ -389,8 +339,7 @@ class TestConditionalLaunchingScenarioRejectsEmptyConditions(LifecycleScenario):
         results: ScenarioResult,
         version: str,
     ) -> None:
-        """Verify validation rejects an empty wait_conditions list outright, before entering
-        the wait loop, rather than only surfacing the same error after the full timeout."""
+        """Non-success exit with "Wait conditions were not provided" on stderr, in under half the timeout."""
         result = results
         elapsed_s = self._elapsed_s
 
