@@ -40,7 +40,7 @@ import pytest
 from daemon_helpers import (
     first_pid,
     is_running,
-    pgrep_cmdline_pattern,
+    read_proc_file,
     signal_process,
     start_launch_manager_daemon,
     stop_launch_manager_daemon,
@@ -73,7 +73,7 @@ class TestProcessLaunchingWithDaemon:
     @staticmethod
     def _proc_environ(pid: str) -> dict[str, str]:
         """Read process environment from /proc as a key/value mapping."""
-        raw = Path(f"/proc/{pid}/environ").read_bytes()
+        raw = read_proc_file(pid, "environ")
         env: dict[str, str] = {}
         for item in raw.split(b"\0"):
             if not item:
@@ -276,11 +276,20 @@ class TestProcessLaunchingWithDaemon:
         app_name = "rust_supervised_app" if version == "rust" else "cpp_supervised_app"
         app_path = str(daemon_info["apps"][version])
 
-        config_path = Path(__file__).resolve().parents[3] / "configs" / "lifecycle_daemon_config.json"
-        config = json.loads(config_path.read_text(encoding="utf-8"))
-        sandbox = config["defaults"]["deployment_config"]["sandbox"]
+        # The rendered config, not the source JSON: under capabilities the helper remaps the
+        # sandbox uid away from the runner's own (daemon_helpers._SANDBOX_UID).
+        config = json.loads(daemon_info["runtime_config"].read_text(encoding="utf-8"))
+        component_sandbox = config["components"][app_name].get("deployment_config", {}).get("sandbox")
+        sandbox = component_sandbox or config["defaults"]["deployment_config"]["sandbox"]
         expected_uid = int(sandbox["uid"])
         expected_gid = int(sandbox["gid"])
+        if expected_uid == os.getuid():
+            # Only when the cap_kill grant failed (uid not remapped); matching uids would pass
+            # whether or not launch_manager applied the sandbox identity.
+            pytest.skip(
+                f"Sandbox uid {expected_uid} equals the test runner's own uid; cannot distinguish an "
+                f"applied sandbox identity from an inherited one. Reason: {daemon_info['sandbox_privileged_reason']}"
+            )
 
         started = wait_until(lambda: is_running(app_path), timeout_s=8.0)
         assert started, f"{app_name} was not launched before uid/gid verification"
@@ -297,15 +306,10 @@ class TestProcessLaunchingWithDaemon:
         assert effective_gid == expected_gid, (
             f"Effective gid mismatch for {app_name}: expected {expected_gid}, got {effective_gid}"
         )
-        # Only meaningful when the configured sandbox uid actually differs from the runner's own
-        # uid; some local/dev configs (e.g. lifecycle_daemon_config.json's uid 1001) coincide with
-        # a common dev-user uid, in which case effective_uid == os.getuid() even when the sandbox
-        # identity was genuinely applied, and this check can't tell the two cases apart.
-        if expected_uid != os.getuid():
-            assert effective_uid != os.getuid(), (
-                f"{app_name} is running as the test runner's own uid ({effective_uid}); sandbox "
-                "identity was not actually applied"
-            )
+        assert effective_uid != os.getuid(), (
+            f"{app_name} is running as the test runner's own uid ({effective_uid}); sandbox "
+            "identity was not actually applied"
+        )
 
     # Not decorated with @add_test_properties: this test is unconditionally skipped in CI/CD
     # (see below), so it never actually exercises feat_req__lifecycle__launch_priority_support /
@@ -365,11 +369,9 @@ class TestProcessLaunchingWithDaemon:
             f"Scheduling priority mismatch for {app_name}: expected {configured_priority}, got {rt_priority}"
         )
 
-    @add_test_properties(
-        partially_verifies=["feat_req__lifecycle__scheduling_policy", "feat_req__lifecycle__launch_priority_support"],
-        test_type="requirements-based",
-        derivation_technique="requirements-analysis",
-    )
+    # Not decorated with @add_test_properties: like the two tests above, this is unconditionally
+    # skipped in CI/CD (no cap_sys_nice grant), so it never actually exercises
+    # feat_req__lifecycle__scheduling_policy / feat_req__lifecycle__launch_priority_support there.
     def test_scheduling_policy_is_non_default_and_applied(
         self,
         launch_manager_daemon: dict[str, Any],
@@ -595,25 +597,32 @@ class TestHealthMonitoringWithDaemon:
         test_type="requirements-based",
         derivation_technique="requirements-analysis",
     )
-    def test_watchdog_detection(self, launch_manager_daemon: dict[str, Any], version: str) -> None:
-        """Verify watchdog detects an unresponsive app (stopped, not reporting health) and reacts."""
-        daemon = launch_manager_daemon["daemon"]
+    def test_watchdog_detection(self, tmp_path_factory: pytest.TempPathFactory, version: str) -> None:
+        """Verify watchdog detects an unresponsive app (stopped, not reporting health) and reacts.
+
+        Uses its own daemon per version: the rust run's watchdog failure triggers recovery
+        (restart, then a run-target switch), so a shared daemon would hand the cpp run a
+        restarting or relaunched app.
+        """
+        daemon_info = start_launch_manager_daemon(tmp_path_factory)
+        try:
+            self._check_watchdog_detection(daemon_info, version)
+        finally:
+            stop_launch_manager_daemon(daemon_info)
+
+    @staticmethod
+    def _check_watchdog_detection(daemon_info: dict[str, Any], version: str) -> None:
+        daemon = daemon_info["daemon"]
         app_name = "rust_supervised_app" if version == "rust" else "cpp_supervised_app"
 
         # Stop the supervised process to emulate a non-reporting workload.
-        app_path = str(launch_manager_daemon["apps"][version])
-        result = subprocess.run(
-            ["pgrep", "-f", pgrep_cmdline_pattern(app_path)],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        # The fixture already waited for the app to reach Running, so a missing process here
+        app_path = str(daemon_info["apps"][version])
+        # start_launch_manager_daemon already waited for Running, so a missing process here
         # means it died under supervision - a genuine failure, not a skip.
-        assert result.returncode == 0, f"{app_name} died before the watchdog check"
+        pid = first_pid(app_path)
+        assert pid is not None, f"{app_name} died before the watchdog check"
 
-        pid = result.stdout.strip().split("\n")[0]
-        sandbox_privileged = launch_manager_daemon["sandbox_privileged"]
+        sandbox_privileged = daemon_info["sandbox_privileged"]
         sent, reason = signal_process(pid, "-STOP", sandbox_privileged=sandbox_privileged)
         assert sent, f"Could not signal {app_name} (pid={pid}): {reason}"
         try:
