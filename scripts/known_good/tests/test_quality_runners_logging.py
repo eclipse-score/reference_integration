@@ -22,7 +22,10 @@ for p in (str(_SCRIPTS_DIR), str(_REPO_ROOT)):
     if p not in sys.path:
         sys.path.insert(0, p)
 
-from scripts.quality_runners import ProcessResult, run_command  # noqa: E402
+from known_good.models.module import Metadata, Module  # noqa: E402
+
+from scripts import quality_runners as qr  # noqa: E402
+from scripts.quality_runners import ProcessResult, parse_arguments, run_command  # noqa: E402
 
 
 def test_run_command_writes_to_log_file(tmp_path: Path, capsys):
@@ -83,7 +86,8 @@ def test_run_command_prints_tail_on_failure(tmp_path: Path, capsys):
 
     assert res.exit_code == 7
     captured = capsys.readouterr()
-    assert "QR: Command failed with exit code 7" in captured.err or "QR: Command failed with exit code 7" in captured.out
+    fail_marker = "QR: Command failed with exit code 7"
+    assert fail_marker in captured.err or fail_marker in captured.out
     assert "failing err detail" in captured.err or "failing err detail" in captured.out
 
 
@@ -96,3 +100,106 @@ def test_run_command_creates_parent_directory(tmp_path: Path):
     assert res.exit_code == 0
     assert log_file.is_file()
     assert "nested ok" in log_file.read_text(encoding="utf-8")
+
+
+def test_parse_arguments_log_dir_defaults(monkeypatch):
+    monkeypatch.setattr(sys, "argv", ["quality_runners.py"])
+    args = parse_arguments()
+
+    assert args.log_output_dir == _REPO_ROOT / "artifacts/logs"
+    assert args.verbose is False
+
+
+def test_parse_arguments_custom_flags(monkeypatch, tmp_path: Path):
+    custom_log_dir = tmp_path / "custom_logs"
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["quality_runners.py", "--log-output-dir", str(custom_log_dir), "--verbose"],
+    )
+    args = parse_arguments()
+
+    assert args.log_output_dir == custom_log_dir
+    assert args.verbose is True
+
+
+def test_run_unit_test_routes_to_module_log(monkeypatch, tmp_path: Path):
+    module = Module(
+        name="score_testmod",
+        repo="https://example.com/mod.git",
+        hash="abc12345",
+        metadata=Metadata(code_root_path="/...", langs=["cpp"]),
+    )
+
+    recorded_kwargs = {}
+
+    def fake_run_command(_command, **kwargs):
+        recorded_kwargs.update(kwargs)
+        return ProcessResult(
+            stdout="Test cases: finished (2 passing, 0 failing, 0 skipped, out of 2 test cases)",
+            stderr="",
+            exit_code=0,
+        )
+
+    monkeypatch.setattr(qr, "run_command", fake_run_command)
+
+    res = qr.run_unit_test_with_coverage(module, log_dir=tmp_path, verbose=False)
+
+    assert res["passed"] == 2
+    assert res["exit_code"] == 0
+    assert recorded_kwargs.get("log_file") == tmp_path / "score_testmod.log"
+    assert recorded_kwargs.get("verbose") is False
+
+
+def test_run_cpp_coverage_routes_to_module_log(monkeypatch, tmp_path: Path):
+    module = Module(
+        name="score_testmod",
+        repo="https://example.com/mod.git",
+        hash="abc12345",
+        metadata=Metadata(code_root_path="/...", langs=["cpp"]),
+    )
+
+    recorded_kwargs = {}
+
+    def fake_cpp_coverage(_mod, _artifact_dir, **kwargs):
+        recorded_kwargs.update(kwargs)
+        return ProcessResult(
+            stdout="lines......: 85.0% (100 of 118 lines)\nfunctions..: 90.0%\nbranches...: 70.0%",
+            stderr="",
+            exit_code=0,
+        )
+
+    monkeypatch.setattr(qr, "cpp_coverage", fake_cpp_coverage)
+
+    res = qr.run_cpp_coverage_extraction(module, output_path=tmp_path / "coverage", log_dir=tmp_path, verbose=False)
+
+    assert res["exit_code"] == 0
+    assert recorded_kwargs.get("log_file") == tmp_path / "score_testmod.log"
+    assert recorded_kwargs.get("verbose") is False
+
+
+def test_run_rust_coverage_routes_to_module_log(monkeypatch, tmp_path: Path):
+    module = Module(
+        name="score_testmod",
+        repo="https://example.com/mod.git",
+        hash="abc12345",
+        metadata=Metadata(code_root_path="/...", langs=["rust"]),
+    )
+
+    recorded_kwargs = {}
+
+    def fake_rust_coverage(_mod, _artifact_dir, **kwargs):
+        recorded_kwargs.update(kwargs)
+        return ProcessResult(
+            stdout="line coverage: 92.5%",
+            stderr="",
+            exit_code=0,
+        )
+
+    monkeypatch.setattr(qr, "rust_coverage", fake_rust_coverage)
+
+    res = qr.run_rust_coverage_extraction(module, output_path=tmp_path / "coverage", log_dir=tmp_path, verbose=False)
+
+    assert res["exit_code"] == 0
+    assert recorded_kwargs.get("log_file") == tmp_path / "score_testmod.log"
+    assert recorded_kwargs.get("verbose") is False

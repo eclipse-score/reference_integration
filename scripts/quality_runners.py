@@ -15,6 +15,7 @@ import os
 import re
 import select
 import sys
+from contextlib import nullcontext
 from dataclasses import dataclass
 from pathlib import Path
 from subprocess import PIPE, Popen, run
@@ -63,8 +64,15 @@ def configure_aslr_for_sanitizers() -> None:
         print(f"QR: Could not lower vm.mmap_rnd_bits (continuing anyway): {result.stderr.strip()}")
 
 
-def run_unit_test_with_coverage(module: Module, trust_cache: bool = False) -> dict[str, str | int]:
+def run_unit_test_with_coverage(
+    module: Module,
+    log_dir: Path | None = None,
+    *,
+    verbose: bool = False,
+    trust_cache: bool = False,
+) -> dict[str, str | int]:
     print_centered("QR: Running unit tests")
+    log_file = (log_dir / f"{module.name}.log") if log_dir else None
 
     call = (
         [
@@ -91,30 +99,50 @@ def run_unit_test_with_coverage(module: Module, trust_cache: bool = False) -> di
         ]
     )
 
-    result = run_command(call)
+    result = run_command(call, log_file=log_file, verbose=verbose)
     summary = extract_ut_summary(result.stdout)
     return {**summary, "exit_code": result.exit_code}
 
 
-def run_cpp_coverage_extraction(module: Module, output_path: Path) -> int:
+def run_cpp_coverage_extraction(
+    module: Module,
+    output_path: Path,
+    log_dir: Path | None = None,
+    *,
+    verbose: bool = False,
+) -> int:
     print_centered("QR: Running cpp coverage analysis")
+    log_file = (log_dir / f"{module.name}.log") if log_dir else None
 
-    result_cpp = cpp_coverage(module, output_path)
+    result_cpp = cpp_coverage(module, output_path, log_file=log_file, verbose=verbose)
     summary = extract_coverage_summary(result_cpp.stdout)
 
     return {**summary, "exit_code": result_cpp.exit_code}
 
 
-def run_rust_coverage_extraction(module: Module, output_path: Path) -> int:
+def run_rust_coverage_extraction(
+    module: Module,
+    output_path: Path,
+    log_dir: Path | None = None,
+    *,
+    verbose: bool = False,
+) -> int:
     print_centered("QR: Running rust coverage analysis")
+    log_file = (log_dir / f"{module.name}.log") if log_dir else None
 
-    result_rust = rust_coverage(module, output_path)
+    result_rust = rust_coverage(module, output_path, log_file=log_file, verbose=verbose)
     summary = extract_coverage_summary(result_rust.stdout)
 
     return {**summary, "exit_code": result_rust.exit_code}
 
 
-def cpp_coverage(module: Module, artifact_dir: Path) -> ProcessResult:
+def cpp_coverage(
+    module: Module,
+    artifact_dir: Path,
+    log_file: Path | None = None,
+    *,
+    verbose: bool = False,
+) -> ProcessResult:
     # .dat files are already generated in UT step
 
     # Run genhtml to generate the HTML report and get the summary
@@ -122,8 +150,16 @@ def cpp_coverage(module: Module, artifact_dir: Path) -> ProcessResult:
     output_dir = artifact_dir / "cpp" / module.name
     output_dir.mkdir(parents=True, exist_ok=True)
     # Find input locations
-    bazel_coverage_output_directory = run_command(["bazel", "info", "output_path"]).stdout.strip()
-    bazel_source_directory = run_command(["bazel", "info", "output_base"]).stdout.strip()
+    bazel_coverage_output_directory = run_command(
+        ["bazel", "info", "output_path"],
+        log_file=log_file,
+        verbose=verbose,
+    ).stdout.strip()
+    bazel_source_directory = run_command(
+        ["bazel", "info", "output_base"],
+        log_file=log_file,
+        verbose=verbose,
+    ).stdout.strip()
 
     genhtml_call = [
         "genhtml",
@@ -136,12 +172,21 @@ def cpp_coverage(module: Module, artifact_dir: Path) -> ProcessResult:
         "--ignore-errors=negative,negative,source,source",
         "--synthesize-missing",
     ]
-    genhtml_result = run_command(genhtml_call, cwd=bazel_source_directory)
+    return run_command(
+        genhtml_call,
+        cwd=bazel_source_directory,
+        log_file=log_file,
+        verbose=verbose,
+    )
 
-    return genhtml_result
 
-
-def rust_coverage(module: Module, artifact_dir: Path) -> ProcessResult:
+def rust_coverage(
+    module: Module,
+    artifact_dir: Path,
+    log_file: Path | None = None,
+    *,
+    verbose: bool = False,
+) -> ProcessResult:
     # .profraw files are already generated in UT step
 
     # Run bazel covverage target
@@ -154,9 +199,7 @@ def rust_coverage(module: Module, artifact_dir: Path) -> ProcessResult:
         "run",
         f"//rust_coverage:rust_coverage_{module.name}",
     ]
-    bazel_result = run_command(bazel_call)
-
-    return bazel_result
+    return run_command(bazel_call, log_file=log_file, verbose=verbose)
 
 
 def generate_markdown_report(
@@ -311,75 +354,47 @@ def extract_coverage_summary(logs: str) -> dict[str, str]:
     return summary
 
 
-def run_command(
+def _execute_command(
     command: list[str],
+    log_handle=None,
     log_file: Path | None = None,
+    *,
     verbose: bool = False,
     tail_on_failure: int = 30,
     **kwargs,
 ) -> ProcessResult:
-    """Run a command and store its output, optionally saving to a log file.
-
-    Args:
-        command: Command and arguments to execute.
-        log_file: Optional path to write full command stdout and stderr to.
-        verbose: Whether to stream all output live to the console. Defaults to False.
-        tail_on_failure: Number of output lines to print to console on non-zero exit code.
-        kwargs: Additional keyword arguments passed to subprocess.Popen.
-
-    Returns:
-        ProcessResult containing stdout, stderr, and exit code.
-    """
     stdout_data = []
     stderr_data = []
 
-    print_centered("QR: Running command:")
-    print(f"{' '.join(command)}")
+    with Popen(command, stdout=PIPE, stderr=PIPE, text=True, bufsize=1, **kwargs) as p:
+        streams = {
+            p.stdout: (stdout_data, sys.stdout),
+            p.stderr: (stderr_data, sys.stderr),
+        }
 
-    log_handle = None
-    if log_file:
-        log_file = Path(log_file)
-        log_file.parent.mkdir(parents=True, exist_ok=True)
-        log_handle = open(log_file, "a", encoding="utf-8")
-        log_handle.write(f"\n--- Running command: {' '.join(command)} ---\n")
-        log_handle.flush()
+        try:
+            while p.poll() is None or streams:
+                readable, _, _ = select.select(list(streams.keys()), [], [], 0.1)
 
-    try:
-        with Popen(command, stdout=PIPE, stderr=PIPE, text=True, bufsize=1, **kwargs) as p:
-            # Use select to read from both streams without blocking
-            streams = {
-                p.stdout: (stdout_data, sys.stdout),
-                p.stderr: (stderr_data, sys.stderr),
-            }
+                for stream in readable:
+                    line = stream.readline()
+                    if line:
+                        storage, output_stream = streams[stream]
+                        storage.append(line)
+                        if log_handle:
+                            log_handle.write(line)
+                            log_handle.flush()
+                        if verbose:
+                            print(line, end="", file=output_stream, flush=True)
+                    else:
+                        del streams[stream]
 
-            try:
-                while p.poll() is None or streams:
-                    # Check which streams have data available
-                    readable, _, _ = select.select(list(streams.keys()), [], [], 0.1)
+            exit_code = p.returncode
 
-                    for stream in readable:
-                        line = stream.readline()
-                        if line:
-                            storage, output_stream = streams[stream]
-                            storage.append(line)
-                            if log_handle:
-                                log_handle.write(line)
-                                log_handle.flush()
-                            if verbose:
-                                print(line, end="", file=output_stream, flush=True)
-                        else:
-                            # Stream closed
-                            del streams[stream]
-
-                exit_code = p.returncode
-
-            except Exception:
-                p.kill()
-                p.wait()
-                raise
-    finally:
-        if log_handle:
-            log_handle.close()
+        except Exception:
+            p.kill()
+            p.wait()
+            raise
 
     result = ProcessResult(stdout="".join(stdout_data), stderr="".join(stderr_data), exit_code=exit_code)
 
@@ -401,6 +416,54 @@ def run_command(
     return result
 
 
+def run_command(
+    command: list[str],
+    log_file: Path | None = None,
+    *,
+    verbose: bool = False,
+    tail_on_failure: int = 30,
+    **kwargs,
+) -> ProcessResult:
+    """Run a command and store its output, optionally saving to a log file.
+
+    Args:
+        command: Command and arguments to execute.
+        log_file: Optional path to write full command stdout and stderr to.
+        verbose: Whether to stream all output live to the console. Defaults to False.
+        tail_on_failure: Number of output lines to print to console on non-zero exit code.
+        kwargs: Additional keyword arguments passed to subprocess.Popen.
+
+    Returns:
+        ProcessResult containing stdout, stderr, and exit code.
+    """
+    print_centered("QR: Running command:")
+    print(f"{' '.join(command)}")
+
+    if log_file:
+        resolved_log = Path(log_file)
+        resolved_log.parent.mkdir(parents=True, exist_ok=True)
+        with open(resolved_log, "a", encoding="utf-8") as log_handle:
+            log_handle.write(f"\n--- Running command: {' '.join(command)} ---\n")
+            log_handle.flush()
+            return _execute_command(
+                command,
+                log_handle=log_handle,
+                log_file=resolved_log,
+                verbose=verbose,
+                tail_on_failure=tail_on_failure,
+                **kwargs,
+            )
+
+    return _execute_command(
+        command,
+        log_handle=None,
+        log_file=None,
+        verbose=verbose,
+        tail_on_failure=tail_on_failure,
+        **kwargs,
+    )
+
+
 def parse_arguments() -> argparse.Namespace:
     import argparse
 
@@ -416,6 +479,17 @@ def parse_arguments() -> argparse.Namespace:
         type=Path,
         default=Path(__file__).parent.parent / "artifacts/coverage",
         help="Path to the directory for coverage output files",
+    )
+    parser.add_argument(
+        "--log-output-dir",
+        type=Path,
+        default=Path(__file__).parent.parent / "artifacts/logs",
+        help="Path to the directory for module log files",
+    )
+    parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Stream all command output live to stdout/stderr in addition to writing to log files",
     )
     parser.add_argument(
         "--modules-to-test",
@@ -439,6 +513,7 @@ def main() -> bool:
     args = parse_arguments()
     configure_aslr_for_sanitizers()
     args.coverage_output_dir.mkdir(parents=True, exist_ok=True)
+    args.log_output_dir.mkdir(parents=True, exist_ok=True)
     path_to_docs = Path(__file__).parent.parent / "docs/verification_report"
     path_to_docs.mkdir(parents=True, exist_ok=True)
 
@@ -455,7 +530,12 @@ def main() -> bool:
             continue
 
         print_centered(f"QR: Testing module: {module.name}")
-        unit_tests_summary[module.name] = run_unit_test_with_coverage(module=module, trust_cache=args.trust_cache)
+        unit_tests_summary[module.name] = run_unit_test_with_coverage(
+            module=module,
+            log_dir=args.log_output_dir,
+            verbose=args.verbose,
+            trust_cache=args.trust_cache,
+        )
 
         # Coverage extraction reads the .dat file Bazel leaves in a fixed
         # location. When the test run failed, that file is still the one the
@@ -469,7 +549,10 @@ def main() -> bool:
 
         if "cpp" in module.metadata.langs:
             coverage_summary[f"{module.name}_cpp"] = run_cpp_coverage_extraction(
-                module=module, output_path=args.coverage_output_dir
+                module=module,
+                output_path=args.coverage_output_dir,
+                log_dir=args.log_output_dir,
+                verbose=args.verbose,
             )
 
         if "rust" in module.metadata.langs:
@@ -480,7 +563,10 @@ def main() -> bool:
                 print_centered(f"QR: Skipping rust coverage extraction for module {module.name} due to known issues")
                 continue
             coverage_summary[f"{module.name}_rust"] = run_rust_coverage_extraction(
-                module=module, output_path=args.coverage_output_dir
+                module=module,
+                output_path=args.coverage_output_dir,
+                log_dir=args.log_output_dir,
+                verbose=args.verbose,
             )
 
         print_centered(f"QR: Finished testing module: {module.name}")
