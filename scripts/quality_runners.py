@@ -19,8 +19,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from subprocess import PIPE, Popen, run
 
-from known_good.models.known_good import load_known_good
-from known_good.models.module import Module
+try:
+    from known_good.models.known_good import load_known_good
+    from known_good.models.module import Module
+except ModuleNotFoundError:
+    from scripts.known_good.models.known_good import load_known_good
+    from scripts.known_good.models.module import Module
 
 
 @dataclass
@@ -307,53 +311,94 @@ def extract_coverage_summary(logs: str) -> dict[str, str]:
     return summary
 
 
-def run_command(command: list[str], **kwargs) -> ProcessResult:
-    """
-    Run a command and print output live while storing it.
+def run_command(
+    command: list[str],
+    log_file: Path | None = None,
+    verbose: bool = False,
+    tail_on_failure: int = 30,
+    **kwargs,
+) -> ProcessResult:
+    """Run a command and store its output, optionally saving to a log file.
 
     Args:
-        command: Command and arguments to execute
+        command: Command and arguments to execute.
+        log_file: Optional path to write full command stdout and stderr to.
+        verbose: Whether to stream all output live to the console. Defaults to False.
+        tail_on_failure: Number of output lines to print to console on non-zero exit code.
+        kwargs: Additional keyword arguments passed to subprocess.Popen.
 
     Returns:
-        ProcessResult containing stdout, stderr, and exit code
+        ProcessResult containing stdout, stderr, and exit code.
     """
-
     stdout_data = []
     stderr_data = []
 
     print_centered("QR: Running command:")
     print(f"{' '.join(command)}")
 
-    with Popen(command, stdout=PIPE, stderr=PIPE, text=True, bufsize=1, **kwargs) as p:
-        # Use select to read from both streams without blocking
-        streams = {
-            p.stdout: (stdout_data, sys.stdout),
-            p.stderr: (stderr_data, sys.stderr),
-        }
+    log_handle = None
+    if log_file:
+        log_file = Path(log_file)
+        log_file.parent.mkdir(parents=True, exist_ok=True)
+        log_handle = open(log_file, "a", encoding="utf-8")
+        log_handle.write(f"\n--- Running command: {' '.join(command)} ---\n")
+        log_handle.flush()
 
-        try:
-            while p.poll() is None or streams:
-                # Check which streams have data available
-                readable, _, _ = select.select(list(streams.keys()), [], [], 0.1)
+    try:
+        with Popen(command, stdout=PIPE, stderr=PIPE, text=True, bufsize=1, **kwargs) as p:
+            # Use select to read from both streams without blocking
+            streams = {
+                p.stdout: (stdout_data, sys.stdout),
+                p.stderr: (stderr_data, sys.stderr),
+            }
 
-                for stream in readable:
-                    line = stream.readline()
-                    if line:
-                        storage, output_stream = streams[stream]
-                        print(line, end="", file=output_stream, flush=True)
-                        storage.append(line)
-                    else:
-                        # Stream closed
-                        del streams[stream]
+            try:
+                while p.poll() is None or streams:
+                    # Check which streams have data available
+                    readable, _, _ = select.select(list(streams.keys()), [], [], 0.1)
 
-            exit_code = p.returncode
+                    for stream in readable:
+                        line = stream.readline()
+                        if line:
+                            storage, output_stream = streams[stream]
+                            storage.append(line)
+                            if log_handle:
+                                log_handle.write(line)
+                                log_handle.flush()
+                            if verbose:
+                                print(line, end="", file=output_stream, flush=True)
+                        else:
+                            # Stream closed
+                            del streams[stream]
 
-        except Exception:
-            p.kill()
-            p.wait()
-            raise
+                exit_code = p.returncode
 
-    return ProcessResult(stdout="".join(stdout_data), stderr="".join(stderr_data), exit_code=exit_code)
+            except Exception:
+                p.kill()
+                p.wait()
+                raise
+    finally:
+        if log_handle:
+            log_handle.close()
+
+    result = ProcessResult(stdout="".join(stdout_data), stderr="".join(stderr_data), exit_code=exit_code)
+
+    if exit_code != 0:
+        err_msg = f"QR: Command failed with exit code {exit_code}"
+        if log_file:
+            err_msg += f" (full log: {log_file})"
+        print_centered(err_msg)
+
+        if not verbose and tail_on_failure > 0:
+            combined_lines = (result.stdout + result.stderr).splitlines()
+            if combined_lines:
+                tail = combined_lines[-tail_on_failure:]
+                print("--- Failure log tail ---", file=sys.stderr)
+                for line in tail:
+                    print(line, file=sys.stderr)
+                print("--- End failure log tail ---", file=sys.stderr)
+
+    return result
 
 
 def parse_arguments() -> argparse.Namespace:
