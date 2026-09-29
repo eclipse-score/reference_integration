@@ -35,18 +35,10 @@ _TARGET_ENV_MAP = {
     "@score_lifecycle//examples/rust_supervised_app:rust_supervised_app": "FIT_RUST_SUPERVISED_APP_PATH",
     "@score_lifecycle//examples/cpp_supervised_app:cpp_supervised_app": "FIT_CPP_SUPERVISED_APP_PATH",
     "//feature_integration_tests/configs:lifecycle_daemon_config.json": "FIT_LIFECYCLE_DAEMON_CONFIG_PATH",
-    "//feature_integration_tests/configs:lifecycle_daemon_parallel_launch_config.json": (
-        "FIT_LIFECYCLE_PARALLEL_LAUNCH_CONFIG_PATH"
-    ),
     "//feature_integration_tests/test_cases/support_apps/flaky_startup_app:flaky_startup_app": (
         "FIT_FLAKY_STARTUP_APP_PATH"
     ),
-    "//feature_integration_tests/configs:lifecycle_daemon_retry_recovers_config.json": (
-        "FIT_LIFECYCLE_RETRY_RECOVERS_CONFIG_PATH"
-    ),
-    "//feature_integration_tests/configs:lifecycle_daemon_retry_exhausts_config.json": (
-        "FIT_LIFECYCLE_RETRY_EXHAUSTS_CONFIG_PATH"
-    ),
+    "//feature_integration_tests/configs:lifecycle_daemon_retry_config.json": "FIT_LIFECYCLE_RETRY_CONFIG_PATH",
     "@score_lifecycle//scripts/config_mapping:lifecycle_config": "FIT_LIFECYCLE_CONFIG_TOOL_PATH",
     "@score_lifecycle//score/launch_manager/src/daemon/src/configuration/config_schema:launch_manager.schema.json": "FIT_LIFECYCLE_CONFIG_SCHEMA_PATH",
     "@score_lifecycle//score/launch_manager/src/daemon/src/configuration:lm_flatcfg_fbs": "FIT_LIFECYCLE_LM_SCHEMA_PATH",
@@ -314,9 +306,12 @@ class ManagedDaemon:
             if self.is_running():
                 os.killpg(os.getpgid(self.process.pid), signal.SIGKILL)
                 self.process.wait(timeout=5)
-        if self.process.stdout is not None:
-            self.process.stdout.close()
+        # Launched apps inherit the daemon's stdout pipe and can outlive it, so the reader may
+        # still be blocked in read() holding the buffer lock; close() would then deadlock.
+        # Only close once the reader has seen EOF (callers pkill the apps afterwards).
         self._thread.join(timeout=1)
+        if self.process.stdout is not None and not self._thread.is_alive():
+            self.process.stdout.close()
 
     def get_logs(self) -> str:
         return "\n".join(self._lines)
@@ -327,19 +322,56 @@ def _cleanup_runtime_root(runtime_root: Path) -> None:
     shutil.rmtree(runtime_root, ignore_errors=True)
 
 
-def _generate_runtime_config(config_template: str, runtime_root: Path, etc_dir: Path) -> None:
-    """Render and serialize an isolated launch-manager config for one daemon."""
+def _generate_runtime_config(
+    config_template: str,
+    runtime_root: Path,
+    etc_dir: Path,
+    sandbox_privileged: bool = True,
+    independent_apps: bool = False,
+    ready_timeout_s: float | None = None,
+    crashes_before_success: int | None = None,
+) -> None:
+    """Render and serialize an isolated launch-manager config for one daemon.
+
+    Test variants are rendered from one template here rather than kept as copied config
+    files, so they cannot drift from the content other tests assert on:
+    `independent_apps` drops every component's `depends_on`, `ready_timeout_s` overrides
+    `defaults.deployment_config.ready_timeout`, and `crashes_before_success` fills the
+    `__FIT_CRASHES_BEFORE_SUCCESS__` process argument.
+
+    Non-`SCHED_OTHER` scheduling policies need `CAP_SYS_NICE`; unlike the uid/gid sandbox
+    fields, launch_manager treats a failed `sched_setscheduler()` as fatal for the component
+    (triggering its `recovery_action` instead of just leaving the policy unapplied), which
+    would otherwise crash-loop every component in the config - not just the one a given test
+    cares about - whenever the capability grant wasn't obtained. When `sandbox_privileged` is
+    `False`, downgrade any configured non-default scheduling policy back to the harmless
+    `SCHED_OTHER`/`0` so the daemon still starts cleanly; scheduling-specific tests already key
+    off `sandbox_privileged` themselves and skip rather than assert against it in that case.
+    """
     config = json.loads(_resolve_target_path(config_template).read_text(encoding="utf-8"))
     config["defaults"]["deployment_config"]["bin_dir"] = str(runtime_root / "bin")
+    if ready_timeout_s is not None:
+        config["defaults"]["deployment_config"]["ready_timeout"] = ready_timeout_s
+    if independent_apps:
+        for component in config["components"].values():
+            component["component_properties"].pop("depends_on", None)
 
+    if not sandbox_privileged:
+        sandboxes = [config["defaults"]["deployment_config"].get("sandbox")]
+        sandboxes += [
+            component.get("deployment_config", {}).get("sandbox") for component in config["components"].values()
+        ]
+        for sandbox in sandboxes:
+            if sandbox and sandbox.get("scheduling_policy") not in (None, "SCHED_OTHER"):
+                sandbox["scheduling_policy"] = "SCHED_OTHER"
+                sandbox["scheduling_priority"] = 0
+
+    placeholders = {"__FIT_RUNTIME_ROOT__/flaky_startup_app.counter": str(runtime_root / "flaky_startup_app.counter")}
+    if crashes_before_success is not None:
+        placeholders["__FIT_CRASHES_BEFORE_SUCCESS__"] = str(crashes_before_success)
     for component in config["components"].values():
         arguments = component["component_properties"].get("process_arguments", [])
-        component["component_properties"]["process_arguments"] = [
-            str(runtime_root / "flaky_startup_app.counter")
-            if argument == "__FIT_RUNTIME_ROOT__/flaky_startup_app.counter"
-            else argument
-            for argument in arguments
-        ]
+        component["component_properties"]["process_arguments"] = [placeholders.get(a, a) for a in arguments]
 
     rendered_config = etc_dir / "lifecycle_config.json"
     rendered_config.write_text(json.dumps(config), encoding="utf-8")
@@ -393,6 +425,25 @@ def _generate_runtime_config(config_template: str, runtime_root: Path, etc_dir: 
         )
 
 
+# launch_manager creates POSIX shm objects with deterministic names ("/ipc_shared_mem<N>",
+# "/_nudge~._.~me_") using O_CREAT|O_EXCL. POSIX shm lives on the host-wide /dev/shm tmpfs
+# (not isolated by `unshare -i`), so a second daemon started before the first has shm_unlink'ed
+# gets EEXIST and silently never launches its components. Daemon lifetimes must not overlap:
+# within a process this registry enforces it; across Bazel test processes the lifecycle
+# targets are tagged "exclusive".
+_live_daemons: list[ManagedDaemon] = []
+
+
+def _assert_no_live_daemon() -> None:
+    _live_daemons[:] = [d for d in _live_daemons if d.is_running()]
+    if _live_daemons:
+        pytest.fail(
+            f"Another launch_manager (pid={_live_daemons[0].pid()}) is still running; overlapping "
+            "daemon lifetimes collide on launch_manager's fixed POSIX shm names. Don't start a "
+            "daemon from a test that also holds the class-scoped `launch_manager_daemon` fixture."
+        )
+
+
 def _spawn_daemon(
     work_dir: Path,
     etc_dir: Path,
@@ -400,14 +451,18 @@ def _spawn_daemon(
     config_template: str,
     staged_binaries: list[tuple[Path, Path, int]],
     grant_sandbox_capabilities: bool = False,
+    **config_options: Any,
 ) -> tuple[ManagedDaemon, bool, str]:
     """Stage launch_manager plus `staged_binaries` (src, dst, mode), render its runtime
-    config, and start it as a supervised subprocess.
+    config (`config_options` are passed to `_generate_runtime_config`), and start it as a
+    supervised subprocess.
 
     Returns `(daemon, sandbox_privileged, sandbox_privileged_reason)`; the latter two are
     `(False, "not requested")` unless `grant_sandbox_capabilities` is set. Fails the test via
-    `pytest.fail` if the daemon exits within the startup grace period.
+    `pytest.fail` if the daemon exits within the startup grace period, or if another daemon
+    started by this process is still alive (see `_live_daemons`).
     """
+    _assert_no_live_daemon()
     launch_manager = _resolve_target_path("@score_lifecycle//score/launch_manager:launch_manager")
     lm_dst = work_dir / "launch_manager"
     shutil.copy2(launch_manager, lm_dst)
@@ -422,7 +477,9 @@ def _spawn_daemon(
         shutil.copy2(src, dst)
         dst.chmod(mode)
 
-    _generate_runtime_config(config_template, runtime_root, etc_dir)
+    _generate_runtime_config(
+        config_template, runtime_root, etc_dir, sandbox_privileged=sandbox_privileged, **config_options
+    )
 
     env = os.environ.copy()
     env.setdefault("ECUCFG_ENV_VAR_ROOTFOLDER", str(etc_dir))
@@ -449,6 +506,7 @@ def _spawn_daemon(
     thread.start()
 
     daemon = ManagedDaemon(process=process, _lines=lines, _thread=thread)
+    _live_daemons.append(daemon)
 
     # Give startup a chance to complete and fail early if config is broken.
     time.sleep(1.0)
@@ -462,8 +520,10 @@ def _spawn_daemon(
 def start_launch_manager_daemon(
     tmp_path_factory: pytest.TempPathFactory,
     blocked_apps: frozenset[str] = frozenset(),
+    stalled_apps: frozenset[str] = frozenset(),
     wait_for_apps: bool = True,
-    config_template: str = "//feature_integration_tests/configs:lifecycle_daemon_config.json",
+    independent_apps: bool = False,
+    ready_timeout_s: float | None = None,
 ) -> dict[str, Any]:
     """Start a real launch_manager process with generated flatbuffer config.
 
@@ -472,11 +532,17 @@ def start_launch_manager_daemon(
     chmod's them back to 0o755. Used to exercise the dependency-gating
     negative path: assert the dependent app stays down while its
     dependency is withheld, then unblock and assert it starts - and, with
-    an independent config (no depends_on between the two apps), the inverse:
+    `independent_apps=True` (no depends_on between the two apps), the inverse:
     assert the other app starts anyway, proving it isn't gated at all.
+    `independent_apps`/`ready_timeout_s` are rendered onto lifecycle_daemon_config.json
+    (see `_generate_runtime_config`).
 
-    Each invocation receives its own directory beneath `TEST_TMPDIR`, so it can
-    run concurrently with the class-scoped fixture or another Bazel test process.
+    `stalled_apps` names are replaced by a shell stub that runs but never reports
+    Running, so launch_manager spends the full `ready_timeout` (and retries) on
+    them - unlike a blocked app, whose exec fails immediately.
+
+    Each invocation receives its own directory beneath `TEST_TMPDIR`, but must not overlap
+    another live daemon (including the class-scoped fixture): see `_live_daemons`.
     """
 
     runtime_root = Path(tempfile.mkdtemp(prefix="lifecycle_fit-", dir=_tmpdir_root()))
@@ -491,8 +557,16 @@ def start_launch_manager_daemon(
 
         rust_supervised = _resolve_target_path("@score_lifecycle//examples/rust_supervised_app:rust_supervised_app")
         cpp_supervised = _resolve_target_path("@score_lifecycle//examples/cpp_supervised_app:cpp_supervised_app")
+        stall_stub = work_dir / "stall_stub.sh"
+        # `exec -a "$0"` keeps the staged app path as argv[0], so is_running()/pkill's anchored
+        # cmdline pattern still matches the stub; a single exec'd process also dies on SIGTERM.
+        stall_stub.write_text('#!/bin/bash\nexec -a "$0" sleep infinity\n', encoding="utf-8")
         staged_binaries = [
-            (src, bin_dir / src.name, 0o000 if key in blocked_apps else 0o755)
+            (
+                stall_stub if key in stalled_apps else src,
+                bin_dir / src.name,
+                0o000 if key in blocked_apps else 0o755,
+            )
             for key, src in (("rust", rust_supervised), ("cpp", cpp_supervised))
         ]
 
@@ -500,9 +574,11 @@ def start_launch_manager_daemon(
             work_dir,
             etc_dir,
             runtime_root,
-            config_template,
+            "//feature_integration_tests/configs:lifecycle_daemon_config.json",
             staged_binaries,
             grant_sandbox_capabilities=True,
+            independent_apps=independent_apps,
+            ready_timeout_s=ready_timeout_s,
         )
 
         apps = {
@@ -542,10 +618,9 @@ def start_launch_manager_daemon(
 
 def start_flaky_retry_daemon(
     tmp_path_factory: pytest.TempPathFactory,
-    config_template: str,
     crashes_before_success: int,
 ) -> dict[str, Any]:
-    """Start launch_manager against a single-component retry config.
+    """Start launch_manager against the single-component lifecycle_daemon_retry_config.json.
 
     Drives `flaky_startup_app` (see support_apps/flaky_startup_app/main.cpp), which
     aborts on its first `crashes_before_success` startup attempts and stays running
@@ -574,7 +649,14 @@ def start_flaky_retry_daemon(
         if counter_path.exists():
             counter_path.unlink()
 
-        daemon, _, _ = _spawn_daemon(work_dir, etc_dir, runtime_root, config_template, staged_binaries)
+        daemon, _, _ = _spawn_daemon(
+            work_dir,
+            etc_dir,
+            runtime_root,
+            "//feature_integration_tests/configs:lifecycle_daemon_retry_config.json",
+            staged_binaries,
+            crashes_before_success=crashes_before_success,
+        )
     except BaseException:
         if daemon is not None:
             daemon.stop()
@@ -625,13 +707,3 @@ def read_retry_attempt_count(counter_path: Path) -> int:
 def stop_launch_manager_daemon(daemon_info: dict[str, Any]) -> None:
     """Tear down a daemon started by `start_launch_manager_daemon`."""
     _stop_daemon(daemon_info, list(daemon_info["apps"].values()))
-
-
-@pytest.fixture(scope="class")
-def launch_manager_daemon(tmp_path_factory: pytest.TempPathFactory) -> dict[str, Any]:
-    """Start a real launch_manager process with generated flatbuffer config."""
-    daemon_info = start_launch_manager_daemon(tmp_path_factory)
-    try:
-        yield daemon_info
-    finally:
-        stop_launch_manager_daemon(daemon_info)

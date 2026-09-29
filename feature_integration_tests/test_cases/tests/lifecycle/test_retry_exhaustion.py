@@ -33,57 +33,32 @@ import pytest
 from daemon_helpers import (
     is_running,
     read_retry_attempt_count,
-    start_flaky_retry_daemon,
-    stop_flaky_retry_daemon,
     wait_until,
 )
+from lifecycle_scenario import RetryDaemonScenario
 from test_properties import add_test_properties
 
-# Must match "number_of_attempts" in both lifecycle_daemon_retry_*_config.json.
+# Must match flaky_startup_app's "number_of_attempts" in lifecycle_daemon_retry_config.json.
 _NUMBER_OF_ATTEMPTS = 2
 
 
-@pytest.fixture(scope="class")
-def recovers_daemon(tmp_path_factory: pytest.TempPathFactory):
-    daemon_info = start_flaky_retry_daemon(
-        tmp_path_factory,
-        "//feature_integration_tests/configs:lifecycle_daemon_retry_recovers_config.json",
-        crashes_before_success=2,
-    )
-    try:
-        yield daemon_info
-    finally:
-        stop_flaky_retry_daemon(daemon_info)
-
-
-@pytest.fixture(scope="class")
-def exhausts_daemon(tmp_path_factory: pytest.TempPathFactory):
-    daemon_info = start_flaky_retry_daemon(
-        tmp_path_factory,
-        "//feature_integration_tests/configs:lifecycle_daemon_retry_exhausts_config.json",
-        crashes_before_success=999,
-    )
-    try:
-        yield daemon_info
-    finally:
-        stop_flaky_retry_daemon(daemon_info)
-
-
-class TestRetrySucceedsWithinConfiguredAttempts:
+class TestRetrySucceedsWithinConfiguredAttempts(RetryDaemonScenario):
     """The component crashes fewer times than `number_of_attempts` allows."""
+
+    crashes_before_success = 2
 
     @add_test_properties(
         partially_verifies=["feat_req__lifecycle__retries_configurable"],
         test_type="requirements-based",
         derivation_technique="requirements-analysis",
     )
-    def test_component_recovers_within_configured_attempts(self, recovers_daemon: dict[str, Any]) -> None:
+    def test_component_recovers_within_configured_attempts(self, retry_daemon: dict[str, Any]) -> None:
         """Daemon retries a failing component up to `number_of_attempts` and lets
         it reach Running once it stops crashing.
         """
-        app_path = recovers_daemon["app_path"]
-        counter_path = recovers_daemon["counter_path"]
-        expected_attempts = recovers_daemon["crashes_before_success"] + 1
+        app_path = retry_daemon["app_path"]
+        counter_path = retry_daemon["counter_path"]
+        expected_attempts = retry_daemon["crashes_before_success"] + 1
 
         # Check the attempt counter before is_running(): a crashing attempt is still
         # technically "running" for the microseconds before it aborts, so polling
@@ -106,21 +81,23 @@ class TestRetrySucceedsWithinConfiguredAttempts:
         assert is_running(app_path), "flaky_startup_app stopped running after recovering"
 
 
-class TestRetryExhaustionTriggersRecovery:
+class TestRetryExhaustionTriggersRecovery(RetryDaemonScenario):
     """The component always crashes, exceeding `number_of_attempts`."""
+
+    crashes_before_success = 999
 
     @add_test_properties(
         partially_verifies=["feat_req__lifecycle__retries_configurable"],
         test_type="requirements-based",
         derivation_technique="requirements-analysis",
     )
-    def test_daemon_gives_up_after_configured_attempts(self, exhausts_daemon: dict[str, Any]) -> None:
+    def test_daemon_gives_up_after_configured_attempts(self, retry_daemon: dict[str, Any]) -> None:
         """Daemon stops restarting a component once `number_of_attempts` is
         exhausted, instead of retrying forever, and executes the run target's
         `recovery_action` (switch to `fallback_run_target`).
         """
-        app_path = exhausts_daemon["app_path"]
-        counter_path = exhausts_daemon["counter_path"]
+        app_path = retry_daemon["app_path"]
+        counter_path = retry_daemon["counter_path"]
 
         settled = wait_until(
             lambda: read_retry_attempt_count(counter_path) >= _NUMBER_OF_ATTEMPTS + 1,
@@ -145,4 +122,4 @@ class TestRetryExhaustionTriggersRecovery:
             "flaky_startup_app is still running after exhausting retries; recovery_action "
             "(switch_run_target -> fallback_run_target) should have stopped further attempts"
         )
-        assert exhausts_daemon["daemon"].is_running(), "Launch Manager daemon crashed instead of switching run target"
+        assert retry_daemon["daemon"].is_running(), "Launch Manager daemon crashed instead of switching run target"
