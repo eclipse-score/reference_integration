@@ -46,8 +46,29 @@ All tests must pass. The suite covers:
 - impact-analysis vocabulary validation;
 - referential integrity and duplicate identifier rejection;
 - classification and SPDX safety-integrity-level consistency;
+- deterministic `needs.json` projection, source provenance, fail-closed safety mapping and carrier-reference integrity;
 - checked-in pilot output, checksum and provenance integrity; and
 - KVS matched and Lifecycle Health Monitor fail-closed behavior.
+
+### Generate the Sphinx-needs projection
+
+```bash
+mkdir -p /tmp/srac-manual
+
+bazel run //srac:export_needs -- \
+  --needs srac/examples/needs/communication.needs.json \
+  --config srac/examples/needs/communication.export.json \
+  --output /tmp/srac-manual/communication.srac.json \
+  --reference-output /tmp/srac-manual/communication.sbom-reference.json
+
+diff -u srac/examples/generated/communication.srac.json \
+  /tmp/srac-manual/communication.srac.json
+diff -u srac/examples/generated/communication.sbom-reference.json \
+  /tmp/srac-manual/communication.sbom-reference.json
+```
+
+Both comparisons must be empty. Confirm that the safety classification, source lifecycle status, Feature, Component and
+Assumption of Use trace back to the selected Sphinx-needs records. The export configuration must contain no safety decision.
 
 ## 2. Run the matched Persistency KVS pilot
 
@@ -226,6 +247,7 @@ Automated suite: PASS / FAIL
 KVS matched pilot: PASS / FAIL
 KVS missing-known-good negative test: PASS / FAIL
 Health Monitor absent-component negative test: PASS / FAIL
+Sphinx-needs projection and reference comparison: PASS / FAIL
 Checksum verification: PASS / FAIL
 Fresh SBOM test, if performed: PASS / FAIL / NOT RUN
 

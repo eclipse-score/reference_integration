@@ -136,6 +136,21 @@ def _validate_resolved_identifiers(
             errors.append(f"{path}[{index}] references {identifier!r}, which does not resolve to an assertion element")
 
 
+def _validate_source_of_truth(value: object, path: str, errors: list[str]) -> None:
+    if not isinstance(value, Mapping):
+        errors.append(f"{path} must be an object")
+        return
+    if value.get("system") != "sphinx-needs":
+        errors.append(f"{path}.system must be 'sphinx-needs'")
+    for key in ("documentUri", "version", "rootElement", "rootElementType", "rootElementStatus"):
+        if not _is_non_empty_string(value.get(key)):
+            errors.append(f"{path}.{key} must be a non-empty string")
+    _validate_identifier_list(value.get("includedElements"), f"{path}.includedElements", errors)
+    digest = value.get("sha256")
+    if not isinstance(digest, str) or SHA256_PATTERN.fullmatch(digest) is None:
+        errors.append(f"{path}.sha256 must be a lowercase SHA-256 digest")
+
+
 def _validate_impact_analysis(
     value: object,
     path: str,
@@ -334,6 +349,10 @@ def validate_assertion(document: Mapping[str, Any]) -> list[str]:
             resolvable_ids=_assertion_element_ids(document, errors),
         )
 
+    source_of_truth = document.get("sourceOfTruth")
+    if source_of_truth is not None:
+        _validate_source_of_truth(source_of_truth, "sourceOfTruth", errors)
+
     assertion = _require_mapping(document, "assertion", errors)
     if assertion.get("status") not in ASSERTION_STATUS_VALUES:
         errors.append(f"assertion.status must be one of {sorted(ASSERTION_STATUS_VALUES)}")
@@ -371,6 +390,8 @@ def validate_report(document: Mapping[str, Any]) -> list[str]:
         _validate_impact_analysis(
             document["impactAnalysis"], "impactAnalysis", errors, classification=safety.get("classification")
         )
+    if "sourceOfTruth" in document:
+        _validate_source_of_truth(document["sourceOfTruth"], "sourceOfTruth", errors)
 
     generator = _require_mapping(document, "generator", errors)
     for key in ("name", "version"):
@@ -602,4 +623,6 @@ def build_enrichment_report(
         }
     if "impactAnalysis" in assertion:
         report["impactAnalysis"] = deepcopy(assertion["impactAnalysis"])
+    if "sourceOfTruth" in assertion:
+        report["sourceOfTruth"] = deepcopy(assertion["sourceOfTruth"])
     return report

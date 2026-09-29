@@ -4,6 +4,10 @@ This directory contains an experimental Safety Relevance Assertion Capability (S
 reference integration. It is not an approved S-CORE specification, does not assign a safety classification, and does not replace
 the safety case or existing lifecycle work products.
 
+For S-CORE, the authoritative safety model is Sphinx-needs and its generated `needs.json`. The PoC includes a read-only exporter
+that projects selected source records into portable safety metadata; it does not introduce a second authoring workflow. See
+[`NEEDS_EXPORT.md`](NEEDS_EXPORT.md) for the flow, generated example and identified SPDX Functional Safety mapping gaps.
+
 The `0.2-draft` profile also carries an optional system-impact workflow. It records the trigger, analysis status and scope,
 impact outcome, per-element decisions, requirement verification and publication bundle. The enrichment tool copies that workflow
 without calculating, approving or changing any decision.
@@ -28,6 +32,9 @@ component owner and safety reviewer provide a decision.
   real component or product.
 - `tools/profile.py`: self-contained core validation and PURL/version matching.
 - `tools/enrich_sbom.py`: CLI that emits a separate enrichment report without changing the source SBOM.
+- `tools/export_needs.py`: deterministic `needs.json` exporter that preserves source provenance and never makes a safety decision.
+- `examples/needs/` and `examples/generated/`: reduced Sphinx-needs input, transport-only configuration, generated projection and
+  illustrative SPDX/CycloneDX reference fragments.
 - `TESTING.md`: consolidated independent test procedure, expected results and reporting template.
 - `mappings/`: proposed SPDX 2.3 and CycloneDX 1.6 carrier mappings.
 - `pilot/persistency-kvs/`: real official SBOM input, provenance, reproducible commands, enrichment output and an

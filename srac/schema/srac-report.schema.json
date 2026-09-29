@@ -53,6 +53,7 @@
       "type": "array",
       "items": {"$ref": "#/$defs/impactAnalysis"}
     },
+    "sourceOfTruth": {"$ref": "#/$defs/sourceOfTruth"},
     "matchedComponents": {
       "type": "array",
       "items": {
@@ -100,6 +101,34 @@
     }
   },
   "$defs": {
+    "sourceOfTruth": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "system",
+        "documentUri",
+        "version",
+        "rootElement",
+        "rootElementType",
+        "rootElementStatus",
+        "includedElements",
+        "sha256"
+      ],
+      "properties": {
+        "system": {"const": "sphinx-needs"},
+        "documentUri": {"type": "string", "format": "uri"},
+        "version": {"type": "string", "minLength": 1},
+        "rootElement": {"type": "string", "minLength": 1},
+        "rootElementType": {"type": "string", "minLength": 1},
+        "rootElementStatus": {"type": "string", "minLength": 1},
+        "includedElements": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
     "party": {
       "type": "object",
       "additionalProperties": false,

@@ -23,12 +23,27 @@ py_library(
     visibility = ["//visibility:public"],
 )
 
+py_library(
+    name = "needs_export",
+    srcs = ["tools/export_needs.py"],
+    visibility = ["//visibility:public"],
+    deps = [":profile"],
+)
+
 py_binary(
     name = "enrich_sbom",
     srcs = ["tools/enrich_sbom.py"],
     main = "tools/enrich_sbom.py",
     visibility = ["//visibility:public"],
     deps = [":profile"],
+)
+
+py_binary(
+    name = "export_needs",
+    srcs = ["tools/export_needs_cli.py"],
+    main = "tools/export_needs_cli.py",
+    visibility = ["//visibility:public"],
+    deps = [":needs_export"],
 )
 
 score_py_pytest(
@@ -38,6 +53,10 @@ score_py_pytest(
         "examples/lifecycle-health-monitor.srac.json",
         "examples/persistency-kvs.srac.json",
         "examples/synthetic-safety-related.srac.json",
+        "examples/needs/communication.export.json",
+        "examples/needs/communication.needs.json",
+        "examples/generated/communication.sbom-reference.json",
+        "examples/generated/communication.srac.json",
         "pilot/lifecycle-health-monitor/output/current-product.srac-report.json",
         "pilot/lifecycle-health-monitor/output/current-product.srac-report.sha256",
         "pilot/lifecycle-health-monitor/provenance.json",
@@ -53,13 +72,20 @@ score_py_pytest(
         "//:known_good.json",
     ],
     pytest_config = "//:pyproject.toml",
-    deps = [":profile"],
+    deps = [
+        ":needs_export",
+        ":profile",
+    ],
 )
 
 exports_files([
     "examples/lifecycle-health-monitor.srac.json",
     "examples/persistency-kvs.srac.json",
     "examples/synthetic-safety-related.srac.json",
+    "examples/needs/communication.export.json",
+    "examples/needs/communication.needs.json",
+    "examples/generated/communication.sbom-reference.json",
+    "examples/generated/communication.srac.json",
     "pilot/lifecycle-health-monitor/output/current-product.srac-report.json",
     "pilot/lifecycle-health-monitor/output/current-product.srac-report.sha256",
     "pilot/lifecycle-health-monitor/provenance.json",
