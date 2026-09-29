@@ -106,7 +106,8 @@ def test_parse_arguments_log_dir_defaults(monkeypatch):
     monkeypatch.setattr(sys, "argv", ["quality_runners.py"])
     args = parse_arguments()
 
-    assert args.log_output_dir == _REPO_ROOT / "artifacts/logs"
+    expected_log_dir = Path(qr.__file__).parent.parent / "artifacts/logs"
+    assert args.log_output_dir == expected_log_dir
     assert args.verbose is False
 
 
