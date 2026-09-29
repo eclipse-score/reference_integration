@@ -34,6 +34,18 @@ alias(
 # regenerate with scripts/known_good/update_module_from_known_good.py.
 docs(
     bundles = DOCS_BUNDLES,
+    # REPRO (see //repro/dependable_element_testonly/README.md): pull
+    # Communication's dependable_element documentation into this site.
+    #
+    # mw_com_rst is the sphinx_docs_library that dependable_element generates
+    # for exactly this purpose. Referencing it breaks the docs build:
+    #
+    #   non-test target '//:docs_bundle' depends on testonly target
+    #   '@@score_communication+//score/mw/com/dependability:mw_com_rst'
+    #   and doesn't have testonly attribute set
+    #
+    # This line is the whole point of the PR and must not be merged.
+    data = ["@score_communication//score/mw/com/dependability:mw_com_rst"],
     known_good = "known_good.json",
     source_dir = "docs",
 )
