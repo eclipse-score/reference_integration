@@ -91,6 +91,28 @@ def test_run_command_prints_tail_on_failure(tmp_path: Path, capsys):
     assert "failing err detail" in captured.err or "failing err detail" in captured.out
 
 
+def test_run_command_chronological_tail_on_failure(tmp_path: Path, capsys):
+    log_file = tmp_path / "interleaved_failing.log"
+    # Emit 10 warnings on stderr first, then test failure on stdout at the end
+    cmd = [
+        sys.executable,
+        "-c",
+        (
+            "import sys\n"
+            "for i in range(10):\n"
+            "    sys.stderr.write(f'early warning {i}\\n')\n"
+            "sys.stdout.write('ASSERTION_FAILURE_DETAIL\\n')\n"
+            "sys.exit(1)\n"
+        ),
+    ]
+
+    res = run_command(cmd, log_file=log_file, verbose=False, tail_on_failure=5)
+
+    assert res.exit_code == 1
+    captured = capsys.readouterr()
+    assert "ASSERTION_FAILURE_DETAIL" in captured.err
+
+
 def test_run_command_creates_parent_directory(tmp_path: Path):
     log_file = tmp_path / "nested" / "logs" / "sub" / "run.log"
     cmd = [sys.executable, "-c", "print('nested ok')"]

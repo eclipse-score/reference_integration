@@ -15,7 +15,6 @@ import os
 import re
 import select
 import sys
-from contextlib import nullcontext
 from dataclasses import dataclass
 from pathlib import Path
 from subprocess import PIPE, Popen, run
@@ -110,7 +109,7 @@ def run_cpp_coverage_extraction(
     log_dir: Path | None = None,
     *,
     verbose: bool = False,
-) -> int:
+) -> dict[str, str | int]:
     print_centered("QR: Running cpp coverage analysis")
     log_file = (log_dir / f"{module.name}.log") if log_dir else None
 
@@ -126,7 +125,7 @@ def run_rust_coverage_extraction(
     log_dir: Path | None = None,
     *,
     verbose: bool = False,
-) -> int:
+) -> dict[str, str | int]:
     print_centered("QR: Running rust coverage analysis")
     log_file = (log_dir / f"{module.name}.log") if log_dir else None
 
@@ -365,6 +364,7 @@ def _execute_command(
 ) -> ProcessResult:
     stdout_data = []
     stderr_data = []
+    chronological_lines: list[str] = []
 
     with Popen(command, stdout=PIPE, stderr=PIPE, text=True, bufsize=1, **kwargs) as p:
         streams = {
@@ -381,6 +381,7 @@ def _execute_command(
                     if line:
                         storage, output_stream = streams[stream]
                         storage.append(line)
+                        chronological_lines.append(line)
                         if log_handle:
                             log_handle.write(line)
                             log_handle.flush()
@@ -405,12 +406,18 @@ def _execute_command(
         print_centered(err_msg)
 
         if not verbose and tail_on_failure > 0:
-            combined_lines = (result.stdout + result.stderr).splitlines()
-            if combined_lines:
-                tail = combined_lines[-tail_on_failure:]
+            stdout_lines = result.stdout.splitlines()
+            stderr_lines = result.stderr.splitlines()
+            if stdout_lines or stderr_lines:
                 print("--- Failure log tail ---", file=sys.stderr)
-                for line in tail:
-                    print(line, file=sys.stderr)
+                if stderr_lines:
+                    print(">>> stderr:", file=sys.stderr)
+                    for line in stderr_lines[-tail_on_failure:]:
+                        print(line, file=sys.stderr)
+                if stdout_lines:
+                    print(">>> stdout:", file=sys.stderr)
+                    for line in stdout_lines[-tail_on_failure:]:
+                        print(line, file=sys.stderr)
                 print("--- End failure log tail ---", file=sys.stderr)
 
     return result
