@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -179,14 +179,14 @@
 <span id="L101"><span class="lineNum">     101</span>                 :<span class="tlaGNC">         305 :         std::optional&lt;T&gt; result{};</span></span>
 <span id="L102"><span class="lineNum">     102</span>         [<span class="tlaGBC" title="Branch 0 was taken 305 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         305 :         std::unique_lock&lt;std::mutex&gt; lock{queue_shared_state_-&gt;mutex_};</span></span>
 <span id="L103"><span class="lineNum">     103</span>                 :             : </span>
-<span id="L104"><span class="lineNum">     104</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 300 times"> + </span>]:<span class="tlaGNC">         305 :         if (queue_shared_state_-&gt;queue_.empty())</span></span>
+<span id="L104"><span class="lineNum">     104</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 301 times"> + </span>]:<span class="tlaGNC">         305 :         if (queue_shared_state_-&gt;queue_.empty())</span></span>
 <span id="L105"><span class="lineNum">     105</span>                 :             :         {</span>
-<span id="L106"><span class="lineNum">     106</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           5 :             lock.unlock();</span></span>
-<span id="L107"><span class="lineNum">     107</span>   [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 4 times"> + </span>]:<span class="tlaGNC">           5 :             if (!queue_shared_state_-&gt;notification_.waitForWithAbort(timeout, token))</span></span>
+<span id="L106"><span class="lineNum">     106</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           4 :             lock.unlock();</span></span>
+<span id="L107"><span class="lineNum">     107</span>   [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 3 times"> + </span>]:<span class="tlaGNC">           4 :             if (!queue_shared_state_-&gt;notification_.waitForWithAbort(timeout, token))</span></span>
 <span id="L108"><span class="lineNum">     108</span>                 :             :             {</span>
 <span id="L109"><span class="lineNum">     109</span>                 :<span class="tlaGNC">           1 :                 return result;</span></span>
 <span id="L110"><span class="lineNum">     110</span>                 :             :             }</span>
-<span id="L111"><span class="lineNum">     111</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           4 :             lock.lock();</span></span>
+<span id="L111"><span class="lineNum">     111</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           3 :             lock.lock();</span></span>
 <span id="L112"><span class="lineNum">     112</span>                 :             :         }</span>
 <span id="L113"><span class="lineNum">     113</span>         [<span class="tlaGBC" title="Branch 0 was taken 304 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         304 :         queue_shared_state_-&gt;notification_.reset();</span></span>
 <span id="L114"><span class="lineNum">     114</span>                 :             : </span>

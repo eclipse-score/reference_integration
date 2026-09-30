@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -146,15 +146,15 @@
 <span id="L68"><span class="lineNum">      68</span>                 :<span class="tlaGNC">         601 :         std::size_t slot_index{};</span></span>
 <span id="L69"><span class="lineNum">      69</span>                 :             :         do</span>
 <span id="L70"><span class="lineNum">      70</span>                 :             :         {</span>
-<span id="L71"><span class="lineNum">      71</span>                 :<span class="tlaGNC">       39836 :             loop_limiter++;</span></span>
-<span id="L72"><span class="lineNum">      72</span>                 :<span class="tlaGNC">       39836 :             slot_index = claimed_sequence_.fetch_add(1UL);</span></span>
-<span id="L73"><span class="lineNum">      73</span>                 :<span class="tlaGNC">       39836 :             slot_index %= buffer_.capacity();</span></span>
+<span id="L71"><span class="lineNum">      71</span>                 :<span class="tlaGNC">       40011 :             loop_limiter++;</span></span>
+<span id="L72"><span class="lineNum">      72</span>                 :<span class="tlaGNC">       40011 :             slot_index = claimed_sequence_.fetch_add(1UL);</span></span>
+<span id="L73"><span class="lineNum">      73</span>                 :<span class="tlaGNC">       40011 :             slot_index %= buffer_.capacity();</span></span>
 <span id="L74"><span class="lineNum">      74</span>                 :             : </span>
-<span id="L75"><span class="lineNum">      75</span>         [<span class="tlaGBC" title="Branch 0 was taken 402 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 39153 times"> + </span>]:<span class="tlaGNC">       39555 :             if (loop_limiter &gt; max_number_of_loops)</span></span>
+<span id="L75"><span class="lineNum">      75</span>         [<span class="tlaGBC" title="Branch 0 was taken 402 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 39373 times"> + </span>]:<span class="tlaGNC">       39775 :             if (loop_limiter &gt; max_number_of_loops)</span></span>
 <span id="L76"><span class="lineNum">      76</span>                 :             :             {</span>
 <span id="L77"><span class="lineNum">      77</span>                 :<span class="tlaGNC">         402 :                 return {};</span></span>
 <span id="L78"><span class="lineNum">      78</span>                 :             :             }</span>
-<span id="L79"><span class="lineNum">      79</span>         [<span class="tlaGBC" title="Branch 0 was taken 39235 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 199 times"> + </span>]:<span class="tlaGNC">       39153 :         } while (!buffer_.at(slot_index).TryUse());</span></span>
+<span id="L79"><span class="lineNum">      79</span>         [<span class="tlaGBC" title="Branch 0 was taken 39410 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 199 times"> + </span>]:<span class="tlaGNC">       39373 :         } while (!buffer_.at(slot_index).TryUse());</span></span>
 <span id="L80"><span class="lineNum">      80</span>                 :             : </span>
 <span id="L81"><span class="lineNum">      81</span>                 :<span class="tlaGNC">         199 :         return slot_index;</span></span>
 <span id="L82"><span class="lineNum">      82</span>                 :             :     }</span>

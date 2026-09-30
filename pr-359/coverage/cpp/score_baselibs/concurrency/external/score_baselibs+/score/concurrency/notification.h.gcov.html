@@ -37,12 +37,12 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryHi">95.0&nbsp;%</td>
+            <td class="headerCovTableEntryMed">85.0&nbsp;%</td>
             <td class="headerCovTableEntry">20</td>
-            <td class="headerCovTableEntry">19</td>
+            <td class="headerCovTableEntry">17</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -184,7 +184,7 @@
 <span id="L106"><span class="lineNum">     106</span>                 :<span class="tlaGNC">        2014 :         DestructionGuard guard{entry_counter_};</span></span>
 <span id="L107"><span class="lineNum">     107</span>         [<span class="tlaGBC" title="Branch 0 was taken 2014 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        2014 :         std::unique_lock&lt;Mutex&gt; lock{mutex_};</span></span>
 <span id="L108"><span class="lineNum">     108</span>         [<span class="tlaGBC" title="Branch 0 was taken 2014 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        2014 :         return conditional_variable_.wait(lock, token, [this]() noexcept {</span></span>
-<span id="L109"><span class="lineNum">     109</span>                 :<span class="tlaGNC">        2222 :             return notified_yet_;</span></span>
+<span id="L109"><span class="lineNum">     109</span>                 :<span class="tlaGNC">        2279 :             return notified_yet_;</span></span>
 <span id="L110"><span class="lineNum">     110</span>                 :<span class="tlaGNC">        4028 :         });</span></span>
 <span id="L111"><span class="lineNum">     111</span>                 :<span class="tlaGNC">        2014 :     }</span></span>
 <span id="L112"><span class="lineNum">     112</span>                 :             : </span>
@@ -204,17 +204,17 @@
 <span id="L126"><span class="lineNum">     126</span>                 :             :      * \return true if a notification was received, false otherwise</span>
 <span id="L127"><span class="lineNum">     127</span>                 :             :      */</span>
 <span id="L128"><span class="lineNum">     128</span>                 :             :     template &lt;class Rep, class Period&gt;</span>
-<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">           6 :     inline bool waitForWithAbort(const std::chrono::duration&lt;Rep, Period&gt;&amp; duration, score::cpp::stop_token token)</span></span>
+<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">           5 :     inline bool waitForWithAbort(const std::chrono::duration&lt;Rep, Period&gt;&amp; duration, score::cpp::stop_token token)</span></span>
 <span id="L130"><span class="lineNum">     130</span>                 :             :     {</span>
 <span id="L131"><span class="lineNum">     131</span>                 :             :         // coverity[autosar_cpp14_m0_1_9_violation] false-positive</span>
 <span id="L132"><span class="lineNum">     132</span>                 :             :         // coverity[autosar_cpp14_m0_1_3_violation] false-positive</span>
-<span id="L133"><span class="lineNum">     133</span>                 :<span class="tlaGNC">           6 :         DestructionGuard guard{entry_counter_};</span></span>
-<span id="L134"><span class="lineNum">     134</span>         [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           6 :         std::unique_lock&lt;Mutex&gt; lock{mutex_};</span></span>
-<span id="L135"><span class="lineNum">     135</span>   [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          13 :         return conditional_variable_.wait_for(lock, token, duration, [this]() noexcept {</span></span>
+<span id="L133"><span class="lineNum">     133</span>                 :<span class="tlaGNC">           5 :         DestructionGuard guard{entry_counter_};</span></span>
+<span id="L134"><span class="lineNum">     134</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           5 :         std::unique_lock&lt;Mutex&gt; lock{mutex_};</span></span>
+<span id="L135"><span class="lineNum">     135</span>   [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          12 :         return conditional_variable_.wait_for(lock, token, duration, [this]() noexcept {</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L136"><span class="lineNum">     136</span>                 :<span class="tlaGNC">           8 :             return notified_yet_;</span></span>
-<span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC">          12 :         });</span></span>
-<span id="L138"><span class="lineNum">     138</span>                 :<span class="tlaGNC">           6 :     }</span></span>
+<span id="L136"><span class="lineNum">     136</span>                 :<span class="tlaGNC">           6 :             return notified_yet_;</span></span>
+<span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC">          10 :         });</span></span>
+<span id="L138"><span class="lineNum">     138</span>                 :<span class="tlaGNC">           5 :     }</span></span>
 <span id="L139"><span class="lineNum">     139</span>                 :             : </span>
 <span id="L140"><span class="lineNum">     140</span>                 :             :     /**</span>
 <span id="L141"><span class="lineNum">     141</span>                 :             :      * \brief Notifies all waiting threads</span>

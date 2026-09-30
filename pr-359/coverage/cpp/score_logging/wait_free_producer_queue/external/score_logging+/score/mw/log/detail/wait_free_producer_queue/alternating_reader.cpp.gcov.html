@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:12:16</td>
+            <td class="headerValue">2026-09-30 04:21:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -109,29 +109,29 @@
 <span id="L31"><span class="lineNum">      31</span>                 :             : {</span>
 <span id="L32"><span class="lineNum">      32</span>                 :<span class="tlaGNC">          53 : }</span></span>
 <span id="L33"><span class="lineNum">      33</span>                 :             : </span>
-<span id="L34"><span class="lineNum">      34</span>                 :<span class="tlaGNC">          87 : LinearReader AlternatingReadOnlyReader::CreateLinearReader(const std::uint32_t block_id_count) noexcept</span></span>
+<span id="L34"><span class="lineNum">      34</span>                 :<span class="tlaGNC">          88 : LinearReader AlternatingReadOnlyReader::CreateLinearReader(const std::uint32_t block_id_count) noexcept</span></span>
 <span id="L35"><span class="lineNum">      35</span>                 :             : {</span>
-<span id="L36"><span class="lineNum">      36</span>                 :<span class="tlaGNC">          87 :     auto block_id = SelectLinearControlBlockId(block_id_count);</span></span>
-<span id="L37"><span class="lineNum">      37</span>                 :<span class="tlaGNC">          87 :     const auto&amp; block = SelectLinearControlBlockReference(block_id, alternating_control_block_);</span></span>
+<span id="L36"><span class="lineNum">      36</span>                 :<span class="tlaGNC">          88 :     auto block_id = SelectLinearControlBlockId(block_id_count);</span></span>
+<span id="L37"><span class="lineNum">      37</span>                 :<span class="tlaGNC">          88 :     const auto&amp; block = SelectLinearControlBlockReference(block_id, alternating_control_block_);</span></span>
 <span id="L38"><span class="lineNum">      38</span>                 :             : </span>
-<span id="L39"><span class="lineNum">      39</span>                 :<span class="tlaGNC">          87 :     const auto written_bytes = block.written_index.load();</span></span>
+<span id="L39"><span class="lineNum">      39</span>                 :<span class="tlaGNC">          88 :     const auto written_bytes = block.written_index.load();</span></span>
 <span id="L40"><span class="lineNum">      40</span>                 :             : </span>
-<span id="L41"><span class="lineNum">      41</span>         [<span class="tlaGBC" title="Branch 0 was taken 30 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 57 times"> + </span>]:<span class="tlaGNC">          87 :     const auto&amp; buffer = block_id == AlternatingControlBlockSelectId::kBlockEven ? buffer_even_ : buffer_odd_;</span></span>
-<span id="L42"><span class="lineNum">      42</span>                 :<span class="tlaGNC">          87 :     return CreateLinearReaderFromDataAndLength(buffer, written_bytes);</span></span>
+<span id="L41"><span class="lineNum">      41</span>         [<span class="tlaGBC" title="Branch 0 was taken 30 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 58 times"> + </span>]:<span class="tlaGNC">          88 :     const auto&amp; buffer = block_id == AlternatingControlBlockSelectId::kBlockEven ? buffer_even_ : buffer_odd_;</span></span>
+<span id="L42"><span class="lineNum">      42</span>                 :<span class="tlaGNC">          88 :     return CreateLinearReaderFromDataAndLength(buffer, written_bytes);</span></span>
 <span id="L43"><span class="lineNum">      43</span>                 :             : }</span>
 <span id="L44"><span class="lineNum">      44</span>                 :             : </span>
-<span id="L45"><span class="lineNum">      45</span>                 :<span class="tlaGNC">          88 : bool AlternatingReadOnlyReader::IsBlockReleasedByWriters(const std::uint32_t block_id_count) const noexcept</span></span>
+<span id="L45"><span class="lineNum">      45</span>                 :<span class="tlaGNC">          89 : bool AlternatingReadOnlyReader::IsBlockReleasedByWriters(const std::uint32_t block_id_count) const noexcept</span></span>
 <span id="L46"><span class="lineNum">      46</span>                 :             : {</span>
-<span id="L47"><span class="lineNum">      47</span>                 :<span class="tlaGNC">          88 :     auto block_id = SelectLinearControlBlockId(block_id_count);</span></span>
-<span id="L48"><span class="lineNum">      48</span>                 :<span class="tlaGNC">          88 :     const auto&amp; block = SelectLinearControlBlockReference(block_id, alternating_control_block_);</span></span>
+<span id="L47"><span class="lineNum">      47</span>                 :<span class="tlaGNC">          89 :     auto block_id = SelectLinearControlBlockId(block_id_count);</span></span>
+<span id="L48"><span class="lineNum">      48</span>                 :<span class="tlaGNC">          89 :     const auto&amp; block = SelectLinearControlBlockReference(block_id, alternating_control_block_);</span></span>
 <span id="L49"><span class="lineNum">      49</span>                 :             : </span>
-<span id="L50"><span class="lineNum">      50</span>         [<span class="tlaGBC" title="Branch 0 was taken 86 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">         262 :     const bool result = (block.number_of_writers.load() == static_cast&lt;Length&gt;(0)) &amp;&amp;</span></span>
-<span id="L51"><span class="lineNum">      51</span>         [<span class="tlaGBC" title="Branch 0 was taken 86 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         258 :                         (block.written_index.load() == block.acquired_index.load());</span></span>
-<span id="L52"><span class="lineNum">      52</span>         [<span class="tlaGBC" title="Branch 0 was taken 86 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">          88 :     if (result)</span></span>
+<span id="L50"><span class="lineNum">      50</span>         [<span class="tlaGBC" title="Branch 0 was taken 87 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">         265 :     const bool result = (block.number_of_writers.load() == static_cast&lt;Length&gt;(0)) &amp;&amp;</span></span>
+<span id="L51"><span class="lineNum">      51</span>         [<span class="tlaGBC" title="Branch 0 was taken 87 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         261 :                         (block.written_index.load() == block.acquired_index.load());</span></span>
+<span id="L52"><span class="lineNum">      52</span>         [<span class="tlaGBC" title="Branch 0 was taken 87 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">          89 :     if (result)</span></span>
 <span id="L53"><span class="lineNum">      53</span>                 :             :     {</span>
 <span id="L54"><span class="lineNum">      54</span>                 :             :         std::atomic_thread_fence(std::memory_order_acquire);</span>
 <span id="L55"><span class="lineNum">      55</span>                 :             :     }</span>
-<span id="L56"><span class="lineNum">      56</span>                 :<span class="tlaGNC">          88 :     return result;</span></span>
+<span id="L56"><span class="lineNum">      56</span>                 :<span class="tlaGNC">          89 :     return result;</span></span>
 <span id="L57"><span class="lineNum">      57</span>                 :             : }</span>
 <span id="L58"><span class="lineNum">      58</span>                 :             : </span>
 <span id="L59"><span class="lineNum">      59</span>                 :             : }  // namespace detail</span>

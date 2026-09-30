@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -247,35 +247,31 @@
 <span id="L169"><span class="lineNum">     169</span>                 :             :     }</span>
 <span id="L170"><span class="lineNum">     170</span>                 :<span class="tlaGNC">           2 :     return {};</span></span>
 <span id="L171"><span class="lineNum">     171</span>                 :             : }</span>
-<span id="L172"><span class="lineNum">     172</span>                 :             : /* KW_SUPPRESS_START:MISRA.VAR.HIDDEN: it's a method definition, doesn't hide identifier in an outer scope */</span>
-<span id="L173"><span class="lineNum">     173</span>                 :<span class="tlaGNC">           3 : score::cpp::expected_blank&lt;score::os::Error&gt; score::os::Pthread::pthread_setschedparam(</span></span>
-<span id="L174"><span class="lineNum">     174</span>                 :             :     /* KW_SUPPRESS_END:MISRA.VAR.HIDDEN */</span>
-<span id="L175"><span class="lineNum">     175</span>                 :             :     const pthread_t thread,</span>
-<span id="L176"><span class="lineNum">     176</span>                 :             :     const std::int32_t policy,</span>
-<span id="L177"><span class="lineNum">     177</span>                 :             :     const struct sched_param* const param) const noexcept</span>
-<span id="L178"><span class="lineNum">     178</span>                 :             : {</span>
-<span id="L179"><span class="lineNum">     179</span>                 :<span class="tlaGNC">           3 :     const std::int32_t ret = ::pthread_setschedparam(thread, policy, param);</span></span>
-<span id="L180"><span class="lineNum">     180</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">           3 :     if (ret != 0)</span></span>
-<span id="L181"><span class="lineNum">     181</span>                 :             :     {</span>
-<span id="L182"><span class="lineNum">     182</span>                 :<span class="tlaGNC">           1 :         return score::cpp::make_unexpected(Error::createFromErrno(ret));</span></span>
-<span id="L183"><span class="lineNum">     183</span>                 :             :     }</span>
-<span id="L184"><span class="lineNum">     184</span>                 :<span class="tlaGNC">           2 :     return {};</span></span>
-<span id="L185"><span class="lineNum">     185</span>                 :             : }</span>
-<span id="L186"><span class="lineNum">     186</span>                 :             : </span>
-<span id="L187"><span class="lineNum">     187</span>                 :             : /* KW_SUPPRESS_START:MISRA.VAR.HIDDEN: it's a method definition, doesn't hide identifier in an outer scope */</span>
-<span id="L188"><span class="lineNum">     188</span>                 :<span class="tlaGNC">           2 : score::cpp::expected_blank&lt;score::os::Error&gt; score::os::Pthread::pthread_getschedparam(</span></span>
-<span id="L189"><span class="lineNum">     189</span>                 :             :     /* KW_SUPPRESS_END:MISRA.VAR.HIDDEN */</span>
-<span id="L190"><span class="lineNum">     190</span>                 :             :     const pthread_t thread,</span>
-<span id="L191"><span class="lineNum">     191</span>                 :             :     std::int32_t* const policy,</span>
-<span id="L192"><span class="lineNum">     192</span>                 :             :     struct sched_param* const param) const noexcept</span>
-<span id="L193"><span class="lineNum">     193</span>                 :             : {</span>
-<span id="L194"><span class="lineNum">     194</span>                 :<span class="tlaGNC">           2 :     const std::int32_t ret = ::pthread_getschedparam(thread, policy, param);</span></span>
-<span id="L195"><span class="lineNum">     195</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           2 :     if (ret != 0)</span></span>
-<span id="L196"><span class="lineNum">     196</span>                 :             :     {</span>
-<span id="L197"><span class="lineNum">     197</span>                 :<span class="tlaGNC">           1 :         return score::cpp::make_unexpected(Error::createFromErrno(ret));</span></span>
-<span id="L198"><span class="lineNum">     198</span>                 :             :     }</span>
-<span id="L199"><span class="lineNum">     199</span>                 :<span class="tlaGNC">           1 :     return {};</span></span>
-<span id="L200"><span class="lineNum">     200</span>                 :             : }</span>
+<span id="L172"><span class="lineNum">     172</span>                 :<span class="tlaGNC">           3 : score::cpp::expected_blank&lt;score::os::Error&gt; score::os::Pthread::pthread_setschedparam(</span></span>
+<span id="L173"><span class="lineNum">     173</span>                 :             :     const pthread_t thread,</span>
+<span id="L174"><span class="lineNum">     174</span>                 :             :     const std::int32_t policy,</span>
+<span id="L175"><span class="lineNum">     175</span>                 :             :     const struct sched_param* const param) const noexcept</span>
+<span id="L176"><span class="lineNum">     176</span>                 :             : {</span>
+<span id="L177"><span class="lineNum">     177</span>                 :<span class="tlaGNC">           3 :     const std::int32_t ret = ::pthread_setschedparam(thread, policy, param);</span></span>
+<span id="L178"><span class="lineNum">     178</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">           3 :     if (ret != 0)</span></span>
+<span id="L179"><span class="lineNum">     179</span>                 :             :     {</span>
+<span id="L180"><span class="lineNum">     180</span>                 :<span class="tlaGNC">           1 :         return score::cpp::make_unexpected(Error::createFromErrno(ret));</span></span>
+<span id="L181"><span class="lineNum">     181</span>                 :             :     }</span>
+<span id="L182"><span class="lineNum">     182</span>                 :<span class="tlaGNC">           2 :     return {};</span></span>
+<span id="L183"><span class="lineNum">     183</span>                 :             : }</span>
+<span id="L184"><span class="lineNum">     184</span>                 :             : </span>
+<span id="L185"><span class="lineNum">     185</span>                 :<span class="tlaGNC">           2 : score::cpp::expected_blank&lt;score::os::Error&gt; score::os::Pthread::pthread_getschedparam(</span></span>
+<span id="L186"><span class="lineNum">     186</span>                 :             :     const pthread_t thread,</span>
+<span id="L187"><span class="lineNum">     187</span>                 :             :     std::int32_t* const policy,</span>
+<span id="L188"><span class="lineNum">     188</span>                 :             :     struct sched_param* const param) const noexcept</span>
+<span id="L189"><span class="lineNum">     189</span>                 :             : {</span>
+<span id="L190"><span class="lineNum">     190</span>                 :<span class="tlaGNC">           2 :     const std::int32_t ret = ::pthread_getschedparam(thread, policy, param);</span></span>
+<span id="L191"><span class="lineNum">     191</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           2 :     if (ret != 0)</span></span>
+<span id="L192"><span class="lineNum">     192</span>                 :             :     {</span>
+<span id="L193"><span class="lineNum">     193</span>                 :<span class="tlaGNC">           1 :         return score::cpp::make_unexpected(Error::createFromErrno(ret));</span></span>
+<span id="L194"><span class="lineNum">     194</span>                 :             :     }</span>
+<span id="L195"><span class="lineNum">     195</span>                 :<span class="tlaGNC">           1 :     return {};</span></span>
+<span id="L196"><span class="lineNum">     196</span>                 :             : }</span>
         </pre>
               </td>
             </tr>

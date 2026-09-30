@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">92.9&nbsp;%</td>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntryMed">78.6&nbsp;%</td>
+            <td class="headerCovTableEntryMed">82.1&nbsp;%</td>
             <td class="headerCovTableEntry">28</td>
-            <td class="headerCovTableEntry">22</td>
+            <td class="headerCovTableEntry">23</td>
           </tr>
                   <tr><td><img src="../../../../../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -203,19 +203,19 @@
 <span id="L125"><span class="lineNum">     125</span>                 :             :     /// \param buffer the initial buffer to use</span>
 <span id="L126"><span class="lineNum">     126</span>                 :             :     /// \param buffer_size the size of the initial buffer; cannot be greater than the number of bytes in \p buffer.</span>
 <span id="L127"><span class="lineNum">     127</span>                 :             :     /// \param upstream The upstream memory resource to use; must point to a valid memory resource.</span>
-<span id="L128"><span class="lineNum">     128</span>                 :<span class="tlaGNC">          16 :     monotonic_buffer_resource(void* const buffer, const std::size_t buffer_size, memory_resource* const upstream)</span></span>
-<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">          16 :         : memory_resource{}</span></span>
-<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">          16 :         , upstream_rsrc_{upstream}</span></span>
-<span id="L131"><span class="lineNum">     131</span>                 :<span class="tlaGNC">          16 :         , original_buffer_{static_cast&lt;std::uint8_t*&gt;(buffer)}</span></span>
-<span id="L132"><span class="lineNum">     132</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          16 :         , original_buffer_size_{(buffer != nullptr) ? buffer_size : compute_next_buffer_size(buffer_size)}</span></span>
-<span id="L133"><span class="lineNum">     133</span>                 :<span class="tlaGNC">          16 :         , current_buffer_{original_buffer_}</span></span>
-<span id="L134"><span class="lineNum">     134</span>         [<span class="tlaGBC" title="Branch 0 was taken 16 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          16 :         , next_buffer_size_{compute_next_buffer_size(buffer_size)}</span></span>
-<span id="L135"><span class="lineNum">     135</span>                 :<span class="tlaGNC">          16 :         , available_{buffer_size}</span></span>
-<span id="L136"><span class="lineNum">     136</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 12 times"> + </span>]:<span class="tlaGNC">          32 :         , chunks_{}</span></span>
+<span id="L128"><span class="lineNum">     128</span>                 :<span class="tlaGNC">          17 :     monotonic_buffer_resource(void* const buffer, const std::size_t buffer_size, memory_resource* const upstream)</span></span>
+<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">          17 :         : memory_resource{}</span></span>
+<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">          17 :         , upstream_rsrc_{upstream}</span></span>
+<span id="L131"><span class="lineNum">     131</span>                 :<span class="tlaGNC">          17 :         , original_buffer_{static_cast&lt;std::uint8_t*&gt;(buffer)}</span></span>
+<span id="L132"><span class="lineNum">     132</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          17 :         , original_buffer_size_{(buffer != nullptr) ? buffer_size : compute_next_buffer_size(buffer_size)}</span></span>
+<span id="L133"><span class="lineNum">     133</span>                 :<span class="tlaGNC">          17 :         , current_buffer_{original_buffer_}</span></span>
+<span id="L134"><span class="lineNum">     134</span>         [<span class="tlaGBC" title="Branch 0 was taken 17 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          17 :         , next_buffer_size_{compute_next_buffer_size(buffer_size)}</span></span>
+<span id="L135"><span class="lineNum">     135</span>                 :<span class="tlaGNC">          17 :         , available_{buffer_size}</span></span>
+<span id="L136"><span class="lineNum">     136</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 13 times"> + </span>]:<span class="tlaGNC">          34 :         , chunks_{}</span></span>
 <span id="L137"><span class="lineNum">     137</span>                 :             :     {</span>
-<span id="L138"><span class="lineNum">     138</span>   [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 12 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 2 times"> + </span>]:<span class="tlaGNC">          16 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION((buffer != nullptr) || (buffer_size == 0U));</span></span>
-<span id="L139"><span class="lineNum">     139</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 13 times"> + </span>]:<span class="tlaGNC">          14 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(upstream != nullptr);</span></span>
-<span id="L140"><span class="lineNum">     140</span>                 :<span class="tlaGNC">          16 :     }</span></span>
+<span id="L138"><span class="lineNum">     138</span>   [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 13 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 2 times"> + </span>]:<span class="tlaGNC">          17 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION((buffer != nullptr) || (buffer_size == 0U));</span></span>
+<span id="L139"><span class="lineNum">     139</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 14 times"> + </span>]:<span class="tlaGNC">          15 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(upstream != nullptr);</span></span>
+<span id="L140"><span class="lineNum">     140</span>                 :<span class="tlaGNC">          17 :     }</span></span>
 <span id="L141"><span class="lineNum">     141</span>                 :             : </span>
 <span id="L142"><span class="lineNum">     142</span>                 :             :     /// \brief Constructs a monotonic_buffer_resource.</span>
 <span id="L143"><span class="lineNum">     143</span>                 :             :     ///</span>
@@ -243,7 +243,7 @@
 <span id="L165"><span class="lineNum">     165</span>                 :             :     /// Deallocates all memory owned by this resource by calling this-&gt;release().</span>
 <span id="L166"><span class="lineNum">     166</span>                 :             :     ///</span>
 <span id="L167"><span class="lineNum">     167</span>                 :             :     /// \see https://en.cppreference.com/w/cpp/memory/monotonic_buffer_resource/%7Emonotonic_buffer_resource</span>
-<span id="L168"><span class="lineNum">     168</span>                 :<span class="tlaGNC tlaBgGNC">          30 :     ~monotonic_buffer_resource() override { release(); }</span></span>
+<span id="L168"><span class="lineNum">     168</span>                 :<span class="tlaGNC tlaBgGNC">          31 :     ~monotonic_buffer_resource() override { release(); }</span></span>
 <span id="L169"><span class="lineNum">     169</span>                 :             : </span>
 <span id="L170"><span class="lineNum">     170</span>                 :             :     /// \brief Copy assignment operator is deleted. monotonic_buffer_resource is not copy assignable</span>
 <span id="L171"><span class="lineNum">     171</span>                 :             :     ///</span>
@@ -304,9 +304,9 @@
 <span id="L226"><span class="lineNum">     226</span>                 :             : private:</span>
 <span id="L227"><span class="lineNum">     227</span>                 :             :     inline static constexpr std::size_t default_initial_size{4096U};</span>
 <span id="L228"><span class="lineNum">     228</span>                 :             : </span>
-<span id="L229"><span class="lineNum">     229</span>                 :<span class="tlaGNC">          56 :     static constexpr std::size_t compute_next_buffer_size(const std::size_t buffer_size)</span></span>
+<span id="L229"><span class="lineNum">     229</span>                 :<span class="tlaGNC">          58 :     static constexpr std::size_t compute_next_buffer_size(const std::size_t buffer_size)</span></span>
 <span id="L230"><span class="lineNum">     230</span>                 :             :     {</span>
-<span id="L231"><span class="lineNum">     231</span>                 :<span class="tlaGNC">          56 :         return std::max(default_initial_size, 2U * buffer_size);</span></span>
+<span id="L231"><span class="lineNum">     231</span>                 :<span class="tlaGNC">          58 :         return std::max(default_initial_size, 2U * buffer_size);</span></span>
 <span id="L232"><span class="lineNum">     232</span>                 :             :     }</span>
 <span id="L233"><span class="lineNum">     233</span>                 :             : </span>
 <span id="L234"><span class="lineNum">     234</span>                 :             :     memory_resource* upstream_rsrc_;</span>
@@ -318,32 +318,32 @@
 <span id="L240"><span class="lineNum">     240</span>                 :             :     detail::chunk_list chunks_;</span>
 <span id="L241"><span class="lineNum">     241</span>                 :             : };</span>
 <span id="L242"><span class="lineNum">     242</span>                 :             : </span>
-<span id="L243"><span class="lineNum">     243</span>                 :<span class="tlaGNC">          37 : inline void monotonic_buffer_resource::release()</span></span>
+<span id="L243"><span class="lineNum">     243</span>                 :<span class="tlaGNC">          38 : inline void monotonic_buffer_resource::release()</span></span>
 <span id="L244"><span class="lineNum">     244</span>                 :             : {</span>
-<span id="L245"><span class="lineNum">     245</span>                 :<span class="tlaGNC">          37 :     chunks_.release(upstream_rsrc_);</span></span>
-<span id="L246"><span class="lineNum">     246</span>                 :<span class="tlaGNC">          37 :     current_buffer_ = original_buffer_;</span></span>
-<span id="L247"><span class="lineNum">     247</span>         [<span class="tlaGBC" title="Branch 0 was taken 23 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 14 times"> + </span>]:<span class="tlaGNC">          37 :     if (current_buffer_ == nullptr)</span></span>
+<span id="L245"><span class="lineNum">     245</span>                 :<span class="tlaGNC">          38 :     chunks_.release(upstream_rsrc_);</span></span>
+<span id="L246"><span class="lineNum">     246</span>                 :<span class="tlaGNC">          38 :     current_buffer_ = original_buffer_;</span></span>
+<span id="L247"><span class="lineNum">     247</span>         [<span class="tlaGBC" title="Branch 0 was taken 23 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 15 times"> + </span>]:<span class="tlaGNC">          38 :     if (current_buffer_ == nullptr)</span></span>
 <span id="L248"><span class="lineNum">     248</span>                 :             :     {</span>
 <span id="L249"><span class="lineNum">     249</span>                 :<span class="tlaGNC">          23 :         available_ = 0U;</span></span>
 <span id="L250"><span class="lineNum">     250</span>                 :<span class="tlaGNC">          23 :         next_buffer_size_ = original_buffer_size_;</span></span>
 <span id="L251"><span class="lineNum">     251</span>                 :             :     }</span>
 <span id="L252"><span class="lineNum">     252</span>                 :             :     else</span>
 <span id="L253"><span class="lineNum">     253</span>                 :             :     {</span>
-<span id="L254"><span class="lineNum">     254</span>                 :<span class="tlaGNC">          14 :         available_ = original_buffer_size_;</span></span>
-<span id="L255"><span class="lineNum">     255</span>                 :<span class="tlaGNC">          14 :         next_buffer_size_ = compute_next_buffer_size(original_buffer_size_);</span></span>
+<span id="L254"><span class="lineNum">     254</span>                 :<span class="tlaGNC">          15 :         available_ = original_buffer_size_;</span></span>
+<span id="L255"><span class="lineNum">     255</span>                 :<span class="tlaGNC">          15 :         next_buffer_size_ = compute_next_buffer_size(original_buffer_size_);</span></span>
 <span id="L256"><span class="lineNum">     256</span>                 :             :     }</span>
-<span id="L257"><span class="lineNum">     257</span>                 :<span class="tlaGNC">          37 : }</span></span>
+<span id="L257"><span class="lineNum">     257</span>                 :<span class="tlaGNC">          38 : }</span></span>
 <span id="L258"><span class="lineNum">     258</span>                 :             : </span>
-<span id="L259"><span class="lineNum">     259</span>                 :<span class="tlaGNC">          35 : inline void* monotonic_buffer_resource::do_allocate(const std::size_t bytes, const std::size_t alignment)</span></span>
+<span id="L259"><span class="lineNum">     259</span>                 :<span class="tlaGNC">          36 : inline void* monotonic_buffer_resource::do_allocate(const std::size_t bytes, const std::size_t alignment)</span></span>
 <span id="L260"><span class="lineNum">     260</span>                 :             : {</span>
-<span id="L261"><span class="lineNum">     261</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 35 times"> + </span>]:<span class="tlaGNC">          35 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION(score::cpp::has_single_bit(alignment));</span></span>
+<span id="L261"><span class="lineNum">     261</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 36 times"> + </span>]:<span class="tlaGNC">          36 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION(score::cpp::has_single_bit(alignment));</span></span>
 <span id="L262"><span class="lineNum">     262</span>                 :             : </span>
-<span id="L263"><span class="lineNum">     263</span>                 :<span class="tlaGNC">          35 :     void* result{current_buffer_};</span></span>
-<span id="L264"><span class="lineNum">     264</span>                 :<span class="tlaGNC">          35 :     result = std::align(alignment, bytes, result, available_);</span></span>
-<span id="L265"><span class="lineNum">     265</span>         [<span class="tlaGBC" title="Branch 0 was taken 22 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 13 times"> + </span>]:<span class="tlaGNC">          35 :     if (result == nullptr)</span></span>
+<span id="L263"><span class="lineNum">     263</span>                 :<span class="tlaGNC">          36 :     void* result{current_buffer_};</span></span>
+<span id="L264"><span class="lineNum">     264</span>                 :<span class="tlaGNC">          36 :     result = std::align(alignment, bytes, result, available_);</span></span>
+<span id="L265"><span class="lineNum">     265</span>         [<span class="tlaGBC" title="Branch 0 was taken 23 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 13 times"> + </span>]:<span class="tlaGNC">          36 :     if (result == nullptr)</span></span>
 <span id="L266"><span class="lineNum">     266</span>                 :             :     {</span>
-<span id="L267"><span class="lineNum">     267</span>                 :<span class="tlaGNC">          22 :         const std::size_t usable_size{std::max(bytes, next_buffer_size_)};</span></span>
-<span id="L268"><span class="lineNum">     268</span>         [<span class="tlaGBC" title="Branch 0 was taken 22 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          22 :         current_buffer_ = chunks_.allocate(upstream_rsrc_, usable_size, alignment);</span></span>
+<span id="L267"><span class="lineNum">     267</span>                 :<span class="tlaGNC">          23 :         const std::size_t usable_size{std::max(bytes, next_buffer_size_)};</span></span>
+<span id="L268"><span class="lineNum">     268</span>         [<span class="tlaGBC" title="Branch 0 was taken 22 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          23 :         current_buffer_ = chunks_.allocate(upstream_rsrc_, usable_size, alignment);</span></span>
 <span id="L269"><span class="lineNum">     269</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 22 times"> + </span>]:<span class="tlaGNC">          22 :         SCORE_LANGUAGE_FUTURECPP_ASSERT(current_buffer_ != nullptr);</span></span>
 <span id="L270"><span class="lineNum">     270</span>         [<span class="tlaGBC" title="Branch 0 was taken 22 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          22 :         next_buffer_size_ = compute_next_buffer_size(usable_size);</span></span>
 <span id="L271"><span class="lineNum">     271</span>                 :<span class="tlaGNC">          22 :         result = current_buffer_;</span></span>

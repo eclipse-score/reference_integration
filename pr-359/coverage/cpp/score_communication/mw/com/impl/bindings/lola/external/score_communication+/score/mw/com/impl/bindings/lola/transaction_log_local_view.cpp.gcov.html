@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:10:46</td>
+            <td class="headerValue">2026-09-30 04:19:55</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -107,15 +107,15 @@
 <span id="L29"><span class="lineNum">      29</span>                 :             : // Handles race condition between concurrent SamplePtr destruction and creation for the same slot.</span>
 <span id="L30"><span class="lineNum">      30</span>                 :             : // Thread A may be suspended between decrementing refcount and clearing the transaction-END bit.</span>
 <span id="L31"><span class="lineNum">      31</span>                 :             : // This allows Thread A to complete its dereference transaction before proceeding.</span>
-<span id="L32"><span class="lineNum">      32</span>                 :<span class="tlaGNC tlaBgGNC">         646 : void WaitForTransactionEndToBecomeFalse(TransactionLogSlot&amp; slot) noexcept</span></span>
+<span id="L32"><span class="lineNum">      32</span>                 :<span class="tlaGNC tlaBgGNC">         644 : void WaitForTransactionEndToBecomeFalse(TransactionLogSlot&amp; slot) noexcept</span></span>
 <span id="L33"><span class="lineNum">      33</span>                 :             : {</span>
-<span id="L34"><span class="lineNum">      34</span>                 :<span class="tlaGNC">         646 :     constexpr std::uint8_t kRetryCount = 10U;</span></span>
-<span id="L35"><span class="lineNum">      35</span>                 :<span class="tlaGNC">         646 :     constexpr std::chrono::milliseconds kRetryInterval(10);</span></span>
-<span id="L36"><span class="lineNum">      36</span>         [<span class="tlaGBC" title="Branch 0 was taken 655 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">         656 :     for (std::uint8_t retry = 0U; retry &lt; kRetryCount; ++retry)</span></span>
+<span id="L34"><span class="lineNum">      34</span>                 :<span class="tlaGNC">         644 :     constexpr std::uint8_t kRetryCount = 10U;</span></span>
+<span id="L35"><span class="lineNum">      35</span>                 :<span class="tlaGNC">         644 :     constexpr std::chrono::milliseconds kRetryInterval(10);</span></span>
+<span id="L36"><span class="lineNum">      36</span>         [<span class="tlaGBC" title="Branch 0 was taken 653 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">         654 :     for (std::uint8_t retry = 0U; retry &lt; kRetryCount; ++retry)</span></span>
 <span id="L37"><span class="lineNum">      37</span>                 :             :     {</span>
-<span id="L38"><span class="lineNum">      38</span>         [<span class="tlaGBC" title="Branch 0 was taken 645 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 10 times"> + </span>]:<span class="tlaGNC">         655 :         if (!slot.GetTransactionEnd())</span></span>
+<span id="L38"><span class="lineNum">      38</span>         [<span class="tlaGBC" title="Branch 0 was taken 643 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 10 times"> + </span>]:<span class="tlaGNC">         653 :         if (!slot.GetTransactionEnd())</span></span>
 <span id="L39"><span class="lineNum">      39</span>                 :             :         {</span>
-<span id="L40"><span class="lineNum">      40</span>                 :<span class="tlaGNC">         645 :             return;</span></span>
+<span id="L40"><span class="lineNum">      40</span>                 :<span class="tlaGNC">         643 :             return;</span></span>
 <span id="L41"><span class="lineNum">      41</span>                 :             :         }</span>
 <span id="L42"><span class="lineNum">      42</span>                 :<span class="tlaGNC">          10 :         std::this_thread::sleep_for(kRetryInterval);</span></span>
 <span id="L43"><span class="lineNum">      43</span>                 :             :     }</span>
@@ -191,28 +191,28 @@
 <span id="L112"><span class="lineNum">     112</span>                 :             : // std::out_of_range As we already do an index check before accessing, so no way for throwing std::out_of_rang which</span>
 <span id="L113"><span class="lineNum">     113</span>                 :             : // leds to calling std::terminate().</span>
 <span id="L114"><span class="lineNum">     114</span>                 :             : // coverity[autosar_cpp14_a15_5_3_violation : FALSE]</span>
-<span id="L115"><span class="lineNum">     115</span>                 :<span class="tlaGNC">         336 : void TransactionLogLocalView::ReferenceTransactionBegin(SlotIndexType slot_index) noexcept</span></span>
+<span id="L115"><span class="lineNum">     115</span>                 :<span class="tlaGNC">         335 : void TransactionLogLocalView::ReferenceTransactionBegin(SlotIndexType slot_index) noexcept</span></span>
 <span id="L116"><span class="lineNum">     116</span>                 :             : {</span>
-<span id="L117"><span class="lineNum">     117</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 336 times"> + </span>]:<span class="tlaGNC">         336 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION(slot_index &lt; reference_count_slots_local_.size());</span></span>
-<span id="L118"><span class="lineNum">     118</span>                 :<span class="tlaGNC">         336 :     TransactionLogSlot&amp; slot = reference_count_slots_local_[static_cast&lt;std::size_t&gt;(slot_index)];</span></span>
-<span id="L119"><span class="lineNum">     119</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 336 times"> + </span>]:<span class="tlaGNC">         336 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION(!slot.GetTransactionBegin());</span></span>
-<span id="L120"><span class="lineNum">     120</span>                 :<span class="tlaGNC">         336 :     WaitForTransactionEndToBecomeFalse(slot);</span></span>
-<span id="L121"><span class="lineNum">     121</span>                 :<span class="tlaGNC">         335 :     slot.SetTransactionBegin(true);</span></span>
-<span id="L122"><span class="lineNum">     122</span>                 :<span class="tlaGNC">         335 : }</span></span>
+<span id="L117"><span class="lineNum">     117</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 335 times"> + </span>]:<span class="tlaGNC">         335 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION(slot_index &lt; reference_count_slots_local_.size());</span></span>
+<span id="L118"><span class="lineNum">     118</span>                 :<span class="tlaGNC">         335 :     TransactionLogSlot&amp; slot = reference_count_slots_local_[static_cast&lt;std::size_t&gt;(slot_index)];</span></span>
+<span id="L119"><span class="lineNum">     119</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 335 times"> + </span>]:<span class="tlaGNC">         335 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION(!slot.GetTransactionBegin());</span></span>
+<span id="L120"><span class="lineNum">     120</span>                 :<span class="tlaGNC">         335 :     WaitForTransactionEndToBecomeFalse(slot);</span></span>
+<span id="L121"><span class="lineNum">     121</span>                 :<span class="tlaGNC">         334 :     slot.SetTransactionBegin(true);</span></span>
+<span id="L122"><span class="lineNum">     122</span>                 :<span class="tlaGNC">         334 : }</span></span>
 <span id="L123"><span class="lineNum">     123</span>                 :             : </span>
 <span id="L124"><span class="lineNum">     124</span>                 :             : // Suppress &quot;AUTOSAR C++14 A15-5-3&quot; rule findings. This rule states: &quot;The std::terminate() function shall not be called</span>
 <span id="L125"><span class="lineNum">     125</span>                 :             : // implicitly&quot;. std::terminate() is implicitly called from 'reference_count_slots_local_.at()' which might throw</span>
 <span id="L126"><span class="lineNum">     126</span>                 :             : // std::out_of_range As we already do an index check before accessing, so no way for throwing std::out_of_rang which</span>
 <span id="L127"><span class="lineNum">     127</span>                 :             : // leds to calling std::terminate().</span>
 <span id="L128"><span class="lineNum">     128</span>                 :             : // coverity[autosar_cpp14_a15_5_3_violation : FALSE]</span>
-<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">         200 : void TransactionLogLocalView::ReferenceTransactionCommit(SlotIndexType slot_index) noexcept</span></span>
+<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">         199 : void TransactionLogLocalView::ReferenceTransactionCommit(SlotIndexType slot_index) noexcept</span></span>
 <span id="L130"><span class="lineNum">     130</span>                 :             : {</span>
-<span id="L131"><span class="lineNum">     131</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 200 times"> + </span>]:<span class="tlaGNC">         200 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION(slot_index &lt; reference_count_slots_local_.size());</span></span>
-<span id="L132"><span class="lineNum">     132</span>                 :<span class="tlaGNC">         200 :     TransactionLogSlot&amp; slot = reference_count_slots_local_[static_cast&lt;std::size_t&gt;(slot_index)];</span></span>
-<span id="L133"><span class="lineNum">     133</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 200 times"> + </span>]:<span class="tlaGNC">         200 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION(slot.GetTransactionBegin());</span></span>
-<span id="L134"><span class="lineNum">     134</span>                 :<span class="tlaGNC">         200 :     WaitForTransactionEndToBecomeFalse(slot);</span></span>
-<span id="L135"><span class="lineNum">     135</span>                 :<span class="tlaGNC">         200 :     slot.SetTransactionEnd(true);</span></span>
-<span id="L136"><span class="lineNum">     136</span>                 :<span class="tlaGNC">         200 : }</span></span>
+<span id="L131"><span class="lineNum">     131</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 199 times"> + </span>]:<span class="tlaGNC">         199 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION(slot_index &lt; reference_count_slots_local_.size());</span></span>
+<span id="L132"><span class="lineNum">     132</span>                 :<span class="tlaGNC">         199 :     TransactionLogSlot&amp; slot = reference_count_slots_local_[static_cast&lt;std::size_t&gt;(slot_index)];</span></span>
+<span id="L133"><span class="lineNum">     133</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 199 times"> + </span>]:<span class="tlaGNC">         199 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION(slot.GetTransactionBegin());</span></span>
+<span id="L134"><span class="lineNum">     134</span>                 :<span class="tlaGNC">         199 :     WaitForTransactionEndToBecomeFalse(slot);</span></span>
+<span id="L135"><span class="lineNum">     135</span>                 :<span class="tlaGNC">         199 :     slot.SetTransactionEnd(true);</span></span>
+<span id="L136"><span class="lineNum">     136</span>                 :<span class="tlaGNC">         199 : }</span></span>
 <span id="L137"><span class="lineNum">     137</span>                 :             : </span>
 <span id="L138"><span class="lineNum">     138</span>                 :             : // Suppress &quot;AUTOSAR C++14 A15-5-3&quot; rule findings. This rule states: &quot;The std::terminate() function shall not be called</span>
 <span id="L139"><span class="lineNum">     139</span>                 :             : // implicitly&quot;. std::terminate() is implicitly called from 'reference_count_slots_local_.at()' which might throw</span>
@@ -233,23 +233,23 @@
 <span id="L154"><span class="lineNum">     154</span>                 :             : // std::out_of_range As we already do an index check before accessing, so no way for throwing std::out_of_rang which</span>
 <span id="L155"><span class="lineNum">     155</span>                 :             : // leds to calling std::terminate().</span>
 <span id="L156"><span class="lineNum">     156</span>                 :             : // coverity[autosar_cpp14_a15_5_3_violation : FALSE]</span>
-<span id="L157"><span class="lineNum">     157</span>                 :<span class="tlaGNC">         166 : void TransactionLogLocalView::DereferenceTransactionBegin(SlotIndexType slot_index) noexcept</span></span>
+<span id="L157"><span class="lineNum">     157</span>                 :<span class="tlaGNC">         165 : void TransactionLogLocalView::DereferenceTransactionBegin(SlotIndexType slot_index) noexcept</span></span>
 <span id="L158"><span class="lineNum">     158</span>                 :             : {</span>
-<span id="L159"><span class="lineNum">     159</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 166 times"> + </span>]:<span class="tlaGNC">         166 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION(slot_index &lt; reference_count_slots_local_.size());</span></span>
-<span id="L160"><span class="lineNum">     160</span>                 :<span class="tlaGNC">         166 :     TransactionLogSlot&amp; slot = reference_count_slots_local_[static_cast&lt;std::size_t&gt;(slot_index)];</span></span>
-<span id="L161"><span class="lineNum">     161</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 166 times"> + </span>]:<span class="tlaGNC">         166 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION(slot.GetTransactionBegin());</span></span>
-<span id="L162"><span class="lineNum">     162</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 166 times"> + </span>]:<span class="tlaGNC">         166 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION(slot.GetTransactionEnd());</span></span>
-<span id="L163"><span class="lineNum">     163</span>                 :<span class="tlaGNC">         166 :     slot.SetTransactionBegin(false);</span></span>
-<span id="L164"><span class="lineNum">     164</span>                 :<span class="tlaGNC">         166 : }</span></span>
+<span id="L159"><span class="lineNum">     159</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 165 times"> + </span>]:<span class="tlaGNC">         165 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION(slot_index &lt; reference_count_slots_local_.size());</span></span>
+<span id="L160"><span class="lineNum">     160</span>                 :<span class="tlaGNC">         165 :     TransactionLogSlot&amp; slot = reference_count_slots_local_[static_cast&lt;std::size_t&gt;(slot_index)];</span></span>
+<span id="L161"><span class="lineNum">     161</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 165 times"> + </span>]:<span class="tlaGNC">         165 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION(slot.GetTransactionBegin());</span></span>
+<span id="L162"><span class="lineNum">     162</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 165 times"> + </span>]:<span class="tlaGNC">         165 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION(slot.GetTransactionEnd());</span></span>
+<span id="L163"><span class="lineNum">     163</span>                 :<span class="tlaGNC">         165 :     slot.SetTransactionBegin(false);</span></span>
+<span id="L164"><span class="lineNum">     164</span>                 :<span class="tlaGNC">         165 : }</span></span>
 <span id="L165"><span class="lineNum">     165</span>                 :             : </span>
-<span id="L166"><span class="lineNum">     166</span>                 :<span class="tlaGNC">         158 : void TransactionLogLocalView::DereferenceTransactionCommit(SlotIndexType slot_index) noexcept</span></span>
+<span id="L166"><span class="lineNum">     166</span>                 :<span class="tlaGNC">         157 : void TransactionLogLocalView::DereferenceTransactionCommit(SlotIndexType slot_index) noexcept</span></span>
 <span id="L167"><span class="lineNum">     167</span>                 :             : {</span>
-<span id="L168"><span class="lineNum">     168</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 158 times"> + </span>]:<span class="tlaGNC">         158 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION(slot_index &lt; reference_count_slots_local_.size());</span></span>
-<span id="L169"><span class="lineNum">     169</span>                 :<span class="tlaGNC">         158 :     TransactionLogSlot&amp; slot = reference_count_slots_local_[static_cast&lt;std::size_t&gt;(slot_index)];</span></span>
-<span id="L170"><span class="lineNum">     170</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 158 times"> + </span>]:<span class="tlaGNC">         158 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION(!slot.GetTransactionBegin());</span></span>
-<span id="L171"><span class="lineNum">     171</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 158 times"> + </span>]:<span class="tlaGNC">         158 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION(slot.GetTransactionEnd());</span></span>
-<span id="L172"><span class="lineNum">     172</span>                 :<span class="tlaGNC">         158 :     slot.SetTransactionEnd(false);</span></span>
-<span id="L173"><span class="lineNum">     173</span>                 :<span class="tlaGNC">         158 : }</span></span>
+<span id="L168"><span class="lineNum">     168</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 157 times"> + </span>]:<span class="tlaGNC">         157 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION(slot_index &lt; reference_count_slots_local_.size());</span></span>
+<span id="L169"><span class="lineNum">     169</span>                 :<span class="tlaGNC">         157 :     TransactionLogSlot&amp; slot = reference_count_slots_local_[static_cast&lt;std::size_t&gt;(slot_index)];</span></span>
+<span id="L170"><span class="lineNum">     170</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 157 times"> + </span>]:<span class="tlaGNC">         157 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION(!slot.GetTransactionBegin());</span></span>
+<span id="L171"><span class="lineNum">     171</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 157 times"> + </span>]:<span class="tlaGNC">         157 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION(slot.GetTransactionEnd());</span></span>
+<span id="L172"><span class="lineNum">     172</span>                 :<span class="tlaGNC">         157 :     slot.SetTransactionEnd(false);</span></span>
+<span id="L173"><span class="lineNum">     173</span>                 :<span class="tlaGNC">         157 : }</span></span>
 <span id="L174"><span class="lineNum">     174</span>                 :             : </span>
 <span id="L175"><span class="lineNum">     175</span>                 :<span class="tlaGNC">          66 : Result&lt;void&gt; TransactionLogLocalView::RollbackProxyElementLog(const DereferenceSlotCallback&amp; dereference_slot_callback,</span></span>
 <span id="L176"><span class="lineNum">     176</span>                 :             :                                                               const UnsubscribeCallback&amp; unsubscribe_callback)</span>

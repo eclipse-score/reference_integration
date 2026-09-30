@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -145,18 +145,18 @@
 <span id="L67"><span class="lineNum">      67</span>                 :             :     // Constructor intentionally provides implicit conversion from Code type to take advantage of ADL of MakeError().</span>
 <span id="L68"><span class="lineNum">      68</span>                 :             :     // Intentional delegation to copy constructor by MakeError() design and to comply with AUTOSAR A12-1-5.</span>
 <span id="L69"><span class="lineNum">      69</span>                 :             :     // NOLINTNEXTLINE(google-explicit-constructor,cppcoreguidelines-pro-type-member-init): Intended, see lines above</span>
-<span id="L70"><span class="lineNum">      70</span>                 :<span class="tlaGNC tlaBgGNC">       25701 :     constexpr Error(Code code, std::string_view user_message = &quot;&quot;) : Error(MakeError(code, user_message))</span></span>
+<span id="L70"><span class="lineNum">      70</span>                 :<span class="tlaGNC tlaBgGNC">       25706 :     constexpr Error(Code code, std::string_view user_message = &quot;&quot;) : Error(MakeError(code, user_message))</span></span>
 <span id="L71"><span class="lineNum">      71</span>                 :             :     {</span>
-<span id="L72"><span class="lineNum">      72</span>                 :<span class="tlaGNC">       25702 :     }</span></span>
+<span id="L72"><span class="lineNum">      72</span>                 :<span class="tlaGNC">       25706 :     }</span></span>
 <span id="L73"><span class="lineNum">      73</span>                 :             : </span>
 <span id="L74"><span class="lineNum">      74</span>                 :             :     /// \brief Constructs an Error</span>
 <span id="L75"><span class="lineNum">      75</span>                 :             :     /// \param code The error code this error shall represent</span>
 <span id="L76"><span class="lineNum">      76</span>                 :             :     /// \param domain The error domain the respective error code is used</span>
 <span id="L77"><span class="lineNum">      77</span>                 :             :     /// \param user_message The user-message (optional) that shall give additional information</span>
-<span id="L78"><span class="lineNum">      78</span>                 :<span class="tlaGNC">       37683 :     constexpr Error(const ErrorCode code, const ErrorDomain&amp; domain, const std::string_view user_message)</span></span>
-<span id="L79"><span class="lineNum">      79</span>                 :<span class="tlaGNC">       37683 :         : code_{code}, domain_{&amp;domain}, user_messages_{user_message}</span></span>
+<span id="L78"><span class="lineNum">      78</span>                 :<span class="tlaGNC">       37685 :     constexpr Error(const ErrorCode code, const ErrorDomain&amp; domain, const std::string_view user_message)</span></span>
+<span id="L79"><span class="lineNum">      79</span>                 :<span class="tlaGNC">       37685 :         : code_{code}, domain_{&amp;domain}, user_messages_{user_message}</span></span>
 <span id="L80"><span class="lineNum">      80</span>                 :             :     {</span>
-<span id="L81"><span class="lineNum">      81</span>                 :<span class="tlaGNC">       37683 :     }</span></span>
+<span id="L81"><span class="lineNum">      81</span>                 :<span class="tlaGNC">       37685 :     }</span></span>
 <span id="L82"><span class="lineNum">      82</span>                 :             : </span>
 <span id="L83"><span class="lineNum">      83</span>                 :             :     /// \brief Dereferences the Error class to its underlying code (e.g. usage within switch-statement)</span>
 <span id="L84"><span class="lineNum">      84</span>                 :             :     /// \return The underlying error code as integral type</span>

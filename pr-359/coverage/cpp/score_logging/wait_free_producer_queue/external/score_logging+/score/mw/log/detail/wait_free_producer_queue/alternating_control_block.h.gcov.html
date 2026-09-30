@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:12:16</td>
+            <td class="headerValue">2026-09-30 04:21:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -138,15 +138,15 @@
 <span id="L60"><span class="lineNum">      60</span>                 :             : //  Template function is used to resolve return type as const or non-const depending on iput arguments type.</span>
 <span id="L61"><span class="lineNum">      61</span>                 :             : template &lt;typename T,</span>
 <span id="L62"><span class="lineNum">      62</span>                 :             :           typename = std::enable_if_t&lt;std::is_same&lt;std::remove_cv_t&lt;T&gt;, AlternatingControlBlock&gt;::value, bool&gt;&gt;</span>
-<span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC tlaBgGNC">       56259 : auto&amp; SelectLinearControlBlockReference(AlternatingControlBlockSelectId block_id, T&amp; control)</span></span>
+<span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC tlaBgGNC">       71543 : auto&amp; SelectLinearControlBlockReference(AlternatingControlBlockSelectId block_id, T&amp; control)</span></span>
 <span id="L64"><span class="lineNum">      64</span>                 :             : {</span>
-<span id="L65"><span class="lineNum">      65</span>         [<span class="tlaGBC" title="Branch 0 was taken 30878 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 25381 times"> + </span>]:<span class="tlaGNC">       56259 :     if (block_id == AlternatingControlBlockSelectId::kBlockEven)</span></span>
+<span id="L65"><span class="lineNum">      65</span>         [<span class="tlaGBC" title="Branch 0 was taken 39151 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 32392 times"> + </span>]:<span class="tlaGNC">       71543 :     if (block_id == AlternatingControlBlockSelectId::kBlockEven)</span></span>
 <span id="L66"><span class="lineNum">      66</span>                 :             :     {</span>
-<span id="L67"><span class="lineNum">      67</span>                 :<span class="tlaGNC">       30878 :         return control.control_block_even;</span></span>
+<span id="L67"><span class="lineNum">      67</span>                 :<span class="tlaGNC">       39151 :         return control.control_block_even;</span></span>
 <span id="L68"><span class="lineNum">      68</span>                 :             :     }</span>
 <span id="L69"><span class="lineNum">      69</span>                 :             :     else</span>
 <span id="L70"><span class="lineNum">      70</span>                 :             :     {</span>
-<span id="L71"><span class="lineNum">      71</span>                 :<span class="tlaGNC">       25381 :         return control.control_block_odd;</span></span>
+<span id="L71"><span class="lineNum">      71</span>                 :<span class="tlaGNC">       32392 :         return control.control_block_odd;</span></span>
 <span id="L72"><span class="lineNum">      72</span>                 :             :     }</span>
 <span id="L73"><span class="lineNum">      73</span>                 :             : }</span>
 <span id="L74"><span class="lineNum">      74</span>                 :             : </span>

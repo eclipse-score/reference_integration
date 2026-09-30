@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:10:46</td>
+            <td class="headerValue">2026-09-30 04:19:55</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -156,18 +156,18 @@
 <span id="L76"><span class="lineNum">      76</span>                 :             :                       // be used.&quot;. Rationale: False-positive, this lambda function is used by std::for_each.</span>
 <span id="L77"><span class="lineNum">      77</span>                 :             :                       // coverity[autosar_cpp14_a0_1_3_violation : FALSE]</span>
 <span id="L78"><span class="lineNum">      78</span>                 :<span class="tlaGNC">         261 :                       [&amp;flag_file_paths, quality_type](const filesystem::DirectoryEntry&amp; entry) {</span></span>
-<span id="L79"><span class="lineNum">      79</span>                 :<span class="tlaGNC">          98 :                           const auto file_status = entry.Status();</span></span>
-<span id="L80"><span class="lineNum">      80</span>                 :<span class="tlaGNC">          98 :                           const auto substring_iterator = entry.GetPath().Native().find(quality_type);</span></span>
+<span id="L79"><span class="lineNum">      79</span>                 :<span class="tlaGNC">          96 :                           const auto file_status = entry.Status();</span></span>
+<span id="L80"><span class="lineNum">      80</span>                 :<span class="tlaGNC">          96 :                           const auto substring_iterator = entry.GetPath().Native().find(quality_type);</span></span>
 <span id="L81"><span class="lineNum">      81</span>                 :             :                           const bool is_regular_file =</span>
-<span id="L82"><span class="lineNum">      82</span>   [<span class="tlaGBC" title="Branch 0 was taken 98 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 96 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 2 times"> + </span>]:<span class="tlaGNC">          98 :                               (file_status.has_value() &amp;&amp; (file_status-&gt;Type() == filesystem::FileType::kRegular));</span></span>
-<span id="L83"><span class="lineNum">      83</span>                 :<span class="tlaGNC">          98 :                           const bool path_contains_quality_type = substring_iterator != std::string::npos;</span></span>
+<span id="L82"><span class="lineNum">      82</span>   [<span class="tlaGBC" title="Branch 0 was taken 96 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 94 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 2 times"> + </span>]:<span class="tlaGNC">          96 :                               (file_status.has_value() &amp;&amp; (file_status-&gt;Type() == filesystem::FileType::kRegular));</span></span>
+<span id="L83"><span class="lineNum">      83</span>                 :<span class="tlaGNC">          96 :                           const bool path_contains_quality_type = substring_iterator != std::string::npos;</span></span>
 <span id="L84"><span class="lineNum">      84</span>                 :             :                           // LCOV_EXCL_BR_START Tooling issue Ticket-199161 - all branches covered</span>
-<span id="L85"><span class="lineNum">      85</span>   [<span class="tlaGBC" title="Branch 0 was taken 96 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 46 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 50 times"> + </span>]:<span class="tlaGNC">          98 :                           if (is_regular_file &amp;&amp; path_contains_quality_type)</span></span>
+<span id="L85"><span class="lineNum">      85</span>   [<span class="tlaGBC" title="Branch 0 was taken 94 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 45 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 49 times"> + </span>]:<span class="tlaGNC">          96 :                           if (is_regular_file &amp;&amp; path_contains_quality_type)</span></span>
 <span id="L86"><span class="lineNum">      86</span>                 :             :                           // LCOV_EXCL_BR_STOP</span>
 <span id="L87"><span class="lineNum">      87</span>                 :             :                           {</span>
-<span id="L88"><span class="lineNum">      88</span>         [<span class="tlaGBC" title="Branch 0 was taken 46 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          46 :                               score::cpp::ignore = flag_file_paths.emplace_back(entry.GetPath());</span></span>
+<span id="L88"><span class="lineNum">      88</span>         [<span class="tlaGBC" title="Branch 0 was taken 45 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          45 :                               score::cpp::ignore = flag_file_paths.emplace_back(entry.GetPath());</span></span>
 <span id="L89"><span class="lineNum">      89</span>                 :             :                           }</span>
-<span id="L90"><span class="lineNum">      90</span>                 :<span class="tlaGNC">         359 :                       });</span></span>
+<span id="L90"><span class="lineNum">      90</span>                 :<span class="tlaGNC">         357 :                       });</span></span>
 <span id="L91"><span class="lineNum">      91</span>                 :             : </span>
 <span id="L92"><span class="lineNum">      92</span>                 :<span class="tlaGNC">         522 :     return flag_file_paths;</span></span>
 <span id="L93"><span class="lineNum">      93</span>         [<span class="tlaGBC" title="Branch 0 was taken 261 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         522 : }</span></span>
@@ -201,21 +201,21 @@
 <span id="L121"><span class="lineNum">     121</span>                 :             : </span>
 <span id="L122"><span class="lineNum">     122</span>                 :             : }  // namespace</span>
 <span id="L123"><span class="lineNum">     123</span>                 :             : </span>
-<span id="L124"><span class="lineNum">     124</span>                 :<span class="tlaGNC">         572 : auto GetQualityTypeString(QualityType quality_type) noexcept -&gt; std::string_view</span></span>
+<span id="L124"><span class="lineNum">     124</span>                 :<span class="tlaGNC">         574 : auto GetQualityTypeString(QualityType quality_type) noexcept -&gt; std::string_view</span></span>
 <span id="L125"><span class="lineNum">     125</span>                 :             : {</span>
-<span id="L126"><span class="lineNum">     126</span>                 :<span class="tlaGNC">         572 :     const char* result{nullptr};</span></span>
+<span id="L126"><span class="lineNum">     126</span>                 :<span class="tlaGNC">         574 :     const char* result{nullptr};</span></span>
 <span id="L127"><span class="lineNum">     127</span>                 :             : </span>
-<span id="L128"><span class="lineNum">     128</span>      [<span class="tlaGBC" title="Branch 0 was taken 189 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 380 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span>]:<span class="tlaGNC">         572 :     switch (quality_type)</span></span>
+<span id="L128"><span class="lineNum">     128</span>      [<span class="tlaGBC" title="Branch 0 was taken 190 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 381 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span>]:<span class="tlaGNC">         574 :     switch (quality_type)</span></span>
 <span id="L129"><span class="lineNum">     129</span>                 :             :     {</span>
-<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">         189 :         case QualityType::kASIL_B:</span></span>
+<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">         190 :         case QualityType::kASIL_B:</span></span>
 <span id="L131"><span class="lineNum">     131</span>                 :             :         {</span>
-<span id="L132"><span class="lineNum">     132</span>                 :<span class="tlaGNC">         189 :             result = &quot;asil-b&quot;;</span></span>
-<span id="L133"><span class="lineNum">     133</span>                 :<span class="tlaGNC">         189 :             break;</span></span>
+<span id="L132"><span class="lineNum">     132</span>                 :<span class="tlaGNC">         190 :             result = &quot;asil-b&quot;;</span></span>
+<span id="L133"><span class="lineNum">     133</span>                 :<span class="tlaGNC">         190 :             break;</span></span>
 <span id="L134"><span class="lineNum">     134</span>                 :             :         }</span>
-<span id="L135"><span class="lineNum">     135</span>                 :<span class="tlaGNC">         380 :         case QualityType::kASIL_QM:</span></span>
+<span id="L135"><span class="lineNum">     135</span>                 :<span class="tlaGNC">         381 :         case QualityType::kASIL_QM:</span></span>
 <span id="L136"><span class="lineNum">     136</span>                 :             :         {</span>
-<span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC">         380 :             result = &quot;asil-qm&quot;;</span></span>
-<span id="L138"><span class="lineNum">     138</span>                 :<span class="tlaGNC">         380 :             break;</span></span>
+<span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC">         381 :             result = &quot;asil-qm&quot;;</span></span>
+<span id="L138"><span class="lineNum">     138</span>                 :<span class="tlaGNC">         381 :             break;</span></span>
 <span id="L139"><span class="lineNum">     139</span>                 :             :         }</span>
 <span id="L140"><span class="lineNum">     140</span>                 :<span class="tlaGNC">           3 :         case QualityType::kInvalid:</span></span>
 <span id="L141"><span class="lineNum">     141</span>                 :             :         default:</span>
@@ -224,7 +224,7 @@
 <span id="L144"><span class="lineNum">     144</span>                 :<span class="tlaGNC">           3 :             break;</span></span>
 <span id="L145"><span class="lineNum">     145</span>                 :             :         }</span>
 <span id="L146"><span class="lineNum">     146</span>                 :             :     }</span>
-<span id="L147"><span class="lineNum">     147</span>                 :<span class="tlaGNC">         572 :     return result;</span></span>
+<span id="L147"><span class="lineNum">     147</span>                 :<span class="tlaGNC">         574 :     return result;</span></span>
 <span id="L148"><span class="lineNum">     148</span>                 :             : }</span>
 <span id="L149"><span class="lineNum">     149</span>                 :             : </span>
 <span id="L150"><span class="lineNum">     150</span>                 :<span class="tlaGNC">         835 : auto GetSearchPathForIdentifier(const EnrichedInstanceIdentifier&amp; enriched_instance_identifier) -&gt; filesystem::Path</span></span>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:10:46</td>
+            <td class="headerValue">2026-09-30 04:19:55</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -132,13 +132,13 @@
 <span id="L54"><span class="lineNum">      54</span>                 :             :         {</span>
 <span id="L55"><span class="lineNum">      55</span>                 :             :             EnrichedInstanceIdentifier quality_aware_identifier_to_check{quality_unaware_identifier_to_check,</span>
 <span id="L56"><span class="lineNum">      56</span>         [<span class="tlaGBC" title="Branch 0 was taken 170 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         170 :                                                                          quality_type};</span></span>
-<span id="L57"><span class="lineNum">      57</span>   [<span class="tlaGBC" title="Branch 0 was taken 170 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 41 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 129 times"> + </span>]:<span class="tlaGNC">         170 :             if (FlagFile::Exists(quality_aware_identifier_to_check))</span></span>
+<span id="L57"><span class="lineNum">      57</span>   [<span class="tlaGBC" title="Branch 0 was taken 170 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 40 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 130 times"> + </span>]:<span class="tlaGNC">         170 :             if (FlagFile::Exists(quality_aware_identifier_to_check))</span></span>
 <span id="L58"><span class="lineNum">      58</span>                 :             :             {</span>
 <span id="L59"><span class="lineNum">      59</span>                 :             :                 // Suppress &quot;AUTOSAR C++14 M6-4-3&quot; rule finding. This rule declares: &quot;A switch statement shall be</span>
 <span id="L60"><span class="lineNum">      60</span>                 :             :                 // a well-formed switch statement&quot;.</span>
 <span id="L61"><span class="lineNum">      61</span>                 :             :                 // We don't need a break statement at the end of default case as we use return.</span>
 <span id="L62"><span class="lineNum">      62</span>                 :             :                 // coverity[autosar_cpp14_m6_4_3_violation]</span>
-<span id="L63"><span class="lineNum">      63</span>      [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 32 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span>]:<span class="tlaGNC">          41 :                 switch (quality_type)</span></span>
+<span id="L63"><span class="lineNum">      63</span>      [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 31 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span>]:<span class="tlaGNC">          40 :                 switch (quality_type)</span></span>
 <span id="L64"><span class="lineNum">      64</span>                 :             :                 {</span>
 <span id="L65"><span class="lineNum">      65</span>                 :<span class="tlaGNC">           9 :                     case QualityType::kASIL_B:</span></span>
 <span id="L66"><span class="lineNum">      66</span>                 :             :                     {</span>
@@ -148,13 +148,13 @@
 <span id="L70"><span class="lineNum">      70</span>         [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           9 :                         score::cpp::ignore = known_instances.asil_b.Insert(quality_aware_identifier_to_check);</span></span>
 <span id="L71"><span class="lineNum">      71</span>                 :<span class="tlaGNC">           9 :                         break;</span></span>
 <span id="L72"><span class="lineNum">      72</span>                 :             :                     }</span>
-<span id="L73"><span class="lineNum">      73</span>                 :<span class="tlaGNC">          32 :                     case QualityType::kASIL_QM:</span></span>
+<span id="L73"><span class="lineNum">      73</span>                 :<span class="tlaGNC">          31 :                     case QualityType::kASIL_QM:</span></span>
 <span id="L74"><span class="lineNum">      74</span>                 :             :                     {</span>
-<span id="L75"><span class="lineNum">      75</span>                 :<span class="tlaGNC">          32 :                         mw::log::LogDebug(&quot;lola&quot;)</span></span>
-<span id="L76"><span class="lineNum">      76</span>         [<span class="tlaGBC" title="Branch 0 was taken 32 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          64 :                             &lt;&lt; &quot;LoLa SD: Added&quot; &lt;&lt; GetSearchPathForIdentifier(quality_aware_identifier_to_check)</span></span>
-<span id="L77"><span class="lineNum">      77</span>                 :<span class="tlaGNC">          32 :                             &lt;&lt; &quot;(ASIL-QM)&quot;;</span></span>
-<span id="L78"><span class="lineNum">      78</span>         [<span class="tlaGBC" title="Branch 0 was taken 32 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          32 :                         score::cpp::ignore = known_instances.asil_qm.Insert(quality_aware_identifier_to_check);</span></span>
-<span id="L79"><span class="lineNum">      79</span>                 :<span class="tlaGNC">          32 :                         break;</span></span>
+<span id="L75"><span class="lineNum">      75</span>                 :<span class="tlaGNC">          31 :                         mw::log::LogDebug(&quot;lola&quot;)</span></span>
+<span id="L76"><span class="lineNum">      76</span>         [<span class="tlaGBC" title="Branch 0 was taken 31 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          62 :                             &lt;&lt; &quot;LoLa SD: Added&quot; &lt;&lt; GetSearchPathForIdentifier(quality_aware_identifier_to_check)</span></span>
+<span id="L77"><span class="lineNum">      77</span>                 :<span class="tlaGNC">          31 :                             &lt;&lt; &quot;(ASIL-QM)&quot;;</span></span>
+<span id="L78"><span class="lineNum">      78</span>         [<span class="tlaGBC" title="Branch 0 was taken 31 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          31 :                         score::cpp::ignore = known_instances.asil_qm.Insert(quality_aware_identifier_to_check);</span></span>
+<span id="L79"><span class="lineNum">      79</span>                 :<span class="tlaGNC">          31 :                         break;</span></span>
 <span id="L80"><span class="lineNum">      80</span>                 :             :                     }</span>
 <span id="L81"><span class="lineNum">      81</span>                 :             :                     // LCOV_EXCL_START (Defensive programming: We only enter this code branch if a flag file</span>
 <span id="L82"><span class="lineNum">      82</span>                 :             :                     // corresponding to the instance identifier could be found. The flag file path contains the quality</span>
@@ -335,15 +335,15 @@
 <span id="L257"><span class="lineNum">     257</span>                 :<span class="tlaGNC">          34 :     return LolaServiceInstanceId{actual_instance_id};</span></span>
 <span id="L258"><span class="lineNum">     258</span>                 :             : }</span>
 <span id="L259"><span class="lineNum">     259</span>                 :             : </span>
-<span id="L260"><span class="lineNum">     260</span>                 :<span class="tlaGNC">          61 : auto FlagFileCrawler::ParseQualityTypeFromString(const std::string_view filename) noexcept -&gt; QualityType</span></span>
+<span id="L260"><span class="lineNum">     260</span>                 :<span class="tlaGNC">          62 : auto FlagFileCrawler::ParseQualityTypeFromString(const std::string_view filename) noexcept -&gt; QualityType</span></span>
 <span id="L261"><span class="lineNum">     261</span>                 :             : {</span>
-<span id="L262"><span class="lineNum">     262</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 56 times"> + </span>]:<span class="tlaGNC">          61 :     if (filename.find(GetQualityTypeString(QualityType::kASIL_B)) != std::string::npos)</span></span>
+<span id="L262"><span class="lineNum">     262</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 57 times"> + </span>]:<span class="tlaGNC">          62 :     if (filename.find(GetQualityTypeString(QualityType::kASIL_B)) != std::string::npos)</span></span>
 <span id="L263"><span class="lineNum">     263</span>                 :             :     {</span>
 <span id="L264"><span class="lineNum">     264</span>                 :<span class="tlaGNC">           5 :         return QualityType::kASIL_B;</span></span>
 <span id="L265"><span class="lineNum">     265</span>                 :             :     }</span>
-<span id="L266"><span class="lineNum">     266</span>         [<span class="tlaGBC" title="Branch 0 was taken 37 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 19 times"> + </span>]:<span class="tlaGNC">          56 :     if (filename.find(GetQualityTypeString(QualityType::kASIL_QM)) != std::string::npos)</span></span>
+<span id="L266"><span class="lineNum">     266</span>         [<span class="tlaGBC" title="Branch 0 was taken 38 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 19 times"> + </span>]:<span class="tlaGNC">          57 :     if (filename.find(GetQualityTypeString(QualityType::kASIL_QM)) != std::string::npos)</span></span>
 <span id="L267"><span class="lineNum">     267</span>                 :             :     {</span>
-<span id="L268"><span class="lineNum">     268</span>                 :<span class="tlaGNC">          37 :         return QualityType::kASIL_QM;</span></span>
+<span id="L268"><span class="lineNum">     268</span>                 :<span class="tlaGNC">          38 :         return QualityType::kASIL_QM;</span></span>
 <span id="L269"><span class="lineNum">     269</span>                 :             :     }</span>
 <span id="L270"><span class="lineNum">     270</span>                 :<span class="tlaGNC">          19 :     return QualityType::kInvalid;</span></span>
 <span id="L271"><span class="lineNum">     271</span>                 :             : }</span>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -95,42 +95,37 @@
 <span id="L17"><span class="lineNum">      17</span>                 :             : </span>
 <span id="L18"><span class="lineNum">      18</span>                 :             : #include &quot;score/expected.hpp&quot;</span>
 <span id="L19"><span class="lineNum">      19</span>                 :             : </span>
-<span id="L20"><span class="lineNum">      20</span>                 :             : /* KW_SUPPRESS_START:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L21"><span class="lineNum">      21</span>                 :             : </span>
-<span id="L22"><span class="lineNum">      22</span>                 :             : namespace score</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : namespace score</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : {</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : namespace os</span>
 <span id="L23"><span class="lineNum">      23</span>                 :             : {</span>
-<span id="L24"><span class="lineNum">      24</span>                 :             : namespace os</span>
-<span id="L25"><span class="lineNum">      25</span>                 :             : {</span>
-<span id="L26"><span class="lineNum">      26</span>                 :             : </span>
-<span id="L27"><span class="lineNum">      27</span>                 :             : // Suppress &quot;AUTOSAR C++14 M3-2-3&quot; rule finding: &quot;A type, object or function that is used in multiple translation units</span>
-<span id="L28"><span class="lineNum">      28</span>                 :             : // shall be declared in one and only one file.&quot;.</span>
-<span id="L29"><span class="lineNum">      29</span>                 :             : // This is false positive because file header include guards ensures ODR.</span>
-<span id="L30"><span class="lineNum">      30</span>                 :             : // coverity[autosar_cpp14_m3_2_3_violation]</span>
-<span id="L31"><span class="lineNum">      31</span>                 :             : class DirentImpl final : public Dirent</span>
-<span id="L32"><span class="lineNum">      32</span>                 :             : {</span>
-<span id="L33"><span class="lineNum">      33</span>                 :             :   public:</span>
-<span id="L34"><span class="lineNum">      34</span>                 :<span class="tlaGNC tlaBgGNC">           7 :     constexpr DirentImpl() = default;</span></span>
-<span id="L35"><span class="lineNum">      35</span>                 :             :     score::cpp::expected&lt;DIR*, score::os::Error&gt; opendir(const char* const name) const noexcept override;</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : </span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : // Suppress &quot;AUTOSAR C++14 M3-2-3&quot; rule finding: &quot;A type, object or function that is used in multiple translation units</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : // shall be declared in one and only one file.&quot;.</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : // This is false positive because file header include guards ensures ODR.</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : // coverity[autosar_cpp14_m3_2_3_violation]</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             : class DirentImpl final : public Dirent</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : {</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             :   public:</span>
+<span id="L32"><span class="lineNum">      32</span>                 :<span class="tlaGNC tlaBgGNC">           7 :     constexpr DirentImpl() = default;</span></span>
+<span id="L33"><span class="lineNum">      33</span>                 :             :     score::cpp::expected&lt;DIR*, score::os::Error&gt; opendir(const char* const name) const noexcept override;</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : </span>
+<span id="L35"><span class="lineNum">      35</span>                 :             :     score::cpp::expected&lt;struct dirent*, score::os::Error&gt; readdir(DIR* const dirp) const noexcept override;</span>
 <span id="L36"><span class="lineNum">      36</span>                 :             : </span>
-<span id="L37"><span class="lineNum">      37</span>                 :             :     score::cpp::expected&lt;struct dirent*, score::os::Error&gt; readdir(DIR* const dirp) const noexcept override;</span>
-<span id="L38"><span class="lineNum">      38</span>                 :             : </span>
-<span id="L39"><span class="lineNum">      39</span>                 :             :     // Rationale: violation is happening out of our code domain due to QNX - ::scandir, no harm to our code</span>
-<span id="L40"><span class="lineNum">      40</span>                 :             :     // coverity[autosar_cpp14_a5_0_3_violation] see above</span>
-<span id="L41"><span class="lineNum">      41</span>                 :             :     score::cpp::expected&lt;std::int32_t, score::os::Error&gt; scandir(</span>
-<span id="L42"><span class="lineNum">      42</span>                 :             :         const char* const dirp,</span>
-<span id="L43"><span class="lineNum">      43</span>                 :             :         /* KW_SUPPRESS_START:MISRA.PTR.TO_PTR_TO_PTR:Used parameters match the param requirements of wrapped function */</span>
-<span id="L44"><span class="lineNum">      44</span>                 :             :         struct dirent*** const namelist,</span>
-<span id="L45"><span class="lineNum">      45</span>                 :             :         /* KW_SUPPRESS_END:MISRA.PTR.TO_PTR_TO_PTR:Used parameters match the param requirements of wrapped function */</span>
-<span id="L46"><span class="lineNum">      46</span>                 :             :         std::int32_t (*const filter)(const struct dirent*),</span>
-<span id="L47"><span class="lineNum">      47</span>                 :             :         std::int32_t (*const compar)(const struct dirent**, const struct dirent**)) const noexcept override;</span>
-<span id="L48"><span class="lineNum">      48</span>                 :             : </span>
-<span id="L49"><span class="lineNum">      49</span>                 :             :     score::cpp::expected_blank&lt;score::os::Error&gt; closedir(DIR* const dirp) const noexcept override;</span>
-<span id="L50"><span class="lineNum">      50</span>                 :             : };</span>
-<span id="L51"><span class="lineNum">      51</span>                 :             : /* KW_SUPPRESS_END:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L52"><span class="lineNum">      52</span>                 :             : }  // namespace os</span>
-<span id="L53"><span class="lineNum">      53</span>                 :             : }  // namespace score</span>
-<span id="L54"><span class="lineNum">      54</span>                 :             : </span>
-<span id="L55"><span class="lineNum">      55</span>                 :             : #endif</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             :     // Rationale: violation is happening out of our code domain due to QNX - ::scandir, no harm to our code</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             :     // coverity[autosar_cpp14_a5_0_3_violation] see above</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             :     score::cpp::expected&lt;std::int32_t, score::os::Error&gt; scandir(</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             :         const char* const dirp,</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             :         struct dirent*** const namelist,</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             :         std::int32_t (*const filter)(const struct dirent*),</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             :         std::int32_t (*const compar)(const struct dirent**, const struct dirent**)) const noexcept override;</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             : </span>
+<span id="L45"><span class="lineNum">      45</span>                 :             :     score::cpp::expected_blank&lt;score::os::Error&gt; closedir(DIR* const dirp) const noexcept override;</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             : };</span>
+<span id="L47"><span class="lineNum">      47</span>                 :             : }  // namespace os</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             : }  // namespace score</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             : </span>
+<span id="L50"><span class="lineNum">      50</span>                 :             : #endif</span>
         </pre>
               </td>
             </tr>

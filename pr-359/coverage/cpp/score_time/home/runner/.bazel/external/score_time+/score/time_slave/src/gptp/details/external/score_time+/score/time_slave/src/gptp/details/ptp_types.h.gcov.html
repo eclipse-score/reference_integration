@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:12:31</td>
+            <td class="headerValue">2026-09-30 04:21:34</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -259,18 +259,18 @@
 <span id="L181"><span class="lineNum">     181</span>                 :             : static_assert(sizeof(PTPMessage) &lt;= 1600, &quot;PTPMessage too large&quot;);</span>
 <span id="L182"><span class="lineNum">     182</span>                 :             : </span>
 <span id="L183"><span class="lineNum">     183</span>                 :             : // ─── Timestamp conversion helpers ────────────────────────────────────────────</span>
-<span id="L184"><span class="lineNum">     184</span>                 :<span class="tlaGNC tlaBgGNC">          37 : inline TmvT TimestampToTmv(const Timestamp&amp; ts) noexcept</span></span>
+<span id="L184"><span class="lineNum">     184</span>                 :<span class="tlaGNC tlaBgGNC">          35 : inline TmvT TimestampToTmv(const Timestamp&amp; ts) noexcept</span></span>
 <span id="L185"><span class="lineNum">     185</span>                 :             : {</span>
-<span id="L186"><span class="lineNum">     186</span>                 :<span class="tlaGNC">          37 :     const std::uint64_t sec =</span></span>
-<span id="L187"><span class="lineNum">     187</span>                 :<span class="tlaGNC">          37 :         (static_cast&lt;std::uint64_t&gt;(ts.seconds_msb) &lt;&lt; 32U) | static_cast&lt;std::uint64_t&gt;(ts.seconds_lsb);</span></span>
-<span id="L188"><span class="lineNum">     188</span>                 :<span class="tlaGNC">          37 :     constexpr std::uint64_t kMaxNs = static_cast&lt;std::uint64_t&gt;(std::numeric_limits&lt;std::int64_t&gt;::max());</span></span>
-<span id="L189"><span class="lineNum">     189</span>                 :<span class="tlaGNC">          37 :     constexpr std::uint64_t kMaxSec = kMaxNs / static_cast&lt;std::uint64_t&gt;(kNsPerSec);</span></span>
-<span id="L190"><span class="lineNum">     190</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 36 times"> + </span>]:<span class="tlaGNC">          37 :     if (sec &gt; kMaxSec)</span></span>
+<span id="L186"><span class="lineNum">     186</span>                 :<span class="tlaGNC">          35 :     const std::uint64_t sec =</span></span>
+<span id="L187"><span class="lineNum">     187</span>                 :<span class="tlaGNC">          35 :         (static_cast&lt;std::uint64_t&gt;(ts.seconds_msb) &lt;&lt; 32U) | static_cast&lt;std::uint64_t&gt;(ts.seconds_lsb);</span></span>
+<span id="L188"><span class="lineNum">     188</span>                 :<span class="tlaGNC">          35 :     constexpr std::uint64_t kMaxNs = static_cast&lt;std::uint64_t&gt;(std::numeric_limits&lt;std::int64_t&gt;::max());</span></span>
+<span id="L189"><span class="lineNum">     189</span>                 :<span class="tlaGNC">          35 :     constexpr std::uint64_t kMaxSec = kMaxNs / static_cast&lt;std::uint64_t&gt;(kNsPerSec);</span></span>
+<span id="L190"><span class="lineNum">     190</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 34 times"> + </span>]:<span class="tlaGNC">          35 :     if (sec &gt; kMaxSec)</span></span>
 <span id="L191"><span class="lineNum">     191</span>                 :<span class="tlaGNC">           1 :         return TmvT{};</span></span>
-<span id="L192"><span class="lineNum">     192</span>                 :<span class="tlaGNC">          36 :     const std::uint64_t total_ns = sec * static_cast&lt;std::uint64_t&gt;(kNsPerSec) + ts.nanoseconds;</span></span>
-<span id="L193"><span class="lineNum">     193</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 35 times"> + </span>]:<span class="tlaGNC">          36 :     if (total_ns &gt; kMaxNs)</span></span>
+<span id="L192"><span class="lineNum">     192</span>                 :<span class="tlaGNC">          34 :     const std::uint64_t total_ns = sec * static_cast&lt;std::uint64_t&gt;(kNsPerSec) + ts.nanoseconds;</span></span>
+<span id="L193"><span class="lineNum">     193</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 33 times"> + </span>]:<span class="tlaGNC">          34 :     if (total_ns &gt; kMaxNs)</span></span>
 <span id="L194"><span class="lineNum">     194</span>                 :<span class="tlaGNC">           1 :         return TmvT{};</span></span>
-<span id="L195"><span class="lineNum">     195</span>                 :<span class="tlaGNC">          35 :     return TmvT{static_cast&lt;std::int64_t&gt;(total_ns)};</span></span>
+<span id="L195"><span class="lineNum">     195</span>                 :<span class="tlaGNC">          33 :     return TmvT{static_cast&lt;std::int64_t&gt;(total_ns)};</span></span>
 <span id="L196"><span class="lineNum">     196</span>                 :             : }</span>
 <span id="L197"><span class="lineNum">     197</span>                 :             : </span>
 <span id="L198"><span class="lineNum">     198</span>                 :<span class="tlaGNC">          21 : inline Timestamp TmvToTimestamp(const TmvT&amp; x) noexcept</span></span>
@@ -286,16 +286,16 @@
 <span id="L208"><span class="lineNum">     208</span>                 :<span class="tlaGNC">          20 :     return t;</span></span>
 <span id="L209"><span class="lineNum">     209</span>                 :             : }</span>
 <span id="L210"><span class="lineNum">     210</span>                 :             : </span>
-<span id="L211"><span class="lineNum">     211</span>                 :<span class="tlaGNC">          60 : inline TmvT CorrectionToTmv(std::int64_t corr) noexcept</span></span>
+<span id="L211"><span class="lineNum">     211</span>                 :<span class="tlaGNC">          58 : inline TmvT CorrectionToTmv(std::int64_t corr) noexcept</span></span>
 <span id="L212"><span class="lineNum">     212</span>                 :             : {</span>
-<span id="L213"><span class="lineNum">     213</span>                 :<span class="tlaGNC">          60 :     return TmvT{corr / 65536LL};</span></span>
+<span id="L213"><span class="lineNum">     213</span>                 :<span class="tlaGNC">          58 :     return TmvT{corr / 65536LL};</span></span>
 <span id="L214"><span class="lineNum">     214</span>                 :             : }</span>
 <span id="L215"><span class="lineNum">     215</span>                 :             : </span>
-<span id="L216"><span class="lineNum">     216</span>                 :<span class="tlaGNC">          37 : inline std::uint64_t ClockIdentityToU64(const ClockIdentity&amp; ci) noexcept</span></span>
+<span id="L216"><span class="lineNum">     216</span>                 :<span class="tlaGNC">          36 : inline std::uint64_t ClockIdentityToU64(const ClockIdentity&amp; ci) noexcept</span></span>
 <span id="L217"><span class="lineNum">     217</span>                 :             : {</span>
-<span id="L218"><span class="lineNum">     218</span>                 :<span class="tlaGNC">          37 :     std::uint64_t v{0};</span></span>
-<span id="L219"><span class="lineNum">     219</span>                 :<span class="tlaGNC">          37 :     std::memcpy(&amp;v, ci.id, sizeof(v));</span></span>
-<span id="L220"><span class="lineNum">     220</span>                 :<span class="tlaGNC">          37 :     return v;</span></span>
+<span id="L218"><span class="lineNum">     218</span>                 :<span class="tlaGNC">          36 :     std::uint64_t v{0};</span></span>
+<span id="L219"><span class="lineNum">     219</span>                 :<span class="tlaGNC">          36 :     std::memcpy(&amp;v, ci.id, sizeof(v));</span></span>
+<span id="L220"><span class="lineNum">     220</span>                 :<span class="tlaGNC">          36 :     return v;</span></span>
 <span id="L221"><span class="lineNum">     221</span>                 :             : }</span>
 <span id="L222"><span class="lineNum">     222</span>                 :             : </span>
 <span id="L223"><span class="lineNum">     223</span>                 :             : }  // namespace details</span>

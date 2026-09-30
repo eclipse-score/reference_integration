@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">50.0&nbsp;%</td>
@@ -108,31 +108,27 @@
 <span id="L30"><span class="lineNum">      30</span>                 :             :   public:</span>
 <span id="L31"><span class="lineNum">      31</span>                 :             :     static SysWait&amp; instance() noexcept;</span>
 <span id="L32"><span class="lineNum">      32</span>                 :             : </span>
-<span id="L33"><span class="lineNum">      33</span>                 :             :     /* KW_SUPPRESS_START:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L34"><span class="lineNum">      34</span>                 :             :     virtual score::cpp::expected&lt;pid_t, Error&gt; wait(std::int32_t* const stat_loc) const noexcept = 0;</span>
-<span id="L35"><span class="lineNum">      35</span>                 :             :     /* KW_SUPPRESS_END:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L36"><span class="lineNum">      36</span>                 :             : </span>
-<span id="L37"><span class="lineNum">      37</span>                 :             :     /* KW_SUPPRESS_START:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L38"><span class="lineNum">      38</span>                 :             :     virtual score::cpp::expected&lt;pid_t, Error&gt; waitpid(const pid_t pid,</span>
-<span id="L39"><span class="lineNum">      39</span>                 :             :                                                        std::int32_t* const stat_loc,</span>
-<span id="L40"><span class="lineNum">      40</span>                 :             :                                                        const std::int32_t options) const noexcept = 0;</span>
-<span id="L41"><span class="lineNum">      41</span>                 :             :     /* KW_SUPPRESS_END:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L42"><span class="lineNum">      42</span>                 :             : </span>
-<span id="L43"><span class="lineNum">      43</span>                 :<span class="tlaGNC tlaBgGNC">           5 :     virtual ~SysWait() = default;</span></span>
-<span id="L44"><span class="lineNum">      44</span>                 :             :     // Below special member functions declared to avoid autosar_cpp14_a12_0_1_violation</span>
-<span id="L45"><span class="lineNum">      45</span>                 :             :     SysWait(const SysWait&amp;) = delete;</span>
-<span id="L46"><span class="lineNum">      46</span>                 :             :     SysWait&amp; operator=(const SysWait&amp;) = delete;</span>
-<span id="L47"><span class="lineNum">      47</span>                 :             :     SysWait(SysWait&amp;&amp; other) = delete;</span>
-<span id="L48"><span class="lineNum">      48</span>                 :             :     SysWait&amp; operator=(SysWait&amp;&amp; other) = delete;</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             :     virtual score::cpp::expected&lt;pid_t, Error&gt; wait(std::int32_t* const stat_loc) const noexcept = 0;</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : </span>
+<span id="L35"><span class="lineNum">      35</span>                 :             :     virtual score::cpp::expected&lt;pid_t, Error&gt; waitpid(const pid_t pid,</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             :                                                        std::int32_t* const stat_loc,</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             :                                                        const std::int32_t options) const noexcept = 0;</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             : </span>
+<span id="L39"><span class="lineNum">      39</span>                 :<span class="tlaGNC tlaBgGNC">           5 :     virtual ~SysWait() = default;</span></span>
+<span id="L40"><span class="lineNum">      40</span>                 :             :     // Below special member functions declared to avoid autosar_cpp14_a12_0_1_violation</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             :     SysWait(const SysWait&amp;) = delete;</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             :     SysWait&amp; operator=(const SysWait&amp;) = delete;</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             :     SysWait(SysWait&amp;&amp; other) = delete;</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             :     SysWait&amp; operator=(SysWait&amp;&amp; other) = delete;</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             : </span>
+<span id="L46"><span class="lineNum">      46</span>                 :             :   protected:</span>
+<span id="L47"><span class="lineNum">      47</span>                 :             :     SysWait() = default;</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             : };</span>
 <span id="L49"><span class="lineNum">      49</span>                 :             : </span>
-<span id="L50"><span class="lineNum">      50</span>                 :             :   protected:</span>
-<span id="L51"><span class="lineNum">      51</span>                 :             :     SysWait() = default;</span>
-<span id="L52"><span class="lineNum">      52</span>                 :             : };</span>
-<span id="L53"><span class="lineNum">      53</span>                 :             : </span>
-<span id="L54"><span class="lineNum">      54</span>                 :             : }  // namespace os</span>
-<span id="L55"><span class="lineNum">      55</span>                 :             : }  // namespace score</span>
-<span id="L56"><span class="lineNum">      56</span>                 :             : </span>
-<span id="L57"><span class="lineNum">      57</span>                 :             : #endif  // SCORE_LIB_OS_SYS_WAIT_H</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             : }  // namespace os</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             : }  // namespace score</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             : </span>
+<span id="L53"><span class="lineNum">      53</span>                 :             : #endif  // SCORE_LIB_OS_SYS_WAIT_H</span>
         </pre>
               </td>
             </tr>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -219,16 +219,16 @@
 <span id="L141"><span class="lineNum">     141</span>                 :             : }</span>
 <span id="L142"><span class="lineNum">     142</span>                 :             : </span>
 <span id="L143"><span class="lineNum">     143</span>                 :             : score::cpp::expected&lt;ssize_t, score::os::Error&gt;</span>
-<span id="L144"><span class="lineNum">     144</span>                 :<span class="tlaGNC">         196 : score::os::internal::UnistdImpl::write(const std::int32_t fd, const void* const buf, const size_t count) const noexcept</span></span>
+<span id="L144"><span class="lineNum">     144</span>                 :<span class="tlaGNC">         192 : score::os::internal::UnistdImpl::write(const std::int32_t fd, const void* const buf, const size_t count) const noexcept</span></span>
 <span id="L145"><span class="lineNum">     145</span>                 :             : {</span>
 <span id="L146"><span class="lineNum">     146</span>                 :             :     // Suppressed here because usage of this OSAL method is on banned list</span>
 <span id="L147"><span class="lineNum">     147</span>                 :             :     // NOLINTNEXTLINE(score-banned-function) see comment above</span>
-<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">         196 :     const ssize_t output = ::write(fd, buf, count);</span></span>
-<span id="L149"><span class="lineNum">     149</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 193 times"> + </span>]:<span class="tlaGNC">         196 :     if (output == -1)</span></span>
+<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">         192 :     const ssize_t output = ::write(fd, buf, count);</span></span>
+<span id="L149"><span class="lineNum">     149</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 189 times"> + </span>]:<span class="tlaGNC">         192 :     if (output == -1)</span></span>
 <span id="L150"><span class="lineNum">     150</span>                 :             :     {</span>
 <span id="L151"><span class="lineNum">     151</span>                 :<span class="tlaGNC">           3 :         return score::cpp::make_unexpected(score::os::Error::createFromErrno());</span></span>
 <span id="L152"><span class="lineNum">     152</span>                 :             :     }</span>
-<span id="L153"><span class="lineNum">     153</span>                 :<span class="tlaGNC">         193 :     return output;</span></span>
+<span id="L153"><span class="lineNum">     153</span>                 :<span class="tlaGNC">         189 :     return output;</span></span>
 <span id="L154"><span class="lineNum">     154</span>                 :             : }</span>
 <span id="L155"><span class="lineNum">     155</span>                 :             : </span>
 <span id="L156"><span class="lineNum">     156</span>                 :<span class="tlaGNC">           6 : score::cpp::expected&lt;ssize_t, score::os::Error&gt; score::os::internal::UnistdImpl::pwrite(</span></span>

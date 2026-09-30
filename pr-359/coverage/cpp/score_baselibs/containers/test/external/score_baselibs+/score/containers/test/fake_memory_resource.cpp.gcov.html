@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -95,18 +95,18 @@
 <span id="L17"><span class="lineNum">      17</span>                 :             : namespace score::containers::test</span>
 <span id="L18"><span class="lineNum">      18</span>                 :             : {</span>
 <span id="L19"><span class="lineNum">      19</span>                 :             : </span>
-<span id="L20"><span class="lineNum">      20</span>                 :<span class="tlaGNC tlaBgGNC">          84 : void* FakeMemoryResource::do_allocate(std::size_t bytes, std::size_t alignment)</span></span>
+<span id="L20"><span class="lineNum">      20</span>                 :<span class="tlaGNC tlaBgGNC">         146 : void* FakeMemoryResource::do_allocate(std::size_t bytes, std::size_t alignment)</span></span>
 <span id="L21"><span class="lineNum">      21</span>                 :             : {</span>
-<span id="L22"><span class="lineNum">      22</span>                 :<span class="tlaGNC">          84 :     void* const memory{::operator new(bytes, std::align_val_t{alignment})};</span></span>
-<span id="L23"><span class="lineNum">      23</span>                 :<span class="tlaGNC">          84 :     allocated_bytes_ += bytes;</span></span>
-<span id="L24"><span class="lineNum">      24</span>                 :<span class="tlaGNC">          84 :     return memory;</span></span>
+<span id="L22"><span class="lineNum">      22</span>                 :<span class="tlaGNC">         146 :     void* const memory{::operator new(bytes, std::align_val_t{alignment})};</span></span>
+<span id="L23"><span class="lineNum">      23</span>                 :<span class="tlaGNC">         146 :     allocated_bytes_ += bytes;</span></span>
+<span id="L24"><span class="lineNum">      24</span>                 :<span class="tlaGNC">         146 :     return memory;</span></span>
 <span id="L25"><span class="lineNum">      25</span>                 :             : }</span>
 <span id="L26"><span class="lineNum">      26</span>                 :             : </span>
-<span id="L27"><span class="lineNum">      27</span>                 :<span class="tlaGNC">          84 : void FakeMemoryResource::do_deallocate(void* memory, std::size_t bytes, std::size_t alignment)</span></span>
+<span id="L27"><span class="lineNum">      27</span>                 :<span class="tlaGNC">         146 : void FakeMemoryResource::do_deallocate(void* memory, std::size_t bytes, std::size_t alignment)</span></span>
 <span id="L28"><span class="lineNum">      28</span>                 :             : {</span>
-<span id="L29"><span class="lineNum">      29</span>                 :<span class="tlaGNC">          84 :     deallocated_bytes_ += bytes;</span></span>
-<span id="L30"><span class="lineNum">      30</span>                 :<span class="tlaGNC">          84 :     ::operator delete(memory, bytes, std::align_val_t{alignment});</span></span>
-<span id="L31"><span class="lineNum">      31</span>                 :<span class="tlaGNC">          84 : }</span></span>
+<span id="L29"><span class="lineNum">      29</span>                 :<span class="tlaGNC">         146 :     deallocated_bytes_ += bytes;</span></span>
+<span id="L30"><span class="lineNum">      30</span>                 :<span class="tlaGNC">         146 :     ::operator delete(memory, bytes, std::align_val_t{alignment});</span></span>
+<span id="L31"><span class="lineNum">      31</span>                 :<span class="tlaGNC">         146 : }</span></span>
 <span id="L32"><span class="lineNum">      32</span>                 :             : </span>
 <span id="L33"><span class="lineNum">      33</span>                 :<span class="tlaGNC">           4 : bool FakeMemoryResource::do_is_equal(const score::cpp::pmr::memory_resource&amp; other) const noexcept</span></span>
 <span id="L34"><span class="lineNum">      34</span>                 :             : {</span>

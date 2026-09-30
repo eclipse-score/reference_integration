@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -146,31 +146,31 @@
 <span id="L66"><span class="lineNum">      66</span>                 :             : {</span>
 <span id="L67"><span class="lineNum">      67</span>         [<span class="tlaGBC" title="Branch 0 was taken 2093 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        2093 :     std::unique_lock&lt;std::mutex&gt; lock{queue_mutex_};</span></span>
 <span id="L68"><span class="lineNum">      68</span>                 :             :     // GCOV_EXCL_START : Decision coudn't be analyzed. Covered by ThreadPool</span>
-<span id="L69"><span class="lineNum">      69</span>   [<span class="tlaGBC" title="Branch 0 was taken 7572 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 4645 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 5479 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 2093 times"> + </span> :<span class="tlaGNC">       12217 :     while ((!stop_token.stop_requested()) || (!queue_.empty()))</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 10124 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 2093 times"> + </span>]
+<span id="L69"><span class="lineNum">      69</span>   [<span class="tlaGBC" title="Branch 0 was taken 7662 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 6111 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 5569 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 2093 times"> + </span> :<span class="tlaGNC">       13773 :     while ((!stop_token.stop_requested()) || (!queue_.empty()))</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 11680 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 2093 times"> + </span>]
 <span id="L70"><span class="lineNum">      70</span>                 :             :     // GCOV_EXCL_STOP</span>
 <span id="L71"><span class="lineNum">      71</span>                 :             :     {</span>
-<span id="L72"><span class="lineNum">      72</span>         [<span class="tlaGBC" title="Branch 0 was taken 10124 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">       10124 :         score::cpp::ignore = condition_.wait(lock, stop_token, [this]() noexcept -&gt; bool {</span></span>
-<span id="L73"><span class="lineNum">      73</span>                 :<span class="tlaGNC">       13654 :             return !queue_.empty();</span></span>
-<span id="L74"><span class="lineNum">      74</span>                 :<span class="tlaGNC">       10124 :         });</span></span>
+<span id="L72"><span class="lineNum">      72</span>         [<span class="tlaGBC" title="Branch 0 was taken 11680 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">       11680 :         score::cpp::ignore = condition_.wait(lock, stop_token, [this]() noexcept -&gt; bool {</span></span>
+<span id="L73"><span class="lineNum">      73</span>                 :<span class="tlaGNC">       15430 :             return !queue_.empty();</span></span>
+<span id="L74"><span class="lineNum">      74</span>                 :<span class="tlaGNC">       11680 :         });</span></span>
 <span id="L75"><span class="lineNum">      75</span>                 :             : </span>
-<span id="L76"><span class="lineNum">      76</span>                 :<span class="tlaGNC">       10124 :         score::cpp::pmr::unique_ptr&lt;Task&gt; task{};</span></span>
-<span id="L77"><span class="lineNum">      77</span>         [<span class="tlaGBC" title="Branch 0 was taken 9591 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 533 times"> + </span>]:<span class="tlaGNC">       10124 :         if (!queue_.empty())</span></span>
+<span id="L76"><span class="lineNum">      76</span>                 :<span class="tlaGNC">       11680 :         score::cpp::pmr::unique_ptr&lt;Task&gt; task{};</span></span>
+<span id="L77"><span class="lineNum">      77</span>         [<span class="tlaGBC" title="Branch 0 was taken 11028 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 652 times"> + </span>]:<span class="tlaGNC">       11680 :         if (!queue_.empty())</span></span>
 <span id="L78"><span class="lineNum">      78</span>                 :             :         {</span>
-<span id="L79"><span class="lineNum">      79</span>                 :<span class="tlaGNC">        9591 :             task = std::move(queue_.front());</span></span>
-<span id="L80"><span class="lineNum">      80</span>                 :<span class="tlaGNC">        9591 :             queue_.pop_front();</span></span>
+<span id="L79"><span class="lineNum">      79</span>                 :<span class="tlaGNC">       11028 :             task = std::move(queue_.front());</span></span>
+<span id="L80"><span class="lineNum">      80</span>                 :<span class="tlaGNC">       11028 :             queue_.pop_front();</span></span>
 <span id="L81"><span class="lineNum">      81</span>                 :             :         }</span>
 <span id="L82"><span class="lineNum">      82</span>                 :             : </span>
-<span id="L83"><span class="lineNum">      83</span>         [<span class="tlaGBC" title="Branch 0 was taken 9591 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 533 times"> + </span>]:<span class="tlaGNC">       10124 :         if (task != nullptr)</span></span>
+<span id="L83"><span class="lineNum">      83</span>         [<span class="tlaGBC" title="Branch 0 was taken 11028 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 652 times"> + </span>]:<span class="tlaGNC">       11680 :         if (task != nullptr)</span></span>
 <span id="L84"><span class="lineNum">      84</span>                 :             :         {</span>
 <span id="L85"><span class="lineNum">      85</span>                 :             :             // Be aware of the ABA-Problem :)</span>
-<span id="L86"><span class="lineNum">      86</span>         [<span class="tlaGBC" title="Branch 0 was taken 9591 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        9591 :             active_.at(thread_number) = task-&gt;GetStopSource();</span></span>
-<span id="L87"><span class="lineNum">      87</span>         [<span class="tlaGBC" title="Branch 0 was taken 9591 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        9591 :             lock.unlock();</span></span>
-<span id="L88"><span class="lineNum">      88</span>         [<span class="tlaGBC" title="Branch 0 was taken 9591 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        9591 :             Execute(std::move(task));</span></span>
-<span id="L89"><span class="lineNum">      89</span>         [<span class="tlaGBC" title="Branch 0 was taken 9591 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        9591 :             lock.lock();</span></span>
-<span id="L90"><span class="lineNum">      90</span>   [<span class="tlaGBC" title="Branch 0 was taken 9591 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 9591 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">        9591 :             active_.at(thread_number) = score::cpp::stop_source{};</span></span>
+<span id="L86"><span class="lineNum">      86</span>         [<span class="tlaGBC" title="Branch 0 was taken 11028 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">       11028 :             active_.at(thread_number) = task-&gt;GetStopSource();</span></span>
+<span id="L87"><span class="lineNum">      87</span>         [<span class="tlaGBC" title="Branch 0 was taken 11028 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">       11028 :             lock.unlock();</span></span>
+<span id="L88"><span class="lineNum">      88</span>         [<span class="tlaGBC" title="Branch 0 was taken 11028 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">       11028 :             Execute(std::move(task));</span></span>
+<span id="L89"><span class="lineNum">      89</span>         [<span class="tlaGBC" title="Branch 0 was taken 11028 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">       11028 :             lock.lock();</span></span>
+<span id="L90"><span class="lineNum">      90</span>   [<span class="tlaGBC" title="Branch 0 was taken 11028 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 11028 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">       11028 :             active_.at(thread_number) = score::cpp::stop_source{};</span></span>
 <span id="L91"><span class="lineNum">      91</span>                 :             :         }</span>
-<span id="L92"><span class="lineNum">      92</span>                 :<span class="tlaGNC">       10124 :     }</span></span>
+<span id="L92"><span class="lineNum">      92</span>                 :<span class="tlaGNC">       11680 :     }</span></span>
 <span id="L93"><span class="lineNum">      93</span>                 :<span class="tlaGNC">        2093 : }</span></span>
 <span id="L94"><span class="lineNum">      94</span>                 :             : </span>
 <span id="L95"><span class="lineNum">      95</span>                 :<span class="tlaGNC">          11 : std::size_t score::concurrency::ThreadPool::MaxConcurrencyLevel() const noexcept</span></span>
@@ -199,9 +199,9 @@
 <span id="L118"><span class="lineNum">     118</span>                 :             :     }</span>
 <span id="L119"><span class="lineNum">     119</span>                 :<span class="tlaGNC">        4091 : }</span></span>
 <span id="L120"><span class="lineNum">     120</span>                 :             : </span>
-<span id="L121"><span class="lineNum">     121</span>                 :<span class="tlaGNC">       42116 : bool score::concurrency::ThreadPool::ShutdownRequested() const noexcept</span></span>
+<span id="L121"><span class="lineNum">     121</span>                 :<span class="tlaGNC">       42120 : bool score::concurrency::ThreadPool::ShutdownRequested() const noexcept</span></span>
 <span id="L122"><span class="lineNum">     122</span>                 :             : {</span>
-<span id="L123"><span class="lineNum">     123</span>                 :<span class="tlaGNC">       42116 :     return shutdown_reqested_.load();</span></span>
+<span id="L123"><span class="lineNum">     123</span>                 :<span class="tlaGNC">       42120 :     return shutdown_reqested_.load();</span></span>
 <span id="L124"><span class="lineNum">     124</span>                 :             : }</span>
 <span id="L125"><span class="lineNum">     125</span>                 :             : </span>
 <span id="L126"><span class="lineNum">     126</span>                 :<span class="tlaGNC">       20057 : void score::concurrency::ThreadPool::Enqueue(score::cpp::pmr::unique_ptr&lt;Task&gt; task)</span></span>
@@ -212,26 +212,26 @@
 <span id="L131"><span class="lineNum">     131</span>                 :             :     //       situation, it could happen that all workers already finished and the newly</span>
 <span id="L132"><span class="lineNum">     132</span>                 :             :     //       added task gets never executed. Hence, we acquire the lock already here.</span>
 <span id="L133"><span class="lineNum">     133</span>         [<span class="tlaGBC" title="Branch 0 was taken 20057 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">       20057 :     std::unique_lock&lt;std::mutex&gt; lock{queue_mutex_};</span></span>
-<span id="L134"><span class="lineNum">     134</span>         [<span class="tlaGBC" title="Branch 0 was taken 10466 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 9591 times"> + </span>]:<span class="tlaGNC">       20057 :     if (ShutdownRequested())</span></span>
+<span id="L134"><span class="lineNum">     134</span>         [<span class="tlaGBC" title="Branch 0 was taken 9029 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 11028 times"> + </span>]:<span class="tlaGNC">       20057 :     if (ShutdownRequested())</span></span>
 <span id="L135"><span class="lineNum">     135</span>                 :             :     {</span>
-<span id="L136"><span class="lineNum">     136</span>         [<span class="tlaGBC" title="Branch 0 was taken 10466 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">       10466 :         lock.unlock();</span></span>
-<span id="L137"><span class="lineNum">     137</span>         [<span class="tlaGBC" title="Branch 0 was taken 10466 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">       10466 :         Execute(std::move(task));</span></span>
+<span id="L136"><span class="lineNum">     136</span>         [<span class="tlaGBC" title="Branch 0 was taken 9029 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        9029 :         lock.unlock();</span></span>
+<span id="L137"><span class="lineNum">     137</span>         [<span class="tlaGBC" title="Branch 0 was taken 9029 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        9029 :         Execute(std::move(task));</span></span>
 <span id="L138"><span class="lineNum">     138</span>                 :             :     }</span>
 <span id="L139"><span class="lineNum">     139</span>                 :             :     else</span>
 <span id="L140"><span class="lineNum">     140</span>                 :             :     {</span>
-<span id="L141"><span class="lineNum">     141</span>         [<span class="tlaGBC" title="Branch 0 was taken 9591 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        9591 :         score::cpp::ignore = queue_.emplace_back(std::move(task));</span></span>
-<span id="L142"><span class="lineNum">     142</span>                 :<span class="tlaGNC">        9591 :         condition_.notify_one();</span></span>
+<span id="L141"><span class="lineNum">     141</span>         [<span class="tlaGBC" title="Branch 0 was taken 11028 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">       11028 :         score::cpp::ignore = queue_.emplace_back(std::move(task));</span></span>
+<span id="L142"><span class="lineNum">     142</span>                 :<span class="tlaGNC">       11028 :         condition_.notify_one();</span></span>
 <span id="L143"><span class="lineNum">     143</span>                 :             :     }</span>
 <span id="L144"><span class="lineNum">     144</span>                 :<span class="tlaGNC">       20057 : }</span></span>
 <span id="L145"><span class="lineNum">     145</span>                 :             : </span>
 <span id="L146"><span class="lineNum">     146</span>                 :<span class="tlaGNC">       20057 : void score::concurrency::ThreadPool::Execute(score::cpp::pmr::unique_ptr&lt;Task&gt; task)</span></span>
 <span id="L147"><span class="lineNum">     147</span>                 :             : {</span>
-<span id="L148"><span class="lineNum">     148</span>         [<span class="tlaGBC" title="Branch 0 was taken 17358 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2699 times"> + </span>]:<span class="tlaGNC">       20057 :     if (ShutdownRequested())</span></span>
+<span id="L148"><span class="lineNum">     148</span>         [<span class="tlaGBC" title="Branch 0 was taken 15905 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 4152 times"> + </span>]:<span class="tlaGNC">       20057 :     if (ShutdownRequested())</span></span>
 <span id="L149"><span class="lineNum">     149</span>                 :             :     {</span>
-<span id="L150"><span class="lineNum">     150</span>                 :<span class="tlaGNC">       17358 :         score::cpp::ignore = task-&gt;GetStopSource().request_stop();</span></span>
+<span id="L150"><span class="lineNum">     150</span>                 :<span class="tlaGNC">       15905 :         score::cpp::ignore = task-&gt;GetStopSource().request_stop();</span></span>
 <span id="L151"><span class="lineNum">     151</span>                 :             :     }</span>
-<span id="L152"><span class="lineNum">     152</span>         [<span class="tlaGBC" title="Branch 0 was taken 20054 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">       20055 :     std::invoke(*task, task-&gt;GetStopSource().get_token());</span></span>
-<span id="L153"><span class="lineNum">     153</span>                 :<span class="tlaGNC">       20050 : }</span></span>
+<span id="L152"><span class="lineNum">     152</span>         [<span class="tlaGBC" title="Branch 0 was taken 20057 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">       20057 :     std::invoke(*task, task-&gt;GetStopSource().get_token());</span></span>
+<span id="L153"><span class="lineNum">     153</span>                 :<span class="tlaGNC">       20057 : }</span></span>
 <span id="L154"><span class="lineNum">     154</span>                 :             : </span>
 <span id="L155"><span class="lineNum">     155</span>                 :<span class="tlaGNC">        2088 : score::concurrency::ThreadPool::~ThreadPool() noexcept</span></span>
 <span id="L156"><span class="lineNum">     156</span>                 :             : {</span>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -179,9 +179,9 @@
 <span id="L101"><span class="lineNum">     101</span>                 :             : // Suppress &quot;AUTOSAR C++14 A13-5-2&quot; rule finding: &quot;All user-defined conversion operators shall be defined explicit.”</span>
 <span id="L102"><span class="lineNum">     102</span>                 :             : // Rationale: Intentional implicit conversion to use this class naturally in POSIX API</span>
 <span id="L103"><span class="lineNum">     103</span>                 :             : // coverity[autosar_cpp14_a13_5_2_violation]</span>
-<span id="L104"><span class="lineNum">     104</span>                 :<span class="tlaGNC">         211 : NonBlockingFileDescriptor::operator std::int32_t() const noexcept</span></span>
+<span id="L104"><span class="lineNum">     104</span>                 :<span class="tlaGNC">         203 : NonBlockingFileDescriptor::operator std::int32_t() const noexcept</span></span>
 <span id="L105"><span class="lineNum">     105</span>                 :             : {</span>
-<span id="L106"><span class="lineNum">     106</span>                 :<span class="tlaGNC">         211 :     return file_descriptor_;</span></span>
+<span id="L106"><span class="lineNum">     106</span>                 :<span class="tlaGNC">         203 :     return file_descriptor_;</span></span>
 <span id="L107"><span class="lineNum">     107</span>                 :             : }</span>
 <span id="L108"><span class="lineNum">     108</span>                 :             : </span>
 <span id="L109"><span class="lineNum">     109</span>                 :<span class="tlaGNC">         242 : NonBlockingFileDescriptor::NonBlockingFileDescriptor(const std::int32_t file_descriptor,</span></span>
@@ -257,12 +257,12 @@
 <span id="L178"><span class="lineNum">     178</span>                 :             : </span>
 <span id="L179"><span class="lineNum">     179</span>                 :             :     while (true)</span>
 <span id="L180"><span class="lineNum">     180</span>                 :             :     {</span>
-<span id="L181"><span class="lineNum">     181</span>                 :<span class="tlaGNC">          89 :         SignalStop();</span></span>
-<span id="L182"><span class="lineNum">     182</span>         [<span class="tlaGBC" title="Branch 0 was taken 77 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 11 times"> + </span>]:<span class="tlaGNC">          88 :         if (lock.try_lock())</span></span>
+<span id="L181"><span class="lineNum">     181</span>                 :<span class="tlaGNC">          85 :         SignalStop();</span></span>
+<span id="L182"><span class="lineNum">     182</span>         [<span class="tlaGBC" title="Branch 0 was taken 77 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 7 times"> + </span>]:<span class="tlaGNC">          84 :         if (lock.try_lock())</span></span>
 <span id="L183"><span class="lineNum">     183</span>                 :             :         {</span>
 <span id="L184"><span class="lineNum">     184</span>                 :<span class="tlaGNC">          77 :             break;</span></span>
 <span id="L185"><span class="lineNum">     185</span>                 :             :         }</span>
-<span id="L186"><span class="lineNum">     186</span>                 :<span class="tlaGNC">          11 :         std::this_thread::sleep_for(std::chrono::milliseconds{10});</span></span>
+<span id="L186"><span class="lineNum">     186</span>                 :<span class="tlaGNC">           7 :         std::this_thread::sleep_for(std::chrono::milliseconds{10});</span></span>
 <span id="L187"><span class="lineNum">     187</span>                 :             :     }</span>
 <span id="L188"><span class="lineNum">     188</span>                 :             : </span>
 <span id="L189"><span class="lineNum">     189</span>                 :             :     // Explicitly reset the file descriptors within the synchronized section</span>
@@ -309,21 +309,21 @@
 <span id="L228"><span class="lineNum">     228</span>                 :<span class="tlaGNC">           8 :     return buffer.first(static_cast&lt;std::size_t&gt;(read_result.value()));</span></span>
 <span id="L229"><span class="lineNum">     229</span>                 :<span class="tlaGNC">          26 : }</span></span>
 <span id="L230"><span class="lineNum">     230</span>                 :             : </span>
-<span id="L231"><span class="lineNum">     231</span>                 :<span class="tlaGNC">          89 : void AbortableBlockingReader::SignalStop() noexcept</span></span>
+<span id="L231"><span class="lineNum">     231</span>                 :<span class="tlaGNC">          85 : void AbortableBlockingReader::SignalStop() noexcept</span></span>
 <span id="L232"><span class="lineNum">     232</span>                 :             : {</span>
-<span id="L233"><span class="lineNum">     233</span>         [<span class="tlaGBC" title="Branch 0 was taken 40 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 49 times"> + </span>]:<span class="tlaGNC">          89 :     if (stop_write_file_descriptor_ &lt; 0)</span></span>
+<span id="L233"><span class="lineNum">     233</span>         [<span class="tlaGBC" title="Branch 0 was taken 40 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 45 times"> + </span>]:<span class="tlaGNC">          85 :     if (stop_write_file_descriptor_ &lt; 0)</span></span>
 <span id="L234"><span class="lineNum">     234</span>                 :             :     {</span>
 <span id="L235"><span class="lineNum">     235</span>                 :<span class="tlaGNC">          40 :         return;</span></span>
 <span id="L236"><span class="lineNum">     236</span>                 :             :     }</span>
 <span id="L237"><span class="lineNum">     237</span>                 :             : </span>
-<span id="L238"><span class="lineNum">     238</span>                 :<span class="tlaGNC">          49 :     std::array&lt;std::uint8_t, 1U&gt; buffer{};</span></span>
+<span id="L238"><span class="lineNum">     238</span>                 :<span class="tlaGNC">          45 :     std::array&lt;std::uint8_t, 1U&gt; buffer{};</span></span>
 <span id="L239"><span class="lineNum">     239</span>                 :             : </span>
 <span id="L240"><span class="lineNum">     240</span>                 :             :     // Suppressed here as it is safely used:</span>
 <span id="L241"><span class="lineNum">     241</span>                 :             :     // Provided error check and safeguard to ensure file descriptor is valid before writing.</span>
 <span id="L242"><span class="lineNum">     242</span>                 :             :     // NOLINTNEXTLINE(score-banned-function) see comment above</span>
-<span id="L243"><span class="lineNum">     243</span>                 :<span class="tlaGNC">          49 :     const auto result = unistd_-&gt;write(stop_write_file_descriptor_, buffer.data(), buffer.size());</span></span>
-<span id="L244"><span class="lineNum">     244</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 48 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          49 :     if ((!result.has_value()) &amp;&amp; (result.error() != Error::Code::kResourceTemporarilyUnavailable))</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 5 was taken 48 times"> + </span>]
+<span id="L243"><span class="lineNum">     243</span>                 :<span class="tlaGNC">          45 :     const auto result = unistd_-&gt;write(stop_write_file_descriptor_, buffer.data(), buffer.size());</span></span>
+<span id="L244"><span class="lineNum">     244</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 44 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          45 :     if ((!result.has_value()) &amp;&amp; (result.error() != Error::Code::kResourceTemporarilyUnavailable))</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 5 was taken 44 times"> + </span>]
 <span id="L245"><span class="lineNum">     245</span>                 :             :     {</span>
 <span id="L246"><span class="lineNum">     246</span>                 :<span class="tlaGNC">           1 :         std::terminate();</span></span>
 <span id="L247"><span class="lineNum">     247</span>                 :             :     }</span>

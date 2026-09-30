@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:10:46</td>
+            <td class="headerValue">2026-09-30 04:19:55</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">76.4&nbsp;%</td>
@@ -329,10 +329,10 @@
 <span id="L251"><span class="lineNum">     251</span>                 :             :     // NOLINTEND(google-explicit-constructor): see above</span>
 <span id="L252"><span class="lineNum">     252</span>                 :             : </span>
 <span id="L253"><span class="lineNum">     253</span>                 :             :     template &lt;class T = PointedType, class = detail_offset_ptr::enable_if_type_is_not_void&lt;T, PointedType&gt;&gt;</span>
-<span id="L254"><span class="lineNum">     254</span>                 :<span class="tlaGNC">      373037 :     pointer operator-&gt;() const</span></span>
+<span id="L254"><span class="lineNum">     254</span>                 :<span class="tlaGNC">      373036 :     pointer operator-&gt;() const</span></span>
 <span id="L255"><span class="lineNum">     255</span>                 :             :     {</span>
 <span id="L256"><span class="lineNum">     256</span>                 :             :         // NOLINTNEXTLINE(score-banned-function) See justification above class.</span>
-<span id="L257"><span class="lineNum">     257</span>                 :<span class="tlaGNC">      373037 :         return GetPointerWithBoundsCheck(this, offset_, memory_bounds_, sizeof(PointedType));</span></span>
+<span id="L257"><span class="lineNum">     257</span>                 :<span class="tlaGNC">      373036 :         return GetPointerWithBoundsCheck(this, offset_, memory_bounds_, sizeof(PointedType));</span></span>
 <span id="L258"><span class="lineNum">     258</span>                 :             :     }</span>
 <span id="L259"><span class="lineNum">     259</span>                 :             : </span>
 <span id="L260"><span class="lineNum">     260</span>                 :<span class="tlaGNC">       69878 :     explicit operator bool() const noexcept</span></span>
@@ -548,10 +548,10 @@
 <span id="L470"><span class="lineNum">     470</span>                 :             : // namespace, or static function with internal linkage, or private member function shall be used.&quot;.</span>
 <span id="L471"><span class="lineNum">     471</span>                 :             : // Rationale: False-positive - method is used in this file.</span>
 <span id="L472"><span class="lineNum">     472</span>                 :             : // coverity[autosar_cpp14_a0_1_3_violation : FALSE]</span>
-<span id="L473"><span class="lineNum">     473</span>                 :<span class="tlaGNC">      601718 : auto OffsetPtr&lt;PointedType&gt;::CalculatePointerFromOffset(const difference_type offset,</span></span>
+<span id="L473"><span class="lineNum">     473</span>                 :<span class="tlaGNC">      601717 : auto OffsetPtr&lt;PointedType&gt;::CalculatePointerFromOffset(const difference_type offset,</span></span>
 <span id="L474"><span class="lineNum">     474</span>                 :             :                                                         const void* const offset_ptr) noexcept -&gt; pointer</span>
 <span id="L475"><span class="lineNum">     475</span>                 :             : {</span>
-<span id="L476"><span class="lineNum">     476</span>         [<span class="tlaGBC" title="Branch 0 was taken 475 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 601243 times"> + </span>]:<span class="tlaGNC">      601718 :     if (offset == detail_offset_ptr::kNullPtrRepresentation)</span></span>
+<span id="L476"><span class="lineNum">     476</span>         [<span class="tlaGBC" title="Branch 0 was taken 475 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 601242 times"> + </span>]:<span class="tlaGNC">      601717 :     if (offset == detail_offset_ptr::kNullPtrRepresentation)</span></span>
 <span id="L477"><span class="lineNum">     477</span>                 :             :     {</span>
 <span id="L478"><span class="lineNum">     478</span>                 :<span class="tlaGNC">         475 :         return nullptr;</span></span>
 <span id="L479"><span class="lineNum">     479</span>                 :             :     }</span>
@@ -574,7 +574,7 @@
 <span id="L496"><span class="lineNum">     496</span>                 :             :     {</span>
 <span id="L497"><span class="lineNum">     497</span>                 :             : </span>
 <span id="L498"><span class="lineNum">     498</span>                 :             :         // NOLINTNEXTLINE(score-banned-function) See justification above class.</span>
-<span id="L499"><span class="lineNum">     499</span>                 :<span class="tlaGNC">      533515 :         return static_cast&lt;pointer&gt;(AddOffsetToPointer&lt;void&gt;(offset_ptr, offset));</span></span>
+<span id="L499"><span class="lineNum">     499</span>                 :<span class="tlaGNC">      533514 :         return static_cast&lt;pointer&gt;(AddOffsetToPointer&lt;void&gt;(offset_ptr, offset));</span></span>
 <span id="L500"><span class="lineNum">     500</span>                 :             :     }</span>
 <span id="L501"><span class="lineNum">     501</span>                 :             : }</span>
 <span id="L502"><span class="lineNum">     502</span>                 :             : </span>
@@ -625,17 +625,17 @@
 <span id="L547"><span class="lineNum">     547</span>                 :             : </span>
 <span id="L548"><span class="lineNum">     548</span>                 :             : template &lt;typename PointedType&gt;</span>
 <span id="L549"><span class="lineNum">     549</span>                 :             : // coverity[autosar_cpp14_a0_1_3_violation : FALSE] false-positive: Function is used in this file.</span>
-<span id="L550"><span class="lineNum">     550</span>                 :<span class="tlaGNC">      387439 : auto OffsetPtr&lt;PointedType&gt;::GetPointerWithBoundsCheck(</span></span>
+<span id="L550"><span class="lineNum">     550</span>                 :<span class="tlaGNC">      387438 : auto OffsetPtr&lt;PointedType&gt;::GetPointerWithBoundsCheck(</span></span>
 <span id="L551"><span class="lineNum">     551</span>                 :             :     const void* const offset_ptr_address,</span>
 <span id="L552"><span class="lineNum">     552</span>                 :             :     const detail_offset_ptr::difference_type offset,</span>
 <span id="L553"><span class="lineNum">     553</span>                 :             :     const MemoryRegionBounds&amp; offset_ptr_memory_bounds_when_not_in_shm,</span>
 <span id="L554"><span class="lineNum">     554</span>                 :             :     const std::size_t pointed_type_size) -&gt; pointer</span>
 <span id="L555"><span class="lineNum">     555</span>                 :             : {</span>
-<span id="L556"><span class="lineNum">     556</span>         [<span class="tlaGBC" title="Branch 0 was taken 387439 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">      387439 :     if (detail_offset_ptr::IsBoundsCheckingEnabled())</span></span>
+<span id="L556"><span class="lineNum">     556</span>         [<span class="tlaGBC" title="Branch 0 was taken 387438 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">      387438 :     if (detail_offset_ptr::IsBoundsCheckingEnabled())</span></span>
 <span id="L557"><span class="lineNum">     557</span>                 :             :     {</span>
-<span id="L558"><span class="lineNum">     558</span>         [<span class="tlaGBC" title="Branch 0 was taken 387439 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">      387439 :         const auto offset_ptr_bounds = MemoryResourceRegistry::getInstance().GetBoundsFromAddress(offset_ptr_address);</span></span>
-<span id="L559"><span class="lineNum">     559</span>                 :<span class="tlaGNC">      387439 :         const auto is_offset_ptr_in_memory_region = offset_ptr_bounds.has_value();</span></span>
-<span id="L560"><span class="lineNum">     560</span>         [<span class="tlaGBC" title="Branch 0 was taken 4572 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 382867 times"> + </span>]:<span class="tlaGNC">      387439 :         if (is_offset_ptr_in_memory_region)</span></span>
+<span id="L558"><span class="lineNum">     558</span>         [<span class="tlaGBC" title="Branch 0 was taken 387439 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">      387438 :         const auto offset_ptr_bounds = MemoryResourceRegistry::getInstance().GetBoundsFromAddress(offset_ptr_address);</span></span>
+<span id="L559"><span class="lineNum">     559</span>                 :<span class="tlaGNC">      387436 :         const auto is_offset_ptr_in_memory_region = offset_ptr_bounds.has_value();</span></span>
+<span id="L560"><span class="lineNum">     560</span>         [<span class="tlaGBC" title="Branch 0 was taken 4572 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 382865 times"> + </span>]:<span class="tlaGNC">      387437 :         if (is_offset_ptr_in_memory_region)</span></span>
 <span id="L561"><span class="lineNum">     561</span>                 :             :         {</span>
 <span id="L562"><span class="lineNum">     562</span>                 :             :             // We use SCORE_LANGUAGE_FUTURECPP_ASSERT_PRD instead of std::terminate so that we can check these in unit</span>
 <span id="L563"><span class="lineNum">     563</span>                 :             :             // tests using SCORE_LANGUAGE_FUTURECPP_EXPECT_CONTRACT_VIOLATED instead of death tests (since death tests</span>
@@ -652,7 +652,7 @@
 <span id="L574"><span class="lineNum">     574</span>                 :             :             // We use SCORE_LANGUAGE_FUTURECPP_ASSERT_PRD instead of std::terminate so that we can check these in unit</span>
 <span id="L575"><span class="lineNum">     575</span>                 :             :             // tests using SCORE_LANGUAGE_FUTURECPP_EXPECT_CONTRACT_VIOLATED instead of death tests (since death tests</span>
 <span id="L576"><span class="lineNum">     576</span>                 :             :             // are very slow).</span>
-<span id="L577"><span class="lineNum">     577</span>   [<span class="tlaGBC" title="Branch 0 was taken 382867 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 24 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 382843 times"> + </span>]:<span class="tlaGNC">      382867 :             SCORE_LANGUAGE_FUTURECPP_ASSERT_PRD(</span></span>
+<span id="L577"><span class="lineNum">     577</span>   [<span class="tlaGBC" title="Branch 0 was taken 382866 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 24 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 382842 times"> + </span>]:<span class="tlaGNC">      382865 :             SCORE_LANGUAGE_FUTURECPP_ASSERT_PRD(</span></span>
 <span id="L578"><span class="lineNum">     578</span>                 :             :                 DoesOffsetPtrNotInSharedMemoryPassBoundsChecks(offset_ptr_address,</span>
 <span id="L579"><span class="lineNum">     579</span>                 :             :                                                                offset,</span>
 <span id="L580"><span class="lineNum">     580</span>                 :             :                                                                offset_ptr_memory_bounds_when_not_in_shm,</span>
@@ -662,16 +662,16 @@
 <span id="L584"><span class="lineNum">     584</span>                 :             :     }</span>
 <span id="L585"><span class="lineNum">     585</span>                 :             : </span>
 <span id="L586"><span class="lineNum">     586</span>                 :             :     // NOLINTNEXTLINE(score-banned-function) The current function is banned for calling this function</span>
-<span id="L587"><span class="lineNum">     587</span>                 :<span class="tlaGNC">      387415 :     return GetPointerWithoutBoundsCheck(offset_ptr_address, offset);</span></span>
+<span id="L587"><span class="lineNum">     587</span>                 :<span class="tlaGNC">      387414 :     return GetPointerWithoutBoundsCheck(offset_ptr_address, offset);</span></span>
 <span id="L588"><span class="lineNum">     588</span>                 :             : }</span>
 <span id="L589"><span class="lineNum">     589</span>                 :             : </span>
 <span id="L590"><span class="lineNum">     590</span>                 :             : template &lt;typename PointedType&gt;</span>
-<span id="L591"><span class="lineNum">     591</span>                 :<span class="tlaGNC">      601718 : auto OffsetPtr&lt;PointedType&gt;::GetPointerWithoutBoundsCheck(const void* const offset_ptr_address,</span></span>
+<span id="L591"><span class="lineNum">     591</span>                 :<span class="tlaGNC">      601717 : auto OffsetPtr&lt;PointedType&gt;::GetPointerWithoutBoundsCheck(const void* const offset_ptr_address,</span></span>
 <span id="L592"><span class="lineNum">     592</span>                 :             :                                                           const detail_offset_ptr::difference_type offset) noexcept</span>
 <span id="L593"><span class="lineNum">     593</span>                 :             :     -&gt; pointer</span>
 <span id="L594"><span class="lineNum">     594</span>                 :             : {</span>
 <span id="L595"><span class="lineNum">     595</span>                 :             :     // NOLINTNEXTLINE(score-banned-function) The current function is banned for calling this function</span>
-<span id="L596"><span class="lineNum">     596</span>                 :<span class="tlaGNC">      601718 :     return CalculatePointerFromOffset(offset, offset_ptr_address);</span></span>
+<span id="L596"><span class="lineNum">     596</span>                 :<span class="tlaGNC">      601717 :     return CalculatePointerFromOffset(offset, offset_ptr_address);</span></span>
 <span id="L597"><span class="lineNum">     597</span>                 :             : }</span>
 <span id="L598"><span class="lineNum">     598</span>                 :             : </span>
 <span id="L599"><span class="lineNum">     599</span>                 :             : // Enabled if PointedType is not void</span>

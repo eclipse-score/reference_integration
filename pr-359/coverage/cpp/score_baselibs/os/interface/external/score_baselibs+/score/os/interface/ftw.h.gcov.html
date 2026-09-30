@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">66.7&nbsp;%</td>
@@ -97,41 +97,35 @@
 <span id="L19"><span class="lineNum">      19</span>                 :             : </span>
 <span id="L20"><span class="lineNum">      20</span>                 :             : #include &lt;sys/stat.h&gt;</span>
 <span id="L21"><span class="lineNum">      21</span>                 :             : </span>
-<span id="L22"><span class="lineNum">      22</span>                 :             : /* KW_SUPPRESS_START:AUTOSAR.BUILTIN_NUMERIC:Char is used in respect to the wrapped function's signature */</span>
-<span id="L23"><span class="lineNum">      23</span>                 :             : </span>
-<span id="L24"><span class="lineNum">      24</span>                 :             : namespace score</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : namespace score</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : {</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : namespace os</span>
 <span id="L25"><span class="lineNum">      25</span>                 :             : {</span>
-<span id="L26"><span class="lineNum">      26</span>                 :             : namespace os</span>
-<span id="L27"><span class="lineNum">      27</span>                 :             : {</span>
-<span id="L28"><span class="lineNum">      28</span>                 :             : </span>
-<span id="L29"><span class="lineNum">      29</span>                 :             : class Ftw</span>
-<span id="L30"><span class="lineNum">      30</span>                 :             : {</span>
-<span id="L31"><span class="lineNum">      31</span>                 :             :   public:</span>
-<span id="L32"><span class="lineNum">      32</span>                 :             :     /* KW_SUPPRESS_START:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L33"><span class="lineNum">      33</span>                 :             :     virtual score::cpp::expected&lt;std::int32_t, score::os::Error&gt; ftw(const char* const path,</span>
-<span id="L34"><span class="lineNum">      34</span>                 :             :                                                                      std::int32_t (*const fn)(const char* const fname,</span>
-<span id="L35"><span class="lineNum">      35</span>                 :             :                                                                                               const struct stat* sbuf,</span>
-<span id="L36"><span class="lineNum">      36</span>                 :             :                                                                                               std::int32_t flag),</span>
-<span id="L37"><span class="lineNum">      37</span>                 :             :                                                                      const std::int32_t ndirs) const noexcept = 0;</span>
-<span id="L38"><span class="lineNum">      38</span>                 :             :     /* KW_SUPPRESS_END:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L39"><span class="lineNum">      39</span>                 :             : </span>
-<span id="L40"><span class="lineNum">      40</span>                 :<span class="tlaGNC tlaBgGNC">           3 :     virtual ~Ftw() = default;</span></span>
-<span id="L41"><span class="lineNum">      41</span>                 :             :     // Below special member functions declared to avoid autosar_cpp14_a12_0_1_violation</span>
-<span id="L42"><span class="lineNum">      42</span>                 :             :     Ftw(const Ftw&amp;) = delete;</span>
-<span id="L43"><span class="lineNum">      43</span>                 :             :     Ftw&amp; operator=(const Ftw&amp;) = delete;</span>
-<span id="L44"><span class="lineNum">      44</span>                 :             :     Ftw(Ftw&amp;&amp; other) = delete;</span>
-<span id="L45"><span class="lineNum">      45</span>                 :             :     Ftw&amp; operator=(Ftw&amp;&amp; other) = delete;</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : </span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : class Ftw</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : {</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             :   public:</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             :     virtual score::cpp::expected&lt;std::int32_t, score::os::Error&gt; ftw(const char* const path,</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             :                                                                      std::int32_t (*const fn)(const char* const fname,</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             :                                                                                               const struct stat* sbuf,</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             :                                                                                               std::int32_t flag),</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             :                                                                      const std::int32_t ndirs) const noexcept = 0;</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             : </span>
+<span id="L36"><span class="lineNum">      36</span>                 :<span class="tlaGNC tlaBgGNC">           3 :     virtual ~Ftw() = default;</span></span>
+<span id="L37"><span class="lineNum">      37</span>                 :             :     // Below special member functions declared to avoid autosar_cpp14_a12_0_1_violation</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             :     Ftw(const Ftw&amp;) = delete;</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             :     Ftw&amp; operator=(const Ftw&amp;) = delete;</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             :     Ftw(Ftw&amp;&amp; other) = delete;</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             :     Ftw&amp; operator=(Ftw&amp;&amp; other) = delete;</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             : </span>
+<span id="L43"><span class="lineNum">      43</span>                 :             :   protected:</span>
+<span id="L44"><span class="lineNum">      44</span>                 :<span class="tlaGNC">           3 :     Ftw() = default;</span></span>
+<span id="L45"><span class="lineNum">      45</span>                 :             : };</span>
 <span id="L46"><span class="lineNum">      46</span>                 :             : </span>
-<span id="L47"><span class="lineNum">      47</span>                 :             :   protected:</span>
-<span id="L48"><span class="lineNum">      48</span>                 :<span class="tlaGNC">           3 :     Ftw() = default;</span></span>
-<span id="L49"><span class="lineNum">      49</span>                 :             : };</span>
-<span id="L50"><span class="lineNum">      50</span>                 :             : </span>
-<span id="L51"><span class="lineNum">      51</span>                 :             : }  // namespace os</span>
-<span id="L52"><span class="lineNum">      52</span>                 :             : }  // namespace score</span>
-<span id="L53"><span class="lineNum">      53</span>                 :             : </span>
-<span id="L54"><span class="lineNum">      54</span>                 :             : /* KW_SUPPRESS_END:AUTOSAR.BUILTIN_NUMERIC:Char is used in respect to the wrapped function's signature */</span>
-<span id="L55"><span class="lineNum">      55</span>                 :             : </span>
-<span id="L56"><span class="lineNum">      56</span>                 :             : #endif  // SCORE_LIB_OS_INTERFACE_FTW_H</span>
+<span id="L47"><span class="lineNum">      47</span>                 :             : }  // namespace os</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             : }  // namespace score</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             : </span>
+<span id="L50"><span class="lineNum">      50</span>                 :             : #endif  // SCORE_LIB_OS_INTERFACE_FTW_H</span>
         </pre>
               </td>
             </tr>

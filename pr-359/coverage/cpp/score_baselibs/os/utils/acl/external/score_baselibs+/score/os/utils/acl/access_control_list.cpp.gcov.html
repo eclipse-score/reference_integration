@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">93.8&nbsp;%</td>
@@ -384,99 +384,97 @@
 <span id="L303"><span class="lineNum">     303</span>                 :             :         // False positive: This is a function call.</span>
 <span id="L304"><span class="lineNum">     304</span>                 :             :         // coverity[autosar_cpp14_a18_9_2_violation]</span>
 <span id="L305"><span class="lineNum">     305</span>                 :<span class="tlaGNC">          15 :         auto check_entry_result = predicate(entry.value());</span></span>
-<span id="L306"><span class="lineNum">     306</span>                 :             :         /* KW_SUPPRESS_START:MISRA.STMT.COND.NOT_BOOLEAN:False positive- has_value() will return a boolean */</span>
-<span id="L307"><span class="lineNum">     307</span>         [<span class="tlaGBC" title="Branch 0 was taken 13 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">          15 :         if (check_entry_result.has_value())</span></span>
-<span id="L308"><span class="lineNum">     308</span>                 :             :         /* KW_SUPPRESS_END:MISRA.STMT.COND.NOT_BOOLEAN:False positive- has_value() will return a boolean */</span>
-<span id="L309"><span class="lineNum">     309</span>                 :             :         {</span>
-<span id="L310"><span class="lineNum">     310</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 10 times"> + </span>]:<span class="tlaGNC">          13 :             if (static_cast&lt;bool&gt;(check_entry_result.value()))</span></span>
-<span id="L311"><span class="lineNum">     311</span>                 :             :             {</span>
-<span id="L312"><span class="lineNum">     312</span>                 :<span class="tlaGNC">           5 :                 return entry;</span></span>
-<span id="L313"><span class="lineNum">     313</span>                 :             :             }</span>
-<span id="L314"><span class="lineNum">     314</span>                 :             :             else</span>
-<span id="L315"><span class="lineNum">     315</span>                 :             :             {</span>
-<span id="L316"><span class="lineNum">     316</span>                 :             :                 // See above regarding error handling.</span>
-<span id="L317"><span class="lineNum">     317</span>                 :<span class="tlaGNC">          10 :                 entry = operating_system.acl_get_entry(acl_, Acl::kAclNextEntry).value();</span></span>
-<span id="L318"><span class="lineNum">     318</span>                 :             :             }</span>
-<span id="L319"><span class="lineNum">     319</span>                 :             :         }</span>
-<span id="L320"><span class="lineNum">     320</span>                 :             :         else</span>
-<span id="L321"><span class="lineNum">     321</span>                 :             :         {</span>
-<span id="L322"><span class="lineNum">     322</span>                 :<span class="tlaGNC">           2 :             return score::cpp::make_unexpected(std::move(check_entry_result).error());</span></span>
-<span id="L323"><span class="lineNum">     323</span>                 :             :         }</span>
-<span id="L324"><span class="lineNum">     324</span>                 :             :     }</span>
-<span id="L325"><span class="lineNum">     325</span>                 :             : </span>
-<span id="L326"><span class="lineNum">     326</span>                 :<span class="tlaGNC">          10 :     return score::cpp::nullopt;</span></span>
-<span id="L327"><span class="lineNum">     327</span>                 :             : }</span>
-<span id="L328"><span class="lineNum">     328</span>                 :             : </span>
-<span id="L329"><span class="lineNum">     329</span>                 :             : // Suppress &quot;AUTOSAR C++14 A15-5-3&quot; rule findings: &quot;The std::terminate() function shall not be called implicitly&quot;.</span>
-<span id="L330"><span class="lineNum">     330</span>                 :             : // Rationale: Calling std::terminate() if any exceptions are thrown is expected as per safety requirements</span>
-<span id="L331"><span class="lineNum">     331</span>                 :             : score::cpp::expected&lt;std::vector&lt;score::os::IAccessControlList::UserIdentifier&gt;, score::os::Error&gt;</span>
-<span id="L332"><span class="lineNum">     332</span>                 :             : // coverity[autosar_cpp14_a15_5_3_violation]</span>
-<span id="L333"><span class="lineNum">     333</span>                 :<span class="tlaGNC">          21 : score::os::AccessControlList::FindUserIdsWithPermission(const Acl::Permission permission) const noexcept</span></span>
-<span id="L334"><span class="lineNum">     334</span>                 :             : {</span>
-<span id="L335"><span class="lineNum">     335</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 19 times"> + </span>]:<span class="tlaGNC">          21 :     if (error_.has_value())</span></span>
-<span id="L336"><span class="lineNum">     336</span>                 :             :     {</span>
-<span id="L337"><span class="lineNum">     337</span>                 :             :         /* Branching is due to hidden exception handling */</span>
-<span id="L338"><span class="lineNum">     338</span>                 :<span class="tlaGNC">           2 :         return score::cpp::make_unexpected(error_.value()); /* LCOV_EXCL_BR_LINE */</span></span>
-<span id="L339"><span class="lineNum">     339</span>                 :             :     }</span>
-<span id="L340"><span class="lineNum">     340</span>                 :             : </span>
-<span id="L341"><span class="lineNum">     341</span>                 :<span class="tlaGNC">          19 :     const auto&amp; operating_system = Acl::instance();</span></span>
-<span id="L342"><span class="lineNum">     342</span>                 :<span class="tlaGNC">          19 :     std::vector&lt;UserIdentifier&gt; user_ids_with_perms{};</span></span>
-<span id="L343"><span class="lineNum">     343</span>                 :             : </span>
-<span id="L344"><span class="lineNum">     344</span>                 :<span class="tlaGNC">          19 :     auto entry = operating_system.acl_get_entry(acl_, Acl::kAclFirstEntry);</span></span>
-<span id="L345"><span class="lineNum">     345</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 18 times"> + </span>]:<span class="tlaGNC">          19 :     if (!entry.has_value())</span></span>
-<span id="L346"><span class="lineNum">     346</span>                 :             :     {</span>
-<span id="L347"><span class="lineNum">     347</span>                 :<span class="tlaGNC">           1 :         return score::cpp::make_unexpected(entry.error());</span></span>
-<span id="L348"><span class="lineNum">     348</span>                 :             :     }</span>
-<span id="L349"><span class="lineNum">     349</span>                 :             : </span>
-<span id="L350"><span class="lineNum">     350</span>         [<span class="tlaGBC" title="Branch 0 was taken 71 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 14 times"> + </span>]:<span class="tlaGNC">          85 :     while (entry.value().has_value())</span></span>
-<span id="L351"><span class="lineNum">     351</span>                 :             :     {</span>
-<span id="L352"><span class="lineNum">     352</span>                 :<span class="tlaGNC">          71 :         const auto acl_entry = entry.value().value();</span></span>
-<span id="L353"><span class="lineNum">     353</span>                 :             : </span>
-<span id="L354"><span class="lineNum">     354</span>                 :<span class="tlaGNC">          71 :         const auto tag_type = operating_system.acl_get_tag_type(acl_entry);</span></span>
-<span id="L355"><span class="lineNum">     355</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 70 times"> + </span>]:<span class="tlaGNC">          71 :         if (!tag_type.has_value())</span></span>
-<span id="L356"><span class="lineNum">     356</span>                 :             :         {</span>
-<span id="L357"><span class="lineNum">     357</span>                 :<span class="tlaGNC">           1 :             return score::cpp::make_unexpected(tag_type.error());</span></span>
-<span id="L358"><span class="lineNum">     358</span>                 :             :         }</span>
-<span id="L359"><span class="lineNum">     359</span>                 :             : </span>
-<span id="L360"><span class="lineNum">     360</span>         [<span class="tlaGBC" title="Branch 0 was taken 28 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 42 times"> + </span>]:<span class="tlaGNC">          70 :         if (tag_type.value() == Acl::Tag::kUser)</span></span>
-<span id="L361"><span class="lineNum">     361</span>                 :             :         {</span>
-<span id="L362"><span class="lineNum">     362</span>                 :<span class="tlaGNC">          28 :             const auto uid_ptr = operating_system.acl_get_qualifier(acl_entry);</span></span>
-<span id="L363"><span class="lineNum">     363</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 27 times"> + </span>]:<span class="tlaGNC">          28 :             if (!uid_ptr.has_value())</span></span>
-<span id="L364"><span class="lineNum">     364</span>                 :             :             {</span>
-<span id="L365"><span class="lineNum">     365</span>                 :<span class="tlaGNC">           1 :                 return score::cpp::make_unexpected(uid_ptr.error());</span></span>
-<span id="L366"><span class="lineNum">     366</span>                 :             :             }</span>
-<span id="L367"><span class="lineNum">     367</span>                 :             : </span>
-<span id="L368"><span class="lineNum">     368</span>                 :<span class="tlaGNC">          27 :             Acl::Permissions permset{};</span></span>
-<span id="L369"><span class="lineNum">     369</span>                 :<span class="tlaGNC">          27 :             operating_system.acl_get_permset(acl_entry, &amp;permset);</span></span>
-<span id="L370"><span class="lineNum">     370</span>                 :             : </span>
-<span id="L371"><span class="lineNum">     371</span>                 :<span class="tlaGNC">          27 :             const auto is_permission_set = operating_system.acl_get_perm(permset, permission);</span></span>
-<span id="L372"><span class="lineNum">     372</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 26 times"> + </span>]:<span class="tlaGNC">          27 :             if (!is_permission_set.has_value())</span></span>
-<span id="L373"><span class="lineNum">     373</span>                 :             :             {</span>
-<span id="L374"><span class="lineNum">     374</span>                 :<span class="tlaGNC">           1 :                 operating_system.acl_free(uid_ptr.value());</span></span>
-<span id="L375"><span class="lineNum">     375</span>                 :<span class="tlaGNC">           1 :                 return score::cpp::make_unexpected(is_permission_set.error());</span></span>
-<span id="L376"><span class="lineNum">     376</span>                 :             :             }</span>
-<span id="L377"><span class="lineNum">     377</span>                 :             : </span>
-<span id="L378"><span class="lineNum">     378</span>         [<span class="tlaGBC" title="Branch 0 was taken 13 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 13 times"> + </span>]:<span class="tlaGNC">          26 :             if (is_permission_set.value())</span></span>
-<span id="L379"><span class="lineNum">     379</span>                 :             :             {</span>
-<span id="L380"><span class="lineNum">     380</span>                 :<span class="tlaGNC">          13 :                 score::os::IAccessControlList::UserIdentifier exec_uid = {};</span></span>
-<span id="L381"><span class="lineNum">     381</span>                 :             :                 // This is safe because uid_t is expected to be TriviallyCopyable, ensuring that std::memcpy()</span>
-<span id="L382"><span class="lineNum">     382</span>                 :             :                 // correctly copies the value without violating strict aliasing or object lifetime rules.</span>
-<span id="L383"><span class="lineNum">     383</span>                 :             :                 // NOLINTNEXTLINE(score-banned-function): See above</span>
-<span id="L384"><span class="lineNum">     384</span>                 :<span class="tlaGNC">          13 :                 std::ignore = std::memcpy(&amp;exec_uid, uid_ptr.value(), sizeof(uid_t));</span></span>
-<span id="L385"><span class="lineNum">     385</span>                 :<span class="tlaGNC">          13 :                 user_ids_with_perms.push_back(exec_uid);</span></span>
-<span id="L386"><span class="lineNum">     386</span>                 :             :             }</span>
-<span id="L387"><span class="lineNum">     387</span>                 :<span class="tlaGNC">          26 :             operating_system.acl_free(uid_ptr.value());</span></span>
-<span id="L388"><span class="lineNum">     388</span>                 :             :         }</span>
-<span id="L389"><span class="lineNum">     389</span>                 :             : </span>
-<span id="L390"><span class="lineNum">     390</span>                 :<span class="tlaGNC">          68 :         entry = operating_system.acl_get_entry(acl_, Acl::kAclNextEntry);</span></span>
-<span id="L391"><span class="lineNum">     391</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 67 times"> + </span>]:<span class="tlaGNC">          68 :         if (!entry.has_value())</span></span>
-<span id="L392"><span class="lineNum">     392</span>                 :             :         {</span>
-<span id="L393"><span class="lineNum">     393</span>                 :<span class="tlaGNC">           1 :             return score::cpp::make_unexpected(entry.error());</span></span>
-<span id="L394"><span class="lineNum">     394</span>                 :             :         }</span>
-<span id="L395"><span class="lineNum">     395</span>                 :             :     }</span>
-<span id="L396"><span class="lineNum">     396</span>                 :             : </span>
-<span id="L397"><span class="lineNum">     397</span>                 :<span class="tlaGNC">          14 :     return user_ids_with_perms;</span></span>
-<span id="L398"><span class="lineNum">     398</span>                 :<span class="tlaGNC">          19 : }</span></span>
+<span id="L306"><span class="lineNum">     306</span>         [<span class="tlaGBC" title="Branch 0 was taken 13 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">          15 :         if (check_entry_result.has_value())</span></span>
+<span id="L307"><span class="lineNum">     307</span>                 :             :         {</span>
+<span id="L308"><span class="lineNum">     308</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 10 times"> + </span>]:<span class="tlaGNC">          13 :             if (static_cast&lt;bool&gt;(check_entry_result.value()))</span></span>
+<span id="L309"><span class="lineNum">     309</span>                 :             :             {</span>
+<span id="L310"><span class="lineNum">     310</span>                 :<span class="tlaGNC">           5 :                 return entry;</span></span>
+<span id="L311"><span class="lineNum">     311</span>                 :             :             }</span>
+<span id="L312"><span class="lineNum">     312</span>                 :             :             else</span>
+<span id="L313"><span class="lineNum">     313</span>                 :             :             {</span>
+<span id="L314"><span class="lineNum">     314</span>                 :             :                 // See above regarding error handling.</span>
+<span id="L315"><span class="lineNum">     315</span>                 :<span class="tlaGNC">          10 :                 entry = operating_system.acl_get_entry(acl_, Acl::kAclNextEntry).value();</span></span>
+<span id="L316"><span class="lineNum">     316</span>                 :             :             }</span>
+<span id="L317"><span class="lineNum">     317</span>                 :             :         }</span>
+<span id="L318"><span class="lineNum">     318</span>                 :             :         else</span>
+<span id="L319"><span class="lineNum">     319</span>                 :             :         {</span>
+<span id="L320"><span class="lineNum">     320</span>                 :<span class="tlaGNC">           2 :             return score::cpp::make_unexpected(std::move(check_entry_result).error());</span></span>
+<span id="L321"><span class="lineNum">     321</span>                 :             :         }</span>
+<span id="L322"><span class="lineNum">     322</span>                 :             :     }</span>
+<span id="L323"><span class="lineNum">     323</span>                 :             : </span>
+<span id="L324"><span class="lineNum">     324</span>                 :<span class="tlaGNC">          10 :     return score::cpp::nullopt;</span></span>
+<span id="L325"><span class="lineNum">     325</span>                 :             : }</span>
+<span id="L326"><span class="lineNum">     326</span>                 :             : </span>
+<span id="L327"><span class="lineNum">     327</span>                 :             : // Suppress &quot;AUTOSAR C++14 A15-5-3&quot; rule findings: &quot;The std::terminate() function shall not be called implicitly&quot;.</span>
+<span id="L328"><span class="lineNum">     328</span>                 :             : // Rationale: Calling std::terminate() if any exceptions are thrown is expected as per safety requirements</span>
+<span id="L329"><span class="lineNum">     329</span>                 :             : score::cpp::expected&lt;std::vector&lt;score::os::IAccessControlList::UserIdentifier&gt;, score::os::Error&gt;</span>
+<span id="L330"><span class="lineNum">     330</span>                 :             : // coverity[autosar_cpp14_a15_5_3_violation]</span>
+<span id="L331"><span class="lineNum">     331</span>                 :<span class="tlaGNC">          21 : score::os::AccessControlList::FindUserIdsWithPermission(const Acl::Permission permission) const noexcept</span></span>
+<span id="L332"><span class="lineNum">     332</span>                 :             : {</span>
+<span id="L333"><span class="lineNum">     333</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 19 times"> + </span>]:<span class="tlaGNC">          21 :     if (error_.has_value())</span></span>
+<span id="L334"><span class="lineNum">     334</span>                 :             :     {</span>
+<span id="L335"><span class="lineNum">     335</span>                 :             :         /* Branching is due to hidden exception handling */</span>
+<span id="L336"><span class="lineNum">     336</span>                 :<span class="tlaGNC">           2 :         return score::cpp::make_unexpected(error_.value()); /* LCOV_EXCL_BR_LINE */</span></span>
+<span id="L337"><span class="lineNum">     337</span>                 :             :     }</span>
+<span id="L338"><span class="lineNum">     338</span>                 :             : </span>
+<span id="L339"><span class="lineNum">     339</span>                 :<span class="tlaGNC">          19 :     const auto&amp; operating_system = Acl::instance();</span></span>
+<span id="L340"><span class="lineNum">     340</span>                 :<span class="tlaGNC">          19 :     std::vector&lt;UserIdentifier&gt; user_ids_with_perms{};</span></span>
+<span id="L341"><span class="lineNum">     341</span>                 :             : </span>
+<span id="L342"><span class="lineNum">     342</span>                 :<span class="tlaGNC">          19 :     auto entry = operating_system.acl_get_entry(acl_, Acl::kAclFirstEntry);</span></span>
+<span id="L343"><span class="lineNum">     343</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 18 times"> + </span>]:<span class="tlaGNC">          19 :     if (!entry.has_value())</span></span>
+<span id="L344"><span class="lineNum">     344</span>                 :             :     {</span>
+<span id="L345"><span class="lineNum">     345</span>                 :<span class="tlaGNC">           1 :         return score::cpp::make_unexpected(entry.error());</span></span>
+<span id="L346"><span class="lineNum">     346</span>                 :             :     }</span>
+<span id="L347"><span class="lineNum">     347</span>                 :             : </span>
+<span id="L348"><span class="lineNum">     348</span>         [<span class="tlaGBC" title="Branch 0 was taken 71 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 14 times"> + </span>]:<span class="tlaGNC">          85 :     while (entry.value().has_value())</span></span>
+<span id="L349"><span class="lineNum">     349</span>                 :             :     {</span>
+<span id="L350"><span class="lineNum">     350</span>                 :<span class="tlaGNC">          71 :         const auto acl_entry = entry.value().value();</span></span>
+<span id="L351"><span class="lineNum">     351</span>                 :             : </span>
+<span id="L352"><span class="lineNum">     352</span>                 :<span class="tlaGNC">          71 :         const auto tag_type = operating_system.acl_get_tag_type(acl_entry);</span></span>
+<span id="L353"><span class="lineNum">     353</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 70 times"> + </span>]:<span class="tlaGNC">          71 :         if (!tag_type.has_value())</span></span>
+<span id="L354"><span class="lineNum">     354</span>                 :             :         {</span>
+<span id="L355"><span class="lineNum">     355</span>                 :<span class="tlaGNC">           1 :             return score::cpp::make_unexpected(tag_type.error());</span></span>
+<span id="L356"><span class="lineNum">     356</span>                 :             :         }</span>
+<span id="L357"><span class="lineNum">     357</span>                 :             : </span>
+<span id="L358"><span class="lineNum">     358</span>         [<span class="tlaGBC" title="Branch 0 was taken 28 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 42 times"> + </span>]:<span class="tlaGNC">          70 :         if (tag_type.value() == Acl::Tag::kUser)</span></span>
+<span id="L359"><span class="lineNum">     359</span>                 :             :         {</span>
+<span id="L360"><span class="lineNum">     360</span>                 :<span class="tlaGNC">          28 :             const auto uid_ptr = operating_system.acl_get_qualifier(acl_entry);</span></span>
+<span id="L361"><span class="lineNum">     361</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 27 times"> + </span>]:<span class="tlaGNC">          28 :             if (!uid_ptr.has_value())</span></span>
+<span id="L362"><span class="lineNum">     362</span>                 :             :             {</span>
+<span id="L363"><span class="lineNum">     363</span>                 :<span class="tlaGNC">           1 :                 return score::cpp::make_unexpected(uid_ptr.error());</span></span>
+<span id="L364"><span class="lineNum">     364</span>                 :             :             }</span>
+<span id="L365"><span class="lineNum">     365</span>                 :             : </span>
+<span id="L366"><span class="lineNum">     366</span>                 :<span class="tlaGNC">          27 :             Acl::Permissions permset{};</span></span>
+<span id="L367"><span class="lineNum">     367</span>                 :<span class="tlaGNC">          27 :             operating_system.acl_get_permset(acl_entry, &amp;permset);</span></span>
+<span id="L368"><span class="lineNum">     368</span>                 :             : </span>
+<span id="L369"><span class="lineNum">     369</span>                 :<span class="tlaGNC">          27 :             const auto is_permission_set = operating_system.acl_get_perm(permset, permission);</span></span>
+<span id="L370"><span class="lineNum">     370</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 26 times"> + </span>]:<span class="tlaGNC">          27 :             if (!is_permission_set.has_value())</span></span>
+<span id="L371"><span class="lineNum">     371</span>                 :             :             {</span>
+<span id="L372"><span class="lineNum">     372</span>                 :<span class="tlaGNC">           1 :                 operating_system.acl_free(uid_ptr.value());</span></span>
+<span id="L373"><span class="lineNum">     373</span>                 :<span class="tlaGNC">           1 :                 return score::cpp::make_unexpected(is_permission_set.error());</span></span>
+<span id="L374"><span class="lineNum">     374</span>                 :             :             }</span>
+<span id="L375"><span class="lineNum">     375</span>                 :             : </span>
+<span id="L376"><span class="lineNum">     376</span>         [<span class="tlaGBC" title="Branch 0 was taken 13 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 13 times"> + </span>]:<span class="tlaGNC">          26 :             if (is_permission_set.value())</span></span>
+<span id="L377"><span class="lineNum">     377</span>                 :             :             {</span>
+<span id="L378"><span class="lineNum">     378</span>                 :<span class="tlaGNC">          13 :                 score::os::IAccessControlList::UserIdentifier exec_uid = {};</span></span>
+<span id="L379"><span class="lineNum">     379</span>                 :             :                 // This is safe because uid_t is expected to be TriviallyCopyable, ensuring that std::memcpy()</span>
+<span id="L380"><span class="lineNum">     380</span>                 :             :                 // correctly copies the value without violating strict aliasing or object lifetime rules.</span>
+<span id="L381"><span class="lineNum">     381</span>                 :             :                 // NOLINTNEXTLINE(score-banned-function): See above</span>
+<span id="L382"><span class="lineNum">     382</span>                 :<span class="tlaGNC">          13 :                 std::ignore = std::memcpy(&amp;exec_uid, uid_ptr.value(), sizeof(uid_t));</span></span>
+<span id="L383"><span class="lineNum">     383</span>                 :<span class="tlaGNC">          13 :                 user_ids_with_perms.push_back(exec_uid);</span></span>
+<span id="L384"><span class="lineNum">     384</span>                 :             :             }</span>
+<span id="L385"><span class="lineNum">     385</span>                 :<span class="tlaGNC">          26 :             operating_system.acl_free(uid_ptr.value());</span></span>
+<span id="L386"><span class="lineNum">     386</span>                 :             :         }</span>
+<span id="L387"><span class="lineNum">     387</span>                 :             : </span>
+<span id="L388"><span class="lineNum">     388</span>                 :<span class="tlaGNC">          68 :         entry = operating_system.acl_get_entry(acl_, Acl::kAclNextEntry);</span></span>
+<span id="L389"><span class="lineNum">     389</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 67 times"> + </span>]:<span class="tlaGNC">          68 :         if (!entry.has_value())</span></span>
+<span id="L390"><span class="lineNum">     390</span>                 :             :         {</span>
+<span id="L391"><span class="lineNum">     391</span>                 :<span class="tlaGNC">           1 :             return score::cpp::make_unexpected(entry.error());</span></span>
+<span id="L392"><span class="lineNum">     392</span>                 :             :         }</span>
+<span id="L393"><span class="lineNum">     393</span>                 :             :     }</span>
+<span id="L394"><span class="lineNum">     394</span>                 :             : </span>
+<span id="L395"><span class="lineNum">     395</span>                 :<span class="tlaGNC">          14 :     return user_ids_with_perms;</span></span>
+<span id="L396"><span class="lineNum">     396</span>                 :<span class="tlaGNC">          19 : }</span></span>
         </pre>
               </td>
             </tr>

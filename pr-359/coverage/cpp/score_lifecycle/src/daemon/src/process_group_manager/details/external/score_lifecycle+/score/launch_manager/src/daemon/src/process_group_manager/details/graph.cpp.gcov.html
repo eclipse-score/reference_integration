@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:11:54</td>
+            <td class="headerValue">2026-09-30 04:20:58</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">95.7&nbsp;%</td>
@@ -271,20 +271,20 @@
 <span id="L187"><span class="lineNum">     187</span>                 :<span class="tlaGNC">          16 :     current_transition_-&gt;onNodeFinished(run_target.getIdentifier());</span></span>
 <span id="L188"><span class="lineNum">     188</span>                 :<span class="tlaGNC">          16 : }</span></span>
 <span id="L189"><span class="lineNum">     189</span>                 :             : </span>
-<span id="L190"><span class="lineNum">     190</span>                 :<span class="tlaGNC">          35 : void Graph::queueReadyNodes()</span></span>
+<span id="L190"><span class="lineNum">     190</span>                 :<span class="tlaGNC">          36 : void Graph::queueReadyNodes()</span></span>
 <span id="L191"><span class="lineNum">     191</span>                 :             : {</span>
 <span id="L192"><span class="lineNum">     192</span>                 :             :     // Range-for consumes the frontier via the transition's iterator (nextReady()); RunTarget</span>
 <span id="L193"><span class="lineNum">     193</span>                 :             :     // completions reported inside the loop append successors that this same iteration picks up.</span>
-<span id="L194"><span class="lineNum">     194</span>   [<span class="tlaGBC" title="Branch 0 was taken 35 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 76 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          76 :     for (const auto [node, action] : *current_transition_)</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 41 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 35 times"> + </span>]
+<span id="L194"><span class="lineNum">     194</span>   [<span class="tlaGBC" title="Branch 0 was taken 36 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 78 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          78 :     for (const auto [node, action] : *current_transition_)</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 42 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 36 times"> + </span>]
 <span id="L195"><span class="lineNum">     195</span>                 :             :     {</span>
-<span id="L196"><span class="lineNum">     196</span>                 :<span class="tlaGNC">          41 :         const ComponentTaskType task_type =</span></span>
-<span id="L197"><span class="lineNum">     197</span>                 :<span class="tlaGNC">          41 :             action == Action::Start ? ComponentTaskType::kActivate : ComponentTaskType::kDeactivate;</span></span>
-<span id="L198"><span class="lineNum">     198</span>         [<span class="tlaGBC" title="Branch 0 was taken 41 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          41 :         LM_LOG_DEBUG() &lt;&lt; &quot;Node&quot; &lt;&lt; node &lt;&lt; &quot;is ready for&quot;</span></span>
-<span id="L199"><span class="lineNum">     199</span>         [<span class="tlaGBC" title="Branch 0 was taken 33 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 8 times"> + </span>]:<span class="tlaGNC">          82 :                        &lt;&lt; (task_type == ComponentTaskType::kActivate ? std::string_view(&quot;activation&quot;)</span></span>
-<span id="L200"><span class="lineNum">     200</span>                 :<span class="tlaGNC">          41 :                                                                      : std::string_view(&quot;deactivation&quot;));</span></span>
-<span id="L201"><span class="lineNum">     201</span>         [<span class="tlaGBC" title="Branch 0 was taken 41 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          41 :         std::visit(</span></span>
-<span id="L202"><span class="lineNum">     202</span>   [<span class="tlaGBC" title="Branch 0 was taken 41 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 41 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">         107 :             [this, task_type](auto&amp; component) {</span></span>
+<span id="L196"><span class="lineNum">     196</span>                 :<span class="tlaGNC">          42 :         const ComponentTaskType task_type =</span></span>
+<span id="L197"><span class="lineNum">     197</span>                 :<span class="tlaGNC">          42 :             action == Action::Start ? ComponentTaskType::kActivate : ComponentTaskType::kDeactivate;</span></span>
+<span id="L198"><span class="lineNum">     198</span>         [<span class="tlaGBC" title="Branch 0 was taken 42 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          42 :         LM_LOG_DEBUG() &lt;&lt; &quot;Node&quot; &lt;&lt; node &lt;&lt; &quot;is ready for&quot;</span></span>
+<span id="L199"><span class="lineNum">     199</span>         [<span class="tlaGBC" title="Branch 0 was taken 33 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 9 times"> + </span>]:<span class="tlaGNC">          84 :                        &lt;&lt; (task_type == ComponentTaskType::kActivate ? std::string_view(&quot;activation&quot;)</span></span>
+<span id="L200"><span class="lineNum">     200</span>                 :<span class="tlaGNC">          42 :                                                                      : std::string_view(&quot;deactivation&quot;));</span></span>
+<span id="L201"><span class="lineNum">     201</span>         [<span class="tlaGBC" title="Branch 0 was taken 42 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          42 :         std::visit(</span></span>
+<span id="L202"><span class="lineNum">     202</span>   [<span class="tlaGBC" title="Branch 0 was taken 42 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 42 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">         110 :             [this, task_type](auto&amp; component) {</span></span>
 <span id="L203"><span class="lineNum">     203</span>                 :             :                 using ComponentT = std::decay_t&lt;decltype(component)&gt;;</span>
 <span id="L204"><span class="lineNum">     204</span>                 :             :                 if constexpr (std::is_same_v&lt;ComponentT, RunTarget&gt;)</span>
 <span id="L205"><span class="lineNum">     205</span>                 :             :                 {</span>
@@ -294,12 +294,12 @@
 <span id="L209"><span class="lineNum">     209</span>                 :             :                 {</span>
 <span id="L210"><span class="lineNum">     210</span>                 :             :                     // Queue ProcessInfoNode for execution on worker thread; completion arrives later</span>
 <span id="L211"><span class="lineNum">     211</span>                 :             :                     // via a ComponentEvent, draining into nodeExecuted() -&gt; onNodeFinished().</span>
-<span id="L212"><span class="lineNum">     212</span>         [<span class="tlaGBC" title="Branch 0 was taken 25 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          25 :                     tryQueueNode(ComponentTask{task_type, component, stop_source_.get_token()});</span></span>
+<span id="L212"><span class="lineNum">     212</span>         [<span class="tlaGBC" title="Branch 0 was taken 26 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          26 :                     tryQueueNode(ComponentTask{task_type, component, stop_source_.get_token()});</span></span>
 <span id="L213"><span class="lineNum">     213</span>                 :             :                 }</span>
-<span id="L214"><span class="lineNum">     214</span>                 :<span class="tlaGNC">          66 :             },</span></span>
+<span id="L214"><span class="lineNum">     214</span>                 :<span class="tlaGNC">          68 :             },</span></span>
 <span id="L215"><span class="lineNum">     215</span>                 :             :             nodes_[node]);</span>
 <span id="L216"><span class="lineNum">     216</span>                 :             :     }</span>
-<span id="L217"><span class="lineNum">     217</span>                 :<span class="tlaGNC">          35 : }</span></span>
+<span id="L217"><span class="lineNum">     217</span>                 :<span class="tlaGNC">          36 : }</span></span>
 <span id="L218"><span class="lineNum">     218</span>                 :             : </span>
 <span id="L219"><span class="lineNum">     219</span>                 :<span class="tlaGNC">          12 : void Graph::finalizeTransitionSuccess()</span></span>
 <span id="L220"><span class="lineNum">     220</span>                 :             : {</span>
@@ -319,15 +319,15 @@
 <span id="L234"><span class="lineNum">     234</span>                 :<span class="tlaGNC">          12 :     setPendingEvent(ControlClientCode::kSetStateSuccess);</span></span>
 <span id="L235"><span class="lineNum">     235</span>                 :<span class="tlaGNC">          12 : }</span></span>
 <span id="L236"><span class="lineNum">     236</span>                 :             : </span>
-<span id="L237"><span class="lineNum">     237</span>                 :<span class="tlaGNC">          25 : void Graph::tryQueueNode(ComponentTask task)</span></span>
+<span id="L237"><span class="lineNum">     237</span>                 :<span class="tlaGNC">          26 : void Graph::tryQueueNode(ComponentTask task)</span></span>
 <span id="L238"><span class="lineNum">     238</span>                 :             : {</span>
-<span id="L239"><span class="lineNum">     239</span>         [<span class="tlaGBC" title="Branch 0 was taken 25 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          25 :     while (GraphState::kInTransition == getState())</span></span>
+<span id="L239"><span class="lineNum">     239</span>         [<span class="tlaGBC" title="Branch 0 was taken 26 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          26 :     while (GraphState::kInTransition == getState())</span></span>
 <span id="L240"><span class="lineNum">     240</span>                 :             :     {</span>
-<span id="L241"><span class="lineNum">     241</span>         [<span class="tlaGBC" title="Branch 0 was taken 25 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          25 :         auto push_res = job_queue_-&gt;push(task, kMaxQueueDelay);</span></span>
-<span id="L242"><span class="lineNum">     242</span>         [<span class="tlaGBC" title="Branch 0 was taken 25 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          25 :         if (push_res)</span></span>
+<span id="L241"><span class="lineNum">     241</span>         [<span class="tlaGBC" title="Branch 0 was taken 26 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          26 :         auto push_res = job_queue_-&gt;push(task, kMaxQueueDelay);</span></span>
+<span id="L242"><span class="lineNum">     242</span>         [<span class="tlaGBC" title="Branch 0 was taken 26 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          26 :         if (push_res)</span></span>
 <span id="L243"><span class="lineNum">     243</span>                 :             :         {</span>
-<span id="L244"><span class="lineNum">     244</span>                 :<span class="tlaGNC">          25 :             jobs_in_progress_++;</span></span>
-<span id="L245"><span class="lineNum">     245</span>                 :<span class="tlaGNC">          25 :             break;</span></span>
+<span id="L244"><span class="lineNum">     244</span>                 :<span class="tlaGNC">          26 :             jobs_in_progress_++;</span></span>
+<span id="L245"><span class="lineNum">     245</span>                 :<span class="tlaGNC">          26 :             break;</span></span>
 <span id="L246"><span class="lineNum">     246</span>                 :             :         }</span>
 <span id="L247"><span class="lineNum">     247</span>   [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span><span class="tlaUNC" title="Branch 2 was not executed"> # </span><span class="tlaUNC" title="Branch 3 was not executed"> # </span>]:<span class="tlaUNC tlaBgUNC">           0 :         else if (push_res.error() == ConcurrencyErrc::kTimeout)</span></span>
 <span id="L248"><span class="lineNum">     248</span>                 :             :         {</span>
@@ -346,7 +346,7 @@
 <span id="L261"><span class="lineNum">     261</span>                 :<span class="tlaUNC">           0 :             break;</span></span>
 <span id="L262"><span class="lineNum">     262</span>                 :             :         }</span>
 <span id="L263"><span class="lineNum">     263</span>                 :             :     }</span>
-<span id="L264"><span class="lineNum">     264</span>                 :<span class="tlaGNC tlaBgGNC">          25 : }</span></span>
+<span id="L264"><span class="lineNum">     264</span>                 :<span class="tlaGNC tlaBgGNC">          26 : }</span></span>
 <span id="L265"><span class="lineNum">     265</span>                 :             : </span>
 <span id="L266"><span class="lineNum">     266</span>                 :<span class="tlaGNC">          25 : bool Graph::startTransition(IdentifierHash pg_state)</span></span>
 <span id="L267"><span class="lineNum">     267</span>                 :             : {</span>
@@ -372,9 +372,9 @@
 <span id="L287"><span class="lineNum">     287</span>                 :             : </span>
 <span id="L288"><span class="lineNum">     288</span>         [<span class="tlaGBC" title="Branch 0 was taken 23 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          23 :     current_transition_ = &amp;transition_builder_.createTransition(pg_state);</span></span>
 <span id="L289"><span class="lineNum">     289</span>         [<span class="tlaGBC" title="Branch 0 was taken 23 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          23 :     queueReadyNodes();</span></span>
-<span id="L290"><span class="lineNum">     290</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 21 times"> + </span>]:<span class="tlaGNC">          23 :     if (current_transition_-&gt;isFinished())</span></span>
+<span id="L290"><span class="lineNum">     290</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 22 times"> + </span>]:<span class="tlaGNC">          23 :     if (current_transition_-&gt;isFinished())</span></span>
 <span id="L291"><span class="lineNum">     291</span>                 :             :     {</span>
-<span id="L292"><span class="lineNum">     292</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :         finalizeTransitionSuccess();</span></span>
+<span id="L292"><span class="lineNum">     292</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :         finalizeTransitionSuccess();</span></span>
 <span id="L293"><span class="lineNum">     293</span>                 :             :     }</span>
 <span id="L294"><span class="lineNum">     294</span>                 :<span class="tlaGNC">          23 :     return true;</span></span>
 <span id="L295"><span class="lineNum">     295</span>                 :             : }</span>
@@ -413,18 +413,18 @@
 <span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span>]
 <span id="L328"><span class="lineNum">     328</span>                 :<span class="tlaGNC">           4 : }</span></span>
 <span id="L329"><span class="lineNum">     329</span>                 :             : </span>
-<span id="L330"><span class="lineNum">     330</span>                 :<span class="tlaGNC">          24 : void Graph::handleComponentEvent(const ComponentEvent&amp; event)</span></span>
+<span id="L330"><span class="lineNum">     330</span>                 :<span class="tlaGNC">          25 : void Graph::handleComponentEvent(const ComponentEvent&amp; event)</span></span>
 <span id="L331"><span class="lineNum">     331</span>                 :             : {</span>
-<span id="L332"><span class="lineNum">     332</span>                 :<span class="tlaGNC">          24 :     std::visit(</span></span>
-<span id="L333"><span class="lineNum">     333</span>         [<span class="tlaGBC" title="Branch 0 was taken 24 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          71 :         [this](const auto&amp; data) {</span></span>
+<span id="L332"><span class="lineNum">     332</span>                 :<span class="tlaGNC">          25 :     std::visit(</span></span>
+<span id="L333"><span class="lineNum">     333</span>         [<span class="tlaGBC" title="Branch 0 was taken 25 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          75 :         [this](const auto&amp; data) {</span></span>
 <span id="L334"><span class="lineNum">     334</span>                 :             :             using T = std::decay_t&lt;decltype(data)&gt;;</span>
 <span id="L335"><span class="lineNum">     335</span>                 :             :             if constexpr (std::is_same_v&lt;T, ActivationSuccessful&gt; || std::is_same_v&lt;T, DeactivationComplete&gt;)</span>
 <span id="L336"><span class="lineNum">     336</span>                 :             :             {</span>
-<span id="L337"><span class="lineNum">     337</span>         [<span class="tlaGBC" title="Branch 0 was taken 16 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          16 :                 LM_LOG_DEBUG() &lt;&lt; &quot;Component &quot; &lt;&lt; data.node_identifier &lt;&lt; &quot; finished &quot;</span></span>
-<span id="L338"><span class="lineNum">     338</span>                 :<span class="tlaGNC">          32 :                                &lt;&lt; (std::is_same_v&lt;T, ActivationSuccessful&gt; ? std::string_view(&quot;activation&quot;)</span></span>
+<span id="L337"><span class="lineNum">     337</span>         [<span class="tlaGBC" title="Branch 0 was taken 18 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          18 :                 LM_LOG_DEBUG() &lt;&lt; &quot;Component &quot; &lt;&lt; data.node_identifier &lt;&lt; &quot; finished &quot;</span></span>
+<span id="L338"><span class="lineNum">     338</span>                 :<span class="tlaGNC">          36 :                                &lt;&lt; (std::is_same_v&lt;T, ActivationSuccessful&gt; ? std::string_view(&quot;activation&quot;)</span></span>
 <span id="L339"><span class="lineNum">     339</span>                 :             :                                                                            : std::string_view(&quot;deactivation&quot;))</span>
-<span id="L340"><span class="lineNum">     340</span>                 :<span class="tlaGNC">          16 :                                &lt;&lt; &quot; successfully&quot;;</span></span>
-<span id="L341"><span class="lineNum">     341</span>         [<span class="tlaGBC" title="Branch 0 was taken 16 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          16 :                 nodeExecuted(data.node_identifier, {});</span></span>
+<span id="L340"><span class="lineNum">     340</span>                 :<span class="tlaGNC">          18 :                                &lt;&lt; &quot; successfully&quot;;</span></span>
+<span id="L341"><span class="lineNum">     341</span>         [<span class="tlaGBC" title="Branch 0 was taken 18 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          18 :                 nodeExecuted(data.node_identifier, {});</span></span>
 <span id="L342"><span class="lineNum">     342</span>                 :             :             }</span>
 <span id="L343"><span class="lineNum">     343</span>                 :             :             else if constexpr (std::is_same_v&lt;T, ActivationFailed&gt;)</span>
 <span id="L344"><span class="lineNum">     344</span>                 :             :             {</span>
@@ -445,37 +445,37 @@
 <span id="L359"><span class="lineNum">     359</span>                 :             :             }</span>
 <span id="L360"><span class="lineNum">     360</span>                 :             :             else if constexpr (std::is_same_v&lt;T, JobSkipped&gt;)</span>
 <span id="L361"><span class="lineNum">     361</span>                 :             :             {</span>
-<span id="L362"><span class="lineNum">     362</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :                 nodeExecuted(data.node_identifier, {});</span></span>
+<span id="L362"><span class="lineNum">     362</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :                 nodeExecuted(data.node_identifier, {});</span></span>
 <span id="L363"><span class="lineNum">     363</span>                 :             :             }</span>
-<span id="L364"><span class="lineNum">     364</span>                 :<span class="tlaGNC">          24 :         },</span></span>
+<span id="L364"><span class="lineNum">     364</span>                 :<span class="tlaGNC">          25 :         },</span></span>
 <span id="L365"><span class="lineNum">     365</span>                 :             :         event);</span>
-<span id="L366"><span class="lineNum">     366</span>                 :<span class="tlaGNC">          24 : }</span></span>
+<span id="L366"><span class="lineNum">     366</span>                 :<span class="tlaGNC">          25 : }</span></span>
 <span id="L367"><span class="lineNum">     367</span>                 :             : </span>
-<span id="L368"><span class="lineNum">     368</span>                 :<span class="tlaGNC">          21 : void Graph::nodeExecuted(IdentifierHash node, score::cpp::expected_blank&lt;IComponent::ComponentError&gt; error)</span></span>
+<span id="L368"><span class="lineNum">     368</span>                 :<span class="tlaGNC">          22 : void Graph::nodeExecuted(IdentifierHash node, score::cpp::expected_blank&lt;IComponent::ComponentError&gt; error)</span></span>
 <span id="L369"><span class="lineNum">     369</span>                 :             : {</span>
-<span id="L370"><span class="lineNum">     370</span>                 :<span class="tlaGNC">          21 :     bool was_last_in_queue = --jobs_in_progress_ == 0;</span></span>
+<span id="L370"><span class="lineNum">     370</span>                 :<span class="tlaGNC">          22 :     bool was_last_in_queue = --jobs_in_progress_ == 0;</span></span>
 <span id="L371"><span class="lineNum">     371</span>                 :             : </span>
-<span id="L372"><span class="lineNum">     372</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 18 times"> + </span>]:<span class="tlaGNC">          21 :     if (!error.has_value())</span></span>
+<span id="L372"><span class="lineNum">     372</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 19 times"> + </span>]:<span class="tlaGNC">          22 :     if (!error.has_value())</span></span>
 <span id="L373"><span class="lineNum">     373</span>                 :             :     {</span>
 <span id="L374"><span class="lineNum">     374</span>                 :<span class="tlaGNC">           3 :         abort(1, error.error());</span></span>
 <span id="L375"><span class="lineNum">     375</span>                 :             :     }</span>
 <span id="L376"><span class="lineNum">     376</span>                 :             : </span>
-<span id="L377"><span class="lineNum">     377</span>                 :<span class="tlaGNC">          21 :     GraphState current_state = getState();</span></span>
+<span id="L377"><span class="lineNum">     377</span>                 :<span class="tlaGNC">          22 :     GraphState current_state = getState();</span></span>
 <span id="L378"><span class="lineNum">     378</span>                 :             : </span>
-<span id="L379"><span class="lineNum">     379</span>         [<span class="tlaGBC" title="Branch 0 was taken 12 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 9 times"> + </span>]:<span class="tlaGNC">          21 :     if (current_state == GraphState::kInTransition)</span></span>
+<span id="L379"><span class="lineNum">     379</span>         [<span class="tlaGBC" title="Branch 0 was taken 13 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 9 times"> + </span>]:<span class="tlaGNC">          22 :     if (current_state == GraphState::kInTransition)</span></span>
 <span id="L380"><span class="lineNum">     380</span>                 :             :     {</span>
-<span id="L381"><span class="lineNum">     381</span>                 :<span class="tlaGNC">          12 :         current_transition_-&gt;onNodeFinished(node);</span></span>
-<span id="L382"><span class="lineNum">     382</span>                 :<span class="tlaGNC">          12 :         queueReadyNodes();</span></span>
-<span id="L383"><span class="lineNum">     383</span>         [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">          12 :         if (current_transition_-&gt;isFinished())</span></span>
+<span id="L381"><span class="lineNum">     381</span>                 :<span class="tlaGNC">          13 :         current_transition_-&gt;onNodeFinished(node);</span></span>
+<span id="L382"><span class="lineNum">     382</span>                 :<span class="tlaGNC">          13 :         queueReadyNodes();</span></span>
+<span id="L383"><span class="lineNum">     383</span>         [<span class="tlaGBC" title="Branch 0 was taken 11 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">          13 :         if (current_transition_-&gt;isFinished())</span></span>
 <span id="L384"><span class="lineNum">     384</span>                 :             :         {</span>
-<span id="L385"><span class="lineNum">     385</span>                 :<span class="tlaGNC">          10 :             finalizeTransitionSuccess();</span></span>
+<span id="L385"><span class="lineNum">     385</span>                 :<span class="tlaGNC">          11 :             finalizeTransitionSuccess();</span></span>
 <span id="L386"><span class="lineNum">     386</span>                 :             :         }</span>
 <span id="L387"><span class="lineNum">     387</span>                 :             :     }</span>
 <span id="L388"><span class="lineNum">     388</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">           9 :     else if (was_last_in_queue)</span></span>
 <span id="L389"><span class="lineNum">     389</span>                 :             :     {</span>
 <span id="L390"><span class="lineNum">     390</span>                 :<span class="tlaGNC">           7 :         handleNonTransitionExecution(current_state);</span></span>
 <span id="L391"><span class="lineNum">     391</span>                 :             :     }</span>
-<span id="L392"><span class="lineNum">     392</span>                 :<span class="tlaGNC">          21 : }</span></span>
+<span id="L392"><span class="lineNum">     392</span>                 :<span class="tlaGNC">          22 : }</span></span>
 <span id="L393"><span class="lineNum">     393</span>                 :             : </span>
 <span id="L394"><span class="lineNum">     394</span>                 :<span class="tlaGNC">           8 : void Graph::handleNonTransitionExecution(GraphState current_state)</span></span>
 <span id="L395"><span class="lineNum">     395</span>                 :             : {</span>
@@ -595,9 +595,9 @@
 <span id="L509"><span class="lineNum">     509</span>                 :<span class="tlaGNC">          15 :     return requested_state_.pg_name_;</span></span>
 <span id="L510"><span class="lineNum">     510</span>                 :             : }</span>
 <span id="L511"><span class="lineNum">     511</span>                 :             : </span>
-<span id="L512"><span class="lineNum">     512</span>                 :<span class="tlaGNC">         158 : GraphState Graph::getState() const</span></span>
+<span id="L512"><span class="lineNum">     512</span>                 :<span class="tlaGNC">         170 : GraphState Graph::getState() const</span></span>
 <span id="L513"><span class="lineNum">     513</span>                 :             : {</span>
-<span id="L514"><span class="lineNum">     514</span>                 :<span class="tlaGNC">         158 :     return state_;</span></span>
+<span id="L514"><span class="lineNum">     514</span>                 :<span class="tlaGNC">         170 :     return state_;</span></span>
 <span id="L515"><span class="lineNum">     515</span>                 :             : }</span>
 <span id="L516"><span class="lineNum">     516</span>                 :             : </span>
 <span id="L517"><span class="lineNum">     517</span>                 :<span class="tlaGNC">          25 : IdentifierHash Graph::getProcessGroupState()</span></span>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -146,7 +146,7 @@
 <span id="L68"><span class="lineNum">      68</span>                 :<span class="tlaGNC">         191 :     return __builtin_popcount(x);</span></span>
 <span id="L69"><span class="lineNum">      69</span>                 :             : }</span>
 <span id="L70"><span class="lineNum">      70</span>                 :             : </span>
-<span id="L71"><span class="lineNum">      71</span>                 :<span class="tlaGNC">       16185 : constexpr int popcount_impl(const unsigned long x) noexcept { return __builtin_popcountl(x); }</span></span>
+<span id="L71"><span class="lineNum">      71</span>                 :<span class="tlaGNC">       16187 : constexpr int popcount_impl(const unsigned long x) noexcept { return __builtin_popcountl(x); }</span></span>
 <span id="L72"><span class="lineNum">      72</span>                 :             : </span>
 <span id="L73"><span class="lineNum">      73</span>                 :<span class="tlaGNC">           3 : constexpr int popcount_impl(const unsigned long long x) noexcept { return __builtin_popcountll(x); }</span></span>
 <span id="L74"><span class="lineNum">      74</span>                 :             : </span>
@@ -289,7 +289,7 @@
 <span id="L211"><span class="lineNum">     211</span>                 :<span class="tlaGNC">          33 : constexpr T bit_ceil(const T x)</span></span>
 <span id="L212"><span class="lineNum">     212</span>                 :             : {</span>
 <span id="L213"><span class="lineNum">     213</span>                 :             :     static_assert(detail::is_unsigned_integer_type&lt;T&gt;::value, &quot;T must be an unsigned integer type.&quot;);</span>
-<span id="L214"><span class="lineNum">     214</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 29 times"> + </span>]:<span class="tlaGNC">          33 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION_DBG(x &lt;= (std::numeric_limits&lt;T&gt;::max() / 2U) + 1U);</span></span>
+<span id="L214"><span class="lineNum">     214</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 29 times"> + </span>]:<span class="tlaGNC">          33 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION_DBG(x &lt;= ((std::numeric_limits&lt;T&gt;::max() / 2U) + 1U));</span></span>
 <span id="L215"><span class="lineNum">     215</span>         [<span class="tlaGBC" title="Branch 0 was taken 27 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">          29 :     return (x &lt;= 1U) ? T{1U} : static_cast&lt;T&gt;(T{1U} &lt;&lt; score::cpp::bit_width(static_cast&lt;T&gt;(x - 1U)));</span></span>
 <span id="L216"><span class="lineNum">     216</span>                 :             : }</span>
 <span id="L217"><span class="lineNum">     217</span>                 :             : </span>
@@ -318,10 +318,10 @@
 <span id="L240"><span class="lineNum">     240</span>                 :             : /// \param x values of unsigned integer type</span>
 <span id="L241"><span class="lineNum">     241</span>                 :             : /// \return The number of 1 bits in the value of x.</span>
 <span id="L242"><span class="lineNum">     242</span>                 :             : template &lt;typename T&gt;</span>
-<span id="L243"><span class="lineNum">     243</span>                 :<span class="tlaGNC">       16379 : constexpr int popcount(const T x) noexcept</span></span>
+<span id="L243"><span class="lineNum">     243</span>                 :<span class="tlaGNC">       16381 : constexpr int popcount(const T x) noexcept</span></span>
 <span id="L244"><span class="lineNum">     244</span>                 :             : {</span>
 <span id="L245"><span class="lineNum">     245</span>                 :             :     static_assert(detail::is_unsigned_integer_type&lt;T&gt;::value, &quot;T must be an unsigned integer type.&quot;);</span>
-<span id="L246"><span class="lineNum">     246</span>                 :<span class="tlaGNC">       16379 :     return score::cpp::detail::popcount_impl(x);</span></span>
+<span id="L246"><span class="lineNum">     246</span>                 :<span class="tlaGNC">       16381 :     return score::cpp::detail::popcount_impl(x);</span></span>
 <span id="L247"><span class="lineNum">     247</span>                 :             : }</span>
 <span id="L248"><span class="lineNum">     248</span>                 :             : </span>
 <span id="L249"><span class="lineNum">     249</span>                 :             : /// \brief Checks if x is an integral power of two.</span>
@@ -333,10 +333,10 @@
 <span id="L255"><span class="lineNum">     255</span>                 :             : /// \param x values of unsigned integer type</span>
 <span id="L256"><span class="lineNum">     256</span>                 :             : /// \return true if x is an integral power of two; otherwise false.</span>
 <span id="L257"><span class="lineNum">     257</span>                 :             : template &lt;typename T&gt;</span>
-<span id="L258"><span class="lineNum">     258</span>                 :<span class="tlaGNC">       16358 : constexpr bool has_single_bit(const T x) noexcept</span></span>
+<span id="L258"><span class="lineNum">     258</span>                 :<span class="tlaGNC">       16360 : constexpr bool has_single_bit(const T x) noexcept</span></span>
 <span id="L259"><span class="lineNum">     259</span>                 :             : {</span>
 <span id="L260"><span class="lineNum">     260</span>                 :             :     static_assert(detail::is_unsigned_integer_type&lt;T&gt;::value, &quot;T must be an unsigned integer type.&quot;);</span>
-<span id="L261"><span class="lineNum">     261</span>                 :<span class="tlaGNC">       16358 :     return score::cpp::popcount(x) == 1;</span></span>
+<span id="L261"><span class="lineNum">     261</span>                 :<span class="tlaGNC">       16360 :     return score::cpp::popcount(x) == 1;</span></span>
 <span id="L262"><span class="lineNum">     262</span>                 :             : }</span>
 <span id="L263"><span class="lineNum">     263</span>                 :             : </span>
 <span id="L264"><span class="lineNum">     264</span>                 :             : /// \brief Round up the specified non-negative integer \p n to a multiple of the integer m.</span>
@@ -350,13 +350,13 @@
 <span id="L272"><span class="lineNum">     272</span>                 :             : /// \param m Value n is rounded up to the next multiple of m.</span>
 <span id="L273"><span class="lineNum">     273</span>                 :             : /// \return The smallest multiple of m not less than \p n.</span>
 <span id="L274"><span class="lineNum">     274</span>                 :             : template &lt;typename T&gt;</span>
-<span id="L275"><span class="lineNum">     275</span>                 :<span class="tlaGNC">       15816 : constexpr T align_up(const T n, const T m)</span></span>
+<span id="L275"><span class="lineNum">     275</span>                 :<span class="tlaGNC">       15817 : constexpr T align_up(const T n, const T m)</span></span>
 <span id="L276"><span class="lineNum">     276</span>                 :             : {</span>
 <span id="L277"><span class="lineNum">     277</span>                 :             :     static_assert(detail::is_unsigned_integer_type&lt;T&gt;::value, &quot;T must be an unsigned integer type.&quot;);</span>
 <span id="L278"><span class="lineNum">     278</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 15806 times"> + </span>]:<span class="tlaGNC">       15810 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION_DBG(score::cpp::has_single_bit(m));</span></span>
-<span id="L279"><span class="lineNum">     279</span>                 :<span class="tlaGNC">       15812 :     const auto t = static_cast&lt;T&gt;(m - T{1U});</span></span>
+<span id="L279"><span class="lineNum">     279</span>                 :<span class="tlaGNC">       15813 :     const auto t = static_cast&lt;T&gt;(m - T{1U});</span></span>
 <span id="L280"><span class="lineNum">     280</span>         [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 15800 times"> + </span>]:<span class="tlaGNC">       15806 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION_DBG(n &lt;= (std::numeric_limits&lt;T&gt;::max() - t));</span></span>
-<span id="L281"><span class="lineNum">     281</span>                 :<span class="tlaGNC">       15806 :     return static_cast&lt;T&gt;(n + static_cast&lt;T&gt;(static_cast&lt;T&gt;(-n) &amp; t));</span></span>
+<span id="L281"><span class="lineNum">     281</span>                 :<span class="tlaGNC">       15807 :     return static_cast&lt;T&gt;(n + static_cast&lt;T&gt;(static_cast&lt;T&gt;(-n) &amp; t));</span></span>
 <span id="L282"><span class="lineNum">     282</span>                 :             : }</span>
 <span id="L283"><span class="lineNum">     283</span>                 :             : </span>
 <span id="L284"><span class="lineNum">     284</span>                 :             : /// \brief Round down the specified non-negative integer \p n to a multiple of the integer m.</span>

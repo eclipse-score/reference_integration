@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">61.4&nbsp;%</td>
@@ -92,9 +92,9 @@
 <span id="L14"><span class="lineNum">      14</span>                 :             : </span>
 <span id="L15"><span class="lineNum">      15</span>                 :             : #include &quot;score/callback.hpp&quot;</span>
 <span id="L16"><span class="lineNum">      16</span>                 :             : #include &quot;score/json/json_parser.h&quot;</span>
-<span id="L17"><span class="lineNum">      17</span>                 :             : #include &quot;score/memory/split_string_view.h&quot;</span>
-<span id="L18"><span class="lineNum">      18</span>                 :             : #include &quot;score/mw/log/detail/error.h&quot;</span>
-<span id="L19"><span class="lineNum">      19</span>                 :             : #include &quot;score/mw/log/detail/initialization_reporter.h&quot;</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : #include &quot;score/mw/log/detail/error.h&quot;</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : #include &quot;score/mw/log/detail/initialization_reporter.h&quot;</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : #include &quot;score/string_manipulation/split_string_view.h&quot;</span>
 <span id="L20"><span class="lineNum">      20</span>                 :             : </span>
 <span id="L21"><span class="lineNum">      21</span>                 :             : #include &lt;functional&gt;</span>
 <span id="L22"><span class="lineNum">      22</span>                 :             : </span>
@@ -287,7 +287,7 @@
 <span id="L209"><span class="lineNum">     209</span>                 :             : // coverity[autosar_cpp14_a15_5_3_violation]</span>
 <span id="L210"><span class="lineNum">     210</span>                 :<span class="tlaGNC">           6 : score::Result&lt;std::unordered_set&lt;LogMode&gt;&gt; LogModesFromString(const std::string_view str) noexcept</span></span>
 <span id="L211"><span class="lineNum">     211</span>                 :             : {</span>
-<span id="L212"><span class="lineNum">     212</span>                 :<span class="tlaGNC">           6 :     const auto segments = score::memory::LazySplitStringView{str, kLogModeCombineChar};</span></span>
+<span id="L212"><span class="lineNum">     212</span>                 :<span class="tlaGNC">           6 :     const auto segments = score::string_manipulation::LazySplitStringView{str, kLogModeCombineChar};</span></span>
 <span id="L213"><span class="lineNum">     213</span>                 :             : </span>
 <span id="L214"><span class="lineNum">     214</span>                 :<span class="tlaGNC">           6 :     std::unordered_set&lt;LogMode&gt; result;</span></span>
 <span id="L215"><span class="lineNum">     215</span>                 :             : </span>

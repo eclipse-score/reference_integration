@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -90,23 +90,23 @@
 <span id="L12"><span class="lineNum">      12</span>                 :             :  ********************************************************************************/</span>
 <span id="L13"><span class="lineNum">      13</span>                 :             : #include &quot;score/concurrency/future/interruptible_state.h&quot;</span>
 <span id="L14"><span class="lineNum">      14</span>                 :             : </span>
-<span id="L15"><span class="lineNum">      15</span>                 :<span class="tlaGNC tlaBgGNC">       20154 : bool score::concurrency::InterruptibleState&lt;void&gt;::SetValue()</span></span>
+<span id="L15"><span class="lineNum">      15</span>                 :<span class="tlaGNC tlaBgGNC">       20157 : bool score::concurrency::InterruptibleState&lt;void&gt;::SetValue()</span></span>
 <span id="L16"><span class="lineNum">      16</span>                 :             : {</span>
-<span id="L17"><span class="lineNum">      17</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 20147 times"> + </span>]:<span class="tlaGNC">       20154 :     if ((this-&gt;TestAndMarkValueAsSet()) == true)</span></span>
+<span id="L17"><span class="lineNum">      17</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 20152 times"> + </span>]:<span class="tlaGNC">       20157 :     if ((this-&gt;TestAndMarkValueAsSet()) == true)</span></span>
 <span id="L18"><span class="lineNum">      18</span>                 :             :     {</span>
 <span id="L19"><span class="lineNum">      19</span>                 :<span class="tlaGNC">           5 :         return false;</span></span>
 <span id="L20"><span class="lineNum">      20</span>                 :             :     }</span>
 <span id="L21"><span class="lineNum">      21</span>                 :             : </span>
-<span id="L22"><span class="lineNum">      22</span>                 :<span class="tlaGNC">       20147 :     MakeReady();</span></span>
-<span id="L23"><span class="lineNum">      23</span>                 :<span class="tlaGNC">       20140 :     TriggerContinuations();</span></span>
-<span id="L24"><span class="lineNum">      24</span>                 :<span class="tlaGNC">       20143 :     return true;</span></span>
+<span id="L22"><span class="lineNum">      22</span>                 :<span class="tlaGNC">       20152 :     MakeReady();</span></span>
+<span id="L23"><span class="lineNum">      23</span>                 :<span class="tlaGNC">       20152 :     TriggerContinuations();</span></span>
+<span id="L24"><span class="lineNum">      24</span>                 :<span class="tlaGNC">       20152 :     return true;</span></span>
 <span id="L25"><span class="lineNum">      25</span>                 :             : }</span>
 <span id="L26"><span class="lineNum">      26</span>                 :             : </span>
-<span id="L27"><span class="lineNum">      27</span>                 :<span class="tlaGNC">       20495 : bool score::concurrency::InterruptibleState&lt;void&gt;::SetError(score::result::Error error)</span></span>
+<span id="L27"><span class="lineNum">      27</span>                 :<span class="tlaGNC">       20499 : bool score::concurrency::InterruptibleState&lt;void&gt;::SetError(score::result::Error error)</span></span>
 <span id="L28"><span class="lineNum">      28</span>                 :             : {</span>
-<span id="L29"><span class="lineNum">      29</span>         [<span class="tlaGBC" title="Branch 0 was taken 20180 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 318 times"> + </span>]:<span class="tlaGNC">       20495 :     if ((this-&gt;TestAndMarkValueAsSet()) == true)</span></span>
+<span id="L29"><span class="lineNum">      29</span>         [<span class="tlaGBC" title="Branch 0 was taken 20181 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 318 times"> + </span>]:<span class="tlaGNC">       20499 :     if ((this-&gt;TestAndMarkValueAsSet()) == true)</span></span>
 <span id="L30"><span class="lineNum">      30</span>                 :             :     {</span>
-<span id="L31"><span class="lineNum">      31</span>                 :<span class="tlaGNC">       20180 :         return false;</span></span>
+<span id="L31"><span class="lineNum">      31</span>                 :<span class="tlaGNC">       20181 :         return false;</span></span>
 <span id="L32"><span class="lineNum">      32</span>                 :             :     }</span>
 <span id="L33"><span class="lineNum">      33</span>                 :             : </span>
 <span id="L34"><span class="lineNum">      34</span>                 :             :     // Use the constructor instead of assignment operator to circumvent issue with types that are not assignable</span>
@@ -142,22 +142,22 @@
 <span id="L64"><span class="lineNum">      64</span>                 :             :     }</span>
 <span id="L65"><span class="lineNum">      65</span>                 :<span class="tlaGNC">          16 : }</span></span>
 <span id="L66"><span class="lineNum">      66</span>                 :             : </span>
-<span id="L67"><span class="lineNum">      67</span>                 :<span class="tlaGNC">       20457 : void score::concurrency::InterruptibleState&lt;void&gt;::TriggerContinuations()</span></span>
+<span id="L67"><span class="lineNum">      67</span>                 :<span class="tlaGNC">       20470 : void score::concurrency::InterruptibleState&lt;void&gt;::TriggerContinuations()</span></span>
 <span id="L68"><span class="lineNum">      68</span>                 :             : {</span>
 <span id="L69"><span class="lineNum">      69</span>                 :             :     {</span>
 <span id="L70"><span class="lineNum">      70</span>                 :             :         // not dead code: Lock guard ensures thread-safe</span>
 <span id="L71"><span class="lineNum">      71</span>                 :             :         // iteration over continuation_callbacks_ during callback execution</span>
 <span id="L72"><span class="lineNum">      72</span>                 :             :         // coverity[autosar_cpp14_m0_1_3_violation]</span>
 <span id="L73"><span class="lineNum">      73</span>                 :             :         // coverity[autosar_cpp14_m0_1_9_violation]</span>
-<span id="L74"><span class="lineNum">      74</span>         [<span class="tlaGBC" title="Branch 0 was taken 20464 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">       20457 :         std::lock_guard&lt;std::mutex&gt; lock{continuation_callback_mutex_};</span></span>
-<span id="L75"><span class="lineNum">      75</span>                 :<span class="tlaGNC">       20464 :         triggered_ = true;</span></span>
-<span id="L76"><span class="lineNum">      76</span>                 :<span class="tlaGNC">       20464 :     }</span></span>
-<span id="L77"><span class="lineNum">      77</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 20463 times"> + </span>]:<span class="tlaGNC">       20472 :     for (auto&amp; callback : continuation_callbacks_)</span></span>
+<span id="L74"><span class="lineNum">      74</span>         [<span class="tlaGBC" title="Branch 0 was taken 20470 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">       20470 :         std::lock_guard&lt;std::mutex&gt; lock{continuation_callback_mutex_};</span></span>
+<span id="L75"><span class="lineNum">      75</span>                 :<span class="tlaGNC">       20470 :         triggered_ = true;</span></span>
+<span id="L76"><span class="lineNum">      76</span>                 :<span class="tlaGNC">       20470 :     }</span></span>
+<span id="L77"><span class="lineNum">      77</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 20470 times"> + </span>]:<span class="tlaGNC">       20477 :     for (auto&amp; callback : continuation_callbacks_)</span></span>
 <span id="L78"><span class="lineNum">      78</span>                 :             :     {</span>
 <span id="L79"><span class="lineNum">      79</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           7 :         score::cpp::ignore = callback(value_);</span></span>
 <span id="L80"><span class="lineNum">      80</span>                 :             :     }</span>
-<span id="L81"><span class="lineNum">      81</span>                 :<span class="tlaGNC">       20463 :     continuation_callbacks_.clear();</span></span>
-<span id="L82"><span class="lineNum">      82</span>                 :<span class="tlaGNC">       20461 : }</span></span>
+<span id="L81"><span class="lineNum">      81</span>                 :<span class="tlaGNC">       20470 :     continuation_callbacks_.clear();</span></span>
+<span id="L82"><span class="lineNum">      82</span>                 :<span class="tlaGNC">       20470 : }</span></span>
         </pre>
               </td>
             </tr>

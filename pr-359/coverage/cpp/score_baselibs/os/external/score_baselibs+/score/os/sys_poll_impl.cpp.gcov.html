@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -95,32 +95,30 @@
 <span id="L17"><span class="lineNum">      17</span>                 :             : namespace os</span>
 <span id="L18"><span class="lineNum">      18</span>                 :             : {</span>
 <span id="L19"><span class="lineNum">      19</span>                 :             : </span>
-<span id="L20"><span class="lineNum">      20</span>                 :             : /* KW_SUPPRESS_START:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L21"><span class="lineNum">      21</span>                 :             : // Justification: The global namespace shall only contain main, namespace declarations and extern &quot;&quot;C&quot;&quot; declarations.</span>
-<span id="L22"><span class="lineNum">      22</span>                 :             : // This is a wrapper function over system API inside local namespace</span>
-<span id="L23"><span class="lineNum">      23</span>                 :             : // coverity[autosar_cpp14_m7_3_1_violation]</span>
-<span id="L24"><span class="lineNum">      24</span>                 :<span class="tlaGNC tlaBgGNC">          22 : score::cpp::expected&lt;std::int32_t, Error&gt; SysPollImpl::poll(struct pollfd* fds,</span></span>
-<span id="L25"><span class="lineNum">      25</span>                 :             :                                                             const nfds_t nfds,</span>
-<span id="L26"><span class="lineNum">      26</span>                 :             :                                                             const std::int32_t timeout) const noexcept</span>
-<span id="L27"><span class="lineNum">      27</span>                 :             : /* KW_SUPPRESS_END:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L28"><span class="lineNum">      28</span>                 :             : {</span>
-<span id="L29"><span class="lineNum">      29</span>                 :             :     // This is a wrapper over C banned function, thus the suppression is justified.</span>
-<span id="L30"><span class="lineNum">      30</span>                 :             :     // NOLINTNEXTLINE(score-banned-function) see comment above</span>
-<span id="L31"><span class="lineNum">      31</span>                 :<span class="tlaGNC">          22 :     const std::int32_t ret{::poll(fds, nfds, timeout)};</span></span>
-<span id="L32"><span class="lineNum">      32</span>                 :             :     // Manual analysis:</span>
-<span id="L33"><span class="lineNum">      33</span>                 :             :     // As per QNX documentation, the fu function returns error when the allocation of internal data structures fails,</span>
-<span id="L34"><span class="lineNum">      34</span>                 :             :     // a signal is caught during the execution of poll() the fds argument points to a portion of memory that does not</span>
-<span id="L35"><span class="lineNum">      35</span>                 :             :     // exist within the calling process's address space or there is not enough memory available. Which are not possible</span>
-<span id="L36"><span class="lineNum">      36</span>                 :             :     // to cover through unit test. In case of an error ::poll return a value of -1 and set errno to indicate the error.</span>
-<span id="L37"><span class="lineNum">      37</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 22 times"> + </span>]:<span class="tlaGNC">          22 :     if (ret &lt; 0)  // LCOV_EXCL_BR_LINE: Justification provided above</span></span>
-<span id="L38"><span class="lineNum">      38</span>                 :             :     {</span>
-<span id="L39"><span class="lineNum">      39</span>                 :<span class="tlaUNC tlaBgUNC">           0 :         return score::cpp::make_unexpected(Error::createFromErrno());  // LCOV_EXCL_LINE: Justification provided above</span></span>
-<span id="L40"><span class="lineNum">      40</span>                 :             :     }</span>
-<span id="L41"><span class="lineNum">      41</span>                 :<span class="tlaGNC tlaBgGNC">          22 :     return ret;</span></span>
-<span id="L42"><span class="lineNum">      42</span>                 :             : }</span>
-<span id="L43"><span class="lineNum">      43</span>                 :             : </span>
-<span id="L44"><span class="lineNum">      44</span>                 :             : }  // namespace os</span>
-<span id="L45"><span class="lineNum">      45</span>                 :             : }  // namespace score</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : // Justification: The global namespace shall only contain main, namespace declarations and extern &quot;&quot;C&quot;&quot; declarations.</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : // This is a wrapper function over system API inside local namespace</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : // coverity[autosar_cpp14_m7_3_1_violation]</span>
+<span id="L23"><span class="lineNum">      23</span>                 :<span class="tlaGNC tlaBgGNC">          22 : score::cpp::expected&lt;std::int32_t, Error&gt; SysPollImpl::poll(struct pollfd* fds,</span></span>
+<span id="L24"><span class="lineNum">      24</span>                 :             :                                                             const nfds_t nfds,</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             :                                                             const std::int32_t timeout) const noexcept</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : {</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             :     // This is a wrapper over C banned function, thus the suppression is justified.</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             :     // NOLINTNEXTLINE(score-banned-function) see comment above</span>
+<span id="L29"><span class="lineNum">      29</span>                 :<span class="tlaGNC">          22 :     const std::int32_t ret{::poll(fds, nfds, timeout)};</span></span>
+<span id="L30"><span class="lineNum">      30</span>                 :             :     // Manual analysis:</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             :     // As per QNX documentation, the fu function returns error when the allocation of internal data structures fails,</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             :     // a signal is caught during the execution of poll() the fds argument points to a portion of memory that does not</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             :     // exist within the calling process's address space or there is not enough memory available. Which are not possible</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             :     // to cover through unit test. In case of an error ::poll return a value of -1 and set errno to indicate the error.</span>
+<span id="L35"><span class="lineNum">      35</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 22 times"> + </span>]:<span class="tlaGNC">          22 :     if (ret &lt; 0)  // LCOV_EXCL_BR_LINE: Justification provided above</span></span>
+<span id="L36"><span class="lineNum">      36</span>                 :             :     {</span>
+<span id="L37"><span class="lineNum">      37</span>                 :<span class="tlaUNC tlaBgUNC">           0 :         return score::cpp::make_unexpected(Error::createFromErrno());  // LCOV_EXCL_LINE: Justification provided above</span></span>
+<span id="L38"><span class="lineNum">      38</span>                 :             :     }</span>
+<span id="L39"><span class="lineNum">      39</span>                 :<span class="tlaGNC tlaBgGNC">          22 :     return ret;</span></span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : }</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             : </span>
+<span id="L42"><span class="lineNum">      42</span>                 :             : }  // namespace os</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             : }  // namespace score</span>
         </pre>
               </td>
             </tr>

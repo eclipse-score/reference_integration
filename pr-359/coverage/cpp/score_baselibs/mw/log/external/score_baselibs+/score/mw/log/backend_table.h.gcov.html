@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -118,13 +118,13 @@
 <span id="L40"><span class="lineNum">      40</span>                 :             : static constexpr std::size_t kMaxBackendSlots{6U};</span>
 <span id="L41"><span class="lineNum">      41</span>                 :             : </span>
 <span id="L42"><span class="lineNum">      42</span>                 :             : /// \brief Maps LogMode enum value to array index. Returns kMaxBackendSlots on invalid input.</span>
-<span id="L43"><span class="lineNum">      43</span>                 :<span class="tlaGNC tlaBgGNC">         132 : constexpr std::size_t ModeToSlotIndex(const LogMode mode) noexcept</span></span>
+<span id="L43"><span class="lineNum">      43</span>                 :<span class="tlaGNC tlaBgGNC">         133 : constexpr std::size_t ModeToSlotIndex(const LogMode mode) noexcept</span></span>
 <span id="L44"><span class="lineNum">      44</span>                 :             : {</span>
-<span id="L45"><span class="lineNum">      45</span>   [<span class="tlaGBC" title="Branch 0 was taken 93 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 23 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 2 times"> + </span> :<span class="tlaGNC">         132 :     switch (mode)</span></span>
+<span id="L45"><span class="lineNum">      45</span>   [<span class="tlaGBC" title="Branch 0 was taken 94 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 23 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 2 times"> + </span> :<span class="tlaGNC">         133 :     switch (mode)</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 6 times"> + </span>]
 <span id="L46"><span class="lineNum">      46</span>                 :             :     {</span>
-<span id="L47"><span class="lineNum">      47</span>                 :<span class="tlaGNC">          93 :         case LogMode::kConsole:</span></span>
-<span id="L48"><span class="lineNum">      48</span>                 :<span class="tlaGNC">          93 :             return 0U;</span></span>
+<span id="L47"><span class="lineNum">      47</span>                 :<span class="tlaGNC">          94 :         case LogMode::kConsole:</span></span>
+<span id="L48"><span class="lineNum">      48</span>                 :<span class="tlaGNC">          94 :             return 0U;</span></span>
 <span id="L49"><span class="lineNum">      49</span>                 :<span class="tlaGNC">          23 :         case LogMode::kFile:</span></span>
 <span id="L50"><span class="lineNum">      50</span>                 :<span class="tlaGNC">          23 :             return 1U;</span></span>
 <span id="L51"><span class="lineNum">      51</span>                 :<span class="tlaGNC">           6 :         case LogMode::kRemote:</span></span>
@@ -152,14 +152,14 @@
 <span id="L73"><span class="lineNum">      73</span>                 :             : ///</span>
 <span id="L74"><span class="lineNum">      74</span>                 :             : /// \pre Must be called during static initialization (before main).</span>
 <span id="L75"><span class="lineNum">      75</span>                 :             : /// \pre mode must not be LogMode::kInvalid.</span>
-<span id="L76"><span class="lineNum">      76</span>                 :<span class="tlaGNC">          41 : inline void RegisterBackend(const LogMode mode, RecorderCreatorFn creator) noexcept</span></span>
+<span id="L76"><span class="lineNum">      76</span>                 :<span class="tlaGNC">          42 : inline void RegisterBackend(const LogMode mode, RecorderCreatorFn creator) noexcept</span></span>
 <span id="L77"><span class="lineNum">      77</span>                 :             : {</span>
-<span id="L78"><span class="lineNum">      78</span>                 :<span class="tlaGNC">          41 :     const auto index = ModeToSlotIndex(mode);</span></span>
-<span id="L79"><span class="lineNum">      79</span>         [<span class="tlaGBC" title="Branch 0 was taken 40 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          41 :     if (index &lt; kMaxBackendSlots)</span></span>
+<span id="L78"><span class="lineNum">      78</span>                 :<span class="tlaGNC">          42 :     const auto index = ModeToSlotIndex(mode);</span></span>
+<span id="L79"><span class="lineNum">      79</span>         [<span class="tlaGBC" title="Branch 0 was taken 41 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          42 :     if (index &lt; kMaxBackendSlots)</span></span>
 <span id="L80"><span class="lineNum">      80</span>                 :             :     {</span>
-<span id="L81"><span class="lineNum">      81</span>                 :<span class="tlaGNC">          40 :         gBackendCreators[index] = creator;</span></span>
+<span id="L81"><span class="lineNum">      81</span>                 :<span class="tlaGNC">          41 :         gBackendCreators[index] = creator;</span></span>
 <span id="L82"><span class="lineNum">      82</span>                 :             :     }</span>
-<span id="L83"><span class="lineNum">      83</span>                 :<span class="tlaGNC">          41 : }</span></span>
+<span id="L83"><span class="lineNum">      83</span>                 :<span class="tlaGNC">          42 : }</span></span>
 <span id="L84"><span class="lineNum">      84</span>                 :             : </span>
 <span id="L85"><span class="lineNum">      85</span>                 :             : /// \brief Query whether a backend for the given mode is registered.</span>
 <span id="L86"><span class="lineNum">      86</span>                 :<span class="tlaGNC">          35 : inline bool IsBackendAvailable(const LogMode mode) noexcept</span></span>
@@ -189,10 +189,10 @@
 <span id="L109"><span class="lineNum">     109</span>                 :             : /// The constructor calls RegisterBackend() during static initialization.</span>
 <span id="L110"><span class="lineNum">     110</span>                 :             : struct BackendRegistrant final</span>
 <span id="L111"><span class="lineNum">     111</span>                 :             : {</span>
-<span id="L112"><span class="lineNum">     112</span>                 :<span class="tlaGNC">          26 :     BackendRegistrant(const LogMode mode, RecorderCreatorFn creator) noexcept</span></span>
+<span id="L112"><span class="lineNum">     112</span>                 :<span class="tlaGNC">          27 :     BackendRegistrant(const LogMode mode, RecorderCreatorFn creator) noexcept</span></span>
 <span id="L113"><span class="lineNum">     113</span>                 :             :     {</span>
-<span id="L114"><span class="lineNum">     114</span>                 :<span class="tlaGNC">          26 :         RegisterBackend(mode, creator);</span></span>
-<span id="L115"><span class="lineNum">     115</span>                 :<span class="tlaGNC">          26 :     }</span></span>
+<span id="L114"><span class="lineNum">     114</span>                 :<span class="tlaGNC">          27 :         RegisterBackend(mode, creator);</span></span>
+<span id="L115"><span class="lineNum">     115</span>                 :<span class="tlaGNC">          27 :     }</span></span>
 <span id="L116"><span class="lineNum">     116</span>                 :             : };</span>
 <span id="L117"><span class="lineNum">     117</span>                 :             : </span>
 <span id="L118"><span class="lineNum">     118</span>                 :             : }  // namespace log</span>

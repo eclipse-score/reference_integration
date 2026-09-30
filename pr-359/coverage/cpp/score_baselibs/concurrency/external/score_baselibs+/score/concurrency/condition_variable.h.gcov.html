@@ -37,12 +37,12 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryLo">63.4&nbsp;%</td>
+            <td class="headerCovTableEntryLo">61.9&nbsp;%</td>
             <td class="headerCovTableEntry">134</td>
-            <td class="headerCovTableEntry">85</td>
+            <td class="headerCovTableEntry">83</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -132,14 +132,14 @@
 <span id="L54"><span class="lineNum">      54</span>                 :             :     class UnlockGuard</span>
 <span id="L55"><span class="lineNum">      55</span>                 :             :     {</span>
 <span id="L56"><span class="lineNum">      56</span>                 :             :       public:</span>
-<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC tlaBgGNC">        6907 :         explicit UnlockGuard(Lockable&amp; lockable) : lockable_{lockable}</span></span>
+<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC tlaBgGNC">        7081 :         explicit UnlockGuard(Lockable&amp; lockable) : lockable_{lockable}</span></span>
 <span id="L58"><span class="lineNum">      58</span>                 :             :         {</span>
-<span id="L59"><span class="lineNum">      59</span>                 :<span class="tlaGNC">        6907 :             lockable_.unlock();</span></span>
-<span id="L60"><span class="lineNum">      60</span>                 :<span class="tlaGNC">        6907 :         }</span></span>
-<span id="L61"><span class="lineNum">      61</span>                 :<span class="tlaGNC">        6907 :         ~UnlockGuard()</span></span>
+<span id="L59"><span class="lineNum">      59</span>                 :<span class="tlaGNC">        7081 :             lockable_.unlock();</span></span>
+<span id="L60"><span class="lineNum">      60</span>                 :<span class="tlaGNC">        7081 :         }</span></span>
+<span id="L61"><span class="lineNum">      61</span>                 :<span class="tlaGNC">        7081 :         ~UnlockGuard()</span></span>
 <span id="L62"><span class="lineNum">      62</span>                 :             :         {</span>
-<span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC">        6907 :             lockable_.lock();</span></span>
-<span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC">        6907 :         }</span></span>
+<span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC">        7081 :             lockable_.lock();</span></span>
+<span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC">        7081 :         }</span></span>
 <span id="L65"><span class="lineNum">      65</span>                 :             :         UnlockGuard(const UnlockGuard&amp;) = delete;</span>
 <span id="L66"><span class="lineNum">      66</span>                 :             :         UnlockGuard(UnlockGuard&amp;&amp;) = delete;</span>
 <span id="L67"><span class="lineNum">      67</span>                 :             :         UnlockGuard&amp; operator=(const UnlockGuard&amp;) = delete;</span>
@@ -189,35 +189,35 @@
 <span id="L108"><span class="lineNum">     108</span>                 :             :     /// The usage of a shared pointer is not acceptable in our case, thus we use entry counting. Meaning, for every</span>
 <span id="L109"><span class="lineNum">     109</span>                 :             :     /// entry into a wait function we increase a counter, for every exit we decrease it. Then the destructor will wait</span>
 <span id="L110"><span class="lineNum">     110</span>                 :             :     /// until all wait functions have been exited.</span>
-<span id="L111"><span class="lineNum">     111</span>                 :<span class="tlaGNC">       26505 :     ~InterruptibleConditionalVariableBasic()</span></span>
+<span id="L111"><span class="lineNum">     111</span>                 :<span class="tlaGNC">       26509 :     ~InterruptibleConditionalVariableBasic()</span></span>
 <span id="L112"><span class="lineNum">     112</span>                 :             :     {</span>
-<span id="L113"><span class="lineNum">     113</span>         [<span class="tlaGBC" title="Branch 0 was taken 86451 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 26501 times"> + </span>]:<span class="tlaGNC">      112956 :         while (entry_counter_ != 0u)</span></span>
+<span id="L113"><span class="lineNum">     113</span>         [<span class="tlaGBC" title="Branch 0 was taken 86451 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 26509 times"> + </span>]:<span class="tlaGNC">      112960 :         while (entry_counter_ != 0u)</span></span>
 <span id="L114"><span class="lineNum">     114</span>                 :             :         {</span>
 <span id="L115"><span class="lineNum">     115</span>                 :<span class="tlaGNC">       86451 :             std::this_thread::yield();</span></span>
 <span id="L116"><span class="lineNum">     116</span>                 :             :         }</span>
-<span id="L117"><span class="lineNum">     117</span>                 :<span class="tlaGNC">       26501 :     }</span></span>
+<span id="L117"><span class="lineNum">     117</span>                 :<span class="tlaGNC">       26509 :     }</span></span>
 <span id="L118"><span class="lineNum">     118</span>                 :             :     InterruptibleConditionalVariableBasic(const InterruptibleConditionalVariableBasic&amp;) = delete;</span>
 <span id="L119"><span class="lineNum">     119</span>                 :             :     InterruptibleConditionalVariableBasic&amp; operator=(const InterruptibleConditionalVariableBasic&amp;) = delete;</span>
 <span id="L120"><span class="lineNum">     120</span>                 :             :     InterruptibleConditionalVariableBasic(InterruptibleConditionalVariableBasic&amp;&amp;) = delete;</span>
 <span id="L121"><span class="lineNum">     121</span>                 :             :     InterruptibleConditionalVariableBasic&amp; operator=(const InterruptibleConditionalVariableBasic&amp;&amp;) = delete;</span>
 <span id="L122"><span class="lineNum">     122</span>                 :             : </span>
 <span id="L123"><span class="lineNum">     123</span>                 :             :     /// \brief If any threads are blocked waiting for *this, unblocks one of those threads</span>
-<span id="L124"><span class="lineNum">     124</span>                 :<span class="tlaGNC">        9593 :     void notify_one() noexcept</span></span>
+<span id="L124"><span class="lineNum">     124</span>                 :<span class="tlaGNC">       11030 :     void notify_one() noexcept</span></span>
 <span id="L125"><span class="lineNum">     125</span>                 :             :     {</span>
 <span id="L126"><span class="lineNum">     126</span>                 :             :         // coverity[autosar_cpp14_m0_1_9_violation] false-positive</span>
 <span id="L127"><span class="lineNum">     127</span>                 :             :         // coverity[autosar_cpp14_m0_1_3_violation] false-positive</span>
-<span id="L128"><span class="lineNum">     128</span>                 :<span class="tlaGNC">        9593 :         std::lock_guard&lt;Mutex&gt; guard(internal_mutex_);</span></span>
-<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">        9593 :         internal_condition_variable_.notify_one();</span></span>
-<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">        9593 :     }</span></span>
+<span id="L128"><span class="lineNum">     128</span>                 :<span class="tlaGNC">       11030 :         std::lock_guard&lt;Mutex&gt; guard(internal_mutex_);</span></span>
+<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">       11030 :         internal_condition_variable_.notify_one();</span></span>
+<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">       11030 :     }</span></span>
 <span id="L131"><span class="lineNum">     131</span>                 :             : </span>
 <span id="L132"><span class="lineNum">     132</span>                 :             :     /// \brief Unblocks all threads that are blocked waiting for *this.</span>
-<span id="L133"><span class="lineNum">     133</span>                 :<span class="tlaGNC">       25931 :     void notify_all() noexcept</span></span>
+<span id="L133"><span class="lineNum">     133</span>                 :<span class="tlaGNC">       26419 :     void notify_all() noexcept</span></span>
 <span id="L134"><span class="lineNum">     134</span>                 :             :     {</span>
 <span id="L135"><span class="lineNum">     135</span>                 :             :         // coverity[autosar_cpp14_m0_1_9_violation] false-positive</span>
 <span id="L136"><span class="lineNum">     136</span>                 :             :         // coverity[autosar_cpp14_m0_1_3_violation] false-positive</span>
-<span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC">       25931 :         std::lock_guard&lt;Mutex&gt; guard(internal_mutex_);</span></span>
-<span id="L138"><span class="lineNum">     138</span>                 :<span class="tlaGNC">       25928 :         internal_condition_variable_.notify_all();</span></span>
-<span id="L139"><span class="lineNum">     139</span>                 :<span class="tlaGNC">       25929 :     }</span></span>
+<span id="L137"><span class="lineNum">     137</span>                 :<span class="tlaGNC">       26419 :         std::lock_guard&lt;Mutex&gt; guard(internal_mutex_);</span></span>
+<span id="L138"><span class="lineNum">     138</span>                 :<span class="tlaGNC">       26419 :         internal_condition_variable_.notify_all();</span></span>
+<span id="L139"><span class="lineNum">     139</span>                 :<span class="tlaGNC">       26418 :     }</span></span>
 <span id="L140"><span class="lineNum">     140</span>                 :             : </span>
 <span id="L141"><span class="lineNum">     141</span>                 :             :     /// \brief Wait with interrupt handling</span>
 <span id="L142"><span class="lineNum">     142</span>                 :             :     /// \param lock an object of type Lock that meets the BasicLockable requirements, which must be locked by the</span>
@@ -226,41 +226,41 @@
 <span id="L145"><span class="lineNum">     145</span>                 :             :     /// \param stop_waiting predicate which returns false if the waiting should be continued (bool(stop_waiting()) ==</span>
 <span id="L146"><span class="lineNum">     146</span>                 :             :     /// false). \return true if stop_waiting() yields true, false otherwise (i.e. on interrupt)</span>
 <span id="L147"><span class="lineNum">     147</span>                 :             :     template &lt;class Lockable, class Predicate&gt;</span>
-<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">       14091 :     bool wait(Lockable&amp; lock, const score::cpp::stop_token&amp; token, Predicate stop_waiting)</span></span>
+<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">       15545 :     bool wait(Lockable&amp; lock, const score::cpp::stop_token&amp; token, Predicate stop_waiting)</span></span>
 <span id="L149"><span class="lineNum">     149</span>                 :             :     {</span>
 <span id="L150"><span class="lineNum">     150</span>                 :             :         // coverity[autosar_cpp14_m0_1_9_violation] false-positive</span>
 <span id="L151"><span class="lineNum">     151</span>                 :             :         // coverity[autosar_cpp14_m0_1_3_violation] false-positive</span>
-<span id="L152"><span class="lineNum">     152</span>                 :<span class="tlaGNC">       14091 :         DestructionGuard guard_destruction{entry_counter_};</span></span>
-<span id="L153"><span class="lineNum">     153</span>         [<span class="tlaGBC" title="Branch 0 was taken 5495 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 8596 times"> + </span>]:<span class="tlaGNC">       14091 :         if (token.stop_requested())</span></span>
+<span id="L152"><span class="lineNum">     152</span>                 :<span class="tlaGNC">       15545 :         DestructionGuard guard_destruction{entry_counter_};</span></span>
+<span id="L153"><span class="lineNum">     153</span>         [<span class="tlaGBC" title="Branch 0 was taken 5585 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 9960 times"> + </span>]:<span class="tlaGNC">       15545 :         if (token.stop_requested())</span></span>
 <span id="L154"><span class="lineNum">     154</span>                 :             :         {</span>
-<span id="L155"><span class="lineNum">     155</span>         [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        5495 :             return stop_waiting();</span></span>
+<span id="L155"><span class="lineNum">     155</span>         [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        5585 :             return stop_waiting();</span></span>
 <span id="L156"><span class="lineNum">     156</span>                 :             :         }</span>
 <span id="L157"><span class="lineNum">     157</span>                 :             :         // coverity[autosar_cpp14_m0_1_9_violation] false-positive</span>
 <span id="L158"><span class="lineNum">     158</span>                 :             :         // coverity[autosar_cpp14_m0_1_3_violation] false-positive</span>
-<span id="L159"><span class="lineNum">     159</span>         [<span class="tlaGBC" title="Branch 0 was taken 8596 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        8604 :         score::cpp::stop_callback callback(token, [this]() noexcept {</span></span>
-<span id="L160"><span class="lineNum">     160</span>                 :<span class="tlaGNC">        1347 :             notify_all();</span></span>
+<span id="L159"><span class="lineNum">     159</span>         [<span class="tlaGBC" title="Branch 0 was taken 9960 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        9968 :         score::cpp::stop_callback callback(token, [this]() noexcept {</span></span>
+<span id="L160"><span class="lineNum">     160</span>                 :<span class="tlaGNC">        1833 :             notify_all();</span></span>
 <span id="L161"><span class="lineNum">     161</span>                 :             :         });</span>
 <span id="L162"><span class="lineNum">     162</span>                 :             :         // GCOV_EXCL_START: false-positive, covered by WaitUntilImmediatelyReturnsTrueWithPredicate</span>
-<span id="L163"><span class="lineNum">     163</span>   [<span class="tlaGBC" title="Branch 0 was taken 8097 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 6150 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1908 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 1908 times"> + </span>]:<span class="tlaGNC">       14247 :         while (!stop_waiting())</span></span>
+<span id="L163"><span class="lineNum">     163</span>   [<span class="tlaGBC" title="Branch 0 was taken 8289 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 7497 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1806 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 1806 times"> + </span>]:<span class="tlaGNC">       15786 :         while (!stop_waiting())</span></span>
 <span id="L164"><span class="lineNum">     164</span>                 :             :         {  // GCOV_EXCL_STOP</span>
 <span id="L165"><span class="lineNum">     165</span>                 :             :             // Additional context to help TSAN understand our locking and unlocking of `lock`</span>
 <span id="L166"><span class="lineNum">     166</span>                 :             :             {</span>
-<span id="L167"><span class="lineNum">     167</span>         [<span class="tlaGBC" title="Branch 0 was taken 6189 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        6189 :                 std::unique_lock&lt;std::remove_reference_t&lt;Mutex&gt;&gt; first_internal_lock(internal_mutex_);</span></span>
-<span id="L168"><span class="lineNum">     168</span>         [<span class="tlaGBC" title="Branch 0 was taken 538 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 5651 times"> + </span>]:<span class="tlaGNC">        6189 :                 if (token.stop_requested())</span></span>
+<span id="L167"><span class="lineNum">     167</span>         [<span class="tlaGBC" title="Branch 0 was taken 6483 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        6483 :                 std::unique_lock&lt;std::remove_reference_t&lt;Mutex&gt;&gt; first_internal_lock(internal_mutex_);</span></span>
+<span id="L168"><span class="lineNum">     168</span>         [<span class="tlaGBC" title="Branch 0 was taken 657 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 5826 times"> + </span>]:<span class="tlaGNC">        6483 :                 if (token.stop_requested())</span></span>
 <span id="L169"><span class="lineNum">     169</span>                 :             :                 {</span>
-<span id="L170"><span class="lineNum">     170</span>                 :<span class="tlaGNC">         538 :                     return false;</span></span>
+<span id="L170"><span class="lineNum">     170</span>                 :<span class="tlaGNC">         657 :                     return false;</span></span>
 <span id="L171"><span class="lineNum">     171</span>                 :             :                 }</span>
 <span id="L172"><span class="lineNum">     172</span>                 :             :                 // coverity[autosar_cpp14_m0_1_9_violation] false-positive</span>
 <span id="L173"><span class="lineNum">     173</span>                 :             :                 // coverity[autosar_cpp14_m0_1_3_violation] false-positive</span>
-<span id="L174"><span class="lineNum">     174</span>         [<span class="tlaGBC" title="Branch 0 was taken 5649 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        5651 :                 UnlockGuard&lt;Lockable&gt; guard_unlock(lock);</span></span>
+<span id="L174"><span class="lineNum">     174</span>         [<span class="tlaGBC" title="Branch 0 was taken 5824 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        5826 :                 UnlockGuard&lt;Lockable&gt; guard_unlock(lock);</span></span>
 <span id="L175"><span class="lineNum">     175</span>                 :             :                 // Move the lock to avoid false-flag from thread-sanitizer</span>
-<span id="L176"><span class="lineNum">     176</span>                 :<span class="tlaGNC">        5651 :                 std::unique_lock&lt;std::remove_reference_t&lt;Mutex&gt;&gt; second_internal_lock(std::move(first_internal_lock));</span></span>
-<span id="L177"><span class="lineNum">     177</span>         [<span class="tlaGBC" title="Branch 0 was taken 5647 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        5651 :                 internal_condition_variable_.wait(second_internal_lock);</span></span>
-<span id="L178"><span class="lineNum">     178</span>         [<span class="tlaGBC" title="Branch 0 was taken 5651 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 538 times"> + </span>]:<span class="tlaGNC">        6189 :             }</span></span>
+<span id="L176"><span class="lineNum">     176</span>                 :<span class="tlaGNC">        5826 :                 std::unique_lock&lt;std::remove_reference_t&lt;Mutex&gt;&gt; second_internal_lock(std::move(first_internal_lock));</span></span>
+<span id="L177"><span class="lineNum">     177</span>         [<span class="tlaGBC" title="Branch 0 was taken 5822 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        5826 :                 internal_condition_variable_.wait(second_internal_lock);</span></span>
+<span id="L178"><span class="lineNum">     178</span>         [<span class="tlaGBC" title="Branch 0 was taken 5826 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 657 times"> + </span>]:<span class="tlaGNC">        6483 :             }</span></span>
 <span id="L179"><span class="lineNum">     179</span>                 :             :         }</span>
 <span id="L180"><span class="lineNum">     180</span>                 :             : </span>
-<span id="L181"><span class="lineNum">     181</span>                 :<span class="tlaGNC">        8058 :         return true;</span></span>
-<span id="L182"><span class="lineNum">     182</span>                 :<span class="tlaGNC">       14091 :     }</span></span>
+<span id="L181"><span class="lineNum">     181</span>                 :<span class="tlaGNC">        9303 :         return true;</span></span>
+<span id="L182"><span class="lineNum">     182</span>                 :<span class="tlaGNC">       15545 :     }</span></span>
 <span id="L183"><span class="lineNum">     183</span>                 :             : </span>
 <span id="L184"><span class="lineNum">     184</span>                 :             :     /// \brief timed wait with interrupt handling</span>
 <span id="L185"><span class="lineNum">     185</span>                 :             :     /// \param lock an object of type Lock that meets the requirements of BasicLockable, which must be locked by the</span>
@@ -311,12 +311,12 @@
 <span id="L230"><span class="lineNum">     230</span>                 :             :     /// \param stop_waiting predicate which returns false if the waiting should be continued (bool(stop_waiting()) ==</span>
 <span id="L231"><span class="lineNum">     231</span>                 :             :     /// false) \return true if stop_waiting() yields true, false otherwise (i.e. on timeout or interrupt)</span>
 <span id="L232"><span class="lineNum">     232</span>                 :             :     template &lt;class Lockable, class Clock, class Duration, class Predicate&gt;</span>
-<span id="L233"><span class="lineNum">     233</span>                 :<span class="tlaGNC">          78 :     bool wait_until(Lockable&amp; lock,</span></span>
+<span id="L233"><span class="lineNum">     233</span>                 :<span class="tlaGNC">          77 :     bool wait_until(Lockable&amp; lock,</span></span>
 <span id="L234"><span class="lineNum">     234</span>                 :             :                     const score::cpp::stop_token&amp; token,</span>
 <span id="L235"><span class="lineNum">     235</span>                 :             :                     const std::chrono::time_point&lt;Clock, Duration&gt;&amp; abs_time,</span>
 <span id="L236"><span class="lineNum">     236</span>                 :             :                     Predicate stop_waiting)</span>
 <span id="L237"><span class="lineNum">     237</span>                 :             :     {</span>
-<span id="L238"><span class="lineNum">     238</span>   [<span class="tlaGBC" title="Branch 0 was taken 72 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 71 times"> + </span>]:<span class="tlaGNC">          78 :         if (abs_time == std::chrono::time_point&lt;Clock, Duration&gt;::max())</span></span>
+<span id="L238"><span class="lineNum">     238</span>   [<span class="tlaGBC" title="Branch 0 was taken 71 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 70 times"> + </span>]:<span class="tlaGNC">          77 :         if (abs_time == std::chrono::time_point&lt;Clock, Duration&gt;::max())</span></span>
 <span id="L239"><span class="lineNum">     239</span>                 :             :         {</span>
 <span id="L240"><span class="lineNum">     240</span>                 :             :             // Suppress &quot;AUTOSAR C++14 A5-1-4&quot; rule finding: &quot;A lambda expression object shall not outlive any of its</span>
 <span id="L241"><span class="lineNum">     241</span>                 :             :             // reference-captured objects.&quot;.</span>
@@ -325,30 +325,30 @@
 <span id="L244"><span class="lineNum">     244</span>                 :             :             // coverity[autosar_cpp14_a5_1_4_violation]</span>
 <span id="L245"><span class="lineNum">     245</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :             return wait(lock, token, std::move(stop_waiting));</span></span>
 <span id="L246"><span class="lineNum">     246</span>                 :             :         }</span>
-<span id="L247"><span class="lineNum">     247</span>   [<span class="tlaGBC" title="Branch 0 was taken 77 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 26 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 51 times"> + </span>]:<span class="tlaGNC">          77 :         if (Clock::now() &gt;= abs_time)</span></span>
+<span id="L247"><span class="lineNum">     247</span>   [<span class="tlaGBC" title="Branch 0 was taken 76 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 26 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 50 times"> + </span>]:<span class="tlaGNC">          76 :         if (Clock::now() &gt;= abs_time)</span></span>
 <span id="L248"><span class="lineNum">     248</span>                 :             :         {</span>
 <span id="L249"><span class="lineNum">     249</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaGNC">          26 :             return stop_waiting();</span></span>
 <span id="L250"><span class="lineNum">     250</span>                 :             :         }</span>
 <span id="L251"><span class="lineNum">     251</span>                 :             : </span>
 <span id="L252"><span class="lineNum">     252</span>                 :             :         // coverity[autosar_cpp14_m0_1_9_violation] false-positive</span>
 <span id="L253"><span class="lineNum">     253</span>                 :             :         // coverity[autosar_cpp14_m0_1_3_violation] false-positive</span>
-<span id="L254"><span class="lineNum">     254</span>                 :<span class="tlaGNC">          51 :         DestructionGuard guard_destruction{entry_counter_};</span></span>
-<span id="L255"><span class="lineNum">     255</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 50 times"> + </span>]:<span class="tlaGNC">          51 :         if (token.stop_requested())</span></span>
+<span id="L254"><span class="lineNum">     254</span>                 :<span class="tlaGNC">          50 :         DestructionGuard guard_destruction{entry_counter_};</span></span>
+<span id="L255"><span class="lineNum">     255</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 49 times"> + </span>]:<span class="tlaGNC">          50 :         if (token.stop_requested())</span></span>
 <span id="L256"><span class="lineNum">     256</span>                 :             :         {</span>
 <span id="L257"><span class="lineNum">     257</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaGNC">           1 :             return stop_waiting();</span></span>
 <span id="L258"><span class="lineNum">     258</span>                 :             :         }</span>
 <span id="L259"><span class="lineNum">     259</span>                 :             : </span>
 <span id="L260"><span class="lineNum">     260</span>                 :             :         // coverity[autosar_cpp14_m0_1_9_violation] false-positive</span>
 <span id="L261"><span class="lineNum">     261</span>                 :             :         // coverity[autosar_cpp14_m0_1_3_violation] false-positive</span>
-<span id="L262"><span class="lineNum">     262</span>         [<span class="tlaGBC" title="Branch 0 was taken 50 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          56 :         score::cpp::stop_callback callback(token, [this]() noexcept {</span></span>
+<span id="L262"><span class="lineNum">     262</span>         [<span class="tlaGBC" title="Branch 0 was taken 49 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          55 :         score::cpp::stop_callback callback(token, [this]() noexcept {</span></span>
 <span id="L263"><span class="lineNum">     263</span>                 :<span class="tlaGNC">           4 :             notify_all();</span></span>
 <span id="L264"><span class="lineNum">     264</span>                 :             :         });  // GCOV_EXCL_START: false-positive, covered by WaitUntilImmediatelyReturnsTrueWithPredicate</span>
-<span id="L265"><span class="lineNum">     265</span>   [<span class="tlaGBC" title="Branch 0 was taken 1250 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1235 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 3 times"> + </span>]:<span class="tlaGNC">        1253 :         while (!stop_waiting())</span></span>
+<span id="L265"><span class="lineNum">     265</span>   [<span class="tlaGBC" title="Branch 0 was taken 1249 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1235 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 3 times"> + </span>]:<span class="tlaGNC">        1251 :         while (!stop_waiting())</span></span>
 <span id="L266"><span class="lineNum">     266</span>                 :             :         // GCOV_EXCL_STOP</span>
 <span id="L267"><span class="lineNum">     267</span>                 :             :         {</span>
-<span id="L268"><span class="lineNum">     268</span>                 :<span class="tlaGNC">        1247 :             bool shouldStop{false};</span></span>
+<span id="L268"><span class="lineNum">     268</span>                 :<span class="tlaGNC">        1246 :             bool shouldStop{false};</span></span>
 <span id="L269"><span class="lineNum">     269</span>                 :             :             {</span>
-<span id="L270"><span class="lineNum">     270</span>         [<span class="tlaGBC" title="Branch 0 was taken 1247 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        1247 :                 score::cpp::ignore = wait_until_impl(lock, token, abs_time);</span></span>
+<span id="L270"><span class="lineNum">     270</span>         [<span class="tlaGBC" title="Branch 0 was taken 1246 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        1246 :                 score::cpp::ignore = wait_until_impl(lock, token, abs_time);</span></span>
 <span id="L271"><span class="lineNum">     271</span>                 :             : </span>
 <span id="L272"><span class="lineNum">     272</span>                 :             :                 // Explicitly check that `abs_time` was reached, to avoid bug in standard library on POSIX systems.</span>
 <span id="L273"><span class="lineNum">     273</span>                 :             :                 // std::condition_variable::wait_until calls pthread_cond_timedwait on POSIX systems.</span>
@@ -358,16 +358,16 @@
 <span id="L277"><span class="lineNum">     277</span>                 :             :                 // that wait_until shall return std::cv_status::no_timeout in such cases. This is not true for POSIX</span>
 <span id="L278"><span class="lineNum">     278</span>                 :             :                 // systems, where the return value is determined based on the monotonic clock of the system and not</span>
 <span id="L279"><span class="lineNum">     279</span>                 :             :                 // `Clock`. See also [thread.req.timing] in the C++ standard.</span>
-<span id="L280"><span class="lineNum">     280</span>   [<span class="tlaGBC" title="Branch 0 was taken 1247 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1207 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 40 times"> + </span> :<span class="tlaGNC">        1247 :                 shouldStop = (Clock::now() &gt;= abs_time) || token.stop_requested();</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 1203 times"> + </span>]
+<span id="L280"><span class="lineNum">     280</span>   [<span class="tlaGBC" title="Branch 0 was taken 1246 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1206 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 40 times"> + </span> :<span class="tlaGNC">        1246 :                 shouldStop = (Clock::now() &gt;= abs_time) || token.stop_requested();</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 1202 times"> + </span>]
 <span id="L281"><span class="lineNum">     281</span>                 :             :             }</span>
-<span id="L282"><span class="lineNum">     282</span>         [<span class="tlaGBC" title="Branch 0 was taken 44 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1203 times"> + </span>]:<span class="tlaGNC">        1247 :             if (shouldStop)</span></span>
+<span id="L282"><span class="lineNum">     282</span>         [<span class="tlaGBC" title="Branch 0 was taken 44 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1202 times"> + </span>]:<span class="tlaGNC">        1246 :             if (shouldStop)</span></span>
 <span id="L283"><span class="lineNum">     283</span>                 :             :             {</span>
 <span id="L284"><span class="lineNum">     284</span>         [<span class="tlaGBC" title="Branch 0 was taken 36 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          44 :                 return stop_waiting();</span></span>
 <span id="L285"><span class="lineNum">     285</span>                 :             :             }</span>
 <span id="L286"><span class="lineNum">     286</span>                 :             :         }</span>
-<span id="L287"><span class="lineNum">     287</span>                 :<span class="tlaGNC">           6 :         return true;</span></span>
-<span id="L288"><span class="lineNum">     288</span>                 :<span class="tlaGNC">          51 :     }</span></span>
+<span id="L287"><span class="lineNum">     287</span>                 :<span class="tlaGNC">           5 :         return true;</span></span>
+<span id="L288"><span class="lineNum">     288</span>                 :<span class="tlaGNC">          50 :     }</span></span>
 <span id="L289"><span class="lineNum">     289</span>                 :             : </span>
 <span id="L290"><span class="lineNum">     290</span>                 :             :     /// \brief timed wait with interrupt handling</span>
 <span id="L291"><span class="lineNum">     291</span>                 :             :     /// \param lock an object of type Lock that meets the BasicLockable requirements, which must be locked by the</span>
@@ -379,18 +379,18 @@
 <span id="L297"><span class="lineNum">     297</span>                 :             :     /// false).</span>
 <span id="L298"><span class="lineNum">     298</span>                 :             :     /// \return true if stop_waiting() yields true, false otherwise (i.e. on timeout or interrupt)</span>
 <span id="L299"><span class="lineNum">     299</span>                 :             :     template &lt;class Lockable, class Rep, class Period, class Predicate&gt;</span>
-<span id="L300"><span class="lineNum">     300</span>                 :<span class="tlaGNC">          28 :     bool wait_for(Lockable&amp; lock,</span></span>
+<span id="L300"><span class="lineNum">     300</span>                 :<span class="tlaGNC">          27 :     bool wait_for(Lockable&amp; lock,</span></span>
 <span id="L301"><span class="lineNum">     301</span>                 :             :                   const score::cpp::stop_token&amp; token,</span>
 <span id="L302"><span class="lineNum">     302</span>                 :             :                   const std::chrono::duration&lt;Rep, Period&gt;&amp; rel_time,</span>
 <span id="L303"><span class="lineNum">     303</span>                 :             :                   Predicate stop_waiting)</span>
 <span id="L304"><span class="lineNum">     304</span>                 :             :     {</span>
-<span id="L305"><span class="lineNum">     305</span>         [<span class="tlaGBC" title="Branch 0 was taken 28 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          28 :         const auto abs_time = std::chrono::steady_clock::now() + rel_time;</span></span>
+<span id="L305"><span class="lineNum">     305</span>         [<span class="tlaGBC" title="Branch 0 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          27 :         const auto abs_time = std::chrono::steady_clock::now() + rel_time;</span></span>
 <span id="L306"><span class="lineNum">     306</span>                 :             :         // Suppress &quot;AUTOSAR C++14 A5-1-4&quot; rule finding: &quot;A lambda expression object shall not outlive any of its</span>
 <span id="L307"><span class="lineNum">     307</span>                 :             :         // reference-captured objects.&quot;.</span>
 <span id="L308"><span class="lineNum">     308</span>                 :             :         // Predicate &quot;stop_waiting&quot; is passed by move-semantic to wait_until(), all dangling references that</span>
 <span id="L309"><span class="lineNum">     309</span>                 :             :         // this predicate can capture is the awareness and responsibility of a caller</span>
 <span id="L310"><span class="lineNum">     310</span>                 :             :         // coverity[autosar_cpp14_a5_1_4_violation]</span>
-<span id="L311"><span class="lineNum">     311</span>         [<span class="tlaGBC" title="Branch 0 was taken 28 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          36 :         return wait_until(lock, token, abs_time, std::move(stop_waiting));</span></span>
+<span id="L311"><span class="lineNum">     311</span>         [<span class="tlaGBC" title="Branch 0 was taken 27 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          34 :         return wait_until(lock, token, abs_time, std::move(stop_waiting));</span></span>
 <span id="L312"><span class="lineNum">     312</span>                 :             :     }</span>
 <span id="L313"><span class="lineNum">     313</span>                 :             : </span>
 <span id="L314"><span class="lineNum">     314</span>                 :             :   private:</span>
@@ -401,26 +401,26 @@
 <span id="L319"><span class="lineNum">     319</span>                 :             :     /// \param abs_time an object of type std::chrono::time_point representing the time when to stop waiting</span>
 <span id="L320"><span class="lineNum">     320</span>                 :             :     /// \return by default true, false otherwise (i.e. on interrupt)</span>
 <span id="L321"><span class="lineNum">     321</span>                 :             :     template &lt;class Lockable, class Clock, class Duration&gt;</span>
-<span id="L322"><span class="lineNum">     322</span>                 :<span class="tlaGNC">        1257 :     bool wait_until_impl(Lockable&amp; lock,</span></span>
+<span id="L322"><span class="lineNum">     322</span>                 :<span class="tlaGNC">        1256 :     bool wait_until_impl(Lockable&amp; lock,</span></span>
 <span id="L323"><span class="lineNum">     323</span>                 :             :                          const score::cpp::stop_token&amp; token,</span>
 <span id="L324"><span class="lineNum">     324</span>                 :             :                          const std::chrono::time_point&lt;Clock, Duration&gt;&amp; abs_time)</span>
 <span id="L325"><span class="lineNum">     325</span>                 :             :     {</span>
-<span id="L326"><span class="lineNum">     326</span>         [<span class="tlaGBC" title="Branch 0 was taken 1257 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        1257 :         std::unique_lock&lt;std::remove_reference_t&lt;Mutex&gt;&gt; first_internal_lock(internal_mutex_);</span></span>
+<span id="L326"><span class="lineNum">     326</span>         [<span class="tlaGBC" title="Branch 0 was taken 1256 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        1256 :         std::unique_lock&lt;std::remove_reference_t&lt;Mutex&gt;&gt; first_internal_lock(internal_mutex_);</span></span>
 <span id="L327"><span class="lineNum">     327</span>                 :             :         // GCOV_EXCL_START: false-positive, covered by WaitUntilImmediatelyReturnIfStopIsRequesteAfterLocking</span>
-<span id="L328"><span class="lineNum">     328</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1256 times"> + </span>]:<span class="tlaGNC">        1257 :         if (token.stop_requested())</span></span>
+<span id="L328"><span class="lineNum">     328</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1255 times"> + </span>]:<span class="tlaGNC">        1256 :         if (token.stop_requested())</span></span>
 <span id="L329"><span class="lineNum">     329</span>                 :             :         // GCOV_EXCL_STOP</span>
 <span id="L330"><span class="lineNum">     330</span>                 :             :         {</span>
 <span id="L331"><span class="lineNum">     331</span>                 :<span class="tlaGNC">           1 :             return false;</span></span>
 <span id="L332"><span class="lineNum">     332</span>                 :             :         }</span>
 <span id="L333"><span class="lineNum">     333</span>                 :             :         // coverity[autosar_cpp14_m0_1_3_violation] false-positive</span>
 <span id="L334"><span class="lineNum">     334</span>                 :             :         // coverity[autosar_cpp14_m0_1_9_violation] false-positive</span>
-<span id="L335"><span class="lineNum">     335</span>         [<span class="tlaGBC" title="Branch 0 was taken 1249 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        1256 :         UnlockGuard&lt;Lockable&gt; guard_unlock(lock);</span></span>
+<span id="L335"><span class="lineNum">     335</span>         [<span class="tlaGBC" title="Branch 0 was taken 1248 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        1255 :         UnlockGuard&lt;Lockable&gt; guard_unlock(lock);</span></span>
 <span id="L336"><span class="lineNum">     336</span>                 :             :         // Move the lock to avoid false-flag from thread-sanitizer</span>
-<span id="L337"><span class="lineNum">     337</span>                 :<span class="tlaGNC">        1256 :         std::unique_lock&lt;std::remove_reference_t&lt;Mutex&gt;&gt; second_internal_lock(std::move(first_internal_lock));</span></span>
-<span id="L338"><span class="lineNum">     338</span>         [<span class="tlaGBC" title="Branch 0 was taken 1256 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        1256 :         score::cpp::ignore = internal_condition_variable_.wait_until(second_internal_lock, abs_time);</span></span>
+<span id="L337"><span class="lineNum">     337</span>                 :<span class="tlaGNC">        1255 :         std::unique_lock&lt;std::remove_reference_t&lt;Mutex&gt;&gt; second_internal_lock(std::move(first_internal_lock));</span></span>
+<span id="L338"><span class="lineNum">     338</span>         [<span class="tlaGBC" title="Branch 0 was taken 1255 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        1255 :         score::cpp::ignore = internal_condition_variable_.wait_until(second_internal_lock, abs_time);</span></span>
 <span id="L339"><span class="lineNum">     339</span>                 :             : </span>
-<span id="L340"><span class="lineNum">     340</span>                 :<span class="tlaGNC">        1256 :         return not token.stop_requested();</span></span>
-<span id="L341"><span class="lineNum">     341</span>                 :<span class="tlaGNC">        1257 :     }</span></span>
+<span id="L340"><span class="lineNum">     340</span>                 :<span class="tlaGNC">        1255 :         return not token.stop_requested();</span></span>
+<span id="L341"><span class="lineNum">     341</span>                 :<span class="tlaGNC">        1256 :     }</span></span>
 <span id="L342"><span class="lineNum">     342</span>                 :             : </span>
 <span id="L343"><span class="lineNum">     343</span>                 :             :     Mutex internal_mutex_;</span>
 <span id="L344"><span class="lineNum">     344</span>                 :             :     ConditionVariable internal_condition_variable_;</span>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:10:46</td>
+            <td class="headerValue">2026-09-30 04:19:55</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">95.0&nbsp;%</td>
@@ -140,10 +140,10 @@
 <span id="L62"><span class="lineNum">      62</span>                 :<span class="tlaGNC">         642 :     return current_state_idx_.load();</span></span>
 <span id="L63"><span class="lineNum">      63</span>                 :             : }</span>
 <span id="L64"><span class="lineNum">      64</span>                 :             : </span>
-<span id="L65"><span class="lineNum">      65</span>                 :<span class="tlaGNC">      401439 : SubscriptionStateBase&amp; SubscriptionStateMachine::GetCurrentEventState() noexcept</span></span>
+<span id="L65"><span class="lineNum">      65</span>                 :<span class="tlaGNC">      867600 : SubscriptionStateBase&amp; SubscriptionStateMachine::GetCurrentEventState() noexcept</span></span>
 <span id="L66"><span class="lineNum">      66</span>                 :             : {</span>
 <span id="L67"><span class="lineNum">      67</span>                 :             :     // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-constant-array-index): current_state_idx_ can't be const expression</span>
-<span id="L68"><span class="lineNum">      68</span>                 :<span class="tlaGNC">      401439 :     return *states_[static_cast&lt;std::uint8_t&gt;(current_state_idx_.load())];</span></span>
+<span id="L68"><span class="lineNum">      68</span>                 :<span class="tlaGNC">      867600 :     return *states_[static_cast&lt;std::uint8_t&gt;(current_state_idx_.load())];</span></span>
 <span id="L69"><span class="lineNum">      69</span>                 :             : }</span>
 <span id="L70"><span class="lineNum">      70</span>                 :             : </span>
 <span id="L71"><span class="lineNum">      71</span>                 :<span class="tlaGNC">          18 : const SubscriptionStateBase&amp; SubscriptionStateMachine::GetCurrentEventState() const noexcept</span></span>
@@ -206,9 +206,9 @@
 <span id="L128"><span class="lineNum">     128</span>                 :<span class="tlaGNC">           7 :     return GetCurrentEventState().GetMaxSampleCount();</span></span>
 <span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">           7 : }</span></span>
 <span id="L130"><span class="lineNum">     130</span>                 :             : </span>
-<span id="L131"><span class="lineNum">     131</span>                 :<span class="tlaGNC">      109460 : std::optional&lt;SlotCollector&gt;&amp; SubscriptionStateMachine::GetSlotCollectorLockFree() noexcept</span></span>
+<span id="L131"><span class="lineNum">     131</span>                 :<span class="tlaGNC">      576047 : std::optional&lt;SlotCollector&gt;&amp; SubscriptionStateMachine::GetSlotCollectorLockFree() noexcept</span></span>
 <span id="L132"><span class="lineNum">     132</span>                 :             : {</span>
-<span id="L133"><span class="lineNum">     133</span>                 :<span class="tlaGNC">      109460 :     return GetCurrentEventState().GetSlotCollector();</span></span>
+<span id="L133"><span class="lineNum">     133</span>                 :<span class="tlaGNC">      576047 :     return GetCurrentEventState().GetSlotCollector();</span></span>
 <span id="L134"><span class="lineNum">     134</span>                 :             : }</span>
 <span id="L135"><span class="lineNum">     135</span>                 :             : </span>
 <span id="L136"><span class="lineNum">     136</span>                 :<span class="tlaGNC">          11 : const std::optional&lt;SlotCollector&gt;&amp; SubscriptionStateMachine::GetSlotCollectorLockFree() const noexcept</span></span>

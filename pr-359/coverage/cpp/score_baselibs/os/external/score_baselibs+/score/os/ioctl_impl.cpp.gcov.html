@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -95,23 +95,21 @@
 <span id="L17"><span class="lineNum">      17</span>                 :             : {</span>
 <span id="L18"><span class="lineNum">      18</span>                 :             : namespace os</span>
 <span id="L19"><span class="lineNum">      19</span>                 :             : {</span>
-<span id="L20"><span class="lineNum">      20</span>                 :             : /* KW_SUPPRESS_START:MISRA.VAR.HIDDEN: Wrapper Function is identifiable through namespace usage */</span>
-<span id="L21"><span class="lineNum">      21</span>                 :<span class="tlaGNC tlaBgGNC">           2 : score::cpp::expected_blank&lt;Error&gt; IoctlImpl::ioctl(const std::int32_t d,</span></span>
-<span id="L22"><span class="lineNum">      22</span>                 :             :                                                    const std::int32_t request,</span>
-<span id="L23"><span class="lineNum">      23</span>                 :             :                                                    void* const arg) const noexcept</span>
-<span id="L24"><span class="lineNum">      24</span>                 :             : /* KW_SUPPRESS_END:MISRA.VAR.HIDDEN: Wrapper Function is identifiable through namespace usage */</span>
-<span id="L25"><span class="lineNum">      25</span>                 :             : {</span>
-<span id="L26"><span class="lineNum">      26</span>                 :             :     // This is a wrapper over C banned function, thus the suppression is justified.</span>
-<span id="L27"><span class="lineNum">      27</span>                 :             :     // POSIX method accepts c-style vararg. For linux function accepts unsigned long</span>
-<span id="L28"><span class="lineNum">      28</span>                 :             :     // NOLINTNEXTLINE(*pro-type-vararg, *narrowing-conversions, score-banned-function) see comment above</span>
-<span id="L29"><span class="lineNum">      29</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           2 :     if (::ioctl(d, static_cast&lt;std::uint64_t&gt;(request), arg) == -1)</span></span>
-<span id="L30"><span class="lineNum">      30</span>                 :             :     {</span>
-<span id="L31"><span class="lineNum">      31</span>                 :<span class="tlaGNC">           1 :         return score::cpp::make_unexpected(Error::createFromErrno());</span></span>
-<span id="L32"><span class="lineNum">      32</span>                 :             :     }</span>
-<span id="L33"><span class="lineNum">      33</span>                 :<span class="tlaGNC">           1 :     return {};</span></span>
-<span id="L34"><span class="lineNum">      34</span>                 :             : }</span>
-<span id="L35"><span class="lineNum">      35</span>                 :             : }  // namespace os</span>
-<span id="L36"><span class="lineNum">      36</span>                 :             : }  // namespace score</span>
+<span id="L20"><span class="lineNum">      20</span>                 :<span class="tlaGNC tlaBgGNC">           2 : score::cpp::expected_blank&lt;Error&gt; IoctlImpl::ioctl(const std::int32_t d,</span></span>
+<span id="L21"><span class="lineNum">      21</span>                 :             :                                                    const std::int32_t request,</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             :                                                    void* const arg) const noexcept</span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : {</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             :     // This is a wrapper over C banned function, thus the suppression is justified.</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             :     // POSIX method accepts c-style vararg. For linux function accepts unsigned long</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             :     // NOLINTNEXTLINE(*pro-type-vararg, *narrowing-conversions, score-banned-function) see comment above</span>
+<span id="L27"><span class="lineNum">      27</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           2 :     if (::ioctl(d, static_cast&lt;std::uint64_t&gt;(request), arg) == -1)</span></span>
+<span id="L28"><span class="lineNum">      28</span>                 :             :     {</span>
+<span id="L29"><span class="lineNum">      29</span>                 :<span class="tlaGNC">           1 :         return score::cpp::make_unexpected(Error::createFromErrno());</span></span>
+<span id="L30"><span class="lineNum">      30</span>                 :             :     }</span>
+<span id="L31"><span class="lineNum">      31</span>                 :<span class="tlaGNC">           1 :     return {};</span></span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : }</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : }  // namespace os</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             : }  // namespace score</span>
         </pre>
               </td>
             </tr>

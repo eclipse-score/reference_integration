@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">84.6&nbsp;%</td>
@@ -252,25 +252,25 @@
 <span id="L174"><span class="lineNum">     174</span>                 :             : private:</span>
 <span id="L175"><span class="lineNum">     175</span>                 :<span class="tlaGNC">          29 :     void work(const score::cpp::stop_token&amp; token, const std::uint32_t queue_index)</span></span>
 <span id="L176"><span class="lineNum">     176</span>                 :             :     {</span>
-<span id="L177"><span class="lineNum">     177</span>         [<span class="tlaGBC" title="Branch 0 was taken 35 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 29 times"> + </span>]:<span class="tlaGNC">          93 :         while (!token.stop_requested())</span></span>
+<span id="L177"><span class="lineNum">     177</span>         [<span class="tlaGBC" title="Branch 0 was taken 34 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 29 times"> + </span>]:<span class="tlaGNC">          92 :         while (!token.stop_requested())</span></span>
 <span id="L178"><span class="lineNum">     178</span>                 :             :         {</span>
-<span id="L179"><span class="lineNum">     179</span>                 :<span class="tlaGNC">          35 :             base_task* task{nullptr};</span></span>
+<span id="L179"><span class="lineNum">     179</span>                 :<span class="tlaGNC">          34 :             base_task* task{nullptr};</span></span>
 <span id="L180"><span class="lineNum">     180</span>                 :             : </span>
-<span id="L181"><span class="lineNum">     181</span>         [<span class="tlaGBC" title="Branch 0 was taken 109 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 17 times"> + </span>]:<span class="tlaGNC">         126 :             for (std::uint32_t i{0U}; i &lt; worker_count_; ++i)</span></span>
+<span id="L181"><span class="lineNum">     181</span>         [<span class="tlaGBC" title="Branch 0 was taken 107 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 16 times"> + </span>]:<span class="tlaGNC">         123 :             for (std::uint32_t i{0U}; i &lt; worker_count_; ++i)</span></span>
 <span id="L182"><span class="lineNum">     182</span>                 :             :             {</span>
-<span id="L183"><span class="lineNum">     183</span>                 :<span class="tlaGNC">         109 :                 task = queues_[(queue_index + i) % worker_count_].try_to_pop();</span></span>
-<span id="L184"><span class="lineNum">     184</span>         [<span class="tlaGBC" title="Branch 0 was taken 18 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 91 times"> + </span>]:<span class="tlaGNC">         109 :                 if (task != nullptr)</span></span>
+<span id="L183"><span class="lineNum">     183</span>                 :<span class="tlaGNC">         107 :                 task = queues_[(queue_index + i) % worker_count_].try_to_pop();</span></span>
+<span id="L184"><span class="lineNum">     184</span>         [<span class="tlaGBC" title="Branch 0 was taken 18 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 89 times"> + </span>]:<span class="tlaGNC">         107 :                 if (task != nullptr)</span></span>
 <span id="L185"><span class="lineNum">     185</span>                 :             :                 {</span>
 <span id="L186"><span class="lineNum">     186</span>                 :<span class="tlaGNC">          18 :                     break;</span></span>
 <span id="L187"><span class="lineNum">     187</span>                 :             :                 }</span>
 <span id="L188"><span class="lineNum">     188</span>                 :             :             }</span>
 <span id="L189"><span class="lineNum">     189</span>                 :             : </span>
-<span id="L190"><span class="lineNum">     190</span>         [<span class="tlaGBC" title="Branch 0 was taken 17 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 18 times"> + </span>]:<span class="tlaGNC">          35 :             if (task == nullptr) // no work found -&gt; block</span></span>
+<span id="L190"><span class="lineNum">     190</span>         [<span class="tlaGBC" title="Branch 0 was taken 16 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 18 times"> + </span>]:<span class="tlaGNC">          34 :             if (task == nullptr) // no work found -&gt; block</span></span>
 <span id="L191"><span class="lineNum">     191</span>                 :             :             {</span>
-<span id="L192"><span class="lineNum">     192</span>                 :<span class="tlaGNC">          17 :                 task = queues_[queue_index].pop();</span></span>
+<span id="L192"><span class="lineNum">     192</span>                 :<span class="tlaGNC">          16 :                 task = queues_[queue_index].pop();</span></span>
 <span id="L193"><span class="lineNum">     193</span>                 :             :             }</span>
 <span id="L194"><span class="lineNum">     194</span>                 :             : </span>
-<span id="L195"><span class="lineNum">     195</span>         [<span class="tlaGBC" title="Branch 0 was taken 16 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 19 times"> + </span>]:<span class="tlaGNC">          35 :             if (task != nullptr)</span></span>
+<span id="L195"><span class="lineNum">     195</span>         [<span class="tlaGBC" title="Branch 0 was taken 15 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 19 times"> + </span>]:<span class="tlaGNC">          34 :             if (task != nullptr)</span></span>
 <span id="L196"><span class="lineNum">     196</span>                 :             :             {</span>
 <span id="L197"><span class="lineNum">     197</span>                 :<span class="tlaGNC">          19 :                 task-&gt;start();</span></span>
 <span id="L198"><span class="lineNum">     198</span>                 :             :             }</span>

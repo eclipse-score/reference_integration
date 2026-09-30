@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">95.5&nbsp;%</td>
@@ -126,13 +126,13 @@
 <span id="L48"><span class="lineNum">      48</span>                 :             :     /// \brief Constructor from error value.</span>
 <span id="L49"><span class="lineNum">      49</span>                 :<span class="tlaGNC tlaBgGNC">         170 :     explicit unexpected(const E&amp; error) noexcept(std::is_nothrow_copy_constructible&lt;E&gt;::value) : error_{error} {}</span></span>
 <span id="L50"><span class="lineNum">      50</span>                 :             :     /// \brief Constructor from error rvalue.</span>
-<span id="L51"><span class="lineNum">      51</span>                 :<span class="tlaGNC">        1339 :     explicit unexpected(E&amp;&amp; error) noexcept(std::is_nothrow_move_constructible&lt;E&gt;::value) : error_{std::move(error)} {}</span></span>
+<span id="L51"><span class="lineNum">      51</span>                 :<span class="tlaGNC">        1263 :     explicit unexpected(E&amp;&amp; error) noexcept(std::is_nothrow_move_constructible&lt;E&gt;::value) : error_{std::move(error)} {}</span></span>
 <span id="L52"><span class="lineNum">      52</span>                 :             :     /// \brief Getter for an error.</span>
 <span id="L53"><span class="lineNum">      53</span>                 :<span class="tlaGNC">          64 :     const E&amp; error() const&amp; noexcept { return error_; }</span></span>
 <span id="L54"><span class="lineNum">      54</span>                 :             :     /// \brief Getter for an error.</span>
 <span id="L55"><span class="lineNum">      55</span>                 :<span class="tlaGNC">          11 :     E&amp; error() &amp; noexcept { return error_; }</span></span>
 <span id="L56"><span class="lineNum">      56</span>                 :             :     /// \brief Getter for an error.</span>
-<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">        1448 :     E&amp;&amp; error() &amp;&amp; noexcept { return std::move(error_); }</span></span>
+<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">        1372 :     E&amp;&amp; error() &amp;&amp; noexcept { return std::move(error_); }</span></span>
 <span id="L58"><span class="lineNum">      58</span>                 :             :     /// \brief Getter for an error.</span>
 <span id="L59"><span class="lineNum">      59</span>                 :<span class="tlaGNC">           1 :     const E&amp;&amp; error() const&amp;&amp; noexcept { return std::move(error_); }</span></span>
 <span id="L60"><span class="lineNum">      60</span>                 :             : </span>
@@ -149,10 +149,10 @@
 <span id="L71"><span class="lineNum">      71</span>                 :             : ///</span>
 <span id="L72"><span class="lineNum">      72</span>                 :             : template &lt;typename E&gt;</span>
 <span id="L73"><span class="lineNum">      73</span>                 :             : unexpected&lt;std::decay_t&lt;E&gt;&gt;</span>
-<span id="L74"><span class="lineNum">      74</span>                 :<span class="tlaGNC">        1488 : make_unexpected(E&amp;&amp; e) noexcept((std::is_rvalue_reference&lt;E&gt;::value &amp;&amp; std::is_nothrow_move_constructible&lt;E&gt;::value) ||</span></span>
+<span id="L74"><span class="lineNum">      74</span>                 :<span class="tlaGNC">        1412 : make_unexpected(E&amp;&amp; e) noexcept((std::is_rvalue_reference&lt;E&gt;::value &amp;&amp; std::is_nothrow_move_constructible&lt;E&gt;::value) ||</span></span>
 <span id="L75"><span class="lineNum">      75</span>                 :             :                                 (std::is_lvalue_reference&lt;E&gt;::value &amp;&amp; std::is_nothrow_copy_constructible&lt;E&gt;::value))</span>
 <span id="L76"><span class="lineNum">      76</span>                 :             : {</span>
-<span id="L77"><span class="lineNum">      77</span>                 :<span class="tlaGNC">        1488 :     return unexpected&lt;std::decay_t&lt;E&gt;&gt;(std::forward&lt;E&gt;(e));</span></span>
+<span id="L77"><span class="lineNum">      77</span>                 :<span class="tlaGNC">        1412 :     return unexpected&lt;std::decay_t&lt;E&gt;&gt;(std::forward&lt;E&gt;(e));</span></span>
 <span id="L78"><span class="lineNum">      78</span>                 :             : }</span>
 <span id="L79"><span class="lineNum">      79</span>                 :             : </span>
 <span id="L80"><span class="lineNum">      80</span>                 :             : namespace detail</span>
@@ -165,7 +165,7 @@
 <span id="L87"><span class="lineNum">      87</span>                 :             : {</span>
 <span id="L88"><span class="lineNum">      88</span>                 :             :     static_assert(std::is_trivially_destructible_v&lt;T&gt; &amp;&amp; std::is_trivially_destructible_v&lt;E&gt;);</span>
 <span id="L89"><span class="lineNum">      89</span>                 :             : </span>
-<span id="L90"><span class="lineNum">      90</span>                 :<span class="tlaGNC">       41836 :     destructor_base() : has_value_{false} {}</span></span>
+<span id="L90"><span class="lineNum">      90</span>                 :<span class="tlaGNC">       41656 :     destructor_base() : has_value_{false} {}</span></span>
 <span id="L91"><span class="lineNum">      91</span>                 :             : </span>
 <span id="L92"><span class="lineNum">      92</span>                 :             :     // For performances reason this class is not using `std::variant` but implementing the storage as a raw union. This</span>
 <span id="L93"><span class="lineNum">      93</span>                 :             :     // class takes care by code review to only read from the active member of the union. The union is only visible</span>
@@ -500,11 +500,11 @@
 <span id="L422"><span class="lineNum">     422</span>                 :             : </span>
 <span id="L423"><span class="lineNum">     423</span>                 :             :     /// \brief Default constructor. The instance is assumed to have a value.</span>
 <span id="L424"><span class="lineNum">     424</span>                 :             :     template &lt;typename U = T, typename = std::enable_if_t&lt;std::is_default_constructible&lt;U&gt;::value&gt;&gt;</span>
-<span id="L425"><span class="lineNum">     425</span>                 :<span class="tlaGNC">       36290 :     expected() noexcept(std::is_nothrow_default_constructible&lt;T&gt;::value) : base_t{}</span></span>
+<span id="L425"><span class="lineNum">     425</span>                 :<span class="tlaGNC">       36250 :     expected() noexcept(std::is_nothrow_default_constructible&lt;T&gt;::value) : base_t{}</span></span>
 <span id="L426"><span class="lineNum">     426</span>                 :             :     {</span>
-<span id="L427"><span class="lineNum">     427</span>                 :<span class="tlaGNC">       36288 :         score::cpp::ignore = score::cpp::detail::construct_at(std::addressof(this-&gt;value_));</span></span>
-<span id="L428"><span class="lineNum">     428</span>                 :<span class="tlaGNC">       36288 :         this-&gt;has_value_ = true;</span></span>
-<span id="L429"><span class="lineNum">     429</span>                 :<span class="tlaGNC">       36288 :     }</span></span>
+<span id="L427"><span class="lineNum">     427</span>                 :<span class="tlaGNC">       36250 :         score::cpp::ignore = score::cpp::detail::construct_at(std::addressof(this-&gt;value_));</span></span>
+<span id="L428"><span class="lineNum">     428</span>                 :<span class="tlaGNC">       36250 :         this-&gt;has_value_ = true;</span></span>
+<span id="L429"><span class="lineNum">     429</span>                 :<span class="tlaGNC">       36250 :     }</span></span>
 <span id="L430"><span class="lineNum">     430</span>                 :             : </span>
 <span id="L431"><span class="lineNum">     431</span>                 :             :     ///</span>
 <span id="L432"><span class="lineNum">     432</span>                 :             :     /// \brief Construct from an universal reference of U.</span>
@@ -539,11 +539,11 @@
 <span id="L461"><span class="lineNum">     461</span>                 :             :         typename = typename std::enable_if_t&lt;enable_universal_reference_ctor&lt;U&gt; &amp;&amp; std::is_convertible&lt;U&amp;&amp;, T&gt;::value&gt;,</span>
 <span id="L462"><span class="lineNum">     462</span>                 :             :         typename = void&gt;</span>
 <span id="L463"><span class="lineNum">     463</span>                 :             :     // NOLINTNEXTLINE(google-explicit-constructor) follows C++ Standard</span>
-<span id="L464"><span class="lineNum">     464</span>                 :<span class="tlaGNC">       16399 :     constexpr expected(U&amp;&amp; rhs) noexcept(std::is_nothrow_move_constructible&lt;T&gt;::value) : base_t{}</span></span>
+<span id="L464"><span class="lineNum">     464</span>                 :<span class="tlaGNC">       16332 :     constexpr expected(U&amp;&amp; rhs) noexcept(std::is_nothrow_move_constructible&lt;T&gt;::value) : base_t{}</span></span>
 <span id="L465"><span class="lineNum">     465</span>                 :             :     {</span>
-<span id="L466"><span class="lineNum">     466</span>                 :<span class="tlaGNC">       16399 :         score::cpp::ignore = score::cpp::detail::construct_at(std::addressof(this-&gt;value_), std::forward&lt;U&gt;(rhs));</span></span>
-<span id="L467"><span class="lineNum">     467</span>                 :<span class="tlaGNC">       16399 :         this-&gt;has_value_ = true;</span></span>
-<span id="L468"><span class="lineNum">     468</span>                 :<span class="tlaGNC">       16399 :     }</span></span>
+<span id="L466"><span class="lineNum">     466</span>                 :<span class="tlaGNC">       16332 :         score::cpp::ignore = score::cpp::detail::construct_at(std::addressof(this-&gt;value_), std::forward&lt;U&gt;(rhs));</span></span>
+<span id="L467"><span class="lineNum">     467</span>                 :<span class="tlaGNC">       16332 :         this-&gt;has_value_ = true;</span></span>
+<span id="L468"><span class="lineNum">     468</span>                 :<span class="tlaGNC">       16332 :     }</span></span>
 <span id="L469"><span class="lineNum">     469</span>                 :             : </span>
 <span id="L470"><span class="lineNum">     470</span>                 :             :     ///</span>
 <span id="L471"><span class="lineNum">     471</span>                 :             :     /// \brief Construct directly from \ref unexpected type.</span>
@@ -564,11 +564,11 @@
 <span id="L486"><span class="lineNum">     486</span>                 :             :     ///</span>
 <span id="L487"><span class="lineNum">     487</span>                 :             :     template &lt;typename ErrorType = E, std::enable_if_t&lt;std::is_move_constructible&lt;ErrorType&gt;::value, bool&gt; = true&gt;</span>
 <span id="L488"><span class="lineNum">     488</span>                 :             :     // NOLINTNEXTLINE(google-explicit-constructor) follows C++ Standard</span>
-<span id="L489"><span class="lineNum">     489</span>                 :<span class="tlaGNC">        1421 :     expected(unexpected&lt;E&gt;&amp;&amp; rhs) noexcept(std::is_nothrow_move_constructible&lt;E&gt;::value) : base_t{}</span></span>
+<span id="L489"><span class="lineNum">     489</span>                 :<span class="tlaGNC">        1345 :     expected(unexpected&lt;E&gt;&amp;&amp; rhs) noexcept(std::is_nothrow_move_constructible&lt;E&gt;::value) : base_t{}</span></span>
 <span id="L490"><span class="lineNum">     490</span>                 :             :     {</span>
-<span id="L491"><span class="lineNum">     491</span>                 :<span class="tlaGNC">        1421 :         score::cpp::ignore = score::cpp::detail::construct_at(std::addressof(this-&gt;error_), std::move(rhs).error());</span></span>
-<span id="L492"><span class="lineNum">     492</span>                 :<span class="tlaGNC">        1421 :         this-&gt;has_value_ = false;</span></span>
-<span id="L493"><span class="lineNum">     493</span>                 :<span class="tlaGNC">        1421 :     }</span></span>
+<span id="L491"><span class="lineNum">     491</span>                 :<span class="tlaGNC">        1345 :         score::cpp::ignore = score::cpp::detail::construct_at(std::addressof(this-&gt;error_), std::move(rhs).error());</span></span>
+<span id="L492"><span class="lineNum">     492</span>                 :<span class="tlaGNC">        1345 :         this-&gt;has_value_ = false;</span></span>
+<span id="L493"><span class="lineNum">     493</span>                 :<span class="tlaGNC">        1345 :     }</span></span>
 <span id="L494"><span class="lineNum">     494</span>                 :             : </span>
 <span id="L495"><span class="lineNum">     495</span>                 :             :     ///</span>
 <span id="L496"><span class="lineNum">     496</span>                 :             :     /// \brief Move assign directly from value.</span>
@@ -680,10 +680,10 @@
 <span id="L602"><span class="lineNum">     602</span>                 :             :     /// \pre this-&gt;has_value()</span>
 <span id="L603"><span class="lineNum">     603</span>                 :             :     /// \return reference to expected value</span>
 <span id="L604"><span class="lineNum">     604</span>                 :             :     /// \{</span>
-<span id="L605"><span class="lineNum">     605</span>                 :<span class="tlaGNC">        2462 :     const T&amp; value() const&amp;</span></span>
+<span id="L605"><span class="lineNum">     605</span>                 :<span class="tlaGNC">        2385 :     const T&amp; value() const&amp;</span></span>
 <span id="L606"><span class="lineNum">     606</span>                 :             :     {</span>
-<span id="L607"><span class="lineNum">     607</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 2462 times"> + </span>]:<span class="tlaGNC">        2462 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION_PRD(has_value());</span></span>
-<span id="L608"><span class="lineNum">     608</span>                 :<span class="tlaGNC">        2462 :         return this-&gt;value_;</span></span>
+<span id="L607"><span class="lineNum">     607</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 2385 times"> + </span>]:<span class="tlaGNC">        2385 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION_PRD(has_value());</span></span>
+<span id="L608"><span class="lineNum">     608</span>                 :<span class="tlaGNC">        2385 :         return this-&gt;value_;</span></span>
 <span id="L609"><span class="lineNum">     609</span>                 :             :     }</span>
 <span id="L610"><span class="lineNum">     610</span>                 :<span class="tlaGNC">        3105 :     T&amp; value() &amp;</span></span>
 <span id="L611"><span class="lineNum">     611</span>                 :             :     {</span>
@@ -717,10 +717,10 @@
 <span id="L639"><span class="lineNum">     639</span>                 :             :     /// \pre !this-&gt;has_value()</span>
 <span id="L640"><span class="lineNum">     640</span>                 :             :     /// \return reference to unexpected error</span>
 <span id="L641"><span class="lineNum">     641</span>                 :             :     ///\{</span>
-<span id="L642"><span class="lineNum">     642</span>                 :<span class="tlaGNC">         395 :     const E&amp; error() const&amp;</span></span>
+<span id="L642"><span class="lineNum">     642</span>                 :<span class="tlaGNC">         325 :     const E&amp; error() const&amp;</span></span>
 <span id="L643"><span class="lineNum">     643</span>                 :             :     {</span>
-<span id="L644"><span class="lineNum">     644</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 395 times"> + </span>]:<span class="tlaGNC">         395 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION_PRD(!has_value());</span></span>
-<span id="L645"><span class="lineNum">     645</span>                 :<span class="tlaGNC">         395 :         return this-&gt;error_;</span></span>
+<span id="L644"><span class="lineNum">     644</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 325 times"> + </span>]:<span class="tlaGNC">         325 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION_PRD(!has_value());</span></span>
+<span id="L645"><span class="lineNum">     645</span>                 :<span class="tlaGNC">         325 :         return this-&gt;error_;</span></span>
 <span id="L646"><span class="lineNum">     646</span>                 :             :     }</span>
 <span id="L647"><span class="lineNum">     647</span>                 :<span class="tlaGNC">         490 :     E&amp; error() &amp;</span></span>
 <span id="L648"><span class="lineNum">     648</span>                 :             :     {</span>
@@ -744,7 +744,7 @@
 <span id="L666"><span class="lineNum">     666</span>                 :             :     ///</span>
 <span id="L667"><span class="lineNum">     667</span>                 :             :     /// \return true if \ref expected stores an expected value and false otherwise.</span>
 <span id="L668"><span class="lineNum">     668</span>                 :             :     /// \{</span>
-<span id="L669"><span class="lineNum">     669</span>                 :<span class="tlaGNC">       27555 :     inline bool has_value() const noexcept { return this-&gt;has_value_; }</span></span>
+<span id="L669"><span class="lineNum">     669</span>                 :<span class="tlaGNC">       27222 :     inline bool has_value() const noexcept { return this-&gt;has_value_; }</span></span>
 <span id="L670"><span class="lineNum">     670</span>                 :<span class="tlaGNC">         111 :     explicit operator bool() const noexcept { return this-&gt;has_value_; }</span></span>
 <span id="L671"><span class="lineNum">     671</span>                 :             :     /// \}</span>
 <span id="L672"><span class="lineNum">     672</span>                 :             : </span>

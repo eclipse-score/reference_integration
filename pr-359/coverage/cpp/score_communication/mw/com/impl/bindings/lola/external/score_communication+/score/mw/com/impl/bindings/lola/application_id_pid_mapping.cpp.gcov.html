@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:10:46</td>
+            <td class="headerValue">2026-09-30 04:19:55</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -109,7 +109,7 @@
 <span id="L31"><span class="lineNum">      31</span>                 :             : /// kUsed) or</span>
 <span id="L32"><span class="lineNum">      32</span>                 :             : ///         the new pid is returned, if status was in kUpdating. If application ID wasn't found empty optional gets</span>
 <span id="L33"><span class="lineNum">      33</span>                 :             : ///         returned.</span>
-<span id="L34"><span class="lineNum">      34</span>                 :<span class="tlaGNC tlaBgGNC">         319 : std::optional&lt;pid_t&gt; TryUpdatePidForExistingId(</span></span>
+<span id="L34"><span class="lineNum">      34</span>                 :<span class="tlaGNC tlaBgGNC">         318 : std::optional&lt;pid_t&gt; TryUpdatePidForExistingId(</span></span>
 <span id="L35"><span class="lineNum">      35</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A8-4-10&quot; rule. The rule declares &quot;A parameter shall be passed by reference</span>
 <span id="L36"><span class="lineNum">      36</span>                 :             :     // if it can’t be NULL&quot;.</span>
 <span id="L37"><span class="lineNum">      37</span>                 :             :     // We need this parameter as an iterator over a container, semantically it should never be a nullptr as</span>
@@ -124,13 +124,13 @@
 <span id="L46"><span class="lineNum">      46</span>                 :             :     // Rationale: Tolerated due to containers providing pointer-like iterators.</span>
 <span id="L47"><span class="lineNum">      47</span>                 :             :     // The Coverity tool considers these iterators as raw pointers.</span>
 <span id="L48"><span class="lineNum">      48</span>                 :             :     // coverity[autosar_cpp14_m5_0_15_violation]</span>
-<span id="L49"><span class="lineNum">      49</span>         [<span class="tlaGBC" title="Branch 0 was taken 3889 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 53 times"> + </span>]:<span class="tlaGNC">        3942 :     for (auto* it = entries_begin; it != entries_end; it++)</span></span>
+<span id="L49"><span class="lineNum">      49</span>         [<span class="tlaGBC" title="Branch 0 was taken 3888 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 54 times"> + </span>]:<span class="tlaGNC">        3942 :     for (auto* it = entries_begin; it != entries_end; it++)</span></span>
 <span id="L50"><span class="lineNum">      50</span>                 :             :     {</span>
 <span id="L51"><span class="lineNum">      51</span>                 :             :         // extract out into a separate function</span>
-<span id="L52"><span class="lineNum">      52</span>                 :<span class="tlaGNC">        3889 :         const auto status_applicationid = it-&gt;GetStatusAndApplicationIdAtomic();</span></span>
-<span id="L53"><span class="lineNum">      53</span>                 :<span class="tlaGNC">        3888 :         const auto entry_status = status_applicationid.first;</span></span>
-<span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC">        3888 :         const auto entry_applicationid = status_applicationid.second;</span></span>
-<span id="L55"><span class="lineNum">      55</span>   [<span class="tlaGBC" title="Branch 0 was taken 1407 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2481 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 264 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 1143 times"> + </span>]:<span class="tlaGNC">        3888 :         if ((entry_status == ApplicationIdPidMappingEntry::MappingEntryStatus::kUsed) &amp;&amp;</span></span>
+<span id="L52"><span class="lineNum">      52</span>                 :<span class="tlaGNC">        3888 :         const auto status_applicationid = it-&gt;GetStatusAndApplicationIdAtomic();</span></span>
+<span id="L53"><span class="lineNum">      53</span>                 :<span class="tlaGNC">        3889 :         const auto entry_status = status_applicationid.first;</span></span>
+<span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC">        3889 :         const auto entry_applicationid = status_applicationid.second;</span></span>
+<span id="L55"><span class="lineNum">      55</span>   [<span class="tlaGBC" title="Branch 0 was taken 1408 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2481 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 264 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 1144 times"> + </span>]:<span class="tlaGNC">        3889 :         if ((entry_status == ApplicationIdPidMappingEntry::MappingEntryStatus::kUsed) &amp;&amp;</span></span>
 <span id="L56"><span class="lineNum">      56</span>                 :             :             (entry_applicationid == application_id))</span>
 <span id="L57"><span class="lineNum">      57</span>                 :             :         {</span>
 <span id="L58"><span class="lineNum">      58</span>                 :             :             // application ID already exists. It is &quot;owned&quot; by us, so we can directly update pid, without atomic state</span>
@@ -139,7 +139,7 @@
 <span id="L61"><span class="lineNum">      61</span>                 :<span class="tlaGNC">         264 :             it-&gt;pid_ = pid;</span></span>
 <span id="L62"><span class="lineNum">      62</span>                 :<span class="tlaGNC">         264 :             return old_pid;</span></span>
 <span id="L63"><span class="lineNum">      63</span>                 :             :         }</span>
-<span id="L64"><span class="lineNum">      64</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 3623 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">        3624 :         else if ((entry_status == ApplicationIdPidMappingEntry::MappingEntryStatus::kUpdating) &amp;&amp;</span></span>
+<span id="L64"><span class="lineNum">      64</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 3624 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">        3625 :         else if ((entry_status == ApplicationIdPidMappingEntry::MappingEntryStatus::kUpdating) &amp;&amp;</span></span>
 <span id="L65"><span class="lineNum">      65</span>                 :             :                  (entry_applicationid == application_id))</span>
 <span id="L66"><span class="lineNum">      66</span>                 :             :         {</span>
 <span id="L67"><span class="lineNum">      67</span>                 :             :             // This is a very odd situation! I.e. someone is currently updating the pid for OUR application ID!</span>
@@ -154,7 +154,7 @@
 <span id="L76"><span class="lineNum">      76</span>                 :<span class="tlaGNC">           1 :             return pid;</span></span>
 <span id="L77"><span class="lineNum">      77</span>                 :             :         }</span>
 <span id="L78"><span class="lineNum">      78</span>                 :             :     }</span>
-<span id="L79"><span class="lineNum">      79</span>                 :<span class="tlaGNC">          53 :     return {};</span></span>
+<span id="L79"><span class="lineNum">      79</span>                 :<span class="tlaGNC">          54 :     return {};</span></span>
 <span id="L80"><span class="lineNum">      80</span>                 :             : }</span>
 <span id="L81"><span class="lineNum">      81</span>                 :             : </span>
 <span id="L82"><span class="lineNum">      82</span>                 :             : }  // namespace</span>
@@ -171,15 +171,15 @@
 <span id="L93"><span class="lineNum">      93</span>                 :             : template &lt;template &lt;class&gt; class AtomicIndirectorType&gt;</span>
 <span id="L94"><span class="lineNum">      94</span>                 :             : // coverity[autosar_cpp14_m3_2_3_violation]</span>
 <span id="L95"><span class="lineNum">      95</span>                 :             : // coverity[autosar_cpp14_a8_4_10_violation]</span>
-<span id="L96"><span class="lineNum">      96</span>                 :<span class="tlaGNC">         319 : std::optional&lt;pid_t&gt; RegisterPid(score::containers::DynamicArray&lt;ApplicationIdPidMappingEntry&gt;::iterator entries_begin,</span></span>
+<span id="L96"><span class="lineNum">      96</span>                 :<span class="tlaGNC">         318 : std::optional&lt;pid_t&gt; RegisterPid(score::containers::DynamicArray&lt;ApplicationIdPidMappingEntry&gt;::iterator entries_begin,</span></span>
 <span id="L97"><span class="lineNum">      97</span>                 :             :                                  score::containers::DynamicArray&lt;ApplicationIdPidMappingEntry&gt;::iterator entries_end,</span>
 <span id="L98"><span class="lineNum">      98</span>                 :             :                                  const std::uint32_t application_id,</span>
 <span id="L99"><span class="lineNum">      99</span>                 :             :                                  const pid_t pid)</span>
 <span id="L100"><span class="lineNum">     100</span>                 :             : {</span>
-<span id="L101"><span class="lineNum">     101</span>                 :<span class="tlaGNC">         319 :     const auto result_pid = TryUpdatePidForExistingId(entries_begin, entries_end, application_id, pid);</span></span>
-<span id="L102"><span class="lineNum">     102</span>         [<span class="tlaGBC" title="Branch 0 was taken 264 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 54 times"> + </span>]:<span class="tlaGNC">         318 :     if (result_pid.has_value())</span></span>
+<span id="L101"><span class="lineNum">     101</span>                 :<span class="tlaGNC">         318 :     const auto result_pid = TryUpdatePidForExistingId(entries_begin, entries_end, application_id, pid);</span></span>
+<span id="L102"><span class="lineNum">     102</span>         [<span class="tlaGBC" title="Branch 0 was taken 265 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 54 times"> + </span>]:<span class="tlaGNC">         319 :     if (result_pid.has_value())</span></span>
 <span id="L103"><span class="lineNum">     103</span>                 :             :     {</span>
-<span id="L104"><span class="lineNum">     104</span>                 :<span class="tlaGNC">         264 :         return result_pid;</span></span>
+<span id="L104"><span class="lineNum">     104</span>                 :<span class="tlaGNC">         265 :         return result_pid;</span></span>
 <span id="L105"><span class="lineNum">     105</span>                 :             :     }</span>
 <span id="L106"><span class="lineNum">     106</span>                 :             : </span>
 <span id="L107"><span class="lineNum">     107</span>                 :             :     // \todo find a &quot;sane&quot; value for max-retries!</span>

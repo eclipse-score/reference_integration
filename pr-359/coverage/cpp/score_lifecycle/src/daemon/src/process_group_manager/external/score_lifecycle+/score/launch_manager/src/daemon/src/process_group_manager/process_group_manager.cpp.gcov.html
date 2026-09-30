@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:11:54</td>
+            <td class="headerValue">2026-09-30 04:20:58</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">76.7&nbsp;%</td>
@@ -409,28 +409,28 @@
 <span id="L330"><span class="lineNum">     330</span>                 :             :     // Wait for process group state to change while actively draining shutdown events.</span>
 <span id="L331"><span class="lineNum">     331</span>                 :             :     // SupervisionFailure is intentionally ignored here so recovery transitions do not</span>
 <span id="L332"><span class="lineNum">     332</span>                 :             :     // fight the forced transition to Off.</span>
-<span id="L333"><span class="lineNum">     333</span>                 :<span class="tlaGNC">          30 :     auto waitForStateCompletion = [this](GraphState state_to_be_completed, int32_t max_wait_ms) -&gt; bool {</span></span>
+<span id="L333"><span class="lineNum">     333</span>                 :<span class="tlaGNC">          52 :     auto waitForStateCompletion = [this](GraphState state_to_be_completed, int32_t max_wait_ms) -&gt; bool {</span></span>
 <span id="L334"><span class="lineNum">     334</span>                 :<span class="tlaGNC">           4 :         constexpr int32_t kSleepIntervalMs = 10;</span></span>
 <span id="L335"><span class="lineNum">     335</span>                 :             : </span>
-<span id="L336"><span class="lineNum">     336</span>                 :<span class="tlaGNC">          38 :         auto has_state = [this, state_to_be_completed]() {</span></span>
-<span id="L337"><span class="lineNum">     337</span>                 :<span class="tlaGNC">          19 :             return graph_-&gt;getState() == state_to_be_completed;</span></span>
+<span id="L336"><span class="lineNum">     336</span>                 :<span class="tlaGNC">          58 :         auto has_state = [this, state_to_be_completed]() {</span></span>
+<span id="L337"><span class="lineNum">     337</span>                 :<span class="tlaGNC">          29 :             return graph_-&gt;getState() == state_to_be_completed;</span></span>
 <span id="L338"><span class="lineNum">     338</span>                 :<span class="tlaGNC">           4 :         };</span></span>
 <span id="L339"><span class="lineNum">     339</span>                 :             : </span>
 <span id="L340"><span class="lineNum">     340</span>                 :<span class="tlaGNC">           4 :         int32_t remaining_ms = max_wait_ms;</span></span>
-<span id="L341"><span class="lineNum">     341</span>   [<span class="tlaGBC" title="Branch 0 was taken 15 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 11 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 4 times"> + </span> :<span class="tlaGNC">          15 :         while (has_state() &amp;&amp; (remaining_ms &gt; 0))</span></span>
-<span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 11 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 11 times"> + </span><span class="tlaGBC" title="Branch 7 was taken 4 times"> + </span>]
+<span id="L341"><span class="lineNum">     341</span>   [<span class="tlaGBC" title="Branch 0 was taken 25 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 21 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 4 times"> + </span> :<span class="tlaGNC">          25 :         while (has_state() &amp;&amp; (remaining_ms &gt; 0))</span></span>
+<span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 21 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 21 times"> + </span><span class="tlaGBC" title="Branch 7 was taken 4 times"> + </span>]
 <span id="L342"><span class="lineNum">     342</span>                 :             :         {</span>
-<span id="L343"><span class="lineNum">     343</span>         [<span class="tlaGBC" title="Branch 0 was taken 11 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          11 :             static_cast&lt;void&gt;(event_queue_-&gt;waitForEvents(std::chrono::milliseconds(kSleepIntervalMs)));</span></span>
-<span id="L344"><span class="lineNum">     344</span>   [<span class="tlaGBC" title="Branch 0 was taken 13 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 11 times"> + </span>]:<span class="tlaGNC">          13 :             while (auto event = event_queue_-&gt;getNextEvent())</span></span>
+<span id="L343"><span class="lineNum">     343</span>         [<span class="tlaGBC" title="Branch 0 was taken 21 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          21 :             static_cast&lt;void&gt;(event_queue_-&gt;waitForEvents(std::chrono::milliseconds(kSleepIntervalMs)));</span></span>
+<span id="L344"><span class="lineNum">     344</span>   [<span class="tlaGBC" title="Branch 0 was taken 24 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 21 times"> + </span>]:<span class="tlaGNC">          24 :             while (auto event = event_queue_-&gt;getNextEvent())</span></span>
 <span id="L345"><span class="lineNum">     345</span>                 :             :             {</span>
-<span id="L346"><span class="lineNum">     346</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">           2 :                 if (std::holds_alternative&lt;SupervisionFailure&gt;(*event))</span></span>
+<span id="L346"><span class="lineNum">     346</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span>]:<span class="tlaGNC">           3 :                 if (std::holds_alternative&lt;SupervisionFailure&gt;(*event))</span></span>
 <span id="L347"><span class="lineNum">     347</span>                 :             :                 {</span>
 <span id="L348"><span class="lineNum">     348</span>                 :<span class="tlaUNC tlaBgUNC">           0 :                     continue;</span></span>
 <span id="L349"><span class="lineNum">     349</span>                 :             :                 }</span>
-<span id="L350"><span class="lineNum">     350</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">           2 :                 graph_-&gt;handleComponentEvent(*event);</span></span>
-<span id="L351"><span class="lineNum">     351</span>                 :<span class="tlaGNC">           2 :             }</span></span>
+<span id="L350"><span class="lineNum">     350</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">           3 :                 graph_-&gt;handleComponentEvent(*event);</span></span>
+<span id="L351"><span class="lineNum">     351</span>                 :<span class="tlaGNC">           3 :             }</span></span>
 <span id="L352"><span class="lineNum">     352</span>                 :             : </span>
-<span id="L353"><span class="lineNum">     353</span>                 :<span class="tlaGNC">          11 :             remaining_ms -= kSleepIntervalMs;</span></span>
+<span id="L353"><span class="lineNum">     353</span>                 :<span class="tlaGNC">          21 :             remaining_ms -= kSleepIntervalMs;</span></span>
 <span id="L354"><span class="lineNum">     354</span>                 :             :         }</span>
 <span id="L355"><span class="lineNum">     355</span>                 :             : </span>
 <span id="L356"><span class="lineNum">     356</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           4 :         return !has_state();</span></span>

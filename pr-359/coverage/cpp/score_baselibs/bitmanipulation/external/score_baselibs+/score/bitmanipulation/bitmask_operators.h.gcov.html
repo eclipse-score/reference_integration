@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -159,7 +159,7 @@
 <span id="L81"><span class="lineNum">      81</span>                 :             : // the operator is only enabled when certain conditions are met, ensuring it is available on demand.</span>
 <span id="L82"><span class="lineNum">      82</span>                 :             : template &lt;typename T&gt;</span>
 <span id="L83"><span class="lineNum">      83</span>                 :             : // coverity[autosar_cpp14_m7_3_1_violation]</span>
-<span id="L84"><span class="lineNum">      84</span>                 :<span class="tlaGNC tlaBgGNC">        1339 : constexpr ::details::IsEnabledEnum&lt;T&gt; operator|(const T&amp; lhs, const T&amp; rhs)</span></span>
+<span id="L84"><span class="lineNum">      84</span>                 :<span class="tlaGNC tlaBgGNC">        1087 : constexpr ::details::IsEnabledEnum&lt;T&gt; operator|(const T&amp; lhs, const T&amp; rhs)</span></span>
 <span id="L85"><span class="lineNum">      85</span>                 :             : {</span>
 <span id="L86"><span class="lineNum">      86</span>                 :             :     using U = std::underlying_type_t&lt;T&gt;;</span>
 <span id="L87"><span class="lineNum">      87</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A7-2-1&quot; rule finding. The rule states: &quot;An expression with enum underlying type shall</span>
@@ -167,8 +167,8 @@
 <span id="L89"><span class="lineNum">      89</span>                 :             :     // This finding occurs because the underlying value, which is a smaller type, is cast to uint64_t and then back</span>
 <span id="L90"><span class="lineNum">      90</span>                 :             :     // after applying the bitwise operation. This can potentially cause data loss, but this fulfills the result type.</span>
 <span id="L91"><span class="lineNum">      91</span>                 :             :     // coverity[autosar_cpp14_a7_2_1_violation]</span>
-<span id="L92"><span class="lineNum">      92</span>                 :<span class="tlaGNC">        1339 :     return static_cast&lt;T&gt;(static_cast&lt;std::uint64_t&gt;(static_cast&lt;U&gt;(lhs)) |</span></span>
-<span id="L93"><span class="lineNum">      93</span>                 :<span class="tlaGNC">        1339 :                           static_cast&lt;std::uint64_t&gt;(static_cast&lt;U&gt;(rhs)));</span></span>
+<span id="L92"><span class="lineNum">      92</span>                 :<span class="tlaGNC">        1087 :     return static_cast&lt;T&gt;(static_cast&lt;std::uint64_t&gt;(static_cast&lt;U&gt;(lhs)) |</span></span>
+<span id="L93"><span class="lineNum">      93</span>                 :<span class="tlaGNC">        1087 :                           static_cast&lt;std::uint64_t&gt;(static_cast&lt;U&gt;(rhs)));</span></span>
 <span id="L94"><span class="lineNum">      94</span>                 :             : }</span>
 <span id="L95"><span class="lineNum">      95</span>                 :             : </span>
 <span id="L96"><span class="lineNum">      96</span>                 :             : /// @brief Provides the bitwise AND operator for scoped enums so that individual bits can be read from a bitmask.</span>
@@ -193,14 +193,14 @@
 <span id="L115"><span class="lineNum">     115</span>                 :             : template &lt;typename T&gt;</span>
 <span id="L116"><span class="lineNum">     116</span>                 :             : constexpr typename std::enable_if&lt;std::is_enum&lt;T&gt;::value &amp;&amp; score::enable_bitmask_operators&lt;T&gt;::value, bool&gt;::type</span>
 <span id="L117"><span class="lineNum">     117</span>                 :             : // coverity[autosar_cpp14_m7_3_1_violation]</span>
-<span id="L118"><span class="lineNum">     118</span>                 :<span class="tlaGNC">        7234 : operator&amp;(const T&amp; lhs, const T&amp; rhs)</span></span>
+<span id="L118"><span class="lineNum">     118</span>                 :<span class="tlaGNC">        5729 : operator&amp;(const T&amp; lhs, const T&amp; rhs)</span></span>
 <span id="L119"><span class="lineNum">     119</span>                 :             : {</span>
 <span id="L120"><span class="lineNum">     120</span>                 :             :     using U = std::underlying_type_t&lt;T&gt;;</span>
 <span id="L121"><span class="lineNum">     121</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A4-7-1&quot; rule finding. This rule states: &quot;An integer expression shall not lead to data</span>
 <span id="L122"><span class="lineNum">     122</span>                 :             :     // loss.&quot; In this context, there is no data loss because lhs/rhs is promoted to std::uint64_t for the bitwise</span>
 <span id="L123"><span class="lineNum">     123</span>                 :             :     // operation. The result is then checked for non-zero, ensuring the integrity of the original data.</span>
 <span id="L124"><span class="lineNum">     124</span>                 :             :     // coverity[autosar_cpp14_a4_7_1_violation]</span>
-<span id="L125"><span class="lineNum">     125</span>                 :<span class="tlaGNC">        7234 :     return (static_cast&lt;std::uint64_t&gt;(static_cast&lt;U&gt;(lhs)) &amp; static_cast&lt;std::uint64_t&gt;(static_cast&lt;U&gt;(rhs))) != 0U;</span></span>
+<span id="L125"><span class="lineNum">     125</span>                 :<span class="tlaGNC">        5729 :     return (static_cast&lt;std::uint64_t&gt;(static_cast&lt;U&gt;(lhs)) &amp; static_cast&lt;std::uint64_t&gt;(static_cast&lt;U&gt;(rhs))) != 0U;</span></span>
 <span id="L126"><span class="lineNum">     126</span>                 :             : }</span>
 <span id="L127"><span class="lineNum">     127</span>                 :             : </span>
 <span id="L128"><span class="lineNum">     128</span>                 :             : /// @brief Provides the bitwise XOR operator for scoped enums.</span>

@@ -37,12 +37,12 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryLo">74.1&nbsp;%</td>
-            <td class="headerCovTableEntry">848</td>
-            <td class="headerCovTableEntry">628</td>
+            <td class="headerCovTableEntryLo">73.9&nbsp;%</td>
+            <td class="headerCovTableEntry">852</td>
+            <td class="headerCovTableEntry">630</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -112,10 +112,10 @@
 <span id="L34"><span class="lineNum">      34</span>                 :             : </span>
 <span id="L35"><span class="lineNum">      35</span>                 :             : /// \brief Creates a `T` object by means of uses-allocator construction at given address `p`.</span>
 <span id="L36"><span class="lineNum">      36</span>                 :             : template &lt;typename T, typename Alloc, typename... Args&gt;</span>
-<span id="L37"><span class="lineNum">      37</span>                 :<span class="tlaGNC tlaBgGNC">       35270 : constexpr T* uninitialized_construct_using_allocator(T* p, const Alloc&amp; alloc, Args&amp;&amp;... args)</span></span>
+<span id="L37"><span class="lineNum">      37</span>                 :<span class="tlaGNC tlaBgGNC">     5284200 : constexpr T* uninitialized_construct_using_allocator(T* p, const Alloc&amp; alloc, Args&amp;&amp;... args)</span></span>
 <span id="L38"><span class="lineNum">      38</span>                 :             : {</span>
-<span id="L39"><span class="lineNum">      39</span>         [<span class="tlaGBC" title="Branch 0 was taken 35270 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">      103340 :     return score::cpp::apply([p](auto&amp;&amp;... xs) { return score::cpp::detail::construct_at(p, std::forward&lt;decltype(xs)&gt;(xs)...); },</span></span>
-<span id="L40"><span class="lineNum">      40</span>                 :<span class="tlaGNC">       70540 :                       score::cpp::detail::uses_allocator_construction_args&lt;T&gt;(alloc, std::forward&lt;Args&gt;(args)...));</span></span>
+<span id="L39"><span class="lineNum">      39</span>         [<span class="tlaGBC" title="Branch 0 was taken 5284200 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">    10602637 :     return score::cpp::apply([p](auto&amp;&amp;... xs) { return score::cpp::detail::construct_at(p, std::forward&lt;decltype(xs)&gt;(xs)...); },</span></span>
+<span id="L40"><span class="lineNum">      40</span>                 :<span class="tlaGNC">    10568400 :                       score::cpp::detail::uses_allocator_construction_args&lt;T&gt;(alloc, std::forward&lt;Args&gt;(args)...));</span></span>
 <span id="L41"><span class="lineNum">      41</span>                 :             : }</span>
 <span id="L42"><span class="lineNum">      42</span>                 :             : </span>
 <span id="L43"><span class="lineNum">      43</span>                 :             : } // namespace detail</span>

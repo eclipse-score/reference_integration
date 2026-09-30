@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -125,7 +125,7 @@
 <span id="L47"><span class="lineNum">      47</span>                 :             : template &lt;typename T, typename Compare&gt;</span>
 <span id="L48"><span class="lineNum">      48</span>                 :<span class="tlaGNC tlaBgGNC">          73 : constexpr const T&amp; clamp(const T&amp; value, const T&amp; lo, const T&amp; hi, Compare comp)</span></span>
 <span id="L49"><span class="lineNum">      49</span>                 :             : {</span>
-<span id="L50"><span class="lineNum">      50</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 73 times"> + </span>]:<span class="tlaGNC">          73 :     SCORE_LANGUAGE_FUTURECPP_ASSERT_DBG(!comp(hi, lo));</span></span>
+<span id="L50"><span class="lineNum">      50</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 73 times"> + </span>]:<span class="tlaGNC">          73 :     SCORE_LANGUAGE_FUTURECPP_PRECONDITION_DBG(!comp(hi, lo));</span></span>
 <span id="L51"><span class="lineNum">      51</span>   [<span class="tlaGBC" title="Branch 0 was taken 22 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 51 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 20 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 31 times"> + </span>]:<span class="tlaGNC">          73 :     return comp(value, lo) ? lo : comp(hi, value) ? hi : value;</span></span>
 <span id="L52"><span class="lineNum">      52</span>                 :             : }</span>
 <span id="L53"><span class="lineNum">      53</span>                 :             : </span>

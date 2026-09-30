@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:11:54</td>
+            <td class="headerValue">2026-09-30 04:20:58</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -194,11 +194,11 @@
 <span id="L116"><span class="lineNum">     116</span>                 :             :     /// @return Success if item was pushed, Error otherwise.</span>
 <span id="L117"><span class="lineNum">     117</span>                 :             :     ///         Note: If the push returns false, the object is still valid for</span>
 <span id="L118"><span class="lineNum">     118</span>                 :             :     ///         the user.</span>
-<span id="L119"><span class="lineNum">     119</span>                 :<span class="tlaGNC">          36 :     [[nodiscard]] score::cpp::expected_blank&lt;ConcurrencyErrc&gt; push(</span></span>
+<span id="L119"><span class="lineNum">     119</span>                 :<span class="tlaGNC">          37 :     [[nodiscard]] score::cpp::expected_blank&lt;ConcurrencyErrc&gt; push(</span></span>
 <span id="L120"><span class="lineNum">     120</span>                 :             :         T&amp;&amp; item,</span>
 <span id="L121"><span class="lineNum">     121</span>                 :<span class="tlaGNC">           9 :         std::chrono::milliseconds timeout = std::chrono::milliseconds{0})</span></span>
 <span id="L122"><span class="lineNum">     122</span>                 :             :     {</span>
-<span id="L123"><span class="lineNum">     123</span>                 :<span class="tlaGNC">          36 :         return push_impl(std::move(item), timeout);</span></span>
+<span id="L123"><span class="lineNum">     123</span>                 :<span class="tlaGNC">          37 :         return push_impl(std::move(item), timeout);</span></span>
 <span id="L124"><span class="lineNum">     124</span>                 :             :     }</span>
 <span id="L125"><span class="lineNum">     125</span>                 :             : </span>
 <span id="L126"><span class="lineNum">     126</span>                 :             :     /// @brief Blocks until a slot is free, then writes the item into the queue.</span>
@@ -240,49 +240,49 @@
 <span id="L162"><span class="lineNum">     162</span>                 :             :     ///          When stopped returns std::nullopt.</span>
 <span id="L163"><span class="lineNum">     163</span>                 :             :     /// @param timeout Maximum time to wait for an item. Zero means wait forever.</span>
 <span id="L164"><span class="lineNum">     164</span>                 :             :     /// @return The next item, or error.</span>
-<span id="L165"><span class="lineNum">     165</span>                 :<span class="tlaGNC">         373 :     [[nodiscard]] score::cpp::expected&lt;T, ConcurrencyErrc&gt; pop(</span></span>
-<span id="L166"><span class="lineNum">     166</span>                 :<span class="tlaGNC">         363 :         std::chrono::milliseconds timeout = std::chrono::milliseconds{0})</span></span>
+<span id="L165"><span class="lineNum">     165</span>                 :<span class="tlaGNC">         376 :     [[nodiscard]] score::cpp::expected&lt;T, ConcurrencyErrc&gt; pop(</span></span>
+<span id="L166"><span class="lineNum">     166</span>                 :<span class="tlaGNC">         366 :         std::chrono::milliseconds timeout = std::chrono::milliseconds{0})</span></span>
 <span id="L167"><span class="lineNum">     167</span>                 :             :     {</span>
-<span id="L168"><span class="lineNum">     168</span>                 :<span class="tlaGNC">         376 :         const auto wait_result =</span></span>
-<span id="L169"><span class="lineNum">     169</span>   [<span class="tlaGBC" title="Branch 0 was taken 373 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 362 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 11 times"> + </span> :<span class="tlaGNC">         373 :             (timeout == std::chrono::milliseconds{0}) ? m_items.wait() : m_items.timedWait(timeout);</span></span>
+<span id="L168"><span class="lineNum">     168</span>                 :<span class="tlaGNC">         377 :         const auto wait_result =</span></span>
+<span id="L169"><span class="lineNum">     169</span>   [<span class="tlaGBC" title="Branch 0 was taken 376 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 366 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 11 times"> + </span> :<span class="tlaGNC">         376 :             (timeout == std::chrono::milliseconds{0}) ? m_items.wait() : m_items.timedWait(timeout);</span></span>
 <span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 234 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 11 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span>]
 <span id="L170"><span class="lineNum">     170</span>                 :             : </span>
-<span id="L171"><span class="lineNum">     171</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 371 times"> + </span>]:<span class="tlaGNC">         376 :         if (wait_result == osal::OsalReturnType::kTimeout)</span></span>
+<span id="L171"><span class="lineNum">     171</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 372 times"> + </span>]:<span class="tlaGNC">         377 :         if (wait_result == osal::OsalReturnType::kTimeout)</span></span>
 <span id="L172"><span class="lineNum">     172</span>                 :             :         {</span>
 <span id="L173"><span class="lineNum">     173</span>                 :<span class="tlaGNC">           5 :             return score::cpp::make_unexpected(ConcurrencyErrc::kTimeout);</span></span>
 <span id="L174"><span class="lineNum">     174</span>                 :             :         }</span>
-<span id="L175"><span class="lineNum">     175</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 370 times"> + </span>]:<span class="tlaGNC">         371 :         else if (wait_result != osal::OsalReturnType::kSuccess)</span></span>
+<span id="L175"><span class="lineNum">     175</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 371 times"> + </span>]:<span class="tlaGNC">         372 :         else if (wait_result != osal::OsalReturnType::kSuccess)</span></span>
 <span id="L176"><span class="lineNum">     176</span>                 :             :         {</span>
 <span id="L177"><span class="lineNum">     177</span>                 :<span class="tlaGNC">           1 :             return score::cpp::make_unexpected(ConcurrencyErrc::kOsError);</span></span>
 <span id="L178"><span class="lineNum">     178</span>                 :             :         }</span>
 <span id="L179"><span class="lineNum">     179</span>                 :             : </span>
-<span id="L180"><span class="lineNum">     180</span>         [<span class="tlaGBC" title="Branch 0 was taken 135 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 235 times"> + </span>]:<span class="tlaGNC">         370 :         if (m_stopped.load(std::memory_order_acquire))</span></span>
+<span id="L180"><span class="lineNum">     180</span>         [<span class="tlaGBC" title="Branch 0 was taken 135 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 236 times"> + </span>]:<span class="tlaGNC">         371 :         if (m_stopped.load(std::memory_order_acquire))</span></span>
 <span id="L181"><span class="lineNum">     181</span>                 :             :         {</span>
 <span id="L182"><span class="lineNum">     182</span>         [<span class="tlaGBC" title="Branch 0 was taken 135 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         135 :             static_cast&lt;void&gt;(m_items.post());</span></span>
 <span id="L183"><span class="lineNum">     183</span>                 :<span class="tlaGNC">         135 :             return score::cpp::make_unexpected(ConcurrencyErrc::kStopped);</span></span>
 <span id="L184"><span class="lineNum">     184</span>                 :             :         }</span>
 <span id="L185"><span class="lineNum">     185</span>                 :             : </span>
-<span id="L186"><span class="lineNum">     186</span>                 :<span class="tlaGNC">         470 :         T item = consume_slot(m_head.fetch_add(1, std::memory_order_relaxed));</span></span>
+<span id="L186"><span class="lineNum">     186</span>                 :<span class="tlaGNC">         472 :         T item = consume_slot(m_head.fetch_add(1, std::memory_order_relaxed));</span></span>
 <span id="L187"><span class="lineNum">     187</span>                 :             : </span>
-<span id="L188"><span class="lineNum">     188</span>   [<span class="tlaGBC" title="Branch 0 was taken 234 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 234 times"> + </span>]:<span class="tlaGNC">         234 :         if (m_spaces.post() != osal::OsalReturnType::kSuccess)</span></span>
+<span id="L188"><span class="lineNum">     188</span>   [<span class="tlaGBC" title="Branch 0 was taken 236 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 236 times"> + </span>]:<span class="tlaGNC">         236 :         if (m_spaces.post() != osal::OsalReturnType::kSuccess)</span></span>
 <span id="L189"><span class="lineNum">     189</span>                 :             :         {</span>
 <span id="L190"><span class="lineNum">     190</span>                 :<span class="tlaUNC tlaBgUNC">           0 :             return score::cpp::make_unexpected(ConcurrencyErrc::kOsError);</span></span>
 <span id="L191"><span class="lineNum">     191</span>                 :             :         }</span>
 <span id="L192"><span class="lineNum">     192</span>                 :             : </span>
-<span id="L193"><span class="lineNum">     193</span>                 :<span class="tlaGNC tlaBgGNC">         234 :         return item;</span></span>
-<span id="L194"><span class="lineNum">     194</span>                 :<span class="tlaGNC">          25 :     }</span></span>
+<span id="L193"><span class="lineNum">     193</span>                 :<span class="tlaGNC tlaBgGNC">         236 :         return item;</span></span>
+<span id="L194"><span class="lineNum">     194</span>                 :<span class="tlaGNC">          26 :     }</span></span>
 <span id="L195"><span class="lineNum">     195</span>                 :             : </span>
 <span id="L196"><span class="lineNum">     196</span>                 :             :   private:</span>
 <span id="L197"><span class="lineNum">     197</span>                 :             :     /// @brief Spins until the slot at tail is ready, moves the item out, and</span>
 <span id="L198"><span class="lineNum">     198</span>                 :             :     ///        releases the slot.</span>
-<span id="L199"><span class="lineNum">     199</span>                 :<span class="tlaGNC">         235 :     T consume_slot(std::size_t tail) noexcept</span></span>
+<span id="L199"><span class="lineNum">     199</span>                 :<span class="tlaGNC">         236 :     T consume_slot(std::size_t tail) noexcept</span></span>
 <span id="L200"><span class="lineNum">     200</span>                 :             :     {</span>
-<span id="L201"><span class="lineNum">     201</span>                 :<span class="tlaGNC">         235 :         auto&amp; slot = m_slots[tail &amp; (Capacity - 1U)];</span></span>
+<span id="L201"><span class="lineNum">     201</span>                 :<span class="tlaGNC">         236 :         auto&amp; slot = m_slots[tail &amp; (Capacity - 1U)];</span></span>
 <span id="L202"><span class="lineNum">     202</span>                 :             : </span>
 <span id="L203"><span class="lineNum">     203</span>                 :             :         // odd turns belong to consumer, +1 relative to the producer's even turn</span>
-<span id="L204"><span class="lineNum">     204</span>                 :<span class="tlaGNC">         235 :         const auto expected_turn = ((tail / Capacity) * 2) + 1;</span></span>
+<span id="L204"><span class="lineNum">     204</span>                 :<span class="tlaGNC">         236 :         const auto expected_turn = ((tail / Capacity) * 2) + 1;</span></span>
 <span id="L205"><span class="lineNum">     205</span>                 :             : </span>
-<span id="L206"><span class="lineNum">     206</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 233 times"> + </span>]:<span class="tlaGNC">         468 :         while (slot.turn.load(std::memory_order_acquire) != expected_turn)</span></span>
+<span id="L206"><span class="lineNum">     206</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 236 times"> + </span>]:<span class="tlaGNC">         472 :         while (slot.turn.load(std::memory_order_acquire) != expected_turn)</span></span>
 <span id="L207"><span class="lineNum">     207</span>                 :             :         {</span>
 <span id="L208"><span class="lineNum">     208</span>                 :<span class="tlaUNC tlaBgUNC">           0 :             std::this_thread::yield();</span></span>
 <span id="L209"><span class="lineNum">     209</span>                 :             :             // small spin, only fires if a prior producer claimed this slot but</span>
@@ -294,47 +294,47 @@
 <span id="L215"><span class="lineNum">     215</span>                 :             :         // as the atomic slot.turn is used for syncing</span>
 <span id="L216"><span class="lineNum">     216</span>                 :             :         ANNOTATE_HAPPENS_AFTER(&amp;slot.turn);</span>
 <span id="L217"><span class="lineNum">     217</span>                 :             : </span>
-<span id="L218"><span class="lineNum">     218</span>                 :<span class="tlaGNC tlaBgGNC">         233 :         T item = std::move_if_noexcept(slot.item);</span></span>
+<span id="L218"><span class="lineNum">     218</span>                 :<span class="tlaGNC tlaBgGNC">         236 :         T item = std::move_if_noexcept(slot.item);</span></span>
 <span id="L219"><span class="lineNum">     219</span>                 :             : </span>
 <span id="L220"><span class="lineNum">     220</span>                 :             :         ANNOTATE_HAPPENS_BEFORE(&amp;slot.turn);</span>
 <span id="L221"><span class="lineNum">     221</span>                 :             : </span>
 <span id="L222"><span class="lineNum">     222</span>                 :             :         // release store signals that the slot is now free for the next producer.</span>
-<span id="L223"><span class="lineNum">     223</span>                 :<span class="tlaGNC">         234 :         slot.turn.store(expected_turn + 1, std::memory_order_release);</span></span>
+<span id="L223"><span class="lineNum">     223</span>                 :<span class="tlaGNC">         236 :         slot.turn.store(expected_turn + 1, std::memory_order_release);</span></span>
 <span id="L224"><span class="lineNum">     224</span>                 :             : </span>
-<span id="L225"><span class="lineNum">     225</span>                 :<span class="tlaGNC">         234 :         return item;</span></span>
+<span id="L225"><span class="lineNum">     225</span>                 :<span class="tlaGNC">         236 :         return item;</span></span>
 <span id="L226"><span class="lineNum">     226</span>                 :             :     }</span>
 <span id="L227"><span class="lineNum">     227</span>                 :             : </span>
 <span id="L228"><span class="lineNum">     228</span>                 :             :     template &lt;class U&gt;</span>
-<span id="L229"><span class="lineNum">     229</span>                 :<span class="tlaGNC">         254 :     [[nodiscard]] score::cpp::expected_blank&lt;ConcurrencyErrc&gt; push_impl(U&amp;&amp; item, std::chrono::milliseconds timeout)</span></span>
+<span id="L229"><span class="lineNum">     229</span>                 :<span class="tlaGNC">         255 :     [[nodiscard]] score::cpp::expected_blank&lt;ConcurrencyErrc&gt; push_impl(U&amp;&amp; item, std::chrono::milliseconds timeout)</span></span>
 <span id="L230"><span class="lineNum">     230</span>                 :             :     {</span>
-<span id="L231"><span class="lineNum">     231</span>                 :<span class="tlaGNC">         254 :         const auto wait_result =</span></span>
-<span id="L232"><span class="lineNum">     232</span>   [<span class="tlaGBC" title="Branch 0 was taken 229 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 25 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 227 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 2 times"> + </span> :<span class="tlaGNC">         254 :             (timeout == std::chrono::milliseconds{0}) ? m_spaces.wait() : m_spaces.timedWait(timeout);</span></span>
-<span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 252 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span>]
+<span id="L231"><span class="lineNum">     231</span>                 :<span class="tlaGNC">         255 :         const auto wait_result =</span></span>
+<span id="L232"><span class="lineNum">     232</span>   [<span class="tlaGBC" title="Branch 0 was taken 228 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 26 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 226 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 2 times"> + </span> :<span class="tlaGNC">         255 :             (timeout == std::chrono::milliseconds{0}) ? m_spaces.wait() : m_spaces.timedWait(timeout);</span></span>
+<span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 253 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span>]
 <span id="L233"><span class="lineNum">     233</span>                 :             : </span>
-<span id="L234"><span class="lineNum">     234</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 253 times"> + </span>]:<span class="tlaGNC">         254 :         if (wait_result == osal::OsalReturnType::kTimeout)</span></span>
+<span id="L234"><span class="lineNum">     234</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 254 times"> + </span>]:<span class="tlaGNC">         255 :         if (wait_result == osal::OsalReturnType::kTimeout)</span></span>
 <span id="L235"><span class="lineNum">     235</span>                 :             :         {</span>
 <span id="L236"><span class="lineNum">     236</span>                 :<span class="tlaGNC">           1 :             return score::cpp::make_unexpected(ConcurrencyErrc::kTimeout);</span></span>
 <span id="L237"><span class="lineNum">     237</span>                 :             :         }</span>
-<span id="L238"><span class="lineNum">     238</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 253 times"> + </span>]:<span class="tlaGNC">         253 :         else if (wait_result != osal::OsalReturnType::kSuccess)</span></span>
+<span id="L238"><span class="lineNum">     238</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 254 times"> + </span>]:<span class="tlaGNC">         254 :         else if (wait_result != osal::OsalReturnType::kSuccess)</span></span>
 <span id="L239"><span class="lineNum">     239</span>                 :             :         {</span>
 <span id="L240"><span class="lineNum">     240</span>                 :<span class="tlaUNC tlaBgUNC">           0 :             return score::cpp::make_unexpected(ConcurrencyErrc::kOsError);</span></span>
 <span id="L241"><span class="lineNum">     241</span>                 :             :         }</span>
 <span id="L242"><span class="lineNum">     242</span>                 :             : </span>
-<span id="L243"><span class="lineNum">     243</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 251 times"> + </span>]:<span class="tlaGNC tlaBgGNC">         253 :         if (m_stopped.load(std::memory_order_acquire))</span></span>
+<span id="L243"><span class="lineNum">     243</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 252 times"> + </span>]:<span class="tlaGNC tlaBgGNC">         254 :         if (m_stopped.load(std::memory_order_acquire))</span></span>
 <span id="L244"><span class="lineNum">     244</span>                 :             :         {</span>
 <span id="L245"><span class="lineNum">     245</span>                 :             :             // chain-wake the next blocked producer then discard the item</span>
 <span id="L246"><span class="lineNum">     246</span>                 :<span class="tlaGNC">           2 :             static_cast&lt;void&gt;(m_spaces.post());</span></span>
 <span id="L247"><span class="lineNum">     247</span>                 :<span class="tlaGNC">           2 :             return score::cpp::make_unexpected(ConcurrencyErrc::kStopped);</span></span>
 <span id="L248"><span class="lineNum">     248</span>                 :             :         }</span>
 <span id="L249"><span class="lineNum">     249</span>                 :             : </span>
-<span id="L250"><span class="lineNum">     250</span>                 :<span class="tlaGNC">         251 :         const auto tail = m_tail.fetch_add(1, std::memory_order_relaxed);</span></span>
-<span id="L251"><span class="lineNum">     251</span>                 :<span class="tlaGNC">         251 :         auto&amp; slot = m_slots[tail &amp; (Capacity - 1U)];</span></span>
+<span id="L250"><span class="lineNum">     250</span>                 :<span class="tlaGNC">         252 :         const auto tail = m_tail.fetch_add(1, std::memory_order_relaxed);</span></span>
+<span id="L251"><span class="lineNum">     251</span>                 :<span class="tlaGNC">         252 :         auto&amp; slot = m_slots[tail &amp; (Capacity - 1U)];</span></span>
 <span id="L252"><span class="lineNum">     252</span>                 :             : </span>
 <span id="L253"><span class="lineNum">     253</span>                 :             :         // even turns belong to producers, odd turns to consumers</span>
 <span id="L254"><span class="lineNum">     254</span>                 :             :         // each lap of the ring increments the expected turn by 2</span>
-<span id="L255"><span class="lineNum">     255</span>                 :<span class="tlaGNC">         251 :         const auto expected_turn = (tail / Capacity) * 2;</span></span>
+<span id="L255"><span class="lineNum">     255</span>                 :<span class="tlaGNC">         252 :         const auto expected_turn = (tail / Capacity) * 2;</span></span>
 <span id="L256"><span class="lineNum">     256</span>                 :             : </span>
-<span id="L257"><span class="lineNum">     257</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 251 times"> + </span>]:<span class="tlaGNC">         502 :         while (slot.turn.load(std::memory_order_acquire) != expected_turn)</span></span>
+<span id="L257"><span class="lineNum">     257</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 252 times"> + </span>]:<span class="tlaGNC">         504 :         while (slot.turn.load(std::memory_order_acquire) != expected_turn)</span></span>
 <span id="L258"><span class="lineNum">     258</span>                 :             :         {</span>
 <span id="L259"><span class="lineNum">     259</span>                 :<span class="tlaUNC tlaBgUNC">           0 :             std::this_thread::yield();</span></span>
 <span id="L260"><span class="lineNum">     260</span>                 :             :             // small spin, only fires if a prior producer claimed this slot but</span>
@@ -346,17 +346,17 @@
 <span id="L266"><span class="lineNum">     266</span>                 :             :         // as the atomic slot.turn is used for syncing</span>
 <span id="L267"><span class="lineNum">     267</span>                 :             :         ANNOTATE_HAPPENS_AFTER(&amp;slot.turn);</span>
 <span id="L268"><span class="lineNum">     268</span>                 :             : </span>
-<span id="L269"><span class="lineNum">     269</span>                 :<span class="tlaGNC tlaBgGNC">         251 :         slot.item = std::forward&lt;U&gt;(item);</span></span>
+<span id="L269"><span class="lineNum">     269</span>                 :<span class="tlaGNC tlaBgGNC">         252 :         slot.item = std::forward&lt;U&gt;(item);</span></span>
 <span id="L270"><span class="lineNum">     270</span>                 :             : </span>
 <span id="L271"><span class="lineNum">     271</span>                 :             :         ANNOTATE_HAPPENS_BEFORE(&amp;slot.turn);</span>
-<span id="L272"><span class="lineNum">     272</span>                 :<span class="tlaGNC">         251 :         slot.turn.store(expected_turn + 1, std::memory_order_release);</span></span>
+<span id="L272"><span class="lineNum">     272</span>                 :<span class="tlaGNC">         252 :         slot.turn.store(expected_turn + 1, std::memory_order_release);</span></span>
 <span id="L273"><span class="lineNum">     273</span>                 :             : </span>
-<span id="L274"><span class="lineNum">     274</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 251 times"> + </span>]:<span class="tlaGNC">         251 :         if (m_items.post() != osal::OsalReturnType::kSuccess)</span></span>
+<span id="L274"><span class="lineNum">     274</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 252 times"> + </span>]:<span class="tlaGNC">         252 :         if (m_items.post() != osal::OsalReturnType::kSuccess)</span></span>
 <span id="L275"><span class="lineNum">     275</span>                 :             :         {</span>
 <span id="L276"><span class="lineNum">     276</span>                 :<span class="tlaUNC tlaBgUNC">           0 :             return score::cpp::make_unexpected(ConcurrencyErrc::kOsError);</span></span>
 <span id="L277"><span class="lineNum">     277</span>                 :             :         }</span>
 <span id="L278"><span class="lineNum">     278</span>                 :             : </span>
-<span id="L279"><span class="lineNum">     279</span>                 :<span class="tlaGNC tlaBgGNC">         251 :         return score::cpp::blank{};</span></span>
+<span id="L279"><span class="lineNum">     279</span>                 :<span class="tlaGNC tlaBgGNC">         252 :         return score::cpp::blank{};</span></span>
 <span id="L280"><span class="lineNum">     280</span>                 :             :     }</span>
 <span id="L281"><span class="lineNum">     281</span>                 :             : </span>
 <span id="L282"><span class="lineNum">     282</span>                 :             :     /// @brief Underlying storage.</span>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:10:46</td>
+            <td class="headerValue">2026-09-30 04:19:55</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -97,9 +97,9 @@
 <span id="L19"><span class="lineNum">      19</span>                 :             : </span>
 <span id="L20"><span class="lineNum">      20</span>                 :<span class="tlaGNC tlaBgGNC">        1018 : FindServiceHandle::FindServiceHandle(const std::size_t uid) : uid_{uid} {}</span></span>
 <span id="L21"><span class="lineNum">      21</span>                 :             : </span>
-<span id="L22"><span class="lineNum">      22</span>                 :<span class="tlaGNC">         339 : auto operator==(const FindServiceHandle&amp; lhs, const FindServiceHandle&amp; rhs) noexcept -&gt; bool</span></span>
+<span id="L22"><span class="lineNum">      22</span>                 :<span class="tlaGNC">         338 : auto operator==(const FindServiceHandle&amp; lhs, const FindServiceHandle&amp; rhs) noexcept -&gt; bool</span></span>
 <span id="L23"><span class="lineNum">      23</span>                 :             : {</span>
-<span id="L24"><span class="lineNum">      24</span>                 :<span class="tlaGNC">         339 :     return lhs.uid_ == rhs.uid_;</span></span>
+<span id="L24"><span class="lineNum">      24</span>                 :<span class="tlaGNC">         338 :     return lhs.uid_ == rhs.uid_;</span></span>
 <span id="L25"><span class="lineNum">      25</span>                 :             : }</span>
 <span id="L26"><span class="lineNum">      26</span>                 :             : </span>
 <span id="L27"><span class="lineNum">      27</span>                 :<span class="tlaGNC">           1 : auto operator&lt;(const FindServiceHandle&amp; lhs, const FindServiceHandle&amp; rhs) noexcept -&gt; bool</span></span>
@@ -132,11 +132,11 @@
 <span id="L54"><span class="lineNum">      54</span>                 :             : namespace std</span>
 <span id="L55"><span class="lineNum">      55</span>                 :             : {</span>
 <span id="L56"><span class="lineNum">      56</span>                 :             : </span>
-<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">         644 : std::size_t hash&lt;score::mw::com::impl::FindServiceHandle&gt;::operator()(</span></span>
+<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">         641 : std::size_t hash&lt;score::mw::com::impl::FindServiceHandle&gt;::operator()(</span></span>
 <span id="L58"><span class="lineNum">      58</span>                 :             :     const score::mw::com::impl::FindServiceHandle&amp; find_service_handle) const noexcept</span>
 <span id="L59"><span class="lineNum">      59</span>                 :             : {</span>
-<span id="L60"><span class="lineNum">      60</span>                 :<span class="tlaGNC">         644 :     score::mw::com::impl::FindServiceHandleView view{find_service_handle};</span></span>
-<span id="L61"><span class="lineNum">      61</span>                 :<span class="tlaGNC">         644 :     return view.getUid();</span></span>
+<span id="L60"><span class="lineNum">      60</span>                 :<span class="tlaGNC">         641 :     score::mw::com::impl::FindServiceHandleView view{find_service_handle};</span></span>
+<span id="L61"><span class="lineNum">      61</span>                 :<span class="tlaGNC">         641 :     return view.getUid();</span></span>
 <span id="L62"><span class="lineNum">      62</span>                 :             : }</span>
 <span id="L63"><span class="lineNum">      63</span>                 :             : </span>
 <span id="L64"><span class="lineNum">      64</span>                 :             : }  // namespace std</span>

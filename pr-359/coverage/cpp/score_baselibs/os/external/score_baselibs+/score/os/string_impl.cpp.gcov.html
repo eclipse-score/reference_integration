@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -97,37 +97,27 @@
 <span id="L19"><span class="lineNum">      19</span>                 :             : namespace os</span>
 <span id="L20"><span class="lineNum">      20</span>                 :             : {</span>
 <span id="L21"><span class="lineNum">      21</span>                 :             : </span>
-<span id="L22"><span class="lineNum">      22</span>                 :             : /* KW_SUPPRESS_START:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L23"><span class="lineNum">      23</span>                 :             : /* KW_SUPPRESS_START:MISRA.STDLIB.WRONGNAME: memcpy is a wrapper method to call OS method memcpy */</span>
-<span id="L24"><span class="lineNum">      24</span>                 :<span class="tlaGNC tlaBgGNC">           3 : void* StringImpl::memcpy(void* const dest, const void* const src, const std::size_t n) const noexcept</span></span>
-<span id="L25"><span class="lineNum">      25</span>                 :             : { /*KW_SUPPRESS_END: MISRA.STDLIB.WRONGNAME:*/</span>
-<span id="L26"><span class="lineNum">      26</span>                 :             :     /* KW_SUPPRESS_END:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L27"><span class="lineNum">      27</span>                 :             :     // Suppressed here because usage of this OSAL method is on banned list</span>
-<span id="L28"><span class="lineNum">      28</span>                 :             :     // NOLINTNEXTLINE(score-banned-function) see comment above</span>
-<span id="L29"><span class="lineNum">      29</span>                 :<span class="tlaGNC">           3 :     return ::memcpy(dest, src, n);</span></span>
-<span id="L30"><span class="lineNum">      30</span>                 :             : }</span>
-<span id="L31"><span class="lineNum">      31</span>                 :             : </span>
-<span id="L32"><span class="lineNum">      32</span>                 :             : /* KW_SUPPRESS_START:MISRA.STDLIB.WRONGNAME: strerror is a wrapper method to call OS method strerror */</span>
-<span id="L33"><span class="lineNum">      33</span>                 :             : /* KW_SUPPRESS_START:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L34"><span class="lineNum">      34</span>                 :<span class="tlaGNC">          12 : char* StringImpl::strerror(const std::int32_t errnum) const noexcept</span></span>
-<span id="L35"><span class="lineNum">      35</span>                 :             : { /* KW_SUPPRESS_END:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L36"><span class="lineNum">      36</span>                 :             :     /* KW_SUPPRESS_END:MISRA.STDLIB.WRONGNAME:*/</span>
-<span id="L37"><span class="lineNum">      37</span>                 :<span class="tlaGNC">          12 :     return ::strerror(errnum);</span></span>
-<span id="L38"><span class="lineNum">      38</span>                 :             : }</span>
-<span id="L39"><span class="lineNum">      39</span>                 :             : </span>
-<span id="L40"><span class="lineNum">      40</span>                 :             : /* KW_SUPPRESS_START:MISRA.STDLIB.WRONGNAME: memset is a wrapper method to call OS method memset */</span>
-<span id="L41"><span class="lineNum">      41</span>                 :             : /* KW_SUPPRESS_START:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L42"><span class="lineNum">      42</span>                 :<span class="tlaGNC">           2 : void* StringImpl::memset(void* const dest, const std::int32_t c, const std::size_t n) const noexcept</span></span>
-<span id="L43"><span class="lineNum">      43</span>                 :             : {</span>
-<span id="L44"><span class="lineNum">      44</span>                 :             :     /* KW_SUPPRESS_END:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L45"><span class="lineNum">      45</span>                 :             :     /* KW_SUPPRESS_END:MISRA.STDLIB.WRONGNAME:*/</span>
-<span id="L46"><span class="lineNum">      46</span>                 :             :     // Suppressed here because usage of this OSAL method is on banned list</span>
-<span id="L47"><span class="lineNum">      47</span>                 :             :     // NOLINTNEXTLINE(score-banned-function) see comment above</span>
-<span id="L48"><span class="lineNum">      48</span>                 :<span class="tlaGNC">           2 :     return ::memset(dest, c, n);</span></span>
-<span id="L49"><span class="lineNum">      49</span>                 :             : }</span>
-<span id="L50"><span class="lineNum">      50</span>                 :             : </span>
-<span id="L51"><span class="lineNum">      51</span>                 :             : }  // namespace os</span>
-<span id="L52"><span class="lineNum">      52</span>                 :             : }  // namespace score</span>
+<span id="L22"><span class="lineNum">      22</span>                 :<span class="tlaGNC tlaBgGNC">           3 : void* StringImpl::memcpy(void* const dest, const void* const src, const std::size_t n) const noexcept</span></span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : {</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             :     // Suppressed here because usage of this OSAL method is on banned list</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             :     // NOLINTNEXTLINE(score-banned-function) see comment above</span>
+<span id="L26"><span class="lineNum">      26</span>                 :<span class="tlaGNC">           3 :     return ::memcpy(dest, src, n);</span></span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : }</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : </span>
+<span id="L29"><span class="lineNum">      29</span>                 :<span class="tlaGNC">          12 : char* StringImpl::strerror(const std::int32_t errnum) const noexcept</span></span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : {</span>
+<span id="L31"><span class="lineNum">      31</span>                 :<span class="tlaGNC">          12 :     return ::strerror(errnum);</span></span>
+<span id="L32"><span class="lineNum">      32</span>                 :             : }</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : </span>
+<span id="L34"><span class="lineNum">      34</span>                 :<span class="tlaGNC">           2 : void* StringImpl::memset(void* const dest, const std::int32_t c, const std::size_t n) const noexcept</span></span>
+<span id="L35"><span class="lineNum">      35</span>                 :             : {</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             :     // Suppressed here because usage of this OSAL method is on banned list</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             :     // NOLINTNEXTLINE(score-banned-function) see comment above</span>
+<span id="L38"><span class="lineNum">      38</span>                 :<span class="tlaGNC">           2 :     return ::memset(dest, c, n);</span></span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : }</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : </span>
+<span id="L41"><span class="lineNum">      41</span>                 :             : }  // namespace os</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             : }  // namespace score</span>
         </pre>
               </td>
             </tr>

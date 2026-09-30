@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">97.0&nbsp;%</td>
@@ -147,20 +147,20 @@
 <span id="L69"><span class="lineNum">      69</span>                 :             : </span>
 <span id="L70"><span class="lineNum">      70</span>                 :             :     BaseInterruptibleState&amp; operator=(BaseInterruptibleState&amp;&amp;) noexcept = delete;</span>
 <span id="L71"><span class="lineNum">      71</span>                 :             : </span>
-<span id="L72"><span class="lineNum">      72</span>                 :<span class="tlaGNC">       22319 :     virtual ~BaseInterruptibleState() = default;</span></span>
+<span id="L72"><span class="lineNum">      72</span>                 :<span class="tlaGNC">       22324 :     virtual ~BaseInterruptibleState() = default;</span></span>
 <span id="L73"><span class="lineNum">      73</span>                 :             : </span>
-<span id="L74"><span class="lineNum">      74</span>                 :<span class="tlaGNC">       22272 :     void MakeReady() noexcept</span></span>
+<span id="L74"><span class="lineNum">      74</span>                 :<span class="tlaGNC">       22275 :     void MakeReady() noexcept</span></span>
 <span id="L75"><span class="lineNum">      75</span>                 :             :     {</span>
-<span id="L76"><span class="lineNum">      76</span>                 :<span class="tlaGNC">       22272 :         [[maybe_unused]] std::lock_guard&lt;std::remove_reference_t&lt;Lockable&gt;&gt; lock{ready_mutex_};</span></span>
-<span id="L77"><span class="lineNum">      77</span>                 :<span class="tlaGNC">       22273 :         ready_ = true;</span></span>
-<span id="L78"><span class="lineNum">      78</span>                 :<span class="tlaGNC">       22272 :         ActualSetStateReady();</span></span>
-<span id="L79"><span class="lineNum">      79</span>                 :<span class="tlaGNC">       22270 :     }</span></span>
+<span id="L76"><span class="lineNum">      76</span>                 :<span class="tlaGNC">       22275 :         [[maybe_unused]] std::lock_guard&lt;std::remove_reference_t&lt;Lockable&gt;&gt; lock{ready_mutex_};</span></span>
+<span id="L77"><span class="lineNum">      77</span>                 :<span class="tlaGNC">       22275 :         ready_ = true;</span></span>
+<span id="L78"><span class="lineNum">      78</span>                 :<span class="tlaGNC">       22275 :         ActualSetStateReady();</span></span>
+<span id="L79"><span class="lineNum">      79</span>                 :<span class="tlaGNC">       22275 :     }</span></span>
 <span id="L80"><span class="lineNum">      80</span>                 :             : </span>
 <span id="L81"><span class="lineNum">      81</span>                 :<span class="tlaGNC">       10387 :     score::cpp::expected_blank&lt;Error&gt; Wait(const score::cpp::stop_token&amp; stop_token) noexcept</span></span>
 <span id="L82"><span class="lineNum">      82</span>                 :             :     {</span>
 <span id="L83"><span class="lineNum">      83</span>                 :<span class="tlaGNC">       20774 :         return WaitByStrategy(</span></span>
 <span id="L84"><span class="lineNum">      84</span>                 :<span class="tlaGNC">       20774 :             [this, &amp;stop_token](auto&amp; lock, auto predicate) {</span></span>
-<span id="L85"><span class="lineNum">      85</span>         [<span class="tlaGBC" title="Branch 0 was taken 1921 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        1925 :                 return ready_conditional_variable_.wait(lock, stop_token, std::move(predicate));</span></span>
+<span id="L85"><span class="lineNum">      85</span>         [<span class="tlaGBC" title="Branch 0 was taken 1819 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">        1823 :                 return ready_conditional_variable_.wait(lock, stop_token, std::move(predicate));</span></span>
 <span id="L86"><span class="lineNum">      86</span>                 :             :             },</span>
 <span id="L87"><span class="lineNum">      87</span>                 :<span class="tlaGNC">       10387 :             stop_token);</span></span>
 <span id="L88"><span class="lineNum">      88</span>                 :             :     }</span>
@@ -238,14 +238,14 @@
 <span id="L160"><span class="lineNum">     160</span>                 :             : </span>
 <span id="L161"><span class="lineNum">     161</span>         [<span class="tlaGBC" title="Branch 0 was taken 11505 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 293 times"> + </span>]:<span class="tlaGNC">       11798 :         if (reference_count == 0)</span></span>
 <span id="L162"><span class="lineNum">     162</span>                 :             :         {</span>
-<span id="L163"><span class="lineNum">     163</span>         [<span class="tlaGBC" title="Branch 0 was taken 873 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 10632 times"> + </span>]:<span class="tlaGNC">       11505 :             if (ready_ == false)</span></span>
+<span id="L163"><span class="lineNum">     163</span>         [<span class="tlaGBC" title="Branch 0 was taken 872 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 10633 times"> + </span>]:<span class="tlaGNC">       11505 :             if (ready_ == false)</span></span>
 <span id="L164"><span class="lineNum">     164</span>                 :             :             {</span>
-<span id="L165"><span class="lineNum">     165</span>                 :<span class="tlaGNC">         873 :                 [[maybe_unused]] std::lock_guard&lt;Lockable&gt; lock{callback_mutex_};</span></span>
-<span id="L166"><span class="lineNum">     166</span>         [<span class="tlaGBC" title="Branch 0 was taken 74 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 799 times"> + </span>]:<span class="tlaGNC">         873 :                 if (on_abort_.has_value())</span></span>
+<span id="L165"><span class="lineNum">     165</span>                 :<span class="tlaGNC">         872 :                 [[maybe_unused]] std::lock_guard&lt;Lockable&gt; lock{callback_mutex_};</span></span>
+<span id="L166"><span class="lineNum">     166</span>         [<span class="tlaGBC" title="Branch 0 was taken 74 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 798 times"> + </span>]:<span class="tlaGNC">         872 :                 if (on_abort_.has_value())</span></span>
 <span id="L167"><span class="lineNum">     167</span>                 :             :                 {</span>
 <span id="L168"><span class="lineNum">     168</span>                 :<span class="tlaGNC">          74 :                     (*on_abort_)();</span></span>
 <span id="L169"><span class="lineNum">     169</span>                 :             :                 }</span>
-<span id="L170"><span class="lineNum">     170</span>                 :<span class="tlaGNC">         873 :             }</span></span>
+<span id="L170"><span class="lineNum">     170</span>                 :<span class="tlaGNC">         872 :             }</span></span>
 <span id="L171"><span class="lineNum">     171</span>                 :             :         }</span>
 <span id="L172"><span class="lineNum">     172</span>                 :<span class="tlaGNC">       11798 :     }</span></span>
 <span id="L173"><span class="lineNum">     173</span>                 :             : </span>
@@ -260,9 +260,9 @@
 <span id="L182"><span class="lineNum">     182</span>                 :<span class="tlaGNC">         125 :     }</span></span>
 <span id="L183"><span class="lineNum">     183</span>                 :             : </span>
 <span id="L184"><span class="lineNum">     184</span>                 :             :   protected:</span>
-<span id="L185"><span class="lineNum">     185</span>                 :<span class="tlaGNC">       42893 :     bool TestAndMarkValueAsSet() noexcept</span></span>
+<span id="L185"><span class="lineNum">     185</span>                 :<span class="tlaGNC">       42902 :     bool TestAndMarkValueAsSet() noexcept</span></span>
 <span id="L186"><span class="lineNum">     186</span>                 :             :     {</span>
-<span id="L187"><span class="lineNum">     187</span>                 :<span class="tlaGNC">       42893 :         return value_set_.exchange(true);</span></span>
+<span id="L187"><span class="lineNum">     187</span>                 :<span class="tlaGNC">       42902 :         return value_set_.exchange(true);</span></span>
 <span id="L188"><span class="lineNum">     188</span>                 :             :     }</span>
 <span id="L189"><span class="lineNum">     189</span>                 :             :     bool TestIfValueIsSet() const noexcept</span>
 <span id="L190"><span class="lineNum">     190</span>                 :             :     {</span>
@@ -270,11 +270,11 @@
 <span id="L192"><span class="lineNum">     192</span>                 :             :     }</span>
 <span id="L193"><span class="lineNum">     193</span>                 :             : </span>
 <span id="L194"><span class="lineNum">     194</span>                 :             :   private:</span>
-<span id="L195"><span class="lineNum">     195</span>                 :<span class="tlaGNC">       22273 :     void ActualSetStateReady() noexcept</span></span>
+<span id="L195"><span class="lineNum">     195</span>                 :<span class="tlaGNC">       22275 :     void ActualSetStateReady() noexcept</span></span>
 <span id="L196"><span class="lineNum">     196</span>                 :             :     {</span>
-<span id="L197"><span class="lineNum">     197</span>                 :<span class="tlaGNC">       22273 :         ready_ = true;</span></span>
-<span id="L198"><span class="lineNum">     198</span>                 :<span class="tlaGNC">       22272 :         ready_conditional_variable_.notify_all();</span></span>
-<span id="L199"><span class="lineNum">     199</span>                 :<span class="tlaGNC">       22270 :     }</span></span>
+<span id="L197"><span class="lineNum">     197</span>                 :<span class="tlaGNC">       22275 :         ready_ = true;</span></span>
+<span id="L198"><span class="lineNum">     198</span>                 :<span class="tlaGNC">       22275 :         ready_conditional_variable_.notify_all();</span></span>
+<span id="L199"><span class="lineNum">     199</span>                 :<span class="tlaGNC">       22275 :     }</span></span>
 <span id="L200"><span class="lineNum">     200</span>                 :             : </span>
 <span id="L201"><span class="lineNum">     201</span>                 :             :     // false-positive: the method is used in Wait, WaitFor, WaitUntil</span>
 <span id="L202"><span class="lineNum">     202</span>                 :             :     // coverity[autosar_cpp14_a0_1_3_violation]</span>
@@ -283,33 +283,33 @@
 <span id="L205"><span class="lineNum">     205</span>                 :             :             wait_strategy,</span>
 <span id="L206"><span class="lineNum">     206</span>                 :             :         const score::cpp::stop_token&amp; stop_token) noexcept</span>
 <span id="L207"><span class="lineNum">     207</span>                 :             :     {</span>
-<span id="L208"><span class="lineNum">     208</span>         [<span class="tlaGBC" title="Branch 0 was taken 8500 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1965 times"> + </span>]:<span class="tlaGNC">       10465 :         if (ready_ == true)</span></span>
+<span id="L208"><span class="lineNum">     208</span>         [<span class="tlaGBC" title="Branch 0 was taken 8602 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1863 times"> + </span>]:<span class="tlaGNC">       10465 :         if (ready_ == true)</span></span>
 <span id="L209"><span class="lineNum">     209</span>                 :             :         {</span>
-<span id="L210"><span class="lineNum">     210</span>                 :<span class="tlaGNC">        8500 :             return {};</span></span>
+<span id="L210"><span class="lineNum">     210</span>                 :<span class="tlaGNC">        8602 :             return {};</span></span>
 <span id="L211"><span class="lineNum">     211</span>                 :             :         }</span>
 <span id="L212"><span class="lineNum">     212</span>                 :             : </span>
 <span id="L213"><span class="lineNum">     213</span>                 :             :         // coverity[autosar_cpp14_a0_1_1_violation] clang-tidy requires variables to be inited</span>
-<span id="L214"><span class="lineNum">     214</span>                 :<span class="tlaGNC">        1965 :         bool wait_succeeded{};</span></span>
+<span id="L214"><span class="lineNum">     214</span>                 :<span class="tlaGNC">        1863 :         bool wait_succeeded{};</span></span>
 <span id="L215"><span class="lineNum">     215</span>                 :             :         {</span>
-<span id="L216"><span class="lineNum">     216</span>                 :<span class="tlaGNC">        1965 :             std::unique_lock&lt;std::remove_reference_t&lt;Lockable&gt;&gt; lock{ready_mutex_};</span></span>
-<span id="L217"><span class="lineNum">     217</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1963 times"> + </span>]:<span class="tlaGNC">        1965 :             if (ready_ == true)</span></span>
+<span id="L216"><span class="lineNum">     216</span>                 :<span class="tlaGNC">        1863 :             std::unique_lock&lt;std::remove_reference_t&lt;Lockable&gt;&gt; lock{ready_mutex_};</span></span>
+<span id="L217"><span class="lineNum">     217</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1861 times"> + </span>]:<span class="tlaGNC">        1863 :             if (ready_ == true)</span></span>
 <span id="L218"><span class="lineNum">     218</span>                 :             :             {</span>
 <span id="L219"><span class="lineNum">     219</span>                 :<span class="tlaGNC">           2 :                 return {};</span></span>
 <span id="L220"><span class="lineNum">     220</span>                 :             :             }</span>
-<span id="L221"><span class="lineNum">     221</span>                 :<span class="tlaGNC">        1963 :             wait_succeeded = wait_strategy(lock, [this]() noexcept -&gt; bool {</span></span>
-<span id="L222"><span class="lineNum">     222</span>                 :<span class="tlaGNC">        5100 :                 return this-&gt;ready_;</span></span>
+<span id="L221"><span class="lineNum">     221</span>                 :<span class="tlaGNC">        1861 :             wait_succeeded = wait_strategy(lock, [this]() noexcept -&gt; bool {</span></span>
+<span id="L222"><span class="lineNum">     222</span>                 :<span class="tlaGNC">        4896 :                 return this-&gt;ready_;</span></span>
 <span id="L223"><span class="lineNum">     223</span>                 :             :             });</span>
-<span id="L224"><span class="lineNum">     224</span>         [<span class="tlaGBC" title="Branch 0 was taken 1963 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">        1965 :         }</span></span>
+<span id="L224"><span class="lineNum">     224</span>         [<span class="tlaGBC" title="Branch 0 was taken 1861 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span>]:<span class="tlaGNC">        1863 :         }</span></span>
 <span id="L225"><span class="lineNum">     225</span>                 :             : </span>
-<span id="L226"><span class="lineNum">     226</span>         [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1949 times"> + </span>]:<span class="tlaGNC">        1963 :         if (stop_token.stop_requested() == true)</span></span>
+<span id="L226"><span class="lineNum">     226</span>         [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1847 times"> + </span>]:<span class="tlaGNC">        1861 :         if (stop_token.stop_requested() == true)</span></span>
 <span id="L227"><span class="lineNum">     227</span>                 :             :         {</span>
 <span id="L228"><span class="lineNum">     228</span>                 :<span class="tlaGNC">          14 :             return score::cpp::make_unexpected(Error::kStopRequested);</span></span>
 <span id="L229"><span class="lineNum">     229</span>                 :             :         }</span>
-<span id="L230"><span class="lineNum">     230</span>         [<span class="tlaGBC" title="Branch 0 was taken 36 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1913 times"> + </span>]:<span class="tlaGNC">        1949 :         if (!wait_succeeded)</span></span>
+<span id="L230"><span class="lineNum">     230</span>         [<span class="tlaGBC" title="Branch 0 was taken 36 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1811 times"> + </span>]:<span class="tlaGNC">        1847 :         if (!wait_succeeded)</span></span>
 <span id="L231"><span class="lineNum">     231</span>                 :             :         {</span>
 <span id="L232"><span class="lineNum">     232</span>                 :<span class="tlaGNC">          36 :             return score::cpp::make_unexpected(Error::kTimeout);</span></span>
 <span id="L233"><span class="lineNum">     233</span>                 :             :         }</span>
-<span id="L234"><span class="lineNum">     234</span>                 :<span class="tlaGNC">        1913 :         return {};</span></span>
+<span id="L234"><span class="lineNum">     234</span>                 :<span class="tlaGNC">        1811 :         return {};</span></span>
 <span id="L235"><span class="lineNum">     235</span>                 :             :     }</span>
 <span id="L236"><span class="lineNum">     236</span>                 :             : </span>
 <span id="L237"><span class="lineNum">     237</span>                 :             :     // Please note that we still must lock ready_mutex_ when handling the state_conditional_variable even though ready_</span>

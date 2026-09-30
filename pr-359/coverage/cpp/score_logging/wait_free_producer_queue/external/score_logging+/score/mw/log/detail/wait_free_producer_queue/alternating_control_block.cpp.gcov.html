@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:12:16</td>
+            <td class="headerValue">2026-09-30 04:21:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -100,33 +100,33 @@
 <span id="L22"><span class="lineNum">      22</span>                 :             : namespace detail</span>
 <span id="L23"><span class="lineNum">      23</span>                 :             : {</span>
 <span id="L24"><span class="lineNum">      24</span>                 :             : </span>
-<span id="L25"><span class="lineNum">      25</span>                 :<span class="tlaGNC tlaBgGNC">       28328 : AlternatingControlBlockSelectId SelectLinearControlBlockId(std::uint32_t count)</span></span>
+<span id="L25"><span class="lineNum">      25</span>                 :<span class="tlaGNC tlaBgGNC">       35866 : AlternatingControlBlockSelectId SelectLinearControlBlockId(std::uint32_t count)</span></span>
 <span id="L26"><span class="lineNum">      26</span>                 :             : {</span>
-<span id="L27"><span class="lineNum">      27</span>         [<span class="tlaGBC" title="Branch 0 was taken 15535 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 12793 times"> + </span>]:<span class="tlaGNC">       28328 :     if (count % 2U == 0U)</span></span>
+<span id="L27"><span class="lineNum">      27</span>         [<span class="tlaGBC" title="Branch 0 was taken 19588 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 16278 times"> + </span>]:<span class="tlaGNC">       35866 :     if (count % 2U == 0U)</span></span>
 <span id="L28"><span class="lineNum">      28</span>                 :             :     {</span>
-<span id="L29"><span class="lineNum">      29</span>                 :<span class="tlaGNC">       15535 :         return AlternatingControlBlockSelectId::kBlockEven;</span></span>
+<span id="L29"><span class="lineNum">      29</span>                 :<span class="tlaGNC">       19588 :         return AlternatingControlBlockSelectId::kBlockEven;</span></span>
 <span id="L30"><span class="lineNum">      30</span>                 :             :     }</span>
 <span id="L31"><span class="lineNum">      31</span>                 :             :     else</span>
 <span id="L32"><span class="lineNum">      32</span>                 :             :     {</span>
-<span id="L33"><span class="lineNum">      33</span>                 :<span class="tlaGNC">       12793 :         return AlternatingControlBlockSelectId::kBlockOdd;</span></span>
+<span id="L33"><span class="lineNum">      33</span>                 :<span class="tlaGNC">       16278 :         return AlternatingControlBlockSelectId::kBlockOdd;</span></span>
 <span id="L34"><span class="lineNum">      34</span>                 :             :     }</span>
 <span id="L35"><span class="lineNum">      35</span>                 :             : }</span>
 <span id="L36"><span class="lineNum">      36</span>                 :             : </span>
-<span id="L37"><span class="lineNum">      37</span>                 :<span class="tlaGNC">          96 : AlternatingControlBlockSelectId GetOppositeLinearControlBlock(const AlternatingControlBlockSelectId id)</span></span>
+<span id="L37"><span class="lineNum">      37</span>                 :<span class="tlaGNC">          97 : AlternatingControlBlockSelectId GetOppositeLinearControlBlock(const AlternatingControlBlockSelectId id)</span></span>
 <span id="L38"><span class="lineNum">      38</span>                 :             : {</span>
-<span id="L39"><span class="lineNum">      39</span>                 :<span class="tlaGNC">          96 :     AlternatingControlBlockSelectId return_value{AlternatingControlBlockSelectId::kBlockEven};</span></span>
-<span id="L40"><span class="lineNum">      40</span>      [<span class="tlaGBC" title="Branch 0 was taken 64 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 31 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span>]:<span class="tlaGNC">          96 :     switch (id)</span></span>
+<span id="L39"><span class="lineNum">      39</span>                 :<span class="tlaGNC">          97 :     AlternatingControlBlockSelectId return_value{AlternatingControlBlockSelectId::kBlockEven};</span></span>
+<span id="L40"><span class="lineNum">      40</span>      [<span class="tlaGBC" title="Branch 0 was taken 65 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 31 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span>]:<span class="tlaGNC">          97 :     switch (id)</span></span>
 <span id="L41"><span class="lineNum">      41</span>                 :             :     {</span>
-<span id="L42"><span class="lineNum">      42</span>                 :<span class="tlaGNC">          64 :         case AlternatingControlBlockSelectId::kBlockOdd:</span></span>
-<span id="L43"><span class="lineNum">      43</span>                 :<span class="tlaGNC">          64 :             return_value = AlternatingControlBlockSelectId::kBlockEven;</span></span>
-<span id="L44"><span class="lineNum">      44</span>                 :<span class="tlaGNC">          64 :             break;</span></span>
+<span id="L42"><span class="lineNum">      42</span>                 :<span class="tlaGNC">          65 :         case AlternatingControlBlockSelectId::kBlockOdd:</span></span>
+<span id="L43"><span class="lineNum">      43</span>                 :<span class="tlaGNC">          65 :             return_value = AlternatingControlBlockSelectId::kBlockEven;</span></span>
+<span id="L44"><span class="lineNum">      44</span>                 :<span class="tlaGNC">          65 :             break;</span></span>
 <span id="L45"><span class="lineNum">      45</span>                 :<span class="tlaGNC">          31 :         case AlternatingControlBlockSelectId::kBlockEven:</span></span>
 <span id="L46"><span class="lineNum">      46</span>                 :<span class="tlaGNC">          31 :             return_value = AlternatingControlBlockSelectId::kBlockOdd;</span></span>
 <span id="L47"><span class="lineNum">      47</span>                 :<span class="tlaGNC">          31 :             break;</span></span>
 <span id="L48"><span class="lineNum">      48</span>                 :<span class="tlaGNC">           1 :         default:</span></span>
 <span id="L49"><span class="lineNum">      49</span>                 :<span class="tlaGNC">           1 :             break;</span></span>
 <span id="L50"><span class="lineNum">      50</span>                 :             :     }</span>
-<span id="L51"><span class="lineNum">      51</span>                 :<span class="tlaGNC">          96 :     return return_value;</span></span>
+<span id="L51"><span class="lineNum">      51</span>                 :<span class="tlaGNC">          97 :     return return_value;</span></span>
 <span id="L52"><span class="lineNum">      52</span>                 :             : }</span>
 <span id="L53"><span class="lineNum">      53</span>                 :             : </span>
 <span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC">         104 : AlternatingControlBlock&amp; InitializeAlternatingControlBlock(AlternatingControlBlock&amp; alternating_control_block)</span></span>

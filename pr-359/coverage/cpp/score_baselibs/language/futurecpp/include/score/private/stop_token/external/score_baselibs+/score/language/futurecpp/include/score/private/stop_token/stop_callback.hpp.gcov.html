@@ -37,12 +37,12 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryMed">75.0&nbsp;%</td>
+            <td class="headerCovTableEntryLo">73.6&nbsp;%</td>
             <td class="headerCovTableEntry">72</td>
-            <td class="headerCovTableEntry">54</td>
+            <td class="headerCovTableEntry">53</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -163,17 +163,17 @@
 <span id="L85"><span class="lineNum">      85</span>                 :             :     /// \param st a score::cpp::stop_token object to register this stop_callback object with</span>
 <span id="L86"><span class="lineNum">      86</span>                 :             :     /// \param cb the type to invoke if stop is requested</span>
 <span id="L87"><span class="lineNum">      87</span>                 :             :     template &lt;typename C&gt;</span>
-<span id="L88"><span class="lineNum">      88</span>                 :<span class="tlaGNC tlaBgGNC">      108711 :     explicit stop_callback(const stop_token&amp; st, C&amp;&amp; cb) noexcept(std::is_nothrow_constructible&lt;C&gt;::value)</span></span>
-<span id="L89"><span class="lineNum">      89</span>                 :<span class="tlaGNC">      108711 :     {</span></span>
+<span id="L88"><span class="lineNum">      88</span>                 :<span class="tlaGNC tlaBgGNC">      110074 :     explicit stop_callback(const stop_token&amp; st, C&amp;&amp; cb) noexcept(std::is_nothrow_constructible&lt;C&gt;::value)</span></span>
+<span id="L89"><span class="lineNum">      89</span>                 :<span class="tlaGNC">      110074 :     {</span></span>
 <span id="L90"><span class="lineNum">      90</span>                 :             :         static_assert(score::cpp::is_invocable&lt;C&gt;::value, &quot;Callback needs to be invocable&quot;);</span>
 <span id="L91"><span class="lineNum">      91</span>                 :             :         static_assert(std::is_nothrow_destructible&lt;C&gt;::value, &quot;Callback needs to be nothrow destructable&quot;);</span>
-<span id="L92"><span class="lineNum">      92</span>   [<span class="tlaGBC" title="Branch 0 was taken 108711 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 108711 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">      108711 :         cb_ = std::forward&lt;C&gt;(cb);</span></span>
-<span id="L93"><span class="lineNum">      93</span>                 :<span class="tlaGNC">      108711 :         state_ = st.state_;</span></span>
-<span id="L94"><span class="lineNum">      94</span>         [<span class="tlaGBC" title="Branch 0 was taken 106640 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2071 times"> + </span>]:<span class="tlaGNC">      108711 :         if (state_ != nullptr)</span></span>
+<span id="L92"><span class="lineNum">      92</span>   [<span class="tlaGBC" title="Branch 0 was taken 110074 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 110074 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">      110074 :         cb_ = std::forward&lt;C&gt;(cb);</span></span>
+<span id="L93"><span class="lineNum">      93</span>                 :<span class="tlaGNC">      110074 :         state_ = st.state_;</span></span>
+<span id="L94"><span class="lineNum">      94</span>         [<span class="tlaGBC" title="Branch 0 was taken 108003 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2071 times"> + </span>]:<span class="tlaGNC">      110074 :         if (state_ != nullptr)</span></span>
 <span id="L95"><span class="lineNum">      95</span>                 :             :         {</span>
-<span id="L96"><span class="lineNum">      96</span>         [<span class="tlaGBC" title="Branch 0 was taken 106640 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">      106640 :             state_-&gt;register_callback(this);</span></span>
+<span id="L96"><span class="lineNum">      96</span>         [<span class="tlaGBC" title="Branch 0 was taken 108003 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">      108003 :             state_-&gt;register_callback(this);</span></span>
 <span id="L97"><span class="lineNum">      97</span>                 :             :         }</span>
-<span id="L98"><span class="lineNum">      98</span>                 :<span class="tlaGNC">      108711 :     }</span></span>
+<span id="L98"><span class="lineNum">      98</span>                 :<span class="tlaGNC">      110074 :     }</span></span>
 <span id="L99"><span class="lineNum">      99</span>                 :             : </span>
 <span id="L100"><span class="lineNum">     100</span>                 :             :     /// \brief Constructs a stop_callback for the given st score::cpp::stop_token (moved), with the given invocable callback</span>
 <span id="L101"><span class="lineNum">     101</span>                 :             :     /// function cb. For more information see stop_callback(const stop_token&amp; st, C&amp;&amp; cb)</span>
@@ -213,13 +213,13 @@
 <span id="L135"><span class="lineNum">     135</span>                 :             :     /// callback, then the destructor cannot wait or else a deadlock would occur. It is possible and valid for the</span>
 <span id="L136"><span class="lineNum">     136</span>                 :             :     /// same thread to be destroying the stop_callback while it is invoking its callback function, because the callback</span>
 <span id="L137"><span class="lineNum">     137</span>                 :             :     /// function might itself destroy the stop_callback, directly or indirectly.</span>
-<span id="L138"><span class="lineNum">     138</span>                 :<span class="tlaGNC">     2108731 :     ~stop_callback()</span></span>
+<span id="L138"><span class="lineNum">     138</span>                 :<span class="tlaGNC">     2110093 :     ~stop_callback()</span></span>
 <span id="L139"><span class="lineNum">     139</span>                 :             :     {</span>
-<span id="L140"><span class="lineNum">     140</span>         [<span class="tlaGBC" title="Branch 0 was taken 2106659 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2069 times"> + </span>]:<span class="tlaGNC">     2108731 :         if (state_ != nullptr)</span></span>
+<span id="L140"><span class="lineNum">     140</span>         [<span class="tlaGBC" title="Branch 0 was taken 2108022 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2071 times"> + </span>]:<span class="tlaGNC">     2110093 :         if (state_ != nullptr)</span></span>
 <span id="L141"><span class="lineNum">     141</span>                 :             :         {</span>
-<span id="L142"><span class="lineNum">     142</span>                 :<span class="tlaGNC">     2106659 :             state_-&gt;deregister_callback(this);</span></span>
+<span id="L142"><span class="lineNum">     142</span>                 :<span class="tlaGNC">     2108022 :             state_-&gt;deregister_callback(this);</span></span>
 <span id="L143"><span class="lineNum">     143</span>                 :             :         }</span>
-<span id="L144"><span class="lineNum">     144</span>                 :<span class="tlaGNC">     2108728 :     }</span></span>
+<span id="L144"><span class="lineNum">     144</span>                 :<span class="tlaGNC">     2110093 :     }</span></span>
 <span id="L145"><span class="lineNum">     145</span>                 :             : </span>
 <span id="L146"><span class="lineNum">     146</span>                 :             :     stop_callback(const stop_callback&amp;) = delete;</span>
 <span id="L147"><span class="lineNum">     147</span>                 :             :     stop_callback(stop_callback&amp;&amp;) = delete;</span>

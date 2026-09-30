@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -125,31 +125,31 @@
 <span id="L47"><span class="lineNum">      47</span>                 :             :     spin_mutex(spin_mutex&amp;&amp;) = delete;</span>
 <span id="L48"><span class="lineNum">      48</span>                 :             :     spin_mutex&amp; operator=(spin_mutex&amp;&amp;) = delete;</span>
 <span id="L49"><span class="lineNum">      49</span>                 :             : </span>
-<span id="L50"><span class="lineNum">      50</span>                 :<span class="tlaGNC">       30134 :     void lock() noexcept</span></span>
+<span id="L50"><span class="lineNum">      50</span>                 :<span class="tlaGNC">       30132 :     void lock() noexcept</span></span>
 <span id="L51"><span class="lineNum">      51</span>                 :             :     {</span>
-<span id="L52"><span class="lineNum">      52</span>                 :<span class="tlaGNC">       30134 :         exponential_backoff backoff{};</span></span>
+<span id="L52"><span class="lineNum">      52</span>                 :<span class="tlaGNC">       30132 :         exponential_backoff backoff{};</span></span>
 <span id="L53"><span class="lineNum">      53</span>                 :             : </span>
 <span id="L54"><span class="lineNum">      54</span>                 :             :         // use test and test-and-set https://en.wikipedia.org/wiki/Test_and_test-and-set</span>
-<span id="L55"><span class="lineNum">      55</span>         [<span class="tlaGBC" title="Branch 0 was taken 36 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 30134 times"> + </span>]:<span class="tlaGNC">       30170 :         while (lock_.exchange(true, std::memory_order_acquire))</span></span>
+<span id="L55"><span class="lineNum">      55</span>         [<span class="tlaGBC" title="Branch 0 was taken 36 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 30132 times"> + </span>]:<span class="tlaGNC">       30168 :         while (lock_.exchange(true, std::memory_order_acquire))</span></span>
 <span id="L56"><span class="lineNum">      56</span>                 :             :         {</span>
 <span id="L57"><span class="lineNum">      57</span>                 :             :             do</span>
 <span id="L58"><span class="lineNum">      58</span>                 :             :             {</span>
 <span id="L59"><span class="lineNum">      59</span>                 :<span class="tlaGNC">          57 :                 backoff.pause();</span></span>
 <span id="L60"><span class="lineNum">      60</span>         [<span class="tlaGBC" title="Branch 0 was taken 21 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 36 times"> + </span>]:<span class="tlaGNC">          57 :             } while (lock_.load(std::memory_order_relaxed));</span></span>
 <span id="L61"><span class="lineNum">      61</span>                 :             :         }</span>
-<span id="L62"><span class="lineNum">      62</span>                 :<span class="tlaGNC">       30134 :     }</span></span>
+<span id="L62"><span class="lineNum">      62</span>                 :<span class="tlaGNC">       30132 :     }</span></span>
 <span id="L63"><span class="lineNum">      63</span>                 :             : </span>
-<span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC">         147 :     bool try_lock() noexcept</span></span>
+<span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC">         145 :     bool try_lock() noexcept</span></span>
 <span id="L65"><span class="lineNum">      65</span>                 :             :     {</span>
-<span id="L66"><span class="lineNum">      66</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 145 times"> + </span>]:<span class="tlaGNC">         147 :         if (lock_.load(std::memory_order_relaxed))</span></span>
+<span id="L66"><span class="lineNum">      66</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 143 times"> + </span>]:<span class="tlaGNC">         145 :         if (lock_.load(std::memory_order_relaxed))</span></span>
 <span id="L67"><span class="lineNum">      67</span>                 :             :         {</span>
 <span id="L68"><span class="lineNum">      68</span>                 :<span class="tlaGNC">           2 :             return false;</span></span>
 <span id="L69"><span class="lineNum">      69</span>                 :             :         }</span>
 <span id="L70"><span class="lineNum">      70</span>                 :             : </span>
-<span id="L71"><span class="lineNum">      71</span>                 :<span class="tlaGNC">         145 :         return !lock_.exchange(true, std::memory_order_acquire);</span></span>
+<span id="L71"><span class="lineNum">      71</span>                 :<span class="tlaGNC">         143 :         return !lock_.exchange(true, std::memory_order_acquire);</span></span>
 <span id="L72"><span class="lineNum">      72</span>                 :             :     }</span>
 <span id="L73"><span class="lineNum">      73</span>                 :             : </span>
-<span id="L74"><span class="lineNum">      74</span>                 :<span class="tlaGNC">       30277 :     void unlock() noexcept { lock_.store(false, std::memory_order_release); }</span></span>
+<span id="L74"><span class="lineNum">      74</span>                 :<span class="tlaGNC">       30273 :     void unlock() noexcept { lock_.store(false, std::memory_order_release); }</span></span>
 <span id="L75"><span class="lineNum">      75</span>                 :             : </span>
 <span id="L76"><span class="lineNum">      76</span>                 :             : private:</span>
 <span id="L77"><span class="lineNum">      77</span>                 :             :     std::atomic&lt;bool&gt; lock_;</span>

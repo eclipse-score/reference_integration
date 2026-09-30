@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -113,26 +113,24 @@
 <span id="L35"><span class="lineNum">      35</span>                 :             : </span>
 <span id="L36"><span class="lineNum">      36</span>                 :             :     void notify_one() noexcept;</span>
 <span id="L37"><span class="lineNum">      37</span>                 :             :     void notify_all() noexcept;</span>
-<span id="L38"><span class="lineNum">      38</span>                 :             :     /* KW_SUPPRESS_START:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L39"><span class="lineNum">      39</span>                 :             :     void wait(std::unique_lock&lt;InterprocessMutex&gt;&amp; lock) noexcept;</span>
-<span id="L40"><span class="lineNum">      40</span>                 :             :     /* KW_SUPPRESS_END:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L41"><span class="lineNum">      41</span>                 :             : </span>
-<span id="L42"><span class="lineNum">      42</span>                 :             :     template &lt;class Predicate&gt;</span>
-<span id="L43"><span class="lineNum">      43</span>                 :<span class="tlaGNC tlaBgGNC">          12 :     void wait(std::unique_lock&lt;InterprocessMutex&gt;&amp; lock, Predicate pred)</span></span>
-<span id="L44"><span class="lineNum">      44</span>                 :             :     {</span>
-<span id="L45"><span class="lineNum">      45</span>         [<span class="tlaGBC" title="Branch 0 was taken 12 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 12 times"> + </span>]:<span class="tlaGNC">          24 :         while (pred() == false)</span></span>
-<span id="L46"><span class="lineNum">      46</span>                 :             :         {</span>
-<span id="L47"><span class="lineNum">      47</span>                 :<span class="tlaGNC">          12 :             this-&gt;wait(lock);</span></span>
-<span id="L48"><span class="lineNum">      48</span>                 :             :         }</span>
-<span id="L49"><span class="lineNum">      49</span>                 :<span class="tlaGNC">          12 :     }</span></span>
-<span id="L50"><span class="lineNum">      50</span>                 :             : </span>
-<span id="L51"><span class="lineNum">      51</span>                 :             :   private:</span>
-<span id="L52"><span class="lineNum">      52</span>                 :             :     pthread_cond_t conditionalVariable{};</span>
-<span id="L53"><span class="lineNum">      53</span>                 :             : };</span>
-<span id="L54"><span class="lineNum">      54</span>                 :             : }  // namespace os</span>
-<span id="L55"><span class="lineNum">      55</span>                 :             : }  // namespace score</span>
-<span id="L56"><span class="lineNum">      56</span>                 :             : </span>
-<span id="L57"><span class="lineNum">      57</span>                 :             : #endif  // SCORE_LIB_OS_UTILS_INTERPROCESSCONDITIONALVARIABLE_H</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             :     void wait(std::unique_lock&lt;InterprocessMutex&gt;&amp; lock) noexcept;</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : </span>
+<span id="L40"><span class="lineNum">      40</span>                 :             :     template &lt;class Predicate&gt;</span>
+<span id="L41"><span class="lineNum">      41</span>                 :<span class="tlaGNC tlaBgGNC">          12 :     void wait(std::unique_lock&lt;InterprocessMutex&gt;&amp; lock, Predicate pred)</span></span>
+<span id="L42"><span class="lineNum">      42</span>                 :             :     {</span>
+<span id="L43"><span class="lineNum">      43</span>         [<span class="tlaGBC" title="Branch 0 was taken 12 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 12 times"> + </span>]:<span class="tlaGNC">          24 :         while (pred() == false)</span></span>
+<span id="L44"><span class="lineNum">      44</span>                 :             :         {</span>
+<span id="L45"><span class="lineNum">      45</span>                 :<span class="tlaGNC">          12 :             this-&gt;wait(lock);</span></span>
+<span id="L46"><span class="lineNum">      46</span>                 :             :         }</span>
+<span id="L47"><span class="lineNum">      47</span>                 :<span class="tlaGNC">          12 :     }</span></span>
+<span id="L48"><span class="lineNum">      48</span>                 :             : </span>
+<span id="L49"><span class="lineNum">      49</span>                 :             :   private:</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             :     pthread_cond_t conditionalVariable{};</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             : };</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             : }  // namespace os</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             : }  // namespace score</span>
+<span id="L54"><span class="lineNum">      54</span>                 :             : </span>
+<span id="L55"><span class="lineNum">      55</span>                 :             : #endif  // SCORE_LIB_OS_UTILS_INTERPROCESSCONDITIONALVARIABLE_H</span>
         </pre>
               </td>
             </tr>

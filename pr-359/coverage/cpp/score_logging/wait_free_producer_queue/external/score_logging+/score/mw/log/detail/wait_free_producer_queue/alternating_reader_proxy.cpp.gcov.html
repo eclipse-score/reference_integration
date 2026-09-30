@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:12:16</td>
+            <td class="headerValue">2026-09-30 04:21:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -103,13 +103,13 @@
 <span id="L25"><span class="lineNum">      25</span>                 :             : {</span>
 <span id="L26"><span class="lineNum">      26</span>                 :             : namespace</span>
 <span id="L27"><span class="lineNum">      27</span>                 :             : {</span>
-<span id="L28"><span class="lineNum">      28</span>                 :<span class="tlaGNC tlaBgGNC">          93 : auto GetSplitBlocks(AlternatingControlBlockSelectId block_id_active_for_writing,</span></span>
+<span id="L28"><span class="lineNum">      28</span>                 :<span class="tlaGNC tlaBgGNC">          94 : auto GetSplitBlocks(AlternatingControlBlockSelectId block_id_active_for_writing,</span></span>
 <span id="L29"><span class="lineNum">      29</span>                 :             :                     AlternatingControlBlock&amp; alternating_control_block)</span>
 <span id="L30"><span class="lineNum">      30</span>                 :             : {</span>
-<span id="L31"><span class="lineNum">      31</span>         [<span class="tlaGBC" title="Branch 0 was taken 93 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          93 :     return std::tuple{ReusedCleanupBlockReference{SelectLinearControlBlockReference(</span></span>
+<span id="L31"><span class="lineNum">      31</span>         [<span class="tlaGBC" title="Branch 0 was taken 94 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          94 :     return std::tuple{ReusedCleanupBlockReference{SelectLinearControlBlockReference(</span></span>
 <span id="L32"><span class="lineNum">      32</span>                 :             :                           GetOppositeLinearControlBlock(block_id_active_for_writing), alternating_control_block)},</span>
-<span id="L33"><span class="lineNum">      33</span>                 :<span class="tlaGNC">         186 :                       TerminatingBlockReference{</span></span>
-<span id="L34"><span class="lineNum">      34</span>                 :<span class="tlaGNC">         186 :                           SelectLinearControlBlockReference(block_id_active_for_writing, alternating_control_block)}};</span></span>
+<span id="L33"><span class="lineNum">      33</span>                 :<span class="tlaGNC">         188 :                       TerminatingBlockReference{</span></span>
+<span id="L34"><span class="lineNum">      34</span>                 :<span class="tlaGNC">         188 :                           SelectLinearControlBlockReference(block_id_active_for_writing, alternating_control_block)}};</span></span>
 <span id="L35"><span class="lineNum">      35</span>                 :             : }</span>
 <span id="L36"><span class="lineNum">      36</span>                 :             : }  // namespace</span>
 <span id="L37"><span class="lineNum">      37</span>                 :             : </span>
@@ -120,34 +120,34 @@
 <span id="L42"><span class="lineNum">      42</span>                 :<span class="tlaGNC">         165 : }</span></span>
 <span id="L43"><span class="lineNum">      43</span>                 :             : </span>
 <span id="L44"><span class="lineNum">      44</span>                 :             : ///  Assumption: The Switch method shall not be called from a concurrent contexts i.e. it supports single consumer.</span>
-<span id="L45"><span class="lineNum">      45</span>                 :<span class="tlaGNC">          93 : std::uint32_t AlternatingReaderProxy::Switch() noexcept</span></span>
+<span id="L45"><span class="lineNum">      45</span>                 :<span class="tlaGNC">          94 : std::uint32_t AlternatingReaderProxy::Switch() noexcept</span></span>
 <span id="L46"><span class="lineNum">      46</span>                 :             : {</span>
 <span id="L47"><span class="lineNum">      47</span>                 :             :     const auto switch_count_points_active_for_writing =</span>
-<span id="L48"><span class="lineNum">      48</span>                 :<span class="tlaGNC">          93 :         alternating_control_block_.switch_count_points_active_for_writing.load();</span></span>
+<span id="L48"><span class="lineNum">      48</span>                 :<span class="tlaGNC">          94 :         alternating_control_block_.switch_count_points_active_for_writing.load();</span></span>
 <span id="L49"><span class="lineNum">      49</span>                 :             : </span>
-<span id="L50"><span class="lineNum">      50</span>                 :<span class="tlaGNC">          93 :     auto block_id_active_for_writing = SelectLinearControlBlockId(switch_count_points_active_for_writing);</span></span>
+<span id="L50"><span class="lineNum">      50</span>                 :<span class="tlaGNC">          94 :     auto block_id_active_for_writing = SelectLinearControlBlockId(switch_count_points_active_for_writing);</span></span>
 <span id="L51"><span class="lineNum">      51</span>                 :             : </span>
-<span id="L52"><span class="lineNum">      52</span>                 :<span class="tlaGNC">          93 :     auto [restarting_control_block, terminating_control_block_intermediate] =</span></span>
-<span id="L53"><span class="lineNum">      53</span>                 :<span class="tlaGNC">          93 :         GetSplitBlocks(block_id_active_for_writing, alternating_control_block_);</span></span>
+<span id="L52"><span class="lineNum">      52</span>                 :<span class="tlaGNC">          94 :     auto [restarting_control_block, terminating_control_block_intermediate] =</span></span>
+<span id="L53"><span class="lineNum">      53</span>                 :<span class="tlaGNC">          94 :         GetSplitBlocks(block_id_active_for_writing, alternating_control_block_);</span></span>
 <span id="L54"><span class="lineNum">      54</span>                 :             : </span>
-<span id="L55"><span class="lineNum">      55</span>                 :<span class="tlaGNC">          93 :     std::ignore = std::move(terminating_control_block_intermediate);</span></span>
+<span id="L55"><span class="lineNum">      55</span>                 :<span class="tlaGNC">          94 :     std::ignore = std::move(terminating_control_block_intermediate);</span></span>
 <span id="L56"><span class="lineNum">      56</span>                 :             : </span>
 <span id="L57"><span class="lineNum">      57</span>                 :             :     //  Reset counters for writing new data into restarting block.</span>
-<span id="L58"><span class="lineNum">      58</span>                 :<span class="tlaGNC">          93 :     const auto acquired_index = restarting_control_block.GetReusedCleanupBlock().acquired_index.exchange(0U);</span></span>
-<span id="L59"><span class="lineNum">      59</span>                 :<span class="tlaGNC">          93 :     const auto written_index = restarting_control_block.GetReusedCleanupBlock().written_index.exchange(0U);</span></span>
-<span id="L60"><span class="lineNum">      60</span>                 :<span class="tlaGNC">          93 :     std::ignore = acquired_index;</span></span>
-<span id="L61"><span class="lineNum">      61</span>                 :<span class="tlaGNC">          93 :     std::ignore = written_index;</span></span>
+<span id="L58"><span class="lineNum">      58</span>                 :<span class="tlaGNC">          94 :     const auto acquired_index = restarting_control_block.GetReusedCleanupBlock().acquired_index.exchange(0U);</span></span>
+<span id="L59"><span class="lineNum">      59</span>                 :<span class="tlaGNC">          94 :     const auto written_index = restarting_control_block.GetReusedCleanupBlock().written_index.exchange(0U);</span></span>
+<span id="L60"><span class="lineNum">      60</span>                 :<span class="tlaGNC">          94 :     std::ignore = acquired_index;</span></span>
+<span id="L61"><span class="lineNum">      61</span>                 :<span class="tlaGNC">          94 :     std::ignore = written_index;</span></span>
 <span id="L62"><span class="lineNum">      62</span>                 :             : </span>
 <span id="L63"><span class="lineNum">      63</span>                 :             :     // Switch the active buffer for future writers.</span>
-<span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC">         186 :     const auto save_switch_count = alternating_control_block_.switch_count_points_active_for_writing.fetch_add(1UL);</span></span>
+<span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC">         188 :     const auto save_switch_count = alternating_control_block_.switch_count_points_active_for_writing.fetch_add(1UL);</span></span>
 <span id="L65"><span class="lineNum">      65</span>                 :             : </span>
 <span id="L66"><span class="lineNum">      66</span>                 :             :     std::atomic_thread_fence(std::memory_order_release);</span>
 <span id="L67"><span class="lineNum">      67</span>                 :             : </span>
 <span id="L68"><span class="lineNum">      68</span>                 :             :     // Writer switch may be incomplete. It is not yet safe to read the data in the buffer.</span>
 <span id="L69"><span class="lineNum">      69</span>                 :             :     // It is left as reader responsibility to check if writers released buffer.</span>
 <span id="L70"><span class="lineNum">      70</span>                 :             : </span>
-<span id="L71"><span class="lineNum">      71</span>                 :<span class="tlaGNC">          93 :     previous_logging_ipc_counter_value_ = save_switch_count + 1U;</span></span>
-<span id="L72"><span class="lineNum">      72</span>                 :<span class="tlaGNC">          93 :     return save_switch_count;</span></span>
+<span id="L71"><span class="lineNum">      71</span>                 :<span class="tlaGNC">          94 :     previous_logging_ipc_counter_value_ = save_switch_count + 1U;</span></span>
+<span id="L72"><span class="lineNum">      72</span>                 :<span class="tlaGNC">          94 :     return save_switch_count;</span></span>
 <span id="L73"><span class="lineNum">      73</span>                 :             : }</span>
 <span id="L74"><span class="lineNum">      74</span>                 :             : </span>
 <span id="L75"><span class="lineNum">      75</span>                 :             : }  // namespace detail</span>

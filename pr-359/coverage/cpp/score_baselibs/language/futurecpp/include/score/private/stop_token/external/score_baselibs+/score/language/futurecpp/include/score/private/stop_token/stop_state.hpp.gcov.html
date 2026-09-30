@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -152,7 +152,7 @@
 <span id="L74"><span class="lineNum">      74</span>                 :             :     /// \brief Accessor to the internal state</span>
 <span id="L75"><span class="lineNum">      75</span>                 :             :     ///</span>
 <span id="L76"><span class="lineNum">      76</span>                 :             :     /// \return This call returns true if request_stop() has been invoked before</span>
-<span id="L77"><span class="lineNum">      77</span>                 :<span class="tlaGNC tlaBgGNC">      196754 :     bool stop_requested() { return stop_requested_.load(std::memory_order_acquire); }</span></span>
+<span id="L77"><span class="lineNum">      77</span>                 :<span class="tlaGNC tlaBgGNC">      199898 :     bool stop_requested() { return stop_requested_.load(std::memory_order_acquire); }</span></span>
 <span id="L78"><span class="lineNum">      78</span>                 :             : </span>
 <span id="L79"><span class="lineNum">      79</span>                 :             :     /// \brief Checks if stop_requested() can ever change its state.</span>
 <span id="L80"><span class="lineNum">      80</span>                 :             :     ///</span>
@@ -162,12 +162,12 @@
 <span id="L84"><span class="lineNum">      84</span>                 :             :     /// \brief Gets invoked once a new stop_source is associated with this state</span>
 <span id="L85"><span class="lineNum">      85</span>                 :             :     ///</span>
 <span id="L86"><span class="lineNum">      86</span>                 :             :     /// \details Necessary to implement stop_possible() functionality.</span>
-<span id="L87"><span class="lineNum">      87</span>                 :<span class="tlaGNC">      206040 :     void increment_associated_sources() { ++associated_sources_; }</span></span>
+<span id="L87"><span class="lineNum">      87</span>                 :<span class="tlaGNC">      207490 :     void increment_associated_sources() { ++associated_sources_; }</span></span>
 <span id="L88"><span class="lineNum">      88</span>                 :             : </span>
 <span id="L89"><span class="lineNum">      89</span>                 :             :     /// \brief Get invoked once a stop_source removes its association with this state</span>
 <span id="L90"><span class="lineNum">      90</span>                 :             :     ///</span>
 <span id="L91"><span class="lineNum">      91</span>                 :             :     /// \details Necessary to implement stop_possible() functionality.</span>
-<span id="L92"><span class="lineNum">      92</span>                 :<span class="tlaGNC">      206037 :     void decrement_associated_sources() { --associated_sources_; }</span></span>
+<span id="L92"><span class="lineNum">      92</span>                 :<span class="tlaGNC">      207483 :     void decrement_associated_sources() { --associated_sources_; }</span></span>
 <span id="L93"><span class="lineNum">      93</span>                 :             : </span>
 <span id="L94"><span class="lineNum">      94</span>                 :             : private:</span>
 <span id="L95"><span class="lineNum">      95</span>                 :             :     /// \brief Invokes all registered callbacks</span>

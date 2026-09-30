@@ -37,12 +37,12 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryMed">77.1&nbsp;%</td>
-            <td class="headerCovTableEntry">537</td>
-            <td class="headerCovTableEntry">414</td>
+            <td class="headerCovTableEntryMed">77.0&nbsp;%</td>
+            <td class="headerCovTableEntry">539</td>
+            <td class="headerCovTableEntry">415</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -114,10 +114,10 @@
 <span id="L36"><span class="lineNum">      36</span>                 :             : /// Implements https://isocpp.org/files/papers/N4860.pdf#subsection.25.11.7</span>
 <span id="L37"><span class="lineNum">      37</span>                 :             : /// Non-conforming: Not constexpr and not constrained.</span>
 <span id="L38"><span class="lineNum">      38</span>                 :             : template &lt;typename T, typename... Args, typename = decltype(::new(std::declval&lt;void*&gt;()) T(std::declval&lt;Args&gt;()...))&gt;</span>
-<span id="L39"><span class="lineNum">      39</span>                 :<span class="tlaGNC tlaBgGNC">       89482 : T* construct_at(T* const p, Args&amp;&amp;... args)</span></span>
+<span id="L39"><span class="lineNum">      39</span>                 :<span class="tlaGNC tlaBgGNC">     5338229 : T* construct_at(T* const p, Args&amp;&amp;... args)</span></span>
 <span id="L40"><span class="lineNum">      40</span>                 :             : {</span>
 <span id="L41"><span class="lineNum">      41</span>                 :             :     static_assert(!std::is_array_v&lt;T&gt;, &quot;not implemented&quot;);</span>
-<span id="L42"><span class="lineNum">      42</span>   [<span class="tlaGBC" title="Branch 0 was taken 2397 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 11 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">       89515 :     return ::new (score::cpp::detail::voidify(*p)) T(std::forward&lt;Args&gt;(args)...);</span></span>
+<span id="L42"><span class="lineNum">      42</span>   [<span class="tlaGBC" title="Branch 0 was taken 2397 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 11 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">     5338262 :     return ::new (score::cpp::detail::voidify(*p)) T(std::forward&lt;Args&gt;(args)...);</span></span>
 <span class="lineNum">        </span>          <span class="tlaUNC" title="Branch 4 was not taken"> - </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
 <span id="L43"><span class="lineNum">      43</span>                 :             : }</span>
 <span id="L44"><span class="lineNum">      44</span>                 :             : </span>

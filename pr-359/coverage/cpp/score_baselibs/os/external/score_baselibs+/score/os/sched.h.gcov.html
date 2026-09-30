@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">66.7&nbsp;%</td>
@@ -102,57 +102,55 @@
 <span id="L24"><span class="lineNum">      24</span>                 :             : {</span>
 <span id="L25"><span class="lineNum">      25</span>                 :             : namespace os</span>
 <span id="L26"><span class="lineNum">      26</span>                 :             : {</span>
-<span id="L27"><span class="lineNum">      27</span>                 :             : /* KW_SUPPRESS_START:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L28"><span class="lineNum">      28</span>                 :             : class Sched : public ObjectSeam&lt;Sched&gt;</span>
-<span id="L29"><span class="lineNum">      29</span>                 :             : {</span>
-<span id="L30"><span class="lineNum">      30</span>                 :             :   public:</span>
-<span id="L31"><span class="lineNum">      31</span>                 :             :     static Sched&amp; instance() noexcept;</span>
-<span id="L32"><span class="lineNum">      32</span>                 :             : </span>
-<span id="L33"><span class="lineNum">      33</span>                 :             :     virtual score::cpp::expected&lt;std::int32_t, score::os::Error&gt; sched_getparam(</span>
-<span id="L34"><span class="lineNum">      34</span>                 :             :         const pid_t pid,</span>
-<span id="L35"><span class="lineNum">      35</span>                 :             :         struct sched_param* const parms) const noexcept = 0;</span>
-<span id="L36"><span class="lineNum">      36</span>                 :             :     virtual score::cpp::expected&lt;std::int32_t, score::os::Error&gt; sched_getscheduler(const pid_t pid) const noexcept = 0;</span>
-<span id="L37"><span class="lineNum">      37</span>                 :             :     virtual score::cpp::expected&lt;std::int32_t, score::os::Error&gt; sched_setparam(</span>
-<span id="L38"><span class="lineNum">      38</span>                 :             :         const pid_t pid,</span>
-<span id="L39"><span class="lineNum">      39</span>                 :             :         const struct sched_param* const parms) const noexcept = 0;</span>
-<span id="L40"><span class="lineNum">      40</span>                 :             :     virtual score::cpp::expected&lt;std::int32_t, score::os::Error&gt; sched_setscheduler(</span>
-<span id="L41"><span class="lineNum">      41</span>                 :             :         const pid_t pid,</span>
-<span id="L42"><span class="lineNum">      42</span>                 :             :         const std::int32_t policy,</span>
-<span id="L43"><span class="lineNum">      43</span>                 :             :         const struct sched_param* const parms) const noexcept = 0;</span>
-<span id="L44"><span class="lineNum">      44</span>                 :             :     virtual score::cpp::expected&lt;std::int32_t, score::os::Error&gt; sched_yield(void) const noexcept = 0;</span>
-<span id="L45"><span class="lineNum">      45</span>                 :             :     virtual score::cpp::expected&lt;std::int32_t, score::os::Error&gt; sched_rr_get_interval(</span>
-<span id="L46"><span class="lineNum">      46</span>                 :             :         const pid_t pid,</span>
-<span id="L47"><span class="lineNum">      47</span>                 :             :         struct timespec* const t) const noexcept = 0;</span>
-<span id="L48"><span class="lineNum">      48</span>                 :             :     virtual score::cpp::expected&lt;std::int32_t, score::os::Error&gt; sched_get_priority_min(</span>
-<span id="L49"><span class="lineNum">      49</span>                 :             :         const std::int32_t alg) const noexcept = 0;</span>
-<span id="L50"><span class="lineNum">      50</span>                 :             :     virtual score::cpp::expected&lt;std::int32_t, score::os::Error&gt; sched_get_priority_max(</span>
-<span id="L51"><span class="lineNum">      51</span>                 :             :         const std::int32_t alg) const noexcept = 0;</span>
-<span id="L52"><span class="lineNum">      52</span>                 :             : // Suppress &quot;AUTOSAR C++14 A16-0-1&quot; rule findings. This rule stated: &quot;The pre-processor shall only be used for</span>
-<span id="L53"><span class="lineNum">      53</span>                 :             : // unconditional and conditional file inclusion and include guards, and using the following directives: (1) #ifndef,</span>
-<span id="L54"><span class="lineNum">      54</span>                 :             : // #ifdef, (3) #if, (4) #if defined, (5) #elif, (6) #else, (7) #define, (8) #endif, (9) #include.&quot;.</span>
-<span id="L55"><span class="lineNum">      55</span>                 :             : // Rationale: Pre-processor commands are used to allow different implementations for linux and QNX to exist</span>
-<span id="L56"><span class="lineNum">      56</span>                 :             : // in the same file. It also prevents compiler errors in linux code when compiling for QNX and vice versa.</span>
-<span id="L57"><span class="lineNum">      57</span>                 :             : // coverity[autosar_cpp14_a16_0_1_violation]</span>
-<span id="L58"><span class="lineNum">      58</span>                 :             : #if defined(__QNX__)</span>
-<span id="L59"><span class="lineNum">      59</span>                 :             :     virtual score::cpp::expected&lt;std::int32_t, score::os::Error&gt;</span>
-<span id="L60"><span class="lineNum">      60</span>                 :             :     sched_get_priority_adjust(std::int32_t prio, std::int32_t alg, std::int32_t adjust) const noexcept = 0;</span>
-<span id="L61"><span class="lineNum">      61</span>                 :             : // coverity[autosar_cpp14_a16_0_1_violation], see above rationale</span>
-<span id="L62"><span class="lineNum">      62</span>                 :             : #endif  //__QNX__</span>
-<span id="L63"><span class="lineNum">      63</span>                 :             : </span>
-<span id="L64"><span class="lineNum">      64</span>                 :<span class="tlaGNC tlaBgGNC">           9 :     virtual ~Sched() = default;</span></span>
-<span id="L65"><span class="lineNum">      65</span>                 :             : </span>
-<span id="L66"><span class="lineNum">      66</span>                 :             :   protected:</span>
-<span id="L67"><span class="lineNum">      67</span>                 :<span class="tlaGNC">           8 :     Sched() = default;</span></span>
-<span id="L68"><span class="lineNum">      68</span>                 :             :     Sched(const Sched&amp;) = default;</span>
-<span id="L69"><span class="lineNum">      69</span>                 :             :     Sched(Sched&amp;&amp;) = default;</span>
-<span id="L70"><span class="lineNum">      70</span>                 :             :     Sched&amp; operator=(const Sched&amp;) = default;</span>
-<span id="L71"><span class="lineNum">      71</span>                 :             :     Sched&amp; operator=(Sched&amp;&amp;) = default;</span>
-<span id="L72"><span class="lineNum">      72</span>                 :             : };</span>
-<span id="L73"><span class="lineNum">      73</span>                 :             : /* KW_SUPPRESS_END:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L74"><span class="lineNum">      74</span>                 :             : }  // namespace os</span>
-<span id="L75"><span class="lineNum">      75</span>                 :             : }  // namespace score</span>
-<span id="L76"><span class="lineNum">      76</span>                 :             : </span>
-<span id="L77"><span class="lineNum">      77</span>                 :             : #endif  // SCORE_LIB_OS_SCHED_H</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : class Sched : public ObjectSeam&lt;Sched&gt;</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             : {</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             :   public:</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             :     static Sched&amp; instance() noexcept;</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             : </span>
+<span id="L32"><span class="lineNum">      32</span>                 :             :     virtual score::cpp::expected&lt;std::int32_t, score::os::Error&gt; sched_getparam(</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             :         const pid_t pid,</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             :         struct sched_param* const parms) const noexcept = 0;</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             :     virtual score::cpp::expected&lt;std::int32_t, score::os::Error&gt; sched_getscheduler(const pid_t pid) const noexcept = 0;</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             :     virtual score::cpp::expected&lt;std::int32_t, score::os::Error&gt; sched_setparam(</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             :         const pid_t pid,</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             :         const struct sched_param* const parms) const noexcept = 0;</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             :     virtual score::cpp::expected&lt;std::int32_t, score::os::Error&gt; sched_setscheduler(</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             :         const pid_t pid,</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             :         const std::int32_t policy,</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             :         const struct sched_param* const parms) const noexcept = 0;</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             :     virtual score::cpp::expected&lt;std::int32_t, score::os::Error&gt; sched_yield(void) const noexcept = 0;</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             :     virtual score::cpp::expected&lt;std::int32_t, score::os::Error&gt; sched_rr_get_interval(</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             :         const pid_t pid,</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             :         struct timespec* const t) const noexcept = 0;</span>
+<span id="L47"><span class="lineNum">      47</span>                 :             :     virtual score::cpp::expected&lt;std::int32_t, score::os::Error&gt; sched_get_priority_min(</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             :         const std::int32_t alg) const noexcept = 0;</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             :     virtual score::cpp::expected&lt;std::int32_t, score::os::Error&gt; sched_get_priority_max(</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             :         const std::int32_t alg) const noexcept = 0;</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             : // Suppress &quot;AUTOSAR C++14 A16-0-1&quot; rule findings. This rule stated: &quot;The pre-processor shall only be used for</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             : // unconditional and conditional file inclusion and include guards, and using the following directives: (1) #ifndef,</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             : // #ifdef, (3) #if, (4) #if defined, (5) #elif, (6) #else, (7) #define, (8) #endif, (9) #include.&quot;.</span>
+<span id="L54"><span class="lineNum">      54</span>                 :             : // Rationale: Pre-processor commands are used to allow different implementations for linux and QNX to exist</span>
+<span id="L55"><span class="lineNum">      55</span>                 :             : // in the same file. It also prevents compiler errors in linux code when compiling for QNX and vice versa.</span>
+<span id="L56"><span class="lineNum">      56</span>                 :             : // coverity[autosar_cpp14_a16_0_1_violation]</span>
+<span id="L57"><span class="lineNum">      57</span>                 :             : #if defined(__QNX__)</span>
+<span id="L58"><span class="lineNum">      58</span>                 :             :     virtual score::cpp::expected&lt;std::int32_t, score::os::Error&gt;</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             :     sched_get_priority_adjust(std::int32_t prio, std::int32_t alg, std::int32_t adjust) const noexcept = 0;</span>
+<span id="L60"><span class="lineNum">      60</span>                 :             : // coverity[autosar_cpp14_a16_0_1_violation], see above rationale</span>
+<span id="L61"><span class="lineNum">      61</span>                 :             : #endif  //__QNX__</span>
+<span id="L62"><span class="lineNum">      62</span>                 :             : </span>
+<span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC tlaBgGNC">           9 :     virtual ~Sched() = default;</span></span>
+<span id="L64"><span class="lineNum">      64</span>                 :             : </span>
+<span id="L65"><span class="lineNum">      65</span>                 :             :   protected:</span>
+<span id="L66"><span class="lineNum">      66</span>                 :<span class="tlaGNC">           8 :     Sched() = default;</span></span>
+<span id="L67"><span class="lineNum">      67</span>                 :             :     Sched(const Sched&amp;) = default;</span>
+<span id="L68"><span class="lineNum">      68</span>                 :             :     Sched(Sched&amp;&amp;) = default;</span>
+<span id="L69"><span class="lineNum">      69</span>                 :             :     Sched&amp; operator=(const Sched&amp;) = default;</span>
+<span id="L70"><span class="lineNum">      70</span>                 :             :     Sched&amp; operator=(Sched&amp;&amp;) = default;</span>
+<span id="L71"><span class="lineNum">      71</span>                 :             : };</span>
+<span id="L72"><span class="lineNum">      72</span>                 :             : }  // namespace os</span>
+<span id="L73"><span class="lineNum">      73</span>                 :             : }  // namespace score</span>
+<span id="L74"><span class="lineNum">      74</span>                 :             : </span>
+<span id="L75"><span class="lineNum">      75</span>                 :             : #endif  // SCORE_LIB_OS_SCHED_H</span>
         </pre>
               </td>
             </tr>

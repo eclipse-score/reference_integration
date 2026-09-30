@@ -31,18 +31,18 @@
             <td class="headerValue">_coverage_report.dat</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
-            <td class="headerCovTableEntry">204</td>
-            <td class="headerCovTableEntry">204</td>
+            <td class="headerCovTableEntryHi">99.1&nbsp;%</td>
+            <td class="headerCovTableEntry">212</td>
+            <td class="headerCovTableEntry">210</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryHi">98.7&nbsp;%</td>
-            <td class="headerCovTableEntry">394</td>
-            <td class="headerCovTableEntry">389</td>
+            <td class="headerCovTableEntryHi">98.3&nbsp;%</td>
+            <td class="headerCovTableEntry">413</td>
+            <td class="headerCovTableEntry">406</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -57,8 +57,8 @@
             <td></td>
             <td class="headerItem">Branches:</td>
             <td class="headerCovTableEntryLo">62.3&nbsp;%</td>
-            <td class="headerCovTableEntry">268</td>
-            <td class="headerCovTableEntry">167</td>
+            <td class="headerCovTableEntry">276</td>
+            <td class="headerCovTableEntry">172</td>
           </tr>
                   <tr><td><img src="../../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -125,20 +125,20 @@
 <span id="L47"><span class="lineNum">      47</span>                 :             :     static_assert(std::is_trivially_destructible_v&lt;T&gt;);</span>
 <span id="L48"><span class="lineNum">      48</span>                 :             : </span>
 <span id="L49"><span class="lineNum">      49</span>                 :             : public:</span>
-<span id="L50"><span class="lineNum">      50</span>                 :<span class="tlaGNC tlaBgGNC">         402 :     destructor_base() noexcept : size_{0}</span></span>
+<span id="L50"><span class="lineNum">      50</span>                 :<span class="tlaGNC tlaBgGNC">         403 :     destructor_base() noexcept : size_{0}</span></span>
 <span id="L51"><span class="lineNum">      51</span>                 :             :     {</span>
 <span id="L52"><span class="lineNum">      52</span>                 :             :         // activate the union member. `start_lifetime_as_array` does not exist in C++17</span>
 <span id="L53"><span class="lineNum">      53</span>                 :             :         // With C++26 trivial union paper wg21.link/p3074 + wg21.link/p3726 this isn't needed</span>
 <span id="L54"><span class="lineNum">      54</span>                 :             :         // https://en.cppreference.com/w/cpp/memory/start_lifetime_as.html says</span>
 <span id="L55"><span class="lineNum">      55</span>                 :             :         // &quot;`new (void_ptr) unsigned char[size]` or ... works as an untyped version of</span>
 <span id="L56"><span class="lineNum">      56</span>                 :             :         // `std::start_lifetime_as`, but it does not keep the object representation.&quot;</span>
-<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">         402 :         score::cpp::ignore = ::new (score::cpp::detail::voidify(array_)) std::uint8_t[sizeof(T) * MaxSize];</span></span>
-<span id="L58"><span class="lineNum">      58</span>                 :<span class="tlaGNC">         402 :     }</span></span>
+<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">         403 :         score::cpp::ignore = ::new (score::cpp::detail::voidify(array_)) std::uint8_t[sizeof(T) * MaxSize];</span></span>
+<span id="L58"><span class="lineNum">      58</span>                 :<span class="tlaGNC">         403 :     }</span></span>
 <span id="L59"><span class="lineNum">      59</span>                 :             : </span>
-<span id="L60"><span class="lineNum">      60</span>                 :<span class="tlaGNC">         926 :     void set_size(const std::size_t n) { size_ = n; }</span></span>
-<span id="L61"><span class="lineNum">      61</span>                 :<span class="tlaGNC">        3702 :     std::size_t size() const { return size_; }</span></span>
-<span id="L62"><span class="lineNum">      62</span>                 :<span class="tlaGNC">        1553 :     T* data() { return array_; }</span></span>
-<span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC">         566 :     const T* data() const { return array_; }</span></span>
+<span id="L60"><span class="lineNum">      60</span>                 :<span class="tlaGNC">         928 :     void set_size(const std::size_t n) { size_ = n; }</span></span>
+<span id="L61"><span class="lineNum">      61</span>                 :<span class="tlaGNC">        3741 :     std::size_t size() const { return size_; }</span></span>
+<span id="L62"><span class="lineNum">      62</span>                 :<span class="tlaGNC">        1563 :     T* data() { return array_; }</span></span>
+<span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC">         568 :     const T* data() const { return array_; }</span></span>
 <span id="L64"><span class="lineNum">      64</span>                 :             : </span>
 <span id="L65"><span class="lineNum">      65</span>                 :             : private:</span>
 <span id="L66"><span class="lineNum">      66</span>                 :             :     union</span>
@@ -261,538 +261,564 @@
 <span id="L183"><span class="lineNum">     183</span>                 :             :     /// \pre the distance between the input iterators shall be in a range of [0, MaxSize]</span>
 <span id="L184"><span class="lineNum">     184</span>                 :             :     template &lt;typename InputIterator,</span>
 <span id="L185"><span class="lineNum">     185</span>                 :             :               typename = decltype(*std::declval&lt;InputIterator&amp;&gt;(), ++std::declval&lt;InputIterator&amp;&gt;())&gt;</span>
-<span id="L186"><span class="lineNum">     186</span>                 :<span class="tlaGNC">         123 :     explicit inplace_vector(InputIterator begin, InputIterator end) : base_t{}</span></span>
-<span id="L187"><span class="lineNum">     187</span>                 :             :     {</span>
-<span id="L188"><span class="lineNum">     188</span>   [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 118 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 4 times"> + </span>]:<span class="tlaGNC">         123 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(std::distance(begin, end) &gt;= 0);</span></span>
-<span id="L189"><span class="lineNum">     189</span>   [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 116 times"> + </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaGBC" title="Branch 3 was taken 4 times"> + </span>]:<span class="tlaGNC">         122 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(static_cast&lt;std::size_t&gt;(std::distance(begin, end)) &lt;= MaxSize);</span></span>
-<span id="L190"><span class="lineNum">     190</span>                 :             :         try</span>
-<span id="L191"><span class="lineNum">     191</span>                 :             :         {</span>
-<span id="L192"><span class="lineNum">     192</span>   [<span class="tlaGBC" title="Branch 0 was taken 120 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 119 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">         120 :             const auto new_end = std::uninitialized_copy(begin, end, std::begin(*this));</span></span>
-<span id="L193"><span class="lineNum">     193</span>   [<span class="tlaGBC" title="Branch 0 was taken 119 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 119 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">         119 :             base_t::set_size(static_cast&lt;std::size_t&gt;(new_end - std::begin(*this)));</span></span>
-<span id="L194"><span class="lineNum">     194</span>                 :             :         }</span>
-<span id="L195"><span class="lineNum">     195</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaGNC">           1 :         catch (...)</span></span>
-<span id="L196"><span class="lineNum">     196</span>                 :             :         {</span>
-<span id="L197"><span class="lineNum">     197</span>                 :             :             // do nothing</span>
-<span id="L198"><span class="lineNum">     198</span>                 :             :         }</span>
-<span id="L199"><span class="lineNum">     199</span>                 :<span class="tlaGNC">         120 :     }</span></span>
+<span id="L186"><span class="lineNum">     186</span>                 :<span class="tlaGNC">         124 :     explicit inplace_vector(InputIterator begin, InputIterator end)</span></span>
+<span id="L187"><span class="lineNum">     187</span>         [<span class="tlaGBC" title="Branch 0 was taken 121 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span>]:<span class="tlaGNC">         124 :         : inplace_vector{begin, end, typename std::iterator_traits&lt;InputIterator&gt;::iterator_category{}}</span></span>
+<span id="L188"><span class="lineNum">     188</span>                 :             :     {</span>
+<span id="L189"><span class="lineNum">     189</span>                 :<span class="tlaGNC">         121 :     }</span></span>
+<span id="L190"><span class="lineNum">     190</span>                 :             : </span>
+<span id="L191"><span class="lineNum">     191</span>                 :             :     /// \brief Constructor with initializer list.</span>
+<span id="L192"><span class="lineNum">     192</span>                 :             :     ///</span>
+<span id="L193"><span class="lineNum">     193</span>                 :             :     /// \param initializer_list The initializer_list to construct the inplace_vector from</span>
+<span id="L194"><span class="lineNum">     194</span>                 :             :     ///</span>
+<span id="L195"><span class="lineNum">     195</span>                 :             :     /// \pre initializer_list.size() &lt;= MaxSize</span>
+<span id="L196"><span class="lineNum">     196</span>                 :<span class="tlaGNC">          76 :     inplace_vector(const std::initializer_list&lt;T&gt; initializer_list)</span></span>
+<span id="L197"><span class="lineNum">     197</span>                 :<span class="tlaGNC">          76 :         : inplace_vector(initializer_list.begin(), initializer_list.end())</span></span>
+<span id="L198"><span class="lineNum">     198</span>                 :             :     {</span>
+<span id="L199"><span class="lineNum">     199</span>                 :<span class="tlaGNC">          75 :     }</span></span>
 <span id="L200"><span class="lineNum">     200</span>                 :             : </span>
-<span id="L201"><span class="lineNum">     201</span>                 :             :     /// \brief Constructor with initializer list.</span>
-<span id="L202"><span class="lineNum">     202</span>                 :             :     ///</span>
-<span id="L203"><span class="lineNum">     203</span>                 :             :     /// \param initializer_list The initializer_list to construct the inplace_vector from</span>
-<span id="L204"><span class="lineNum">     204</span>                 :             :     ///</span>
-<span id="L205"><span class="lineNum">     205</span>                 :             :     /// \pre initializer_list.size() &lt;= MaxSize</span>
-<span id="L206"><span class="lineNum">     206</span>                 :<span class="tlaGNC">          76 :     inplace_vector(const std::initializer_list&lt;T&gt; initializer_list)</span></span>
-<span id="L207"><span class="lineNum">     207</span>                 :<span class="tlaGNC">          76 :         : inplace_vector(initializer_list.begin(), initializer_list.end())</span></span>
-<span id="L208"><span class="lineNum">     208</span>                 :             :     {</span>
-<span id="L209"><span class="lineNum">     209</span>                 :<span class="tlaGNC">          75 :     }</span></span>
-<span id="L210"><span class="lineNum">     210</span>                 :             : </span>
-<span id="L211"><span class="lineNum">     211</span>                 :             :     /// \brief Copy construction from inplace_vector.</span>
-<span id="L212"><span class="lineNum">     212</span>                 :<span class="tlaGNC">          50 :     inplace_vector(const inplace_vector&amp; other) noexcept((MaxSize == 0) || std::is_nothrow_copy_constructible&lt;T&gt;::value)</span></span>
-<span id="L213"><span class="lineNum">     213</span>                 :<span class="tlaGNC">          50 :         : base_t{}</span></span>
-<span id="L214"><span class="lineNum">     214</span>                 :             :     {</span>
-<span id="L215"><span class="lineNum">     215</span>                 :             :         try</span>
-<span id="L216"><span class="lineNum">     216</span>                 :             :         {</span>
-<span id="L217"><span class="lineNum">     217</span>         [<span class="tlaGBC" title="Branch 0 was taken 50 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          50 :             this-&gt;set_size(other.size());</span></span>
-<span id="L218"><span class="lineNum">     218</span>   [<span class="tlaGBC" title="Branch 0 was taken 50 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 50 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          50 :             score::cpp::ignore = std::uninitialized_copy_n(other.data(), other.size(), this-&gt;data());</span></span>
+<span id="L201"><span class="lineNum">     201</span>                 :             :     /// \brief Copy construction from inplace_vector.</span>
+<span id="L202"><span class="lineNum">     202</span>                 :<span class="tlaGNC">          50 :     inplace_vector(const inplace_vector&amp; other) noexcept((MaxSize == 0) || std::is_nothrow_copy_constructible&lt;T&gt;::value)</span></span>
+<span id="L203"><span class="lineNum">     203</span>                 :<span class="tlaGNC">          50 :         : base_t{}</span></span>
+<span id="L204"><span class="lineNum">     204</span>                 :             :     {</span>
+<span id="L205"><span class="lineNum">     205</span>                 :             :         try</span>
+<span id="L206"><span class="lineNum">     206</span>                 :             :         {</span>
+<span id="L207"><span class="lineNum">     207</span>   [<span class="tlaGBC" title="Branch 0 was taken 50 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 50 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          50 :             score::cpp::ignore = std::uninitialized_copy_n(other.data(), other.size(), this-&gt;data());</span></span>
 <span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 50 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 48 times"> + </span><span class="tlaGBC" title="Branch 7 was taken 1 time"> + </span>]
-<span id="L219"><span class="lineNum">     219</span>                 :             :         }</span>
-<span id="L220"><span class="lineNum">     220</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaGNC">           1 :         catch (...)</span></span>
-<span id="L221"><span class="lineNum">     221</span>                 :             :         {</span>
-<span id="L222"><span class="lineNum">     222</span>                 :<span class="tlaGNC">           1 :             this-&gt;set_size(0U);</span></span>
-<span id="L223"><span class="lineNum">     223</span>                 :             :         }</span>
-<span id="L224"><span class="lineNum">     224</span>                 :<span class="tlaGNC">          50 :     }</span></span>
-<span id="L225"><span class="lineNum">     225</span>                 :             : </span>
-<span id="L226"><span class="lineNum">     226</span>                 :             :     /// \brief Copy assignment from inplace_vector.</span>
-<span id="L227"><span class="lineNum">     227</span>                 :<span class="tlaGNC">           4 :     inplace_vector&amp; operator=(const inplace_vector&amp; other) noexcept((MaxSize == 0) ||</span></span>
-<span id="L228"><span class="lineNum">     228</span>                 :             :                                                                     (std::is_nothrow_copy_assignable&lt;T&gt;::value &amp;&amp;</span>
-<span id="L229"><span class="lineNum">     229</span>                 :             :                                                                      std::is_nothrow_copy_constructible&lt;T&gt;::value))</span>
-<span id="L230"><span class="lineNum">     230</span>                 :             :     {</span>
-<span id="L231"><span class="lineNum">     231</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           4 :         if (this != &amp;other)</span></span>
-<span id="L232"><span class="lineNum">     232</span>                 :             :         {</span>
-<span id="L233"><span class="lineNum">     233</span>                 :             :             try</span>
-<span id="L234"><span class="lineNum">     234</span>                 :             :             {</span>
-<span id="L235"><span class="lineNum">     235</span>   [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           3 :                 score::cpp::ignore = std::destroy_n(this-&gt;data(), this-&gt;size());</span></span>
+<span id="L208"><span class="lineNum">     208</span>         [<span class="tlaGBC" title="Branch 0 was taken 49 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          49 :             this-&gt;set_size(other.size());</span></span>
+<span id="L209"><span class="lineNum">     209</span>                 :             :         }</span>
+<span id="L210"><span class="lineNum">     210</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaGNC">           1 :         catch (...)</span></span>
+<span id="L211"><span class="lineNum">     211</span>                 :             :         {</span>
+<span id="L212"><span class="lineNum">     212</span>                 :             :             // do nothing because `uninitialized_copy_n` destroys all already copied elements</span>
+<span id="L213"><span class="lineNum">     213</span>                 :             :         }</span>
+<span id="L214"><span class="lineNum">     214</span>                 :<span class="tlaGNC">          50 :     }</span></span>
+<span id="L215"><span class="lineNum">     215</span>                 :             : </span>
+<span id="L216"><span class="lineNum">     216</span>                 :             :     /// \brief Copy assignment from inplace_vector.</span>
+<span id="L217"><span class="lineNum">     217</span>                 :<span class="tlaGNC">           4 :     inplace_vector&amp; operator=(const inplace_vector&amp; other) noexcept((MaxSize == 0) ||</span></span>
+<span id="L218"><span class="lineNum">     218</span>                 :             :                                                                     (std::is_nothrow_copy_assignable&lt;T&gt;::value &amp;&amp;</span>
+<span id="L219"><span class="lineNum">     219</span>                 :             :                                                                      std::is_nothrow_copy_constructible&lt;T&gt;::value))</span>
+<span id="L220"><span class="lineNum">     220</span>                 :             :     {</span>
+<span id="L221"><span class="lineNum">     221</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           4 :         if (this != &amp;other)</span></span>
+<span id="L222"><span class="lineNum">     222</span>                 :             :         {</span>
+<span id="L223"><span class="lineNum">     223</span>                 :             :             try</span>
+<span id="L224"><span class="lineNum">     224</span>                 :             :             {</span>
+<span id="L225"><span class="lineNum">     225</span>   [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           3 :                 score::cpp::ignore = std::destroy_n(this-&gt;data(), this-&gt;size());</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L236"><span class="lineNum">     236</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           3 :                 this-&gt;set_size(other.size());</span></span>
-<span id="L237"><span class="lineNum">     237</span>   [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           3 :                 score::cpp::ignore = std::uninitialized_copy_n(other.data(), other.size(), this-&gt;data());</span></span>
+<span id="L226"><span class="lineNum">     226</span>   [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           3 :                 score::cpp::ignore = std::uninitialized_copy_n(other.data(), other.size(), this-&gt;data());</span></span>
 <span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaUNC" title="Branch 6 was not taken"> - </span><span class="tlaGBC" title="Branch 7 was taken 1 time"> + </span>]
-<span id="L238"><span class="lineNum">     238</span>                 :             :             }</span>
-<span id="L239"><span class="lineNum">     239</span>                 :<span class="tlaGNC">           1 :             catch (...)</span></span>
-<span id="L240"><span class="lineNum">     240</span>                 :             :             {</span>
-<span id="L241"><span class="lineNum">     241</span>                 :<span class="tlaGNC">           1 :                 this-&gt;set_size(0U);</span></span>
-<span id="L242"><span class="lineNum">     242</span>                 :             :             }</span>
-<span id="L243"><span class="lineNum">     243</span>                 :             :         }</span>
-<span id="L244"><span class="lineNum">     244</span>                 :<span class="tlaGNC">           4 :         return *this;</span></span>
-<span id="L245"><span class="lineNum">     245</span>                 :             :     }</span>
-<span id="L246"><span class="lineNum">     246</span>                 :             : </span>
-<span id="L247"><span class="lineNum">     247</span>                 :             :     /// \brief Move construction from inplace_vector.</span>
-<span id="L248"><span class="lineNum">     248</span>                 :<span class="tlaGNC">         125 :     inplace_vector(inplace_vector&amp;&amp; other) noexcept((MaxSize == 0) || std::is_nothrow_move_constructible&lt;T&gt;::value)</span></span>
-<span id="L249"><span class="lineNum">     249</span>                 :<span class="tlaGNC">         125 :         : base_t{}</span></span>
-<span id="L250"><span class="lineNum">     250</span>                 :             :     {</span>
-<span id="L251"><span class="lineNum">     251</span>                 :             :         try</span>
-<span id="L252"><span class="lineNum">     252</span>                 :             :         {</span>
-<span id="L253"><span class="lineNum">     253</span>         [<span class="tlaGBC" title="Branch 0 was taken 125 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         125 :             this-&gt;set_size(other.size());</span></span>
-<span id="L254"><span class="lineNum">     254</span>   [<span class="tlaGBC" title="Branch 0 was taken 125 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 125 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         125 :             score::cpp::ignore = std::uninitialized_move_n(other.data(), other.size(), this-&gt;data());</span></span>
+<span id="L227"><span class="lineNum">     227</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :                 this-&gt;set_size(other.size());</span></span>
+<span id="L228"><span class="lineNum">     228</span>                 :             :             }</span>
+<span id="L229"><span class="lineNum">     229</span>                 :<span class="tlaGNC">           1 :             catch (...)</span></span>
+<span id="L230"><span class="lineNum">     230</span>                 :             :             {</span>
+<span id="L231"><span class="lineNum">     231</span>                 :             :                 // do nothing because `uninitialized_copy_n` destroys all already copied elements</span>
+<span id="L232"><span class="lineNum">     232</span>                 :             :             }</span>
+<span id="L233"><span class="lineNum">     233</span>                 :             :         }</span>
+<span id="L234"><span class="lineNum">     234</span>                 :<span class="tlaGNC">           4 :         return *this;</span></span>
+<span id="L235"><span class="lineNum">     235</span>                 :             :     }</span>
+<span id="L236"><span class="lineNum">     236</span>                 :             : </span>
+<span id="L237"><span class="lineNum">     237</span>                 :             :     /// \brief Move construction from inplace_vector.</span>
+<span id="L238"><span class="lineNum">     238</span>                 :<span class="tlaGNC">         125 :     inplace_vector(inplace_vector&amp;&amp; other) noexcept((MaxSize == 0) || std::is_nothrow_move_constructible&lt;T&gt;::value)</span></span>
+<span id="L239"><span class="lineNum">     239</span>                 :<span class="tlaGNC">         125 :         : base_t{}</span></span>
+<span id="L240"><span class="lineNum">     240</span>                 :             :     {</span>
+<span id="L241"><span class="lineNum">     241</span>                 :             :         try</span>
+<span id="L242"><span class="lineNum">     242</span>                 :             :         {</span>
+<span id="L243"><span class="lineNum">     243</span>   [<span class="tlaGBC" title="Branch 0 was taken 125 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 125 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         125 :             score::cpp::ignore = std::uninitialized_move_n(other.data(), other.size(), this-&gt;data());</span></span>
 <span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 124 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 123 times"> + </span><span class="tlaGBC" title="Branch 7 was taken 1 time"> + </span>]
-<span id="L255"><span class="lineNum">     255</span>                 :             :         }</span>
-<span id="L256"><span class="lineNum">     256</span>                 :<span class="tlaGNC">           2 :         catch (...)</span></span>
-<span id="L257"><span class="lineNum">     257</span>                 :             :         {</span>
-<span id="L258"><span class="lineNum">     258</span>                 :<span class="tlaGNC">           1 :             this-&gt;set_size(0U);</span></span>
-<span id="L259"><span class="lineNum">     259</span>                 :             :         }</span>
-<span id="L260"><span class="lineNum">     260</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         125 :         score::cpp::ignore = std::destroy_n(other.data(), other.size());</span></span>
+<span id="L244"><span class="lineNum">     244</span>         [<span class="tlaGBC" title="Branch 0 was taken 124 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         124 :             this-&gt;set_size(other.size());</span></span>
+<span id="L245"><span class="lineNum">     245</span>                 :             :         }</span>
+<span id="L246"><span class="lineNum">     246</span>                 :<span class="tlaGNC">           1 :         catch (...)</span></span>
+<span id="L247"><span class="lineNum">     247</span>                 :             :         {</span>
+<span id="L248"><span class="lineNum">     248</span>                 :             :             // do nothing because `uninitialized_move_n` destroys all already copied elements</span>
+<span id="L249"><span class="lineNum">     249</span>                 :             :         }</span>
+<span id="L250"><span class="lineNum">     250</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         125 :         score::cpp::ignore = std::destroy_n(other.data(), other.size());</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L261"><span class="lineNum">     261</span>                 :<span class="tlaGNC">         125 :         other.set_size(0U);</span></span>
-<span id="L262"><span class="lineNum">     262</span>                 :<span class="tlaGNC">         125 :     }</span></span>
-<span id="L263"><span class="lineNum">     263</span>                 :             : </span>
-<span id="L264"><span class="lineNum">     264</span>                 :             :     /// \brief Move assignment from inplace_vector.</span>
-<span id="L265"><span class="lineNum">     265</span>                 :<span class="tlaGNC">          37 :     inplace_vector&amp; operator=(inplace_vector&amp;&amp; other) noexcept((MaxSize == 0) ||</span></span>
-<span id="L266"><span class="lineNum">     266</span>                 :             :                                                                (std::is_nothrow_move_assignable&lt;T&gt;::value &amp;&amp;</span>
-<span id="L267"><span class="lineNum">     267</span>                 :             :                                                                 std::is_nothrow_move_constructible&lt;T&gt;::value))</span>
-<span id="L268"><span class="lineNum">     268</span>                 :             :     {</span>
-<span id="L269"><span class="lineNum">     269</span>         [<span class="tlaGBC" title="Branch 0 was taken 36 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          37 :         if (this != &amp;other)</span></span>
-<span id="L270"><span class="lineNum">     270</span>                 :             :         {</span>
-<span id="L271"><span class="lineNum">     271</span>                 :             :             try</span>
-<span id="L272"><span class="lineNum">     272</span>                 :             :             {</span>
-<span id="L273"><span class="lineNum">     273</span>   [<span class="tlaGBC" title="Branch 0 was taken 36 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 36 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          36 :                 score::cpp::ignore = std::destroy_n(this-&gt;data(), this-&gt;size());</span></span>
+<span id="L251"><span class="lineNum">     251</span>                 :<span class="tlaGNC">         125 :         other.set_size(0U);</span></span>
+<span id="L252"><span class="lineNum">     252</span>                 :<span class="tlaGNC">         125 :     }</span></span>
+<span id="L253"><span class="lineNum">     253</span>                 :             : </span>
+<span id="L254"><span class="lineNum">     254</span>                 :             :     /// \brief Move assignment from inplace_vector.</span>
+<span id="L255"><span class="lineNum">     255</span>                 :<span class="tlaGNC">          37 :     inplace_vector&amp; operator=(inplace_vector&amp;&amp; other) noexcept((MaxSize == 0) ||</span></span>
+<span id="L256"><span class="lineNum">     256</span>                 :             :                                                                (std::is_nothrow_move_assignable&lt;T&gt;::value &amp;&amp;</span>
+<span id="L257"><span class="lineNum">     257</span>                 :             :                                                                 std::is_nothrow_move_constructible&lt;T&gt;::value))</span>
+<span id="L258"><span class="lineNum">     258</span>                 :             :     {</span>
+<span id="L259"><span class="lineNum">     259</span>         [<span class="tlaGBC" title="Branch 0 was taken 36 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">          37 :         if (this != &amp;other)</span></span>
+<span id="L260"><span class="lineNum">     260</span>                 :             :         {</span>
+<span id="L261"><span class="lineNum">     261</span>                 :             :             try</span>
+<span id="L262"><span class="lineNum">     262</span>                 :             :             {</span>
+<span id="L263"><span class="lineNum">     263</span>   [<span class="tlaGBC" title="Branch 0 was taken 36 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 36 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          36 :                 score::cpp::ignore = std::destroy_n(this-&gt;data(), this-&gt;size());</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 34 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L274"><span class="lineNum">     274</span>         [<span class="tlaGBC" title="Branch 0 was taken 36 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          36 :                 this-&gt;set_size(other.size());</span></span>
-<span id="L275"><span class="lineNum">     275</span>   [<span class="tlaGBC" title="Branch 0 was taken 36 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 36 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          36 :                 score::cpp::ignore = std::uninitialized_move_n(other.data(), other.size(), this-&gt;data());</span></span>
+<span id="L264"><span class="lineNum">     264</span>   [<span class="tlaGBC" title="Branch 0 was taken 36 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 36 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          36 :                 score::cpp::ignore = std::uninitialized_move_n(other.data(), other.size(), this-&gt;data());</span></span>
 <span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 34 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 33 times"> + </span><span class="tlaGBC" title="Branch 7 was taken 1 time"> + </span>]
-<span id="L276"><span class="lineNum">     276</span>                 :             :             }</span>
-<span id="L277"><span class="lineNum">     277</span>                 :<span class="tlaGNC">           2 :             catch (...)</span></span>
-<span id="L278"><span class="lineNum">     278</span>                 :             :             {</span>
-<span id="L279"><span class="lineNum">     279</span>                 :<span class="tlaGNC">           1 :                 this-&gt;set_size(0U);</span></span>
-<span id="L280"><span class="lineNum">     280</span>                 :             :             }</span>
-<span id="L281"><span class="lineNum">     281</span>   [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          36 :             score::cpp::ignore = std::destroy_n(other.data(), other.size());</span></span>
+<span id="L265"><span class="lineNum">     265</span>         [<span class="tlaGBC" title="Branch 0 was taken 35 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          35 :                 this-&gt;set_size(other.size());</span></span>
+<span id="L266"><span class="lineNum">     266</span>                 :             :             }</span>
+<span id="L267"><span class="lineNum">     267</span>                 :<span class="tlaGNC">           1 :             catch (...)</span></span>
+<span id="L268"><span class="lineNum">     268</span>                 :             :             {</span>
+<span id="L269"><span class="lineNum">     269</span>                 :             :                 // do nothing because `uninitialized_move_n` destroys all already copied elements</span>
+<span id="L270"><span class="lineNum">     270</span>                 :             :             }</span>
+<span id="L271"><span class="lineNum">     271</span>   [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          36 :             score::cpp::ignore = std::destroy_n(other.data(), other.size());</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L282"><span class="lineNum">     282</span>                 :<span class="tlaGNC">          36 :             other.set_size(0U);</span></span>
-<span id="L283"><span class="lineNum">     283</span>                 :             :         }</span>
-<span id="L284"><span class="lineNum">     284</span>                 :<span class="tlaGNC">          37 :         return *this;</span></span>
-<span id="L285"><span class="lineNum">     285</span>                 :             :     }</span>
-<span id="L286"><span class="lineNum">     286</span>                 :             : </span>
-<span id="L287"><span class="lineNum">     287</span>                 :             :     /// \brief Destruct inplace_vector</span>
-<span id="L288"><span class="lineNum">     288</span>                 :             :     ///</span>
-<span id="L289"><span class="lineNum">     289</span>                 :             :     /// The destructor is trivial if `T` is trivial destructible</span>
-<span id="L290"><span class="lineNum">     290</span>                 :<span class="tlaGNC">          22 :     ~inplace_vector() = default;</span></span>
-<span id="L291"><span class="lineNum">     291</span>                 :             : </span>
-<span id="L292"><span class="lineNum">     292</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::clear()</span>
-<span id="L293"><span class="lineNum">     293</span>                 :<span class="tlaGNC">           3 :     void clear() { shrink(0U); }</span></span>
-<span id="L294"><span class="lineNum">     294</span>                 :             : </span>
-<span id="L295"><span class="lineNum">     295</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::assign(size_type count, const T&amp; value).</span>
-<span id="L296"><span class="lineNum">     296</span>                 :             :     ///</span>
-<span id="L297"><span class="lineNum">     297</span>                 :             :     /// \param count Number of elements to assign.</span>
-<span id="L298"><span class="lineNum">     298</span>                 :             :     /// \param value Value to assign to the elements.</span>
+<span id="L272"><span class="lineNum">     272</span>                 :<span class="tlaGNC">          36 :             other.set_size(0U);</span></span>
+<span id="L273"><span class="lineNum">     273</span>                 :             :         }</span>
+<span id="L274"><span class="lineNum">     274</span>                 :<span class="tlaGNC">          37 :         return *this;</span></span>
+<span id="L275"><span class="lineNum">     275</span>                 :             :     }</span>
+<span id="L276"><span class="lineNum">     276</span>                 :             : </span>
+<span id="L277"><span class="lineNum">     277</span>                 :             :     /// \brief Destruct inplace_vector</span>
+<span id="L278"><span class="lineNum">     278</span>                 :             :     ///</span>
+<span id="L279"><span class="lineNum">     279</span>                 :             :     /// The destructor is trivial if `T` is trivial destructible</span>
+<span id="L280"><span class="lineNum">     280</span>                 :<span class="tlaGNC">          22 :     ~inplace_vector() = default;</span></span>
+<span id="L281"><span class="lineNum">     281</span>                 :             : </span>
+<span id="L282"><span class="lineNum">     282</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::clear()</span>
+<span id="L283"><span class="lineNum">     283</span>                 :<span class="tlaGNC">           3 :     void clear() { shrink(0U); }</span></span>
+<span id="L284"><span class="lineNum">     284</span>                 :             : </span>
+<span id="L285"><span class="lineNum">     285</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::assign(size_type count, const T&amp; value).</span>
+<span id="L286"><span class="lineNum">     286</span>                 :             :     ///</span>
+<span id="L287"><span class="lineNum">     287</span>                 :             :     /// \param count Number of elements to assign.</span>
+<span id="L288"><span class="lineNum">     288</span>                 :             :     /// \param value Value to assign to the elements.</span>
+<span id="L289"><span class="lineNum">     289</span>                 :             :     ///</span>
+<span id="L290"><span class="lineNum">     290</span>                 :             :     /// \pre count &lt;= MaxSize</span>
+<span id="L291"><span class="lineNum">     291</span>                 :<span class="tlaGNC">           4 :     void assign(const size_type count, const_reference value)</span></span>
+<span id="L292"><span class="lineNum">     292</span>                 :             :     {</span>
+<span id="L293"><span class="lineNum">     293</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span>]:<span class="tlaGNC">           4 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(count &lt;= MaxSize);</span></span>
+<span id="L294"><span class="lineNum">     294</span>                 :<span class="tlaGNC">           3 :         clear();</span></span>
+<span id="L295"><span class="lineNum">     295</span>                 :<span class="tlaGNC">           3 :         append(count, value);</span></span>
+<span id="L296"><span class="lineNum">     296</span>                 :<span class="tlaGNC">           3 :     }</span></span>
+<span id="L297"><span class="lineNum">     297</span>                 :             : </span>
+<span id="L298"><span class="lineNum">     298</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::resize(size_type count).</span>
 <span id="L299"><span class="lineNum">     299</span>                 :             :     ///</span>
-<span id="L300"><span class="lineNum">     300</span>                 :             :     /// \pre count &lt;= MaxSize</span>
-<span id="L301"><span class="lineNum">     301</span>                 :<span class="tlaGNC">           4 :     void assign(const size_type count, const_reference value)</span></span>
-<span id="L302"><span class="lineNum">     302</span>                 :             :     {</span>
-<span id="L303"><span class="lineNum">     303</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span>]:<span class="tlaGNC">           4 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(count &lt;= MaxSize);</span></span>
-<span id="L304"><span class="lineNum">     304</span>                 :<span class="tlaGNC">           3 :         clear();</span></span>
-<span id="L305"><span class="lineNum">     305</span>                 :<span class="tlaGNC">           3 :         append(count, value);</span></span>
-<span id="L306"><span class="lineNum">     306</span>                 :<span class="tlaGNC">           3 :     }</span></span>
-<span id="L307"><span class="lineNum">     307</span>                 :             : </span>
-<span id="L308"><span class="lineNum">     308</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::resize(size_type count).</span>
-<span id="L309"><span class="lineNum">     309</span>                 :             :     ///</span>
-<span id="L310"><span class="lineNum">     310</span>                 :             :     /// \param count New size of the vector.</span>
-<span id="L311"><span class="lineNum">     311</span>                 :             :     ///</span>
-<span id="L312"><span class="lineNum">     312</span>                 :             :     /// \pre count &lt;= MaxSize</span>
-<span id="L313"><span class="lineNum">     313</span>                 :<span class="tlaGNC">           8 :     void resize(const size_type count)</span></span>
-<span id="L314"><span class="lineNum">     314</span>                 :             :     {</span>
-<span id="L315"><span class="lineNum">     315</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 7 times"> + </span>]:<span class="tlaGNC">           8 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(count &lt;= MaxSize);</span></span>
-<span id="L316"><span class="lineNum">     316</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span>]:<span class="tlaGNC">           7 :         if (count &lt; size())</span></span>
-<span id="L317"><span class="lineNum">     317</span>                 :             :         {</span>
-<span id="L318"><span class="lineNum">     318</span>                 :<span class="tlaGNC">           4 :             shrink(count);</span></span>
-<span id="L319"><span class="lineNum">     319</span>                 :             :         }</span>
-<span id="L320"><span class="lineNum">     320</span>                 :             :         else</span>
-<span id="L321"><span class="lineNum">     321</span>                 :             :         {</span>
-<span id="L322"><span class="lineNum">     322</span>                 :<span class="tlaGNC">           3 :             append(count - size());</span></span>
-<span id="L323"><span class="lineNum">     323</span>                 :             :         }</span>
-<span id="L324"><span class="lineNum">     324</span>                 :<span class="tlaGNC">           7 :     }</span></span>
-<span id="L325"><span class="lineNum">     325</span>                 :             : </span>
-<span id="L326"><span class="lineNum">     326</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::resize(size_type count, const T&amp; value).</span>
-<span id="L327"><span class="lineNum">     327</span>                 :             :     ///</span>
-<span id="L328"><span class="lineNum">     328</span>                 :             :     /// \param count New size of the vector.</span>
-<span id="L329"><span class="lineNum">     329</span>                 :             :     /// \param value Value to initialize new elements with.</span>
-<span id="L330"><span class="lineNum">     330</span>                 :             :     ///</span>
-<span id="L331"><span class="lineNum">     331</span>                 :             :     /// \pre count &lt;= MaxSize</span>
-<span id="L332"><span class="lineNum">     332</span>                 :<span class="tlaGNC">           6 :     void resize(const size_type count, const_reference value)</span></span>
-<span id="L333"><span class="lineNum">     333</span>                 :             :     {</span>
-<span id="L334"><span class="lineNum">     334</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 5 times"> + </span>]:<span class="tlaGNC">           6 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(count &lt;= MaxSize);</span></span>
-<span id="L335"><span class="lineNum">     335</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span>]:<span class="tlaGNC">           5 :         if (count &lt; size())</span></span>
-<span id="L336"><span class="lineNum">     336</span>                 :             :         {</span>
-<span id="L337"><span class="lineNum">     337</span>                 :<span class="tlaGNC">           2 :             shrink(count);</span></span>
-<span id="L338"><span class="lineNum">     338</span>                 :             :         }</span>
-<span id="L339"><span class="lineNum">     339</span>                 :             :         else</span>
-<span id="L340"><span class="lineNum">     340</span>                 :             :         {</span>
-<span id="L341"><span class="lineNum">     341</span>                 :<span class="tlaGNC">           3 :             append(count - size(), value);</span></span>
-<span id="L342"><span class="lineNum">     342</span>                 :             :         }</span>
-<span id="L343"><span class="lineNum">     343</span>                 :<span class="tlaGNC">           5 :     }</span></span>
+<span id="L300"><span class="lineNum">     300</span>                 :             :     /// \param count New size of the vector.</span>
+<span id="L301"><span class="lineNum">     301</span>                 :             :     ///</span>
+<span id="L302"><span class="lineNum">     302</span>                 :             :     /// \pre count &lt;= MaxSize</span>
+<span id="L303"><span class="lineNum">     303</span>                 :<span class="tlaGNC">           8 :     void resize(const size_type count)</span></span>
+<span id="L304"><span class="lineNum">     304</span>                 :             :     {</span>
+<span id="L305"><span class="lineNum">     305</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 7 times"> + </span>]:<span class="tlaGNC">           8 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(count &lt;= MaxSize);</span></span>
+<span id="L306"><span class="lineNum">     306</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span>]:<span class="tlaGNC">           7 :         if (count &lt; size())</span></span>
+<span id="L307"><span class="lineNum">     307</span>                 :             :         {</span>
+<span id="L308"><span class="lineNum">     308</span>                 :<span class="tlaGNC">           4 :             shrink(count);</span></span>
+<span id="L309"><span class="lineNum">     309</span>                 :             :         }</span>
+<span id="L310"><span class="lineNum">     310</span>                 :             :         else</span>
+<span id="L311"><span class="lineNum">     311</span>                 :             :         {</span>
+<span id="L312"><span class="lineNum">     312</span>                 :<span class="tlaGNC">           3 :             append(count - size());</span></span>
+<span id="L313"><span class="lineNum">     313</span>                 :             :         }</span>
+<span id="L314"><span class="lineNum">     314</span>                 :<span class="tlaGNC">           7 :     }</span></span>
+<span id="L315"><span class="lineNum">     315</span>                 :             : </span>
+<span id="L316"><span class="lineNum">     316</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::resize(size_type count, const T&amp; value).</span>
+<span id="L317"><span class="lineNum">     317</span>                 :             :     ///</span>
+<span id="L318"><span class="lineNum">     318</span>                 :             :     /// \param count New size of the vector.</span>
+<span id="L319"><span class="lineNum">     319</span>                 :             :     /// \param value Value to initialize new elements with.</span>
+<span id="L320"><span class="lineNum">     320</span>                 :             :     ///</span>
+<span id="L321"><span class="lineNum">     321</span>                 :             :     /// \pre count &lt;= MaxSize</span>
+<span id="L322"><span class="lineNum">     322</span>                 :<span class="tlaGNC">           6 :     void resize(const size_type count, const_reference value)</span></span>
+<span id="L323"><span class="lineNum">     323</span>                 :             :     {</span>
+<span id="L324"><span class="lineNum">     324</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 5 times"> + </span>]:<span class="tlaGNC">           6 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(count &lt;= MaxSize);</span></span>
+<span id="L325"><span class="lineNum">     325</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span>]:<span class="tlaGNC">           5 :         if (count &lt; size())</span></span>
+<span id="L326"><span class="lineNum">     326</span>                 :             :         {</span>
+<span id="L327"><span class="lineNum">     327</span>                 :<span class="tlaGNC">           2 :             shrink(count);</span></span>
+<span id="L328"><span class="lineNum">     328</span>                 :             :         }</span>
+<span id="L329"><span class="lineNum">     329</span>                 :             :         else</span>
+<span id="L330"><span class="lineNum">     330</span>                 :             :         {</span>
+<span id="L331"><span class="lineNum">     331</span>                 :<span class="tlaGNC">           3 :             append(count - size(), value);</span></span>
+<span id="L332"><span class="lineNum">     332</span>                 :             :         }</span>
+<span id="L333"><span class="lineNum">     333</span>                 :<span class="tlaGNC">           5 :     }</span></span>
+<span id="L334"><span class="lineNum">     334</span>                 :             : </span>
+<span id="L335"><span class="lineNum">     335</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::capacity().</span>
+<span id="L336"><span class="lineNum">     336</span>                 :             :     ///</span>
+<span id="L337"><span class="lineNum">     337</span>                 :             :     /// \return capacity, which is MaxSize.</span>
+<span id="L338"><span class="lineNum">     338</span>                 :<span class="tlaGNC">           2 :     static constexpr std::size_t capacity() { return MaxSize; }</span></span>
+<span id="L339"><span class="lineNum">     339</span>                 :             : </span>
+<span id="L340"><span class="lineNum">     340</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::max_size().</span>
+<span id="L341"><span class="lineNum">     341</span>                 :             :     ///</span>
+<span id="L342"><span class="lineNum">     342</span>                 :             :     /// \return maximum size, which is MaxSize.</span>
+<span id="L343"><span class="lineNum">     343</span>                 :<span class="tlaGNC">           2 :     static constexpr std::size_t max_size() { return MaxSize; }</span></span>
 <span id="L344"><span class="lineNum">     344</span>                 :             : </span>
-<span id="L345"><span class="lineNum">     345</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::capacity().</span>
+<span id="L345"><span class="lineNum">     345</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::empty()</span>
 <span id="L346"><span class="lineNum">     346</span>                 :             :     ///</span>
-<span id="L347"><span class="lineNum">     347</span>                 :             :     /// \return capacity, which is MaxSize.</span>
-<span id="L348"><span class="lineNum">     348</span>                 :<span class="tlaGNC">           2 :     static constexpr std::size_t capacity() { return MaxSize; }</span></span>
+<span id="L347"><span class="lineNum">     347</span>                 :             :     /// \return True if vector is empty - otherwise false.</span>
+<span id="L348"><span class="lineNum">     348</span>                 :<span class="tlaGNC">          73 :     bool empty() const { return (0U == size()); }</span></span>
 <span id="L349"><span class="lineNum">     349</span>                 :             : </span>
-<span id="L350"><span class="lineNum">     350</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::max_size().</span>
+<span id="L350"><span class="lineNum">     350</span>                 :             :     /// \brief Returns true if vector is full.</span>
 <span id="L351"><span class="lineNum">     351</span>                 :             :     ///</span>
-<span id="L352"><span class="lineNum">     352</span>                 :             :     /// \return maximum size, which is MaxSize.</span>
-<span id="L353"><span class="lineNum">     353</span>                 :<span class="tlaGNC">           2 :     static constexpr std::size_t max_size() { return MaxSize; }</span></span>
+<span id="L352"><span class="lineNum">     352</span>                 :             :     /// \return True if vector is full - otherwise false.</span>
+<span id="L353"><span class="lineNum">     353</span>                 :<span class="tlaGNC">           1 :     bool full() const { return (MaxSize == size()); }</span></span>
 <span id="L354"><span class="lineNum">     354</span>                 :             : </span>
-<span id="L355"><span class="lineNum">     355</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::empty()</span>
+<span id="L355"><span class="lineNum">     355</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::operator[]()</span>
 <span id="L356"><span class="lineNum">     356</span>                 :             :     ///</span>
-<span id="L357"><span class="lineNum">     357</span>                 :             :     /// \return True if vector is empty - otherwise false.</span>
-<span id="L358"><span class="lineNum">     358</span>                 :<span class="tlaGNC">          73 :     bool empty() const { return (0U == size()); }</span></span>
-<span id="L359"><span class="lineNum">     359</span>                 :             : </span>
-<span id="L360"><span class="lineNum">     360</span>                 :             :     /// \brief Returns true if vector is full.</span>
-<span id="L361"><span class="lineNum">     361</span>                 :             :     ///</span>
-<span id="L362"><span class="lineNum">     362</span>                 :             :     /// \return True if vector is full - otherwise false.</span>
-<span id="L363"><span class="lineNum">     363</span>                 :<span class="tlaGNC">           1 :     bool full() const { return (MaxSize == size()); }</span></span>
-<span id="L364"><span class="lineNum">     364</span>                 :             : </span>
-<span id="L365"><span class="lineNum">     365</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::operator[]()</span>
-<span id="L366"><span class="lineNum">     366</span>                 :             :     ///</span>
-<span id="L367"><span class="lineNum">     367</span>                 :             :     /// \pre n &lt; size()</span>
-<span id="L368"><span class="lineNum">     368</span>                 :             :     ///</span>
-<span id="L369"><span class="lineNum">     369</span>                 :             :     /// \return Reference to the n-th element.</span>
-<span id="L370"><span class="lineNum">     370</span>                 :             :     /// \{</span>
-<span id="L371"><span class="lineNum">     371</span>                 :<span class="tlaGNC">         196 :     reference operator[](const size_type n)</span></span>
-<span id="L372"><span class="lineNum">     372</span>                 :             :     {</span>
-<span id="L373"><span class="lineNum">     373</span>                 :             :         static_assert(MaxSize &lt; static_cast&lt;size_type&gt;(std::numeric_limits&lt;difference_type&gt;::max()), &quot;Overflow&quot;);</span>
-<span id="L374"><span class="lineNum">     374</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 193 times"> + </span>]:<span class="tlaGNC">         196 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(n &lt; size());</span></span>
-<span id="L375"><span class="lineNum">     375</span>                 :             :         // The following static_cast is valid because of static_assert above.</span>
-<span id="L376"><span class="lineNum">     376</span>   [<span class="tlaGBC" title="Branch 0 was taken 193 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 193 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         193 :         return *(std::begin(*this) + static_cast&lt;difference_type&gt;(n));</span></span>
+<span id="L357"><span class="lineNum">     357</span>                 :             :     /// \pre n &lt; size()</span>
+<span id="L358"><span class="lineNum">     358</span>                 :             :     ///</span>
+<span id="L359"><span class="lineNum">     359</span>                 :             :     /// \return Reference to the n-th element.</span>
+<span id="L360"><span class="lineNum">     360</span>                 :             :     /// \{</span>
+<span id="L361"><span class="lineNum">     361</span>                 :<span class="tlaGNC">         196 :     reference operator[](const size_type n)</span></span>
+<span id="L362"><span class="lineNum">     362</span>                 :             :     {</span>
+<span id="L363"><span class="lineNum">     363</span>                 :             :         static_assert(MaxSize &lt; static_cast&lt;size_type&gt;(std::numeric_limits&lt;difference_type&gt;::max()), &quot;Overflow&quot;);</span>
+<span id="L364"><span class="lineNum">     364</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 193 times"> + </span>]:<span class="tlaGNC">         196 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(n &lt; size());</span></span>
+<span id="L365"><span class="lineNum">     365</span>                 :             :         // The following static_cast is valid because of static_assert above.</span>
+<span id="L366"><span class="lineNum">     366</span>   [<span class="tlaGBC" title="Branch 0 was taken 193 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 193 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         193 :         return *(std::begin(*this) + static_cast&lt;difference_type&gt;(n));</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 191 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L377"><span class="lineNum">     377</span>                 :             :     }</span>
-<span id="L378"><span class="lineNum">     378</span>                 :<span class="tlaGNC">          54 :     const_reference operator[](const size_type n) const</span></span>
-<span id="L379"><span class="lineNum">     379</span>                 :             :     {</span>
-<span id="L380"><span class="lineNum">     380</span>                 :             :         static_assert(MaxSize &lt; static_cast&lt;size_type&gt;(std::numeric_limits&lt;difference_type&gt;::max()), &quot;Overflow&quot;);</span>
-<span id="L381"><span class="lineNum">     381</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 52 times"> + </span>]:<span class="tlaGNC">          54 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(n &lt; size());</span></span>
-<span id="L382"><span class="lineNum">     382</span>                 :             :         // The following static_cast is valid because of static_assert above.</span>
-<span id="L383"><span class="lineNum">     383</span>   [<span class="tlaGBC" title="Branch 0 was taken 52 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 52 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          52 :         return *(std::cbegin(*this) + static_cast&lt;difference_type&gt;(n));</span></span>
+<span id="L367"><span class="lineNum">     367</span>                 :             :     }</span>
+<span id="L368"><span class="lineNum">     368</span>                 :<span class="tlaGNC">          54 :     const_reference operator[](const size_type n) const</span></span>
+<span id="L369"><span class="lineNum">     369</span>                 :             :     {</span>
+<span id="L370"><span class="lineNum">     370</span>                 :             :         static_assert(MaxSize &lt; static_cast&lt;size_type&gt;(std::numeric_limits&lt;difference_type&gt;::max()), &quot;Overflow&quot;);</span>
+<span id="L371"><span class="lineNum">     371</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 52 times"> + </span>]:<span class="tlaGNC">          54 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(n &lt; size());</span></span>
+<span id="L372"><span class="lineNum">     372</span>                 :             :         // The following static_cast is valid because of static_assert above.</span>
+<span id="L373"><span class="lineNum">     373</span>   [<span class="tlaGBC" title="Branch 0 was taken 52 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 52 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          52 :         return *(std::cbegin(*this) + static_cast&lt;difference_type&gt;(n));</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 49 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L384"><span class="lineNum">     384</span>                 :             :     }</span>
-<span id="L385"><span class="lineNum">     385</span>                 :             :     /// \}</span>
-<span id="L386"><span class="lineNum">     386</span>                 :             : </span>
-<span id="L387"><span class="lineNum">     387</span>                 :             :     /// \brief Returns the number elements in the vector</span>
-<span id="L388"><span class="lineNum">     388</span>                 :             :     ///</span>
-<span id="L389"><span class="lineNum">     389</span>                 :             :     /// \return The number of elements in the container.</span>
-<span id="L390"><span class="lineNum">     390</span>                 :<span class="tlaGNC">        4170 :     size_type size() const { return base_t::size(); }</span></span>
-<span id="L391"><span class="lineNum">     391</span>                 :             : </span>
-<span id="L392"><span class="lineNum">     392</span>                 :             :     /// \brief Returns a pointer to the first element of the internal array.</span>
-<span id="L393"><span class="lineNum">     393</span>                 :             :     ///</span>
-<span id="L394"><span class="lineNum">     394</span>                 :             :     /// \return Pointer to the first element of the internal array.</span>
-<span id="L395"><span class="lineNum">     395</span>                 :             :     /// \{</span>
-<span id="L396"><span class="lineNum">     396</span>                 :<span class="tlaGNC">        1699 :     T* data() { return base_t::data(); }</span></span>
-<span id="L397"><span class="lineNum">     397</span>                 :<span class="tlaGNC">         615 :     const T* data() const { return base_t::data(); }</span></span>
-<span id="L398"><span class="lineNum">     398</span>                 :             :     /// \}</span>
-<span id="L399"><span class="lineNum">     399</span>                 :             : </span>
-<span id="L400"><span class="lineNum">     400</span>                 :             :     /// \brief Returns an iterator to the beginning</span>
-<span id="L401"><span class="lineNum">     401</span>                 :             :     ///</span>
-<span id="L402"><span class="lineNum">     402</span>                 :             :     /// \return Iterator to the first element in the row.</span>
-<span id="L403"><span class="lineNum">     403</span>                 :             :     /// \{</span>
-<span id="L404"><span class="lineNum">     404</span>         [<span class="tlaGBC" title="Branch 0 was taken 518 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         518 :     iterator begin() { return iterator{*this, true}; }</span></span>
-<span id="L405"><span class="lineNum">     405</span>         [<span class="tlaGBC" title="Branch 0 was taken 296 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         296 :     const_iterator begin() const { return const_iterator{*this, true}; }</span></span>
-<span id="L406"><span class="lineNum">     406</span>                 :<span class="tlaGNC">          14 :     const_iterator cbegin() const { return std::cbegin(*this); }</span></span>
-<span id="L407"><span class="lineNum">     407</span>                 :             :     /// \}</span>
-<span id="L408"><span class="lineNum">     408</span>                 :             : </span>
-<span id="L409"><span class="lineNum">     409</span>                 :             :     /// \brief Returns an iterator to the reverse-beginning of the container</span>
-<span id="L410"><span class="lineNum">     410</span>                 :             :     ///</span>
-<span id="L411"><span class="lineNum">     411</span>                 :             :     /// \return Iterator to the last element of the vector.</span>
-<span id="L412"><span class="lineNum">     412</span>                 :             :     /// \{</span>
-<span id="L413"><span class="lineNum">     413</span>                 :<span class="tlaGNC">           1 :     reverse_iterator rbegin() { return reverse_iterator{end()}; }</span></span>
-<span id="L414"><span class="lineNum">     414</span>                 :             :     const_reverse_iterator rbegin() const { return const_reverse_iterator{end()}; }</span>
-<span id="L415"><span class="lineNum">     415</span>                 :<span class="tlaGNC">           1 :     const_reverse_iterator crbegin() const { return const_reverse_iterator{cend()}; }</span></span>
-<span id="L416"><span class="lineNum">     416</span>                 :             :     /// \}</span>
-<span id="L417"><span class="lineNum">     417</span>                 :             : </span>
-<span id="L418"><span class="lineNum">     418</span>                 :             :     /// \brief Returns an iterator one past the end</span>
-<span id="L419"><span class="lineNum">     419</span>                 :             :     ///</span>
-<span id="L420"><span class="lineNum">     420</span>                 :             :     /// Attempting to access it, results in undefined behavior.</span>
-<span id="L421"><span class="lineNum">     421</span>                 :             :     ///</span>
-<span id="L422"><span class="lineNum">     422</span>                 :             :     /// \return Iterator one past the last element of the vector.</span>
-<span id="L423"><span class="lineNum">     423</span>                 :             :     /// \{</span>
-<span id="L424"><span class="lineNum">     424</span>         [<span class="tlaGBC" title="Branch 0 was taken 79 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          79 :     iterator end() { return iterator{*this, false}; }</span></span>
-<span id="L425"><span class="lineNum">     425</span>         [<span class="tlaGBC" title="Branch 0 was taken 243 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         243 :     const_iterator end() const { return const_iterator{*this, false}; }</span></span>
-<span id="L426"><span class="lineNum">     426</span>                 :<span class="tlaGNC">          48 :     const_iterator cend() const { return std::cend(*this); }</span></span>
-<span id="L427"><span class="lineNum">     427</span>                 :             :     /// \}</span>
-<span id="L428"><span class="lineNum">     428</span>                 :             : </span>
-<span id="L429"><span class="lineNum">     429</span>                 :             :     /// \brief Returns an iterator to the reverse-end of the container</span>
-<span id="L430"><span class="lineNum">     430</span>                 :             :     ///</span>
-<span id="L431"><span class="lineNum">     431</span>                 :             :     /// Attempting to access it, results in undefined behavior.</span>
-<span id="L432"><span class="lineNum">     432</span>                 :             :     ///</span>
-<span id="L433"><span class="lineNum">     433</span>                 :             :     /// \return Iterator one before the first element of the container.</span>
-<span id="L434"><span class="lineNum">     434</span>                 :             :     /// \{</span>
-<span id="L435"><span class="lineNum">     435</span>                 :<span class="tlaGNC">           1 :     reverse_iterator rend() { return reverse_iterator{begin()}; }</span></span>
-<span id="L436"><span class="lineNum">     436</span>                 :             :     const_reverse_iterator rend() const { return const_reverse_iterator{begin()}; }</span>
-<span id="L437"><span class="lineNum">     437</span>                 :<span class="tlaGNC">           1 :     const_reverse_iterator crend() const { return const_reverse_iterator{cbegin()}; }</span></span>
-<span id="L438"><span class="lineNum">     438</span>                 :             :     /// \}</span>
+<span id="L374"><span class="lineNum">     374</span>                 :             :     }</span>
+<span id="L375"><span class="lineNum">     375</span>                 :             :     /// \}</span>
+<span id="L376"><span class="lineNum">     376</span>                 :             : </span>
+<span id="L377"><span class="lineNum">     377</span>                 :             :     /// \brief Returns the number elements in the vector</span>
+<span id="L378"><span class="lineNum">     378</span>                 :             :     ///</span>
+<span id="L379"><span class="lineNum">     379</span>                 :             :     /// \return The number of elements in the container.</span>
+<span id="L380"><span class="lineNum">     380</span>                 :<span class="tlaGNC">        4209 :     size_type size() const { return base_t::size(); }</span></span>
+<span id="L381"><span class="lineNum">     381</span>                 :             : </span>
+<span id="L382"><span class="lineNum">     382</span>                 :             :     /// \brief Returns a pointer to the first element of the internal array.</span>
+<span id="L383"><span class="lineNum">     383</span>                 :             :     ///</span>
+<span id="L384"><span class="lineNum">     384</span>                 :             :     /// \return Pointer to the first element of the internal array.</span>
+<span id="L385"><span class="lineNum">     385</span>                 :             :     /// \{</span>
+<span id="L386"><span class="lineNum">     386</span>                 :<span class="tlaGNC">        1709 :     T* data() { return base_t::data(); }</span></span>
+<span id="L387"><span class="lineNum">     387</span>                 :<span class="tlaGNC">         617 :     const T* data() const { return base_t::data(); }</span></span>
+<span id="L388"><span class="lineNum">     388</span>                 :             :     /// \}</span>
+<span id="L389"><span class="lineNum">     389</span>                 :             : </span>
+<span id="L390"><span class="lineNum">     390</span>                 :             :     /// \brief Returns an iterator to the beginning</span>
+<span id="L391"><span class="lineNum">     391</span>                 :             :     ///</span>
+<span id="L392"><span class="lineNum">     392</span>                 :             :     /// \return Iterator to the first element in the row.</span>
+<span id="L393"><span class="lineNum">     393</span>                 :             :     /// \{</span>
+<span id="L394"><span class="lineNum">     394</span>         [<span class="tlaGBC" title="Branch 0 was taken 518 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         518 :     iterator begin() { return iterator{*this, true}; }</span></span>
+<span id="L395"><span class="lineNum">     395</span>         [<span class="tlaGBC" title="Branch 0 was taken 297 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         297 :     const_iterator begin() const { return const_iterator{*this, true}; }</span></span>
+<span id="L396"><span class="lineNum">     396</span>                 :<span class="tlaGNC">          14 :     const_iterator cbegin() const { return std::cbegin(*this); }</span></span>
+<span id="L397"><span class="lineNum">     397</span>                 :             :     /// \}</span>
+<span id="L398"><span class="lineNum">     398</span>                 :             : </span>
+<span id="L399"><span class="lineNum">     399</span>                 :             :     /// \brief Returns an iterator to the reverse-beginning of the container</span>
+<span id="L400"><span class="lineNum">     400</span>                 :             :     ///</span>
+<span id="L401"><span class="lineNum">     401</span>                 :             :     /// \return Iterator to the last element of the vector.</span>
+<span id="L402"><span class="lineNum">     402</span>                 :             :     /// \{</span>
+<span id="L403"><span class="lineNum">     403</span>                 :<span class="tlaGNC">           1 :     reverse_iterator rbegin() { return reverse_iterator{end()}; }</span></span>
+<span id="L404"><span class="lineNum">     404</span>                 :             :     const_reverse_iterator rbegin() const { return const_reverse_iterator{end()}; }</span>
+<span id="L405"><span class="lineNum">     405</span>                 :<span class="tlaGNC">           1 :     const_reverse_iterator crbegin() const { return const_reverse_iterator{cend()}; }</span></span>
+<span id="L406"><span class="lineNum">     406</span>                 :             :     /// \}</span>
+<span id="L407"><span class="lineNum">     407</span>                 :             : </span>
+<span id="L408"><span class="lineNum">     408</span>                 :             :     /// \brief Returns an iterator one past the end</span>
+<span id="L409"><span class="lineNum">     409</span>                 :             :     ///</span>
+<span id="L410"><span class="lineNum">     410</span>                 :             :     /// Attempting to access it, results in undefined behavior.</span>
+<span id="L411"><span class="lineNum">     411</span>                 :             :     ///</span>
+<span id="L412"><span class="lineNum">     412</span>                 :             :     /// \return Iterator one past the last element of the vector.</span>
+<span id="L413"><span class="lineNum">     413</span>                 :             :     /// \{</span>
+<span id="L414"><span class="lineNum">     414</span>         [<span class="tlaGBC" title="Branch 0 was taken 79 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          79 :     iterator end() { return iterator{*this, false}; }</span></span>
+<span id="L415"><span class="lineNum">     415</span>         [<span class="tlaGBC" title="Branch 0 was taken 244 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         244 :     const_iterator end() const { return const_iterator{*this, false}; }</span></span>
+<span id="L416"><span class="lineNum">     416</span>                 :<span class="tlaGNC">          48 :     const_iterator cend() const { return std::cend(*this); }</span></span>
+<span id="L417"><span class="lineNum">     417</span>                 :             :     /// \}</span>
+<span id="L418"><span class="lineNum">     418</span>                 :             : </span>
+<span id="L419"><span class="lineNum">     419</span>                 :             :     /// \brief Returns an iterator to the reverse-end of the container</span>
+<span id="L420"><span class="lineNum">     420</span>                 :             :     ///</span>
+<span id="L421"><span class="lineNum">     421</span>                 :             :     /// Attempting to access it, results in undefined behavior.</span>
+<span id="L422"><span class="lineNum">     422</span>                 :             :     ///</span>
+<span id="L423"><span class="lineNum">     423</span>                 :             :     /// \return Iterator one before the first element of the container.</span>
+<span id="L424"><span class="lineNum">     424</span>                 :             :     /// \{</span>
+<span id="L425"><span class="lineNum">     425</span>                 :<span class="tlaGNC">           1 :     reverse_iterator rend() { return reverse_iterator{begin()}; }</span></span>
+<span id="L426"><span class="lineNum">     426</span>                 :             :     const_reverse_iterator rend() const { return const_reverse_iterator{begin()}; }</span>
+<span id="L427"><span class="lineNum">     427</span>                 :<span class="tlaGNC">           1 :     const_reverse_iterator crend() const { return const_reverse_iterator{cbegin()}; }</span></span>
+<span id="L428"><span class="lineNum">     428</span>                 :             :     /// \}</span>
+<span id="L429"><span class="lineNum">     429</span>                 :             : </span>
+<span id="L430"><span class="lineNum">     430</span>                 :             :     /// \brief Inserts new element in vector at specified position</span>
+<span id="L431"><span class="lineNum">     431</span>                 :             :     ///</span>
+<span id="L432"><span class="lineNum">     432</span>                 :             :     /// \param where Position in the vector where the new element is inserted.</span>
+<span id="L433"><span class="lineNum">     433</span>                 :             :     /// \param value Value to be copied to the inserted elements.</span>
+<span id="L434"><span class="lineNum">     434</span>                 :             :     ///</span>
+<span id="L435"><span class="lineNum">     435</span>                 :             :     /// \pre std::cbegin(*this) &lt;= where &lt;= std::cend(*this)</span>
+<span id="L436"><span class="lineNum">     436</span>                 :             :     ///</span>
+<span id="L437"><span class="lineNum">     437</span>                 :             :     /// \return An iterator that points to the the newly inserted element.</span>
+<span id="L438"><span class="lineNum">     438</span>                 :<span class="tlaGNC">           1 :     iterator insert(const const_iterator where, const_reference value) { return insert_impl(where, value); }</span></span>
 <span id="L439"><span class="lineNum">     439</span>                 :             : </span>
-<span id="L440"><span class="lineNum">     440</span>                 :             :     /// \brief Inserts new element in vector at specified position</span>
+<span id="L440"><span class="lineNum">     440</span>                 :             :     /// \brief Inserts new rvalue element in vector at specified position</span>
 <span id="L441"><span class="lineNum">     441</span>                 :             :     ///</span>
 <span id="L442"><span class="lineNum">     442</span>                 :             :     /// \param where Position in the vector where the new element is inserted.</span>
-<span id="L443"><span class="lineNum">     443</span>                 :             :     /// \param value Value to be copied to the inserted elements.</span>
+<span id="L443"><span class="lineNum">     443</span>                 :             :     /// \param value Value to be moved to the inserted elements.</span>
 <span id="L444"><span class="lineNum">     444</span>                 :             :     ///</span>
 <span id="L445"><span class="lineNum">     445</span>                 :             :     /// \pre std::cbegin(*this) &lt;= where &lt;= std::cend(*this)</span>
 <span id="L446"><span class="lineNum">     446</span>                 :             :     ///</span>
 <span id="L447"><span class="lineNum">     447</span>                 :             :     /// \return An iterator that points to the the newly inserted element.</span>
-<span id="L448"><span class="lineNum">     448</span>                 :<span class="tlaGNC">           1 :     iterator insert(const const_iterator where, const_reference value) { return insert_impl(where, value); }</span></span>
+<span id="L448"><span class="lineNum">     448</span>                 :<span class="tlaGNC">           8 :     iterator insert(const const_iterator where, value_type&amp;&amp; value) { return insert_impl(where, std::move(value)); }</span></span>
 <span id="L449"><span class="lineNum">     449</span>                 :             : </span>
-<span id="L450"><span class="lineNum">     450</span>                 :             :     /// \brief Inserts new rvalue element in vector at specified position</span>
+<span id="L450"><span class="lineNum">     450</span>                 :             :     /// \brief Inserts elements from range [first, last) before a specific position</span>
 <span id="L451"><span class="lineNum">     451</span>                 :             :     ///</span>
-<span id="L452"><span class="lineNum">     452</span>                 :             :     /// \param where Position in the vector where the new element is inserted.</span>
-<span id="L453"><span class="lineNum">     453</span>                 :             :     /// \param value Value to be moved to the inserted elements.</span>
-<span id="L454"><span class="lineNum">     454</span>                 :             :     ///</span>
-<span id="L455"><span class="lineNum">     455</span>                 :             :     /// \pre std::cbegin(*this) &lt;= where &lt;= std::cend(*this)</span>
-<span id="L456"><span class="lineNum">     456</span>                 :             :     ///</span>
-<span id="L457"><span class="lineNum">     457</span>                 :             :     /// \return An iterator that points to the the newly inserted element.</span>
-<span id="L458"><span class="lineNum">     458</span>                 :<span class="tlaGNC">           8 :     iterator insert(const const_iterator where, value_type&amp;&amp; value) { return insert_impl(where, std::move(value)); }</span></span>
-<span id="L459"><span class="lineNum">     459</span>                 :             : </span>
-<span id="L460"><span class="lineNum">     460</span>                 :             :     /// \brief Inserts elements from range [first, last) before a specific position</span>
-<span id="L461"><span class="lineNum">     461</span>                 :             :     ///</span>
-<span id="L462"><span class="lineNum">     462</span>                 :             :     /// \param where Position in the vector before which the new elements are inserted.</span>
-<span id="L463"><span class="lineNum">     463</span>                 :             :     /// \param first The start of the range of elements to insert</span>
-<span id="L464"><span class="lineNum">     464</span>                 :             :     /// \param last The end of the range of elements to insert</span>
-<span id="L465"><span class="lineNum">     465</span>                 :             :     ///</span>
-<span id="L466"><span class="lineNum">     466</span>                 :             :     /// \pre std::cbegin(*this) &lt;= where &lt;= std::cend(*this)</span>
-<span id="L467"><span class="lineNum">     467</span>                 :             :     /// \pre the distance between the input iterators shall be in the range of [0, MaxSize - current_size]</span>
-<span id="L468"><span class="lineNum">     468</span>                 :             :     ///</span>
-<span id="L469"><span class="lineNum">     469</span>                 :             :     /// \return An iterator pointing to the first element inserted, or where if first==last.</span>
-<span id="L470"><span class="lineNum">     470</span>                 :             :     template &lt;typename InputIterator&gt;</span>
-<span id="L471"><span class="lineNum">     471</span>                 :<span class="tlaGNC">          10 :     iterator insert(const const_iterator where, InputIterator first, InputIterator last)</span></span>
-<span id="L472"><span class="lineNum">     472</span>                 :             :     {</span>
-<span id="L473"><span class="lineNum">     473</span>   [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 9 times"> + </span>]:<span class="tlaGNC">          10 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(std::cbegin(*this) &lt;= where);</span></span>
-<span id="L474"><span class="lineNum">     474</span>   [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 8 times"> + </span>]:<span class="tlaGNC">           9 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(where &lt;= std::cend(*this));</span></span>
-<span id="L475"><span class="lineNum">     475</span>   [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 7 times"> + </span>]:<span class="tlaGNC">           8 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(std::distance(first, last) &gt;= 0);</span></span>
-<span id="L476"><span class="lineNum">     476</span>   [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           7 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION((static_cast&lt;std::size_t&gt;(std::distance(first, last)) + size()) &lt;= MaxSize);</span></span>
+<span id="L452"><span class="lineNum">     452</span>                 :             :     /// \param where Position in the vector before which the new elements are inserted.</span>
+<span id="L453"><span class="lineNum">     453</span>                 :             :     /// \param first The start of the range of elements to insert</span>
+<span id="L454"><span class="lineNum">     454</span>                 :             :     /// \param last The end of the range of elements to insert</span>
+<span id="L455"><span class="lineNum">     455</span>                 :             :     ///</span>
+<span id="L456"><span class="lineNum">     456</span>                 :             :     /// \pre std::cbegin(*this) &lt;= where &lt;= std::cend(*this)</span>
+<span id="L457"><span class="lineNum">     457</span>                 :             :     /// \pre the distance between the input iterators shall be in the range of [0, MaxSize - current_size]</span>
+<span id="L458"><span class="lineNum">     458</span>                 :             :     ///</span>
+<span id="L459"><span class="lineNum">     459</span>                 :             :     /// \return An iterator pointing to the first element inserted, or where if first==last.</span>
+<span id="L460"><span class="lineNum">     460</span>                 :             :     template &lt;typename InputIterator&gt;</span>
+<span id="L461"><span class="lineNum">     461</span>                 :<span class="tlaGNC">          10 :     iterator insert(const const_iterator where, InputIterator first, InputIterator last)</span></span>
+<span id="L462"><span class="lineNum">     462</span>                 :             :     {</span>
+<span id="L463"><span class="lineNum">     463</span>   [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 9 times"> + </span>]:<span class="tlaGNC">          10 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(std::cbegin(*this) &lt;= where);</span></span>
+<span id="L464"><span class="lineNum">     464</span>   [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 8 times"> + </span>]:<span class="tlaGNC">           9 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(where &lt;= std::cend(*this));</span></span>
+<span id="L465"><span class="lineNum">     465</span>   [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 7 times"> + </span>]:<span class="tlaGNC">           8 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(std::distance(first, last) &gt;= 0);</span></span>
+<span id="L466"><span class="lineNum">     466</span>   [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           7 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION((static_cast&lt;std::size_t&gt;(std::distance(first, last)) + size()) &lt;= MaxSize);</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 5 was taken 6 times"> + </span>]
+<span id="L467"><span class="lineNum">     467</span>                 :             : </span>
+<span id="L468"><span class="lineNum">     468</span>         [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           6 :         const auto old_end = end();</span></span>
+<span id="L469"><span class="lineNum">     469</span>   [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           6 :         const auto new_end = std::uninitialized_copy(first, last, std::end(*this));</span></span>
+<span id="L470"><span class="lineNum">     470</span>         [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           6 :         const difference_type num_new_elements{new_end - old_end};</span></span>
+<span id="L471"><span class="lineNum">     471</span>         [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           6 :         base_t::set_size(size() + static_cast&lt;std::size_t&gt;(num_new_elements));</span></span>
+<span id="L472"><span class="lineNum">     472</span>         [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           6 :         const iterator it{const_iterator_cast(where)};</span></span>
+<span id="L473"><span class="lineNum">     473</span>         [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           6 :         score::cpp::ignore = std::rotate(it, old_end, new_end);</span></span>
+<span id="L474"><span class="lineNum">     474</span>                 :             : </span>
+<span id="L475"><span class="lineNum">     475</span>                 :<span class="tlaGNC">           6 :         return it;</span></span>
+<span id="L476"><span class="lineNum">     476</span>                 :             :     }</span>
 <span id="L477"><span class="lineNum">     477</span>                 :             : </span>
-<span id="L478"><span class="lineNum">     478</span>         [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           6 :         const auto old_end = end();</span></span>
-<span id="L479"><span class="lineNum">     479</span>   [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           6 :         const auto new_end = std::uninitialized_copy(first, last, std::end(*this));</span></span>
-<span id="L480"><span class="lineNum">     480</span>         [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           6 :         const difference_type num_new_elements{new_end - old_end};</span></span>
-<span id="L481"><span class="lineNum">     481</span>         [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           6 :         base_t::set_size(size() + static_cast&lt;std::size_t&gt;(num_new_elements));</span></span>
-<span id="L482"><span class="lineNum">     482</span>         [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           6 :         const iterator it{const_iterator_cast(where)};</span></span>
-<span id="L483"><span class="lineNum">     483</span>         [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           6 :         score::cpp::ignore = std::rotate(it, old_end, new_end);</span></span>
-<span id="L484"><span class="lineNum">     484</span>                 :             : </span>
-<span id="L485"><span class="lineNum">     485</span>                 :<span class="tlaGNC">           6 :         return it;</span></span>
-<span id="L486"><span class="lineNum">     486</span>                 :             :     }</span>
-<span id="L487"><span class="lineNum">     487</span>                 :             : </span>
-<span id="L488"><span class="lineNum">     488</span>                 :             :     /// \brief Removes the element at where.</span>
-<span id="L489"><span class="lineNum">     489</span>                 :             :     ///</span>
-<span id="L490"><span class="lineNum">     490</span>                 :             :     /// \param where Iterator pointing to a single element to be removed from the vector.</span>
-<span id="L491"><span class="lineNum">     491</span>                 :             :     ///</span>
-<span id="L492"><span class="lineNum">     492</span>                 :             :     /// \pre std::cbegin(*this) &lt;= where &lt; std::cend(*this)</span>
-<span id="L493"><span class="lineNum">     493</span>                 :             :     ///</span>
-<span id="L494"><span class="lineNum">     494</span>                 :             :     /// \return An iterator pointing to the new location of the element that followed the last element erased by the</span>
-<span id="L495"><span class="lineNum">     495</span>                 :             :     /// function call.</span>
-<span id="L496"><span class="lineNum">     496</span>                 :<span class="tlaGNC">           7 :     iterator erase(const const_iterator where)</span></span>
-<span id="L497"><span class="lineNum">     497</span>                 :             :     {</span>
-<span id="L498"><span class="lineNum">     498</span>   [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 6 times"> + </span>]:<span class="tlaGNC">           7 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(std::cbegin(*this) &lt;= where);</span></span>
-<span id="L499"><span class="lineNum">     499</span>   [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 5 times"> + </span>]:<span class="tlaGNC">           6 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(where &lt; std::cend(*this));</span></span>
-<span id="L500"><span class="lineNum">     500</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           5 :         const iterator it{const_iterator_cast(where)}; // same as where but non-constant iterator</span></span>
-<span id="L501"><span class="lineNum">     501</span>   [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           5 :         score::cpp::ignore = std::move(it + 1, std::end(*this), it);</span></span>
+<span id="L478"><span class="lineNum">     478</span>                 :             :     /// \brief Removes the element at where.</span>
+<span id="L479"><span class="lineNum">     479</span>                 :             :     ///</span>
+<span id="L480"><span class="lineNum">     480</span>                 :             :     /// \param where Iterator pointing to a single element to be removed from the vector.</span>
+<span id="L481"><span class="lineNum">     481</span>                 :             :     ///</span>
+<span id="L482"><span class="lineNum">     482</span>                 :             :     /// \pre std::cbegin(*this) &lt;= where &lt; std::cend(*this)</span>
+<span id="L483"><span class="lineNum">     483</span>                 :             :     ///</span>
+<span id="L484"><span class="lineNum">     484</span>                 :             :     /// \return An iterator pointing to the new location of the element that followed the last element erased by the</span>
+<span id="L485"><span class="lineNum">     485</span>                 :             :     /// function call.</span>
+<span id="L486"><span class="lineNum">     486</span>                 :<span class="tlaGNC">           7 :     iterator erase(const const_iterator where)</span></span>
+<span id="L487"><span class="lineNum">     487</span>                 :             :     {</span>
+<span id="L488"><span class="lineNum">     488</span>   [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 6 times"> + </span>]:<span class="tlaGNC">           7 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(std::cbegin(*this) &lt;= where);</span></span>
+<span id="L489"><span class="lineNum">     489</span>   [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 5 times"> + </span>]:<span class="tlaGNC">           6 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(where &lt; std::cend(*this));</span></span>
+<span id="L490"><span class="lineNum">     490</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           5 :         const iterator it{const_iterator_cast(where)}; // same as where but non-constant iterator</span></span>
+<span id="L491"><span class="lineNum">     491</span>   [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           5 :         score::cpp::ignore = std::move(it + 1, std::end(*this), it);</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L502"><span class="lineNum">     502</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           5 :         pop_back();</span></span>
-<span id="L503"><span class="lineNum">     503</span>                 :<span class="tlaGNC">           5 :         return it;</span></span>
-<span id="L504"><span class="lineNum">     504</span>                 :             :     }</span>
-<span id="L505"><span class="lineNum">     505</span>                 :             : </span>
-<span id="L506"><span class="lineNum">     506</span>                 :             :     /// \brief Removes the elements in the range [first, last).</span>
-<span id="L507"><span class="lineNum">     507</span>                 :             :     ///</span>
-<span id="L508"><span class="lineNum">     508</span>                 :             :     /// \param first Iterator pointing to the first element to be removed from the vector.</span>
-<span id="L509"><span class="lineNum">     509</span>                 :             :     /// \param last Iterator pointing to the last element to be removed from the vector.</span>
-<span id="L510"><span class="lineNum">     510</span>                 :             :     ///</span>
-<span id="L511"><span class="lineNum">     511</span>                 :             :     /// \pre first &lt;= last</span>
-<span id="L512"><span class="lineNum">     512</span>                 :             :     /// \pre std::cbegin(*this) &lt;= first</span>
-<span id="L513"><span class="lineNum">     513</span>                 :             :     /// \pre last &lt;= std::cend(*this)</span>
-<span id="L514"><span class="lineNum">     514</span>                 :             :     ///</span>
-<span id="L515"><span class="lineNum">     515</span>                 :             :     /// \return Iterator pointing to the new location of the element that followed the last element erased by the</span>
-<span id="L516"><span class="lineNum">     516</span>                 :             :     /// function call.</span>
-<span id="L517"><span class="lineNum">     517</span>                 :<span class="tlaGNC">          10 :     iterator erase(const const_iterator first, const const_iterator last)</span></span>
-<span id="L518"><span class="lineNum">     518</span>                 :             :     {</span>
-<span id="L519"><span class="lineNum">     519</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 9 times"> + </span>]:<span class="tlaGNC">          10 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(first &lt;= last);</span></span>
-<span id="L520"><span class="lineNum">     520</span>   [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 8 times"> + </span>]:<span class="tlaGNC">           9 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(std::cbegin(*this) &lt;= first);</span></span>
-<span id="L521"><span class="lineNum">     521</span>   [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 7 times"> + </span>]:<span class="tlaGNC">           8 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(last &lt;= std::cend(*this));</span></span>
-<span id="L522"><span class="lineNum">     522</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           7 :         const iterator first_non_const{const_iterator_cast(first)}; // same as first but non-constant iterator</span></span>
-<span id="L523"><span class="lineNum">     523</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           7 :         const iterator last_non_const{const_iterator_cast(last)};   // same as last but non-constant iterator</span></span>
-<span id="L524"><span class="lineNum">     524</span>   [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           7 :         score::cpp::ignore = std::move(last_non_const, std::end(*this), first_non_const);</span></span>
-<span id="L525"><span class="lineNum">     525</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           7 :         const difference_type number_of_elements_to_erase{std::distance(first, last)};</span></span>
-<span id="L526"><span class="lineNum">     526</span>         [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 7 times"> + </span>]:<span class="tlaGNC">          15 :         for (difference_type i{0}; i &lt; number_of_elements_to_erase; ++i)</span></span>
-<span id="L527"><span class="lineNum">     527</span>                 :             :         {</span>
-<span id="L528"><span class="lineNum">     528</span>         [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           8 :             pop_back();</span></span>
-<span id="L529"><span class="lineNum">     529</span>                 :             :         }</span>
-<span id="L530"><span class="lineNum">     530</span>                 :<span class="tlaGNC">           7 :         return first_non_const;</span></span>
-<span id="L531"><span class="lineNum">     531</span>                 :             :     }</span>
-<span id="L532"><span class="lineNum">     532</span>                 :             : </span>
-<span id="L533"><span class="lineNum">     533</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::push_back()</span>
-<span id="L534"><span class="lineNum">     534</span>                 :             :     ///</span>
-<span id="L535"><span class="lineNum">     535</span>                 :             :     /// \param value Value to be copied to the new element.</span>
-<span id="L536"><span class="lineNum">     536</span>                 :             :     ///</span>
-<span id="L537"><span class="lineNum">     537</span>                 :             :     /// \pre size() &lt; MaxSize</span>
-<span id="L538"><span class="lineNum">     538</span>                 :<span class="tlaGNC">         259 :     void push_back(const_reference value) { score::cpp::ignore = emplace_back(value); }</span></span>
-<span id="L539"><span class="lineNum">     539</span>                 :             : </span>
-<span id="L540"><span class="lineNum">     540</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::push_back() for rvalues</span>
-<span id="L541"><span class="lineNum">     541</span>                 :             :     ///</span>
-<span id="L542"><span class="lineNum">     542</span>                 :             :     /// \param value Value to be moved to the new element.</span>
-<span id="L543"><span class="lineNum">     543</span>                 :             :     ///</span>
-<span id="L544"><span class="lineNum">     544</span>                 :             :     /// \pre size() &lt; MaxSize</span>
-<span id="L545"><span class="lineNum">     545</span>                 :<span class="tlaGNC">         118 :     void push_back(value_type&amp;&amp; value) { score::cpp::ignore = emplace_back(std::move(value)); }</span></span>
-<span id="L546"><span class="lineNum">     546</span>                 :             : </span>
-<span id="L547"><span class="lineNum">     547</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::emplace_back()</span>
-<span id="L548"><span class="lineNum">     548</span>                 :             :     ///</span>
-<span id="L549"><span class="lineNum">     549</span>                 :             :     /// \param arguments Arguments forwarded to the constructor of T.</span>
-<span id="L550"><span class="lineNum">     550</span>                 :             :     ///</span>
-<span id="L551"><span class="lineNum">     551</span>                 :             :     /// \pre size() &lt; MaxSize</span>
-<span id="L552"><span class="lineNum">     552</span>                 :             :     ///</span>
-<span id="L553"><span class="lineNum">     553</span>                 :             :     /// \return Reference to the inserted element.</span>
-<span id="L554"><span class="lineNum">     554</span>                 :             :     template &lt;typename... Ts&gt;</span>
-<span id="L555"><span class="lineNum">     555</span>                 :<span class="tlaGNC">         426 :     reference emplace_back(Ts&amp;&amp;... arguments)</span></span>
-<span id="L556"><span class="lineNum">     556</span>                 :             :     {</span>
-<span id="L557"><span class="lineNum">     557</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 424 times"> + </span>]:<span class="tlaGNC">         426 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(size() &lt; MaxSize);</span></span>
-<span id="L558"><span class="lineNum">     558</span>   [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">         424 :         T* ptr{::new (data() + size()) T{std::forward&lt;Ts&gt;(arguments)...}};</span></span>
-<span id="L559"><span class="lineNum">     559</span>                 :<span class="tlaGNC">         424 :         base_t::set_size(size() + 1U);</span></span>
-<span id="L560"><span class="lineNum">     560</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 424 times"> + </span>]:<span class="tlaGNC">         424 :         SCORE_LANGUAGE_FUTURECPP_ASSERT(size() &lt;= MaxSize);</span></span>
-<span id="L561"><span class="lineNum">     561</span>                 :<span class="tlaGNC">         424 :         return *ptr;</span></span>
-<span id="L562"><span class="lineNum">     562</span>                 :             :     }</span>
-<span id="L563"><span class="lineNum">     563</span>                 :             : </span>
-<span id="L564"><span class="lineNum">     564</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::pop_back()</span>
-<span id="L565"><span class="lineNum">     565</span>                 :             :     ///</span>
-<span id="L566"><span class="lineNum">     566</span>                 :             :     /// \pre !empty()</span>
-<span id="L567"><span class="lineNum">     567</span>                 :<span class="tlaGNC">          17 :     void pop_back()</span></span>
-<span id="L568"><span class="lineNum">     568</span>                 :             :     {</span>
-<span id="L569"><span class="lineNum">     569</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 16 times"> + </span>]:<span class="tlaGNC">          17 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(!empty());</span></span>
-<span id="L570"><span class="lineNum">     570</span>                 :<span class="tlaGNC">          16 :         back().~T();</span></span>
-<span id="L571"><span class="lineNum">     571</span>                 :<span class="tlaGNC">          16 :         base_t::set_size(size() - 1U);</span></span>
-<span id="L572"><span class="lineNum">     572</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 16 times"> + </span>]:<span class="tlaGNC">          16 :         SCORE_LANGUAGE_FUTURECPP_ASSERT(size() &lt; MaxSize);</span></span>
-<span id="L573"><span class="lineNum">     573</span>                 :<span class="tlaGNC">          16 :     }</span></span>
-<span id="L574"><span class="lineNum">     574</span>                 :             : </span>
-<span id="L575"><span class="lineNum">     575</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::back()</span>
-<span id="L576"><span class="lineNum">     576</span>                 :             :     ///</span>
-<span id="L577"><span class="lineNum">     577</span>                 :             :     /// \pre !empty()</span>
-<span id="L578"><span class="lineNum">     578</span>                 :             :     ///</span>
-<span id="L579"><span class="lineNum">     579</span>                 :             :     /// \return Reference to the last element.</span>
-<span id="L580"><span class="lineNum">     580</span>                 :             :     /// \{</span>
-<span id="L581"><span class="lineNum">     581</span>                 :<span class="tlaGNC">          24 :     reference back()</span></span>
-<span id="L582"><span class="lineNum">     582</span>                 :             :     {</span>
-<span id="L583"><span class="lineNum">     583</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 23 times"> + </span>]:<span class="tlaGNC">          24 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(!empty());</span></span>
-<span id="L584"><span class="lineNum">     584</span>                 :<span class="tlaGNC">          23 :         return (*this)[size() - 1U];</span></span>
-<span id="L585"><span class="lineNum">     585</span>                 :             :     }</span>
-<span id="L586"><span class="lineNum">     586</span>                 :<span class="tlaGNC">           2 :     const_reference back() const</span></span>
-<span id="L587"><span class="lineNum">     587</span>                 :             :     {</span>
-<span id="L588"><span class="lineNum">     588</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           2 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(!empty());</span></span>
-<span id="L589"><span class="lineNum">     589</span>                 :<span class="tlaGNC">           1 :         return (*this)[size() - 1U];</span></span>
-<span id="L590"><span class="lineNum">     590</span>                 :             :     }</span>
-<span id="L591"><span class="lineNum">     591</span>                 :             :     /// \}</span>
-<span id="L592"><span class="lineNum">     592</span>                 :             : </span>
-<span id="L593"><span class="lineNum">     593</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::front()</span>
-<span id="L594"><span class="lineNum">     594</span>                 :             :     ///</span>
-<span id="L595"><span class="lineNum">     595</span>                 :             :     /// \pre !empty()</span>
-<span id="L596"><span class="lineNum">     596</span>                 :             :     ///</span>
-<span id="L597"><span class="lineNum">     597</span>                 :             :     /// \return Reference to the first element.</span>
-<span id="L598"><span class="lineNum">     598</span>                 :             :     /// \{</span>
-<span id="L599"><span class="lineNum">     599</span>                 :<span class="tlaGNC">          14 :     reference front()</span></span>
-<span id="L600"><span class="lineNum">     600</span>                 :             :     {</span>
-<span id="L601"><span class="lineNum">     601</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 13 times"> + </span>]:<span class="tlaGNC">          14 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(!empty());</span></span>
-<span id="L602"><span class="lineNum">     602</span>                 :<span class="tlaGNC">          13 :         return (*this)[0U];</span></span>
-<span id="L603"><span class="lineNum">     603</span>                 :             :     }</span>
-<span id="L604"><span class="lineNum">     604</span>                 :<span class="tlaGNC">           2 :     const_reference front() const</span></span>
-<span id="L605"><span class="lineNum">     605</span>                 :             :     {</span>
-<span id="L606"><span class="lineNum">     606</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           2 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(!empty());</span></span>
-<span id="L607"><span class="lineNum">     607</span>                 :<span class="tlaGNC">           1 :         return (*this)[0U];</span></span>
-<span id="L608"><span class="lineNum">     608</span>                 :             :     }</span>
-<span id="L609"><span class="lineNum">     609</span>                 :             :     /// \}</span>
-<span id="L610"><span class="lineNum">     610</span>                 :             : </span>
-<span id="L611"><span class="lineNum">     611</span>                 :             : private:</span>
-<span id="L612"><span class="lineNum">     612</span>                 :             :     /// \brief Removes (cast away) constness from iterator.</span>
-<span id="L613"><span class="lineNum">     613</span>   [<span class="tlaGBC" title="Branch 0 was taken 32 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 32 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          32 :     iterator const_iterator_cast(const const_iterator&amp; it) { return std::begin(*this) + (it - std::cbegin(*this)); }</span></span>
+<span id="L492"><span class="lineNum">     492</span>         [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           5 :         pop_back();</span></span>
+<span id="L493"><span class="lineNum">     493</span>                 :<span class="tlaGNC">           5 :         return it;</span></span>
+<span id="L494"><span class="lineNum">     494</span>                 :             :     }</span>
+<span id="L495"><span class="lineNum">     495</span>                 :             : </span>
+<span id="L496"><span class="lineNum">     496</span>                 :             :     /// \brief Removes the elements in the range [first, last).</span>
+<span id="L497"><span class="lineNum">     497</span>                 :             :     ///</span>
+<span id="L498"><span class="lineNum">     498</span>                 :             :     /// \param first Iterator pointing to the first element to be removed from the vector.</span>
+<span id="L499"><span class="lineNum">     499</span>                 :             :     /// \param last Iterator pointing to the last element to be removed from the vector.</span>
+<span id="L500"><span class="lineNum">     500</span>                 :             :     ///</span>
+<span id="L501"><span class="lineNum">     501</span>                 :             :     /// \pre first &lt;= last</span>
+<span id="L502"><span class="lineNum">     502</span>                 :             :     /// \pre std::cbegin(*this) &lt;= first</span>
+<span id="L503"><span class="lineNum">     503</span>                 :             :     /// \pre last &lt;= std::cend(*this)</span>
+<span id="L504"><span class="lineNum">     504</span>                 :             :     ///</span>
+<span id="L505"><span class="lineNum">     505</span>                 :             :     /// \return Iterator pointing to the new location of the element that followed the last element erased by the</span>
+<span id="L506"><span class="lineNum">     506</span>                 :             :     /// function call.</span>
+<span id="L507"><span class="lineNum">     507</span>                 :<span class="tlaGNC">          10 :     iterator erase(const const_iterator first, const const_iterator last)</span></span>
+<span id="L508"><span class="lineNum">     508</span>                 :             :     {</span>
+<span id="L509"><span class="lineNum">     509</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 9 times"> + </span>]:<span class="tlaGNC">          10 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(first &lt;= last);</span></span>
+<span id="L510"><span class="lineNum">     510</span>   [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 8 times"> + </span>]:<span class="tlaGNC">           9 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(std::cbegin(*this) &lt;= first);</span></span>
+<span id="L511"><span class="lineNum">     511</span>   [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 7 times"> + </span>]:<span class="tlaGNC">           8 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(last &lt;= std::cend(*this));</span></span>
+<span id="L512"><span class="lineNum">     512</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           7 :         const iterator first_non_const{const_iterator_cast(first)}; // same as first but non-constant iterator</span></span>
+<span id="L513"><span class="lineNum">     513</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           7 :         const iterator last_non_const{const_iterator_cast(last)};   // same as last but non-constant iterator</span></span>
+<span id="L514"><span class="lineNum">     514</span>   [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">           7 :         score::cpp::ignore = std::move(last_non_const, std::end(*this), first_non_const);</span></span>
+<span id="L515"><span class="lineNum">     515</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           7 :         const difference_type number_of_elements_to_erase{std::distance(first, last)};</span></span>
+<span id="L516"><span class="lineNum">     516</span>         [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 7 times"> + </span>]:<span class="tlaGNC">          15 :         for (difference_type i{0}; i &lt; number_of_elements_to_erase; ++i)</span></span>
+<span id="L517"><span class="lineNum">     517</span>                 :             :         {</span>
+<span id="L518"><span class="lineNum">     518</span>         [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           8 :             pop_back();</span></span>
+<span id="L519"><span class="lineNum">     519</span>                 :             :         }</span>
+<span id="L520"><span class="lineNum">     520</span>                 :<span class="tlaGNC">           7 :         return first_non_const;</span></span>
+<span id="L521"><span class="lineNum">     521</span>                 :             :     }</span>
+<span id="L522"><span class="lineNum">     522</span>                 :             : </span>
+<span id="L523"><span class="lineNum">     523</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::push_back()</span>
+<span id="L524"><span class="lineNum">     524</span>                 :             :     ///</span>
+<span id="L525"><span class="lineNum">     525</span>                 :             :     /// \param value Value to be copied to the new element.</span>
+<span id="L526"><span class="lineNum">     526</span>                 :             :     ///</span>
+<span id="L527"><span class="lineNum">     527</span>                 :             :     /// \pre size() &lt; MaxSize</span>
+<span id="L528"><span class="lineNum">     528</span>                 :<span class="tlaGNC">         259 :     void push_back(const_reference value) { score::cpp::ignore = emplace_back(value); }</span></span>
+<span id="L529"><span class="lineNum">     529</span>                 :             : </span>
+<span id="L530"><span class="lineNum">     530</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::push_back() for rvalues</span>
+<span id="L531"><span class="lineNum">     531</span>                 :             :     ///</span>
+<span id="L532"><span class="lineNum">     532</span>                 :             :     /// \param value Value to be moved to the new element.</span>
+<span id="L533"><span class="lineNum">     533</span>                 :             :     ///</span>
+<span id="L534"><span class="lineNum">     534</span>                 :             :     /// \pre size() &lt; MaxSize</span>
+<span id="L535"><span class="lineNum">     535</span>                 :<span class="tlaGNC">         118 :     void push_back(value_type&amp;&amp; value) { score::cpp::ignore = emplace_back(std::move(value)); }</span></span>
+<span id="L536"><span class="lineNum">     536</span>                 :             : </span>
+<span id="L537"><span class="lineNum">     537</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::emplace_back()</span>
+<span id="L538"><span class="lineNum">     538</span>                 :             :     ///</span>
+<span id="L539"><span class="lineNum">     539</span>                 :             :     /// \param arguments Arguments forwarded to the constructor of T.</span>
+<span id="L540"><span class="lineNum">     540</span>                 :             :     ///</span>
+<span id="L541"><span class="lineNum">     541</span>                 :             :     /// \pre size() &lt; MaxSize</span>
+<span id="L542"><span class="lineNum">     542</span>                 :             :     ///</span>
+<span id="L543"><span class="lineNum">     543</span>                 :             :     /// \return Reference to the inserted element.</span>
+<span id="L544"><span class="lineNum">     544</span>                 :             :     template &lt;typename... Ts&gt;</span>
+<span id="L545"><span class="lineNum">     545</span>                 :<span class="tlaGNC">         436 :     reference emplace_back(Ts&amp;&amp;... arguments)</span></span>
+<span id="L546"><span class="lineNum">     546</span>                 :             :     {</span>
+<span id="L547"><span class="lineNum">     547</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 434 times"> + </span>]:<span class="tlaGNC">         436 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(size() &lt; MaxSize);</span></span>
+<span id="L548"><span class="lineNum">     548</span>   [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">         434 :         T* ptr{::new (data() + size()) T{std::forward&lt;Ts&gt;(arguments)...}};</span></span>
+<span id="L549"><span class="lineNum">     549</span>                 :<span class="tlaGNC">         434 :         base_t::set_size(size() + 1U);</span></span>
+<span id="L550"><span class="lineNum">     550</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 434 times"> + </span>]:<span class="tlaGNC">         434 :         SCORE_LANGUAGE_FUTURECPP_ASSERT(size() &lt;= MaxSize);</span></span>
+<span id="L551"><span class="lineNum">     551</span>                 :<span class="tlaGNC">         434 :         return *ptr;</span></span>
+<span id="L552"><span class="lineNum">     552</span>                 :             :     }</span>
+<span id="L553"><span class="lineNum">     553</span>                 :             : </span>
+<span id="L554"><span class="lineNum">     554</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::pop_back()</span>
+<span id="L555"><span class="lineNum">     555</span>                 :             :     ///</span>
+<span id="L556"><span class="lineNum">     556</span>                 :             :     /// \pre !empty()</span>
+<span id="L557"><span class="lineNum">     557</span>                 :<span class="tlaGNC">          17 :     void pop_back()</span></span>
+<span id="L558"><span class="lineNum">     558</span>                 :             :     {</span>
+<span id="L559"><span class="lineNum">     559</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 16 times"> + </span>]:<span class="tlaGNC">          17 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(!empty());</span></span>
+<span id="L560"><span class="lineNum">     560</span>                 :<span class="tlaGNC">          16 :         back().~T();</span></span>
+<span id="L561"><span class="lineNum">     561</span>                 :<span class="tlaGNC">          16 :         base_t::set_size(size() - 1U);</span></span>
+<span id="L562"><span class="lineNum">     562</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 16 times"> + </span>]:<span class="tlaGNC">          16 :         SCORE_LANGUAGE_FUTURECPP_ASSERT(size() &lt; MaxSize);</span></span>
+<span id="L563"><span class="lineNum">     563</span>                 :<span class="tlaGNC">          16 :     }</span></span>
+<span id="L564"><span class="lineNum">     564</span>                 :             : </span>
+<span id="L565"><span class="lineNum">     565</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::back()</span>
+<span id="L566"><span class="lineNum">     566</span>                 :             :     ///</span>
+<span id="L567"><span class="lineNum">     567</span>                 :             :     /// \pre !empty()</span>
+<span id="L568"><span class="lineNum">     568</span>                 :             :     ///</span>
+<span id="L569"><span class="lineNum">     569</span>                 :             :     /// \return Reference to the last element.</span>
+<span id="L570"><span class="lineNum">     570</span>                 :             :     /// \{</span>
+<span id="L571"><span class="lineNum">     571</span>                 :<span class="tlaGNC">          24 :     reference back()</span></span>
+<span id="L572"><span class="lineNum">     572</span>                 :             :     {</span>
+<span id="L573"><span class="lineNum">     573</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 23 times"> + </span>]:<span class="tlaGNC">          24 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(!empty());</span></span>
+<span id="L574"><span class="lineNum">     574</span>                 :<span class="tlaGNC">          23 :         return (*this)[size() - 1U];</span></span>
+<span id="L575"><span class="lineNum">     575</span>                 :             :     }</span>
+<span id="L576"><span class="lineNum">     576</span>                 :<span class="tlaGNC">           2 :     const_reference back() const</span></span>
+<span id="L577"><span class="lineNum">     577</span>                 :             :     {</span>
+<span id="L578"><span class="lineNum">     578</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           2 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(!empty());</span></span>
+<span id="L579"><span class="lineNum">     579</span>                 :<span class="tlaGNC">           1 :         return (*this)[size() - 1U];</span></span>
+<span id="L580"><span class="lineNum">     580</span>                 :             :     }</span>
+<span id="L581"><span class="lineNum">     581</span>                 :             :     /// \}</span>
+<span id="L582"><span class="lineNum">     582</span>                 :             : </span>
+<span id="L583"><span class="lineNum">     583</span>                 :             :     /// \brief Mimics std::vector&lt;&gt;::front()</span>
+<span id="L584"><span class="lineNum">     584</span>                 :             :     ///</span>
+<span id="L585"><span class="lineNum">     585</span>                 :             :     /// \pre !empty()</span>
+<span id="L586"><span class="lineNum">     586</span>                 :             :     ///</span>
+<span id="L587"><span class="lineNum">     587</span>                 :             :     /// \return Reference to the first element.</span>
+<span id="L588"><span class="lineNum">     588</span>                 :             :     /// \{</span>
+<span id="L589"><span class="lineNum">     589</span>                 :<span class="tlaGNC">          14 :     reference front()</span></span>
+<span id="L590"><span class="lineNum">     590</span>                 :             :     {</span>
+<span id="L591"><span class="lineNum">     591</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 13 times"> + </span>]:<span class="tlaGNC">          14 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(!empty());</span></span>
+<span id="L592"><span class="lineNum">     592</span>                 :<span class="tlaGNC">          13 :         return (*this)[0U];</span></span>
+<span id="L593"><span class="lineNum">     593</span>                 :             :     }</span>
+<span id="L594"><span class="lineNum">     594</span>                 :<span class="tlaGNC">           2 :     const_reference front() const</span></span>
+<span id="L595"><span class="lineNum">     595</span>                 :             :     {</span>
+<span id="L596"><span class="lineNum">     596</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           2 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(!empty());</span></span>
+<span id="L597"><span class="lineNum">     597</span>                 :<span class="tlaGNC">           1 :         return (*this)[0U];</span></span>
+<span id="L598"><span class="lineNum">     598</span>                 :             :     }</span>
+<span id="L599"><span class="lineNum">     599</span>                 :             :     /// \}</span>
+<span id="L600"><span class="lineNum">     600</span>                 :             : </span>
+<span id="L601"><span class="lineNum">     601</span>                 :             : private:</span>
+<span id="L602"><span class="lineNum">     602</span>                 :             :     /// \brief Construct from &quot;single-pass&quot; iterators</span>
+<span id="L603"><span class="lineNum">     603</span>                 :             :     template &lt;typename InputIterator&gt;</span>
+<span id="L604"><span class="lineNum">     604</span>                 :<span class="tlaGNC">           1 :     inplace_vector(InputIterator begin, const InputIterator end, const std::input_iterator_tag)</span></span>
+<span id="L605"><span class="lineNum">     605</span>                 :<span class="tlaGNC">           1 :     {</span></span>
+<span id="L606"><span class="lineNum">     606</span>                 :             :         try</span>
+<span id="L607"><span class="lineNum">     607</span>                 :             :         {</span>
+<span id="L608"><span class="lineNum">     608</span>   [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 10 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">          11 :             for (; begin != end; ++begin)</span></span>
+<span id="L609"><span class="lineNum">     609</span>                 :             :             {</span>
+<span id="L610"><span class="lineNum">     610</span>         [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          10 :                 emplace_back(*begin);</span></span>
+<span id="L611"><span class="lineNum">     611</span>                 :             :             }</span>
+<span id="L612"><span class="lineNum">     612</span>                 :             :         }</span>
+<span id="L613"><span class="lineNum">     613</span>                 :<span class="tlaUNC tlaBgUNC">           0 :         catch (...)</span></span>
+<span id="L614"><span class="lineNum">     614</span>                 :             :         {</span>
+<span id="L615"><span class="lineNum">     615</span>                 :             :             // roll back all already copied elements</span>
+<span id="L616"><span class="lineNum">     616</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :             clear();</span></span>
+<span id="L617"><span class="lineNum">     617</span>                 :             :         }</span>
+<span id="L618"><span class="lineNum">     618</span>                 :<span class="tlaGNC tlaBgGNC">           1 :     }</span></span>
+<span id="L619"><span class="lineNum">     619</span>                 :             : </span>
+<span id="L620"><span class="lineNum">     620</span>                 :             :     /// \brief Construct from &quot;multi-pass&quot; iterators</span>
+<span id="L621"><span class="lineNum">     621</span>                 :             :     template &lt;typename InputIterator&gt;</span>
+<span id="L622"><span class="lineNum">     622</span>                 :<span class="tlaGNC">         123 :     inplace_vector(const InputIterator begin, const InputIterator end, const std::forward_iterator_tag)</span></span>
+<span id="L623"><span class="lineNum">     623</span>                 :<span class="tlaGNC">         123 :     {</span></span>
+<span id="L624"><span class="lineNum">     624</span>         [<span class="tlaGBC" title="Branch 0 was taken 4 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         123 :         const auto length = std::distance(begin, end);</span></span>
+<span id="L625"><span class="lineNum">     625</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 122 times"> + </span>]:<span class="tlaGNC">         123 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(length &gt;= 0);</span></span>
+<span id="L626"><span class="lineNum">     626</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 120 times"> + </span>]:<span class="tlaGNC">         122 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(static_cast&lt;std::size_t&gt;(length) &lt;= MaxSize);</span></span>
+<span id="L627"><span class="lineNum">     627</span>                 :             :         try</span>
+<span id="L628"><span class="lineNum">     628</span>                 :             :         {</span>
+<span id="L629"><span class="lineNum">     629</span>   [<span class="tlaGBC" title="Branch 0 was taken 120 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 119 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">         120 :             const auto new_end = std::uninitialized_copy(begin, end, std::begin(*this));</span></span>
+<span id="L630"><span class="lineNum">     630</span>   [<span class="tlaGBC" title="Branch 0 was taken 119 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 119 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">         119 :             base_t::set_size(static_cast&lt;std::size_t&gt;(new_end - std::begin(*this)));</span></span>
+<span id="L631"><span class="lineNum">     631</span>                 :             :         }</span>
+<span id="L632"><span class="lineNum">     632</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaGNC">           1 :         catch (...)</span></span>
+<span id="L633"><span class="lineNum">     633</span>                 :             :         {</span>
+<span id="L634"><span class="lineNum">     634</span>                 :             :             // do nothing because `uninitialized_copy` destroys all already copied elements</span>
+<span id="L635"><span class="lineNum">     635</span>                 :             :         }</span>
+<span id="L636"><span class="lineNum">     636</span>                 :<span class="tlaGNC">         120 :     }</span></span>
+<span id="L637"><span class="lineNum">     637</span>                 :             : </span>
+<span id="L638"><span class="lineNum">     638</span>                 :             :     /// \brief Removes (cast away) constness from iterator.</span>
+<span id="L639"><span class="lineNum">     639</span>   [<span class="tlaGBC" title="Branch 0 was taken 32 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 32 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          32 :     iterator const_iterator_cast(const const_iterator&amp; it) { return std::begin(*this) + (it - std::cbegin(*this)); }</span></span>
 <span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 32 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span>]
-<span id="L614"><span class="lineNum">     614</span>                 :             : </span>
-<span id="L615"><span class="lineNum">     615</span>                 :             :     /// \brief Inserts new element in vector at specified position using forwarding references</span>
-<span id="L616"><span class="lineNum">     616</span>                 :             :     ///</span>
-<span id="L617"><span class="lineNum">     617</span>                 :             :     /// \pre std::cbegin(*this) &lt;= where &lt;= std::cend(*this)</span>
-<span id="L618"><span class="lineNum">     618</span>                 :             :     template &lt;typename U&gt;</span>
-<span id="L619"><span class="lineNum">     619</span>                 :<span class="tlaGNC">           9 :     iterator insert_impl(const const_iterator where, U&amp;&amp; value)</span></span>
-<span id="L620"><span class="lineNum">     620</span>                 :             :     {</span>
-<span id="L621"><span class="lineNum">     621</span>   [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 8 times"> + </span>]:<span class="tlaGNC">           9 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(std::cbegin(*this) &lt;= where);</span></span>
-<span id="L622"><span class="lineNum">     622</span>   [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 7 times"> + </span>]:<span class="tlaGNC">           8 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(where &lt;= std::cend(*this));</span></span>
-<span id="L623"><span class="lineNum">     623</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           7 :         score::cpp::ignore = emplace_back(std::forward&lt;U&gt;(value));</span></span>
-<span id="L624"><span class="lineNum">     624</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           7 :         const iterator it{const_iterator_cast(where)}; // same as where but non-constant iterator</span></span>
-<span id="L625"><span class="lineNum">     625</span>   [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           7 :         score::cpp::ignore = std::rotate(it, std::end(*this) - 1, std::end(*this));</span></span>
+<span id="L640"><span class="lineNum">     640</span>                 :             : </span>
+<span id="L641"><span class="lineNum">     641</span>                 :             :     /// \brief Inserts new element in vector at specified position using forwarding references</span>
+<span id="L642"><span class="lineNum">     642</span>                 :             :     ///</span>
+<span id="L643"><span class="lineNum">     643</span>                 :             :     /// \pre std::cbegin(*this) &lt;= where &lt;= std::cend(*this)</span>
+<span id="L644"><span class="lineNum">     644</span>                 :             :     template &lt;typename U&gt;</span>
+<span id="L645"><span class="lineNum">     645</span>                 :<span class="tlaGNC">           9 :     iterator insert_impl(const const_iterator where, U&amp;&amp; value)</span></span>
+<span id="L646"><span class="lineNum">     646</span>                 :             :     {</span>
+<span id="L647"><span class="lineNum">     647</span>   [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 8 times"> + </span>]:<span class="tlaGNC">           9 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(std::cbegin(*this) &lt;= where);</span></span>
+<span id="L648"><span class="lineNum">     648</span>   [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 3 was taken 7 times"> + </span>]:<span class="tlaGNC">           8 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(where &lt;= std::cend(*this));</span></span>
+<span id="L649"><span class="lineNum">     649</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           7 :         score::cpp::ignore = emplace_back(std::forward&lt;U&gt;(value));</span></span>
+<span id="L650"><span class="lineNum">     650</span>         [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           7 :         const iterator it{const_iterator_cast(where)}; // same as where but non-constant iterator</span></span>
+<span id="L651"><span class="lineNum">     651</span>   [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           7 :         score::cpp::ignore = std::rotate(it, std::end(*this) - 1, std::end(*this));</span></span>
 <span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span>]
-<span id="L626"><span class="lineNum">     626</span>                 :<span class="tlaGNC">           7 :         return it;</span></span>
-<span id="L627"><span class="lineNum">     627</span>                 :             :     }</span>
-<span id="L628"><span class="lineNum">     628</span>                 :             : </span>
-<span id="L629"><span class="lineNum">     629</span>                 :             :     /// \brief Shrinks container so that `new_size` is the result of `size()` afterwards.</span>
-<span id="L630"><span class="lineNum">     630</span>                 :<span class="tlaGNC">           9 :     void shrink(const size_type new_size)</span></span>
-<span id="L631"><span class="lineNum">     631</span>                 :             :     {</span>
-<span id="L632"><span class="lineNum">     632</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 7 times"> + </span>]:<span class="tlaGNC">           7 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION_DBG(new_size &lt;= size());</span></span>
-<span id="L633"><span class="lineNum">     633</span>         [<span class="tlaGBC" title="Branch 0 was taken 70 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 9 times"> + </span>]:<span class="tlaGNC">          79 :         for (size_type i{new_size}; i &lt; size(); ++i)</span></span>
-<span id="L634"><span class="lineNum">     634</span>                 :             :         {</span>
-<span id="L635"><span class="lineNum">     635</span>                 :<span class="tlaGNC">          70 :             (data() + i)-&gt;~T();</span></span>
-<span id="L636"><span class="lineNum">     636</span>                 :             :         }</span>
-<span id="L637"><span class="lineNum">     637</span>                 :<span class="tlaGNC">           9 :         base_t::set_size(new_size);</span></span>
-<span id="L638"><span class="lineNum">     638</span>                 :<span class="tlaGNC">           9 :     }</span></span>
-<span id="L639"><span class="lineNum">     639</span>                 :             : </span>
-<span id="L640"><span class="lineNum">     640</span>                 :             :     /// \brief Appends `n` default-inserted `T`s.</span>
-<span id="L641"><span class="lineNum">     641</span>                 :<span class="tlaGNC">          12 :     void append(const size_type n)</span></span>
-<span id="L642"><span class="lineNum">     642</span>                 :             :     {</span>
-<span id="L643"><span class="lineNum">     643</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 9 times"> + </span>]:<span class="tlaGNC">           9 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION_DBG((size() + n) &lt;= MaxSize);</span></span>
-<span id="L644"><span class="lineNum">     644</span>   [<span class="tlaGBC" title="Branch 0 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          12 :         score::cpp::ignore = std::uninitialized_value_construct_n(data() + size(), n);</span></span>
+<span id="L652"><span class="lineNum">     652</span>                 :<span class="tlaGNC">           7 :         return it;</span></span>
+<span id="L653"><span class="lineNum">     653</span>                 :             :     }</span>
+<span id="L654"><span class="lineNum">     654</span>                 :             : </span>
+<span id="L655"><span class="lineNum">     655</span>                 :             :     /// \brief Shrinks container so that `new_size` is the result of `size()` afterwards.</span>
+<span id="L656"><span class="lineNum">     656</span>                 :<span class="tlaGNC">           9 :     void shrink(const size_type new_size)</span></span>
+<span id="L657"><span class="lineNum">     657</span>                 :             :     {</span>
+<span id="L658"><span class="lineNum">     658</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 7 times"> + </span>]:<span class="tlaGNC">           7 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION_DBG(new_size &lt;= size());</span></span>
+<span id="L659"><span class="lineNum">     659</span>         [<span class="tlaGBC" title="Branch 0 was taken 70 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 9 times"> + </span>]:<span class="tlaGNC">          79 :         for (size_type i{new_size}; i &lt; size(); ++i)</span></span>
+<span id="L660"><span class="lineNum">     660</span>                 :             :         {</span>
+<span id="L661"><span class="lineNum">     661</span>                 :<span class="tlaGNC">          70 :             (data() + i)-&gt;~T();</span></span>
+<span id="L662"><span class="lineNum">     662</span>                 :             :         }</span>
+<span id="L663"><span class="lineNum">     663</span>                 :<span class="tlaGNC">           9 :         base_t::set_size(new_size);</span></span>
+<span id="L664"><span class="lineNum">     664</span>                 :<span class="tlaGNC">           9 :     }</span></span>
+<span id="L665"><span class="lineNum">     665</span>                 :             : </span>
+<span id="L666"><span class="lineNum">     666</span>                 :             :     /// \brief Appends `n` default-inserted `T`s.</span>
+<span id="L667"><span class="lineNum">     667</span>                 :<span class="tlaGNC">          12 :     void append(const size_type n)</span></span>
+<span id="L668"><span class="lineNum">     668</span>                 :             :     {</span>
+<span id="L669"><span class="lineNum">     669</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 9 times"> + </span>]:<span class="tlaGNC">           9 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION_DBG((size() + n) &lt;= MaxSize);</span></span>
+<span id="L670"><span class="lineNum">     670</span>   [<span class="tlaGBC" title="Branch 0 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          12 :         score::cpp::ignore = std::uninitialized_value_construct_n(data() + size(), n);</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L645"><span class="lineNum">     645</span>                 :<span class="tlaGNC">          12 :         base_t::set_size(size() + n);</span></span>
-<span id="L646"><span class="lineNum">     646</span>                 :<span class="tlaGNC">          12 :     }</span></span>
-<span id="L647"><span class="lineNum">     647</span>                 :             : </span>
-<span id="L648"><span class="lineNum">     648</span>                 :             :     /// \brief Appends `n` copies of `value`.</span>
-<span id="L649"><span class="lineNum">     649</span>                 :<span class="tlaGNC">          16 :     void append(const size_type n, const_reference value)</span></span>
-<span id="L650"><span class="lineNum">     650</span>                 :             :     {</span>
-<span id="L651"><span class="lineNum">     651</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 16 times"> + </span>]:<span class="tlaGNC">          16 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION_DBG((size() + n) &lt;= MaxSize);</span></span>
-<span id="L652"><span class="lineNum">     652</span>   [<span class="tlaGBC" title="Branch 0 was taken 16 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 16 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          16 :         score::cpp::ignore = std::uninitialized_fill_n(data() + size(), n, value);</span></span>
+<span id="L671"><span class="lineNum">     671</span>                 :<span class="tlaGNC">          12 :         base_t::set_size(size() + n);</span></span>
+<span id="L672"><span class="lineNum">     672</span>                 :<span class="tlaGNC">          12 :     }</span></span>
+<span id="L673"><span class="lineNum">     673</span>                 :             : </span>
+<span id="L674"><span class="lineNum">     674</span>                 :             :     /// \brief Appends `n` copies of `value`.</span>
+<span id="L675"><span class="lineNum">     675</span>                 :<span class="tlaGNC">          16 :     void append(const size_type n, const_reference value)</span></span>
+<span id="L676"><span class="lineNum">     676</span>                 :             :     {</span>
+<span id="L677"><span class="lineNum">     677</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 16 times"> + </span>]:<span class="tlaGNC">          16 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION_DBG((size() + n) &lt;= MaxSize);</span></span>
+<span id="L678"><span class="lineNum">     678</span>   [<span class="tlaGBC" title="Branch 0 was taken 16 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 16 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          16 :         score::cpp::ignore = std::uninitialized_fill_n(data() + size(), n, value);</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 16 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
-<span id="L653"><span class="lineNum">     653</span>                 :<span class="tlaGNC">          16 :         base_t::set_size(size() + n);</span></span>
-<span id="L654"><span class="lineNum">     654</span>                 :<span class="tlaGNC">          16 :     }</span></span>
-<span id="L655"><span class="lineNum">     655</span>                 :             : };</span>
-<span id="L656"><span class="lineNum">     656</span>                 :             : </span>
-<span id="L657"><span class="lineNum">     657</span>                 :             : /// \brief Mimics std::vector operator==</span>
-<span id="L658"><span class="lineNum">     658</span>                 :             : template &lt;typename T, std::size_t MaxSize&gt;</span>
-<span id="L659"><span class="lineNum">     659</span>                 :<span class="tlaGNC">          37 : inline bool operator==(const inplace_vector&lt;T, MaxSize&gt;&amp; lhs, const inplace_vector&lt;T, MaxSize&gt;&amp; rhs)</span></span>
-<span id="L660"><span class="lineNum">     660</span>                 :             : {</span>
-<span id="L661"><span class="lineNum">     661</span>                 :<span class="tlaGNC">          37 :     return std::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());</span></span>
-<span id="L662"><span class="lineNum">     662</span>                 :             : }</span>
-<span id="L663"><span class="lineNum">     663</span>                 :             : </span>
-<span id="L664"><span class="lineNum">     664</span>                 :             : /// \brief Mimics std::vector operator!=</span>
-<span id="L665"><span class="lineNum">     665</span>                 :             : template &lt;typename T, std::size_t MaxSize&gt;</span>
-<span id="L666"><span class="lineNum">     666</span>                 :<span class="tlaGNC">           6 : inline bool operator!=(const inplace_vector&lt;T, MaxSize&gt;&amp; lhs, const inplace_vector&lt;T, MaxSize&gt;&amp; rhs)</span></span>
-<span id="L667"><span class="lineNum">     667</span>                 :             : {</span>
-<span id="L668"><span class="lineNum">     668</span>                 :<span class="tlaGNC">           6 :     return !(lhs == rhs);</span></span>
-<span id="L669"><span class="lineNum">     669</span>                 :             : }</span>
-<span id="L670"><span class="lineNum">     670</span>                 :             : </span>
-<span id="L671"><span class="lineNum">     671</span>                 :             : /// \brief Mimics std::vector operator&lt;</span>
-<span id="L672"><span class="lineNum">     672</span>                 :             : template &lt;typename T, std::size_t MaxSize&gt;</span>
-<span id="L673"><span class="lineNum">     673</span>                 :<span class="tlaGNC">          24 : inline bool operator&lt;(const inplace_vector&lt;T, MaxSize&gt;&amp; lhs, const inplace_vector&lt;T, MaxSize&gt;&amp; rhs)</span></span>
-<span id="L674"><span class="lineNum">     674</span>                 :             : {</span>
-<span id="L675"><span class="lineNum">     675</span>                 :<span class="tlaGNC">          24 :     return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());</span></span>
-<span id="L676"><span class="lineNum">     676</span>                 :             : }</span>
-<span id="L677"><span class="lineNum">     677</span>                 :             : </span>
-<span id="L678"><span class="lineNum">     678</span>                 :             : /// \brief Mimics std::vector operator&gt;</span>
-<span id="L679"><span class="lineNum">     679</span>                 :             : template &lt;typename T, std::size_t MaxSize&gt;</span>
-<span id="L680"><span class="lineNum">     680</span>                 :<span class="tlaGNC">           6 : inline bool operator&gt;(const inplace_vector&lt;T, MaxSize&gt;&amp; lhs, const inplace_vector&lt;T, MaxSize&gt;&amp; rhs)</span></span>
-<span id="L681"><span class="lineNum">     681</span>                 :             : {</span>
-<span id="L682"><span class="lineNum">     682</span>                 :<span class="tlaGNC">           6 :     return rhs &lt; lhs;</span></span>
-<span id="L683"><span class="lineNum">     683</span>                 :             : }</span>
-<span id="L684"><span class="lineNum">     684</span>                 :             : </span>
-<span id="L685"><span class="lineNum">     685</span>                 :             : /// \brief Mimics std::vector operator&lt;=</span>
-<span id="L686"><span class="lineNum">     686</span>                 :             : template &lt;typename T, std::size_t MaxSize&gt;</span>
-<span id="L687"><span class="lineNum">     687</span>                 :<span class="tlaGNC">           6 : inline bool operator&lt;=(const inplace_vector&lt;T, MaxSize&gt;&amp; lhs, const inplace_vector&lt;T, MaxSize&gt;&amp; rhs)</span></span>
-<span id="L688"><span class="lineNum">     688</span>                 :             : {</span>
-<span id="L689"><span class="lineNum">     689</span>                 :<span class="tlaGNC">           6 :     return !(rhs &lt; lhs);</span></span>
-<span id="L690"><span class="lineNum">     690</span>                 :             : }</span>
-<span id="L691"><span class="lineNum">     691</span>                 :             : </span>
-<span id="L692"><span class="lineNum">     692</span>                 :             : /// \brief Mimics std::vector operator&gt;=</span>
-<span id="L693"><span class="lineNum">     693</span>                 :             : template &lt;typename T, std::size_t MaxSize&gt;</span>
-<span id="L694"><span class="lineNum">     694</span>                 :<span class="tlaGNC">           6 : inline bool operator&gt;=(const inplace_vector&lt;T, MaxSize&gt;&amp; lhs, const inplace_vector&lt;T, MaxSize&gt;&amp; rhs)</span></span>
-<span id="L695"><span class="lineNum">     695</span>                 :             : {</span>
-<span id="L696"><span class="lineNum">     696</span>                 :<span class="tlaGNC">           6 :     return !(lhs &lt; rhs);</span></span>
-<span id="L697"><span class="lineNum">     697</span>                 :             : }</span>
-<span id="L698"><span class="lineNum">     698</span>                 :             : </span>
-<span id="L699"><span class="lineNum">     699</span>                 :             : } // namespace score::cpp</span>
-<span id="L700"><span class="lineNum">     700</span>                 :             : </span>
-<span id="L701"><span class="lineNum">     701</span>                 :             : #endif // SCORE_LANGUAGE_FUTURECPP_INPLACE_VECTOR_HPP</span>
+<span id="L679"><span class="lineNum">     679</span>                 :<span class="tlaGNC">          16 :         base_t::set_size(size() + n);</span></span>
+<span id="L680"><span class="lineNum">     680</span>                 :<span class="tlaGNC">          16 :     }</span></span>
+<span id="L681"><span class="lineNum">     681</span>                 :             : };</span>
+<span id="L682"><span class="lineNum">     682</span>                 :             : </span>
+<span id="L683"><span class="lineNum">     683</span>                 :             : /// \brief Mimics std::vector operator==</span>
+<span id="L684"><span class="lineNum">     684</span>                 :             : template &lt;typename T, std::size_t MaxSize&gt;</span>
+<span id="L685"><span class="lineNum">     685</span>                 :<span class="tlaGNC">          37 : inline bool operator==(const inplace_vector&lt;T, MaxSize&gt;&amp; lhs, const inplace_vector&lt;T, MaxSize&gt;&amp; rhs)</span></span>
+<span id="L686"><span class="lineNum">     686</span>                 :             : {</span>
+<span id="L687"><span class="lineNum">     687</span>                 :<span class="tlaGNC">          37 :     return std::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());</span></span>
+<span id="L688"><span class="lineNum">     688</span>                 :             : }</span>
+<span id="L689"><span class="lineNum">     689</span>                 :             : </span>
+<span id="L690"><span class="lineNum">     690</span>                 :             : /// \brief Mimics std::vector operator!=</span>
+<span id="L691"><span class="lineNum">     691</span>                 :             : template &lt;typename T, std::size_t MaxSize&gt;</span>
+<span id="L692"><span class="lineNum">     692</span>                 :<span class="tlaGNC">           6 : inline bool operator!=(const inplace_vector&lt;T, MaxSize&gt;&amp; lhs, const inplace_vector&lt;T, MaxSize&gt;&amp; rhs)</span></span>
+<span id="L693"><span class="lineNum">     693</span>                 :             : {</span>
+<span id="L694"><span class="lineNum">     694</span>                 :<span class="tlaGNC">           6 :     return !(lhs == rhs);</span></span>
+<span id="L695"><span class="lineNum">     695</span>                 :             : }</span>
+<span id="L696"><span class="lineNum">     696</span>                 :             : </span>
+<span id="L697"><span class="lineNum">     697</span>                 :             : /// \brief Mimics std::vector operator&lt;</span>
+<span id="L698"><span class="lineNum">     698</span>                 :             : template &lt;typename T, std::size_t MaxSize&gt;</span>
+<span id="L699"><span class="lineNum">     699</span>                 :<span class="tlaGNC">          24 : inline bool operator&lt;(const inplace_vector&lt;T, MaxSize&gt;&amp; lhs, const inplace_vector&lt;T, MaxSize&gt;&amp; rhs)</span></span>
+<span id="L700"><span class="lineNum">     700</span>                 :             : {</span>
+<span id="L701"><span class="lineNum">     701</span>                 :<span class="tlaGNC">          24 :     return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());</span></span>
+<span id="L702"><span class="lineNum">     702</span>                 :             : }</span>
+<span id="L703"><span class="lineNum">     703</span>                 :             : </span>
+<span id="L704"><span class="lineNum">     704</span>                 :             : /// \brief Mimics std::vector operator&gt;</span>
+<span id="L705"><span class="lineNum">     705</span>                 :             : template &lt;typename T, std::size_t MaxSize&gt;</span>
+<span id="L706"><span class="lineNum">     706</span>                 :<span class="tlaGNC">           6 : inline bool operator&gt;(const inplace_vector&lt;T, MaxSize&gt;&amp; lhs, const inplace_vector&lt;T, MaxSize&gt;&amp; rhs)</span></span>
+<span id="L707"><span class="lineNum">     707</span>                 :             : {</span>
+<span id="L708"><span class="lineNum">     708</span>                 :<span class="tlaGNC">           6 :     return rhs &lt; lhs;</span></span>
+<span id="L709"><span class="lineNum">     709</span>                 :             : }</span>
+<span id="L710"><span class="lineNum">     710</span>                 :             : </span>
+<span id="L711"><span class="lineNum">     711</span>                 :             : /// \brief Mimics std::vector operator&lt;=</span>
+<span id="L712"><span class="lineNum">     712</span>                 :             : template &lt;typename T, std::size_t MaxSize&gt;</span>
+<span id="L713"><span class="lineNum">     713</span>                 :<span class="tlaGNC">           6 : inline bool operator&lt;=(const inplace_vector&lt;T, MaxSize&gt;&amp; lhs, const inplace_vector&lt;T, MaxSize&gt;&amp; rhs)</span></span>
+<span id="L714"><span class="lineNum">     714</span>                 :             : {</span>
+<span id="L715"><span class="lineNum">     715</span>                 :<span class="tlaGNC">           6 :     return !(rhs &lt; lhs);</span></span>
+<span id="L716"><span class="lineNum">     716</span>                 :             : }</span>
+<span id="L717"><span class="lineNum">     717</span>                 :             : </span>
+<span id="L718"><span class="lineNum">     718</span>                 :             : /// \brief Mimics std::vector operator&gt;=</span>
+<span id="L719"><span class="lineNum">     719</span>                 :             : template &lt;typename T, std::size_t MaxSize&gt;</span>
+<span id="L720"><span class="lineNum">     720</span>                 :<span class="tlaGNC">           6 : inline bool operator&gt;=(const inplace_vector&lt;T, MaxSize&gt;&amp; lhs, const inplace_vector&lt;T, MaxSize&gt;&amp; rhs)</span></span>
+<span id="L721"><span class="lineNum">     721</span>                 :             : {</span>
+<span id="L722"><span class="lineNum">     722</span>                 :<span class="tlaGNC">           6 :     return !(lhs &lt; rhs);</span></span>
+<span id="L723"><span class="lineNum">     723</span>                 :             : }</span>
+<span id="L724"><span class="lineNum">     724</span>                 :             : </span>
+<span id="L725"><span class="lineNum">     725</span>                 :             : } // namespace score::cpp</span>
+<span id="L726"><span class="lineNum">     726</span>                 :             : </span>
+<span id="L727"><span class="lineNum">     727</span>                 :             : #endif // SCORE_LANGUAGE_FUTURECPP_INPLACE_VECTOR_HPP</span>
         </pre>
               </td>
             </tr>

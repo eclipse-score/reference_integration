@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -117,7 +117,7 @@
 <span id="L39"><span class="lineNum">      39</span>                 :             : /// \return True, if the two floats compare bit exact, false otherwise.</span>
 <span id="L40"><span class="lineNum">      40</span>                 :             : // performance-unnecessary-value-param: T is specified as floating point type, thus performance is not suffering</span>
 <span id="L41"><span class="lineNum">      41</span>                 :             : template &lt;typename T&gt;</span>
-<span id="L42"><span class="lineNum">      42</span>                 :<span class="tlaGNC tlaBgGNC">         697 : constexpr bool equals_bitexact(const T lhs, const T rhs) noexcept // NOLINT(performance-unnecessary-value-param)</span></span>
+<span id="L42"><span class="lineNum">      42</span>                 :<span class="tlaGNC tlaBgGNC">         807 : constexpr bool equals_bitexact(const T lhs, const T rhs) noexcept // NOLINT(performance-unnecessary-value-param)</span></span>
 <span id="L43"><span class="lineNum">      43</span>                 :             : {</span>
 <span id="L44"><span class="lineNum">      44</span>                 :             : #if defined(__GNUC__) || defined(__clang__)</span>
 <span id="L45"><span class="lineNum">      45</span>                 :             : #pragma GCC diagnostic push</span>
@@ -129,7 +129,7 @@
 <span id="L51"><span class="lineNum">      51</span>                 :             :     // to provide a tooling-agnostic way to compare floating point values on exact equality. So similar to suppress</span>
 <span id="L52"><span class="lineNum">      52</span>                 :             :     // compiler warning also allow static code analysis</span>
 <span id="L53"><span class="lineNum">      53</span>                 :             :     // coverity[misra_cpp_2023_dir_0_3_1_violation : SUPPRESS]</span>
-<span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC">         697 :     return lhs == rhs;</span></span>
+<span id="L54"><span class="lineNum">      54</span>                 :<span class="tlaGNC">         807 :     return lhs == rhs;</span></span>
 <span id="L55"><span class="lineNum">      55</span>                 :             : #if defined(__GNUC__) || defined(__clang__)</span>
 <span id="L56"><span class="lineNum">      56</span>                 :             : #pragma GCC diagnostic pop</span>
 <span id="L57"><span class="lineNum">      57</span>                 :             : #endif</span>

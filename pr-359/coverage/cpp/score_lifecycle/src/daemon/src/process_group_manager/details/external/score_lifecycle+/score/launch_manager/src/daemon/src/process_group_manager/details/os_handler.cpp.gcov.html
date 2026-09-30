@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:11:54</td>
+            <td class="headerValue">2026-09-30 04:20:58</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -96,17 +96,17 @@
 <span id="L18"><span class="lineNum">      18</span>                 :             : </span>
 <span id="L19"><span class="lineNum">      19</span>                 :<span class="tlaGNC tlaBgGNC">          10 : void OsHandler::run(void)</span></span>
 <span id="L20"><span class="lineNum">      20</span>                 :             : {</span>
-<span id="L21"><span class="lineNum">      21</span>         [<span class="tlaGBC" title="Branch 0 was taken 17 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 10 times"> + </span>]:<span class="tlaGNC">          27 :     while (is_running_)</span></span>
+<span id="L21"><span class="lineNum">      21</span>         [<span class="tlaGBC" title="Branch 0 was taken 19 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 10 times"> + </span>]:<span class="tlaGNC">          29 :     while (is_running_)</span></span>
 <span id="L22"><span class="lineNum">      22</span>                 :             :     {</span>
-<span id="L23"><span class="lineNum">      23</span>                 :<span class="tlaGNC">          17 :         int32_t wait_status = 0;</span></span>
-<span id="L24"><span class="lineNum">      24</span>                 :<span class="tlaGNC">          17 :         auto result = sys_wait_.wait(&amp;wait_status);</span></span>
+<span id="L23"><span class="lineNum">      23</span>                 :<span class="tlaGNC">          19 :         int32_t wait_status = 0;</span></span>
+<span id="L24"><span class="lineNum">      24</span>                 :<span class="tlaGNC">          19 :         auto result = sys_wait_.wait(&amp;wait_status);</span></span>
 <span id="L25"><span class="lineNum">      25</span>                 :             : </span>
-<span id="L26"><span class="lineNum">      26</span>   [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 11 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          17 :         if (result.has_value() &amp;&amp; result.value() &gt; 0)</span></span>
-<span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 6 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 7 was taken 12 times"> + </span>]
+<span id="L26"><span class="lineNum">      26</span>   [<span class="tlaGBC" title="Branch 0 was taken 7 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 12 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 7 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">          19 :         if (result.has_value() &amp;&amp; result.value() &gt; 0)</span></span>
+<span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 6 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 7 was taken 13 times"> + </span>]
 <span id="L27"><span class="lineNum">      27</span>                 :             :         {</span>
-<span id="L28"><span class="lineNum">      28</span>                 :<span class="tlaGNC">           5 :             if (score::mw::lifecycle::internal::SafeProcessMapReturnType::kInsertionError ==</span></span>
-<span id="L29"><span class="lineNum">      29</span>   [<span class="tlaGBC" title="Branch 0 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 5 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           5 :                 safe_process_map_.findTerminated(result.value(), wait_status))</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 5 was taken 4 times"> + </span>]
+<span id="L28"><span class="lineNum">      28</span>                 :<span class="tlaGNC">           6 :             if (score::mw::lifecycle::internal::SafeProcessMapReturnType::kInsertionError ==</span></span>
+<span id="L29"><span class="lineNum">      29</span>   [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 6 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           6 :                 safe_process_map_.findTerminated(result.value(), wait_status))</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 5 was taken 5 times"> + </span>]
 <span id="L30"><span class="lineNum">      30</span>                 :             :             {</span>
 <span id="L31"><span class="lineNum">      31</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           2 :                 LM_LOG_ERROR() &lt;&lt; &quot;No more resources available to track process with PID &quot; &lt;&lt; result.value()</span></span>
 <span id="L32"><span class="lineNum">      32</span>                 :<span class="tlaGNC">           1 :                                &lt;&lt; &quot;(SafeProcessMap capacity exceeded).&quot;;</span></span>
@@ -117,7 +117,7 @@
 <span id="L37"><span class="lineNum">      37</span>                 :             :             // This process has no children to wait for at present,</span>
 <span id="L38"><span class="lineNum">      38</span>                 :             :             // or the wait was interrupted by a signal.</span>
 <span id="L39"><span class="lineNum">      39</span>                 :             :             // Wait a while to stop this thread from hogging cpu time</span>
-<span id="L40"><span class="lineNum">      40</span>         [<span class="tlaGBC" title="Branch 0 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          12 :             std::this_thread::sleep_for(OS_HANDLER_LOOP_DELAY);</span></span>
+<span id="L40"><span class="lineNum">      40</span>         [<span class="tlaGBC" title="Branch 0 was taken 13 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          13 :             std::this_thread::sleep_for(OS_HANDLER_LOOP_DELAY);</span></span>
 <span id="L41"><span class="lineNum">      41</span>                 :             :         }</span>
 <span id="L42"><span class="lineNum">      42</span>                 :             :     }</span>
 <span id="L43"><span class="lineNum">      43</span>                 :<span class="tlaGNC">          10 : }</span></span>

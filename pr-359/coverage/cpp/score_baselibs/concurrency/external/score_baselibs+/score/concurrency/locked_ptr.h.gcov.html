@@ -31,18 +31,18 @@
             <td class="headerValue">_coverage_report.dat</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryHi">97.9&nbsp;%</td>
-            <td class="headerCovTableEntry">47</td>
-            <td class="headerCovTableEntry">46</td>
+            <td class="headerCovTableEntryHi">98.4&nbsp;%</td>
+            <td class="headerCovTableEntry">63</td>
+            <td class="headerCovTableEntry">62</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
-            <td class="headerCovTableEntry">127</td>
-            <td class="headerCovTableEntry">127</td>
+            <td class="headerCovTableEntry">138</td>
+            <td class="headerCovTableEntry">138</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -56,9 +56,9 @@
 </td>
             <td></td>
             <td class="headerItem">Branches:</td>
-            <td class="headerCovTableEntryLo">64.3&nbsp;%</td>
-            <td class="headerCovTableEntry">14</td>
-            <td class="headerCovTableEntry">9</td>
+            <td class="headerCovTableEntryMed">77.3&nbsp;%</td>
+            <td class="headerCovTableEntry">22</td>
+            <td class="headerCovTableEntry">17</td>
           </tr>
                   <tr><td><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -140,12 +140,12 @@
 <span id="L62"><span class="lineNum">      62</span>                 :             :     /**</span>
 <span id="L63"><span class="lineNum">      63</span>                 :             :      * @brief Constructs a LockedPtr that manages the given pointer and lock.</span>
 <span id="L64"><span class="lineNum">      64</span>                 :             :      */</span>
-<span id="L65"><span class="lineNum">      65</span>                 :<span class="tlaGNC tlaBgGNC">       10118 :     LockedPtr(T* ptr, Lock lock) : ptr_(ptr), lock_(std::move(lock)) {}</span></span>
+<span id="L65"><span class="lineNum">      65</span>                 :<span class="tlaGNC tlaBgGNC">       10128 :     LockedPtr(T* ptr, Lock lock) : ptr_(ptr), lock_(std::move(lock)) {}</span></span>
 <span id="L66"><span class="lineNum">      66</span>                 :             : </span>
 <span id="L67"><span class="lineNum">      67</span>                 :             :     /**</span>
 <span id="L68"><span class="lineNum">      68</span>                 :             :      * @brief Destructor that destroys the lock thereby releasing the lock.</span>
 <span id="L69"><span class="lineNum">      69</span>                 :             :      */</span>
-<span id="L70"><span class="lineNum">      70</span>                 :<span class="tlaGNC">       20147 :     ~LockedPtr() = default;</span></span>
+<span id="L70"><span class="lineNum">      70</span>                 :<span class="tlaGNC">       20168 :     ~LockedPtr() = default;</span></span>
 <span id="L71"><span class="lineNum">      71</span>                 :             : </span>
 <span id="L72"><span class="lineNum">      72</span>                 :             :     /**</span>
 <span id="L73"><span class="lineNum">      73</span>                 :             :      * @brief Copy construction and copy assignment are not supported.</span>
@@ -160,11 +160,11 @@
 <span id="L82"><span class="lineNum">      82</span>                 :             :      * @post The moved-from LockedPtr, other, does not point to any object (other == nullptr is true)</span>
 <span id="L83"><span class="lineNum">      83</span>                 :             :      *       and the lock is in a moved-out state.</span>
 <span id="L84"><span class="lineNum">      84</span>                 :             :      */</span>
-<span id="L85"><span class="lineNum">      85</span>                 :<span class="tlaGNC">       10065 :     LockedPtr(LockedPtr&amp;&amp; other) noexcept(std::is_nothrow_move_constructible_v&lt;Lock&gt;)</span></span>
-<span id="L86"><span class="lineNum">      86</span>                 :<span class="tlaGNC">       10065 :         : ptr_(other.ptr_), lock_(std::move(other.lock_))</span></span>
+<span id="L85"><span class="lineNum">      85</span>                 :<span class="tlaGNC">       10066 :     LockedPtr(LockedPtr&amp;&amp; other) noexcept(std::is_nothrow_move_constructible_v&lt;Lock&gt;)</span></span>
+<span id="L86"><span class="lineNum">      86</span>                 :<span class="tlaGNC">       10066 :         : ptr_(other.ptr_), lock_(std::move(other.lock_))</span></span>
 <span id="L87"><span class="lineNum">      87</span>                 :             :     {</span>
-<span id="L88"><span class="lineNum">      88</span>                 :<span class="tlaGNC">       10065 :         other.ptr_ = nullptr;</span></span>
-<span id="L89"><span class="lineNum">      89</span>                 :<span class="tlaGNC">       10065 :     }</span></span>
+<span id="L88"><span class="lineNum">      88</span>                 :<span class="tlaGNC">       10066 :         other.ptr_ = nullptr;</span></span>
+<span id="L89"><span class="lineNum">      89</span>                 :<span class="tlaGNC">       10066 :     }</span></span>
 <span id="L90"><span class="lineNum">      90</span>                 :             : </span>
 <span id="L91"><span class="lineNum">      91</span>                 :             :     /**</span>
 <span id="L92"><span class="lineNum">      92</span>                 :             :      * @brief Move assignment operator</span>
@@ -215,18 +215,18 @@
 <span id="L137"><span class="lineNum">     137</span>                 :             :      * @brief Pointer access to the underlying object.</span>
 <span id="L138"><span class="lineNum">     138</span>                 :             :      * @return Pointer to the underlying object.</span>
 <span id="L139"><span class="lineNum">     139</span>                 :             :      */</span>
-<span id="L140"><span class="lineNum">     140</span>                 :<span class="tlaGNC">          54 :     [[nodiscard]] T* operator-&gt;()</span></span>
+<span id="L140"><span class="lineNum">     140</span>                 :<span class="tlaGNC">          59 :     [[nodiscard]] T* operator-&gt;()</span></span>
 <span id="L141"><span class="lineNum">     141</span>                 :             :     {</span>
-<span id="L142"><span class="lineNum">     142</span>                 :<span class="tlaGNC">          54 :         return ptr_;</span></span>
+<span id="L142"><span class="lineNum">     142</span>                 :<span class="tlaGNC">          59 :         return ptr_;</span></span>
 <span id="L143"><span class="lineNum">     143</span>                 :             :     }</span>
 <span id="L144"><span class="lineNum">     144</span>                 :             : </span>
 <span id="L145"><span class="lineNum">     145</span>                 :             :     /**</span>
 <span id="L146"><span class="lineNum">     146</span>                 :             :      * @brief Pointer access to the underlying object.</span>
 <span id="L147"><span class="lineNum">     147</span>                 :             :      * @return Pointer to the underlying object.</span>
 <span id="L148"><span class="lineNum">     148</span>                 :             :      */</span>
-<span id="L149"><span class="lineNum">     149</span>                 :<span class="tlaGNC">           4 :     [[nodiscard]] const T* operator-&gt;() const</span></span>
+<span id="L149"><span class="lineNum">     149</span>                 :<span class="tlaGNC">          11 :     [[nodiscard]] const T* operator-&gt;() const</span></span>
 <span id="L150"><span class="lineNum">     150</span>                 :             :     {</span>
-<span id="L151"><span class="lineNum">     151</span>                 :<span class="tlaGNC">           4 :         return ptr_;</span></span>
+<span id="L151"><span class="lineNum">     151</span>                 :<span class="tlaGNC">          11 :         return ptr_;</span></span>
 <span id="L152"><span class="lineNum">     152</span>                 :             :     }</span>
 <span id="L153"><span class="lineNum">     153</span>                 :             : </span>
 <span id="L154"><span class="lineNum">     154</span>                 :             :     /**</span>
@@ -234,9 +234,9 @@
 <span id="L156"><span class="lineNum">     156</span>                 :             :      * @return Pointer to the underlying object.</span>
 <span id="L157"><span class="lineNum">     157</span>                 :             :      * @remarks This does not transfer ownership; the LockedPtr still manages the lock.</span>
 <span id="L158"><span class="lineNum">     158</span>                 :             :      */</span>
-<span id="L159"><span class="lineNum">     159</span>                 :<span class="tlaGNC">          25 :     [[nodiscard]] T* get() noexcept</span></span>
+<span id="L159"><span class="lineNum">     159</span>                 :<span class="tlaGNC">          26 :     [[nodiscard]] T* get() noexcept</span></span>
 <span id="L160"><span class="lineNum">     160</span>                 :             :     {</span>
-<span id="L161"><span class="lineNum">     161</span>                 :<span class="tlaGNC">          25 :         return ptr_;</span></span>
+<span id="L161"><span class="lineNum">     161</span>                 :<span class="tlaGNC">          26 :         return ptr_;</span></span>
 <span id="L162"><span class="lineNum">     162</span>                 :             :     }</span>
 <span id="L163"><span class="lineNum">     163</span>                 :             : </span>
 <span id="L164"><span class="lineNum">     164</span>                 :             :     /**</span>
@@ -274,156 +274,240 @@
 <span id="L196"><span class="lineNum">     196</span>                 :             :     }</span>
 <span id="L197"><span class="lineNum">     197</span>                 :             : </span>
 <span id="L198"><span class="lineNum">     198</span>                 :             :     /**</span>
-<span id="L199"><span class="lineNum">     199</span>                 :             :      * @brief Bool conversion operator checks if the LockedPtr is managing a valid pointer.</span>
-<span id="L200"><span class="lineNum">     200</span>                 :             :      * @return true if the LockedPtr is managing a non-null pointer, false otherwise.</span>
-<span id="L201"><span class="lineNum">     201</span>                 :             :      * @note This does not check the state of the Lock as they are held for the lifetime of the LockedPtr.</span>
-<span id="L202"><span class="lineNum">     202</span>                 :             :      */</span>
-<span id="L203"><span class="lineNum">     203</span>                 :<span class="tlaGNC">          13 :     [[nodiscard]] explicit operator bool() const noexcept</span></span>
-<span id="L204"><span class="lineNum">     204</span>                 :             :     {</span>
-<span id="L205"><span class="lineNum">     205</span>                 :<span class="tlaGNC">          13 :         return ptr_ != nullptr;</span></span>
-<span id="L206"><span class="lineNum">     206</span>                 :             :     }</span>
-<span id="L207"><span class="lineNum">     207</span>                 :             : </span>
-<span id="L208"><span class="lineNum">     208</span>                 :             :     /**</span>
-<span id="L209"><span class="lineNum">     209</span>                 :             :      * @brief Applies a callable to this LockedPtr if the pointer is non-null.</span>
-<span id="L210"><span class="lineNum">     210</span>                 :             :      *        The callable receives a non-const lvalue reference to this LockedPtr.</span>
-<span id="L211"><span class="lineNum">     211</span>                 :             :      *        Returns score::cpp::optional containing the result.</span>
-<span id="L212"><span class="lineNum">     212</span>                 :             :      * @tparam Func Callable type that accepts LockedPtr&amp; and returns a non-void type.</span>
-<span id="L213"><span class="lineNum">     213</span>                 :             :      * @param f The callable to apply. Must not return void.</span>
-<span id="L214"><span class="lineNum">     214</span>                 :             :      * @return score::cpp::optional containing the result if non-null, score::cpp::nullopt otherwise.</span>
-<span id="L215"><span class="lineNum">     215</span>                 :             :      */</span>
-<span id="L216"><span class="lineNum">     216</span>                 :             :     template &lt;typename Func,</span>
-<span id="L217"><span class="lineNum">     217</span>                 :             :               typename = std::enable_if_t&lt;std::is_invocable_v&lt;Func, LockedPtr&amp;&gt;&gt;,</span>
-<span id="L218"><span class="lineNum">     218</span>                 :             :               typename FuncResult = std::invoke_result_t&lt;Func, LockedPtr&amp;&gt;,</span>
-<span id="L219"><span class="lineNum">     219</span>                 :             :               typename = std::enable_if_t&lt;std::conjunction_v&lt;std::negation&lt;std::is_void&lt;FuncResult&gt;&gt;,</span>
-<span id="L220"><span class="lineNum">     220</span>                 :             :                                                              std::negation&lt;std::is_reference&lt;FuncResult&gt;&gt;&gt;&gt;&gt;</span>
-<span id="L221"><span class="lineNum">     221</span>                 :<span class="tlaGNC">           5 :     [[nodiscard]] auto transform(Func&amp;&amp; f) &amp; -&gt; score::cpp::optional&lt;FuncResult&gt;</span></span>
-<span id="L222"><span class="lineNum">     222</span>                 :             :     {</span>
-<span id="L223"><span class="lineNum">     223</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span>]:<span class="tlaGNC">           5 :         if (ptr_ == nullptr)</span></span>
-<span id="L224"><span class="lineNum">     224</span>                 :             :         {</span>
-<span id="L225"><span class="lineNum">     225</span>                 :<span class="tlaGNC">           2 :             return score::cpp::nullopt;</span></span>
-<span id="L226"><span class="lineNum">     226</span>                 :             :         }</span>
-<span id="L227"><span class="lineNum">     227</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           3 :         return std::invoke(std::forward&lt;Func&gt;(f), *this);</span></span>
-<span id="L228"><span class="lineNum">     228</span>                 :             :     }</span>
-<span id="L229"><span class="lineNum">     229</span>                 :             : </span>
-<span id="L230"><span class="lineNum">     230</span>                 :             :     /**</span>
-<span id="L231"><span class="lineNum">     231</span>                 :             :      * @brief Applies a callable to this LockedPtr if the pointer is non-null.</span>
-<span id="L232"><span class="lineNum">     232</span>                 :             :      *        The callable receives a const lvalue reference to this LockedPtr.</span>
-<span id="L233"><span class="lineNum">     233</span>                 :             :      *        Returns score::cpp::optional containing the result.</span>
-<span id="L234"><span class="lineNum">     234</span>                 :             :      * @tparam Func Callable type that accepts const LockedPtr&amp; and returns a non-void type.</span>
-<span id="L235"><span class="lineNum">     235</span>                 :             :      * @param f The callable to apply. Must not return void.</span>
-<span id="L236"><span class="lineNum">     236</span>                 :             :      * @return score::cpp::optional containing the result if non-null, score::cpp::nullopt otherwise.</span>
-<span id="L237"><span class="lineNum">     237</span>                 :             :      */</span>
-<span id="L238"><span class="lineNum">     238</span>                 :             :     template &lt;typename Func,</span>
-<span id="L239"><span class="lineNum">     239</span>                 :             :               typename = std::enable_if_t&lt;std::is_invocable_v&lt;Func, const LockedPtr&amp;&gt;&gt;,</span>
-<span id="L240"><span class="lineNum">     240</span>                 :             :               typename FuncResult = std::invoke_result_t&lt;Func, const LockedPtr&amp;&gt;,</span>
-<span id="L241"><span class="lineNum">     241</span>                 :             :               typename = std::enable_if_t&lt;std::conjunction_v&lt;std::negation&lt;std::is_void&lt;FuncResult&gt;&gt;,</span>
-<span id="L242"><span class="lineNum">     242</span>                 :             :                                                              std::negation&lt;std::is_reference&lt;FuncResult&gt;&gt;&gt;&gt;&gt;</span>
-<span id="L243"><span class="lineNum">     243</span>                 :<span class="tlaGNC">           1 :     [[nodiscard]] auto transform(Func&amp;&amp; f) const&amp; -&gt; score::cpp::optional&lt;FuncResult&gt;</span></span>
-<span id="L244"><span class="lineNum">     244</span>                 :             :     {</span>
-<span id="L245"><span class="lineNum">     245</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           1 :         if (ptr_ == nullptr)</span></span>
-<span id="L246"><span class="lineNum">     246</span>                 :             :         {</span>
-<span id="L247"><span class="lineNum">     247</span>                 :<span class="tlaUNC tlaBgUNC">           0 :             return score::cpp::nullopt;</span></span>
-<span id="L248"><span class="lineNum">     248</span>                 :             :         }</span>
-<span id="L249"><span class="lineNum">     249</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">           1 :         return std::invoke(std::forward&lt;Func&gt;(f), *this);</span></span>
-<span id="L250"><span class="lineNum">     250</span>                 :             :     }</span>
-<span id="L251"><span class="lineNum">     251</span>                 :             : </span>
-<span id="L252"><span class="lineNum">     252</span>                 :             :     /**</span>
-<span id="L253"><span class="lineNum">     253</span>                 :             :      * @brief Applies a callable to this LockedPtr if the pointer is non-null.</span>
-<span id="L254"><span class="lineNum">     254</span>                 :             :      *        The LockedPtr is moved into the callable by value allowing the `Func` to take ownership of the LockedPtr.</span>
-<span id="L255"><span class="lineNum">     255</span>                 :             :      *        Returns score::cpp::optional containing the result.</span>
-<span id="L256"><span class="lineNum">     256</span>                 :             :      * @tparam Func Callable type that accepts a LockedPtr by value and returns a non-void type.</span>
-<span id="L257"><span class="lineNum">     257</span>                 :             :      * @param f The callable to apply. Must not return void.</span>
-<span id="L258"><span class="lineNum">     258</span>                 :             :      * @return score::cpp::optional containing the result if non-null, score::cpp::nullopt otherwise.</span>
-<span id="L259"><span class="lineNum">     259</span>                 :             :      */</span>
-<span id="L260"><span class="lineNum">     260</span>                 :             :     template &lt;typename Func,</span>
-<span id="L261"><span class="lineNum">     261</span>                 :             :               typename = std::enable_if_t&lt;std::is_invocable_v&lt;Func, LockedPtr&gt;&gt;,</span>
-<span id="L262"><span class="lineNum">     262</span>                 :             :               typename FuncResult = std::invoke_result_t&lt;Func, LockedPtr&gt;,</span>
-<span id="L263"><span class="lineNum">     263</span>                 :             :               typename = std::enable_if_t&lt;std::conjunction_v&lt;std::negation&lt;std::is_void&lt;FuncResult&gt;&gt;,</span>
-<span id="L264"><span class="lineNum">     264</span>                 :             :                                                              std::negation&lt;std::is_reference&lt;FuncResult&gt;&gt;&gt;&gt;&gt;</span>
-<span id="L265"><span class="lineNum">     265</span>                 :<span class="tlaGNC">           3 :     [[nodiscard]] auto transform(Func&amp;&amp; f) &amp;&amp; -&gt; score::cpp::optional&lt;FuncResult&gt;</span></span>
-<span id="L266"><span class="lineNum">     266</span>                 :             :     {</span>
-<span id="L267"><span class="lineNum">     267</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           3 :         if (ptr_ == nullptr)</span></span>
-<span id="L268"><span class="lineNum">     268</span>                 :             :         {</span>
-<span id="L269"><span class="lineNum">     269</span>                 :<span class="tlaGNC">           2 :             return score::cpp::nullopt;</span></span>
-<span id="L270"><span class="lineNum">     270</span>                 :             :         }</span>
-<span id="L271"><span class="lineNum">     271</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :         return std::invoke(std::forward&lt;Func&gt;(f), std::move(*this));</span></span>
-<span id="L272"><span class="lineNum">     272</span>                 :             :     }</span>
-<span id="L273"><span class="lineNum">     273</span>                 :             : </span>
-<span id="L274"><span class="lineNum">     274</span>                 :             :     /**</span>
-<span id="L275"><span class="lineNum">     275</span>                 :             :      * @brief Equality comparison with another LockedPtr.</span>
-<span id="L276"><span class="lineNum">     276</span>                 :             :      * @param other The LockedPtr to compare with.</span>
-<span id="L277"><span class="lineNum">     277</span>                 :             :      * @return true if both LockedPtrs point to the same object, false otherwise.</span>
-<span id="L278"><span class="lineNum">     278</span>                 :             :      * @note The locks of the LockedPtrs are not compared - they are held for the lifetime of the LockedPtr.</span>
-<span id="L279"><span class="lineNum">     279</span>                 :             :      */</span>
-<span id="L280"><span class="lineNum">     280</span>                 :             :     [[nodiscard]] bool operator==(const LockedPtr&amp; other) const noexcept</span>
-<span id="L281"><span class="lineNum">     281</span>                 :             :     {</span>
-<span id="L282"><span class="lineNum">     282</span>                 :             :         return ptr_ == other.ptr_;</span>
-<span id="L283"><span class="lineNum">     283</span>                 :             :     }</span>
-<span id="L284"><span class="lineNum">     284</span>                 :             : </span>
-<span id="L285"><span class="lineNum">     285</span>                 :             :     /**</span>
-<span id="L286"><span class="lineNum">     286</span>                 :             :      * @brief Inequality comparison with another LockedPtr.</span>
-<span id="L287"><span class="lineNum">     287</span>                 :             :      * @param other The LockedPtr to compare with.</span>
-<span id="L288"><span class="lineNum">     288</span>                 :             :      * @return true if both LockedPtrs point to different objects, false otherwise.</span>
-<span id="L289"><span class="lineNum">     289</span>                 :             :      * @note The locks of the LockedPtrs are not compared - they are held for the lifetime of the LockedPtr.</span>
-<span id="L290"><span class="lineNum">     290</span>                 :             :      */</span>
-<span id="L291"><span class="lineNum">     291</span>                 :             :     [[nodiscard]] bool operator!=(const LockedPtr&amp; other) const noexcept</span>
-<span id="L292"><span class="lineNum">     292</span>                 :             :     {</span>
-<span id="L293"><span class="lineNum">     293</span>                 :             :         return !(*this == other);</span>
-<span id="L294"><span class="lineNum">     294</span>                 :             :     }</span>
-<span id="L295"><span class="lineNum">     295</span>                 :             : </span>
-<span id="L296"><span class="lineNum">     296</span>                 :             :     /**</span>
-<span id="L297"><span class="lineNum">     297</span>                 :             :      * @brief Equality comparison with a raw pointer.</span>
-<span id="L298"><span class="lineNum">     298</span>                 :             :      * @param p The raw pointer to compare with.</span>
-<span id="L299"><span class="lineNum">     299</span>                 :             :      * @return true if the LockedPtr points to the same object as the raw pointer, false otherwise.</span>
-<span id="L300"><span class="lineNum">     300</span>                 :             :      * @note This does not check the state of the Lock as they are held for the lifetime of the LockedPtr.</span>
-<span id="L301"><span class="lineNum">     301</span>                 :             :      */</span>
-<span id="L302"><span class="lineNum">     302</span>                 :<span class="tlaGNC">           4 :     [[nodiscard]] bool operator==(const T* p) const noexcept</span></span>
-<span id="L303"><span class="lineNum">     303</span>                 :             :     {</span>
-<span id="L304"><span class="lineNum">     304</span>                 :<span class="tlaGNC">           4 :         return ptr_ == p;</span></span>
-<span id="L305"><span class="lineNum">     305</span>                 :             :     }</span>
-<span id="L306"><span class="lineNum">     306</span>                 :             : </span>
-<span id="L307"><span class="lineNum">     307</span>                 :             :     /**</span>
-<span id="L308"><span class="lineNum">     308</span>                 :             :      * @brief Inequality comparison with a raw pointer.</span>
-<span id="L309"><span class="lineNum">     309</span>                 :             :      * @param p The raw pointer to compare with.</span>
-<span id="L310"><span class="lineNum">     310</span>                 :             :      * @return true if the LockedPtr points to a different object than the raw pointer, false otherwise.</span>
-<span id="L311"><span class="lineNum">     311</span>                 :             :      * @note This does not check the state of the Lock as they are held for the lifetime of the LockedPtr.</span>
-<span id="L312"><span class="lineNum">     312</span>                 :             :      */</span>
-<span id="L313"><span class="lineNum">     313</span>                 :             :     [[nodiscard]] bool operator!=(const T* p) const noexcept</span>
-<span id="L314"><span class="lineNum">     314</span>                 :             :     {</span>
-<span id="L315"><span class="lineNum">     315</span>                 :             :         return !(*this == p);</span>
-<span id="L316"><span class="lineNum">     316</span>                 :             :     }</span>
-<span id="L317"><span class="lineNum">     317</span>                 :             : </span>
-<span id="L318"><span class="lineNum">     318</span>                 :             :     /**</span>
-<span id="L319"><span class="lineNum">     319</span>                 :             :      * @brief Equality comparison with nullptr.</span>
-<span id="L320"><span class="lineNum">     320</span>                 :             :      * @param nullptr_t The nullptr to compare with.</span>
-<span id="L321"><span class="lineNum">     321</span>                 :             :      * @return true if the LockedPtr points to nullptr, false otherwise.</span>
-<span id="L322"><span class="lineNum">     322</span>                 :             :      * @note This does not check the state of the Lock.</span>
-<span id="L323"><span class="lineNum">     323</span>                 :             :      */</span>
-<span id="L324"><span class="lineNum">     324</span>                 :             :     [[nodiscard]] bool operator==(const std::nullptr_t&amp;) const noexcept</span>
-<span id="L325"><span class="lineNum">     325</span>                 :             :     {</span>
-<span id="L326"><span class="lineNum">     326</span>                 :             :         return ptr_ == nullptr;</span>
-<span id="L327"><span class="lineNum">     327</span>                 :             :     }</span>
-<span id="L328"><span class="lineNum">     328</span>                 :             : </span>
-<span id="L329"><span class="lineNum">     329</span>                 :             :     /**</span>
-<span id="L330"><span class="lineNum">     330</span>                 :             :      * @brief Inequality comparison with nullptr.</span>
-<span id="L331"><span class="lineNum">     331</span>                 :             :      * @param nullptr_t The nullptr to compare with.</span>
-<span id="L332"><span class="lineNum">     332</span>                 :             :      * @return true if the LockedPtr points to a non-nullptr, false otherwise.</span>
-<span id="L333"><span class="lineNum">     333</span>                 :             :      * @note This does not check the state of the Lock.</span>
-<span id="L334"><span class="lineNum">     334</span>                 :             :      */</span>
-<span id="L335"><span class="lineNum">     335</span>                 :             :     [[nodiscard]] bool operator!=(const std::nullptr_t&amp;) const noexcept</span>
-<span id="L336"><span class="lineNum">     336</span>                 :             :     {</span>
-<span id="L337"><span class="lineNum">     337</span>                 :             :         return !(*this == nullptr);</span>
-<span id="L338"><span class="lineNum">     338</span>                 :             :     }</span>
-<span id="L339"><span class="lineNum">     339</span>                 :             : </span>
-<span id="L340"><span class="lineNum">     340</span>                 :             :   private:</span>
-<span id="L341"><span class="lineNum">     341</span>                 :             :     T* ptr_;</span>
-<span id="L342"><span class="lineNum">     342</span>                 :             :     mutable Lock lock_;</span>
-<span id="L343"><span class="lineNum">     343</span>                 :             : };</span>
-<span id="L344"><span class="lineNum">     344</span>                 :             : </span>
-<span id="L345"><span class="lineNum">     345</span>                 :             : }  // namespace concurrency</span>
-<span id="L346"><span class="lineNum">     346</span>                 :             : }  // namespace score</span>
-<span id="L347"><span class="lineNum">     347</span>                 :             : </span>
-<span id="L348"><span class="lineNum">     348</span>                 :             : #endif  // SCORE_LIB_CONCURRENCY_LOCKED_PTR_H</span>
+<span id="L199"><span class="lineNum">     199</span>                 :             :      * @brief Monadic bind. Applies a callable that returns a score::cpp::optional.</span>
+<span id="L200"><span class="lineNum">     200</span>                 :             :      *        If the pointer is null, short-circuits to score::cpp::nullopt without invoking the callable.</span>
+<span id="L201"><span class="lineNum">     201</span>                 :             :      *        The callable receives a non-const lvalue reference to this LockedPtr.</span>
+<span id="L202"><span class="lineNum">     202</span>                 :             :      * @tparam Func Callable type that accepts LockedPtr&amp; and returns a score::cpp::optional specialization.</span>
+<span id="L203"><span class="lineNum">     203</span>                 :             :      * @param f The callable to apply.</span>
+<span id="L204"><span class="lineNum">     204</span>                 :             :      * @return The result of f(*this) if non-null, score::cpp::nullopt otherwise.</span>
+<span id="L205"><span class="lineNum">     205</span>                 :             :      */</span>
+<span id="L206"><span class="lineNum">     206</span>                 :             :     template &lt;typename Func,</span>
+<span id="L207"><span class="lineNum">     207</span>                 :             :               typename = std::enable_if_t&lt;std::is_invocable_v&lt;Func, LockedPtr&amp;&gt;&gt;,</span>
+<span id="L208"><span class="lineNum">     208</span>                 :             :               typename Ret = std::invoke_result_t&lt;Func, LockedPtr&amp;&gt;,</span>
+<span id="L209"><span class="lineNum">     209</span>                 :             :               typename = std::enable_if_t&lt;score::cpp::is_optional_v&lt;Ret&gt;&gt;&gt;</span>
+<span id="L210"><span class="lineNum">     210</span>                 :<span class="tlaGNC">           7 :     [[nodiscard]] auto and_then(Func&amp;&amp; f) &amp; -&gt; Ret</span></span>
+<span id="L211"><span class="lineNum">     211</span>                 :             :     {</span>
+<span id="L212"><span class="lineNum">     212</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 5 times"> + </span>]:<span class="tlaGNC">           7 :         if (ptr_ == nullptr)</span></span>
+<span id="L213"><span class="lineNum">     213</span>                 :             :         {</span>
+<span id="L214"><span class="lineNum">     214</span>                 :<span class="tlaGNC">           2 :             return score::cpp::nullopt;</span></span>
+<span id="L215"><span class="lineNum">     215</span>                 :             :         }</span>
+<span id="L216"><span class="lineNum">     216</span>                 :<span class="tlaGNC">           5 :         return std::invoke(std::forward&lt;Func&gt;(f), *this);</span></span>
+<span id="L217"><span class="lineNum">     217</span>                 :             :     }</span>
+<span id="L218"><span class="lineNum">     218</span>                 :             : </span>
+<span id="L219"><span class="lineNum">     219</span>                 :             :     /**</span>
+<span id="L220"><span class="lineNum">     220</span>                 :             :      * @brief Monadic bind. Applies a callable that returns a score::cpp::optional.</span>
+<span id="L221"><span class="lineNum">     221</span>                 :             :      *        If the pointer is null, short-circuits to score::cpp::nullopt without invoking the callable.</span>
+<span id="L222"><span class="lineNum">     222</span>                 :             :      *        The callable receives a const lvalue reference to this LockedPtr.</span>
+<span id="L223"><span class="lineNum">     223</span>                 :             :      * @tparam Func Callable type that accepts const LockedPtr&amp; and returns a score::cpp::optional specialization.</span>
+<span id="L224"><span class="lineNum">     224</span>                 :             :      * @param f The callable to apply.</span>
+<span id="L225"><span class="lineNum">     225</span>                 :             :      * @return The result of f(*this) if non-null, score::cpp::nullopt otherwise.</span>
+<span id="L226"><span class="lineNum">     226</span>                 :             :      */</span>
+<span id="L227"><span class="lineNum">     227</span>                 :             :     template &lt;typename Func,</span>
+<span id="L228"><span class="lineNum">     228</span>                 :             :               typename = std::enable_if_t&lt;std::is_invocable_v&lt;Func, const LockedPtr&amp;&gt;&gt;,</span>
+<span id="L229"><span class="lineNum">     229</span>                 :             :               typename Ret = std::invoke_result_t&lt;Func, const LockedPtr&amp;&gt;,</span>
+<span id="L230"><span class="lineNum">     230</span>                 :             :               typename = std::enable_if_t&lt;score::cpp::is_optional_v&lt;Ret&gt;&gt;&gt;</span>
+<span id="L231"><span class="lineNum">     231</span>                 :<span class="tlaGNC">           5 :     [[nodiscard]] auto and_then(Func&amp;&amp; f) const&amp; -&gt; Ret</span></span>
+<span id="L232"><span class="lineNum">     232</span>                 :             :     {</span>
+<span id="L233"><span class="lineNum">     233</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 4 times"> + </span>]:<span class="tlaGNC">           5 :         if (ptr_ == nullptr)</span></span>
+<span id="L234"><span class="lineNum">     234</span>                 :             :         {</span>
+<span id="L235"><span class="lineNum">     235</span>                 :<span class="tlaGNC">           1 :             return score::cpp::nullopt;</span></span>
+<span id="L236"><span class="lineNum">     236</span>                 :             :         }</span>
+<span id="L237"><span class="lineNum">     237</span>                 :<span class="tlaGNC">           4 :         return std::invoke(std::forward&lt;Func&gt;(f), *this);</span></span>
+<span id="L238"><span class="lineNum">     238</span>                 :             :     }</span>
+<span id="L239"><span class="lineNum">     239</span>                 :             : </span>
+<span id="L240"><span class="lineNum">     240</span>                 :             :     /**</span>
+<span id="L241"><span class="lineNum">     241</span>                 :             :      * @brief Monadic bind. Applies a callable that returns a score::cpp::optional.</span>
+<span id="L242"><span class="lineNum">     242</span>                 :             :      *        If the pointer is null, short-circuits to score::cpp::nullopt without invoking the callable.</span>
+<span id="L243"><span class="lineNum">     243</span>                 :             :      *        The callable receives this LockedPtr as an rvalue and may transfer lock ownership by moving from it.</span>
+<span id="L244"><span class="lineNum">     244</span>                 :             :      * @tparam Func Callable type that accepts an rvalue LockedPtr and returns a score::cpp::optional specialization.</span>
+<span id="L245"><span class="lineNum">     245</span>                 :             :      * @param f The callable to apply.</span>
+<span id="L246"><span class="lineNum">     246</span>                 :             :      * @return The result of f(std::move(*this)) if non-null, score::cpp::nullopt otherwise.</span>
+<span id="L247"><span class="lineNum">     247</span>                 :             :      */</span>
+<span id="L248"><span class="lineNum">     248</span>                 :             :     template &lt;typename Func,</span>
+<span id="L249"><span class="lineNum">     249</span>                 :             :               typename = std::enable_if_t&lt;std::is_invocable_v&lt;Func, LockedPtr&gt;&gt;,</span>
+<span id="L250"><span class="lineNum">     250</span>                 :             :               typename Ret = std::invoke_result_t&lt;Func, LockedPtr&gt;,</span>
+<span id="L251"><span class="lineNum">     251</span>                 :             :               typename = std::enable_if_t&lt;score::cpp::is_optional_v&lt;Ret&gt;&gt;&gt;</span>
+<span id="L252"><span class="lineNum">     252</span>                 :<span class="tlaGNC">           2 :     [[nodiscard]] auto and_then(Func&amp;&amp; f) &amp;&amp; -&gt; Ret</span></span>
+<span id="L253"><span class="lineNum">     253</span>                 :             :     {</span>
+<span id="L254"><span class="lineNum">     254</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           2 :         if (ptr_ == nullptr)</span></span>
+<span id="L255"><span class="lineNum">     255</span>                 :             :         {</span>
+<span id="L256"><span class="lineNum">     256</span>                 :<span class="tlaGNC">           1 :             return score::cpp::nullopt;</span></span>
+<span id="L257"><span class="lineNum">     257</span>                 :             :         }</span>
+<span id="L258"><span class="lineNum">     258</span>                 :<span class="tlaGNC">           1 :         return std::invoke(std::forward&lt;Func&gt;(f), std::move(*this));</span></span>
+<span id="L259"><span class="lineNum">     259</span>                 :             :     }</span>
+<span id="L260"><span class="lineNum">     260</span>                 :             : </span>
+<span id="L261"><span class="lineNum">     261</span>                 :             :     /**</span>
+<span id="L262"><span class="lineNum">     262</span>                 :             :      * @brief Monadic bind. Applies a callable that returns a score::cpp::optional.</span>
+<span id="L263"><span class="lineNum">     263</span>                 :             :      *        If the pointer is null, short-circuits to score::cpp::nullopt without invoking the callable.</span>
+<span id="L264"><span class="lineNum">     264</span>                 :             :      *        The callable receives a const lvalue reference to this LockedPtr (from a const rvalue).</span>
+<span id="L265"><span class="lineNum">     265</span>                 :             :      * @tparam Func Callable type that accepts const LockedPtr&amp; and returns a score::cpp::optional specialization.</span>
+<span id="L266"><span class="lineNum">     266</span>                 :             :      * @param f The callable to apply.</span>
+<span id="L267"><span class="lineNum">     267</span>                 :             :      * @return The result of f(*this) if non-null, score::cpp::nullopt otherwise.</span>
+<span id="L268"><span class="lineNum">     268</span>                 :             :      */</span>
+<span id="L269"><span class="lineNum">     269</span>                 :             :     template &lt;typename Func,</span>
+<span id="L270"><span class="lineNum">     270</span>                 :             :               typename = std::enable_if_t&lt;std::is_invocable_v&lt;Func, const LockedPtr&amp;&gt;&gt;,</span>
+<span id="L271"><span class="lineNum">     271</span>                 :             :               typename Ret = std::invoke_result_t&lt;Func, const LockedPtr&amp;&gt;,</span>
+<span id="L272"><span class="lineNum">     272</span>                 :             :               typename = std::enable_if_t&lt;score::cpp::is_optional_v&lt;Ret&gt;&gt;&gt;</span>
+<span id="L273"><span class="lineNum">     273</span>                 :<span class="tlaGNC">           2 :     [[nodiscard]] auto and_then(Func&amp;&amp; f) const&amp;&amp; -&gt; Ret</span></span>
+<span id="L274"><span class="lineNum">     274</span>                 :             :     {</span>
+<span id="L275"><span class="lineNum">     275</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           2 :         if (ptr_ == nullptr)</span></span>
+<span id="L276"><span class="lineNum">     276</span>                 :             :         {</span>
+<span id="L277"><span class="lineNum">     277</span>                 :<span class="tlaGNC">           1 :             return score::cpp::nullopt;</span></span>
+<span id="L278"><span class="lineNum">     278</span>                 :             :         }</span>
+<span id="L279"><span class="lineNum">     279</span>                 :<span class="tlaGNC">           1 :         return std::invoke(std::forward&lt;Func&gt;(f), *this);</span></span>
+<span id="L280"><span class="lineNum">     280</span>                 :             :     }</span>
+<span id="L281"><span class="lineNum">     281</span>                 :             : </span>
+<span id="L282"><span class="lineNum">     282</span>                 :             :     /**</span>
+<span id="L283"><span class="lineNum">     283</span>                 :             :      * @brief Bool conversion operator checks if the LockedPtr is managing a valid pointer.</span>
+<span id="L284"><span class="lineNum">     284</span>                 :             :      * @return true if the LockedPtr is managing a non-null pointer, false otherwise.</span>
+<span id="L285"><span class="lineNum">     285</span>                 :             :      * @note This does not check the state of the Lock as they are held for the lifetime of the LockedPtr.</span>
+<span id="L286"><span class="lineNum">     286</span>                 :             :      */</span>
+<span id="L287"><span class="lineNum">     287</span>                 :<span class="tlaGNC">          14 :     [[nodiscard]] explicit operator bool() const noexcept</span></span>
+<span id="L288"><span class="lineNum">     288</span>                 :             :     {</span>
+<span id="L289"><span class="lineNum">     289</span>                 :<span class="tlaGNC">          14 :         return ptr_ != nullptr;</span></span>
+<span id="L290"><span class="lineNum">     290</span>                 :             :     }</span>
+<span id="L291"><span class="lineNum">     291</span>                 :             : </span>
+<span id="L292"><span class="lineNum">     292</span>                 :             :     /**</span>
+<span id="L293"><span class="lineNum">     293</span>                 :             :      * @brief Applies a callable to this LockedPtr if the pointer is non-null.</span>
+<span id="L294"><span class="lineNum">     294</span>                 :             :      *        The callable receives a non-const lvalue reference to this LockedPtr.</span>
+<span id="L295"><span class="lineNum">     295</span>                 :             :      *        Returns score::cpp::optional containing the result.</span>
+<span id="L296"><span class="lineNum">     296</span>                 :             :      * @tparam Func Callable type that accepts LockedPtr&amp; and returns a non-void type.</span>
+<span id="L297"><span class="lineNum">     297</span>                 :             :      * @param f The callable to apply. Must not return void.</span>
+<span id="L298"><span class="lineNum">     298</span>                 :             :      * @return score::cpp::optional containing the result if non-null, score::cpp::nullopt otherwise.</span>
+<span id="L299"><span class="lineNum">     299</span>                 :             :      */</span>
+<span id="L300"><span class="lineNum">     300</span>                 :             :     template &lt;typename Func,</span>
+<span id="L301"><span class="lineNum">     301</span>                 :             :               typename = std::enable_if_t&lt;std::is_invocable_v&lt;Func, LockedPtr&amp;&gt;&gt;,</span>
+<span id="L302"><span class="lineNum">     302</span>                 :             :               typename FuncResult = std::invoke_result_t&lt;Func, LockedPtr&amp;&gt;,</span>
+<span id="L303"><span class="lineNum">     303</span>                 :             :               typename = std::enable_if_t&lt;std::conjunction_v&lt;std::negation&lt;std::is_void&lt;FuncResult&gt;&gt;,</span>
+<span id="L304"><span class="lineNum">     304</span>                 :             :                                                              std::negation&lt;std::is_reference&lt;FuncResult&gt;&gt;&gt;&gt;&gt;</span>
+<span id="L305"><span class="lineNum">     305</span>                 :<span class="tlaGNC">           5 :     [[nodiscard]] auto transform(Func&amp;&amp; f) &amp; -&gt; score::cpp::optional&lt;FuncResult&gt;</span></span>
+<span id="L306"><span class="lineNum">     306</span>                 :             :     {</span>
+<span id="L307"><span class="lineNum">     307</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span>]:<span class="tlaGNC">           5 :         if (ptr_ == nullptr)</span></span>
+<span id="L308"><span class="lineNum">     308</span>                 :             :         {</span>
+<span id="L309"><span class="lineNum">     309</span>                 :<span class="tlaGNC">           2 :             return score::cpp::nullopt;</span></span>
+<span id="L310"><span class="lineNum">     310</span>                 :             :         }</span>
+<span id="L311"><span class="lineNum">     311</span>         [<span class="tlaGBC" title="Branch 0 was taken 3 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           3 :         return std::invoke(std::forward&lt;Func&gt;(f), *this);</span></span>
+<span id="L312"><span class="lineNum">     312</span>                 :             :     }</span>
+<span id="L313"><span class="lineNum">     313</span>                 :             : </span>
+<span id="L314"><span class="lineNum">     314</span>                 :             :     /**</span>
+<span id="L315"><span class="lineNum">     315</span>                 :             :      * @brief Applies a callable to this LockedPtr if the pointer is non-null.</span>
+<span id="L316"><span class="lineNum">     316</span>                 :             :      *        The callable receives a const lvalue reference to this LockedPtr.</span>
+<span id="L317"><span class="lineNum">     317</span>                 :             :      *        Returns score::cpp::optional containing the result.</span>
+<span id="L318"><span class="lineNum">     318</span>                 :             :      * @tparam Func Callable type that accepts const LockedPtr&amp; and returns a non-void type.</span>
+<span id="L319"><span class="lineNum">     319</span>                 :             :      * @param f The callable to apply. Must not return void.</span>
+<span id="L320"><span class="lineNum">     320</span>                 :             :      * @return score::cpp::optional containing the result if non-null, score::cpp::nullopt otherwise.</span>
+<span id="L321"><span class="lineNum">     321</span>                 :             :      */</span>
+<span id="L322"><span class="lineNum">     322</span>                 :             :     template &lt;typename Func,</span>
+<span id="L323"><span class="lineNum">     323</span>                 :             :               typename = std::enable_if_t&lt;std::is_invocable_v&lt;Func, const LockedPtr&amp;&gt;&gt;,</span>
+<span id="L324"><span class="lineNum">     324</span>                 :             :               typename FuncResult = std::invoke_result_t&lt;Func, const LockedPtr&amp;&gt;,</span>
+<span id="L325"><span class="lineNum">     325</span>                 :             :               typename = std::enable_if_t&lt;std::conjunction_v&lt;std::negation&lt;std::is_void&lt;FuncResult&gt;&gt;,</span>
+<span id="L326"><span class="lineNum">     326</span>                 :             :                                                              std::negation&lt;std::is_reference&lt;FuncResult&gt;&gt;&gt;&gt;&gt;</span>
+<span id="L327"><span class="lineNum">     327</span>                 :<span class="tlaGNC">           1 :     [[nodiscard]] auto transform(Func&amp;&amp; f) const&amp; -&gt; score::cpp::optional&lt;FuncResult&gt;</span></span>
+<span id="L328"><span class="lineNum">     328</span>                 :             :     {</span>
+<span id="L329"><span class="lineNum">     329</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           1 :         if (ptr_ == nullptr)</span></span>
+<span id="L330"><span class="lineNum">     330</span>                 :             :         {</span>
+<span id="L331"><span class="lineNum">     331</span>                 :<span class="tlaUNC tlaBgUNC">           0 :             return score::cpp::nullopt;</span></span>
+<span id="L332"><span class="lineNum">     332</span>                 :             :         }</span>
+<span id="L333"><span class="lineNum">     333</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC tlaBgGNC">           1 :         return std::invoke(std::forward&lt;Func&gt;(f), *this);</span></span>
+<span id="L334"><span class="lineNum">     334</span>                 :             :     }</span>
+<span id="L335"><span class="lineNum">     335</span>                 :             : </span>
+<span id="L336"><span class="lineNum">     336</span>                 :             :     /**</span>
+<span id="L337"><span class="lineNum">     337</span>                 :             :      * @brief Applies a callable to this LockedPtr if the pointer is non-null.</span>
+<span id="L338"><span class="lineNum">     338</span>                 :             :      *        The LockedPtr is moved into the callable by value allowing the `Func` to take ownership of the LockedPtr.</span>
+<span id="L339"><span class="lineNum">     339</span>                 :             :      *        Returns score::cpp::optional containing the result.</span>
+<span id="L340"><span class="lineNum">     340</span>                 :             :      * @tparam Func Callable type that accepts a LockedPtr by value and returns a non-void type.</span>
+<span id="L341"><span class="lineNum">     341</span>                 :             :      * @param f The callable to apply. Must not return void.</span>
+<span id="L342"><span class="lineNum">     342</span>                 :             :      * @return score::cpp::optional containing the result if non-null, score::cpp::nullopt otherwise.</span>
+<span id="L343"><span class="lineNum">     343</span>                 :             :      */</span>
+<span id="L344"><span class="lineNum">     344</span>                 :             :     template &lt;typename Func,</span>
+<span id="L345"><span class="lineNum">     345</span>                 :             :               typename = std::enable_if_t&lt;std::is_invocable_v&lt;Func, LockedPtr&gt;&gt;,</span>
+<span id="L346"><span class="lineNum">     346</span>                 :             :               typename FuncResult = std::invoke_result_t&lt;Func, LockedPtr&gt;,</span>
+<span id="L347"><span class="lineNum">     347</span>                 :             :               typename = std::enable_if_t&lt;std::conjunction_v&lt;std::negation&lt;std::is_void&lt;FuncResult&gt;&gt;,</span>
+<span id="L348"><span class="lineNum">     348</span>                 :             :                                                              std::negation&lt;std::is_reference&lt;FuncResult&gt;&gt;&gt;&gt;&gt;</span>
+<span id="L349"><span class="lineNum">     349</span>                 :<span class="tlaGNC">           3 :     [[nodiscard]] auto transform(Func&amp;&amp; f) &amp;&amp; -&gt; score::cpp::optional&lt;FuncResult&gt;</span></span>
+<span id="L350"><span class="lineNum">     350</span>                 :             :     {</span>
+<span id="L351"><span class="lineNum">     351</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           3 :         if (ptr_ == nullptr)</span></span>
+<span id="L352"><span class="lineNum">     352</span>                 :             :         {</span>
+<span id="L353"><span class="lineNum">     353</span>                 :<span class="tlaGNC">           2 :             return score::cpp::nullopt;</span></span>
+<span id="L354"><span class="lineNum">     354</span>                 :             :         }</span>
+<span id="L355"><span class="lineNum">     355</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">           1 :         return std::invoke(std::forward&lt;Func&gt;(f), std::move(*this));</span></span>
+<span id="L356"><span class="lineNum">     356</span>                 :             :     }</span>
+<span id="L357"><span class="lineNum">     357</span>                 :             : </span>
+<span id="L358"><span class="lineNum">     358</span>                 :             :     /**</span>
+<span id="L359"><span class="lineNum">     359</span>                 :             :      * @brief Equality comparison with another LockedPtr.</span>
+<span id="L360"><span class="lineNum">     360</span>                 :             :      * @param other The LockedPtr to compare with.</span>
+<span id="L361"><span class="lineNum">     361</span>                 :             :      * @return true if both LockedPtrs point to the same object, false otherwise.</span>
+<span id="L362"><span class="lineNum">     362</span>                 :             :      * @note The locks of the LockedPtrs are not compared - they are held for the lifetime of the LockedPtr.</span>
+<span id="L363"><span class="lineNum">     363</span>                 :             :      */</span>
+<span id="L364"><span class="lineNum">     364</span>                 :             :     [[nodiscard]] bool operator==(const LockedPtr&amp; other) const noexcept</span>
+<span id="L365"><span class="lineNum">     365</span>                 :             :     {</span>
+<span id="L366"><span class="lineNum">     366</span>                 :             :         return ptr_ == other.ptr_;</span>
+<span id="L367"><span class="lineNum">     367</span>                 :             :     }</span>
+<span id="L368"><span class="lineNum">     368</span>                 :             : </span>
+<span id="L369"><span class="lineNum">     369</span>                 :             :     /**</span>
+<span id="L370"><span class="lineNum">     370</span>                 :             :      * @brief Inequality comparison with another LockedPtr.</span>
+<span id="L371"><span class="lineNum">     371</span>                 :             :      * @param other The LockedPtr to compare with.</span>
+<span id="L372"><span class="lineNum">     372</span>                 :             :      * @return true if both LockedPtrs point to different objects, false otherwise.</span>
+<span id="L373"><span class="lineNum">     373</span>                 :             :      * @note The locks of the LockedPtrs are not compared - they are held for the lifetime of the LockedPtr.</span>
+<span id="L374"><span class="lineNum">     374</span>                 :             :      */</span>
+<span id="L375"><span class="lineNum">     375</span>                 :             :     [[nodiscard]] bool operator!=(const LockedPtr&amp; other) const noexcept</span>
+<span id="L376"><span class="lineNum">     376</span>                 :             :     {</span>
+<span id="L377"><span class="lineNum">     377</span>                 :             :         return !(*this == other);</span>
+<span id="L378"><span class="lineNum">     378</span>                 :             :     }</span>
+<span id="L379"><span class="lineNum">     379</span>                 :             : </span>
+<span id="L380"><span class="lineNum">     380</span>                 :             :     /**</span>
+<span id="L381"><span class="lineNum">     381</span>                 :             :      * @brief Equality comparison with a raw pointer.</span>
+<span id="L382"><span class="lineNum">     382</span>                 :             :      * @param p The raw pointer to compare with.</span>
+<span id="L383"><span class="lineNum">     383</span>                 :             :      * @return true if the LockedPtr points to the same object as the raw pointer, false otherwise.</span>
+<span id="L384"><span class="lineNum">     384</span>                 :             :      * @note This does not check the state of the Lock as they are held for the lifetime of the LockedPtr.</span>
+<span id="L385"><span class="lineNum">     385</span>                 :             :      */</span>
+<span id="L386"><span class="lineNum">     386</span>                 :<span class="tlaGNC">           4 :     [[nodiscard]] bool operator==(const T* p) const noexcept</span></span>
+<span id="L387"><span class="lineNum">     387</span>                 :             :     {</span>
+<span id="L388"><span class="lineNum">     388</span>                 :<span class="tlaGNC">           4 :         return ptr_ == p;</span></span>
+<span id="L389"><span class="lineNum">     389</span>                 :             :     }</span>
+<span id="L390"><span class="lineNum">     390</span>                 :             : </span>
+<span id="L391"><span class="lineNum">     391</span>                 :             :     /**</span>
+<span id="L392"><span class="lineNum">     392</span>                 :             :      * @brief Inequality comparison with a raw pointer.</span>
+<span id="L393"><span class="lineNum">     393</span>                 :             :      * @param p The raw pointer to compare with.</span>
+<span id="L394"><span class="lineNum">     394</span>                 :             :      * @return true if the LockedPtr points to a different object than the raw pointer, false otherwise.</span>
+<span id="L395"><span class="lineNum">     395</span>                 :             :      * @note This does not check the state of the Lock as they are held for the lifetime of the LockedPtr.</span>
+<span id="L396"><span class="lineNum">     396</span>                 :             :      */</span>
+<span id="L397"><span class="lineNum">     397</span>                 :             :     [[nodiscard]] bool operator!=(const T* p) const noexcept</span>
+<span id="L398"><span class="lineNum">     398</span>                 :             :     {</span>
+<span id="L399"><span class="lineNum">     399</span>                 :             :         return !(*this == p);</span>
+<span id="L400"><span class="lineNum">     400</span>                 :             :     }</span>
+<span id="L401"><span class="lineNum">     401</span>                 :             : </span>
+<span id="L402"><span class="lineNum">     402</span>                 :             :     /**</span>
+<span id="L403"><span class="lineNum">     403</span>                 :             :      * @brief Equality comparison with nullptr.</span>
+<span id="L404"><span class="lineNum">     404</span>                 :             :      * @param nullptr_t The nullptr to compare with.</span>
+<span id="L405"><span class="lineNum">     405</span>                 :             :      * @return true if the LockedPtr points to nullptr, false otherwise.</span>
+<span id="L406"><span class="lineNum">     406</span>                 :             :      * @note This does not check the state of the Lock.</span>
+<span id="L407"><span class="lineNum">     407</span>                 :             :      */</span>
+<span id="L408"><span class="lineNum">     408</span>                 :             :     [[nodiscard]] bool operator==(const std::nullptr_t&amp;) const noexcept</span>
+<span id="L409"><span class="lineNum">     409</span>                 :             :     {</span>
+<span id="L410"><span class="lineNum">     410</span>                 :             :         return ptr_ == nullptr;</span>
+<span id="L411"><span class="lineNum">     411</span>                 :             :     }</span>
+<span id="L412"><span class="lineNum">     412</span>                 :             : </span>
+<span id="L413"><span class="lineNum">     413</span>                 :             :     /**</span>
+<span id="L414"><span class="lineNum">     414</span>                 :             :      * @brief Inequality comparison with nullptr.</span>
+<span id="L415"><span class="lineNum">     415</span>                 :             :      * @param nullptr_t The nullptr to compare with.</span>
+<span id="L416"><span class="lineNum">     416</span>                 :             :      * @return true if the LockedPtr points to a non-nullptr, false otherwise.</span>
+<span id="L417"><span class="lineNum">     417</span>                 :             :      * @note This does not check the state of the Lock.</span>
+<span id="L418"><span class="lineNum">     418</span>                 :             :      */</span>
+<span id="L419"><span class="lineNum">     419</span>                 :             :     [[nodiscard]] bool operator!=(const std::nullptr_t&amp;) const noexcept</span>
+<span id="L420"><span class="lineNum">     420</span>                 :             :     {</span>
+<span id="L421"><span class="lineNum">     421</span>                 :             :         return !(*this == nullptr);</span>
+<span id="L422"><span class="lineNum">     422</span>                 :             :     }</span>
+<span id="L423"><span class="lineNum">     423</span>                 :             : </span>
+<span id="L424"><span class="lineNum">     424</span>                 :             :   private:</span>
+<span id="L425"><span class="lineNum">     425</span>                 :             :     T* ptr_;</span>
+<span id="L426"><span class="lineNum">     426</span>                 :             :     mutable Lock lock_;</span>
+<span id="L427"><span class="lineNum">     427</span>                 :             : };</span>
+<span id="L428"><span class="lineNum">     428</span>                 :             : </span>
+<span id="L429"><span class="lineNum">     429</span>                 :             : }  // namespace concurrency</span>
+<span id="L430"><span class="lineNum">     430</span>                 :             : }  // namespace score</span>
+<span id="L431"><span class="lineNum">     431</span>                 :             : </span>
+<span id="L432"><span class="lineNum">     432</span>                 :             : #endif  // SCORE_LIB_CONCURRENCY_LOCKED_PTR_H</span>
         </pre>
               </td>
             </tr>

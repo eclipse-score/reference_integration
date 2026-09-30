@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">96.6&nbsp;%</td>
@@ -128,7 +128,7 @@
 <span id="L50"><span class="lineNum">      50</span>                 :             :      */</span>
 <span id="L51"><span class="lineNum">      51</span>                 :<span class="tlaGNC tlaBgGNC">       20102 :     explicit SimpleTaskBase(ConstructionGuard) noexcept : Task(), stop_source_{} {}</span></span>
 <span id="L52"><span class="lineNum">      52</span>                 :             : </span>
-<span id="L53"><span class="lineNum">      53</span>                 :<span class="tlaGNC">       20097 :     ~SimpleTaskBase() override = default;</span></span>
+<span id="L53"><span class="lineNum">      53</span>                 :<span class="tlaGNC">       20102 :     ~SimpleTaskBase() override = default;</span></span>
 <span id="L54"><span class="lineNum">      54</span>                 :             : </span>
 <span id="L55"><span class="lineNum">      55</span>                 :             :     SimpleTaskBase(const SimpleTaskBase&amp;) = delete;</span>
 <span id="L56"><span class="lineNum">      56</span>                 :             :     SimpleTaskBase&amp; operator=(const SimpleTaskBase&amp;) = delete;</span>
@@ -146,9 +146,9 @@
 <span id="L68"><span class="lineNum">      68</span>                 :             :      */</span>
 <span id="L69"><span class="lineNum">      69</span>                 :             :     void operator()(const score::cpp::stop_token token) override = 0;</span>
 <span id="L70"><span class="lineNum">      70</span>                 :             : </span>
-<span id="L71"><span class="lineNum">      71</span>                 :<span class="tlaGNC">       57047 :     score::cpp::stop_source GetStopSource() const noexcept override</span></span>
+<span id="L71"><span class="lineNum">      71</span>                 :<span class="tlaGNC">       57036 :     score::cpp::stop_source GetStopSource() const noexcept override</span></span>
 <span id="L72"><span class="lineNum">      72</span>                 :             :     {</span>
-<span id="L73"><span class="lineNum">      73</span>                 :<span class="tlaGNC">       57047 :         return stop_source_;</span></span>
+<span id="L73"><span class="lineNum">      73</span>                 :<span class="tlaGNC">       57036 :         return stop_source_;</span></span>
 <span id="L74"><span class="lineNum">      74</span>                 :             :     }</span>
 <span id="L75"><span class="lineNum">      75</span>                 :             : </span>
 <span id="L76"><span class="lineNum">      76</span>                 :             :   private:</span>
@@ -225,8 +225,8 @@
 <span id="L147"><span class="lineNum">     147</span>                 :<span class="tlaGNC">       20071 :     void operator()(const score::cpp::stop_token token) override</span></span>
 <span id="L148"><span class="lineNum">     148</span>                 :             :     {</span>
 <span id="L149"><span class="lineNum">     149</span>                 :<span class="tlaGNC">       20071 :         this-&gt;callable_(token);</span></span>
-<span id="L150"><span class="lineNum">     150</span>                 :<span class="tlaGNC">       20070 :         score::cpp::ignore = this-&gt;promise_.SetValue();</span></span>
-<span id="L151"><span class="lineNum">     151</span>                 :<span class="tlaGNC">       20067 :     }</span></span>
+<span id="L150"><span class="lineNum">     150</span>                 :<span class="tlaGNC">       20072 :         score::cpp::ignore = this-&gt;promise_.SetValue();</span></span>
+<span id="L151"><span class="lineNum">     151</span>                 :<span class="tlaGNC">       20072 :     }</span></span>
 <span id="L152"><span class="lineNum">     152</span>                 :             : </span>
 <span id="L153"><span class="lineNum">     153</span>                 :             :   private:</span>
 <span id="L154"><span class="lineNum">     154</span>                 :             :     // due to lambda usage number of template instantiation increases</span>
@@ -301,10 +301,10 @@
 <span id="L223"><span class="lineNum">     223</span>                 :             :         // intentional usage; may generate more instantiations, but is harmless</span>
 <span id="L224"><span class="lineNum">     224</span>                 :             :         // coverity[autosar_cpp14_a5_1_7_violation]</span>
 <span id="L225"><span class="lineNum">     225</span>                 :             :         // coverity[autosar_cpp14_a18_9_2_violation] false-poisitve</span>
-<span id="L226"><span class="lineNum">     226</span>                 :<span class="tlaGNC">       40151 :         return [wrapped_callable = std::forward&lt;decltype(callable)&gt;(callable),</span></span>
+<span id="L226"><span class="lineNum">     226</span>                 :<span class="tlaGNC">       40152 :         return [wrapped_callable = std::forward&lt;decltype(callable)&gt;(callable),</span></span>
 <span id="L227"><span class="lineNum">     227</span>                 :             :                 tuple = std::make_tuple(std::forward&lt;decltype(arguments)&gt;(arguments)...)](</span>
 <span id="L228"><span class="lineNum">     228</span>                 :             :                    const score::cpp::stop_token&amp; token) mutable {</span>
-<span id="L229"><span class="lineNum">     229</span>   [<span class="tlaGBC" title="Branch 0 was taken 10008 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 11 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">       20088 :             return score::cpp::apply(std::forward&lt;decltype(wrapped_callable)&gt;(wrapped_callable),</span></span>
+<span id="L229"><span class="lineNum">     229</span>   [<span class="tlaGBC" title="Branch 0 was taken 10009 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 11 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">       20088 :             return score::cpp::apply(std::forward&lt;decltype(wrapped_callable)&gt;(wrapped_callable),</span></span>
 <span class="lineNum">        </span> <span class="tlaGBC" title="Branch 4 was taken 10 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span><span class="tlaGBC" title="Branch 6 was taken 10 times"> + </span><span class="tlaUNC" title="Branch 7 was not taken"> - </span><span class="tlaGBC" title="Branch 8 was taken 28 times"> + </span> 
 <span class="lineNum">        </span> <span class="tlaUNC" title="Branch 9 was not taken"> - </span><span class="tlaGBC" title="Branch 10 was taken 28 times"> + </span><span class="tlaUNC" title="Branch 11 was not taken"> - </span><span class="tlaGBC" title="Branch 12 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 13 was not taken"> - </span> 
 <span class="lineNum">        </span> <span class="tlaGBC" title="Branch 14 was taken 2 times"> + </span><span class="tlaUNC" title="Branch 15 was not taken"> - </span><span class="tlaGBC" title="Branch 16 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 17 was not taken"> - </span><span class="tlaGBC" title="Branch 18 was taken 1 time"> + </span> 
@@ -316,7 +316,7 @@
 <span class="lineNum">        </span> <span class="tlaGBC" title="Branch 44 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 45 was not taken"> - </span><span class="tlaGBC" title="Branch 46 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 47 was not taken"> - </span><span class="tlaGBC" title="Branch 48 was taken 1 time"> + </span> 
 <span class="lineNum">        </span> <span class="tlaUNC" title="Branch 49 was not taken"> - </span><span class="tlaGBC" title="Branch 50 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 51 was not taken"> - </span><span class="tlaGBC" title="Branch 52 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 53 was not taken"> - </span> 
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 54 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 55 was not taken"> - </span>]
-<span id="L230"><span class="lineNum">     230</span>                 :<span class="tlaGNC">       40165 :                                      std::tuple_cat(std::tie(token), tuple));</span></span>
+<span id="L230"><span class="lineNum">     230</span>                 :<span class="tlaGNC">       40167 :                                      std::tuple_cat(std::tie(token), tuple));</span></span>
 <span id="L231"><span class="lineNum">     231</span>                 :<span class="tlaGNC">       20131 :         };</span></span>
 <span id="L232"><span class="lineNum">     232</span>                 :<span class="tlaGNC">          29 :     }</span></span>
 <span id="L233"><span class="lineNum">     233</span>                 :             : </span>

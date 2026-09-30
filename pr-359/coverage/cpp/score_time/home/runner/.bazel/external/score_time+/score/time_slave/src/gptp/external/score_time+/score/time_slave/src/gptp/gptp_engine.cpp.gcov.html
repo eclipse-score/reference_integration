@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:12:31</td>
+            <td class="headerValue">2026-09-30 04:21:34</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -226,47 +226,47 @@
 <span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">          46 :     return true;</span></span>
 <span id="L149"><span class="lineNum">     149</span>                 :             : }</span>
 <span id="L150"><span class="lineNum">     150</span>                 :             : </span>
-<span id="L151"><span class="lineNum">     151</span>                 :<span class="tlaGNC">          16 : void GptpEngine::FinalizeSnapshot() noexcept</span></span>
+<span id="L151"><span class="lineNum">     151</span>                 :<span class="tlaGNC">          15 : void GptpEngine::FinalizeSnapshot() noexcept</span></span>
 <span id="L152"><span class="lineNum">     152</span>                 :             : {</span>
-<span id="L153"><span class="lineNum">     153</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 16 times"> + </span>]:<span class="tlaGNC">          16 :     if (!running_.load(std::memory_order_acquire))</span></span>
+<span id="L153"><span class="lineNum">     153</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 15 times"> + </span>]:<span class="tlaGNC">          15 :     if (!running_.load(std::memory_order_acquire))</span></span>
 <span id="L154"><span class="lineNum">     154</span>                 :<span class="tlaUNC tlaBgUNC">           0 :         return;</span></span>
 <span id="L155"><span class="lineNum">     155</span>                 :             : </span>
-<span id="L156"><span class="lineNum">     156</span>                 :<span class="tlaGNC tlaBgGNC">          16 :     const std::int64_t mono_now = MonoNs();</span></span>
-<span id="L157"><span class="lineNum">     157</span>                 :<span class="tlaGNC">          16 :     const std::int64_t timeout_ns = static_cast&lt;std::int64_t&gt;(opts_.sync_timeout_ms) * 1'000'000LL;</span></span>
+<span id="L156"><span class="lineNum">     156</span>                 :<span class="tlaGNC tlaBgGNC">          15 :     const std::int64_t mono_now = MonoNs();</span></span>
+<span id="L157"><span class="lineNum">     157</span>                 :<span class="tlaGNC">          15 :     const std::int64_t timeout_ns = static_cast&lt;std::int64_t&gt;(opts_.sync_timeout_ms) * 1'000'000LL;</span></span>
 <span id="L158"><span class="lineNum">     158</span>                 :             : </span>
-<span id="L159"><span class="lineNum">     159</span>                 :<span class="tlaGNC">          16 :     std::lock_guard&lt;std::mutex&gt; lk(snapshot_mutex_);</span></span>
-<span id="L160"><span class="lineNum">     160</span>                 :<span class="tlaGNC">          16 :     const bool timed_out = sync_sm_.IsTimeout(mono_now, timeout_ns);</span></span>
-<span id="L161"><span class="lineNum">     161</span>                 :<span class="tlaGNC">          16 :     current_snapshot_ = pending_snapshot_;</span></span>
-<span id="L162"><span class="lineNum">     162</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 15 times"> + </span>]:<span class="tlaGNC">          16 :     if (timed_out)</span></span>
+<span id="L159"><span class="lineNum">     159</span>                 :<span class="tlaGNC">          15 :     std::lock_guard&lt;std::mutex&gt; lk(snapshot_mutex_);</span></span>
+<span id="L160"><span class="lineNum">     160</span>                 :<span class="tlaGNC">          15 :     const bool timed_out = sync_sm_.IsTimeout(mono_now, timeout_ns);</span></span>
+<span id="L161"><span class="lineNum">     161</span>                 :<span class="tlaGNC">          15 :     current_snapshot_ = pending_snapshot_;</span></span>
+<span id="L162"><span class="lineNum">     162</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 14 times"> + </span>]:<span class="tlaGNC">          15 :     if (timed_out)</span></span>
 <span id="L163"><span class="lineNum">     163</span>                 :             :     {</span>
 <span id="L164"><span class="lineNum">     164</span>                 :<span class="tlaGNC">           1 :         current_snapshot_.status.is_synchronized = false;</span></span>
 <span id="L165"><span class="lineNum">     165</span>                 :<span class="tlaGNC">           1 :         current_snapshot_.status.is_timeout = true;</span></span>
 <span id="L166"><span class="lineNum">     166</span>                 :<span class="tlaGNC">           1 :         current_snapshot_.status.is_correct = false;</span></span>
 <span id="L167"><span class="lineNum">     167</span>                 :             :     }</span>
-<span id="L168"><span class="lineNum">     168</span>                 :<span class="tlaGNC">          16 : }</span></span>
+<span id="L168"><span class="lineNum">     168</span>                 :<span class="tlaGNC">          15 : }</span></span>
 <span id="L169"><span class="lineNum">     169</span>                 :             : </span>
-<span id="L170"><span class="lineNum">     170</span>                 :<span class="tlaGNC">          18 : bool GptpEngine::ReadPTPSnapshot(score::ts::GptpIpcData&amp; data) const noexcept</span></span>
+<span id="L170"><span class="lineNum">     170</span>                 :<span class="tlaGNC">          17 : bool GptpEngine::ReadPTPSnapshot(score::ts::GptpIpcData&amp; data) const noexcept</span></span>
 <span id="L171"><span class="lineNum">     171</span>                 :             : {</span>
-<span id="L172"><span class="lineNum">     172</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 16 times"> + </span>]:<span class="tlaGNC">          18 :     if (!running_.load(std::memory_order_acquire))</span></span>
+<span id="L172"><span class="lineNum">     172</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 15 times"> + </span>]:<span class="tlaGNC">          17 :     if (!running_.load(std::memory_order_acquire))</span></span>
 <span id="L173"><span class="lineNum">     173</span>                 :<span class="tlaGNC">           2 :         return false;</span></span>
 <span id="L174"><span class="lineNum">     174</span>                 :             : </span>
-<span id="L175"><span class="lineNum">     175</span>                 :<span class="tlaGNC">          16 :     std::lock_guard&lt;std::mutex&gt; lk(snapshot_mutex_);</span></span>
-<span id="L176"><span class="lineNum">     176</span>                 :<span class="tlaGNC">          16 :     data = current_snapshot_;</span></span>
-<span id="L177"><span class="lineNum">     177</span>                 :<span class="tlaGNC">          16 :     return true;</span></span>
-<span id="L178"><span class="lineNum">     178</span>                 :<span class="tlaGNC">          16 : }</span></span>
+<span id="L175"><span class="lineNum">     175</span>                 :<span class="tlaGNC">          15 :     std::lock_guard&lt;std::mutex&gt; lk(snapshot_mutex_);</span></span>
+<span id="L176"><span class="lineNum">     176</span>                 :<span class="tlaGNC">          15 :     data = current_snapshot_;</span></span>
+<span id="L177"><span class="lineNum">     177</span>                 :<span class="tlaGNC">          15 :     return true;</span></span>
+<span id="L178"><span class="lineNum">     178</span>                 :<span class="tlaGNC">          15 : }</span></span>
 <span id="L179"><span class="lineNum">     179</span>                 :             : </span>
 <span id="L180"><span class="lineNum">     180</span>                 :<span class="tlaGNC">          14 : void GptpEngine::RxLoop() noexcept</span></span>
 <span id="L181"><span class="lineNum">     181</span>                 :             : {</span>
 <span id="L182"><span class="lineNum">     182</span>                 :             :     std::uint8_t buf[kRxBufferSize];</span>
 <span id="L183"><span class="lineNum">     183</span>                 :<span class="tlaGNC">          14 :     ::timespec hwts{};</span></span>
 <span id="L184"><span class="lineNum">     184</span>                 :             : </span>
-<span id="L185"><span class="lineNum">     185</span>         [<span class="tlaGBC" title="Branch 0 was taken 32 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 14 times"> + </span>]:<span class="tlaGNC">          46 :     while (running_.load(std::memory_order_acquire))</span></span>
+<span id="L185"><span class="lineNum">     185</span>         [<span class="tlaGBC" title="Branch 0 was taken 31 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 14 times"> + </span>]:<span class="tlaGNC">          45 :     while (running_.load(std::memory_order_acquire))</span></span>
 <span id="L186"><span class="lineNum">     186</span>                 :             :     {</span>
-<span id="L187"><span class="lineNum">     187</span>                 :<span class="tlaGNC">          32 :         std::memset(&amp;hwts, 0, sizeof(hwts));</span></span>
-<span id="L188"><span class="lineNum">     188</span>                 :<span class="tlaGNC">          32 :         const int n = socket_-&gt;Recv(buf, sizeof(buf), hwts, kRxTimeoutMs);</span></span>
-<span id="L189"><span class="lineNum">     189</span>         [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 22 times"> + </span>]:<span class="tlaGNC">          32 :         if (n &lt;= 0)</span></span>
+<span id="L187"><span class="lineNum">     187</span>                 :<span class="tlaGNC">          31 :         std::memset(&amp;hwts, 0, sizeof(hwts));</span></span>
+<span id="L188"><span class="lineNum">     188</span>                 :<span class="tlaGNC">          31 :         const int n = socket_-&gt;Recv(buf, sizeof(buf), hwts, kRxTimeoutMs);</span></span>
+<span id="L189"><span class="lineNum">     189</span>         [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 21 times"> + </span>]:<span class="tlaGNC">          31 :         if (n &lt;= 0)</span></span>
 <span id="L190"><span class="lineNum">     190</span>                 :<span class="tlaGNC">          10 :             continue;</span></span>
-<span id="L191"><span class="lineNum">     191</span>                 :<span class="tlaGNC">          22 :         HandlePacket(buf, n, hwts);</span></span>
+<span id="L191"><span class="lineNum">     191</span>                 :<span class="tlaGNC">          21 :         HandlePacket(buf, n, hwts);</span></span>
 <span id="L192"><span class="lineNum">     192</span>                 :             :     }</span>
 <span id="L193"><span class="lineNum">     193</span>                 :<span class="tlaGNC">          14 : }</span></span>
 <span id="L194"><span class="lineNum">     194</span>                 :             : </span>
@@ -289,51 +289,51 @@
 <span id="L211"><span class="lineNum">     211</span>                 :<span class="tlaGNC">          14 :     const std::int64_t interval_ns =</span></span>
 <span id="L212"><span class="lineNum">     212</span>         [<span class="tlaGBC" title="Branch 0 was taken 14 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          14 :         static_cast&lt;std::int64_t&gt;(opts_.pdelay_req_interval_ms &gt; 0 ? opts_.pdelay_req_interval_ms : 1000) * 1'000'000LL;</span></span>
 <span id="L213"><span class="lineNum">     213</span>                 :             : </span>
-<span id="L214"><span class="lineNum">     214</span>         [<span class="tlaGBC" title="Branch 0 was taken 42 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 6 times"> + </span>]:<span class="tlaGNC">          48 :     while (running_.load(std::memory_order_acquire))</span></span>
+<span id="L214"><span class="lineNum">     214</span>         [<span class="tlaGBC" title="Branch 0 was taken 39 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 6 times"> + </span>]:<span class="tlaGNC">          45 :     while (running_.load(std::memory_order_acquire))</span></span>
 <span id="L215"><span class="lineNum">     215</span>                 :             :     {</span>
-<span id="L216"><span class="lineNum">     216</span>                 :<span class="tlaGNC">          42 :         const std::int64_t target_ns = static_cast&lt;std::int64_t&gt;(next.tv_sec) * 1'000'000'000LL + next.tv_nsec;</span></span>
+<span id="L216"><span class="lineNum">     216</span>                 :<span class="tlaGNC">          39 :         const std::int64_t target_ns = static_cast&lt;std::int64_t&gt;(next.tv_sec) * 1'000'000'000LL + next.tv_nsec;</span></span>
 <span id="L217"><span class="lineNum">     217</span>                 :             : </span>
-<span id="L218"><span class="lineNum">     218</span>         [<span class="tlaGBC" title="Branch 0 was taken 66 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 8 times"> + </span>]:<span class="tlaGNC">          74 :         while (running_.load(std::memory_order_acquire))</span></span>
+<span id="L218"><span class="lineNum">     218</span>         [<span class="tlaGBC" title="Branch 0 was taken 62 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 8 times"> + </span>]:<span class="tlaGNC">          70 :         while (running_.load(std::memory_order_acquire))</span></span>
 <span id="L219"><span class="lineNum">     219</span>                 :             :         {</span>
-<span id="L220"><span class="lineNum">     220</span>                 :<span class="tlaGNC">          66 :             const std::int64_t remaining = target_ns - MonoNs();</span></span>
-<span id="L221"><span class="lineNum">     221</span>         [<span class="tlaGBC" title="Branch 0 was taken 34 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 32 times"> + </span>]:<span class="tlaGNC">          66 :             if (remaining &lt;= 0)</span></span>
-<span id="L222"><span class="lineNum">     222</span>                 :<span class="tlaGNC">          34 :                 break;</span></span>
-<span id="L223"><span class="lineNum">     223</span>                 :<span class="tlaGNC">          32 :             constexpr std::int64_t kSliceNs = 50'000'000LL;</span></span>
-<span id="L224"><span class="lineNum">     224</span>         [<span class="tlaGBC" title="Branch 0 was taken 32 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          32 :             const std::int64_t sleep_ns = remaining &lt; kSliceNs ? remaining : kSliceNs;</span></span>
-<span id="L225"><span class="lineNum">     225</span>                 :<span class="tlaGNC">          32 :             const ::timespec slice{0, static_cast&lt;long&gt;(sleep_ns)};</span></span>
-<span id="L226"><span class="lineNum">     226</span>                 :<span class="tlaGNC">          32 :             ::clock_nanosleep(CLOCK_MONOTONIC, 0, &amp;slice, nullptr);</span></span>
+<span id="L220"><span class="lineNum">     220</span>                 :<span class="tlaGNC">          62 :             const std::int64_t remaining = target_ns - MonoNs();</span></span>
+<span id="L221"><span class="lineNum">     221</span>         [<span class="tlaGBC" title="Branch 0 was taken 31 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 31 times"> + </span>]:<span class="tlaGNC">          62 :             if (remaining &lt;= 0)</span></span>
+<span id="L222"><span class="lineNum">     222</span>                 :<span class="tlaGNC">          31 :                 break;</span></span>
+<span id="L223"><span class="lineNum">     223</span>                 :<span class="tlaGNC">          31 :             constexpr std::int64_t kSliceNs = 50'000'000LL;</span></span>
+<span id="L224"><span class="lineNum">     224</span>         [<span class="tlaGBC" title="Branch 0 was taken 31 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          31 :             const std::int64_t sleep_ns = remaining &lt; kSliceNs ? remaining : kSliceNs;</span></span>
+<span id="L225"><span class="lineNum">     225</span>                 :<span class="tlaGNC">          31 :             const ::timespec slice{0, static_cast&lt;long&gt;(sleep_ns)};</span></span>
+<span id="L226"><span class="lineNum">     226</span>                 :<span class="tlaGNC">          31 :             ::clock_nanosleep(CLOCK_MONOTONIC, 0, &amp;slice, nullptr);</span></span>
 <span id="L227"><span class="lineNum">     227</span>                 :             :         }</span>
 <span id="L228"><span class="lineNum">     228</span>                 :             : </span>
-<span id="L229"><span class="lineNum">     229</span>         [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 34 times"> + </span>]:<span class="tlaGNC">          42 :         if (!running_.load(std::memory_order_acquire))</span></span>
+<span id="L229"><span class="lineNum">     229</span>         [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 31 times"> + </span>]:<span class="tlaGNC">          39 :         if (!running_.load(std::memory_order_acquire))</span></span>
 <span id="L230"><span class="lineNum">     230</span>                 :<span class="tlaGNC">           8 :             break;</span></span>
 <span id="L231"><span class="lineNum">     231</span>                 :             : </span>
-<span id="L232"><span class="lineNum">     232</span>         [<span class="tlaGBC" title="Branch 0 was taken 34 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          34 :         if (pdelay_)</span></span>
+<span id="L232"><span class="lineNum">     232</span>         [<span class="tlaGBC" title="Branch 0 was taken 31 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          31 :         if (pdelay_)</span></span>
 <span id="L233"><span class="lineNum">     233</span>                 :             :         {</span>
-<span id="L234"><span class="lineNum">     234</span>                 :<span class="tlaGNC">          34 :             (void)pdelay_-&gt;SendRequest(*socket_);</span></span>
+<span id="L234"><span class="lineNum">     234</span>                 :<span class="tlaGNC">          31 :             (void)pdelay_-&gt;SendRequest(*socket_);</span></span>
 <span id="L235"><span class="lineNum">     235</span>                 :             :         }</span>
 <span id="L236"><span class="lineNum">     236</span>                 :             : </span>
-<span id="L237"><span class="lineNum">     237</span>                 :<span class="tlaGNC">          34 :         const std::int64_t next_ns = target_ns + interval_ns;</span></span>
-<span id="L238"><span class="lineNum">     238</span>                 :<span class="tlaGNC">          34 :         next.tv_sec = static_cast&lt;time_t&gt;(next_ns / 1'000'000'000LL);</span></span>
-<span id="L239"><span class="lineNum">     239</span>                 :<span class="tlaGNC">          34 :         next.tv_nsec = static_cast&lt;long&gt;(next_ns % 1'000'000'000LL);</span></span>
+<span id="L237"><span class="lineNum">     237</span>                 :<span class="tlaGNC">          31 :         const std::int64_t next_ns = target_ns + interval_ns;</span></span>
+<span id="L238"><span class="lineNum">     238</span>                 :<span class="tlaGNC">          31 :         next.tv_sec = static_cast&lt;time_t&gt;(next_ns / 1'000'000'000LL);</span></span>
+<span id="L239"><span class="lineNum">     239</span>                 :<span class="tlaGNC">          31 :         next.tv_nsec = static_cast&lt;long&gt;(next_ns % 1'000'000'000LL);</span></span>
 <span id="L240"><span class="lineNum">     240</span>                 :             :     }</span>
 <span id="L241"><span class="lineNum">     241</span>                 :             : }</span>
 <span id="L242"><span class="lineNum">     242</span>                 :             : </span>
-<span id="L243"><span class="lineNum">     243</span>                 :<span class="tlaGNC">          22 : void GptpEngine::HandlePacket(const std::uint8_t* frame, int len, const ::timespec&amp; hwts) noexcept</span></span>
+<span id="L243"><span class="lineNum">     243</span>                 :<span class="tlaGNC">          21 : void GptpEngine::HandlePacket(const std::uint8_t* frame, int len, const ::timespec&amp; hwts) noexcept</span></span>
 <span id="L244"><span class="lineNum">     244</span>                 :             : {</span>
-<span id="L245"><span class="lineNum">     245</span>                 :<span class="tlaGNC">          22 :     int ptp_offset = 0;</span></span>
-<span id="L246"><span class="lineNum">     246</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 21 times"> + </span>]:<span class="tlaGNC">          22 :     if (!codec_.ParseEthernetHeader(frame, len, ptp_offset))</span></span>
+<span id="L245"><span class="lineNum">     245</span>                 :<span class="tlaGNC">          21 :     int ptp_offset = 0;</span></span>
+<span id="L246"><span class="lineNum">     246</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 20 times"> + </span>]:<span class="tlaGNC">          21 :     if (!codec_.ParseEthernetHeader(frame, len, ptp_offset))</span></span>
 <span id="L247"><span class="lineNum">     247</span>                 :<span class="tlaGNC">           1 :         return;</span></span>
 <span id="L248"><span class="lineNum">     248</span>                 :             : </span>
-<span id="L249"><span class="lineNum">     249</span>                 :<span class="tlaGNC">          21 :     const auto* payload = frame + ptp_offset;</span></span>
-<span id="L250"><span class="lineNum">     250</span>                 :<span class="tlaGNC">          21 :     const std::size_t payload_len = static_cast&lt;std::size_t&gt;(len - ptp_offset);</span></span>
+<span id="L249"><span class="lineNum">     249</span>                 :<span class="tlaGNC">          20 :     const auto* payload = frame + ptp_offset;</span></span>
+<span id="L250"><span class="lineNum">     250</span>                 :<span class="tlaGNC">          20 :     const std::size_t payload_len = static_cast&lt;std::size_t&gt;(len - ptp_offset);</span></span>
 <span id="L251"><span class="lineNum">     251</span>                 :             : </span>
-<span id="L252"><span class="lineNum">     252</span>                 :<span class="tlaGNC">          21 :     PTPMessage msg{};</span></span>
-<span id="L253"><span class="lineNum">     253</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 21 times"> + </span>]:<span class="tlaGNC">          21 :     if (!parser_.Parse(payload, payload_len, msg))</span></span>
+<span id="L252"><span class="lineNum">     252</span>                 :<span class="tlaGNC">          20 :     PTPMessage msg{};</span></span>
+<span id="L253"><span class="lineNum">     253</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 20 times"> + </span>]:<span class="tlaGNC">          20 :     if (!parser_.Parse(payload, payload_len, msg))</span></span>
 <span id="L254"><span class="lineNum">     254</span>                 :<span class="tlaUNC tlaBgUNC">           0 :         return;</span></span>
 <span id="L255"><span class="lineNum">     255</span>                 :             : </span>
-<span id="L256"><span class="lineNum">     256</span>                 :<span class="tlaGNC tlaBgGNC">          21 :     const TmvT hw_ts{static_cast&lt;std::int64_t&gt;(hwts.tv_sec) * 1'000'000'000LL + hwts.tv_nsec};</span></span>
+<span id="L256"><span class="lineNum">     256</span>                 :<span class="tlaGNC tlaBgGNC">          20 :     const TmvT hw_ts{static_cast&lt;std::int64_t&gt;(hwts.tv_sec) * 1'000'000'000LL + hwts.tv_nsec};</span></span>
 <span id="L257"><span class="lineNum">     257</span>                 :             : </span>
-<span id="L258"><span class="lineNum">     258</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span> :<span class="tlaGNC">          21 :     switch (msg.msgtype)</span></span>
+<span id="L258"><span class="lineNum">     258</span>   [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 9 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 8 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span> :<span class="tlaGNC">          20 :     switch (msg.msgtype)</span></span>
 <span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 1 time"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
 <span id="L259"><span class="lineNum">     259</span>                 :             :     {</span>
 <span id="L260"><span class="lineNum">     260</span>                 :<span class="tlaGNC">           1 :         case kPtpMsgtypePdelayReq:</span></span>
@@ -349,30 +349,30 @@
 <span id="L270"><span class="lineNum">     270</span>                 :<span class="tlaGNC">           9 :             sync_sm_.OnSync(msg);</span></span>
 <span id="L271"><span class="lineNum">     271</span>                 :<span class="tlaGNC">           9 :             break;</span></span>
 <span id="L272"><span class="lineNum">     272</span>                 :             : </span>
-<span id="L273"><span class="lineNum">     273</span>                 :<span class="tlaGNC">           9 :         case kPtpMsgtypeFollowUp:</span></span>
-<span id="L274"><span class="lineNum">     274</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 9 times"> + </span>]:<span class="tlaGNC">           9 :             if (msg.ptpHdr.domainNumber != opts_.domain_number)</span></span>
+<span id="L273"><span class="lineNum">     273</span>                 :<span class="tlaGNC">           8 :         case kPtpMsgtypeFollowUp:</span></span>
+<span id="L274"><span class="lineNum">     274</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 8 times"> + </span>]:<span class="tlaGNC">           8 :             if (msg.ptpHdr.domainNumber != opts_.domain_number)</span></span>
 <span id="L275"><span class="lineNum">     275</span>                 :<span class="tlaUNC tlaBgUNC">           0 :                 break;</span></span>
-<span id="L276"><span class="lineNum">     276</span>                 :<span class="tlaGNC tlaBgGNC">           9 :             msg.parseMessageTs = TimestampToTmv(msg.follow_up.preciseOriginTimestamp);</span></span>
+<span id="L276"><span class="lineNum">     276</span>                 :<span class="tlaGNC tlaBgGNC">           8 :             msg.parseMessageTs = TimestampToTmv(msg.follow_up.preciseOriginTimestamp);</span></span>
 <span id="L277"><span class="lineNum">     277</span>                 :             :             {</span>
-<span id="L278"><span class="lineNum">     278</span>                 :<span class="tlaGNC">           9 :                 auto result = sync_sm_.OnFollowUp(msg);</span></span>
-<span id="L279"><span class="lineNum">     279</span>   [<span class="tlaGBC" title="Branch 0 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           9 :                 if (result.has_value() &amp;&amp; pdelay_)</span></span>
-<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 9 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
+<span id="L278"><span class="lineNum">     278</span>                 :<span class="tlaGNC">           8 :                 auto result = sync_sm_.OnFollowUp(msg);</span></span>
+<span id="L279"><span class="lineNum">     279</span>   [<span class="tlaGBC" title="Branch 0 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">           8 :                 if (result.has_value() &amp;&amp; pdelay_)</span></span>
+<span class="lineNum">        </span>          <span class="tlaGBC" title="Branch 4 was taken 8 times"> + </span><span class="tlaUNC" title="Branch 5 was not taken"> - </span>]
 <span id="L280"><span class="lineNum">     280</span>                 :             :                 {</span>
-<span id="L281"><span class="lineNum">     281</span>                 :<span class="tlaGNC">           9 :                     const PDelayResult pdr = pdelay_-&gt;GetResult();</span></span>
+<span id="L281"><span class="lineNum">     281</span>                 :<span class="tlaGNC">           8 :                     const PDelayResult pdr = pdelay_-&gt;GetResult();</span></span>
 <span id="L282"><span class="lineNum">     282</span>                 :             :                     // IEEE 802.1AS: subtract peer link delay from offset</span>
-<span id="L283"><span class="lineNum">     283</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 9 times"> + </span>]:<span class="tlaGNC">           9 :                     if (pdr.valid)</span></span>
+<span id="L283"><span class="lineNum">     283</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 8 times"> + </span>]:<span class="tlaGNC">           8 :                     if (pdr.valid)</span></span>
 <span id="L284"><span class="lineNum">     284</span>                 :             :                     {</span>
 <span id="L285"><span class="lineNum">     285</span>                 :<span class="tlaUNC tlaBgUNC">           0 :                         result-&gt;offset_ns -= pdr.path_delay_ns;</span></span>
 <span id="L286"><span class="lineNum">     286</span>                 :<span class="tlaUNC">           0 :                         result-&gt;sync_fup_data.pdelay = static_cast&lt;std::uint64_t&gt;(pdr.path_delay_ns);</span></span>
 <span id="L287"><span class="lineNum">     287</span>                 :             :                     }</span>
 <span id="L288"><span class="lineNum">     288</span>                 :             :                     else</span>
 <span id="L289"><span class="lineNum">     289</span>                 :             :                     {</span>
-<span id="L290"><span class="lineNum">     290</span>                 :<span class="tlaGNC tlaBgGNC">           9 :                         result-&gt;sync_fup_data.pdelay = 0U;</span></span>
+<span id="L290"><span class="lineNum">     290</span>                 :<span class="tlaGNC tlaBgGNC">           8 :                         result-&gt;sync_fup_data.pdelay = 0U;</span></span>
 <span id="L291"><span class="lineNum">     291</span>                 :             :                     }</span>
-<span id="L292"><span class="lineNum">     292</span>                 :<span class="tlaGNC">           9 :                     UpdateSnapshot(*result, pdr);</span></span>
+<span id="L292"><span class="lineNum">     292</span>                 :<span class="tlaGNC">           8 :                     UpdateSnapshot(*result, pdr);</span></span>
 <span id="L293"><span class="lineNum">     293</span>                 :             :                 }</span>
 <span id="L294"><span class="lineNum">     294</span>                 :             :             }</span>
-<span id="L295"><span class="lineNum">     295</span>                 :<span class="tlaGNC">           9 :             break;</span></span>
+<span id="L295"><span class="lineNum">     295</span>                 :<span class="tlaGNC">           8 :             break;</span></span>
 <span id="L296"><span class="lineNum">     296</span>                 :             : </span>
 <span id="L297"><span class="lineNum">     297</span>                 :<span class="tlaGNC">           1 :         case kPtpMsgtypePdelayResp:</span></span>
 <span id="L298"><span class="lineNum">     298</span>                 :<span class="tlaGNC">           1 :             msg.recvHardwareTS = hw_ts;</span></span>
@@ -392,29 +392,29 @@
 <span id="L312"><span class="lineNum">     312</span>                 :             :     }</span>
 <span id="L313"><span class="lineNum">     313</span>                 :             : }</span>
 <span id="L314"><span class="lineNum">     314</span>                 :             : </span>
-<span id="L315"><span class="lineNum">     315</span>                 :<span class="tlaGNC tlaBgGNC">           9 : void GptpEngine::UpdateSnapshot(const SyncResult&amp; sync, const PDelayResult&amp; pdelay) noexcept</span></span>
+<span id="L315"><span class="lineNum">     315</span>                 :<span class="tlaGNC tlaBgGNC">           8 : void GptpEngine::UpdateSnapshot(const SyncResult&amp; sync, const PDelayResult&amp; pdelay) noexcept</span></span>
 <span id="L316"><span class="lineNum">     316</span>                 :             : {</span>
-<span id="L317"><span class="lineNum">     317</span>                 :<span class="tlaGNC">           9 :     const double rate_ratio = sync_sm_.GetNeighborRateRatio();</span></span>
+<span id="L317"><span class="lineNum">     317</span>                 :<span class="tlaGNC">           8 :     const double rate_ratio = sync_sm_.GetNeighborRateRatio();</span></span>
 <span id="L318"><span class="lineNum">     318</span>                 :             : </span>
 <span id="L319"><span class="lineNum">     319</span>                 :             :     {</span>
-<span id="L320"><span class="lineNum">     320</span>                 :<span class="tlaGNC">           9 :         std::lock_guard&lt;std::mutex&gt; lk(snapshot_mutex_);</span></span>
+<span id="L320"><span class="lineNum">     320</span>                 :<span class="tlaGNC">           8 :         std::lock_guard&lt;std::mutex&gt; lk(snapshot_mutex_);</span></span>
 <span id="L321"><span class="lineNum">     321</span>                 :             : </span>
-<span id="L322"><span class="lineNum">     322</span>                 :<span class="tlaGNC">           9 :         const std::int64_t local_rx_ns = static_cast&lt;std::int64_t&gt;(sync.sync_fup_data.reference_local_timestamp);</span></span>
-<span id="L323"><span class="lineNum">     323</span>                 :<span class="tlaGNC">           9 :         pending_snapshot_.ptp_assumed_time = std::chrono::nanoseconds{local_rx_ns - sync.offset_ns};</span></span>
-<span id="L324"><span class="lineNum">     324</span>                 :<span class="tlaGNC">           9 :         pending_snapshot_.local_time = std::chrono::nanoseconds{sync.sync_mono_ns};</span></span>
-<span id="L325"><span class="lineNum">     325</span>                 :<span class="tlaGNC">           9 :         pending_snapshot_.rate_deviation = rate_ratio;</span></span>
+<span id="L322"><span class="lineNum">     322</span>                 :<span class="tlaGNC">           8 :         const std::int64_t local_rx_ns = static_cast&lt;std::int64_t&gt;(sync.sync_fup_data.reference_local_timestamp);</span></span>
+<span id="L323"><span class="lineNum">     323</span>                 :<span class="tlaGNC">           8 :         pending_snapshot_.ptp_assumed_time = std::chrono::nanoseconds{local_rx_ns - sync.offset_ns};</span></span>
+<span id="L324"><span class="lineNum">     324</span>                 :<span class="tlaGNC">           8 :         pending_snapshot_.local_time = std::chrono::nanoseconds{sync.sync_mono_ns};</span></span>
+<span id="L325"><span class="lineNum">     325</span>                 :<span class="tlaGNC">           8 :         pending_snapshot_.rate_deviation = rate_ratio;</span></span>
 <span id="L326"><span class="lineNum">     326</span>                 :             : </span>
-<span id="L327"><span class="lineNum">     327</span>                 :<span class="tlaGNC">           9 :         pending_snapshot_.status.is_synchronized = true;</span></span>
-<span id="L328"><span class="lineNum">     328</span>                 :<span class="tlaGNC">           9 :         pending_snapshot_.status.is_timeout = false;</span></span>
-<span id="L329"><span class="lineNum">     329</span>                 :<span class="tlaGNC">           9 :         pending_snapshot_.status.is_time_jump_future = sync.is_time_jump_future;</span></span>
-<span id="L330"><span class="lineNum">     330</span>                 :<span class="tlaGNC">           9 :         pending_snapshot_.status.is_time_jump_past = sync.is_time_jump_past;</span></span>
-<span id="L331"><span class="lineNum">     331</span>   [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">           9 :         pending_snapshot_.status.is_correct = !sync.is_time_jump_future &amp;&amp; !sync.is_time_jump_past;</span></span>
+<span id="L327"><span class="lineNum">     327</span>                 :<span class="tlaGNC">           8 :         pending_snapshot_.status.is_synchronized = true;</span></span>
+<span id="L328"><span class="lineNum">     328</span>                 :<span class="tlaGNC">           8 :         pending_snapshot_.status.is_timeout = false;</span></span>
+<span id="L329"><span class="lineNum">     329</span>                 :<span class="tlaGNC">           8 :         pending_snapshot_.status.is_time_jump_future = sync.is_time_jump_future;</span></span>
+<span id="L330"><span class="lineNum">     330</span>                 :<span class="tlaGNC">           8 :         pending_snapshot_.status.is_time_jump_past = sync.is_time_jump_past;</span></span>
+<span id="L331"><span class="lineNum">     331</span>   [<span class="tlaGBC" title="Branch 0 was taken 6 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 5 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 1 time"> + </span>]:<span class="tlaGNC">           8 :         pending_snapshot_.status.is_correct = !sync.is_time_jump_future &amp;&amp; !sync.is_time_jump_past;</span></span>
 <span id="L332"><span class="lineNum">     332</span>                 :             : </span>
-<span id="L333"><span class="lineNum">     333</span>                 :<span class="tlaGNC">           9 :         pending_snapshot_.sync_fup_data = sync.sync_fup_data;</span></span>
-<span id="L334"><span class="lineNum">     334</span>                 :<span class="tlaGNC">           9 :         pending_snapshot_.pdelay_data = pdelay.pdelay_data;</span></span>
-<span id="L335"><span class="lineNum">     335</span>                 :<span class="tlaGNC">           9 :     }</span></span>
+<span id="L333"><span class="lineNum">     333</span>                 :<span class="tlaGNC">           8 :         pending_snapshot_.sync_fup_data = sync.sync_fup_data;</span></span>
+<span id="L334"><span class="lineNum">     334</span>                 :<span class="tlaGNC">           8 :         pending_snapshot_.pdelay_data = pdelay.pdelay_data;</span></span>
+<span id="L335"><span class="lineNum">     335</span>                 :<span class="tlaGNC">           8 :     }</span></span>
 <span id="L336"><span class="lineNum">     336</span>                 :             : </span>
-<span id="L337"><span class="lineNum">     337</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 9 times"> + </span>]:<span class="tlaGNC">           9 :     if (phc_.IsEnabled())</span></span>
+<span id="L337"><span class="lineNum">     337</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 8 times"> + </span>]:<span class="tlaGNC">           8 :     if (phc_.IsEnabled())</span></span>
 <span id="L338"><span class="lineNum">     338</span>                 :             :     {</span>
 <span id="L339"><span class="lineNum">     339</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC tlaBgUNC">           0 :         const bool is_step = (sync.offset_ns &gt;= opts_.phc_config.step_threshold_ns) ||</span></span>
 <span id="L340"><span class="lineNum">     340</span>         [<span class="tlaUNC" title="Branch 0 was not executed"> # </span><span class="tlaUNC" title="Branch 1 was not executed"> # </span>]:<span class="tlaUNC">           0 :                              (sync.offset_ns &lt;= -opts_.phc_config.step_threshold_ns);</span></span>
@@ -432,7 +432,7 @@
 <span id="L352"><span class="lineNum">     352</span>                 :<span class="tlaUNC">           0 :                                                          &lt;&lt; &quot; rate_ratio=&quot; &lt;&lt; rate_ratio;</span></span>
 <span id="L353"><span class="lineNum">     353</span>                 :             :         }</span>
 <span id="L354"><span class="lineNum">     354</span>                 :             :     }</span>
-<span id="L355"><span class="lineNum">     355</span>                 :<span class="tlaGNC tlaBgGNC">           9 : }</span></span>
+<span id="L355"><span class="lineNum">     355</span>                 :<span class="tlaGNC tlaBgGNC">           8 : }</span></span>
 <span id="L356"><span class="lineNum">     356</span>                 :             : </span>
 <span id="L357"><span class="lineNum">     357</span>                 :<span class="tlaGNC">           1 : void GptpEngine::SendPDelayResponseAndFollowUp(const PTPMessage&amp; req, TmvT t2) noexcept</span></span>
 <span id="L358"><span class="lineNum">     358</span>                 :             : {</span>

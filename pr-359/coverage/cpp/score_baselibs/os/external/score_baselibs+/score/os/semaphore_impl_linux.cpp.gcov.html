@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -93,47 +93,41 @@
 <span id="L15"><span class="lineNum">      15</span>                 :             : #include &lt;time.h&gt;</span>
 <span id="L16"><span class="lineNum">      16</span>                 :             : #include &lt;cerrno&gt;</span>
 <span id="L17"><span class="lineNum">      17</span>                 :             : </span>
-<span id="L18"><span class="lineNum">      18</span>                 :             : /* KW_SUPPRESS_START:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L19"><span class="lineNum">      19</span>                 :             : </span>
-<span id="L20"><span class="lineNum">      20</span>                 :             : namespace score</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : namespace score</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : {</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : namespace os</span>
 <span id="L21"><span class="lineNum">      21</span>                 :             : {</span>
-<span id="L22"><span class="lineNum">      22</span>                 :             : namespace os</span>
-<span id="L23"><span class="lineNum">      23</span>                 :             : {</span>
-<span id="L24"><span class="lineNum">      24</span>                 :             : </span>
-<span id="L25"><span class="lineNum">      25</span>                 :             : // Linux variant of SemaphoreImpl::sem_timedwait_monotonic(); selected via BUILD select(). glibc &gt;= 2.30</span>
-<span id="L26"><span class="lineNum">      26</span>                 :             : // provides sem_clockwait(), which lets us pin the timeout to CLOCK_MONOTONIC (immune to wall-clock changes</span>
-<span id="L27"><span class="lineNum">      27</span>                 :             : // such as NTP steps). g++/clang++ predefine _GNU_SOURCE for C++, so the __USE_GNU-guarded declaration is</span>
-<span id="L28"><span class="lineNum">      28</span>                 :             : // visible.</span>
-<span id="L29"><span class="lineNum">      29</span>                 :             : /* KW_SUPPRESS_START:AUTOSAR.MEMB.VIRTUAL.FINAL: Compiler warn suggests override */</span>
-<span id="L30"><span class="lineNum">      30</span>                 :<span class="tlaGNC tlaBgGNC">           3 : score::cpp::expected_blank&lt;Error&gt; SemaphoreImpl::sem_timedwait_monotonic(</span></span>
-<span id="L31"><span class="lineNum">      31</span>                 :             :     sem_t* const sem,</span>
-<span id="L32"><span class="lineNum">      32</span>                 :             :     const struct timespec* const abs_time) const noexcept</span>
-<span id="L33"><span class="lineNum">      33</span>                 :             : /* KW_SUPPRESS_END:AUTOSAR.MEMB.VIRTUAL.FINAL: Compiler warn suggests override  */</span>
-<span id="L34"><span class="lineNum">      34</span>                 :             : {</span>
-<span id="L35"><span class="lineNum">      35</span>                 :             :     // A16-0-1: version guard avoids a compile error on glibc &lt; 2.30 (no sem_clockwait()).</span>
-<span id="L36"><span class="lineNum">      36</span>                 :             :     // coverity[autosar_cpp14_a16_0_1_violation]</span>
-<span id="L37"><span class="lineNum">      37</span>                 :             : #if defined(__GLIBC__) &amp;&amp; ((__GLIBC__ &gt; 2) || ((__GLIBC__ == 2) &amp;&amp; (__GLIBC_MINOR__ &gt;= 30)))</span>
-<span id="L38"><span class="lineNum">      38</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           3 :     if (::sem_clockwait(sem, CLOCK_MONOTONIC, abs_time) != 0)</span></span>
-<span id="L39"><span class="lineNum">      39</span>                 :             :     {</span>
-<span id="L40"><span class="lineNum">      40</span>                 :<span class="tlaGNC">           2 :         return score::cpp::make_unexpected(score::os::Error::createFromErrno());</span></span>
-<span id="L41"><span class="lineNum">      41</span>                 :             :     }</span>
-<span id="L42"><span class="lineNum">      42</span>                 :<span class="tlaGNC">           1 :     return {};</span></span>
-<span id="L43"><span class="lineNum">      43</span>                 :             : // coverity[autosar_cpp14_a16_0_1_violation], see above rationale</span>
-<span id="L44"><span class="lineNum">      44</span>                 :             : #else</span>
-<span id="L45"><span class="lineNum">      45</span>                 :             :     // glibc &lt; 2.30: no monotonic wait primitive. Notify at build time, return ENOSYS at runtime.</span>
-<span id="L46"><span class="lineNum">      46</span>                 :             :     // coverity[autosar_cpp14_a16_0_1_violation], see above rationale</span>
-<span id="L47"><span class="lineNum">      47</span>                 :             : #pragma message(&quot;sem_timedwait_monotonic(): requires glibc &gt;= 2.30; returning ENOSYS&quot;)</span>
-<span id="L48"><span class="lineNum">      48</span>                 :             :     static_cast&lt;void&gt;(sem);</span>
-<span id="L49"><span class="lineNum">      49</span>                 :             :     static_cast&lt;void&gt;(abs_time);</span>
-<span id="L50"><span class="lineNum">      50</span>                 :             :     return score::cpp::make_unexpected(score::os::Error::createFromErrno(ENOSYS));</span>
-<span id="L51"><span class="lineNum">      51</span>                 :             : // coverity[autosar_cpp14_a16_0_1_violation], see above rationale</span>
-<span id="L52"><span class="lineNum">      52</span>                 :             : #endif</span>
-<span id="L53"><span class="lineNum">      53</span>                 :             : }</span>
-<span id="L54"><span class="lineNum">      54</span>                 :             : </span>
-<span id="L55"><span class="lineNum">      55</span>                 :             : /* KW_SUPPRESS_END:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L56"><span class="lineNum">      56</span>                 :             : </span>
-<span id="L57"><span class="lineNum">      57</span>                 :             : }  // namespace os</span>
-<span id="L58"><span class="lineNum">      58</span>                 :             : }  // namespace score</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : </span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : // Linux variant of SemaphoreImpl::sem_timedwait_monotonic(); selected via BUILD select(). glibc &gt;= 2.30</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             : // provides sem_clockwait(), which lets us pin the timeout to CLOCK_MONOTONIC (immune to wall-clock changes</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             : // such as NTP steps). g++/clang++ predefine _GNU_SOURCE for C++, so the __USE_GNU-guarded declaration is</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             : // visible.</span>
+<span id="L27"><span class="lineNum">      27</span>                 :<span class="tlaGNC tlaBgGNC">           3 : score::cpp::expected_blank&lt;Error&gt; SemaphoreImpl::sem_timedwait_monotonic(</span></span>
+<span id="L28"><span class="lineNum">      28</span>                 :             :     sem_t* const sem,</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             :     const struct timespec* const abs_time) const noexcept</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             : {</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             :     // A16-0-1: version guard avoids a compile error on glibc &lt; 2.30 (no sem_clockwait()).</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             :     // coverity[autosar_cpp14_a16_0_1_violation]</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             : #if defined(__GLIBC__) &amp;&amp; ((__GLIBC__ &gt; 2) || ((__GLIBC__ == 2) &amp;&amp; (__GLIBC_MINOR__ &gt;= 30)))</span>
+<span id="L34"><span class="lineNum">      34</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           3 :     if (::sem_clockwait(sem, CLOCK_MONOTONIC, abs_time) != 0)</span></span>
+<span id="L35"><span class="lineNum">      35</span>                 :             :     {</span>
+<span id="L36"><span class="lineNum">      36</span>                 :<span class="tlaGNC">           2 :         return score::cpp::make_unexpected(score::os::Error::createFromErrno());</span></span>
+<span id="L37"><span class="lineNum">      37</span>                 :             :     }</span>
+<span id="L38"><span class="lineNum">      38</span>                 :<span class="tlaGNC">           1 :     return {};</span></span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : // coverity[autosar_cpp14_a16_0_1_violation], see above rationale</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : #else</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             :     // glibc &lt; 2.30: no monotonic wait primitive. Notify at build time, return ENOSYS at runtime.</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             :     // coverity[autosar_cpp14_a16_0_1_violation], see above rationale</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             : #pragma message(&quot;sem_timedwait_monotonic(): requires glibc &gt;= 2.30; returning ENOSYS&quot;)</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             :     static_cast&lt;void&gt;(sem);</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             :     static_cast&lt;void&gt;(abs_time);</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             :     return score::cpp::make_unexpected(score::os::Error::createFromErrno(ENOSYS));</span>
+<span id="L47"><span class="lineNum">      47</span>                 :             : // coverity[autosar_cpp14_a16_0_1_violation], see above rationale</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             : #endif</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             : }</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             : </span>
+<span id="L51"><span class="lineNum">      51</span>                 :             : }  // namespace os</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             : }  // namespace score</span>
         </pre>
               </td>
             </tr>

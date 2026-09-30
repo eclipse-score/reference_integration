@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -152,11 +152,11 @@
 <span id="L74"><span class="lineNum">      74</span>                 :             :     /// The property of the sentinel is</span>
 <span id="L75"><span class="lineNum">      75</span>                 :             :     ///   - unique address</span>
 <span id="L76"><span class="lineNum">      76</span>                 :             :     ///   - address is different from `nulltpr`</span>
-<span id="L77"><span class="lineNum">      77</span>                 :<span class="tlaGNC">         763 :     static constexpr intrusive_forward_list_node* end_of_list() noexcept</span></span>
+<span id="L77"><span class="lineNum">      77</span>                 :<span class="tlaGNC">         759 :     static constexpr intrusive_forward_list_node* end_of_list() noexcept</span></span>
 <span id="L78"><span class="lineNum">      78</span>                 :             :     {</span>
 <span id="L79"><span class="lineNum">      79</span>                 :             :         // sentinel should never be modified. cast const away to allow sanitizer detecting this case. the alternative</span>
 <span id="L80"><span class="lineNum">      80</span>                 :             :         // would be to have a non-const global variable. but this disallows detecting the error case with sanitizers.</span>
-<span id="L81"><span class="lineNum">      81</span>                 :<span class="tlaGNC">         763 :         return const_cast&lt;intrusive_forward_list_node*&gt;(&amp;sentinel); // NOLINT(cppcoreguidelines-pro-type-const-cast)</span></span>
+<span id="L81"><span class="lineNum">      81</span>                 :<span class="tlaGNC">         759 :         return const_cast&lt;intrusive_forward_list_node*&gt;(&amp;sentinel); // NOLINT(cppcoreguidelines-pro-type-const-cast)</span></span>
 <span id="L82"><span class="lineNum">      82</span>                 :             :     }</span>
 <span id="L83"><span class="lineNum">      83</span>                 :             : </span>
 <span id="L84"><span class="lineNum">      84</span>                 :             :     /// \brief Pointer to the next node in the intrusive forward list.</span>
@@ -337,7 +337,7 @@
 <span id="L259"><span class="lineNum">     259</span>                 :             :     /// Complexity: O(1)</span>
 <span id="L260"><span class="lineNum">     260</span>                 :             :     ///</span>
 <span id="L261"><span class="lineNum">     261</span>                 :             :     /// \return true if the container is empty, false otherwise</span>
-<span id="L262"><span class="lineNum">     262</span>                 :<span class="tlaGNC">         383 :     constexpr bool empty() const noexcept { return before_begin_.next_ == intrusive_forward_list_node::end_of_list(); }</span></span>
+<span id="L262"><span class="lineNum">     262</span>                 :<span class="tlaGNC">         379 :     constexpr bool empty() const noexcept { return before_begin_.next_ == intrusive_forward_list_node::end_of_list(); }</span></span>
 <span id="L263"><span class="lineNum">     263</span>                 :             : </span>
 <span id="L264"><span class="lineNum">     264</span>                 :             :     /// \brief Exchanges the contents of the container with those of other.</span>
 <span id="L265"><span class="lineNum">     265</span>                 :             :     ///</span>

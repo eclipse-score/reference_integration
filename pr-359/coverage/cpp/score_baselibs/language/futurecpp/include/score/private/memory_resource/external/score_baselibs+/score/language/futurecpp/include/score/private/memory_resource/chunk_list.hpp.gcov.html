@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -130,7 +130,7 @@
 <span id="L52"><span class="lineNum">      52</span>                 :             :     };</span>
 <span id="L53"><span class="lineNum">      53</span>                 :             : </span>
 <span id="L54"><span class="lineNum">      54</span>                 :             : public:</span>
-<span id="L55"><span class="lineNum">      55</span>                 :<span class="tlaGNC tlaBgGNC">          45 :     std::uint8_t* allocate(memory_resource* const resource, const std::size_t bytes, const std::size_t alignment)</span></span>
+<span id="L55"><span class="lineNum">      55</span>                 :<span class="tlaGNC tlaBgGNC">          46 :     std::uint8_t* allocate(memory_resource* const resource, const std::size_t bytes, const std::size_t alignment)</span></span>
 <span id="L56"><span class="lineNum">      56</span>                 :             :     {</span>
 <span id="L57"><span class="lineNum">      57</span>                 :             :         // To support `release()`, `chunk_list` has to keep track of all allocated chunks together with their size and</span>
 <span id="L58"><span class="lineNum">      58</span>                 :             :         // alignment. To that end an amount of memory of size `s` greater than the amount requested by the caller</span>
@@ -159,11 +159,11 @@
 <span id="L81"><span class="lineNum">      81</span>                 :             :         // |-------------------------------|----|</span>
 <span id="L82"><span class="lineNum">      82</span>                 :             :         // ^                               ^</span>
 <span id="L83"><span class="lineNum">      83</span>                 :             :         // result                          data_</span>
-<span id="L84"><span class="lineNum">      84</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 45 times"> + </span>]:<span class="tlaGNC">          45 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(resource != nullptr);</span></span>
-<span id="L85"><span class="lineNum">      85</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 45 times"> + </span>]:<span class="tlaGNC">          45 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(score::cpp::has_single_bit(alignment));</span></span>
-<span id="L86"><span class="lineNum">      86</span>                 :<span class="tlaGNC">          45 :         const std::size_t s{internal_size(bytes)};</span></span>
-<span id="L87"><span class="lineNum">      87</span>                 :<span class="tlaGNC">          45 :         const std::size_t a{internal_alignment(alignment)};</span></span>
-<span id="L88"><span class="lineNum">      88</span>                 :<span class="tlaGNC">          45 :         auto* const result = static_cast&lt;std::uint8_t*&gt;(resource-&gt;allocate(s, a));</span></span>
+<span id="L84"><span class="lineNum">      84</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 46 times"> + </span>]:<span class="tlaGNC">          46 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(resource != nullptr);</span></span>
+<span id="L85"><span class="lineNum">      85</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 46 times"> + </span>]:<span class="tlaGNC">          46 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(score::cpp::has_single_bit(alignment));</span></span>
+<span id="L86"><span class="lineNum">      86</span>                 :<span class="tlaGNC">          46 :         const std::size_t s{internal_size(bytes)};</span></span>
+<span id="L87"><span class="lineNum">      87</span>                 :<span class="tlaGNC">          46 :         const std::size_t a{internal_alignment(alignment)};</span></span>
+<span id="L88"><span class="lineNum">      88</span>                 :<span class="tlaGNC">          46 :         auto* const result = static_cast&lt;std::uint8_t*&gt;(resource-&gt;allocate(s, a));</span></span>
 <span id="L89"><span class="lineNum">      89</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 45 times"> + </span>]:<span class="tlaGNC">          45 :         SCORE_LANGUAGE_FUTURECPP_ASSERT(result != nullptr);</span></span>
 <span id="L90"><span class="lineNum">      90</span>   [<span class="tlaGBC" title="Branch 0 was taken 45 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaUNC" title="Branch 2 was not taken"> - </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">          45 :         link(::new (get_element(result, s)) element{{s, a}, nullptr, nullptr});</span></span>
 <span id="L91"><span class="lineNum">      91</span>                 :<span class="tlaGNC">          45 :         return result;</span></span>
@@ -181,20 +181,20 @@
 <span id="L103"><span class="lineNum">     103</span>                 :<span class="tlaGNC">           3 :         resource-&gt;deallocate(p, s, a);</span></span>
 <span id="L104"><span class="lineNum">     104</span>                 :<span class="tlaGNC">           3 :     }</span></span>
 <span id="L105"><span class="lineNum">     105</span>                 :             : </span>
-<span id="L106"><span class="lineNum">     106</span>                 :<span class="tlaGNC">         139 :     void release(memory_resource* const resource)</span></span>
+<span id="L106"><span class="lineNum">     106</span>                 :<span class="tlaGNC">         140 :     void release(memory_resource* const resource)</span></span>
 <span id="L107"><span class="lineNum">     107</span>                 :             :     {</span>
-<span id="L108"><span class="lineNum">     108</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 139 times"> + </span>]:<span class="tlaGNC">         139 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(resource != nullptr);</span></span>
-<span id="L109"><span class="lineNum">     109</span>         [<span class="tlaGBC" title="Branch 0 was taken 42 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 139 times"> + </span>]:<span class="tlaGNC">         181 :         while (head_ != nullptr)</span></span>
+<span id="L108"><span class="lineNum">     108</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 140 times"> + </span>]:<span class="tlaGNC">         140 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(resource != nullptr);</span></span>
+<span id="L109"><span class="lineNum">     109</span>         [<span class="tlaGBC" title="Branch 0 was taken 42 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 140 times"> + </span>]:<span class="tlaGNC">         182 :         while (head_ != nullptr)</span></span>
 <span id="L110"><span class="lineNum">     110</span>                 :             :         {</span>
 <span id="L111"><span class="lineNum">     111</span>                 :<span class="tlaGNC">          42 :             element* const descriptor{std::exchange(head_, head_-&gt;next)};</span></span>
 <span id="L112"><span class="lineNum">     112</span>                 :<span class="tlaGNC">          42 :             resource-&gt;deallocate(</span></span>
 <span id="L113"><span class="lineNum">     113</span>                 :             :                 get_chunk(descriptor), descriptor-&gt;properties.get_size(), descriptor-&gt;properties.get_alignment());</span>
 <span id="L114"><span class="lineNum">     114</span>                 :             :         }</span>
-<span id="L115"><span class="lineNum">     115</span>                 :<span class="tlaGNC">         139 :     }</span></span>
+<span id="L115"><span class="lineNum">     115</span>                 :<span class="tlaGNC">         140 :     }</span></span>
 <span id="L116"><span class="lineNum">     116</span>                 :             : </span>
-<span id="L117"><span class="lineNum">     117</span>                 :<span class="tlaGNC">          50 :     static std::size_t internal_alignment(const std::size_t alignment) { return std::max(alignment, alignof(element)); }</span></span>
+<span id="L117"><span class="lineNum">     117</span>                 :<span class="tlaGNC">          51 :     static std::size_t internal_alignment(const std::size_t alignment) { return std::max(alignment, alignof(element)); }</span></span>
 <span id="L118"><span class="lineNum">     118</span>                 :             : </span>
-<span id="L119"><span class="lineNum">     119</span>                 :<span class="tlaGNC">          83 :     static std::size_t internal_size(const std::size_t bytes) { return score::cpp::align_up(bytes + sizeof(element), 64_UZ); }</span></span>
+<span id="L119"><span class="lineNum">     119</span>                 :<span class="tlaGNC">          84 :     static std::size_t internal_size(const std::size_t bytes) { return score::cpp::align_up(bytes + sizeof(element), 64_UZ); }</span></span>
 <span id="L120"><span class="lineNum">     120</span>                 :             : </span>
 <span id="L121"><span class="lineNum">     121</span>                 :             : private:</span>
 <span id="L122"><span class="lineNum">     122</span>                 :<span class="tlaGNC">          48 :     static void* get_element(void* const chunk, const std::size_t chunk_size)</span></span>

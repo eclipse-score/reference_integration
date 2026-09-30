@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">42.1&nbsp;%</td>
@@ -119,12 +119,12 @@
 <span id="L41"><span class="lineNum">      41</span>                 :             : public:</span>
 <span id="L42"><span class="lineNum">      42</span>                 :<span class="tlaGNC tlaBgGNC">         110 :     unique_ptr_deleter() = default;</span></span>
 <span id="L43"><span class="lineNum">      43</span>                 :             : </span>
-<span id="L44"><span class="lineNum">      44</span>                 :<span class="tlaGNC">       20485 :     explicit unique_ptr_deleter(score::cpp::pmr::memory_resource* const memory_resource,</span></span>
+<span id="L44"><span class="lineNum">      44</span>                 :<span class="tlaGNC">       20478 :     explicit unique_ptr_deleter(score::cpp::pmr::memory_resource* const memory_resource,</span></span>
 <span id="L45"><span class="lineNum">      45</span>                 :             :                                 const std::size_t size,</span>
 <span id="L46"><span class="lineNum">      46</span>                 :             :                                 const std::size_t alignment) noexcept</span>
-<span id="L47"><span class="lineNum">      47</span>                 :<span class="tlaGNC">       20485 :         : memory_resource_{memory_resource}, size_{size}, alignment_{alignment}</span></span>
+<span id="L47"><span class="lineNum">      47</span>                 :<span class="tlaGNC">       20478 :         : memory_resource_{memory_resource}, size_{size}, alignment_{alignment}</span></span>
 <span id="L48"><span class="lineNum">      48</span>                 :             :     {</span>
-<span id="L49"><span class="lineNum">      49</span>                 :<span class="tlaGNC">       20485 :     }</span></span>
+<span id="L49"><span class="lineNum">      49</span>                 :<span class="tlaGNC">       20478 :     }</span></span>
 <span id="L50"><span class="lineNum">      50</span>                 :             : </span>
 <span id="L51"><span class="lineNum">      51</span>                 :             :     unique_ptr_deleter(const unique_ptr_deleter&amp; rhs) = default;</span>
 <span id="L52"><span class="lineNum">      52</span>                 :             :     unique_ptr_deleter&amp; operator=(const unique_ptr_deleter&amp; rhs) = default;</span>
@@ -133,12 +133,12 @@
 <span id="L55"><span class="lineNum">      55</span>                 :             :     ~unique_ptr_deleter() = default;</span>
 <span id="L56"><span class="lineNum">      56</span>                 :             : </span>
 <span id="L57"><span class="lineNum">      57</span>                 :             :     template &lt;typename T&gt;</span>
-<span id="L58"><span class="lineNum">      58</span>                 :<span class="tlaGNC">       20476 :     void operator()(T* p) const</span></span>
+<span id="L58"><span class="lineNum">      58</span>                 :<span class="tlaGNC">       20475 :     void operator()(T* p) const</span></span>
 <span id="L59"><span class="lineNum">      59</span>                 :             :     {</span>
-<span id="L60"><span class="lineNum">      60</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 20475 times"> + </span>]:<span class="tlaGNC">       20476 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(memory_resource_ != nullptr);</span></span>
-<span id="L61"><span class="lineNum">      61</span>                 :<span class="tlaGNC">       20475 :         p-&gt;~T();</span></span>
-<span id="L62"><span class="lineNum">      62</span>                 :<span class="tlaGNC">       20481 :         memory_resource_-&gt;deallocate(p, size_, alignment_);</span></span>
-<span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC">       20478 :     }</span></span>
+<span id="L60"><span class="lineNum">      60</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 20474 times"> + </span>]:<span class="tlaGNC">       20475 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION(memory_resource_ != nullptr);</span></span>
+<span id="L61"><span class="lineNum">      61</span>                 :<span class="tlaGNC">       20474 :         p-&gt;~T();</span></span>
+<span id="L62"><span class="lineNum">      62</span>                 :<span class="tlaGNC">       20474 :         memory_resource_-&gt;deallocate(p, size_, alignment_);</span></span>
+<span id="L63"><span class="lineNum">      63</span>                 :<span class="tlaGNC">       20474 :     }</span></span>
 <span id="L64"><span class="lineNum">      64</span>                 :             : </span>
 <span id="L65"><span class="lineNum">      65</span>                 :<span class="tlaGNC">           1 :     score::cpp::pmr::memory_resource* memory_resource() const { return memory_resource_; }</span></span>
 <span id="L66"><span class="lineNum">      66</span>                 :             : </span>

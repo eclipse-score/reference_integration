@@ -37,12 +37,12 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryMed">78.8&nbsp;%</td>
-            <td class="headerCovTableEntry">1318</td>
-            <td class="headerCovTableEntry">1038</td>
+            <td class="headerCovTableEntryMed">78.7&nbsp;%</td>
+            <td class="headerCovTableEntry">1322</td>
+            <td class="headerCovTableEntry">1040</td>
           </tr>
           <tr>
             <td class="headerItem">Legend:</td>
@@ -115,9 +115,9 @@
 <span id="L37"><span class="lineNum">      37</span>                 :             : /// \brief Helper function that implements the unpacking of the tuple arguments into</span>
 <span id="L38"><span class="lineNum">      38</span>                 :             : /// the arguments of the Callable object f</span>
 <span id="L39"><span class="lineNum">      39</span>                 :             : template &lt;typename Function, typename Tuple, std::size_t... Is&gt;</span>
-<span id="L40"><span class="lineNum">      40</span>                 :<span class="tlaGNC tlaBgGNC">       59775 : constexpr decltype(auto) apply_impl(Function&amp;&amp; f, Tuple&amp;&amp; t, std::index_sequence&lt;Is...&gt;)</span></span>
+<span id="L40"><span class="lineNum">      40</span>                 :<span class="tlaGNC tlaBgGNC">     5308707 : constexpr decltype(auto) apply_impl(Function&amp;&amp; f, Tuple&amp;&amp; t, std::index_sequence&lt;Is...&gt;)</span></span>
 <span id="L41"><span class="lineNum">      41</span>                 :             : {</span>
-<span id="L42"><span class="lineNum">      42</span>                 :<span class="tlaGNC">       59775 :     return score::cpp::detail::invoke(std::forward&lt;Function&gt;(f), std::get&lt;Is&gt;(std::forward&lt;Tuple&gt;(t))...);</span></span>
+<span id="L42"><span class="lineNum">      42</span>                 :<span class="tlaGNC">     5308707 :     return score::cpp::detail::invoke(std::forward&lt;Function&gt;(f), std::get&lt;Is&gt;(std::forward&lt;Tuple&gt;(t))...);</span></span>
 <span id="L43"><span class="lineNum">      43</span>                 :             : }</span>
 <span id="L44"><span class="lineNum">      44</span>                 :             : </span>
 <span id="L45"><span class="lineNum">      45</span>                 :             : } // namespace detail</span>
@@ -130,11 +130,11 @@
 <span id="L52"><span class="lineNum">      52</span>                 :             : /// \param t instance of the function parameters `Tuple`.</span>
 <span id="L53"><span class="lineNum">      53</span>                 :             : /// \return the result of applying the function object.</span>
 <span id="L54"><span class="lineNum">      54</span>                 :             : template &lt;typename Function, typename Tuple&gt;</span>
-<span id="L55"><span class="lineNum">      55</span>                 :<span class="tlaGNC">       59776 : constexpr decltype(auto) apply(Function&amp;&amp; f, Tuple&amp;&amp; t)</span></span>
+<span id="L55"><span class="lineNum">      55</span>                 :<span class="tlaGNC">     5308707 : constexpr decltype(auto) apply(Function&amp;&amp; f, Tuple&amp;&amp; t)</span></span>
 <span id="L56"><span class="lineNum">      56</span>                 :             : {</span>
-<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">       59666 :     return score::cpp::detail::apply_impl(std::forward&lt;Function&gt;(f),</span></span>
+<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">     5308597 :     return score::cpp::detail::apply_impl(std::forward&lt;Function&gt;(f),</span></span>
 <span id="L58"><span class="lineNum">      58</span>                 :             :                                    std::forward&lt;Tuple&gt;(t),</span>
-<span id="L59"><span class="lineNum">      59</span>                 :<span class="tlaGNC">       59776 :                                    std::make_index_sequence&lt;std::tuple_size&lt;std::decay_t&lt;Tuple&gt;&gt;::value&gt;());</span></span>
+<span id="L59"><span class="lineNum">      59</span>                 :<span class="tlaGNC">     5308707 :                                    std::make_index_sequence&lt;std::tuple_size&lt;std::decay_t&lt;Tuple&gt;&gt;::value&gt;());</span></span>
 <span id="L60"><span class="lineNum">      60</span>                 :             : }</span>
 <span id="L61"><span class="lineNum">      61</span>                 :             : </span>
 <span id="L62"><span class="lineNum">      62</span>                 :             : } // namespace score::cpp</span>

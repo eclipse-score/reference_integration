@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">66.7&nbsp;%</td>
@@ -108,53 +108,49 @@
 <span id="L30"><span class="lineNum">      30</span>                 :             : /// @brief Buffer struct</span>
 <span id="L31"><span class="lineNum">      31</span>                 :             : struct GroupBuffer</span>
 <span id="L32"><span class="lineNum">      32</span>                 :             : {</span>
-<span id="L33"><span class="lineNum">      33</span>                 :             :     /* KW_SUPPRESS_START:AUTOSAR.ARRAY.CSTYLE:Wrapped function requires C-style array param */</span>
-<span id="L34"><span class="lineNum">      34</span>                 :             :     // Wrapped function's signature requires C-style array</span>
-<span id="L35"><span class="lineNum">      35</span>                 :             :     // NOLINTBEGIN(modernize-avoid-c-arrays) see comment above</span>
-<span id="L36"><span class="lineNum">      36</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A9-6-1&quot; rule findings. This rule declares: &quot;Data types used for interfacing with hardware</span>
-<span id="L37"><span class="lineNum">      37</span>                 :             :     // or conforming to communication protocols shall be trivial, standard-layout and only contain members of types with</span>
-<span id="L38"><span class="lineNum">      38</span>                 :             :     // defined sizes.&quot;</span>
-<span id="L39"><span class="lineNum">      39</span>                 :             :     // Violation due to std::size_t which is typedef as unsigned long, which is of non standard type,</span>
-<span id="L40"><span class="lineNum">      40</span>                 :             :     // No harm for implementation.</span>
-<span id="L41"><span class="lineNum">      41</span>                 :             :     // coverity[autosar_cpp14_a9_6_1_violation]</span>
-<span id="L42"><span class="lineNum">      42</span>                 :             :     char name[max_groupname_length + static_cast&lt;std::size_t&gt;(1)];</span>
-<span id="L43"><span class="lineNum">      43</span>                 :             :     // NOLINTEND(modernize-avoid-c-arrays)</span>
-<span id="L44"><span class="lineNum">      44</span>                 :             :     /* KW_SUPPRESS_END:AUTOSAR.ARRAY.CSTYLE:Wrapped function requires C-style array param */</span>
-<span id="L45"><span class="lineNum">      45</span>                 :             :     // Rationale: Violation due to gid_t which is typedef as unsigned int, which is of non standard type,</span>
-<span id="L46"><span class="lineNum">      46</span>                 :             :     // No harm for implementation.</span>
-<span id="L47"><span class="lineNum">      47</span>                 :             :     // coverity[autosar_cpp14_a9_6_1_violation]</span>
-<span id="L48"><span class="lineNum">      48</span>                 :             :     gid_t gid;</span>
-<span id="L49"><span class="lineNum">      49</span>                 :             : };</span>
-<span id="L50"><span class="lineNum">      50</span>                 :             : </span>
-<span id="L51"><span class="lineNum">      51</span>                 :             : class Grp : public ObjectSeam&lt;Grp&gt;</span>
-<span id="L52"><span class="lineNum">      52</span>                 :             : {</span>
-<span id="L53"><span class="lineNum">      53</span>                 :             :   public:</span>
-<span id="L54"><span class="lineNum">      54</span>                 :             :     static Grp&amp; instance() noexcept;</span>
-<span id="L55"><span class="lineNum">      55</span>                 :             : </span>
-<span id="L56"><span class="lineNum">      56</span>                 :             :     /* KW_SUPPRESS_START:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L57"><span class="lineNum">      57</span>                 :             :     /// Get information about the group with a given name.</span>
-<span id="L58"><span class="lineNum">      58</span>                 :             :     /// Contrary to the original system call, this call may block.</span>
-<span id="L59"><span class="lineNum">      59</span>                 :             :     /// Contrary to the original system call, this call will return k</span>
-<span id="L60"><span class="lineNum">      60</span>                 :             :     /// \param group The name of the group</span>
-<span id="L61"><span class="lineNum">      61</span>                 :             :     /// \return A structure holding the name and id of the group or an error</span>
-<span id="L62"><span class="lineNum">      62</span>                 :             :     virtual score::cpp::expected&lt;GroupBuffer, Error&gt; getgrnam(const std::string&amp; group) const noexcept = 0;</span>
-<span id="L63"><span class="lineNum">      63</span>                 :             :     /* KW_SUPPRESS_END:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L64"><span class="lineNum">      64</span>                 :             : </span>
-<span id="L65"><span class="lineNum">      65</span>                 :<span class="tlaGNC tlaBgGNC">          28 :     virtual ~Grp() = default;</span></span>
-<span id="L66"><span class="lineNum">      66</span>                 :             :     // Below special member functions declared to avoid autosar_cpp14_a12_0_1_violation</span>
-<span id="L67"><span class="lineNum">      67</span>                 :             :     Grp(const Grp&amp;) = delete;</span>
-<span id="L68"><span class="lineNum">      68</span>                 :             :     Grp&amp; operator=(const Grp&amp;) = delete;</span>
-<span id="L69"><span class="lineNum">      69</span>                 :             :     Grp(Grp&amp;&amp; other) = delete;</span>
-<span id="L70"><span class="lineNum">      70</span>                 :             :     Grp&amp; operator=(Grp&amp;&amp; other) = delete;</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             :     // Wrapped function's signature requires C-style array</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             :     // NOLINTBEGIN(modernize-avoid-c-arrays) see comment above</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             :     // Suppress &quot;AUTOSAR C++14 A9-6-1&quot; rule findings. This rule declares: &quot;Data types used for interfacing with hardware</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             :     // or conforming to communication protocols shall be trivial, standard-layout and only contain members of types with</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             :     // defined sizes.&quot;</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             :     // Violation due to std::size_t which is typedef as unsigned long, which is of non standard type,</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             :     // No harm for implementation.</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             :     // coverity[autosar_cpp14_a9_6_1_violation]</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             :     char name[max_groupname_length + static_cast&lt;std::size_t&gt;(1)];</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             :     // NOLINTEND(modernize-avoid-c-arrays)</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             :     // Rationale: Violation due to gid_t which is typedef as unsigned int, which is of non standard type,</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             :     // No harm for implementation.</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             :     // coverity[autosar_cpp14_a9_6_1_violation]</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             :     gid_t gid;</span>
+<span id="L47"><span class="lineNum">      47</span>                 :             : };</span>
+<span id="L48"><span class="lineNum">      48</span>                 :             : </span>
+<span id="L49"><span class="lineNum">      49</span>                 :             : class Grp : public ObjectSeam&lt;Grp&gt;</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             : {</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             :   public:</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             :     static Grp&amp; instance() noexcept;</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             : </span>
+<span id="L54"><span class="lineNum">      54</span>                 :             :     /// Get information about the group with a given name.</span>
+<span id="L55"><span class="lineNum">      55</span>                 :             :     /// Contrary to the original system call, this call may block.</span>
+<span id="L56"><span class="lineNum">      56</span>                 :             :     /// Contrary to the original system call, this call will return k</span>
+<span id="L57"><span class="lineNum">      57</span>                 :             :     /// \param group The name of the group</span>
+<span id="L58"><span class="lineNum">      58</span>                 :             :     /// \return A structure holding the name and id of the group or an error</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             :     virtual score::cpp::expected&lt;GroupBuffer, Error&gt; getgrnam(const std::string&amp; group) const noexcept = 0;</span>
+<span id="L60"><span class="lineNum">      60</span>                 :             : </span>
+<span id="L61"><span class="lineNum">      61</span>                 :<span class="tlaGNC tlaBgGNC">          28 :     virtual ~Grp() = default;</span></span>
+<span id="L62"><span class="lineNum">      62</span>                 :             :     // Below special member functions declared to avoid autosar_cpp14_a12_0_1_violation</span>
+<span id="L63"><span class="lineNum">      63</span>                 :             :     Grp(const Grp&amp;) = delete;</span>
+<span id="L64"><span class="lineNum">      64</span>                 :             :     Grp&amp; operator=(const Grp&amp;) = delete;</span>
+<span id="L65"><span class="lineNum">      65</span>                 :             :     Grp(Grp&amp;&amp; other) = delete;</span>
+<span id="L66"><span class="lineNum">      66</span>                 :             :     Grp&amp; operator=(Grp&amp;&amp; other) = delete;</span>
+<span id="L67"><span class="lineNum">      67</span>                 :             : </span>
+<span id="L68"><span class="lineNum">      68</span>                 :             :   protected:</span>
+<span id="L69"><span class="lineNum">      69</span>                 :<span class="tlaGNC">          26 :     Grp() = default;</span></span>
+<span id="L70"><span class="lineNum">      70</span>                 :             : };</span>
 <span id="L71"><span class="lineNum">      71</span>                 :             : </span>
-<span id="L72"><span class="lineNum">      72</span>                 :             :   protected:</span>
-<span id="L73"><span class="lineNum">      73</span>                 :<span class="tlaGNC">          26 :     Grp() = default;</span></span>
-<span id="L74"><span class="lineNum">      74</span>                 :             : };</span>
-<span id="L75"><span class="lineNum">      75</span>                 :             : </span>
-<span id="L76"><span class="lineNum">      76</span>                 :             : }  // namespace os</span>
-<span id="L77"><span class="lineNum">      77</span>                 :             : }  // namespace score</span>
-<span id="L78"><span class="lineNum">      78</span>                 :             : </span>
-<span id="L79"><span class="lineNum">      79</span>                 :             : #endif  // SCORE_LIB_OS_GRP_H</span>
+<span id="L72"><span class="lineNum">      72</span>                 :             : }  // namespace os</span>
+<span id="L73"><span class="lineNum">      73</span>                 :             : }  // namespace score</span>
+<span id="L74"><span class="lineNum">      74</span>                 :             : </span>
+<span id="L75"><span class="lineNum">      75</span>                 :             : #endif  // SCORE_LIB_OS_GRP_H</span>
         </pre>
               </td>
             </tr>

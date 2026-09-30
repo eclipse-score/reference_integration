@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">96.2&nbsp;%</td>
@@ -159,11 +159,11 @@
 <span id="L81"><span class="lineNum">      81</span>                 :             :     {</span>
 <span id="L82"><span class="lineNum">      82</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 417 times"> + </span>]:<span class="tlaGNC">         417 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION_DBG(container.size() &gt;= 0);</span></span>
 <span id="L83"><span class="lineNum">      83</span>                 :<span class="tlaGNC">         627 :     }</span></span>
-<span id="L84"><span class="lineNum">      84</span>                 :<span class="tlaGNC">        6118 :     iterator(const Container&amp; container, const bool is_begin)</span></span>
-<span id="L85"><span class="lineNum">      85</span>         [<span class="tlaGBC" title="Branch 0 was taken 2754 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3364 times"> + </span>]:<span class="tlaGNC">        6118 :         : current_{is_begin ? container.data() : (container.data() + container.size())}</span></span>
+<span id="L84"><span class="lineNum">      84</span>                 :<span class="tlaGNC">        6120 :     iterator(const Container&amp; container, const bool is_begin)</span></span>
+<span id="L85"><span class="lineNum">      85</span>         [<span class="tlaGBC" title="Branch 0 was taken 2755 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 3365 times"> + </span>]:<span class="tlaGNC">        6120 :         : current_{is_begin ? container.data() : (container.data() + container.size())}</span></span>
 <span id="L86"><span class="lineNum">      86</span>                 :             :     {</span>
-<span id="L87"><span class="lineNum">      87</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 512 times"> + </span>]:<span class="tlaGNC">         512 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION_DBG(container.size() &gt;= 0);</span></span>
-<span id="L88"><span class="lineNum">      88</span>                 :<span class="tlaGNC">        6118 :     }</span></span>
+<span id="L87"><span class="lineNum">      87</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 514 times"> + </span>]:<span class="tlaGNC">         514 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION_DBG(container.size() &gt;= 0);</span></span>
+<span id="L88"><span class="lineNum">      88</span>                 :<span class="tlaGNC">        6120 :     }</span></span>
 <span id="L89"><span class="lineNum">      89</span>                 :             :     /// \}</span>
 <span id="L90"><span class="lineNum">      90</span>                 :             : </span>
 <span id="L91"><span class="lineNum">      91</span>                 :             :     /// @brief Allow iterator to const_iterator conversion.</span>
@@ -183,10 +183,10 @@
 <span id="L105"><span class="lineNum">     105</span>                 :             :     /// \pre current_ != nullptr</span>
 <span id="L106"><span class="lineNum">     106</span>                 :             :     ///</span>
 <span id="L107"><span class="lineNum">     107</span>                 :             :     /// \return Reference to the current element.</span>
-<span id="L108"><span class="lineNum">     108</span>                 :<span class="tlaGNC">       41764 :     reference operator*() const</span></span>
+<span id="L108"><span class="lineNum">     108</span>                 :<span class="tlaGNC">       41774 :     reference operator*() const</span></span>
 <span id="L109"><span class="lineNum">     109</span>                 :             :     {</span>
-<span id="L110"><span class="lineNum">     110</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 876 times"> + </span>]:<span class="tlaGNC">         878 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION_DBG(nullptr != current_);</span></span>
-<span id="L111"><span class="lineNum">     111</span>                 :<span class="tlaGNC">       41762 :         return *current_;</span></span>
+<span id="L110"><span class="lineNum">     110</span>         [<span class="tlaGBC" title="Branch 0 was taken 2 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 886 times"> + </span>]:<span class="tlaGNC">         888 :         SCORE_LANGUAGE_FUTURECPP_PRECONDITION_DBG(nullptr != current_);</span></span>
+<span id="L111"><span class="lineNum">     111</span>                 :<span class="tlaGNC">       41772 :         return *current_;</span></span>
 <span id="L112"><span class="lineNum">     112</span>                 :             :     }</span>
 <span id="L113"><span class="lineNum">     113</span>                 :             : </span>
 <span id="L114"><span class="lineNum">     114</span>                 :             :     /// \brief Access the pointed-to-element.</span>
@@ -203,10 +203,10 @@
 <span id="L125"><span class="lineNum">     125</span>                 :             :     /// \brief Pre-increments by one.</span>
 <span id="L126"><span class="lineNum">     126</span>                 :             :     ///</span>
 <span id="L127"><span class="lineNum">     127</span>                 :             :     /// \return The incremented iterator.</span>
-<span id="L128"><span class="lineNum">     128</span>                 :<span class="tlaGNC">       39032 :     iterator&amp; operator++()</span></span>
+<span id="L128"><span class="lineNum">     128</span>                 :<span class="tlaGNC">       39042 :     iterator&amp; operator++()</span></span>
 <span id="L129"><span class="lineNum">     129</span>                 :             :     {</span>
-<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">       39032 :         ++current_;</span></span>
-<span id="L131"><span class="lineNum">     131</span>                 :<span class="tlaGNC">       39032 :         return *this;</span></span>
+<span id="L130"><span class="lineNum">     130</span>                 :<span class="tlaGNC">       39042 :         ++current_;</span></span>
+<span id="L131"><span class="lineNum">     131</span>                 :<span class="tlaGNC">       39042 :         return *this;</span></span>
 <span id="L132"><span class="lineNum">     132</span>                 :             :     }</span>
 <span id="L133"><span class="lineNum">     133</span>                 :             : </span>
 <span id="L134"><span class="lineNum">     134</span>                 :             :     /// \brief Post-increments by one.</span>
@@ -293,7 +293,7 @@
 <span id="L215"><span class="lineNum">     215</span>                 :             :     /// \brief Accesses the underlying pointer.</span>
 <span id="L216"><span class="lineNum">     216</span>                 :             :     ///</span>
 <span id="L217"><span class="lineNum">     217</span>                 :             :     /// \return The underlying pointer.</span>
-<span id="L218"><span class="lineNum">     218</span>                 :<span class="tlaGNC">        7143 :     const value_type* current() const { return current_; }</span></span>
+<span id="L218"><span class="lineNum">     218</span>                 :<span class="tlaGNC">        7141 :     const value_type* current() const { return current_; }</span></span>
 <span id="L219"><span class="lineNum">     219</span>                 :             : </span>
 <span id="L220"><span class="lineNum">     220</span>                 :             : private:</span>
 <span id="L221"><span class="lineNum">     221</span>                 :             :     /// \brief Pointer to the current element</span>
@@ -302,10 +302,10 @@
 <span id="L224"><span class="lineNum">     224</span>                 :             : </span>
 <span id="L225"><span class="lineNum">     225</span>                 :             : /// \brief Returns the distance between two iterators.</span>
 <span id="L226"><span class="lineNum">     226</span>                 :             : template &lt;typename T, bool LhsIsConstant, bool RhsIsConstant&gt;</span>
-<span id="L227"><span class="lineNum">     227</span>                 :<span class="tlaGNC">        1211 : typename iterator&lt;T&gt;::difference_type operator-(const iterator&lt;T, LhsIsConstant&gt;&amp; lhs,</span></span>
+<span id="L227"><span class="lineNum">     227</span>                 :<span class="tlaGNC">        1210 : typename iterator&lt;T&gt;::difference_type operator-(const iterator&lt;T, LhsIsConstant&gt;&amp; lhs,</span></span>
 <span id="L228"><span class="lineNum">     228</span>                 :             :                                                 const iterator&lt;T, RhsIsConstant&gt;&amp; rhs)</span>
 <span id="L229"><span class="lineNum">     229</span>                 :             : {</span>
-<span id="L230"><span class="lineNum">     230</span>                 :<span class="tlaGNC">        1211 :     return lhs.current() - rhs.current();</span></span>
+<span id="L230"><span class="lineNum">     230</span>                 :<span class="tlaGNC">        1210 :     return lhs.current() - rhs.current();</span></span>
 <span id="L231"><span class="lineNum">     231</span>                 :             : }</span>
 <span id="L232"><span class="lineNum">     232</span>                 :             : </span>
 <span id="L233"><span class="lineNum">     233</span>                 :             : /// \brief Checks whether two iterators are equal.</span>

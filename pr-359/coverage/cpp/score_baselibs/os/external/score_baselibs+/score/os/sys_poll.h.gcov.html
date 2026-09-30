@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">66.7&nbsp;%</td>
@@ -115,30 +115,28 @@
 <span id="L37"><span class="lineNum">      37</span>                 :             : </span>
 <span id="L38"><span class="lineNum">      38</span>                 :             :     static score::cpp::pmr::unique_ptr&lt;SysPoll&gt; Default(score::cpp::pmr::memory_resource* memory_resource) noexcept;</span>
 <span id="L39"><span class="lineNum">      39</span>                 :             : </span>
-<span id="L40"><span class="lineNum">      40</span>                 :             :     /* KW_SUPPRESS_START:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L41"><span class="lineNum">      41</span>                 :             :     // Justification: The global namespace shall only contain main, namespace declarations and extern &quot;&quot;C&quot;&quot;</span>
-<span id="L42"><span class="lineNum">      42</span>                 :             :     // declarations. This is a wrapper function over system API inside local namespace</span>
-<span id="L43"><span class="lineNum">      43</span>                 :             :     // coverity[autosar_cpp14_m7_3_1_violation]</span>
-<span id="L44"><span class="lineNum">      44</span>                 :             :     virtual score::cpp::expected&lt;std::int32_t, Error&gt; poll(struct pollfd* fds,</span>
-<span id="L45"><span class="lineNum">      45</span>                 :             :                                                            const nfds_t nfds,</span>
-<span id="L46"><span class="lineNum">      46</span>                 :             :                                                            const std::int32_t timeout) const noexcept = 0;</span>
-<span id="L47"><span class="lineNum">      47</span>                 :             :     /* KW_SUPPRESS_END:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L48"><span class="lineNum">      48</span>                 :             : </span>
-<span id="L49"><span class="lineNum">      49</span>                 :<span class="tlaGNC tlaBgGNC">          96 :     virtual ~SysPoll() = default;</span></span>
-<span id="L50"><span class="lineNum">      50</span>                 :             :     // Below special member functions declared to avoid autosar_cpp14_a12_0_1_violation</span>
-<span id="L51"><span class="lineNum">      51</span>                 :             :     SysPoll(const SysPoll&amp;) = delete;</span>
-<span id="L52"><span class="lineNum">      52</span>                 :             :     SysPoll&amp; operator=(const SysPoll&amp;) = delete;</span>
-<span id="L53"><span class="lineNum">      53</span>                 :             :     SysPoll(SysPoll&amp;&amp; other) = delete;</span>
-<span id="L54"><span class="lineNum">      54</span>                 :             :     SysPoll&amp; operator=(SysPoll&amp;&amp; other) = delete;</span>
-<span id="L55"><span class="lineNum">      55</span>                 :             : </span>
-<span id="L56"><span class="lineNum">      56</span>                 :             :   protected:</span>
-<span id="L57"><span class="lineNum">      57</span>                 :<span class="tlaGNC">          93 :     SysPoll() = default;</span></span>
-<span id="L58"><span class="lineNum">      58</span>                 :             : };</span>
-<span id="L59"><span class="lineNum">      59</span>                 :             : </span>
-<span id="L60"><span class="lineNum">      60</span>                 :             : }  // namespace os</span>
-<span id="L61"><span class="lineNum">      61</span>                 :             : }  // namespace score</span>
-<span id="L62"><span class="lineNum">      62</span>                 :             : </span>
-<span id="L63"><span class="lineNum">      63</span>                 :             : #endif  // SCORE_LIB_OS_SYS_POLL_H</span>
+<span id="L40"><span class="lineNum">      40</span>                 :             :     // Justification: The global namespace shall only contain main, namespace declarations and extern &quot;&quot;C&quot;&quot;</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             :     // declarations. This is a wrapper function over system API inside local namespace</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             :     // coverity[autosar_cpp14_m7_3_1_violation]</span>
+<span id="L43"><span class="lineNum">      43</span>                 :             :     virtual score::cpp::expected&lt;std::int32_t, Error&gt; poll(struct pollfd* fds,</span>
+<span id="L44"><span class="lineNum">      44</span>                 :             :                                                            const nfds_t nfds,</span>
+<span id="L45"><span class="lineNum">      45</span>                 :             :                                                            const std::int32_t timeout) const noexcept = 0;</span>
+<span id="L46"><span class="lineNum">      46</span>                 :             : </span>
+<span id="L47"><span class="lineNum">      47</span>                 :<span class="tlaGNC tlaBgGNC">          96 :     virtual ~SysPoll() = default;</span></span>
+<span id="L48"><span class="lineNum">      48</span>                 :             :     // Below special member functions declared to avoid autosar_cpp14_a12_0_1_violation</span>
+<span id="L49"><span class="lineNum">      49</span>                 :             :     SysPoll(const SysPoll&amp;) = delete;</span>
+<span id="L50"><span class="lineNum">      50</span>                 :             :     SysPoll&amp; operator=(const SysPoll&amp;) = delete;</span>
+<span id="L51"><span class="lineNum">      51</span>                 :             :     SysPoll(SysPoll&amp;&amp; other) = delete;</span>
+<span id="L52"><span class="lineNum">      52</span>                 :             :     SysPoll&amp; operator=(SysPoll&amp;&amp; other) = delete;</span>
+<span id="L53"><span class="lineNum">      53</span>                 :             : </span>
+<span id="L54"><span class="lineNum">      54</span>                 :             :   protected:</span>
+<span id="L55"><span class="lineNum">      55</span>                 :<span class="tlaGNC">          93 :     SysPoll() = default;</span></span>
+<span id="L56"><span class="lineNum">      56</span>                 :             : };</span>
+<span id="L57"><span class="lineNum">      57</span>                 :             : </span>
+<span id="L58"><span class="lineNum">      58</span>                 :             : }  // namespace os</span>
+<span id="L59"><span class="lineNum">      59</span>                 :             : }  // namespace score</span>
+<span id="L60"><span class="lineNum">      60</span>                 :             : </span>
+<span id="L61"><span class="lineNum">      61</span>                 :             : #endif  // SCORE_LIB_OS_SYS_POLL_H</span>
         </pre>
               </td>
             </tr>

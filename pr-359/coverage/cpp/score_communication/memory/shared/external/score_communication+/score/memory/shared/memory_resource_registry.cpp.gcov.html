@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:10:46</td>
+            <td class="headerValue">2026-09-30 04:19:55</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -102,14 +102,14 @@
 <span id="L24"><span class="lineNum">      24</span>                 :             : #include &lt;exception&gt;</span>
 <span id="L25"><span class="lineNum">      25</span>                 :             : #include &lt;optional&gt;</span>
 <span id="L26"><span class="lineNum">      26</span>                 :             : </span>
-<span id="L27"><span class="lineNum">      27</span>                 :<span class="tlaGNC tlaBgGNC">     1266438 : auto score::memory::shared::MemoryResourceRegistry::getInstance() -&gt; MemoryResourceRegistry&amp;</span></span>
+<span id="L27"><span class="lineNum">      27</span>                 :<span class="tlaGNC tlaBgGNC">     1266435 : auto score::memory::shared::MemoryResourceRegistry::getInstance() -&gt; MemoryResourceRegistry&amp;</span></span>
 <span id="L28"><span class="lineNum">      28</span>                 :             : {</span>
 <span id="L29"><span class="lineNum">      29</span>                 :             :     // MemoryResourceRegistry is kept alive via the nifty-counter idiom (see</span>
 <span id="L30"><span class="lineNum">      30</span>                 :             :     // detail::nifty_counter_memory_resource_registry) rather than a plain</span>
 <span id="L31"><span class="lineNum">      31</span>                 :             :     // function-local static (Meyer's singleton), to avoid the static destruction order fiasco: a</span>
 <span id="L32"><span class="lineNum">      32</span>                 :             :     // std::shared_ptr&lt;ISharedMemoryResource&gt; stored in some other static/long-lived</span>
 <span id="L33"><span class="lineNum">      33</span>                 :             :     // context could otherwise be destroyed after this registry, and ~SharedMemoryResource() accesses this registry.</span>
-<span id="L34"><span class="lineNum">      34</span>                 :<span class="tlaGNC">     1266438 :     return ::score::utils::StaticDestructionGuard&lt;MemoryResourceRegistry&gt;::GetStorage();</span></span>
+<span id="L34"><span class="lineNum">      34</span>                 :<span class="tlaGNC">     1266435 :     return ::score::utils::StaticDestructionGuard&lt;MemoryResourceRegistry&gt;::GetStorage();</span></span>
 <span id="L35"><span class="lineNum">      35</span>                 :             : }</span>
 <span id="L36"><span class="lineNum">      36</span>                 :             : </span>
 <span id="L37"><span class="lineNum">      37</span>                 :<span class="tlaGNC">       34194 : auto score::memory::shared::MemoryResourceRegistry::at(const MemoryResourceIdentifier identifier) const noexcept</span></span>
@@ -205,13 +205,13 @@
 <span id="L126"><span class="lineNum">     126</span>                 :             :     -&gt; std::optional&lt;MemoryRegionBounds&gt;</span>
 <span id="L127"><span class="lineNum">     127</span>                 :             : {</span>
 <span id="L128"><span class="lineNum">     128</span>                 :<span class="tlaGNC">      816044 :     const auto pointer_as_integer = CastPointerToInteger(pointer);</span></span>
-<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">      816045 :     return region_map_.GetBoundsFromAddress(pointer_as_integer);</span></span>
+<span id="L129"><span class="lineNum">     129</span>                 :<span class="tlaGNC">      816044 :     return region_map_.GetBoundsFromAddress(pointer_as_integer);</span></span>
 <span id="L130"><span class="lineNum">     130</span>                 :             : }</span>
 <span id="L131"><span class="lineNum">     131</span>                 :             : </span>
-<span id="L132"><span class="lineNum">     132</span>                 :<span class="tlaGNC">      382867 : auto score::memory::shared::MemoryResourceRegistry::GetBoundsFromAddressAsInteger(</span></span>
+<span id="L132"><span class="lineNum">     132</span>                 :<span class="tlaGNC">      382864 : auto score::memory::shared::MemoryResourceRegistry::GetBoundsFromAddressAsInteger(</span></span>
 <span id="L133"><span class="lineNum">     133</span>                 :             :     const std::uintptr_t pointer_as_integer) const noexcept -&gt; std::optional&lt;MemoryRegionBounds&gt;</span>
 <span id="L134"><span class="lineNum">     134</span>                 :             : {</span>
-<span id="L135"><span class="lineNum">     135</span>                 :<span class="tlaGNC">      382867 :     return region_map_.GetBoundsFromAddress(pointer_as_integer);</span></span>
+<span id="L135"><span class="lineNum">     135</span>                 :<span class="tlaGNC">      382864 :     return region_map_.GetBoundsFromAddress(pointer_as_integer);</span></span>
 <span id="L136"><span class="lineNum">     136</span>                 :             : }</span>
         </pre>
               </td>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -93,42 +93,32 @@
 <span id="L15"><span class="lineNum">      15</span>                 :             : </span>
 <span id="L16"><span class="lineNum">      16</span>                 :             : #include &quot;score/os/stdlib.h&quot;</span>
 <span id="L17"><span class="lineNum">      17</span>                 :             : </span>
-<span id="L18"><span class="lineNum">      18</span>                 :             : /* KW_SUPPRESS_START:AUTOSAR.BUILTIN_NUMERIC:Char is used in respect to the wrapped function's signature */</span>
-<span id="L19"><span class="lineNum">      19</span>                 :             : /* KW_SUPPRESS_START:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L20"><span class="lineNum">      20</span>                 :             : </span>
-<span id="L21"><span class="lineNum">      21</span>                 :             : namespace score</span>
-<span id="L22"><span class="lineNum">      22</span>                 :             : {</span>
-<span id="L23"><span class="lineNum">      23</span>                 :             : namespace os</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : namespace score</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : {</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : namespace os</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : {</span>
+<span id="L22"><span class="lineNum">      22</span>                 :             : </span>
+<span id="L23"><span class="lineNum">      23</span>                 :             : class StdlibImpl final : public Stdlib</span>
 <span id="L24"><span class="lineNum">      24</span>                 :             : {</span>
-<span id="L25"><span class="lineNum">      25</span>                 :             : </span>
-<span id="L26"><span class="lineNum">      26</span>                 :             : class StdlibImpl final : public Stdlib</span>
-<span id="L27"><span class="lineNum">      27</span>                 :             : {</span>
-<span id="L28"><span class="lineNum">      28</span>                 :             :   public:</span>
-<span id="L29"><span class="lineNum">      29</span>                 :<span class="tlaGNC tlaBgGNC">          23 :     constexpr StdlibImpl() = default;</span></span>
-<span id="L30"><span class="lineNum">      30</span>                 :             :     score::cpp::expected_blank&lt;Error&gt; system_call(const std::string&amp; cmd) const noexcept override;</span>
-<span id="L31"><span class="lineNum">      31</span>                 :             :     /* KW_SUPPRESS_START:MISRA.STDLIB.WRONGNAME: Function is wrapped */</span>
-<span id="L32"><span class="lineNum">      32</span>                 :             :     void exit(const int status) const noexcept override;</span>
-<span id="L33"><span class="lineNum">      33</span>                 :             :     /* KW_SUPPRESS_END:MISRA.STDLIB.WRONGNAME: Function is wrapped */</span>
-<span id="L34"><span class="lineNum">      34</span>                 :             :     void quick_exit(const int status) const noexcept override;</span>
-<span id="L35"><span class="lineNum">      35</span>                 :             :     /* KW_SUPPRESS_START:MISRA.STDLIB.WRONGNAME: Function is wrapped */</span>
-<span id="L36"><span class="lineNum">      36</span>                 :             :     char* getenv(const char* const name) const noexcept override;</span>
-<span id="L37"><span class="lineNum">      37</span>                 :             :     auto setenv(const char* name, const char* value, int overwrite) const noexcept -&gt; Result&lt;int&gt; override;</span>
-<span id="L38"><span class="lineNum">      38</span>                 :             :     auto unsetenv(const char* name) const noexcept -&gt; Result&lt;int&gt; override;</span>
-<span id="L39"><span class="lineNum">      39</span>                 :             :     Result&lt;void*&gt; calloc(size_t num_of_elements, size_t size) const noexcept override;</span>
-<span id="L40"><span class="lineNum">      40</span>                 :             :     void free(void* ptr) const noexcept override;</span>
-<span id="L41"><span class="lineNum">      41</span>                 :             :     /* KW_SUPPRESS_END:MISRA.STDLIB.WRONGNAME: Function is wrapped */</span>
-<span id="L42"><span class="lineNum">      42</span>                 :             :     Result&lt;char*&gt; realpath(const char* const path, char* const resolved_path) const noexcept override;</span>
-<span id="L43"><span class="lineNum">      43</span>                 :             :     Result&lt;int&gt; mkstemp(char* const path) const noexcept override;</span>
-<span id="L44"><span class="lineNum">      44</span>                 :             :     Result&lt;int&gt; mkstemps(char* const path, const int len) const noexcept override;</span>
-<span id="L45"><span class="lineNum">      45</span>                 :             : };</span>
-<span id="L46"><span class="lineNum">      46</span>                 :             : </span>
-<span id="L47"><span class="lineNum">      47</span>                 :             : }  // namespace os</span>
-<span id="L48"><span class="lineNum">      48</span>                 :             : }  // namespace score</span>
-<span id="L49"><span class="lineNum">      49</span>                 :             : </span>
-<span id="L50"><span class="lineNum">      50</span>                 :             : /* KW_SUPPRESS_END:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L51"><span class="lineNum">      51</span>                 :             : /* KW_SUPPRESS_END:AUTOSAR.BUILTIN_NUMERIC:Char is used in respect to the wrapped function's signature */</span>
-<span id="L52"><span class="lineNum">      52</span>                 :             : </span>
-<span id="L53"><span class="lineNum">      53</span>                 :             : #endif  // SCORE_LIB_OS_STDLIB_IMPL_H</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             :   public:</span>
+<span id="L26"><span class="lineNum">      26</span>                 :<span class="tlaGNC tlaBgGNC">          23 :     constexpr StdlibImpl() = default;</span></span>
+<span id="L27"><span class="lineNum">      27</span>                 :             :     score::cpp::expected_blank&lt;Error&gt; system_call(const std::string&amp; cmd) const noexcept override;</span>
+<span id="L28"><span class="lineNum">      28</span>                 :             :     void exit(const int status) const noexcept override;</span>
+<span id="L29"><span class="lineNum">      29</span>                 :             :     void quick_exit(const int status) const noexcept override;</span>
+<span id="L30"><span class="lineNum">      30</span>                 :             :     char* getenv(const char* const name) const noexcept override;</span>
+<span id="L31"><span class="lineNum">      31</span>                 :             :     auto setenv(const char* name, const char* value, int overwrite) const noexcept -&gt; Result&lt;int&gt; override;</span>
+<span id="L32"><span class="lineNum">      32</span>                 :             :     auto unsetenv(const char* name) const noexcept -&gt; Result&lt;int&gt; override;</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             :     Result&lt;void*&gt; calloc(size_t num_of_elements, size_t size) const noexcept override;</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             :     void free(void* ptr) const noexcept override;</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             :     Result&lt;char*&gt; realpath(const char* const path, char* const resolved_path) const noexcept override;</span>
+<span id="L36"><span class="lineNum">      36</span>                 :             :     Result&lt;int&gt; mkstemp(char* const path) const noexcept override;</span>
+<span id="L37"><span class="lineNum">      37</span>                 :             :     Result&lt;int&gt; mkstemps(char* const path, const int len) const noexcept override;</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             : };</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : </span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : }  // namespace os</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             : }  // namespace score</span>
+<span id="L42"><span class="lineNum">      42</span>                 :             : </span>
+<span id="L43"><span class="lineNum">      43</span>                 :             : #endif  // SCORE_LIB_OS_STDLIB_IMPL_H</span>
         </pre>
               </td>
             </tr>

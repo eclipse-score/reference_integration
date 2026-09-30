@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -135,7 +135,7 @@
 <span id="L57"><span class="lineNum">      57</span>                 :             :     // Non-explicit constructor is required so that FancyPointerAllocator can be constructed implicitly from a</span>
 <span id="L58"><span class="lineNum">      58</span>                 :             :     // memory resource reference, mirroring PolymorphicOffsetPtrAllocator's constructor from ManagedMemoryResource&amp;.</span>
 <span id="L59"><span class="lineNum">      59</span>                 :             :     // NOLINTNEXTLINE(google-explicit-constructor): intentional implicit conversion.</span>
-<span id="L60"><span class="lineNum">      60</span>                 :<span class="tlaGNC">          77 :     FancyPointerAllocator(score::cpp::pmr::memory_resource&amp; resource) noexcept : resource_{&amp;resource} {}</span></span>
+<span id="L60"><span class="lineNum">      60</span>                 :<span class="tlaGNC">         139 :     FancyPointerAllocator(score::cpp::pmr::memory_resource&amp; resource) noexcept : resource_{&amp;resource} {}</span></span>
 <span id="L61"><span class="lineNum">      61</span>                 :             : </span>
 <span id="L62"><span class="lineNum">      62</span>                 :             :     template &lt;typename U&gt;</span>
 <span id="L63"><span class="lineNum">      63</span>                 :             :     // Non-explicit constructor is required to support allocator rebind.</span>
@@ -150,27 +150,27 @@
 <span id="L72"><span class="lineNum">      72</span>                 :             :     FancyPointerAllocator&amp; operator=(FancyPointerAllocator&amp;&amp;) noexcept = default;</span>
 <span id="L73"><span class="lineNum">      73</span>                 :             :     ~FancyPointerAllocator() = default;</span>
 <span id="L74"><span class="lineNum">      74</span>                 :             : </span>
-<span id="L75"><span class="lineNum">      75</span>                 :<span class="tlaGNC">          91 :     pointer allocate(size_type n)</span></span>
+<span id="L75"><span class="lineNum">      75</span>                 :<span class="tlaGNC">         153 :     pointer allocate(size_type n)</span></span>
 <span id="L76"><span class="lineNum">      76</span>                 :             :     {</span>
-<span id="L77"><span class="lineNum">      77</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 91 times"> + </span>]:<span class="tlaGNC">          91 :         SCORE_LANGUAGE_FUTURECPP_ASSERT_PRD(n &lt;= (std::numeric_limits&lt;size_type&gt;::max() / sizeof(T)));</span></span>
+<span id="L77"><span class="lineNum">      77</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 153 times"> + </span>]:<span class="tlaGNC">         153 :         SCORE_LANGUAGE_FUTURECPP_ASSERT_PRD(n &lt;= (std::numeric_limits&lt;size_type&gt;::max() / sizeof(T)));</span></span>
 <span id="L78"><span class="lineNum">      78</span>                 :             :         // Falls back to malloc when unconnected to a memory resource (default-constructed), mirroring</span>
 <span id="L79"><span class="lineNum">      79</span>                 :             :         // PolymorphicOffsetPtrAllocator::allocate()'s behavior for a null proxy_.</span>
-<span id="L80"><span class="lineNum">      80</span>         [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 81 times"> + </span>]:<span class="tlaGNC">          91 :         if (resource_ == nullptr)</span></span>
+<span id="L80"><span class="lineNum">      80</span>         [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 143 times"> + </span>]:<span class="tlaGNC">         153 :         if (resource_ == nullptr)</span></span>
 <span id="L81"><span class="lineNum">      81</span>                 :             :         {</span>
 <span id="L82"><span class="lineNum">      82</span>                 :<span class="tlaGNC">          10 :             return pointer{static_cast&lt;T*&gt;(std::malloc(n * sizeof(T)))};</span></span>
 <span id="L83"><span class="lineNum">      83</span>                 :             :         }</span>
-<span id="L84"><span class="lineNum">      84</span>         [<span class="tlaGBC" title="Branch 0 was taken 81 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          81 :         return pointer{static_cast&lt;T*&gt;(resource_-&gt;allocate(n * sizeof(T), alignof(T)))};</span></span>
+<span id="L84"><span class="lineNum">      84</span>         [<span class="tlaGBC" title="Branch 0 was taken 143 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         143 :         return pointer{static_cast&lt;T*&gt;(resource_-&gt;allocate(n * sizeof(T), alignof(T)))};</span></span>
 <span id="L85"><span class="lineNum">      85</span>                 :             :     }</span>
 <span id="L86"><span class="lineNum">      86</span>                 :             : </span>
-<span id="L87"><span class="lineNum">      87</span>                 :<span class="tlaGNC">          91 :     void deallocate(pointer p, size_type n)</span></span>
+<span id="L87"><span class="lineNum">      87</span>                 :<span class="tlaGNC">         153 :     void deallocate(pointer p, size_type n)</span></span>
 <span id="L88"><span class="lineNum">      88</span>                 :             :     {</span>
-<span id="L89"><span class="lineNum">      89</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 91 times"> + </span>]:<span class="tlaGNC">          91 :         SCORE_LANGUAGE_FUTURECPP_ASSERT_PRD(n &lt;= (std::numeric_limits&lt;size_type&gt;::max() / sizeof(T)));</span></span>
-<span id="L90"><span class="lineNum">      90</span>         [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 81 times"> + </span>]:<span class="tlaGNC">          91 :         if (resource_ == nullptr)</span></span>
+<span id="L89"><span class="lineNum">      89</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 153 times"> + </span>]:<span class="tlaGNC">         153 :         SCORE_LANGUAGE_FUTURECPP_ASSERT_PRD(n &lt;= (std::numeric_limits&lt;size_type&gt;::max() / sizeof(T)));</span></span>
+<span id="L90"><span class="lineNum">      90</span>         [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 143 times"> + </span>]:<span class="tlaGNC">         153 :         if (resource_ == nullptr)</span></span>
 <span id="L91"><span class="lineNum">      91</span>                 :             :         {</span>
 <span id="L92"><span class="lineNum">      92</span>                 :<span class="tlaGNC">          10 :             std::free(static_cast&lt;void*&gt;(p.get()));</span></span>
 <span id="L93"><span class="lineNum">      93</span>                 :<span class="tlaGNC">          10 :             return;</span></span>
 <span id="L94"><span class="lineNum">      94</span>                 :             :         }</span>
-<span id="L95"><span class="lineNum">      95</span>                 :<span class="tlaGNC">          81 :         resource_-&gt;deallocate(static_cast&lt;void*&gt;(p.get()), n * sizeof(T), alignof(T));</span></span>
+<span id="L95"><span class="lineNum">      95</span>                 :<span class="tlaGNC">         143 :         resource_-&gt;deallocate(static_cast&lt;void*&gt;(p.get()), n * sizeof(T), alignof(T));</span></span>
 <span id="L96"><span class="lineNum">      96</span>                 :             :     }</span>
 <span id="L97"><span class="lineNum">      97</span>                 :             : </span>
 <span id="L98"><span class="lineNum">      98</span>                 :<span class="tlaGNC">          18 :     score::cpp::pmr::memory_resource* GetMemoryResource() const noexcept</span></span>

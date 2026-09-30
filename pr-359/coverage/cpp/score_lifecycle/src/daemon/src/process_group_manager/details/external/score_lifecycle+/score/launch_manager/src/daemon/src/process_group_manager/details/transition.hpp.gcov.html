@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:11:54</td>
+            <td class="headerValue">2026-09-30 04:20:58</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -196,13 +196,13 @@
 <span id="L118"><span class="lineNum">     118</span>                 :             :     /// is gone from the frontier the moment it's returned. Safe to interleave</span>
 <span id="L119"><span class="lineNum">     119</span>                 :             :     /// with onNodeFinished() — nodes onNodeFinished() appends are queued behind</span>
 <span id="L120"><span class="lineNum">     120</span>                 :             :     /// whatever's already pending, never lost, regardless of consumption order.</span>
-<span id="L121"><span class="lineNum">     121</span>                 :<span class="tlaGNC">         156 :     std::optional&lt;ReadyNode&lt;Key&gt;&gt; nextReady()</span></span>
+<span id="L121"><span class="lineNum">     121</span>                 :<span class="tlaGNC">         158 :     std::optional&lt;ReadyNode&lt;Key&gt;&gt; nextReady()</span></span>
 <span id="L122"><span class="lineNum">     122</span>                 :             :     {</span>
-<span id="L123"><span class="lineNum">     123</span>         [<span class="tlaGBC" title="Branch 0 was taken 76 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 80 times"> + </span>]:<span class="tlaGNC">         156 :         if (state_.next_nodes.empty())</span></span>
+<span id="L123"><span class="lineNum">     123</span>         [<span class="tlaGBC" title="Branch 0 was taken 77 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 81 times"> + </span>]:<span class="tlaGNC">         158 :         if (state_.next_nodes.empty())</span></span>
 <span id="L124"><span class="lineNum">     124</span>                 :             :         {</span>
-<span id="L125"><span class="lineNum">     125</span>                 :<span class="tlaGNC">          76 :             return std::nullopt;</span></span>
+<span id="L125"><span class="lineNum">     125</span>                 :<span class="tlaGNC">          77 :             return std::nullopt;</span></span>
 <span id="L126"><span class="lineNum">     126</span>                 :             :         }</span>
-<span id="L127"><span class="lineNum">     127</span>         [<span class="tlaGBC" title="Branch 0 was taken 80 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          80 :         return ReadyNode&lt;Key&gt;{state_.next_nodes.tryPop().value(), currentAction()};</span></span>
+<span id="L127"><span class="lineNum">     127</span>         [<span class="tlaGBC" title="Branch 0 was taken 81 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          81 :         return ReadyNode&lt;Key&gt;{state_.next_nodes.tryPop().value(), currentAction()};</span></span>
 <span id="L128"><span class="lineNum">     128</span>                 :             :     }</span>
 <span id="L129"><span class="lineNum">     129</span>                 :             : </span>
 <span id="L130"><span class="lineNum">     130</span>                 :             :     /// @brief Input iterator that drains the transition via nextReady().</span>
@@ -219,47 +219,47 @@
 <span id="L141"><span class="lineNum">     141</span>                 :             :         using iterator_category = std::input_iterator_tag;</span>
 <span id="L142"><span class="lineNum">     142</span>                 :             :         using pointer = void;</span>
 <span id="L143"><span class="lineNum">     143</span>                 :             : </span>
-<span id="L144"><span class="lineNum">     144</span>                 :<span class="tlaGNC">          74 :         Iterator() = default;  // end sentinel: owner_ == nullptr</span></span>
-<span id="L145"><span class="lineNum">     145</span>                 :<span class="tlaGNC">          74 :         explicit Iterator(Transition* owner) : owner_(owner)</span></span>
+<span id="L144"><span class="lineNum">     144</span>                 :<span class="tlaGNC">          75 :         Iterator() = default;  // end sentinel: owner_ == nullptr</span></span>
+<span id="L145"><span class="lineNum">     145</span>                 :<span class="tlaGNC">          75 :         explicit Iterator(Transition* owner) : owner_(owner)</span></span>
 <span id="L146"><span class="lineNum">     146</span>                 :             :         {</span>
-<span id="L147"><span class="lineNum">     147</span>                 :<span class="tlaGNC">          74 :             advance();</span></span>
-<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">          74 :         }</span></span>
+<span id="L147"><span class="lineNum">     147</span>                 :<span class="tlaGNC">          75 :             advance();</span></span>
+<span id="L148"><span class="lineNum">     148</span>                 :<span class="tlaGNC">          75 :         }</span></span>
 <span id="L149"><span class="lineNum">     149</span>                 :             : </span>
-<span id="L150"><span class="lineNum">     150</span>                 :<span class="tlaGNC">          77 :         ReadyNode&lt;Key&gt; operator*() const</span></span>
+<span id="L150"><span class="lineNum">     150</span>                 :<span class="tlaGNC">          78 :         ReadyNode&lt;Key&gt; operator*() const</span></span>
 <span id="L151"><span class="lineNum">     151</span>                 :             :         {</span>
-<span id="L152"><span class="lineNum">     152</span>                 :<span class="tlaGNC">          77 :             return *current_;</span></span>
+<span id="L152"><span class="lineNum">     152</span>                 :<span class="tlaGNC">          78 :             return *current_;</span></span>
 <span id="L153"><span class="lineNum">     153</span>                 :             :         }</span>
-<span id="L154"><span class="lineNum">     154</span>                 :<span class="tlaGNC">          77 :         Iterator&amp; operator++()</span></span>
+<span id="L154"><span class="lineNum">     154</span>                 :<span class="tlaGNC">          78 :         Iterator&amp; operator++()</span></span>
 <span id="L155"><span class="lineNum">     155</span>                 :             :         {</span>
-<span id="L156"><span class="lineNum">     156</span>                 :<span class="tlaGNC">          77 :             advance();</span></span>
-<span id="L157"><span class="lineNum">     157</span>                 :<span class="tlaGNC">          77 :             return *this;</span></span>
+<span id="L156"><span class="lineNum">     156</span>                 :<span class="tlaGNC">          78 :             advance();</span></span>
+<span id="L157"><span class="lineNum">     157</span>                 :<span class="tlaGNC">          78 :             return *this;</span></span>
 <span id="L158"><span class="lineNum">     158</span>                 :             :         }</span>
-<span id="L159"><span class="lineNum">     159</span>                 :<span class="tlaGNC">         151 :         bool operator==(const Iterator&amp; other) const</span></span>
+<span id="L159"><span class="lineNum">     159</span>                 :<span class="tlaGNC">         153 :         bool operator==(const Iterator&amp; other) const</span></span>
 <span id="L160"><span class="lineNum">     160</span>                 :             :         {</span>
-<span id="L161"><span class="lineNum">     161</span>                 :<span class="tlaGNC">         151 :             return current_.has_value() == other.current_.has_value();</span></span>
+<span id="L161"><span class="lineNum">     161</span>                 :<span class="tlaGNC">         153 :             return current_.has_value() == other.current_.has_value();</span></span>
 <span id="L162"><span class="lineNum">     162</span>                 :             :         }</span>
-<span id="L163"><span class="lineNum">     163</span>                 :<span class="tlaGNC">         151 :         bool operator!=(const Iterator&amp; other) const</span></span>
+<span id="L163"><span class="lineNum">     163</span>                 :<span class="tlaGNC">         153 :         bool operator!=(const Iterator&amp; other) const</span></span>
 <span id="L164"><span class="lineNum">     164</span>                 :             :         {</span>
-<span id="L165"><span class="lineNum">     165</span>                 :<span class="tlaGNC">         151 :             return !(*this == other);</span></span>
+<span id="L165"><span class="lineNum">     165</span>                 :<span class="tlaGNC">         153 :             return !(*this == other);</span></span>
 <span id="L166"><span class="lineNum">     166</span>                 :             :         }</span>
 <span id="L167"><span class="lineNum">     167</span>                 :             : </span>
 <span id="L168"><span class="lineNum">     168</span>                 :             :       private:</span>
-<span id="L169"><span class="lineNum">     169</span>                 :<span class="tlaGNC">         151 :         void advance()</span></span>
+<span id="L169"><span class="lineNum">     169</span>                 :<span class="tlaGNC">         153 :         void advance()</span></span>
 <span id="L170"><span class="lineNum">     170</span>                 :             :         {</span>
-<span id="L171"><span class="lineNum">     171</span>   [<span class="tlaGBC" title="Branch 0 was taken 151 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 151 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">         151 :             current_ = owner_ ? owner_-&gt;nextReady() : std::nullopt;</span></span>
-<span id="L172"><span class="lineNum">     172</span>                 :<span class="tlaGNC">         151 :         }</span></span>
+<span id="L171"><span class="lineNum">     171</span>   [<span class="tlaGBC" title="Branch 0 was taken 153 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 153 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span>]:<span class="tlaGNC">         153 :             current_ = owner_ ? owner_-&gt;nextReady() : std::nullopt;</span></span>
+<span id="L172"><span class="lineNum">     172</span>                 :<span class="tlaGNC">         153 :         }</span></span>
 <span id="L173"><span class="lineNum">     173</span>                 :             : </span>
 <span id="L174"><span class="lineNum">     174</span>                 :             :         Transition* owner_ = nullptr;</span>
 <span id="L175"><span class="lineNum">     175</span>                 :             :         std::optional&lt;ReadyNode&lt;Key&gt;&gt; current_;</span>
 <span id="L176"><span class="lineNum">     176</span>                 :             :     };</span>
 <span id="L177"><span class="lineNum">     177</span>                 :             : </span>
-<span id="L178"><span class="lineNum">     178</span>                 :<span class="tlaGNC">          74 :     Iterator begin()</span></span>
+<span id="L178"><span class="lineNum">     178</span>                 :<span class="tlaGNC">          75 :     Iterator begin()</span></span>
 <span id="L179"><span class="lineNum">     179</span>                 :             :     {</span>
-<span id="L180"><span class="lineNum">     180</span>                 :<span class="tlaGNC">          74 :         return Iterator{this};</span></span>
+<span id="L180"><span class="lineNum">     180</span>                 :<span class="tlaGNC">          75 :         return Iterator{this};</span></span>
 <span id="L181"><span class="lineNum">     181</span>                 :             :     }</span>
-<span id="L182"><span class="lineNum">     182</span>                 :<span class="tlaGNC">          74 :     Iterator end()</span></span>
+<span id="L182"><span class="lineNum">     182</span>                 :<span class="tlaGNC">          75 :     Iterator end()</span></span>
 <span id="L183"><span class="lineNum">     183</span>                 :             :     {</span>
-<span id="L184"><span class="lineNum">     184</span>                 :<span class="tlaGNC">          74 :         return Iterator{};</span></span>
+<span id="L184"><span class="lineNum">     184</span>                 :<span class="tlaGNC">          75 :         return Iterator{};</span></span>
 <span id="L185"><span class="lineNum">     185</span>                 :             :     }</span>
 <span id="L186"><span class="lineNum">     186</span>                 :             : </span>
 <span id="L187"><span class="lineNum">     187</span>                 :             :     /// @brief Mark @p node finished and refresh the list of ready nodes</span>
@@ -267,23 +267,23 @@
 <span id="L189"><span class="lineNum">     189</span>                 :             :     ///   activation:   it is part of the target subgraph, and every dependency it</span>
 <span id="L190"><span class="lineNum">     190</span>                 :             :     ///                 has is active()</span>
 <span id="L191"><span class="lineNum">     191</span>                 :             :     ///   deactivation: every dependent it has is stopped()</span>
-<span id="L192"><span class="lineNum">     192</span>                 :<span class="tlaGNC">          66 :     void onNodeFinished(Key node)</span></span>
+<span id="L192"><span class="lineNum">     192</span>                 :<span class="tlaGNC">          67 :     void onNodeFinished(Key node)</span></span>
 <span id="L193"><span class="lineNum">     193</span>                 :             :     {</span>
-<span id="L194"><span class="lineNum">     194</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 66 times"> + </span>]:<span class="tlaGNC">          66 :         SCORE_LANGUAGE_FUTURECPP_ASSERT(isValidNode(node));</span></span>
+<span id="L194"><span class="lineNum">     194</span>         [<span class="tlaUNC" title="Branch 0 was not taken"> - </span><span class="tlaGBC" title="Branch 1 was taken 67 times"> + </span>]:<span class="tlaGNC">          67 :         SCORE_LANGUAGE_FUTURECPP_ASSERT(isValidNode(node));</span></span>
 <span id="L195"><span class="lineNum">     195</span>                 :             : </span>
-<span id="L196"><span class="lineNum">     196</span>                 :<span class="tlaGNC">          66 :         --state_.pending;  // completion counter; only detects done-ness, never gates order</span></span>
+<span id="L196"><span class="lineNum">     196</span>                 :<span class="tlaGNC">          67 :         --state_.pending;  // completion counter; only detects done-ness, never gates order</span></span>
 <span id="L197"><span class="lineNum">     197</span>                 :             : </span>
-<span id="L198"><span class="lineNum">     198</span>         [<span class="tlaGBC" title="Branch 0 was taken 33 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 33 times"> + </span>]:<span class="tlaGNC">          66 :         if (state_.pending == 0)  // active phase drained</span></span>
+<span id="L198"><span class="lineNum">     198</span>         [<span class="tlaGBC" title="Branch 0 was taken 34 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 33 times"> + </span>]:<span class="tlaGNC">          67 :         if (state_.pending == 0)  // active phase drained</span></span>
 <span id="L199"><span class="lineNum">     199</span>                 :             :         {</span>
-<span id="L200"><span class="lineNum">     200</span>         [<span class="tlaGBC" title="Branch 0 was taken 10 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 23 times"> + </span>]:<span class="tlaGNC">          33 :             if (state_.phase == Phase::Stopping)</span></span>
+<span id="L200"><span class="lineNum">     200</span>         [<span class="tlaGBC" title="Branch 0 was taken 11 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 23 times"> + </span>]:<span class="tlaGNC">          34 :             if (state_.phase == Phase::Stopping)</span></span>
 <span id="L201"><span class="lineNum">     201</span>                 :             :             {</span>
-<span id="L202"><span class="lineNum">     202</span>                 :<span class="tlaGNC">          10 :                 advanceToStarting();  // sets up the starting-phase heads</span></span>
+<span id="L202"><span class="lineNum">     202</span>                 :<span class="tlaGNC">          11 :                 advanceToStarting();  // sets up the starting-phase heads</span></span>
 <span id="L203"><span class="lineNum">     203</span>                 :             :             }</span>
 <span id="L204"><span class="lineNum">     204</span>                 :             :             else</span>
 <span id="L205"><span class="lineNum">     205</span>                 :             :             {</span>
 <span id="L206"><span class="lineNum">     206</span>                 :<span class="tlaGNC">          23 :                 state_.phase = Phase::Done;</span></span>
 <span id="L207"><span class="lineNum">     207</span>                 :             :             }</span>
-<span id="L208"><span class="lineNum">     208</span>                 :<span class="tlaGNC">          33 :             return;</span></span>
+<span id="L208"><span class="lineNum">     208</span>                 :<span class="tlaGNC">          34 :             return;</span></span>
 <span id="L209"><span class="lineNum">     209</span>                 :             :         }</span>
 <span id="L210"><span class="lineNum">     210</span>                 :             : </span>
 <span id="L211"><span class="lineNum">     211</span>                 :             :         // Still within the phase: append the finished node's neighbours in the</span>
@@ -305,16 +305,16 @@
 <span id="L225"><span class="lineNum">     225</span>                 :             : </span>
 <span id="L226"><span class="lineNum">     226</span>                 :             :     /// @return True once every node participating in this transition has reached</span>
 <span id="L227"><span class="lineNum">     227</span>                 :             :     /// its terminal state.</span>
-<span id="L228"><span class="lineNum">     228</span>                 :<span class="tlaGNC">          52 :     bool isFinished() const</span></span>
+<span id="L228"><span class="lineNum">     228</span>                 :<span class="tlaGNC">          53 :     bool isFinished() const</span></span>
 <span id="L229"><span class="lineNum">     229</span>                 :             :     {</span>
-<span id="L230"><span class="lineNum">     230</span>                 :<span class="tlaGNC">          52 :         return state_.phase == Phase::Done;</span></span>
+<span id="L230"><span class="lineNum">     230</span>                 :<span class="tlaGNC">          53 :         return state_.phase == Phase::Done;</span></span>
 <span id="L231"><span class="lineNum">     231</span>                 :             :     }</span>
 <span id="L232"><span class="lineNum">     232</span>                 :             : </span>
 <span id="L233"><span class="lineNum">     233</span>                 :             :   private:</span>
 <span id="L234"><span class="lineNum">     234</span>                 :             :     /// @brief True iff @p node is a valid index into the underlying graph, i.e. in [0, size()).</span>
-<span id="L235"><span class="lineNum">     235</span>                 :<span class="tlaGNC">         103 :     bool isValidNode(Key node) const</span></span>
+<span id="L235"><span class="lineNum">     235</span>                 :<span class="tlaGNC">         104 :     bool isValidNode(Key node) const</span></span>
 <span id="L236"><span class="lineNum">     236</span>                 :             :     {</span>
-<span id="L237"><span class="lineNum">     237</span>         [<span class="tlaGBC" title="Branch 0 was taken 103 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         103 :         return graph_.find(node) != graph_.end();</span></span>
+<span id="L237"><span class="lineNum">     237</span>         [<span class="tlaGBC" title="Branch 0 was taken 104 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">         104 :         return graph_.find(node) != graph_.end();</span></span>
 <span id="L238"><span class="lineNum">     238</span>                 :             :     }</span>
 <span id="L239"><span class="lineNum">     239</span>                 :             : </span>
 <span id="L240"><span class="lineNum">     240</span>                 :             :     /// @brief Construct a reusable Transition for the given graph.</span>
@@ -345,9 +345,9 @@
 <span id="L265"><span class="lineNum">     265</span>                 :<span class="tlaGNC">          37 :         state_.pending = 0;</span></span>
 <span id="L266"><span class="lineNum">     266</span>                 :<span class="tlaGNC">          37 :         state_.phase = Phase::Stopping;</span></span>
 <span id="L267"><span class="lineNum">     267</span>                 :<span class="tlaGNC">          37 :         setupDeactivation(target);</span></span>
-<span id="L268"><span class="lineNum">     268</span>         [<span class="tlaGBC" title="Branch 0 was taken 26 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 11 times"> + </span>]:<span class="tlaGNC">          37 :         if (state_.pending == 0)</span></span>
+<span id="L268"><span class="lineNum">     268</span>         [<span class="tlaGBC" title="Branch 0 was taken 25 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 12 times"> + </span>]:<span class="tlaGNC">          37 :         if (state_.pending == 0)</span></span>
 <span id="L269"><span class="lineNum">     269</span>                 :             :         {</span>
-<span id="L270"><span class="lineNum">     270</span>                 :<span class="tlaGNC">          26 :             advanceToStarting();</span></span>
+<span id="L270"><span class="lineNum">     270</span>                 :<span class="tlaGNC">          25 :             advanceToStarting();</span></span>
 <span id="L271"><span class="lineNum">     271</span>                 :             :         }</span>
 <span id="L272"><span class="lineNum">     272</span>                 :<span class="tlaGNC">          37 :     }</span></span>
 <span id="L273"><span class="lineNum">     273</span>                 :             : </span>
@@ -403,9 +403,9 @@
 <span id="L323"><span class="lineNum">     323</span>                 :             :     }</span>
 <span id="L324"><span class="lineNum">     324</span>                 :             : </span>
 <span id="L325"><span class="lineNum">     325</span>                 :             :     /// @brief Check if the node is stopped</span>
-<span id="L326"><span class="lineNum">     326</span>                 :<span class="tlaGNC">         153 :     bool stopped(Key i)</span></span>
+<span id="L326"><span class="lineNum">     326</span>                 :<span class="tlaGNC">         154 :     bool stopped(Key i)</span></span>
 <span id="L327"><span class="lineNum">     327</span>                 :             :     {</span>
-<span id="L328"><span class="lineNum">     328</span>                 :<span class="tlaGNC">         153 :         return !componentOf(graph_[i]).active();</span></span>
+<span id="L328"><span class="lineNum">     328</span>                 :<span class="tlaGNC">         154 :         return !componentOf(graph_[i]).active();</span></span>
 <span id="L329"><span class="lineNum">     329</span>                 :             :     }</span>
 <span id="L330"><span class="lineNum">     330</span>                 :             : </span>
 <span id="L331"><span class="lineNum">     331</span>                 :             :     /// @brief Check if all dependencies of the given node are active</span>
@@ -418,21 +418,21 @@
 <span id="L338"><span class="lineNum">     338</span>                 :             :     }</span>
 <span id="L339"><span class="lineNum">     339</span>                 :             : </span>
 <span id="L340"><span class="lineNum">     340</span>                 :             :     /// @brief Check if all dependents of the given node are stopped</span>
-<span id="L341"><span class="lineNum">     341</span>                 :<span class="tlaGNC">          38 :     bool allDependentsStopped(Key i)</span></span>
+<span id="L341"><span class="lineNum">     341</span>                 :<span class="tlaGNC">          39 :     bool allDependentsStopped(Key i)</span></span>
 <span id="L342"><span class="lineNum">     342</span>                 :             :     {</span>
-<span id="L343"><span class="lineNum">     343</span>                 :<span class="tlaGNC">          38 :         const auto&amp; d = graph_.dependents(i);</span></span>
-<span id="L344"><span class="lineNum">     344</span>                 :<span class="tlaGNC">          38 :         return std::all_of(d.begin(), d.end(), [this](Key dep) {</span></span>
-<span id="L345"><span class="lineNum">     345</span>                 :<span class="tlaGNC">          28 :             return stopped(dep);</span></span>
-<span id="L346"><span class="lineNum">     346</span>                 :<span class="tlaGNC">          38 :         });</span></span>
+<span id="L343"><span class="lineNum">     343</span>                 :<span class="tlaGNC">          39 :         const auto&amp; d = graph_.dependents(i);</span></span>
+<span id="L344"><span class="lineNum">     344</span>                 :<span class="tlaGNC">          39 :         return std::all_of(d.begin(), d.end(), [this](Key dep) {</span></span>
+<span id="L345"><span class="lineNum">     345</span>                 :<span class="tlaGNC">          29 :             return stopped(dep);</span></span>
+<span id="L346"><span class="lineNum">     346</span>                 :<span class="tlaGNC">          39 :         });</span></span>
 <span id="L347"><span class="lineNum">     347</span>                 :             :     }</span>
 <span id="L348"><span class="lineNum">     348</span>                 :             : </span>
 <span id="L349"><span class="lineNum">     349</span>                 :             :     State state_;</span>
 <span id="L350"><span class="lineNum">     350</span>                 :             :     DependencyGraph&lt;Key, T&gt;&amp; graph_;</span>
 <span id="L351"><span class="lineNum">     351</span>                 :             : </span>
 <span id="L352"><span class="lineNum">     352</span>                 :             :     /// @brief The action based on whether the transition is in the Stopping or Starting phase</span>
-<span id="L353"><span class="lineNum">     353</span>                 :<span class="tlaGNC">          80 :     Action currentAction() const</span></span>
+<span id="L353"><span class="lineNum">     353</span>                 :<span class="tlaGNC">          81 :     Action currentAction() const</span></span>
 <span id="L354"><span class="lineNum">     354</span>                 :             :     {</span>
-<span id="L355"><span class="lineNum">     355</span>         [<span class="tlaGBC" title="Branch 0 was taken 55 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 25 times"> + </span>]:<span class="tlaGNC">          80 :         return state_.phase == Phase::Starting ? Action::Start : Action::Stop;</span></span>
+<span id="L355"><span class="lineNum">     355</span>         [<span class="tlaGBC" title="Branch 0 was taken 55 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 26 times"> + </span>]:<span class="tlaGNC">          81 :         return state_.phase == Phase::Starting ? Action::Start : Action::Stop;</span></span>
 <span id="L356"><span class="lineNum">     356</span>                 :             :     }</span>
 <span id="L357"><span class="lineNum">     357</span>                 :             : </span>
 <span id="L358"><span class="lineNum">     358</span>                 :             :     /// @brief Check if the node is ready to be activated/deactivated in the current phase.</span>
@@ -514,12 +514,12 @@
 <span id="L432"><span class="lineNum">     432</span>         [<span class="tlaGBC" title="Branch 0 was taken 186 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 37 times"> + </span>]:<span class="tlaGNC">         223 :         for (const auto&amp; [key, value] : state_.node_information)</span></span>
 <span id="L433"><span class="lineNum">     433</span>                 :             :         {</span>
 <span id="L434"><span class="lineNum">     434</span>   [<span class="tlaGBC" title="Branch 0 was taken 112 times"> + </span><span class="tlaGBC" title="Branch 1 was taken 74 times"> + </span><span class="tlaGBC" title="Branch 2 was taken 112 times"> + </span><span class="tlaUNC" title="Branch 3 was not taken"> - </span> :<span class="tlaGNC">         186 :             if (!value.in_target_subgraph_ &amp;&amp; !stopped(key))</span></span>
-<span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 25 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 87 times"> + </span><span class="tlaGBC" title="Branch 6 was taken 25 times"> + </span><span class="tlaGBC" title="Branch 7 was taken 161 times"> + </span>]
+<span class="lineNum">        </span>    <span class="tlaGBC" title="Branch 4 was taken 26 times"> + </span><span class="tlaGBC" title="Branch 5 was taken 86 times"> + </span><span class="tlaGBC" title="Branch 6 was taken 26 times"> + </span><span class="tlaGBC" title="Branch 7 was taken 160 times"> + </span>]
 <span id="L435"><span class="lineNum">     435</span>                 :             :             {</span>
-<span id="L436"><span class="lineNum">     436</span>                 :<span class="tlaGNC">          25 :                 ++state_.pending;</span></span>
-<span id="L437"><span class="lineNum">     437</span>   [<span class="tlaGBC" title="Branch 0 was taken 25 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 12 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 13 times"> + </span>]:<span class="tlaGNC">          25 :                 if (allDependentsStopped(key))</span></span>
+<span id="L436"><span class="lineNum">     436</span>                 :<span class="tlaGNC">          26 :                 ++state_.pending;</span></span>
+<span id="L437"><span class="lineNum">     437</span>   [<span class="tlaGBC" title="Branch 0 was taken 26 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span><span class="tlaGBC" title="Branch 2 was taken 13 times"> + </span><span class="tlaGBC" title="Branch 3 was taken 13 times"> + </span>]:<span class="tlaGNC">          26 :                 if (allDependentsStopped(key))</span></span>
 <span id="L438"><span class="lineNum">     438</span>                 :             :                 {</span>
-<span id="L439"><span class="lineNum">     439</span>         [<span class="tlaGBC" title="Branch 0 was taken 12 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          12 :                     state_.next_nodes.push(key);</span></span>
+<span id="L439"><span class="lineNum">     439</span>         [<span class="tlaGBC" title="Branch 0 was taken 13 times"> + </span><span class="tlaUNC" title="Branch 1 was not taken"> - </span>]:<span class="tlaGNC">          13 :                     state_.next_nodes.push(key);</span></span>
 <span id="L440"><span class="lineNum">     440</span>                 :             :                 }</span>
 <span id="L441"><span class="lineNum">     441</span>                 :             :             }</span>
 <span id="L442"><span class="lineNum">     442</span>                 :             :         }</span>

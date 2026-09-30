@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-25 06:07:00</td>
+            <td class="headerValue">2026-09-30 04:16:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -92,37 +92,31 @@
 <span id="L14"><span class="lineNum">      14</span>                 :             : </span>
 <span id="L15"><span class="lineNum">      15</span>                 :             : #include &lt;ftw.h&gt;</span>
 <span id="L16"><span class="lineNum">      16</span>                 :             : </span>
-<span id="L17"><span class="lineNum">      17</span>                 :             : /* KW_SUPPRESS_START:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L18"><span class="lineNum">      18</span>                 :             : /* KW_SUPPRESS_START:AUTOSAR.BUILTIN_NUMERIC:Char is used in respect to the wrapped function's signature */</span>
-<span id="L19"><span class="lineNum">      19</span>                 :             : </span>
-<span id="L20"><span class="lineNum">      20</span>                 :             : namespace score</span>
-<span id="L21"><span class="lineNum">      21</span>                 :             : {</span>
-<span id="L22"><span class="lineNum">      22</span>                 :             : namespace os</span>
-<span id="L23"><span class="lineNum">      23</span>                 :             : {</span>
-<span id="L24"><span class="lineNum">      24</span>                 :             : </span>
-<span id="L25"><span class="lineNum">      25</span>                 :<span class="tlaGNC tlaBgGNC">           2 : score::cpp::expected&lt;std::int32_t, score::os::Error&gt; FtwPosix::ftw(const char* const path,</span></span>
-<span id="L26"><span class="lineNum">      26</span>                 :             :                                                                    std::int32_t (*const fn)(const char* fname,</span>
-<span id="L27"><span class="lineNum">      27</span>                 :             :                                                                                             const struct stat* sbuf,</span>
-<span id="L28"><span class="lineNum">      28</span>                 :             :                                                                                             std::int32_t flag),</span>
-<span id="L29"><span class="lineNum">      29</span>                 :             :                                                                    const std::int32_t ndirs) const noexcept</span>
-<span id="L30"><span class="lineNum">      30</span>                 :             : {</span>
-<span id="L31"><span class="lineNum">      31</span>                 :<span class="tlaGNC">           2 :     const std::int32_t res = ::ftw(path, fn, ndirs);</span></span>
-<span id="L32"><span class="lineNum">      32</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           2 :     if (res == -1)</span></span>
-<span id="L33"><span class="lineNum">      33</span>                 :             :     {</span>
-<span id="L34"><span class="lineNum">      34</span>                 :<span class="tlaGNC">           1 :         return score::cpp::make_unexpected(score::os::Error::createFromErrno());</span></span>
-<span id="L35"><span class="lineNum">      35</span>                 :             :     }</span>
-<span id="L36"><span class="lineNum">      36</span>                 :             :     else</span>
-<span id="L37"><span class="lineNum">      37</span>                 :             :     {</span>
-<span id="L38"><span class="lineNum">      38</span>                 :             :         // return whatever value was returned by fn()</span>
-<span id="L39"><span class="lineNum">      39</span>                 :<span class="tlaGNC">           1 :         return res;</span></span>
-<span id="L40"><span class="lineNum">      40</span>                 :             :     }</span>
-<span id="L41"><span class="lineNum">      41</span>                 :             : }</span>
-<span id="L42"><span class="lineNum">      42</span>                 :             : </span>
-<span id="L43"><span class="lineNum">      43</span>                 :             : }  // namespace os</span>
-<span id="L44"><span class="lineNum">      44</span>                 :             : }  // namespace score</span>
-<span id="L45"><span class="lineNum">      45</span>                 :             : </span>
-<span id="L46"><span class="lineNum">      46</span>                 :             : /* KW_SUPPRESS_END:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */</span>
-<span id="L47"><span class="lineNum">      47</span>                 :             : /* KW_SUPPRESS_END:AUTOSAR.BUILTIN_NUMERIC:Char is used in respect to the wrapped function's signature */</span>
+<span id="L17"><span class="lineNum">      17</span>                 :             : namespace score</span>
+<span id="L18"><span class="lineNum">      18</span>                 :             : {</span>
+<span id="L19"><span class="lineNum">      19</span>                 :             : namespace os</span>
+<span id="L20"><span class="lineNum">      20</span>                 :             : {</span>
+<span id="L21"><span class="lineNum">      21</span>                 :             : </span>
+<span id="L22"><span class="lineNum">      22</span>                 :<span class="tlaGNC tlaBgGNC">           2 : score::cpp::expected&lt;std::int32_t, score::os::Error&gt; FtwPosix::ftw(const char* const path,</span></span>
+<span id="L23"><span class="lineNum">      23</span>                 :             :                                                                    std::int32_t (*const fn)(const char* fname,</span>
+<span id="L24"><span class="lineNum">      24</span>                 :             :                                                                                             const struct stat* sbuf,</span>
+<span id="L25"><span class="lineNum">      25</span>                 :             :                                                                                             std::int32_t flag),</span>
+<span id="L26"><span class="lineNum">      26</span>                 :             :                                                                    const std::int32_t ndirs) const noexcept</span>
+<span id="L27"><span class="lineNum">      27</span>                 :             : {</span>
+<span id="L28"><span class="lineNum">      28</span>                 :<span class="tlaGNC">           2 :     const std::int32_t res = ::ftw(path, fn, ndirs);</span></span>
+<span id="L29"><span class="lineNum">      29</span>         [<span class="tlaGBC" title="Branch 0 was taken 1 time"> + </span><span class="tlaGBC" title="Branch 1 was taken 1 time"> + </span>]:<span class="tlaGNC">           2 :     if (res == -1)</span></span>
+<span id="L30"><span class="lineNum">      30</span>                 :             :     {</span>
+<span id="L31"><span class="lineNum">      31</span>                 :<span class="tlaGNC">           1 :         return score::cpp::make_unexpected(score::os::Error::createFromErrno());</span></span>
+<span id="L32"><span class="lineNum">      32</span>                 :             :     }</span>
+<span id="L33"><span class="lineNum">      33</span>                 :             :     else</span>
+<span id="L34"><span class="lineNum">      34</span>                 :             :     {</span>
+<span id="L35"><span class="lineNum">      35</span>                 :             :         // return whatever value was returned by fn()</span>
+<span id="L36"><span class="lineNum">      36</span>                 :<span class="tlaGNC">           1 :         return res;</span></span>
+<span id="L37"><span class="lineNum">      37</span>                 :             :     }</span>
+<span id="L38"><span class="lineNum">      38</span>                 :             : }</span>
+<span id="L39"><span class="lineNum">      39</span>                 :             : </span>
+<span id="L40"><span class="lineNum">      40</span>                 :             : }  // namespace os</span>
+<span id="L41"><span class="lineNum">      41</span>                 :             : }  // namespace score</span>
         </pre>
               </td>
             </tr>
