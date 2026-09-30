@@ -65,9 +65,12 @@ git_override(
 )
 
 bazel_dep(name = "score_docs_as_code")
-single_version_override(
+git_override(
     module_name = "score_docs_as_code",
-    version = "8.3.0",
+    # TEMPORARY: testing docs-as-code#887 (feature-level DFA/FMEA in platform
+    # verification report). DO NOT MERGE - revert to the known_good pin before merging.
+    commit = "d4d4101d7be287fdfcf8c9b45104ecf4ef7de6cf",
+    remote = "https://github.com/eclipse-score/docs-as-code.git",
 )
 
 bazel_dep(name = "score_process_description")
