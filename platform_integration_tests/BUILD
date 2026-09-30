@@ -10,7 +10,9 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-load("@score_itf//:defs.bzl", "py_itf_test")
+load("@rules_python//python:defs.bzl", "py_library")
+
+package(default_visibility = ["//platform_integration_tests:__subpackages__"])
 
 config_setting(
     name = "config_linux_x86_64",
@@ -30,56 +32,26 @@ config_setting(
     ],
 )
 
-py_itf_test(
+py_library(
+    name = "showcase_runner",
+    srcs = ["showcase_runner.py"],
+    # Lets sibling packages `import showcase_runner` as a flat top-level
+    # module instead of `platform_integration_tests.showcase_runner`.
+    imports = ["."],
+)
+
+# Collects the per-module showcase tests below into the single suite that CI
+# runs (see the top-level module docstring of each test for the rationale).
+test_suite(
     name = "pit",
-    srcs = [
-        "showcase_runner.py",
-        "test_async_runtime_showcase.py",
-        "test_communication_showcase.py",
-        "test_lifecycle_showcase.py",
-        "test_logging_showcase.py",
-        "test_vehicle_time_showcase.py",
-    ],
-    args = select(
-        {
-            ":config_linux_x86_64": [
-                "--docker-image-bootstrap=$(location //images/linux_x86_64:image_load)",
-                "--docker-image=score_showcases:latest",
-            ],
-            ":config_qnx_x86_64": [
-                "--qemu-config=$(location //feature_integration_tests/configs:qemu_bridge_config.json)",
-                "--qemu-image=$(location //images/qnx_x86_64:image)",
-            ],
-        },
-        no_match_error = "Unsupported platform",
-    ),
-    data = select({
-        ":config_linux_x86_64": [
-            "//images/linux_x86_64:image_load",
-        ],
-        ":config_qnx_x86_64": [
-            "//feature_integration_tests/configs:qemu_bridge_config.json",
-            "//images/qnx_x86_64:image",
-        ],
-    }),
-    plugins = select(
-        {
-            ":config_linux_x86_64": [
-                "@score_itf//score/itf/plugins:docker_plugin",
-            ],
-            ":config_qnx_x86_64": [
-                "@score_itf//score/itf/plugins:qemu_plugin",
-            ],
-        },
-        no_match_error = "Unsupported platform",
-    ) + [
-        # Records PartiallyVerifies (via the `@add_test_properties` decorator)
-        # into the JUnit XML. docs-as-code's source code linker turns those
-        # properties into `testlink` attributes on the referenced stakeholder
-        # requirement needs.
-        "@score_itf//score/itf/plugins:attribute_plugin",
-    ],
     tags = [
         "manual",
+    ],
+    tests = [
+        "//platform_integration_tests/communication",
+        "//platform_integration_tests/kyron",
+        "//platform_integration_tests/lifecycle",
+        "//platform_integration_tests/logging",
+        "//platform_integration_tests/time",
     ],
 )

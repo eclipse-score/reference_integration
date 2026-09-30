@@ -63,6 +63,6 @@ oci_load(
     repo_tags = ["score_showcases:latest"],
     visibility = [
         "//feature_integration_tests/itf:__pkg__",
-        "//platform_integration_tests:__pkg__",
+        "//platform_integration_tests:__subpackages__",
     ],
 )
