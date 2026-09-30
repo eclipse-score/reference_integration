@@ -82,7 +82,7 @@ def test_receiver_accepts_bazel_runfile_style_artifact_symlink(tmp_path: Path) -
 
     assertion, _, resolved_artifact = load_referenced_assertion(_read(SPDX_PATH), tmp_path)
 
-    assert assertion["id"] == "srac-score-communication-configuration"
+    assert assertion["assertionId"] == "srac-needs-export-comp__com_configuration-0.1"
     assert resolved_artifact == artifact.absolute()
 
 
