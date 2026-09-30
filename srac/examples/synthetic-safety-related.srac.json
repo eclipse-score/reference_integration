@@ -1,0 +1,112 @@
+{
+  "schemaVersion": "0.2-draft",
+  "assertionId": "srac-synthetic-illustrative-safety-related-001",
+  "subject": {
+    "name": "synthetic-brake-monitor",
+    "purl": "pkg:generic/synthetic-brake-monitor@1.0.0",
+    "version": "1.0.0",
+    "repository": "https://example.com/srac/synthetic-brake-monitor",
+    "componentPath": "components/synthetic-brake-monitor"
+  },
+  "safetyRelevance": {
+    "status": "safety-related",
+    "classification": "ASIL-B"
+  },
+  "rationale": "Synthetic and illustrative example only. This fictional component demonstrates a fully populated reviewed SRAC assertion and does not make a safety claim about any real Eclipse S-CORE component or product.",
+  "requirements": [
+    {
+      "id": "synthetic-req-001",
+      "type": "safety-requirement",
+      "uri": "https://example.com/srac/synthetic-brake-monitor/requirements/synthetic-req-001"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "synthetic-analysis-001",
+      "type": "safety-analysis",
+      "uri": "https://example.com/srac/synthetic-brake-monitor/evidence/synthetic-analysis-001"
+    },
+    {
+      "id": "synthetic-test-report-001",
+      "type": "verification-report",
+      "uri": "https://example.com/srac/synthetic-brake-monitor/evidence/synthetic-test-report-001"
+    }
+  ],
+  "impactAnalysis": [
+    {
+      "id": "synthetic-sia-configuration-change-001",
+      "trigger": {
+        "id": "synthetic-trigger-configuration-change-001",
+        "type": "configuration-change",
+        "uri": "https://example.com/srac/synthetic-brake-monitor/changes/configuration-change-001"
+      },
+      "impactAnalysisStatus": "complete",
+      "impactLevel": "safetyImpact",
+      "safetyIntegrityLevel": "asilB",
+      "impactAnalysisProcess": {
+        "uri": "https://example.com/srac/processes/synthetic-change-impact-analysis"
+      },
+      "rationale": "Synthetic analysis concluded that the configuration change affects the illustrative ASIL-B requirement and requires its verification to be repeated before publication.",
+      "impactedElement": [
+        "synthetic-req-001",
+        "synthetic-test-report-001"
+      ],
+      "addedElement": [
+        "synthetic-verification-001"
+      ],
+      "modifiedElement": [
+        "synthetic-req-001"
+      ],
+      "removedElement": [],
+      "decisions": [
+        {
+          "id": "synthetic-decision-approve-001",
+          "decisionType": "approve",
+          "decisionStatus": "recorded",
+          "appliesTo": [
+            "synthetic-req-001",
+            "synthetic-verification-001"
+          ],
+          "originatedBy": {
+            "name": "Synthetic Example Safety Reviewer",
+            "uri": "https://example.com/srac/people/synthetic-reviewer"
+          },
+          "rationale": "Synthetic reviewer accepted the changed requirement after the illustrative verification completed successfully."
+        }
+      ],
+      "requirementVerification": [
+        {
+          "id": "synthetic-verification-001",
+          "verifies": [
+            "synthetic-req-001"
+          ],
+          "evidence": [
+            "synthetic-test-report-001"
+          ],
+          "rationale": "Synthetic verification demonstrates the RequirementVerification and verifiedBy mapping; it is not real test evidence."
+        }
+      ],
+      "bundle": {
+        "id": "synthetic-srac-publication-bundle-001",
+        "rootElement": [
+          "synthetic-sia-configuration-change-001",
+          "synthetic-decision-approve-001",
+          "synthetic-verification-001"
+        ]
+      }
+    }
+  ],
+  "assertion": {
+    "status": "reviewed",
+    "author": {
+      "name": "Synthetic Example Author",
+      "uri": "https://example.com/srac/people/synthetic-author"
+    },
+    "reviewer": {
+      "name": "Synthetic Example Safety Reviewer",
+      "uri": "https://example.com/srac/people/synthetic-reviewer"
+    },
+    "created": "2026-09-26T00:00:00Z",
+    "updated": "2026-09-26T00:00:00Z"
+  }
+}

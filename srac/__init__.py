@@ -10,15 +10,4 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-name: Internal Tooling Tests
-on:
-  pull_request:
-    types: [opened, reopened, synchronize]
-  push:
-    branches:
-      - main
-jobs:
-  internal_tests:
-    uses: eclipse-score/cicd-workflows/.github/workflows/tests.yml@37eaadadfefc263d94a858d25665735659e916fa
-    with:
-      bazel-target: "test //scripts/tooling:tooling_tests //scripts/known_good:known_good_tests //srac:srac_tests"
+"""SRAC sidecar proof of concept."""
