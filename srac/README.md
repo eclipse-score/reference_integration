@@ -33,8 +33,9 @@ component owner and safety reviewer provide a decision.
 - `tools/profile.py`: self-contained core validation and PURL/version matching.
 - `tools/enrich_sbom.py`: CLI that emits a separate enrichment report without changing the source SBOM.
 - `tools/export_needs.py`: deterministic `needs.json` exporter that preserves source provenance and never makes a safety decision.
+- `tools/receive_srac.py`: receiving-side discovery, SHA-256 verification, assertion validation and SBOM correlation.
 - `examples/needs/` and `examples/generated/`: reduced Sphinx-needs input, transport-only configuration, generated projection and
-  illustrative SPDX/CycloneDX reference fragments.
+  illustrative SPDX/CycloneDX carrier SBOMs and reference fragments.
 - `TESTING.md`: consolidated independent test procedure, expected results and reporting template.
 - `mappings/`: proposed SPDX 2.3 and CycloneDX 1.6 carrier mappings.
 - `pilot/persistency-kvs/`: real official SBOM input, provenance, reproducible commands, enrichment output and an
@@ -73,6 +74,11 @@ identity. See `pilot/persistency-kvs/README.md` for the completed end-to-end exa
 The report copies the safety relevance, classification, assertion status and reviewer from the assertion. It does not calculate,
 approve or strengthen those values. SHA-256 digests bind the report to the exact assertion, SBOM and known-good inputs; a separate
 checksum file protects the serialized report itself.
+
+The `needs.json` example also demonstrates the complete transport boundary. The generated SRAC sidecar is referenced from
+synthetic SPDX 2.3 and CycloneDX 1.6 carrier SBOMs. `receive_srac` discovers exactly one reference, requires its SHA-256,
+verifies the local artifact before parsing, validates the assertion and then performs component correlation. Missing, ambiguous
+or digest-mismatched references fail closed. Network retrieval is deliberately outside this PoC.
 
 When present, `impactAnalysis` is also copied verbatim for both matched and unmatched reports. This preserves the distinction
 between component matching and an engineering decision: the tool can bind records, but it never supplies the trigger conclusion,

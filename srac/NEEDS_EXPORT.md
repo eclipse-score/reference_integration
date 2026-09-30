@@ -11,9 +11,13 @@ authoritative Sphinx-needs model
                v
  portable SRAC safety metadata
                |
-               | integrity-protected reference
+               | SPDX/CycloneDX external reference
                v
       SPDX or CycloneDX SBOM
+               |
+               | discovery and SHA-256 verification
+               v
+          receiving tool
 ```
 
 ## What is authored and what is derived
@@ -52,7 +56,10 @@ bazel run //srac:export_needs -- \
 ```
 
 The expected outputs are checked in under `examples/generated/`. The reference manifest shows the proposed SPDX 2.3 `OTHER`
-external reference and CycloneDX 1.6 `other` external reference. It does not modify an SBOM.
+external reference and CycloneDX 1.6 `other` external reference. The synthetic carrier SBOMs in that directory demonstrate the
+same references in context. `receive_srac` discovers the reference, resolves a previously retrieved local artifact, verifies its
+SHA-256 before parsing, validates the assertion and only then correlates it to the referenced component. It does not perform
+network retrieval or modify an SBOM.
 
 ## Mapping and feedback for SPDX Functional Safety
 

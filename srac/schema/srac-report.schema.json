@@ -57,6 +57,7 @@
       "items": {"$ref": "#/$defs/impactAnalysis"}
     },
     "sourceOfTruth": {"$ref": "#/$defs/sourceOfTruth"},
+    "discoveredReference": {"$ref": "#/$defs/discoveredReference"},
     "matchedComponents": {
       "type": "array",
       "items": {
@@ -104,6 +105,17 @@
     }
   },
   "$defs": {
+    "discoveredReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "componentIdentifier", "uri", "sha256"],
+      "properties": {
+        "format": {"enum": ["SPDX", "CycloneDX"]},
+        "componentIdentifier": {"type": "string", "minLength": 1},
+        "uri": {"type": "string", "format": "uri-reference"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
     "sourceOfTruth": {
       "type": "object",
       "additionalProperties": false,

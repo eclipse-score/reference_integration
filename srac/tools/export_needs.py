@@ -194,11 +194,12 @@ def build_reference_manifest(config: Mapping[str, Any], assertion_sha256: str) -
             "referenceCategory": "OTHER",
             "referenceType": "srac",
             "referenceLocator": artifact_uri,
+            "comment": f"SRAC sidecar; SHA-256: {assertion_sha256}",
         },
         "cycloneDx16ExternalReference": {
             "type": "other",
             "url": artifact_uri,
-            "comment": "Read-only SRAC projection from the authoritative S-CORE needs.json model",
+            "comment": "SRAC sidecar",
             "hashes": [
                 {
                     "alg": "SHA-256",

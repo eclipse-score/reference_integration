@@ -128,6 +128,8 @@ def test_reference_manifest_is_reproducible_and_integrity_protected() -> None:
     assert expected["artifact"]["sha256"] == _sha256(GENERATED_PATH)
     assert expected["cycloneDx16ExternalReference"]["hashes"][0]["content"] == _sha256(GENERATED_PATH)
     assert expected["spdx23PackageExternalRef"]["referenceCategory"] == "OTHER"
+    assert expected["spdx23PackageExternalRef"]["comment"] == (f"SRAC sidecar; SHA-256: {_sha256(GENERATED_PATH)}")
+    assert expected["cycloneDx16ExternalReference"]["comment"] == "SRAC sidecar"
 
 
 def test_enrichment_report_preserves_needs_source_of_truth() -> None:

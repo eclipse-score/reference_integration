@@ -406,6 +406,20 @@ def validate_report(document: Mapping[str, Any]) -> list[str]:
     if "sourceOfTruth" in document:
         _validate_source_of_truth(document["sourceOfTruth"], "sourceOfTruth", errors)
 
+    discovered_reference = document.get("discoveredReference")
+    if discovered_reference is not None:
+        if not isinstance(discovered_reference, Mapping):
+            errors.append("discoveredReference must be an object")
+        else:
+            if discovered_reference.get("format") not in {"SPDX", "CycloneDX"}:
+                errors.append("discoveredReference.format must be 'SPDX' or 'CycloneDX'")
+            for key in ("componentIdentifier", "uri"):
+                if not _is_non_empty_string(discovered_reference.get(key)):
+                    errors.append(f"discoveredReference.{key} must be a non-empty string")
+            digest = discovered_reference.get("sha256")
+            if not isinstance(digest, str) or SHA256_PATTERN.fullmatch(digest) is None:
+                errors.append("discoveredReference.sha256 must be a lowercase SHA-256 digest")
+
     generator = _require_mapping(document, "generator", errors)
     for key in ("name", "version"):
         if not _is_non_empty_string(generator.get(key)):

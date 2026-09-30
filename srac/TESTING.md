@@ -47,6 +47,7 @@ All tests must pass. The suite covers:
 - referential integrity and duplicate identifier rejection;
 - classification and SPDX safety-integrity-level consistency;
 - deterministic `needs.json` projection, source provenance, fail-closed safety mapping and carrier-reference integrity;
+- SPDX/CycloneDX external-reference discovery, pre-parse SHA-256 verification and ambiguity rejection;
 - checked-in pilot output, checksum and provenance integrity; and
 - KVS matched and Lifecycle Health Monitor fail-closed behavior.
 
@@ -69,6 +70,31 @@ diff -u srac/examples/generated/communication.sbom-reference.json \
 
 Both comparisons must be empty. Confirm that the safety classification, source lifecycle status, Feature, Component and
 Assumption of Use trace back to the selected Sphinx-needs records. The export configuration must contain no safety decision.
+
+### Exercise the receiving side
+
+Run the complete `needs.json → SRAC sidecar → SBOM external reference → receiving tool` path against both synthetic carriers:
+
+```bash
+bazel run //srac:receive_srac -- \
+  --sbom srac/examples/generated/communication.spdx.json \
+  --artifact-root srac/examples/generated \
+  --output /tmp/srac-manual/communication-spdx.srac-report.json
+
+bazel run //srac:receive_srac -- \
+  --sbom srac/examples/generated/communication.cdx.json \
+  --artifact-root srac/examples/generated \
+  --output /tmp/srac-manual/communication-cdx.srac-report.json
+
+jq '{matchStatus, discoveredReference, safetyAssessment}' \
+  /tmp/srac-manual/communication-spdx.srac-report.json
+jq '{matchStatus, discoveredReference, safetyAssessment}' \
+  /tmp/srac-manual/communication-cdx.srac-report.json
+```
+
+Both commands must return `0`, report `matched`, identify their respective carrier format and preserve the source classification
+as `safety-related` / `ASIL-B` with assertion status `draft`. The receiver must verify the declared SHA-256 before parsing the
+sidecar. Automated negative tests cover missing references, digest mismatch and ambiguous references.
 
 ## 2. Run the matched Persistency KVS pilot
 

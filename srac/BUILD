@@ -30,6 +30,13 @@ py_library(
     deps = [":profile"],
 )
 
+py_library(
+    name = "receiver",
+    srcs = ["tools/receive_srac.py"],
+    visibility = ["//visibility:public"],
+    deps = [":profile"],
+)
+
 py_binary(
     name = "enrich_sbom",
     srcs = ["tools/enrich_sbom.py"],
@@ -46,11 +53,21 @@ py_binary(
     deps = [":needs_export"],
 )
 
+py_binary(
+    name = "receive_srac",
+    srcs = ["tools/receive_srac.py"],
+    main = "tools/receive_srac.py",
+    visibility = ["//visibility:public"],
+    deps = [":profile"],
+)
+
 score_py_pytest(
     name = "srac_tests",
     srcs = glob(["tests/**/*.py"]),
     data = [
         "examples/generated/communication.sbom-reference.json",
+        "examples/generated/communication.cdx.json",
+        "examples/generated/communication.spdx.json",
         "examples/generated/communication.srac.json",
         "examples/lifecycle-health-monitor.srac.json",
         "examples/needs/communication.export.json",
@@ -75,6 +92,7 @@ score_py_pytest(
     deps = [
         ":needs_export",
         ":profile",
+        ":receiver",
     ],
 )
 
@@ -85,6 +103,8 @@ exports_files([
     "examples/needs/communication.export.json",
     "examples/needs/communication.needs.json",
     "examples/generated/communication.sbom-reference.json",
+    "examples/generated/communication.cdx.json",
+    "examples/generated/communication.spdx.json",
     "examples/generated/communication.srac.json",
     "pilot/lifecycle-health-monitor/output/current-product.srac-report.json",
     "pilot/lifecycle-health-monitor/output/current-product.srac-report.sha256",
