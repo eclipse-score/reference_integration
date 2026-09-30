@@ -231,7 +231,7 @@ def test_impact_analysis_rejects_unresolved_element_references(
     assert any("references 'does-not-exist', which does not resolve" in error for error in validate_assertion(invalid))
 
 
-def test_impact_analysis_rejects_sil_that_disagrees_with_classification(
+def test_impact_analysis_rejects_integrity_level_that_disagrees_with_classification(
     synthetic_reviewed_assertion: dict,
 ) -> None:
     invalid = deepcopy(synthetic_reviewed_assertion)
@@ -240,6 +240,20 @@ def test_impact_analysis_rejects_sil_that_disagrees_with_classification(
     assert (
         "impactAnalysis[0].safetyIntegrityLevel must be 'asilD' when safety relevance classification is 'ASIL-D'"
     ) in validate_assertion(invalid)
+
+
+def test_security_impact_is_orthogonal_to_functional_safety_relevance(
+    synthetic_reviewed_assertion: dict,
+) -> None:
+    security_impact = deepcopy(synthetic_reviewed_assertion)
+    security_impact["impactAnalysis"][0]["impactLevel"] = "securityImpact"
+    assert validate_assertion(security_impact) == []
+
+    invalid_relevance = deepcopy(synthetic_reviewed_assertion)
+    invalid_relevance["safetyRelevance"]["status"] = "security-related"
+    assert any(
+        error.startswith("safetyRelevance.status must be one of") for error in validate_assertion(invalid_relevance)
+    )
 
 
 def test_assertion_rejects_duplicate_element_ids(synthetic_reviewed_assertion: dict) -> None:

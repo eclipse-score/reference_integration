@@ -80,9 +80,20 @@ impact level, decision authority, verification result or completion status.
 
 All identifiers used by impact scope, decisions, verification and publication roots must resolve within the assertion to a
 requirement, evidence item, impact analysis, decision or requirement verification. IDs share one namespace and duplicate IDs are
-invalid. `safetyRelevance.classification` retains the human-facing S-CORE spelling (`ASIL-B`), while
-`impactAnalysis.safetyIntegrityLevel` uses SPDX `SafetyIntegrityLevelType` spelling (`asilB`). The validator enforces their exact
-mapping; neither field can silently override the other.
+invalid.
+
+`safetyRelevance` describes **functional-safety relevance only**. Security relevance is an independent dimension represented by
+`impactAnalysis.impactLevel` values such as `securityImpact` or `safetyAndSecurityImpact` and by the existing SBOM/VEX security
+model. A value such as `security-related` is therefore invalid in `safetyRelevance.status`.
+
+The generic sidecar schema retains the portable SPDX/ISO 26262 vocabulary, including ASIL-A through ASIL-D, while the S-CORE
+`needs.json` exporter implements the narrower S-CORE source profile: `QM`, `ASIL_B` and `ASIL_D` only. Missing source
+classification fails closed to `undetermined` / `not-assigned`; an explicitly unsupported ASIL, SIL, DAL or security value is
+rejected. The exporter never emits SIL or DAL.
+
+`safetyRelevance.classification` uses the human-facing spelling (`ASIL-B`), while
+`impactAnalysis.safetyIntegrityLevel` uses SPDX `SafetyIntegrityLevelType` spelling (`asilB`). The portable validator enforces
+their exact mapping when the latter is present; neither field can silently override the other.
 
 ## Deliberate limitations
 

@@ -35,7 +35,16 @@ subject to upstream review.
 `decisions[].appliesTo` is the compact sidecar form of one or more Core `hasInput` relationships. The enrichment report copies the
 entire block as-is and never infers a status, impact level, decision, reviewer or verification outcome.
 
-The sidecar keeps both S-CORE's human-facing classification (`QM`, `ASIL-A` through `ASIL-D`, `not-assigned`) and SPDX's
-`SafetyIntegrityLevelType` spelling (`qm`, `asilA` through `asilD`, `noAssertion`) because they serve different serializations.
-They are not independent assertions: validation requires `QM` ↔ `qm`, `ASIL-A` ↔ `asilA`, `ASIL-B` ↔ `asilB`, `ASIL-C` ↔
-`asilC`, `ASIL-D` ↔ `asilD`, and `not-assigned` ↔ `noAssertion` whenever the SPDX-aligned field is present.
+The portable sidecar profile retains the broader ISO 26262/SPDX classification vocabulary (`QM`, ASIL-A through ASIL-D and
+`not-assigned`) and SPDX `SafetyIntegrityLevelType` spellings (`qm`, `asilA` through `asilD`, `noAssertion`). These are not
+independent assertions: validation requires `QM` ↔ `qm`, `ASIL-A` ↔ `asilA`, `ASIL-B` ↔ `asilB`, `ASIL-C` ↔ `asilC`,
+`ASIL-D` ↔ `asilD`, and `not-assigned` ↔ `noAssertion` whenever the SPDX-aligned field is present.
+
+The S-CORE `needs.json` source profile is deliberately narrower. Its exporter accepts only `QM`, `ASIL_B` and `ASIL_D`, maps
+them to `QM`, `ASIL-B` and `ASIL-D`, and never emits ASIL-A, ASIL-C, SIL or DAL. Missing source classification becomes
+`undetermined` / `not-assigned`; an explicit unsupported value fails export. SIL and DAL remain part of the broader SPDX type,
+not claims that S-CORE uses those schemes.
+
+Security relevance is orthogonal to `safetyRelevance`. It is represented by `SystemImpactLevelType` values such as
+`securityImpact` or `safetyAndSecurityImpact` and by SPDX security/VEX data; `security-related` is not a valid functional-safety
+relevance status.

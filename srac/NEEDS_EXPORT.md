@@ -33,6 +33,11 @@ The generated assertion remains `draft` because the export itself has not receiv
 S-CORE review process remain authoritative. Missing or contradictory safety fields fail closed as `undetermined` or an error;
 the exporter never infers safety relevance from a title, path or relationship.
 
+The exporter accepts only the S-CORE source vocabulary `QM`, `ASIL_B` and `ASIL_D`. It does not emit ASIL-A, ASIL-C, SIL or DAL.
+An absent classification is exported as `undetermined` / `not-assigned`; an explicitly unsupported value is rejected rather than
+silently translated. Functional-safety relevance and security relevance remain separate: security belongs in the impact-analysis
+or SBOM/VEX security model, not in `safetyRelevance`.
+
 ## Run the minimal example
 
 The checked-in `communication.needs.json` is a reduced fixture taken from the public S-CORE `needs.json` shape. It includes a
@@ -57,7 +62,8 @@ external reference and CycloneDX 1.6 `other` external reference. It does not mod
 | Component (`comp`) | Used as the projection root and preserved by ID/type/URI | Component identity must remain distinct from an SBOM package and from a source folder. |
 | Unit | Not present in this reduced public example | The SPDX mapping needs an unambiguous Unit level below Component. |
 | Assumption of Use (`aou_req`) | Preserved as a typed requirement reference | SEooC exchanges need first-class AoU semantics, applicability and satisfaction/verification links. |
-| `safety: ASIL_B` | Projected exactly to `safety-related` / `ASIL-B` | Safety integrity is contextual and must not become a global package property. |
+| `safety: QM`, `ASIL_B` or `ASIL_D` | Projected exactly to the corresponding S-CORE functional-safety value | Safety integrity is contextual and must not become a global package property. |
+| Unsupported ASIL/SIL/DAL or security value | Export rejected | The S-CORE exporter must not imply support for a vocabulary the source model does not use. |
 | `status: valid` | Recorded in `sourceOfTruth.rootElementStatus` | Source lifecycle state must not be silently reinterpreted as an external approval. |
 | Sphinx-needs relationships | Source IDs remain resolvable; no new relation is inferred | Dependable Element / Feature / Component / Unit and AoU relationships need lossless standardized predicates. |
 

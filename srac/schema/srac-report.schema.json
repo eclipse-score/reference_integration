@@ -28,9 +28,12 @@
       "required": ["source", "safetyRelevance", "classification", "assertionStatus", "reviewer"],
       "properties": {
         "source": {"const": "assertion"},
-        "safetyRelevance": {"enum": ["safety-related", "not-safety-related", "undetermined"]},
+        "safetyRelevance": {
+          "description": "Functional-safety relevance only. Security relevance is represented independently by impactLevel and SBOM/VEX security data.",
+          "enum": ["safety-related", "not-safety-related", "undetermined"]
+        },
         "classification": {
-          "description": "Human-facing S-CORE classification. When impactAnalysis.safetyIntegrityLevel is present, the validator requires its equivalent SPDX vocabulary value.",
+          "description": "Portable classification copied from the assertion. The S-CORE needs.json exporter emits only QM, ASIL-B, ASIL-D and not-assigned. When impactAnalysis.safetyIntegrityLevel is present, the validator requires its equivalent SPDX vocabulary value.",
           "enum": ["QM", "ASIL-A", "ASIL-B", "ASIL-C", "ASIL-D", "not-assigned"]
         },
         "assertionStatus": {"enum": ["draft", "under-review", "reviewed", "approved", "superseded", "withdrawn"]},
@@ -184,7 +187,7 @@
           ]
         },
         "safetyIntegrityLevel": {
-          "description": "SPDX SafetyIntegrityLevelType spelling of safetyAssessment.classification; both values must be equivalent.",
+          "description": "Portable SPDX SafetyIntegrityLevelType spelling of safetyAssessment.classification; both values must be equivalent. SIL and DAL are retained for SPDX alignment but are not emitted by the S-CORE needs.json exporter.",
           "enum": [
             "qm",
             "asilA",

@@ -22,8 +22,15 @@ from urllib.parse import urlparse
 
 SCHEMA_VERSION = "0.2-draft"
 TOOL_VERSION = "0.2.0-draft"
-RELEVANCE_VALUES = {"safety-related", "not-safety-related", "undetermined"}
-CLASSIFICATION_VALUES = {"QM", "ASIL-A", "ASIL-B", "ASIL-C", "ASIL-D", "not-assigned"}
+FUNCTIONAL_SAFETY_RELEVANCE_VALUES = {"safety-related", "not-safety-related", "undetermined"}
+PORTABLE_FUNCTIONAL_SAFETY_CLASSIFICATION_VALUES = {
+    "QM",
+    "ASIL-A",
+    "ASIL-B",
+    "ASIL-C",
+    "ASIL-D",
+    "not-assigned",
+}
 ASSERTION_STATUS_VALUES = {"draft", "under-review", "reviewed", "approved", "superseded", "withdrawn"}
 IMPACT_ANALYSIS_STATUS_VALUES = {"new", "inProgress", "complete", "stopped", "duplicate", "other"}
 IMPACT_LEVEL_VALUES = {
@@ -59,7 +66,7 @@ DECISION_STATUS_VALUES = {
     "enteredInError",
     "other",
 }
-SAFETY_INTEGRITY_LEVEL_VALUES = {
+SPDX_SAFETY_INTEGRITY_LEVEL_VALUES = {
     "qm",
     "asilA",
     "asilB",
@@ -77,7 +84,7 @@ SAFETY_INTEGRITY_LEVEL_VALUES = {
     "other",
     "noAssertion",
 }
-CLASSIFICATION_TO_SAFETY_INTEGRITY_LEVEL = {
+PORTABLE_CLASSIFICATION_TO_SPDX_SAFETY_INTEGRITY_LEVEL = {
     "QM": "qm",
     "ASIL-A": "asilA",
     "ASIL-B": "asilB",
@@ -184,9 +191,11 @@ def _validate_impact_analysis(
         if impact_level is not None and impact_level not in IMPACT_LEVEL_VALUES:
             errors.append(f"{item_path}.impactLevel must be one of {sorted(IMPACT_LEVEL_VALUES)}")
         safety_integrity_level = item.get("safetyIntegrityLevel")
-        if safety_integrity_level is not None and safety_integrity_level not in SAFETY_INTEGRITY_LEVEL_VALUES:
-            errors.append(f"{item_path}.safetyIntegrityLevel must be one of {sorted(SAFETY_INTEGRITY_LEVEL_VALUES)}")
-        expected_safety_integrity_level = CLASSIFICATION_TO_SAFETY_INTEGRITY_LEVEL.get(classification)
+        if safety_integrity_level is not None and safety_integrity_level not in SPDX_SAFETY_INTEGRITY_LEVEL_VALUES:
+            errors.append(
+                f"{item_path}.safetyIntegrityLevel must be one of {sorted(SPDX_SAFETY_INTEGRITY_LEVEL_VALUES)}"
+            )
+        expected_safety_integrity_level = PORTABLE_CLASSIFICATION_TO_SPDX_SAFETY_INTEGRITY_LEVEL.get(classification)
         if (
             safety_integrity_level is not None
             and expected_safety_integrity_level is not None
@@ -330,10 +339,12 @@ def validate_assertion(document: Mapping[str, Any]) -> list[str]:
         errors.append("subject.purl must start with 'pkg:'")
 
     relevance = _require_mapping(document, "safetyRelevance", errors)
-    if relevance.get("status") not in RELEVANCE_VALUES:
-        errors.append(f"safetyRelevance.status must be one of {sorted(RELEVANCE_VALUES)}")
-    if relevance.get("classification") not in CLASSIFICATION_VALUES:
-        errors.append(f"safetyRelevance.classification must be one of {sorted(CLASSIFICATION_VALUES)}")
+    if relevance.get("status") not in FUNCTIONAL_SAFETY_RELEVANCE_VALUES:
+        errors.append(f"safetyRelevance.status must be one of {sorted(FUNCTIONAL_SAFETY_RELEVANCE_VALUES)}")
+    if relevance.get("classification") not in PORTABLE_FUNCTIONAL_SAFETY_CLASSIFICATION_VALUES:
+        errors.append(
+            f"safetyRelevance.classification must be one of {sorted(PORTABLE_FUNCTIONAL_SAFETY_CLASSIFICATION_VALUES)}"
+        )
 
     if not _is_non_empty_string(document.get("rationale")):
         errors.append("rationale must be a non-empty string")
@@ -380,10 +391,12 @@ def validate_report(document: Mapping[str, Any]) -> list[str]:
     safety = _require_mapping(document, "safetyAssessment", errors)
     if safety.get("source") != "assertion":
         errors.append("safetyAssessment.source must be 'assertion'")
-    if safety.get("safetyRelevance") not in RELEVANCE_VALUES:
-        errors.append(f"safetyAssessment.safetyRelevance must be one of {sorted(RELEVANCE_VALUES)}")
-    if safety.get("classification") not in CLASSIFICATION_VALUES:
-        errors.append(f"safetyAssessment.classification must be one of {sorted(CLASSIFICATION_VALUES)}")
+    if safety.get("safetyRelevance") not in FUNCTIONAL_SAFETY_RELEVANCE_VALUES:
+        errors.append(f"safetyAssessment.safetyRelevance must be one of {sorted(FUNCTIONAL_SAFETY_RELEVANCE_VALUES)}")
+    if safety.get("classification") not in PORTABLE_FUNCTIONAL_SAFETY_CLASSIFICATION_VALUES:
+        errors.append(
+            f"safetyAssessment.classification must be one of {sorted(PORTABLE_FUNCTIONAL_SAFETY_CLASSIFICATION_VALUES)}"
+        )
     if safety.get("assertionStatus") not in ASSERTION_STATUS_VALUES:
         errors.append(f"safetyAssessment.assertionStatus must be one of {sorted(ASSERTION_STATUS_VALUES)}")
     if "impactAnalysis" in document:

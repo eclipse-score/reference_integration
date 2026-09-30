@@ -23,11 +23,9 @@ from typing import Any
 
 from srac.tools.profile import validate_assertion
 
-SAFETY_CLASSIFICATIONS = {
+SCORE_SAFETY_CLASSIFICATIONS = {
     "QM": ("not-safety-related", "QM"),
-    "ASIL_A": ("safety-related", "ASIL-A"),
     "ASIL_B": ("safety-related", "ASIL-B"),
-    "ASIL_C": ("safety-related", "ASIL-C"),
     "ASIL_D": ("safety-related", "ASIL-D"),
 }
 SAFETY_RELEVANT_TRUE = {"TRUE", "YES", "Y", "1", "SAFETY_RELATED"}
@@ -56,7 +54,13 @@ def _normalize_token(value: object) -> str:
 
 def _safety_relevance(need: Mapping[str, Any]) -> dict[str, str]:
     safety = _normalize_token(need.get("safety"))
-    mapped = SAFETY_CLASSIFICATIONS.get(safety, ("undetermined", "not-assigned"))
+    if safety and safety not in SCORE_SAFETY_CLASSIFICATIONS:
+        supported = ", ".join(sorted(SCORE_SAFETY_CLASSIFICATIONS))
+        raise ValueError(
+            f"Need {need.get('id')!r} has unsupported S-CORE safety classification {safety!r}; "
+            f"expected one of {supported}"
+        )
+    mapped = SCORE_SAFETY_CLASSIFICATIONS.get(safety, ("undetermined", "not-assigned"))
     explicit = _normalize_token(need.get("safety_relevant"))
     if explicit in SAFETY_RELEVANT_TRUE:
         if mapped[0] == "not-safety-related":

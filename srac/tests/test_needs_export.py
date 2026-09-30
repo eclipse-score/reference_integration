@@ -87,6 +87,40 @@ def test_needs_projection_rejects_conflicting_source_safety_fields() -> None:
         build_assertion(needs, _read(CONFIG_PATH), "a" * 64)
 
 
+@pytest.mark.parametrize(
+    "source_classification",
+    ["ASIL_A", "ASIL_C", "SIL_3", "DAL_A", "SECURITY_RELATED"],
+)
+def test_needs_projection_rejects_values_outside_score_safety_vocabulary(
+    source_classification: str,
+) -> None:
+    needs = _read(NEEDS_PATH)
+    needs["versions"]["0.1"]["needs"]["comp__com_configuration"]["safety"] = source_classification
+
+    with pytest.raises(ValueError, match="unsupported S-CORE safety classification"):
+        build_assertion(needs, _read(CONFIG_PATH), "a" * 64)
+
+
+@pytest.mark.parametrize(
+    ("source_classification", "expected"),
+    [
+        ("QM", {"status": "not-safety-related", "classification": "QM"}),
+        ("ASIL_B", {"status": "safety-related", "classification": "ASIL-B"}),
+        ("ASIL_D", {"status": "safety-related", "classification": "ASIL-D"}),
+    ],
+)
+def test_needs_projection_accepts_only_score_safety_classifications(
+    source_classification: str,
+    expected: dict[str, str],
+) -> None:
+    needs = _read(NEEDS_PATH)
+    needs["versions"]["0.1"]["needs"]["comp__com_configuration"]["safety"] = source_classification
+
+    generated = build_assertion(needs, _read(CONFIG_PATH), "a" * 64)
+
+    assert generated["safetyRelevance"] == expected
+
+
 def test_reference_manifest_is_reproducible_and_integrity_protected() -> None:
     expected = _read(REFERENCE_PATH)
 
