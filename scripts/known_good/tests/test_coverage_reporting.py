@@ -20,6 +20,7 @@ try:
         generate_markdown_report,
         generate_rust_module_index,
         is_lcov_2_plus_version,
+        with_status,
     )
 except ModuleNotFoundError:
     from quality_runners import (
@@ -29,7 +30,43 @@ except ModuleNotFoundError:
         generate_markdown_report,
         generate_rust_module_index,
         is_lcov_2_plus_version,
+        with_status,
     )
+
+
+def test_generate_markdown_report_with_status_and_dashboard_column(tmp_path: Path):
+    output_path = tmp_path / "coverage_summary.md"
+    data = {
+        "score_baselibs_cpp": {
+            "lines": "93.0%",
+            "functions": "85.8%",
+            "branches": "64.1%",
+            "dashboard": '<a href="../coverage/cpp/score_baselibs/index.html">C++ Dashboard</a>',
+            "exit_code": 0,
+        },
+        "score_logging_cpp": {
+            "exit_code": 1,
+            "status": "skipped",
+        },
+    }
+    columns = ["module", "status", "lines", "functions", "branches", "dashboard"]
+
+    ret = generate_markdown_report(
+        with_status(data),
+        title="Coverage Analysis Summary",
+        columns=columns,
+        output_path=output_path,
+    )
+
+    content = output_path.read_text(encoding="utf-8")
+    assert ret == content
+    assert "# Coverage Analysis Summary" in content
+    assert "| module | status | lines | functions | branches | dashboard |" in content
+    assert (
+        "| score_baselibs_cpp | ✅ pass | 93.0% | 85.8% | 64.1% | "
+        '<a href="../coverage/cpp/score_baselibs/index.html">C++ Dashboard</a> |'
+    ) in content
+    assert "| score_logging_cpp | ⚪ skipped |  |  |  |  |" in content
 
 
 def test_generate_markdown_report_with_dashboard_column(tmp_path: Path):

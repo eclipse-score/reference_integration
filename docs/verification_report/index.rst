@@ -28,9 +28,6 @@ Module Verification Reports
 
 * :doc:`Modules <modules/index>`
 
-Feature/Component Diagram (experiment)
-----------------------------------------
-
 .. toctree::
    :titlesonly:
    :hidden:
