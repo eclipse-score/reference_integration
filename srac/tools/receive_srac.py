@@ -153,8 +153,12 @@ def load_referenced_assertion(
     filename = Path(unquote(urlparse(reference["uri"]).path)).name
     if not filename:
         raise ValueError("SRAC external reference URI has no artifact filename")
-    root = artifact_root.resolve()
-    artifact = (root / filename).resolve()
+    # Check the lexical path rather than resolving the final file. Bazel runfiles
+    # expose data files as symlinks whose targets live outside the runfiles tree;
+    # following that symlink here would incorrectly report an escape. The URI is
+    # reduced to a basename above, so the candidate cannot introduce traversal.
+    root = artifact_root.absolute()
+    artifact = (root / filename).absolute()
     if not artifact.is_relative_to(root):
         raise ValueError("Resolved SRAC artifact escapes artifact root")
     if not artifact.is_file():

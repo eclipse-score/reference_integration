@@ -73,6 +73,19 @@ def test_receiver_rejects_digest_mismatch() -> None:
         load_referenced_assertion(sbom, GENERATED_ROOT)
 
 
+def test_receiver_accepts_bazel_runfile_style_artifact_symlink(tmp_path: Path) -> None:
+    artifact = tmp_path / "communication.srac.json"
+    try:
+        artifact.symlink_to((GENERATED_ROOT / artifact.name).resolve())
+    except OSError as error:
+        pytest.skip(f"symlinks are unavailable on this platform: {error}")
+
+    assertion, _, resolved_artifact = load_referenced_assertion(_read(SPDX_PATH), tmp_path)
+
+    assert assertion["id"] == "srac-score-communication-configuration"
+    assert resolved_artifact == artifact.absolute()
+
+
 def test_receiver_rejects_missing_reference() -> None:
     sbom = _read(CYCLONEDX_PATH)
     del sbom["components"][0]["externalReferences"]
