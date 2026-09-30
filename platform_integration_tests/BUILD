@@ -33,7 +33,12 @@ config_setting(
 py_itf_test(
     name = "pit",
     srcs = [
-        "test_showcases.py",
+        "showcase_runner.py",
+        "test_async_runtime_showcase.py",
+        "test_communication_showcase.py",
+        "test_lifecycle_showcase.py",
+        "test_logging_showcase.py",
+        "test_vehicle_time_showcase.py",
     ],
     args = select(
         {
@@ -47,16 +52,7 @@ py_itf_test(
             ],
         },
         no_match_error = "Unsupported platform",
-    ) + [
-        # Enables the `@add_test_properties` decorator used by the tests to
-        # record PartiallyVerifies into the JUnit XML. docs-as-code's source
-        # code linker turns those properties into `testlink` attributes on the
-        # referenced stakeholder requirement needs. `py_itf_test` does not
-        # register the plugin itself (unlike `score_py_pytest`), so it is wired
-        # up here.
-        "-p",
-        "attribute_plugin",
-    ],
+    ),
     data = select({
         ":config_linux_x86_64": [
             "//images/linux_x86_64:image_load",
@@ -76,11 +72,14 @@ py_itf_test(
             ],
         },
         no_match_error = "Unsupported platform",
-    ),
+    ) + [
+        # Records PartiallyVerifies (via the `@add_test_properties` decorator)
+        # into the JUnit XML. docs-as-code's source code linker turns those
+        # properties into `testlink` attributes on the referenced stakeholder
+        # requirement needs.
+        "@score_itf//score/itf/plugins:attribute_plugin",
+    ],
     tags = [
         "manual",
-    ],
-    deps = [
-        "@score_tooling//python_basics/score_pytest:attribute_plugin",
     ],
 )
