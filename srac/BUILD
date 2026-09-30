@@ -65,8 +65,8 @@ score_py_pytest(
     name = "srac_tests",
     srcs = glob(["tests/**/*.py"]),
     data = [
-        "examples/generated/communication.sbom-reference.json",
         "examples/generated/communication.cdx.json",
+        "examples/generated/communication.sbom-reference.json",
         "examples/generated/communication.spdx.json",
         "examples/generated/communication.srac.json",
         "examples/lifecycle-health-monitor.srac.json",
