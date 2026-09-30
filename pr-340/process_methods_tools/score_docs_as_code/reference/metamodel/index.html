@@ -27,8 +27,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
-<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+  <link href="../../../../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
@@ -38,19 +38,19 @@
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/modern.css?v=803738c0" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css?v=f420dc51" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="../../../../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
-<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
     <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
     <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
@@ -64,10 +64,12 @@
     <script src="../../../../_static/sphinx-needs/libs/html/datatables_loader.js?v=a2cae175"></script>
     <script src="../../../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js?v=dca66431"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
-    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.6.0/dist/mermaid.esm.min.mjs";
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.17.2/dist/mermaid.esm.min.mjs";
 
 
 import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.2.0/dist/mermaid-layout-elk.esm.min.mjs"
+
+
 
 
 const initStyles = () => {
@@ -426,7 +428,7 @@ window.addEventListener("load", load);
 window.runMermaid = runMermaid;</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'process_methods_tools/score_docs_as_code/reference/metamodel/index';</script>
     <script>
-        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_version = '0.21.0';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-score.github.io/reference_integration/versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
@@ -536,7 +538,7 @@ window.runMermaid = runMermaid;</script>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-external" href="https://eclipse-score.github.io/reference_integration/main/status_dashboard.html">
+  <a class="nav-link nav-internal" href="../../../../status_dashboard.html">
     Integration Status
   </a>
 </li>
@@ -664,10 +666,6 @@ window.runMermaid = runMermaid;</script>
   
 
   
-    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
-      <span class="fa-solid fa-outdent"></span>
-    </button>
-  
 </div>
 
     </header>
@@ -709,7 +707,7 @@ window.runMermaid = runMermaid;</script>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-external" href="https://eclipse-score.github.io/reference_integration/main/status_dashboard.html">
+  <a class="nav-link nav-internal" href="../../../../status_dashboard.html">
     Integration Status
   </a>
 </li>
@@ -921,6 +919,8 @@ class aou_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -930,6 +930,8 @@ class assertion {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -939,6 +941,8 @@ class comp {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -948,6 +952,8 @@ class comp_arc_dyn {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -957,6 +963,8 @@ class comp_arc_sta {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -968,6 +976,8 @@ class comp_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -981,6 +991,8 @@ class comp_saf_dfa {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +safety_relevant [optional]*
   +source_code_link [optional]*
@@ -994,6 +1006,8 @@ class comp_saf_fmea {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +root_cause [optional]*
   +safety_relevant [optional]*
@@ -1008,6 +1022,8 @@ class comp_sec_ana {
   +threat_effect
   +threat_scenario_id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
@@ -1018,6 +1034,8 @@ class comp_sec_threat {
   +status
   +threat_id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1027,6 +1045,8 @@ class dec_rec {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +consequences [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
@@ -1036,6 +1056,8 @@ class doc_concept {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1043,20 +1065,24 @@ class doc_getstrt {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
 class doc_tool {
   +id
-  +safety_affected
   +security_affected
   +status
-  +tcl
   +version
   +approver [optional]*
   +author [optional]*
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +reviewer [optional]*
+  +safety_affected [optional]*
   +source_code_link [optional]*
+  +tcl [optional]*
   +testlink [optional]*
   +tool_version [optional]*
 }
@@ -1068,6 +1094,9 @@ class document {
   +version
   +approver [optional]*
   +author [optional]*
+  +bazel_target [optional]*
+  +bazel_type [optional]*
+  +report_version [optional]*
   +reviewer [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
@@ -1078,6 +1107,8 @@ class feat {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1087,6 +1118,8 @@ class feat_arc_dyn {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1096,6 +1129,8 @@ class feat_arc_sta {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1108,6 +1143,8 @@ class feat_req {
   +status
   +valid_from
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -1122,6 +1159,8 @@ class feat_saf_dfa {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +safety_relevant [optional]*
   +source_code_link [optional]*
@@ -1135,6 +1174,8 @@ class feat_saf_fmea {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +root_cause [optional]*
   +safety_relevant [optional]*
@@ -1149,6 +1190,8 @@ class feat_sec_ana {
   +threat_effect
   +threat_scenario_id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
@@ -1159,6 +1202,8 @@ class feat_sec_threat {
   +status
   +threat_id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1166,6 +1211,8 @@ class gd_chklst {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1173,6 +1220,8 @@ class gd_guidl {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1180,6 +1229,8 @@ class gd_method {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1187,6 +1238,8 @@ class gd_req {
   +content
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1194,6 +1247,8 @@ class gd_temp {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1203,6 +1258,8 @@ class logic_arc_int {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1212,12 +1269,17 @@ class logic_arc_int_op {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
 class mod {
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
+  +maturity [optional]*
   +safety [optional]*
   +security [optional]*
   +source_code_link [optional]*
@@ -1232,6 +1294,8 @@ class mod_ver_report {
   +verification_method
   +version
   +applies_to_module_version [optional]*
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +branch_coverage_percent [optional]*
   +line_coverage_percent [optional]*
   +requirements_tests_completely_passed_percent [optional]*
@@ -1241,12 +1305,16 @@ class mod_ver_report {
 class mod_view_dyn {
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
 class mod_view_sta {
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1258,6 +1326,8 @@ class plat_saf_dfa {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +safety_relevant [optional]*
   +source_code_link [optional]*
@@ -1271,6 +1341,8 @@ class plat_sec_ana {
   +threat_effect
   +threat_scenario_id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
@@ -1281,6 +1353,19 @@ class plat_sec_threat {
   +status
   +threat_id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
+  +source_code_link [optional]*
+  +testlink [optional]*
+}
+class potential_tool_malfunction {
+  +id
+  +safety_affected
+  +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
+  +detection_sufficient [optional]*
+  +safety_measures [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1291,6 +1376,8 @@ class real_arc_int {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1300,6 +1387,8 @@ class real_arc_int_op {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1310,12 +1399,16 @@ class review_header {
   +reviewers
   +template
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
 class role {
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1323,6 +1416,8 @@ class std_req {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1330,6 +1425,8 @@ class std_wp {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1342,6 +1439,8 @@ class stkh_req {
   +status
   +valid_from
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -1352,12 +1451,16 @@ class tenet {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
 class testcase {
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +derivation_technique [optional]*
   +file [optional]*
   +line [optional]*
@@ -1372,6 +1475,8 @@ class tool_req {
   +content
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +implemented [optional]*
   +parent_covered [optional]*
@@ -1383,10 +1488,20 @@ class tool_req {
   +testcovered [optional]*
   +testlink [optional]*
 }
+class tool_usecase {
+  +id
+  +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
+  +source_code_link [optional]*
+  +testlink [optional]*
+}
 class tsf {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1394,6 +1509,8 @@ class workflow {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1401,6 +1518,8 @@ class workproduct {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1476,14 +1595,17 @@ plat_saf_dfa ..&gt; stkh_req : mitigated_by
 plat_saf_dfa ..&gt; aou_req : mitigated_by
 plat_sec_ana ..&gt; feat_req : mitigated_by
 plat_sec_ana ..&gt; aou_req : mitigated_by
+potential_tool_malfunction --&gt; tool_usecase : parent_needs
+potential_tool_malfunction --&gt; tool_req : violates
 real_arc_int ..&gt; comp_req : fulfils
 real_arc_int_op --&gt; real_arc_int : included_by
 real_arc_int_op ..&gt; logic_arc_int_op : implements
 role ..&gt; role : contains
-tool_req ..&gt; gd_req : satisfies
-tool_req ..&gt; stkh_req : satisfies
-tool_req ..&gt; feat_req : satisfies
-tool_req ..&gt; comp_req : satisfies
+tool_req --&gt; gd_req : satisfies
+tool_req --&gt; stkh_req : satisfies
+tool_req --&gt; feat_req : satisfies
+tool_req --&gt; comp_req : satisfies
+tool_usecase --&gt; doc_tool : belongs_to
 workflow --&gt; role : approved_by
 workflow --&gt; workproduct : input
 workflow --&gt; workproduct : output
@@ -1529,6 +1651,7 @@ style mod_view_sta fill:#D5E8D4,stroke:#666,color:#000
 style plat_saf_dfa fill:#DAE8FC,stroke:#666,color:#000
 style plat_sec_ana fill:#DAE8FC,stroke:#666,color:#000
 style plat_sec_threat fill:#DAE8FC,stroke:#666,color:#000
+style potential_tool_malfunction fill:#F8CECC,stroke:#666,color:#000
 style real_arc_int fill:#D5E8D4,stroke:#666,color:#000
 style real_arc_int_op fill:#D5E8D4,stroke:#666,color:#000
 style role fill:#E1D5E7,stroke:#666,color:#000
@@ -1537,6 +1660,7 @@ style std_wp fill:#E1D5E7,stroke:#666,color:#000
 style stkh_req fill:#DAE8FC,stroke:#666,color:#000
 style tenet fill:#E1D5E7,stroke:#666,color:#000
 style tool_req fill:#F5F5F5,stroke:#666,color:#000
+style tool_usecase fill:#E1D5E7,stroke:#666,color:#000
 style tsf fill:#E1D5E7,stroke:#666,color:#000
 style workflow fill:#E1D5E7,stroke:#666,color:#000
 style workproduct fill:#E1D5E7,stroke:#666,color:#000
@@ -1577,6 +1701,7 @@ click mod_view_sta href &quot;#mod-view-sta&quot; &quot;Open mod_view_sta detail
 click plat_saf_dfa href &quot;#plat-saf-dfa&quot; &quot;Open plat_saf_dfa details&quot;
 click plat_sec_ana href &quot;#plat-sec-ana&quot; &quot;Open plat_sec_ana details&quot;
 click plat_sec_threat href &quot;#plat-sec-threat&quot; &quot;Open plat_sec_threat details&quot;
+click potential_tool_malfunction href &quot;#potential-tool-malfunction&quot; &quot;Open potential_tool_malfunction details&quot;
 click real_arc_int href &quot;#real-arc-int&quot; &quot;Open real_arc_int details&quot;
 click real_arc_int_op href &quot;#real-arc-int-op&quot; &quot;Open real_arc_int_op details&quot;
 click review_header href &quot;#review-header&quot; &quot;Open review_header details&quot;
@@ -1587,6 +1712,7 @@ click stkh_req href &quot;#stkh-req&quot; &quot;Open stkh_req details&quot;
 click tenet href &quot;#tenet&quot; &quot;Open tenet details&quot;
 click testcase href &quot;#testcase&quot; &quot;Open testcase details&quot;
 click tool_req href &quot;#tool-req&quot; &quot;Open tool_req details&quot;
+click tool_usecase href &quot;#tool-usecase&quot; &quot;Open tool_usecase details&quot;
 click tsf href &quot;#tsf&quot; &quot;Open tsf details&quot;
 click workflow href &quot;#workflow&quot; &quot;Open workflow details&quot;
 click workproduct href &quot;#workproduct&quot; &quot;Open workproduct details&quot;
@@ -1617,9 +1743,6 @@ pre#metamodel-type-diagram-doc-concept.mermaid > svg {
     height: 333px !important;
 }
 pre#metamodel-type-diagram-doc-getstrt.mermaid > svg {
-    height: 333px !important;
-}
-pre#metamodel-type-diagram-doc-tool.mermaid > svg {
     height: 333px !important;
 }
 pre#metamodel-type-diagram-document.mermaid > svg {
@@ -1655,6 +1778,9 @@ pre#metamodel-type-diagram-plat-sec-ana.mermaid > svg {
 pre#metamodel-type-diagram-plat-sec-threat.mermaid > svg {
     height: 167px !important;
 }
+pre#metamodel-type-diagram-potential-tool-malfunction.mermaid > svg {
+    height: 333px !important;
+}
 pre#metamodel-type-diagram-review-header.mermaid > svg {
     height: 167px !important;
 }
@@ -1672,9 +1798,6 @@ pre#metamodel-type-diagram-tenet.mermaid > svg {
 }
 pre#metamodel-type-diagram-testcase.mermaid > svg {
     height: 167px !important;
-}
-pre#metamodel-type-diagram-tool-req.mermaid > svg {
-    height: 333px !important;
 }
 pre#metamodel-type-diagram-tsf.mermaid > svg {
     height: 167px !important;
@@ -1699,6 +1822,8 @@ class aou_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -1710,6 +1835,8 @@ class comp {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1721,6 +1848,8 @@ class comp_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -1734,6 +1863,8 @@ class comp_saf_dfa {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +safety_relevant [optional]*
   +source_code_link [optional]*
@@ -1747,6 +1878,8 @@ class comp_saf_fmea {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +root_cause [optional]*
   +safety_relevant [optional]*
@@ -1761,6 +1894,8 @@ class comp_sec_ana {
   +threat_effect
   +threat_scenario_id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
@@ -1771,6 +1906,8 @@ class feat_arc_sta {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1783,6 +1920,8 @@ class feat_req {
   +status
   +valid_from
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -1797,6 +1936,8 @@ class feat_saf_dfa {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +safety_relevant [optional]*
   +source_code_link [optional]*
@@ -1810,6 +1951,8 @@ class feat_saf_fmea {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +root_cause [optional]*
   +safety_relevant [optional]*
@@ -1824,6 +1967,8 @@ class feat_sec_ana {
   +threat_effect
   +threat_scenario_id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
@@ -1836,6 +1981,8 @@ class plat_saf_dfa {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +safety_relevant [optional]*
   +source_code_link [optional]*
@@ -1849,6 +1996,8 @@ class plat_sec_ana {
   +threat_effect
   +threat_scenario_id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
@@ -1932,6 +2081,14 @@ click plat_sec_ana href &quot;#plat-sec-ana&quot; &quot;Open plat_sec_ana detail
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">hash</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
@@ -1967,6 +2124,8 @@ class assertion {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -1995,6 +2154,14 @@ click assertion href &quot;#assertion&quot; &quot;Open assertion details&quot;
 <tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
@@ -2044,6 +2211,8 @@ class aou_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -2055,6 +2224,8 @@ class comp {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -2064,6 +2235,8 @@ class comp_arc_dyn {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -2073,6 +2246,8 @@ class comp_arc_sta {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -2084,6 +2259,8 @@ class comp_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -2095,6 +2272,8 @@ class feat {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -2104,12 +2283,17 @@ class logic_arc_int {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
 class mod {
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
+  +maturity [optional]*
   +safety [optional]*
   +security [optional]*
   +source_code_link [optional]*
@@ -2119,6 +2303,8 @@ class mod {
 class mod_view_sta {
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -2128,6 +2314,8 @@ class real_arc_int_op {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -2196,6 +2384,14 @@ click real_arc_int_op href &quot;#real-arc-int-op&quot; &quot;Open real_arc_int_
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
 </tr>
@@ -2257,6 +2453,8 @@ class comp {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -2266,6 +2464,8 @@ class comp_arc_dyn {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -2277,6 +2477,8 @@ class comp_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -2290,6 +2492,8 @@ class comp_saf_fmea {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +root_cause [optional]*
   +safety_relevant [optional]*
@@ -2338,6 +2542,14 @@ click comp_saf_fmea href &quot;#comp-saf-fmea&quot; &quot;Open comp_saf_fmea det
 <tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
@@ -2389,6 +2601,8 @@ class comp {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -2398,6 +2612,8 @@ class comp_arc_sta {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -2409,6 +2625,8 @@ class comp_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -2422,6 +2640,8 @@ class comp_saf_dfa {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +safety_relevant [optional]*
   +source_code_link [optional]*
@@ -2435,6 +2655,8 @@ class comp_saf_fmea {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +root_cause [optional]*
   +safety_relevant [optional]*
@@ -2447,6 +2669,8 @@ class logic_arc_int {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -2456,6 +2680,8 @@ class real_arc_int_op {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -2510,6 +2736,14 @@ click real_arc_int_op href &quot;#real-arc-int-op&quot; &quot;Open real_arc_int_
 <tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
@@ -2567,6 +2801,8 @@ class aou_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -2578,6 +2814,8 @@ class comp {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -2587,6 +2825,8 @@ class comp_arc_dyn {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -2596,6 +2836,8 @@ class comp_arc_sta {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -2607,6 +2849,8 @@ class comp_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -2620,6 +2864,8 @@ class comp_saf_dfa {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +safety_relevant [optional]*
   +source_code_link [optional]*
@@ -2633,6 +2879,8 @@ class comp_saf_fmea {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +root_cause [optional]*
   +safety_relevant [optional]*
@@ -2647,6 +2895,8 @@ class comp_sec_ana {
   +threat_effect
   +threat_scenario_id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
@@ -2660,6 +2910,8 @@ class feat_req {
   +status
   +valid_from
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -2673,6 +2925,8 @@ class real_arc_int {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -2680,6 +2934,8 @@ class tool_req {
   +content
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +implemented [optional]*
   +parent_covered [optional]*
@@ -2700,7 +2956,7 @@ comp_saf_dfa ..&gt; comp_req : mitigated_by
 comp_saf_fmea ..&gt; comp_req : mitigated_by
 comp_sec_ana ..&gt; comp_req : mitigated_by
 real_arc_int ..&gt; comp_req : fulfils
-tool_req ..&gt; comp_req : satisfies
+tool_req --&gt; comp_req : satisfies
 style aou_req fill:#FCFCFC,stroke:#666,color:#000
 style comp fill:#D5E8D4,stroke:#666,color:#000
 style comp_arc_dyn fill:#D5E8D4,stroke:#666,color:#000
@@ -2762,6 +3018,14 @@ click tool_req href &quot;#tool-req&quot; &quot;Open tool_req details&quot;
 <tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">hash</span></code></p></td>
@@ -2827,6 +3091,8 @@ class aou_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -2838,6 +3104,8 @@ class comp_arc_sta {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -2849,6 +3117,8 @@ class comp_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -2862,6 +3132,8 @@ class comp_saf_dfa {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +safety_relevant [optional]*
   +source_code_link [optional]*
@@ -2917,6 +3189,14 @@ click comp_saf_dfa href &quot;#comp-saf-dfa&quot; &quot;Open comp_saf_dfa detail
 <tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">mitigation_issue</span></code></p></td>
@@ -2978,6 +3258,8 @@ class aou_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -2989,6 +3271,8 @@ class comp_arc_dyn {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -2998,6 +3282,8 @@ class comp_arc_sta {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -3009,6 +3295,8 @@ class comp_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -3022,6 +3310,8 @@ class comp_saf_fmea {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +root_cause [optional]*
   +safety_relevant [optional]*
@@ -3081,6 +3371,14 @@ click comp_saf_fmea href &quot;#comp-saf-fmea&quot; &quot;Open comp_saf_fmea det
 <tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">mitigation_issue</span></code></p></td>
@@ -3146,6 +3444,8 @@ class aou_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -3159,6 +3459,8 @@ class comp_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -3172,6 +3474,8 @@ class comp_sec_ana {
   +threat_effect
   +threat_scenario_id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
@@ -3225,6 +3529,14 @@ click comp_sec_ana href &quot;#comp-sec-ana&quot; &quot;Open comp_sec_ana detail
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">mitigation_issue</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github\.com/[^/]+/[^/]+/issues/\d+$</span></code></p></td>
 </tr>
@@ -3274,6 +3586,8 @@ class comp_sec_threat {
   +status
   +threat_id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -3312,6 +3626,14 @@ click comp_sec_threat href &quot;#comp-sec-threat&quot; &quot;Open comp_sec_thre
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
 </tr>
@@ -3341,6 +3663,8 @@ class dec_rec {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +consequences [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
@@ -3379,6 +3703,14 @@ click dec_rec href &quot;#dec-rec&quot; &quot;Open dec_rec details&quot;
 <tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">consequences</span></code></p></td>
@@ -3432,6 +3764,8 @@ class doc_concept {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -3439,6 +3773,8 @@ class workflow {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -3472,6 +3808,14 @@ click workflow href &quot;#workflow&quot; &quot;Open workflow details&quot;
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
 </tr>
@@ -3499,6 +3843,8 @@ class doc_getstrt {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -3506,6 +3852,8 @@ class workflow {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -3539,6 +3887,14 @@ click workflow href &quot;#workflow&quot; &quot;Open workflow details&quot;
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
 </tr>
@@ -3564,29 +3920,44 @@ classDiagram
   direction BT
 class doc_tool {
   +id
-  +safety_affected
   +security_affected
   +status
-  +tcl
   +version
   +approver [optional]*
   +author [optional]*
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +reviewer [optional]*
+  +safety_affected [optional]*
   +source_code_link [optional]*
+  +tcl [optional]*
   +testlink [optional]*
   +tool_version [optional]*
+}
+class tool_usecase {
+  +id
+  +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
+  +source_code_link [optional]*
+  +testlink [optional]*
 }
 class workproduct {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
 doc_tool ..&gt; workproduct : realizes
+tool_usecase --&gt; doc_tool : belongs_to
+style tool_usecase fill:#E1D5E7,stroke:#666,color:#000
 style workproduct fill:#E1D5E7,stroke:#666,color:#000
 style doc_tool fill:#FFFFFF,stroke:#000,stroke-width:3px,color:#000
 click doc_tool href &quot;#doc-tool&quot; &quot;Open doc_tool details&quot;
+click tool_usecase href &quot;#tool-usecase&quot; &quot;Open tool_usecase details&quot;
 click workproduct href &quot;#workproduct&quot; &quot;Open workproduct details&quot;
     </pre><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
 <summary class="sd-summary-title sd-card-header">
@@ -3605,20 +3976,12 @@ click workproduct href &quot;#workproduct&quot; &quot;Open workproduct details&q
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^doc_tool__[0-9a-z_]+$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Mandatory</p></td>
-<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">safety_affected</span></code></p></td>
-<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^(YES|NO)$</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">security_affected</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^(YES|NO)$</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p class="sd-card-text">Mandatory</p></td>
+<tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">status</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^(draft|evaluated|qualified|released|rejected)$</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
-<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">tcl</span></code></p></td>
-<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^(LOW|HIGH)$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
@@ -3633,12 +3996,28 @@ click workproduct href &quot;#workproduct&quot; &quot;Open workproduct details&q
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">reviewer</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">safety_affected</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^(YES|NO)$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">tcl</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^(LOW|HIGH)$</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">testlink</span></code></p></td>
@@ -3688,6 +4067,9 @@ class document {
   +version
   +approver [optional]*
   +author [optional]*
+  +bazel_target [optional]*
+  +bazel_type [optional]*
+  +report_version [optional]*
   +reviewer [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
@@ -3696,6 +4078,8 @@ class workproduct {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -3745,14 +4129,26 @@ click workproduct href &quot;#workproduct&quot; &quot;Open workproduct details&q
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
-<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">reviewer</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">report_version</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^v(0|[1-9]\d*)\.(0|[1-9]\d*)(\.(0|[1-9]\d*))?$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">reviewer</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">testlink</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
 </tr>
@@ -3794,6 +4190,8 @@ class comp {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -3803,6 +4201,8 @@ class feat {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -3812,6 +4212,8 @@ class feat_arc_dyn {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -3821,6 +4223,8 @@ class feat_arc_sta {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -3833,6 +4237,8 @@ class feat_req {
   +status
   +valid_from
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -3845,6 +4251,8 @@ class logic_arc_int {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -3854,6 +4262,8 @@ class logic_arc_int_op {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -3915,6 +4325,14 @@ click logic_arc_int_op href &quot;#logic-arc-int-op&quot; &quot;Open logic_arc_i
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
 </tr>
@@ -3968,6 +4386,8 @@ class feat {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -3977,6 +4397,8 @@ class feat_arc_dyn {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -3989,6 +4411,8 @@ class feat_req {
   +status
   +valid_from
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -4003,6 +4427,8 @@ class feat_saf_fmea {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +root_cause [optional]*
   +safety_relevant [optional]*
@@ -4051,6 +4477,14 @@ click feat_saf_fmea href &quot;#feat-saf-fmea&quot; &quot;Open feat_saf_fmea det
 <tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
@@ -4104,6 +4538,8 @@ class aou_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -4115,6 +4551,8 @@ class feat {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -4124,6 +4562,8 @@ class feat_arc_sta {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -4136,6 +4576,8 @@ class feat_req {
   +status
   +valid_from
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -4150,6 +4592,8 @@ class feat_saf_dfa {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +safety_relevant [optional]*
   +source_code_link [optional]*
@@ -4163,6 +4607,8 @@ class feat_saf_fmea {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +root_cause [optional]*
   +safety_relevant [optional]*
@@ -4175,6 +4621,8 @@ class logic_arc_int {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -4184,6 +4632,8 @@ class logic_arc_int_op {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -4195,6 +4645,8 @@ class plat_saf_dfa {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +safety_relevant [optional]*
   +source_code_link [optional]*
@@ -4259,6 +4711,14 @@ click plat_saf_dfa href &quot;#plat-saf-dfa&quot; &quot;Open plat_saf_dfa detail
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
 </tr>
@@ -4314,6 +4774,8 @@ class aou_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -4327,6 +4789,8 @@ class comp_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -4338,6 +4802,8 @@ class feat {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -4347,6 +4813,8 @@ class feat_arc_dyn {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -4356,6 +4824,8 @@ class feat_arc_sta {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -4368,6 +4838,8 @@ class feat_req {
   +status
   +valid_from
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -4382,6 +4854,8 @@ class feat_saf_dfa {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +safety_relevant [optional]*
   +source_code_link [optional]*
@@ -4395,6 +4869,8 @@ class feat_saf_fmea {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +root_cause [optional]*
   +safety_relevant [optional]*
@@ -4409,6 +4885,8 @@ class feat_sec_ana {
   +threat_effect
   +threat_scenario_id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
@@ -4419,6 +4897,8 @@ class logic_arc_int {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -4430,6 +4910,8 @@ class plat_sec_ana {
   +threat_effect
   +threat_scenario_id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
@@ -4443,6 +4925,8 @@ class stkh_req {
   +status
   +valid_from
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -4453,6 +4937,8 @@ class tool_req {
   +content
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +implemented [optional]*
   +parent_covered [optional]*
@@ -4475,7 +4961,7 @@ feat_saf_fmea ..&gt; feat_req : mitigated_by
 feat_sec_ana ..&gt; feat_req : mitigated_by
 logic_arc_int ..&gt; feat_req : fulfils
 plat_sec_ana ..&gt; feat_req : mitigated_by
-tool_req ..&gt; feat_req : satisfies
+tool_req --&gt; feat_req : satisfies
 style aou_req fill:#FCFCFC,stroke:#666,color:#000
 style comp_req fill:#D5E8D4,stroke:#666,color:#000
 style feat fill:#FFF2CC,stroke:#666,color:#000
@@ -4547,6 +5033,14 @@ click tool_req href &quot;#tool-req&quot; &quot;Open tool_req details&quot;
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">hash</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
@@ -4614,6 +5108,8 @@ class aou_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -4625,6 +5121,8 @@ class feat_arc_sta {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -4637,6 +5135,8 @@ class feat_req {
   +status
   +valid_from
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -4651,6 +5151,8 @@ class feat_saf_dfa {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +safety_relevant [optional]*
   +source_code_link [optional]*
@@ -4706,6 +5208,14 @@ click feat_saf_dfa href &quot;#feat-saf-dfa&quot; &quot;Open feat_saf_dfa detail
 <tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">mitigation_issue</span></code></p></td>
@@ -4767,6 +5277,8 @@ class aou_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -4778,6 +5290,8 @@ class feat_arc_dyn {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -4787,6 +5301,8 @@ class feat_arc_sta {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -4799,6 +5315,8 @@ class feat_req {
   +status
   +valid_from
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -4813,6 +5331,8 @@ class feat_saf_fmea {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +root_cause [optional]*
   +safety_relevant [optional]*
@@ -4872,6 +5392,14 @@ click feat_saf_fmea href &quot;#feat-saf-fmea&quot; &quot;Open feat_saf_fmea det
 <tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">mitigation_issue</span></code></p></td>
@@ -4937,6 +5465,8 @@ class aou_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -4951,6 +5481,8 @@ class feat_req {
   +status
   +valid_from
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -4965,6 +5497,8 @@ class feat_sec_ana {
   +threat_effect
   +threat_scenario_id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
@@ -5018,6 +5552,14 @@ click feat_sec_ana href &quot;#feat-sec-ana&quot; &quot;Open feat_sec_ana detail
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">mitigation_issue</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github\.com/[^/]+/[^/]+/issues/\d+$</span></code></p></td>
 </tr>
@@ -5067,6 +5609,8 @@ class feat_sec_threat {
   +status
   +threat_id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5105,6 +5649,14 @@ click feat_sec_threat href &quot;#feat-sec-threat&quot; &quot;Open feat_sec_thre
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
 </tr>
@@ -5132,6 +5684,8 @@ class gd_chklst {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5139,6 +5693,8 @@ class std_req {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5146,6 +5702,8 @@ class workflow {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5180,6 +5738,14 @@ click workflow href &quot;#workflow&quot; &quot;Open workflow details&quot;
 <tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
@@ -5225,6 +5791,8 @@ class gd_guidl {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5232,6 +5800,8 @@ class std_req {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5239,6 +5809,8 @@ class workflow {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5273,6 +5845,14 @@ click workflow href &quot;#workflow&quot; &quot;Open workflow details&quot;
 <tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
@@ -5318,6 +5898,8 @@ class gd_method {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5325,6 +5907,8 @@ class std_req {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5332,6 +5916,8 @@ class workflow {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5366,6 +5952,14 @@ click workflow href &quot;#workflow&quot; &quot;Open workflow details&quot;
 <tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
@@ -5411,6 +6005,8 @@ class gd_req {
   +content
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5418,6 +6014,8 @@ class std_req {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5425,6 +6023,8 @@ class tool_req {
   +content
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +implemented [optional]*
   +parent_covered [optional]*
@@ -5440,12 +6040,14 @@ class workflow {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
 gd_req ..&gt; std_req : complies
 gd_req ..&gt; workflow : satisfies
-tool_req ..&gt; gd_req : satisfies
+tool_req --&gt; gd_req : satisfies
 workflow ..&gt; gd_req : contains
 style std_req fill:#E1D5E7,stroke:#666,color:#000
 style tool_req fill:#F5F5F5,stroke:#666,color:#000
@@ -5478,6 +6080,14 @@ click workflow href &quot;#workflow&quot; &quot;Open workflow details&quot;
 <tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
@@ -5527,6 +6137,8 @@ class gd_temp {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5534,6 +6146,8 @@ class std_req {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5541,6 +6155,8 @@ class workflow {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5575,6 +6191,14 @@ click workflow href &quot;#workflow&quot; &quot;Open workflow details&quot;
 <tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
@@ -5622,6 +6246,8 @@ class comp {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5631,6 +6257,8 @@ class comp_arc_sta {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5640,6 +6268,8 @@ class feat {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5649,6 +6279,8 @@ class feat_arc_sta {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5661,6 +6293,8 @@ class feat_req {
   +status
   +valid_from
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -5673,6 +6307,8 @@ class logic_arc_int {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5682,6 +6318,8 @@ class logic_arc_int_op {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5742,6 +6380,14 @@ click logic_arc_int_op href &quot;#logic-arc-int-op&quot; &quot;Open logic_arc_i
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
 </tr>
@@ -5791,6 +6437,8 @@ class feat {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5800,6 +6448,8 @@ class feat_arc_sta {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5809,6 +6459,8 @@ class logic_arc_int {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5818,6 +6470,8 @@ class logic_arc_int_op {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5827,6 +6481,8 @@ class real_arc_int_op {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5879,6 +6535,14 @@ click real_arc_int_op href &quot;#real-arc-int-op&quot; &quot;Open real_arc_int_
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
 </tr>
@@ -5924,12 +6588,17 @@ class comp {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
 class mod {
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
+  +maturity [optional]*
   +safety [optional]*
   +security [optional]*
   +source_code_link [optional]*
@@ -5944,6 +6613,8 @@ class mod_ver_report {
   +verification_method
   +version
   +applies_to_module_version [optional]*
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +branch_coverage_percent [optional]*
   +line_coverage_percent [optional]*
   +requirements_tests_completely_passed_percent [optional]*
@@ -5953,12 +6624,16 @@ class mod_ver_report {
 class mod_view_dyn {
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
 class mod_view_sta {
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -5996,22 +6671,34 @@ click mod_view_sta href &quot;#mod-view-sta&quot; &quot;Open mod_view_sta detail
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">maturity</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^(preview|experimental|release)$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">safety</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^(QM|ASIL_B)$</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">security</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^(YES|NO)$</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">status</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^(valid|invalid)$</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">testlink</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
 </tr>
@@ -6050,6 +6737,9 @@ classDiagram
 class mod {
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
+  +maturity [optional]*
   +safety [optional]*
   +security [optional]*
   +source_code_link [optional]*
@@ -6064,6 +6754,8 @@ class mod_ver_report {
   +verification_method
   +version
   +applies_to_module_version [optional]*
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +branch_coverage_percent [optional]*
   +line_coverage_percent [optional]*
   +requirements_tests_completely_passed_percent [optional]*
@@ -6074,6 +6766,8 @@ class workproduct {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -6123,6 +6817,14 @@ click workproduct href &quot;#workproduct&quot; &quot;Open workproduct details&q
 </tr>
 <tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">applies_to_module_version</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
@@ -6196,6 +6898,9 @@ classDiagram
 class mod {
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
+  +maturity [optional]*
   +safety [optional]*
   +security [optional]*
   +source_code_link [optional]*
@@ -6205,6 +6910,8 @@ class mod {
 class mod_view_dyn {
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -6232,6 +6939,14 @@ click mod_view_dyn href &quot;#mod-view-dyn&quot; &quot;Open mod_view_dyn detail
 <tr class="row-odd"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
@@ -6279,12 +6994,17 @@ class comp {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
 class mod {
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
+  +maturity [optional]*
   +safety [optional]*
   +security [optional]*
   +source_code_link [optional]*
@@ -6294,6 +7014,8 @@ class mod {
 class mod_view_sta {
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -6324,6 +7046,14 @@ click mod_view_sta href &quot;#mod-view-sta&quot; &quot;Open mod_view_sta detail
 <tr class="row-odd"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
@@ -6377,6 +7107,8 @@ class aou_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -6388,6 +7120,8 @@ class feat_arc_sta {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -6399,6 +7133,8 @@ class plat_saf_dfa {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +safety_relevant [optional]*
   +source_code_link [optional]*
@@ -6413,6 +7149,8 @@ class stkh_req {
   +status
   +valid_from
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -6469,6 +7207,14 @@ click stkh_req href &quot;#stkh-req&quot; &quot;Open stkh_req details&quot;
 <tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">mitigation_issue</span></code></p></td>
@@ -6530,6 +7276,8 @@ class aou_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -6544,6 +7292,8 @@ class feat_req {
   +status
   +valid_from
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -6558,6 +7308,8 @@ class plat_sec_ana {
   +threat_effect
   +threat_scenario_id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
@@ -6611,6 +7363,14 @@ click plat_sec_ana href &quot;#plat-sec-ana&quot; &quot;Open plat_sec_ana detail
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">mitigation_issue</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github\.com/[^/]+/[^/]+/issues/\d+$</span></code></p></td>
 </tr>
@@ -6660,6 +7420,8 @@ class plat_sec_threat {
   +status
   +threat_id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -6698,12 +7460,148 @@ click plat_sec_threat href &quot;#plat-sec-threat&quot; &quot;Open plat_sec_thre
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">testlink</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</details></section>
+<section id="potential-tool-malfunction">
+<h2>potential_tool_malfunction<a class="headerlink" href="#potential-tool-malfunction" title="Link to this heading">#</a></h2>
+<p><strong>Potential Tool Malfunction</strong> (<code class="docutils literal notranslate"><span class="pre">potential_tool_malfunction__</span></code>)</p>
+<pre id="metamodel-type-diagram-potential-tool-malfunction" class="mermaid">
+        ---
+config:
+  layout: elk
+  securityLevel: loose
+---
+classDiagram
+  direction BT
+class potential_tool_malfunction {
+  +id
+  +safety_affected
+  +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
+  +detection_sufficient [optional]*
+  +safety_measures [optional]*
+  +source_code_link [optional]*
+  +testlink [optional]*
+}
+class tool_req {
+  +content
+  +id
+  +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
+  +hash [optional]*
+  +implemented [optional]*
+  +parent_covered [optional]*
+  +parent_has_problem [optional]*
+  +safety [optional]*
+  +security [optional]*
+  +source_code_link [optional]*
+  +tags [optional]*
+  +testcovered [optional]*
+  +testlink [optional]*
+}
+class tool_usecase {
+  +id
+  +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
+  +source_code_link [optional]*
+  +testlink [optional]*
+}
+potential_tool_malfunction --&gt; tool_usecase : parent_needs
+potential_tool_malfunction --&gt; tool_req : violates
+style tool_req fill:#F5F5F5,stroke:#666,color:#000
+style tool_usecase fill:#E1D5E7,stroke:#666,color:#000
+style potential_tool_malfunction fill:#F8CECC,stroke:#000,stroke-width:3px,color:#000
+click potential_tool_malfunction href &quot;#potential-tool-malfunction&quot; &quot;Open potential_tool_malfunction details&quot;
+click tool_req href &quot;#tool-req&quot; &quot;Open tool_req details&quot;
+click tool_usecase href &quot;#tool-usecase&quot; &quot;Open tool_usecase details&quot;
+    </pre><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Options and Links</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text"><strong>Options</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p class="sd-card-text">Type</p></th>
+<th class="head"><p class="sd-card-text">Option</p></th>
+<th class="head"><p class="sd-card-text">Definition</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">id</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^potential_tool_malfunction__[0-9a-z_]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Mandatory</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">safety_affected</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^(YES|NO)$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">detection_sufficient</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^(YES|NO)$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">safety_measures</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">testlink</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="sd-card-text"><strong>Links</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p class="sd-card-text">Type</p></th>
+<th class="head"><p class="sd-card-text">Link</p></th>
+<th class="head"><p class="sd-card-text">Definition</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">parent_needs</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">tool_usecase</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Mandatory</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">violates</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">tool_req</span></code></p></td>
 </tr>
 </tbody>
 </table>
@@ -6729,6 +7627,8 @@ class comp_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -6741,6 +7641,8 @@ class real_arc_int {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -6750,6 +7652,8 @@ class real_arc_int_op {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -6798,6 +7702,14 @@ click real_arc_int_op href &quot;#real-arc-int-op&quot; &quot;Open real_arc_int_
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
 </tr>
@@ -6843,6 +7755,8 @@ class comp {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -6852,6 +7766,8 @@ class comp_arc_sta {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -6861,6 +7777,8 @@ class logic_arc_int_op {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -6871,6 +7789,8 @@ class real_arc_int {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -6880,6 +7800,8 @@ class real_arc_int_op {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -6929,6 +7851,14 @@ click real_arc_int_op href &quot;#real-arc-int-op&quot; &quot;Open real_arc_int_
 <tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
@@ -6981,6 +7911,8 @@ class review_header {
   +reviewers
   +template
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -7023,6 +7955,14 @@ click review_header href &quot;#review-header&quot; &quot;Open review_header det
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
 </tr>
@@ -7049,6 +7989,8 @@ classDiagram
 class role {
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -7056,6 +7998,8 @@ class workflow {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -7086,6 +8030,14 @@ click workflow href &quot;#workflow&quot; &quot;Open workflow details&quot;
 <tr class="row-odd"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
@@ -7131,6 +8083,8 @@ class gd_chklst {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -7138,6 +8092,8 @@ class gd_guidl {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -7145,6 +8101,8 @@ class gd_method {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -7152,6 +8110,8 @@ class gd_req {
   +content
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -7159,6 +8119,8 @@ class gd_temp {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -7166,6 +8128,8 @@ class std_req {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -7173,6 +8137,8 @@ class workproduct {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -7221,6 +8187,14 @@ click workproduct href &quot;#workproduct&quot; &quot;Open workproduct details&q
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
 </tr>
@@ -7264,6 +8238,8 @@ class std_wp {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -7271,6 +8247,8 @@ class workproduct {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -7302,6 +8280,14 @@ click workproduct href &quot;#workproduct&quot; &quot;Open workproduct details&q
 <tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
@@ -7336,6 +8322,8 @@ class feat_req {
   +status
   +valid_from
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -7350,6 +8338,8 @@ class plat_saf_dfa {
   +status
   +sufficient
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +mitigation_issue [optional]*
   +safety_relevant [optional]*
   +source_code_link [optional]*
@@ -7364,6 +8354,8 @@ class stkh_req {
   +status
   +valid_from
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -7374,6 +8366,8 @@ class tool_req {
   +content
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +implemented [optional]*
   +parent_covered [optional]*
@@ -7387,7 +8381,7 @@ class tool_req {
 }
 feat_req ..&gt; stkh_req : derived_from
 plat_saf_dfa ..&gt; stkh_req : mitigated_by
-tool_req ..&gt; stkh_req : satisfies
+tool_req --&gt; stkh_req : satisfies
 style feat_req fill:#FFF2CC,stroke:#666,color:#000
 style plat_saf_dfa fill:#DAE8FC,stroke:#666,color:#000
 style tool_req fill:#F5F5F5,stroke:#666,color:#000
@@ -7441,6 +8435,14 @@ click tool_req href &quot;#tool-req&quot; &quot;Open tool_req details&quot;
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">hash</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
@@ -7480,6 +8482,8 @@ class tenet {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -7508,6 +8512,14 @@ click tenet href &quot;#tenet&quot; &quot;Open tenet details&quot;
 <tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
@@ -7552,6 +8564,8 @@ classDiagram
 class testcase {
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +derivation_technique [optional]*
   +file [optional]*
   +line [optional]*
@@ -7583,6 +8597,14 @@ click testcase href &quot;#testcase&quot; &quot;Open testcase details&quot;
 <tr class="row-odd"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">derivation_technique</span></code></p></td>
@@ -7664,6 +8686,8 @@ class comp_req {
   +security
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -7678,6 +8702,8 @@ class feat_req {
   +status
   +valid_from
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -7688,6 +8714,19 @@ class gd_req {
   +content
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
+  +source_code_link [optional]*
+  +testlink [optional]*
+}
+class potential_tool_malfunction {
+  +id
+  +safety_affected
+  +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
+  +detection_sufficient [optional]*
+  +safety_measures [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -7700,6 +8739,8 @@ class stkh_req {
   +status
   +valid_from
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +source_code_link [optional]*
   +testcovered [optional]*
@@ -7710,6 +8751,8 @@ class tool_req {
   +content
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +hash [optional]*
   +implemented [optional]*
   +parent_covered [optional]*
@@ -7721,18 +8764,21 @@ class tool_req {
   +testcovered [optional]*
   +testlink [optional]*
 }
-tool_req ..&gt; gd_req : satisfies
-tool_req ..&gt; stkh_req : satisfies
-tool_req ..&gt; feat_req : satisfies
-tool_req ..&gt; comp_req : satisfies
+potential_tool_malfunction --&gt; tool_req : violates
+tool_req --&gt; gd_req : satisfies
+tool_req --&gt; stkh_req : satisfies
+tool_req --&gt; feat_req : satisfies
+tool_req --&gt; comp_req : satisfies
 style comp_req fill:#D5E8D4,stroke:#666,color:#000
 style feat_req fill:#FFF2CC,stroke:#666,color:#000
 style gd_req fill:#E1D5E7,stroke:#666,color:#000
+style potential_tool_malfunction fill:#F8CECC,stroke:#666,color:#000
 style stkh_req fill:#DAE8FC,stroke:#666,color:#000
 style tool_req fill:#F5F5F5,stroke:#000,stroke-width:3px,color:#000
 click comp_req href &quot;#comp-req&quot; &quot;Open comp_req details&quot;
 click feat_req href &quot;#feat-req&quot; &quot;Open feat_req details&quot;
 click gd_req href &quot;#gd-req&quot; &quot;Open gd_req details&quot;
+click potential_tool_malfunction href &quot;#potential-tool-malfunction&quot; &quot;Open potential_tool_malfunction details&quot;
 click stkh_req href &quot;#stkh-req&quot; &quot;Open stkh_req details&quot;
 click tool_req href &quot;#tool-req&quot; &quot;Open tool_req details&quot;
     </pre><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
@@ -7758,6 +8804,14 @@ click tool_req href &quot;#tool-req&quot; &quot;Open tool_req details&quot;
 <tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">hash</span></code></p></td>
@@ -7811,9 +8865,119 @@ click tool_req href &quot;#tool-req&quot; &quot;Open tool_req details&quot;
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">satisfies</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">gd_req,</span> <span class="pre">stkh_req,</span> <span class="pre">feat_req,</span> <span class="pre">comp_req</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</details></section>
+<section id="tool-usecase">
+<h2>tool_usecase<a class="headerlink" href="#tool-usecase" title="Link to this heading">#</a></h2>
+<p><strong>Tool Use Case</strong> (<code class="docutils literal notranslate"><span class="pre">tool_usecase__</span></code>)</p>
+<pre id="metamodel-type-diagram-tool-usecase" class="mermaid">
+        ---
+config:
+  layout: elk
+  securityLevel: loose
+---
+classDiagram
+  direction BT
+class doc_tool {
+  +id
+  +security_affected
+  +status
+  +version
+  +approver [optional]*
+  +author [optional]*
+  +bazel_target [optional]*
+  +bazel_type [optional]*
+  +reviewer [optional]*
+  +safety_affected [optional]*
+  +source_code_link [optional]*
+  +tcl [optional]*
+  +testlink [optional]*
+  +tool_version [optional]*
+}
+class potential_tool_malfunction {
+  +id
+  +safety_affected
+  +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
+  +detection_sufficient [optional]*
+  +safety_measures [optional]*
+  +source_code_link [optional]*
+  +testlink [optional]*
+}
+class tool_usecase {
+  +id
+  +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
+  +source_code_link [optional]*
+  +testlink [optional]*
+}
+potential_tool_malfunction --&gt; tool_usecase : parent_needs
+tool_usecase --&gt; doc_tool : belongs_to
+style potential_tool_malfunction fill:#F8CECC,stroke:#666,color:#000
+style tool_usecase fill:#E1D5E7,stroke:#000,stroke-width:3px,color:#000
+click doc_tool href &quot;#doc-tool&quot; &quot;Open doc_tool details&quot;
+click potential_tool_malfunction href &quot;#potential-tool-malfunction&quot; &quot;Open potential_tool_malfunction details&quot;
+click tool_usecase href &quot;#tool-usecase&quot; &quot;Open tool_usecase details&quot;
+    </pre><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Options and Links</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text"><strong>Options</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p class="sd-card-text">Type</p></th>
+<th class="head"><p class="sd-card-text">Option</p></th>
+<th class="head"><p class="sd-card-text">Definition</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">id</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^tool_usecase__[0-9a-z_]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Mandatory</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">testlink</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^https://github.com/.*</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="sd-card-text"><strong>Links</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p class="sd-card-text">Type</p></th>
+<th class="head"><p class="sd-card-text">Link</p></th>
+<th class="head"><p class="sd-card-text">Definition</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">belongs_to</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">doc_tool</span></code></p></td>
 </tr>
 </tbody>
 </table>
@@ -7835,6 +8999,8 @@ class tsf {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -7863,6 +9029,14 @@ click tsf href &quot;#tsf&quot; &quot;Open tsf details&quot;
 <tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
@@ -7908,6 +9082,8 @@ class doc_concept {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -7915,6 +9091,8 @@ class doc_getstrt {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -7922,6 +9100,8 @@ class gd_chklst {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -7929,6 +9109,8 @@ class gd_guidl {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -7936,6 +9118,8 @@ class gd_method {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -7943,6 +9127,8 @@ class gd_req {
   +content
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -7950,12 +9136,16 @@ class gd_temp {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
 class role {
   +id
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -7963,6 +9153,8 @@ class workflow {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -7970,6 +9162,8 @@ class workproduct {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -8027,6 +9221,14 @@ click workproduct href &quot;#workproduct&quot; &quot;Open workproduct details&q
 <tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
@@ -8094,15 +9296,17 @@ classDiagram
   direction BT
 class doc_tool {
   +id
-  +safety_affected
   +security_affected
   +status
-  +tcl
   +version
   +approver [optional]*
   +author [optional]*
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +reviewer [optional]*
+  +safety_affected [optional]*
   +source_code_link [optional]*
+  +tcl [optional]*
   +testlink [optional]*
   +tool_version [optional]*
 }
@@ -8114,6 +9318,9 @@ class document {
   +version
   +approver [optional]*
   +author [optional]*
+  +bazel_target [optional]*
+  +bazel_type [optional]*
+  +report_version [optional]*
   +reviewer [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
@@ -8126,6 +9333,8 @@ class mod_ver_report {
   +verification_method
   +version
   +applies_to_module_version [optional]*
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +branch_coverage_percent [optional]*
   +line_coverage_percent [optional]*
   +requirements_tests_completely_passed_percent [optional]*
@@ -8136,6 +9345,8 @@ class std_req {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -8143,6 +9354,8 @@ class std_wp {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -8150,6 +9363,8 @@ class workflow {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -8157,6 +9372,8 @@ class workproduct {
   +id
   +status
   +version
+  +bazel_target [optional]*
+  +bazel_type [optional]*
   +source_code_link [optional]*
   +testlink [optional]*
 }
@@ -8201,6 +9418,14 @@ click workproduct href &quot;#workproduct&quot; &quot;Open workproduct details&q
 <tr class="row-even"><td><p class="sd-card-text">Mandatory</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">version</span></code></p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^[0-9]+$</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_target</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Optional</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">bazel_type</span></code></p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">^.*$</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p class="sd-card-text">Optional</p></td>
 <td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">source_code_link</span></code></p></td>
@@ -8268,74 +9493,6 @@ click workproduct href &quot;#workproduct&quot; &quot;Open workproduct details&q
             
             
               
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
-                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#aou-req">aou_req</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assertion">assertion</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comp">comp</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comp-arc-dyn">comp_arc_dyn</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comp-arc-sta">comp_arc_sta</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comp-req">comp_req</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comp-saf-dfa">comp_saf_dfa</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comp-saf-fmea">comp_saf_fmea</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comp-sec-ana">comp_sec_ana</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comp-sec-threat">comp_sec_threat</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dec-rec">dec_rec</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#doc-concept">doc_concept</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#doc-getstrt">doc_getstrt</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#doc-tool">doc_tool</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#document">document</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#feat">feat</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#feat-arc-dyn">feat_arc_dyn</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#feat-arc-sta">feat_arc_sta</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#feat-req">feat_req</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#feat-saf-dfa">feat_saf_dfa</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#feat-saf-fmea">feat_saf_fmea</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#feat-sec-ana">feat_sec_ana</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#feat-sec-threat">feat_sec_threat</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gd-chklst">gd_chklst</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gd-guidl">gd_guidl</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gd-method">gd_method</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gd-req">gd_req</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gd-temp">gd_temp</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logic-arc-int">logic_arc_int</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logic-arc-int-op">logic_arc_int_op</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mod">mod</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mod-ver-report">mod_ver_report</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mod-view-dyn">mod_view_dyn</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mod-view-sta">mod_view_sta</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plat-saf-dfa">plat_saf_dfa</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plat-sec-ana">plat_sec_ana</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plat-sec-threat">plat_sec_threat</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#real-arc-int">real_arc_int</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#real-arc-int-op">real_arc_int_op</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#review-header">review_header</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#role">role</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#std-req">std_req</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#std-wp">std_wp</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stkh-req">stkh_req</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tenet">tenet</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testcase">testcase</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tool-req">tool_req</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tsf">tsf</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow">workflow</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workproduct">workproduct</a></li>
-</ul>
-  </nav></div>
-
-</div></div>
-              
             
           </div>
           <footer class="bd-footer-content">
@@ -8347,8 +9504,8 @@ click workproduct href &quot;#workproduct&quot; &quot;Open workproduct details&q
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
-<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -8372,7 +9529,7 @@ click workproduct href &quot;#workproduct&quot; &quot;Open workproduct details&q
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
 </p></div>
       
     </div>
