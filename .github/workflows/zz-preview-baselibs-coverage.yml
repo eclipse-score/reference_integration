@@ -95,7 +95,12 @@ jobs:
             test_bitmanipulation_library_sets_and_toggles_bits \
             test_hash_library_crc32_ieee_check_value \
             test_containers_library_dynamic_array \
-            test_result_library_error_handling; do
+            test_result_library_error_handling \
+            test_concurrency_library_notification \
+            test_filesystem_library_path_decomposition \
+            test_memory_library_pmr_ring_buffer \
+            test_static_reflection_library_serialize_roundtrip \
+            test_flatbuffers_library_build_and_lookup; do
             if grep -rq "$t" _build; then
               echo "OK   $t is referenced in the rendered docs"
             else
