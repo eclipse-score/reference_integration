@@ -82,25 +82,112 @@ def test_hash_library_crc32_ieee_check_value(target):
 
 
 @add_test_properties(
-    partially_verifies=["feat_req__baselibs__containers_library"],
+    partially_verifies=[
+        "feat_req__baselibs__containers_library",
+        "feat_req__baselibs__abi_containers",
+    ],
     test_type="requirements-based",
     derivation_technique="requirements-analysis",
 )
 def test_containers_library_dynamic_array(target):
-    """Fill and iterate a DynamicArray, confirming size and element access."""
+    """Fill and iterate a DynamicArray, confirming size and element access.
+
+    DynamicArray is the ABI-stable container (raw-pointer iterators,
+    allocator-aware), so this also partially verifies the abi_containers
+    requirement.
+    """
     output = run_test_app(target, "containers")
     assert "size=4" in output
     assert "sum=100" in output
 
 
 @add_test_properties(
-    partially_verifies=["feat_req__baselibs__result_library"],
+    partially_verifies=[
+        "feat_req__baselibs__result_library",
+        "feat_req__baselibs__panic_free_development",
+    ],
     test_type="requirements-based",
     derivation_technique="requirements-analysis",
 )
 def test_result_library_error_handling(target):
-    """Exercise the Result value and error paths without C++ exceptions."""
+    """Exercise the Result value and error paths without C++ exceptions.
+
+    Returning errors as values instead of throwing is the panic-free error
+    handling mechanism, so this also partially verifies the
+    panic_free_development requirement.
+    """
     output = run_test_app(target, "result")
     assert "ok_value=42" in output
     assert "error_handled=1" in output
     assert "error_msg=division by zero" in output
+
+
+@add_test_properties(
+    partially_verifies=["feat_req__baselibs__concurrency_library"],
+    test_type="requirements-based",
+    derivation_technique="requirements-analysis",
+)
+def test_concurrency_library_notification(target):
+    """Notify a Notification and confirm an already-notified wait returns."""
+    output = run_test_app(target, "concurrency")
+    assert "notified=1" in output
+    assert "reset=ok" in output
+
+
+@add_test_properties(
+    partially_verifies=["feat_req__baselibs__filesystem_library"],
+    test_type="requirements-based",
+    derivation_technique="requirements-analysis",
+)
+def test_filesystem_library_path_decomposition(target):
+    """Decompose a path into filename, extension and parent components."""
+    output = run_test_app(target, "filesystem")
+    assert "filename=report.txt" in output
+    assert "extension=.txt" in output
+    assert "parent=/home/user/documents" in output
+
+
+@add_test_properties(
+    partially_verifies=["feat_req__baselibs__memory_library"],
+    test_type="requirements-based",
+    derivation_technique="requirements-analysis",
+)
+def test_memory_library_pmr_ring_buffer(target):
+    """Fill a PMR ring buffer past capacity and confirm it overwrites oldest."""
+    output = run_test_app(target, "memory")
+    assert "size=3" in output
+    assert "front=20" in output
+    assert "full=1" in output
+
+
+@add_test_properties(
+    partially_verifies=["feat_req__baselibs__static_reflection_library"],
+    test_type="requirements-based",
+    derivation_technique="requirements-analysis",
+)
+def test_static_reflection_library_serialize_roundtrip(target):
+    """Serialize a reflectable struct to bytes and deserialize it back."""
+    output = run_test_app(target, "reflect")
+    assert "id=43981" in output  # 0xABCD
+    assert "count=7" in output
+    assert "roundtrip=ok" in output
+
+
+@add_test_properties(
+    partially_verifies=[
+        "feat_req__baselibs__flatbuffers_library",
+        "feat_req__baselibs__multi_language_apis",
+    ],
+    test_type="requirements-based",
+    derivation_technique="requirements-analysis",
+)
+def test_flatbuffers_library_build_and_lookup(target):
+    """Build a flatbuffer from a schema and look an element up by key.
+
+    FlatBuffers is a language-neutral serialization format with generated C++
+    and Rust APIs, so this also partially verifies the multi_language_apis
+    requirement.
+    """
+    output = run_test_app(target, "flatbuffers")
+    assert "items=3" in output
+    assert "lookup20=twenty" in output
