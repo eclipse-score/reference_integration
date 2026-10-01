@@ -113,6 +113,28 @@ jobs:
         # coverage figures of the platform verification report.
         run: |
           bazel test --lockfile_mode=error --config=linux-x86_64 //feature_integration_tests/baselibs_integration_tests:bit
+      - name: Execute Lifecycle Integration Tests
+        # Same rationale as the baselibs step above: these tests run in this job
+        # and before the documentation build so the docs source code linker picks
+        # up their PartiallyVerifies properties from `bazel-testlogs`, turning
+        # them into `testlink` attributes on the lifecycle feature requirement
+        # needs of the platform verification report. The tests live in the
+        # lifecycle module; their test-framework dependencies (score_itf, the
+        # rules_oci extension) are exposed to this non-root consumer by
+        # //patches/lifecycle:002-undev-integration-test-deps.patch. The docker
+        # integration mode is selected explicitly via the lifecycle config flag.
+        run: |
+          bazel test --lockfile_mode=error --config=linux-x86_64 \
+            --@score_lifecycle//config:integration_mode=docker \
+            @score_lifecycle//tests/integration/crash_on_startup:crash_on_startup \
+            @score_lifecycle//tests/integration/parallel_launch:parallel_launch \
+            @score_lifecycle//tests/integration/process_complex_rep_failure:process_complex_rep_failure \
+            @score_lifecycle//tests/integration/process_crash_monitoring:process_crash_monitoring \
+            @score_lifecycle//tests/integration/process_fd_leak:process_fd_leak \
+            @score_lifecycle//tests/integration/process_launch_args:process_launch_args \
+            @score_lifecycle//tests/integration/process_simple_rep_failure:process_simple_rep_failure \
+            @score_lifecycle//tests/integration/rt_running_when_process_exits:rt_running_when_process_exits \
+            @score_lifecycle//tests/integration/switch_run_target:switch_run_target
       - name: Install uv (required for SBOM license scanning)
         uses: astral-sh/setup-uv@v5
         with:
