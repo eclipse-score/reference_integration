@@ -13,11 +13,11 @@
 
 load("@rules_cc//cc:defs.bzl", "cc_binary")
 
-# On-target demo exercising one baselibs feature library per subcommand. It is
-# bundled into //images/linux_x86_64:image (see that package's BUILD) and driven
-# by the baselibs integration tests in the parent package.
+# On-target test app exercising one baselibs feature library per subcommand. It
+# is bundled into //images/linux_x86_64:image (see that package's BUILD) and
+# driven by the baselibs integration tests in the parent package.
 cc_binary(
-    name = "baselibs_feature_demo",
+    name = "baselibs_test_app",
     srcs = ["main.cpp"],
     tags = ["manual"],
     visibility = ["//visibility:public"],

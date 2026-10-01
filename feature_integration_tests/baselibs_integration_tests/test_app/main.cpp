@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-// On-target feature demo for the Eclipse S-CORE base libraries.
+// On-target test app for the Eclipse S-CORE base libraries.
 //
 // Each subcommand exercises exactly one baselibs feature library and prints a
 // single deterministic "<name>: ..." line to stdout. The baselibs integration
@@ -39,34 +39,34 @@
 namespace
 {
 
-// Minimal self-contained error domain so the result demo can exercise the
+// Minimal self-contained error domain so the result subcommand can exercise the
 // error path without pulling in a logging backend.
-enum class DemoErrc : score::result::ErrorCode
+enum class AppErrc : score::result::ErrorCode
 {
     kDivideByZero = 1,
 };
 
-class DemoErrorDomain final : public score::result::ErrorDomain
+class AppErrorDomain final : public score::result::ErrorDomain
 {
   public:
     std::string_view MessageFor(const score::result::ErrorCode& code) const noexcept override
     {
-        return (static_cast<DemoErrc>(code) == DemoErrc::kDivideByZero) ? "division by zero" : "unknown error";
+        return (static_cast<AppErrc>(code) == AppErrc::kDivideByZero) ? "division by zero" : "unknown error";
     }
 };
 
-constexpr DemoErrorDomain kDemoErrorDomain;
+constexpr AppErrorDomain kAppErrorDomain;
 
-score::result::Error MakeError(const DemoErrc code, const std::string_view user_message = "") noexcept
+score::result::Error MakeError(const AppErrc code, const std::string_view user_message = "") noexcept
 {
-    return score::result::Error{static_cast<score::result::ErrorCode>(code), kDemoErrorDomain, user_message};
+    return score::result::Error{static_cast<score::result::ErrorCode>(code), kAppErrorDomain, user_message};
 }
 
 score::Result<int> SafeDivide(const int numerator, const int denominator)
 {
     if (denominator == 0)
     {
-        return score::MakeUnexpected(DemoErrc::kDivideByZero, "cannot divide by zero");
+        return score::MakeUnexpected(AppErrc::kDivideByZero, "cannot divide by zero");
     }
     return numerator / denominator;
 }
@@ -183,7 +183,7 @@ int main(int argc, char** argv)
 {
     if (argc < 2)
     {
-        std::cerr << "usage: baselibs_feature_demo <json|base64|bitmanip|crc32|containers|result>\n";
+        std::cerr << "usage: baselibs_test_app <json|base64|bitmanip|crc32|containers|result>\n";
         return 2;
     }
 

@@ -10,23 +10,23 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-"""Helper for driving the baselibs feature demo on the deployed target."""
+"""Helper for driving the baselibs test app on the deployed target."""
 
 import logging
 
 logger = logging.getLogger(__name__)
 
-_DEMO_BIN = "/usr/bin/baselibs_feature_demo"
+_TEST_APP_BIN = "/usr/bin/baselibs_test_app"
 
 
-def run_demo(target, subcommand: str) -> str:
-    """Run one subcommand of the demo binary on the target and return its stdout.
+def run_test_app(target, subcommand: str) -> str:
+    """Run one subcommand of the test app on the target and return its stdout.
 
     Asserts the binary exits successfully so every feature test fails loudly if
     the exercised baselibs library misbehaves on the target.
     """
-    exit_code, out = target.execute(f"{_DEMO_BIN} {subcommand}")
+    exit_code, out = target.execute(f"{_TEST_APP_BIN} {subcommand}")
     output = out.decode(errors="replace").strip()
-    logger.info("baselibs_feature_demo %s -> (%s) %s", subcommand, exit_code, output)
-    assert exit_code == 0, f"baselibs_feature_demo {subcommand} exited with {exit_code}:\n{output}"
+    logger.info("baselibs_test_app %s -> (%s) %s", subcommand, exit_code, output)
+    assert exit_code == 0, f"baselibs_test_app {subcommand} exited with {exit_code}:\n{output}"
     return output

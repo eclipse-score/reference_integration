@@ -34,9 +34,9 @@ config_setting(
 )
 
 py_library(
-    name = "demo_runner",
-    srcs = ["demo_runner.py"],
-    # Lets the test `import demo_runner` as a flat top-level module.
+    name = "test_app_runner",
+    srcs = ["test_app_runner.py"],
+    # Lets the test `import test_app_runner` as a flat top-level module.
     imports = ["."],
 )
 
@@ -86,6 +86,6 @@ py_itf_test(
         "manual",
     ],
     deps = [
-        ":demo_runner",
+        ":test_app_runner",
     ],
 )

@@ -48,8 +48,8 @@ pkg_tar(
 )
 
 pkg_tar(
-    name = "baselibs_feature_demo_tar",
-    srcs = ["//feature_integration_tests/baselibs_integration_tests/demo:baselibs_feature_demo"],
+    name = "baselibs_test_app_tar",
+    srcs = ["//feature_integration_tests/baselibs_integration_tests/test_app:baselibs_test_app"],
     mode = "0755",
     package_dir = "/usr/bin",
 )
@@ -61,7 +61,7 @@ oci_image(
         "//showcases:showcases_pkg_tar",
         ":datarouter_bin_tar",
         ":datarouter_etc_tar",
-        ":baselibs_feature_demo_tar",
+        ":baselibs_test_app_tar",
     ],
 )
 
