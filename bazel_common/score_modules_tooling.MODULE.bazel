@@ -64,10 +64,12 @@ git_override(
     remote = "https://github.com/eclipse-score/testing_tools.git",
 )
 
+# Temporarily overridden to test docs-as-code PR #893 (feat/valid-inspected-status).
 bazel_dep(name = "score_docs_as_code")
-single_version_override(
+git_override(
     module_name = "score_docs_as_code",
-    version = "8.3.0",
+    commit = "64d669363e4e0ecd2ce7816afefc284dc1c66c9f",
+    remote = "https://github.com/eclipse-score/docs-as-code.git",
 )
 
 bazel_dep(name = "score_process_description")
