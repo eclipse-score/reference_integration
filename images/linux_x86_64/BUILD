@@ -47,6 +47,13 @@ pkg_tar(
     package_dir = "/usr/bin/datarouter/etc",
 )
 
+pkg_tar(
+    name = "baselibs_feature_demo_tar",
+    srcs = ["//feature_integration_tests/baselibs_integration_tests/demo:baselibs_feature_demo"],
+    mode = "0755",
+    package_dir = "/usr/bin",
+)
+
 oci_image(
     name = "image",
     base = "@ubuntu_22_04_linux_amd64",
@@ -54,6 +61,7 @@ oci_image(
         "//showcases:showcases_pkg_tar",
         ":datarouter_bin_tar",
         ":datarouter_etc_tar",
+        ":baselibs_feature_demo_tar",
     ],
 )
 
@@ -62,6 +70,7 @@ oci_load(
     image = ":image",
     repo_tags = ["score_showcases:latest"],
     visibility = [
+        "//feature_integration_tests/baselibs_integration_tests:__subpackages__",
         "//feature_integration_tests/itf:__pkg__",
     ],
 )
