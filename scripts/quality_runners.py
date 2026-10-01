@@ -11,12 +11,12 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 import argparse
+import os
 import re
 import select
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from pprint import pprint
 from subprocess import PIPE, Popen, run
 
 from known_good.models.known_good import load_known_good
@@ -59,7 +59,7 @@ def configure_aslr_for_sanitizers() -> None:
         print(f"QR: Could not lower vm.mmap_rnd_bits (continuing anyway): {result.stderr.strip()}")
 
 
-def run_unit_test_with_coverage(module: Module) -> dict[str, str | int]:
+def run_unit_test_with_coverage(module: Module, trust_cache: bool = False) -> dict[str, str | int]:
     print_centered("QR: Running unit tests")
 
     call = (
@@ -72,7 +72,9 @@ def run_unit_test_with_coverage(module: Module) -> dict[str, str | int]:
             "--config=ferrocene-coverage",
             "--test_summary=testcase",
             "--test_output=errors",
-            "--nocache_test_results",
+        ]
+        + ([] if trust_cache else ["--nocache_test_results"])
+        + [
             f"--instrumentation_filter=@{module.name}",
             f"@{module.name}{module.metadata.code_root_path}",
         ]
@@ -158,7 +160,7 @@ def generate_markdown_report(
     title: str,
     columns: list[str],
     output_path: Path = Path("unit_test_summary.md"),
-) -> None:
+) -> str:
     # Build header and separator
     title = f"# {title}\n"
     header = "| " + " | ".join(columns) + " |"
@@ -171,6 +173,80 @@ def generate_markdown_report(
 
     md = "\n".join([title, header, separator] + rows + [""])
     output_path.write_text(md)
+    return md
+
+
+def append_to_step_summary(*blocks: str) -> None:
+    """Mirror the reports into the job summary GitHub shows above the log.
+
+    Writing straight from the data keeps what gets published tied to this run.
+    The markdown files are still needed by the documentation build, but nothing
+    reads them back, so a stale or hand-edited copy cannot be mistaken for a
+    result. Outside of Actions the variable is unset and this does nothing.
+    """
+    step_summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    if not step_summary:
+        return
+    with open(step_summary, "a", encoding="utf-8") as handle:
+        handle.write("\n".join(blocks))
+
+
+STATUS_LABELS = {"pass": "✅ pass", "FAILED": "❌ FAILED", "skipped": "⚪ skipped"}
+
+
+def with_status(data: dict[str, dict[str, int]]) -> dict[str, dict[str, int]]:
+    """Derive a readable status column from the exit code each runner reports.
+
+    Without it a module whose Bazel invocation aborted during analysis is
+    indistinguishable from one that simply has no tests: both show up as all
+    zeroes, and ``failed`` even claims zero failures. An explicit status set by
+    the caller (``skipped``) wins over the derived one.
+
+    The emoji carries the colour: Markdown offers no way to colour a table cell
+    that survives both GitHub and the Sphinx build of these same files. The word
+    stays next to it so the table is still readable where emoji are not.
+    """
+    return {
+        name: {
+            **stats,
+            "status": STATUS_LABELS[stats.get("status") or ("pass" if stats.get("exit_code", 0) == 0 else "FAILED")],
+        }
+        for name, stats in data.items()
+    }
+
+
+def report_failures(unit_tests: dict[str, dict[str, int]], coverage: dict[str, dict[str, int]]) -> list[str]:
+    """Name every module that failed, via annotations and a final summary block.
+
+    ``::error`` annotations are rendered by GitHub above the step list of the
+    run, so the failing module is visible without opening the log at all.
+    """
+    failed = sorted(name for name, stats in unit_tests.items() if stats.get("exit_code", 0) != 0)
+
+    for name in failed:
+        print(
+            f"::error title=Unit tests failed::{name}: bazel exited with "
+            f"{unit_tests[name]['exit_code']} and produced no test results"
+        )
+    for name, stats in coverage.items():
+        # A coverage run that was skipped is already covered by the unit test
+        # annotation for the same module; annotating it again is just noise.
+        if stats.get("exit_code", 0) != 0 and stats.get("status") != "skipped":
+            print(f"::error title=Coverage failed::{name}: coverage extraction did not succeed")
+
+    print_centered("QR: UNIT TEST EXECUTION SUMMARY", fillchar="=")
+    for name, stats in sorted(unit_tests.items()):
+        if stats.get("exit_code", 0) == 0:
+            print(f"  pass    {name:<26} {stats['passed']:>6} passed, {stats['skipped']:>3} skipped")
+    for name in failed:
+        print(f"  FAILED  {name:<26} bazel exit code {unit_tests[name]['exit_code']}, no results")
+
+    if failed:
+        print_centered(
+            f"QR: {len(failed)} of {len(unit_tests)} MODULES FAILED: {', '.join(failed)}",
+            fillchar="=",
+        )
+    return failed
 
 
 def extract_ut_summary(logs: str) -> dict[str, int]:
@@ -302,6 +378,15 @@ def parse_arguments() -> argparse.Namespace:
         default=[],
         help="List of modules to test",
     )
+    parser.add_argument(
+        "--trust-cache",
+        action="store_true",
+        help="Allow Bazel to reuse cached test/coverage results for unchanged modules instead of always "
+        "re-executing them (--nocache_test_results). Note that --nocache_test_results suppresses not only "
+        "reading but also writing test results into the disk-cache, so omitting --trust-cache on a run that "
+        "populates a shared cache makes that cache useless for subsequent runs. Omit it only for "
+        "authoritative runs whose artifacts are published (e.g. release).",
+    )
     return parser.parse_args()
 
 
@@ -325,7 +410,17 @@ def main() -> bool:
             continue
 
         print_centered(f"QR: Testing module: {module.name}")
-        unit_tests_summary[module.name] = run_unit_test_with_coverage(module=module)
+        unit_tests_summary[module.name] = run_unit_test_with_coverage(module=module, trust_cache=args.trust_cache)
+
+        # Coverage extraction reads the .dat file Bazel leaves in a fixed
+        # location. When the test run failed, that file is still the one the
+        # previous module produced, so genhtml would silently report another
+        # module's numbers under this module's name.
+        if unit_tests_summary[module.name]["exit_code"] != 0:
+            print_centered(f"QR: Skipping coverage for {module.name}: unit test run failed")
+            for lang in module.metadata.langs:
+                coverage_summary[f"{module.name}_{lang}"] = {"exit_code": 1, "status": "skipped"}
+            continue
 
         if "cpp" in module.metadata.langs:
             coverage_summary[f"{module.name}_cpp"] = run_cpp_coverage_extraction(
@@ -345,23 +440,21 @@ def main() -> bool:
 
         print_centered(f"QR: Finished testing module: {module.name}")
 
-    generate_markdown_report(
-        unit_tests_summary,
+    unit_tests_md = generate_markdown_report(
+        with_status(unit_tests_summary),
         title="Unit Test Execution Summary",
-        columns=["module", "passed", "failed", "skipped", "total"],
+        columns=["module", "status", "passed", "failed", "skipped", "total"],
         output_path=path_to_docs / "unit_test_summary.md",
     )
-    print_centered("QR: UNIT TEST EXECUTION SUMMARY", fillchar="=")
-    pprint(unit_tests_summary, width=120)
-
-    generate_markdown_report(
-        coverage_summary,
+    coverage_md = generate_markdown_report(
+        with_status(coverage_summary),
         title="Coverage Analysis Summary",
-        columns=["module", "lines", "functions", "branches"],
+        columns=["module", "status", "lines", "functions", "branches"],
         output_path=path_to_docs / "coverage_summary.md",
     )
-    print_centered("QR: COVERAGE ANALYSIS SUMMARY", fillchar="=")
-    pprint(coverage_summary, width=120)
+    append_to_step_summary(unit_tests_md, coverage_md)
+
+    report_failures(unit_tests_summary, coverage_summary)
 
     # Check all exit codes and return non-zero if any test or coverage extraction failed
     return any(r["exit_code"] != 0 for r in {**unit_tests_summary, **coverage_summary}.values())

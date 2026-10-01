@@ -1,0 +1,26 @@
+diff --git a/score/kvs/rust_kvs/BUILD b/score/kvs/rust_kvs/BUILD
+index 0be840f70..07c7bf1fc 100644
+--- a/score/kvs/rust_kvs/BUILD
++++ b/score/kvs/rust_kvs/BUILD
+@@ -17,7 +17,7 @@ rust_library(
+     srcs = glob(["src/**/*.rs"]),
+     visibility = ["//visibility:public"],
+     deps = [
+-        "@score_baselibs//src/log/score_log",
++        "@score_baselibs//score/log_rust/score_log",
+         "@score_crates//:adler32",
+         "@score_crates//:tinyjson",
+     ],
+diff --git a/score/kvs/rust_kvs_tool/BUILD b/score/kvs/rust_kvs_tool/BUILD
+index 831304c5e..47c9fcbf5 100644
+--- a/score/kvs/rust_kvs_tool/BUILD
++++ b/score/kvs/rust_kvs_tool/BUILD
+@@ -27,7 +27,7 @@ rust_binary(
+     visibility = ["//visibility:public"],
+     deps = [
+         "//score/kvs/rust_kvs",
+-        "@score_baselibs//src/log/score_log",
++        "@score_baselibs//score/log_rust/score_log",
+         "@score_crates//:pico_args",
+         "@score_crates//:tinyjson",
+         "@score_logging//score/mw/log/rust/score_log_bridge",

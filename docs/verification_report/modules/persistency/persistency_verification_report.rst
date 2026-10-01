@@ -22,9 +22,8 @@ Persistency Module Verification Report
    :safety: QM
    :security: NO
    :realizes: wp__verification_module_ver_report
+   :report_version: v1.0
    :version: 1
 
-This report is generated from persistency's own needs data.
-It uses the module verification report template introduced by docs-as-code.
-It complements persistency's own hand-written verification report,
+This report complements persistency's own hand-written verification report,
 :need:`doc__persistency_manual_verification_report`.
