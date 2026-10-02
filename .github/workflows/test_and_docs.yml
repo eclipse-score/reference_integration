@@ -112,6 +112,36 @@ jobs:
         # figures of the platform verification report.
         run: |
           bazel test --lockfile_mode=error --config=linux-x86_64 //platform_integration_tests:pit
+      - name: Execute Lifecycle Integration Tests
+        # Must run in this job, before the docs build: its source code linker
+        # turns the tests' Verifies properties into `testlink`s on the lifecycle
+        # feature and component requirements. Test-framework deps are exposed by
+        # //patches/lifecycle:002-undev-integration-test-deps.patch; docker mode
+        # is selected explicitly, qemu variants skip. --flaky_test_attempts=3
+        # absorbs a race in the ITF docker plugin's PID read.
+        run: |
+          bazel test --lockfile_mode=error --config=linux-x86_64 \
+            --flaky_test_attempts=3 \
+            --@score_lifecycle//config:integration_mode=docker \
+            @score_lifecycle//tests/integration/...
+      - name: Execute Logging Component Tests
+        # Same rationale as the lifecycle step: contributes `testlink`s to the
+        # logging component requirements. Test-framework deps are exposed by
+        # //patches/logging:002-undev-component-test-deps.patch; the docker image
+        # variant is the linux default, qnx/qemu variants skip.
+        # --flaky_test_attempts=3 absorbs the same ITF docker PID read race.
+        run: |
+          bazel test --lockfile_mode=error --config=linux-x86_64 \
+            --flaky_test_attempts=3 \
+            @score_logging//score/test/component/...
+      - name: Execute Persistency Component Integration Tests
+        # Same rationale as the module steps above. The "cit" suite is a pair of
+        # score_py_pytest host targets (no Docker) carrying comp_req__kvs__*
+        # annotations. No patch needed, but it is excluded from the standard
+        # persistency run, so it is executed explicitly here.
+        run: |
+          bazel test --lockfile_mode=error --config=linux-x86_64 \
+            @score_persistency//score/kvs/tests/test_cases:cit
       - name: Install uv (required for SBOM license scanning)
         uses: astral-sh/setup-uv@v5
         with:
