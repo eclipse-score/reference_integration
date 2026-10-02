@@ -303,6 +303,10 @@
   
 
   
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
 </div>
 
     </header>
@@ -483,7 +487,6 @@
 </ul>
 </details></li>
 
-<li class="toctree-l2"><a class="reference internal" href="../../../../cpp-style-guide.html">C++ Style Conventions</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../score_persistency/index.html">Persistency Documentation</a></li>
@@ -562,7 +565,7 @@
                   
   <section id="rust-containers-architecture">
 <h1>Rust Containers Architecture<a class="headerlink" href="#rust-containers-architecture" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-d7bd8610">
+<div class="need_container docutils container" id="SNCB-75219a77">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__containers_rust_architecture">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -582,7 +585,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">baselibs_rust_containers_rust</span></span></span></div>
-<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>2</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">realizes: <span class="realizes"><span><a class="reference internal" href="../../../../../../process_methods_tools/score_process_description/process_areas/architecture_design/architecture_workproducts.html#wp__component_arch" title="doc__containers_rust_architecture">wp__component_arch</a></span></span></div>
 </span></div>
@@ -618,8 +621,8 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </section>
 <section id="static-architecture">
 <h2>Static Architecture<a class="headerlink" href="#static-architecture" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-e814c6ca">
-<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_arc_sta table" id="comp_arc_sta__baselibs_rust__containers_rust">
+<div class="need_container docutils container" id="SNCB-a27f57f7">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp table" id="comp__baselibs_containers_rust">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
 <div class="line"><span><span class="needs_title"><span class="needs_data">Rust Containers</span></span></span></div>
@@ -638,9 +641,57 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">baselibs_rust_containers_rust</span></span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>2</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="../../../../../../process_methods_tools/score_platform/features/baselibs/architecture/index.html#feat__baselibs" title="comp__baselibs_containers_rust">feat__baselibs</a></span></span></div>
+<div class="line">has: <span class="belongs_to"><span><a class="reference internal" href="#comp_arc_sta__baselibs_rust__containers_rust" title="comp__baselibs_containers_rust">comp_arc_sta__baselibs_rust__containers_rust</a></span></span></div>
+<div class="line">satisfies: <span class="satisfied_by"><span><a class="reference internal" href="../requirements/index.html#comp_req__containers_rust__det_behavior" title="comp__baselibs_containers_rust">comp_req__containers_rust__det_behavior</a>, <a class="reference internal" href="../requirements/index.html#comp_req__containers_rust__fixed_btree" title="comp__baselibs_containers_rust">comp_req__containers_rust__fixed_btree</a>, <a class="reference internal" href="../requirements/index.html#comp_req__containers_rust__fixed_hashmap" title="comp__baselibs_containers_rust">comp_req__containers_rust__fixed_hashmap</a>, <a class="reference internal" href="../requirements/index.html#comp_req__containers_rust__fixed_hashset" title="comp__baselibs_containers_rust">comp_req__containers_rust__fixed_hashset</a>, <a class="reference internal" href="../requirements/index.html#comp_req__containers_rust__fixed_no_realloc" title="comp__baselibs_containers_rust">comp_req__containers_rust__fixed_no_realloc</a>, <a class="reference internal" href="../requirements/index.html#comp_req__containers_rust__fixed_queue" title="comp__baselibs_containers_rust">comp_req__containers_rust__fixed_queue</a>, <a class="reference internal" href="../requirements/index.html#comp_req__containers_rust__fixed_string" title="comp__baselibs_containers_rust">comp_req__containers_rust__fixed_string</a>, <a class="reference internal" href="../requirements/index.html#comp_req__containers_rust__fixed_vector" title="comp__baselibs_containers_rust">comp_req__containers_rust__fixed_vector</a>, <a class="reference internal" href="../requirements/index.html#comp_req__containers_rust__inline_btree" title="comp__baselibs_containers_rust">comp_req__containers_rust__inline_btree</a>, <a class="reference internal" href="../requirements/index.html#comp_req__containers_rust__inline_hashmap" title="comp__baselibs_containers_rust">comp_req__containers_rust__inline_hashmap</a>, <a class="reference internal" href="../requirements/index.html#comp_req__containers_rust__inline_hashset" title="comp__baselibs_containers_rust">comp_req__containers_rust__inline_hashset</a>, <a class="reference internal" href="../requirements/index.html#comp_req__containers_rust__inline_no_heap" title="comp__baselibs_containers_rust">comp_req__containers_rust__inline_no_heap</a>, <a class="reference internal" href="../requirements/index.html#comp_req__containers_rust__inline_queue" title="comp__baselibs_containers_rust">comp_req__containers_rust__inline_queue</a>, <a class="reference internal" href="../requirements/index.html#comp_req__containers_rust__inline_string" title="comp__baselibs_containers_rust">comp_req__containers_rust__inline_string</a>, <a class="reference internal" href="../requirements/index.html#comp_req__containers_rust__inline_vector" title="comp__baselibs_containers_rust">comp_req__containers_rust__inline_vector</a>, <a class="reference internal" href="../requirements/index.html#comp_req__containers_rust__type_safety" title="comp__baselibs_containers_rust">comp_req__containers_rust__type_safety</a></span></span></div>
+<div class="line">implements: <span class="implements"><span><a class="reference internal" href="#logic_arc_int__b_r__fixqueue" title="comp__baselibs_containers_rust">logic_arc_int__b_r__fixqueue</a>, <a class="reference internal" href="#logic_arc_int__b_r__fixvec" title="comp__baselibs_containers_rust">logic_arc_int__b_r__fixvec</a>, <a class="reference internal" href="#logic_arc_int__b_r__inlinevec" title="comp__baselibs_containers_rust">logic_arc_int__b_r__inlinevec</a>, <a class="reference internal" href="#logic_arc_int__b_r__inlqueue" title="comp__baselibs_containers_rust">logic_arc_int__b_r__inlqueue</a></span></span></div>
+<div class="line">included by: <span class="includes"><span><a class="reference internal" href="../../../../module/index.html#mod__baselibs" title="comp__baselibs_containers_rust">mod__baselibs</a>, <a class="reference internal" href="../../../../module/index.html#mod_view_sta__baselibs__baselibs" title="comp__baselibs_containers_rust">mod_view_sta__baselibs__baselibs</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#comp__baselibs_containers_rust" title="comp__baselibs_containers_rust">comp__baselibs_containers_rust</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Component</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-9651d29f">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_arc_sta table" id="comp_arc_sta__baselibs_rust__containers_rust">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Rust Containers Static View</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">YES</span></span></span></div>
+<div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">ASIL_B</span></span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">baselibs_rust_containers_rust</span></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
-<div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="../requirements/index.html#comp__baselibs_containers_rust" title="comp_arc_sta__baselibs_rust__containers_rust">comp__baselibs_containers_rust</a></span></span></div>
+<div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="#comp__baselibs_containers_rust" title="comp_arc_sta__baselibs_rust__containers_rust">comp__baselibs_containers_rust</a></span></span></div>
 <div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#comp_req__containers_rust__fixed_queue" title="comp_arc_sta__baselibs_rust__containers_rust">comp_req__containers_rust__fixed_queue</a>, <a class="reference internal" href="../requirements/index.html#comp_req__containers_rust__fixed_vector" title="comp_arc_sta__baselibs_rust__containers_rust">comp_req__containers_rust__fixed_vector</a>, <a class="reference internal" href="../requirements/index.html#comp_req__containers_rust__inline_queue" title="comp_arc_sta__baselibs_rust__containers_rust">comp_req__containers_rust__inline_queue</a>, <a class="reference internal" href="../requirements/index.html#comp_req__containers_rust__inline_vector" title="comp_arc_sta__baselibs_rust__containers_rust">comp_req__containers_rust__inline_vector</a></span></span></div>
 </span></div>
 </div>
@@ -648,7 +699,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 <td class="meta" colspan="3"></td>
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml" id="needarch-modules/score_baselibs/baselibs/components/containers_rust/architecture/index-0">
-<object data="../../../../../../_images/plantuml-7dda6d339d73a7fa37fa45346d82be9977623c6f.svg" type="image/svg+xml" style="width:164px;height:59px;background:#FFFFFF;"></object></p>
+<object data="../../../../../../_images/plantuml-dbc94af48bdcb2701e118136a70933c3d78ea564.svg" type="image/svg+xml" style="width:852px;height:274px;background:#FFFFFF;"></object></p>
 </td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
@@ -668,7 +719,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </section>
 <section id="interfaces">
 <h2>Interfaces<a class="headerlink" href="#interfaces" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-9fc2836d">
+<div class="need_container docutils container" id="SNCB-b08aeb2e">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int table" id="logic_arc_int__b_r__fixvec">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -689,7 +740,9 @@ one using heap-allocated storage, and one using inline storage</p></li>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
-<div class="line"><span><div class="line">includes: <span class="included_by"><span><a class="reference internal" href="#logic_arc_int_op__cont__fixvec_clear" title="logic_arc_int__b_r__fixvec">logic_arc_int_op__cont__fixvec_clear</a>, <a class="reference internal" href="#logic_arc_int_op__cont__fixvec_index" title="logic_arc_int__b_r__fixvec">logic_arc_int_op__cont__fixvec_index</a>, <a class="reference internal" href="#logic_arc_int_op__cont__fixvec_iterate" title="logic_arc_int__b_r__fixvec">logic_arc_int_op__cont__fixvec_iterate</a>, <a class="reference internal" href="#logic_arc_int_op__cont__fixvec_pop" title="logic_arc_int__b_r__fixvec">logic_arc_int_op__cont__fixvec_pop</a>, <a class="reference internal" href="#logic_arc_int_op__cont__fixvec_push" title="logic_arc_int__b_r__fixvec">logic_arc_int_op__cont__fixvec_push</a></span></span></div>
+<div class="line"><span><div class="line">implemented by: <span class="implements"><span><a class="reference internal" href="#comp__baselibs_containers_rust" title="logic_arc_int__b_r__fixvec">comp__baselibs_containers_rust</a></span></span></div>
+<div class="line">included by: <span class="includes"><span><a class="reference internal" href="../../../../features/architecture/index.html#feat_arc_sta__baselibs__static_view_arch" title="logic_arc_int__b_r__fixvec">feat_arc_sta__baselibs__static_view_arch</a></span></span></div>
+<div class="line">includes: <span class="included_by"><span><a class="reference internal" href="#logic_arc_int_op__cont__fixvec_clear" title="logic_arc_int__b_r__fixvec">logic_arc_int_op__cont__fixvec_clear</a>, <a class="reference internal" href="#logic_arc_int_op__cont__fixvec_index" title="logic_arc_int__b_r__fixvec">logic_arc_int_op__cont__fixvec_index</a>, <a class="reference internal" href="#logic_arc_int_op__cont__fixvec_iterate" title="logic_arc_int__b_r__fixvec">logic_arc_int_op__cont__fixvec_iterate</a>, <a class="reference internal" href="#logic_arc_int_op__cont__fixvec_pop" title="logic_arc_int__b_r__fixvec">logic_arc_int_op__cont__fixvec_pop</a>, <a class="reference internal" href="#logic_arc_int_op__cont__fixvec_push" title="logic_arc_int__b_r__fixvec">logic_arc_int_op__cont__fixvec_push</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -711,7 +764,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-b932015a">
+<div class="need_container docutils container" id="SNCB-db4f6074">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__cont__fixvec_push">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -754,7 +807,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-c222bfee">
+<div class="need_container docutils container" id="SNCB-c5e69d2d">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__cont__fixvec_pop">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -797,7 +850,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-24346a4f">
+<div class="need_container docutils container" id="SNCB-48d50068">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__cont__fixvec_clear">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -840,7 +893,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-be223624">
+<div class="need_container docutils container" id="SNCB-e03fc602">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__cont__fixvec_index">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -883,7 +936,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-89beb023">
+<div class="need_container docutils container" id="SNCB-cc5ce38f">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__cont__fixvec_iterate">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -926,7 +979,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-3cc49d90">
+<div class="need_container docutils container" id="SNCB-a2efb82d">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int table" id="logic_arc_int__b_r__inlinevec">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -947,7 +1000,9 @@ one using heap-allocated storage, and one using inline storage</p></li>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
-<div class="line"><span><div class="line">includes: <span class="included_by"><span><a class="reference internal" href="#logic_arc_int_op__cont__inlinevec_clear" title="logic_arc_int__b_r__inlinevec">logic_arc_int_op__cont__inlinevec_clear</a>, <a class="reference internal" href="#logic_arc_int_op__cont__inlinevec_index" title="logic_arc_int__b_r__inlinevec">logic_arc_int_op__cont__inlinevec_index</a>, <a class="reference internal" href="#logic_arc_int_op__cont__inlinevec_iterate" title="logic_arc_int__b_r__inlinevec">logic_arc_int_op__cont__inlinevec_iterate</a>, <a class="reference internal" href="#logic_arc_int_op__cont__inlinevec_pop" title="logic_arc_int__b_r__inlinevec">logic_arc_int_op__cont__inlinevec_pop</a>, <a class="reference internal" href="#logic_arc_int_op__cont__inlinevec_push" title="logic_arc_int__b_r__inlinevec">logic_arc_int_op__cont__inlinevec_push</a></span></span></div>
+<div class="line"><span><div class="line">implemented by: <span class="implements"><span><a class="reference internal" href="#comp__baselibs_containers_rust" title="logic_arc_int__b_r__inlinevec">comp__baselibs_containers_rust</a></span></span></div>
+<div class="line">included by: <span class="includes"><span><a class="reference internal" href="../../../../features/architecture/index.html#feat_arc_sta__baselibs__static_view_arch" title="logic_arc_int__b_r__inlinevec">feat_arc_sta__baselibs__static_view_arch</a></span></span></div>
+<div class="line">includes: <span class="included_by"><span><a class="reference internal" href="#logic_arc_int_op__cont__inlinevec_clear" title="logic_arc_int__b_r__inlinevec">logic_arc_int_op__cont__inlinevec_clear</a>, <a class="reference internal" href="#logic_arc_int_op__cont__inlinevec_index" title="logic_arc_int__b_r__inlinevec">logic_arc_int_op__cont__inlinevec_index</a>, <a class="reference internal" href="#logic_arc_int_op__cont__inlinevec_iterate" title="logic_arc_int__b_r__inlinevec">logic_arc_int_op__cont__inlinevec_iterate</a>, <a class="reference internal" href="#logic_arc_int_op__cont__inlinevec_pop" title="logic_arc_int__b_r__inlinevec">logic_arc_int_op__cont__inlinevec_pop</a>, <a class="reference internal" href="#logic_arc_int_op__cont__inlinevec_push" title="logic_arc_int__b_r__inlinevec">logic_arc_int_op__cont__inlinevec_push</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -969,7 +1024,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-418947be">
+<div class="need_container docutils container" id="SNCB-eead1983">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__cont__inlinevec_push">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1012,7 +1067,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-7af385ab">
+<div class="need_container docutils container" id="SNCB-b3af1a24">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__cont__inlinevec_pop">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1055,7 +1110,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-76f28c3a">
+<div class="need_container docutils container" id="SNCB-a6cfe989">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__cont__inlinevec_clear">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1098,7 +1153,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-084e6ef6">
+<div class="need_container docutils container" id="SNCB-58926f6c">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__cont__inlinevec_index">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1141,7 +1196,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-79103608">
+<div class="need_container docutils container" id="SNCB-9eed9526">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__cont__inlinevec_iterate">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1184,7 +1239,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-05025d0b">
+<div class="need_container docutils container" id="SNCB-96b6c807">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int table" id="logic_arc_int__b_r__fixqueue">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1205,7 +1260,9 @@ one using heap-allocated storage, and one using inline storage</p></li>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
-<div class="line"><span><div class="line">includes: <span class="included_by"><span><a class="reference internal" href="#logic_arc_int_op__cont__fixqueue_clear" title="logic_arc_int__b_r__fixqueue">logic_arc_int_op__cont__fixqueue_clear</a>, <a class="reference internal" href="#logic_arc_int_op__cont__fixqueue_iterate" title="logic_arc_int__b_r__fixqueue">logic_arc_int_op__cont__fixqueue_iterate</a>, <a class="reference internal" href="#logic_arc_int_op__cont__fixqueue_popback" title="logic_arc_int__b_r__fixqueue">logic_arc_int_op__cont__fixqueue_popback</a>, <a class="reference internal" href="#logic_arc_int_op__cont__fixqueue_popfront" title="logic_arc_int__b_r__fixqueue">logic_arc_int_op__cont__fixqueue_popfront</a>, <a class="reference internal" href="#logic_arc_int_op__cont__fixqueue_pushback" title="logic_arc_int__b_r__fixqueue">logic_arc_int_op__cont__fixqueue_pushback</a>, <a class="reference internal" href="#logic_arc_int_op__cont__fixqueue_pushfront" title="logic_arc_int__b_r__fixqueue">logic_arc_int_op__cont__fixqueue_pushfront</a></span></span></div>
+<div class="line"><span><div class="line">implemented by: <span class="implements"><span><a class="reference internal" href="#comp__baselibs_containers_rust" title="logic_arc_int__b_r__fixqueue">comp__baselibs_containers_rust</a></span></span></div>
+<div class="line">included by: <span class="includes"><span><a class="reference internal" href="../../../../features/architecture/index.html#feat_arc_sta__baselibs__static_view_arch" title="logic_arc_int__b_r__fixqueue">feat_arc_sta__baselibs__static_view_arch</a></span></span></div>
+<div class="line">includes: <span class="included_by"><span><a class="reference internal" href="#logic_arc_int_op__cont__fixqueue_clear" title="logic_arc_int__b_r__fixqueue">logic_arc_int_op__cont__fixqueue_clear</a>, <a class="reference internal" href="#logic_arc_int_op__cont__fixqueue_iterate" title="logic_arc_int__b_r__fixqueue">logic_arc_int_op__cont__fixqueue_iterate</a>, <a class="reference internal" href="#logic_arc_int_op__cont__fixqueue_popback" title="logic_arc_int__b_r__fixqueue">logic_arc_int_op__cont__fixqueue_popback</a>, <a class="reference internal" href="#logic_arc_int_op__cont__fixqueue_popfront" title="logic_arc_int__b_r__fixqueue">logic_arc_int_op__cont__fixqueue_popfront</a>, <a class="reference internal" href="#logic_arc_int_op__cont__fixqueue_pushback" title="logic_arc_int__b_r__fixqueue">logic_arc_int_op__cont__fixqueue_pushback</a>, <a class="reference internal" href="#logic_arc_int_op__cont__fixqueue_pushfront" title="logic_arc_int__b_r__fixqueue">logic_arc_int_op__cont__fixqueue_pushfront</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -1227,7 +1284,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-6cd7b374">
+<div class="need_container docutils container" id="SNCB-b4b891df">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__cont__fixqueue_pushfront">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1270,7 +1327,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-1ccc3123">
+<div class="need_container docutils container" id="SNCB-dc4c6d4f">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__cont__fixqueue_pushback">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1313,7 +1370,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-d6ec7068">
+<div class="need_container docutils container" id="SNCB-8374959f">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__cont__fixqueue_popfront">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1356,7 +1413,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-314228bf">
+<div class="need_container docutils container" id="SNCB-3a069266">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__cont__fixqueue_popback">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1399,7 +1456,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-3cd4116d">
+<div class="need_container docutils container" id="SNCB-ebc61551">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__cont__fixqueue_clear">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1442,7 +1499,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-e98c8677">
+<div class="need_container docutils container" id="SNCB-a9ba2af4">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__cont__fixqueue_iterate">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1485,7 +1542,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-7c901a3a">
+<div class="need_container docutils container" id="SNCB-604312f4">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int table" id="logic_arc_int__b_r__inlqueue">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1506,7 +1563,9 @@ one using heap-allocated storage, and one using inline storage</p></li>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
-<div class="line"><span><div class="line">includes: <span class="included_by"><span><a class="reference internal" href="#logic_arc_int_op__cont__inlqueue_clear" title="logic_arc_int__b_r__inlqueue">logic_arc_int_op__cont__inlqueue_clear</a>, <a class="reference internal" href="#logic_arc_int_op__cont__inlqueue_iterate" title="logic_arc_int__b_r__inlqueue">logic_arc_int_op__cont__inlqueue_iterate</a>, <a class="reference internal" href="#logic_arc_int_op__cont__inlqueue_popback" title="logic_arc_int__b_r__inlqueue">logic_arc_int_op__cont__inlqueue_popback</a>, <a class="reference internal" href="#logic_arc_int_op__cont__inlqueue_popfront" title="logic_arc_int__b_r__inlqueue">logic_arc_int_op__cont__inlqueue_popfront</a>, <a class="reference internal" href="#logic_arc_int_op__cont__inlqueue_pushback" title="logic_arc_int__b_r__inlqueue">logic_arc_int_op__cont__inlqueue_pushback</a>, <a class="reference internal" href="#logic_arc_int_op__cont__inlqueue_pushfront" title="logic_arc_int__b_r__inlqueue">logic_arc_int_op__cont__inlqueue_pushfront</a></span></span></div>
+<div class="line"><span><div class="line">implemented by: <span class="implements"><span><a class="reference internal" href="#comp__baselibs_containers_rust" title="logic_arc_int__b_r__inlqueue">comp__baselibs_containers_rust</a></span></span></div>
+<div class="line">included by: <span class="includes"><span><a class="reference internal" href="../../../../features/architecture/index.html#feat_arc_sta__baselibs__static_view_arch" title="logic_arc_int__b_r__inlqueue">feat_arc_sta__baselibs__static_view_arch</a></span></span></div>
+<div class="line">includes: <span class="included_by"><span><a class="reference internal" href="#logic_arc_int_op__cont__inlqueue_clear" title="logic_arc_int__b_r__inlqueue">logic_arc_int_op__cont__inlqueue_clear</a>, <a class="reference internal" href="#logic_arc_int_op__cont__inlqueue_iterate" title="logic_arc_int__b_r__inlqueue">logic_arc_int_op__cont__inlqueue_iterate</a>, <a class="reference internal" href="#logic_arc_int_op__cont__inlqueue_popback" title="logic_arc_int__b_r__inlqueue">logic_arc_int_op__cont__inlqueue_popback</a>, <a class="reference internal" href="#logic_arc_int_op__cont__inlqueue_popfront" title="logic_arc_int__b_r__inlqueue">logic_arc_int_op__cont__inlqueue_popfront</a>, <a class="reference internal" href="#logic_arc_int_op__cont__inlqueue_pushback" title="logic_arc_int__b_r__inlqueue">logic_arc_int_op__cont__inlqueue_pushback</a>, <a class="reference internal" href="#logic_arc_int_op__cont__inlqueue_pushfront" title="logic_arc_int__b_r__inlqueue">logic_arc_int_op__cont__inlqueue_pushfront</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -1528,7 +1587,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-f9884784">
+<div class="need_container docutils container" id="SNCB-79026fbe">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__cont__inlqueue_pushfront">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1571,7 +1630,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-f214be16">
+<div class="need_container docutils container" id="SNCB-89d93f3f">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__cont__inlqueue_pushback">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1614,7 +1673,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-d693768f">
+<div class="need_container docutils container" id="SNCB-44822007">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__cont__inlqueue_popfront">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1657,7 +1716,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-32ba86f4">
+<div class="need_container docutils container" id="SNCB-7f4eeb27">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__cont__inlqueue_popback">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1700,7 +1759,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-729fec0f">
+<div class="need_container docutils container" id="SNCB-e9fc7f8c">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__cont__inlqueue_clear">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1743,7 +1802,7 @@ one using heap-allocated storage, and one using inline storage</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-ab69bf5f">
+<div class="need_container docutils container" id="SNCB-e974d319">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__cont__inlqueue_iterate">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1823,6 +1882,26 @@ one using heap-allocated storage, and one using inline storage</p></li>
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#static-architecture">Static Architecture</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interfaces">Interfaces</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
