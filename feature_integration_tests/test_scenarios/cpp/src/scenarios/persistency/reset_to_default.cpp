@@ -65,7 +65,7 @@ void ResetToDefault::run(const std::string& input) const {
     }
 
     // Log the default value reported by KVS after reset so Python can assert it.
-    auto default_val = kvs->get_value_f64(key_to_reset);
+    auto default_val = kvs->get_default_value_f64(key_to_reset);
     if (!default_val.has_value()) {
         throw std::runtime_error("Failed to read default value after reset for 'key2'");
     }
