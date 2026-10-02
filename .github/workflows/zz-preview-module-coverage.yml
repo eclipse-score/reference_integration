@@ -1,0 +1,249 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+# THROWAWAY preview workflow - DELETE before merging this PR.
+#
+# The real wiring lives in test_and_docs.yml, but that job runs via
+# `pull_request_target`, which reads its YAML from the base branch (main) - so
+# the new module test steps added on this branch never run in the PR. A `push`
+# event instead reads the YAML from the pushed commit, so this workflow actually
+# exercises the new steps and proves the lifecycle / logging / persistency
+# requirement coverage shows up in the verification reports.
+name: Preview - Module Coverage (throwaway)
+on:
+  push:
+    branches:
+      - feat/module-integration-tests
+concurrency:
+  # push events have no pull_request.number, so key on the ref.
+  group: preview-module-coverage-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  preview:
+    runs-on: ${{ vars.REPO_RUNNER_LABELS && fromJSON(vars.REPO_RUNNER_LABELS) || 'ubuntu-latest' }}
+    steps:
+      - name: Clean disk space
+        uses: eclipse-score/more-disk-space@v1.1
+        with:
+          level: 4
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Set up Docker Buildx
+        # Required by the lifecycle / logging integration tests, which load their
+        # test images into the Docker daemon via rules_oci.
+        uses: docker/setup-buildx-action@6524bf65af31da8d45b59e8c27de4bd072b392f5 # v3.8.0
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.18.0
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}
+          repository-cache: |
+            - MODULE.bazel
+            - known_good.json
+            - bazel_common/*.MODULE.bazel
+            - patches/**
+            - .bazelrc
+          cache-save: false
+      - name: Set up Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Graphviz
+        uses: eclipse-score/apt-install@main
+        with:
+          packages: graphviz
+          cache: false
+      - name: Execute Lifecycle Integration Tests
+        # Exposed to this non-root consumer via
+        # //patches/lifecycle:002-undev-integration-test-deps.patch. Runs before
+        # the documentation build so the docs source code linker picks up their
+        # PartiallyVerifies properties from bazel-testlogs. The whole integration
+        # tree runs (feature- AND component-requirement tests); the qemu-only
+        # variants are incompatible in docker mode and are skipped automatically.
+        # --flaky_test_attempts=3 retries the ITF docker PID-read race.
+        run: |
+          bazel test --lockfile_mode=error --config=linux-x86_64 \
+            --flaky_test_attempts=3 \
+            --@score_lifecycle//config:integration_mode=docker \
+            @score_lifecycle//tests/integration/...
+      - name: Show recorded lifecycle PartiallyVerifies properties
+        if: always()
+        run: |
+          echo "## lifecycle test.xml PartiallyVerifies (feat_req + comp_req):"
+          find bazel-testlogs -path '*score_lifecycle*tests/integration*' -name 'test.xml' \
+            -exec sh -c 'echo "--- $1 ---"; grep -o "feat_req__lifecycle__[a-z_]*\|comp_req__launch_man__[a-z_]*" "$1" | sort -u' _ {} \;
+      - name: Execute Logging Component Tests
+        # Exposed to this non-root consumer via
+        # //patches/logging:002-undev-component-test-deps.patch. Runs before the
+        # documentation build so the docs source code linker picks up their
+        # PartiallyVerifies properties from bazel-testlogs. The docker image
+        # variant is the x86_64/linux default; the qnx_ifs/qemu variants are
+        # incompatible here and are skipped automatically.
+        # --flaky_test_attempts=3 retries the ITF docker PID-read race.
+        run: |
+          bazel test --lockfile_mode=error --config=linux-x86_64 \
+            --flaky_test_attempts=3 \
+            @score_logging//score/test/component/...
+      - name: Show recorded logging PartiallyVerifies properties
+        if: always()
+        run: |
+          echo "## logging test.xml PartiallyVerifies (comp_req):"
+          find bazel-testlogs -path '*score_logging*score/test/component*' -name 'test.xml' \
+            -exec sh -c 'echo "--- $1 ---"; grep -o "comp_req__log__[a-z_]*\|comp_req__data_router__[a-z_]*" "$1" | sort -u' _ {} \;
+      - name: Execute Persistency Component Integration Tests
+        # The persistency cit suite is a pair of score_py_pytest host targets
+        # (cit_cpp + cit_rust) driving the KVS C++/Rust scenarios directly - no
+        # Docker, no dev-dependency patch needed. Run explicitly before the docs
+        # build so the comp_req__kvs__* PartiallyVerifies land as testlinks.
+        run: |
+          bazel test --lockfile_mode=error --config=linux-x86_64 \
+            @score_persistency//score/kvs/tests/test_cases:cit
+      - name: Show recorded persistency PartiallyVerifies properties
+        if: always()
+        run: |
+          echo "## persistency test.xml PartiallyVerifies (comp_req):"
+          find bazel-testlogs -path '*score_persistency*test_cases*' -name 'test.xml' \
+            -exec sh -c 'echo "--- $1 ---"; grep -o "comp_req__kvs__[a-z_]*" "$1" | sort -u' _ {} \;
+      - name: Build documentation
+        run: |
+          bazel run \
+            --lockfile_mode=error \
+              //:docs_shim -- \
+              --github_user=${{ github.repository_owner }} \
+              --github_repo=${{ github.event.repository.name }}
+      - name: Verify lifecycle feature and component requirements are linked by tests
+        run: |
+          python3 - <<'PY'
+          import json, sys
+          d = json.load(open("_build/needs.json"))
+          needs = {}
+          for v in d.get("versions", {}).values():
+              needs.update(v.get("needs", {}))
+          expected = [
+              "feat_req__lifecycle__launch_support",
+              "feat_req__lifecycle__start_named_run_target",
+              "feat_req__lifecycle__parallel_launch_support",
+              "feat_req__lifecycle__monitor_abnormal_term",
+              "feat_req__lifecycle__recov_run_target_switch",
+              "feat_req__lifecycle__recovery_action_support",
+              "feat_req__lifecycle__process_ordering",
+              "feat_req__lifecycle__process_termination",
+              "feat_req__lifecycle__request_run_target_start",
+              "feat_req__lifecycle__switch_run_targets",
+              "feat_req__lifecycle__terminationn_dependency",
+              "comp_req__launch_man__cwd_support",
+              "comp_req__launch_man__ext_monitor_notify",
+              "comp_req__launch_man__failure_detect",
+              "comp_req__launch_man__launch_manager_shutdown",
+              "comp_req__launch_man__launch_priority_support",
+              "comp_req__launch_man__launcher_exit_shutdown",
+              "comp_req__launch_man__path_condition_check",
+              "comp_req__launch_man__process_launch_args",
+              "comp_req__launch_man__process_state_comm",
+              "comp_req__launch_man__retries_configurable",
+              "comp_req__launch_man__scheduling_policy",
+              "comp_req__launch_man__shutdown_signal",
+              "comp_req__launch_man__supplementary_groups",
+              "comp_req__launch_man__uid_gid_support",
+          ]
+          missing = []
+          for r in expected:
+              n = needs.get(r)
+              if n and n.get("testlink"):
+                  print(f"OK   {r} has a testlink")
+              else:
+                  print(f"MISS {r} has NO testlink")
+                  missing.append(r)
+          if missing:
+              print(f"::error::lifecycle requirements without testlink: {missing}")
+              sys.exit(1)
+          PY
+      - name: Verify logging component requirements are linked by tests
+        run: |
+          python3 - <<'PY'
+          import json, sys
+          d = json.load(open("_build/needs.json"))
+          needs = {}
+          for v in d.get("versions", {}).values():
+              needs.update(v.get("needs", {}))
+          expected = [
+              "comp_req__data_router__dlt_bw_quota_config",
+              "comp_req__data_router__dlt_message_filtering",
+              "comp_req__data_router__dlt_quota_bw_reduction",
+              "comp_req__data_router__dlt_server",
+              "comp_req__log__autosar_log_trace_spec",
+              "comp_req__log__dlt_verbose_mode",
+              "comp_req__log__inactive_logstream",
+              "comp_req__log__send_to_datarouter",
+          ]
+          missing = []
+          for r in expected:
+              n = needs.get(r)
+              if n and n.get("testlink"):
+                  print(f"OK   {r} has a testlink")
+              else:
+                  print(f"MISS {r} has NO testlink")
+                  missing.append(r)
+          if missing:
+              print(f"::error::logging requirements without testlink: {missing}")
+              sys.exit(1)
+          PY
+      - name: Verify persistency component requirements are linked by tests
+        run: |
+          python3 - <<'PY'
+          import json, sys
+          d = json.load(open("_build/needs.json"))
+          needs = {}
+          for v in d.get("versions", {}).values():
+              needs.update(v.get("needs", {}))
+          expected = [
+              "comp_req__kvs__concurrency",
+              "comp_req__kvs__default_val_chksum",
+              "comp_req__kvs__default_value_cfg",
+              "comp_req__kvs__default_value_query",
+              "comp_req__kvs__default_value_types",
+              "comp_req__kvs__key_encoding",
+              "comp_req__kvs__multi_instance",
+              "comp_req__kvs__persist_data_com",
+              "comp_req__kvs__snapshot_creation",
+              "comp_req__kvs__snapshot_max_num",
+              "comp_req__kvs__snapshot_restore",
+              "comp_req__kvs__snapshot_rotate",
+              "comp_req__kvs__value_data_types",
+              "comp_req__kvs__value_default",
+              "comp_req__kvs__value_reset",
+          ]
+          missing = []
+          for r in expected:
+              n = needs.get(r)
+              if n and n.get("testlink"):
+                  print(f"OK   {r} has a testlink")
+              else:
+                  print(f"MISS {r} has NO testlink")
+                  missing.append(r)
+          if missing:
+              print(f"::error::persistency requirements without testlink: {missing}")
+              sys.exit(1)
+          PY
+      - name: Upload rendered documentation (report preview)
+        if: always()
+        run: tar -cf module-report-preview.tar _build
+      - name: Upload report artifact
+        if: always()
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+        with:
+          name: module-report-preview-${{ github.sha }}
+          path: module-report-preview.tar
+          retention-days: 3
+          if-no-files-found: error

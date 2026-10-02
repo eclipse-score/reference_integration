@@ -1,0 +1,16 @@
+diff --git a/MODULE.bazel b/MODULE.bazel
+index 721aacc9e..f7726c220 100644
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -174,9 +174,9 @@ pip.parse(
+ )
+ use_repo(pip, "score_lifecycle_pip")
+ 
+-bazel_dep(name = "score_itf", version = "0.5.0", dev_dependency = True)
++bazel_dep(name = "score_itf", version = "0.5.0")
+ 
+-oci = use_extension("@rules_oci//oci:extensions.bzl", "oci", dev_dependency = True)
++oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
+ oci.pull(
+     name = "debian-test-runtime",
+     digest = "sha256:f06537653ac770703bc45b4b113475bd402f451e85223f0f2837acbf89ab020a",

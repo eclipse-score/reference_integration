@@ -112,6 +112,59 @@ jobs:
         # figures of the platform verification report.
         run: |
           bazel test --lockfile_mode=error --config=linux-x86_64 //platform_integration_tests:pit
+      - name: Execute Lifecycle Integration Tests
+        # Runs in this job and before the documentation build on purpose: the
+        # docs source code linker scans `bazel-testlogs` of this very workspace,
+        # so only tests executed here contribute their PartiallyVerifies/
+        # FullyVerifies properties as `testlink` attributes to the lifecycle
+        # feature AND component requirement needs of the verification reports.
+        # The tests live in the lifecycle module; their test-framework
+        # dependencies (score_itf, the rules_oci extension) are exposed to this
+        # non-root consumer by
+        # //patches/lifecycle:002-undev-integration-test-deps.patch. The docker
+        # integration mode is selected explicitly via the lifecycle config flag;
+        # the qemu-only test variants are target_compatible_with incompatible in
+        # docker mode and are skipped automatically.
+        #
+        # --flaky_test_attempts=3: the ITF docker plugin's execute_async reads the
+        # launched PID from the first stdout line (echo $$); occasionally the test
+        # binary's own output races ahead of that echo, making the PID parse fail
+        # (ValueError in score_itf docker.py). Retrying absorbs that race.
+        run: |
+          bazel test --lockfile_mode=error --config=linux-x86_64 \
+            --flaky_test_attempts=3 \
+            --@score_lifecycle//config:integration_mode=docker \
+            @score_lifecycle//tests/integration/...
+      - name: Execute Logging Component Tests
+        # Same rationale as the lifecycle step above: these tests run in this job
+        # and before the documentation build so the docs source code linker picks
+        # up their PartiallyVerifies properties from `bazel-testlogs`, turning
+        # them into `testlink` attributes on the logging component requirement
+        # needs of the verification reports. The tests live in the logging module
+        # under //score/test/component; their test-framework dependencies
+        # (score_itf, the rules_oci extension, score_rules_imagefs) are exposed to
+        # this non-root consumer by
+        # //patches/logging:002-undev-component-test-deps.patch. The docker image
+        # variant is the x86_64/linux platform default; the qnx_ifs/qemu variants
+        # are target_compatible_with incompatible here and are skipped
+        # automatically. --flaky_test_attempts=3 absorbs the same ITF docker PID
+        # read race as the lifecycle step above.
+        run: |
+          bazel test --lockfile_mode=error --config=linux-x86_64 \
+            --flaky_test_attempts=3 \
+            @score_logging//score/test/component/...
+      - name: Execute Persistency Component Integration Tests
+        # Same rationale as the module steps above. The persistency "cit"
+        # (component integration test) suite is a pair of score_py_pytest host
+        # targets (cit_cpp + cit_rust) that drive the KVS C++/Rust test scenarios
+        # directly - no Docker involved - and carry comp_req__kvs__* annotations
+        # via the attribute_plugin. They need no dev-dependency patch (persistency
+        # already un-devs pip/imagefs/googletest upstream) but are excluded from
+        # the standard persistency test run, so they are executed explicitly here
+        # to contribute their testlinks to the module verification report.
+        run: |
+          bazel test --lockfile_mode=error --config=linux-x86_64 \
+            @score_persistency//score/kvs/tests/test_cases:cit
       - name: Install uv (required for SBOM license scanning)
         uses: astral-sh/setup-uv@v5
         with:
