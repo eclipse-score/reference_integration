@@ -13,7 +13,7 @@
 name: QNX8 - Build & Integration Test
 on:
   pull_request_target:
-    types: [opened, reopened, synchronize]
+    types: [opened, reopened, synchronize, labeled, unlabeled]
   merge_group:
     types: [checks_requested]
   push:
@@ -26,6 +26,8 @@ concurrency:
 jobs:
   qnx-build-x86_64:
     name: x86_64
+    # Skipped while the 'staged-ci' label is set; see staged_ci_guard.yml.
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'staged-ci') }}
     runs-on: ${{ vars.REPO_RUNNER_LABELS && fromJSON(vars.REPO_RUNNER_LABELS) || 'ubuntu-latest' }}
     environment: ${{ inputs.environment-name }}
     permissions:

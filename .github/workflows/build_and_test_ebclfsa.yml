@@ -13,7 +13,7 @@
 name: EB corbos Linux for Safety Applications - Build & Integration Test
 on:
   pull_request:
-    types: [opened, reopened, synchronize]
+    types: [opened, reopened, synchronize, labeled, unlabeled]
   merge_group:
     types: [checks_requested]
   push:
@@ -26,6 +26,8 @@ concurrency:
 jobs:
   build:
     name: aarch64
+    # Skipped while the 'staged-ci' label is set; see staged_ci_guard.yml.
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'staged-ci') }}
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/eclipse-score/devcontainer:v1.11.0

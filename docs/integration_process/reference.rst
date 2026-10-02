@@ -78,6 +78,11 @@ declared in the workflows.
      - Code-quality checks, builds the docs and reports, publishes to Pages.
      - **yes**
      - wire docs in Step 2, reports in Step 7
+   * - `staged_ci_guard.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/staged_ci_guard.yml>`_
+     - Fails while the ``staged-ci`` label is set, so a pull request with
+       skipped heavy checks cannot be merged (see :ref:`staged_ci`).
+     - **yes**
+     - none
    * - `check_release_approvals.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/check_release_approvals.yml>`_
      - Enforces required approvals on PRs targeting ``releases/*`` branches.
      - release branches only
@@ -101,6 +106,205 @@ declared in the workflows.
      - no
      - add runtime targets to
        `ci/showcase_targets_run.txt <https://github.com/eclipse-score/reference_integration/blob/main/ci/showcase_targets_run.txt>`_
+
+.. _staged_ci:
+
+Staged CI for integration pull requests
+---------------------------------------
+
+A "come together" pull request that bumps every module hash in
+``known_good.json`` at once often fails for a reason that is visible long before
+the hour-long image builds finish — a module no longer resolves, a target was
+renamed, a documentation mount broke. Waiting for the full pipeline on every
+push wastes both runner time and the integrator's time.
+
+Adding the ``staged-ci`` label to such a pull request skips the expensive jobs
+and leaves only the cheap, ``known_good.json``-derived validation running:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 46 27 27
+
+   * - Check
+     - with ``staged-ci``
+     - without the label
+   * - ``known_good_correct``, ``bzlmod-lock``, ``format``, ``copyright``
+     - runs
+     - runs
+   * - ``test_and_docs.yml`` — documentation preflight
+     - runs
+     - runs
+   * - ``test_and_docs.yml`` — unit tests, coverage, feature integration tests
+     - skipped
+     - runs
+   * - ``build_and_test_{linux,qnx,autosd,ebclfsa}.yml``
+     - skipped
+     - runs
+   * - ``codeql-multiple-repo-scan.yml``
+     - skipped
+     - runs
+   * - ``staged_ci_guard.yml``
+     - **fails** (blocks merge)
+     - passes
+
+Workflow
+~~~~~~~~
+
+#. Add the ``staged-ci`` label when opening the integration pull request.
+#. Iterate until the documentation preflight and the generator checks are green.
+#. Remove the label. The full pipeline runs, and ``Staged CI Guard`` turns green.
+#. Merge once everything passes.
+
+The label only takes effect on the next workflow run, which is why every gated
+workflow listens for the ``labeled`` and ``unlabeled`` pull-request events.
+
+.. note::
+
+   ``Staged CI Guard`` must be configured as a **required** status check in the
+   repository's branch-protection settings. GitHub reports a job skipped via an
+   ``if:`` condition as *skipped* and treats a skipped required check as
+   satisfied — without the guard, a staged pull request would be mergeable even
+   though none of the heavy checks ever ran.
+
+   Staging is a manual override for a supervised integration pull request, not a
+   way to merge unvalidated changes. The full pipeline still has to pass before
+   the merge.
+
+.. _disabling_a_module:
+
+Temporarily disabling a module
+------------------------------
+
+Staging CI buys time to look at a failure; it does not remove the failure. When
+a single module blocks the whole integration — an upstream change that will not
+land before the next cycle, a broken dependency, a test that cannot pass yet —
+that module can be taken out of the integration without losing its pinned state.
+
+Add ``"enabled": false`` together with a mandatory ``"disabled_reason"`` to its
+entry in ``known_good.json``:
+
+.. code-block:: json
+
+   "score_example": {
+     "repo": "https://github.com/eclipse-score/example.git",
+     "hash": "0123456789abcdef0123456789abcdef01234567",
+     "enabled": false,
+     "disabled_reason": "blocked by eclipse-score/example#123, re-enable after it lands",
+     "metadata": { }
+   }
+
+The hash, the ``bazel_patches`` list and the metadata stay in the file, so
+re-enabling the module is a two-line revert rather than a reconstruction from
+the git history. Deleting the entry instead would discard exactly the state the
+next integrator needs.
+
+After the edit, regenerate the Bazel fragments as usual (Step 1) and commit them
+together with the ``known_good.json`` change:
+
+.. code-block:: bash
+
+   python3 scripts/known_good/update_module_from_known_good.py
+
+A disabled module then contributes no ``bazel_dep``/``git_override`` entry, no
+coverage target, no documentation mount, no unit-test run and no SBOM entry.
+The generator prints every disabled module and its reason on each run, so the
+state cannot decay into an unnoticed permanent one.
+
+.. _module_specific_bazelrc_flags:
+
+Module-specific ``.bazelrc`` flags
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A ``--@score_module//path:flag=value`` line is the most hostile thing that can
+outlive its module. Bazel resolves it on *every* invocation, so a flag naming a
+repository that is no longer in the graph breaks the entire workspace — not just
+the build, but ``bazel query`` and ``bazel mod`` as well, which are exactly the
+commands needed to diagnose the problem.
+
+Such flags therefore do not live in the root ``.bazelrc``. Each is placed in the
+fragment of the module whose **repository it names**:
+
+.. code-block:: text
+
+   bazel_common/bazelrc/score_baselibs.bazelrc
+   bazel_common/bazelrc/score_logging.bazelrc
+   ...
+
+Grouping by owning repository, rather than by the ``--config`` the flag belongs
+to, is what makes deactivation a deletion: every line that becomes unresolvable
+when a module leaves sits in that module's file and in no other. A single
+fragment may contribute to several configs.
+
+``update_module_from_known_good.py`` generates
+``bazel_common/module_flags.bazelrc``, a plain list of ``import`` lines covering
+the enabled modules that have a fragment. The root ``.bazelrc`` imports that one
+file from its ``build:_common`` block. A disabled module is simply absent from
+the generated list, so its flags are gone without its fragment being touched —
+and come back unchanged when the module is re-enabled.
+
+The generator refuses to proceed if a ``--@score_*//`` flag appears in the root
+``.bazelrc``, if a fragment holds a flag belonging to a different module, or if
+a fragment exists for a module that is not in ``known_good.json``.
+
+.. _disabled_module_registry_fallback:
+
+Why disabling is not always possible
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Removing a module's ``bazel_dep`` removes **this repository's** request for it.
+It does not remove the module from the build. If any other module declares its
+own dependency — ``score_persistency`` requires ``score_logging``, for instance
+— Bazel still needs it, cannot find an override any more, and resolves it from
+the registry instead: at a released version, not the commit ``known_good.json``
+pinned. The build succeeds. It just builds code nobody selected, and nothing in
+the output says so.
+
+Disabling is therefore only permitted when no enabled module requires the
+module. ``scripts/known_good/check_disabled_modules.py`` enforces this in CI by
+resolving the real graph and failing with the list of modules that pull a
+disabled one back in. It exits before invoking Bazel when nothing is disabled,
+so it is free on an ordinary pull request.
+
+At the time of writing only ``score_config_management``, ``score_kyron`` and
+``score_time`` are leaves that can be disabled on their own. Anything else has
+to be disabled together with its consumers, which is usually the point at which
+staging the CI (:ref:`staged_ci`) is the better answer.
+
+What the flag does not do
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The flag governs the **generated** artefacts only. Anything that names the
+module by hand keeps naming a module that no longer exists, and Bazel reports
+that far away from ``known_good.json``. These references are handled explicitly:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 40 60
+
+   * - Reference
+     - How it is handled
+   * - ``--@module//...`` flags
+     - Removed automatically, because they live in the module's own
+       ``.bazelrc`` fragment (see above). A stray flag in the root ``.bazelrc``
+       aborts the regeneration.
+   * - ``sbom.tracked_modules``
+     - Filtered automatically. The entry stays in ``known_good.json`` and the
+       generator reports which modules it dropped from the SBOM.
+   * - ``extra_test_config`` / ``exclude_test_targets`` of another module
+     - Aborts the regeneration with the offending entry: it points into a
+       module the build no longer contains, and only a human can decide whether
+       to drop the flag or keep the module.
+   * - A ``bazel_dep`` in another enabled module
+     - Aborts in CI (see above). There is no way to express this in
+       ``known_good.json``.
+
+Other references are **not** detected automatically and have to be removed by
+hand — hand-written ``BUILD`` files such as ``images/*/BUILD``,
+``showcases/standalone/BUILD`` and the feature-integration test scenarios, plus
+any test in ``feature_integration_tests/itf/`` that exercises the module. In
+practice the flag is therefore sufficient for a module that only contributes
+documentation, coverage and unit tests, and is only the first step for a module
+that is wired into the images, the showcases or the integration tests.
 
 .. _reports:
 
