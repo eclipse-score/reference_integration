@@ -18,6 +18,7 @@
 Scenario::Ptr make_system_clock_now_scenario();
 Scenario::Ptr make_steady_clock_now_scenario();
 Scenario::Ptr make_high_res_steady_clock_now_scenario();
+Scenario::Ptr make_steady_clock_progression_scenario();
 
 ScenarioGroup::Ptr time_scenario_group() {
     return std::make_shared<ScenarioGroupImpl>(
@@ -26,6 +27,7 @@ ScenarioGroup::Ptr time_scenario_group() {
             make_system_clock_now_scenario(),
             make_steady_clock_now_scenario(),
             make_high_res_steady_clock_now_scenario(),
+            make_steady_clock_progression_scenario(),
         },
         std::vector<ScenarioGroup::Ptr>{});
 }
