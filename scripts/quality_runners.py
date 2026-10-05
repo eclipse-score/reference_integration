@@ -450,9 +450,6 @@ def run_unit_tests(known, args: argparse.Namespace) -> bool:
 
     unit_tests_summary, coverage_summary = {}, {}
 
-    if args.modules_to_test:
-        print_centered(f"QR: User requested tests only for specified modules: {', '.join(args.modules_to_test)}")
-
     for module in known.modules["target_sw"].values():
         if args.modules_to_test and module.name not in args.modules_to_test:
             print_centered(f"QR: Skipping module {module.name}")
@@ -512,6 +509,8 @@ def run_unit_tests(known, args: argparse.Namespace) -> bool:
 def main() -> bool:
     args = parse_arguments()
     known = load_known_good(args.known_good_path.resolve())
+    if args.modules_to_test:
+        print_centered(f"QR: User requested tests only for specified modules: {', '.join(args.modules_to_test)}")
     if args.integration_tests:
         return run_integration_tests(known, args.modules_to_test)
     return run_unit_tests(known, args)
