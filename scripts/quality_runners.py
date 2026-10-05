@@ -92,19 +92,6 @@ def run_unit_test_with_coverage(module: Module, trust_cache: bool = False) -> di
     return {**summary, "exit_code": result.exit_code}
 
 
-def run_integration_test(module: Module) -> dict[str, str | int]:
-    print_centered(f"QR: Running integration tests for {module.name}")
-
-    call = (
-        ["bazel", "test", "--lockfile_mode=error", "--config=linux-x86_64"]
-        + [f"--{flag}" for flag in module.metadata.integration_test_config]
-        + [f"@{module.name}{target}" for target in module.metadata.integration_test_targets]
-    )
-
-    result = run_command(call)
-    return {"exit_code": result.exit_code}
-
-
 def run_cpp_coverage_extraction(module: Module, output_path: Path) -> int:
     print_centered("QR: Running cpp coverage analysis")
 
@@ -387,7 +374,13 @@ def run_integration_tests(known, modules_to_test: list[str]) -> bool:
             continue
         if not module.metadata.integration_test_targets:
             continue
-        summary[module.name] = run_integration_test(module)
+        print_centered(f"QR: Running integration tests for {module.name}")
+        call = (
+            ["bazel", "test", "--lockfile_mode=error", "--config=linux-x86_64"]
+            + [f"--{flag}" for flag in module.metadata.integration_test_config]
+            + [f"@{module.name}{target}" for target in module.metadata.integration_test_targets]
+        )
+        summary[module.name] = {"exit_code": run_command(call).exit_code}
 
     failed = sorted(name for name, result in summary.items() if result["exit_code"] != 0)
     for name in failed:
