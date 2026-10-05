@@ -15,7 +15,7 @@ import os
 import re
 import select
 import sys
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from subprocess import PIPE, Popen, run
 
@@ -28,46 +28,6 @@ class ProcessResult:
     stdout: str
     stderr: str
     exit_code: int
-
-
-@dataclass
-class IntegrationTest:
-    """A module-owned integration/component test suite run before the docs build.
-
-    Kept here (checked out from the PR head) rather than in the workflow YAML:
-    the Code Quality & Documentation job runs via ``pull_request_target``, which
-    reads the YAML from the base branch, so a module upgrade PR could not adjust
-    the targets or flags in lockstep. This script can.
-    """
-
-    name: str
-    targets: list[str]
-    extra_flags: list[str] = field(default_factory=list)
-
-
-# The docs source code linker turns the Verifies properties of these tests into
-# `testlink` attributes on the respective module requirement needs, so they must
-# run in this job and before the documentation build. --flaky_test_attempts=3
-# absorbs a race in the ITF docker plugin's PID read for the docker-based suites.
-MODULE_INTEGRATION_TESTS = [
-    IntegrationTest(
-        name="score_lifecycle",
-        targets=["@score_lifecycle//tests/integration/..."],
-        extra_flags=[
-            "--flaky_test_attempts=3",
-            "--@score_lifecycle//config:integration_mode=docker",
-        ],
-    ),
-    IntegrationTest(
-        name="score_logging",
-        targets=["@score_logging//score/test/component/..."],
-        extra_flags=["--flaky_test_attempts=3"],
-    ),
-    IntegrationTest(
-        name="score_persistency",
-        targets=["@score_persistency//score/kvs/tests/test_cases:cit"],
-    ),
-]
 
 
 def print_centered(message: str, width: int = 120, fillchar: str = "-") -> None:
@@ -130,6 +90,19 @@ def run_unit_test_with_coverage(module: Module, trust_cache: bool = False) -> di
     result = run_command(call)
     summary = extract_ut_summary(result.stdout)
     return {**summary, "exit_code": result.exit_code}
+
+
+def run_integration_test(module: Module) -> dict[str, str | int]:
+    print_centered(f"QR: Running integration tests for {module.name}")
+
+    call = (
+        ["bazel", "test", "--lockfile_mode=error", "--config=linux-x86_64"]
+        + [f"--{flag}" for flag in module.metadata.integration_test_config]
+        + [f"@{module.name}{target}" for target in module.metadata.integration_test_targets]
+    )
+
+    result = run_command(call)
+    return {"exit_code": result.exit_code}
 
 
 def run_cpp_coverage_extraction(module: Module, output_path: Path) -> int:
@@ -396,22 +369,35 @@ def run_command(command: list[str], **kwargs) -> ProcessResult:
     return ProcessResult(stdout="".join(stdout_data), stderr="".join(stderr_data), exit_code=exit_code)
 
 
-def run_integration_tests() -> bool:
-    """Run the module-owned integration/component test suites.
+def run_integration_tests(known, modules_to_test: list[str]) -> bool:
+    """Run each module's integration test suite, mirroring the unit-test loop.
 
-    Returns True when at least one suite failed, matching ``main``'s convention
-    so the process exits non-zero.
+    Iterates over the target_sw modules and runs ``integration_test_targets`` for
+    every module that declares them in known_good.json. Returns True when at least
+    one suite failed, matching ``main``'s convention so the process exits non-zero.
+
+    Driven from known_good.json (checked out from the PR head) rather than the
+    workflow YAML on purpose: the Code Quality & Documentation job runs via
+    ``pull_request_target``, which reads the YAML from the base branch, so a module
+    upgrade PR could not adjust the targets or flags in lockstep. This can.
     """
-    failed = []
-    for test in MODULE_INTEGRATION_TESTS:
-        print_centered(f"QR: Running integration tests for {test.name}")
-        call = ["bazel", "test", "--lockfile_mode=error", "--config=linux-x86_64"] + test.extra_flags + test.targets
-        if run_command(call).exit_code != 0:
-            failed.append(test.name)
-            print(f"::error title=Integration tests failed::{test.name}")
+    summary = {}
+    for module in known.modules["target_sw"].values():
+        if modules_to_test and module.name not in modules_to_test:
+            continue
+        if not module.metadata.integration_test_targets:
+            continue
+        summary[module.name] = run_integration_test(module)
 
+    failed = sorted(name for name, result in summary.items() if result["exit_code"] != 0)
+    for name in failed:
+        print(f"::error title=Integration tests failed::{name}: bazel exited with {summary[name]['exit_code']}")
+
+    print_centered("QR: INTEGRATION TEST EXECUTION SUMMARY", fillchar="=")
+    for name, result in sorted(summary.items()):
+        print(f"  {'pass' if result['exit_code'] == 0 else 'FAILED':<7} {name}")
     if failed:
-        print_centered(f"QR: {len(failed)} INTEGRATION SUITE(S) FAILED: {', '.join(failed)}", fillchar="=")
+        print_centered(f"QR: {len(failed)} of {len(summary)} MODULES FAILED: {', '.join(failed)}", fillchar="=")
     return bool(failed)
 
 
@@ -440,10 +426,10 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         "--integration-tests",
         action="store_true",
-        help="Run only the module-owned integration/component test suites "
-        "(lifecycle, logging, persistency) instead of the unit tests and coverage. "
-        "Kept here rather than in the workflow YAML because that YAML is read from "
-        "the base branch under pull_request_target and could not be changed by a "
+        help="Run each module's integration test suite (its known_good.json "
+        "integration_test_targets) instead of the unit tests and coverage. Kept "
+        "here rather than in the workflow YAML because that YAML is read from the "
+        "base branch under pull_request_target and could not be changed by a "
         "module upgrade PR.",
     )
     parser.add_argument(
@@ -461,7 +447,8 @@ def parse_arguments() -> argparse.Namespace:
 def main() -> bool:
     args = parse_arguments()
     if args.integration_tests:
-        return run_integration_tests()
+        known = load_known_good(args.known_good_path.resolve())
+        return run_integration_tests(known, args.modules_to_test)
     configure_aslr_for_sanitizers()
     args.coverage_output_dir.mkdir(parents=True, exist_ok=True)
     path_to_docs = Path(__file__).parent.parent / "docs/verification_report"
