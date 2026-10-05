@@ -144,20 +144,15 @@ class Metadata:
         Returns:
                 Dictionary with metadata configuration
         """
-        result: Dict[str, Any] = {
+        return {
             "code_root_path": self.code_root_path,
             "extra_test_config": self.extra_test_config,
             "exclude_test_targets": self.exclude_test_targets,
             "langs": self.langs,
             "rust_coverage_config": self.rust_coverage_config,
+            "integration_test_targets": self.integration_test_targets,
+            "integration_test_config": self.integration_test_config,
         }
-        # Emitted only when set so the key stays absent for the vast majority of
-        # modules that have no integration tests wired into the integration.
-        if self.integration_test_targets:
-            result["integration_test_targets"] = self.integration_test_targets
-        if self.integration_test_config:
-            result["integration_test_config"] = self.integration_test_config
-        return result
 
 
 @dataclass
