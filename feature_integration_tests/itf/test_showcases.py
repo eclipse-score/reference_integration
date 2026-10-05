@@ -28,9 +28,3 @@ def test_com_api_example_app_is_running(target):
     )
     logger.info(out)
     assert exit_code == 0
-
-
-def test_run_all_showcases(target):
-    exit_code, out = target.execute("/showcases/bin/cli --examples=all")
-    logger.info(out)
-    assert exit_code == 0

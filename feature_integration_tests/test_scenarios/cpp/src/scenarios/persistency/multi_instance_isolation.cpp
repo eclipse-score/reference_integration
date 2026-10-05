@@ -60,7 +60,7 @@ public:
         auto kvs1 = *kvs1_opt;
 
         // Log instance 1's own default (key_a) — proves default was loaded for instance 1.
-        auto val_a = kvs1->get_value_f64("key_a");
+        auto val_a = kvs1->get_default_value_f64("key_a");
         if (!val_a.has_value()) {
             throw std::runtime_error("Instance 1 should have key_a default but it is not accessible");
         }
@@ -69,8 +69,8 @@ public:
                 ",\"source\":\"default\"",
             "cpp_test_scenarios::scenarios::persistency::multi_instance_isolation");
 
-        // Confirm key_b is NOT accessible from instance 1 (isolation check).
-        auto cross_a = kvs1->get_value_f64("key_b");
+        // Confirm key_b's default is NOT accessible from instance 1 (isolation check).
+        auto cross_a = kvs1->get_default_value_f64("key_b");
         if (cross_a.has_value()) {
             throw std::runtime_error("Isolation broken: instance 1 can access key_b from instance 2 defaults");
         }
@@ -93,7 +93,7 @@ public:
         auto kvs2 = *kvs2_opt;
 
         // Log instance 2's own default (key_b) — proves default was loaded for instance 2.
-        auto val_b = kvs2->get_value_f64("key_b");
+        auto val_b = kvs2->get_default_value_f64("key_b");
         if (!val_b.has_value()) {
             throw std::runtime_error("Instance 2 should have key_b default but it is not accessible");
         }
@@ -102,8 +102,8 @@ public:
                 ",\"source\":\"default\"",
             "cpp_test_scenarios::scenarios::persistency::multi_instance_isolation");
 
-        // Confirm key_a is NOT accessible from instance 2 (isolation check).
-        auto cross_b = kvs2->get_value_f64("key_a");
+        // Confirm key_a's default is NOT accessible from instance 2 (isolation check).
+        auto cross_b = kvs2->get_default_value_f64("key_a");
         if (cross_b.has_value()) {
             throw std::runtime_error("Isolation broken: instance 2 can access key_a from instance 1 defaults");
         }
