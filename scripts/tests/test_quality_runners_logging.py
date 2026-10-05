@@ -15,17 +15,14 @@
 import sys
 from pathlib import Path
 
-# Make repo root and scripts/ importable so quality_runners and known_good resolve.
-_SCRIPTS_DIR = Path(__file__).resolve().parents[2]
-_REPO_ROOT = Path(__file__).resolve().parents[3]
-for p in (str(_SCRIPTS_DIR), str(_REPO_ROOT)):
-    if p not in sys.path:
-        sys.path.insert(0, p)
+# Make scripts/ importable so quality_runners and known_good resolve when run via plain pytest.
+_SCRIPTS_DIR = Path(__file__).resolve().parents[1]
+if str(_SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPTS_DIR))
 
+import quality_runners as qr  # noqa: E402
 from known_good.models.module import Metadata, Module  # noqa: E402
-
-from scripts import quality_runners as qr  # noqa: E402
-from scripts.quality_runners import ProcessResult, parse_arguments, run_command  # noqa: E402
+from quality_runners import ProcessResult, parse_arguments, run_command  # noqa: E402
 
 
 def test_run_command_writes_to_log_file(tmp_path: Path, capsys):

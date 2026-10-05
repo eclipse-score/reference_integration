@@ -32,10 +32,7 @@ score_py_pytest(
     srcs = glob(["tests/**/*.py"]),
     data = ["//:known_good.json"],
     pytest_config = "//:pyproject.toml",
-    deps = [
-        ":known_good",
-        "//scripts:quality_runners",
-    ],
+    deps = [":known_good"],
 )
 
 # Runnable binary for the resolve + inject workflow.

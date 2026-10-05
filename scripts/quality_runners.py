@@ -19,12 +19,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from subprocess import PIPE, Popen, run
 
-try:
-    from known_good.models.known_good import load_known_good
-    from known_good.models.module import Module
-except ModuleNotFoundError:
-    from scripts.known_good.models.known_good import load_known_good
-    from scripts.known_good.models.module import Module
+from known_good.models.known_good import load_known_good
+from known_good.models.module import Module
 
 
 @dataclass
