@@ -77,7 +77,10 @@
                         "//score/kvs/tests/integration_test_scenarios/...",
                         "//score/kvs/tests/test_cases/..."
                     ],
-                    "rust_coverage_config": "ferrocene-coverage-per"
+                    "rust_coverage_config": "ferrocene-coverage-per",
+                    "integration_test_targets": [
+                        "//score/kvs/tests/test_cases:cit"
+                    ]
                 },
                 "hash": "323950c42431956ce76bf48c407a1709f114876d"
             },
@@ -96,13 +99,21 @@
             "score_lifecycle": {
                 "repo": "https://github.com/eclipse-score/lifecycle.git",
                 "bazel_patches": [
-                    "//patches/lifecycle:001-migrate-baselibs-rust-targets.patch"
+                    "//patches/lifecycle:001-migrate-baselibs-rust-targets.patch",
+                    "//patches/lifecycle:002-undev-integration-test-deps.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/...",
                     "extra_test_config": [],
                     "exclude_test_targets": [
                         "//score/health_monitor/src/rust:miri_tests"
+                    ],
+                    "integration_test_targets": [
+                        "//tests/integration/..."
+                    ],
+                    "integration_test_config": [
+                        "flaky_test_attempts=3",
+                        "@score_lifecycle//config:integration_mode=docker"
                     ]
                 },
                 "hash": "85da2168328d17a3cf53791ebf93534e5ed921fc"
@@ -110,7 +121,8 @@
             "score_logging": {
                 "repo": "https://github.com/eclipse-score/logging.git",
                 "bazel_patches": [
-                    "//patches/logging:001-migrate-baselibs-targets.patch"
+                    "//patches/logging:001-migrate-baselibs-targets.patch",
+                    "//patches/logging:002-undev-component-test-deps.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/mw/log/...",
@@ -122,6 +134,12 @@
                     ],
                     "exclude_test_targets": [
                         "//score/mw/log/legacy_non_verbose_api:unit_test"
+                    ],
+                    "integration_test_targets": [
+                        "//score/test/component/..."
+                    ],
+                    "integration_test_config": [
+                        "flaky_test_attempts=3"
                     ]
                 },
                 "hash": "b4f272b0a036d46fc7ff2e9a051fdec95fd23b4f"
