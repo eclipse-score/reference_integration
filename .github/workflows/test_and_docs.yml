@@ -118,9 +118,11 @@ jobs:
         # this YAML from the base branch, so a module upgrade PR could not adjust
         # the test targets/flags otherwise. Runs before the docs build so the
         # source code linker turns the tests' Verifies properties into `testlink`s
-        # on the lifecycle, logging and persistency requirement needs.
+        # on the lifecycle, logging and persistency requirement needs. Mirrors the
+        # unit-test step's cache gating: only tag runs re-execute from scratch.
         run: |
-          python ./scripts/quality_runners.py --integration-tests
+          python ./scripts/quality_runners.py --integration-tests \
+            ${{ github.ref_type != 'tag' && '--trust-cache' || '' }}
       - name: Install uv (required for SBOM license scanning)
         uses: astral-sh/setup-uv@v5
         with:

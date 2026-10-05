@@ -356,7 +356,7 @@ def run_command(command: list[str], **kwargs) -> ProcessResult:
     return ProcessResult(stdout="".join(stdout_data), stderr="".join(stderr_data), exit_code=exit_code)
 
 
-def run_integration_tests(known, modules_to_test: list[str]) -> bool:
+def run_integration_tests(known, modules_to_test: list[str], trust_cache: bool = False) -> bool:
     """Run each module's integration test suite, mirroring the unit-test loop.
 
     Iterates over the target_sw modules and runs ``integration_test_targets`` for
@@ -377,6 +377,7 @@ def run_integration_tests(known, modules_to_test: list[str]) -> bool:
         print_centered(f"QR: Running integration tests for {module.name}")
         call = (
             ["bazel", "test", "--lockfile_mode=error", "--config=linux-x86_64"]
+            + ([] if trust_cache else ["--nocache_test_results"])
             + [f"--{flag}" for flag in module.metadata.integration_test_config]
             + [f"@{module.name}{target}" for target in module.metadata.integration_test_targets]
         )
@@ -512,7 +513,7 @@ def main() -> bool:
     if args.modules_to_test:
         print_centered(f"QR: User requested tests only for specified modules: {', '.join(args.modules_to_test)}")
     if args.integration_tests:
-        return run_integration_tests(known, args.modules_to_test)
+        return run_integration_tests(known, args.modules_to_test, args.trust_cache)
     return run_unit_tests(known, args)
 
 
