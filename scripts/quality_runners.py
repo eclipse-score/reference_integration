@@ -437,17 +437,16 @@ def parse_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def main() -> bool:
-    args = parse_arguments()
-    if args.integration_tests:
-        known = load_known_good(args.known_good_path.resolve())
-        return run_integration_tests(known, args.modules_to_test)
+def run_unit_tests(known, args: argparse.Namespace) -> bool:
+    """Run unit tests and coverage for every module, mirroring run_integration_tests.
+
+    Returns True when any test or coverage extraction failed, so the process
+    exits non-zero.
+    """
     configure_aslr_for_sanitizers()
     args.coverage_output_dir.mkdir(parents=True, exist_ok=True)
     path_to_docs = Path(__file__).parent.parent / "docs/verification_report"
     path_to_docs.mkdir(parents=True, exist_ok=True)
-
-    known = load_known_good(args.known_good_path.resolve())
 
     unit_tests_summary, coverage_summary = {}, {}
 
@@ -508,6 +507,14 @@ def main() -> bool:
 
     # Check all exit codes and return non-zero if any test or coverage extraction failed
     return any(r["exit_code"] != 0 for r in {**unit_tests_summary, **coverage_summary}.values())
+
+
+def main() -> bool:
+    args = parse_arguments()
+    known = load_known_good(args.known_good_path.resolve())
+    if args.integration_tests:
+        return run_integration_tests(known, args.modules_to_test)
+    return run_unit_tests(known, args)
 
 
 if __name__ == "__main__":
