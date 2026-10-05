@@ -15,7 +15,7 @@ import os
 import re
 import select
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from subprocess import PIPE, Popen, run
 
@@ -28,6 +28,46 @@ class ProcessResult:
     stdout: str
     stderr: str
     exit_code: int
+
+
+@dataclass
+class IntegrationTest:
+    """A module-owned integration/component test suite run before the docs build.
+
+    Kept here (checked out from the PR head) rather than in the workflow YAML:
+    the Code Quality & Documentation job runs via ``pull_request_target``, which
+    reads the YAML from the base branch, so a module upgrade PR could not adjust
+    the targets or flags in lockstep. This script can.
+    """
+
+    name: str
+    targets: list[str]
+    extra_flags: list[str] = field(default_factory=list)
+
+
+# The docs source code linker turns the Verifies properties of these tests into
+# `testlink` attributes on the respective module requirement needs, so they must
+# run in this job and before the documentation build. --flaky_test_attempts=3
+# absorbs a race in the ITF docker plugin's PID read for the docker-based suites.
+MODULE_INTEGRATION_TESTS = [
+    IntegrationTest(
+        name="score_lifecycle",
+        targets=["@score_lifecycle//tests/integration/..."],
+        extra_flags=[
+            "--flaky_test_attempts=3",
+            "--@score_lifecycle//config:integration_mode=docker",
+        ],
+    ),
+    IntegrationTest(
+        name="score_logging",
+        targets=["@score_logging//score/test/component/..."],
+        extra_flags=["--flaky_test_attempts=3"],
+    ),
+    IntegrationTest(
+        name="score_persistency",
+        targets=["@score_persistency//score/kvs/tests/test_cases:cit"],
+    ),
+]
 
 
 def print_centered(message: str, width: int = 120, fillchar: str = "-") -> None:
@@ -356,6 +396,25 @@ def run_command(command: list[str], **kwargs) -> ProcessResult:
     return ProcessResult(stdout="".join(stdout_data), stderr="".join(stderr_data), exit_code=exit_code)
 
 
+def run_integration_tests() -> bool:
+    """Run the module-owned integration/component test suites.
+
+    Returns True when at least one suite failed, matching ``main``'s convention
+    so the process exits non-zero.
+    """
+    failed = []
+    for test in MODULE_INTEGRATION_TESTS:
+        print_centered(f"QR: Running integration tests for {test.name}")
+        call = ["bazel", "test", "--lockfile_mode=error", "--config=linux-x86_64"] + test.extra_flags + test.targets
+        if run_command(call).exit_code != 0:
+            failed.append(test.name)
+            print(f"::error title=Integration tests failed::{test.name}")
+
+    if failed:
+        print_centered(f"QR: {len(failed)} INTEGRATION SUITE(S) FAILED: {', '.join(failed)}", fillchar="=")
+    return bool(failed)
+
+
 def parse_arguments() -> argparse.Namespace:
     import argparse
 
@@ -379,6 +438,15 @@ def parse_arguments() -> argparse.Namespace:
         help="List of modules to test",
     )
     parser.add_argument(
+        "--integration-tests",
+        action="store_true",
+        help="Run only the module-owned integration/component test suites "
+        "(lifecycle, logging, persistency) instead of the unit tests and coverage. "
+        "Kept here rather than in the workflow YAML because that YAML is read from "
+        "the base branch under pull_request_target and could not be changed by a "
+        "module upgrade PR.",
+    )
+    parser.add_argument(
         "--trust-cache",
         action="store_true",
         help="Allow Bazel to reuse cached test/coverage results for unchanged modules instead of always "
@@ -392,6 +460,8 @@ def parse_arguments() -> argparse.Namespace:
 
 def main() -> bool:
     args = parse_arguments()
+    if args.integration_tests:
+        return run_integration_tests()
     configure_aslr_for_sanitizers()
     args.coverage_output_dir.mkdir(parents=True, exist_ok=True)
     path_to_docs = Path(__file__).parent.parent / "docs/verification_report"
