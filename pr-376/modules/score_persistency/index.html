@@ -75,7 +75,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Persistency" href="features/persistency/index.html" />
-    <link rel="prev" title="C++ Style Conventions" href="../score_baselibs/cpp-style-guide.html" />
+    <link rel="prev" title="Implementation Inspection Checklist" href="../score_baselibs/baselibs/components/utils/detailed_design/chklst_impl_inspection.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.1" />
@@ -303,6 +303,10 @@
   
 
   
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
 </div>
 
     </header>
@@ -458,7 +462,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../score_baselibs/index.html">Base Libraries</a></li>
 <li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Persistency Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="features/persistency/index.html">Persistency</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module/index.html">Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module/index.html">Persistency Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module/manuals/index.html">Manuals</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module/release/release_note.html">Release Note</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module/safety_mgt/index.html">Safety Management</a></li>
@@ -616,7 +620,7 @@ It integrates best practices for build, test, CI/CD and documentation.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="features/persistency/index.html">Persistency</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module/index.html">Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module/index.html">Persistency Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module/manuals/index.html">Manuals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module/release/release_note.html">Release Note</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module/safety_mgt/index.html">Safety Management</a></li>
@@ -645,1042 +649,880 @@ It integrates best practices for build, test, CI/CD and documentation.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="need row-even"><td class="needs_title"><p>[Feature Name] Requirements Inspection</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_process_description/folder_templates/platform/features/feature_name/requirements/req_inspection.html#doc__feature_name_req_inspection">doc__feature_name_req_inspection</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>[Your Feature Name]</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_process_description/folder_templates/platform/features/feature_name/index.html#doc__feature_name">doc__feature_name</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>[Your Feature Name] Architecture</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_process_description/folder_templates/platform/features/feature_name/architecture/index.html#doc__feature_name_architecture">doc__feature_name_architecture</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>[Your Feature Name] Requirements</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_process_description/folder_templates/platform/features/feature_name/requirements/index.html#doc__feature_name_requirements">doc__feature_name_requirements</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>[Your Platform Name] Security Analysis Checklist</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_process_description/folder_templates/platform/docs/security_mgt/platform_security_analysis_fdr.html#doc__platform_name_security_analysis_fdr">doc__platform_name_security_analysis_fdr</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>[Your Platform Name] Security Analysis Checklist</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_process_description/folder_templates/platform/docs/security_mgt/platform_security_plan_fdr.html#doc__platform_name_security_plan_fdr">doc__platform_name_security_plan_fdr</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>[Your Platform Name] Security Package Checklist</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_process_description/folder_templates/platform/docs/security_mgt/platform_security_package_fdr.html#doc__platform_name_security_package_fdr">doc__platform_name_security_package_fdr</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>AI-Platform</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/ai_platform/index.html#doc__ai_platform">doc__ai_platform</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>AI-Platform Architecture</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/ai_platform/architecture/index.html#doc__ai_platform_architecture">doc__ai_platform_architecture</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Base Libraries</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/baselibs/index.html#doc__baselibs">doc__baselibs</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>ABI Compatible Data Types</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/abi_compatible_data_types/docs/index.html#doc__abi_compatible_data_types">doc__abi_compatible_data_types</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>valid</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Baselibs Architecture</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/baselibs/architecture/index.html#doc__baselibs_architecture">doc__baselibs_architecture</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>ABI Compatible Data Types Architecture</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/abi_compatible_data_types/docs/architecture/index.html#doc__abi_compatible_data_types_architecture">doc__abi_compatible_data_types_architecture</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>valid</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Baselibs Architecture Inspection Checklist</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/features/architecture/chklst_arc_inspection.html#doc__baselibs_arc_inspection">doc__baselibs_arc_inspection</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>ABI Compatible Data Types Requirements</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/abi_compatible_data_types/docs/requirements/index.html#doc__abi_compatible_data_types_requirements">doc__abi_compatible_data_types_requirements</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>valid</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Baselibs Codeowners</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/module/safety_mgt/module_codeowners.html#doc__baselibs_codeowners">doc__baselibs_codeowners</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Baselibs DFA</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/features/safety_analysis/dfa.html#doc__baselibs_dfa">doc__baselibs_dfa</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Baselibs FMEA</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/features/safety_analysis/fmea.html#doc__baselibs_fmea">doc__baselibs_fmea</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Baselibs Module Architecture</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/features/architecture/index.html#doc__baselibs_module_architecture">doc__baselibs_module_architecture</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Baselibs Module Verification Report</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/verification_report/module_verification_report.html#doc__baselibs_verification_report">doc__baselibs_verification_report</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Baselibs Release Note</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/module/release/release_note.html#doc__baselibs_release_note">doc__baselibs_release_note</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Baselibs Requirements</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/baselibs/requirements/index.html#doc__baselibs_requirements">doc__baselibs_requirements</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Baselibs Requirements Inspection Checklist</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/baselibs/requirements/chklst_req_inspection.html#doc__baselibs_req_inspection">doc__baselibs_req_inspection</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Baselibs Safety Analysis Checklist</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/module/safety_mgt/module_safety_analysis_fdr.html#doc__baselibs_safety_analysis_fdr">doc__baselibs_safety_analysis_fdr</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>Bit Manipulation Library</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/bitmanipulation/index.html#doc__bitmanipulation">doc__bitmanipulation</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Baselibs Safety Manual</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/module/manuals/safety_manual.html#doc__baselibs_safety_manual">doc__baselibs_safety_manual</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>Bit Manipulation Requirements</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/bitmanipulation/requirements/index.html#doc__bitmanipulation_requirements">doc__bitmanipulation_requirements</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
+<td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Baselibs Safety Package Formal Review</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/module/safety_mgt/module_safety_package_fdr.html#doc__baselibs_safety_package_fdr">doc__baselibs_safety_package_fdr</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>bitmanipulation Architecture</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/bitmanipulation/architecture/index.html#doc__bitmanipulation_architecture">doc__bitmanipulation_architecture</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Bitmanipulation Architecture Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/bitmanipulation/architecture/chklst_arc_inspection.html#doc__bitmanipulation_arc_inspection">doc__bitmanipulation_arc_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>bitmanipulation DFA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/bitmanipulation/safety_analysis/dfa.html#doc__bitmanipulation_dfa">doc__bitmanipulation_dfa</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Baselibs Safety Plan</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/module/safety_mgt/module_safety_plan.html#doc__baselibs_safety_plan">doc__baselibs_safety_plan</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>bitmanipulation FMEA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/bitmanipulation/safety_analysis/fmea.html#doc__bitmanipulation_fmea">doc__bitmanipulation_fmea</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>valid</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Baselibs Safety Plan Formal Review</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/module/safety_mgt/module_safety_plan_fdr.html#doc__baselibs_safety_plan_fdr">doc__baselibs_safety_plan_fdr</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Baselibs Safety WPs</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/features/safety_planning/index.html#doc__baselibs_safety_wp">doc__baselibs_safety_wp</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>Bitmanipulation Implementation Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/bitmanipulation/detailed_design/chklst_impl_inspection.html#doc__bitmanipulation_impl_inspection">doc__bitmanipulation_impl_inspection</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Code-Generation</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/code_generation/index.html#doc__code_generation">doc__code_generation</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Code-Generation Architecture</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/code_generation/architecture/index.html#doc__code_generation_architecture">doc__code_generation_architecture</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Communication</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/communication/index.html#doc__com">doc__com</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>Bitmanipulation Requirements Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/bitmanipulation/requirements/chklst_req_inspection.html#doc__bitmanipulation_req_inspection">doc__bitmanipulation_req_inspection</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>valid</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Communication Codeowners</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/modules/communication/docs/safety_mgt/module_codeowners.html#doc__communication_codeowners">doc__communication_codeowners</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>Concurrency Architecture</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/concurrency/architecture/index.html#doc__concurrency_architecture">doc__concurrency_architecture</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>valid</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Communication IPC Safety WPs</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/communication/ipc/safety_planning/index.html#doc__com_ipc_safety_wp">doc__com_ipc_safety_wp</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Communication Release Note</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/modules/communication/docs/release/release_note.html#doc__communication_release_note">doc__communication_release_note</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>Concurrency Architecture Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/concurrency/architecture/chklst_arc_inspection.html#doc__concurrency_arc_inspection">doc__concurrency_arc_inspection</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>valid</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Communication Requirements</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/communication/requirements/index.html#doc__communication_requirements">doc__communication_requirements</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>concurrency DFA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/concurrency/safety_analysis/dfa.html#doc__concurrency_dfa">doc__concurrency_dfa</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>concurrency FMEA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/concurrency/safety_analysis/fmea.html#doc__concurrency_fmea">doc__concurrency_fmea</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Concurrency Implementation Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/concurrency/detailed_design/chklst_impl_inspection.html#doc__concurrency_impl_inspection">doc__concurrency_impl_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Concurrency Library</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/concurrency/index.html#doc__concurrency">doc__concurrency</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Concurrency Requirements</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/concurrency/requirements/index.html#doc__concurrency_requirements">doc__concurrency_requirements</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Concurrency Requirements Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/concurrency/requirements/chklst_req_inspection.html#doc__concurrency_req_inspection">doc__concurrency_req_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Container Architecture</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/containers/architecture/index.html#doc__containers_architecture">doc__containers_architecture</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>valid</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Communication Safety Package Formal Review</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/modules/communication/docs/safety_mgt/module_safety_package_fdr.html#doc__communication_safety_package_fdr">doc__communication_safety_package_fdr</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>Containers Architecture Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/containers/architecture/chklst_arc_inspection.html#doc__containers_arc_inspection">doc__containers_arc_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>containers DFA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/containers/safety_analysis/dfa.html#doc__containers_dfa">doc__containers_dfa</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Communication Safety Plan</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/modules/communication/docs/safety_mgt/module_safety_plan.html#doc__communication_safety_plan">doc__communication_safety_plan</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>containers FMEA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/containers/safety_analysis/fmea.html#doc__containers_fmea">doc__containers_fmea</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Communication Safety Plan Formal Review</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/modules/communication/docs/safety_mgt/module_safety_plan_fdr.html#doc__communication_safety_plan_fdr">doc__communication_safety_plan_fdr</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Communication Verification Report</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/modules/communication/docs/verification/module_verification_report.html#doc__communication_verification_report">doc__communication_verification_report</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>Containers Implementation Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/containers/detailed_design/chklst_impl_inspection.html#doc__containers_impl_inspection">doc__containers_impl_inspection</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Configuration Management</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/configuration/config_mgmt/index.html#doc__config_mgmt">doc__config_mgmt</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>Containers Library</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/containers/index.html#doc__containers">doc__containers</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Configuration Management Architecture</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/configuration/config_mgmt/architecture/index.html#doc__config_mgmt_architecture">doc__config_mgmt_architecture</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>Containers Library Requirements</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/containers/requirements/index.html#doc__containers_lib_requirements">doc__containers_lib_requirements</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Configuration Model</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/configuration/config_model/index.html#doc__configuration_model">doc__configuration_model</a></p></td>
-<td class="needs_safety"><p>QM</p></td>
-<td class="needs_security"><p>NO</p></td>
+<tr class="need row-even"><td class="needs_title"><p>Containers Requirements Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/containers/requirements/chklst_req_inspection.html#doc__containers_req_inspection">doc__containers_req_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Deterministic App Abstraction Layer</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/frameworks/daal/index.html#doc__daal">doc__daal</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>Datarouter Component Requirements</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_logging/components/datarouter/requirements/index.html#doc__data_router_requirements">doc__data_router_requirements</a></p></td>
 <td class="needs_safety"><p>QM</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>valid</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Deterministic App Abstraction Layer Architecture</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/frameworks/daal/architecture/index.html#doc__daal_architecture">doc__daal_architecture</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>Datarouter Detailed Design</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_logging/components/datarouter/detailed_design/index.html#doc__datarouter_detailed_design">doc__datarouter_detailed_design</a></p></td>
 <td class="needs_safety"><p>QM</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Diagnostics</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/diagnostics/index.html#doc__diagnostics">doc__diagnostics</a></p></td>
-<td class="needs_safety"><p>QM</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Diagnostics Architecture</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/diagnostics/architecture/index.html#doc__diagnostics_architecture">doc__diagnostics_architecture</a></p></td>
-<td class="needs_safety"><p>QM</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>doc__logging</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/log_and_trace/logging/index.html#doc__logging">doc__logging</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>FEO Assumptions of Use Requirements</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/frameworks/feo/requirements/aou_req.html#doc__frameworks_feo_aou_reqs">doc__frameworks_feo_aou_reqs</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>FEO Feature Architecture</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/frameworks/feo/architecture/feature_architecture.html#doc__frameworks_feo_feat_arch">doc__frameworks_feo_feat_arch</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>FEO Feature Architecture Inspection Checklist</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/frameworks/feo/architecture/chklst_arch_inspection.html#doc__arch_inspection_frameworks_feo">doc__arch_inspection_frameworks_feo</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>FEO Feature DFA</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/frameworks/feo/safety_analysis/feature_dfa.html#doc__frameworks_feo_dfa">doc__frameworks_feo_dfa</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>FEO Feature FMEA</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/frameworks/feo/safety_analysis/feature_fmea.html#doc__frameworks_feo_fmea">doc__frameworks_feo_fmea</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>FEO Feature Requirements</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/frameworks/feo/requirements/feature_req.html#doc__frameworks_feo_feat_reqs">doc__frameworks_feo_feat_reqs</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>FEO Feature Requirements Inspection Checklist</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/frameworks/feo/requirements/chklst_req_inspection.html#doc__req_inspection_frameworks_feo">doc__req_inspection_frameworks_feo</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>FEO Feature Safety Analysis Inspection Checklist</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/frameworks/feo/safety_analysis/chklst_safety_analysis_inspection.html#doc__saf_ana_inspec_frameworks_feo">doc__saf_ana_inspec_frameworks_feo</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>FEO Module Release Note</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/modules/feo/docs/release/release_note.html#doc__feo_release_note">doc__feo_release_note</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>FEO Module Safety Package Formal Review</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/modules/feo/docs/safety_mgt/module_safety_package_fdr.html#doc__feo_safety_package_fdr">doc__feo_safety_package_fdr</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>FEO Module Safety Plan</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/modules/feo/docs/safety_mgt/module_safety_plan.html#doc__feo_safety_plan">doc__feo_safety_plan</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>FEO Module Safety Plan Formal Review</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/modules/feo/docs/safety_mgt/module_safety_plan_fdr.html#doc__feo_safety_plan_fdr">doc__feo_safety_plan_fdr</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>FEO Module Verification Report</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/modules/feo/docs/verification/module_verification_report.html#doc__feo_verification_report">doc__feo_verification_report</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>FEO Safety Work Products</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/frameworks/feo/safety_planning/index.html#doc__feo_safety_wp">doc__feo_safety_wp</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Fixed execution order framework</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/frameworks/feo/index.html#doc__frameworks_feo">doc__frameworks_feo</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Gen-AI</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/ai_platform/gen_ai/index.html#doc__gen_ai">doc__gen_ai</a></p></td>
-<td class="needs_safety"><p>QM</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Gen-AI Architecture</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/ai_platform/gen_ai/architecture/index.html#doc__gen_ai_architecture">doc__gen_ai_architecture</a></p></td>
-<td class="needs_safety"><p>QM</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Inter-process Communication</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/communication/ipc/index.html#doc__com_ipc">doc__com_ipc</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>Filesystem Architecture</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/filesystem/architecture/index.html#doc__filesystem_architecture">doc__filesystem_architecture</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>valid</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>IPC Architecture</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/communication/ipc/architecture/index.html#doc__ipc_architecture">doc__ipc_architecture</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>Filesystem Architecture Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/filesystem/architecture/chklst_arc_inspection.html#doc__filesystem_arc_inspection">doc__filesystem_arc_inspection</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>valid</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>IPC DFA</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/communication/ipc/safety_analysis/dfa.html#doc__ipc_dfa">doc__ipc_dfa</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>filesystem DFA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/filesystem/safety_analysis/dfa.html#doc__filesystem_dfa">doc__filesystem_dfa</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>IPC FMEA</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/communication/ipc/safety_analysis/fmea.html#doc__ipc_fmea">doc__ipc_fmea</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>filesystem FMEA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/filesystem/safety_analysis/fmea.html#doc__filesystem_fmea">doc__filesystem_fmea</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>IPC Requirements</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/communication/ipc/requirements/index.html#doc__ipc_requirements">doc__ipc_requirements</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Lifcycle Security Package Formal Review</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/security_mgt/module_security_package_fdr.html#doc__lifecycle_sec_pkg_fdr">doc__lifecycle_sec_pkg_fdr</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>Filesystem Implementation Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/filesystem/detailed_design/chklst_impl_inspection.html#doc__filesystem_impl_inspection">doc__filesystem_impl_inspection</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Lifecycle</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/lifecycle/index.html#doc__lifecycle">doc__lifecycle</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Lifecycle Architecture</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/lifecycle/architecture/index.html#doc__lifecycle_architecture">doc__lifecycle_architecture</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Lifecycle Architecture Inspection Checklist</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/features/lifecycle/architecture/chklst_arc_inspection.html#doc__lifecycle_arc_inspection">doc__lifecycle_arc_inspection</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>Filesystem Library</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/filesystem/index.html#doc__filesystem">doc__filesystem</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Lifecycle DFA</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/features/lifecycle/safety_analysis/dfa.html#doc__lifecycle_dfa">doc__lifecycle_dfa</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>Filesystem Library Requirements</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/filesystem/requirements/index.html#doc__filesystem_lib_requirements">doc__filesystem_lib_requirements</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Filesystem Requirements Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/filesystem/requirements/chklst_req_inspection.html#doc__filesystem_req_inspection">doc__filesystem_req_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>FlatBuffers Requirements</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/flatbuffers/requirements/index.html#doc__flatbuffers_requirements">doc__flatbuffers_requirements</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>FlatBuffers-Library</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/flatbuffers/index.html#doc__flatbuffers">doc__flatbuffers</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>FutureCPP Library</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/language/futurecpp/index.html#doc__futurecpp">doc__futurecpp</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Hash Library</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/hash/index.html#doc__hash">doc__hash</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Lifecycle Feature AoU</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/features/lifecycle/safety_analysis/aou_requirements.html#doc__lifecycle_feat_aou">doc__lifecycle_feat_aou</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>Hash Requirements</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/hash/requirements/index.html#doc__hash_requirements">doc__hash_requirements</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Lifecycle FMEA</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/features/lifecycle/safety_analysis/fmea.html#doc__lifecycle_fmea">doc__lifecycle_fmea</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>Health Monitor Architecture Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/components/health_monitor/architecture/chklst_arc_inspection.html#doc__health_monitor_arc_inspection">doc__health_monitor_arc_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Health Monitor DFA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/components/health_monitor/safety_analysis/dfa.html#doc__health_monitor_dfa">doc__health_monitor_dfa</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Lifecycle Module Architecture</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/features/lifecycle/architecture/index.html#doc__lifecycle_module_architecture">doc__lifecycle_module_architecture</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>lifecycle Release Note v0.2.0</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/release/release_note_v_0_2_0.html#doc__lifecycle_release_note_v0_2_0">doc__lifecycle_release_note_v0_2_0</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>lifecycle Release Note v0.3.0</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/release/release_note_v_0_3_0.html#doc__lifecycle_release_note_v0_3_0">doc__lifecycle_release_note_v0_3_0</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>lifecycle Release Note v0.4.0</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/release/release_note_v_0_4_0.html#doc__lifecycle_release_note_v0_4_0">doc__lifecycle_release_note_v0_4_0</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>lifecycle Release Note v0.5.0</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/release/release_note_v_0_5_0.html#doc__lifecycle_release_note_v0_5_0">doc__lifecycle_release_note_v0_5_0</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>lifecycle Release Note v0.6.0</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/release/release_note_v_0_6_0.html#doc__lifecycle_release_note_v0_6_0">doc__lifecycle_release_note_v0_6_0</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>lifecycle Release Note v0.6.1</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/release/release_note_v_0_6_1.html#doc__lifecycle_release_note_v0_6_1">doc__lifecycle_release_note_v0_6_1</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Lifecycle Requirements</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/lifecycle/requirements/index.html#doc__lifecycle_requirements">doc__lifecycle_requirements</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Lifecycle Safety Analysis Checklist</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/safety_mgt/module_safety_analysis_fdr.html#doc__lifecycle_safety_analysis_fdr">doc__lifecycle_safety_analysis_fdr</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Lifecycle Safety Manual</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/manuals/safety_manual.html#doc__lifecycle_safety_manual">doc__lifecycle_safety_manual</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>Health Monitor FMEA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/components/health_monitor/safety_analysis/fmea.html#doc__health_monitor_fmea">doc__health_monitor_fmea</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Lifecycle Safety Package Formal Review</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/safety_mgt/module_safety_package_fdr.html#doc__lifecycle_safety_package_fdr">doc__lifecycle_safety_package_fdr</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>Health Monitor Implementation Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/components/health_monitor/detailed_design/chklst_impl_inspection.html#doc__health_monitor_impl_inspection">doc__health_monitor_impl_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Health Monitor Requirements Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/components/health_monitor/requirements/chklst_req_inspection.html#doc__health_monitor_req_inspection">doc__health_monitor_req_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>HealthMonitor</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/components/health_monitor/index.html#doc__health_monitor">doc__health_monitor</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Lifecycle Safety Plan</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/safety_mgt/module_safety_plan.html#doc__lifecycle_safety_plan">doc__lifecycle_safety_plan</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>HealthMonitor Architecture</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/components/health_monitor/architecture/index.html#doc__health_monitor_architecture">doc__health_monitor_architecture</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Lifecycle Safety Plan Formal Review</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/safety_mgt/module_safety_plan_fdr.html#doc__lifecycle_safety_plan_fdr">doc__lifecycle_safety_plan_fdr</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>HealthMonitor Detailed Design</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/components/health_monitor/detailed_design/index.html#doc__health_monitor_detailed_design">doc__health_monitor_detailed_design</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Lifecycle Safety WPs</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/features/lifecycle/safety_planning/index.html#doc__lifecycle_safety_wp">doc__lifecycle_safety_wp</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>HealthMonitor Requirements</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/components/health_monitor/requirements/index.html#doc__health_monitor_requirements">doc__health_monitor_requirements</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Lifecycle Security Manual</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/manuals/security_manual.html#doc__lifecycle_security_manual">doc__lifecycle_security_manual</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>JSON Architecture</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/json/architecture/index.html#doc__json_architecture">doc__json_architecture</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Lifecycle Security Plan</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/security_mgt/module_security_plan.html#doc__lifecycle_security_plan">doc__lifecycle_security_plan</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>Json Architecture Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/json/architecture/chklst_arc_inspection.html#doc__json_arc_inspection">doc__json_arc_inspection</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Lifecycle Security Plan Formal Review</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/security_mgt/module_security_plan_fdr.html#doc__lifecycle_security_plan_fdr">doc__lifecycle_security_plan_fdr</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Lifecycle Security WPs</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/features/lifecycle/security_planning/index.html#doc__lifecycle_security_planning_wp">doc__lifecycle_security_planning_wp</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Lifecycle Verification Report</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/verification_report/index.html#doc__lifecycle_verification_report">doc__lifecycle_verification_report</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Logging Architecture</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/log_and_trace/logging/architecture/index.html#doc__logging_architecture">doc__logging_architecture</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Logging Architecture</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_logging/features/logging/architecture/index.html#doc__logging_module_architecture">doc__logging_module_architecture</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Logging Architecture Inspection Checklist</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_logging/features/logging/architecture/chklst_arc_inspection.html#doc__logging_arc_inspection">doc__logging_arc_inspection</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Logging Module Safety Plan</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_logging/module/safety_mgt/module_safety_plan.html#doc__logging_safety_plan">doc__logging_safety_plan</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Logging Module Verification Report</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_logging/verification_report/module_verification_report.html#doc__logging_verification_report">doc__logging_verification_report</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Logging Release Note</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_logging/module/release/release_note.html#doc__logging_release_note">doc__logging_release_note</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>JSON Component Classification</p></td>
+<td class="needs_id"><p><a class="reference internal" href="components/json/component_classification.html#doc__json_comp_class">doc__json_comp_class</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>valid</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Logging Requirements</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/log_and_trace/logging/requirements/index.html#doc__logging_requirements">doc__logging_requirements</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Logging Requirements Inspection Checklist</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/log_and_trace/logging/requirements/chklst_req_inspection.html#doc__logging_req_inspection">doc__logging_req_inspection</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Logging Safety Analysis Checklist</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_logging/module/safety_mgt/module_safety_analysis_fdr.html#doc__logging_safety_analysis_fdr">doc__logging_safety_analysis_fdr</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Logging Safety Manual</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_logging/module/manuals/safety_manual.html#doc__logging_safety_manual">doc__logging_safety_manual</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>JSON DFA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/json/safety_analysis/dfa.html#doc__json_dfa">doc__json_dfa</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Logging Safety WPs</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_logging/features/logging/safety_planning/index.html#doc__logging_safety_wp">doc__logging_safety_wp</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>JSON FMEA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/json/safety_analysis/fmea.html#doc__json_fmea">doc__json_fmea</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Orchestration</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/orchestration/index.html#doc__orchestration">doc__orchestration</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>Json Implementation Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/json/detailed_design/chklst_impl_inspection.html#doc__json_impl_inspection">doc__json_impl_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>JSON Requirements</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/json/requirements/index.html#doc__json_requirements">doc__json_requirements</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>JSON Requirements Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/json/requirements/chklst_req_inspection.html#doc__json_req_inspection">doc__json_req_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>JSON Wrapper Requirements</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/json/json_wrapper/requirements/index.html#doc__json_wrapper_requirements">doc__json_wrapper_requirements</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>valid</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Orchestration Architecture</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/orchestration/architecture/index.html#doc__orchestration_architecture">doc__orchestration_architecture</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Orchestration DFA</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/orchestration/safety_analysis/dfa.html#doc__orchestration_dfa">doc__orchestration_dfa</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Orchestration FMEA</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/orchestration/safety_analysis/fmea.html#doc__orchestration_fmea">doc__orchestration_fmea</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Orchestration Requirements</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/orchestration/requirements/index.html#doc__orchestration_requirements">doc__orchestration_requirements</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>JSON-Library</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/json/index.html#doc__json">doc__json</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>valid</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Orchestration Safety WPs</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/orchestration/safety_planning/index.html#doc__orchestration_safety_wp">doc__orchestration_safety_wp</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Orchestrator Codeowners</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/modules/orchestrator/docs/safety_mgt/module_codeowners.html#doc__orchestrator_codeowners">doc__orchestrator_codeowners</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Orchestrator Release Note</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/modules/orchestrator/docs/release/release_note.html#doc__orchestrator_release_note">doc__orchestrator_release_note</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Orchestrator Safety Package Formal Review</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/modules/orchestrator/docs/safety_mgt/module_safety_package_fdr.html#doc__orchestrator_safety_package_fdr">doc__orchestrator_safety_package_fdr</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Orchestrator Safety Plan</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/modules/orchestrator/docs/safety_mgt/module_safety_plan.html#doc__orchestrator_safety_plan">doc__orchestrator_safety_plan</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Orchestrator Safety Plan Formal Review</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/modules/orchestrator/docs/safety_mgt/module_safety_plan_fdr.html#doc__orchestrator_safety_plan_fdr">doc__orchestrator_safety_plan_fdr</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Orchestrator Verification Report</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/modules/orchestrator/docs/verification/module_verification_report.html#doc__orchestrator_verification_report">doc__orchestrator_verification_report</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Persistency</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/persistency/index.html#doc__persistency">doc__persistency</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>KVS</p></td>
+<td class="needs_id"><p><a class="reference internal" href="components/kvs/index.html#doc__kvs">doc__kvs</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>valid</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Persistency Architecture Inspection Checklist</p></td>
-<td class="needs_id"><p><a class="reference internal" href="features/persistency/architecture/chklst_arc_inspection.html#doc__persistency_arc_inspection">doc__persistency_arc_inspection</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>KVS Architecture Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="components/kvs/architecture/chklst_arc_inspection.html#doc__kvs_arc_inspection">doc__kvs_arc_inspection</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Persistency Codeowners</p></td>
-<td class="needs_id"><p><a class="reference internal" href="module/safety_mgt/module_codeowners.html#doc__persistency_codeowners">doc__persistency_codeowners</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Persistency DFA</p></td>
-<td class="needs_id"><p><a class="reference internal" href="features/persistency/safety_analysis/dfa.html#doc__persistency_dfa">doc__persistency_dfa</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Persistency FMEA</p></td>
-<td class="needs_id"><p><a class="reference internal" href="features/persistency/safety_analysis/fmea.html#doc__persistency_fmea">doc__persistency_fmea</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Persistency KVS Feature Architecture</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/persistency/architecture/index.html#doc__persistency_architecture">doc__persistency_architecture</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Persistency KVS Feature Architecture</p></td>
-<td class="needs_id"><p><a class="reference internal" href="features/persistency/architecture/index.html#doc__persistency_kvs_architecture">doc__persistency_kvs_architecture</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Persistency KVS Security WPs</p></td>
-<td class="needs_id"><p><a class="reference internal" href="features/persistency/security_planning/index.html#doc__persistency_security_wp">doc__persistency_security_wp</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Persistency Module Verification Report</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../verification_report/modules/persistency/persistency_verification_report.html#doc__persistency_verification_report">doc__persistency_verification_report</a></p></td>
-<td class="needs_safety"><p>QM</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Persistency Release Note</p></td>
-<td class="needs_id"><p><a class="reference internal" href="module/release/release_note.html#doc__persistency_release_note">doc__persistency_release_note</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Persistency Requirements</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/persistency/requirements/index.html#doc__feature_persistency_requirements">doc__feature_persistency_requirements</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Persistency Requirements Inspection Checklist</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/persistency/requirements/chklst_req_inspection.html#doc__feature_persistency_requirements_chklst">doc__feature_persistency_requirements_chklst</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Persistency Safety Analysis Checklist</p></td>
-<td class="needs_id"><p><a class="reference internal" href="module/safety_mgt/feature_safety_analysis_fdr.html#doc__persistency_safety_analysis_fdr">doc__persistency_safety_analysis_fdr</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Persistency Safety Analysis Checklist</p></td>
-<td class="needs_id"><p><a class="reference internal" href="module/safety_mgt/module_safety_analysis_fdr.html#doc__module_safety_analysis_fdr">doc__module_safety_analysis_fdr</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Persistency Safety Manual</p></td>
-<td class="needs_id"><p><a class="reference internal" href="module/manuals/safety_manual.html#doc__persistency_safety_manual">doc__persistency_safety_manual</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Persistency Safety Package Formal Review</p></td>
-<td class="needs_id"><p><a class="reference internal" href="module/safety_mgt/module_safety_package_fdr.html#doc__persistency_safety_package_fdr">doc__persistency_safety_package_fdr</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Persistency Safety Plan</p></td>
-<td class="needs_id"><p><a class="reference internal" href="module/safety_mgt/module_safety_plan.html#doc__persistency_safety_plan">doc__persistency_safety_plan</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Persistency Safety Plan Formal Review</p></td>
-<td class="needs_id"><p><a class="reference internal" href="module/safety_mgt/module_safety_plan_fdr.html#doc__persistency_safety_plan_fdr">doc__persistency_safety_plan_fdr</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Persistency Safety WPs</p></td>
-<td class="needs_id"><p><a class="reference internal" href="features/persistency/safety_planning/index.html#doc__persistency_safety_wp">doc__persistency_safety_wp</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Persistency Security Manual</p></td>
-<td class="needs_id"><p><a class="reference internal" href="module/manuals/security_manual.html#doc__persistency_security_manual">doc__persistency_security_manual</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Persistency Security Package Formal Review</p></td>
-<td class="needs_id"><p><a class="reference internal" href="module/security_mgt/module_security_package_fdr.html#doc__persistency_sec_pkg_fdr">doc__persistency_sec_pkg_fdr</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Persistency Security Plan</p></td>
-<td class="needs_id"><p><a class="reference internal" href="module/security_mgt/module_security_plan.html#doc__persistency_security_plan">doc__persistency_security_plan</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Persistency Security Plan Formal Review</p></td>
-<td class="needs_id"><p><a class="reference internal" href="module/security_mgt/module_security_plan_fdr.html#doc__persistency_security_plan_fdr">doc__persistency_security_plan_fdr</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Persistency Verification Report</p></td>
-<td class="needs_id"><p><a class="reference internal" href="verification_report/module_verification_report.html#doc__persistency_manual_verification_report">doc__persistency_manual_verification_report</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Platform DFA</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_process_description/folder_templates/platform/docs/safety_mgt/platform_dfa.html#doc__platform_dfa">doc__platform_dfa</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>KVS Detailed Design</p></td>
+<td class="needs_id"><p><a class="reference internal" href="components/kvs/detailed_design/index.html#doc__kvs_detailed_design">doc__kvs_detailed_design</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Platform Release Note</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_process_description/folder_templates/platform/docs/release/release_note.html#doc__platform_release_note">doc__platform_release_note</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>KVS DFA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="components/kvs/safety_analysis/dfa.html#doc__kvs_dfa">doc__kvs_dfa</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>KVS FMEA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="components/kvs/safety_analysis/fmea.html#doc__kvs_fmea">doc__kvs_fmea</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>KVS Implementation Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="components/kvs/detailed_design/chklst_impl_inspection.html#doc__kvs_impl_inspection">doc__kvs_impl_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>KVS Module Architecture</p></td>
+<td class="needs_id"><p><a class="reference internal" href="components/kvs/architecture/index.html#doc__kvs_architecture">doc__kvs_architecture</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>KVS Requirements</p></td>
+<td class="needs_id"><p><a class="reference internal" href="components/kvs/requirements/index.html#doc__kvs_requirements">doc__kvs_requirements</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>KVS Requirements Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="components/kvs/requirements/chklst_req_inspection.html#doc__kvs_req_inspection">doc__kvs_req_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Launch Manager Architecture</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/components/launch_manager/architecture/component_architecture.html#doc__launch_manager_architecture">doc__launch_manager_architecture</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Launch Manager Architecture Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/components/launch_manager/architecture/chklst_arc_inspection.html#doc__launch_manager_arc_inspection">doc__launch_manager_arc_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Launch Manager Component AoU</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/components/launch_manager/safety_analysis/aou_requirements.html#doc__launch_manager_comp_aou">doc__launch_manager_comp_aou</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Platform Safety Analysis Formal Review Report</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_process_description/folder_templates/platform/docs/safety_mgt/platform_safety_analysis_fdr.html#doc__platform_safety_analysis_fdr">doc__platform_safety_analysis_fdr</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Platform Safety Manual</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_process_description/folder_templates/platform/docs/safety_mgt/platform_safety_manual.html#doc__platform_safety_manual">doc__platform_safety_manual</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>Launch Manager Detailed Design</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/components/launch_manager/detailed_design/detailed_design.html#doc__launch_manager_detailed_design">doc__launch_manager_detailed_design</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Platform Safety Package Formal Review</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_process_description/folder_templates/platform/docs/safety_mgt/platform_safety_package_fdr.html#doc__platform_safety_package_fdr">doc__platform_safety_package_fdr</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>Launch Manager DFA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/components/launch_manager/safety_analysis/dfa.html#doc__launch_manager_dfa">doc__launch_manager_dfa</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Platform Safety Plan</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_process_description/folder_templates/platform/docs/safety_mgt/platform_safety_plan.html#doc__platform_safety_plan">doc__platform_safety_plan</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>Launch Manager FMEA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/components/launch_manager/safety_analysis/fmea.html#doc__launch_manager_fmea">doc__launch_manager_fmea</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Platform Safety Plan Formal Review</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_process_description/folder_templates/platform/docs/safety_mgt/platform_safety_plan_fdr.html#doc__platform_safety_plan_fdr">doc__platform_safety_plan_fdr</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>Launch Manager Implementation Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/components/launch_manager/detailed_design/chklst_impl_inspection.html#doc__launch_manager_impl_inspection">doc__launch_manager_impl_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Launch Manager Requirements</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/components/launch_manager/requirements/requirements.html#doc__launch_manager_requirements">doc__launch_manager_requirements</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Launch Manager Requirements Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/components/launch_manager/requirements/chklst_req_inspection.html#doc__launch_manager_req_inspection">doc__launch_manager_req_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Log Assumptions of Use</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/mw_log/safety_analysis/aou_requirements.html#doc__log_assumptions_of_use">doc__log_assumptions_of_use</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Log Detailed Design</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/mw_log/detailed_design/index.html#doc__log_detailed_design">doc__log_detailed_design</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Platform Security Analysis</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_process_description/folder_templates/platform/docs/security_mgt/platform_security_analysis.html#doc__platform_security_analysis">doc__platform_security_analysis</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Platform Security Manual</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_process_description/folder_templates/platform/docs/security_mgt/platform_security_manual.html#doc__platform_security_manual">doc__platform_security_manual</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Platform Security Plan</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_process_description/folder_templates/platform/docs/security_mgt/platform_security_plan.html#doc__platform_security_plan">doc__platform_security_plan</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Platform Verification Report</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_process_description/folder_templates/platform/docs/verification/platform_verification_report.html#doc__platform_verification_report">doc__platform_verification_report</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Platform Verification Report</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../verification_report/platform_verification_report.html#doc__platform_verification_report_latest">doc__platform_verification_report_latest</a></p></td>
-<td class="needs_safety"><p>QM</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Process description Release Note v1.5.3</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_process_description/release_notes/release_note_v_1_5_3.html#doc__process_description_release_note_v152">doc__process_description_release_note_v152</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Process description Release Note v2.0.0</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_process_description/release_notes/release_note_v_2_0_0.html#doc__process_description_release_note_v200">doc__process_description_release_note_v200</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Process description Release Note v2.0.1</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_process_description/release_notes/release_note_v_2_0_1.html#doc__process_description_release_note_v201">doc__process_description_release_note_v201</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Process description Release Note v2.1.0</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_process_description/release_notes/release_note_v_2_1_0.html#doc__process_description_release_note_v210">doc__process_description_release_note_v210</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Release Management Plan</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/platform_management_plan/release_management.html#doc__platform_release_management_plan">doc__platform_release_management_plan</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>Log Frontend Architecture</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/mw_log/architecture/component_architecture.html#doc__log_architecture">doc__log_architecture</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>S-Core v0.5-alpha release note</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../s_core_v_1/releases/release_note_score_v0_5_alpha.html#doc__score_v05_alpha_release_note">doc__score_v05_alpha_release_note</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>S-Core v0.5-beta release note</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../s_core_v_1/releases/release_note_score_v0_5_beta.html#doc__ref_int_v0_5_beta_release_note">doc__ref_int_v0_5_beta_release_note</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>Log Frontend Architecture Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/mw_log/architecture/chklst_arc_inspection.html#doc__log_arc_inspection">doc__log_arc_inspection</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>S-CORE v0.6 release note</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../s_core_v_1/releases/release_note_score_v0_6.html#doc__ref_int_v0_6_release_note">doc__ref_int_v0_6_release_note</a></p></td>
-<td class="needs_safety"><p>QM</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>S-CORE v0.7 release note</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../s_core_v_1/releases/release_note_score_v0_7.html#doc__score_v07_release_note">doc__score_v07_release_note</a></p></td>
-<td class="needs_safety"><p>QM</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>S-CORE v0.8 release note</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../s_core_v_1/releases/release_note_score_v0_8.html#doc__score_v08_release_note">doc__score_v08_release_note</a></p></td>
-<td class="needs_safety"><p>QM</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>S-CORE v0.9 release note</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../s_core_v_1/releases/release_note_score_v0_9.html#doc__score_v09_release_note">doc__score_v09_release_note</a></p></td>
-<td class="needs_safety"><p>QM</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Security &amp; Crpyto Feature Requirements</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/security_crypto/index.html#doc__security_crypto_feat_reqs">doc__security_crypto_feat_reqs</a></p></td>
-<td class="needs_safety"><p>QM</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Security &amp; Crypto Architecture</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/security_crypto/architecture/index.html#doc__security_crypto_architecture">doc__security_crypto_architecture</a></p></td>
-<td class="needs_safety"><p>QM</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>SOME_IP-Gateway</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/communication/some_ip_gateway/index.html#doc__some_ip_gateway">doc__some_ip_gateway</a></p></td>
+<tr class="need row-odd"><td class="needs_title"><p>Log Requirements</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/mw_log/requirements/index.html#doc__log_requirements">doc__log_requirements</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>STRIDE</p></td>
-<td class="needs_id"><p><a class="reference internal" href="features/persistency/security_analysis/stride.html#doc__persistency_stride">doc__persistency_stride</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>Time</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/time/index.html#doc__time">doc__time</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>valid</p></td>
-</tr>
-<tr class="need row-even"><td class="needs_title"><p>Time Architecture</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../../process_methods_tools/score_platform/features/time/architecture/index.html#doc__time_architecture">doc__time_architecture</a></p></td>
-<td class="needs_safety"><p>ASIL_B</p></td>
-<td class="needs_security"><p>YES</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>User Manual Lifecycle</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_lifecycle/manuals/user_manual.html#doc__user_manual_lifecycle">doc__user_manual_lifecycle</a></p></td>
-<td class="needs_safety"><p>QM</p></td>
 <td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
+<td class="needs_status"><p>valid</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>User Manual Time Daemon Component</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_time/time_daemon/manuals/user_manual.html#doc__user_manual_time_daemon">doc__user_manual_time_daemon</a></p></td>
-<td class="needs_safety"><p>QM</p></td>
-<td class="needs_security"><p>NO</p></td>
-<td class="needs_status"><p>draft</p></td>
-</tr>
-<tr class="need row-odd"><td class="needs_title"><p>User Manual Time Module</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_time/module/manuals/user_manual.html#doc__user_manual_time">doc__user_manual_time</a></p></td>
+<tr class="need row-even"><td class="needs_title"><p>log_frontend DFA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/mw_log/safety_analysis/dfa.html#doc__log_dfa">doc__log_dfa</a></p></td>
 <td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>User Manual Time Slave Component</p></td>
-<td class="needs_id"><p><a class="reference internal" href="../score_time/time_slave/manuals/user_manual.html#doc__user_manual_time_slave">doc__user_manual_time_slave</a></p></td>
-<td class="needs_safety"><p>QM</p></td>
+<tr class="need row-odd"><td class="needs_title"><p>log_frontend FMEA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/mw_log/safety_analysis/fmea.html#doc__log_fmea">doc__log_fmea</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
 <td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>log_frontend Implementation Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/mw_log/detailed_design/chklst_impl_inspection.html#doc__log_impl_inspection">doc__log_impl_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>log_frontend Requirements Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/mw_log/requirements/chklst_req_inspection.html#doc__log_req_inspection">doc__log_req_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Memory Library</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/memory/index.html#doc__memory">doc__memory</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Memory Library Requirements</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/memory/requirements/index.html#doc__memory_lib_requirements">doc__memory_lib_requirements</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>mw::log Backend</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_logging/components/mw_log/index.html#doc__mw_log_backend">doc__mw_log_backend</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>mw::log Backend Architecture</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_logging/components/mw_log/architecture/component_architecture.html#doc__mw_log_backend_architecture">doc__mw_log_backend_architecture</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>mw::log Backend Component AoU</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_logging/components/mw_log/safety_analysis/aou_requirements.html#doc__mw_log_backend_comp_aou">doc__mw_log_backend_comp_aou</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>mw::log Backend Component Requirements</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_logging/components/mw_log/requirements/requirements.html#doc__mw_log_backend_requirements">doc__mw_log_backend_requirements</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>mw::log Backend Detailed Design</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_logging/components/mw_log/detailed_design/index.html#doc__mw_log_backend_detailed_design">doc__mw_log_backend_detailed_design</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>mw::log Backend DFA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_logging/components/mw_log/safety_analysis/dfa.html#doc__mw_log_backend_dfa">doc__mw_log_backend_dfa</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>mw::log Backend FMEA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_logging/components/mw_log/safety_analysis/fmea.html#doc__mw_log_backend_fmea">doc__mw_log_backend_fmea</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>mw::log Backend Implementation Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_logging/components/mw_log/detailed_design/chklst_impl_inspection.html#doc__mw_log_backend_impl_inspection">doc__mw_log_backend_impl_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>mw::log Backend Requirements Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_logging/components/mw_log/requirements/chklst_req_inspection.html#doc__mw_log_backend_req_inspection">doc__mw_log_backend_req_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>OS Architecture</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/os/architecture/index.html#doc__os_architecture">doc__os_architecture</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>OS Architecture Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/os/architecture/chklst_arc_inspection.html#doc__os_arc_inspection">doc__os_arc_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>os DFA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/os/safety_analysis/dfa.html#doc__os_dfa">doc__os_dfa</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>os FMEA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/os/safety_analysis/fmea.html#doc__os_fmea">doc__os_fmea</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>OS Implementation Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/os/detailed_design/chklst_impl_inspection.html#doc__os_impl_inspection">doc__os_impl_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>OS Library</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/os/index.html#doc__os">doc__os</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>OS Library Requirements</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/os/requirements/index.html#doc__os_lib_requirements">doc__os_lib_requirements</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>OS Requirements Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/os/requirements/chklst_req_inspection.html#doc__os_req_inspection">doc__os_req_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Persistency JSON</p></td>
+<td class="needs_id"><p><a class="reference internal" href="components/json/index.html#doc__persistencyjson">doc__persistencyjson</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Result Architecture</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/result/architecture/index.html#doc__result_architecture">doc__result_architecture</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>result DFA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/result/safety_analysis/dfa.html#doc__result_dfa">doc__result_dfa</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>result FMEA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/result/safety_analysis/fmea.html#doc__result_fmea">doc__result_fmea</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Result Lib Implementation Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/result/detailed_design/chklst_impl_inspection.html#doc__result_lib_impl_inspection">doc__result_lib_impl_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Result Library</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/result/index.html#doc__result">doc__result</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Result Library Architecture Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/result/architecture/chklst_arc_inspection.html#doc__result_lib_arc_inspection">doc__result_lib_arc_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Result Library Requirements</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/result/requirements/index.html#doc__result_lib_requirements">doc__result_lib_requirements</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Result Library Requirements Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/result/requirements/chklst_req_inspection.html#doc__result_library_req_inspection">doc__result_library_req_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Rust Containers Architecture</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/containers_rust/architecture/index.html#doc__containers_rust_architecture">doc__containers_rust_architecture</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Rust Containers Library</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/containers_rust/index.html#doc__containers_rust">doc__containers_rust</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Rust Containers Library Requirements</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/containers_rust/requirements/index.html#doc__containers_rust_lib_requirements">doc__containers_rust_lib_requirements</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Safecpp Architecture</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/language/safecpp/architecture/index.html#doc__safecpp_architecture">doc__safecpp_architecture</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Safecpp Architecture Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/language/safecpp/architecture/chklst_arc_inspection.html#doc__safecpp_arc_inspection">doc__safecpp_arc_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>SafeCpp DFA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/language/safecpp/safety_analysis/dfa.html#doc__safecpp_dfa">doc__safecpp_dfa</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>SafeCpp FMEA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/language/safecpp/safety_analysis/fmea.html#doc__safecpp_fmea">doc__safecpp_fmea</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Safecpp Implementation Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/language/safecpp/detailed_design/chklst_impl_inspection.html#doc__safecpp_impl_inspection">doc__safecpp_impl_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Safecpp Library</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/language/safecpp/index.html#doc__safecpp">doc__safecpp</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Safecpp Requirements</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/language/safecpp/requirements/index.html#doc__safecpp_requirements">doc__safecpp_requirements</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Safecpp Requirements Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/language/safecpp/requirements/chklst_req_inspection.html#doc__safecpp_req_inspection">doc__safecpp_req_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Static Reflection Architecture Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/static_reflection_with_serialization/architecture/chklst_arc_inspection.html#doc__static_reflection_arc_inspection">doc__static_reflection_arc_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Static Reflection DFA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/static_reflection_with_serialization/safety_analysis/dfa.html#doc__static_reflection_dfa">doc__static_reflection_dfa</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Static Reflection FMEA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/static_reflection_with_serialization/safety_analysis/fmea.html#doc__static_reflection_fmea">doc__static_reflection_fmea</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Static Reflection Implementation Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/static_reflection_with_serialization/detailed_design/chklst_impl_inspection.html#doc__static_reflection_impl_inspection">doc__static_reflection_impl_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Static Reflection Requirements Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/static_reflection_with_serialization/requirements/chklst_req_inspection.html#doc__static_reflection_req_inspection">doc__static_reflection_req_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Static Reflection With Serialization Library</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/static_reflection_with_serialization/index.html#doc__static_reflection_with_serialization">doc__static_reflection_with_serialization</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Static Reflection with Serialization Library Requirements</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/static_reflection_with_serialization/requirements/index.html#doc__static_reflect_serial_lib_req">doc__static_reflect_serial_lib_req</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>static_reflection_with_serialization Architecture</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/static_reflection_with_serialization/architecture/index.html#doc__static_refl_with_serial_arch">doc__static_refl_with_serial_arch</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Utils Architecture</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/utils/architecture/index.html#doc__utils_architecture">doc__utils_architecture</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Utils Architecture Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/utils/architecture/chklst_arc_inspection.html#doc__utils_arc_inspection">doc__utils_arc_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>utils DFA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/utils/safety_analysis/dfa.html#doc__utils_dfa">doc__utils_dfa</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>utils FMEA</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/utils/safety_analysis/fmea.html#doc__utils_fmea">doc__utils_fmea</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Utils Implementation Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/utils/detailed_design/chklst_impl_inspection.html#doc__utils_impl_inspection">doc__utils_impl_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Utils Library</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/utils/index.html#doc__utils">doc__utils</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Utils Library Requirements</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/utils/requirements/index.html#doc__utils_lib_requirements">doc__utils_lib_requirements</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Utils Requirements Inspection Checklist</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/utils/requirements/chklst_req_inspection.html#doc__utils_req_inspection">doc__utils_req_inspection</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>vajson</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/json/vajson/index.html#doc__vajson">doc__vajson</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>NO</p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>VaJson Architecture</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/json/vajson/architecture/index.html#doc__vajson_architecture">doc__vajson_architecture</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
+<td class="needs_status"><p>draft</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>VaJson Requirements</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../score_baselibs/baselibs/components/json/vajson/requirements/index.html#doc__vajson_requirements">doc__vajson_requirements</a></p></td>
+<td class="needs_safety"><p>ASIL_B</p></td>
+<td class="needs_security"><p>YES</p></td>
 <td class="needs_status"><p>draft</p></td>
 </tr>
 </tbody>
@@ -1742,12 +1584,12 @@ It integrates best practices for build, test, CI/CD and documentation.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../score_baselibs/cpp-style-guide.html"
+       href="../score_baselibs/baselibs/components/utils/detailed_design/chklst_impl_inspection.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">C++ Style Conventions</p>
+        <p class="prev-next-title">Implementation Inspection Checklist</p>
       </div>
     </a>
     <a class="right-next"
@@ -1765,6 +1607,33 @@ It integrates best practices for build, test, CI/CD and documentation.</p>
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-layout">Module Layout</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-feature-documentation">Module / Feature Documentation</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-feature-documentation-overview">Module / Feature documentation overview</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#component-documentation">Component documentation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start">Quick Start</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-configuration">Module Configuration</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
