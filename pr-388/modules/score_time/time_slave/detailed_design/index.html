@@ -552,7 +552,7 @@
                   
   <section id="time-slave-detailed-design">
 <span id="time-slave-detailed-design-index"></span><h1>Time Slave Detailed Design<a class="headerlink" href="#time-slave-detailed-design" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-c0d00265">
+<div class="need_container docutils container" id="SNCB-8fc5ae20">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__time_slave_detailed_design">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -851,7 +851,7 @@ consumer (<code class="docutils literal notranslate"><span class="pre">ShmPTPEng
 <section id="timestamp-definitions">
 <h4>Timestamp Definitions<a class="headerlink" href="#timestamp-definitions" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table" id="id8">
-<caption><span class="caption-number">Table 117 </span><span class="caption-text">Peer Delay Timestamps (IEEE 802.1AS)</span><a class="headerlink" href="#id8" title="Link to this table">#</a></caption>
+<caption><span class="caption-number">Table 116 </span><span class="caption-text">Peer Delay Timestamps (IEEE 802.1AS)</span><a class="headerlink" href="#id8" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 10.0%" />
 <col style="width: 20.0%" />
@@ -941,7 +941,7 @@ consumer (<code class="docutils literal notranslate"><span class="pre">ShmPTPEng
 <h3>Platform Support<a class="headerlink" href="#platform-support" title="Link to this heading">#</a></h3>
 <p>TimeSlave supports two target platforms with platform-specific implementations selected at compile time via Bazel <code class="docutils literal notranslate"><span class="pre">select()</span></code>:</p>
 <div class="pst-scrollable-table-container"><table class="table" id="id9">
-<caption><span class="caption-number">Table 118 </span><span class="caption-text">Platform Implementations</span><a class="headerlink" href="#id9" title="Link to this table">#</a></caption>
+<caption><span class="caption-number">Table 117 </span><span class="caption-text">Platform Implementations</span><a class="headerlink" href="#id9" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 25.0%" />
 <col style="width: 37.0%" />
@@ -982,7 +982,7 @@ consumer (<code class="docutils literal notranslate"><span class="pre">ShmPTPEng
 <p>The <code class="docutils literal notranslate"><span class="pre">ProbeManager</span></code> is a singleton that traces probe events at key processing points in the gPTP engine. It emits a <code class="docutils literal notranslate"><span class="pre">LogDebug</span></code> entry on every <code class="docutils literal notranslate"><span class="pre">Trace()</span></code> call and forwards the event to a linked <code class="docutils literal notranslate"><span class="pre">Recorder</span></code> (if set and enabled). Probing is controlled at runtime via <code class="docutils literal notranslate"><span class="pre">SetEnabled()</span></code>; the <code class="docutils literal notranslate"><span class="pre">GPTP_PROBE()</span></code> macro provides zero overhead when disabled.</p>
 <p>Supported probe points (<code class="docutils literal notranslate"><span class="pre">ProbePoint</span></code> enum):</p>
 <div class="pst-scrollable-table-container"><table class="table" id="id10">
-<caption><span class="caption-number">Table 119 </span><span class="caption-text">ProbePoint Events</span><a class="headerlink" href="#id10" title="Link to this table">#</a></caption>
+<caption><span class="caption-number">Table 118 </span><span class="caption-text">ProbePoint Events</span><a class="headerlink" href="#id10" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 10.0%" />
 <col style="width: 30.0%" />
@@ -1034,7 +1034,7 @@ consumer (<code class="docutils literal notranslate"><span class="pre">ShmPTPEng
 <p><strong>Status model:</strong> the <code class="docutils literal notranslate"><span class="pre">Recorder</span></code> starts in the state determined by <code class="docutils literal notranslate"><span class="pre">Config.enabled</span></code>. If a write error occurs (<code class="docutils literal notranslate"><span class="pre">file_.good()</span></code> fails after a flush), <code class="docutils literal notranslate"><span class="pre">enabled_</span></code> is atomically set to <code class="docutils literal notranslate"><span class="pre">false</span></code> and all subsequent <code class="docutils literal notranslate"><span class="pre">Record()</span></code> calls become no-ops. The file is never re-opened after an error.</p>
 <p>Configuration (<code class="docutils literal notranslate"><span class="pre">Recorder::Config</span></code>):</p>
 <div class="pst-scrollable-table-container"><table class="table" id="id11">
-<caption><span class="caption-number">Table 120 </span><span class="caption-text">Recorder Configuration</span><a class="headerlink" href="#id11" title="Link to this table">#</a></caption>
+<caption><span class="caption-number">Table 119 </span><span class="caption-text">Recorder Configuration</span><a class="headerlink" href="#id11" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 30.0%" />
 <col style="width: 15.0%" />
@@ -1072,7 +1072,7 @@ consumer (<code class="docutils literal notranslate"><span class="pre">ShmPTPEng
 </div>
 <p>Supported <code class="docutils literal notranslate"><span class="pre">RecordEvent</span></code> values written to the <code class="docutils literal notranslate"><span class="pre">event</span></code> column:</p>
 <div class="pst-scrollable-table-container"><table class="table" id="id12">
-<caption><span class="caption-number">Table 121 </span><span class="caption-text">RecordEvent Values</span><a class="headerlink" href="#id12" title="Link to this table">#</a></caption>
+<caption><span class="caption-number">Table 120 </span><span class="caption-text">RecordEvent Values</span><a class="headerlink" href="#id12" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 10.0%" />
 <col style="width: 30.0%" />
@@ -1114,7 +1114,7 @@ consumer (<code class="docutils literal notranslate"><span class="pre">ShmPTPEng
 <h3>Logging configuration<a class="headerlink" href="#logging-configuration" title="Link to this heading">#</a></h3>
 <p>TimeSlave uses the following logging contexts:</p>
 <div class="pst-scrollable-table-container"><table class="table" id="id13">
-<caption><span class="caption-number">Table 122 </span><span class="caption-text">Logging Contexts</span><a class="headerlink" href="#id13" title="Link to this table">#</a></caption>
+<caption><span class="caption-number">Table 121 </span><span class="caption-text">Logging Contexts</span><a class="headerlink" href="#id13" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 35.0%" />
 <col style="width: 20.0%" />
@@ -1145,7 +1145,7 @@ consumer (<code class="docutils literal notranslate"><span class="pre">ShmPTPEng
 <h4>Configuration<a class="headerlink" href="#configuration" title="Link to this heading">#</a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">GptpEngineOptions</span></code> struct provides all configurable parameters for the gPTP engine:</p>
 <div class="pst-scrollable-table-container"><table class="table" id="id14">
-<caption><span class="caption-number">Table 123 </span><span class="caption-text">GptpEngine Configuration</span><a class="headerlink" href="#id14" title="Link to this table">#</a></caption>
+<caption><span class="caption-number">Table 122 </span><span class="caption-text">GptpEngine Configuration</span><a class="headerlink" href="#id14" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 30.0%" />
 <col style="width: 15.0%" />
@@ -1187,7 +1187,7 @@ consumer (<code class="docutils literal notranslate"><span class="pre">ShmPTPEng
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">PhcConfig</span></code> struct (embedded in <code class="docutils literal notranslate"><span class="pre">GptpEngineOptions</span></code>) contains:</p>
 <div class="pst-scrollable-table-container"><table class="table" id="id15">
-<caption><span class="caption-number">Table 124 </span><span class="caption-text">PhcAdjuster Configuration</span><a class="headerlink" href="#id15" title="Link to this table">#</a></caption>
+<caption><span class="caption-number">Table 123 </span><span class="caption-text">PhcAdjuster Configuration</span><a class="headerlink" href="#id15" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 30.0%" />
 <col style="width: 15.0%" />
@@ -1250,7 +1250,7 @@ consuming side, are documented in the <a class="reference internal" href="../../
 <h5>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h5>
 <p>The <code class="docutils literal notranslate"><span class="pre">TimeSlave</span></code> and its constituent components can be tested on an x86 Linux host without PTP hardware or a real network. The key platform-dependent abstractions all have test-injectable counterparts:</p>
 <div class="pst-scrollable-table-container"><table class="table" id="id16">
-<caption><span class="caption-number">Table 125 </span><span class="caption-text">Testable Abstractions</span><a class="headerlink" href="#id16" title="Link to this table">#</a></caption>
+<caption><span class="caption-number">Table 124 </span><span class="caption-text">Testable Abstractions</span><a class="headerlink" href="#id16" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 30.0%" />
 <col style="width: 35.0%" />

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Architecture &#8212; REF_INT  documentation</title>
+    <title>Persistency KVS Architecture &#8212; REF_INT  documentation</title>
   
   
   
@@ -74,7 +74,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
-    <link rel="next" title="Architecture Inspection Checklist" href="chklst_arc_inspection.html" />
+    <link rel="next" title="Persistency Architecture Inspection" href="chklst_arc_inspection.html" />
     <link rel="prev" title="Persistency" href="../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -462,8 +462,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_baselibs/index.html">Base Libraries</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">Persistency Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">Persistency</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">Architecture</a></li>
-<li class="toctree-l3"><a class="reference internal" href="chklst_arc_inspection.html">Architecture Inspection Checklist</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">Persistency KVS Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chklst_arc_inspection.html">Persistency Architecture Inspection</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../safety_analysis/fmea.html">FMEA (Failure Modes and Effects Analysis)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../safety_analysis/dfa.html">DFA (Dependent Failure Analysis)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../safety_planning/index.html">Feature Safety Work Products List</a></li>
@@ -533,7 +533,7 @@
     
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Persistency</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Architecture</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Persistency KVS Architecture</span></li>
   </ul>
 </nav>
 </div>
@@ -550,9 +550,9 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="architecture">
-<h1>Architecture<a class="headerlink" href="#architecture" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-32e3c301">
+  <section id="persistency-kvs-architecture">
+<h1>Persistency KVS Architecture<a class="headerlink" href="#persistency-kvs-architecture" title="Link to this heading">#</a></h1>
+<div class="need_container docutils container" id="SNCB-0fad8183">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__persistency_kvs_architecture">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -596,9 +596,11 @@
 </table>
 </div>
 </div>
-<hr class="docutils" />
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p>The Key-Value-Storage (kvs) provides the capability to efficiently store,
 retrieve, and manage key-value pairs in a persistent storage system.</p>
+</section>
 <section id="description">
 <h2>Description<a class="headerlink" href="#description" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -608,24 +610,154 @@ The key acts as a unique identifier for getting the value.</p></li>
 and widely supported way to store and manage key-value pairs.</p></li>
 <li><p>The JSON data persisted is according to RFC-8259.</p></li>
 </ul>
-<section id="rationale-behind-architecture-decomposition">
-<h3>Rationale Behind Architecture Decomposition<a class="headerlink" href="#rationale-behind-architecture-decomposition" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p>The architecture is decomposed to include a dedicated JSON parser component (json) to facilitate the persistent storage of data in JSON format.</p></li>
-<li><p>The architecture is decomposed to include a FileStorage component (fs) to read and write to the file system.</p></li>
-</ul>
-</section>
-</section>
-<section id="glossary">
-<h2>Glossary<a class="headerlink" href="#glossary" title="Link to this heading">#</a></h2>
+<p>Glossary:</p>
 <ul class="simple">
 <li><p>User: Program code that is written by a person that initiates the given
 functionality call or receives a callback.</p></li>
 </ul>
 </section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h2>
+<div class="needstable_wrapper docutils container" id="needtable-modules/score_persistency/features/persistency/architecture/index-0">
+<div class="pst-scrollable-table-container"><table class="NEEDS_TABLE table" id="needtable-modules/score_persistency/features/persistency/architecture/index-0-table_node">
+<caption><span class="caption-text">Overview of Feature Requirements</span><a class="headerlink" href="#needtable-modules/score_persistency/features/persistency/architecture/index-0-table_node" title="Link to this table">#</a></caption>
+<colgroup>
+<col style="width: 70.0%" />
+<col style="width: 30.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Title</p></th>
+<th class="head"><p>ID</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="need row-even"><td class="needs_title"><p>Separate data stores</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__access_control">feat_req__persistency__access_control</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Asynchronous operation</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__async_api">feat_req__persistency__async_api</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Signalling completion of asynchronous operation</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__async_completion">feat_req__persistency__async_completion</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Atomic store operation</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__atomic_store">feat_req__persistency__atomic_store</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Cached access</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__cached_access">feat_req__persistency__cached_access</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Configuration</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__cfg">feat_req__persistency__cfg</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Intra-Process data access</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__concurrency">feat_req__persistency__concurrency</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Confidential storage</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__confidential_storage">feat_req__persistency__confidential_storage</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>C++ and Rust language support</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__cpp_rust">feat_req__persistency__cpp_rust</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Provisioning of default values via external file</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__default_value_file">feat_req__persistency__default_value_file</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Retrieval of default values</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__default_value_get">feat_req__persistency__default_value_get</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Default values</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__default_values">feat_req__persistency__default_values</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Support development mode</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__dev_mode">feat_req__persistency__dev_mode</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Direct access</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__direct_access">feat_req__persistency__direct_access</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Dynamic memory allocation during runtime</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__dynamic_memory_alloc">feat_req__persistency__dynamic_memory_alloc</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Random access time</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__fast_access">feat_req__persistency__fast_access</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Integrity check</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__integrity_check">feat_req__persistency__integrity_check</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Load persistent data</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__load_data">feat_req__persistency__load_data</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Access from multiple applications</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__multiple_app">feat_req__persistency__multiple_app</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Multiple KVS per application</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__multiple_kvs">feat_req__persistency__multiple_kvs</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Operating system agnostic implementation</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__os_agnostic">feat_req__persistency__os_agnostic</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Support production mode</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__prod_mode">feat_req__persistency__prod_mode</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Recovery from reset</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__recovery_from_reset">feat_req__persistency__recovery_from_reset</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Reset resistant storage</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__reset_resistant">feat_req__persistency__reset_resistant</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Reset to default values</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__reset_to_default">feat_req__persistency__reset_to_default</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Snapshot create</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_create">feat_req__persistency__snapshot_create</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Snapshot remove</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_remove">feat_req__persistency__snapshot_remove</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Snapshot restore</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_restore">feat_req__persistency__snapshot_restore</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Multiple storage backends</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__storage_backends">feat_req__persistency__storage_backends</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Store persistent data</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__store_data">feat_req__persistency__store_data</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Supported datatypes (Keys)</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__support_datatype_keys">feat_req__persistency__support_datatype_keys</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Supported datatypes (Values)</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__support_datatype_value">feat_req__persistency__support_datatype_value</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Tooling</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__tooling">feat_req__persistency__tooling</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Update Mechanism</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__update_mechanism">feat_req__persistency__update_mechanism</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Variant management support</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__variant_management">feat_req__persistency__variant_management</a></p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Versioning</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__versioning">feat_req__persistency__versioning</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Write amplification minimization</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__write_amplification">feat_req__persistency__write_amplification</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<section id="rationale-behind-architecture-decomposition">
+<h3>Rationale Behind Architecture Decomposition<a class="headerlink" href="#rationale-behind-architecture-decomposition" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>The architecture has one component <cite>comp__persistency_kvs</cite> and it uses <cite>mod__baselibs</cite> for JSON handling and file system access.</p></li>
+</ul>
+</section>
+</section>
 <section id="static-architecture">
 <h2>Static Architecture<a class="headerlink" href="#static-architecture" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-d21b4b3b">
+<p>The static view shows the feature with its logical interface and the components implementing it.
+The diagram is generated from the Sphinx Needs model.</p>
+<div class="need_container docutils container" id="SNCB-7c4751df">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_sta table" id="feat_arc_sta__persistency__static">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -655,8 +787,8 @@ functionality call or receives a callback.</p></li>
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml">
-<object data="../../../../../_images/plantuml-1acdd5cddfaf9db3dae49613de41cae740003601.svg" type="image/svg+xml" style="width:568px;height:582px;background:#FFFFFF;"></object></p>
+<tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml" id="needarch-modules/score_persistency/features/persistency/architecture/index-0">
+<object data="../../../../../_images/plantuml-ff35ed5b1cf8065687f8983dd41df5b48fd2cd63.svg" type="image/svg+xml" style="width:596px;height:1003px;background:#FFFFFF;"></object></p>
 </td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
@@ -676,7 +808,9 @@ functionality call or receives a callback.</p></li>
 </section>
 <section id="dynamic-architecture">
 <h2>Dynamic Architecture<a class="headerlink" href="#dynamic-architecture" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-5bd46cda">
+<p>The dynamic views describe the interactions between the user and the components of the feature
+for the main use cases of the KVS.</p>
+<div class="need_container docutils container" id="SNCB-95aff172">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_dyn table" id="feat_arc_dyn__persistency__check_key_default">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -699,14 +833,14 @@ functionality call or receives a callback.</p></li>
 </span></span></div>
 <div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/architecture/index.html#feat__persistency" title="feat_arc_dyn__persistency__check_key_default">feat__persistency</a></span></span></div>
 <div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__default_value_get" title="feat_arc_dyn__persistency__check_key_default">feat_req__persistency__default_value_get</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__default_values" title="feat_arc_dyn__persistency__check_key_default">feat_req__persistency__default_values</a></span></span></div>
-<div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__corrupted_message" title="feat_arc_dyn__persistency__check_key_default">feat_saf_fmea__persistency__corrupted_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__err_handl" title="feat_arc_dyn__persistency__check_key_default">feat_saf_fmea__persistency__err_handl</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__late_message" title="feat_arc_dyn__persistency__check_key_default">feat_saf_fmea__persistency__late_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__message_nreived" title="feat_arc_dyn__persistency__check_key_default">feat_saf_fmea__persistency__message_nreived</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__not_sent" title="feat_arc_dyn__persistency__check_key_default">feat_saf_fmea__persistency__not_sent</a></span></span></div>
+<div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__corrupted_message" title="feat_arc_dyn__persistency__check_key_default">feat_saf_fmea__persistency__corrupted_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__err_handl" title="feat_arc_dyn__persistency__check_key_default">feat_saf_fmea__persistency__err_handl</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__late_message" title="feat_arc_dyn__persistency__check_key_default">feat_saf_fmea__persistency__late_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__msg_not_received" title="feat_arc_dyn__persistency__check_key_default">feat_saf_fmea__persistency__msg_not_received</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__not_sent" title="feat_arc_dyn__persistency__check_key_default">feat_saf_fmea__persistency__not_sent</a></span></span></div>
 </span></div>
 </div>
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml">
-<object data="../../../../../_images/plantuml-9528dace853967489b47a0e3ee8219d85463d87e.svg" type="image/svg+xml" style="width:468px;height:412px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-45e82a9cbacc3b2d05d51dbb5b87ee5a38ebd95f.svg" type="image/svg+xml" style="width:468px;height:337px;background:#FFFFFF;"></object></p>
 </td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
@@ -723,7 +857,7 @@ functionality call or receives a callback.</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-41985c0c">
+<div class="need_container docutils container" id="SNCB-96131e79">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_dyn table" id="feat_arc_dyn__persistency__delete_key">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -746,7 +880,7 @@ functionality call or receives a callback.</p></li>
 </span></span></div>
 <div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/architecture/index.html#feat__persistency" title="feat_arc_dyn__persistency__delete_key">feat__persistency</a></span></span></div>
 <div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__support_datatype_keys" title="feat_arc_dyn__persistency__delete_key">feat_req__persistency__support_datatype_keys</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__support_datatype_value" title="feat_arc_dyn__persistency__delete_key">feat_req__persistency__support_datatype_value</a></span></span></div>
-<div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__corrupted_message" title="feat_arc_dyn__persistency__delete_key">feat_saf_fmea__persistency__corrupted_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__err_handl" title="feat_arc_dyn__persistency__delete_key">feat_saf_fmea__persistency__err_handl</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__late_message" title="feat_arc_dyn__persistency__delete_key">feat_saf_fmea__persistency__late_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__message_nreived" title="feat_arc_dyn__persistency__delete_key">feat_saf_fmea__persistency__message_nreived</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__not_sent" title="feat_arc_dyn__persistency__delete_key">feat_saf_fmea__persistency__not_sent</a></span></span></div>
+<div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__corrupted_message" title="feat_arc_dyn__persistency__delete_key">feat_saf_fmea__persistency__corrupted_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__err_handl" title="feat_arc_dyn__persistency__delete_key">feat_saf_fmea__persistency__err_handl</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__late_message" title="feat_arc_dyn__persistency__delete_key">feat_saf_fmea__persistency__late_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__msg_not_received" title="feat_arc_dyn__persistency__delete_key">feat_saf_fmea__persistency__msg_not_received</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__not_sent" title="feat_arc_dyn__persistency__delete_key">feat_saf_fmea__persistency__not_sent</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -770,7 +904,7 @@ functionality call or receives a callback.</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-83170437">
+<div class="need_container docutils container" id="SNCB-0d06faba">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_dyn table" id="feat_arc_dyn__persistency__flush">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -793,14 +927,14 @@ functionality call or receives a callback.</p></li>
 </span></span></div>
 <div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/architecture/index.html#feat__persistency" title="feat_arc_dyn__persistency__flush">feat__persistency</a></span></span></div>
 <div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__integrity_check" title="feat_arc_dyn__persistency__flush">feat_req__persistency__integrity_check</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_create" title="feat_arc_dyn__persistency__flush">feat_req__persistency__snapshot_create</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_restore" title="feat_arc_dyn__persistency__flush">feat_req__persistency__snapshot_restore</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__store_data" title="feat_arc_dyn__persistency__flush">feat_req__persistency__store_data</a></span></span></div>
-<div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__corrupted_message" title="feat_arc_dyn__persistency__flush">feat_saf_fmea__persistency__corrupted_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__err_handl" title="feat_arc_dyn__persistency__flush">feat_saf_fmea__persistency__err_handl</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__late_message" title="feat_arc_dyn__persistency__flush">feat_saf_fmea__persistency__late_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__message_nreived" title="feat_arc_dyn__persistency__flush">feat_saf_fmea__persistency__message_nreived</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__not_sent" title="feat_arc_dyn__persistency__flush">feat_saf_fmea__persistency__not_sent</a></span></span></div>
+<div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__corrupted_message" title="feat_arc_dyn__persistency__flush">feat_saf_fmea__persistency__corrupted_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__err_handl" title="feat_arc_dyn__persistency__flush">feat_saf_fmea__persistency__err_handl</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__late_message" title="feat_arc_dyn__persistency__flush">feat_saf_fmea__persistency__late_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__msg_not_received" title="feat_arc_dyn__persistency__flush">feat_saf_fmea__persistency__msg_not_received</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__not_sent" title="feat_arc_dyn__persistency__flush">feat_saf_fmea__persistency__not_sent</a></span></span></div>
 </span></div>
 </div>
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml">
-<object data="../../../../../_images/plantuml-2661dfe523c2708183bf8aec7125ed053ba209ef.svg" type="image/svg+xml" style="width:740px;height:993px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-00bd009fb5e6bd9c1fd83e1f10422d46de3127eb.svg" type="image/svg+xml" style="width:832px;height:951px;background:#FFFFFF;"></object></p>
 </td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
@@ -817,7 +951,7 @@ functionality call or receives a callback.</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-7ee0cbd2">
+<div class="need_container docutils container" id="SNCB-ff81dd73">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_dyn table" id="feat_arc_dyn__persistency__read_key">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -840,14 +974,14 @@ functionality call or receives a callback.</p></li>
 </span></span></div>
 <div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/architecture/index.html#feat__persistency" title="feat_arc_dyn__persistency__read_key">feat__persistency</a></span></span></div>
 <div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__default_value_get" title="feat_arc_dyn__persistency__read_key">feat_req__persistency__default_value_get</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__default_values" title="feat_arc_dyn__persistency__read_key">feat_req__persistency__default_values</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__support_datatype_keys" title="feat_arc_dyn__persistency__read_key">feat_req__persistency__support_datatype_keys</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__support_datatype_value" title="feat_arc_dyn__persistency__read_key">feat_req__persistency__support_datatype_value</a></span></span></div>
-<div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__corrupted_message" title="feat_arc_dyn__persistency__read_key">feat_saf_fmea__persistency__corrupted_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__err_handl" title="feat_arc_dyn__persistency__read_key">feat_saf_fmea__persistency__err_handl</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__late_message" title="feat_arc_dyn__persistency__read_key">feat_saf_fmea__persistency__late_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__message_nreived" title="feat_arc_dyn__persistency__read_key">feat_saf_fmea__persistency__message_nreived</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__not_sent" title="feat_arc_dyn__persistency__read_key">feat_saf_fmea__persistency__not_sent</a></span></span></div>
+<div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__corrupted_message" title="feat_arc_dyn__persistency__read_key">feat_saf_fmea__persistency__corrupted_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__err_handl" title="feat_arc_dyn__persistency__read_key">feat_saf_fmea__persistency__err_handl</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__late_message" title="feat_arc_dyn__persistency__read_key">feat_saf_fmea__persistency__late_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__msg_not_received" title="feat_arc_dyn__persistency__read_key">feat_saf_fmea__persistency__msg_not_received</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__not_sent" title="feat_arc_dyn__persistency__read_key">feat_saf_fmea__persistency__not_sent</a></span></span></div>
 </span></div>
 </div>
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml">
-<object data="../../../../../_images/plantuml-6e72a854d45874c7a700b10a3d4b93d238f01201.svg" type="image/svg+xml" style="width:412px;height:337px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-751fef6cc5808a5e423fe1dcce4e0fc29854b614.svg" type="image/svg+xml" style="width:412px;height:262px;background:#FFFFFF;"></object></p>
 </td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
@@ -864,7 +998,7 @@ functionality call or receives a callback.</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-c3041f46">
+<div class="need_container docutils container" id="SNCB-8b2bc06d">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_dyn table" id="feat_arc_dyn__persistency__read_from_storage">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -887,14 +1021,14 @@ functionality call or receives a callback.</p></li>
 </span></span></div>
 <div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/architecture/index.html#feat__persistency" title="feat_arc_dyn__persistency__read_from_storage">feat__persistency</a></span></span></div>
 <div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__integrity_check" title="feat_arc_dyn__persistency__read_from_storage">feat_req__persistency__integrity_check</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__load_data" title="feat_arc_dyn__persistency__read_from_storage">feat_req__persistency__load_data</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_restore" title="feat_arc_dyn__persistency__read_from_storage">feat_req__persistency__snapshot_restore</a></span></span></div>
-<div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__corrupted_message" title="feat_arc_dyn__persistency__read_from_storage">feat_saf_fmea__persistency__corrupted_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__err_handl" title="feat_arc_dyn__persistency__read_from_storage">feat_saf_fmea__persistency__err_handl</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__late_message" title="feat_arc_dyn__persistency__read_from_storage">feat_saf_fmea__persistency__late_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__message_nreived" title="feat_arc_dyn__persistency__read_from_storage">feat_saf_fmea__persistency__message_nreived</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__not_sent" title="feat_arc_dyn__persistency__read_from_storage">feat_saf_fmea__persistency__not_sent</a></span></span></div>
+<div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__corrupted_message" title="feat_arc_dyn__persistency__read_from_storage">feat_saf_fmea__persistency__corrupted_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__err_handl" title="feat_arc_dyn__persistency__read_from_storage">feat_saf_fmea__persistency__err_handl</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__late_message" title="feat_arc_dyn__persistency__read_from_storage">feat_saf_fmea__persistency__late_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__msg_not_received" title="feat_arc_dyn__persistency__read_from_storage">feat_saf_fmea__persistency__msg_not_received</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__not_sent" title="feat_arc_dyn__persistency__read_from_storage">feat_saf_fmea__persistency__not_sent</a></span></span></div>
 </span></div>
 </div>
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml">
-<object data="../../../../../_images/plantuml-83c6e76642a87ada0cb77f4166457129667ce0b1.svg" type="image/svg+xml" style="width:576px;height:791px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-4b9a8a4121f71a865248de1b579c9d2ef2036a59.svg" type="image/svg+xml" style="width:813px;height:910px;background:#FFFFFF;"></object></p>
 </td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
@@ -911,7 +1045,7 @@ functionality call or receives a callback.</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-38fda0ec">
+<div class="need_container docutils container" id="SNCB-6ca52ede">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_dyn table" id="feat_arc_dyn__persistency__write_key">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -934,14 +1068,14 @@ functionality call or receives a callback.</p></li>
 </span></span></div>
 <div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/architecture/index.html#feat__persistency" title="feat_arc_dyn__persistency__write_key">feat__persistency</a></span></span></div>
 <div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__support_datatype_keys" title="feat_arc_dyn__persistency__write_key">feat_req__persistency__support_datatype_keys</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__support_datatype_value" title="feat_arc_dyn__persistency__write_key">feat_req__persistency__support_datatype_value</a></span></span></div>
-<div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__corrupted_message" title="feat_arc_dyn__persistency__write_key">feat_saf_fmea__persistency__corrupted_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__err_handl" title="feat_arc_dyn__persistency__write_key">feat_saf_fmea__persistency__err_handl</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__late_message" title="feat_arc_dyn__persistency__write_key">feat_saf_fmea__persistency__late_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__message_nreived" title="feat_arc_dyn__persistency__write_key">feat_saf_fmea__persistency__message_nreived</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__not_sent" title="feat_arc_dyn__persistency__write_key">feat_saf_fmea__persistency__not_sent</a></span></span></div>
+<div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__corrupted_message" title="feat_arc_dyn__persistency__write_key">feat_saf_fmea__persistency__corrupted_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__err_handl" title="feat_arc_dyn__persistency__write_key">feat_saf_fmea__persistency__err_handl</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__late_message" title="feat_arc_dyn__persistency__write_key">feat_saf_fmea__persistency__late_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__msg_not_received" title="feat_arc_dyn__persistency__write_key">feat_saf_fmea__persistency__msg_not_received</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__not_sent" title="feat_arc_dyn__persistency__write_key">feat_saf_fmea__persistency__not_sent</a></span></span></div>
 </span></div>
 </div>
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml">
-<object data="../../../../../_images/plantuml-ae9741b6f842db22e99f315978a1922eaef2f2e1.svg" type="image/svg+xml" style="width:394px;height:187px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-ebc14caa13fba644b7b0a5283ff041b5708d29fb.svg" type="image/svg+xml" style="width:394px;height:262px;background:#FFFFFF;"></object></p>
 </td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
@@ -958,7 +1092,7 @@ functionality call or receives a callback.</p></li>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-2cb3cc84">
+<div class="need_container docutils container" id="SNCB-e98349f2">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_dyn table" id="feat_arc_dyn__persistency__snapshot_restore">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -981,14 +1115,14 @@ functionality call or receives a callback.</p></li>
 </span></span></div>
 <div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/architecture/index.html#feat__persistency" title="feat_arc_dyn__persistency__snapshot_restore">feat__persistency</a></span></span></div>
 <div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_restore" title="feat_arc_dyn__persistency__snapshot_restore">feat_req__persistency__snapshot_restore</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__store_data" title="feat_arc_dyn__persistency__snapshot_restore">feat_req__persistency__store_data</a></span></span></div>
-<div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__corrupted_message" title="feat_arc_dyn__persistency__snapshot_restore">feat_saf_fmea__persistency__corrupted_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__err_handl" title="feat_arc_dyn__persistency__snapshot_restore">feat_saf_fmea__persistency__err_handl</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__late_message" title="feat_arc_dyn__persistency__snapshot_restore">feat_saf_fmea__persistency__late_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__message_nreived" title="feat_arc_dyn__persistency__snapshot_restore">feat_saf_fmea__persistency__message_nreived</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__not_sent" title="feat_arc_dyn__persistency__snapshot_restore">feat_saf_fmea__persistency__not_sent</a></span></span></div>
+<div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__corrupted_message" title="feat_arc_dyn__persistency__snapshot_restore">feat_saf_fmea__persistency__corrupted_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__err_handl" title="feat_arc_dyn__persistency__snapshot_restore">feat_saf_fmea__persistency__err_handl</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__late_message" title="feat_arc_dyn__persistency__snapshot_restore">feat_saf_fmea__persistency__late_message</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__msg_not_received" title="feat_arc_dyn__persistency__snapshot_restore">feat_saf_fmea__persistency__msg_not_received</a>, <a class="reference internal" href="../safety_analysis/fmea.html#feat_saf_fmea__persistency__not_sent" title="feat_arc_dyn__persistency__snapshot_restore">feat_saf_fmea__persistency__not_sent</a></span></span></div>
 </span></div>
 </div>
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml">
-<object data="../../../../../_images/plantuml-061dc498e617d6354378aa50fcb5ec0b15a2c33c.svg" type="image/svg+xml" style="width:357px;height:262px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-027a70817a6c0d509bff20c2a72201bdf2c967ba.svg" type="image/svg+xml" style="width:683px;height:550px;background:#FFFFFF;"></object></p>
 </td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
@@ -1005,6 +1139,19 @@ functionality call or receives a callback.</p></li>
 </table>
 </div>
 </div>
+</section>
+<section id="logical-interfaces">
+<h2>Logical Interfaces<a class="headerlink" href="#logical-interfaces" title="Link to this heading">#</a></h2>
+<p>The logical interfaces of the feature are defined in the platform documentation:
+<a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/architecture/index.html#logic_arc_int__persistency__interface" title="logic_arc_int__persistency__interface"><em class="xref need">Ikvs (logic_arc_int__persistency__interface)</em></a>.</p>
+<p>See <a class="reference external" href="https://eclipse-score.github.io/score/main/features/index.html">SCORE Features</a> for more information.</p>
+</section>
+<section id="used-components">
+<h2>Used Components<a class="headerlink" href="#used-components" title="Link to this heading">#</a></h2>
+<p>The feature is realized by the following components of the module:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../components/kvs/architecture/component_architecture.html#comp__persistency_kvs" title="comp__persistency_kvs"><em class="xref need">persistency::kvs (comp__persistency_kvs)</em></a></p></li>
+</ul>
 </section>
 </section>
 
@@ -1032,7 +1179,7 @@ functionality call or receives a callback.</p></li>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Architecture Inspection Checklist</p>
+        <p class="prev-next-title">Persistency Architecture Inspection</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1055,13 +1202,16 @@ functionality call or receives a callback.</p></li>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#description">Description</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#description">Description</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rationale-behind-architecture-decomposition">Rationale Behind Architecture Decomposition</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#glossary">Glossary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#static-architecture">Static Architecture</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dynamic-architecture">Dynamic Architecture</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logical-interfaces">Logical Interfaces</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#used-components">Used Components</a></li>
 </ul>
   </nav></div>
 
