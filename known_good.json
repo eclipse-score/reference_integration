@@ -119,7 +119,8 @@
                 "repo": "https://github.com/eclipse-score/logging.git",
                 "bazel_patches": [
                     "//patches/logging:001-migrate-baselibs-targets.patch",
-                    "//patches/logging:002-undev-component-test-deps.patch"
+                    "//patches/logging:002-undev-component-test-deps.patch",
+                    "//patches/logging:003-fix-datarouter-config-packaging.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/mw/log/...",
@@ -131,6 +132,12 @@
                     ],
                     "exclude_test_targets": [
                         "//score/mw/log/legacy_non_verbose_api:unit_test"
+                    ],
+                    "integration_test_targets": [
+                        "//score/test/component/..."
+                    ],
+                    "integration_test_config": [
+                        "flaky_test_attempts=3"
                     ]
                 },
                 "hash": "b4f272b0a036d46fc7ff2e9a051fdec95fd23b4f"
