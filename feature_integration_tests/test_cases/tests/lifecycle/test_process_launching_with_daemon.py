@@ -148,7 +148,7 @@ class TestProcessLaunchingWithDaemon:
         assert daemon.is_running(), "Launch Manager daemon stopped unexpectedly"
 
     @add_test_properties(
-        partially_verifies=["feat_req__lifecycle__process_launch_args"],
+        partially_verifies=["feat_req__lifecycle__launch_support"],
         test_type="requirements-based",
         derivation_technique="requirements-analysis",
     )
@@ -182,7 +182,7 @@ class TestProcessLaunchingWithDaemon:
             )
 
     @add_test_properties(
-        partially_verifies=["feat_req__lifecycle__process_launch_args"],
+        partially_verifies=["feat_req__lifecycle__launch_support"],
         test_type="requirements-based",
         derivation_technique="requirements-analysis",
     )
@@ -214,7 +214,7 @@ class TestProcessLaunchingWithDaemon:
                 f"{key} mismatch for {app_name}: expected {expected_value!r}, got {proc_env.get(key)!r}"
             )
 
-    # No requirement claim (feat_req__lifecycle__uid_gid_support): skips in CI, which neither sets
+    # No requirement claim: skips in CI, which neither sets
     # FIT_ENABLE_SETCAP=1 nor runs unsandboxed, both needed for the setcap grant. See README.md.
     def test_launched_process_uid_gid_matches_config_when_applied(
         self,
@@ -371,7 +371,7 @@ class TestProcessLaunchingWithDaemon:
         )
 
     @add_test_properties(
-        partially_verifies=["feat_req__lifecycle__secpol_non_root"],
+        partially_verifies=["feat_req__lifecycle__launch_support"],
         test_type="requirements-based",
         derivation_technique="requirements-analysis",
     )

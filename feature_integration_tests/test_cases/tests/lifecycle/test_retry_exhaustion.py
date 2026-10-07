@@ -19,8 +19,8 @@ and counts every launch in a file, so the daemon's retry count is observed exact
 - `TestRetryExhaustionTriggersRecovery`: the app always crashes; the daemon must stop after
   1 + `number_of_attempts` launches and stay alive.
 
-Limitation for `retries_configurable`: only the single configured value (2) is exercised; the
-count is not varied across runs.
+Limitation: only the single configured retry value (2) is exercised; the count is not varied
+across runs.
 """
 
 from __future__ import annotations
@@ -51,7 +51,7 @@ class TestRetrySucceedsWithinConfiguredAttempts(RetryDaemonScenario):
     crashes_before_success = 2
 
     @add_test_properties(
-        partially_verifies=["feat_req__lifecycle__retries_configurable"],
+        partially_verifies=["feat_req__lifecycle__launch_support"],
         test_type="requirements-based",
         derivation_technique="requirements-analysis",
     )
@@ -88,7 +88,7 @@ class TestRetryExhaustionTriggersRecovery(RetryDaemonScenario):
     crashes_before_success = 999
 
     @add_test_properties(
-        partially_verifies=["feat_req__lifecycle__retries_configurable"],
+        partially_verifies=["feat_req__lifecycle__launch_support"],
         test_type="requirements-based",
         derivation_technique="requirements-analysis",
     )
