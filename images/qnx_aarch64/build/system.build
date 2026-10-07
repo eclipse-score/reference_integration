@@ -233,57 +233,16 @@ pci/pci_debug2.so                        # Enhanced PCI debugging support
 [gid=0 uid=0 dperms=755 type=dir] /var/chroot/sshd              # SSH chroot directory for privilege separation
 [gid=0 uid=0 dperms=700 type=dir] /var/ssh                      # SSH configuration and key storage directory
 
-
-#############################################
-### SCRIPTS ###
-#############################################
-# System startup and initialization scripts
-[perms=700] /etc/startup.sh = ${MAIN_BUILD_FILE_DIR}/../configs/startup.sh                # Main system startup script
-[perms=700] /etc/network_setup.sh = ${MAIN_BUILD_FILE_DIR}/../configs/network_setup.sh    # Network configuration script
-[perms=700] /etc/network_setup_dhcp.sh = ${MAIN_BUILD_FILE_DIR}/../configs/network_setup_dhcp.sh    # Network configuration script
-[perms=755] /etc/network_capture = ${MAIN_BUILD_FILE_DIR}/../configs/network_capture.sh  # Network packet capture utility
-
-
-#############################################
-### CONFIGURATION FILES ###
-#############################################
-# This section defines critical configuration files that control system
-# behavior, hardware access, security policies, and user environment setup.
-
-[perms=0444] qcrypto.conf = ${MAIN_BUILD_FILE_DIR}/../configs/qcrypto.conf          # QNX cryptographic library configuration
-
-# System hostname configuration
-/etc/hostname = ${MAIN_BUILD_FILE_DIR}/../configs/hostname         # System hostname definition file
-/etc/profile = ${MAIN_BUILD_FILE_DIR}/../configs/profile
-
-# System user and group databases
-/etc/passwd = ${MAIN_BUILD_FILE_DIR}/../configs/passwd             # User account database with login information
-/etc/group = ${MAIN_BUILD_FILE_DIR}/../configs/group               # Group membership database
-
-
-#############################################
-### SSH CONFIGURATION ###
-#############################################
-# SSH server configuration (no static host keys - generated at runtime)
-[perms=444] /var/ssh/sshd_config = ${MAIN_BUILD_FILE_DIR}/../configs/sshd_config  # SSH daemon configuration file
-
-[uid=0 gid=0 perms=400] /var/ssh/ssh_host_rsa_key = ${MAIN_BUILD_FILE_DIR}/../configs/ssh_host_rsa_key      # SSH server private key
-[uid=0 gid=0 perms=400] /var/ssh/ssh_host_rsa_key.pub = ${MAIN_BUILD_FILE_DIR}/../configs/ssh_host_rsa_key.pub  # SSH server public key
-
-# DHCP client configuration
-[perms=644] /etc/dhcpcd.conf = ${MAIN_BUILD_FILE_DIR}/../configs/dhcpcd.conf                                     # DHCP client configuration file
-
-# Communication configuration files
-[perms=777] /etc/logging.json = ${MAIN_BUILD_FILE_DIR}/../../../feature_integration_tests/configs/etc/logging.json
-[perms=777] /etc/mw_com_config.json = ${MAIN_BUILD_FILE_DIR}/../../../feature_integration_tests/configs/etc/mw_com_config.json
-
 # Executable files from external repositories
 [perms=777] /scrample = ${SCRAMPLE_PATH}
 [perms=777] /cpp_tests_persistency = ${CPP_TEST_SCENARIOS_PATH}
 
-[perms=777] /usr/bin/datarouter/datarouter = ${DATAROUTER_PATH}
-[perms=644] /usr/bin/datarouter/etc/logging.json = ${MAIN_BUILD_FILE_DIR}/../../../feature_integration_tests/configs/datarouter/etc/logging.json
-[perms=644] /usr/bin/datarouter/etc/log-channels.json = ${MAIN_BUILD_FILE_DIR}/../../../feature_integration_tests/configs/datarouter/etc/log-channels.json
-
-# Common showcases bundle
-[perms=777] / = ${BUNDLE_PATH}
+#############################################
+### BAZEL-PROVIDED CONTENT ###
+#############################################
+# Scripts, configuration files, SSH host keys, the datarouter binary and the
+# showcases bundle are declared as rules_pkg targets in
+# //images/qnx_aarch64/build:BUILD.
+# score_rules_imagefs turns those into mkifs directives in
+# init_pkg_content.build, which its generated entrypoint includes after this
+# file - so the directory entries above still precede the files they hold.
