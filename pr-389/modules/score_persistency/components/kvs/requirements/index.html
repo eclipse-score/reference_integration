@@ -469,7 +469,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../module/security_mgt/index.html">Security Management</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../verification_report/module_verification_report.html">Verification Report</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../../index.html">Component documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="../../json/index.html">Tiny JSON</a></li>
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="../index.html">KVS (Key Value Store)</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="../architecture/chklst_arc_inspection.html">Architecture Inspection Checklist</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../architecture/component_architecture.html">Component Architecture KVS</a></li>
@@ -562,9 +561,53 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="requirements">
+  
+<style>
+.score-testcase-result {
+  font-weight: bold;
+}
+.score-testcase-result--passed {
+  color: #146c2e;
+}
+.score-testcase-result--failed {
+  color: #b42318;
+}
+.score-testcase-result--skipped {
+  color: #8a5300;
+}
+.score-testcase-result--disabled {
+  color: #5f6368;
+}
+html[data-theme="dark"] .score-testcase-result--passed {
+  color: #7ee787;
+}
+html[data-theme="dark"] .score-testcase-result--failed {
+  color: #ff7b72;
+}
+html[data-theme="dark"] .score-testcase-result--skipped {
+  color: #d29922;
+}
+html[data-theme="dark"] .score-testcase-result--disabled {
+  color: #c4cad2;
+}
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) .score-testcase-result--passed {
+    color: #7ee787;
+  }
+  html:not([data-theme="light"]) .score-testcase-result--failed {
+    color: #ff7b72;
+  }
+  html:not([data-theme="light"]) .score-testcase-result--skipped {
+    color: #d29922;
+  }
+  html:not([data-theme="light"]) .score-testcase-result--disabled {
+    color: #c4cad2;
+  }
+}
+</style>
+<section id="requirements">
 <h1>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-b7f078c4">
+<div class="need_container docutils container" id="SNCB-b95fc620">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__kvs_requirements">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -610,7 +653,7 @@
 </div>
 <section id="component-requirements">
 <h2>Component Requirements<a class="headerlink" href="#component-requirements" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-261ccd53">
+<div class="need_container docutils container" id="SNCB-32398ff3">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__key_naming">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -634,7 +677,7 @@
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__support_datatype_keys" title="comp_req__kvs__key_naming">feat_req__persistency__support_datatype_keys</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__key_naming">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__key_naming">comp__persistency_kvs</a></span></span></div>
 <div class="line">fulfilled by: <span class="fulfils"><span><a class="reference internal" href="../architecture/index.html#comp_arc_dyn__kvs__dynamic_view" title="comp_req__kvs__key_naming">comp_arc_dyn__kvs__dynamic_view</a>, <a class="reference internal" href="../architecture/index.html#comp_arc_sta__kvs__2" title="comp_req__kvs__key_naming">comp_arc_sta__kvs__2</a>, <a class="reference internal" href="../architecture/index.html#comp_arc_sta__kvs__static_view" title="comp_req__kvs__key_naming">comp_arc_sta__kvs__static_view</a></span></span></div>
 </span></div>
 </div>
@@ -657,7 +700,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-fd66adc9">
+<div class="need_container docutils container" id="SNCB-76982f8a">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__key_encoding">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -678,10 +721,11 @@
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">inspected</span><span class="needs_spacer">, </span><span class="needs_data">kvs</span></span></span></div>
 <div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_testlink"><span class="needs_label">testlink: </span><span class="needs_data"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L44">TestSupportedDatatypesKeys__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_I32__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_U32__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_I64__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_U64__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_F64__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_Bool__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_String__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_Array__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_Object__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L44">TestSupportedDatatypesKeys__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_I32__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_U32__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_I64__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_U64__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_F64__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_Bool__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_String__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_Array__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_Object__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__support_datatype_keys" title="comp_req__kvs__key_encoding">feat_req__persistency__support_datatype_keys</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__key_encoding">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__key_encoding">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -703,7 +747,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-6098136b">
+<div class="need_container docutils container" id="SNCB-14e69de4">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__key_uniqueness">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -727,7 +771,7 @@
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__support_datatype_keys" title="comp_req__kvs__key_uniqueness">feat_req__persistency__support_datatype_keys</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__key_uniqueness">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__key_uniqueness">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -749,7 +793,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-1b472d8d">
+<div class="need_container docutils container" id="SNCB-79bf194a">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__key_length">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -773,7 +817,7 @@
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__support_datatype_keys" title="comp_req__kvs__key_length">feat_req__persistency__support_datatype_keys</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__key_length">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__key_length">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -795,7 +839,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-a3046771">
+<div class="need_container docutils container" id="SNCB-4b6e3260">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__value_data_types">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -816,10 +860,11 @@
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">inspected</span><span class="needs_spacer">, </span><span class="needs_data">kvs</span></span></span></div>
 <div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_testlink"><span class="needs_label">testlink: </span><span class="needs_data"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L44">TestSupportedDatatypesKeys__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_I32__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_U32__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_I64__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_U64__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_F64__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_Bool__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_String__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_Array__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_Object__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L44">TestSupportedDatatypesKeys__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_I32__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_U32__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_I64__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_U64__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_F64__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_Bool__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_String__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_Array__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py#L85">TestSupportedDatatypesValues_Object__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__support_datatype_value" title="comp_req__kvs__value_data_types">feat_req__persistency__support_datatype_value</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__value_data_types">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__value_data_types">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -842,7 +887,7 @@ String, Null, Array[Value], or Dictionary{Key:Value}.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-7e30140d">
+<div class="need_container docutils container" id="SNCB-df1fecbc">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__value_serialize">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -866,7 +911,7 @@ String, Null, Array[Value], or Dictionary{Key:Value}.</p></td>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__support_datatype_value" title="comp_req__kvs__value_serialize">feat_req__persistency__support_datatype_value</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__value_serialize">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__value_serialize">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -888,7 +933,7 @@ String, Null, Array[Value], or Dictionary{Key:Value}.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-13dffe4e">
+<div class="need_container docutils container" id="SNCB-f1f040b7">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__value_length">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -912,7 +957,7 @@ String, Null, Array[Value], or Dictionary{Key:Value}.</p></td>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__support_datatype_value" title="comp_req__kvs__value_length">feat_req__persistency__support_datatype_value</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__value_length">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__value_length">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -934,7 +979,7 @@ String, Null, Array[Value], or Dictionary{Key:Value}.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-40c1d776">
+<div class="need_container docutils container" id="SNCB-1b86e993">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__value_default">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -955,10 +1000,11 @@ String, Null, Array[Value], or Dictionary{Key:Value}.</p></td>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">inspected</span><span class="needs_spacer">, </span><span class="needs_data">kvs</span></span></span></div>
 <div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_testlink"><span class="needs_label">testlink: </span><span class="needs_data"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[optional-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[required-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[without-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L211">TestRemoveKey__test_valid[optional-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L211">TestRemoveKey__test_valid[required-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L211">TestRemoveKey__test_valid[without-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L311">TestMalformedDefaultsFile__test_invalid[optional-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L311">TestMalformedDefaultsFile__test_invalid[required-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L353">TestMissingDefaultsFile__test_invalid[required-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L402">TestResetAllKeys__test_valid[optional-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L402">TestResetAllKeys__test_valid[required-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L469">TestResetSingleKey__test_valid[optional-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L469">TestResetSingleKey__test_valid[required-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L549">TestChecksumOnProvidedDefaults__test_valid[optional-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L549">TestChecksumOnProvidedDefaults__test_valid[required-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[optional-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[required-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[without-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L211">TestRemoveKey__test_valid[optional-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L211">TestRemoveKey__test_valid[required-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L211">TestRemoveKey__test_valid[without-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L311">TestMalformedDefaultsFile__test_invalid[optional-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L311">TestMalformedDefaultsFile__test_invalid[required-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L353">TestMissingDefaultsFile__test_invalid[required-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L402">TestResetAllKeys__test_valid[optional-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L402">TestResetAllKeys__test_valid[required-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L469">TestResetSingleKey__test_valid[optional-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L469">TestResetSingleKey__test_valid[required-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L549">TestChecksumOnProvidedDefaults__test_valid[optional-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L549">TestChecksumOnProvidedDefaults__test_valid[required-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__default_values" title="comp_req__kvs__value_default">feat_req__persistency__default_values</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__support_datatype_value" title="comp_req__kvs__value_default">feat_req__persistency__support_datatype_value</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__value_default">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__value_default">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -981,7 +1027,7 @@ when a value is unset.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-f75feebf">
+<div class="need_container docutils container" id="SNCB-0765157c">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__value_reset">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1002,10 +1048,11 @@ when a value is unset.</p></td>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">inspected</span><span class="needs_spacer">, </span><span class="needs_data">kvs</span></span></span></div>
 <div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_testlink"><span class="needs_label">testlink: </span><span class="needs_data"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L402">TestResetAllKeys__test_valid[optional-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L402">TestResetAllKeys__test_valid[required-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L402">TestResetAllKeys__test_valid[optional-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L402">TestResetAllKeys__test_valid[required-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__default_values" title="comp_req__kvs__value_reset">feat_req__persistency__default_values</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__support_datatype_value" title="comp_req__kvs__value_reset">feat_req__persistency__support_datatype_value</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__value_reset">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__value_reset">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -1028,7 +1075,7 @@ defined.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-6bf54883">
+<div class="need_container docutils container" id="SNCB-051f8b70">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__default_value_types">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1049,10 +1096,11 @@ defined.</p></td>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">inspected</span><span class="needs_spacer">, </span><span class="needs_data">kvs</span></span></span></div>
 <div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_testlink"><span class="needs_label">testlink: </span><span class="needs_data"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[optional-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[required-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[without-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L211">TestRemoveKey__test_valid[optional-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L211">TestRemoveKey__test_valid[required-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L211">TestRemoveKey__test_valid[without-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L311">TestMalformedDefaultsFile__test_invalid[optional-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L311">TestMalformedDefaultsFile__test_invalid[required-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L353">TestMissingDefaultsFile__test_invalid[required-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L402">TestResetAllKeys__test_valid[optional-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L402">TestResetAllKeys__test_valid[required-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[optional-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[required-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[without-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L211">TestRemoveKey__test_valid[optional-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L211">TestRemoveKey__test_valid[required-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L211">TestRemoveKey__test_valid[without-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L311">TestMalformedDefaultsFile__test_invalid[optional-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L311">TestMalformedDefaultsFile__test_invalid[required-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L353">TestMissingDefaultsFile__test_invalid[required-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L402">TestResetAllKeys__test_valid[optional-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L402">TestResetAllKeys__test_valid[required-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__default_value_file" title="comp_req__kvs__default_value_types">feat_req__persistency__default_value_file</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__default_value_get" title="comp_req__kvs__default_value_types">feat_req__persistency__default_value_get</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__default_values" title="comp_req__kvs__default_value_types">feat_req__persistency__default_values</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__reset_to_default" title="comp_req__kvs__default_value_types">feat_req__persistency__reset_to_default</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__default_value_types">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__default_value_types">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -1075,7 +1123,7 @@ types.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-6d687448">
+<div class="need_container docutils container" id="SNCB-5b8e1cd5">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__default_value_query">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1096,10 +1144,11 @@ types.</p></td>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">inspected</span><span class="needs_spacer">, </span><span class="needs_data">kvs</span></span></span></div>
 <div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_testlink"><span class="needs_label">testlink: </span><span class="needs_data"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[optional-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[required-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[without-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[optional-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[required-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[without-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__default_value_file" title="comp_req__kvs__default_value_query">feat_req__persistency__default_value_file</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__default_value_get" title="comp_req__kvs__default_value_query">feat_req__persistency__default_value_get</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__default_values" title="comp_req__kvs__default_value_query">feat_req__persistency__default_values</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__reset_to_default" title="comp_req__kvs__default_value_query">feat_req__persistency__reset_to_default</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__default_value_query">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__default_value_query">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -1121,7 +1170,7 @@ types.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-2046eae7">
+<div class="need_container docutils container" id="SNCB-a6021467">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__default_value_cfg">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1142,10 +1191,11 @@ types.</p></td>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">inspected</span><span class="needs_spacer">, </span><span class="needs_data">kvs</span></span></span></div>
 <div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_testlink"><span class="needs_label">testlink: </span><span class="needs_data"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[optional-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[required-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[without-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L211">TestRemoveKey__test_valid[optional-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L211">TestRemoveKey__test_valid[required-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L211">TestRemoveKey__test_valid[without-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L311">TestMalformedDefaultsFile__test_invalid[optional-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L311">TestMalformedDefaultsFile__test_invalid[required-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L353">TestMissingDefaultsFile__test_invalid[required-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L402">TestResetAllKeys__test_valid[optional-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L402">TestResetAllKeys__test_valid[required-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L469">TestResetSingleKey__test_valid[optional-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L469">TestResetSingleKey__test_valid[required-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L549">TestChecksumOnProvidedDefaults__test_valid[optional-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L549">TestChecksumOnProvidedDefaults__test_valid[required-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[optional-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[required-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L134">TestDefaultValues__test_valid[without-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L211">TestRemoveKey__test_valid[optional-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L211">TestRemoveKey__test_valid[required-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L211">TestRemoveKey__test_valid[without-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L311">TestMalformedDefaultsFile__test_invalid[optional-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L311">TestMalformedDefaultsFile__test_invalid[required-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L353">TestMissingDefaultsFile__test_invalid[required-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L402">TestResetAllKeys__test_valid[optional-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L402">TestResetAllKeys__test_valid[required-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L469">TestResetSingleKey__test_valid[optional-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L469">TestResetSingleKey__test_valid[required-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L549">TestChecksumOnProvidedDefaults__test_valid[optional-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L549">TestChecksumOnProvidedDefaults__test_valid[required-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__default_value_file" title="comp_req__kvs__default_value_cfg">feat_req__persistency__default_value_file</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__default_value_get" title="comp_req__kvs__default_value_cfg">feat_req__persistency__default_value_get</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__default_values" title="comp_req__kvs__default_value_cfg">feat_req__persistency__default_values</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__reset_to_default" title="comp_req__kvs__default_value_cfg">feat_req__persistency__reset_to_default</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__default_value_cfg">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__default_value_cfg">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -1168,7 +1218,7 @@ separate configuration file.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-47e9268b">
+<div class="need_container docutils container" id="SNCB-609f5ff2">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__default_val_chksum">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1189,10 +1239,11 @@ separate configuration file.</p></td>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">inspected</span><span class="needs_spacer">, </span><span class="needs_data">kvs</span></span></span></div>
 <div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_testlink"><span class="needs_label">testlink: </span><span class="needs_data"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L549">TestChecksumOnProvidedDefaults__test_valid[optional-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L549">TestChecksumOnProvidedDefaults__test_valid[required-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L549">TestChecksumOnProvidedDefaults__test_valid[optional-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_default_values.py#L549">TestChecksumOnProvidedDefaults__test_valid[required-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__default_value_file" title="comp_req__kvs__default_val_chksum">feat_req__persistency__default_value_file</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__default_value_get" title="comp_req__kvs__default_val_chksum">feat_req__persistency__default_value_get</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__default_values" title="comp_req__kvs__default_val_chksum">feat_req__persistency__default_values</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__reset_to_default" title="comp_req__kvs__default_val_chksum">feat_req__persistency__reset_to_default</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__default_val_chksum">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__default_val_chksum">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -1215,7 +1266,7 @@ associated checksum file when default values are stored in a file.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-5f4e0810">
+<div class="need_container docutils container" id="SNCB-b7d7cb2c">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__constraints">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1239,7 +1290,7 @@ associated checksum file when default values are stored in a file.</p></td>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__cfg" title="comp_req__kvs__constraints">feat_req__persistency__cfg</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__constraints">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__constraints">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -1262,7 +1313,7 @@ using source code constants or at runtime using a configuration file.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-18bbd88e">
+<div class="need_container docutils container" id="SNCB-91c4d999">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__concurrency">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1283,10 +1334,11 @@ using source code constants or at runtime using a configuration file.</p></td>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">inspected</span><span class="needs_spacer">, </span><span class="needs_data">kvs</span></span></span></div>
 <div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_testlink"><span class="needs_label">testlink: </span><span class="needs_data"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py#L46">TestMultipleInstanceIds__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py#L80">TestSameInstanceIdSameValue__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py#L116">TestSameInstanceIdDifferentValue__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py#L46">TestMultipleInstanceIds__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py#L80">TestSameInstanceIdSameValue__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py#L116">TestSameInstanceIdDifferentValue__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__concurrency" title="comp_req__kvs__concurrency">feat_req__persistency__concurrency</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__concurrency">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__concurrency">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -1309,7 +1361,7 @@ access to data without data races.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-f6cdb70b">
+<div class="need_container docutils container" id="SNCB-ec4bbda0">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__multi_instance">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1330,10 +1382,11 @@ access to data without data races.</p></td>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">inspected</span><span class="needs_spacer">, </span><span class="needs_data">kvs</span></span></span></div>
 <div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_testlink"><span class="needs_label">testlink: </span><span class="needs_data"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py#L46">TestMultipleInstanceIds__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py#L80">TestSameInstanceIdSameValue__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py#L116">TestSameInstanceIdDifferentValue__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py#L46">TestMultipleInstanceIds__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py#L80">TestSameInstanceIdSameValue__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py#L116">TestSameInstanceIdDifferentValue__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__multiple_kvs" title="comp_req__kvs__multi_instance">feat_req__persistency__multiple_kvs</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__multi_instance">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__multi_instance">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -1357,7 +1410,7 @@ single software architecture element.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-5721982c">
+<div class="need_container docutils container" id="SNCB-a45aa573">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__persist_data_com">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1378,10 +1431,11 @@ single software architecture element.</p></td>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">inspected</span><span class="needs_spacer">, </span><span class="needs_data">kvs</span></span></span></div>
 <div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_testlink"><span class="needs_label">testlink: </span><span class="needs_data"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_persistency.py#L47">TestExplicitFlush__test_data_stored[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__integrity_check" title="comp_req__kvs__persist_data_com">feat_req__persistency__integrity_check</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__store_data" title="comp_req__kvs__persist_data_com">feat_req__persistency__store_data</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__persist_data_com">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__persist_data_com">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -1403,7 +1457,7 @@ single software architecture element.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-ab412ec2">
+<div class="need_container docutils container" id="SNCB-3d8c07f6">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__pers_data_csum">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1427,7 +1481,7 @@ single software architecture element.</p></td>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__integrity_check" title="comp_req__kvs__pers_data_csum">feat_req__persistency__integrity_check</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__store_data" title="comp_req__kvs__pers_data_csum">feat_req__persistency__store_data</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__pers_data_csum">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__pers_data_csum">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -1450,7 +1504,7 @@ it alongside the data.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-c6dbc5d2">
+<div class="need_container docutils container" id="SNCB-50eacd3d">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__pers_data_csum_vrfy">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1474,7 +1528,7 @@ it alongside the data.</p></td>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__integrity_check" title="comp_req__kvs__pers_data_csum_vrfy">feat_req__persistency__integrity_check</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__load_data" title="comp_req__kvs__pers_data_csum_vrfy">feat_req__persistency__load_data</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__pers_data_csum_vrfy">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__pers_data_csum_vrfy">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -1496,7 +1550,7 @@ it alongside the data.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-f19d7d08">
+<div class="need_container docutils container" id="SNCB-fe12932f">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__pers_data_store_bnd">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1520,7 +1574,7 @@ it alongside the data.</p></td>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__integrity_check" title="comp_req__kvs__pers_data_store_bnd">feat_req__persistency__integrity_check</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__store_data" title="comp_req__kvs__pers_data_store_bnd">feat_req__persistency__store_data</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__pers_data_store_bnd">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__pers_data_store_bnd">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -1542,7 +1596,7 @@ it alongside the data.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-daf95fd3">
+<div class="need_container docutils container" id="SNCB-8abc92c5">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__pers_data_store_fmt">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1566,7 +1620,7 @@ it alongside the data.</p></td>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__integrity_check" title="comp_req__kvs__pers_data_store_fmt">feat_req__persistency__integrity_check</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__store_data" title="comp_req__kvs__pers_data_store_fmt">feat_req__persistency__store_data</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__pers_data_store_fmt">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__pers_data_store_fmt">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -1588,7 +1642,7 @@ it alongside the data.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-065e7f9a">
+<div class="need_container docutils container" id="SNCB-40330758">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__pers_data_version">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1612,7 +1666,7 @@ it alongside the data.</p></td>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__update_mechanism" title="comp_req__kvs__pers_data_version">feat_req__persistency__update_mechanism</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__versioning" title="comp_req__kvs__pers_data_version">feat_req__persistency__versioning</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__pers_data_version">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__pers_data_version">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -1634,7 +1688,7 @@ it alongside the data.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-23feed70">
+<div class="need_container docutils container" id="SNCB-af89a0d5">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__pers_data_schema">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1658,7 +1712,7 @@ it alongside the data.</p></td>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__update_mechanism" title="comp_req__kvs__pers_data_schema">feat_req__persistency__update_mechanism</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__versioning" title="comp_req__kvs__pers_data_schema">feat_req__persistency__versioning</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__pers_data_schema">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__pers_data_schema">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -1682,7 +1736,7 @@ as needed.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-922d7eba">
+<div class="need_container docutils container" id="SNCB-60901a5a">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__snapshot_max_num_cfg">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1706,7 +1760,7 @@ as needed.</p></td>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__cfg" title="comp_req__kvs__snapshot_max_num_cfg">feat_req__persistency__cfg</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_max_num_cfg">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_max_num_cfg">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -1732,7 +1786,7 @@ Default value shall be: <code class="docutils literal notranslate"><span class="
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-f7a5d0c3">
+<div class="need_container docutils container" id="SNCB-0ccf1980">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__snapshot_create_api">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1756,7 +1810,7 @@ Default value shall be: <code class="docutils literal notranslate"><span class="
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_create" title="comp_req__kvs__snapshot_create_api">feat_req__persistency__snapshot_create</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_create_api">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_create_api">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -1785,7 +1839,7 @@ The API should return an error when provided slot index is out of range. See <a 
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-1b3ef4a3">
+<div class="need_container docutils container" id="SNCB-0882592a">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__snapshot_create">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1809,7 +1863,7 @@ The API should return an error when provided slot index is out of range. See <a 
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_create" title="comp_req__kvs__snapshot_create">feat_req__persistency__snapshot_create</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_create">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_create">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -1831,7 +1885,7 @@ The API should return an error when provided slot index is out of range. See <a 
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-8718cc08">
+<div class="need_container docutils container" id="SNCB-d863e546">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__snapshot_overwrite">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1855,7 +1909,7 @@ The API should return an error when provided slot index is out of range. See <a 
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_create" title="comp_req__kvs__snapshot_overwrite">feat_req__persistency__snapshot_create</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_overwrite">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_overwrite">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -1877,7 +1931,7 @@ The API should return an error when provided slot index is out of range. See <a 
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-33656925">
+<div class="need_container docutils container" id="SNCB-793351f7">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__snapshot_restore_api">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1901,7 +1955,7 @@ The API should return an error when provided slot index is out of range. See <a 
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_restore" title="comp_req__kvs__snapshot_restore_api">feat_req__persistency__snapshot_restore</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_restore_api">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_restore_api">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -1926,7 +1980,7 @@ The API should return an error when provided slot index is out of range. See <a 
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-b19b33ee">
+<div class="need_container docutils container" id="SNCB-d7805112">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__snapshot_remove_api">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1950,7 +2004,7 @@ The API should return an error when provided slot index is out of range. See <a 
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_remove" title="comp_req__kvs__snapshot_remove_api">feat_req__persistency__snapshot_remove</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_remove_api">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_remove_api">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -1975,7 +2029,7 @@ The API should return an error when provided slot index is out of range. See <a 
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-8c6cef30">
+<div class="need_container docutils container" id="SNCB-82ec4392">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__explicit_snapshot_operations">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1999,7 +2053,7 @@ The API should return an error when provided slot index is out of range. See <a 
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_create" title="comp_req__kvs__explicit_snapshot_operations">feat_req__persistency__snapshot_create</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_remove" title="comp_req__kvs__explicit_snapshot_operations">feat_req__persistency__snapshot_remove</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_restore" title="comp_req__kvs__explicit_snapshot_operations">feat_req__persistency__snapshot_restore</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__explicit_snapshot_operations">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__explicit_snapshot_operations">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -2021,7 +2075,7 @@ The API should return an error when provided slot index is out of range. See <a 
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-3cbb3294">
+<div class="need_container docutils container" id="SNCB-758c4434">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__snapshot_id_api">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -2045,7 +2099,7 @@ The API should return an error when provided slot index is out of range. See <a 
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_create" title="comp_req__kvs__snapshot_id_api">feat_req__persistency__snapshot_create</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_id_api">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_id_api">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -2067,7 +2121,7 @@ The API should return an error when provided slot index is out of range. See <a 
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-0ec38620">
+<div class="need_container docutils container" id="SNCB-eef21cf9">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__snapshot_source">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -2091,7 +2145,7 @@ The API should return an error when provided slot index is out of range. See <a 
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_create" title="comp_req__kvs__snapshot_source">feat_req__persistency__snapshot_create</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_source">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_source">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -2114,7 +2168,7 @@ have been flushed to disk.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-228588a4">
+<div class="need_container docutils container" id="SNCB-464ea216">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__snapshot_slot_free_api">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -2138,7 +2192,7 @@ have been flushed to disk.</p></td>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__cfg" title="comp_req__kvs__snapshot_slot_free_api">feat_req__persistency__cfg</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_create" title="comp_req__kvs__snapshot_slot_free_api">feat_req__persistency__snapshot_create</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_remove" title="comp_req__kvs__snapshot_slot_free_api">feat_req__persistency__snapshot_remove</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_slot_free_api">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_slot_free_api">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -2161,7 +2215,7 @@ The API should return an error when provided slot index is out of range. See <a 
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-b2348cb1">
+<div class="need_container docutils container" id="SNCB-227072f8">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__snapshot_creation">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -2182,10 +2236,11 @@ The API should return an error when provided slot index is out of range. See <a 
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">inspected</span><span class="needs_spacer">, </span><span class="needs_data">kvs</span></span></span></div>
 <div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_testlink"><span class="needs_label">testlink: </span><span class="needs_data"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L66">TestSnapshotCountFirstFlush__test_ok[0-cpp]<span class="score-testcase-result score-testcase-result--skipped"> (skipped)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L66">TestSnapshotCountFirstFlush__test_ok[1-cpp]<span class="score-testcase-result score-testcase-result--skipped"> (skipped)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L66">TestSnapshotCountFirstFlush__test_ok[3-cpp]<span class="score-testcase-result score-testcase-result--skipped"> (skipped)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L66">TestSnapshotCountFirstFlush__test_ok[10-cpp]<span class="score-testcase-result score-testcase-result--skipped"> (skipped)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L66">TestSnapshotCountFull__test_ok[0-cpp]<span class="score-testcase-result score-testcase-result--skipped"> (skipped)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L66">TestSnapshotCountFull__test_ok[1-cpp]<span class="score-testcase-result score-testcase-result--skipped"> (skipped)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L66">TestSnapshotCountFull__test_ok[3-cpp]<span class="score-testcase-result score-testcase-result--skipped"> (skipped)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L66">TestSnapshotCountFull__test_ok[10-cpp]<span class="score-testcase-result score-testcase-result--skipped"> (skipped)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L177">TestSnapshotRestorePrevious__test_ok[3-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L177">TestSnapshotRestorePrevious__test_ok[10-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L213">TestSnapshotRestoreCurrent__test_error[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L252">TestSnapshotRestoreNonexistent__test_error[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L283">TestSnapshotPathsExist__test_ok[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L319">TestSnapshotPathsNonexistent__test_error[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L66">TestSnapshotCountFirstFlush__test_ok[0-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L66">TestSnapshotCountFirstFlush__test_ok[1-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L66">TestSnapshotCountFirstFlush__test_ok[3-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L66">TestSnapshotCountFirstFlush__test_ok[10-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L66">TestSnapshotCountFull__test_ok[0-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L66">TestSnapshotCountFull__test_ok[1-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L66">TestSnapshotCountFull__test_ok[3-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L66">TestSnapshotCountFull__test_ok[10-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L177">TestSnapshotRestorePrevious__test_ok[3-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L177">TestSnapshotRestorePrevious__test_ok[10-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L213">TestSnapshotRestoreCurrent__test_error[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L252">TestSnapshotRestoreNonexistent__test_error[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L283">TestSnapshotPathsExist__test_ok[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L319">TestSnapshotPathsNonexistent__test_error[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_create" title="comp_req__kvs__snapshot_creation">feat_req__persistency__snapshot_create</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_creation">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_creation">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -2212,7 +2267,7 @@ The API should return an error when provided slot index is out of range. See <a 
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-a35a799a">
+<div class="need_container docutils container" id="SNCB-a6b00f3e">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__snapshot_max_num">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -2233,10 +2288,11 @@ The API should return an error when provided slot index is out of range. See <a 
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">inspected</span><span class="needs_spacer">, </span><span class="needs_data">kvs</span></span></span></div>
 <div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_testlink"><span class="needs_label">testlink: </span><span class="needs_data"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L133">TestSnapshotMaxCount__test_ok[0-cpp]<span class="score-testcase-result score-testcase-result--skipped"> (skipped)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L133">TestSnapshotMaxCount__test_ok[1-cpp]<span class="score-testcase-result score-testcase-result--skipped"> (skipped)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L133">TestSnapshotMaxCount__test_ok[3-cpp]<span class="score-testcase-result score-testcase-result--skipped"> (skipped)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L133">TestSnapshotMaxCount__test_ok[10-cpp]<span class="score-testcase-result score-testcase-result--skipped"> (skipped)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L133">TestSnapshotMaxCount__test_ok[0-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L133">TestSnapshotMaxCount__test_ok[1-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L133">TestSnapshotMaxCount__test_ok[3-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L133">TestSnapshotMaxCount__test_ok[10-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__cfg" title="comp_req__kvs__snapshot_max_num">feat_req__persistency__cfg</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_max_num">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_max_num">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -2263,7 +2319,7 @@ The API should return an error when provided slot index is out of range. See <a 
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-beb3548c">
+<div class="need_container docutils container" id="SNCB-2ebfd674">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__snapshot_id">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -2287,7 +2343,7 @@ The API should return an error when provided slot index is out of range. See <a 
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_create" title="comp_req__kvs__snapshot_id">feat_req__persistency__snapshot_create</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_id">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_id">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -2316,7 +2372,7 @@ The API should return an error when provided slot index is out of range. See <a 
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-ba6715e6">
+<div class="need_container docutils container" id="SNCB-746e669a">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__snapshot_rotate">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -2337,10 +2393,11 @@ The API should return an error when provided slot index is out of range. See <a 
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">inspected</span><span class="needs_spacer">, </span><span class="needs_data">kvs</span></span></span></div>
 <div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_testlink"><span class="needs_label">testlink: </span><span class="needs_data"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L177">TestSnapshotRestorePrevious__test_ok[3-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L177">TestSnapshotRestorePrevious__test_ok[10-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L177">TestSnapshotRestorePrevious__test_ok[3-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L177">TestSnapshotRestorePrevious__test_ok[10-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_remove" title="comp_req__kvs__snapshot_rotate">feat_req__persistency__snapshot_remove</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_restore" title="comp_req__kvs__snapshot_rotate">feat_req__persistency__snapshot_restore</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_rotate">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_rotate">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -2367,7 +2424,7 @@ The API should return an error when provided slot index is out of range. See <a 
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-8b72b3af">
+<div class="need_container docutils container" id="SNCB-1e00bf6f">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__snapshot_restore">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -2388,10 +2445,11 @@ The API should return an error when provided slot index is out of range. See <a 
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">inspected</span><span class="needs_spacer">, </span><span class="needs_data">kvs</span></span></span></div>
 <div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_testlink"><span class="needs_label">testlink: </span><span class="needs_data"><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L177">TestSnapshotRestorePrevious__test_ok[3-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L177">TestSnapshotRestorePrevious__test_ok[10-cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L252">TestSnapshotRestoreNonexistent__test_error[cpp]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L177">TestSnapshotRestorePrevious__test_ok[3-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L177">TestSnapshotRestorePrevious__test_ok[10-rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a><em>; </em><a class="reference external" href="https://github.com/eclipse-score/persistency/blob/961c0a0989755a1e0fe8de55e83c0a44e2e20b56/score/kvs/tests/test_cases/tests/test_cit_snapshots.py#L252">TestSnapshotRestoreNonexistent__test_error[rust]<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_restore" title="comp_req__kvs__snapshot_restore">feat_req__persistency__snapshot_restore</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_restore">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_restore">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -2418,7 +2476,7 @@ The API should return an error when provided slot index is out of range. See <a 
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-8bbf2aa1">
+<div class="need_container docutils container" id="SNCB-7065dbe4">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__snapshot_delete">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -2442,7 +2500,7 @@ The API should return an error when provided slot index is out of range. See <a 
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__snapshot_remove" title="comp_req__kvs__snapshot_delete">feat_req__persistency__snapshot_remove</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_delete">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__snapshot_delete">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -2469,7 +2527,7 @@ The API should return an error when provided slot index is out of range. See <a 
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-61f5d2a7">
+<div class="need_container docutils container" id="SNCB-038453d9">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__eng_mode">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -2493,7 +2551,7 @@ The API should return an error when provided slot index is out of range. See <a 
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__dev_mode" title="comp_req__kvs__eng_mode">feat_req__persistency__dev_mode</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__eng_mode">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__eng_mode">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -2516,7 +2574,7 @@ build time to display debugging and internal information.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-a4360fda">
+<div class="need_container docutils container" id="SNCB-1906f7db">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__field_mode">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -2540,7 +2598,7 @@ build time to display debugging and internal information.</p></td>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__prod_mode" title="comp_req__kvs__field_mode">feat_req__persistency__prod_mode</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__field_mode">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__field_mode">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -2563,7 +2621,7 @@ time to restrict access as much as possible.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-f10614f4">
+<div class="need_container docutils container" id="SNCB-3bb5ba1e">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__async_api">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -2587,7 +2645,7 @@ time to restrict access as much as possible.</p></td>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__async_api" title="comp_req__kvs__async_api">feat_req__persistency__async_api</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__async_api">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__async_api">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -2609,7 +2667,7 @@ time to restrict access as much as possible.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-9b6961b3">
+<div class="need_container docutils container" id="SNCB-4ed2975f">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__permission_control">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -2633,7 +2691,7 @@ time to restrict access as much as possible.</p></td>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__access_control" title="comp_req__kvs__permission_control">feat_req__persistency__access_control</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__permission_control">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__permission_control">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -2657,7 +2715,7 @@ controls.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-f05ca6b8">
+<div class="need_container docutils container" id="SNCB-bffad59a">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__permission_err_hndl">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -2681,7 +2739,7 @@ controls.</p></td>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__access_control" title="comp_req__kvs__permission_err_hndl">feat_req__persistency__access_control</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__permission_err_hndl">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__permission_err_hndl">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -2704,7 +2762,7 @@ the filesystem level to the application.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-160ec7cf">
+<div class="need_container docutils container" id="SNCB-25fd869e">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__kvs__callback_support">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -2728,7 +2786,7 @@ the filesystem level to the application.</p></td>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__async_api" title="comp_req__kvs__callback_support">feat_req__persistency__async_api</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__async_completion" title="comp_req__kvs__callback_support">feat_req__persistency__async_completion</a></span></span></div>
-<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../index.html#comp__persistency_kvs" title="comp_req__kvs__callback_support">comp__persistency_kvs</a></span></span></div>
+<div class="line">satisfied by: <span class="satisfied_by"><span><a class="reference internal" href="../architecture/component_architecture.html#comp__persistency_kvs" title="comp_req__kvs__callback_support">comp__persistency_kvs</a></span></span></div>
 </span></div>
 </div>
 </td>

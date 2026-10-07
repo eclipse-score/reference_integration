@@ -75,7 +75,7 @@
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
     <link rel="next" title="DFA (Dependent Failure Analysis)" href="dfa.html" />
-    <link rel="prev" title="Architecture Inspection Checklist" href="../architecture/chklst_arc_inspection.html" />
+    <link rel="prev" title="Persistency Architecture Inspection" href="../architecture/chklst_arc_inspection.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.1" />
@@ -462,8 +462,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_baselibs/index.html">Base Libraries</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">Persistency Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">Persistency</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../architecture/chklst_arc_inspection.html">Architecture Inspection Checklist</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture/index.html">Persistency KVS Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../architecture/chklst_arc_inspection.html">Persistency Architecture Inspection</a></li>
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">FMEA (Failure Modes and Effects Analysis)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dfa.html">DFA (Dependent Failure Analysis)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../safety_planning/index.html">Feature Safety Work Products List</a></li>
@@ -552,7 +552,7 @@
                   
   <section id="fmea-failure-modes-and-effects-analysis">
 <h1>FMEA (Failure Modes and Effects Analysis)<a class="headerlink" href="#fmea-failure-modes-and-effects-analysis" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-89dd5bac">
+<div class="need_container docutils container" id="SNCB-e9ec0797">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__persistency_fmea">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -600,26 +600,31 @@
 following tables. For all applicable failure initiators, the FMEA has to be performed.</p>
 <section id="failure-mode-list">
 <h2>Failure Mode List<a class="headerlink" href="#failure-mode-list" title="Link to this heading">#</a></h2>
-<dl>
-<dt>Fault Models for sequence diagrams</dt><dd><div class="pst-scrollable-table-container"><table class="table" id="id1">
-<caption><span class="caption-number">Table 51 </span><span class="caption-text">Fault Models for sequence diagrams
- :header-rows: 1
- :widths: 10,20,10,20</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
-<tbody>
-<tr class="row-odd"><td><p>ID</p></td>
-<td><p>Failure Mode</p></td>
-<td><p>Applicability</p></td>
-<td><p>Rationale</p></td>
+<div class="pst-scrollable-table-container"><table class="table" id="id1">
+<caption><span class="caption-number">Table 52 </span><span class="caption-text">Fault Models for sequence diagrams</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
+<colgroup>
+<col style="width: 16.7%" />
+<col style="width: 33.3%" />
+<col style="width: 16.7%" />
+<col style="width: 33.3%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>ID</p></th>
+<th class="head"><p>Failure Mode</p></th>
+<th class="head"><p>Applicability</p></th>
+<th class="head"><p>Rationale</p></th>
 </tr>
+</thead>
+<tbody>
 <tr class="row-even"><td><p>MF_01_01</p></td>
 <td><p>message is not received (is a subset/more precise description of MF_01_05)</p></td>
 <td><p>yes</p></td>
-<td><p><a class="reference internal" href="#feat_saf_fmea__persistency__message_nreived" title="feat_saf_fmea__persistency__message_nreived"><em class="xref need">Persistency (feat_saf_fmea__persistency__message_nreived)</em></a></p></td>
+<td><p><a class="reference internal" href="#feat_saf_fmea__persistency__msg_not_received" title="feat_saf_fmea__persistency__msg_not_received"><em class="xref need">Message is not received (feat_saf_fmea__persistency__msg_not_received)</em></a></p></td>
 </tr>
 <tr class="row-odd"><td><p>MF_01_02</p></td>
 <td><p>message received too late (only relevant if delay is a realistic fault)</p></td>
 <td><p>yes</p></td>
-<td><p><a class="reference internal" href="#feat_saf_fmea__persistency__late_message" title="feat_saf_fmea__persistency__late_message"><em class="xref need">Persistency (feat_saf_fmea__persistency__late_message)</em></a></p></td>
+<td><p><a class="reference internal" href="#feat_saf_fmea__persistency__late_message" title="feat_saf_fmea__persistency__late_message"><em class="xref need">Message received too late (feat_saf_fmea__persistency__late_message)</em></a></p></td>
 </tr>
 <tr class="row-even"><td><p>MF_01_03</p></td>
 <td><p>message received too early (usually not a problem)</p></td>
@@ -634,12 +639,12 @@ following tables. For all applicable failure initiators, the FMEA has to be perf
 <tr class="row-even"><td><p>MF_01_05</p></td>
 <td><p>message is corrupted</p></td>
 <td><p>yes</p></td>
-<td><p><a class="reference internal" href="#feat_saf_fmea__persistency__corrupted_message" title="feat_saf_fmea__persistency__corrupted_message"><em class="xref need">Persistency (feat_saf_fmea__persistency__corrupted_message)</em></a></p></td>
+<td><p><a class="reference internal" href="#feat_saf_fmea__persistency__corrupted_message" title="feat_saf_fmea__persistency__corrupted_message"><em class="xref need">Message is corrupted (feat_saf_fmea__persistency__corrupted_message)</em></a></p></td>
 </tr>
 <tr class="row-odd"><td><p>MF_01_06</p></td>
 <td><p>message is not sent</p></td>
 <td><p>yes</p></td>
-<td><p><a class="reference internal" href="#feat_saf_fmea__persistency__not_sent" title="feat_saf_fmea__persistency__not_sent"><em class="xref need">Persistency (feat_saf_fmea__persistency__not_sent)</em></a></p></td>
+<td><p><a class="reference internal" href="#feat_saf_fmea__persistency__not_sent" title="feat_saf_fmea__persistency__not_sent"><em class="xref need">Message is not sent (feat_saf_fmea__persistency__not_sent)</em></a></p></td>
 </tr>
 <tr class="row-even"><td><p>MF_01_07</p></td>
 <td><p>message is unintended sent</p></td>
@@ -674,7 +679,7 @@ following tables. For all applicable failure initiators, the FMEA has to be perf
 <tr class="row-even"><td><p>EX_01_04</p></td>
 <td><p>loss of execution</p></td>
 <td><p>yes</p></td>
-<td><p><a class="reference internal" href="#feat_saf_fmea__persistency__err_handl" title="feat_saf_fmea__persistency__err_handl"><em class="xref need">Persistency (feat_saf_fmea__persistency__err_handl)</em></a></p></td>
+<td><p><a class="reference internal" href="#feat_saf_fmea__persistency__err_handl" title="feat_saf_fmea__persistency__err_handl"><em class="xref need">Loss of execution (feat_saf_fmea__persistency__err_handl)</em></a></p></td>
 </tr>
 <tr class="row-odd"><td><p>EX_01_05</p></td>
 <td><p>processing changes to arbitrary process</p></td>
@@ -689,17 +694,15 @@ following tables. For all applicable failure initiators, the FMEA has to be perf
 </tbody>
 </table>
 </div>
-</dd>
-</dl>
 </section>
 <section id="fmea">
 <h2>FMEA<a class="headerlink" href="#fmea" title="Link to this heading">#</a></h2>
 <p>For all identified applicable failure initiators, the FMEA is performed in the following section.</p>
-<div class="need_container docutils container" id="SNCB-1815d678">
-<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_saf_fmea table" id="feat_saf_fmea__persistency__message_nreived">
+<div class="need_container docutils container" id="SNCB-d54cda04">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_saf_fmea table" id="feat_saf_fmea__persistency__msg_not_received">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
-<div class="line"><span><span class="needs_title"><span class="needs_data">Persistency</span></span></span></div>
+<div class="line"><span><span class="needs_title"><span class="needs_data">Message is not received</span></span></span></div>
 </div>
 </td>
 <td class="head_center" colspan="2"><div class="needs_head line-block">
@@ -719,18 +722,18 @@ following tables. For all applicable failure initiators, the FMEA has to be perf
 <div class="line"><span class="needs_sufficient"><span class="needs_label">sufficient: </span><span class="needs_data">yes</span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
-<div class="line"><span><div class="line">mitigated_by: <span class="mitigated_by"><span><a class="reference internal" href="../../../module/manuals/safety_manual.html#aou_req__persistency__error_handling" title="feat_saf_fmea__persistency__message_nreived">aou_req__persistency__error_handling</a></span></span></div>
-<div class="line">violates: <span class="violates"><span><a class="reference internal" href="../architecture/index.html#feat_arc_dyn__persistency__check_key_default" title="feat_saf_fmea__persistency__message_nreived">feat_arc_dyn__persistency__check_key_default</a>, <a class="reference internal" href="../architecture/index.html#feat_arc_dyn__persistency__delete_key" title="feat_saf_fmea__persistency__message_nreived">feat_arc_dyn__persistency__delete_key</a>, <a class="reference internal" href="../architecture/index.html#feat_arc_dyn__persistency__flush" title="feat_saf_fmea__persistency__message_nreived">feat_arc_dyn__persistency__flush</a>, <a class="reference internal" href="../architecture/index.html#feat_arc_dyn__persistency__read_from_storage" title="feat_saf_fmea__persistency__message_nreived">feat_arc_dyn__persistency__read_from_storage</a>, <a class="reference internal" href="../architecture/index.html#feat_arc_dyn__persistency__read_key" title="feat_saf_fmea__persistency__message_nreived">feat_arc_dyn__persistency__read_key</a>, <a class="reference internal" href="../architecture/index.html#feat_arc_dyn__persistency__snapshot_restore" title="feat_saf_fmea__persistency__message_nreived">feat_arc_dyn__persistency__snapshot_restore</a>, <a class="reference internal" href="../architecture/index.html#feat_arc_dyn__persistency__write_key" title="feat_saf_fmea__persistency__message_nreived">feat_arc_dyn__persistency__write_key</a></span></span></div>
+<div class="line"><span><div class="line">mitigated_by: <span class="mitigated_by"><span><a class="reference internal" href="../../../module/manuals/safety_manual.html#aou_req__persistency__error_handling" title="feat_saf_fmea__persistency__msg_not_received">aou_req__persistency__error_handling</a></span></span></div>
+<div class="line">violates: <span class="violates"><span><a class="reference internal" href="../architecture/index.html#feat_arc_dyn__persistency__check_key_default" title="feat_saf_fmea__persistency__msg_not_received">feat_arc_dyn__persistency__check_key_default</a>, <a class="reference internal" href="../architecture/index.html#feat_arc_dyn__persistency__delete_key" title="feat_saf_fmea__persistency__msg_not_received">feat_arc_dyn__persistency__delete_key</a>, <a class="reference internal" href="../architecture/index.html#feat_arc_dyn__persistency__flush" title="feat_saf_fmea__persistency__msg_not_received">feat_arc_dyn__persistency__flush</a>, <a class="reference internal" href="../architecture/index.html#feat_arc_dyn__persistency__read_from_storage" title="feat_saf_fmea__persistency__msg_not_received">feat_arc_dyn__persistency__read_from_storage</a>, <a class="reference internal" href="../architecture/index.html#feat_arc_dyn__persistency__read_key" title="feat_saf_fmea__persistency__msg_not_received">feat_arc_dyn__persistency__read_key</a>, <a class="reference internal" href="../architecture/index.html#feat_arc_dyn__persistency__snapshot_restore" title="feat_saf_fmea__persistency__msg_not_received">feat_arc_dyn__persistency__snapshot_restore</a>, <a class="reference internal" href="../architecture/index.html#feat_arc_dyn__persistency__write_key" title="feat_saf_fmea__persistency__msg_not_received">feat_arc_dyn__persistency__write_key</a></span></span></div>
 </span></div>
 </div>
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p>User is not able to use the feature. Middleware cant be used. User is not able to use the feature. Middleware cant be used. Loss of execution can only be caused by the application, not by the persistency feature itself.
+<tr class="content row-odd"><td class="content" colspan="6"><p>User is not able to use the feature. Middleware cant be used. Loss of execution can only be caused by the application, not by the persistency feature itself.
 Failure handling is addressed to the application by the aou_req__persistency__error_handling.</p></td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
-<div class="line"><span><span class="needs-id"><a class="reference internal" href="#feat_saf_fmea__persistency__message_nreived" title="feat_saf_fmea__persistency__message_nreived">feat_saf_fmea__persistency__message_nreived</a></span></span></div>
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#feat_saf_fmea__persistency__msg_not_received" title="feat_saf_fmea__persistency__msg_not_received">feat_saf_fmea__persistency__msg_not_received</a></span></span></div>
 </div>
 </td>
 <td class="footer" colspan="2"><div class="needs_footer line-block">
@@ -743,11 +746,11 @@ Failure handling is addressed to the application by the aou_req__persistency__er
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-9d03978e">
+<div class="need_container docutils container" id="SNCB-3b47873a">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_saf_fmea table" id="feat_saf_fmea__persistency__late_message">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
-<div class="line"><span><span class="needs_title"><span class="needs_data">Persistency</span></span></span></div>
+<div class="line"><span><span class="needs_title"><span class="needs_data">Message received too late</span></span></span></div>
 </div>
 </td>
 <td class="head_center" colspan="2"><div class="needs_head line-block">
@@ -774,7 +777,7 @@ Failure handling is addressed to the application by the aou_req__persistency__er
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p>Subset of MF_01_01 if the delay is to long.</p></td>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Subset of MF_01_01 if the delay is too long.</p></td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
 <div class="line"><span><span class="needs-id"><a class="reference internal" href="#feat_saf_fmea__persistency__late_message" title="feat_saf_fmea__persistency__late_message">feat_saf_fmea__persistency__late_message</a></span></span></div>
@@ -790,11 +793,11 @@ Failure handling is addressed to the application by the aou_req__persistency__er
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-aeaa3424">
+<div class="need_container docutils container" id="SNCB-6e7f07e7">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_saf_fmea table" id="feat_saf_fmea__persistency__corrupted_message">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
-<div class="line"><span><span class="needs_title"><span class="needs_data">Persistency</span></span></span></div>
+<div class="line"><span><span class="needs_title"><span class="needs_data">Message is corrupted</span></span></span></div>
 </div>
 </td>
 <td class="head_center" colspan="2"><div class="needs_head line-block">
@@ -837,11 +840,11 @@ Failure handling is addressed to the application by the aou_req__persistency__er
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-60fe0bdd">
+<div class="need_container docutils container" id="SNCB-81e4201d">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_saf_fmea table" id="feat_saf_fmea__persistency__not_sent">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
-<div class="line"><span><span class="needs_title"><span class="needs_data">Persistency</span></span></span></div>
+<div class="line"><span><span class="needs_title"><span class="needs_data">Message is not sent</span></span></span></div>
 </div>
 </td>
 <td class="head_center" colspan="2"><div class="needs_head line-block">
@@ -884,11 +887,11 @@ Failure handling is addressed to the application by the aou_req__persistency__er
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-f633beeb">
+<div class="need_container docutils container" id="SNCB-95f8056c">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_saf_fmea table" id="feat_saf_fmea__persistency__err_handl">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
-<div class="line"><span><span class="needs_title"><span class="needs_data">Persistency</span></span></span></div>
+<div class="line"><span><span class="needs_title"><span class="needs_data">Loss of execution</span></span></span></div>
 </div>
 </td>
 <td class="head_center" colspan="2"><div class="needs_head line-block">
@@ -951,7 +954,7 @@ Failure handling is addressed to the application by the aou_req__persistency__er
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Architecture Inspection Checklist</p>
+        <p class="prev-next-title">Persistency Architecture Inspection</p>
       </div>
     </a>
     <a class="right-next"
