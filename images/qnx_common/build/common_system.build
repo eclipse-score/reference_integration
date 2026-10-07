@@ -18,6 +18,10 @@
 # This file defines the contents of the QNX system partition, including
 # essential utilities, libraries, configuration files, and system services
 # needed for a minimal QNX QEMU environment.
+#
+# Architecture-independent: shared by all QNX images via qnx_ifs
+# extra_build_files. The hardware-specific PCI HW module (and any other
+# per-architecture drivers) are added from each image's own system.build.
 
 #############################################
 ### SHARED LIBRARIES ###
@@ -216,7 +220,8 @@ librpc.so.2                              # For TCP dump
 #############################################
 ### PCI COMPONENTS ###
 #############################################
-# PCI-related shared libraries and modules (no hardware-specific HW module for QEMU virt)
+# PCI-related shared libraries and modules (common across architectures).
+# The architecture-specific PCI HW module is added from each image's system.build.
 pci/pci_slog2.so                         # PCI system logging support
 pci/pci_cap-0x05.so                      # PCI capability handler for MSI
 pci/pci_cap-0x10.so                      # PCI Express capability handler
@@ -233,16 +238,12 @@ pci/pci_debug2.so                        # Enhanced PCI debugging support
 [gid=0 uid=0 dperms=755 type=dir] /var/chroot/sshd              # SSH chroot directory for privilege separation
 [gid=0 uid=0 dperms=700 type=dir] /var/ssh                      # SSH configuration and key storage directory
 
-# Executable files from external repositories
-[perms=777] /scrample = ${SCRAMPLE_PATH}
-[perms=777] /cpp_tests_persistency = ${CPP_TEST_SCENARIOS_PATH}
 
 #############################################
-### BAZEL-PROVIDED CONTENT ###
+### HOST-PROVIDED FILES ###
 #############################################
-# Scripts, configuration files, SSH host keys, the datarouter binary and the
-# showcases bundle are declared as rules_pkg targets in
-# //images/qnx_aarch64/build:BUILD.
-# score_rules_imagefs turns those into mkifs directives in
-# init_pkg_content.build, which its generated entrypoint includes after this
-# file - so the directory entries above still precede the files they hold.
+# Scripts, configuration files, SSH keys, communication/datarouter configs and
+# the showcases bundle are placed into the image via rules_pkg pkg_files targets
+# in each image's BUILD file (srcs of qnx_ifs). score_rules_imagefs >= 0.1.0
+# generates the corresponding mkifs entries from those rules_pkg providers, so
+# the former ${MAIN_BUILD_FILE_DIR}/${*_PATH} substitutions are no longer used.

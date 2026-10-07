@@ -11,6 +11,11 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-root::0:root
-qnxuser::1000:qnxuser
-sshd::6:sshd
+# Architecture-independent QNX mkifs build fragments shared by the per-image
+# qnx_ifs targets (//images/qnx_x86_64/build, //images/qnx_aarch64/build) via
+# their extra_build_files attribute.
+
+exports_files([
+    "common_init.build",
+    "common_system.build",
+])

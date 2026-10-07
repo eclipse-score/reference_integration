@@ -22,6 +22,10 @@ echo "---> Starting slogger2"
 slogger2 -s 4096                       # Start system logger with 4KB buffer size for log messages
 waitfor /dev/slog                       # Wait for system log device to become available
 
+# Architecture-specific early hardware initialisation (PCI bus, storage, ...).
+# x86_64 ships /etc/startup-hw.sh; images without extra hardware (aarch64) skip it.
+[ -f /etc/startup-hw.sh ] && . /etc/startup-hw.sh
+
 echo "---> Starting Pipe"
 pipe                                    # Start named pipe resource manager for IPC
 waitfor /dev/pipe                       # Wait for pipe device to become available
