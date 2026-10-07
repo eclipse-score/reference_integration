@@ -61,9 +61,7 @@
             "score_persistency": {
                 "repo": "https://github.com/eclipse-score/persistency.git",
                 "bazel_patches": [
-                    "//patches/persistency:003-pip-not-dev-dependency.patch",
-                    "//patches/persistency:004-imagefs-not-dev-dependency.patch",
-                    "//patches/persistency:005-googletest-not-dev-dependency.patch"
+                    "//patches/persistency:003-undev-deps-for-root-module.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/kvs/...",
@@ -77,9 +75,15 @@
                         "//score/kvs/tests/integration_test_scenarios/...",
                         "//score/kvs/tests/test_cases/..."
                     ],
-                    "rust_coverage_config": "ferrocene-coverage-per"
+                    "rust_coverage_config": "ferrocene-coverage-per",
+                    "integration_test_targets": [
+                        "//score/kvs/tests/test_cases:cit"
+                    ],
+                    "integration_test_config": [
+                        "flaky_test_attempts=3"
+                    ]
                 },
-                "hash": "323950c42431956ce76bf48c407a1709f114876d"
+                "hash": "961c0a0989755a1e0fe8de55e83c0a44e2e20b56"
             },
             "score_kyron": {
                 "repo": "https://github.com/eclipse-score/kyron.git",
@@ -188,6 +192,11 @@
             "score_itf": {
                 "repo": "https://github.com/eclipse-score/itf.git",
                 "hash": "802e0186d373e0d9d67c1c9ccb1ea08952c7ad06"
+            },
+            "score_tools": {
+                "repo": "https://github.com/eclipse-score/tools.git",
+                "docs": false,
+                "hash": "4b48cec400c67be75cfc3fa4658ac6a0489bf7a8"
             },
             "score_tooling": {
                 "repo": "https://github.com/eclipse-score/tooling.git",

@@ -43,12 +43,10 @@ git_override(
 bazel_dep(name = "score_persistency")
 git_override(
     module_name = "score_persistency",
-    commit = "323950c42431956ce76bf48c407a1709f114876d",
+    commit = "961c0a0989755a1e0fe8de55e83c0a44e2e20b56",
     patch_strip = 1,
     patches = [
-        "//patches/persistency:003-pip-not-dev-dependency.patch",
-        "//patches/persistency:004-imagefs-not-dev-dependency.patch",
-        "//patches/persistency:005-googletest-not-dev-dependency.patch",
+        "//patches/persistency:003-undev-deps-for-root-module.patch",
     ],
     remote = "https://github.com/eclipse-score/persistency.git",
 )

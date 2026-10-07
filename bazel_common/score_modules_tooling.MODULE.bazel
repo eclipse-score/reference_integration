@@ -28,6 +28,13 @@ git_override(
     remote = "https://github.com/eclipse-score/itf.git",
 )
 
+bazel_dep(name = "score_tools")
+git_override(
+    module_name = "score_tools",
+    commit = "4b48cec400c67be75cfc3fa4658ac6a0489bf7a8",
+    remote = "https://github.com/eclipse-score/tools.git",
+)
+
 bazel_dep(name = "score_tooling")
 git_override(
     module_name = "score_tooling",
