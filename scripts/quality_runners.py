@@ -11,12 +11,12 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 import argparse
+import os
 import re
 import select
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from pprint import pprint
 from subprocess import PIPE, Popen, run
 
 from known_good.models.known_good import load_known_good
@@ -59,7 +59,7 @@ def configure_aslr_for_sanitizers() -> None:
         print(f"QR: Could not lower vm.mmap_rnd_bits (continuing anyway): {result.stderr.strip()}")
 
 
-def run_unit_test_with_coverage(module: Module) -> dict[str, str | int]:
+def run_unit_test_with_coverage(module: Module, trust_cache: bool = False) -> dict[str, str | int]:
     print_centered("QR: Running unit tests")
 
     call = (
@@ -72,7 +72,9 @@ def run_unit_test_with_coverage(module: Module) -> dict[str, str | int]:
             "--config=ferrocene-coverage",
             "--test_summary=testcase",
             "--test_output=errors",
-            "--nocache_test_results",
+        ]
+        + ([] if trust_cache else ["--nocache_test_results"])
+        + [
             f"--instrumentation_filter=@{module.name}",
             f"@{module.name}{module.metadata.code_root_path}",
         ]
@@ -158,7 +160,7 @@ def generate_markdown_report(
     title: str,
     columns: list[str],
     output_path: Path = Path("unit_test_summary.md"),
-) -> None:
+) -> str:
     # Build header and separator
     title = f"# {title}\n"
     header = "| " + " | ".join(columns) + " |"
@@ -171,6 +173,80 @@ def generate_markdown_report(
 
     md = "\n".join([title, header, separator] + rows + [""])
     output_path.write_text(md)
+    return md
+
+
+def append_to_step_summary(*blocks: str) -> None:
+    """Mirror the reports into the job summary GitHub shows above the log.
+
+    Writing straight from the data keeps what gets published tied to this run.
+    The markdown files are still needed by the documentation build, but nothing
+    reads them back, so a stale or hand-edited copy cannot be mistaken for a
+    result. Outside of Actions the variable is unset and this does nothing.
+    """
+    step_summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    if not step_summary:
+        return
+    with open(step_summary, "a", encoding="utf-8") as handle:
+        handle.write("\n".join(blocks))
+
+
+STATUS_LABELS = {"pass": "✅ pass", "FAILED": "❌ FAILED", "skipped": "⚪ skipped"}
+
+
+def with_status(data: dict[str, dict[str, int]]) -> dict[str, dict[str, int]]:
+    """Derive a readable status column from the exit code each runner reports.
+
+    Without it a module whose Bazel invocation aborted during analysis is
+    indistinguishable from one that simply has no tests: both show up as all
+    zeroes, and ``failed`` even claims zero failures. An explicit status set by
+    the caller (``skipped``) wins over the derived one.
+
+    The emoji carries the colour: Markdown offers no way to colour a table cell
+    that survives both GitHub and the Sphinx build of these same files. The word
+    stays next to it so the table is still readable where emoji are not.
+    """
+    return {
+        name: {
+            **stats,
+            "status": STATUS_LABELS[stats.get("status") or ("pass" if stats.get("exit_code", 0) == 0 else "FAILED")],
+        }
+        for name, stats in data.items()
+    }
+
+
+def report_failures(unit_tests: dict[str, dict[str, int]], coverage: dict[str, dict[str, int]]) -> list[str]:
+    """Name every module that failed, via annotations and a final summary block.
+
+    ``::error`` annotations are rendered by GitHub above the step list of the
+    run, so the failing module is visible without opening the log at all.
+    """
+    failed = sorted(name for name, stats in unit_tests.items() if stats.get("exit_code", 0) != 0)
+
+    for name in failed:
+        print(
+            f"::error title=Unit tests failed::{name}: bazel exited with "
+            f"{unit_tests[name]['exit_code']} and produced no test results"
+        )
+    for name, stats in coverage.items():
+        # A coverage run that was skipped is already covered by the unit test
+        # annotation for the same module; annotating it again is just noise.
+        if stats.get("exit_code", 0) != 0 and stats.get("status") != "skipped":
+            print(f"::error title=Coverage failed::{name}: coverage extraction did not succeed")
+
+    print_centered("QR: UNIT TEST EXECUTION SUMMARY", fillchar="=")
+    for name, stats in sorted(unit_tests.items()):
+        if stats.get("exit_code", 0) == 0:
+            print(f"  pass    {name:<26} {stats['passed']:>6} passed, {stats['skipped']:>3} skipped")
+    for name in failed:
+        print(f"  FAILED  {name:<26} bazel exit code {unit_tests[name]['exit_code']}, no results")
+
+    if failed:
+        print_centered(
+            f"QR: {len(failed)} of {len(unit_tests)} MODULES FAILED: {', '.join(failed)}",
+            fillchar="=",
+        )
+    return failed
 
 
 def extract_ut_summary(logs: str) -> dict[str, int]:
@@ -280,6 +356,45 @@ def run_command(command: list[str], **kwargs) -> ProcessResult:
     return ProcessResult(stdout="".join(stdout_data), stderr="".join(stderr_data), exit_code=exit_code)
 
 
+def run_integration_tests(known, modules_to_test: list[str], trust_cache: bool = False) -> bool:
+    """Run each module's integration test suite, mirroring the unit-test loop.
+
+    Iterates over the target_sw modules and runs ``integration_test_targets`` for
+    every module that declares them in known_good.json. Returns True when at least
+    one suite failed, matching ``main``'s convention so the process exits non-zero.
+
+    Driven from known_good.json (checked out from the PR head) rather than the
+    workflow YAML on purpose: the Code Quality & Documentation job runs via
+    ``pull_request_target``, which reads the YAML from the base branch, so a module
+    upgrade PR could not adjust the targets or flags in lockstep. This can.
+    """
+    summary = {}
+    for module in known.modules["target_sw"].values():
+        if modules_to_test and module.name not in modules_to_test:
+            continue
+        if not module.metadata.integration_test_targets:
+            continue
+        print_centered(f"QR: Running integration tests for {module.name}")
+        call = (
+            ["bazel", "test", "--lockfile_mode=error", "--config=linux-x86_64"]
+            + ([] if trust_cache else ["--nocache_test_results"])
+            + [f"--{flag}" for flag in module.metadata.integration_test_config]
+            + [f"@{module.name}{target}" for target in module.metadata.integration_test_targets]
+        )
+        summary[module.name] = {"exit_code": run_command(call).exit_code}
+
+    failed = sorted(name for name, result in summary.items() if result["exit_code"] != 0)
+    for name in failed:
+        print(f"::error title=Integration tests failed::{name}: bazel exited with {summary[name]['exit_code']}")
+
+    print_centered("QR: INTEGRATION TEST EXECUTION SUMMARY", fillchar="=")
+    for name, result in sorted(summary.items()):
+        print(f"  {'pass' if result['exit_code'] == 0 else 'FAILED':<7} {name}")
+    if failed:
+        print_centered(f"QR: {len(failed)} of {len(summary)} MODULES FAILED: {', '.join(failed)}", fillchar="=")
+    return bool(failed)
+
+
 def parse_arguments() -> argparse.Namespace:
     import argparse
 
@@ -302,22 +417,39 @@ def parse_arguments() -> argparse.Namespace:
         default=[],
         help="List of modules to test",
     )
+    parser.add_argument(
+        "--integration-tests",
+        action="store_true",
+        help="Run each module's integration test suite (its known_good.json "
+        "integration_test_targets) instead of the unit tests and coverage. Kept "
+        "here rather than in the workflow YAML because that YAML is read from the "
+        "base branch under pull_request_target and could not be changed by a "
+        "module upgrade PR.",
+    )
+    parser.add_argument(
+        "--trust-cache",
+        action="store_true",
+        help="Allow Bazel to reuse cached test/coverage results for unchanged modules instead of always "
+        "re-executing them (--nocache_test_results). Note that --nocache_test_results suppresses not only "
+        "reading but also writing test results into the disk-cache, so omitting --trust-cache on a run that "
+        "populates a shared cache makes that cache useless for subsequent runs. Omit it only for "
+        "authoritative runs whose artifacts are published (e.g. release).",
+    )
     return parser.parse_args()
 
 
-def main() -> bool:
-    args = parse_arguments()
+def run_unit_tests(known, args: argparse.Namespace) -> bool:
+    """Run unit tests and coverage for every module, mirroring run_integration_tests.
+
+    Returns True when any test or coverage extraction failed, so the process
+    exits non-zero.
+    """
     configure_aslr_for_sanitizers()
     args.coverage_output_dir.mkdir(parents=True, exist_ok=True)
     path_to_docs = Path(__file__).parent.parent / "docs/verification_report"
     path_to_docs.mkdir(parents=True, exist_ok=True)
 
-    known = load_known_good(args.known_good_path.resolve())
-
     unit_tests_summary, coverage_summary = {}, {}
-
-    if args.modules_to_test:
-        print_centered(f"QR: User requested tests only for specified modules: {', '.join(args.modules_to_test)}")
 
     for module in known.modules["target_sw"].values():
         if args.modules_to_test and module.name not in args.modules_to_test:
@@ -325,7 +457,17 @@ def main() -> bool:
             continue
 
         print_centered(f"QR: Testing module: {module.name}")
-        unit_tests_summary[module.name] = run_unit_test_with_coverage(module=module)
+        unit_tests_summary[module.name] = run_unit_test_with_coverage(module=module, trust_cache=args.trust_cache)
+
+        # Coverage extraction reads the .dat file Bazel leaves in a fixed
+        # location. When the test run failed, that file is still the one the
+        # previous module produced, so genhtml would silently report another
+        # module's numbers under this module's name.
+        if unit_tests_summary[module.name]["exit_code"] != 0:
+            print_centered(f"QR: Skipping coverage for {module.name}: unit test run failed")
+            for lang in module.metadata.langs:
+                coverage_summary[f"{module.name}_{lang}"] = {"exit_code": 1, "status": "skipped"}
+            continue
 
         if "cpp" in module.metadata.langs:
             coverage_summary[f"{module.name}_cpp"] = run_cpp_coverage_extraction(
@@ -345,26 +487,34 @@ def main() -> bool:
 
         print_centered(f"QR: Finished testing module: {module.name}")
 
-    generate_markdown_report(
-        unit_tests_summary,
+    unit_tests_md = generate_markdown_report(
+        with_status(unit_tests_summary),
         title="Unit Test Execution Summary",
-        columns=["module", "passed", "failed", "skipped", "total"],
+        columns=["module", "status", "passed", "failed", "skipped", "total"],
         output_path=path_to_docs / "unit_test_summary.md",
     )
-    print_centered("QR: UNIT TEST EXECUTION SUMMARY", fillchar="=")
-    pprint(unit_tests_summary, width=120)
-
-    generate_markdown_report(
-        coverage_summary,
+    coverage_md = generate_markdown_report(
+        with_status(coverage_summary),
         title="Coverage Analysis Summary",
-        columns=["module", "lines", "functions", "branches"],
+        columns=["module", "status", "lines", "functions", "branches"],
         output_path=path_to_docs / "coverage_summary.md",
     )
-    print_centered("QR: COVERAGE ANALYSIS SUMMARY", fillchar="=")
-    pprint(coverage_summary, width=120)
+    append_to_step_summary(unit_tests_md, coverage_md)
+
+    report_failures(unit_tests_summary, coverage_summary)
 
     # Check all exit codes and return non-zero if any test or coverage extraction failed
     return any(r["exit_code"] != 0 for r in {**unit_tests_summary, **coverage_summary}.values())
+
+
+def main() -> bool:
+    args = parse_arguments()
+    known = load_known_good(args.known_good_path.resolve())
+    if args.modules_to_test:
+        print_centered(f"QR: User requested tests only for specified modules: {', '.join(args.modules_to_test)}")
+    if args.integration_tests:
+        return run_integration_tests(known, args.modules_to_test, args.trust_cache)
+    return run_unit_tests(known, args)
 
 
 if __name__ == "__main__":

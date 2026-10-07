@@ -55,11 +55,11 @@ Selected modules are fully implemented and tested.
      - Lifecycle management
    * - `Security/Crypto <https://github.com/eclipse-score/inc_security_crypto>`__
      - Cryptographic services
-   * - `Diagnosis <https://github.com/eclipse-score/inc_diagnosis>`__
+   * - `Diagnosis <https://github.com/eclipse-score/inc_diagnostics>`__
      - On-board diagnostics / DTC management
    * - `NM <https://github.com/eclipse-score/inc_nm>`__
      - Network management
-   * - `Some/IP <https://github.com/eclipse-score/someip>`__
+   * - `Some/IP <https://github.com/eclipse-score/inc_someip_gateway>`__
      - SOME/IP communication middleware
 
 Qualifiable State

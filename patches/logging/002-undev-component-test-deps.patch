@@ -1,0 +1,44 @@
+diff --git a/MODULE.bazel b/MODULE.bazel
+index 45a6aafd..afd6a2aa 100644
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -42,15 +42,15 @@ bazel_dep(name = "score_rust_policies", version = "0.0.5")
+ bazel_dep(name = "score_process_description", version = "2.1.2")
+ bazel_dep(name = "score_platform", version = "0.7.2")
+ 
+-bazel_dep(name = "score_itf", version = "0.5.0", dev_dependency = True)
++bazel_dep(name = "score_itf", version = "0.5.0")
+ 
+ # OCI / Docker image rules for integration tests
+-bazel_dep(name = "rules_oci", version = "2.2.7", dev_dependency = True)
++bazel_dep(name = "rules_oci", version = "2.2.7")
+ 
+ bazel_dep(name = "rules_pkg", version = "1.2.0")
+ 
+ # QNX image filesystem rules for QNX integration tests
+-bazel_dep(name = "score_rules_imagefs", version = "0.1.0", dev_dependency = True)
++bazel_dep(name = "score_rules_imagefs", version = "0.1.0")
+ 
+ imagefs = use_extension("@score_rules_imagefs//extensions:imagefs.bzl", "imagefs", dev_dependency = True)
+ imagefs.toolchain(
+@@ -75,7 +75,7 @@ use_repo(
+     "score_qnx_x86_64_ifs_toolchain",
+ )
+ 
+-oci = use_extension("@rules_oci//oci:extensions.bzl", "oci", dev_dependency = True)
++oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
+ oci.pull(
+     name = "ubuntu_24_04",
+     digest = "sha256:2e863c44b718727c860746568e1d54afd13b2fa71b160f5cd9058fc436217b30",
+diff --git a/score/test/component/defs.bzl b/score/test/component/defs.bzl
+index 665f891a..0177a698 100644
+--- a/score/test/component/defs.bzl
++++ b/score/test/component/defs.bzl
+@@ -66,7 +66,6 @@ def py_logging_itf_test(name, srcs, filesystem, filesystem_pkg, extra_oci_tars =
+             filesystem_pkg,
+         ],
+         build_file = "{}:init_build".format(_ENV),
+-        extra_build_files = ["{}:system_build".format(_ENV)],
+         target_compatible_with = [
+             "@platforms//cpu:x86_64",
+             "@platforms//os:qnx",
