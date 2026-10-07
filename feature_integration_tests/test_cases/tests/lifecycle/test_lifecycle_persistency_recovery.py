@@ -44,8 +44,6 @@ survived. See the test docstring for the precise claim being verified.
 """
 
 import json
-
-# import psutil
 import signal
 import subprocess
 import time
@@ -225,21 +223,6 @@ def _find_supervised_process(daemon: Any, process_name: str) -> int | None:
             # Process terminated or is inaccessible.
             continue
     return None
-    # try:
-    #     daemon_pid = daemon.process.pid
-    #     daemon_proc = psutil.Process(daemon_pid)
-
-    #     # Search through daemon's child processes
-    #     for child in daemon_proc.children(recursive=True):
-    #         try:
-    #             if process_name in " ".join(child.cmdline()):
-    #                 return child.pid
-    #         except (psutil.NoSuchProcess, psutil.AccessDenied):
-    #             continue
-
-    #     return None
-    # except (psutil.NoSuchProcess, psutil.AccessDenied):
-    #     return None
 
 
 def _force_kill_supervised_process(pid: int, *, sandbox_privileged: bool) -> tuple[bool, str]:
