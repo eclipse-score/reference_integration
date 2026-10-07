@@ -58,10 +58,8 @@ class TestConditionalLaunchingBlocksOnMissingDependency:
 
     @add_test_properties(
         partially_verifies=[
-            "feat_req__lifecycle__waitfor_support",
-            "feat_req__lifecycle__dependency_check",
+            "feat_req__lifecycle__conditional_startup",
             "feat_req__lifecycle__process_ordering",
-            "feat_req__lifecycle__define_swc_dependencies",
         ],
         test_type="requirements-based",
         derivation_technique="requirements-analysis",
@@ -73,8 +71,8 @@ class TestConditionalLaunchingBlocksOnMissingDependency:
         launch failure at least twice (it keeps retrying rather than aborting). After cpp is made
         executable, cpp and then rust must be running within 8 s each.
 
-        Limitations: "running" is pgrep process existence; rust has a single dependency, so
-        `dependency_check` ("all dependencies") cannot be told apart from "any dependency".
+        Limitations: "running" is pgrep process existence; rust has a single dependency, so this
+        does not distinguish single-edge gating from multi-dependency behavior.
         No `cond_process_start` claim: that requirement is about starting on the return value
         of earlier processes, which this config does not use.
         """

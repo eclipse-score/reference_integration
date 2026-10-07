@@ -188,9 +188,8 @@ score_py_pytest(
     deps = all_requirements,
 )
 
-# Dedicated, isolated coverage for ready_recovery_action.restart.number_of_attempts
-# (feat_req__lifecycle__retries_configurable). Each daemon invocation generates its own
-# single-component config and runtime tree under TEST_TMPDIR.
+# Dedicated, isolated coverage for ready_recovery_action.restart.number_of_attempts. Each daemon
+# invocation generates its own single-component config and runtime tree under TEST_TMPDIR.
 score_py_pytest(
     name = "fit_lifecycle_retries",
     timeout = "long",
