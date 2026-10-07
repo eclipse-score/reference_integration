@@ -44,7 +44,8 @@ survived. See the test docstring for the precise claim being verified.
 """
 
 import json
-import psutil
+
+# import psutil
 import signal
 import subprocess
 import time
@@ -178,21 +179,67 @@ def _find_supervised_process(daemon: Any, process_name: str) -> int | None:
     int | None
         PID of the supervised process if found, None otherwise.
     """
+    daemon_pid = daemon.process.pid
+
+    # Build parent -> children mapping from /proc.
+    children_by_parent: dict[int, list[int]] = {}
+
     try:
-        daemon_pid = daemon.process.pid
-        daemon_proc = psutil.Process(daemon_pid)
-
-        # Search through daemon's child processes
-        for child in daemon_proc.children(recursive=True):
-            try:
-                if process_name in " ".join(child.cmdline()):
-                    return child.pid
-            except (psutil.NoSuchProcess, psutil.AccessDenied):
-                continue
-
+        proc_entries = list(Path("/proc").iterdir())
+    except OSError:
         return None
-    except (psutil.NoSuchProcess, psutil.AccessDenied):
-        return None
+
+    for entry in proc_entries:
+        if not entry.name.isdigit():
+            continue
+
+        pid = int(entry.name)
+
+        try:
+            status = (entry / "status").read_text()
+            ppid = None
+            for line in status.splitlines():
+                if line.startswith("PPid:"):
+                    ppid = int(line.split()[1])
+                    break
+            if ppid is not None:
+                children_by_parent.setdefault(ppid, []).append(pid)
+        except (FileNotFoundError, PermissionError, ProcessLookupError):
+            continue  # Process disappeared or cannot be inspected.
+
+    # Recursively search daemon descendants.
+    pending = list(children_by_parent.get(daemon_pid, []))
+
+    while pending:
+        pid = pending.pop()
+        # Equivalent to psutil.children(recursive=True).
+        pending.extend(children_by_parent.get(pid, []))
+        try:
+            cmdline = Path(f"/proc/{pid}/cmdline").read_bytes()
+
+            # /proc/<pid>/cmdline is NUL-separated.
+            command = cmdline.replace(b"\0", b" ").decode(errors="replace")
+            if process_name in command:
+                return pid
+        except (FileNotFoundError, PermissionError, ProcessLookupError):
+            # Process terminated or is inaccessible.
+            continue
+    return None
+    # try:
+    #     daemon_pid = daemon.process.pid
+    #     daemon_proc = psutil.Process(daemon_pid)
+
+    #     # Search through daemon's child processes
+    #     for child in daemon_proc.children(recursive=True):
+    #         try:
+    #             if process_name in " ".join(child.cmdline()):
+    #                 return child.pid
+    #         except (psutil.NoSuchProcess, psutil.AccessDenied):
+    #             continue
+
+    #     return None
+    # except (psutil.NoSuchProcess, psutil.AccessDenied):
+    #     return None
 
 
 def _force_kill_supervised_process(pid: int, *, sandbox_privileged: bool) -> tuple[bool, str]:
