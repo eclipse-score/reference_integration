@@ -43,12 +43,10 @@ git_override(
 bazel_dep(name = "score_persistency")
 git_override(
     module_name = "score_persistency",
-    commit = "323950c42431956ce76bf48c407a1709f114876d",
+    commit = "961c0a0989755a1e0fe8de55e83c0a44e2e20b56",
     patch_strip = 1,
     patches = [
-        "//patches/persistency:003-pip-not-dev-dependency.patch",
-        "//patches/persistency:004-imagefs-not-dev-dependency.patch",
-        "//patches/persistency:005-googletest-not-dev-dependency.patch",
+        "//patches/persistency:003-undev-deps-for-root-module.patch",
     ],
     remote = "https://github.com/eclipse-score/persistency.git",
 )
@@ -67,6 +65,7 @@ git_override(
     patch_strip = 1,
     patches = [
         "//patches/lifecycle:001-migrate-baselibs-rust-targets.patch",
+        "//patches/lifecycle:002-undev-integration-test-deps.patch",
     ],
     remote = "https://github.com/eclipse-score/lifecycle.git",
 )
@@ -74,10 +73,10 @@ git_override(
 bazel_dep(name = "score_logging")
 git_override(
     module_name = "score_logging",
-    commit = "b4f272b0a036d46fc7ff2e9a051fdec95fd23b4f",
+    commit = "3d9896611baf4e0d018032e5cb999941b2602dbd",
     patch_strip = 1,
     patches = [
-        "//patches/logging:001-migrate-baselibs-targets.patch",
+        "//patches/logging:002-undev-component-test-deps.patch",
     ],
     remote = "https://github.com/eclipse-score/logging.git",
 )
