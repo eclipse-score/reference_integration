@@ -15,80 +15,22 @@
 #define INTERNALS_PERSISTENCY_KVS_BUILD_HELPERS_H_
 
 #include "kvs_parameters.h"
+#include "internals/log_helpers.h"
 
 #include <kvs.hpp>
 #include <kvsbuilder.hpp>
 
-#include <chrono>
-#include <iostream>
-#include <locale>
 #include <optional>
-#include <sstream>
 #include <stdexcept>
 #include <string>
 
 namespace kvs_build_helpers {
 
-/**
- * @brief Return the current UNIX timestamp as a decimal string (seconds).
- *
- * Used to populate the "timestamp" field in structured JSON log lines so that
- * the C++ output matches the Rust tracing JSON shape expected by the FIT log
- * filters.
- *
- * @return String containing the number of seconds since the UNIX epoch.
- */
-inline std::string unix_seconds_string() {
-    const auto now = std::chrono::system_clock::now();
-    const auto secs =
-        std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch()).count();
-    return std::to_string(secs);
-}
-
-/**
- * @brief Emit a structured JSON INFO log line to stdout.
- *
- * Matches the Rust tracing JSON format expected by the FIT LogContainer so
- * that Python test assertions can use find_log() uniformly for both Rust and
- * C++ scenarios.
- *
- * Example output:
- * @code
- * {"timestamp":"1234567890","level":"INFO","fields":{"key":"my_key","value":42.0},
- *  "target":"cpp_test_scenarios::scenarios::persistency::my_module","threadId":"ThreadId(1)"}
- * @endcode
- *
- * @param fields  JSON fragment for the "fields" object, e.g. @c "\"key\":\"x\",\"value\":1.0"
- * @param target  Module target string embedded in the log line.
- */
-inline void log_info(const std::string& fields, const std::string& target) {
-    std::cout << "{\"timestamp\":\"" << unix_seconds_string()
-              << "\",\"level\":\"INFO\",\"fields\":{" << fields
-              << "},\"target\":\"" << target
-              << "\",\"threadId\":\"ThreadId(1)\"}\n";
-}
-
-/**
- * @brief Format a double value to match Python's str(float) representation.
- *
- * For whole-number values (e.g. 42.0, 200.0) this appends ".0" so that the
- * resulting string matches what Python's f-string interpolation produces.
- * Non-integer values (e.g. 3.14) are printed as-is by the default stream.
- *
- * @param v Double value to format.
- * @return String representation matching Python float str().
- */
-inline std::string format_double_python(double v) {
-    std::ostringstream oss;
-    oss.imbue(std::locale::classic());  // Ensure '.' decimal separator regardless of process locale.
-    oss << v;
-    std::string s = oss.str();
-    if (s.find('.') == std::string::npos && s.find('e') == std::string::npos &&
-        s.find('E') == std::string::npos) {
-        s += ".0";
-    }
-    return s;
-}
+// Generic structured-log helpers live in the feature-neutral internals/log_helpers.h so the
+// log line format (including json_escape of `target`) is defined once for all scenarios.
+using log_helpers::format_double_python;
+using log_helpers::log_info;
+using log_helpers::unix_seconds_string;
 
 /**
  * @brief Convert an optional KvsDefaults mode to the boolean flag expected by KvsBuilder.
