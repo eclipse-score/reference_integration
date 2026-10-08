@@ -11,147 +11,65 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-load("@rules_pkg//pkg:mappings.bzl", "REMOVE_BASE_DIRECTORY", "pkg_attributes", "pkg_files")
+load("@rules_pkg//pkg:mappings.bzl", "pkg_attributes", "pkg_files", "strip_prefix")
 load("@score_rules_imagefs//rules/qnx:ifs.bzl", "qnx_ifs")
 
-# score_rules_imagefs derives the mkifs placement directives from these
-# rules_pkg targets, so the destination path, permissions and owner of every
-# Bazel-provided file are declared here instead of in system.build.
-
+# x86_64-specific early hardware init fragment, sourced by the common
+# /etc/startup.sh, placed as /etc/startup-hw.sh (0700).
 pkg_files(
-    name = "etc_scripts",
-    srcs = [
-        "//images/qnx_x86_64/configs:network_setup.sh",
-        "//images/qnx_x86_64/configs:network_setup_dhcp.sh",
-        "//images/qnx_x86_64/configs:startup.sh",
-    ],
+    name = "etc_startup_hw",
+    srcs = ["//images/qnx_x86_64/configs:startup-hw.sh"],
     attributes = pkg_attributes(mode = "0700"),
     prefix = "etc",
-    visibility = ["//visibility:private"],
+    strip_prefix = strip_prefix.files_only(),
 )
 
+# x86_64 PCI configuration files in /proc/boot (0444).
+#
+# These must live in /proc/boot (the boot IFS) because pci-server and the
+# pci_hw module read them during early boot, before the on-disk root
+# filesystem is available. On the pre-migration image they were bare-name
+# mkifs entries, which mkifs places under its default /proc/boot prefix;
+# the "proc/boot" pkg_files prefix reproduces that exact layout.
 pkg_files(
-    name = "etc_network_capture",
-    srcs = ["//images/qnx_x86_64/configs:network_capture.sh"],
-    attributes = pkg_attributes(mode = "0755"),
-    prefix = "etc",
-    renames = {"//images/qnx_x86_64/configs:network_capture.sh": "network_capture"},
-    visibility = ["//visibility:private"],
-)
-
-# mkifs resolves a bare filename against its default /proc/boot prefix, which is
-# how these were written before; the prefix is explicit now because
-# score_rules_imagefs always emits an absolute destination. startup.sh and
-# pci_server.cfg reference these by their /proc/boot path.
-pkg_files(
-    name = "boot_configs",
+    name = "pci_configs",
     srcs = [
         "//images/qnx_x86_64/configs:pci_hw.cfg",
         "//images/qnx_x86_64/configs:pci_server.cfg",
-        "//images/qnx_x86_64/configs:qcrypto.conf",
     ],
     attributes = pkg_attributes(mode = "0444"),
     prefix = "proc/boot",
-    visibility = ["//visibility:private"],
+    strip_prefix = strip_prefix.files_only(),
 )
 
-# These four carried no attribute block before, which made mkifs inherit the
-# host file mode. All four are 0644 in git; pin it.
-pkg_files(
-    name = "etc_identity",
-    srcs = [
-        "//images/qnx_x86_64/configs:group",
-        "//images/qnx_x86_64/configs:hostname",
-        "//images/qnx_x86_64/configs:passwd",
-        "//images/qnx_x86_64/configs:profile",
-    ],
-    attributes = pkg_attributes(mode = "0644"),
-    prefix = "etc",
-    visibility = ["//visibility:private"],
-)
-
-pkg_files(
-    name = "etc_dhcpcd",
-    srcs = ["//images/qnx_x86_64/configs:dhcpcd.conf"],
-    attributes = pkg_attributes(mode = "0644"),
-    prefix = "etc",
-    visibility = ["//visibility:private"],
-)
-
-pkg_files(
-    name = "ssh_config",
-    srcs = ["//images/qnx_x86_64/configs:sshd_config"],
-    attributes = pkg_attributes(mode = "0444"),
-    prefix = "var/ssh",
-    visibility = ["//visibility:private"],
-)
-
-pkg_files(
-    name = "ssh_host_keys",
-    srcs = [
-        "//images/qnx_x86_64/configs:ssh_host_rsa_key",
-        "//images/qnx_x86_64/configs:ssh_host_rsa_key.pub",
-    ],
-    attributes = pkg_attributes(
-        gid = 0,
-        mode = "0400",
-        uid = 0,
-    ),
-    prefix = "var/ssh",
-    visibility = ["//visibility:private"],
-)
-
-pkg_files(
-    name = "etc_comm_configs",
-    srcs = ["//feature_integration_tests/configs:etc_configs"],
-    attributes = pkg_attributes(mode = "0777"),
-    prefix = "etc",
-    visibility = ["//visibility:private"],
-)
-
-pkg_files(
-    name = "datarouter",
-    srcs = ["@score_logging//score/datarouter"],
-    attributes = pkg_attributes(mode = "0777"),
-    prefix = "usr/bin/datarouter",
-    visibility = ["//visibility:private"],
-)
-
-pkg_files(
-    name = "datarouter_configs",
-    srcs = ["//feature_integration_tests/configs/datarouter:etc_configs"],
-    attributes = pkg_attributes(mode = "0644"),
-    prefix = "usr/bin/datarouter/etc",
-    visibility = ["//visibility:private"],
-)
-
-# REMOVE_BASE_DIRECTORY drops the bundle's contents at the image root, which is
-# what `[perms=777] / = ${BUNDLE_PATH}` did.
-pkg_files(
-    name = "showcases",
-    srcs = ["//showcases"],
-    attributes = pkg_attributes(mode = "0777"),
-    renames = {"//showcases": REMOVE_BASE_DIRECTORY},
-    visibility = ["//visibility:private"],
-)
+# The architecture-independent configuration files are shared via
+# //images/qnx_common/configs; the application packaging (datarouter
+# binary/configs, communication configs, persistency test binary) via
+# //images/common/apps.
 
 qnx_ifs(
     name = "init",
     srcs = [
-        ":boot_configs",
-        ":datarouter",
-        ":datarouter_configs",
-        ":etc_comm_configs",
-        ":etc_dhcpcd",
-        ":etc_identity",
-        ":etc_network_capture",
-        ":etc_scripts",
-        ":showcases",
-        ":ssh_config",
-        ":ssh_host_keys",
+        ":etc_startup_hw",
+        ":pci_configs",
+        "//images/common/apps:cpp_tests_persistency_bin",
+        "//images/common/apps:datarouter_bin",
+        "//images/common/apps:datarouter_configs",
+        "//images/common/apps:etc_comm_configs",
+        "//images/qnx_common/configs:etc_configs",
+        "//images/qnx_common/configs:etc_network_capture",
+        "//images/qnx_common/configs:etc_scripts",
+        "//images/qnx_common/configs:qcrypto_config",
+        "//images/qnx_common/configs:var_ssh_config",
+        "//images/qnx_common/configs:var_ssh_keys",
+        "//showcases:showcases_bundle",
     ],
     build_file = "init.build",
-    extra_build_files = ["system.build"],
+    extra_build_files = [
+        "//images/qnx_common/build:common_init.build",
+        "//images/qnx_common/build:common_system.build",
+        "system.build",
+    ],
     visibility = [
         "//visibility:public",
     ],
