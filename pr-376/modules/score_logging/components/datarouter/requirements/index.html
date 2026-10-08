@@ -542,9 +542,53 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="datarouter-component-requirements">
+  
+<style>
+.score-testcase-result {
+  font-weight: bold;
+}
+.score-testcase-result--passed {
+  color: #146c2e;
+}
+.score-testcase-result--failed {
+  color: #b42318;
+}
+.score-testcase-result--skipped {
+  color: #8a5300;
+}
+.score-testcase-result--disabled {
+  color: #5f6368;
+}
+html[data-theme="dark"] .score-testcase-result--passed {
+  color: #7ee787;
+}
+html[data-theme="dark"] .score-testcase-result--failed {
+  color: #ff7b72;
+}
+html[data-theme="dark"] .score-testcase-result--skipped {
+  color: #d29922;
+}
+html[data-theme="dark"] .score-testcase-result--disabled {
+  color: #c4cad2;
+}
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) .score-testcase-result--passed {
+    color: #7ee787;
+  }
+  html:not([data-theme="light"]) .score-testcase-result--failed {
+    color: #ff7b72;
+  }
+  html:not([data-theme="light"]) .score-testcase-result--skipped {
+    color: #d29922;
+  }
+  html:not([data-theme="light"]) .score-testcase-result--disabled {
+    color: #c4cad2;
+  }
+}
+</style>
+<section id="datarouter-component-requirements">
 <h1>Datarouter Component Requirements<a class="headerlink" href="#datarouter-component-requirements" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-6b9dac60">
+<div class="need_container docutils container" id="SNCB-fa8d4a71">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__data_router_requirements">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -589,7 +633,7 @@
 </div>
 <section id="datarouter-services">
 <h2>Datarouter Services<a class="headerlink" href="#datarouter-services" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-261019d1">
+<div class="need_container docutils container" id="SNCB-538f3829">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__data_router__dlt_server">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -609,6 +653,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_testlink"><span class="needs_label">testlink: </span><span class="needs_data"><a class="reference external" href="https://github.com/eclipse-score/logging/blob/3d9896611baf4e0d018032e5cb999941b2602dbd/../score_logging+/score/test/component/datarouter/test_logging_after_delayed_dr_start.py#L46">test_logging_after_delayed_dr_start<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/log_and_trace/logging/requirements/index.html#feat_req__logging__compat_dlt" title="comp_req__data_router__dlt_server">feat_req__logging__compat_dlt</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/log_and_trace/logging/requirements/index.html#feat_req__logging__log_sinks_network" title="comp_req__data_router__dlt_server">feat_req__logging__log_sinks_network</a></span></span></div>
@@ -635,7 +680,7 @@ send messages using DLT protocol over UDP multicast transport.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-07b25be6">
+<div class="need_container docutils container" id="SNCB-3f66ed33">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__data_router__dlt_multiple_channels">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -685,7 +730,7 @@ assignments per application/context.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-548a761b">
+<div class="need_container docutils container" id="SNCB-30a85885">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__data_router__dlt_message_filtering">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -705,6 +750,7 @@ assignments per application/context.</p></td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_testlink"><span class="needs_label">testlink: </span><span class="needs_data"><a class="reference external" href="https://github.com/eclipse-score/logging/blob/3d9896611baf4e0d018032e5cb999941b2602dbd/../score_logging+/score/test/component/datarouter/test_datarouter_filters.py#L42">test_datarouter_filters<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/log_and_trace/logging/requirements/index.html#feat_req__logging__config_log_filter" title="comp_req__data_router__dlt_message_filtering">feat_req__logging__config_log_filter</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/log_and_trace/logging/requirements/index.html#feat_req__logging__filtering_entity_id" title="comp_req__data_router__dlt_message_filtering">feat_req__logging__filtering_entity_id</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/log_and_trace/logging/requirements/index.html#feat_req__logging__filtering_log_levels" title="comp_req__data_router__dlt_message_filtering">feat_req__logging__filtering_log_levels</a></span></span></div>
@@ -733,7 +779,7 @@ be part of channel configuration file, located in the following path:
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-5f2256e4">
+<div class="need_container docutils container" id="SNCB-ca4c8980">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__data_router__dlt_verbose_messages">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -782,7 +828,7 @@ library shall be sent via DLT using verbose mode.</p></td>
 </section>
 <section id="dlt-quotas">
 <h2>DLT Quotas<a class="headerlink" href="#dlt-quotas" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-89d26fbc">
+<div class="need_container docutils container" id="SNCB-6c4ad854">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__data_router__dlt_bw_quota_config">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -802,6 +848,7 @@ library shall be sent via DLT using verbose mode.</p></td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_testlink"><span class="needs_label">testlink: </span><span class="needs_data"><a class="reference external" href="https://github.com/eclipse-score/logging/blob/3d9896611baf4e0d018032e5cb999941b2602dbd/../score_logging+/score/test/component/datarouter/test_bandwidth_quotes_exists.py#L37">test_bandwidth_quotes_exists<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/log_and_trace/logging/requirements/index.html#feat_req__logging__config_buffer_size" title="comp_req__data_router__dlt_bw_quota_config">feat_req__logging__config_buffer_size</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/log_and_trace/logging/requirements/index.html#feat_req__logging__resource_comm_channel" title="comp_req__data_router__dlt_bw_quota_config">feat_req__logging__resource_comm_channel</a></span></span></div>
@@ -828,7 +875,7 @@ library shall be sent via DLT using verbose mode.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-43d862f9">
+<div class="need_container docutils container" id="SNCB-8bb358c5">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__data_router__dlt_quota_bw_reduction">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -848,6 +895,7 @@ library shall be sent via DLT using verbose mode.</p></td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_testlink"><span class="needs_label">testlink: </span><span class="needs_data"><a class="reference external" href="https://github.com/eclipse-score/logging/blob/3d9896611baf4e0d018032e5cb999941b2602dbd/../score_logging+/score/test/component/datarouter/test_quota_exceed.py#L144">test_quota_exceed<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/log_and_trace/logging/requirements/index.html#feat_req__logging__message_loss_handling" title="comp_req__data_router__dlt_quota_bw_reduction">feat_req__logging__message_loss_handling</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/log_and_trace/logging/requirements/index.html#feat_req__logging__qos_message_handling" title="comp_req__data_router__dlt_quota_bw_reduction">feat_req__logging__qos_message_handling</a></span></span></div>
