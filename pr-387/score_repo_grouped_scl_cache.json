@@ -2,7 +2,7 @@
   {
     "repo": {
       "name": "score_docs_as_code",
-      "hash": "47f686dcc802cfb89e6472c5fa9f05bfae5d550b",
+      "hash": "36cdc3f7a56e9651ee51ce91fd183bf3d947dd16",
       "url": "https://github.com/eclipse-score/docs-as-code"
     },
     "needs": [
@@ -532,10 +532,25 @@
           "CodeLinks": [
             {
               "file": "src/extensions/score_metamodel/checks/check_options.py",
-              "line": 287,
+              "line": 297,
               "tag": "# req-Id:",
               "need": "tool_req__docs_req_attr_validity_consistency",
               "full_line": "# req-Id: tool_req__docs_req_attr_validity_consistency"
+            }
+          ],
+          "TestLinks": []
+        }
+      },
+      {
+        "need": "tool_req__docs_common_attr_status_invalid",
+        "links": {
+          "CodeLinks": [
+            {
+              "file": "src/extensions/score_metamodel/log.py",
+              "line": 108,
+              "tag": "# req-Id:",
+              "need": "tool_req__docs_common_attr_status_invalid",
+              "full_line": "# req-Id: tool_req__docs_common_attr_status_invalid"
             }
           ],
           "TestLinks": []
@@ -1762,7 +1777,7 @@
           "CodeLinks": [
             {
               "file": "src/extensions/score_metamodel/metamodel.yaml",
-              "line": 1220,
+              "line": 1224,
               "tag": "# req-Id:",
               "need": "tool_req__docs_common_attr_safety_link_check",
               "full_line": "# req-Id: tool_req__docs_common_attr_safety_link_check"
@@ -1777,7 +1792,7 @@
           "CodeLinks": [
             {
               "file": "src/extensions/score_metamodel/metamodel.yaml",
-              "line": 1229,
+              "line": 1233,
               "tag": "# req-Id:",
               "need": "tool_req__docs_arch_link_qm_to_safety_req",
               "full_line": "# req-Id: tool_req__docs_arch_link_qm_to_safety_req"
@@ -1792,7 +1807,7 @@
           "CodeLinks": [
             {
               "file": "src/extensions/score_metamodel/metamodel.yaml",
-              "line": 1238,
+              "line": 1242,
               "tag": "# req-Id:",
               "need": "tool_req__docs_req_arch_link_safety_to_arch",
               "full_line": "# req-Id: tool_req__docs_req_arch_link_safety_to_arch"
@@ -1807,7 +1822,7 @@
           "CodeLinks": [
             {
               "file": "src/extensions/score_metamodel/metamodel.yaml",
-              "line": 1253,
+              "line": 1261,
               "tag": "# req-Id:",
               "need": "tool_req__docs_arch_link_security",
               "full_line": "# req-Id: tool_req__docs_arch_link_security"
@@ -12172,6 +12187,1890 @@
               "line": 77,
               "need": "comp_req__log__forward_to_system_logger",
               "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "repo": {
+      "name": "score_persistency",
+      "hash": "961c0a0989755a1e0fe8de55e83c0a44e2e20b56",
+      "url": "https://github.com/eclipse-score/persistency"
+    },
+    "needs": [
+      {
+        "need": "comp_req__kvs__value_default",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "TestDefaultValues__test_valid[optional-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestDefaultValues__test_valid[required-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestDefaultValues__test_valid[without-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestRemoveKey__test_valid[optional-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 211,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestRemoveKey__test_valid[required-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 211,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestRemoveKey__test_valid[without-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 211,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestMalformedDefaultsFile__test_invalid[optional-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 311,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestMalformedDefaultsFile__test_invalid[required-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 311,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestMissingDefaultsFile__test_invalid[required-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 353,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestResetAllKeys__test_valid[optional-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 402,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestResetAllKeys__test_valid[required-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 402,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestResetSingleKey__test_valid[optional-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 469,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestResetSingleKey__test_valid[required-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 469,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestChecksumOnProvidedDefaults__test_valid[optional-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 549,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestChecksumOnProvidedDefaults__test_valid[required-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 549,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestDefaultValues__test_valid[optional-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestDefaultValues__test_valid[required-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestDefaultValues__test_valid[without-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestRemoveKey__test_valid[optional-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 211,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestRemoveKey__test_valid[required-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 211,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestRemoveKey__test_valid[without-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 211,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestMalformedDefaultsFile__test_invalid[optional-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 311,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestMalformedDefaultsFile__test_invalid[required-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 311,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestMissingDefaultsFile__test_invalid[required-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 353,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestResetAllKeys__test_valid[optional-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 402,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestResetAllKeys__test_valid[required-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 402,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestResetSingleKey__test_valid[optional-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 469,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestResetSingleKey__test_valid[required-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 469,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestChecksumOnProvidedDefaults__test_valid[optional-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 549,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestChecksumOnProvidedDefaults__test_valid[required-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 549,
+              "need": "comp_req__kvs__value_default",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "comp_req__kvs__default_value_cfg",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "TestDefaultValues__test_valid[optional-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestDefaultValues__test_valid[required-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestDefaultValues__test_valid[without-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestRemoveKey__test_valid[optional-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 211,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestRemoveKey__test_valid[required-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 211,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestRemoveKey__test_valid[without-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 211,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestMalformedDefaultsFile__test_invalid[optional-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 311,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestMalformedDefaultsFile__test_invalid[required-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 311,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestMissingDefaultsFile__test_invalid[required-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 353,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestResetAllKeys__test_valid[optional-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 402,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestResetAllKeys__test_valid[required-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 402,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestResetSingleKey__test_valid[optional-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 469,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestResetSingleKey__test_valid[required-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 469,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestChecksumOnProvidedDefaults__test_valid[optional-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 549,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestChecksumOnProvidedDefaults__test_valid[required-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 549,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestDefaultValues__test_valid[optional-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestDefaultValues__test_valid[required-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestDefaultValues__test_valid[without-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestRemoveKey__test_valid[optional-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 211,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestRemoveKey__test_valid[required-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 211,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestRemoveKey__test_valid[without-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 211,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestMalformedDefaultsFile__test_invalid[optional-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 311,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestMalformedDefaultsFile__test_invalid[required-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 311,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestMissingDefaultsFile__test_invalid[required-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 353,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestResetAllKeys__test_valid[optional-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 402,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestResetAllKeys__test_valid[required-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 402,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestResetSingleKey__test_valid[optional-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 469,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestResetSingleKey__test_valid[required-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 469,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestChecksumOnProvidedDefaults__test_valid[optional-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 549,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestChecksumOnProvidedDefaults__test_valid[required-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 549,
+              "need": "comp_req__kvs__default_value_cfg",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "comp_req__kvs__default_value_types",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "TestDefaultValues__test_valid[optional-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__default_value_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestDefaultValues__test_valid[required-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__default_value_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestDefaultValues__test_valid[without-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__default_value_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestRemoveKey__test_valid[optional-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 211,
+              "need": "comp_req__kvs__default_value_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestRemoveKey__test_valid[required-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 211,
+              "need": "comp_req__kvs__default_value_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestRemoveKey__test_valid[without-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 211,
+              "need": "comp_req__kvs__default_value_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestMalformedDefaultsFile__test_invalid[optional-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 311,
+              "need": "comp_req__kvs__default_value_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestMalformedDefaultsFile__test_invalid[required-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 311,
+              "need": "comp_req__kvs__default_value_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestMissingDefaultsFile__test_invalid[required-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 353,
+              "need": "comp_req__kvs__default_value_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestResetAllKeys__test_valid[optional-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 402,
+              "need": "comp_req__kvs__default_value_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestResetAllKeys__test_valid[required-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 402,
+              "need": "comp_req__kvs__default_value_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestDefaultValues__test_valid[optional-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__default_value_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestDefaultValues__test_valid[required-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__default_value_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestDefaultValues__test_valid[without-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__default_value_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestRemoveKey__test_valid[optional-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 211,
+              "need": "comp_req__kvs__default_value_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestRemoveKey__test_valid[required-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 211,
+              "need": "comp_req__kvs__default_value_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestRemoveKey__test_valid[without-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 211,
+              "need": "comp_req__kvs__default_value_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestMalformedDefaultsFile__test_invalid[optional-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 311,
+              "need": "comp_req__kvs__default_value_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestMalformedDefaultsFile__test_invalid[required-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 311,
+              "need": "comp_req__kvs__default_value_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestMissingDefaultsFile__test_invalid[required-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 353,
+              "need": "comp_req__kvs__default_value_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestResetAllKeys__test_valid[optional-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 402,
+              "need": "comp_req__kvs__default_value_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestResetAllKeys__test_valid[required-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 402,
+              "need": "comp_req__kvs__default_value_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "comp_req__kvs__default_value_query",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "TestDefaultValues__test_valid[optional-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__default_value_query",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestDefaultValues__test_valid[required-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__default_value_query",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestDefaultValues__test_valid[without-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__default_value_query",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestDefaultValues__test_valid[optional-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__default_value_query",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestDefaultValues__test_valid[required-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__default_value_query",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestDefaultValues__test_valid[without-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 134,
+              "need": "comp_req__kvs__default_value_query",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "comp_req__kvs__value_reset",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "TestResetAllKeys__test_valid[optional-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 402,
+              "need": "comp_req__kvs__value_reset",
+              "verify_type": "fully",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestResetAllKeys__test_valid[required-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 402,
+              "need": "comp_req__kvs__value_reset",
+              "verify_type": "fully",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestResetAllKeys__test_valid[optional-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 402,
+              "need": "comp_req__kvs__value_reset",
+              "verify_type": "fully",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestResetAllKeys__test_valid[required-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 402,
+              "need": "comp_req__kvs__value_reset",
+              "verify_type": "fully",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "comp_req__kvs__default_val_chksum",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "TestChecksumOnProvidedDefaults__test_valid[optional-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 549,
+              "need": "comp_req__kvs__default_val_chksum",
+              "verify_type": "fully",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestChecksumOnProvidedDefaults__test_valid[required-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 549,
+              "need": "comp_req__kvs__default_val_chksum",
+              "verify_type": "fully",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestChecksumOnProvidedDefaults__test_valid[optional-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 549,
+              "need": "comp_req__kvs__default_val_chksum",
+              "verify_type": "fully",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestChecksumOnProvidedDefaults__test_valid[required-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_default_values.py",
+              "line": 549,
+              "need": "comp_req__kvs__default_val_chksum",
+              "verify_type": "fully",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "comp_req__kvs__multi_instance",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "TestMultipleInstanceIds__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py",
+              "line": 46,
+              "need": "comp_req__kvs__multi_instance",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSameInstanceIdSameValue__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py",
+              "line": 80,
+              "need": "comp_req__kvs__multi_instance",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSameInstanceIdDifferentValue__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py",
+              "line": 116,
+              "need": "comp_req__kvs__multi_instance",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestMultipleInstanceIds__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py",
+              "line": 46,
+              "need": "comp_req__kvs__multi_instance",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSameInstanceIdSameValue__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py",
+              "line": 80,
+              "need": "comp_req__kvs__multi_instance",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSameInstanceIdDifferentValue__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py",
+              "line": 116,
+              "need": "comp_req__kvs__multi_instance",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "comp_req__kvs__concurrency",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "TestMultipleInstanceIds__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py",
+              "line": 46,
+              "need": "comp_req__kvs__concurrency",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSameInstanceIdSameValue__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py",
+              "line": 80,
+              "need": "comp_req__kvs__concurrency",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSameInstanceIdDifferentValue__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py",
+              "line": 116,
+              "need": "comp_req__kvs__concurrency",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestMultipleInstanceIds__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py",
+              "line": 46,
+              "need": "comp_req__kvs__concurrency",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSameInstanceIdSameValue__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py",
+              "line": 80,
+              "need": "comp_req__kvs__concurrency",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSameInstanceIdDifferentValue__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_multiple_kvs.py",
+              "line": 116,
+              "need": "comp_req__kvs__concurrency",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "comp_req__kvs__snapshot_creation",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "TestSnapshotCountFirstFlush__test_ok[0-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 66,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "skipped",
+              "result_text": "https://github.com/eclipse-score/persistency/issues/108"
+            },
+            {
+              "name": "TestSnapshotCountFirstFlush__test_ok[1-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 66,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "skipped",
+              "result_text": "https://github.com/eclipse-score/persistency/issues/108"
+            },
+            {
+              "name": "TestSnapshotCountFirstFlush__test_ok[3-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 66,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "skipped",
+              "result_text": "https://github.com/eclipse-score/persistency/issues/108"
+            },
+            {
+              "name": "TestSnapshotCountFirstFlush__test_ok[10-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 66,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "skipped",
+              "result_text": "https://github.com/eclipse-score/persistency/issues/108"
+            },
+            {
+              "name": "TestSnapshotCountFull__test_ok[0-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 66,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "skipped",
+              "result_text": "https://github.com/eclipse-score/persistency/issues/108"
+            },
+            {
+              "name": "TestSnapshotCountFull__test_ok[1-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 66,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "skipped",
+              "result_text": "https://github.com/eclipse-score/persistency/issues/108"
+            },
+            {
+              "name": "TestSnapshotCountFull__test_ok[3-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 66,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "skipped",
+              "result_text": "https://github.com/eclipse-score/persistency/issues/108"
+            },
+            {
+              "name": "TestSnapshotCountFull__test_ok[10-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 66,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "skipped",
+              "result_text": "https://github.com/eclipse-score/persistency/issues/108"
+            },
+            {
+              "name": "TestSnapshotRestorePrevious__test_ok[3-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 177,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotRestorePrevious__test_ok[10-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 177,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotRestoreCurrent__test_error[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 213,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotRestoreNonexistent__test_error[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 252,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotPathsExist__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 283,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotPathsNonexistent__test_error[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 319,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotCountFirstFlush__test_ok[0-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 66,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotCountFirstFlush__test_ok[1-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 66,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotCountFirstFlush__test_ok[3-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 66,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotCountFirstFlush__test_ok[10-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 66,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotCountFull__test_ok[0-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 66,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotCountFull__test_ok[1-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 66,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotCountFull__test_ok[3-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 66,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotCountFull__test_ok[10-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 66,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotRestorePrevious__test_ok[3-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 177,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotRestorePrevious__test_ok[10-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 177,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotRestoreCurrent__test_error[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 213,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotRestoreNonexistent__test_error[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 252,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotPathsExist__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 283,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotPathsNonexistent__test_error[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 319,
+              "need": "comp_req__kvs__snapshot_creation",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "comp_req__kvs__snapshot_max_num",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "TestSnapshotMaxCount__test_ok[0-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 133,
+              "need": "comp_req__kvs__snapshot_max_num",
+              "verify_type": "partially",
+              "result": "skipped",
+              "result_text": "https://github.com/eclipse-score/persistency/issues/108"
+            },
+            {
+              "name": "TestSnapshotMaxCount__test_ok[1-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 133,
+              "need": "comp_req__kvs__snapshot_max_num",
+              "verify_type": "partially",
+              "result": "skipped",
+              "result_text": "https://github.com/eclipse-score/persistency/issues/108"
+            },
+            {
+              "name": "TestSnapshotMaxCount__test_ok[3-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 133,
+              "need": "comp_req__kvs__snapshot_max_num",
+              "verify_type": "partially",
+              "result": "skipped",
+              "result_text": "https://github.com/eclipse-score/persistency/issues/108"
+            },
+            {
+              "name": "TestSnapshotMaxCount__test_ok[10-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 133,
+              "need": "comp_req__kvs__snapshot_max_num",
+              "verify_type": "partially",
+              "result": "skipped",
+              "result_text": "https://github.com/eclipse-score/persistency/issues/108"
+            },
+            {
+              "name": "TestSnapshotMaxCount__test_ok[0-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 133,
+              "need": "comp_req__kvs__snapshot_max_num",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotMaxCount__test_ok[1-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 133,
+              "need": "comp_req__kvs__snapshot_max_num",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotMaxCount__test_ok[3-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 133,
+              "need": "comp_req__kvs__snapshot_max_num",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotMaxCount__test_ok[10-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 133,
+              "need": "comp_req__kvs__snapshot_max_num",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "comp_req__kvs__snapshot_rotate",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "TestSnapshotRestorePrevious__test_ok[3-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 177,
+              "need": "comp_req__kvs__snapshot_rotate",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotRestorePrevious__test_ok[10-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 177,
+              "need": "comp_req__kvs__snapshot_rotate",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotRestorePrevious__test_ok[3-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 177,
+              "need": "comp_req__kvs__snapshot_rotate",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotRestorePrevious__test_ok[10-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 177,
+              "need": "comp_req__kvs__snapshot_rotate",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "comp_req__kvs__snapshot_restore",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "TestSnapshotRestorePrevious__test_ok[3-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 177,
+              "need": "comp_req__kvs__snapshot_restore",
+              "verify_type": "fully",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotRestorePrevious__test_ok[10-cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 177,
+              "need": "comp_req__kvs__snapshot_restore",
+              "verify_type": "fully",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotRestoreNonexistent__test_error[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 252,
+              "need": "comp_req__kvs__snapshot_restore",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotRestorePrevious__test_ok[3-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 177,
+              "need": "comp_req__kvs__snapshot_restore",
+              "verify_type": "fully",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotRestorePrevious__test_ok[10-rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 177,
+              "need": "comp_req__kvs__snapshot_restore",
+              "verify_type": "fully",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSnapshotRestoreNonexistent__test_error[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_snapshots.py",
+              "line": 252,
+              "need": "comp_req__kvs__snapshot_restore",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "comp_req__kvs__key_encoding",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "TestSupportedDatatypesKeys__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 44,
+              "need": "comp_req__kvs__key_encoding",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_I32__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__key_encoding",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_U32__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__key_encoding",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_I64__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__key_encoding",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_U64__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__key_encoding",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_F64__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__key_encoding",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_Bool__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__key_encoding",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_String__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__key_encoding",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_Array__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__key_encoding",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_Object__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__key_encoding",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesKeys__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 44,
+              "need": "comp_req__kvs__key_encoding",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_I32__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__key_encoding",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_U32__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__key_encoding",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_I64__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__key_encoding",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_U64__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__key_encoding",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_F64__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__key_encoding",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_Bool__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__key_encoding",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_String__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__key_encoding",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_Array__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__key_encoding",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_Object__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__key_encoding",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "comp_req__kvs__value_data_types",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "TestSupportedDatatypesKeys__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 44,
+              "need": "comp_req__kvs__value_data_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_I32__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__value_data_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_U32__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__value_data_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_I64__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__value_data_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_U64__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__value_data_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_F64__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__value_data_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_Bool__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__value_data_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_String__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__value_data_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_Array__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__value_data_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_Object__test_ok[cpp]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__value_data_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesKeys__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 44,
+              "need": "comp_req__kvs__value_data_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_I32__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__value_data_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_U32__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__value_data_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_I64__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__value_data_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_U64__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__value_data_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_F64__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__value_data_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_Bool__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__value_data_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_String__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__value_data_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_Array__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__value_data_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            },
+            {
+              "name": "TestSupportedDatatypesValues_Object__test_ok[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_supported_datatypes.py",
+              "line": 85,
+              "need": "comp_req__kvs__value_data_types",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "comp_req__kvs__persist_data_com",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "TestExplicitFlush__test_data_stored[rust]",
+              "file": "score/kvs/tests/test_cases/tests/test_cit_persistency.py",
+              "line": 47,
+              "need": "comp_req__kvs__persist_data_com",
+              "verify_type": "fully",
               "result": "passed",
               "result_text": ""
             }
