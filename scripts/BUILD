@@ -10,15 +10,25 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-name: Internal Tooling Tests
-on:
-  pull_request:
-    types: [opened, reopened, synchronize]
-  push:
-    branches:
-      - main
-jobs:
-  internal_tests:
-    uses: eclipse-score/cicd-workflows/.github/workflows/tests.yml@37eaadadfefc263d94a858d25665735659e916fa
-    with:
-      bazel-target: "test //scripts/tooling:tooling_tests //scripts/known_good:known_good_tests //scripts:quality_runners_tests"
+load("@rules_python//python:defs.bzl", "py_library")
+load("@score_tooling//python_basics:defs.bzl", "score_py_pytest")
+
+py_library(
+    name = "quality_runners",
+    srcs = ["quality_runners.py"],
+    imports = ["."],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//scripts/known_good",
+    ],
+)
+
+score_py_pytest(
+    name = "quality_runners_tests",
+    srcs = glob(["tests/**/*.py"]),
+    data = ["//:known_good.json"],
+    pytest_config = "//:pyproject.toml",
+    deps = [
+        ":quality_runners",
+    ],
+)
