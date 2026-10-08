@@ -11830,7 +11830,7 @@
   {
     "repo": {
       "name": "score_logging",
-      "hash": "b4f272b0a036d46fc7ff2e9a051fdec95fd23b4f",
+      "hash": "3d9896611baf4e0d018032e5cb999941b2602dbd",
       "url": "https://github.com/eclipse-score/logging"
     },
     "needs": [
@@ -12154,6 +12154,23 @@
               "file": "external/score_logging+/score/mw/log/detail/wait_free_producer_queue/wait_free_linear_writer_test.cpp",
               "line": 44,
               "need": "comp_req__log__no_endless_loops",
+              "verify_type": "partially",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
+        }
+      },
+      {
+        "need": "comp_req__log__forward_to_system_logger",
+        "links": {
+          "CodeLinks": [],
+          "TestLinks": [
+            {
+              "name": "SyslogBackendFixture__SyslogOpenlog",
+              "file": "external/score_logging+/score/mw/log/detail/syslog/syslog_backend_test.cpp",
+              "line": 77,
+              "need": "comp_req__log__forward_to_system_logger",
               "verify_type": "partially",
               "result": "passed",
               "result_text": ""
