@@ -178,21 +178,21 @@ General steps to create a bootable QNX SD card for Raspberry Pi:
    sync && umount /media/$USER/boot
    ```
 
-5. **Insert the SD card** into the RPi and power it on. QNX boots and starts all services defined in [`images/qnx_aarch64/configs/startup.sh`](images/qnx_aarch64/configs/startup.sh).
+5. **Insert the SD card** into the RPi and power it on. QNX boots and starts all services defined in [`images/qnx_common/configs/startup.sh`](images/qnx_common/configs/startup.sh).
 
 ### Deploy and run showcases on Raspberry Pi
 
 Once QNX is running on the RPi:
 
-1. **Find the RPi IP address** — the system acquires an address via DHCP on the `vtnet0` interface at startup (configured in [`configs/network_setup_dhcp.sh`](images/qnx_aarch64/configs/network_setup_dhcp.sh)). Check your router's DHCP table or connect a serial console to read the address from the boot log.
+1. **Find the RPi IP address** — the system acquires an address via DHCP on the `vtnet0` interface at startup (configured in [`configs/network_setup_dhcp.sh`](images/qnx_common/configs/network_setup_dhcp.sh)). Check your router's DHCP table or connect a serial console to read the address from the boot log.
 
-2. **SSH into the RPi** (root, no password — see [`configs/sshd_config`](images/qnx_aarch64/configs/sshd_config)):
+2. **SSH into the RPi** (root, no password — see [`configs/sshd_config`](images/qnx_common/configs/sshd_config)):
 
    ```bash
    ssh root@<RPi_IP>
    ```
 
-3. **Showcases are pre-loaded** in `/showcases/bin/`. The interactive CLI is started automatically on boot (see [`configs/startup.sh`](images/qnx_aarch64/configs/startup.sh)). Re-launch it at any time:
+3. **Showcases are pre-loaded** in `/showcases/bin/`. The interactive CLI is started automatically on boot (see [`configs/startup.sh`](images/qnx_common/configs/startup.sh)). Re-launch it at any time:
 
    ```bash
    /showcases/bin/cli
