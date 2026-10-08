@@ -46,8 +46,8 @@ score_py_pytest(
         "examples/generated/communication.srac.json",
         "examples/needs/communication.export.json",
         "examples/needs/communication.needs.json",
-        "schema/srac-report.schema.json",
         "schema/srac.schema.json",
+        "schema/srac-report.schema.json",
     ],
     pytest_config = "//:pyproject.toml",
     deps = [
