@@ -8,7 +8,7 @@ tools: [read, edit, search, execute, todo]
 You maintain the **Overall Status** progress charts in
 `docs/s_core_v_1/roadmap/overall_status.rst`.
 
-The page is deliberately thin: four charts showing how the platform grew across
+The page is deliberately thin: five charts showing how the platform grew across
 releases, plus links to the verification reports. Per-module and per-component
 detail lives in the **Platform Verification Report** and the **Module
 Verification Reports** under `docs/verification_report/` — those are generated
@@ -48,6 +48,8 @@ Maintain a todo list.
   page — that information now belongs to the verification reports.
 - DO NOT reconcile these numbers against CI dashboards. They are source-derived
   by design and will differ.
+- DO NOT give a module a chart-specific colour. `MODULE_COLORS` applies to every
+  chart so a colour is recognisable across the whole page.
 
 ## Output
 

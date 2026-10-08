@@ -78,6 +78,24 @@ SCORE_REPO = "eclipse-score/score"
 SCORE_KEY = "score_platform"
 SOMEIP = "some_ip_gateway"
 
+# reference_integration hosts the feature-level integration tests; the module a
+# test belongs to is taken from the path segment below these directories.
+RI_TEST_DIRS = ("feature_integration_tests", "platform_integration_tests")
+RI_ALIASES = {
+    "Baselibs": {"baselibs"},
+    "Communication": {"communication"},
+    "Logging": {"logging"},
+    "Persistency": {"persistency"},
+    "Time": {"time"},
+    "Config Mgmt": {"config", "config_management", "configuration"},
+    "Lifecycle": {"lifecycle"},
+    "Kyron": {"kyron"},
+    "Security/Crypto": {"security", "crypto", "security_crypto"},
+    "Diagnostic Services": {"diagnostics", "diagnostic_services"},
+    "NM": {"nm", "network_management"},
+    "Some/IP": {"some_ip", "someip", "some_ip_gateway"},
+}
+
 MODULE_COLORS = {
     "Baselibs": "#1f77b4",
     "Communication": "#ff7f0e",
@@ -97,7 +115,13 @@ CHARTS = [
     ("requirements", "req", "pa2_impl_progress.svg", "Requirements per release (feature + component)"),
     ("architecture", "arc", "pa3_arch_progress.svg", "Architecture elements per release (feature + component)"),
     ("implementation", "loc", "pa4_impl_progress.svg", "Lines of code per release"),
-    ("verification", "tests", "pa5_verification_progress.svg", "Tests per release (unit + integration)"),
+    ("unit_tests", "unit_tests", "pa5_unit_test_progress.svg", "Unit tests per release"),
+    (
+        "integration_tests",
+        "int_tests",
+        "pa5_integration_test_progress.svg",
+        "Component and feature integration tests per release",
+    ),
 ]
 
 REQ_RST = re.compile(r"^\s*\.\.\s+(feat_req|comp_req|aou_req)::", re.M)
@@ -114,6 +138,16 @@ TEST_PAT = re.compile(
     re.M,
 )
 SRC_EXT = (".cpp", ".cc", ".cxx", ".c", ".h", ".hpp", ".hh", ".rs", ".py")
+# a test whose path crosses one of these directories is not a unit test
+INT_TEST_DIRS = {
+    "component",
+    "integration",
+    "integration_test",
+    "integration_tests",
+    "integration_testing",
+    "itf",
+    *RI_TEST_DIRS,
+}
 
 _api_cache: dict[str, object] = {}
 
@@ -163,15 +197,22 @@ def flatten(known_good):
     return flat
 
 
+def gitdir(repo, cache):
+    """reference_integration is measured from this checkout, not from a clone."""
+    if repo == REF_INT:
+        return REPO_ROOT / ".git"
+    return cache / f"{repo.split('/')[-1]}.git"
+
+
 def git(repo, cache, *args):
     return subprocess.run(
-        ["git", f"--git-dir={cache}/{repo.split('/')[-1]}.git", *args],
+        ["git", f"--git-dir={gitdir(repo, cache)}", *args],
         capture_output=True,
     )
 
 
 def ensure_clone(repo, cache):
-    target = cache / f"{repo.split('/')[-1]}.git"
+    target = gitdir(repo, cache)
     if target.exists():
         subprocess.run(["git", f"--git-dir={target}", "fetch", "-q", "--all", "--tags"], check=False)
         return
@@ -201,7 +242,7 @@ def read_blobs(repo, shas, cache):
     if not shas:
         return {}
     p = subprocess.run(
-        ["git", f"--git-dir={cache}/{repo.split('/')[-1]}.git", "cat-file", "--batch"],
+        ["git", f"--git-dir={gitdir(repo, cache)}", "cat-file", "--batch"],
         input=("\n".join(shas) + "\n").encode(),
         capture_output=True,
     )
@@ -229,6 +270,10 @@ def is_src(path):
     return not (p.startswith(("docs/", "third_party/")) or "/docs/" in p or "/third_party/" in p)
 
 
+def is_integration_test(path):
+    return bool(INT_TEST_DIRS & set(path.split("/")[:-1]))
+
+
 def measure(repo, sha, cache, path_ok=None, *, with_code=True):
     entries = [e for e in ls_tree(repo, sha, cache) if path_ok is None or path_ok(e[1])]
     counts = Counter()
@@ -250,17 +295,39 @@ def measure(repo, sha, cache, path_ok=None, *, with_code=True):
                 counts["req"] += 1
 
     if with_code:
-        src = [s for s, p in entries if is_src(p)]
-        blobs = read_blobs(repo, src, cache)
-        for sha_ in src:
+        src = [(s, p) for s, p in entries if is_src(p)]
+        blobs = read_blobs(repo, [s for s, _ in src], cache)
+        for sha_, path in src:
             body = blobs.get(sha_, "")
             counts["loc"] += body.count("\n")
-            counts["tests"] += len(TEST_PAT.findall(body))
+            bucket = "int_tests" if is_integration_test(path) else "unit_tests"
+            counts[bucket] += len(TEST_PAT.findall(body))
     return counts
 
 
+def ri_integration_tests(repo, sha, cache):
+    """Count reference_integration's own feature tests per module."""
+    per_module = Counter()
+    entries = [(s, p) for s, p in ls_tree(repo, sha, cache) if p.startswith(RI_TEST_DIRS) and is_src(p)]
+    blobs = read_blobs(repo, [s for s, _ in entries], cache)
+    for sha_, path in entries:
+        n = len(TEST_PAT.findall(blobs.get(sha_, "")))
+        if not n:
+            continue
+        segs = set(path.split("/")[1:-1])
+        for name, aliases in RI_ALIASES.items():
+            if aliases & segs:
+                per_module[name] += n
+                break
+    return per_module
+
+
 def release_pins(cache):
-    """Return [(label, {module: (repo, sha)})] oldest first, forecast last."""
+    """Return [(label, {module: (repo, sha)})] oldest first, forecast last.
+
+    The pseudo-entries ``__score__`` and ``__ri__`` carry the platform and
+    reference_integration commits for the same release.
+    """
     tags = [t["name"] for t in gh(f"/repos/{REF_INT}/tags?per_page=100")]
     columns = []
     for tag in sorted(t for t in tags if t != "v0.5.0-alpha"):
@@ -268,14 +335,15 @@ def release_pins(cache):
         date = gh(f"/repos/{REF_INT}/commits/{ref}")["commit"]["committer"]["date"]
         blob = gh(f"/repos/{REF_INT}/contents/known_good.json?ref={ref}")
         flat = flatten(json.loads(base64.b64decode(blob["content"])))
-        columns.append((tag, date, flat))
+        columns.append((tag, date, ref, flat))
 
     local = flatten(json.loads((REPO_ROOT / "known_good.json").read_text(encoding="utf-8")))
-    columns.append(("forecast", None, local))
+    head = git(REF_INT, cache, "rev-parse", "HEAD").stdout.decode().strip()
+    columns.append(("forecast", None, head, local))
 
     out = []
-    for tag, date, flat in columns:
-        resolved = {}
+    for tag, date, ri_sha, flat in columns:
+        resolved = {"__ri__": (REF_INT, ri_sha)}
         for name, (repo, keys, _) in list(MODULES.items()) + [("__score__", (SCORE_REPO, [SCORE_KEY], []))]:
             if repo is None:
                 continue
@@ -325,6 +393,7 @@ def main() -> None:
     for label, resolved in release_pins(args.cache):
         print(f"== {label}")
         score_repo, score_sha = resolved["__score__"]
+        ri_int = ri_integration_tests(*resolved["__ri__"], args.cache)
         totals = {}
         for name, (_, _, fragments) in MODULES.items():
             counts = Counter()
@@ -338,6 +407,7 @@ def main() -> None:
             if name in resolved:
                 repo, sha = resolved[name]
                 counts.update(measure(repo, sha, args.cache))
+            counts["int_tests"] += ri_int[name]
             totals[name] = counts
             summary = " ".join(f"{m}={counts[m]:>7d}" for _, m, _, _ in CHARTS)
             print(f"   {name:22s} {summary}")

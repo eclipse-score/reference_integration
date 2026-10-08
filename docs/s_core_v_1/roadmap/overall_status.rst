@@ -88,9 +88,17 @@ Implementation
 Verification
 ------------
 
-.. figure:: /_assets/pa5_verification_progress.svg
-   :alt: Tests per release, split by module
+.. figure:: /_assets/pa5_unit_test_progress.svg
+   :alt: Unit tests per release, split by module
    :width: 880px
 
-   Unit and integration test definitions across the tracked modules per
-   release.
+   Unit test definitions across the tracked modules per release.
+
+.. figure:: /_assets/pa5_integration_test_progress.svg
+   :alt: Component and feature integration tests per release, split by module
+   :width: 880px
+
+   Component and feature integration test definitions per release. Alongside
+   the integration tests kept in the module repositories this includes the
+   feature tests hosted in ``reference_integration`` itself, attributed to the
+   module under test.

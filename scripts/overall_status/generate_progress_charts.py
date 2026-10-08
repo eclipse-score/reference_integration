@@ -14,7 +14,10 @@
 """Render the Overall Status progress charts from ``overall_status_data.json``.
 
 Every release is a stacked bar whose colour slots map to the contributing
-modules, so the per-module split is comparable across releases.
+modules, so the per-module split is comparable across releases. Colours come
+from the shared ``module_colors`` map, which makes a module recognisable by the
+same colour in every chart. Within a bar the slots are ordered by size,
+largest at the bottom.
 """
 
 import argparse
@@ -94,10 +97,13 @@ def render(chart: dict, module_colors: dict) -> str:
         cx = round(x + BAR_WIDTH / 2, 1)
         o.append(f"  <!-- {release['name']}: total {total} -->")
         cursor = float(PLOT_BOTTOM)
-        for module in contributing:
-            value = mods.get(module, 0)
-            if value <= 0:
-                continue
+        # largest slot at the bottom; colour stays tied to the module either way
+        order = sorted(
+            (m for m in contributing if mods.get(m, 0) > 0),
+            key=lambda m: (-mods[m], contributing.index(m)),
+        )
+        for module in order:
+            value = mods[module]
             h = value * scale
             y = cursor - h
             o.append(
