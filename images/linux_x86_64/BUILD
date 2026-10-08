@@ -30,21 +30,13 @@ sh_binary(
     },
 )
 
+# Datarouter binary and configs, shared via //images/common/apps.
 pkg_tar(
-    name = "datarouter_bin_tar",
-    srcs = ["@score_logging//score/datarouter"],
-    mode = "0755",
-    package_dir = "/usr/bin/datarouter",
-)
-
-pkg_tar(
-    name = "datarouter_etc_tar",
+    name = "datarouter_tar",
     srcs = [
-        "//feature_integration_tests/configs/datarouter:etc/log-channels.json",
-        "//feature_integration_tests/configs/datarouter:etc/logging.json",
+        "//images/common/apps:datarouter_bin",
+        "//images/common/apps:datarouter_configs",
     ],
-    mode = "0644",
-    package_dir = "/usr/bin/datarouter/etc",
 )
 
 oci_image(
@@ -52,8 +44,7 @@ oci_image(
     base = "@ubuntu_22_04_linux_amd64",
     tars = [
         "//showcases:showcases_pkg_tar",
-        ":datarouter_bin_tar",
-        ":datarouter_etc_tar",
+        ":datarouter_tar",
     ],
 )
 

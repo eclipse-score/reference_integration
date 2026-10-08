@@ -103,6 +103,11 @@ class Metadata:
             extra_test_config: List of extra test configuration flags
             exclude_test_targets: List of test targets to exclude
             langs: List of languages supported (e.g., ["cpp", "rust"])
+            integration_test_targets: Module-relative labels of integration/component
+                    test suites to run (e.g. ["//tests/integration/..."]). Empty means
+                    the module has no integration tests to run from the integration.
+            integration_test_config: Extra bazel flags (without the leading ``--``)
+                    applied only to the integration test run (e.g. ["flaky_test_attempts=3"]).
     """
 
     code_root_path: str = "//score/..."
@@ -110,6 +115,8 @@ class Metadata:
     exclude_test_targets: list[str] = field(default_factory=lambda: [])
     langs: list[str] = field(default_factory=lambda: ["cpp", "rust"])
     rust_coverage_config: str | None = "ferrocene-coverage"  # Optional field for Rust coverage configuration
+    integration_test_targets: list[str] = field(default_factory=lambda: [])
+    integration_test_config: list[str] = field(default_factory=lambda: [])
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> Metadata:
@@ -127,6 +134,8 @@ class Metadata:
             exclude_test_targets=data.get("exclude_test_targets", []),
             langs=data.get("langs", ["cpp", "rust"]),
             rust_coverage_config=data.get("rust_coverage_config", "ferrocene-coverage"),
+            integration_test_targets=data.get("integration_test_targets", []),
+            integration_test_config=data.get("integration_test_config", []),
         )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -141,6 +150,8 @@ class Metadata:
             "exclude_test_targets": self.exclude_test_targets,
             "langs": self.langs,
             "rust_coverage_config": self.rust_coverage_config,
+            "integration_test_targets": self.integration_test_targets,
+            "integration_test_config": self.integration_test_config,
         }
 
 

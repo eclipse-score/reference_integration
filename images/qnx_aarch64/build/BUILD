@@ -13,60 +13,33 @@
 
 load("@score_rules_imagefs//rules/qnx:ifs.bzl", "qnx_ifs")
 
-filegroup(
-    name = "scripts",
-    srcs = [
-        "//images/qnx_aarch64/configs:startup.sh",
-    ],
-    visibility = ["//visibility:private"],
-)
-
-filegroup(
-    name = "configs",
-    srcs = [
-        "//images/qnx_aarch64/configs:dhcpcd.conf",
-        "//images/qnx_aarch64/configs:group",
-        "//images/qnx_aarch64/configs:hostname",
-        "//images/qnx_aarch64/configs:network_capture.sh",
-        "//images/qnx_aarch64/configs:network_setup.sh",
-        "//images/qnx_aarch64/configs:network_setup_dhcp.sh",
-        "//images/qnx_aarch64/configs:passwd",
-        "//images/qnx_aarch64/configs:profile",
-        "//images/qnx_aarch64/configs:qcrypto.conf",
-        "//images/qnx_aarch64/configs:ssh_host_rsa_key",
-        "//images/qnx_aarch64/configs:ssh_host_rsa_key.pub",
-        "//images/qnx_aarch64/configs:sshd_config",
-    ],
-    visibility = ["//visibility:private"],
-)
+# The architecture-independent configuration files are shared via
+# //images/qnx_common/configs; the application packaging (datarouter
+# binary/configs, communication configs, persistency test binary) via
+# //images/common/apps. The aarch64 QEMU virt image has no arch-specific
+# configuration files of its own.
 
 qnx_ifs(
     name = "init",
     srcs = [
-        ":configs",
-        ":scripts",
-        ":system.build",
-        ":system_dir",
-        "//feature_integration_tests/configs:etc_configs",
-        "//feature_integration_tests/configs/datarouter:etc_configs",
-        "//showcases",
-        "@score_logging//score/datarouter",
-        "@score_persistency//tests/test_scenarios/cpp:test_scenarios",
+        "//images/common/apps:cpp_tests_persistency_bin",
+        "//images/common/apps:datarouter_bin",
+        "//images/common/apps:datarouter_configs",
+        "//images/common/apps:etc_comm_configs",
+        "//images/qnx_common/configs:etc_configs",
+        "//images/qnx_common/configs:etc_network_capture",
+        "//images/qnx_common/configs:etc_scripts",
+        "//images/qnx_common/configs:qcrypto_config",
+        "//images/qnx_common/configs:var_ssh_config",
+        "//images/qnx_common/configs:var_ssh_keys",
+        "//showcases:showcases_bundle",
     ],
     build_file = "init.build",
-    ext_repo_maping = {
-        "BUNDLE_PATH": "$(location //showcases:showcases)",
-        "DATAROUTER_PATH": "$(location @score_logging//score/datarouter:datarouter)",
-    },
+    extra_build_files = [
+        "//images/qnx_common/build:common_init.build",
+        "//images/qnx_common/build:common_system.build",
+    ],
     visibility = [
         "//visibility:public",
-    ],
-)
-
-filegroup(
-    name = "system_dir",
-    srcs = [
-        "init.build",
-        "system.build",
     ],
 )
