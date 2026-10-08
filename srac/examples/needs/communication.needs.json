@@ -1,0 +1,52 @@
+{
+  "current_version": "0.1",
+  "project": "S-CORE",
+  "project_url": "https://eclipse-score.github.io/score",
+  "versions": {
+    "0.1": {
+      "creator": {
+        "program": "sphinx_needs",
+        "version": "8.5.0"
+      },
+      "needs": {
+        "feat__com_communication": {
+          "id": "feat__com_communication",
+          "title": "Communication Feature",
+          "type": "feat",
+          "type_name": "Feature",
+          "docname": "features/communication/architecture/index",
+          "safety": "ASIL_B",
+          "security": "YES",
+          "status": "valid",
+          "version": 1
+        },
+        "comp__com_configuration": {
+          "id": "comp__com_configuration",
+          "title": "Lola Configuration",
+          "type": "comp",
+          "type_name": "Component",
+          "docname": "modules/communication/configuration/docs/architecture/index",
+          "belongs_to": [
+            "feat__com_communication[version==1]"
+          ],
+          "safety": "ASIL_B",
+          "security": "YES",
+          "status": "valid",
+          "version": 1
+        },
+        "aou_req__communication__1": {
+          "id": "aou_req__communication__1",
+          "title": "Monotonic Semi-Dynamic Memory Allocation",
+          "type": "aou_req",
+          "type_name": "Assumption of Use Requirement",
+          "docname": "modules/communication/docs/requirements/aou_req",
+          "content": "It shall be ensured that enough memory is configured for shared memory instances, in order that LoLa can perform all necessary allocations.",
+          "safety": "ASIL_B",
+          "security": "NO",
+          "status": "valid",
+          "version": 1
+        }
+      }
+    }
+  }
+}
