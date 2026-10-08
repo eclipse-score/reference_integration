@@ -1,65 +1,89 @@
 ---
 name: overall-status
-description: "How-to reference for the Feature and Process Status table in docs/s_core_v_1/roadmap/overall_status.rst. Explains the counting model, status criteria, RST formatting, path filters and progress-chart workflow used to derive completion status from eclipse-score GitHub repos (Baselibs, Communication, Logging, Persistency, Time, Config Management, Lifecycle, Security/Crypto, Some/IP). Use when updating, regenerating or reviewing the overall status / feature status tracker. The overall-status agent orchestrates the run; this skill holds the 'how'."
-argument-hint: "optional: module name or 'all'"
+description: "How-to reference for the per-release progress charts on docs/s_core_v_1/roadmap/overall_status.rst. Explains the two scripts (collect_metrics.py, generate_progress_charts.py), the counting model, the forecast column and the module/colour mapping. Use when refreshing the overall status page after a release, a known_good.json ref bump, or when adding a module. The overall-status agent orchestrates the run; this skill holds the 'how'."
+argument-hint: "optional: release name, e.g. v1.0"
 ---
 
-# Feature and Process Status Tracker — the "how"
+# Overall Status progress charts — the "how"
 
-This skill is the **methodology** for refreshing the table in
-`docs/s_core_v_1/roadmap/overall_status.rst` from live `eclipse-score` GitHub
-repositories pinned via `known_good.json`.
+`docs/s_core_v_1/roadmap/overall_status.rst` is a **thin page**: an intro, four
+`figure::` directives and links to the verification reports. It carries no
+per-module tables — those were replaced by the **Platform Verification Report**
+and the per-module **Module Verification Reports**
+(`docs/verification_report/`), which are generated from the needs data of the
+documentation build and are the authoritative source for the *current* state.
 
-The **[overall-status agent](../../agents/overall-status.agent.md)** is the
-main actor: it is started to update or regenerate the table and executes the
-procedure end-to-end. This skill supplies the detailed rules the agent reads
-at each phase.
+The only thing this page owns is the **multi-release trend**. Refreshing it is
+two commands.
 
-The content is split into a **Common** part (shared engine) and one file per
-**Process Area** (PA-specific data), so each concern stays self-contained.
+## Files
 
----
+| File | Role |
+|---|---|
+| `scripts/overall_status/collect_metrics.py` | counts every release from the module sources, writes the data file |
+| `docs/s_core_v_1/roadmap/overall_status_data.json` | generated data; safe to hand-tune, but a re-collect overwrites it |
+| `scripts/overall_status/generate_progress_charts.py` | renders the four SVGs; never hand-edit the SVGs |
+| `docs/_assets/pa{2,3,4,5}_*.svg` | generated output |
+| `docs/s_core_v_1/roadmap/overall_status.rst` | only the *data collection date* changes on a refresh |
 
-## When to use
+## Procedure
 
-- Update / refresh the overall status (feature & process status) table.
-- Regenerate the table from scratch after a `known_good.json` ref bump.
-- Add a new module row, or review the table for plausibility.
-- Update the per-PA progress SVG charts.
+```bash
+export GITHUB_PAT=...                                   # for tag / pin lookups
+python3 scripts/overall_status/collect_metrics.py       # ~5 min, clones to /tmp
+python3 scripts/overall_status/generate_progress_charts.py
+```
 
-## Structure — Common + Process Areas
+Then bump the date in the `.. important::` admonition of `overall_status.rst`
+to the `data_collected` value, and verify with
+`python3 scripts/overall_status/generate_progress_charts.py --check`.
 
-| Scope | File | What it contains |
-|---|---|---|
-| **Common** | [references/common.md](./references/common.md) | Scope & modules, repos & pinned refs, counting model, RST formatting rules, the shared procedure (Steps 0–7), the progress-graphics workflow, and limitations |
-| **PA1** | [references/pa1-change-management.md](./references/pa1-change-management.md) | `CR approved` — Feature Request issue lookup (labels, milestone scope, Project V2 status, manual overrides); the PA1-only modules Diagnostic Services & NM |
-| **PA2** | [references/pa2-requirements.md](./references/pa2-requirements.md) | `Feature Req` · `Component Req` · `Req. Inspection` — directive types, split rendering, path filters |
-| **PA3** | [references/pa3-architecture.md](./references/pa3-architecture.md) | `Feature Arch` · `Component Arch` · `Arch. Inspection` — directive types, path filters |
-| **PA4** | [references/pa4-implementation.md](./references/pa4-implementation.md) | `SW Dev Plan` · `Code` (LOC) · `Detailed Design` · `Impl. Inspection` |
-| **PA5** | [references/pa5-verification.md](./references/pa5-verification.md) | `Unit Tests` · `C0/C1 Cov` · `Comp. IT` · `Feat. IT` · `Static` · `Dynamic` · `Module Ver. Rpt`; coverage CI keys, static/dynamic CI table, platform verification report |
+The first run clones ~11 bare repositories (~1.8 GB) into
+`/tmp/overall_status_repos`; later runs only fetch. Use `--cache` to relocate.
 
-## Scope at a glance
+## How the columns are built
 
-Tracked modules (one row each, in order):
-`Baselibs · Communication · Logging · Persistency · Time · Config Mgmt ·
-Lifecycle · Security/Crypto · Diagnostic Services · NM · Some/IP`.
-**Orchestrator** is never tracked.
+One column per `reference_integration` release tag, oldest first, plus a
+trailing forecast column:
 
-| PA | Title | sphinx-needs tag | Columns |
-|---|---|---|---|
-| PA1 | Change Management | `change_management` | CR approved |
-| PA2 | Requirements Engineering | `requirements_engineering` | Feature Req · Component Req · Req. Inspection |
-| PA3 | Architecture Design | `architecture_design` | Feature Arch · Component Arch · Arch. Inspection |
-| PA4 | Implementation | `implementation` | SW Dev Plan · Code · Detailed Design · Impl. Inspection |
-| PA5 | Verification | `verification` | Unit Tests · C0/C1 Cov · Comp. IT · Feat. IT · Static · Dynamic · Module Ver. Rpt |
+- **Release columns** — the tag's `known_good.json` gives each module's pin.
+  Entries carrying only a `version` are resolved to `v<version>` in the module's
+  own repository. Modules that were never pinned (Security/Crypto, Some/IP) fall
+  back to the commit on `main` as of the release date.
+- **Forecast column** (`v0.10 (forecast)`) — the **working tree's**
+  `known_good.json`, i.e. today's state, labelled as the projection for the next
+  release. Rename it in `collect_metrics.py` when the target release changes.
 
-## Quickstart
+Every bar is stacked by module. `MODULE_COLORS` defines both the colour and the
+stacking order (bottom-up); modules contributing `0` are dropped from the stack
+and the legend.
 
-1. Read [references/common.md](./references/common.md) and run **Step 0–1**
-   (resolve pinned refs, fetch repo trees).
-2. For each Process Area, read its file and compute the cells using the
-   Common counting model + the PA's path filters / criteria.
-3. Run the **sanity checks** (Common Step 5) before writing.
-4. Write the RST (Common Step 6) — update every PA table, the per-table
-   **Rollout status** row, and the **data collection date**.
-5. Refresh the per-PA progress SVGs (Common C6).
+## Counting model
+
+Per module, metrics are summed over **its own repository** plus the matching
+feature paths in `eclipse-score/score` (`SCORE_PATHS` fragments, which cover
+both the old `modules/<mod>` and the current `features/<area>` layout).
+Communication excludes `some_ip_gateway`, which is its own module.
+
+| Metric | Counted as |
+|---|---|
+| `req` | `.. feat_req::` / `.. comp_req::` / `.. aou_req::` in `.rst`, plus `CompReq` / `FeatReq` / `AoU` / `ExternalCompReq` / `AssumedSystemReq` objects in `.trlc` |
+| `arc` | `.. feat*::` / `.. comp*::` / `.. logic_arc_int*::` / `.. real_arc_int*::` in `.rst` |
+| `loc` | newlines in `.cpp .cc .cxx .c .h .hpp .hh .rs .py`, excluding `docs/`, `third_party/`, `bazel-*` |
+| `tests` | `TEST(` / `TEST_F(` / `TEST_P(` / `TYPED_TEST(` / `TYPED_TEST_P(` / Rust `#[test]` / Python `def test_` |
+
+Counts are **totals**, irrespective of `:status:` — the charts visualise scope
+growth, not validation maturity. `chklst_*.rst` files are excluded.
+
+## Rules
+
+- Keep the cross-reference labels `overall_status_pa2` … `overall_status_pa5` —
+  `pi1.rst`, `pi2.rst` and `pi3.rst` link to them.
+- Never hand-edit an SVG; regenerate it.
+- Re-collect **all** columns rather than appending one by hand. The value of the
+  series is that every column used the same counter.
+- Adding a module means one entry in `MODULES` (repo, `known_good` keys, score
+  path fragments) and one in `MODULE_COLORS`.
+- These numbers are source-derived and will **not** match CI dashboards. Test
+  counts are test definitions, not parameterised CI runs; expect the CI unit
+  test total to be several times larger. Say so if a reader compares them.
