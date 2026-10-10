@@ -74,7 +74,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="Architecture" href="architecture/index.html" />
+    <link rel="next" title="Persistency KVS Architecture" href="architecture/index.html" />
     <link rel="prev" title="Persistency Documentation" href="../../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -458,8 +458,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../score_baselibs/index.html">Base Libraries</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">Persistency Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active has-children"><a class="current reference internal" href="#">Persistency</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="architecture/index.html">Architecture</a></li>
-<li class="toctree-l3"><a class="reference internal" href="architecture/chklst_arc_inspection.html">Architecture Inspection Checklist</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture/index.html">Persistency KVS Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture/chklst_arc_inspection.html">Persistency Architecture Inspection</a></li>
 <li class="toctree-l3"><a class="reference internal" href="safety_analysis/fmea.html">FMEA (Failure Modes and Effects Analysis)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="safety_analysis/dfa.html">DFA (Dependent Failure Analysis)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="safety_planning/index.html">Feature Safety Work Products List</a></li>
@@ -467,7 +467,7 @@
 <li class="toctree-l3"><a class="reference internal" href="security_analysis/stride.html">Persistency STRIDE</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2"><a class="reference internal" href="../../module/index.html">Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../module/index.html">Persistency Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../module/manuals/index.html">Manuals</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../module/release/release_note.html">Release Note</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../module/safety_mgt/index.html">Safety Management</a></li>
@@ -548,20 +548,27 @@
 <p>Feature request can be found here: <a class="reference internal" href="../../../../process_methods_tools/score_platform/features/persistency/index.html#doc__persistency" title="doc__persistency"><em class="xref need">Persistency (doc__persistency)</em></a></p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="architecture/index.html">Architecture</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="architecture/index.html#description">Description</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture/index.html">Persistency KVS Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture/index.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/index.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/index.html#requirements">Requirements</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="architecture/index.html#rationale-behind-architecture-decomposition">Rationale Behind Architecture Decomposition</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="architecture/index.html#glossary">Glossary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="architecture/index.html#static-architecture">Static Architecture</a></li>
 <li class="toctree-l2"><a class="reference internal" href="architecture/index.html#dynamic-architecture">Dynamic Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/index.html#logical-interfaces">Logical Interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/index.html#used-components">Used Components</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="architecture/chklst_arc_inspection.html">Architecture Inspection Checklist</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="architecture/chklst_arc_inspection.html#purpose">Purpose</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture/chklst_arc_inspection.html#conduct">Conduct</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture/chklst_arc_inspection.html#checklist">Checklist</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/chklst_arc_inspection.html">Persistency Architecture Inspection</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture/chklst_arc_inspection.html#participants">Participants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/chklst_arc_inspection.html#architecture-inspection-checklist">Architecture Inspection Checklist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/chklst_arc_inspection.html#summary">Summary</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture/chklst_arc_inspection.html#inspected-static-architecture-views">Inspected Static Architecture Views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture/chklst_arc_inspection.html#inspected-dynamic-architecture-views">Inspected Dynamic Architecture Views</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="safety_analysis/fmea.html">FMEA (Failure Modes and Effects Analysis)</a><ul>
@@ -582,7 +589,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="safety_planning/index.html">Feature Safety Work Products List</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="safety_planning/index.html#tailoring">Tailoring</a></li>
-<li class="toctree-l2"><a class="reference internal" href="safety_planning/index.html#safety-work-products-list">Safety Work products List</a></li>
+<li class="toctree-l2"><a class="reference internal" href="safety_planning/index.html#safety-work-products-list">Safety Work Products List</a></li>
 <li class="toctree-l2"><a class="reference internal" href="safety_planning/index.html#feature-safety-package">Feature Safety Package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="safety_planning/index.html#feature-documents-status">Feature Documents Status</a></li>
 <li class="toctree-l3"><a class="reference internal" href="safety_planning/index.html#feature-requirements-status">Feature Requirements Status</a></li>
@@ -622,7 +629,7 @@
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Architecture</p>
+        <p class="prev-next-title">Persistency KVS Architecture</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

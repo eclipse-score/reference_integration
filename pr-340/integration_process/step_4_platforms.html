@@ -695,28 +695,39 @@ job</strong> automatically.</p>
 must always be present — you wire it straight into each image’s build
 description instead. Unlike the showcase route, <strong>this is per-image work: you
 repeat it for every image you target</strong> (Linux, QNX, AutoSD, EBcLfSA).</p>
-<p>The reference example is the <code class="docutils literal notranslate"><span class="pre">datarouter</span></code>. In the QNX image it is added as a
-source of the image target and exposed to the image’s build description via a
-location mapping, then placed into the filesystem by <code class="docutils literal notranslate"><span class="pre">system.build</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># images/qnx_x86_64/build/BUILD</span>
+<p>The reference example is the <code class="docutils literal notranslate"><span class="pre">datarouter</span></code>. Its destination path, permissions
+and owner are declared once as a <code class="docutils literal notranslate"><span class="pre">pkg_files</span></code> target; because the binary is
+resolved per platform (not per architecture) the definition is shared from
+<code class="docutils literal notranslate"><span class="pre">images/common/apps</span></code> and each image lists it in its <code class="docutils literal notranslate"><span class="pre">srcs</span></code>.
+<code class="docutils literal notranslate"><span class="pre">score_rules_imagefs</span></code> then generates the matching <code class="docutils literal notranslate"><span class="pre">mkifs</span></code> directives, so
+nothing has to be added to <code class="docutils literal notranslate"><span class="pre">system.build</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># images/common/apps/BUILD  (defined once, shared by every image)</span>
+<span class="n">pkg_files</span><span class="p">(</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;datarouter_bin&quot;</span><span class="p">,</span>
+    <span class="n">srcs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;@score_logging//score/datarouter&quot;</span><span class="p">],</span>
+    <span class="n">attributes</span> <span class="o">=</span> <span class="n">pkg_attributes</span><span class="p">(</span><span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;0777&quot;</span><span class="p">),</span>
+    <span class="n">prefix</span> <span class="o">=</span> <span class="s2">&quot;usr/bin/datarouter&quot;</span><span class="p">,</span>
+    <span class="n">strip_prefix</span> <span class="o">=</span> <span class="n">strip_prefix</span><span class="o">.</span><span class="n">files_only</span><span class="p">(),</span>
+    <span class="n">visibility</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;//visibility:public&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="c1"># images/qnx_x86_64/build/BUILD  (referenced per image)</span>
 <span class="n">qnx_ifs</span><span class="p">(</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;init&quot;</span><span class="p">,</span>
     <span class="n">srcs</span> <span class="o">=</span> <span class="p">[</span>
         <span class="c1"># ...</span>
-        <span class="s2">&quot;//showcases&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;@score_logging//score/datarouter&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;//feature_integration_tests/configs/datarouter:etc_configs&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;//images/common/apps:datarouter_bin&quot;</span><span class="p">,</span>
     <span class="p">],</span>
-    <span class="n">ext_repo_maping</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;BUNDLE_PATH&quot;</span><span class="p">:</span> <span class="s2">&quot;$(location //showcases:showcases)&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;DATAROUTER_PATH&quot;</span><span class="p">:</span> <span class="s2">&quot;$(location @score_logging//score/datarouter:datarouter)&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
+    <span class="n">build_file</span> <span class="o">=</span> <span class="s2">&quot;init.build&quot;</span><span class="p">,</span>
+    <span class="n">extra_build_files</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;system.build&quot;</span><span class="p">],</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>See <a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/images/qnx_x86_64/build/BUILD">images/qnx_x86_64/build/BUILD</a> and the
-matching deployment lines in
-<a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/images/qnx_x86_64/build/system.build">images/qnx_x86_64/build/system.build</a>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">qnx_ifs</span></code> rejects anything in <code class="docutils literal notranslate"><span class="pre">srcs</span></code> that does not provide a
+<code class="docutils literal notranslate"><span class="pre">rules_pkg</span></code> provider, so a plain <code class="docutils literal notranslate"><span class="pre">filegroup</span></code> or a bare label will not work -
+wrap it in <code class="docutils literal notranslate"><span class="pre">pkg_files</span></code>.</p>
+<p>See <a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/images/common/apps/BUILD">images/common/apps/BUILD</a>
+and <a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/images/qnx_x86_64/build/BUILD">images/qnx_x86_64/build/BUILD</a>
 for the full picture, and repeat the equivalent wiring in the other images you
 need (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/images/linux_x86_64">images/linux_x86_64</a>,
 <a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/images/autosd">images/autosd</a>,
