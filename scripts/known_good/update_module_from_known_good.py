@@ -42,15 +42,19 @@ from typing import Dict, List, Optional
 # Importable both as a package module (from the tests and the py_library) and runnable as a
 # plain script from the repo root, which is how CI invokes it. Same fallback as
 # resolved_dependencies.py.
+# generate_override_directive is imported, not redefined: this generator and
+# ResolvedDependencies.overwrite must emit identical directives.
 try:
     from known_good.models import Module
     from known_good.models.known_good import KnownGood, load_known_good
+    from known_good.resolved_dependencies import generate_override_directive
 except ImportError:
     _HERE = str(Path(__file__).resolve().parent)
     if _HERE not in sys.path:
         sys.path.insert(0, _HERE)
     from models import Module  # noqa: E402
     from models.known_good import KnownGood, load_known_good  # noqa: E402
+    from resolved_dependencies import generate_override_directive  # noqa: E402
 
 # Configure logging
 logging.basicConfig(level=logging.WARNING, format="%(levelname)s: %(message)s")
@@ -70,64 +74,10 @@ def generate_git_override_blocks(modules: List[Module], repo_commit_dict: Dict[s
     blocks = []
 
     for module in modules:
-        commit = module.hash
-
-        # Allow overriding specific repos via command line
-        if module.repo in repo_commit_dict:
-            commit = repo_commit_dict[module.repo]
-
-        # Generate patches lines if bazel_patches exist
-        patches_lines = ""
-        if module.bazel_patches:
-            patches_lines = "    patches = [\n"
-            for patch in module.bazel_patches:
-                patches_lines += f'        "{patch}",\n'
-            patches_lines += "    ],\n"
-        patch_strip_line = "    patch_strip = 1,\n" if patches_lines else ""
-
-        if module.version:
-            # If version is provided, use bazel_dep with single_version_override
-            block = (
-                f'bazel_dep(name = "{module.name}")\n'
-                "single_version_override(\n"
-                f'    module_name = "{module.name}",\n'
-                f"{patch_strip_line}"
-                f"{patches_lines}"
-                f'    version = "{module.version}",\n'
-                ")\n"
-            )
-        else:
-            if not module.repo or not commit:
-                logging.warning(
-                    "Skipping module %s with missing repo or commit: repo=%s, commit=%s",
-                    module.name,
-                    module.repo,
-                    commit,
-                )
-                continue
-
-            # Validate commit hash format (7-40 hex characters)
-            if not re.match(r"^[a-fA-F0-9]{7,40}$", commit):
-                logging.warning(
-                    "Skipping module %s with invalid commit hash: %s",
-                    module.name,
-                    commit,
-                )
-                continue
-
-            # If no version, use bazel_dep with git_override
-            # Only include patch_strip if there are patches to apply
-            block = (
-                f'bazel_dep(name = "{module.name}")\n'
-                "git_override(\n"
-                f'    module_name = "{module.name}",\n'
-                f'    commit = "{commit}",\n'
-                f"{patch_strip_line}"
-                f"{patches_lines}"
-                f'    remote = "{module.repo}",\n'
-                ")\n"
-            )
-        blocks.append(block)
+        directive = generate_override_directive(module, repo_commit_dict)
+        if directive is None:
+            continue
+        blocks.append(f'bazel_dep(name = "{module.name}")\n' + directive)
 
     return blocks
 
@@ -422,6 +372,7 @@ Note:
 
     # Generate files based on structure (flat vs grouped)
     output_dir_modules = os.path.abspath(args.output_dir_modules)
+    output_dir_coverage = Path(args.output_dir_coverage)
     os.makedirs(output_dir_modules, exist_ok=True)
 
     generated_files = []
@@ -438,7 +389,7 @@ Note:
         output_filename = f"score_modules_{group_name}.MODULE.bazel"
 
         output_path_modules = os.path.join(output_dir_modules, output_filename)
-        output_path_coverage = args.output_dir_coverage / "BUILD"
+        output_path_coverage = output_dir_coverage / "BUILD"
 
         # Generate file content of MODULE files
         content_module = generate_file_content(

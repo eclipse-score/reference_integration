@@ -27,6 +27,7 @@ class Metadata:
     code_root_path: str = "//score/..."
     extra_test_config: list[str] = field(default_factory=list)
     exclude_test_targets: list[str] = field(default_factory=list)
+    exclude_test_target_reasons: dict[str, str] = field(default_factory=dict)
     langs: list[str] = field(default_factory=lambda: ["cpp", "rust"])
 
     @classmethod
@@ -35,6 +36,7 @@ class Metadata:
             code_root_path=data.get("code_root_path", "//score/..."),
             extra_test_config=data.get("extra_test_config", []),
             exclude_test_targets=data.get("exclude_test_targets", []),
+            exclude_test_target_reasons=data.get("exclude_test_target_reasons", {}),
             langs=data.get("langs", ["cpp", "rust"]),
         )
 
@@ -43,6 +45,7 @@ class Metadata:
             "code_root_path": self.code_root_path,
             "extra_test_config": self.extra_test_config,
             "exclude_test_targets": self.exclude_test_targets,
+            "exclude_test_target_reasons": self.exclude_test_target_reasons,
             "langs": self.langs,
         }
 
