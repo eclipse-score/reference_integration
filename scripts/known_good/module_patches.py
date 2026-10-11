@@ -12,10 +12,9 @@
 # *******************************************************************************
 """Apply the module-under-test's own ``bazel_patches`` to its Stage-2 checkout.
 
-Distinct from the ``bazel_patches`` strip in ``ResolvedDependencies.overwrite``: that drops
-``//patches/...`` labels from *injected dependency overrides* (they do not resolve inside
-another module's root); this applies the module's own patches by filesystem path, emitting
-no label. Both are correct at once.
+Distinct from the patch transport in ``ResolvedDependencies.overwrite``, which hands a
+*dependency's* patches to Bazel by label. The module under test is the root and is never
+fetched, so its own patches are applied here directly, by filesystem path.
 """
 
 from __future__ import annotations
@@ -43,12 +42,18 @@ class ModulePatchError(RuntimeError):
     """
 
 
-def resolve_patch_path(patch: str, ref_int_root: Path) -> Path:
-    """Map one ``bazel_patches`` entry (label or bare path) to a file in ref_int's tree."""
+def patch_relpath(patch: str) -> Path:
+    """Map one ``bazel_patches`` entry (``//patches/x:y.patch`` or a bare path) to a workspace path."""
     match = _LABEL_RE.match(patch)
     relative = Path(match.group("pkg")) / match.group("name") if match else Path(patch)
     if relative.is_absolute():
         raise ModulePatchError(f"patch entry must be workspace-relative, got absolute path: {patch!r}")
+    return relative
+
+
+def resolve_patch_path(patch: str, ref_int_root: Path) -> Path:
+    """Map one ``bazel_patches`` entry to an existing file in ref_int's tree."""
+    relative = patch_relpath(patch)
     resolved = (ref_int_root / relative).resolve()
     if not resolved.is_file():
         raise ModulePatchError(f"declared patch {patch!r} does not exist at {resolved}")

@@ -1,0 +1,34 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+#
+# DR-008 Stage 2 — score_communication only, read after ci/stage2/module.bazelrc under
+# --noworkspace_rc. Separate file because these are `//`-relative labels, valid only when this
+# module is Bazel root.
+
+# libclang for this module's code generation. ref_int can't share one instance across modules
+# (needs @llvm_toolchain_llvm, root-only under bzlmod), so this registers the module's own.
+build --extra_toolchains=//bazel/toolchains:score_communication_libclang_toolchain
+
+# cc toolchain: this module's gcc.toolchain() call names its target differently, so it can't use
+# stage2-gcc. Both lines required, or the gate passes on the wrong (auto-detected) toolchain.
+build --extra_toolchains=@gcc_toolchain_x86_64//:cc_toolchain
+build --action_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
+
+build --@score_baselibs//score/json:base_library=nlohmann
+build --@score_baselibs//score/analysis/tracing/generic_trace_library:implementation=@score_baselibs//score/analysis/tracing/generic_trace_library/stub_implementation
+build --incompatible_strict_action_env
+build --experimental_retain_test_configuration_across_testonly  # bazelbuild/bazel#6842
+
+test --sandbox_tmpfs_path=/dev/shm
+test --sandbox_tmpfs_path=/tmp
+test --nosandbox_default_allow_network

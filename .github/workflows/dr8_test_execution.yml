@@ -1,0 +1,251 @@
+# *******************************************************************************
+# Copyright (c) 2025 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+name: DR-008 Test Execution (Stage 1 & 2)
+permissions:
+  contents: write
+  pull-requests: write
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+  push:
+    branches:
+      - main
+  merge_group:
+    types: [checks_requested]
+  release:
+    types: [created]
+# Do not flood CI with unneeded previous runs in PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+jobs:
+  stage1_integration:
+    name: "Stage 1 — Platform Build & Feature Integration Tests"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Clean disk space
+        uses: eclipse-score/more-disk-space@v1.1
+        with:
+          level: 4
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.18.0
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}-stage1
+          repository-cache: true
+          cache-save: ${{ github.event_name == 'push' }}
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Execute Feature Integration Tests
+        run: |
+          bazel test --lockfile_mode=error --config=linux-x86_64 //feature_integration_tests/test_cases:fit
+      - name: Export resolved dependency manifest
+        if: always()
+        run: |
+          mkdir -p artifacts/stage1-resolved-deps
+          # Merge the resolved registry versions with ref_int's own override directives into the
+          # single Stage 1 -> Stage 2 handoff manifest. The script stores the graph alongside it,
+          # which Stage 2 needs to pin each module's full transitive closure.
+          # --verbose populates originalVersion; without it every pin report verdict is "unknown".
+          bazel mod graph --verbose --output=json --lockfile_mode=error > resolved_graph.json
+          bazel run //scripts/known_good:resolve_deps -- \
+            --mod-graph resolved_graph.json \
+            --export artifacts/stage1-resolved-deps/resolved_versions.json
+          cp MODULE.bazel.lock artifacts/stage1-resolved-deps/   # evidence of full resolution
+      - name: Upload resolved dependency set artifact
+        if: always()
+        uses: actions/upload-artifact@v4.4.0
+        with:
+          name: stage1-resolved-deps
+          path: artifacts/stage1-resolved-deps/
+          retention-days: 14
+          if-no-files-found: warn
+  # ---------------------------------------------------------------------------
+  # Stage 2 matrix, derived from known_good.json's target_sw group and never hardcoded here.
+  # Each entry carries {name, repo, slug, commit, branch} so Stage 2 can check the module out.
+  # ---------------------------------------------------------------------------
+  prepare_matrix:
+    name: "Prepare Stage 2 module matrix"
+    needs: stage1_integration
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    outputs:
+      modules: ${{ steps.list.outputs.modules }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.18.0
+        with:
+          bazelisk-cache: true
+          repository-cache: true
+          cache-save: ${{ github.event_name == 'push' }}
+      - name: List target_sw modules from known_good.json
+        id: list
+        run: |
+          echo "modules=$(bazel run --ui_event_filters=-info,-stdout --noshow_progress \
+            //scripts/known_good:list_modules -- --group target_sw)" >> "$GITHUB_OUTPUT"
+  # ---------------------------------------------------------------------------
+  # Stage 2 — Module-Scoped (DR-008 Option 4). Per module: check it out at its known_good commit,
+  # pin its MODULE.bazel to the Stage-1 resolved set, and run its own unit tests + coverage inside
+  # the module (bazel root //...), not through ref_int's graph. Injection is ephemeral (CI checkout
+  # only). fail-fast: false so one module's failure does not hide the others' results.
+  # ---------------------------------------------------------------------------
+  stage2_module_validation:
+    name: "Stage 2 — Module UT & Coverage (${{ matrix.module.name }})"
+    needs: [stage1_integration, prepare_matrix]
+    if: ${{ !cancelled() }}
+    strategy:
+      fail-fast: false
+      matrix:
+        module: ${{ fromJSON(needs.prepare_matrix.outputs.modules) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clean disk space
+        uses: eclipse-score/more-disk-space@v1.1
+        with:
+          level: 4
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.18.0
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}-stage2-${{ matrix.module.name }}
+          repository-cache: true
+          cache-save: ${{ github.event_name == 'push' }}
+      - name: Install lcov
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lcov
+      # ref_int checkout — provides the scripts (quality_runners.py, ResolvedDependencies).
+      - name: Checkout reference_integration
+        uses: actions/checkout@v4
+      # The module under test, checked out at its Stage-1 known_good commit (R4).
+      - name: Checkout module under test
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ matrix.module.slug }}
+          ref: ${{ matrix.module.commit }}
+          path: _module
+      # Consume the Stage-1 resolved dependency set (R2).
+      - name: Download Stage 1 resolved dependency set
+        uses: actions/download-artifact@v4.1.8
+        with:
+          name: stage1-resolved-deps
+          path: _resolved_deps/
+      - name: Execute Unit Tests with Coverage Analysis (in module context)
+        run: |
+          bazel run //scripts:quality_runners -- \
+            --modules-to-test ${{ matrix.module.name }} \
+            --module-dir _module \
+            --resolved-deps _resolved_deps
+      # DR-008's claim is that the module was validated against ref_int's resolved versions.
+      # Prove it from the module's own post-MVS graph rather than assuming the injection took.
+      - name: Verify module resolved to ref_int's dependency versions
+        if: always()
+        run: |
+          # The resolution gate already captured this graph, before the tests ran and under the
+          # resolution they were pinned to. Reuse it rather than recomputing a second one.
+          if [ ! -s _module/module_graph.json ]; then
+            echo "::warning::no module graph captured for ${{ matrix.module.name }}"; exit 0
+          fi
+          bazel run //scripts/known_good:verify_stage2_resolution -- \
+            --mod-graph _module/module_graph.json \
+            --resolved _resolved_deps/resolved_versions.json \
+            --module-bazel _module/MODULE.bazel \
+            --module ${{ matrix.module.name }}
+      - name: Upload module quality report
+        if: always()
+        uses: actions/upload-artifact@v4.4.0
+        with:
+          name: stage2-report-${{ matrix.module.name }}
+          path: docs/verification_report/
+          retention-days: 14
+          if-no-files-found: warn
+      - name: Upload module test logs and coverage
+        if: always()
+        uses: actions/upload-artifact@v4.4.0
+        with:
+          name: stage2-testlogs-${{ matrix.module.name }}
+          path: |
+            _module/bazel-testlogs/
+            artifacts/coverage/
+          retention-days: 14
+          if-no-files-found: warn
+      # MODULE.bazel.lock as the resolution gate wrote it, after injection and before any test ran;
+      # selection_digest then asserts the test run did not move any selected version.
+      # module_graph.json is the module-rooted post-MVS graph -- the only artifact carrying a
+      # module's dev-dependency closure, since Stage 1's graph is rooted at ref_int where those
+      # edges are inactive.
+      - name: Upload regenerated module lockfile and resolved graph
+        if: always()
+        uses: actions/upload-artifact@v4.4.0
+        with:
+          name: stage2-resolved-lock-${{ matrix.module.name }}
+          path: |
+            _module/MODULE.bazel.lock
+            _module/module_graph.json
+          retention-days: 14
+          if-no-files-found: warn
+  # ---------------------------------------------------------------------------
+  # Aggregate — consolidate Stage 1 + Stage 2 results into one quality report.
+  # Also handles the release-tag test-report ZIP.
+  # ---------------------------------------------------------------------------
+  aggregate:
+    name: "Aggregate Quality Report"
+    needs: [stage1_integration, stage2_module_validation]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.18.0
+        with:
+          bazelisk-cache: true
+          repository-cache: true
+          cache-save: ${{ github.event_name == 'push' }}
+      - name: Download Stage 2 quality reports
+        uses: actions/download-artifact@v4.1.8
+        with:
+          pattern: stage2-report-*
+          path: _stage2_reports/
+      # Distinct name from test_and_docs's release asset -- avoids a tag-event upload race.
+      - name: Create archive of test reports
+        if: github.ref_type == 'tag'
+        run: |
+          mkdir -p artifacts/test-reports
+          find _stage2_reports -name 'test.xml' -print0 | \
+            xargs -0 -I{} cp --parents {} artifacts/test-reports/ 2>/dev/null || true
+          zip -r ${{ github.event.repository.name }}_test_reports_stage2.zip artifacts/test-reports/
+        shell: bash
+      - name: Upload release asset (attach ZIP to GitHub Release)
+        uses: softprops/action-gh-release@v2.5.0
+        if: github.ref_type == 'tag'
+        with:
+          files: ${{ github.event.repository.name }}_test_reports_stage2.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish consolidated quality report
+        if: always()
+        run: |
+          bazel run --ui_event_filters=-info,-stdout --noshow_progress \
+            //scripts:aggregate_quality_report -- \
+            --stage1-result "${{ needs.stage1_integration.result }}" \
+            --stage2-result "${{ needs.stage2_module_validation.result }}" \
+            --stage2-dir "_stage2_reports/" \
+            >> "$GITHUB_STEP_SUMMARY"

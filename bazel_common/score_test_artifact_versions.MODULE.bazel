@@ -34,8 +34,9 @@ single_version_override(
     version = "0.68.2-score",
 )
 
-# Ferrocene coverage tooling behind those .profraw files.
+# Ferrocene coverage tooling behind those .profraw files. Must move in the same commit as the
+# bazel_dep in score_rust_toolchains.MODULE.bazel, or the bump is overruled back to this value.
 single_version_override(
     module_name = "score_toolchains_rust",
-    version = "0.8.0",
+    version = "0.9.1",
 )

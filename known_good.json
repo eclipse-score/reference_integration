@@ -14,14 +14,27 @@
                     ],
                     "exclude_test_targets": [
                         "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test",
+                        "//score/flatbuffers/bazel:schema_generator_test"
+                    ],
+                    "langs": [
+                        "cpp"
+                    ],
+                    "bazel_config": [
+                        "stage2-gcc",
+                        "stage2-rust",
+                        "stage2-baselibs-flags"
+                    ],
+                    "exclude_test_target_reasons": {
+                        "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test": "Intentionally-failing upstream target (eclipse-score/baselibs#7): asserts an aborts_upon_exception feature no S-CORE toolchain implements; tags=[\"unit\"], so no tag filter removes it.",
+                        "//score/flatbuffers/bazel:schema_generator_test": "Its unittest cases pass, but bazel coverage re-invokes the script as a CLI entrypoint for lcov collection, which fails with 'the following arguments are required: --raw-schema' (excluded upstream in #346). Stage 2 also runs bazel coverage."
+                    },
+                    "legacy_exclude_test_targets": [
+                        "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test",
                         "//score/containers:dynamic_array_test",
                         "//score/mw/log/configuration:*",
                         "//score/json/examples:*",
                         "//score/flatbuffers:version_reader_test",
                         "//score/flatbuffers/bazel:schema_generator_test"
-                    ],
-                    "langs": [
-                        "cpp"
                     ]
                 },
                 "hash": "ee40fece5abacb28ea641b448446a04175038b17"
@@ -37,11 +50,21 @@
                     "//patches/communication:005-migrate-baselibs-rust-targets.patch"
                 ],
                 "metadata": {
-                    "code_root_path": "//score/mw/com/impl/...",
+                    "code_root_path": "//...",
                     "extra_test_config": [
                         "@score_communication//score/memory/shared/flags:use_typedshmd=False"
                     ],
-                    "exclude_test_targets": [
+                    "exclude_test_targets": [],
+                    "langs": [
+                        "cpp",
+                        "rust"
+                    ],
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "bazel_config": [
+                        "stage2-rust",
+                        "stage2-baselibs-flags"
+                    ],
+                    "legacy_exclude_test_targets": [
                         "//score/mw/com/impl:unit_test_runtime_single_exec",
                         "//score/mw/com/impl:runtime_test",
                         "//score/mw/com/impl/configuration:config_parser_test",
@@ -50,12 +73,7 @@
                         "//score/mw/com/impl/tracing/configuration:tracing_filter_config_parser_test",
                         "//score/mw/com/impl/tracing:tracing_runtime_test",
                         "//score/mw/com/impl/bindings/lola/tracing:tracing_runtime_test"
-                    ],
-                    "langs": [
-                        "cpp",
-                        "rust"
-                    ],
-                    "rust_coverage_config": "ferrocene-coverage"
+                    ]
                 }
             },
             "score_persistency": {
@@ -81,6 +99,22 @@
                     ],
                     "integration_test_config": [
                         "flaky_test_attempts=3"
+                    ],
+                    "bazel_config": [
+                        "stage2-gcc",
+                        "stage2-rust",
+                        "stage2-communication-flags",
+                        "stage2-baselibs-flags"
+                    ],
+                    "exclude_test_target_reasons": {
+                        "//score/kvs/tests:bm_kvs_cpp": "google_benchmark benchmark declared as a cc_test; a timing measurement, not a correctness test, so it is not meaningful in a UT/coverage run.",
+                        "//score/kvs/tests/integration_test_scenarios/...": "Integration-test scenario binaries driven by the CIT suite; run through metadata.integration_test_targets, not as unit tests.",
+                        "//score/kvs/tests/test_cases/...": "Component integration tests (CIT); run through metadata.integration_test_targets, not as unit tests."
+                    },
+                    "legacy_exclude_test_targets": [
+                        "//score/kvs/tests:bm_kvs_cpp",
+                        "//score/kvs/tests/integration_test_scenarios/...",
+                        "//score/kvs/tests/test_cases/..."
                     ]
                 },
                 "hash": "961c0a0989755a1e0fe8de55e83c0a44e2e20b56"
@@ -93,6 +127,10 @@
                     "exclude_test_targets": [],
                     "langs": [
                         "rust"
+                    ],
+                    "bazel_config": [
+                        "stage2-gcc",
+                        "stage2-rust"
                     ]
                 },
                 "hash": "90fb90258f49f17a504d41262634d43608f28ccc"
@@ -115,6 +153,17 @@
                     "integration_test_config": [
                         "flaky_test_attempts=3",
                         "@score_lifecycle//config:integration_mode=docker"
+                    ],
+                    "bazel_config": [
+                        "stage2-gcc",
+                        "stage2-rust",
+                        "stage2-baselibs-flags"
+                    ],
+                    "exclude_test_target_reasons": {
+                        "//score/health_monitor/src/rust:miri_tests": "miri_test rule (tags=[\"miri\"]); ref_int registers no miri toolchain, so the target fails toolchain resolution during analysis, before any tag filter applies."
+                    },
+                    "legacy_exclude_test_targets": [
+                        "//score/health_monitor/src/rust:miri_tests"
                     ]
                 },
                 "hash": "85da2168328d17a3cf53791ebf93534e5ed921fc"
@@ -125,7 +174,7 @@
                     "//patches/logging:002-undev-component-test-deps.patch"
                 ],
                 "metadata": {
-                    "code_root_path": "//score/mw/log/...",
+                    "code_root_path": "//...",
                     "extra_test_config": [
                         "@score_logging//score/datarouter/build_configuration_flags:enable_nonverbose_dlt=False",
                         "@score_logging//score/datarouter/build_configuration_flags:enable_dynamic_configuration=False",
@@ -133,7 +182,7 @@
                         "@score_logging//score/datarouter/build_configuration_flags:use_local_vlan=True"
                     ],
                     "exclude_test_targets": [
-                        "//score/mw/log/legacy_non_verbose_api:unit_test"
+                        "//score/test/component/..."
                     ],
                     "integration_test_targets": [
                         "//score/test/component/..."
@@ -141,6 +190,18 @@
                     "integration_test_config": [
                         "flaky_test_attempts=3",
                         "@score_logging//score/datarouter/build_configuration_flags:enable_nonverbose_dlt=True"
+                    ],
+                    "bazel_config": [
+                        "stage2-gcc",
+                        "stage2-rust",
+                        "stage2-communication-flags",
+                        "stage2-baselibs-flags"
+                    ],
+                    "exclude_test_target_reasons": {
+                        "//score/test/component/...": "Component integration tests; run through metadata.integration_test_targets with their own config, not as unit tests (code_root_path //... would otherwise pick them up)."
+                    },
+                    "legacy_exclude_test_targets": [
+                        "//score/mw/log/legacy_non_verbose_api:unit_test"
                     ]
                 },
                 "hash": "3d9896611baf4e0d018032e5cb999941b2602dbd"
@@ -158,7 +219,12 @@
                     "langs": [
                         "cpp"
                     ],
-                    "rust_coverage_config": "ferrocene-coverage"
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "bazel_config": [
+                        "stage2-gcc",
+                        "stage2-communication-flags",
+                        "stage2-baselibs-flags"
+                    ]
                 }
             },
             "score_config_management": {
@@ -176,16 +242,33 @@
                     ],
                     "exclude_test_targets": [
                         "//score/config_management/config_daemon/code/factory/details:unit_test_mw_com",
+                        "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com",
+                        "//score/config_management/dependability/...",
+                        "//score/config_management/config_daemon/code:main_function_test"
+                    ],
+                    "langs": [
+                        "cpp"
+                    ],
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "bazel_config": [
+                        "stage2-gcc",
+                        "stage2-communication-flags",
+                        "stage2-baselibs-flags"
+                    ],
+                    "exclude_test_target_reasons": {
+                        "//score/config_management/config_daemon/code/factory/details:unit_test_mw_com": "tags=[\"exclusive\"] upstream for LoLa message passing 2.0 sandboxing (Ticket-217341); mw_com service discovery does not come up in Stage 2 and 4 TestFactoryMwImpl cases fail.",
+                        "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com": "tags=[\"exclusive\"] upstream for LoLa message passing 2.0 sandboxing (Ticket-217341); mw_com service discovery does not come up in Stage 2 and ConfigProviderFactoryTest.FoundServiceDuringCreation times out.",
+                        "//score/config_management/dependability/...": "No test rules (component()/dependable_element(), tests=[]); analysis fails because dependability/BUILD references :config_daemon_app_unit and :config_provider_details_unit, declared nowhere in the module.",
+                        "//score/config_management/config_daemon/code:main_function_test": "Fails to compile: main_test.cpp references score::mw::lifecycle::LifeCycleManagerMock, which score_lifecycle v0.5.0 no longer provides (excluded upstream in #336)."
+                    },
+                    "legacy_exclude_test_targets": [
+                        "//score/config_management/config_daemon/code/factory/details:unit_test_mw_com",
                         "//score/config_management/config_daemon/code/services/details/mw_com:unit_test",
                         "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com",
                         "//score/config_management/config_provider/code/proxies/details:unit_test_mw",
                         "//score/config_management/config_daemon/code:main_function_test",
                         "//score/config_management/dependability/..."
-                    ],
-                    "langs": [
-                        "cpp"
-                    ],
-                    "rust_coverage_config": "ferrocene-coverage"
+                    ]
                 }
             }
         },

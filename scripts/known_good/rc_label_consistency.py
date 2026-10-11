@@ -36,6 +36,8 @@ REF_INT_ROOT = Path(__file__).resolve().parent.parent.parent
 
 # Only sources ref_int owns; a module's own .bazelrc is fixed by a patch instead.
 RC_FILES = (Path(".bazelrc"), Path("ci/stage2/module.bazelrc"))
+# ref_int's dedicated per-module Stage-2 rc files. Globbed so a new one is covered automatically.
+RC_GLOBS = (("ci/stage2", "*.bazelrc"),)
 KNOWN_GOOD = Path("known_good.json")
 
 # ``--@repo//pkg/path:setting=value`` or the repo-relative ``--//pkg:setting=value``.
@@ -59,7 +61,8 @@ def collect_occurrences(root: Path = REF_INT_ROOT) -> list[Occurrence]:
     """Gather every build-setting label ref_int sets, tagged with where it was found."""
     found: list[Occurrence] = []
 
-    for rc in RC_FILES:
+    globbed = sorted(rc.relative_to(root) for directory, pattern in RC_GLOBS for rc in (root / directory).glob(pattern))
+    for rc in list(RC_FILES) + [rc for rc in globbed if rc not in RC_FILES]:
         path = root / rc
         if not path.is_file():
             continue
