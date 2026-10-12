@@ -22,10 +22,16 @@ git_override(
 )
 
 bazel_dep(name = "score_itf")
-git_override(
+single_version_override(
     module_name = "score_itf",
-    commit = "802e0186d373e0d9d67c1c9ccb1ea08952c7ad06",
-    remote = "https://github.com/eclipse-score/itf.git",
+    version = "0.6.0",
+)
+
+bazel_dep(name = "score_tools")
+git_override(
+    module_name = "score_tools",
+    commit = "4b48cec400c67be75cfc3fa4658ac6a0489bf7a8",
+    remote = "https://github.com/eclipse-score/tools.git",
 )
 
 bazel_dep(name = "score_tooling")
@@ -67,7 +73,7 @@ git_override(
 bazel_dep(name = "score_docs_as_code")
 git_override(
     module_name = "score_docs_as_code",
-    commit = "a7edbc55c5b4ea35e9ef0c7554f961bc583021a4",
+    commit = "36cdc3f7a56e9651ee51ce91fd183bf3d947dd16",
     remote = "https://github.com/eclipse-score/docs-as-code.git",
 )
 

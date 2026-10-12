@@ -77,11 +77,11 @@ public:
         }
 
         // Log default values for key_0 and key_2 so Python can assert they are accessible.
-        auto val0{kvs->get_value_f64("partial_key_0")};
+        auto val0{kvs->get_default_value_f64("partial_key_0")};
         if (!val0.has_value()) {
             throw std::runtime_error{"Failed to read default value for 'partial_key_0'"};
         }
-        auto val2{kvs->get_value_f64("partial_key_2")};
+        auto val2{kvs->get_default_value_f64("partial_key_2")};
         if (!val2.has_value()) {
             throw std::runtime_error{"Failed to read default value for 'partial_key_2'"};
         }
@@ -114,7 +114,7 @@ public:
         auto kvs{*kvs_opt};
 
         // Read the default — this key has a default value but was never explicitly set.
-        auto default_result{kvs->get_value_f64("default_probe_key")};
+        auto default_result{kvs->get_default_value_f64("default_probe_key")};
         if (!default_result.has_value()) {
             throw std::runtime_error{"Failed to read default value for 'default_probe_key'"};
         }
@@ -175,7 +175,7 @@ public:
         }
 
         // Log default for sel_key_0 after reset_key — confirms key returns to its default value.
-        auto default_val{kvs->get_value_f64(keys[0])};
+        auto default_val{kvs->get_default_value_f64(keys[0])};
         if (!default_val.has_value()) {
             throw std::runtime_error{"Failed to read default after reset for sel_key_0"};
         }
@@ -224,7 +224,7 @@ public:
         }
 
         // Log default for fr_key_0 after reset — confirms key returns to its default value.
-        auto default_val{kvs->get_value_f64("fr_key_0")};
+        auto default_val{kvs->get_default_value_f64("fr_key_0")};
         if (!default_val.has_value()) {
             throw std::runtime_error{"Failed to read default after reset for fr_key_0"};
         }

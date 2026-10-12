@@ -17,13 +17,11 @@
 bazel_dep(name = "score_baselibs")
 git_override(
     module_name = "score_baselibs",
-    commit = "8f58bd34fb5218ddd909f87cadc3d7f17ca38ef7",
+    commit = "ee40fece5abacb28ea641b448446a04175038b17",
     patch_strip = 1,
     patches = [
         "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
         "//patches/baselibs:002-restore-qnx8-poll-workaround.patch",
-        "//patches/baselibs:005-rename-manual-verification-report-id.patch",
-        "//patches/baselibs:006-include-cpp-style-guide-in-toctree.patch",
     ],
     remote = "https://github.com/eclipse-score/baselibs.git",
 )
@@ -37,6 +35,7 @@ git_override(
         "//patches/communication:001-expose-comm-examples.patch",
         "//patches/communication:003-module-deps-visibility.patch",
         "//patches/communication:004-rules-build-error-not-dev-dependency.patch",
+        "//patches/communication:005-migrate-baselibs-rust-targets.patch",
     ],
     remote = "https://github.com/eclipse-score/communication.git",
 )
@@ -44,15 +43,10 @@ git_override(
 bazel_dep(name = "score_persistency")
 git_override(
     module_name = "score_persistency",
-    commit = "9ae529ba9f413976ff5c9948c6490afa51bbfdc3",
+    commit = "961c0a0989755a1e0fe8de55e83c0a44e2e20b56",
     patch_strip = 1,
     patches = [
-        "//patches/persistency:001-add-mod-need.patch",
-        "//patches/persistency:002-rename-manual-verification-report-id.patch",
-        "//patches/persistency:003-pip-not-dev-dependency.patch",
-        "//patches/persistency:004-imagefs-not-dev-dependency.patch",
-        "//patches/persistency:005-googletest-not-dev-dependency.patch",
-        "//patches/persistency:006-add-module-index-title.patch",
+        "//patches/persistency:003-undev-deps-for-root-module.patch",
     ],
     remote = "https://github.com/eclipse-score/persistency.git",
 )
@@ -60,25 +54,29 @@ git_override(
 bazel_dep(name = "score_kyron")
 git_override(
     module_name = "score_kyron",
-    commit = "394b232a8db7fb77db0ff16e9c26ec31c7759efd",
-    patch_strip = 1,
-    patches = [
-        "//patches/kyron:001-use-format-targets-new-location.patch",
-    ],
+    commit = "90fb90258f49f17a504d41262634d43608f28ccc",
     remote = "https://github.com/eclipse-score/kyron.git",
 )
 
 bazel_dep(name = "score_lifecycle")
 git_override(
     module_name = "score_lifecycle",
-    commit = "9b86164ac1f850f76ac8ce743be903f98a60f422",
+    commit = "a7b86bff484a22526dda09e5742d89a7def4788b",
+    patch_strip = 1,
+    patches = [
+        "//patches/lifecycle:002-undev-integration-test-deps.patch",
+    ],
     remote = "https://github.com/eclipse-score/lifecycle.git",
 )
 
 bazel_dep(name = "score_logging")
 git_override(
     module_name = "score_logging",
-    commit = "c8e85fd862d3cd281d263a87b3dcc3d59f8fa1a5",
+    commit = "3d9896611baf4e0d018032e5cb999941b2602dbd",
+    patch_strip = 1,
+    patches = [
+        "//patches/logging:002-undev-component-test-deps.patch",
+    ],
     remote = "https://github.com/eclipse-score/logging.git",
 )
 
@@ -100,6 +98,7 @@ git_override(
     patch_strip = 1,
     patches = [
         "//patches/config_management:001-adapt-proxy-api-and-remove-internal-targets.patch",
+        "//patches/config_management:002-migrate-baselibs-targets.patch",
     ],
     remote = "https://github.com/eclipse-score/config_management.git",
 )

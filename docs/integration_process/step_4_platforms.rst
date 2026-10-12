@@ -184,30 +184,42 @@ must always be present — you wire it straight into each image's build
 description instead. Unlike the showcase route, **this is per-image work: you
 repeat it for every image you target** (Linux, QNX, AutoSD, EBcLfSA).
 
-The reference example is the ``datarouter``. In the QNX image it is added as a
-source of the image target and exposed to the image's build description via a
-location mapping, then placed into the filesystem by ``system.build``:
+The reference example is the ``datarouter``. Its destination path, permissions
+and owner are declared once as a ``pkg_files`` target; because the binary is
+resolved per platform (not per architecture) the definition is shared from
+``images/common/apps`` and each image lists it in its ``srcs``.
+``score_rules_imagefs`` then generates the matching ``mkifs`` directives, so
+nothing has to be added to ``system.build``:
 
 .. code-block:: python
 
-   # images/qnx_x86_64/build/BUILD
+   # images/common/apps/BUILD  (defined once, shared by every image)
+   pkg_files(
+       name = "datarouter_bin",
+       srcs = ["@score_logging//score/datarouter"],
+       attributes = pkg_attributes(mode = "0777"),
+       prefix = "usr/bin/datarouter",
+       strip_prefix = strip_prefix.files_only(),
+       visibility = ["//visibility:public"],
+   )
+
+   # images/qnx_x86_64/build/BUILD  (referenced per image)
    qnx_ifs(
        name = "init",
        srcs = [
            # ...
-           "//showcases",
-           "@score_logging//score/datarouter",
-           "//feature_integration_tests/configs/datarouter:etc_configs",
+           "//images/common/apps:datarouter_bin",
        ],
-       ext_repo_maping = {
-           "BUNDLE_PATH": "$(location //showcases:showcases)",
-           "DATAROUTER_PATH": "$(location @score_logging//score/datarouter:datarouter)",
-       },
+       build_file = "init.build",
+       extra_build_files = ["system.build"],
    )
 
-See `images/qnx_x86_64/build/BUILD <https://github.com/eclipse-score/reference_integration/blob/main/images/qnx_x86_64/build/BUILD>`_ and the
-matching deployment lines in
-`images/qnx_x86_64/build/system.build <https://github.com/eclipse-score/reference_integration/blob/main/images/qnx_x86_64/build/system.build>`_
+Note that ``qnx_ifs`` rejects anything in ``srcs`` that does not provide a
+``rules_pkg`` provider, so a plain ``filegroup`` or a bare label will not work -
+wrap it in ``pkg_files``.
+
+See `images/common/apps/BUILD <https://github.com/eclipse-score/reference_integration/blob/main/images/common/apps/BUILD>`_
+and `images/qnx_x86_64/build/BUILD <https://github.com/eclipse-score/reference_integration/blob/main/images/qnx_x86_64/build/BUILD>`_
 for the full picture, and repeat the equivalent wiring in the other images you
 need (`images/linux_x86_64 <https://github.com/eclipse-score/reference_integration/tree/main/images/linux_x86_64>`_,
 `images/autosd <https://github.com/eclipse-score/reference_integration/tree/main/images/autosd>`_,

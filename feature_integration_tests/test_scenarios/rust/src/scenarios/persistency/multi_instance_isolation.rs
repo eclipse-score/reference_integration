@@ -11,7 +11,10 @@
 // SPDX-License-Identifier: Apache-2.0
 // *******************************************************************************
 
-use crate::internals::persistency::{kvs_instance::kvs_instance, kvs_parameters::KvsParameters};
+use crate::internals::persistency::{
+    kvs_instance::{get_default_value_f64, kvs_instance},
+    kvs_parameters::KvsParameters,
+};
 use rust_kvs::prelude::KvsApi;
 use serde_json::Value;
 use test_scenarios_rust::scenario::Scenario;
@@ -43,13 +46,12 @@ impl Scenario for MultiInstanceIsolation {
         let kvs1 = kvs_instance(params1).map_err(|e| format!("{e:?}"))?;
 
         // Log instance 1's own default (key_a) — proves default was loaded.
-        let val_a: f64 = kvs1
-            .get_value_as("key_a")
+        let val_a: f64 = get_default_value_f64(&kvs1, "key_a")
             .map_err(|e| format!("Instance 1 should have key_a default: {e:?}"))?;
         info!(instance = "1", key = "key_a", value = val_a, source = "default");
 
-        // Confirm key_b is NOT accessible from instance 1 (isolation check).
-        let cross_a: Result<f64, _> = kvs1.get_value_as("key_b");
+        // Confirm key_b's default is NOT accessible from instance 1 (isolation check).
+        let cross_a: Result<f64, _> = get_default_value_f64(&kvs1, "key_b");
         if cross_a.is_ok() {
             return Err("Isolation broken: instance 1 can access key_b from instance 2 defaults".to_string());
         }
@@ -62,13 +64,12 @@ impl Scenario for MultiInstanceIsolation {
         let kvs2 = kvs_instance(params2).map_err(|e| format!("{e:?}"))?;
 
         // Log instance 2's own default (key_b) — proves default was loaded.
-        let val_b: f64 = kvs2
-            .get_value_as("key_b")
+        let val_b: f64 = get_default_value_f64(&kvs2, "key_b")
             .map_err(|e| format!("Instance 2 should have key_b default: {e:?}"))?;
         info!(instance = "2", key = "key_b", value = val_b, source = "default");
 
-        // Confirm key_a is NOT accessible from instance 2 (isolation check).
-        let cross_b: Result<f64, _> = kvs2.get_value_as("key_a");
+        // Confirm key_a's default is NOT accessible from instance 2 (isolation check).
+        let cross_b: Result<f64, _> = get_default_value_f64(&kvs2, "key_a");
         if cross_b.is_ok() {
             return Err("Isolation broken: instance 2 can access key_a from instance 1 defaults".to_string());
         }

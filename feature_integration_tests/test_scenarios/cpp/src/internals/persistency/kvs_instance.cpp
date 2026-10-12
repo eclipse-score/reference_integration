@@ -322,6 +322,19 @@ std::optional<double> KvsInstance::get_value_f64(const std::string& key) {
     return std::get<double>(stored.getValue());
 }
 
+std::optional<double> KvsInstance::get_default_value_f64(const std::string& key) {
+    auto result = kvs_.get_default_value(key);
+    if (!result) {
+        return std::nullopt;
+    }
+
+    const auto& stored = result.value();
+    if (stored.getType() != score::mw::per::kvs::KvsValue::Type::f64) {
+        return std::nullopt;
+    }
+    return std::get<double>(stored.getValue());
+}
+
 bool KvsInstance::remove_key(const std::string& key) {
     auto result = kvs_.remove_key(key);
     return static_cast<bool>(result);

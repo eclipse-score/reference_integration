@@ -35,6 +35,7 @@ public:
     // Get value methods
     std::optional<double> get_value(const std::string& key);
     std::optional<double> get_value_f64(const std::string& key);
+    std::optional<double> get_default_value_f64(const std::string& key);
 
     // Key management methods
     bool remove_key(const std::string& key);

@@ -54,11 +54,11 @@ public:
         }
 
         // Log default values for ascii and greek keys so Python can assert they are accessible.
-        auto val_ascii = kvs->get_value_f64("utf8_ascii_key");
+        auto val_ascii = kvs->get_default_value_f64("utf8_ascii_key");
         if (!val_ascii.has_value()) {
             throw std::runtime_error("Failed to read default value for 'utf8_ascii_key'");
         }
-        auto val_greek = kvs->get_value_f64(u8"utf8_greek κλμ");
+        auto val_greek = kvs->get_default_value_f64(u8"utf8_greek κλμ");
         if (!val_greek.has_value()) {
             throw std::runtime_error(u8"Failed to read default value for 'utf8_greek κλμ'");
         }
@@ -96,7 +96,7 @@ public:
         auto kvs = *kvs_opt;
 
         // Read the default via a UTF-8 emoji key — never explicitly set.
-        auto default_result = kvs->get_value_f64(u8"probe 🔍");
+        auto default_result = kvs->get_default_value_f64(u8"probe 🔍");
         if (!default_result.has_value()) {
             throw std::runtime_error(u8"Failed to read default value for 'probe 🔍'");
         }

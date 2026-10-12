@@ -1,0 +1,24 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+# Fast documentation check: builds the docs only to surface warnings and errors
+# early, without waiting for the test suite in test_and_docs.yml. Nothing is
+# deployed from here - the published docs come from test_and_docs.yml.
+name: Documentation check
+permissions:
+  contents: read
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+jobs:
+  docs-check:
+    uses: eclipse-score/cicd-workflows/.github/workflows/docs.yml@d2083d5dac0e309643d9f495e61342dfbaf07ed5 # main, 2026-09-24

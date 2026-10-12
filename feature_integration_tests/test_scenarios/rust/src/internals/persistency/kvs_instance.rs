@@ -14,7 +14,18 @@
 
 use crate::internals::persistency::kvs_parameters::KvsParameters;
 use rust_kvs::json_backend::JsonBackendBuilder;
-use rust_kvs::prelude::{ErrorCode, Kvs, KvsBuilder};
+use rust_kvs::prelude::{ErrorCode, Kvs, KvsApi, KvsBuilder};
+
+/// Read the default value for `key` as `f64`.
+///
+/// Mirrors the pre-#417 behavior where `get_value` fell back to a key's default
+/// for keys that were never written. The current persistency API returns
+/// `KeyNotFound` from `get_value`/`get_value_as` for unwritten keys, so default
+/// reads must go through `get_default_value`.
+pub fn get_default_value_f64(kvs: &Kvs, key: &str) -> Result<f64, ErrorCode> {
+    let value = kvs.get_default_value(key)?;
+    f64::try_from(&value).map_err(|_| ErrorCode::ConversionFailed)
+}
 
 /// Create KVS instance based on provided parameters.
 pub fn kvs_instance(kvs_parameters: KvsParameters) -> Result<Kvs, ErrorCode> {
