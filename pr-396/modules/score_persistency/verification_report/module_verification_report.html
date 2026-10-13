@@ -576,7 +576,7 @@ html[data-theme="dark"] .score-testcase-result--disabled {
 </style>
 <section id="verification-report">
 <h1>Verification Report<a class="headerlink" href="#verification-report" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-b90d360f">
+<div class="need_container docutils container" id="SNCB-eaad96fc">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__persistency_verification_report">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -642,6 +642,23 @@ html[data-theme="dark"] .score-testcase-result--disabled {
 .wp-doc-table td .dataTables_wrapper .dataTables_filter,
 .wp-doc-table td .dataTables_wrapper .dataTables_info,
 .wp-doc-table td .dataTables_wrapper .dataTables_paginate { display: none; }
+
+p.rubric.safety-class-heading {
+    display: inline-block; margin: 1.4em 0 0.5em 0;
+    padding: 0.15em 0.9em; border-radius: 1em;
+    font-size: 0.95em; font-weight: 600; color: #ffffff;
+}
+p.rubric.safety-class-heading.safety-asil-b { background: #1f4e79; }
+p.rubric.safety-class-heading.safety-qm { background: #6c757d; }
+
+.empty-pie {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 0.4em;
+    height: 200px; padding: 0.5em; text-align: center;
+    border: 2px dashed #b0b0b0; border-radius: 6px; color: #6c757d;
+}
+.empty-pie-title { font-weight: 600; }
+.empty-pie-text { font-style: italic; }
 </style><section id="components">
 <h2>Components<a class="headerlink" href="#components" title="Link to this heading">#</a></h2>
 <section id="component-overview">
@@ -676,6 +693,7 @@ html[data-theme="dark"] .score-testcase-result--disabled {
 <span id="comp-persistency-kvs"></span><h3>persistency::kvs<a class="headerlink" href="#persistency-kvs" title="Link to this heading">#</a></h3>
 <hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="component-requirements-statistics">
 <h4>Component Requirements Statistics<a class="headerlink" href="#component-requirements-statistics" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
@@ -686,37 +704,48 @@ html[data-theme="dark"] .score-testcase-result--disabled {
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_persistency/verification_report/module_verification_report-2">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Status (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_persistency/verification_report/module_verification_report-3">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 </div>
 </div>
 </section>
 <section id="component-architecture-statistics">
 <h4>Component Architecture Statistics<a class="headerlink" href="#component-architecture-statistics" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="persistency::kvs Architecture Elements Status (ASIL B)" id="needpie-modules/score_persistency/verification_report/module_verification_report-4" src="../../../_images/need_pie_2eefc.svg" />
+<img alt="persistency::kvs Architecture Elements Status (ASIL B)" id="needpie-modules/score_persistency/verification_report/module_verification_report-2" src="../../../_images/need_pie_2bf79.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="persistency::kvs Architecture Elements Test Coverage (ASIL B)" id="needpie-modules/score_persistency/verification_report/module_verification_report-5" src="../../../_images/need_pie_7c774.svg" />
+<img alt="persistency::kvs Architecture Elements Test Coverage (ASIL B)" id="needpie-modules/score_persistency/verification_report/module_verification_report-3" src="../../../_images/need_pie_9c830.svg" />
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_persistency/verification_report/module_verification_report-6">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Status (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_persistency/verification_report/module_verification_report-7">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 </div>
 </div>
 </section>

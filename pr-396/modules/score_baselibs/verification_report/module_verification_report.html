@@ -579,7 +579,7 @@ html[data-theme="dark"] .score-testcase-result--disabled {
 </style>
 <section id="verification-report">
 <h1>Verification Report<a class="headerlink" href="#verification-report" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-d7a14a10">
+<div class="need_container docutils container" id="SNCB-b12aa878">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__baselibs_verification_report">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -645,6 +645,23 @@ html[data-theme="dark"] .score-testcase-result--disabled {
 .wp-doc-table td .dataTables_wrapper .dataTables_filter,
 .wp-doc-table td .dataTables_wrapper .dataTables_info,
 .wp-doc-table td .dataTables_wrapper .dataTables_paginate { display: none; }
+
+p.rubric.safety-class-heading {
+    display: inline-block; margin: 1.4em 0 0.5em 0;
+    padding: 0.15em 0.9em; border-radius: 1em;
+    font-size: 0.95em; font-weight: 600; color: #ffffff;
+}
+p.rubric.safety-class-heading.safety-asil-b { background: #1f4e79; }
+p.rubric.safety-class-heading.safety-qm { background: #6c757d; }
+
+.empty-pie {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 0.4em;
+    height: 200px; padding: 0.5em; text-align: center;
+    border: 2px dashed #b0b0b0; border-radius: 6px; color: #6c757d;
+}
+.empty-pie-title { font-weight: 600; }
+.empty-pie-text { font-style: italic; }
 </style><section id="components">
 <h2>Components<a class="headerlink" href="#components" title="Link to this heading">#</a></h2>
 <section id="component-overview">
@@ -739,6 +756,7 @@ html[data-theme="dark"] .score-testcase-result--disabled {
 <span id="comp-json"></span><h3>JSON<a class="headerlink" href="#json" title="Link to this heading">#</a></h3>
 <hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="component-requirements-statistics">
 <h4>Component Requirements Statistics<a class="headerlink" href="#component-requirements-statistics" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
@@ -749,37 +767,48 @@ html[data-theme="dark"] .score-testcase-result--disabled {
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-2">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Status (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-3">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 </div>
 </div>
 </section>
 <section id="component-architecture-statistics">
 <h4>Component Architecture Statistics<a class="headerlink" href="#component-architecture-statistics" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="JSON Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-4" src="../../../_images/need_pie_1718d.svg" />
+<img alt="JSON Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-2" src="../../../_images/need_pie_828de.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="JSON Architecture Elements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-5" src="../../../_images/need_pie_ae42c.svg" />
+<img alt="JSON Architecture Elements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-3" src="../../../_images/need_pie_26260.svg" />
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-6">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Status (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-7">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 </div>
 </div>
 </section>
@@ -1139,47 +1168,63 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <span id="comp-vajson"></span><h3>VaJson<a class="headerlink" href="#vajson" title="Link to this heading">#</a></h3>
 <hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="id1">
 <h4>Component Requirements Statistics<a class="headerlink" href="#id1" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="VaJson Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-8" src="../../../_images/need_pie_d1547.svg" />
+<img alt="VaJson Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-4" src="../../../_images/need_pie_1718d.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="VaJson Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-9" src="../../../_images/need_pie_3068b.svg" />
+<img alt="VaJson Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-5" src="../../../_images/need_pie_ae42c.svg" />
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-10">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Status (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-11">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 </div>
 </div>
 </section>
 <section id="id2">
 <h4>Component Architecture Statistics<a class="headerlink" href="#id2" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-12">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Status (ASIL B)</span>
+   <span class="empty-pie-text">no ASIL B architecture elements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-13">No needs passed the filters</p>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Test Coverage (ASIL B)</span>
+   <span class="empty-pie-text">no ASIL B architecture elements</span>
+</div></div>
 </div>
 </div>
-</div>
+<p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-14">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Status (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-15">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 </div>
 </div>
 </section>
@@ -1338,47 +1383,59 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <span id="comp-memory-shared"></span><h3>Memory Shared<a class="headerlink" href="#memory-shared" title="Link to this heading">#</a></h3>
 <hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="id7">
 <h4>Component Requirements Statistics<a class="headerlink" href="#id7" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Memory Shared Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-16" src="../../../_images/need_pie_dda30.svg" />
+<img alt="Memory Shared Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-6" src="../../../_images/need_pie_3678b.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Memory Shared Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-17" src="../../../_images/need_pie_5ff76.svg" />
+<img alt="Memory Shared Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-7" src="../../../_images/need_pie_93516.svg" />
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-18">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Status (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-19">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 </div>
 </div>
 </section>
 <section id="id8">
 <h4>Component Architecture Statistics<a class="headerlink" href="#id8" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Memory Shared Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-20" src="../../../_images/need_pie_47c5a.svg" />
+<img alt="Memory Shared Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-8" src="../../../_images/need_pie_d1547.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Memory Shared Architecture Elements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-21" src="../../../_images/need_pie_31be3.svg" />
+<img alt="Memory Shared Architecture Elements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-9" src="../../../_images/need_pie_3068b.svg" />
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-22">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Status (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-23">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 </div>
 </div>
 </section>
@@ -1612,47 +1669,59 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <span id="comp-result"></span><h3>Result<a class="headerlink" href="#result" title="Link to this heading">#</a></h3>
 <hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="id13">
 <h4>Component Requirements Statistics<a class="headerlink" href="#id13" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Result Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-24" src="../../../_images/need_pie_ae3b9.svg" />
+<img alt="Result Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-10" src="../../../_images/need_pie_21b8b.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Result Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-25" src="../../../_images/need_pie_bb1aa.svg" />
+<img alt="Result Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-11" src="../../../_images/need_pie_fc040.svg" />
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-26">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Status (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-27">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 </div>
 </div>
 </section>
 <section id="id14">
 <h4>Component Architecture Statistics<a class="headerlink" href="#id14" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Result Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-28" src="../../../_images/need_pie_10b34.svg" />
+<img alt="Result Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-12" src="../../../_images/need_pie_66e30.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Result Architecture Elements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-29" src="../../../_images/need_pie_0e14d.svg" />
+<img alt="Result Architecture Elements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-13" src="../../../_images/need_pie_ad069.svg" />
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-30">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Status (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-31">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 </div>
 </div>
 </section>
@@ -2012,47 +2081,59 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <span id="comp-bit-manipulation"></span><h3>Bit Manipulation<a class="headerlink" href="#bit-manipulation" title="Link to this heading">#</a></h3>
 <hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="id19">
 <h4>Component Requirements Statistics<a class="headerlink" href="#id19" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Bit Manipulation Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-32" src="../../../_images/need_pie_881e8.svg" />
+<img alt="Bit Manipulation Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-14" src="../../../_images/need_pie_8f4e7.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Bit Manipulation Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-33" src="../../../_images/need_pie_fa344.svg" />
+<img alt="Bit Manipulation Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-15" src="../../../_images/need_pie_6dfcf.svg" />
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-34">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Status (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-35">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 </div>
 </div>
 </section>
 <section id="id20">
 <h4>Component Architecture Statistics<a class="headerlink" href="#id20" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Bit Manipulation Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-36" src="../../../_images/need_pie_e35af.svg" />
+<img alt="Bit Manipulation Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-16" src="../../../_images/need_pie_dda30.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Bit Manipulation Architecture Elements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-37" src="../../../_images/need_pie_c151f.svg" />
+<img alt="Bit Manipulation Architecture Elements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-17" src="../../../_images/need_pie_5ff76.svg" />
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-38">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Status (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-39">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 </div>
 </div>
 </section>
@@ -2394,47 +2475,59 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <span id="comp-containers"></span><h3>Containers<a class="headerlink" href="#containers" title="Link to this heading">#</a></h3>
 <hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="id25">
 <h4>Component Requirements Statistics<a class="headerlink" href="#id25" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Containers Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-40" src="../../../_images/need_pie_6f1fa.svg" />
+<img alt="Containers Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-18" src="../../../_images/need_pie_6867b.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Containers Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-41" src="../../../_images/need_pie_308f9.svg" />
+<img alt="Containers Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-19" src="../../../_images/need_pie_d12b5.svg" />
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-42">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Status (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-43">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 </div>
 </div>
 </section>
 <section id="id26">
 <h4>Component Architecture Statistics<a class="headerlink" href="#id26" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Containers Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-44" src="../../../_images/need_pie_78452.svg" />
+<img alt="Containers Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-20" src="../../../_images/need_pie_47c5a.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Containers Architecture Elements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-45" src="../../../_images/need_pie_78c74.svg" />
+<img alt="Containers Architecture Elements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-21" src="../../../_images/need_pie_31be3.svg" />
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-46">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Status (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-47">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 </div>
 </div>
 </section>
@@ -2764,47 +2857,59 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <span id="comp-filesystem"></span><h3>Filesystem<a class="headerlink" href="#filesystem" title="Link to this heading">#</a></h3>
 <hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="id31">
 <h4>Component Requirements Statistics<a class="headerlink" href="#id31" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Filesystem Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-48" src="../../../_images/need_pie_6d60d.svg" />
+<img alt="Filesystem Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-22" src="../../../_images/need_pie_7317b.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Filesystem Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-49" src="../../../_images/need_pie_6d5a2.svg" />
+<img alt="Filesystem Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-23" src="../../../_images/need_pie_69ace.svg" />
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-50">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Status (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-51">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 </div>
 </div>
 </section>
 <section id="id32">
 <h4>Component Architecture Statistics<a class="headerlink" href="#id32" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Filesystem Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-52" src="../../../_images/need_pie_3a0d2.svg" />
+<img alt="Filesystem Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-24" src="../../../_images/need_pie_ae3b9.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Filesystem Architecture Elements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-53" src="../../../_images/need_pie_4a9c3.svg" />
+<img alt="Filesystem Architecture Elements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-25" src="../../../_images/need_pie_bb1aa.svg" />
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-54">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Status (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-55">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 </div>
 </div>
 </section>
@@ -3152,47 +3257,59 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <span id="comp-utils"></span><h3>Utils<a class="headerlink" href="#utils" title="Link to this heading">#</a></h3>
 <hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="id37">
 <h4>Component Requirements Statistics<a class="headerlink" href="#id37" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Utils Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-56" src="../../../_images/need_pie_96635.svg" />
+<img alt="Utils Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-26" src="../../../_images/need_pie_f583e.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Utils Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-57" src="../../../_images/need_pie_9abec.svg" />
+<img alt="Utils Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-27" src="../../../_images/need_pie_ac1eb.svg" />
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-58">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Status (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-59">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 </div>
 </div>
 </section>
 <section id="id38">
 <h4>Component Architecture Statistics<a class="headerlink" href="#id38" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Utils Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-60" src="../../../_images/need_pie_8a591.svg" />
+<img alt="Utils Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-28" src="../../../_images/need_pie_10b34.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Utils Architecture Elements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-61" src="../../../_images/need_pie_b384d.svg" />
+<img alt="Utils Architecture Elements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-29" src="../../../_images/need_pie_0e14d.svg" />
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-62">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Status (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-63">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 </div>
 </div>
 </section>
@@ -3516,47 +3633,59 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <span id="comp-concurrency"></span><h3>Concurrency<a class="headerlink" href="#concurrency" title="Link to this heading">#</a></h3>
 <hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="id43">
 <h4>Component Requirements Statistics<a class="headerlink" href="#id43" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Concurrency Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-64" src="../../../_images/need_pie_80412.svg" />
+<img alt="Concurrency Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-30" src="../../../_images/need_pie_5479a.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Concurrency Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-65" src="../../../_images/need_pie_c3d35.svg" />
+<img alt="Concurrency Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-31" src="../../../_images/need_pie_6fb1e.svg" />
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-66">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Status (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-67">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 </div>
 </div>
 </section>
 <section id="id44">
 <h4>Component Architecture Statistics<a class="headerlink" href="#id44" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Concurrency Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-68" src="../../../_images/need_pie_269e1.svg" />
+<img alt="Concurrency Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-32" src="../../../_images/need_pie_881e8.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Concurrency Architecture Elements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-69" src="../../../_images/need_pie_1be89.svg" />
+<img alt="Concurrency Architecture Elements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-33" src="../../../_images/need_pie_fa344.svg" />
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-70">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Status (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-71">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 </div>
 </div>
 </section>
@@ -3970,47 +4099,59 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <span id="comp-safecpp"></span><h3>SafeCpp<a class="headerlink" href="#safecpp" title="Link to this heading">#</a></h3>
 <hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="id49">
 <h4>Component Requirements Statistics<a class="headerlink" href="#id49" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="SafeCpp Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-72" src="../../../_images/need_pie_fcfc9.svg" />
+<img alt="SafeCpp Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-34" src="../../../_images/need_pie_f65e4.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="SafeCpp Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-73" src="../../../_images/need_pie_7398a.svg" />
+<img alt="SafeCpp Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-35" src="../../../_images/need_pie_6231d.svg" />
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-74">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Status (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-75">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 </div>
 </div>
 </section>
 <section id="id50">
 <h4>Component Architecture Statistics<a class="headerlink" href="#id50" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="SafeCpp Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-76" src="../../../_images/need_pie_fedc9.svg" />
+<img alt="SafeCpp Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-36" src="../../../_images/need_pie_e35af.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="SafeCpp Architecture Elements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-77" src="../../../_images/need_pie_02d02.svg" />
+<img alt="SafeCpp Architecture Elements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-37" src="../../../_images/need_pie_c151f.svg" />
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-78">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Status (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-79">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 </div>
 </div>
 </section>
@@ -4352,47 +4493,63 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <span id="comp-flatbuffers"></span><h3>FlatBuffers<a class="headerlink" href="#flatbuffers" title="Link to this heading">#</a></h3>
 <hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="id55">
 <h4>Component Requirements Statistics<a class="headerlink" href="#id55" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="FlatBuffers Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-80" src="../../../_images/need_pie_2694c.svg" />
+<img alt="FlatBuffers Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-38" src="../../../_images/need_pie_d80f6.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="FlatBuffers Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-81" src="../../../_images/need_pie_f9b58.svg" />
+<img alt="FlatBuffers Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-39" src="../../../_images/need_pie_d2f08.svg" />
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-82">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Status (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-83">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 </div>
 </div>
 </section>
 <section id="id56">
 <h4>Component Architecture Statistics<a class="headerlink" href="#id56" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-84">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Status (ASIL B)</span>
+   <span class="empty-pie-text">no ASIL B architecture elements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-85">No needs passed the filters</p>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Test Coverage (ASIL B)</span>
+   <span class="empty-pie-text">no ASIL B architecture elements</span>
+</div></div>
 </div>
 </div>
-</div>
+<p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-86">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Status (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-87">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 </div>
 </div>
 </section>
@@ -4557,47 +4714,63 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <span id="comp-hash-library"></span><h3>Hash Library<a class="headerlink" href="#hash-library" title="Link to this heading">#</a></h3>
 <hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="id61">
 <h4>Component Requirements Statistics<a class="headerlink" href="#id61" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Hash Library Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-88" src="../../../_images/need_pie_7ca39.svg" />
+<img alt="Hash Library Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-40" src="../../../_images/need_pie_6f1fa.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Hash Library Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-89" src="../../../_images/need_pie_9bbae.svg" />
+<img alt="Hash Library Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-41" src="../../../_images/need_pie_308f9.svg" />
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-90">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Status (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-91">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 </div>
 </div>
 </section>
 <section id="id62">
 <h4>Component Architecture Statistics<a class="headerlink" href="#id62" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-92">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Status (ASIL B)</span>
+   <span class="empty-pie-text">no ASIL B architecture elements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-93">No needs passed the filters</p>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Test Coverage (ASIL B)</span>
+   <span class="empty-pie-text">no ASIL B architecture elements</span>
+</div></div>
 </div>
 </div>
-</div>
+<p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-94">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Status (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-95">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 </div>
 </div>
 </section>
@@ -4768,47 +4941,59 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <span id="comp-static-reflection-with-serialization"></span><h3>Static Reflection with Serialization<a class="headerlink" href="#static-reflection-with-serialization" title="Link to this heading">#</a></h3>
 <hr style="border-top: 2px solid #333333; margin: 0.5em 0 1.5em 0;"><section id="id67">
 <h4>Component Requirements Statistics<a class="headerlink" href="#id67" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Static Reflection with Serialization Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-96" src="../../../_images/need_pie_b4b3e.svg" />
+<img alt="Static Reflection with Serialization Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-42" src="../../../_images/need_pie_6baab.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Static Reflection with Serialization Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-97" src="../../../_images/need_pie_73363.svg" />
+<img alt="Static Reflection with Serialization Requirements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-43" src="../../../_images/need_pie_21f70.svg" />
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-98">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Status (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-99">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Requirements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM requirements</span>
+</div></div>
 </div>
 </div>
 </section>
 <section id="id68">
 <h4>Component Architecture Statistics<a class="headerlink" href="#id68" title="Link to this heading">#</a></h4>
+<p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Static Reflection with Serialization Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-100" src="../../../_images/need_pie_035c0.svg" />
+<img alt="Static Reflection with Serialization Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-44" src="../../../_images/need_pie_78452.svg" />
 </div>
 <div class="sd-col sd-d-flex-column docutils">
-<img alt="Static Reflection with Serialization Architecture Elements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-101" src="../../../_images/need_pie_fed32.svg" />
+<img alt="Static Reflection with Serialization Architecture Elements Test Coverage (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-45" src="../../../_images/need_pie_78c74.svg" />
 </div>
 </div>
 </div>
+<p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-102">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Status (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 <div class="sd-col sd-d-flex-column docutils">
-<p class="needs_filter_warning" id="needpie-modules/score_baselibs/verification_report/module_verification_report-103">No needs passed the filters</p>
-</div>
+<div class="empty-pie">
+   <span class="empty-pie-title">Architecture Elements Test Coverage (QM)</span>
+   <span class="empty-pie-text">no QM architecture elements</span>
+</div></div>
 </div>
 </div>
 </section>
