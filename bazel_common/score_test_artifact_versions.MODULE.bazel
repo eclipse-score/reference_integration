@@ -39,3 +39,10 @@ single_version_override(
     module_name = "score_toolchains_rust",
     version = "0.8.0",
 )
+
+# score_devcontainer 1.11.1 was republished; its tarball hash in the registry no longer
+# matches the actual archive at v1.11.1. Pin to 1.11.0 (v1.11.0.tar.gz) which is stable.
+single_version_override(
+    module_name = "score_devcontainer",
+    version = "1.11.0",
+)
