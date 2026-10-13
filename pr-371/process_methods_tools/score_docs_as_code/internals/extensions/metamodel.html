@@ -27,8 +27,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
-<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+  <link href="../../../../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
@@ -47,10 +47,10 @@
     <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css?v=f420dc51" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="../../../../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
-<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
     <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
     <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
@@ -65,7 +65,7 @@
     <script src="../../../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js?v=dca66431"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'process_methods_tools/score_docs_as_code/internals/extensions/metamodel';</script>
     <script>
-        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_version = '0.21.0';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-score.github.io/reference_integration/versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
@@ -302,6 +302,10 @@
     </div>
   
 
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
   
 </div>
 
@@ -662,8 +666,9 @@ These checks follow the same structure:</p>
 <span class="w">  </span><span class="nt">needs</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;need1&gt;, &lt;need2&gt;</span><span class="w"> </span><span class="c1">#list of your needs</span>
 <span class="w">    </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;your condition(s) that need to be fulfilled&gt;</span>
-<span class="w">  </span><span class="nt">check</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">check_all</span><span class="p">:</span><span class="w"> </span><span class="c1"># or check_one</span>
 <span class="w">    </span><span class="nt">&lt;link attribute to check&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;condition to be checked in each need inside the link attribute&gt;</span>
+<span class="w">  </span><span class="nt">info_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"> </span><span class="c1"># OPTIONAL, defaults to false</span>
 <span class="w">  </span><span class="nt">explanation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;A short sentence that explains what is required to be adhered to. This will be</span>
 <span class="w">              </span><span class="l l-Scalar l-Scalar-Plain">&lt; part of the error message if the check fails&gt;</span>
 </pre></div>
@@ -671,6 +676,15 @@ These checks follow the same structure:</p>
 <blockquote>
 <div><p><em>Note:</em> You can also use multiple conditions or negate conditions in either the needs or check part.</p>
 </div></blockquote>
+<p>Each graph check defines exactly one of the following, which decides how many linked needs have to fulfill the condition:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">check_all</span></code>: every linked need has to fulfill the condition. Each violating need gets its own warning.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">check_one</span></code>: at least one linked need has to fulfill the condition. A need without any linked needs passes.
+Use a mandatory link check if the link itself is required.</p></li>
+</ul>
+<p>This applies to every link attribute inside <code class="docutils literal notranslate"><span class="pre">check_all</span></code> / <code class="docutils literal notranslate"><span class="pre">check_one</span></code>.</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">info_only:</span> <span class="pre">true</span></code> violations are reported as info instead of warning, so they do not break the build.
+Use this to introduce a new check before it is enforced.</p>
 <p>A complete example might look like so:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">graph_checks</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">tool_req__docs_req_arch_link_safety_to_arch</span><span class="p">:</span>
@@ -679,12 +693,16 @@ These checks follow the same structure:</p>
 <span class="w">      </span><span class="nt">condition</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">and</span><span class="p">:</span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">safety != QM</span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">status == valid</span>
-<span class="w">    </span><span class="nt">check</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">or</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">status == valid</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">status == valid_inspected</span>
+<span class="w">    </span><span class="nt">check_all</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">implements</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">and</span><span class="p">:</span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">safety != QM</span>
-<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">status == valid</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">or</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">status == valid</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">status == valid_inspected</span>
 <span class="w">    </span><span class="nt">explanation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A safety architecture element can only link other safety architecture elements.</span>
 </pre></div>
 </div>
@@ -851,6 +869,41 @@ The signature is similar to that of local_check, but instead of one need, you wi
             
             
               
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#core-components">Core Components</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metamodel-definition">Metamodel Definition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#validation-system">Validation System</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#need-types">need types</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-new-validation-checks">Creating New Validation Checks</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#need-local-checks-configuration-based">1. Need-Local Checks (Configuration-Based)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generic-graph-checks-configuration-based">2. Generic Graph Checks (Configuration-Based)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prohibited-word-checks-configuration-based">3. Prohibited Word Checks (Configuration-Based)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-local-checks-python-code">4. Custom Local Checks (Python Code)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-graph-checks-python-code">5. Custom Graph Checks (Python Code)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#file-structure-reference">File Structure Reference</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-your-changes">Testing Your Changes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture-decision-local-vs-graph-based-checks">Architecture Decision: Local vs Graph-Based Checks</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
             
           </div>
           <footer class="bd-footer-content">
@@ -862,8 +915,8 @@ The signature is similar to that of local_check, but instead of one need, you wi
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
-<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -887,7 +940,7 @@ The signature is similar to that of local_check, but instead of one need, you wi
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
 </p></div>
       
     </div>

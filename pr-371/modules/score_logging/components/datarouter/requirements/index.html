@@ -27,8 +27,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
-<link href="../../../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+  <link href="../../../../../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../../../../../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
@@ -47,10 +47,10 @@
     <link rel="stylesheet" type="text/css" href="../../../../../_static/custom.css?v=f420dc51" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../../../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="../../../../../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
-<link rel="preload" as="script" href="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+  <link rel="preload" as="script" href="../../../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
     <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
     <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
@@ -65,7 +65,7 @@
     <script src="../../../../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js?v=dca66431"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/score_logging/components/datarouter/requirements/index';</script>
     <script>
-        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_version = '0.21.0';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-score.github.io/reference_integration/versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
@@ -303,6 +303,10 @@
   
 
   
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
 </div>
 
     </header>
@@ -538,9 +542,53 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="datarouter-component-requirements">
+  
+<style>
+.score-testcase-result {
+  font-weight: bold;
+}
+.score-testcase-result--passed {
+  color: #146c2e;
+}
+.score-testcase-result--failed {
+  color: #b42318;
+}
+.score-testcase-result--skipped {
+  color: #8a5300;
+}
+.score-testcase-result--disabled {
+  color: #5f6368;
+}
+html[data-theme="dark"] .score-testcase-result--passed {
+  color: #7ee787;
+}
+html[data-theme="dark"] .score-testcase-result--failed {
+  color: #ff7b72;
+}
+html[data-theme="dark"] .score-testcase-result--skipped {
+  color: #d29922;
+}
+html[data-theme="dark"] .score-testcase-result--disabled {
+  color: #c4cad2;
+}
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) .score-testcase-result--passed {
+    color: #7ee787;
+  }
+  html:not([data-theme="light"]) .score-testcase-result--failed {
+    color: #ff7b72;
+  }
+  html:not([data-theme="light"]) .score-testcase-result--skipped {
+    color: #d29922;
+  }
+  html:not([data-theme="light"]) .score-testcase-result--disabled {
+    color: #c4cad2;
+  }
+}
+</style>
+<section id="datarouter-component-requirements">
 <h1>Datarouter Component Requirements<a class="headerlink" href="#datarouter-component-requirements" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-2f019426">
+<div class="need_container docutils container" id="SNCB-5f01d519">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__data_router_requirements">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -585,7 +633,7 @@
 </div>
 <section id="datarouter-services">
 <h2>Datarouter Services<a class="headerlink" href="#datarouter-services" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-22e86e08">
+<div class="need_container docutils container" id="SNCB-239ff166">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__data_router__dlt_server">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -605,6 +653,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_testlink"><span class="needs_label">testlink: </span><span class="needs_data"><a class="reference external" href="https://github.com/eclipse-score/logging/blob/3d9896611baf4e0d018032e5cb999941b2602dbd/../score_logging+/score/test/component/datarouter/test_logging_after_delayed_dr_start.py#L46">test_logging_after_delayed_dr_start<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/log_and_trace/logging/requirements/index.html#feat_req__logging__compat_dlt" title="comp_req__data_router__dlt_server">feat_req__logging__compat_dlt</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/log_and_trace/logging/requirements/index.html#feat_req__logging__log_sinks_network" title="comp_req__data_router__dlt_server">feat_req__logging__log_sinks_network</a></span></span></div>
@@ -631,7 +680,7 @@ send messages using DLT protocol over UDP multicast transport.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-cec3b29b">
+<div class="need_container docutils container" id="SNCB-17cafd30">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__data_router__dlt_multiple_channels">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -681,7 +730,7 @@ assignments per application/context.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-fb8ffd1d">
+<div class="need_container docutils container" id="SNCB-52b92de0">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__data_router__dlt_message_filtering">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -701,6 +750,7 @@ assignments per application/context.</p></td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_testlink"><span class="needs_label">testlink: </span><span class="needs_data"><a class="reference external" href="https://github.com/eclipse-score/logging/blob/3d9896611baf4e0d018032e5cb999941b2602dbd/../score_logging+/score/test/component/datarouter/test_datarouter_filters.py#L42">test_datarouter_filters<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/log_and_trace/logging/requirements/index.html#feat_req__logging__config_log_filter" title="comp_req__data_router__dlt_message_filtering">feat_req__logging__config_log_filter</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/log_and_trace/logging/requirements/index.html#feat_req__logging__filtering_entity_id" title="comp_req__data_router__dlt_message_filtering">feat_req__logging__filtering_entity_id</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/log_and_trace/logging/requirements/index.html#feat_req__logging__filtering_log_levels" title="comp_req__data_router__dlt_message_filtering">feat_req__logging__filtering_log_levels</a></span></span></div>
@@ -729,7 +779,7 @@ be part of channel configuration file, located in the following path:
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-a112fd87">
+<div class="need_container docutils container" id="SNCB-9d05ae28">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__data_router__dlt_verbose_messages">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -778,7 +828,7 @@ library shall be sent via DLT using verbose mode.</p></td>
 </section>
 <section id="dlt-quotas">
 <h2>DLT Quotas<a class="headerlink" href="#dlt-quotas" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-26d04702">
+<div class="need_container docutils container" id="SNCB-f0188598">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__data_router__dlt_bw_quota_config">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -798,6 +848,7 @@ library shall be sent via DLT using verbose mode.</p></td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_testlink"><span class="needs_label">testlink: </span><span class="needs_data"><a class="reference external" href="https://github.com/eclipse-score/logging/blob/3d9896611baf4e0d018032e5cb999941b2602dbd/../score_logging+/score/test/component/datarouter/test_bandwidth_quotes_exists.py#L37">test_bandwidth_quotes_exists<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/log_and_trace/logging/requirements/index.html#feat_req__logging__config_buffer_size" title="comp_req__data_router__dlt_bw_quota_config">feat_req__logging__config_buffer_size</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/log_and_trace/logging/requirements/index.html#feat_req__logging__resource_comm_channel" title="comp_req__data_router__dlt_bw_quota_config">feat_req__logging__resource_comm_channel</a></span></span></div>
@@ -824,7 +875,7 @@ library shall be sent via DLT using verbose mode.</p></td>
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-494cbcc6">
+<div class="need_container docutils container" id="SNCB-3f65361f">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_req table" id="comp_req__data_router__dlt_quota_bw_reduction">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -844,6 +895,7 @@ library shall be sent via DLT using verbose mode.</p></td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Functional</span></span></div>
+<div class="line"><span class="needs_testlink"><span class="needs_label">testlink: </span><span class="needs_data"><a class="reference external" href="https://github.com/eclipse-score/logging/blob/3d9896611baf4e0d018032e5cb999941b2602dbd/../score_logging+/score/test/component/datarouter/test_quota_exceed.py#L144">test_quota_exceed<span class="score-testcase-result score-testcase-result--passed"> (passed)</span></a></span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">derived from: <span class="derived_from"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/log_and_trace/logging/requirements/index.html#feat_req__logging__message_loss_handling" title="comp_req__data_router__dlt_quota_bw_reduction">feat_req__logging__message_loss_handling</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/log_and_trace/logging/requirements/index.html#feat_req__logging__qos_message_handling" title="comp_req__data_router__dlt_quota_bw_reduction">feat_req__logging__qos_message_handling</a></span></span></div>
@@ -910,6 +962,25 @@ configuration file (<a class="reference internal" href="#comp_req__data_router__
             
             
               
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datarouter-services">Datarouter Services</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dlt-quotas">DLT Quotas</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
             
           </div>
           <footer class="bd-footer-content">
@@ -921,8 +992,8 @@ configuration file (<a class="reference internal" href="#comp_req__data_router__
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
-<script defer src="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="../../../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -946,7 +1017,7 @@ configuration file (<a class="reference internal" href="#comp_req__data_router__
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
 </p></div>
       
     </div>
