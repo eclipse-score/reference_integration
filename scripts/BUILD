@@ -10,55 +10,22 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-load("@rules_python//python:defs.bzl", "py_binary", "py_library")
+load("@rules_python//python:defs.bzl", "py_library")
 load("@score_tooling//python_basics:defs.bzl", "score_py_pytest")
 
-# The Stage-2 driver and the report aggregator.
 py_library(
-    name = "quality_scripts",
+    name = "module_tests",
     srcs = [
-        "aggregate_quality_report.py",
+        "module_tests.py",
         "quality_runners.py",
     ],
-    visibility = ["//visibility:public"],
+    imports = ["."],
     deps = ["//scripts/known_good"],
 )
 
-# No `data` needed: the tests point STAGE2_RC at a temp file rather than reading
-# ci/stage2/module.bazelrc, so they do not depend on runfiles layout.
 score_py_pytest(
-    name = "quality_scripts_tests",
-    srcs = glob(["tests/**/*.py"]),
+    name = "module_tests_tests",
+    srcs = ["tests/test_module_tests.py"],
     pytest_config = "//:pyproject.toml",
-    deps = [":quality_scripts"],
-)
-
-# Stage 2's driver: checks a module out against ref_int's resolved set and runs its tests.
-py_binary(
-    name = "quality_runners",
-    srcs = ["quality_runners.py"],
-    data = ["//:known_good.json"],
-    main = "quality_runners.py",
-    visibility = ["//visibility:public"],
-    deps = [":quality_scripts"],
-)
-
-# The consolidated Stage 1 + Stage 2 report written to the job summary.
-py_binary(
-    name = "aggregate_quality_report",
-    srcs = ["aggregate_quality_report.py"],
-    main = "aggregate_quality_report.py",
-    visibility = ["//visibility:public"],
-    deps = [":quality_scripts"],
-)
-
-# One label for every Python unit test, so CI runs all of them by naming a single target.
-test_suite(
-    name = "all_python_unit_tests",
-    tests = [
-        ":quality_scripts_tests",
-        "//scripts/known_good:known_good_tests",
-        "//scripts/tooling:tooling_tests",
-    ],
-    visibility = ["//visibility:public"],
+    deps = [":module_tests"],
 )
