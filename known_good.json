@@ -163,8 +163,7 @@
             },
             "score_config_management": {
                 "repo": "https://github.com/eclipse-score/config_management.git",
-                "docs": false,
-                "hash": "e0489b190ed6d2fa183b9a8063e2dba4f6378505",
+                "hash": "08b7156529967c3233d2474f4f332bc8b3796e10",
                 "bazel_patches": [
                     "//patches/config_management:001-adapt-proxy-api-and-remove-internal-targets.patch",
                     "//patches/config_management:002-migrate-baselibs-targets.patch"
@@ -175,11 +174,16 @@
                         "@score_config_management//score/config_management/config_daemon/code:score_variant=true"
                     ],
                     "exclude_test_targets": [
-                        "//score/config_management/config_daemon/code/factory/details:unit_test_mw_com",
-                        "//score/config_management/config_daemon/code/services/details/mw_com:unit_test",
-                        "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com",
-                        "//score/config_management/config_provider/code/proxies/details:unit_test_mw",
+                        "//score/config_management/config_provider:all",
+                        "//score/config_management/config_provider/code/config_provider/details/...",
+                        "//score/config_management/config_provider/code/config_provider/factory/...",
+                        "//score/config_management/config_provider/code/config_provider:unit_tests_host",
                         "//score/config_management/config_daemon/code:main_function_test",
+                        "//score/config_management/config_daemon/code:unit_tests_host",
+                        "//score/config_management/config_daemon:unit_tests_host",
+                        "//score/config_management/config_daemon/code:config_daemon",
+                        "//score/config_management/config_daemon/code/factory/details:unit_test_mw_com",
+                        "//score/config_management/config_daemon/code/factory:unit_tests_host",
                         "//score/config_management/dependability/..."
                     ],
                     "langs": [
