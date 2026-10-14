@@ -13,7 +13,7 @@
 import json
 import re
 
-from cli.misc.html_report import TEMPLATE_DIR, generate_report, write_report
+from cli.misc.html_report import TEMPLATE_DIR, copy_coverage_dashboards, generate_report, write_report
 from lib.known_good import KnownGood
 from lib.known_good.module import Module
 
@@ -275,3 +275,31 @@ class TestReportFromRealFile:
             assert "hash" in entry
             assert "branch" in entry
             assert "owner_repo" in entry
+
+
+# ---------------------------------------------------------------------------
+# copy_coverage_dashboards
+# ---------------------------------------------------------------------------
+
+
+class TestCopyCoverageDashboards:
+    def test_copies_coverage_when_present(self, tmp_path):
+        repo_root = tmp_path / "repo"
+        coverage_src = repo_root / "artifacts" / "coverage"
+        coverage_src.mkdir(parents=True)
+        (coverage_src / "index.html").write_text("Coverage Portal", encoding="utf-8")
+        (coverage_src / "cpp" / "score_baselibs").mkdir(parents=True)
+        (coverage_src / "cpp" / "score_baselibs" / "index.html").write_text("Baselibs Report", encoding="utf-8")
+
+        output_dir = tmp_path / "_build"
+        assert copy_coverage_dashboards(repo_root, output_dir) is True
+        assert (output_dir / "coverage" / "index.html").is_file()
+        assert (output_dir / "coverage" / "index.html").read_text(encoding="utf-8") == "Coverage Portal"
+        assert (output_dir / "coverage" / "cpp" / "score_baselibs" / "index.html").is_file()
+
+    def test_returns_false_when_not_present(self, tmp_path):
+        repo_root = tmp_path / "repo"
+        repo_root.mkdir()
+        output_dir = tmp_path / "_build"
+        assert copy_coverage_dashboards(repo_root, output_dir) is False
+        assert not (output_dir / "coverage").exists()

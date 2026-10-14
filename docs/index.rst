@@ -49,10 +49,10 @@ documentation set that downstream product distributions can build on.
       S-CORE process description, platform standards, and documentation toolchain.
 
    .. grid-item-card:: ✅ Code Quality
-      :link: verification_report/index
-      :link-type: doc
 
-      Platform and module verification reports and test coverage results.
+      Platform and module verification reports and test coverage results with links to
+      :doc:`Platform Verification Report <verification_report/platform_verification_report>` and
+      :doc:`Code Coverage Dashboards <verification_report/coverage_dashboards>`.
 
    .. grid-item-card:: 🔗 Integration
 
