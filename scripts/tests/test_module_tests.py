@@ -71,6 +71,14 @@ def test_coverage_args_register_ferrocene_only_for_rust():
     assert "--config=unified-rust" not in coverage_args(["//score/..."], ["cpp"])
 
 
+def test_coverage_args_exclude_targets_after_separator():
+    args = coverage_args(["--config=x86_64-linux", "//..."], ["rust"], ["//score/rust:miri_tests"])
+    assert args[-3:] == ["--config=unified-rust", "--", "-//score/rust:miri_tests"]
+    # An existing separator is reused, the excludes go after the module's own targets.
+    args = coverage_args(["--", "//score/...", "-//score/test/..."], ["cpp"], ["//score/a:b"])
+    assert args[-5:] == ["--combined_report=lcov", "--", "//score/...", "-//score/test/...", "-//score/a:b"]
+
+
 def test_status_line_reads_bazel_failures():
     log = (
         "//a:ok_test      PASSED in 1.0s\n"

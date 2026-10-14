@@ -106,13 +106,18 @@ def override_rc(paths: dict[str, Path]) -> str:
     return "".join(f"common --override_module={name}={paths[name]}\n" for name in sorted(paths))
 
 
-def coverage_args(test_args: list[str], langs: list[str]) -> list[str]:
-    """The module's own test args with ref_int's unified config added before any ``--``."""
+def coverage_args(test_args: list[str], langs: list[str], excludes: list[str] = ()) -> list[str]:
+    """The module's own test args with ref_int's unified config added before any ``--``.
+
+    ``excludes`` (the module's ``exclude_test_targets``) become negative patterns after ``--``.
+    """
     ours = ["--config=unified", "--combined_report=lcov"]
     if "rust" in langs:
         ours.append("--config=unified-rust")
     split = test_args.index("--") if "--" in test_args else len(test_args)
-    return ["coverage", "--lockfile_mode=update", *test_args[:split], *ours, *test_args[split:]]
+    targets = [*test_args[split + 1 :], *(f"-{target}" for target in excludes)]
+    separator = ["--"] if targets else []
+    return ["coverage", "--lockfile_mode=update", *test_args[:split], *ours, *separator, *targets]
 
 
 def _status(case: ET.Element) -> str:
@@ -187,7 +192,7 @@ def run(args: argparse.Namespace) -> int:
     unpinned = sorted(shared - set(pinned))
     shutil.copy(rc, out / "overrides.bazelrc")
 
-    command = coverage_args(module.metadata.test_args, module.metadata.langs)
+    command = coverage_args(module.metadata.test_args, module.metadata.langs, module.metadata.exclude_test_targets)
     exit_code, log = streamed(["bazel", *command], workspace, env)
 
     results = list((workspace / "bazel-testlogs").glob("**/test.xml"))
