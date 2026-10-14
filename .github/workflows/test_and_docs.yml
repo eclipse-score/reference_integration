@@ -100,6 +100,14 @@ jobs:
         run: |
           python ./scripts/quality_runners.py \
             ${{ github.ref_type != 'tag' && '--trust-cache' || '' }}
+      - name: Upload quality runner logs (workflow artifact)
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+        if: always()
+        with:
+          name: quality-runner-logs-${{ github.event.pull_request.head.sha || github.sha }}
+          path: artifacts/logs
+          retention-days: 7
+          if-no-files-found: warn
       - name: Execute Feature Integration Tests
         run: |
           bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit
