@@ -10,6 +10,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+load("@rules_pkg//pkg:mappings.bzl", "pkg_attributes", "pkg_files")
 load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
 
 score_pkg_bundle(
@@ -67,17 +68,24 @@ score_pkg_bundle(
     package_dir = "standalone",
 )
 
+# The config daemon and its configuration are part of the deployed platform
+# (//deploy/config_management). This showcase only contributes the manifest
+# that drives the deployed daemon.
 score_pkg_bundle(
     name = "config_management",
-    bins = [
-        "@score_config_management//score/config_management/config_daemon/code:config_daemon",
-    ],
+    bins = [],
     config_data = [
         "//showcases/standalone:config_management.score.json",
     ],
-    custom_layout = {
-        "@score_config_management//score/config_management/config_daemon/code/services/details/mw_com:mw_com_config": "etc/mw_com_config.json",
-        "@score_config_management//score/config_management/config_daemon/code/plugins/demo_json:demo_parameters": "etc/demo_parameters.json",
-    },
     package_dir = "standalone",
+)
+
+# Persistency has no runnable showcase yet; the upstream test scenarios binary
+# is shipped so that one can be added without changing the image layout.
+pkg_files(
+    name = "persistency_pkg_files",
+    srcs = ["@score_persistency//score/kvs/tests/test_scenarios/cpp:test_scenarios"],
+    attributes = pkg_attributes(mode = "0755"),
+    renames = {"@score_persistency//score/kvs/tests/test_scenarios/cpp:test_scenarios": "bin/cpp_tests_persistency"},
+    visibility = ["//visibility:public"],
 )
