@@ -49,8 +49,9 @@ daemon.
 
 Add a `deploy/<module>/BUILD` that packages the module's binaries and
 configuration with `pkg_files`, then list those targets in
-`//deploy:platform_bundle`. Keep examples, demo applications and test
-binaries out; those belong in `//showcases`.
+`//deploy:platform_bundle`. Configuration that is deployed onto the target
+is kept in `deploy/<module>/etc/`, not in a test directory. Keep examples,
+demo applications and test binaries out; those belong in `//showcases`.
 
 Long term each S-CORE module should export its own deployment package
 upstream, so that "deployed correctly" becomes checkable rather than agreed.

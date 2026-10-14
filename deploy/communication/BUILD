@@ -23,10 +23,21 @@ package(default_visibility = ["//deploy:__pkg__"])
 pkg_files(
     name = "etc_comm_configs",
     srcs = [
-        "//feature_integration_tests/configs:etc/logging.json",
-        "//feature_integration_tests/configs:etc/mw_com_config.json",
+        "etc/logging.json",
+        "etc/mw_com_config.json",
     ],
     attributes = pkg_attributes(mode = "0777"),
     prefix = "etc",
     strip_prefix = strip_prefix.files_only(),
+)
+
+# Same files as a plain filegroup, for images that assemble /etc themselves
+# instead of consuming rules_pkg providers.
+filegroup(
+    name = "etc_configs",
+    srcs = [
+        "etc/logging.json",
+        "etc/mw_com_config.json",
+    ],
+    visibility = ["//visibility:public"],
 )

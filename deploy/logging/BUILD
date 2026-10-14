@@ -30,8 +30,8 @@ pkg_files(
 pkg_files(
     name = "datarouter_configs",
     srcs = [
-        "//feature_integration_tests/configs/datarouter:etc/log-channels.json",
-        "//feature_integration_tests/configs/datarouter:etc/logging.json",
+        "etc/log-channels.json",
+        "etc/logging.json",
     ],
     attributes = pkg_attributes(mode = "0644"),
     prefix = "usr/bin/datarouter/etc",
