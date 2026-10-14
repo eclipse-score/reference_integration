@@ -1,13 +1,19 @@
 diff --git a/MODULE.bazel b/MODULE.bazel
-index 721aacc9e..f7726c220 100644
+index 184e9f9b3..d87b04ee0 100644
 --- a/MODULE.bazel
 +++ b/MODULE.bazel
-@@ -174,9 +174,9 @@ pip.parse(
+@@ -302,7 +302,7 @@ pip.parse(
  )
- use_repo(pip, "score_lifecycle_pip")
+ use_repo(pip, "codeql_coding_standards_pip_hub")
  
 -bazel_dep(name = "score_itf", version = "0.5.0", dev_dependency = True)
 +bazel_dep(name = "score_itf", version = "0.5.0")
+ 
+ # Need latest ITF for qemu arm support which is not part latest release
+ git_override(
+@@ -311,7 +311,7 @@ git_override(
+     remote = "https://github.com/eclipse-score/itf.git",
+ )
  
 -oci = use_extension("@rules_oci//oci:extensions.bzl", "oci", dev_dependency = True)
 +oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
