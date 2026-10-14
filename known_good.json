@@ -22,6 +22,11 @@
                     ],
                     "langs": [
                         "cpp"
+                    ],
+                    "test_args": [
+                        "--config=score-linux-x86_64",
+                        "--",
+                        "//..."
                     ]
                 },
                 "hash": "ee40fece5abacb28ea641b448446a04175038b17"
@@ -55,7 +60,12 @@
                         "cpp",
                         "rust"
                     ],
-                    "rust_coverage_config": "ferrocene-coverage"
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "test_args": [
+                        "--config=ci",
+                        "--build_tests_only",
+                        "//..."
+                    ]
                 }
             },
             "score_persistency": {
@@ -81,6 +91,11 @@
                     ],
                     "integration_test_config": [
                         "flaky_test_attempts=3"
+                    ],
+                    "test_args": [
+                        "--config=per-x86_64-linux",
+                        "//:test_kvs_cpp",
+                        "//score/kvs/rust_kvs:tests"
                     ]
                 },
                 "hash": "961c0a0989755a1e0fe8de55e83c0a44e2e20b56"
@@ -93,6 +108,10 @@
                     "exclude_test_targets": [],
                     "langs": [
                         "rust"
+                    ],
+                    "test_args": [
+                        "--config=x86_64-linux",
+                        "//src/..."
                     ]
                 },
                 "hash": "90fb90258f49f17a504d41262634d43608f28ccc"
@@ -115,6 +134,10 @@
                     "integration_test_config": [
                         "flaky_test_attempts=3",
                         "@score_lifecycle//config:integration_mode=docker"
+                    ],
+                    "test_args": [
+                        "--config=x86_64-linux",
+                        "//..."
                     ]
                 },
                 "hash": "85da2168328d17a3cf53791ebf93534e5ed921fc"
@@ -141,6 +164,13 @@
                     "integration_test_config": [
                         "flaky_test_attempts=3",
                         "@score_logging//score/datarouter/build_configuration_flags:enable_nonverbose_dlt=True"
+                    ],
+                    "test_args": [
+                        "--config=x86_64-linux",
+                        "--test_tag_filters=-no_ci",
+                        "--",
+                        "//score/...",
+                        "-//score/test/component/..."
                     ]
                 },
                 "hash": "3d9896611baf4e0d018032e5cb999941b2602dbd"
@@ -149,7 +179,9 @@
                 "repo": "https://github.com/eclipse-score/time.git",
                 "hash": "3723ce687e4abc7d6cb4c0efdbbd30455ed7c303",
                 "bazel_patches": [
-                    "//patches/time:003-disable-broken-qnx-ifs-target.patch"
+                    "//patches/time:003-disable-broken-qnx-ifs-target.patch",
+                    "//patches/time:004-rename-ubuntu-image-pull.patch",
+                    "//patches/time:005-use-sanitizer-bool-flags.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/...",
@@ -158,7 +190,13 @@
                     "langs": [
                         "cpp"
                     ],
-                    "rust_coverage_config": "ferrocene-coverage"
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "test_args": [
+                        "--config=asan_ubsan_lsan",
+                        "--config=x86_64-linux",
+                        "--keep_going",
+                        "//score/..."
+                    ]
                 }
             },
             "score_config_management": {
@@ -185,7 +223,19 @@
                     "langs": [
                         "cpp"
                     ],
-                    "rust_coverage_config": "ferrocene-coverage"
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "test_args": [
+                        "//score/config_management/config_daemon/code/data_model:unit_tests_host",
+                        "//score/config_management/config_daemon/code/data_model/parameter_set_storage:unit_tests_host",
+                        "//score/config_management/config_daemon/code/fault_event_reporter:unit_tests_host",
+                        "//score/config_management/config_daemon/code/plugins/demo_json:unit_tests_host",
+                        "//score/config_management/config_daemon/code/plugins/plugin_collector:unit_tests_host",
+                        "//score/config_management/config_daemon/code/services:unit_tests_host",
+                        "//score/config_management/config_provider/code/config_provider/error:unit_test",
+                        "//score/config_management/config_provider/code/parameter_set:unit_test",
+                        "//score/config_management/config_provider/code/persistency:unit_tests_host",
+                        "//tests/cpp:cpp_test_main"
+                    ]
                 }
             }
         },
@@ -208,10 +258,7 @@
             "score_tooling": {
                 "repo": "https://github.com/eclipse-score/tooling.git",
                 "docs": false,
-                "bazel_patches": [
-                    "//patches/tooling:001-expose-aspect-rules-lint-non-dev.patch"
-                ],
-                "hash": "4736b5655f3a73dd353da1bdbeced5febd669664"
+                "hash": "026e0983a9d65454b449199557ab655f82f5e81a"
             },
             "score_platform": {
                 "repo": "https://github.com/eclipse-score/score.git",
