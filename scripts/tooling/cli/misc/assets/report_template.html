@@ -262,20 +262,27 @@
       margin: 0 auto 1.5rem;
       display: flex;
       gap: 0.5rem;
+      flex-wrap: wrap;
       border-bottom: 1px solid var(--border);
+      padding-bottom: 0.3rem;
     }
     .dashboard-tab {
-      border: 0;
-      border-bottom: 2px solid transparent;
-      border-radius: 0;
-      background: transparent;
+      border: 1px solid var(--border);
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+      background: var(--surface);
       color: var(--muted);
-      padding: 0.65rem 0.85rem;
+      padding: 0.4rem 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.42rem;
+      font-size: 0.8rem;
     }
     .dashboard-tab:hover,
     .dashboard-tab.active {
-      border-bottom-color: var(--accent);
-      color: var(--accent);
+      border-color: var(--accent);
+      background: var(--bg);
+      color: #e6edf3;
     }
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
@@ -343,6 +350,22 @@
       font-size: 0.82rem;
       margin-bottom: 1rem;
     }
+    .dependency-filters {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .dependency-panel { display: none; }
+    .dependency-panel.active { display: block; }
+    .dependency-legend {
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin: 0 0 1rem;
+      padding-left: 1.2rem;
+    }
+    .dependency-legend li { margin-bottom: 0.35rem; }
+    .dependency-legend strong { color: var(--text); }
     .dependency-table-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -417,10 +440,18 @@
   </div>
 
   <nav class="dashboard-tabs" id="main-tabs" aria-label="Dashboard sections">
-    <button class="dashboard-tab active" type="button" data-tab="modules" aria-selected="true">Modules</button>
-    <button class="dashboard-tab" type="button" data-tab="dependency-integration" aria-selected="false">Dependency Integration</button>
-    <button class="dashboard-tab" type="button" data-tab="traceability" aria-selected="false">Traceability</button>
-    <button class="dashboard-tab" type="button" data-tab="sbom-tools" aria-selected="false">SBOM &amp; Tools</button>
+    <button class="dashboard-tab active" type="button" data-tab="modules" aria-selected="true">
+      Modules
+    </button>
+    <button class="dashboard-tab" type="button" data-tab="dependency-integration" aria-selected="false">
+      Dependency Integration
+    </button>
+    <button class="dashboard-tab" type="button" data-tab="traceability" aria-selected="false">
+      Traceability
+    </button>
+    <button class="dashboard-tab" type="button" data-tab="sbom-tools" aria-selected="false">
+      SBOM &amp; Tools
+    </button>
   </nav>
 
   <!-- Modules tab (existing) -->
@@ -438,7 +469,22 @@
     <div class="dependency-section">
       <h2>Dependency Integration</h2>
       <p>Dependencies between known-good modules, their declared versions, and the latest available repository tags.</p>
-      <div id="dependency-tables" class="dependency-loading">Loading dependency information…</div>
+      <div class="dependency-filters" role="tablist" aria-label="Dependency categories">
+        <button class="filter-btn active" type="button" role="tab" aria-selected="true" data-dependency-tab="module-dependencies">Module dependencies</button>
+        <button class="filter-btn" type="button" role="tab" aria-selected="false" data-dependency-tab="other-dependencies">Other dependencies</button>
+      </div>
+      <div id="dependency-panel-module-dependencies" class="dependency-panel active" role="tabpanel">
+        <ul class="dependency-legend">
+          <li><strong>Version Used:</strong> component version used by the Module.</li>
+          <li><strong>Known Good Version:</strong> component version which is pinned in <code>known_good.json</code>.</li>
+          <li><strong>Latest Available Version:</strong> latest release found in the component repository.</li>
+          <li><strong>Integration:</strong> <em>Aligned</em> when the Module is using the same version as the one pinned in <code>known_good.json</code>; <em>Mismatch</em> when the Module is using a different version than the one pinned in <code>known_good.json</code>; <em>Update Available</em> when a newer component release is available to be integrated into <code>known_good.json</code>.</li>
+        </ul>
+        <div id="dependency-tables" class="dependency-loading">Loading dependency information…</div>
+      </div>
+      <div id="dependency-panel-other-dependencies" class="dependency-panel" role="tabpanel">
+        <div id="other-dependency-tables" class="dependency-loading">Loading dependency information…</div>
+      </div>
     </div>
   </section>
 
@@ -552,6 +598,24 @@
           btn.classList.add('active');
           tabs.forEach(t => t.setAttribute('aria-selected', t === btn ? 'true' : 'false'));
           document.getElementById('tab-' + target).classList.add('active');
+        });
+      });
+    })();
+
+    (function() {
+      const tabs = document.querySelectorAll('[data-dependency-tab]');
+      const panels = document.querySelectorAll('.dependency-panel');
+      tabs.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const target = btn.dataset.dependencyTab;
+          tabs.forEach(tab => {
+            const active = tab === btn;
+            tab.classList.toggle('active', active);
+            tab.setAttribute('aria-selected', active ? 'true' : 'false');
+          });
+          panels.forEach(panel => panel.classList.toggle(
+            'active', panel.id === `dependency-panel-${target}`
+          ));
         });
       });
     })();
@@ -680,6 +744,22 @@
       return dependencies;
     }
 
+    function parseDependencies(moduleText, dependencyNames) {
+      const dependencies = [];
+      const bazelDepPattern = /bazel_dep\s*\(([^)]*)\)/g;
+      let match;
+      while ((match = bazelDepPattern.exec(moduleText)) !== null) {
+        const nameMatch = match[1].match(/name\s*=\s*["']([^"']+)["']/);
+        if (!nameMatch || !dependencyNames.has(nameMatch[1])) continue;
+        const versionMatch = match[1].match(/version\s*=\s*["']([^"']+)["']/);
+        dependencies.push({
+          name: nameMatch[1],
+          version: versionMatch ? versionMatch[1] : null,
+        });
+      }
+      return dependencies;
+    }
+
     function versionParts(value) {
       const match = String(value || '').replace(/^v/, '').match(/^(\d+)(?:\.(\d+))?(?:\.(\d+))?/);
       return match ? [Number(match[1]), Number(match[2] || 0), Number(match[3] || 0)] : null;
@@ -767,6 +847,48 @@
       container.innerHTML = dependencyTables.length
         ? dependencyTables.join('')
         : '<div class="dependency-empty">No dependencies between known-good modules were found.</div>';
+    }
+
+    const OTHER_DEPENDENCIES = [
+      'aspect_rules_lint',
+      'aspect_rules_py',
+      'rules_cc',
+      'rules_python',
+    ];
+
+    async function renderOtherDependencies() {
+      const container = document.getElementById('other-dependency-tables');
+      const dependencyNames = new Set(OTHER_DEPENDENCIES);
+      const foundDependencies = new Map(OTHER_DEPENDENCIES.map(name => [name, []]));
+
+      for (const source of DEPENDENCY_MODULES) {
+        try {
+          const moduleText = await fetchModuleFile(source);
+          const dependencies = parseDependencies(moduleText, dependencyNames);
+          dependencies.forEach(dependency => {
+            foundDependencies.get(dependency.name).push({
+              module: source.name,
+              version: dependency.version,
+            });
+          });
+        } catch {
+        }
+      }
+
+      container.innerHTML = OTHER_DEPENDENCIES.map(name => {
+        const rows = foundDependencies.get(name);
+        return `
+          <div class="dependency-table-card">
+            <h3>${name}</h3>
+            <table class="dependency-table">
+              <thead><tr><th>Module</th><th>Version Used</th></tr></thead>
+              <tbody>${rows.length
+                ? rows.map(row => `<tr><td>${row.module}</td><td class="version-cell">${row.version || 'unversioned'}</td></tr>`).join('')
+                : '<tr><td colspan="2">No version declared in known-good modules.</td></tr>'}</tbody>
+            </table>
+          </div>
+        `;
+      }).join('');
     }
 
     async function resolveVersionRef(ownerRepo, version) {
@@ -991,6 +1113,7 @@
     renderAuthBar();
     render(true);   // use cache on initial page load
     renderDependencyIntegration();
+    renderOtherDependencies();
 
     // ── SBOM table rendering (optional) ────────────────────────────────────
     const sbomData = typeof window.SBOM_DATA !== 'undefined' ? window.SBOM_DATA : null;
