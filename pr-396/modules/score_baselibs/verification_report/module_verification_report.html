@@ -579,7 +579,7 @@ html[data-theme="dark"] .score-testcase-result--disabled {
 </style>
 <section id="verification-report">
 <h1>Verification Report<a class="headerlink" href="#verification-report" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-e1dd42f1">
+<div class="need_container docutils container" id="SNCB-92b493b8">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__baselibs_verification_report">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -646,6 +646,12 @@ html[data-theme="dark"] .score-testcase-result--disabled {
 .wp-doc-table td .dataTables_wrapper .dataTables_info,
 .wp-doc-table td .dataTables_wrapper .dataTables_paginate { display: none; }
 
+/* Scales every chart to its column, so all rows match in size. */
+.score-pie-row img[id^="needpie-"] {
+    width: 100%;
+    height: auto;
+}
+
 p.rubric.safety-class-heading {
     display: inline-block; margin: 1.4em 0 0.5em 0;
     padding: 0.15em 0.9em; border-radius: 1em;
@@ -654,10 +660,11 @@ p.rubric.safety-class-heading {
 p.rubric.safety-class-heading.safety-asil-b { background: #1f4e79; }
 p.rubric.safety-class-heading.safety-qm { background: #6c757d; }
 
+/* Matches the aspect ratio of the rendered pie charts. */
 .empty-pie {
     display: flex; flex-direction: column; align-items: center;
     justify-content: center; gap: 0.4em;
-    height: 200px; padding: 0.5em; text-align: center;
+    aspect-ratio: 9 / 10; padding: 0.5em; text-align: center;
     border: 2px dashed #b0b0b0; border-radius: 6px; color: #6c757d;
 }
 .empty-pie-title { font-weight: 600; }
@@ -758,7 +765,7 @@ p.rubric.safety-class-heading.safety-qm { background: #6c757d; }
 <h4>Component Requirements Statistics<a class="headerlink" href="#component-requirements-statistics" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="JSON Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-0" src="../../../_images/need_pie_15992.svg" />
 </div>
@@ -769,7 +776,7 @@ p.rubric.safety-class-heading.safety-qm { background: #6c757d; }
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Requirements Status (QM)</span>
@@ -787,7 +794,7 @@ p.rubric.safety-class-heading.safety-qm { background: #6c757d; }
 <h4>Component Architecture Statistics<a class="headerlink" href="#component-architecture-statistics" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="JSON Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-2" src="../../../_images/need_pie_828de.svg" />
 </div>
@@ -798,7 +805,7 @@ p.rubric.safety-class-heading.safety-qm { background: #6c757d; }
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Architecture Elements Status (QM)</span>
@@ -1170,7 +1177,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Requirements Statistics<a class="headerlink" href="#id1" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="VaJson Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-4" src="../../../_images/need_pie_1718d.svg" />
 </div>
@@ -1181,7 +1188,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Requirements Status (QM)</span>
@@ -1199,7 +1206,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Architecture Statistics<a class="headerlink" href="#id2" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Architecture Elements Status (ASIL B)</span>
@@ -1214,7 +1221,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Architecture Elements Status (QM)</span>
@@ -1385,7 +1392,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Requirements Statistics<a class="headerlink" href="#id7" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="Memory Shared Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-6" src="../../../_images/need_pie_3678b.svg" />
 </div>
@@ -1396,7 +1403,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Requirements Status (QM)</span>
@@ -1414,7 +1421,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Architecture Statistics<a class="headerlink" href="#id8" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="Memory Shared Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-8" src="../../../_images/need_pie_d1547.svg" />
 </div>
@@ -1425,7 +1432,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Architecture Elements Status (QM)</span>
@@ -1671,7 +1678,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Requirements Statistics<a class="headerlink" href="#id13" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="Result Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-10" src="../../../_images/need_pie_21b8b.svg" />
 </div>
@@ -1682,7 +1689,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Requirements Status (QM)</span>
@@ -1700,7 +1707,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Architecture Statistics<a class="headerlink" href="#id14" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="Result Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-12" src="../../../_images/need_pie_66e30.svg" />
 </div>
@@ -1711,7 +1718,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Architecture Elements Status (QM)</span>
@@ -2083,7 +2090,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Requirements Statistics<a class="headerlink" href="#id19" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="Bit Manipulation Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-14" src="../../../_images/need_pie_8f4e7.svg" />
 </div>
@@ -2094,7 +2101,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Requirements Status (QM)</span>
@@ -2112,7 +2119,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Architecture Statistics<a class="headerlink" href="#id20" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="Bit Manipulation Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-16" src="../../../_images/need_pie_dda30.svg" />
 </div>
@@ -2123,7 +2130,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Architecture Elements Status (QM)</span>
@@ -2477,7 +2484,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Requirements Statistics<a class="headerlink" href="#id25" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="Containers Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-18" src="../../../_images/need_pie_6867b.svg" />
 </div>
@@ -2488,7 +2495,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Requirements Status (QM)</span>
@@ -2506,7 +2513,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Architecture Statistics<a class="headerlink" href="#id26" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="Containers Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-20" src="../../../_images/need_pie_47c5a.svg" />
 </div>
@@ -2517,7 +2524,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Architecture Elements Status (QM)</span>
@@ -2859,7 +2866,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Requirements Statistics<a class="headerlink" href="#id31" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="Filesystem Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-22" src="../../../_images/need_pie_7317b.svg" />
 </div>
@@ -2870,7 +2877,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Requirements Status (QM)</span>
@@ -2888,7 +2895,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Architecture Statistics<a class="headerlink" href="#id32" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="Filesystem Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-24" src="../../../_images/need_pie_ae3b9.svg" />
 </div>
@@ -2899,7 +2906,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Architecture Elements Status (QM)</span>
@@ -3259,7 +3266,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Requirements Statistics<a class="headerlink" href="#id37" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="Utils Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-26" src="../../../_images/need_pie_f583e.svg" />
 </div>
@@ -3270,7 +3277,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Requirements Status (QM)</span>
@@ -3288,7 +3295,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Architecture Statistics<a class="headerlink" href="#id38" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="Utils Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-28" src="../../../_images/need_pie_10b34.svg" />
 </div>
@@ -3299,7 +3306,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Architecture Elements Status (QM)</span>
@@ -3635,7 +3642,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Requirements Statistics<a class="headerlink" href="#id43" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="Concurrency Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-30" src="../../../_images/need_pie_5479a.svg" />
 </div>
@@ -3646,7 +3653,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Requirements Status (QM)</span>
@@ -3664,7 +3671,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Architecture Statistics<a class="headerlink" href="#id44" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="Concurrency Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-32" src="../../../_images/need_pie_881e8.svg" />
 </div>
@@ -3675,7 +3682,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Architecture Elements Status (QM)</span>
@@ -4101,7 +4108,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Requirements Statistics<a class="headerlink" href="#id49" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="SafeCpp Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-34" src="../../../_images/need_pie_f65e4.svg" />
 </div>
@@ -4112,7 +4119,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Requirements Status (QM)</span>
@@ -4130,7 +4137,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Architecture Statistics<a class="headerlink" href="#id50" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="SafeCpp Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-36" src="../../../_images/need_pie_e35af.svg" />
 </div>
@@ -4141,7 +4148,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Architecture Elements Status (QM)</span>
@@ -4495,7 +4502,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Requirements Statistics<a class="headerlink" href="#id55" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="FlatBuffers Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-38" src="../../../_images/need_pie_d80f6.svg" />
 </div>
@@ -4506,7 +4513,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Requirements Status (QM)</span>
@@ -4524,7 +4531,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Architecture Statistics<a class="headerlink" href="#id56" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Architecture Elements Status (ASIL B)</span>
@@ -4539,7 +4546,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Architecture Elements Status (QM)</span>
@@ -4716,7 +4723,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Requirements Statistics<a class="headerlink" href="#id61" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="Hash Library Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-40" src="../../../_images/need_pie_6f1fa.svg" />
 </div>
@@ -4727,7 +4734,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Requirements Status (QM)</span>
@@ -4745,7 +4752,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Architecture Statistics<a class="headerlink" href="#id62" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Architecture Elements Status (ASIL B)</span>
@@ -4760,7 +4767,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Architecture Elements Status (QM)</span>
@@ -4943,7 +4950,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Requirements Statistics<a class="headerlink" href="#id67" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="Static Reflection with Serialization Requirements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-42" src="../../../_images/need_pie_6baab.svg" />
 </div>
@@ -4954,7 +4961,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Requirements Status (QM)</span>
@@ -4972,7 +4979,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 <h4>Component Architecture Statistics<a class="headerlink" href="#id68" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="Static Reflection with Serialization Architecture Elements Status (ASIL B)" id="needpie-modules/score_baselibs/verification_report/module_verification_report-44" src="../../../_images/need_pie_78452.svg" />
 </div>
@@ -4983,7 +4990,7 @@ this component. A dash (<code class="docutils literal notranslate"><span class="
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Architecture Elements Status (QM)</span>
