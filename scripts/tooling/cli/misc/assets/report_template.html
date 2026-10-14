@@ -256,25 +256,26 @@
       border-top: 1px solid var(--border);
       padding-top: 1rem;
     }
-    /* ── Tabs (new) ─────────────────────────────────────────────── */
-    .tabs {
+    /* ── Dashboard tabs ───────────────────────────────────────── */
+    .dashboard-tabs {
       max-width: 1400px;
-      margin: 0 auto 1.2rem;
+      margin: 0 auto 1.5rem;
       display: flex;
       gap: 0.5rem;
       border-bottom: 1px solid var(--border);
-      padding-bottom: 0.3rem;
     }
-    .tab-btn {
-      font-size: 0.85rem;
-      padding: 0.4rem 0.9rem;
-      border-radius: 6px 6px 0 0;
-      border-bottom: none;
+    .dashboard-tab {
+      border: 0;
+      border-bottom: 2px solid transparent;
+      border-radius: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 0.65rem 0.85rem;
     }
-    .tab-btn.active {
-      background: var(--bg);
-      color: #e6edf3;
-      border-color: var(--accent);
+    .dashboard-tab:hover,
+    .dashboard-tab.active {
+      border-bottom-color: var(--accent);
+      color: var(--accent);
     }
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
@@ -327,18 +328,76 @@
       font-size: 0.82rem;
     }
     .trace-links a:hover { text-decoration: underline; }
+
+    /* Dependency integration */
+    .dependency-section {
+      max-width: 1400px;
+      margin: 0 auto 1.5rem;
+    }
+    .dependency-section h2 {
+      font-size: 1.1rem;
+      margin-bottom: 0.35rem;
+    }
+    .dependency-section > p {
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-bottom: 1rem;
+    }
+    .dependency-table-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 1rem;
+      overflow-x: auto;
+    }
+    .dependency-table-card h3 {
+      font-size: 0.95rem;
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .dependency-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+    .dependency-table th,
+    .dependency-table td {
+      padding: 0.55rem 0.7rem;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .dependency-table tr:last-child td { border-bottom: none; }
+    .dependency-table th { color: #e6edf3; font-weight: 600; }
+    .dependency-table td { color: var(--text); }
+    .dependency-table .version-cell { font-family: var(--mono); }
+    .integration-badges { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+    .integration-badge {
+      display: inline-block;
+      border: 1px solid;
+      border-radius: 20px;
+      padding: 0.18rem 0.5rem;
+      font-size: 0.72rem;
+      font-weight: 500;
+    }
+    .integration-aligned { color: var(--green); border-color: #3fb95055; background: #3fb95011; }
+    .integration-mismatch { color: var(--red); border-color: #f8514955; background: #f8514911; }
+    .integration-update { color: var(--yellow); border-color: #d2992255; background: #d2992211; }
+    .dependency-loading,
+    .dependency-empty,
+    .dependency-error {
+      color: var(--muted);
+      font-size: 0.82rem;
+      padding: 1rem;
+    }
+    .dependency-error { color: var(--red); }
   </style>
 </head>
 <body>
   <header>
     <h1>Integration Dashboard</h1>
     <p class="subtitle">Snapshot: {{ timestamp }}</p>
-
-    <div class="tabs" id="main-tabs">
-      <button class="tab-btn active" data-tab="modules">Modules</button>
-      <button class="tab-btn" data-tab="traceability">Traceability</button>
-      <button class="tab-btn" data-tab="sbom-tools">SBOM & Tools</button>
-    </div>
 
     <div class="header-row">
       <div id="summary"><!-- filled by JS --></div>
@@ -349,22 +408,38 @@
     </div>
   </header>
 
+  <div class="pat-notice">
+    <span>&#128274; Add a <strong>GitHub personal access token (PAT)</strong> for <em>live</em> status — exact commit counts fetched directly from GitHub.
+    Enter it in the token field above, or
+    <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">create one here</a>.
+    Without a token, up-to-date / behind status is still shown from data embedded at report generation time.
+    <strong>Your PAT is not sent anywhere — it is only kept in the local cache of this page.</strong></span>
+  </div>
+
+  <nav class="dashboard-tabs" id="main-tabs" aria-label="Dashboard sections">
+    <button class="dashboard-tab active" type="button" data-tab="modules" aria-selected="true">Modules</button>
+    <button class="dashboard-tab" type="button" data-tab="dependency-integration" aria-selected="false">Dependency Integration</button>
+    <button class="dashboard-tab" type="button" data-tab="traceability" aria-selected="false">Traceability</button>
+    <button class="dashboard-tab" type="button" data-tab="sbom-tools" aria-selected="false">SBOM &amp; Tools</button>
+  </nav>
+
   <!-- Modules tab (existing) -->
   <section id="tab-modules" class="tab-panel active">
-    <div class="pat-notice">
-      <span>&#128274; Add a <strong>GitHub personal access token (PAT)</strong> for <em>live</em> status — exact commit counts fetched directly from GitHub.
-      Enter it in the token field above, or
-      <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">create one here</a>.
-      Without a token, up-to-date / behind status is still shown from data embedded at report generation time.
-      <strong>Your PAT is not sent anywhere — it is only kept in the local cache of this page.</strong></span>
-    </div>
-
     <div id="filters"></div>
     <div id="grid"></div>
 
     <footer>
       Commits-behind data fetched live from the GitHub REST API.
     </footer>
+  </section>
+
+  <!-- Dependency Integration tab -->
+  <section id="tab-dependency-integration" class="tab-panel">
+    <div class="dependency-section">
+      <h2>Dependency Integration</h2>
+      <p>Dependencies between known-good modules, their declared versions, and the latest available repository tags.</p>
+      <div id="dependency-tables" class="dependency-loading">Loading dependency information…</div>
+    </div>
   </section>
 
   <!-- Traceability tab (ISO 26262) -->
@@ -467,7 +542,7 @@
   <script>
     // ── Tab switching ───────────────────────────────────────────────
     (function() {
-      const tabs = document.querySelectorAll('#main-tabs .tab-btn');
+      const tabs = document.querySelectorAll('#main-tabs .dashboard-tab');
       const panels = document.querySelectorAll('.tab-panel');
       tabs.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -475,6 +550,7 @@
           tabs.forEach(t => t.classList.remove('active'));
           panels.forEach(p => p.classList.remove('active'));
           btn.classList.add('active');
+          tabs.forEach(t => t.setAttribute('aria-selected', t === btn ? 'true' : 'false'));
           document.getElementById('tab-' + target).classList.add('active');
         });
       });
@@ -482,6 +558,7 @@
 
     const MODULES = {{ modules_json | safe }};
     const SBOM_PACKAGES = {{ sbom_packages_json | safe }};
+    const DEPENDENCY_MODULES = MODULES.filter(mod => mod.owner_repo);
 
     // ── Token storage (unchanged) ───────────────────────────────────────
     function getToken()   { return localStorage.getItem('gh_token') || ''; }
@@ -523,7 +600,7 @@
     const CACHE_TTL_MS = 5 * 60_000; // 5 min
 
     function cacheKey(mod) {
-      return `gh|${mod.owner_repo}|${mod.hash}|${mod.branch}`;
+      return `gh|${mod.owner_repo}|${mod.hash || mod.version}|${mod.branch}`;
     }
 
     function loadFromCache(mod) {
@@ -565,6 +642,144 @@
       if (!res.ok) return null;
       const data = await res.json();
       return data.sha || null;
+    }
+
+    function decodeBase64(value) {
+      const bytes = Uint8Array.from(atob(value.replace(/\s/g, '')), char => char.charCodeAt(0));
+      return new TextDecoder().decode(bytes);
+    }
+
+    async function fetchModuleFile(mod) {
+      const refs = [];
+      if (mod.hash) refs.push(mod.hash);
+      if (mod.version) {
+        refs.push(mod.version);
+        if (!mod.version.startsWith('v')) refs.push(`v${mod.version}`);
+      }
+
+      for (const ref of refs) {
+        const url = `https://api.github.com/repos/${mod.owner_repo}/contents/MODULE.bazel?ref=${encodeURIComponent(ref)}`;
+        const res = await fetch(url, { headers: authHeaders() });
+        if (!res.ok) continue;
+        const data = await res.json();
+        if (data.encoding === 'base64' && data.content) return decodeBase64(data.content);
+      }
+      throw new Error(`MODULE.bazel not found at the pin for ${mod.name}`);
+    }
+
+    function parseKnownGoodDependencies(moduleText, knownGoodNames) {
+      const dependencies = [];
+      const bazelDepPattern = /bazel_dep\s*\(([^)]*)\)/g;
+      let match;
+      while ((match = bazelDepPattern.exec(moduleText)) !== null) {
+        const nameMatch = match[1].match(/name\s*=\s*["']([^"']+)["']/);
+        if (!nameMatch || !knownGoodNames.has(nameMatch[1])) continue;
+        const versionMatch = match[1].match(/version\s*=\s*["']([^"']+)["']/);
+        dependencies.push({ name: nameMatch[1], version: versionMatch ? versionMatch[1] : null });
+      }
+      return dependencies;
+    }
+
+    function versionParts(value) {
+      const match = String(value || '').replace(/^v/, '').match(/^(\d+)(?:\.(\d+))?(?:\.(\d+))?/);
+      return match ? [Number(match[1]), Number(match[2] || 0), Number(match[3] || 0)] : null;
+    }
+
+    function compareVersions(left, right) {
+      const a = versionParts(left);
+      const b = versionParts(right);
+      if (!a || !b) return null;
+      for (let i = 0; i < a.length; i++) {
+        if (a[i] !== b[i]) return a[i] - b[i];
+      }
+      return 0;
+    }
+
+    async function fetchLatestVersion(ownerRepo) {
+      const url = `https://api.github.com/repos/${ownerRepo}/tags?per_page=100`;
+      const res = await fetch(url, { headers: authHeaders() });
+      if (!res.ok) return null;
+      const tags = await res.json();
+      const versions = tags
+        .map(tag => tag.name)
+        .filter(tag => versionParts(tag))
+        .sort((a, b) => compareVersions(b, a));
+      return versions[0] || null;
+    }
+
+    function displayKnownGoodVersion(mod) {
+      return mod.version || (mod.hash ? mod.hash.slice(0, 10) : '—');
+    }
+
+    function dependencyBadges(versionUsed, knownGoodVersion, latestVersion) {
+      const badges = [];
+      const usedComparison = compareVersions(versionUsed, knownGoodVersion);
+      const aligned = usedComparison === 0 || versionUsed === knownGoodVersion;
+      badges.push(`<span class="integration-badge ${aligned ? 'integration-aligned' : 'integration-mismatch'}">${aligned ? 'Aligned' : 'Mismatch'}</span>`);
+      if (latestVersion && compareVersions(latestVersion, versionUsed) > 0) {
+        badges.push('<span class="integration-badge integration-update">Update Available</span>');
+      }
+      return badges.join('');
+    }
+
+    async function renderDependencyIntegration() {
+      const container = document.getElementById('dependency-tables');
+      const knownGoodByName = new Map(MODULES.map(mod => [mod.name, mod]));
+      const knownGoodNames = new Set(knownGoodByName.keys());
+      const dependencyTables = [];
+
+      for (const source of DEPENDENCY_MODULES) {
+        try {
+          const moduleText = await fetchModuleFile(source);
+          const dependencies = parseKnownGoodDependencies(moduleText, knownGoodNames);
+          if (!dependencies.length) continue;
+
+          const rows = [];
+          for (const dependency of dependencies) {
+            const knownGood = knownGoodByName.get(dependency.name);
+            const latestVersion = await fetchLatestVersion(knownGood.owner_repo);
+            const knownGoodVersion = displayKnownGoodVersion(knownGood);
+            rows.push(`
+              <tr>
+                <td>${dependency.name}</td>
+                <td class="version-cell">${dependency.version || 'unversioned'}</td>
+                <td class="version-cell">${knownGoodVersion}</td>
+                <td class="version-cell">${latestVersion || 'unknown'}</td>
+                <td><div class="integration-badges">${dependencyBadges(dependency.version, knownGood.version, latestVersion)}</div></td>
+              </tr>
+            `);
+          }
+
+          dependencyTables.push(`
+            <div class="dependency-table-card">
+              <h3>${source.name}</h3>
+              <table class="dependency-table">
+                <thead><tr><th>Dependency</th><th>Version Used</th><th>Known Good Version</th><th>Latest Available Version</th><th>Integration</th></tr></thead>
+                <tbody>${rows.join('')}</tbody>
+              </table>
+            </div>
+          `);
+        } catch (error) {
+          dependencyTables.push(`<div class="dependency-error">${error.message}</div>`);
+        }
+      }
+
+      container.innerHTML = dependencyTables.length
+        ? dependencyTables.join('')
+        : '<div class="dependency-empty">No dependencies between known-good modules were found.</div>';
+    }
+
+    async function resolveVersionRef(ownerRepo, version) {
+      const candidates = [version, `v${version}`];
+      for (const candidate of candidates) {
+        const url = `https://api.github.com/repos/${ownerRepo}/git/ref/tags/${encodeURIComponent(candidate)}`;
+        const res = await fetch(url, { headers: authHeaders() });
+        if (res.ok) {
+          const data = await res.json();
+          return data.object?.sha || candidate;
+        }
+      }
+      throw new Error(`version tag ${version} not found`);
     }
 
     // ── Status helpers ─────────────────────────────────────────────────────
@@ -630,9 +845,12 @@
 
       const repoDisplay = mod.repo.replace(/^https?:\/\/github\.com\//, '').replace(/\.git$/, '');
       const shortHash   = mod.hash ? mod.hash.slice(0, 10) : '—';
+      const pinnedValue = mod.version || shortHash;
       const commitUrl   = mod.owner_repo && mod.hash
         ? `https://github.com/${mod.owner_repo}/commit/${mod.hash}`
-        : mod.repo;
+        : mod.owner_repo && mod.version
+          ? `https://github.com/${mod.owner_repo}/tree/${encodeURIComponent(mod.version)}`
+          : mod.repo;
 
       card.innerHTML = `
         <div class="card-header">
@@ -645,7 +863,7 @@
         <div class="hash-row">
           <span class="hash-label">pinned</span>
           <span class="hash-value">
-            <a class="hash-link" href="${commitUrl}" target="_blank" rel="noopener">${shortHash}</a>
+            <a class="hash-link" href="${commitUrl}" target="_blank" rel="noopener">${pinnedValue}</a>
           </span>
         </div>
         <div class="hash-row latest-row" id="latest-${mod.name}">
@@ -719,7 +937,7 @@
         return;
       }
 
-      if (!mod.owner_repo || !mod.hash) {
+      if (!mod.owner_repo || (!mod.hash && !mod.version)) {
         statusEl.className   = 'status pin';
         statusEl.textContent = '⊘ version pinned (no hash)';
         counters.error++;
@@ -734,8 +952,9 @@
       }
 
       try {
+        const pinnedRef = mod.hash || await resolveVersionRef(mod.owner_repo, mod.version);
         const [cmp, latestSha] = await Promise.all([
-          fetchBehind(mod.owner_repo, mod.hash, mod.branch),
+          fetchBehind(mod.owner_repo, pinnedRef, mod.branch),
           fetchLatestHash(mod.owner_repo, mod.branch),
         ]);
         const result = { ahead_by: cmp.ahead_by ?? 0, status: cmp.status, latestSha };
@@ -771,6 +990,7 @@
     document.getElementById('refresh-btn').addEventListener('click', () => render(false));
     renderAuthBar();
     render(true);   // use cache on initial page load
+    renderDependencyIntegration();
 
     // ── SBOM table rendering (optional) ────────────────────────────────────
     const sbomData = typeof window.SBOM_DATA !== 'undefined' ? window.SBOM_DATA : null;
