@@ -576,7 +576,7 @@ html[data-theme="dark"] .score-testcase-result--disabled {
 </style>
 <section id="verification-report">
 <h1>Verification Report<a class="headerlink" href="#verification-report" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-552208f2">
+<div class="need_container docutils container" id="SNCB-7bb88bc9">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__persistency_verification_report">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -643,7 +643,8 @@ html[data-theme="dark"] .score-testcase-result--disabled {
 .wp-doc-table td .dataTables_wrapper .dataTables_info,
 .wp-doc-table td .dataTables_wrapper .dataTables_paginate { display: none; }
 
-/* Scales every chart to its column, so all rows match in size. */
+/* Scales every chart to its column; together with the fixed three-column
+   raster this gives every chart the same size as in the platform report. */
 .score-pie-row img[id^="needpie-"] {
     width: 100%;
     height: auto;
@@ -666,7 +667,41 @@ p.rubric.safety-class-heading.safety-qm { background: #6c757d; }
 }
 .empty-pie-title { font-weight: 600; }
 .empty-pie-text { font-style: italic; }
-</style><section id="components">
+
+.chart-legend { display: flex; flex-wrap: wrap; gap: 1.2em 2.5em; }
+.chart-legend-group {
+    display: flex; flex-direction: column; gap: 0.3em;
+    flex: 1 1 20em; font-size: 0.9em;
+}
+.chart-legend-head { font-weight: 600; }
+.chart-legend-dot {
+    display: inline-block; width: 0.8em; height: 0.8em;
+    margin-right: 0.5em; border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+}
+</style><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in" open="open">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Legend — status values and chart colours</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="chart-legend">
+  <div class="chart-legend-group">
+    <span class="chart-legend-head">Status — ASIL B</span>
+    <span><span class="chart-legend-dot" style="background: #f5c518;"></span><code>valid</code> — agreed, formal inspection still outstanding</span>
+    <span><span class="chart-legend-dot" style="background: #37a12d;"></span><code>valid_inspected</code> — agreed and formally inspected</span>
+    <span><span class="chart-legend-dot" style="background: #ca2828;"></span><code>invalid</code> — not agreed; metamodel checks are skipped</span>
+  </div>
+  <div class="chart-legend-group">
+    <span class="chart-legend-head">Status — QM</span>
+    <span><span class="chart-legend-dot" style="background: #37a12d;"></span><code>valid</code> — agreed; QM needs are not formally inspected, so this is their final state</span>
+    <span><span class="chart-legend-dot" style="background: #ca2828;"></span><code>invalid</code> — not agreed; metamodel checks are skipped</span>
+  </div>
+  <div class="chart-legend-group">
+    <span class="chart-legend-head">Test coverage — both classes</span>
+    <span><span class="chart-legend-dot" style="background: #37a12d;"></span>fully covered — at least one test fully verifies the need</span>
+    <span><span class="chart-legend-dot" style="background: #f0a500;"></span>partially covered — only partially verifying tests</span>
+    <span><span class="chart-legend-dot" style="background: #ca2828;"></span>not covered — no verifying test at all</span>
+  </div>
+</div></div>
+</details><section id="components">
 <h2>Components<a class="headerlink" href="#components" title="Link to this heading">#</a></h2>
 <section id="component-overview">
 <h3>Component Overview<a class="headerlink" href="#component-overview" title="Link to this heading">#</a></h3>
@@ -702,7 +737,7 @@ p.rubric.safety-class-heading.safety-qm { background: #6c757d; }
 <h4>Component Requirements Statistics<a class="headerlink" href="#component-requirements-statistics" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-3 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="persistency::kvs Requirements Status (ASIL B)" id="needpie-modules/score_persistency/verification_report/module_verification_report-0" src="../../../_images/need_pie_34b70.svg" />
 </div>
@@ -713,7 +748,7 @@ p.rubric.safety-class-heading.safety-qm { background: #6c757d; }
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Requirements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-3 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Requirements Status (QM)</span>
@@ -731,7 +766,7 @@ p.rubric.safety-class-heading.safety-qm { background: #6c757d; }
 <h4>Component Architecture Statistics<a class="headerlink" href="#component-architecture-statistics" title="Link to this heading">#</a></h4>
 <p class="safety-class-heading safety-asil-b rubric">ASIL B — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-3 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <img alt="persistency::kvs Architecture Elements Status (ASIL B)" id="needpie-modules/score_persistency/verification_report/module_verification_report-2" src="../../../_images/need_pie_2bf79.svg" />
 </div>
@@ -742,7 +777,7 @@ p.rubric.safety-class-heading.safety-qm { background: #6c757d; }
 </div>
 <p class="safety-class-heading safety-qm rubric">QM — Architecture Elements</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-3 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 score-pie-row docutils">
 <div class="sd-col sd-d-flex-column docutils">
 <div class="empty-pie">
    <span class="empty-pie-title">Architecture Elements Status (QM)</span>
