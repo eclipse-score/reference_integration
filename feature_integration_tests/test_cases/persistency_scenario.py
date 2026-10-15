@@ -120,6 +120,44 @@ def verify_kvs_snapshot_hash(dir_path: Path, instance_id: int, snapshot_id: int 
     )
 
 
+def read_verified_kvs_values(dir_path: Path, instance_id: int) -> dict[str, float]:
+    """
+    Hash-check every snapshot of a KVS instance and return the current one as key -> value.
+
+    The KVS keeps the current snapshot in ``kvs_<instance>_0.json`` and rotates
+    older ones to higher ids on each flush; all of them must stay hash-valid.
+    """
+    for json_path in dir_path.glob(f"kvs_{instance_id}_*.json"):
+        snapshot_id = json_path.stem.rsplit("_", 1)[-1]
+        if snapshot_id.isdigit():  # Skips kvs_<instance>_default.json.
+            verify_kvs_snapshot_hash(dir_path, instance_id=instance_id, snapshot_id=int(snapshot_id))
+    return {key: float(tagged["v"]) for key, tagged in read_kvs_snapshot(dir_path, instance_id, 0).items()}
+
+
+def restart_counter_logged_values(logs: str, key: str, source: str = "loaded_on_open") -> list[float]:
+    """Values the `persistency.restart_counter` scenario logged for `key`.
+
+    `source` is "loaded_on_open" (counter value read when the KVS was opened),
+    "read_back" (stored value of a `read_keys` entry, read through the KVS API
+    after the writes and resets) or "read_back_default" (its default, logged
+    instead when the key has no stored value, e.g. after `reset_key`).
+
+    A candidate line that is not valid JSON (e.g. cut off when its process was
+    killed) fails the test instead of raising a bare decode error.
+    """
+    values = []
+    for line in logs.splitlines():
+        if source not in line or not line.startswith("{"):
+            continue
+        try:
+            fields = json.loads(line).get("fields", {})
+        except json.JSONDecodeError as error:
+            pytest.fail(f"Malformed restart_counter log line ({error}): {line!r}")
+        if fields.get("source") == source and fields.get("key") == key:
+            values.append(float(fields["value"]))
+    return values
+
+
 class PersistencyScenario(FitScenario):
     """
     Base class for persistency feature integration tests.

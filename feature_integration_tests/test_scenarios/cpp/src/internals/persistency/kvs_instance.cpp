@@ -285,6 +285,14 @@ bool KvsInstance::set_value(const std::string& key, double value) {
     return static_cast<bool>(result);
 }
 
+std::optional<bool> KvsInstance::key_exists(const std::string& key) {
+    auto result = kvs_.key_exists(key);
+    if (!result) {
+        return std::nullopt;
+    }
+    return result.value();
+}
+
 std::optional<double> KvsInstance::get_value(const std::string& key) {
     auto result = kvs_.get_value(key);
     if (!result) {

@@ -14,6 +14,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import json
 import os
 import re
@@ -23,31 +24,25 @@ import subprocess
 import tempfile
 import threading
 import time
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 import pytest
 
+_LAUNCH_MANAGER = "@score_lifecycle//score/launch_manager"
+_LMCONTROL = "@score_lifecycle//examples/control_application:lmcontrol"
+CONTROL_DAEMON = "@score_lifecycle//examples/control_application:control_daemon"
+LIFECYCLE_PERSISTENCY_CONFIG = "//feature_integration_tests/configs:lifecycle_persistency_config.json"
 
 _TARGET_ENV_MAP = {
-    "@score_lifecycle//score/launch_manager": "FIT_LAUNCH_MANAGER_PATH",
+    _LAUNCH_MANAGER: "FIT_LAUNCH_MANAGER_PATH",
     "@score_lifecycle//examples/rust_supervised_app": "FIT_RUST_SUPERVISED_APP_PATH",
     "@score_lifecycle//examples/cpp_supervised_app": "FIT_CPP_SUPERVISED_APP_PATH",
-    "@score_lifecycle//examples/control_application:lmcontrol": "FIT_LMCONTROL_PATH",
-    "//feature_integration_tests/configs:lifecycle_daemon_config.json": "FIT_LIFECYCLE_DAEMON_CONFIG_PATH",
-    "//feature_integration_tests/configs:lifecycle_daemon_parallel_launch_config.json": (
-        "FIT_LIFECYCLE_PARALLEL_LAUNCH_CONFIG_PATH"
-    ),
-    "//feature_integration_tests/test_cases/support_apps/flaky_startup_app:flaky_startup_app": (
-        "FIT_FLAKY_STARTUP_APP_PATH"
-    ),
-    "//feature_integration_tests/configs:lifecycle_daemon_retry_recovers_config.json": (
-        "FIT_LIFECYCLE_RETRY_RECOVERS_CONFIG_PATH"
-    ),
-    "//feature_integration_tests/configs:lifecycle_daemon_retry_exhausts_config.json": (
-        "FIT_LIFECYCLE_RETRY_EXHAUSTS_CONFIG_PATH"
-    ),
+    _LMCONTROL: "FIT_LMCONTROL_PATH",
+    CONTROL_DAEMON: "FIT_CONTROL_DAEMON_PATH",
+    LIFECYCLE_PERSISTENCY_CONFIG: "FIT_LIFECYCLE_PERSISTENCY_CONFIG_PATH",
     "@score_lifecycle//scripts/config_mapping:lifecycle_config": "FIT_LIFECYCLE_CONFIG_TOOL_PATH",
     "@score_lifecycle//score/launch_manager/src/daemon/src/configuration/config_schema:launch_manager.schema.json": "FIT_LIFECYCLE_CONFIG_SCHEMA_PATH",
     "@score_lifecycle//score/launch_manager/src/daemon/src/configuration:lm_flatcfg_fbs": "FIT_LIFECYCLE_LM_SCHEMA_PATH",
@@ -55,34 +50,23 @@ _TARGET_ENV_MAP = {
 }
 
 
-def _repo_root() -> Path:
-    return Path(__file__).resolve().parents[2]
+def resolve_target_path(target: str) -> Path:
+    """Resolve a Bazel label to its runfile via the env var the BUILD target sets.
 
-
-def _run(cmd: list[str]) -> str:
-    completed = subprocess.run(
-        cmd,
-        cwd=_repo_root(),
-        capture_output=True,
-        text=True,
-        check=True,
-    )
-    return completed.stdout.strip()
-
-
-def _resolve_from_env(target: str) -> Path | None:
-    """Resolve a target path from Bazel-provided runfile environment variables."""
+    There is no `bazel build`/`cquery` fallback: nested bazel invocations fail
+    inside the `bazel test` sandbox, so a missing env var or runfile is a BUILD
+    wiring error and fails loudly.
+    """
     env_var = _TARGET_ENV_MAP.get(target)
     if env_var is None:
-        return None
+        raise RuntimeError(f"No env var mapped for target {target}; add it to _TARGET_ENV_MAP.")
 
     raw_path = os.environ.get(env_var)
     if not raw_path:
-        return None
+        raise RuntimeError(f"{env_var} is not set; declare {target} in the test target's `data` and `env`.")
 
     candidate = Path(raw_path)
     search_roots = [Path.cwd()]
-
     test_srcdir = os.environ.get("TEST_SRCDIR")
     test_workspace = os.environ.get("TEST_WORKSPACE")
     if test_srcdir and test_workspace:
@@ -95,35 +79,7 @@ def _resolve_from_env(target: str) -> Path | None:
         if resolved.exists():
             return resolved.resolve()
 
-    return None
-
-
-def _resolve_target_path(target: str) -> Path:
-    """Resolve an executable/file path from a bazel target label."""
-    env_resolved = _resolve_from_env(target)
-    if env_resolved is not None:
-        return env_resolved
-
-    _run(["bazel", "build", target])
-    output = _run(["bazel", "cquery", "--output=files", target])
-    candidates = [line.strip() for line in output.splitlines() if line.strip()]
-    if not candidates:
-        raise RuntimeError(f"No files produced by target: {target}")
-
-    execution_root = Path(_run(["bazel", "info", "execution_root"]))
-    for item in candidates:
-        candidate = Path(item)
-        if not candidate.is_absolute():
-            candidate = execution_root / candidate
-        if candidate.exists():
-            return candidate
-
-    raise RuntimeError(f"No existing artifact found for target: {target}. Candidates: {candidates!r}")
-
-
-def get_binary_path(target: str) -> Path:
-    """Compatibility helper used by daemon tests for bazel labels."""
-    return _resolve_target_path(target)
+    raise RuntimeError(f"{env_var}={raw_path} does not exist under any of {search_roots}.")
 
 
 def pgrep_cmdline_pattern(binary_path: str) -> str:
@@ -131,27 +87,18 @@ def pgrep_cmdline_pattern(binary_path: str) -> str:
     return rf"^{re.escape(binary_path)}([[:space:]]|$)"
 
 
+def _pids(binary_path: str | Path) -> list[str]:
+    result = subprocess.run(
+        ["pgrep", "-f", pgrep_cmdline_pattern(str(binary_path))],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return [line for line in result.stdout.splitlines() if line] if result.returncode == 0 else []
+
+
 def is_running(binary_path: str | Path) -> bool:
-    result = subprocess.run(
-        ["pgrep", "-f", pgrep_cmdline_pattern(str(binary_path))],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    return result.returncode == 0
-
-
-def first_pid(binary_path: str | Path) -> str | None:
-    result = subprocess.run(
-        ["pgrep", "-f", pgrep_cmdline_pattern(str(binary_path))],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    if result.returncode != 0:
-        return None
-    lines = [line for line in result.stdout.splitlines() if line]
-    return lines[0] if lines else None
+    return bool(_pids(binary_path))
 
 
 def wait_until(predicate, timeout_s: float, interval_s: float = 0.2) -> bool:
@@ -163,7 +110,31 @@ def wait_until(predicate, timeout_s: float, interval_s: float = 0.2) -> bool:
     return False
 
 
-_SETCAP_CAPS = "cap_setuid,cap_setgid,cap_sys_nice+ep"
+def _run_tool(cmd: list[str]) -> None:
+    """Run a build tool, raising with its full output on failure."""
+    result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"Command failed (rc={result.returncode}): {' '.join(cmd)}\n"
+            f"stdout:\n{result.stdout.strip()}\nstderr:\n{result.stderr.strip()}"
+        )
+
+
+# cap_kill lets launch_manager terminate apps it started under another uid (run-target switches).
+_SETCAP_CAPS = "cap_setuid,cap_setgid,cap_sys_nice,cap_kill+ep"
+_KILL_CAPS = "cap_kill+ep"
+
+# Sandbox uid used for `__FIT_SANDBOX_UID__` when capabilities are granted. Must differ from the
+# runner's uid, else an applied identity cannot be told from an inherited one.
+SANDBOX_UID = 65533
+
+# Sandbox id placeholders in config templates. `__FIT_SANDBOX_UID__` becomes SANDBOX_UID when
+# launch_manager may setuid() and the runner's uid otherwise; `__FIT_RUNNER_UID__` is always the
+# runner's uid (for components the runner must reach, e.g. through a control socket). The gid is
+# always the runner's, so the runner can read files the apps write.
+_SANDBOX_UID_PLACEHOLDER = "__FIT_SANDBOX_UID__"
+_RUNNER_UID_PLACEHOLDER = "__FIT_RUNNER_UID__"
+_RUNNER_GID_PLACEHOLDER = "__FIT_RUNNER_GID__"
 
 
 def _mount_nosuid(path: Path) -> bool:
@@ -188,11 +159,11 @@ def _mount_nosuid(path: Path) -> bool:
         return False
 
 
-def _grant_sandbox_capabilities(binary_path: Path) -> tuple[bool, str]:
-    """Best-effort grant of the capabilities launch_manager needs to apply sandbox uid/gid
-    and scheduling policy without running as root. Returns `(granted, reason)`: `granted`
-    is a *verified* result (re-read via `getcap`, not just the setcap exit code) so tests
-    can key off a real, established precondition instead of assuming root; `reason` is a
+def _grant_capabilities(binary_path: Path, caps: str, required: tuple[str, ...]) -> tuple[bool, str]:
+    """Best-effort grant of file capabilities `caps` to `binary_path`.
+
+    Returns `(granted, reason)`: `granted` is a *verified* result (every name in
+    `required` re-read via `getcap`, not just the setcap exit code); `reason` is a
     human-readable diagnostic that is safe to surface directly in a pytest.skip() message.
 
     Requires CAP_SETFCAP to write the capability xattr, which a non-root test runner does not
@@ -205,25 +176,19 @@ def _grant_sandbox_capabilities(binary_path: Path) -> tuple[bool, str]:
 
     Under `bazel test`, undeclared env vars (like FIT_ENABLE_SETCAP) do not reach the test
     process unless passed via `--test_env=FIT_ENABLE_SETCAP=1` (NOT `--action_env`, which only
-    affects build actions). `bazel run` inherits the invoking shell's environment directly, so
-    `--action_env` is a no-op for this variable there; it is only needed to force a rebuild
-    when it affects action inputs, which it does not here.
+    affects build actions).
     """
     if shutil.which("setcap") is None:
         return False, "setcap binary not found on PATH"
 
-    setcap_enabled = os.environ.get("FIT_ENABLE_SETCAP") == "1"
     attempts: list[tuple[list[str], str]] = [
-        (["setcap", _SETCAP_CAPS, str(binary_path)], "plain setcap (requires running as root)")
+        (["setcap", caps, str(binary_path)], "plain setcap (requires running as root)")
     ]
-    if setcap_enabled:
+    if os.environ.get("FIT_ENABLE_SETCAP") == "1":
         if shutil.which("sudo") is None:
             attempts.append(([], "FIT_ENABLE_SETCAP=1 set but 'sudo' not found on PATH"))
         else:
-            attempts.insert(
-                0,
-                (["sudo", "-n", "setcap", _SETCAP_CAPS, str(binary_path)], "sudo -n setcap"),
-            )
+            attempts.insert(0, (["sudo", "-n", "setcap", caps, str(binary_path)], "sudo -n setcap"))
     else:
         attempts.append(([], "FIT_ENABLE_SETCAP not set to '1'; skipping sudo setcap attempt"))
 
@@ -246,7 +211,7 @@ def _grant_sandbox_capabilities(binary_path: Path) -> tuple[bool, str]:
         getcap = shutil.which("getcap")
         if getcap is not None:
             verify = subprocess.run([getcap, str(binary_path)], capture_output=True, text=True, check=False)
-            if "cap_setuid" not in verify.stdout or "cap_setgid" not in verify.stdout:
+            if not all(cap in verify.stdout for cap in required):
                 nosuid_hint = " (path is on a 'nosuid' mount)" if _mount_nosuid(binary_path) else ""
                 failures.append(
                     f"{label} reported success but getcap did not confirm the capabilities"
@@ -259,16 +224,40 @@ def _grant_sandbox_capabilities(binary_path: Path) -> tuple[bool, str]:
     return False, "; ".join(failures) if failures else "no grant attempt produced a result"
 
 
-def signal_process(pid: str, sig: str, *, sandbox_privileged: bool) -> tuple[bool, str]:
-    """Send `sig` (e.g. "-9", "-STOP", "-CONT") to `pid`, escalating via sudo if needed.
+def _stage_privileged_kill(runtime_root: Path) -> tuple[Path | None, str]:
+    """Stage an owner-only copy of `kill` carrying `cap_kill`.
 
-    Under sandbox capabilities, supervised apps run as the configured sandbox uid/gid,
-    not the runner's own uid, so a plain `kill` fails. Falls back to `sudo -n kill` when
-    `FIT_ENABLE_SETCAP=1` (same sudoers scope as `_grant_sandbox_capabilities`).
+    Supervised apps run as the configured sandbox uid once launch_manager holds
+    `cap_setuid`, so the runner's own `kill` cannot signal them. The sudoers rule
+    behind FIT_ENABLE_SETCAP only covers `setcap`, so `sudo -n kill` is not an
+    option; the copy is granted through the same `setcap` path instead. It lives
+    inside `runtime_root` and is deleted with it in `_teardown`.
+    """
+    system_kill = shutil.which("kill")
+    if system_kill is None:
+        return None, "'kill' binary not found on PATH"
+    priv_dir = runtime_root / "priv"
+    priv_dir.mkdir(mode=0o700)
+    kill_copy = priv_dir / "kill"
+    shutil.copy2(system_kill, kill_copy)
+    kill_copy.chmod(0o700)
+    granted, reason = _grant_capabilities(kill_copy, _KILL_CAPS, required=("cap_kill",))
+    if not granted:
+        kill_copy.unlink(missing_ok=True)
+        return None, f"cap_kill grant for kill copy failed: {reason}"
+    return kill_copy, reason
+
+
+def signal_process(pid: str, sig: str, *, kill_binary: Path | None = None) -> tuple[bool, str]:
+    """Send `sig` (e.g. "-9", "-STOP", "-CONT") to `pid`.
+
+    Tries the runner's own `kill` first, then the staged `cap_kill` copy
+    (`daemon_info["kill_binary"]`), which is set only when sandbox
+    capabilities were granted and apps may run under another uid.
     """
     attempts: list[list[str]] = [["kill", sig, pid]]
-    if sandbox_privileged and os.environ.get("FIT_ENABLE_SETCAP") == "1" and shutil.which("sudo") is not None:
-        attempts.append(["sudo", "-n", "kill", sig, pid])
+    if kill_binary is not None:
+        attempts.append([str(kill_binary), sig, pid])
 
     failures: list[str] = []
     for cmd in attempts:
@@ -278,6 +267,39 @@ def signal_process(pid: str, sig: str, *, sandbox_privileged: bool) -> tuple[boo
         failures.append(f"{' '.join(cmd)} failed (rc={result.returncode}): {result.stderr.strip() or '<no output>'}")
 
     return False, "; ".join(failures)
+
+
+def find_descendant_pid(root_pid: int, process_name: str) -> int | None:
+    """Return the PID of a descendant of `root_pid` whose command line contains `process_name`."""
+    children_by_parent: dict[int, list[int]] = {}
+    try:
+        proc_entries = list(Path("/proc").iterdir())
+    except OSError:
+        return None
+    for entry in proc_entries:
+        if not entry.name.isdigit():
+            continue
+        try:
+            status = (entry / "status").read_text()
+        except (FileNotFoundError, PermissionError, ProcessLookupError):
+            continue  # Process disappeared or cannot be inspected.
+        for line in status.splitlines():
+            if line.startswith("PPid:"):
+                children_by_parent.setdefault(int(line.split()[1]), []).append(int(entry.name))
+                break
+
+    pending = list(children_by_parent.get(root_pid, []))
+    while pending:
+        pid = pending.pop()
+        pending.extend(children_by_parent.get(pid, []))
+        try:
+            # /proc/<pid>/cmdline is NUL-separated.
+            command = Path(f"/proc/{pid}/cmdline").read_bytes().replace(b"\0", b" ").decode(errors="replace")
+        except (FileNotFoundError, PermissionError, ProcessLookupError):
+            continue  # Process terminated or is inaccessible.
+        if process_name in command:
+            return pid
+    return None
 
 
 def _wait_for_apps(apps: dict[str, Path], timeout_s: float = 8.0, interval_s: float = 0.2) -> bool:
@@ -310,16 +332,34 @@ class ManagedDaemon:
     def pid(self) -> int:
         return self.process.pid
 
+    def _signal_group(self, sig: signal.Signals) -> None:
+        with contextlib.suppress(ProcessLookupError):
+            os.killpg(os.getpgid(self.process.pid), sig)
+
     def stop(self) -> None:
-        if self.is_running():
-            os.killpg(os.getpgid(self.process.pid), signal.SIGTERM)
-            deadline = time.time() + 5.0
-            while self.is_running() and time.time() < deadline:
-                time.sleep(0.1)
-            if self.is_running():
-                os.killpg(os.getpgid(self.process.pid), signal.SIGKILL)
-                self.process.wait(timeout=5)
-        self._thread.join(timeout=1)
+        """Signal the daemon's process group and wait for the daemon to exit.
+
+        Supervised apps `setpgid()` into their own groups, so this does not reach
+        them; `_teardown` kills them separately before `close_output()`.
+        """
+        if not self.is_running():
+            return
+        self._signal_group(signal.SIGTERM)
+        try:
+            self.process.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            self._signal_group(signal.SIGKILL)
+            self.process.wait(timeout=5)
+
+    def close_output(self) -> None:
+        """Join the reader thread and close the pipe.
+
+        Supervised apps inherit the daemon's stdout, so the reader only sees EOF
+        once they are dead too; call this after they have been killed.
+        """
+        self._thread.join(timeout=2)
+        if self.process.stdout is not None:
+            self.process.stdout.close()
 
     def get_logs(self) -> str:
         return "\n".join(self._lines)
@@ -338,159 +378,234 @@ def _cleanup_runtime_root(runtime_root: Path) -> None:
     shutil.rmtree(runtime_root, ignore_errors=True)
 
 
-def _generate_runtime_config(config_template: str, runtime_root: Path, etc_dir: Path) -> Path:
-    """Render and serialize an isolated launch-manager config for one daemon."""
-    config = json.loads(_resolve_target_path(config_template).read_text(encoding="utf-8"))
-    config["defaults"]["deployment_config"]["bin_dir"] = str(runtime_root / "bin")
+def _kill_apps(app_paths: Iterable[Path], kill_binary: Path | None) -> None:
+    for app_path in app_paths:
+        for pid in _pids(app_path):
+            signal_process(pid, "-9", kill_binary=kill_binary)
 
-    for component in config["components"].values():
-        arguments = component["component_properties"].get("process_arguments", [])
-        component["component_properties"]["process_arguments"] = [
-            str(runtime_root / "flaky_startup_app.counter")
-            if argument == "__FIT_RUNTIME_ROOT__/flaky_startup_app.counter"
-            else argument
-            for argument in arguments
-        ]
+
+def _teardown(
+    daemon: ManagedDaemon | None,
+    app_paths: Iterable[Path],
+    runtime_root: Path,
+    kill_binary: Path | None,
+) -> None:
+    """Stop daemon, kill apps, close output, remove runtime root; each step runs even if one raises."""
+    try:
+        if daemon is not None:
+            daemon.stop()
+    finally:
+        try:
+            _kill_apps(app_paths, kill_binary)
+        finally:
+            try:
+                if daemon is not None:
+                    daemon.close_output()
+            finally:
+                _cleanup_runtime_root(runtime_root)
+
+
+def _generate_runtime_config(
+    runtime_root: Path,
+    etc_dir: Path,
+    config_target: str,
+    render: Callable[[dict[str, Any], Path], None] | None,
+    *,
+    sandbox_privileged: bool,
+) -> Path:
+    """Render and serialize an isolated launch-manager config for one daemon.
+
+    Resolves the sandbox id placeholders (see `_SANDBOX_UID_PLACEHOLDER`). When
+    `sandbox_privileged`, `runtime_root` is opened to the runner's group (0750)
+    so apps running as `SANDBOX_UID` can reach `bin_dir`. Limitation: the gid
+    is the runner's own, so a gid check cannot prove setgid() was applied.
+    `render(config, runtime_root)` runs afterwards and may fill further
+    runtime-specific values before the config is validated and serialized.
+    """
+    config = json.loads(resolve_target_path(config_target).read_text(encoding="utf-8"))
+    config["defaults"]["deployment_config"]["bin_dir"] = str(runtime_root / "bin")
+    ids = {
+        _SANDBOX_UID_PLACEHOLDER: SANDBOX_UID if sandbox_privileged else os.getuid(),
+        _RUNNER_UID_PLACEHOLDER: os.getuid(),
+        _RUNNER_GID_PLACEHOLDER: os.getgid(),
+    }
+    sandboxes = [config["defaults"]["deployment_config"].get("sandbox")]
+    sandboxes += [c.get("deployment_config", {}).get("sandbox") for c in config["components"].values()]
+    for sandbox in filter(None, sandboxes):
+        for field in ("uid", "gid"):
+            if sandbox.get(field) in ids:
+                sandbox[field] = ids[sandbox[field]]
+    if sandbox_privileged:
+        runtime_root.chmod(0o750)
+    if render is not None:
+        render(config, runtime_root)
 
     rendered_config = etc_dir / "lifecycle_config.json"
     rendered_config.write_text(json.dumps(config), encoding="utf-8")
     generated_dir = etc_dir / "generated"
     generated_dir.mkdir()
-    config_tool = _resolve_target_path("@score_lifecycle//scripts/config_mapping:lifecycle_config")
-    config_schema = _resolve_target_path(
+    config_tool = resolve_target_path("@score_lifecycle//scripts/config_mapping:lifecycle_config")
+    config_schema = resolve_target_path(
         "@score_lifecycle//score/launch_manager/src/daemon/src/configuration/config_schema:launch_manager.schema.json"
     )
-    subprocess.run(
-        [str(config_tool), str(rendered_config), "--schema", str(config_schema), "-o", str(generated_dir)],
-        capture_output=True,
-        text=True,
-        check=True,
+    _run_tool([str(config_tool), str(rendered_config), "--schema", str(config_schema), "-o", str(generated_dir)])
+
+    flatc = resolve_target_path("@flatbuffers//:flatc")
+    lm_schema = resolve_target_path(
+        "@score_lifecycle//score/launch_manager/src/daemon/src/configuration:lm_flatcfg_fbs"
     )
-
-    flatc = _resolve_target_path("@flatbuffers//:flatc")
-    buffers = (
-        (
-            f"{rendered_config.stem}_gen",
-            "@score_lifecycle//score/launch_manager/src/daemon/src/configuration:lm_flatcfg_fbs",
-        ),
+    name = f"{rendered_config.stem}_gen"
+    _run_tool(
+        [
+            str(flatc),
+            "--binary",
+            "--strict-json",
+            "-o",
+            str(etc_dir),
+            str(lm_schema),
+            str(generated_dir / f"{name}.json"),
+        ]
     )
-    for name, schema_target in buffers:
-        subprocess.run(
-            [
-                str(flatc),
-                "--binary",
-                "--strict-json",
-                "-o",
-                str(etc_dir),
-                str(_resolve_target_path(schema_target)),
-                str(generated_dir / f"{name}.json"),
-            ],
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-
-    return etc_dir / f"{buffers[0][0]}.bin"
+    return etc_dir / f"{name}.bin"
 
 
-def start_launch_manager_daemon(
-    tmp_path_factory: pytest.TempPathFactory,
-    blocked_apps: frozenset[str] = frozenset(),
-    wait_for_apps: bool = True,
-    config_template: str = "//feature_integration_tests/configs:lifecycle_daemon_config.json",
-) -> dict[str, Any]:
-    """Start a real launch_manager process with generated flatbuffer config.
+def _spawn_daemon(
+    lm_binary: Path, config_path: Path, work_dir: Path, etc_dir: Path, log_config: Path | None
+) -> ManagedDaemon:
+    """Start launch_manager and wait briefly for startup.
 
-    `blocked_apps` names ("rust"/"cpp") are copied into place but left
-    non-executable, so launch_manager cannot start them until the caller
-    chmod's them back to 0o755. Used to exercise the dependency-gating
-    negative path: assert the dependent app stays down while its
-    dependency is withheld, then unblock and assert it starts - and, with
-    an independent config (no depends_on between the two apps), the inverse:
-    assert the other app starts anyway, proving it isn't gated at all.
-
-    Each invocation receives its own directory beneath `TEST_TMPDIR`, so it can
-    run concurrently with the class-scoped fixture or another Bazel test process.
+    Stops its own daemon and closes its output if the startup wait is
+    interrupted, since the caller only receives the handle on return. The
+    caller's teardown kills the apps; the reader thread is joined with a
+    timeout, so an app still holding the pipe cannot block here.
     """
+    env = os.environ.copy()
+    env.setdefault("ECUCFG_ENV_VAR_ROOTFOLDER", str(etc_dir))
+    if log_config is not None:
+        env["MW_LOG_CONFIG_FILE"] = str(log_config)
 
-    runtime_root = Path(tempfile.mkdtemp(prefix="lifecycle_fit-", dir=_tmpdir_root()))
-    try:
-        work_dir = tmp_path_factory.mktemp("lm-daemon")
-        etc_dir = work_dir / "etc"
-        etc_dir.mkdir(parents=True, exist_ok=True)
+    lines: list[str] = []
+    process = subprocess.Popen(
+        [str(lm_binary), "-c", str(config_path)],
+        cwd=work_dir,
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        start_new_session=True,
+    )
 
-        bin_dir = runtime_root / "bin"
-        bin_dir.mkdir(parents=True, exist_ok=True)
-
-        launch_manager = _resolve_target_path("@score_lifecycle//score/launch_manager")
-        rust_supervised = _resolve_target_path("@score_lifecycle//examples/rust_supervised_app")
-        cpp_supervised = _resolve_target_path("@score_lifecycle//examples/cpp_supervised_app")
-
-        lm_dst = work_dir / "launch_manager"
-        shutil.copy2(launch_manager, lm_dst)
-        lm_dst.chmod(0o755)
-        sandbox_privileged, sandbox_privileged_reason = _grant_sandbox_capabilities(lm_dst)
-
+    def _collect_output() -> None:
+        assert process.stdout is not None
         try:
-            lm_ctl_binary = _resolve_target_path("@score_lifecycle//examples/control_application:lmcontrol")
-        except RuntimeError:
-            lm_ctl_binary = None
-
-        for key, src in (("rust", rust_supervised), ("cpp", cpp_supervised)):
-            dst = bin_dir / src.name
-            shutil.copy2(src, dst)
-            dst.chmod(0o000 if key in blocked_apps else 0o755)
-
-        config_path = _generate_runtime_config(config_template, runtime_root, etc_dir)
-
-        env = os.environ.copy()
-        env.setdefault("ECUCFG_ENV_VAR_ROOTFOLDER", str(etc_dir))
-
-        lines: list[str] = []
-        process = subprocess.Popen(
-            [str(lm_dst), "-c", str(config_path)],
-            cwd=work_dir,
-            env=env,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            start_new_session=True,
-        )
-
-        def _collect_output() -> None:
-            assert process.stdout is not None
             for line in process.stdout:
                 line = line.rstrip("\n")
                 if line:
                     lines.append(line)
+        except ValueError:
+            pass  # Pipe closed by close_output().
 
-        thread = threading.Thread(target=_collect_output, daemon=True)
-        thread.start()
+    thread = threading.Thread(target=_collect_output, daemon=True)
+    thread.start()
+    daemon = ManagedDaemon(process=process, _lines=lines, _thread=thread)
 
-        daemon = ManagedDaemon(process=process, _lines=lines, _thread=thread)
-
-        # Give startup a chance to complete and fail early if config is broken.
+    try:
         time.sleep(1.0)
-        if not daemon.is_running():
-            logs = daemon.get_logs()
-            pytest.skip(f"launch_manager failed to start in this environment. Logs:\n{logs}")
-
-        apps = {
-            "rust": bin_dir / "rust_supervised_app",
-            "cpp": bin_dir / "cpp_supervised_app",
-        }
-        if wait_for_apps and not _wait_for_apps({k: v for k, v in apps.items() if k not in blocked_apps}):
-            process_snapshot = _run(["ps", "-eo", "pid,args"])
+    except BaseException:
+        try:
             daemon.stop()
-            _cleanup_runtime_root(runtime_root)
+        finally:
+            daemon.close_output()
+        raise
+    return daemon
+
+
+def start_launch_manager_daemon(
+    tmp_path_factory: pytest.TempPathFactory,
+    *,
+    config_target: str,
+    binaries: dict[str, Path],
+    ready_apps: Iterable[str] | None = None,
+    render: Callable[[dict[str, Any], Path], None] | None = None,
+    log_level: str | None = None,
+    control_client: bool = False,
+) -> dict[str, Any]:
+    """Start a real launch_manager process with generated flatbuffer config.
+
+    Each invocation receives its own directory beneath `TEST_TMPDIR`. Any
+    failure after allocation tears down everything started so far. A daemon
+    that dies at startup fails the test: launch_manager is a declared Bazel
+    `data` dependency, so there is no legitimate "unavailable" case to skip.
+
+    `binaries` maps a `bin_dir` file name to its source; `ready_apps` names
+    those that must be running after startup (default: all). `log_level`
+    (e.g. "kDebug") writes an mw::log console config for launch_manager;
+    without it only warnings are printed. `control_client` resolves `lmcontrol`
+    into `lm_ctl_binary` (None otherwise), so only targets that drive the
+    control interface need it in `data`.
+    """
+    runtime_root = Path(tempfile.mkdtemp(prefix="lifecycle_fit-", dir=_tmpdir_root()))
+    bin_dir = runtime_root / "bin"
+    apps = {name: bin_dir / name for name in binaries}
+    daemon: ManagedDaemon | None = None
+    kill_binary: Path | None = None
+    try:
+        work_dir = tmp_path_factory.mktemp("lm-daemon")
+        etc_dir = work_dir / "etc"
+        etc_dir.mkdir(parents=True, exist_ok=True)
+        bin_dir.mkdir(parents=True, exist_ok=True)
+
+        lm_dst = work_dir / "launch_manager"
+        shutil.copy2(resolve_target_path(_LAUNCH_MANAGER), lm_dst)
+        lm_dst.chmod(0o700)
+
+        # Grant launch_manager its sandbox caps only if the cap_kill copy is in
+        # place, so apps running under another uid can always be killed.
+        kill_binary, sandbox_privileged_reason = _stage_privileged_kill(runtime_root)
+        sandbox_privileged = False
+        if kill_binary is not None:
+            sandbox_privileged, sandbox_privileged_reason = _grant_capabilities(
+                lm_dst, _SETCAP_CAPS, required=("cap_setuid", "cap_setgid", "cap_kill")
+            )
+            if not sandbox_privileged:
+                kill_binary.unlink(missing_ok=True)
+                kill_binary = None
+
+        lm_ctl_binary = resolve_target_path(_LMCONTROL) if control_client else None
+
+        for name, dst in apps.items():
+            shutil.copy2(binaries[name], dst)
+            dst.chmod(0o755)
+
+        # sandbox_privileged implies the cap_kill copy is staged, so apps can always be killed.
+        config_path = _generate_runtime_config(
+            runtime_root, etc_dir, config_target, render, sandbox_privileged=sandbox_privileged
+        )
+        log_config = None
+        if log_level is not None:
+            log_config = etc_dir / "logging.json"
+            log_config.write_text(
+                json.dumps(
+                    {"appId": "LM", "logMode": "kConsole", "logLevel": log_level, "logLevelThresholdConsole": log_level}
+                ),
+                encoding="utf-8",
+            )
+        daemon = _spawn_daemon(lm_dst, config_path, work_dir, etc_dir, log_config)
+
+        if not daemon.is_running():
+            pytest.fail(f"launch_manager exited during startup. Logs:\n{daemon.get_logs()}")
+
+        ready = apps if ready_apps is None else {name: apps[name] for name in ready_apps}
+        if not _wait_for_apps(ready):
+            snapshot = subprocess.run(["ps", "-eo", "pid,args"], capture_output=True, text=True, check=False)
             pytest.fail(
                 "Launch Manager did not bring supervised apps to running state within timeout.\n"
-                f"Expected apps: {apps}\n"
+                f"Expected apps: {ready}\n"
                 f"Daemon logs:\n{daemon.get_logs()}\n"
-                f"Process snapshot:\n{process_snapshot}"
+                f"Process snapshot:\n{snapshot.stdout}"
             )
     except BaseException:
-        _cleanup_runtime_root(runtime_root)
+        _teardown(daemon, apps.values(), runtime_root, kill_binary)
         raise
 
     return {
@@ -500,128 +615,17 @@ def start_launch_manager_daemon(
         "apps": apps,
         "sandbox_privileged": sandbox_privileged,
         "sandbox_privileged_reason": sandbox_privileged_reason,
+        "kill_binary": kill_binary,
         "runtime_root": runtime_root,
         "lm_ctl_binary": lm_ctl_binary,
     }
 
 
-def start_flaky_retry_daemon(
-    tmp_path_factory: pytest.TempPathFactory,
-    config_template: str,
-    crashes_before_success: int,
-) -> dict[str, Any]:
-    """Start launch_manager against a single-component retry config.
-
-    Drives `flaky_startup_app` (see support_apps/flaky_startup_app/main.cpp), which
-    aborts on its first `crashes_before_success` startup attempts and stays running
-    from then on, so `ready_recovery_action.restart.number_of_attempts` can be
-    exercised deterministically instead of relying on a real, racy startup failure.
-    Does not wait for the app to reach Running: whether it ever does is exactly
-    what the calling test is checking.
-    """
-    runtime_root = Path(tempfile.mkdtemp(prefix="lifecycle_fit_retries-", dir=_tmpdir_root()))
-    try:
-        work_dir = tmp_path_factory.mktemp("lm-retry-daemon")
-        etc_dir = work_dir / "etc"
-        etc_dir.mkdir(parents=True, exist_ok=True)
-
-        bin_dir = runtime_root / "bin"
-        bin_dir.mkdir(parents=True, exist_ok=True)
-
-        launch_manager = _resolve_target_path("@score_lifecycle//score/launch_manager")
-        flaky_app = _resolve_target_path(
-            "//feature_integration_tests/test_cases/support_apps/flaky_startup_app:flaky_startup_app"
-        )
-        lm_dst = work_dir / "launch_manager"
-        shutil.copy2(launch_manager, lm_dst)
-        lm_dst.chmod(0o755)
-
-        app_dst = bin_dir / "flaky_startup_app"
-        shutil.copy2(flaky_app, app_dst)
-        app_dst.chmod(0o755)
-
-        counter_path = runtime_root / "flaky_startup_app.counter"
-        if counter_path.exists():
-            counter_path.unlink()
-
-        config_path = _generate_runtime_config(config_template, runtime_root, etc_dir)
-
-        env = os.environ.copy()
-        env.setdefault("ECUCFG_ENV_VAR_ROOTFOLDER", str(etc_dir))
-
-        lines: list[str] = []
-        process = subprocess.Popen(
-            [str(lm_dst), "-c", str(config_path)],
-            cwd=work_dir,
-            env=env,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            start_new_session=True,
-        )
-
-        def _collect_output() -> None:
-            assert process.stdout is not None
-            for line in process.stdout:
-                line = line.rstrip("\n")
-                if line:
-                    lines.append(line)
-
-        thread = threading.Thread(target=_collect_output, daemon=True)
-        thread.start()
-
-        daemon = ManagedDaemon(process=process, _lines=lines, _thread=thread)
-
-        time.sleep(1.0)
-        if not daemon.is_running():
-            logs = daemon.get_logs()
-            pytest.skip(f"launch_manager failed to start in this environment. Logs:\n{logs}")
-    except BaseException:
-        _cleanup_runtime_root(runtime_root)
-        raise
-
-    return {
-        "daemon": daemon,
-        "work_dir": work_dir,
-        "bin_dir": bin_dir,
-        "app_path": app_dst,
-        "counter_path": counter_path,
-        "crashes_before_success": crashes_before_success,
-        "runtime_root": runtime_root,
-    }
-
-
-def stop_flaky_retry_daemon(daemon_info: dict[str, Any]) -> None:
-    """Tear down a daemon started by `start_flaky_retry_daemon`."""
-    daemon_info["daemon"].stop()
-    subprocess.run(
-        ["pkill", "-f", pgrep_cmdline_pattern(str(daemon_info["app_path"]))],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    _cleanup_runtime_root(daemon_info["runtime_root"])
-
-
-def read_retry_attempt_count(counter_path: Path) -> int:
-    """Read flaky_startup_app's persisted attempt counter; 0 if it hasn't run yet."""
-    try:
-        return int(counter_path.read_text().strip())
-    except (FileNotFoundError, ValueError):
-        return 0
-
-
 def stop_launch_manager_daemon(daemon_info: dict[str, Any]) -> None:
     """Tear down a daemon started by `start_launch_manager_daemon`."""
-    daemon_info["daemon"].stop()
-    _cleanup_runtime_root(daemon_info["runtime_root"])
-
-
-@pytest.fixture(scope="class")
-def launch_manager_daemon(tmp_path_factory: pytest.TempPathFactory) -> dict[str, Any]:
-    """Start a real launch_manager process with generated flatbuffer config."""
-    daemon_info = start_launch_manager_daemon(tmp_path_factory)
-    try:
-        yield daemon_info
-    finally:
-        stop_launch_manager_daemon(daemon_info)
+    _teardown(
+        daemon_info["daemon"],
+        daemon_info["apps"].values(),
+        daemon_info["runtime_root"],
+        daemon_info["kill_binary"],
+    )

@@ -32,9 +32,36 @@ bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit
 To run specific test suites:
 
 ```sh
-bazel test //feature_integration_tests/test_cases:fit_rust
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_rust
 bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_cpp
 ```
+
+### Lifecycle ↔ persistency tests
+
+`tests/lifecycle/test_lifecycle_persistency_integration.py` starts a real Launch Manager with
+`configs/lifecycle_persistency_config.json`. Launch Manager launches the FIT scenario binary
+(`persistency.restart_counter`) as KVS-owning components. The test drives run targets through
+`lmcontrol` → `control_daemon`, crashes a supervised app to trigger recovery, and checks the KVS
+files and Launch Manager's log. It runs once per language:
+
+```sh
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_rust_lifecycle_persistency
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit_cpp_lifecycle_persistency
+```
+
+Both targets are `exclusive`: Launch Manager and `control_daemon` use host-wide names in `/dev/shm`.
+
+`test_components_run_with_configured_sandbox_identity` skips unless Launch Manager can be granted
+`cap_setuid`/`cap_setgid` and a `cap_kill` copy of `kill` can be staged. CI doesn't do this, so the
+test carries no requirement claim. To run it locally, you need a passwordless sudoers rule for
+`setcap` and a run outside the Bazel sandbox:
+
+```sh
+bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit \
+  --spawn_strategy=local --test_env=FIT_ENABLE_SETCAP=1 --test_arg=-rs
+```
+
+Requirement coverage is listed in [docs/lifecycle_persistency_traceability.md](docs/lifecycle_persistency_traceability.md).
 
 ## Quick try
 

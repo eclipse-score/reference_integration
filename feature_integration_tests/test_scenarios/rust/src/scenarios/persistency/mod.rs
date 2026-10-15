@@ -15,6 +15,7 @@ mod default_values_ignored;
 mod multi_instance_isolation;
 mod multiple_kvs_per_app;
 mod reset_to_default;
+mod restart_counter;
 mod supported_datatypes;
 mod utf8_defaults;
 
@@ -23,6 +24,7 @@ use default_values_ignored::DefaultValuesIgnored;
 use multi_instance_isolation::MultiInstanceIsolation;
 use multiple_kvs_per_app::MultipleKvsPerApp;
 use reset_to_default::ResetToDefault;
+use restart_counter::RestartCounter;
 use supported_datatypes::supported_datatypes_group;
 use test_scenarios_rust::scenario::{ScenarioGroup, ScenarioGroupImpl};
 use utf8_defaults::Utf8DefaultValueGet;
@@ -38,6 +40,7 @@ pub fn persistency_group() -> Box<dyn ScenarioGroup> {
             Box::new(Utf8Defaults),
             Box::new(Utf8DefaultValueGet),
             Box::new(MultiInstanceIsolation),
+            Box::new(RestartCounter),
         ],
         vec![supported_datatypes_group(), default_values_group()],
     ))
