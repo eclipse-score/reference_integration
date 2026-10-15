@@ -26,6 +26,6 @@ rust_binary(
         "@score_crates//:tracing",
         "@score_crates//:tracing_subscriber",
         "@score_persistency//score/kvs/rust_kvs",
-        "@score_test_scenarios//test_scenarios_rust",
+        "@score_test_scenarios//score/test_scenarios_rust",
     ],
 )
