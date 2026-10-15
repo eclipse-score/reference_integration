@@ -10,7 +10,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-load("@rules_pkg//pkg:mappings.bzl", "pkg_attributes", "pkg_files")
 load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
 
 score_pkg_bundle(
@@ -82,10 +81,14 @@ score_pkg_bundle(
 
 # Persistency has no runnable showcase yet; the upstream test scenarios binary
 # is shipped so that one can be added without changing the image layout.
-pkg_files(
-    name = "persistency_pkg_files",
-    srcs = ["@score_persistency//score/kvs/tests/test_scenarios/cpp:test_scenarios"],
-    attributes = pkg_attributes(mode = "0755"),
-    renames = {"@score_persistency//score/kvs/tests/test_scenarios/cpp:test_scenarios": "bin/cpp_tests_persistency"},
-    visibility = ["//visibility:public"],
+# score_pkg_bundle names binaries after their label, hence the alias.
+alias(
+    name = "cpp_tests_persistency",
+    actual = "@score_persistency//score/kvs/tests/test_scenarios/cpp:test_scenarios",
+)
+
+score_pkg_bundle(
+    name = "persistency",
+    bins = ["//showcases/standalone:cpp_tests_persistency"],
+    package_dir = "standalone",
 )
