@@ -67,17 +67,28 @@ score_pkg_bundle(
     package_dir = "standalone",
 )
 
+# The config daemon and its configuration are part of the deployed platform
+# (//deploy/config_management). This showcase only contributes the manifest
+# that drives the deployed daemon.
 score_pkg_bundle(
     name = "config_management",
-    bins = [
-        "@score_config_management//score/config_management/config_daemon/code:config_daemon",
-    ],
+    bins = [],
     config_data = [
         "//showcases/standalone:config_management.score.json",
     ],
-    custom_layout = {
-        "@score_config_management//score/config_management/config_daemon/code/services/details/mw_com:mw_com_config": "etc/mw_com_config.json",
-        "@score_config_management//score/config_management/config_daemon/code/plugins/demo_json:demo_parameters": "etc/demo_parameters.json",
-    },
+    package_dir = "standalone",
+)
+
+# Persistency has no runnable showcase yet; the upstream test scenarios binary
+# is shipped so that one can be added without changing the image layout.
+# score_pkg_bundle names binaries after their label, hence the alias.
+alias(
+    name = "cpp_tests_persistency",
+    actual = "@score_persistency//score/kvs/tests/test_scenarios/cpp:test_scenarios",
+)
+
+score_pkg_bundle(
+    name = "persistency",
+    bins = ["//showcases/standalone:cpp_tests_persistency"],
     package_dir = "standalone",
 )
