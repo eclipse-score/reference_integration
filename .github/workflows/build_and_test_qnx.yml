@@ -76,6 +76,9 @@ jobs:
       - name: Run integration tests
         run: |
           bazel test --lockfile_mode=error --config=itf-qnx-x86_64 //feature_integration_tests/itf
+      - name: Run platform integration tests
+        run: |
+          bazel test --lockfile_mode=error --config=itf-qnx-x86_64 //platform_integration_tests:pit
       - name: Cleanup QNX license
         if: always()
         run: sudo rm -rf /opt/score_qnx
