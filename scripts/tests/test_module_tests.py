@@ -16,7 +16,6 @@ from module_tests import (
     STATUS_LINE,
     count_testcases,
     coverage_args,
-    direct_deps,
     graph_modules,
     lcov_percentages,
     override_rc,
@@ -35,20 +34,14 @@ def test_graph_modules_walks_nested_and_indirect_deps():
     assert graph_modules(graph) == {"rules_cc", "platforms", "zlib"}
 
 
-def test_direct_deps_are_the_root_modules_own_deps_only():
-    graph = {
-        "dependencies": [
-            {"name": "rules_cc", "dependencies": [{"name": "platforms"}]},
-            {"name": "bazel_tools"},
-        ],
-        "indirectDependencies": [{"name": "libpfm"}],
-    }
-    assert direct_deps(graph) == {"rules_cc"}
-
-
 def test_override_rc_is_sorted_one_line_per_module():
     rc = override_rc({"zlib": Path("/o/zlib+"), "platforms": Path("/o/platforms")})
     assert rc == "common --override_module=platforms=/o/platforms\ncommon --override_module=zlib=/o/zlib+\n"
+
+
+def test_override_rc_appends_extra_test_config_as_build_flags():
+    rc = override_rc({"zlib": Path("/o/zlib+")}, ["@m//p:flag=v"])
+    assert rc == "common --override_module=zlib=/o/zlib+\nbuild --@m//p:flag=v\n"
 
 
 def test_coverage_args_put_unified_config_before_target_separator():
