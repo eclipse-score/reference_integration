@@ -23,10 +23,3 @@ unified_gcc.toolchain(
     version = "12.2.0",
 )
 use_repo(unified_gcc, "unified_gcc_x86_64_toolchain")
-
-# score_docs_as_code@36cdc3f pulls score_devcontainer@1.11.1, which got yanked. Lives here as it is the
-# only file included by ref_int and by every tested module alike. Drop with the next docs_as_code bump.
-single_version_override(
-    module_name = "score_devcontainer",
-    version = "1.11.2",
-)
