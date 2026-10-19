@@ -15,17 +15,19 @@
   run <module>      test <module> at its known_good commit with those versions forced
   report <dir>      write the verification report's unit test and coverage summaries
 
-Each of the module's direct dependencies that ref_int also resolves is pinned with
+Every module in the module's dependency graph that ref_int also resolves is pinned with
 ``--override_module``, pointing at ref_int's own fetched copy (so ref_int's patches come along);
-Bazel resolves the deeper ones from there. ``bazel_common/unified.bazelrc`` is layered over the
-module's .bazelrc. The only edit to the module is one ``include()`` of ref_int's
-``unified_toolchains.MODULE.bazel``, as toolchains can only be defined in MODULE files.
+ones ref_int cannot fetch are reported as not pinned. ``bazel_common/unified.bazelrc`` and the
+module's ``extra_test_config`` are layered over the module's .bazelrc. The only edit to the module
+is one ``include()`` of ref_int's ``unified_toolchains.MODULE.bazel``, as toolchains can only be
+defined in MODULE files.
 """
 
 import argparse
 import json
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -72,11 +74,6 @@ def graph_modules(graph: dict) -> set[str]:
     return names - {"bazel_tools"}
 
 
-def direct_deps(graph: dict) -> set[str]:
-    """The root module's own bazel_deps in a ``bazel mod graph --output=json`` dump."""
-    return {dep["name"] for dep in graph["dependencies"]} - {"bazel_tools"}
-
-
 def mod_graph(cwd: Path, env: dict | None = None, lockfile_mode: str = "update") -> dict:
     result = bazel(["mod", "graph", "--output=json", f"--lockfile_mode={lockfile_mode}"], cwd, env)
     if result.returncode:
@@ -87,8 +84,11 @@ def mod_graph(cwd: Path, env: dict | None = None, lockfile_mode: str = "update")
 def fetch(names: set[str]) -> dict[str, Path]:
     """Fetch modules in ref_int and return where their sources landed.
 
-    A repo that fails to fetch (e.g. a dead mirror of a module no build ever touches) is just
-    missing from the result instead of failing the run.
+    Fetching in ref_int's context applies its ``git_override`` / ``single_version_override``
+    (including the known_good.json patches) automatically. A repo that fails to fetch (e.g. a dead
+    mirror of a module no build ever touches) is just missing from the result instead of failing
+    the run. ``multiple_version_override`` is not supported: its repos are named
+    ``<name>+<version>`` and are not found here.
     """
     bazel(["fetch", "--keep_going", "--lockfile_mode=error", *(f"--repo=@@{n}+" for n in sorted(names))])
     external = Path(bazel(["info", "output_base"]).stdout.strip()) / "external"
@@ -102,8 +102,10 @@ def fetch(names: set[str]) -> dict[str, Path]:
     return found
 
 
-def override_rc(paths: dict[str, Path]) -> str:
-    return "".join(f"common --override_module={name}={paths[name]}\n" for name in sorted(paths))
+def override_rc(paths: dict[str, Path], extra_test_config: list[str] = ()) -> str:
+    """Pin each module to its path; the module's ``extra_test_config`` flags follow as build flags."""
+    rc = "".join(f"common --override_module={name}={paths[name]}\n" for name in sorted(paths))
+    return rc + "".join(f"build --{flag}\n" for flag in extra_test_config)
 
 
 def coverage_args(test_args: list[str], langs: list[str], excludes: list[str] = ()) -> list[str]:
@@ -146,6 +148,57 @@ def lcov_percentages(lcov: Path) -> dict[str, str]:
     return {"lines": ratio("LF", "LH"), "functions": ratio("FNF", "FNH"), "branches": ratio("BRF", "BRH")}
 
 
+def _setup_working_dir(work: Path, name: str) -> tuple[Path, Path]:
+    """Fresh module workspace and report dir under ``work``."""
+    workspace, out = work / name, work / "reports" / name
+    shutil.rmtree(workspace, ignore_errors=True)
+    shutil.rmtree(out, ignore_errors=True)
+    out.mkdir(parents=True)
+    return workspace, out
+
+
+def _copy_fetch_module(name: str, workspace: Path) -> None:
+    """Copy ref_int's fetched (and patched) copy of the module into ``workspace``."""
+    source = fetch({name}).get(name)
+    if source is None:
+        sys.exit(f"could not fetch {name} in ref_int")
+    shutil.copytree(source, workspace, symlinks=True)
+
+
+def _append_unified_toolchain(workspace: Path) -> None:
+    shutil.copy(UNIFIED_TOOLCHAINS, workspace)
+    module_file = workspace / "MODULE.bazel"
+    module_file.chmod(0o644)  # read-only when copied from Bazel's repo cache
+    with module_file.open("a") as f:
+        f.write(f'\ninclude("//:{UNIFIED_TOOLCHAINS.name}")\n')
+
+
+def _collect_coverage(workspace: Path, out: Path, env: dict) -> None:
+    (out / "coverage").mkdir()
+    lcov = Path(bazel(["info", "output_path"], workspace, env).stdout.strip()) / "_coverage" / "_coverage_report.dat"
+    if lcov.is_file():
+        shutil.copy(lcov, out / "coverage" / "lcov.dat")
+
+
+def _write_summary(
+    name: str, out: Path, exit_code: int, log: str, *, no_tests: bool, pinned: dict, unpinned: list[str]
+) -> None:
+    failed = STATUS_LINE.findall(log)
+    summary = [f"## {name}: bazel exit code {exit_code}", ""]
+    summary += [f"- `{target}` {status}" for target, status in failed]
+    if no_tests:
+        summary.append("- no test was executed: all skipped or the build failed, see the job log")
+    elif exit_code and not failed:
+        summary.append("- no per-target results: the build or analysis failed, see the job log")
+    if unpinned:
+        summary.append(f"- not pinned (ref_int could not fetch them): {', '.join(unpinned)}")
+    summary.append(f"- {len(pinned)} modules pinned to ref_int's versions (overrides.bazelrc)")
+    text = "\n".join(summary) + "\n"
+    (out / "summary.md").write_text(text)
+    print(text)
+    append_to_step_summary(text)
+
+
 def run(args: argparse.Namespace) -> int:
     known = load_known_good(REF_INT / "known_good.json")
     module = known.modules["target_sw"].get(args.module)
@@ -155,19 +208,9 @@ def run(args: argparse.Namespace) -> int:
     resolved = graph_modules(mod_graph(REF_INT, None, "error"))
 
     work = args.work_dir.resolve()
-    workspace, out = work / module.name, work / "reports" / module.name
-    shutil.rmtree(workspace, ignore_errors=True)
-    shutil.rmtree(out, ignore_errors=True)
-    out.mkdir(parents=True)
-    source = fetch({module.name}).get(module.name)
-    if source is None:
-        sys.exit(f"could not fetch {module.name} in ref_int")
-    shutil.copytree(source, workspace, symlinks=True)
-    shutil.copy(UNIFIED_TOOLCHAINS, workspace)
-    module_file = workspace / "MODULE.bazel"
-    module_file.chmod(0o644)  # read-only when copied from Bazel's repo cache
-    with module_file.open("a") as f:
-        f.write(f'\ninclude("//:{UNIFIED_TOOLCHAINS.name}")\n')
+    workspace, out = _setup_working_dir(work, module.name)
+    _copy_fetch_module(module.name, workspace)
+    _append_unified_toolchain(workspace)
 
     # Every bazel call in the module goes through this wrapper, so they all see the overrides and
     # the unified config. Its own output base keeps
@@ -177,18 +220,21 @@ def run(args: argparse.Namespace) -> int:
     rc.write_text("")  # empty while the module's own graph is read
     wrapper = work / "bin" / "bazel"
     wrapper.parent.mkdir(parents=True, exist_ok=True)
-    startup = f"--output_base={work / 'output_base' / module.name} --bazelrc={UNIFIED_RC} --bazelrc={rc}"
-    wrapper.write_text(f'#!/bin/sh\nexec {shutil.which("bazel")} {startup} "$@"\n')
+    startup = [f"--output_base={work / 'output_base' / module.name}", f"--bazelrc={UNIFIED_RC}", f"--bazelrc={rc}"]
+    wrapper.write_text(f'#!/bin/sh\nexec {shlex.quote(shutil.which("bazel"))} {shlex.join(startup)} "$@"\n')
     wrapper.chmod(0o755)
     env = {
         **os.environ,
         "PATH": f"{wrapper.parent}{os.pathsep}{os.environ['PATH']}",
+        # Overrules the module's own .bazelversion: the module is tested with ref_int's Bazel.
         "USE_BAZEL_VERSION": (REF_INT / ".bazelversion").read_text().strip(),
     }
 
-    shared = direct_deps(mod_graph(workspace, env)) & resolved
+    # ponytail: single pass; modules that only enter the graph once these overrides apply stay
+    # unpinned. Repeat until the set is stable if that ever matters.
+    shared = (graph_modules(mod_graph(workspace, env)) & resolved) - {module.name}
     pinned = fetch(shared)
-    rc.write_text(override_rc(pinned))
+    rc.write_text(override_rc(pinned, module.metadata.extra_test_config))
     unpinned = sorted(shared - set(pinned))
     shutil.copy(rc, out / "overrides.bazelrc")
 
@@ -203,26 +249,9 @@ def run(args: argparse.Namespace) -> int:
     # Bazel exits 0 when every test is skipped (e.g. all incompatible with the platform).
     no_tests = not results
     exit_code = exit_code or int(no_tests)
-    (out / "coverage").mkdir()
-    lcov = Path(bazel(["info", "output_path"], workspace, env).stdout.strip()) / "_coverage" / "_coverage_report.dat"
-    if lcov.is_file():
-        shutil.copy(lcov, out / "coverage" / "lcov.dat")
+    _collect_coverage(workspace, out, env)
     (out / "result.json").write_text(json.dumps({"exit_code": exit_code}) + "\n")
-
-    failed = STATUS_LINE.findall(log)
-    summary = [f"## {module.name}: bazel exit code {exit_code}", ""]
-    summary += [f"- `{target}` {status}" for target, status in failed]
-    if no_tests:
-        summary.append("- no test was executed: all skipped or the build failed, see the job log")
-    elif exit_code and not failed:
-        summary.append("- no per-target results: the build or analysis failed, see the job log")
-    if unpinned:
-        summary.append(f"- not pinned (ref_int could not fetch them): {', '.join(unpinned)}")
-    summary.append(f"- {len(pinned)} modules pinned to ref_int's versions (overrides.bazelrc)")
-    text = "\n".join(summary) + "\n"
-    (out / "summary.md").write_text(text)
-    print(text)
-    append_to_step_summary(text)
+    _write_summary(module.name, out, exit_code, log, no_tests=no_tests, pinned=pinned, unpinned=unpinned)
     return exit_code
 
 
