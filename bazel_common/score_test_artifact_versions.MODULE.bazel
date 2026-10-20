@@ -31,6 +31,8 @@ single_version_override(
 # Rust test rules that build the .profraw-emitting binaries.
 single_version_override(
     module_name = "rules_rust",
+    patch_strip = 1,
+    patches = ["//patches/rules_rust:001-pwd-flags-imacros-resource-dir.patch"],
     version = "0.68.2-score",
 )
 

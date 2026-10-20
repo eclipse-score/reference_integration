@@ -232,7 +232,10 @@ def run(args: argparse.Namespace) -> int:
 
     # ponytail: single pass; modules that only enter the graph once these overrides apply stay
     # unpinned. Repeat until the set is stable if that ever matters.
-    shared = (graph_modules(mod_graph(workspace, env)) & resolved) - {module.name}
+    # Yanked versions in the module's own (unpinned) graph do not matter: only the module names are
+    # used, and the test run below gets ref_int's versions.
+    own_graph = mod_graph(workspace, {**env, "BZLMOD_ALLOW_YANKED_VERSIONS": "all"})
+    shared = (graph_modules(own_graph) & resolved) - {module.name}
     pinned = fetch(shared)
     rc.write_text(override_rc(pinned, module.metadata.extra_test_config))
     unpinned = sorted(shared - set(pinned))

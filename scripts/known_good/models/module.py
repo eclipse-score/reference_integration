@@ -102,6 +102,8 @@ class Metadata:
             code_root_path: Root path to the code directory
             extra_test_config: List of extra test configuration flags
             exclude_test_targets: List of test targets to exclude
+            test_notes: Why a target is excluded or a test config flag is added, keyed by it (JSON has no
+                    comments). Documentation only.
             langs: List of languages supported (e.g., ["cpp", "rust"])
             integration_test_targets: Module-relative labels of integration/component
                     test suites to run (e.g. ["//tests/integration/..."]). Empty means
@@ -117,6 +119,7 @@ class Metadata:
     code_root_path: str = "//score/..."
     extra_test_config: list[str] = field(default_factory=lambda: [])
     exclude_test_targets: list[str] = field(default_factory=lambda: [])
+    test_notes: dict[str, str] = field(default_factory=lambda: {})
     langs: list[str] = field(default_factory=lambda: ["cpp", "rust"])
     rust_coverage_config: str | None = "ferrocene-coverage"  # Optional field for Rust coverage configuration
     integration_test_targets: list[str] = field(default_factory=lambda: [])
@@ -137,6 +140,7 @@ class Metadata:
             code_root_path=data.get("code_root_path", "//score/..."),
             extra_test_config=data.get("extra_test_config", []),
             exclude_test_targets=data.get("exclude_test_targets", []),
+            test_notes=data.get("test_notes", {}),
             langs=data.get("langs", ["cpp", "rust"]),
             rust_coverage_config=data.get("rust_coverage_config", "ferrocene-coverage"),
             integration_test_targets=data.get("integration_test_targets", []),
@@ -154,6 +158,8 @@ class Metadata:
             "code_root_path": self.code_root_path,
             "extra_test_config": self.extra_test_config,
             "exclude_test_targets": self.exclude_test_targets,
+            # Only where set, so modules without notes keep their JSON unchanged.
+            **({"test_notes": self.test_notes} if self.test_notes else {}),
             "langs": self.langs,
             "rust_coverage_config": self.rust_coverage_config,
             "integration_test_targets": self.integration_test_targets,

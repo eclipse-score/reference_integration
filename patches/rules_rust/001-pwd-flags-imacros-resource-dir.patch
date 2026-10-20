@@ -1,0 +1,38 @@
+Make the -imacros and -resource-dir paths of cargo build scripts absolute, as upstream
+rules_rust does (_pwd_flags_imacros / _pwd_flags_resource_dir). toolchains_llvm passes both
+execroot-relative, so cc-rs build scripts fail under the unified clang coverage toolchain.
+
+--- a/cargo/private/cargo_build_script.bzl
++++ b/cargo/private/cargo_build_script.bzl
+@@ -232,7 +232,31 @@
+             res.append(arg)
+     return res
+ 
++def _pwd_flags_next_arg(args, flag):
++    """Prefix the execroot-relative path following `flag` with ${pwd}.
++
++    Args:
++        args (list): List of tool arguments.
++        flag (str): The flag whose next argument is a path.
++
++    Returns:
++        list: The modified argument list.
++    """
++    res = []
++    fix_next_arg = False
++    for arg in args:
++        if fix_next_arg and not paths.is_absolute(arg):
++            res.append("${{pwd}}/{}".format(arg))
++        else:
++            res.append(arg)
++
++        fix_next_arg = arg == flag
++
++    return res
++
+ def _pwd_flags(args):
++    # -imacros and -resource-dir: emitted by toolchains_llvm, backported from upstream rules_rust.
++    args = _pwd_flags_next_arg(_pwd_flags_next_arg(args, "-imacros"), "-resource-dir")
+     return _pwd_flags_fsanitize_ignorelist(_pwd_flags_isystem(_pwd_flags_bindir(_pwd_flags_sysroot(args))))
+ 
+ def _feature_enabled(ctx, feature_name, default = False):

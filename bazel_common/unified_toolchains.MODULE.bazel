@@ -23,3 +23,13 @@ unified_gcc.toolchain(
     version = "12.2.0",
 )
 use_repo(unified_gcc, "unified_gcc_x86_64_toolchain")
+
+# Clang for `bazel coverage`: exports LLVM_PROFDATA/LLVM_COV, which llvm-based coverage (e.g.
+# score_communication's merger for ferrocene profraw) needs. Every tested module depends on toolchains_llvm.
+unified_llvm = use_extension("@toolchains_llvm//toolchain/extensions:llvm.bzl", "llvm", dev_dependency = True)
+unified_llvm.toolchain(
+    name = "unified_llvm_toolchain",
+    llvm_version = "22.1.7",
+    stdlib = {"": "stdc++"},
+)
+use_repo(unified_llvm, "unified_llvm_toolchain")
