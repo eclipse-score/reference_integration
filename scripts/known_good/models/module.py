@@ -108,6 +108,10 @@ class Metadata:
                     the module has no integration tests to run from the integration.
             integration_test_config: Extra bazel flags (without the leading ``--``)
                     applied only to the integration test run (e.g. ["flaky_test_attempts=3"]).
+            test_args: The module's own CI unit-test arguments (configs, filters, target
+                    patterns). scripts/module_tests.py runs them under ``bazel coverage``,
+                    with ref_int's unified config added before any ``--`` and ref_int's
+                    resolved dependency versions forced.
     """
 
     code_root_path: str = "//score/..."
@@ -117,6 +121,7 @@ class Metadata:
     rust_coverage_config: str | None = "ferrocene-coverage"  # Optional field for Rust coverage configuration
     integration_test_targets: list[str] = field(default_factory=lambda: [])
     integration_test_config: list[str] = field(default_factory=lambda: [])
+    test_args: list[str] = field(default_factory=lambda: [])
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> Metadata:
@@ -136,6 +141,7 @@ class Metadata:
             rust_coverage_config=data.get("rust_coverage_config", "ferrocene-coverage"),
             integration_test_targets=data.get("integration_test_targets", []),
             integration_test_config=data.get("integration_test_config", []),
+            test_args=data.get("test_args", []),
         )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -152,6 +158,7 @@ class Metadata:
             "rust_coverage_config": self.rust_coverage_config,
             "integration_test_targets": self.integration_test_targets,
             "integration_test_config": self.integration_test_config,
+            "test_args": self.test_args,
         }
 
 
