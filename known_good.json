@@ -61,8 +61,7 @@
             "score_persistency": {
                 "repo": "https://github.com/eclipse-score/persistency.git",
                 "bazel_patches": [
-                    "//patches/persistency:003-undev-deps-for-root-module.patch",
-                    "//patches/persistency:007-use-score-test-scenarios-paths.patch"
+                    "//patches/persistency:003-undev-deps-for-root-module.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/kvs/...",
@@ -72,7 +71,6 @@
                         "@score_logging//score/mw/log/flags:KRemote_Logging=False"
                     ],
                     "exclude_test_targets": [
-                        "//score/kvs/tests:bm_kvs_cpp",
                         "//score/kvs/tests/integration_test_scenarios/...",
                         "//score/kvs/tests/test_cases/..."
                     ],
@@ -84,7 +82,7 @@
                         "flaky_test_attempts=3"
                     ]
                 },
-                "hash": "961c0a0989755a1e0fe8de55e83c0a44e2e20b56"
+                "hash": "86ac1e9a176b0ddeeaa3c33c3ac8df65cae594df"
             },
             "score_kyron": {
                 "repo": "https://github.com/eclipse-score/kyron.git",
@@ -168,7 +166,8 @@
                 "hash": "d0dab01ae408ceb8ec65344e93d8a51d8173da81",
                 "bazel_patches": [
                     "//patches/config_management:001-adapt-proxy-api-and-remove-internal-targets.patch",
-                    "//patches/config_management:002-migrate-baselibs-targets.patch"
+                    "//patches/config_management:002-migrate-baselibs-targets.patch",
+                    "//patches/config_management:003-migrate-kvs-to-full-include-paths.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/config_management/...",

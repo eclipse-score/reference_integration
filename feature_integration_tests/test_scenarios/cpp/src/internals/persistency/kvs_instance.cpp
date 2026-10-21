@@ -13,7 +13,7 @@
 
 #include "kvs_instance.h"
 
-#include <kvsbuilder.hpp>
+#include "score/kvs/kvsbuilder.hpp"
 
 #include <array>
 #include <cctype>
@@ -154,26 +154,28 @@ std::optional<std::string> snapshot_path(const KvsParameters& params) {
     return dir + "/kvs_" + std::to_string(params.instance_id.value) + "_0.json";
 }
 
-std::optional<bool> to_need_flag(const std::optional<KvsDefaults>& mode) {
+std::optional<score::mw::per::kvs::OpenNeedDefaults> to_need_flag(
+    const std::optional<KvsDefaults>& mode) {
     if (!mode.has_value()) {
         return std::nullopt;
     }
     if (*mode == KvsDefaults::Required) {
-        return true;
+        return score::mw::per::kvs::OpenNeedDefaults::Required;
     }
     // Optional and Ignored are mapped to not-required for C++ KvsBuilder API.
-    return false;
+    return score::mw::per::kvs::OpenNeedDefaults::Optional;
 }
 
-std::optional<bool> to_need_flag(const std::optional<KvsLoad>& mode) {
+std::optional<score::mw::per::kvs::OpenNeedKvs> to_need_flag(
+    const std::optional<KvsLoad>& mode) {
     if (!mode.has_value()) {
         return std::nullopt;
     }
     if (*mode == KvsLoad::Required) {
-        return true;
+        return score::mw::per::kvs::OpenNeedKvs::Required;
     }
     // Optional and Ignored are mapped to not-required for C++ KvsBuilder API.
-    return false;
+    return score::mw::per::kvs::OpenNeedKvs::Optional;
 }
 
 }  // namespace
@@ -186,9 +188,9 @@ std::optional<std::shared_ptr<KvsInstance>> KvsInstance::create(const KvsParamet
 
     try {
         if (params.snapshot_max_count.has_value() &&
-            params.snapshot_max_count.value() != static_cast<int>(KVS_MAX_SNAPSHOTS)) {
+            params.snapshot_max_count.value() != static_cast<int>(KVS_MAX_SNAPSHOTS_UPPER_BOUND)) {
             std::cerr << "Unsupported snapshot_max_count for C++ KVS API: requested "
-                      << params.snapshot_max_count.value() << ", supported " << KVS_MAX_SNAPSHOTS
+                      << params.snapshot_max_count.value() << ", supported " << KVS_MAX_SNAPSHOTS_UPPER_BOUND
                       << std::endl;
             return std::nullopt;
         }

@@ -16,8 +16,8 @@
 
 #include "kvs_parameters.h"
 
-#include <kvs.hpp>
-#include <kvsbuilder.hpp>
+#include "score/kvs/kvs.hpp"
+#include "score/kvs/kvsbuilder.hpp"
 
 #include <chrono>
 #include <iostream>
@@ -99,27 +99,31 @@ inline std::string format_double_python(double v) {
  * @param mode Optional KvsDefaults value to convert.
  * @return Converted boolean flag or nullopt.
  */
-inline std::optional<bool> to_need_flag(const std::optional<KvsDefaults>& mode) {
+inline std::optional<score::mw::per::kvs::OpenNeedDefaults> to_need_flag(
+    const std::optional<KvsDefaults>& mode) {
     if (!mode.has_value()) {
         return std::nullopt;
     }
-    return *mode == KvsDefaults::Required;
+    return *mode == KvsDefaults::Required ? score::mw::per::kvs::OpenNeedDefaults::Required
+                                          : score::mw::per::kvs::OpenNeedDefaults::Optional;
 }
 
 /**
- * @brief Convert an optional KvsLoad mode to the boolean flag expected by KvsBuilder.
+ * @brief Convert an optional KvsLoad mode to the enum flag expected by KvsBuilder.
  *
- * Returns true if the mode is Required, false if Optional or Ignored, or
+ * Returns Required if the mode is Required, Optional if Optional or Ignored, or
  * std::nullopt if no mode was provided (omit the flag from the builder call).
  *
  * @param mode Optional KvsLoad value to convert.
- * @return Converted boolean flag or nullopt.
+ * @return Converted OpenNeedKvs flag or nullopt.
  */
-inline std::optional<bool> to_need_flag(const std::optional<KvsLoad>& mode) {
+inline std::optional<score::mw::per::kvs::OpenNeedKvs> to_need_flag(
+    const std::optional<KvsLoad>& mode) {
     if (!mode.has_value()) {
         return std::nullopt;
     }
-    return *mode == KvsLoad::Required;
+    return *mode == KvsLoad::Required ? score::mw::per::kvs::OpenNeedKvs::Required
+                                      : score::mw::per::kvs::OpenNeedKvs::Optional;
 }
 
 /**

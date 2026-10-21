@@ -1,0 +1,70 @@
+diff --git a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/BUILD b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/BUILD
+--- a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/BUILD
++++ b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/BUILD
+@@ -48,7 +48,7 @@ COMMON_FEATURES = [
+             "details_score",
+             False,
+             [
+-                "@score_persistency//:kvs_cpp",
++                "@score_persistency//score/kvs",
+             ],
+         ),
+         (
+diff --git a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.cpp b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.cpp
+--- a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.cpp
++++ b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.cpp
+@@ -16,7 +16,7 @@
+ #include "score/config_management/config_daemon/code/data_model/parameter_set_storage/error/parameter_set_storage_error.h"
+ #include "score/config_management/config_daemon/code/data_model/parameterset_collection.h"
+
+-#include "kvsvalue.hpp"
++#include "score/kvs/kvsvalue.hpp"
+ #include "score/json/json_writer.h"
+ #include "score/hash/code/common/algorithms.h"
+ #include "score/hash/code/core/factory/impl/safe_hash_calculator_factory.h"
+diff --git a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.h b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.h
+--- a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.h
++++ b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.h
+@@ -16,7 +16,7 @@
+
+ #include "score/config_management/config_daemon/code/data_model/parameter_set_storage/parameter_set_storage.h"
+
+-#include "kvs.hpp"
++#include "score/kvs/kvs.hpp"
+
+ #include <memory>
+ #include <string>
+diff --git a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/BUILD b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/BUILD
+--- a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/BUILD
++++ b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/BUILD
+@@ -30,6 +30,7 @@ cc_library(
+     # Expose the directory itself as a system include path so that
+     # `#include "kvs.hpp"` resolves here, mirroring how score-persistency does it.
+     includes = ["."],
++    include_prefix = "score/kvs",
+     tags = ["FUSA"],
+     visibility = [
+         "//score/config_management/config_daemon/code:__subpackages__",
+diff --git a/score/config_management/config_daemon/code/factory/details/factory_mw_impl.cpp b/score/config_management/config_daemon/code/factory/details/factory_mw_impl.cpp
+--- a/score/config_management/config_daemon/code/factory/details/factory_mw_impl.cpp
++++ b/score/config_management/config_daemon/code/factory/details/factory_mw_impl.cpp
+@@ -18,7 +18,7 @@
+ #include "score/config_management/config_daemon/code/fault_event_reporter/details/fault_event_reporter_score_impl.h"
+ #include "score/config_management/config_daemon/code/json_helper/details/json_helper_impl.h"
+
+-#include "kvsbuilder.hpp"
++#include "score/kvs/kvsbuilder.hpp"
+ #include "score/config_management/config_daemon/code/plugins/plugin_collector/details/plugin_collector_impl.h"
+ #include "score/config_management/config_daemon/code/services/details/internal_config_provider_service_reactor_impl.h"
+ #include "score/config_management/config_daemon/code/services/details/mw_com/internal_config_provider_service_impl.h"
+@@ -101,8 +101,8 @@ std::shared_ptr<data_model::IParameterSetCollectionManager> Factory::CreateParam
+     std::vector<std::shared_ptr<IPlugin>>& plugins) const
+ {
+     auto kvs_result = score::mw::per::kvs::KvsBuilder(score::mw::per::kvs::InstanceId{0U})
+-                          .need_defaults_flag(false)
+-                          .need_kvs_flag(false)
++                          .need_defaults_flag(score::mw::per::kvs::OpenNeedDefaults::Optional)
++                          .need_kvs_flag(score::mw::per::kvs::OpenNeedKvs::Optional)
+                           .dir("/persistent/trusted/ConfigDaemon")
+                           .build();
+     if (!kvs_result.has_value())
