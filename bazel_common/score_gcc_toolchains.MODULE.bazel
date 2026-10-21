@@ -20,6 +20,13 @@ gcc.toolchain(
     version = "12.2.0",
 )
 gcc.toolchain(
+    name = "score_gcc_aarch64_toolchain",
+    target_cpu = "aarch64",
+    target_os = "linux",
+    use_default_package = True,
+    version = "12.2.0",
+)
+gcc.toolchain(
     name = "score_ebclfsa_toolchain",
     runtime_ecosystem = "ebclfsa",
     sdk_version = "2.0.0-beta2",
@@ -40,5 +47,6 @@ use_repo(
     gcc,
     "score_autosd10_x86_64_toolchain",
     "score_ebclfsa_toolchain",
+    "score_gcc_aarch64_toolchain",
     "score_gcc_x86_64_toolchain",
 )
