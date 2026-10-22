@@ -43,19 +43,15 @@ pkg_files(
 )
 
 # The architecture-independent configuration files are shared via
-# //images/qnx_common/configs; the application packaging (datarouter
-# binary/configs, communication configs, persistency test binary) via
-# //images/common/apps.
+# //images/qnx_common/configs; the deployed S-CORE platform comes from
+# //deploy and the applications demonstrating it from //showcases.
 
 qnx_ifs(
     name = "init",
     srcs = [
         ":etc_startup_hw",
         ":pci_configs",
-        "//images/common/apps:cpp_tests_persistency_bin",
-        "//images/common/apps:datarouter_bin",
-        "//images/common/apps:datarouter_configs",
-        "//images/common/apps:etc_comm_configs",
+        "//deploy:platform_bundle",
         "//images/qnx_common/configs:etc_configs",
         "//images/qnx_common/configs:etc_network_capture",
         "//images/qnx_common/configs:etc_scripts",
