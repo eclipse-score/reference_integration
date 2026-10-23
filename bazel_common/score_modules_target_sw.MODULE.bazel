@@ -43,7 +43,7 @@ git_override(
 bazel_dep(name = "score_persistency")
 git_override(
     module_name = "score_persistency",
-    commit = "961c0a0989755a1e0fe8de55e83c0a44e2e20b56",
+    commit = "86ac1e9a176b0ddeeaa3c33c3ac8df65cae594df",
     patch_strip = 1,
     patches = [
         "//patches/persistency:003-undev-deps-for-root-module.patch",
@@ -54,7 +54,7 @@ git_override(
 bazel_dep(name = "score_kyron")
 git_override(
     module_name = "score_kyron",
-    commit = "90fb90258f49f17a504d41262634d43608f28ccc",
+    commit = "52d4bef3d1822f82199d72e58e815b9e43406fe6",
     remote = "https://github.com/eclipse-score/kyron.git",
 )
 
@@ -100,6 +100,7 @@ git_override(
     patches = [
         "//patches/config_management:001-adapt-proxy-api-and-remove-internal-targets.patch",
         "//patches/config_management:002-migrate-baselibs-targets.patch",
+        "//patches/config_management:003-migrate-kvs-to-full-include-paths.patch",
     ],
     remote = "https://github.com/eclipse-score/config_management.git",
 )

@@ -71,7 +71,6 @@
                         "@score_logging//score/mw/log/flags:KRemote_Logging=False"
                     ],
                     "exclude_test_targets": [
-                        "//score/kvs/tests:bm_kvs_cpp",
                         "//score/kvs/tests/integration_test_scenarios/...",
                         "//score/kvs/tests/test_cases/..."
                     ],
@@ -83,7 +82,7 @@
                         "flaky_test_attempts=3"
                     ]
                 },
-                "hash": "961c0a0989755a1e0fe8de55e83c0a44e2e20b56"
+                "hash": "86ac1e9a176b0ddeeaa3c33c3ac8df65cae594df"
             },
             "score_kyron": {
                 "repo": "https://github.com/eclipse-score/kyron.git",
@@ -95,7 +94,7 @@
                         "rust"
                     ]
                 },
-                "hash": "90fb90258f49f17a504d41262634d43608f28ccc"
+                "hash": "52d4bef3d1822f82199d72e58e815b9e43406fe6"
             },
             "score_lifecycle": {
                 "repo": "https://github.com/eclipse-score/lifecycle.git",
@@ -167,7 +166,8 @@
                 "hash": "d0dab01ae408ceb8ec65344e93d8a51d8173da81",
                 "bazel_patches": [
                     "//patches/config_management:001-adapt-proxy-api-and-remove-internal-targets.patch",
-                    "//patches/config_management:002-migrate-baselibs-targets.patch"
+                    "//patches/config_management:002-migrate-baselibs-targets.patch",
+                    "//patches/config_management:003-migrate-kvs-to-full-include-paths.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/config_management/...",
@@ -228,7 +228,7 @@
             "score_test_scenarios": {
                 "repo": "https://github.com/eclipse-score/testing_tools.git",
                 "docs": false,
-                "hash": "fec712d490ff5d46fae91332bafac4777b300026"
+                "hash": "c16400a3f7c71ca26b67965c5e7469560b6de496"
             },
             "score_docs_as_code": {
                 "repo": "https://github.com/eclipse-score/docs-as-code.git",
