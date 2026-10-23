@@ -37,9 +37,11 @@ compile_pip_requirements(
 )
 
 # Tests targets
+
 score_py_pytest(
-    name = "fit_rust",
-    srcs = glob(["tests/**/*.py"]),
+    name = "fit_rust_persistency",
+    timeout = "long",
+    srcs = glob(["tests/persistency/**/*.py"]),
     args = [
         "-m rust",
         "--traces=all",
@@ -59,9 +61,17 @@ score_py_pytest(
     deps = all_requirements,
 )
 
+test_suite(
+    name = "fit_rust",
+    tests = [
+        ":fit_rust_persistency",
+    ],
+)
+
 score_py_pytest(
-    name = "fit_cpp",
-    srcs = glob(["tests/**/*.py"]),
+    name = "fit_cpp_persistency",
+    timeout = "long",
+    srcs = glob(["tests/persistency/**/*.py"]),
     args = [
         "-m cpp",
         "--traces=all",
@@ -79,9 +89,94 @@ score_py_pytest(
 )
 
 test_suite(
+    name = "fit_cpp",
+    tests = [
+        ":fit_cpp_persistency",
+    ],
+)
+
+# Cross-module lifecycle<->persistency tests (recovery, control interface,
+# run targets with multiple KVS instances, Launch Manager logging). They
+# parametrize on rust/cpp and need the scenario binaries (the KVS components
+# Launch Manager launches) besides the daemon deps, so they run once per
+# language.
+_LIFECYCLE_SRCS = [
+    "tests/lifecycle/test_lifecycle_persistency_integration.py",
+]
+
+_LIFECYCLE_DATA = [
+    "conftest.py",
+    "daemon_helpers.py",
+    "fit_scenario.py",
+    "persistency_scenario.py",
+    "test_properties.py",
+    "//feature_integration_tests/configs:lifecycle_persistency_config.json",
+    "@flatbuffers//:flatc",
+    "@score_lifecycle//examples/control_application:control_daemon",
+    "@score_lifecycle//examples/control_application:lmcontrol",
+    "@score_lifecycle//examples/cpp_supervised_app",
+    "@score_lifecycle//examples/rust_supervised_app",
+    "@score_lifecycle//score/launch_manager",
+    "@score_lifecycle//score/launch_manager/src/daemon/src/configuration:lm_flatcfg_fbs",
+    "@score_lifecycle//score/launch_manager/src/daemon/src/configuration/config_schema:launch_manager.schema.json",
+    "@score_lifecycle//scripts/config_mapping:lifecycle_config",
+]
+
+_LIFECYCLE_ENV = {
+    "FIT_CONTROL_DAEMON_PATH": "$(rootpath @score_lifecycle//examples/control_application:control_daemon)",
+    "FIT_CPP_SUPERVISED_APP_PATH": "$(rootpath @score_lifecycle//examples/cpp_supervised_app)",
+    "FIT_FLATC_PATH": "$(rootpath @flatbuffers//:flatc)",
+    "FIT_LAUNCH_MANAGER_PATH": "$(rootpath @score_lifecycle//score/launch_manager)",
+    "FIT_LIFECYCLE_CONFIG_SCHEMA_PATH": "$(rootpath @score_lifecycle//score/launch_manager/src/daemon/src/configuration/config_schema:launch_manager.schema.json)",
+    "FIT_LIFECYCLE_CONFIG_TOOL_PATH": "$(rootpath @score_lifecycle//scripts/config_mapping:lifecycle_config)",
+    "FIT_LIFECYCLE_LM_SCHEMA_PATH": "$(rootpath @score_lifecycle//score/launch_manager/src/daemon/src/configuration:lm_flatcfg_fbs)",
+    "FIT_LIFECYCLE_PERSISTENCY_CONFIG_PATH": "$(rootpath //feature_integration_tests/configs:lifecycle_persistency_config.json)",
+    "FIT_LMCONTROL_PATH": "$(rootpath @score_lifecycle//examples/control_application:lmcontrol)",
+    "FIT_RUST_SUPERVISED_APP_PATH": "$(rootpath @score_lifecycle//examples/rust_supervised_app)",
+}
+
+score_py_pytest(
+    name = "fit_rust_lifecycle_persistency",
+    timeout = "long",
+    srcs = _LIFECYCLE_SRCS,
+    args = [
+        "-m rust",
+        "--traces=all",
+        "--rust-target-path=$(rootpath //feature_integration_tests/test_scenarios/rust:rust_test_scenarios)",
+    ],
+    data = _LIFECYCLE_DATA + ["//feature_integration_tests/test_scenarios/rust:rust_test_scenarios"],
+    env = _LIFECYCLE_ENV | {"RUST_BACKTRACE": "1"},
+    env_inherit = ["FIT_ENABLE_SETCAP"],
+    pytest_config = "//:pyproject.toml",
+    # Daemons collide in the host-wide /dev/shm namespace if both targets run at once.
+    tags = ["exclusive"],
+    deps = all_requirements,
+)
+
+score_py_pytest(
+    name = "fit_cpp_lifecycle_persistency",
+    timeout = "long",
+    srcs = _LIFECYCLE_SRCS,
+    args = [
+        "-m cpp",
+        "--traces=all",
+        "--cpp-target-path=$(rootpath //feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios)",
+    ],
+    data = _LIFECYCLE_DATA + ["//feature_integration_tests/test_scenarios/cpp:cpp_test_scenarios"],
+    env = _LIFECYCLE_ENV,
+    env_inherit = ["FIT_ENABLE_SETCAP"],
+    pytest_config = "//:pyproject.toml",
+    # Daemons collide in the host-wide /dev/shm namespace if both targets run at once.
+    tags = ["exclusive"],
+    deps = all_requirements,
+)
+
+test_suite(
     name = "fit",
     tests = [
         ":fit_cpp",
+        ":fit_cpp_lifecycle_persistency",
         ":fit_rust",
+        ":fit_rust_lifecycle_persistency",
     ],
 )
