@@ -238,7 +238,6 @@ class TestLifecyclePersistencyIntegration:
 
     @add_test_properties(
         partially_verifies=[
-            "feat_req__lifecycle__process_failure_react",
             "feat_req__lifecycle__monitor_abnormal_term",
             "feat_req__lifecycle__recovery_action_support",
             "feat_req__lifecycle__recov_run_target_switch",
@@ -343,9 +342,11 @@ class TestLifecyclePersistencyIntegration:
         partially_verifies=[
             "feat_req__lifecycle__control_commands",
             "feat_req__lifecycle__request_run_target_start",
+            "feat_req__lifecycle__start_named_run_target",
             "feat_req__lifecycle__run_target_support",
             "feat_req__lifecycle__switch_run_targets",
             "feat_req__lifecycle__process_termination",
+            "feat_req__lifecycle__prog_lang",
         ],
         test_type="integration",
         derivation_technique="architecture-based-testing",
@@ -364,6 +365,11 @@ class TestLifecyclePersistencyIntegration:
            byte-identical.
         4. An unknown run target is reported as failed and changes no process
            or KVS file.
+
+        `Running` and `Secondary` are started by name. `Running` only succeeds
+        once `<version>_supervised_app` (`Reporting_And_Supervised`,
+        `ready_condition: Running`) reports Running through the lifecycle API,
+        so the rust and cpp parameters cover the Rust and C++ example apps.
 
         Pass/fail
         ---------
@@ -409,7 +415,6 @@ class TestLifecyclePersistencyIntegration:
 
     @add_test_properties(
         partially_verifies=[
-            "feat_req__lifecycle__multi_instance_support",
             "feat_req__lifecycle__switch_run_targets",
             "feat_req__persistency__multiple_kvs",
         ],
@@ -474,6 +479,7 @@ class TestLifecyclePersistencyIntegration:
     @add_test_properties(
         partially_verifies=[
             "feat_req__lifecycle__logging_support",
+            "feat_req__lifecycle__start_named_run_target",
         ],
         test_type="integration",
         derivation_technique="architecture-based-testing",
@@ -483,6 +489,9 @@ class TestLifecyclePersistencyIntegration:
     ) -> None:
         """
         Launch Manager's own log records run-target transitions, KVS process exits, recovery and shutdown.
+
+        The startup check also shows Launch Manager started the configured
+        `initial_run_target` (`Startup`) by name.
 
         Pass/fail
         ---------

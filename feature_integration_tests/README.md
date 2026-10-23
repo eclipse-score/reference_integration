@@ -61,7 +61,7 @@ bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit \
   --spawn_strategy=local --test_env=FIT_ENABLE_SETCAP=1 --test_arg=-rs
 ```
 
-Requirement coverage is listed in [docs/lifecycle_persistency_traceability.md](docs/lifecycle_persistency_traceability.md).
+Requirement coverage and status are tracked in Section 6 of [project_context.md](../project_context.md).
 
 ## Quick try
 

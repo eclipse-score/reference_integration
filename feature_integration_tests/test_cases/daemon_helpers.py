@@ -102,12 +102,13 @@ def is_running(binary_path: str | Path) -> bool:
 
 
 def wait_until(predicate, timeout_s: float, interval_s: float = 0.2) -> bool:
-    deadline = time.time() + timeout_s
-    while time.time() < deadline:
+    # monotonic: wall-clock jumps (e.g. WSL2 time sync) must not expire the deadline early.
+    deadline = time.monotonic() + timeout_s
+    while time.monotonic() < deadline:
         if predicate():
             return True
         time.sleep(interval_s)
-    return False
+    return predicate()
 
 
 def _run_tool(cmd: list[str]) -> None:
