@@ -22,6 +22,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use tracing::Level;
 use tracing_subscriber::fmt::time::FormatTime;
 use tracing_subscriber::FmtSubscriber;
+
 struct NumericUnixTime;
 
 impl FormatTime for NumericUnixTime {
