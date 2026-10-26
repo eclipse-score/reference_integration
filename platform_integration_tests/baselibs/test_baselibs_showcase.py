@@ -10,6 +10,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+from attribute_plugin import add_test_properties
+from showcase_runner import run_showcases
+
+
 @add_test_properties(
     partially_verifies=["<baselibs stakeholder req id>"],
     test_type="interface-test",
