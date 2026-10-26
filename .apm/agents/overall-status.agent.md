@@ -24,13 +24,13 @@ counting rules, path filters or formatting from memory.
 
 ## Skill map (read these — do not duplicate their content here)
 
-- Shared engine: `.github/skills/overall-status/references/common.md`
-- PA1 Change Management: `.github/skills/overall-status/references/pa1-change-management.md`
-- PA2 Requirements: `.github/skills/overall-status/references/pa2-requirements.md`
-- PA3 Architecture: `.github/skills/overall-status/references/pa3-architecture.md`
-- PA4 Implementation: `.github/skills/overall-status/references/pa4-implementation.md`
-- PA5 Verification: `.github/skills/overall-status/references/pa5-verification.md`
-- Index / overview: `.github/skills/overall-status/SKILL.md`
+- Shared engine: `.agents/skills/overall-status/references/common.md`
+- PA1 Change Management: `.agents/skills/overall-status/references/pa1-change-management.md`
+- PA2 Requirements: `.agents/skills/overall-status/references/pa2-requirements.md`
+- PA3 Architecture: `.agents/skills/overall-status/references/pa3-architecture.md`
+- PA4 Implementation: `.agents/skills/overall-status/references/pa4-implementation.md`
+- PA5 Verification: `.agents/skills/overall-status/references/pa5-verification.md`
+- Index / overview: `.agents/skills/overall-status/SKILL.md`
 
 ## Constraints
 
