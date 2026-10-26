@@ -1,0 +1,18 @@
+{
+    "name": "Lifecycle-managed Communication Example",
+    "description": "Demonstrates score_lifecycle managing the score_communication API example as a supervised process: launch_manager starts and monitors com-api-example, then shuts down cleanly. Example takes ~8s.",
+    "apps": [
+        {
+            "path": "/showcases/bin/launch_manager",
+            "dir": "/showcases/data/lifecycle_comm",
+            "args": [],
+            "env": {}
+        },
+        {
+            "path": "/showcases/bin/lifecycle_signal.sh",
+            "args": ["launch_manager", "SIGTERM"],
+            "env": {},
+            "delay": 6
+        }
+    ]
+}

@@ -27,6 +27,7 @@ score_pkg_bundle(
         "//showcases/standalone:baselibs_pkg_files",
         "//showcases/platform_run:platform_run_pkg_files",
         "//showcases/standalone:platform_info_pkg_files",
+        "//showcases/lifecycle_comm:lifecycle_comm_pkg_files",
     ],
     package_dir = "showcases",
 )
