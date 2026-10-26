@@ -31,11 +31,13 @@ single_version_override(
 # Rust test rules that build the .profraw-emitting binaries.
 single_version_override(
     module_name = "rules_rust",
+    patch_strip = 1,
+    patches = ["//patches/rules_rust:001-pwd-flags-imacros-resource-dir.patch"],
     version = "0.68.2-score",
 )
 
 # Ferrocene coverage tooling behind those .profraw files.
 single_version_override(
     module_name = "score_toolchains_rust",
-    version = "0.8.0",
+    version = "0.10.0",
 )
