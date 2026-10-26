@@ -19,3 +19,5 @@ Modules
    :titlesonly:
    :maxdepth: 1
 
+   score_config_management
+
