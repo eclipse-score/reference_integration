@@ -1,0 +1,17 @@
+diff --git a/examples/log_cpp_init/BUILD b/examples/log_cpp_init/BUILD
+index d1141b4..0f38088 100644
+--- a/examples/log_cpp_init/BUILD
++++ b/examples/log_cpp_init/BUILD
+@@ -28,7 +28,11 @@ rust_static_library(
+ cc_binary(
+     name = "log_cpp_init",
+     srcs = ["src/main.cpp"],
+-    linkopts = ["-lpthread"],
++    # QNX provides pthreads in libc (no libpthread); Rust std needs libsocket.
++    linkopts = select({
++        "@platforms//os:qnx": ["-lsocket"],
++        "//conditions:default": ["-lpthread"],
++    }),
+     visibility = ["//visibility:public"],
+     deps = [
+         ":example_lib",
