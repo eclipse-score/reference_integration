@@ -24,6 +24,7 @@ score_pkg_bundle(
         "//showcases/standalone:config_management_pkg_files",
         "//showcases/simple_lifecycle:simple_lifecycle_pkg_files",
         "//showcases/standalone:baselibs_pkg_files",
+        "//showcases/lifecycle_comm:lifecycle_comm_pkg_files",
     ],
     package_dir = "showcases",
 )
