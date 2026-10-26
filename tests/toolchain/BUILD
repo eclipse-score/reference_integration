@@ -20,4 +20,9 @@ sh_test(
         "linux-aarch64",
         "requires-linux-aarch64-toolchain",
     ],
+    # Only run on Linux AArch64 platforms
+    target_compatible_with = [
+        "@platforms//os:linux",
+        "@platforms//cpu:aarch64",
+    ],
 )

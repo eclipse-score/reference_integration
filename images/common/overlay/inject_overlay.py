@@ -72,6 +72,7 @@ def extract_partition(image_path: str, partition: int, output_path: str) -> None
     """Extract a partition to a file using dd."""
     offset, size = get_partition_info(image_path, partition)
     
+    # Use 1M block size for performance; byte-accurate via skip_bytes/count_bytes
     subprocess.run(
         [
             "dd",
@@ -79,7 +80,7 @@ def extract_partition(image_path: str, partition: int, output_path: str) -> None
             f"of={output_path}",
             f"skip={offset}",
             f"count={size}",
-            "bs=1",
+            "bs=1M",
             "iflag=skip_bytes,count_bytes",
         ],
         check=True,
@@ -91,13 +92,14 @@ def write_partition(image_path: str, partition: int, partition_file: str) -> Non
     """Write a partition back into an image using dd."""
     offset, _ = get_partition_info(image_path, partition)
     
+    # Use 1M block size for performance; byte-accurate via seek_bytes
     subprocess.run(
         [
             "dd",
             f"if={partition_file}",
             f"of={image_path}",
             f"seek={offset}",
-            "bs=1",
+            "bs=1M",
             "oflag=seek_bytes",
             "conv=notrunc",
         ],
@@ -145,74 +147,76 @@ def inject_tar_contents(partition_path: str, tar_path: str) -> None:
     debugfs_script = []
     
     with tarfile.open(tar_path, "r:*") as tf:
-        # First pass: create all directories
-        dirs_to_create = []
+        # First pass: create all directories (parent-first order)
+        dirs_to_create = set()
         for member in tf.getmembers():
             if member.isdir():
                 path = member.name.lstrip("/")
-                dirs_to_create.append(path)
+                dirs_to_create.add(path)
+                # Also add all parent directories
+                parts = path.split("/")
+                for i in range(len(parts)):
+                    dirs_to_create.add("/".join(parts[:i+1]))
             elif member.isfile() or member.issym():
                 # Ensure parent directory exists
                 parent = str(Path(member.name.lstrip("/")).parent)
                 if parent and parent != ".":
-                    dirs_to_create.append(parent)
+                    parts = parent.split("/")
+                    for i in range(len(parts)):
+                        dirs_to_create.add("/".join(parts[:i+1]))
         
         # Sort by depth to create parents first
-        dirs_to_create = sorted(set(dirs_to_create), key=lambda p: p.count("/"))
-        for d in dirs_to_create:
-            debugfs_script.append(f"mkdir -p {d}")
+        dirs_to_create = sorted(dirs_to_create, key=lambda p: p.count("/"))
         
-        # Second pass: write files and symlinks
-        for member in tf.getmembers():
-            path = member.name.lstrip("/")
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
             
-            if member.isfile():
-                # Extract file to temp location for debugfs write
-                # debugfs write command: write local_file dest_path
-                # We'll extract each file and write it
-                debugfs_script.append(f"# WRITE_FILE: {path}")
-                # Note: Actual file writing requires temp file extraction
-                # We handle this in the execution phase
+            # Extract all files to temp dir
+            with tarfile.open(tar_path, "r:*") as tf:
+                tf.extractall(temp_path, filter='data')
             
-            elif member.issym():
-                # Create symlink: symlink target path
-                debugfs_script.append(f"symlink {member.linkname} {path}")
-    
-    # For actual file injection, we use debugfs's write command
-    # which requires the source file to exist on the host
-    # We'll extract each file to a temp dir and reference it
-    
-    with tempfile.TemporaryDirectory() as temp_dir:
-        temp_path = Path(temp_dir)
-        
-        # Extract all files to temp dir
-        with tarfile.open(tar_path, "r:*") as tf:
-            tf.extractall(temp_path, filter='data')
-        
-        # Build the debugfs command list with actual file references
-        write_commands = []
-        
-        with tarfile.open(tar_path, "r:*") as tf:
-            for member in tf.getmembers():
-                path = member.name.lstrip("/")
-                
-                if member.isfile():
-                    local_file = temp_path / member.name.lstrip("/")
-                    if local_file.exists():
-                        write_commands.append(f"write {local_file} {path}")
-        
-        # Run debugfs with all commands
-        all_commands = ["mkdir -p " + d for d in dirs_to_create] + write_commands
-        
-        # debugfs -w -f reads commands from file
-        cmd_file = temp_path / "debugfs.cmds"
-        cmd_file.write_text("\n".join(all_commands) + "\n")
-        
-        subprocess.run(
-            ["debugfs", "-w", "-f", str(cmd_file), partition_path],
-            check=True,
-            capture_output=True,
-        )
+            # Build debugfs commands
+            commands = []
+            
+            # Create directories (parent-first, plain mkdir without -p)
+            for d in dirs_to_create:
+                if d:  # Skip empty strings
+                    commands.append(f"mkdir {d}")
+            
+            # Write files and symlinks
+            with tarfile.open(tar_path, "r:*") as tf:
+                for member in tf.getmembers():
+                    path = member.name.lstrip("/")
+                    
+                    if member.isfile():
+                        local_file = temp_path / member.name.lstrip("/")
+                        if local_file.exists():
+                            # Remove existing destination if present (handle collisions)
+                            commands.append(f"rm {path}")
+                            commands.append(f"write {local_file} {path}")
+                    
+                    elif member.issym():
+                        # debugfs symlink syntax: symlink <link-name> <target>
+                        commands.append(f"rm {path}")
+                        commands.append(f"symlink {path} {member.linkname}")
+            
+            # Write commands to file
+            cmd_file = temp_path / "debugfs.cmds"
+            cmd_file.write_text("\n".join(commands) + "\n")
+            
+            # Run debugfs and capture output for error checking
+            result = subprocess.run(
+                ["debugfs", "-w", "-f", str(cmd_file), partition_path],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            
+            # Check for errors in debugfs output
+            if result.stderr and "error" in result.stderr.lower():
+                raise RuntimeError(
+                    f"debugfs reported errors during injection:\n{result.stderr}"
+                )
 
 
 def check_free_space(partition_path: str, required_bytes: int) -> None:

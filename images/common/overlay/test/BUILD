@@ -30,10 +30,10 @@ pkg_tar(
 py_test(
     name = "inject_overlay_test",
     srcs = ["inject_overlay_test.py"],
-    deps = [
-        "//images/common/overlay:inject_overlay",
-    ],
     data = [":test_overlay"],
     tags = ["requires-root-partition"],
     visibility = ["//visibility:public"],
+    deps = [
+        "//images/common/overlay:inject_overlay",
+    ],
 )

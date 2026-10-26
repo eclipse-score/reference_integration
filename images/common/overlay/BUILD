@@ -23,6 +23,6 @@ load("@rules_python//python:defs.bzl", "py_binary")
 py_binary(
     name = "inject_overlay",
     srcs = ["inject_overlay.py"],
-    deps = ["@rules_python//python/runfiles"],
     visibility = ["//visibility:public"],
+    deps = ["@rules_python//python/runfiles"],
 )
