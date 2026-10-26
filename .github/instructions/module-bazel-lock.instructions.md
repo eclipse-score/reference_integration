@@ -20,7 +20,7 @@ bazel mod deps --lockfile_mode=update
 This re-resolves the module graph and writes the updated dependencies into
 `MODULE.bazel.lock`. Run it **after** `python3 scripts/known_good/update_module_from_known_good.py`
 if the change originated from `known_good.json` (see
-[known-good-json.instructions.md](./known-good-json.instructions.md)) — the lockfile
+[known-good-json.instructions.md](../../.apm/instructions/known-good-json.instructions.md)) — the lockfile
 update must see the already-regenerated `bazel_dep`/override entries.
 
 Commit `MODULE.bazel.lock` together with the change that caused it to go stale.
