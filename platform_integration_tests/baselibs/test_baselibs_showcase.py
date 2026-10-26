@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 @add_test_properties(
-    # partially_verifies=["<baselibs stakeholder req id>"],
+    partially_verifies=["<baselibs stakeholder req id>"],
     test_type="interface-test",
     derivation_technique="requirements-analysis",
 )
