@@ -52,6 +52,14 @@ http_file(
 
 bazel_dep(name = "score_rules_imagefs", version = "0.1.0")
 
+# Use PR branch with ext4 overlay injection support
+# TODO: Remove after eclipse-score/rules_imagefs#33 is merged
+git_override(
+    module_name = "score_rules_imagefs",
+    commit = "41fd603873548f38bcb524b7e3fbbc84419a764b",
+    remote = "https://github.com/eclipse-score/rules_imagefs.git",
+)
+
 imagefs = use_extension("@score_rules_imagefs//extensions:imagefs.bzl", "imagefs", dev_dependency = True)
 imagefs.toolchain(
     name = "score_qnx_x86_64_ifs_toolchain",
