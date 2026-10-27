@@ -1,6 +1,6 @@
 ---
 name: release-note
-description: "How-to reference for creating the S-CORE platform release note (docs/s_core_v_1/releases/release_note_score_vX_Y.rst). Defines the document format, the data sources (known_good.json, git log, module GitHub releases), the generator script for the deterministic parts and the rules for the AI-written narrative sections. Use when preparing, regenerating or reviewing a platform release note. The release-note agent orchestrates the run; this skill holds the 'how'."
+description: "How-to reference for creating the S-CORE platform release note (docs/s_core_v_1/releases/release_note_score_vX_Y.rst). Defines the document format, the data sources (known_good.json, merged PRs and removed files of this repository, module GitHub releases), the generator script for the deterministic parts and the rules for the AI-written narrative sections. Use when preparing, regenerating or reviewing a platform release note. The release-note agent orchestrates the run; this skill holds the 'how'."
 argument-hint: "release tag, e.g. v0.10.0 (and optionally origin tag)"
 ---
 
@@ -23,7 +23,7 @@ runs the procedure; this skill holds the rules.
 | Integrated Software Modules (table incl. `score_platform` first; extra column Module verification report) | `known_good.json` group `target_sw` + `score_platform` | script |
 | Associated Infrastructure Modules (table) | `known_good.json` group `tooling` (without `score_platform`) | script |
 | Images (subchapter after the two module tables; table: Name, Tarball, How-to, Description) | release assets, README/runner docs at the tag | script |
-| Known Issues, Upgrade Instructions, Contact | fixed text, link to `known_good.json` at the tag | script |
+| Known Issues, Upgrade Instructions (registry hint, hint for commit pins, link to `known_good.json` at the tag), Contact | fixed text | script |
 
 The scope section describes this repository (reference_integration) and holds
 links only; no change narrative. Changes of this repository and of the images
@@ -95,7 +95,10 @@ The procedure is identical for existing and new releases; only the inputs differ
 7. **Validate** (checklist below) and report.
 
 An existing note is never overwritten unless the user asks for it; to compare,
-write to another path.
+write to another path. To refresh the tables of an existing draft (for example
+after pin bumps, or with `--status valid` once the tag exists), generate to
+another path and replace everything outside "Changes to the Platform"; keep the
+reviewed narrative.
 
 Re-running with the same inputs gives the same tables and chapter structure.
 The narrative may be worded differently, but it has to name the same items as
@@ -129,8 +132,10 @@ python3 scripts/release_note/collect_changes.py --release vX.Y.0 --origin vX.W.0
 ```
 
 The output has one section for the merged PRs and closed issues of this
-repository and one section per changed module with the **breaking** and
-**new-feature** parts of the module's own GitHub release notes. For every
+repository, one for the files of this repository that were removed or renamed
+(per directory, without `docs/` and `patches/`), and one section per changed
+module with the **breaking** and **new-feature** parts of the module's own
+GitHub release notes. For every
 breaking part the script lists "impact hints": places in this repository that
 mention a flag, label or symbol named there. `--module <key>` restricts the run,
 `--module-prs` adds the merged PRs of a module (slow, only for a deep dive),
@@ -143,10 +148,16 @@ Classification:
   `known_good.json` or `.bazelrc` that the release note says was removed). A hit
   that merely shares a name (a different configuration with a similar name) is a
   false alarm; ignore it.
-- **Breaking**: removed or renamed module, target, flag or API that integrators or
-  other modules use, changed behaviour requiring action. An impact hint in this
-  repository is strong evidence. Without any hint, treat it as module-internal
-  and omit it.
+- **Breaking**:
+  - this repository: a removed or renamed script, target, configuration file or
+    mechanism, in particular one that an earlier release note announced. The
+    "removed or renamed files" section points to them; read the PR that removed
+    them.
+  - a module: a removed or renamed module, target, flag or public API, or
+    changed behaviour requiring action, as stated in the module's release note
+    ("breaking" section). List it if this repository uses it (impact hint) or
+    if it is a public API that applications use directly; say which of the two
+    applies. Changes of internals stay in the module's release note.
 - **New feature**: new module, platform, image, integration capability or
   deliverable; or a module feature that is visible across the platform.
 - Anything else is omitted. When unsure, omit it and name it in the final report.
@@ -156,9 +167,16 @@ Classification:
 Rules:
 
 - Only state facts found in the evidence. No invented features, dates or versions.
-- One `~~~` subsection per item, written for integrators; link to the PR, issue or
-  the module's release note as RST links (`` `text <url>`__ ``).
-- Breaking changes state what integrators have to do.
+  Read the PR description before describing a PR; the title alone is not enough
+  (a PR may replace something instead of extending it).
+- One `~~~` subsection per item with a short noun-phrase title, written for
+  integrators; link to the PR, issue or the module's release note as RST links
+  (`` `text <url>`__ ``). Name new scripts, targets or settings that
+  integrators use.
+- Order of the items: module set, integration and build, images and platforms,
+  tests, documentation; breaking changes of this repository before those of
+  the modules (one subsection per module, in table order).
+- Breaking changes end with "Action required: ...".
 - Remove **Breaking Changes** only if there is none; never leave an `AI-FILL`
   marker behind (`grep -n AI-FILL <file>` must be empty).
 - Report items you left out although they looked relevant, and modules without
@@ -180,7 +198,9 @@ Known limits of the evidence:
 - `grep -n "AI-FILL" <file>` is empty.
 - `releases.rst` lists the new note last.
 - Every `~~~` item and every bullet names a PR, issue or release note link.
-- Every table row links to an existing tag (no stderr warnings).
-- Platform scope version equals the `score_platform` row source.
+- Every new module of the `--changes` table and every removed mechanism of this
+  repository is either in the note or named in the report.
+- No stderr warnings of the generator; `(unreleased)` rows are named in the report.
+- The scope links point to the release tag.
 - Docs build: `bazel run --lockfile_mode=error //:docs_shim -- --github_user=eclipse-score --github_repo=reference_integration`
   (heavy; optional locally, CI runs it).

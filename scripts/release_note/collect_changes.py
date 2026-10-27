@@ -30,7 +30,6 @@ import json
 import os
 import re
 import subprocess
-import sys
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -301,6 +300,31 @@ def render_release_notes(name: str, slug: str, old: grn.Entry, new: grn.Entry) -
     return "\n".join(out)
 
 
+def render_removed_files(base: str, head: str) -> str:
+    """Files of this repository deleted or renamed between the two refs, per directory (breaking candidates)."""
+    result = subprocess.run(
+        ["git", "diff", "--name-status", "-M", "--diff-filter=DR", base, head, "--", ".", ":!docs", ":!patches"],
+        cwd=grn.REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    groups: dict[str, int] = {}
+    for parts in (line.split("\t") for line in result.stdout.splitlines()):
+        old_dir = os.path.dirname(parts[1]) or "."
+        label = (
+            f"renamed {old_dir} -> {os.path.dirname(parts[2]) or '.'}"
+            if parts[0].startswith("R")
+            else f"removed from {old_dir}"
+        )
+        if parts[0].startswith("R") and label.endswith(f"-> {old_dir}"):
+            label = f"renamed within {old_dir}"
+        groups[label] = groups.get(label, 0) + 1
+    out = [f"## Reference integration: removed or renamed files {base} -> {head} (without docs/ and patches/)", ""]
+    out += [f"- {label} ({count} files)" for label, count in groups.items()] or ["None."]
+    return "\n".join(out) + "\n"
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--release", required=True)
@@ -329,6 +353,7 @@ def main() -> None:
     ref_slug = f"eclipse-score/{grn.RELEASE_REPO}"
     head = args.release if grn._tag_exists(args.release) else "main"
     sections.append(render_module("Reference integration", ref_slug, args.origin, head, own_repo=True))
+    sections.append(render_removed_files(args.origin, args.release if grn._tag_exists(args.release) else ref or "HEAD"))
 
     renamed_from = {new: old for old, new in grn.KEY_ALIASES.items()}
     for key, (group, entry) in current.items():

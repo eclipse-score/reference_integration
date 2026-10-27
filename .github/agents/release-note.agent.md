@@ -43,6 +43,7 @@ Read it first and follow it exactly.
    `docs/s_core_v_1/releases/releases.rst` (explicit order, newest last).
 7. Run the validation checks from the skill.
 8. Report: output path, generator warnings, modules with unreleased pins,
-   and anything you could not verify.
+   items left out although they looked relevant, and anything you could not
+   verify.
 
 The skill section "Run from scratch" has the exact commands.

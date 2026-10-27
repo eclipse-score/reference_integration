@@ -13,7 +13,7 @@
    # *******************************************************************************
 
 S-CORE Platform v0.10 release note
-==================================
+====================================
 
 .. document:: S-CORE v0.10 release note
    :id: doc__score_v010_release_note
@@ -53,26 +53,45 @@ source organization, can not take over any liability for its content.
 ✨ New Features
 ----------------
 
+Module Tests in the Module Workspace (DR-008)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Each integrated software module now runs its own unit tests and coverage in its
+own Bazel workspace, against the dependency versions resolved by the reference
+integration, with one CI job per module. The test arguments of each module are
+kept in ``known_good.json`` (``metadata.test_args``), the shared build settings
+in ``bazel_common/unified.bazelrc``. Locally:
+``python3 scripts/module_tests.py run <module>``
+(`PR #398 <https://github.com/eclipse-score/reference_integration/pull/398>`__).
+
+Shared Image Packaging
+~~~~~~~~~~~~~~~~~~~~~~
+
+The QNX images are built with ``score_rules_imagefs`` 0.1.0. Application files
+and configuration that both QNX images and the Linux image use are defined once
+in ``//images/common/apps``, ``//images/qnx_common/build`` and
+``//images/qnx_common/configs``
+(`PR #349 <https://github.com/eclipse-score/reference_integration/pull/349>`__,
+`PR #389 <https://github.com/eclipse-score/reference_integration/pull/389>`__).
+
 SBOM Generation
 ~~~~~~~~~~~~~~~
 
 Added generation of a Software Bill of Materials for the product dependencies
 (SPDX and CycloneDX) and for the build tools (SPDX), see the "Software Bill of
-Materials" section of the README (`PR #304 <https://github.com/eclipse-score/reference_integration/pull/304>`__).
+Materials" section of the README
+(`PR #304 <https://github.com/eclipse-score/reference_integration/pull/304>`__).
 
 Module Integration Tests
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Added module integration tests for Lifecycle, Logging and Persistency to the
-reference integration, so that their requirement coverage appears in the
-verification reports (`PR #385 <https://github.com/eclipse-score/reference_integration/pull/385>`__, `PR #387 <https://github.com/eclipse-score/reference_integration/pull/387>`__,
-`PR #388 <https://github.com/eclipse-score/reference_integration/pull/388>`__).
-
-DR-008 Integration Workflow
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Added the DR-008 integration workflow (`PR #398 <https://github.com/eclipse-score/reference_integration/pull/398>`__), building on the
-resolved-dependency override mechanism introduced in v0.9.
+The integration tests of Lifecycle, Logging and Persistency run in the reference
+integration, and their results are linked to the requirements in the
+verification reports
+(`PR #385 <https://github.com/eclipse-score/reference_integration/pull/385>`__,
+`PR #387 <https://github.com/eclipse-score/reference_integration/pull/387>`__).
+The new infrastructure module Tools provides the pytest setup of the Persistency
+tests (`PR #388 <https://github.com/eclipse-score/reference_integration/pull/388>`__).
 
 Documentation and Verification Reports
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -80,12 +99,27 @@ Documentation and Verification Reports
 - The documentation of the Time module is part of the integrated documentation
   (`PR #348 <https://github.com/eclipse-score/reference_integration/pull/348>`__).
 - The module verification reports of Logging and Lifecycle are linked from the
-  verification report overview (`PR #367 <https://github.com/eclipse-score/reference_integration/pull/367>`__, `PR #373 <https://github.com/eclipse-score/reference_integration/pull/373>`__).
+  verification report overview
+  (`PR #367 <https://github.com/eclipse-score/reference_integration/pull/367>`__,
+  `PR #373 <https://github.com/eclipse-score/reference_integration/pull/373>`__).
 - The Unit Tests and Coverage summaries are nested under the Platform
-  Verification Report (`PR #358 <https://github.com/eclipse-score/reference_integration/pull/358>`__).
+  Verification Report
+  (`PR #358 <https://github.com/eclipse-score/reference_integration/pull/358>`__).
 
 💥 Breaking Changes
 --------------------
+
+Reference Integration: Resolved-Dependency Override Removed
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The resolved-dependency override introduced in v0.9
+(``scripts/known_good/resolved_dependencies.py`` and
+``scripts/known_good/module_patches.py``) and the generated
+``rust_coverage/BUILD`` were removed; module tests no longer run inside the
+reference integration workspace
+(`PR #398 <https://github.com/eclipse-score/reference_integration/pull/398>`__).
+Action required: run module tests with ``scripts/module_tests.py`` and keep
+their test arguments in ``known_good.json`` (``metadata.test_args``).
 
 Baselibs
 ~~~~~~~~
@@ -94,18 +128,21 @@ Baselibs is integrated at a commit after ``v0.2.14`` and contains breaking
 changes of ``v0.2.13`` and ``v0.2.14`` (see the `Baselibs release notes
 <https://github.com/eclipse-score/baselibs/releases>`__):
 
-- ``score/datetime_converter`` was removed (`PR #471 <https://github.com/eclipse-score/baselibs/pull/471>`__). Use
-  POSIX or C library time APIs instead.
+- ``score/datetime_converter`` was removed
+  (`PR #471 <https://github.com/eclipse-score/baselibs/pull/471>`__). Use POSIX
+  or C library time APIs instead.
 - The unused ``score/os`` libraries ``cpuid``, ``file_stream`` and ``make_dev``
   were removed (`PR #535 <https://github.com/eclipse-score/baselibs/pull/535>`__).
 - The deprecated ``//src`` Bazel aliases and the string and atomic shims in
-  ``//score/memory`` were removed (`PR #598 <https://github.com/eclipse-score/baselibs/pull/598>`__). Use the
+  ``//score/memory`` were removed
+  (`PR #598 <https://github.com/eclipse-score/baselibs/pull/598>`__). Use the
   replacement targets.
 - ``score::flatbuffers::LoadBuffer`` now takes ``score::cpp::pmr::vector<uint8_t>``
-  instead of ``std::pmr::vector<uint8_t>`` (`PR #603 <https://github.com/eclipse-score/baselibs/pull/603>`__).
+  instead of ``std::pmr::vector<uint8_t>``
+  (`PR #603 <https://github.com/eclipse-score/baselibs/pull/603>`__).
 
-No usage of the removed APIs was found in the configuration of the reference
-integration. Action required: adapt own code that uses them.
+These are public APIs of Baselibs; the configuration of the reference
+integration does not use them. Action required: adapt own code that uses them.
 
 🎯 Reference Integration scope
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -237,13 +274,14 @@ integration. Action required: adapt own code that uses them.
 🐞 Known Issues/Vulnerabilities and Bug Fixes
 ----------------------------------------------
 
-- See release notes of every module separately
+- See the release notes of the individual modules.
 
 🚀 Upgrade Instructions
 ------------------------
 
-- Modules shown as *(unreleased)* are pinned to a commit and have no registry version; use the commit from known_good.json.
-- Versions can be found under: https://github.com/eclipse-score/reference_integration/blob/v0.10.0/known_good.json
+- Increase to the newest Bazel registry versions: https://eclipse-score.github.io/bazel_registry_ui
+- Modules shown as *(unreleased)* are pinned to a commit and have no registry version; use the commit from ``known_good.json``.
+- The module versions of this release are listed in `known_good.json <https://github.com/eclipse-score/reference_integration/blob/v0.10.0/known_good.json>`__.
 
 
 📧 Contact Information

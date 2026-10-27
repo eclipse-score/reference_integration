@@ -418,19 +418,20 @@ source organization, can not take over any liability for its content.
     parts += [_heading("Images", "-"), render_images(release, ref) + "\n"]
 
     unreleased = any(e.tag is None for entries in groups.values() for e in entries)
-    registry_hint = (
-        "- Modules shown as *(unreleased)* are pinned to a commit and have no registry version; use the commit from known_good.json."
+    unreleased_hint = (
+        "\n- Modules shown as *(unreleased)* are pinned to a commit and have no registry version; "
+        "use the commit from ``known_good.json``."
         if unreleased
-        else "- Increase to newest bazel registry versions: https://eclipse-score.github.io/bazel_registry_ui"
+        else ""
     )
 
     parts += [
         _heading("Known Issues/Vulnerabilities and Bug Fixes", "-"),
-        "\n- See release notes of every module separately\n",
+        "\n- See the release notes of the individual modules.\n",
         _heading("Upgrade Instructions", "-"),
         f"""
-{registry_hint}
-- Versions can be found under: {release_url}/blob/{release}/known_good.json
+- Increase to the newest Bazel registry versions: https://eclipse-score.github.io/bazel_registry_ui{unreleased_hint}
+- The module versions of this release are listed in `known_good.json <{release_url}/blob/{release}/known_good.json>`__.
 
 """,
         _heading("Contact Information", "-"),
