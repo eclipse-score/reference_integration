@@ -242,14 +242,20 @@ def render_table(entries: list[Entry], with_verification: bool = False) -> str:
             f"     - {notes}",
         ]
         if with_verification:
-            rows.append(f"     - :doc:`Verification report <{e.verification_doc}>`" if e.verification_doc else f"     - {EMPTY_CELL}")
+            rows.append(
+                f"     - :doc:`Verification report <{e.verification_doc}>`"
+                if e.verification_doc
+                else f"     - {EMPTY_CELL}"
+            )
     return "\n".join(rows)
 
 
 def _exists(ref: str | None, path: str) -> bool:
     if ref is None:
         return (REPO_ROOT / path).exists()
-    return subprocess.run(["git", "cat-file", "-e", f"{ref}:{path}"], cwd=REPO_ROOT, capture_output=True).returncode == 0
+    return (
+        subprocess.run(["git", "cat-file", "-e", f"{ref}:{path}"], cwd=REPO_ROOT, capture_output=True).returncode == 0
+    )
 
 
 def _anchors(ref: str | None, path: str) -> set[str]:
@@ -455,7 +461,10 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--release", required=True, help="Release tag, e.g. v0.10.0")
     parser.add_argument("--origin", required=True, help="Previous release tag, e.g. v0.9.0")
-    parser.add_argument("--known-good-ref", help="Git ref to read known_good.json from (default: release tag if it exists, else working tree)")
+    parser.add_argument(
+        "--known-good-ref",
+        help="Git ref to read known_good.json from (default: release tag if it exists, else working tree)",
+    )
     parser.add_argument("--date", help="Release date YYYY-MM-DD (default: tag date if the tag exists, else TBD)")
     parser.add_argument("--status", default="draft", choices=["draft", "valid"])
     parser.add_argument("--changes", action="store_true", help="Print module version changes instead of the skeleton")
@@ -468,7 +477,11 @@ def main() -> None:
     if args.changes:
         text = render_changes(collect(load_known_good(args.origin)), groups)
     else:
-        date = args.date or (_git("log", "-1", "--format=%cs", f"{args.release}^{{commit}}").strip() if _tag_exists(args.release) else "TBD")
+        date = args.date or (
+            _git("log", "-1", "--format=%cs", f"{args.release}^{{commit}}").strip()
+            if _tag_exists(args.release)
+            else "TBD"
+        )
         text = render(args.release, args.origin, date, args.status, groups, ref)
 
     if args.output:

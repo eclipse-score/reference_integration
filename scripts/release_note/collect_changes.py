@@ -113,7 +113,10 @@ def merged_pulls(slug: str, start: str, end: str) -> list[dict]:
     """Closed PRs merged in [start, end]; sorted by update time so paging stops once PRs predate the window."""
     found: list[dict] = []
     for page in range(1, 60):
-        batch = api(f"/repos/{slug}/pulls", {"state": "closed", "sort": "updated", "direction": "desc", "per_page": 100, "page": page})
+        batch = api(
+            f"/repos/{slug}/pulls",
+            {"state": "closed", "sort": "updated", "direction": "desc", "per_page": 100, "page": page},
+        )
         found += [p for p in batch if p.get("merged_at") and start <= p["merged_at"] <= end]
         if len(batch) < 100 or batch[-1]["updated_at"] < start:
             break
@@ -132,7 +135,11 @@ def collect_prs(slug: str, base: str, head: str) -> list[PullRequest]:
     prs = []
     for data in sorted(merged_pulls(slug, ref_date(slug, base), ref_date(slug, head)), key=lambda p: p["merged_at"]):
         pr = PullRequest(
-            data["number"], data["title"], [l["name"] for l in data["labels"]], data["user"]["login"], data["html_url"],
+            data["number"],
+            data["title"],
+            [l["name"] for l in data["labels"]],
+            data["user"]["login"],
+            data["html_url"],
             data.get("body") or "",
         )
         for issue_number in dict.fromkeys(int(n) for n in CLOSES.findall(pr.body)):
@@ -156,7 +163,11 @@ def collect_prs_by_commits(slug: str, base: str, head: str) -> list[PullRequest]
         except urllib.error.HTTPError:
             continue
         pr = PullRequest(
-            number, data["title"], [l["name"] for l in data["labels"]], data["user"]["login"], data["html_url"],
+            number,
+            data["title"],
+            [l["name"] for l in data["labels"]],
+            data["user"]["login"],
+            data["html_url"],
             data.get("body") or "",
         )
         for issue_number in dict.fromkeys(int(n) for n in CLOSES.findall(pr.body)):
@@ -193,20 +204,39 @@ def render_module(name: str, slug: str, base: str, head: str, own_repo: bool = F
     """own_repo: this repository; every PR is listed (version bumps and tooling updates are platform-level here)."""
     prs = collect_prs_by_commits(slug, base, head) if own_repo else collect_prs(slug, base, head)
     relevant = prs if own_repo else [p for p in prs if not p.is_noise]
-    out = [f"## {name}: {base} -> {head} ({slug}, {len(prs)} merged PRs, {len(prs) - len(relevant)} bot/dependency PRs omitted)", ""]
-    for kind, title in (("breaking", "Breaking candidates"), ("feature", "Feature candidates"), ("other", "Other merged PRs")):
+    out = [
+        f"## {name}: {base} -> {head} ({slug}, {len(prs)} merged PRs, {len(prs) - len(relevant)} bot/dependency PRs omitted)",
+        "",
+    ]
+    for kind, title in (
+        ("breaking", "Breaking candidates"),
+        ("feature", "Feature candidates"),
+        ("other", "Other merged PRs"),
+    ):
         group = [p for p in relevant if p.kind == kind]
         out += [f"### {title} ({len(group)})"] + [_line(p, with_body=kind != "other") for p in group] + [""]
     linked = {i.number for p in prs for i in p.issues}
     extra = closed_issues(slug, base, head, linked)
     out += [f"### Closed issues in the release window, not linked to a PR ({len(extra)})"]
-    out += [f"- #{i.number} {i.title}" + (f" [{', '.join(i.labels)}]" if i.labels else "") + f" ({i.url})" for i in extra]
+    out += [
+        f"- #{i.number} {i.title}" + (f" [{', '.join(i.labels)}]" if i.labels else "") + f" ({i.url})" for i in extra
+    ]
     return "\n".join(out) + "\n"
 
 
 SECTION_HEADING = re.compile(r"^(#{2,4})\s+(.*?)\s*$", re.M)
 WANTED_SECTION = re.compile(r"breaking|deprecat|incompatible|new feature|features", re.I)
-IMPACT_PATHS = ["known_good.json", ".bazelrc", "bazel_common", "patches", "images", "showcases", "MODULE.bazel", "feature_integration_tests", "platform_integration_tests"]
+IMPACT_PATHS = [
+    "known_good.json",
+    ".bazelrc",
+    "bazel_common",
+    "patches",
+    "images",
+    "showcases",
+    "MODULE.bazel",
+    "feature_integration_tests",
+    "platform_integration_tests",
+]
 
 
 def release_sections(body: str) -> list[tuple[str, str]]:
@@ -216,7 +246,7 @@ def release_sections(body: str) -> list[tuple[str, str]]:
     for i, mark in enumerate(marks):
         if WANTED_SECTION.search(mark.group(2)):
             end = marks[i + 1].start() if i + 1 < len(marks) else len(body)
-            sections.append((mark.group(2), body[mark.end():end].strip()))
+            sections.append((mark.group(2), body[mark.end() : end].strip()))
     return sections
 
 
@@ -232,11 +262,15 @@ def impact_hints(text: str, module_key: str) -> list[str]:
         for needle in (n for n in needles if len(n) >= 8):
             result = subprocess.run(
                 ["git", "grep", "-n", "-F", "-I", needle, "--", *IMPACT_PATHS],
-                cwd=grn.REPO_ROOT, capture_output=True, text=True,
+                cwd=grn.REPO_ROOT,
+                capture_output=True,
+                text=True,
             )
             for line in result.stdout.splitlines():
                 path = line.split(":", 1)[0]
-                if short in line.lower() and (needle, path) not in seen:  # one hint per file, line must concern this module
+                if (
+                    short in line.lower() and (needle, path) not in seen
+                ):  # one hint per file, line must concern this module
                     seen.add((needle, path))
                     hints.append(f"`{needle}` is used in {line[:160]}")
     return hints[:8]
@@ -245,8 +279,11 @@ def impact_hints(text: str, module_key: str) -> list[str]:
 def render_release_notes(name: str, slug: str, old: grn.Entry, new: grn.Entry) -> str:
     start, end = ref_date(slug, old.ref), ref_date(slug, new.ref)
     releases = [
-        r for r in paged(f"/repos/{slug}/releases")
-        if r.get("published_at") and start < r["published_at"] <= end[:10] + "T23:59:59Z" and not r["draft"]
+        r
+        for r in paged(f"/repos/{slug}/releases")
+        if r.get("published_at")
+        and start < r["published_at"] <= end[:10] + "T23:59:59Z"
+        and not r["draft"]
         and r["tag_name"] != old.tag  # the origin release is already part of the previous platform release
     ]
     out = [f"## {name}: {old.version_label} -> {new.version_label} ({slug}), module release notes", ""]
@@ -268,10 +305,19 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--release", required=True)
     parser.add_argument("--origin", required=True)
-    parser.add_argument("--module", action="append", help="Restrict module sections to these known_good keys (repeatable)")
-    parser.add_argument("--module-prs", action="store_true", help="Also list the merged PRs of each changed module (slow, large modules have hundreds)")
+    parser.add_argument(
+        "--module", action="append", help="Restrict module sections to these known_good keys (repeatable)"
+    )
+    parser.add_argument(
+        "--module-prs",
+        action="store_true",
+        help="Also list the merged PRs of each changed module (slow, large modules have hundreds)",
+    )
     parser.add_argument("--include-infra", action="store_true", help="Also cover the Associated Infrastructure Modules")
-    parser.add_argument("--known-good-ref", help="Git ref to read known_good.json from (default: release tag if it exists, else the working tree), e.g. origin/main")
+    parser.add_argument(
+        "--known-good-ref",
+        help="Git ref to read known_good.json from (default: release tag if it exists, else the working tree), e.g. origin/main",
+    )
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
 
@@ -302,7 +348,11 @@ def main() -> None:
             if args.module_prs:
                 sections.append(render_module(entry.name, slug, old.ref, entry.ref))
     for key, old in previous.items():
-        if key not in current and not (key in grn.KEY_ALIASES and grn.KEY_ALIASES[key] in current) and (not args.module or key in args.module):
+        if (
+            key not in current
+            and not (key in grn.KEY_ALIASES and grn.KEY_ALIASES[key] in current)
+            and (not args.module or key in args.module)
+        ):
             sections.append(f"## {old.name}: removed from the platform (was {old.version_label})\n")
 
     text = "\n".join(sections)
