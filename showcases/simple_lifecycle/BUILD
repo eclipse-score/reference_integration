@@ -14,6 +14,11 @@ load("@rules_cc//cc:cc_library.bzl", "cc_library")
 load("@score_lifecycle//:defs.bzl", "launch_manager_config")
 load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
 
+exports_files(
+    ["lifecycle_signal.sh"],
+    visibility = ["//showcases:__subpackages__"],
+)
+
 launch_manager_config(
     name = "lifecycle_configs",
     config = "//showcases/simple_lifecycle/configs:launch_manager_config.json",

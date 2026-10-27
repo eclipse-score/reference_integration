@@ -1,0 +1,18 @@
+{
+    "name": "Lifecycle-managed Time Reporting Showcase",
+    "description": "Demonstrates score_lifecycle managing a score_time vehicle-time reporting process: launch_manager supervises vehicle_time, monitoring its lifecycle state and providing clean shutdown via SIGTERM. Example takes ~6s.",
+    "apps": [
+        {
+            "path": "/showcases/bin/launch_manager",
+            "dir": "/showcases/data/lifecycle_time",
+            "args": [],
+            "env": {}
+        },
+        {
+            "path": "/showcases/bin/lifecycle_signal.sh",
+            "args": ["launch_manager", "SIGTERM"],
+            "env": {},
+            "delay": 6
+        }
+    ]
+}
