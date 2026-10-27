@@ -375,8 +375,8 @@ def status_banner(release: str, date: str, status: str) -> str:
     return f"""
 .. note::
 
-   **FINAL - released.** This is the release note of the published release
-   `{release} <{ORG_URL}/{RELEASE_REPO}/releases/tag/{release}>`__.
+   **FINAL.** This is the release note of release
+   `{release} <{ORG_URL}/{RELEASE_REPO}/releases/tag/{release}>`__ ({date}).
 """
 
 
@@ -507,11 +507,8 @@ def main() -> None:
         "--date",
         help="Override the release date YYYY-MM-DD (default: due date of the milestone in eclipse-score/score)",
     )
-    parser.add_argument(
-        "--status",
-        choices=["draft", "valid"],
-        help="draft = release in progress, valid = final (default: valid if the release tag exists, else draft)",
-    )
+    # The note is part of the release and is finalised before the tag exists, so the state cannot be derived.
+    parser.add_argument("--final", action="store_true", help="Final release note (default: draft)")
     parser.add_argument("--changes", action="store_true", help="Print module version changes instead of the skeleton")
     parser.add_argument("--output", type=Path, help="Write to file instead of stdout")
     args = parser.parse_args()
@@ -523,7 +520,7 @@ def main() -> None:
         text = render_changes(collect(load_known_good(args.origin)), groups)
     else:
         date = args.date or milestone_date(args.release)
-        status = args.status or ("valid" if _tag_exists(args.release) else "draft")
+        status = "valid" if args.final else "draft"
         text = render(args.release, args.origin, date, status, groups, ref)
 
     if args.output:

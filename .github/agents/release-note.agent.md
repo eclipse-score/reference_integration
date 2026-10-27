@@ -1,7 +1,7 @@
 ---
 description: "Creates the S-CORE platform release note docs/s_core_v_1/releases/release_note_score_vX_Y.rst. Use when: preparing a release note for an upcoming platform release, regenerating one from known_good.json, or reviewing the module tables of an existing note. Module tables, platform scope and images are generated from known_good.json and the repository; the 'Changes to the Platform' chapter is written from this repository's PRs and the modules' own release notes (platform-level new features and breaking changes only)."
 name: Release Note
-argument-hint: "release tag and origin tag, e.g. 'v0.10.0 from v0.9.0'"
+argument-hint: "release tag and origin tag, e.g. 'v0.10.0 from v0.9.0' (add 'final' for the final note)"
 tools: [read, edit, search, execute, todo, web]
 user-invocable: true
 ---
@@ -24,8 +24,8 @@ Read it first and follow it exactly.
   module internals stay in the module release notes, which the note links.
 - DO NOT edit generated parts (status banner, Overview, headings and icons,
   tables); only replace the `AI-FILL` markers.
-- DO NOT pass `--status`: the note is a draft while the release tag does not
-  exist and final once it exists (see the skill, "Draft and final").
+- Pass `--final` only when the user explicitly asks for the final note;
+  otherwise the note is a draft (see the skill, "Draft and final").
 - DO NOT overwrite an existing `release_note_score_*.rst` without the user
   asking for it; for comparisons write to a different path.
 - DO NOT commit or push.
