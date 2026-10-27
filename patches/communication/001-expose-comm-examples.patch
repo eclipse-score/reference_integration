@@ -1,6 +1,7 @@
 Expose the com-api-example binary and its mw_com config to the reference
 integration showcase bundle. Upstream dropped the public visibility on the
-rust_binary, and the config file was never exported.
+rust_binary, and the config file was never exported. The visibility guard golden
+lists the now-public binary.
 
 diff --git a/score/mw/com/example/com-api-example/BUILD b/score/mw/com/example/com-api-example/BUILD
 index 10e02502..a4273bf8 100644
@@ -22,3 +23,14 @@ index 10e02502..a4273bf8 100644
 +exports_files([
 +    "etc/mw_com_config.json",
 +])
+diff --git a/quality/visibility_guard/public_targets.golden b/quality/visibility_guard/public_targets.golden
+--- a/quality/visibility_guard/public_targets.golden
++++ b/quality/visibility_guard/public_targets.golden
+@@ -54,6 +54,7 @@
+ //score/mw/com/dependability:mw_com_doc_needs
+ //score/mw/com/dependability:mw_com_index
+ //score/mw/com/dependability:mw_com_rst
++//score/mw/com/example/com-api-example:com-api-example
+ //score/mw/com/performance_benchmarks/macro_benchmark/config_generator:config_generator_rule.bzl
+ //score/mw/com/performance_benchmarks/macro_benchmark:logging.json
+ //score/mw/com/performance_benchmarks/macro_benchmark:lola_benchmarking_client

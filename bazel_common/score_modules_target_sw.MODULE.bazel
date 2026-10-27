@@ -88,6 +88,8 @@ git_override(
     patch_strip = 1,
     patches = [
         "//patches/time:003-disable-broken-qnx-ifs-target.patch",
+        "//patches/time:004-rename-ubuntu-image-pull.patch",
+        "//patches/time:005-use-sanitizer-bool-flags.patch",
     ],
     remote = "https://github.com/eclipse-score/time.git",
 )
@@ -95,7 +97,7 @@ git_override(
 bazel_dep(name = "score_config_management")
 git_override(
     module_name = "score_config_management",
-    commit = "e0489b190ed6d2fa183b9a8063e2dba4f6378505",
+    commit = "d0dab01ae408ceb8ec65344e93d8a51d8173da81",
     patch_strip = 1,
     patches = [
         "//patches/config_management:001-adapt-proxy-api-and-remove-internal-targets.patch",
