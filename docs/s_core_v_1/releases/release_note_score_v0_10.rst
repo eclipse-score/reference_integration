@@ -238,8 +238,9 @@ Associated Infrastructure Modules
 Process description
 ~~~~~~~~~~~~~~~~~~~
 
-- ...
-
+- **Version:** ``2.2.2`` (previously ``2.1.2``)
+- **Release notes**: `Process description releases
+  <https://github.com/eclipse-score/process_description/releases>`_
 
 Docs-as-code
 ~~~~~~~~~~~~
