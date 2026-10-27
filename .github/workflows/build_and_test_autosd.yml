@@ -12,6 +12,7 @@
 # *******************************************************************************
 name: AutoSD - Build & Integration Test
 on:
+  workflow_call:
   pull_request:
     types: [opened, reopened, synchronize]
   merge_group:
@@ -112,6 +113,17 @@ jobs:
           sleep 5
           sshcmd 'bootc status'
           sshcmd '/showcases/bin/cli --examples all'
+          sshcmd 'rm -f /tmp/score_showcases_autosd_latest.oci'
         working-directory: ./images/autosd
         env:
           SSH_PASSWORD: password
+      - name: Archive Modified Image
+        run: |
+          xz disk.qcow2
+          mv disk.qcow2.xz eclipse-autosd-bootc-qemu-${{ matrix.platform }}.qcow2.xz
+        working-directory: ./images/autosd
+      - name: Store Image
+        uses: actions/upload-artifact@v4
+        with:
+          name: eclipse-autosd-bootc-qemu-${{ matrix.platform }}.qcow2.xz
+          path: images/autosd/eclipse-autosd-bootc-qemu-${{ matrix.platform }}.qcow2.xz

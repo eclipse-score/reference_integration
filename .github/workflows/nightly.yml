@@ -1,0 +1,72 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+name: Nightly
+on:
+  schedule:
+    # Nightly at 02:00 UTC
+    - cron: '0 2 * * *'
+jobs:
+  # Skip the nightly run if the commit has not changed since the last
+  # successful nightly build.
+  check_changes:
+    name: Check for new commits
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: read
+    outputs:
+      should_build: ${{ steps.check.outputs.should_build }}
+    steps:
+      - name: Determine if a build is needed
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          last_sha=$(gh run list \
+            --repo "${{ github.repository }}" \
+            --workflow nightly.yml \
+            --branch "${{ github.ref_name }}" \
+            --event schedule \
+            --status success \
+            --json headSha \
+            --limit 1 \
+            --jq '.[0].headSha')
+
+          echo "Last successful nightly build: ${last_sha:-none}"
+          echo "Current commit:               ${{ github.sha }}"
+
+          if [ "$last_sha" = "${{ github.sha }}" ]; then
+            echo "No new commits since the last nightly build; skipping."
+            echo "should_build=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_build=true" >> "$GITHUB_OUTPUT"
+          fi
+  autosd:
+    needs: check_changes
+    if: needs.check_changes.outputs.should_build == 'true'
+    uses: ./.github/workflows/build_and_test_autosd.yml
+  ebclfsa:
+    needs: check_changes
+    if: needs.check_changes.outputs.should_build == 'true'
+    uses: ./.github/workflows/build_and_test_ebclfsa.yml
+  linux:
+    needs: check_changes
+    if: needs.check_changes.outputs.should_build == 'true'
+    uses: ./.github/workflows/build_and_test_linux.yml
+  qnx:
+    needs: check_changes
+    if: needs.check_changes.outputs.should_build == 'true'
+    uses: ./.github/workflows/build_and_test_qnx.yml
+  module_tests:
+    needs: check_changes
+    if: needs.check_changes.outputs.should_build == 'true'
+    uses: ./.github/workflows/module_tests.yml
