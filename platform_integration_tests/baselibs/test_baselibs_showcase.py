@@ -19,11 +19,26 @@ from showcase_runner import run_showcases
     test_type="interface-test",
     derivation_technique="requirements-analysis",
 )
-def test_baselibs_showcase(target):
+def test_baselibs_builtin_logger_showcase(target):
     """..."""
-    run_showcases(
-        target,
-        "Baselibs Builtin Logger Example",
-        "Baselibs Custom Logger Example",
-        "Baselibs C++ Logger Init Example",
-    )
+    run_showcases(target, "Baselibs Builtin Logger Example")
+
+
+@add_test_properties(
+    partially_verifies=["<baselibs stakeholder req id>"],
+    test_type="interface-test",
+    derivation_technique="requirements-analysis",
+)
+def test_baselibs_custom_logger_showcase(target):
+    """..."""
+    run_showcases(target, "Baselibs Custom Logger Example")
+
+
+@add_test_properties(
+    partially_verifies=["<baselibs stakeholder req id>"],
+    test_type="interface-test",
+    derivation_technique="requirements-analysis",
+)
+def test_baselibs_cpp_logger_init_showcase(target):
+    """..."""
+    run_showcases(target, "Baselibs C++ Logger Init Example")
