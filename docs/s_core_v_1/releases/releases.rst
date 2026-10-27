@@ -15,15 +15,8 @@
 Releases
 ============
 
-.. Explicit order: a glob would sort v0_10 before v0_5.
-
 .. toctree::
    :titlesonly:
+   :glob:
 
-   release_note_score_v0_5_alpha
-   release_note_score_v0_5_beta
-   release_note_score_v0_6
-   release_note_score_v0_7
-   release_note_score_v0_8
-   release_note_score_v0_9
-   release_note_score_v0_10
+   *

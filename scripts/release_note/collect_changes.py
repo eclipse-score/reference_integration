@@ -347,12 +347,12 @@ def main() -> None:
     parser.add_argument("--include-infra", action="store_true", help="Also cover the Associated Infrastructure Modules")
     parser.add_argument(
         "--known-good-ref",
-        help="Git ref for known_good.json and the evidence of this repository (default: release tag if it exists, else origin/main)",
+        help="Git ref for known_good.json and the evidence of this repository (default: release tag if it exists, else HEAD; must be pushed)",
     )
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
 
-    ref = args.known_good_ref or (args.release if grn._tag_exists(args.release) else "origin/main")
+    ref = args.known_good_ref or (args.release if grn._tag_exists(args.release) else "HEAD")
     current = {e.key: (g, e) for g, es in grn.collect(grn.load_known_good(ref)).items() for e in es}
     previous = {e.key: e for es in grn.collect(grn.load_known_good(args.origin)).values() for e in es}
 

@@ -37,14 +37,15 @@ Read it first and follow it exactly.
 1. Resolve `release` and `origin` tags from the argument. The release date
    comes from the milestone `v<major>.<minor>` in eclipse-score/score (the
    generator reads it); do not ask for it and do not pass `--date`.
-2. Prepare: `git fetch origin main --tags`; for an untagged release use
-   `--known-good-ref origin/main` in both scripts.
+2. Prepare: work on the release candidate branch of the release (ask for it if
+   the current branch is `main`); `git pull` and `git fetch --tags`. Do not
+   pass `--known-good-ref`; both scripts read the checked-out branch.
 3. Run the generator to create the skeleton and the `--changes` table.
 4. Run `collect_changes.py` and classify into platform-level new features and
    breaking changes as described in the skill (use the impact hints).
 5. Replace both `.. AI-FILL:` markers (New Features, Breaking Changes).
-6. Append the new file to the `toctree` in
-   `docs/s_core_v_1/releases/releases.rst` (explicit order, newest last).
+6. Make sure the new note is part of the `toctree` in
+   `docs/s_core_v_1/releases/releases.rst`.
 7. Run the validation checks from the skill.
 8. Report: output path, state (draft or final), generator warnings, modules
    with unreleased pins,

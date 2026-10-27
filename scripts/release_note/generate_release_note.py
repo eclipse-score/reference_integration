@@ -20,8 +20,8 @@ Examples:
     # Skeleton for an already tagged release (known_good.json is read from the tag)
     python3 scripts/release_note/generate_release_note.py --release v0.8.0 --origin v0.7.0
 
-    # Skeleton for an upcoming release (known_good.json is read from origin/main)
-    python3 scripts/release_note/generate_release_note.py --release v0.10.0 --origin v0.9.0 --known-good-ref origin/main
+    # Skeleton for an upcoming release, run on its release candidate branch (known_good.json of the checkout)
+    python3 scripts/release_note/generate_release_note.py --release v0.10.0 --origin v0.9.0
 
     # Module version changes between the two releases
     python3 scripts/release_note/generate_release_note.py --release v0.8.0 --origin v0.7.0 --changes

@@ -56,7 +56,7 @@ A note has one of two states. The release note is part of the release and is
 finalised before the tag is created, so the state is set explicitly:
 
 - **Draft** (default) while the release is in progress: the note shows the
-  current state, read from `origin/main`. Title suffix "(DRAFT)", a warning
+  current state of the release branch. Title suffix "(DRAFT)", a warning
   banner on top and `:status: draft`.
 - **Final** with `--final`, only when the user says the note is final (content
   frozen for the release). No title suffix, a note banner with the link to the
@@ -68,7 +68,7 @@ scratch" and keep the reviewed narrative.
 ## Generator
 
 ```bash
-# Skeleton (known_good.json is read from the release tag if it exists, else the working tree)
+# Skeleton (known_good.json is read from the release tag if it exists, else the checked-out release branch)
 python3 scripts/release_note/generate_release_note.py --release vX.Y.0 --origin vX.W.0 \
     --output docs/s_core_v_1/releases/release_note_score_vX_Y.rst
 
@@ -103,18 +103,21 @@ asks for release, origin and state (`draft` or `final`) and starts the agent.
 1. **Inputs.** `release` and `origin` tag and the output file
    `docs/s_core_v_1/releases/release_note_score_v<major>_<minor>.rst`. The
    release date is taken from the milestone (see above).
-2. **Prepare.** `git fetch origin main --tags`. For an upcoming release read
-   `known_good.json` from `origin/main` with `--known-good-ref origin/main`
-   (the working tree stays untouched). Set `GITHUB_TOKEN` for the GitHub API
-   calls (anonymous access is rate limited); never print it.
+2. **Prepare.** Check out the release candidate branch of the release and
+   update it (`git pull`, `git fetch --tags`). The note is created and
+   committed only there; it reaches `main` when the release branch is merged
+   back after the release. Never add a release note on `main` directly, it
+   would conflict with that merge. Both scripts read the checked-out state by
+   default; the release branch must be pushed, because the collector compares
+   commits through the GitHub API. Set `GITHUB_TOKEN` for the GitHub API calls
+   (anonymous access is rate limited); never print it.
 3. **Skeleton.** Run the generator (see above). Check the stderr warnings.
-4. **Evidence.** Run `collect_changes.py` with the same `--release`, `--origin`
-   and `--known-good-ref`, plus the `--changes` table. Runtime is a few minutes.
+4. **Evidence.** Run `collect_changes.py` with the same `--release` and
+   `--origin`, plus the `--changes` table. Runtime is a few minutes.
 5. **Narrative.** Replace the two `AI-FILL` markers (New Features, Breaking
    Changes) with the rules below. Nothing else in the file is written by hand.
-6. **Index.** `docs/s_core_v_1/releases/releases.rst` lists the notes in an
-   explicit order (oldest first); append the new file at the end of that
-   `toctree`.
+6. **Index.** Make sure the new note is part of the `toctree` in
+   `docs/s_core_v_1/releases/releases.rst` on the release branch.
 7. **Validate** (checklist below) and report.
 
 An existing note is never overwritten unless the user asks for it; to compare,
@@ -219,7 +222,7 @@ Known limits of the evidence:
 ## Validation
 
 - `grep -n "AI-FILL" <file>` is empty.
-- `releases.rst` lists the new note last.
+- The new note is part of the `toctree` in `releases.rst`.
 - Every `~~~` item and every bullet names a PR, issue or release note link.
 - Every new module of the `--changes` table and every removed mechanism of this
   repository is either in the note or named in the report.
