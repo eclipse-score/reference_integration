@@ -482,7 +482,7 @@ https://projects.eclipse.org/projects/automotive.score
 
 def render_changes(origin: dict[str, list[Entry]], current: dict[str, list[Entry]]) -> str:
     old = {KEY_ALIASES.get(e.key, e.key): e for entries in origin.values() for e in entries}
-    new = {e.key: e for entries in current.values() for e in entries}
+    new = {KEY_ALIASES.get(e.key, e.key): e for entries in current.values() for e in entries}
     lines = ["| Module | Previous | Current |", "|---|---|---|"]
     for key in sorted(old.keys() | new.keys()):
         o, n = old.get(key), new.get(key)

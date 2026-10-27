@@ -275,15 +275,22 @@ def impact_hints(text: str, module_key: str) -> list[str]:
     return hints[:8]
 
 
+def in_range(slug: str, old_ref: str, tag: str, new_ref: str) -> bool:
+    """True if the tag commit is after old_ref and contained in new_ref (excludes other maintenance branches)."""
+    after_old = api(f"/repos/{slug}/compare/{old_ref}...{tag}")["status"] == "ahead"
+    return after_old and api(f"/repos/{slug}/compare/{tag}...{new_ref}")["status"] in ("ahead", "identical")
+
+
 def render_release_notes(name: str, slug: str, old: grn.Entry, new: grn.Entry) -> str:
-    start, end = ref_date(slug, old.ref), ref_date(slug, new.ref)
+    start = ref_date(slug, old.ref)
+    # A release published before the old pin cannot contain later commits; the range itself is decided by the tag commit.
     releases = [
         r
         for r in paged(f"/repos/{slug}/releases")
         if r.get("published_at")
-        and start < r["published_at"] <= end[:10] + "T23:59:59Z"
+        and r["published_at"] > start
         and not r["draft"]
-        and r["tag_name"] != old.tag  # the origin release is already part of the previous platform release
+        and in_range(slug, old.ref, r["tag_name"], new.ref)
     ]
     out = [f"## {name}: {old.version_label} -> {new.version_label} ({slug}), module release notes", ""]
     if not releases:
@@ -340,20 +347,21 @@ def main() -> None:
     parser.add_argument("--include-infra", action="store_true", help="Also cover the Associated Infrastructure Modules")
     parser.add_argument(
         "--known-good-ref",
-        help="Git ref to read known_good.json from (default: release tag if it exists, else the working tree), e.g. origin/main",
+        help="Git ref for known_good.json and the evidence of this repository (default: release tag if it exists, else origin/main)",
     )
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
 
-    ref = args.known_good_ref or (args.release if grn._tag_exists(args.release) else None)
+    ref = args.known_good_ref or (args.release if grn._tag_exists(args.release) else "origin/main")
     current = {e.key: (g, e) for g, es in grn.collect(grn.load_known_good(ref)).items() for e in es}
     previous = {e.key: e for es in grn.collect(grn.load_known_good(args.origin)).values() for e in es}
 
     sections = []
     ref_slug = f"eclipse-score/{grn.RELEASE_REPO}"
-    head = args.release if grn._tag_exists(args.release) else "main"
+    # One commit for all evidence of this repository, the same one known_good.json is read from.
+    head = grn._git("rev-parse", f"{ref}^{{commit}}").strip()
     sections.append(render_module("Reference integration", ref_slug, args.origin, head, own_repo=True))
-    sections.append(render_removed_files(args.origin, args.release if grn._tag_exists(args.release) else ref or "HEAD"))
+    sections.append(render_removed_files(args.origin, head))
 
     renamed_from = {new: old for old, new in grn.KEY_ALIASES.items()}
     for key, (group, entry) in current.items():
