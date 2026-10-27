@@ -25,6 +25,11 @@ score_pkg_bundle(
         "//showcases/simple_lifecycle:simple_lifecycle_pkg_files",
         "//showcases/standalone:baselibs_pkg_files",
         "//showcases/lifecycle_comm:lifecycle_comm_pkg_files",
+        "//showcases/lifecycle_kyron:lifecycle_kyron_pkg_files",
+        "//showcases/lifecycle_time:lifecycle_time_pkg_files",
+        "//showcases/kyron_logging:kyron_logging_showcase_pkg_files",
+        "//showcases/lifecycle_time_comm:lifecycle_time_comm_pkg_files",
+        "//showcases/lifecycle_kyron_comm:lifecycle_kyron_comm_pkg_files",
     ],
     package_dir = "showcases",
 )

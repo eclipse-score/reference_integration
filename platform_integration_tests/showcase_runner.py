@@ -19,13 +19,14 @@ logger = logging.getLogger(__name__)
 _CLI = "/showcases/bin/cli"
 
 
-def run_showcases(target, *names: str) -> None:
+def run_showcases(target, *names: str) -> str:
     """Run the named showcases via the showcase entrypoint and assert success.
 
     ``run_score`` in the showcase CLI prints a per-example completion banner
     and exits 0 once every app of an example has been spawned and joined, so
     both the exit code and the banner are checked to confirm the showcase ran
-    end-to-end on the platform.
+    end-to-end on the platform. Returns the combined output so callers can add
+    further module-specific assertions.
     """
     selection = ",".join(names)
     exit_code, out = target.execute(f"{_CLI} --examples='{selection}'")
@@ -36,3 +37,4 @@ def run_showcases(target, *names: str) -> None:
         assert f"Example '{name}' finished successfully" in output, (
             f"Showcase '{name}' did not finish successfully:\n{output}"
         )
+    return output

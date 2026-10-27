@@ -1,0 +1,18 @@
+{
+    "name": "Lifecycle-managed Time and Communication Showcase",
+    "description": "Demonstrates score_lifecycle managing both a score_time vehicle-time reporter and a score_communication IPC example as co-supervised processes: launch_manager starts both, monitors their lifecycle states, and shuts down cleanly. Example takes ~8s.",
+    "apps": [
+        {
+            "path": "/showcases/bin/launch_manager",
+            "dir": "/showcases/data/lifecycle_time_comm",
+            "args": [],
+            "env": {}
+        },
+        {
+            "path": "/showcases/bin/lifecycle_signal.sh",
+            "args": ["launch_manager", "SIGTERM"],
+            "env": {},
+            "delay": 8
+        }
+    ]
+}
