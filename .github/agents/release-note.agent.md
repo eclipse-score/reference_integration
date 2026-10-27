@@ -22,8 +22,10 @@ Read it first and follow it exactly.
   GitHub release notes (all via `collect_changes.py`).
 - List only platform-level new features and breaking changes (see the skill);
   module internals stay in the module release notes, which the note links.
-- DO NOT edit generated parts (Overview, headings and icons, tables); only
-  replace the `AI-FILL` markers.
+- DO NOT edit generated parts (status banner, Overview, headings and icons,
+  tables); only replace the `AI-FILL` markers.
+- DO NOT pass `--status`: the note is a draft while the release tag does not
+  exist and final once it exists (see the skill, "Draft and final").
 - DO NOT overwrite an existing `release_note_score_*.rst` without the user
   asking for it; for comparisons write to a different path.
 - DO NOT commit or push.
@@ -44,7 +46,8 @@ Read it first and follow it exactly.
 6. Append the new file to the `toctree` in
    `docs/s_core_v_1/releases/releases.rst` (explicit order, newest last).
 7. Run the validation checks from the skill.
-8. Report: output path, generator warnings, modules with unreleased pins,
+8. Report: output path, state (draft or final), generator warnings, modules
+   with unreleased pins,
    items left out although they looked relevant, and anything you could not
    verify.
 

@@ -12,8 +12,15 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-S-CORE Platform v0.10 release note
-====================================
+S-CORE Platform v0.10 release note (DRAFT)
+============================================
+
+.. warning::
+
+   **DRAFT - release in progress.** v0.10.0 is not released yet (planned for
+   2026-11-02). This note shows the current state of the integration and changes
+   until the release is published.
+
 
 .. document:: S-CORE v0.10 release note
    :id: doc__score_v010_release_note

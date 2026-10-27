@@ -363,10 +363,27 @@ def _heading(text: str, char: str) -> str:
     return f"{text}\n{char * (len(text) + 2)}"
 
 
+def status_banner(release: str, date: str, status: str) -> str:
+    if status == "draft":
+        return f"""
+.. warning::
+
+   **DRAFT - release in progress.** {release} is not released yet (planned for
+   {date}). This note shows the current state of the integration and changes
+   until the release is published.
+"""
+    return f"""
+.. note::
+
+   **FINAL - released.** This is the release note of the published release
+   `{release} <{ORG_URL}/{RELEASE_REPO}/releases/tag/{release}>`__.
+"""
+
+
 def render(release: str, origin: str, date: str, status: str, groups: dict[str, list[Entry]], ref: str | None) -> str:
     short = ".".join(release.removeprefix("v").split(".")[:2])
     doc_id = "v" + short.replace(".", "")
-    title = f"S-CORE Platform v{short} release note"
+    title = f"S-CORE Platform v{short} release note" + (" (DRAFT)" if status == "draft" else "")
     release_url = f"{ORG_URL}/{RELEASE_REPO}"
 
     header = """..
@@ -386,6 +403,7 @@ def render(release: str, origin: str, date: str, status: str, groups: dict[str, 
     parts = [
         header,
         _heading(title, "="),
+        status_banner(release, date, status),
         f"""
 .. document:: S-CORE v{short} release note
    :id: doc__score_{doc_id}_release_note
@@ -489,7 +507,11 @@ def main() -> None:
         "--date",
         help="Override the release date YYYY-MM-DD (default: due date of the milestone in eclipse-score/score)",
     )
-    parser.add_argument("--status", default="draft", choices=["draft", "valid"])
+    parser.add_argument(
+        "--status",
+        choices=["draft", "valid"],
+        help="draft = release in progress, valid = final (default: valid if the release tag exists, else draft)",
+    )
     parser.add_argument("--changes", action="store_true", help="Print module version changes instead of the skeleton")
     parser.add_argument("--output", type=Path, help="Write to file instead of stdout")
     args = parser.parse_args()
@@ -501,7 +523,8 @@ def main() -> None:
         text = render_changes(collect(load_known_good(args.origin)), groups)
     else:
         date = args.date or milestone_date(args.release)
-        text = render(args.release, args.origin, date, args.status, groups, ref)
+        status = args.status or ("valid" if _tag_exists(args.release) else "draft")
+        text = render(args.release, args.origin, date, status, groups, ref)
 
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)

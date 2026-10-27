@@ -15,6 +15,7 @@ runs the procedure; this skill holds the rules.
 
 | Section | Source | Written by |
 |---|---|---|
+| Status banner directly below the title: **DRAFT** (`.. warning::`, title suffix "(DRAFT)", `:status: draft`) or **FINAL** (`.. note::` with link to the GitHub release, `:status: valid`) | release tag exists? | script |
 | Header (`document` directive, Platform Name, Release Tag, Origin Release Tag, Release Date) | CLI args; Release Date = due date of the milestone `v<major>.<minor>` in [eclipse-score/score](https://github.com/eclipse-score/score/milestones) | script |
 | Overview (fixed intro sentence) | release and origin tag | script |
 | Disclaimer | fixed text | script |
@@ -48,6 +49,22 @@ Image table: the image catalogue (`IMAGES` in the script) lists name,
 `images/<dir>` exists at the release ref. Tarball is a release asset whose name
 contains the image directory name, else `---`. How-to is the first candidate that exists at the ref, else `---`.
 When an image is added or renamed in `images/`, update `IMAGES`.
+
+## Draft and final
+
+A note has one of two states, chosen by the generator from the release tag
+(override with `--status draft|valid`):
+
+- **Draft** while the release is in progress (tag does not exist yet): the note
+  shows the current state, read from `origin/main`. Title suffix "(DRAFT)", a
+  warning banner on top and `:status: draft`.
+- **Final** once the release is published (tag exists): the note shows the state
+  of the tag. No title suffix, a note banner with the link to the GitHub
+  release and `:status: valid`.
+
+When the tag is created, refresh the draft as described in "Run from scratch"
+(regenerate without `--status`, keep the reviewed narrative); the banner, title
+and status switch to final automatically.
 
 ## Generator
 
@@ -101,7 +118,7 @@ The procedure is identical for existing and new releases; only the inputs differ
 
 An existing note is never overwritten unless the user asks for it; to compare,
 write to another path. To refresh the tables of an existing draft (for example
-after pin bumps, or with `--status valid` once the tag exists), generate to
+after pin bumps, or to make it final once the tag exists), generate to
 another path and replace everything outside "Changes to the Platform"; keep the
 reviewed narrative.
 
