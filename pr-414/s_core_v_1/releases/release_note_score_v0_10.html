@@ -1,0 +1,977 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>S-CORE Platform v0.10 release note &#8212; REF_INT  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/score.css?v=415257cb" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/score_needs.css?v=82a1844f" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/score_design.css?v=8048e6ee" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-needs/modern.css?v=803738c0" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=f420dc51" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
+
+    <script src="../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../_static/documentation_options.js?v=7f41d439"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/sphinx-data-viewer/jsonview.bundle.js?v=18cd53c5"></script>
+    <script src="../../_static/sphinx-data-viewer/jsonview_loader.js?v=f7ff7e7d"></script>
+    <script src="../../_static/sphinx-needs/libs/html/datatables.min.js?v=8a4aee21"></script>
+    <script src="../../_static/sphinx-needs/libs/html/datatables_loader.js?v=a2cae175"></script>
+    <script src="../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js?v=dca66431"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 's_core_v_1/releases/release_note_score_v0_10';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.21.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-score.github.io/reference_integration/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="S-CORE v1.0 Roadmap" href="../roadmap/roadmap.html" />
+    <link rel="prev" title="S-CORE Platform v0.9 release note" href="release_note_score_v0_9.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Eclipse S-CORE</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../modules/index.html">
+    Modules
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../verification_report/index.html">
+    Verification Reports
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../status_dashboard.html">
+    Integration Status
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    S-Core v1.0
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="releases.html">
+    Releases
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../integration_process/integration_process.html">
+    Integration Process
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../process_methods_tools/index.html">
+    Process & Tools
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../modules/index.html">
+    Modules
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../verification_report/index.html">
+    Verification Reports
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../status_dashboard.html">
+    Integration Status
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    S-Core v1.0
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="releases.html">
+    Releases
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../integration_process/integration_process.html">
+    Integration Process
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../process_methods_tools/index.html">
+    Process & Tools
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="releases.html">Releases</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="release_note_score_v0_5_alpha.html">S-CORE Platform v0.5-alpha release note</a></li>
+<li class="toctree-l2"><a class="reference internal" href="release_note_score_v0_5_beta.html">S-CORE Platform v0.5-beta release note</a></li>
+<li class="toctree-l2"><a class="reference internal" href="release_note_score_v0_6.html">S-CORE Platform v0.6 release note</a></li>
+<li class="toctree-l2"><a class="reference internal" href="release_note_score_v0_7.html">S-CORE Platform v0.7 release note</a></li>
+<li class="toctree-l2"><a class="reference internal" href="release_note_score_v0_8.html">S-CORE Platform v0.8 release note</a></li>
+<li class="toctree-l2"><a class="reference internal" href="release_note_score_v0_9.html">S-CORE Platform v0.9 release note</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">S-CORE Platform v0.10 release note</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap/roadmap.html">Roadmap</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">S-Core v1.0</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="releases.html" class="nav-link">Releases</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">S-CORE Platform v0.10 release note</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="s-core-platform-v0-10-release-note">
+<h1>S-CORE Platform v0.10 release note<a class="headerlink" href="#s-core-platform-v0-10-release-note" title="Link to this heading">#</a></h1>
+<div class="need_container docutils container" id="SNCB-d1c9cb98">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__score_v010_release_note">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">S-CORE v0.10 release note</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">draft</span></span></span></div>
+<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">YES</span></span></span></div>
+<div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">QM</span></span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">realizes: <span class="realizes"><span><a class="reference internal" href="../../process_methods_tools/score_process_description/process_areas/release_management/release_workproducts.html#wp__platform_sw_release_note" title="doc__score_v010_release_note">wp__platform_sw_release_note</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#doc__score_v010_release_note" title="doc__score_v010_release_note">doc__score_v010_release_note</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Generic Document</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Platform Name:</strong> S-CORE</div>
+<div class="line"><strong>Release Tag:</strong> v0.10.0</div>
+<div class="line"><strong>Origin Release Tag:</strong> v0.9.0</div>
+<div class="line"><strong>Release Date:</strong> 2026-11-02</div>
+</div>
+<section id="overview">
+<h2>📋 Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>This document provides an overview of the changes, improvements, and bug fixes
+included in the software platform release version v0.10.0 as compared to the
+previous platform release (v0.9.0).</p>
+<section id="disclaimer">
+<h3>📜 Disclaimer<a class="headerlink" href="#disclaimer" title="Link to this heading">#</a></h3>
+<p>This release note does not “release for production”, as it does not come with a
+safety argumentation and a performed safety assessment.
+The work products compiled in the safety package are created with care according
+to a process satisfying standards, but the project, being a non-profit and open
+source organization, can not take over any liability for its content.</p>
+</section>
+</section>
+<section id="changes-to-the-platform">
+<h2>🔄 Changes to the Platform<a class="headerlink" href="#changes-to-the-platform" title="Link to this heading">#</a></h2>
+<section id="new-features">
+<h3>✨ New Features<a class="headerlink" href="#new-features" title="Link to this heading">#</a></h3>
+<section id="sbom-generation">
+<h4>SBOM Generation<a class="headerlink" href="#sbom-generation" title="Link to this heading">#</a></h4>
+<p>Added generation of a Software Bill of Materials for the product dependencies
+(SPDX and CycloneDX) and for the build tools (SPDX), see the “Software Bill of
+Materials” section of the README (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/304">PR #304</a>).</p>
+</section>
+<section id="module-integration-tests">
+<h4>Module Integration Tests<a class="headerlink" href="#module-integration-tests" title="Link to this heading">#</a></h4>
+<p>Added module integration tests for Lifecycle, Logging and Persistency to the
+reference integration, so that their requirement coverage appears in the
+verification reports (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/385">PR #385</a>, <a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/387">PR #387</a>,
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/388">PR #388</a>).</p>
+</section>
+<section id="dr-008-integration-workflow">
+<h4>DR-008 Integration Workflow<a class="headerlink" href="#dr-008-integration-workflow" title="Link to this heading">#</a></h4>
+<p>Added the DR-008 integration workflow (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/398">PR #398</a>), building on the
+resolved-dependency override mechanism introduced in v0.9.</p>
+</section>
+<section id="documentation-and-verification-reports">
+<h4>Documentation and Verification Reports<a class="headerlink" href="#documentation-and-verification-reports" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p>The documentation of the Time module is part of the integrated documentation
+(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/348">PR #348</a>).</p></li>
+<li><p>The module verification reports of Logging and Lifecycle are linked from the
+verification report overview (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/367">PR #367</a>, <a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/373">PR #373</a>).</p></li>
+<li><p>The Unit Tests and Coverage summaries are nested under the Platform
+Verification Report (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/358">PR #358</a>).</p></li>
+</ul>
+</section>
+</section>
+<section id="breaking-changes">
+<h3>💥 Breaking Changes<a class="headerlink" href="#breaking-changes" title="Link to this heading">#</a></h3>
+<section id="baselibs">
+<h4>Baselibs<a class="headerlink" href="#baselibs" title="Link to this heading">#</a></h4>
+<p>Baselibs is integrated at a commit after <code class="docutils literal notranslate"><span class="pre">v0.2.14</span></code> and contains breaking
+changes of <code class="docutils literal notranslate"><span class="pre">v0.2.13</span></code> and <code class="docutils literal notranslate"><span class="pre">v0.2.14</span></code> (see the <a class="reference external" href="https://github.com/eclipse-score/baselibs/releases">Baselibs release notes</a>):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">score/datetime_converter</span></code> was removed (<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/471">PR #471</a>). Use
+POSIX or C library time APIs instead.</p></li>
+<li><p>The unused <code class="docutils literal notranslate"><span class="pre">score/os</span></code> libraries <code class="docutils literal notranslate"><span class="pre">cpuid</span></code>, <code class="docutils literal notranslate"><span class="pre">file_stream</span></code> and <code class="docutils literal notranslate"><span class="pre">make_dev</span></code>
+were removed (<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/535">PR #535</a>).</p></li>
+<li><p>The deprecated <code class="docutils literal notranslate"><span class="pre">//src</span></code> Bazel aliases and the string and atomic shims in
+<code class="docutils literal notranslate"><span class="pre">//score/memory</span></code> were removed (<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/598">PR #598</a>). Use the
+replacement targets.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">score::flatbuffers::LoadBuffer</span></code> now takes <code class="docutils literal notranslate"><span class="pre">score::cpp::pmr::vector&lt;uint8_t&gt;</span></code>
+instead of <code class="docutils literal notranslate"><span class="pre">std::pmr::vector&lt;uint8_t&gt;</span></code> (<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/603">PR #603</a>).</p></li>
+</ul>
+<p>No usage of the removed APIs was found in the configuration of the reference
+integration. Action required: adapt own code that uses them.</p>
+</section>
+</section>
+</section>
+<section id="reference-integration-scope">
+<h2>🎯 Reference Integration scope<a class="headerlink" href="#reference-integration-scope" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Version:</strong> <code class="docutils literal notranslate"><span class="pre">v0.10.0</span></code></p></li>
+<li><p><strong>Source / tag:</strong> <a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/v0.10.0">Reference integration</a></p></li>
+<li><p><strong>Release notes:</strong> <a class="reference external" href="https://github.com/eclipse-score/reference_integration/releases/tag/v0.10.0">Reference integration release notes</a></p></li>
+<li><p><strong>Platform Verification Report:</strong> <a class="reference internal" href="../../verification_report/platform_verification_report.html#doc__platform_verification_report_latest" title="doc__platform_verification_report_latest"><em class="xref need">Platform Verification Report (doc__platform_verification_report_latest)</em></a></p></li>
+</ul>
+<section id="integrated-software-modules">
+<h3>🧩 Integrated Software Modules<a class="headerlink" href="#integrated-software-modules" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 15.0%" />
+<col style="width: 25.0%" />
+<col style="width: 35.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Version</p></th>
+<th class="head"><p>Release notes</p></th>
+<th class="head"><p>Module verification report</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/score/tree/v0.7.2">Platform</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">v0.7.2</span></code></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/score/releases/tag/v0.7.2">Release notes</a></p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/baselibs/tree/ee40fece5abacb28ea641b448446a04175038b17">Baselibs</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ee40fec</span> <span class="pre">(unreleased)</span></code></p></td>
+<td><p>—</p></td>
+<td><p><a class="reference internal" href="../../modules/score_baselibs/verification_report/module_verification_report.html"><span class="doc">Verification report</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/communication/tree/313f1178628189d267c8cd0d75971bdac04c20ee">Communication</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">313f117</span> <span class="pre">(unreleased)</span></code></p></td>
+<td><p>—</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/persistency/tree/961c0a0989755a1e0fe8de55e83c0a44e2e20b56">Persistency</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">961c0a0</span> <span class="pre">(unreleased)</span></code></p></td>
+<td><p>—</p></td>
+<td><p><a class="reference internal" href="../../modules/score_persistency/verification_report/module_verification_report.html"><span class="doc">Verification report</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/kyron/tree/90fb90258f49f17a504d41262634d43608f28ccc">Kyron</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">90fb902</span> <span class="pre">(unreleased)</span></code></p></td>
+<td><p>—</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/lifecycle/tree/85da2168328d17a3cf53791ebf93534e5ed921fc">Lifecycle</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">85da216</span> <span class="pre">(unreleased)</span></code></p></td>
+<td><p>—</p></td>
+<td><p><a class="reference internal" href="../../modules/score_lifecycle/verification_report/index.html"><span class="doc">Verification report</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/logging/tree/3d9896611baf4e0d018032e5cb999941b2602dbd">Logging</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">3d98966</span> <span class="pre">(unreleased)</span></code></p></td>
+<td><p>—</p></td>
+<td><p><a class="reference internal" href="../../modules/score_logging/verification_report/module_verification_report.html"><span class="doc">Verification report</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/time/tree/3723ce687e4abc7d6cb4c0efdbbd30455ed7c303">Time</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">3723ce6</span> <span class="pre">(unreleased)</span></code></p></td>
+<td><p>—</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/config_management/tree/d0dab01ae408ceb8ec65344e93d8a51d8173da81">Configuration Management</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">d0dab01</span> <span class="pre">(unreleased)</span></code></p></td>
+<td><p>—</p></td>
+<td><p>—</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="associated-infrastructure-modules">
+<h3>🔧 Associated Infrastructure Modules<a class="headerlink" href="#associated-infrastructure-modules" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 25.0%" />
+<col style="width: 45.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Version</p></th>
+<th class="head"><p>Release notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/score-crates/tree/v0.0.11">Crates</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">v0.0.11</span></code></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/score-crates/releases/tag/v0.0.11">Release notes</a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/itf/tree/v0.6.0">ITF (Integration Testing Framework)</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">v0.6.0</span></code></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/itf/releases/tag/v0.6.0">Release notes</a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/tools/tree/4b48cec400c67be75cfc3fa4658ac6a0489bf7a8">Tools</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">4b48cec</span> <span class="pre">(unreleased)</span></code></p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/tooling/tree/v2.2.3">Tooling</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">v2.2.3</span></code></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/tooling/releases/tag/v2.2.3">Release notes</a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/bazel_platforms/tree/v1.1.0">Bazel Platforms</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">v1.1.0</span></code></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/bazel_platforms/releases/tag/v1.1.0">Release notes</a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/testing_tools/tree/v0.4.1">Test Scenarios</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">v0.4.1</span></code></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/testing_tools/releases/tag/v0.4.1">Release notes</a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/docs-as-code/tree/v8.4.0">Docs-as-code</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">v8.4.0</span></code></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/docs-as-code/releases/tag/v8.4.0">Release notes</a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/process_description/tree/v2.1.2">Process description</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">v2.1.2</span></code></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/process_description/releases/tag/v2.1.2">Release notes</a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/bazel_cpp_toolchains/tree/v1.0.3">Bazel CPP Toolchain</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">v1.0.3</span></code></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/bazel_cpp_toolchains/releases/tag/v1.0.3">Release notes</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="images">
+<h3>💿 Images<a class="headerlink" href="#images" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Tarball</p></th>
+<th class="head"><p>How-to</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Reference Linux x86_64 image</p></td>
+<td><p>—</p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/v0.10.0/README.md#run-showcases">How-to</a></p></td>
+<td><p>Linux x86_64 Docker image bundling the S-CORE showcases.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Reference QNX x86_64 image</p></td>
+<td><p>—</p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/v0.10.0/runners/qemu_x86_64/README.md">How-to</a></p></td>
+<td><p>QNX x86_64 image, run in QEMU.</p></td>
+</tr>
+<tr class="row-even"><td><p>Reference QNX aarch64 image</p></td>
+<td><p>—</p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/v0.10.0/README.md#build-and-deploy-showcases-on-raspberry-pi-qnx-aarch64">How-to</a></p></td>
+<td><p>QNX 8.0 aarch64 image, run in QEMU or on Raspberry Pi 4/5.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Reference Red Hat AutoSD Linux image (Experimental)</p></td>
+<td><p>—</p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/v0.10.0/README.md#operating-system-integrations">How-to</a></p></td>
+<td><p>Red Hat AutoSD x86_64 image.</p></td>
+</tr>
+<tr class="row-even"><td><p>Reference Elektrobit corbos Linux for Safety Applications image (Experimental)</p></td>
+<td><p>—</p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/v0.10.0/images/ebclfsa_aarch64/README.md">How-to</a></p></td>
+<td><p>Elektrobit corbos Linux for Safety Applications (aarch64) image.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="known-issues-vulnerabilities-and-bug-fixes">
+<h3>🐞 Known Issues/Vulnerabilities and Bug Fixes<a class="headerlink" href="#known-issues-vulnerabilities-and-bug-fixes" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>See release notes of every module separately</p></li>
+</ul>
+</section>
+<section id="upgrade-instructions">
+<h3>🚀 Upgrade Instructions<a class="headerlink" href="#upgrade-instructions" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Modules shown as <em>(unreleased)</em> are pinned to a commit and have no registry version; use the commit from known_good.json.</p></li>
+<li><p>Versions can be found under: <a class="github reference external" href="https://github.com/eclipse-score/reference_integration/blob/v0.10.0/known_good.json">eclipse-score/reference_integration</a></p></li>
+</ul>
+</section>
+<section id="contact-information">
+<h3>📧 Contact Information<a class="headerlink" href="#contact-information" title="Link to this heading">#</a></h3>
+<p>For any questions or support, please contact the <em>Project leads</em> or raise an issue/discussion.
+<a class="reference external" href="https://projects.eclipse.org/projects/automotive.score">https://projects.eclipse.org/projects/automotive.score</a></p>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="release_note_score_v0_9.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">S-CORE Platform v0.9 release note</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../roadmap/roadmap.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">S-CORE v1.0 Roadmap</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">📋 Overview</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#disclaimer">📜 Disclaimer</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#changes-to-the-platform">🔄 Changes to the Platform</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#new-features">✨ New Features</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sbom-generation">SBOM Generation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#module-integration-tests">Module Integration Tests</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dr-008-integration-workflow">DR-008 Integration Workflow</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation-and-verification-reports">Documentation and Verification Reports</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#breaking-changes">💥 Breaking Changes</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#baselibs">Baselibs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reference-integration-scope">🎯 Reference Integration scope</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integrated-software-modules">🧩 Integrated Software Modules</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#associated-infrastructure-modules">🔧 Associated Infrastructure Modules</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#images">💿 Images</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#known-issues-vulnerabilities-and-bug-fixes">🐞 Known Issues/Vulnerabilities and Bug Fixes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#upgrade-instructions">🚀 Upgrade Instructions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#contact-information">📧 Contact Information</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
