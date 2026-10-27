@@ -27,12 +27,14 @@ Read it first and follow it exactly.
 - DO NOT overwrite an existing `release_note_score_*.rst` without the user
   asking for it; for comparisons write to a different path.
 - DO NOT commit or push.
-- ALWAYS surface generator warnings (missing tags, unreleased pins) to the user.
+- ALWAYS surface generator warnings (missing tags, unreleased pins, missing
+  milestone) to the user.
 
 ## Workflow
 
-1. Resolve `release` and `origin` tags from the argument. If the release tag
-   does not exist yet, ask for the planned release date.
+1. Resolve `release` and `origin` tags from the argument. The release date
+   comes from the milestone `v<major>.<minor>` in eclipse-score/score (the
+   generator reads it); do not ask for it and do not pass `--date`.
 2. Prepare: `git fetch origin main --tags`; for an untagged release use
    `--known-good-ref origin/main` in both scripts.
 3. Run the generator to create the skeleton and the `--changes` table.

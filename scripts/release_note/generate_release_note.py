@@ -20,11 +20,14 @@ Examples:
     # Skeleton for an already tagged release (known_good.json is read from the tag)
     python3 scripts/release_note/generate_release_note.py --release v0.8.0 --origin v0.7.0
 
-    # Skeleton for an upcoming release (known_good.json is read from the working tree)
-    python3 scripts/release_note/generate_release_note.py --release v0.10.0 --origin v0.9.0 --date 2026-11-02
+    # Skeleton for an upcoming release (known_good.json is read from origin/main)
+    python3 scripts/release_note/generate_release_note.py --release v0.10.0 --origin v0.9.0 --known-good-ref origin/main
 
     # Module version changes between the two releases
     python3 scripts/release_note/generate_release_note.py --release v0.8.0 --origin v0.7.0 --changes
+
+The release date is the due date of the milestone ``v<major>.<minor>`` in the
+eclipse-score/score repository.
 """
 
 from __future__ import annotations
@@ -42,6 +45,8 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 ORG_URL = "https://github.com/eclipse-score"
 RELEASE_REPO = "reference_integration"
+# Repository whose milestones v<major>.<minor> carry the planned platform release dates.
+MILESTONE_REPO = "score"
 
 # known_good.json group -> section title; score_platform is moved from "tooling" to "target_sw".
 PLATFORM_MODULE = "score_platform"
@@ -281,14 +286,28 @@ def _howto(ref: str | None, release: str, candidates: list[tuple[str, str | None
     return None
 
 
-def release_assets(release: str) -> list[dict]:
-    url = f"https://api.github.com/repos/eclipse-score/{RELEASE_REPO}/releases/tags/{release}"
-    request = urllib.request.Request(url)
+def _github_get(path: str) -> object:
+    request = urllib.request.Request(f"https://api.github.com{path}", headers={"Accept": "application/vnd.github+json"})
     if token := os.environ.get("GITHUB_TOKEN") or os.environ.get("GITHUB_PAT"):
         request.add_header("Authorization", f"Bearer {token}")
+    with urllib.request.urlopen(request, timeout=30) as response:
+        return json.load(response)
+
+
+def milestone_date(release: str) -> str:
+    """Due date of the milestone v<major>.<minor> in the S-CORE repository, e.g. v0.10.0 -> milestone v0.10."""
+    title = "v" + ".".join(release.removeprefix("v").split(".")[:2])
+    milestones = _github_get(f"/repos/eclipse-score/{MILESTONE_REPO}/milestones?state=all&per_page=100")
+    due = next((m["due_on"] for m in milestones if m["title"] == title and m["due_on"]), None)
+    if due is None:
+        print(f"warning: no milestone {title} with a due date in eclipse-score/{MILESTONE_REPO}", file=sys.stderr)
+        return "TBD"
+    return due[:10]
+
+
+def release_assets(release: str) -> list[dict]:
     try:
-        with urllib.request.urlopen(request, timeout=30) as response:
-            return json.load(response).get("assets", [])
+        return _github_get(f"/repos/eclipse-score/{RELEASE_REPO}/releases/tags/{release}").get("assets", [])
     except OSError:
         return []  # release not published yet
 
@@ -466,7 +485,10 @@ def main() -> None:
         "--known-good-ref",
         help="Git ref to read known_good.json from (default: release tag if it exists, else working tree)",
     )
-    parser.add_argument("--date", help="Release date YYYY-MM-DD (default: tag date if the tag exists, else TBD)")
+    parser.add_argument(
+        "--date",
+        help="Override the release date YYYY-MM-DD (default: due date of the milestone in eclipse-score/score)",
+    )
     parser.add_argument("--status", default="draft", choices=["draft", "valid"])
     parser.add_argument("--changes", action="store_true", help="Print module version changes instead of the skeleton")
     parser.add_argument("--output", type=Path, help="Write to file instead of stdout")
@@ -478,11 +500,7 @@ def main() -> None:
     if args.changes:
         text = render_changes(collect(load_known_good(args.origin)), groups)
     else:
-        date = args.date or (
-            _git("log", "-1", "--format=%cs", f"{args.release}^{{commit}}").strip()
-            if _tag_exists(args.release)
-            else "TBD"
-        )
+        date = args.date or milestone_date(args.release)
         text = render(args.release, args.origin, date, args.status, groups, ref)
 
     if args.output:

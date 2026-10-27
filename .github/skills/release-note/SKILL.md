@@ -15,7 +15,7 @@ runs the procedure; this skill holds the rules.
 
 | Section | Source | Written by |
 |---|---|---|
-| Header (`document` directive, Platform Name, Release Tag, Origin Release Tag, Release Date) | CLI args, tag date | script |
+| Header (`document` directive, Platform Name, Release Tag, Origin Release Tag, Release Date) | CLI args; Release Date = due date of the milestone `v<major>.<minor>` in [eclipse-score/score](https://github.com/eclipse-score/score/milestones) | script |
 | Overview (fixed intro sentence) | release and origin tag | script |
 | Disclaimer | fixed text | script |
 | Changes to the Platform: New Features / Breaking Changes (platform-level only) | `collect_changes.py` (this repo's PRs, modules' own release notes, impact hints), `--changes` table | AI |
@@ -54,7 +54,7 @@ When an image is added or renamed in `images/`, update `IMAGES`.
 ```bash
 # Skeleton (known_good.json is read from the release tag if it exists, else the working tree)
 python3 scripts/release_note/generate_release_note.py --release vX.Y.0 --origin vX.W.0 \
-    --date YYYY-MM-DD --output docs/s_core_v_1/releases/release_note_score_vX_Y.rst
+    --output docs/s_core_v_1/releases/release_note_score_vX_Y.rst
 
 # Module version changes origin -> release (input for the narrative)
 python3 scripts/release_note/generate_release_note.py --release vX.Y.0 --origin vX.W.0 --changes
@@ -66,6 +66,11 @@ Behaviour worth knowing:
   `version` pin maps to `v<ver>` or `<ver>`; a `hash` pin maps to a tag only if
   one points exactly at that commit, otherwise the row shows `<sha7> (unreleased)`,
   links the commit and has no release-notes link.
+- The Release Date is always the due date of the milestone `v<major>.<minor>`
+  (for `vX.Y.0`: milestone `vX.Y`) in eclipse-score/score. Do not pass `--date`;
+  it only exists as an override when the user asks for a different date. If
+  the milestone or its due date is missing, the script warns and writes `TBD`;
+  report this instead of guessing a date.
 - Warnings (`no tag for version ...`) on stderr mean a broken link. Fix the
   `known_good.json` pin or report it, never silence it.
 - Modules with `"enabled": false` are skipped.
@@ -77,9 +82,9 @@ Behaviour worth knowing:
 
 The procedure is identical for existing and new releases; only the inputs differ.
 
-1. **Inputs.** `release` and `origin` tag, output file
-   `docs/s_core_v_1/releases/release_note_score_v<major>_<minor>.rst`, and the
-   planned release date if the release tag does not exist yet.
+1. **Inputs.** `release` and `origin` tag and the output file
+   `docs/s_core_v_1/releases/release_note_score_v<major>_<minor>.rst`. The
+   release date is taken from the milestone (see above).
 2. **Prepare.** `git fetch origin main --tags`. For an upcoming release read
    `known_good.json` from `origin/main` with `--known-good-ref origin/main`
    (the working tree stays untouched). Set `GITHUB_TOKEN` for the GitHub API
