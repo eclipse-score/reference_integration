@@ -16,7 +16,7 @@ runs the procedure; this skill holds the rules.
 | Section | Source | Written by |
 |---|---|---|
 | Header (`document` directive, Platform Name, Release Tag, Origin Release Tag, Release Date) | CLI args, tag date | script |
-| Overview (fixed intro sentence only, no summary of the changes) | release and origin tag | script |
+| Overview (fixed intro sentence) | release and origin tag | script |
 | Disclaimer | fixed text | script |
 | Changes to the Platform: New Features / Breaking Changes (platform-level only) | `collect_changes.py` (this repo's PRs, modules' own release notes, impact hints), `--changes` table | AI |
 | Reference Integration scope: Version, Source / tag, Release notes, Platform Verification Report (bullets) | release tag | script |
@@ -29,12 +29,10 @@ The scope section describes this repository (reference_integration) and holds
 links only; no change narrative. Changes of this repository and of the images
 go into **Changes to the Platform**.
 
-Every chapter heading carries an icon (emoji) so that readers recognise the
-topic at a glance. The mapping is `ICONS` in the script. The script also makes
-the heading underline longer, because emoji are double-width and docutils would
-warn about a too short underline (warnings are errors in the docs build). Use
-the same mechanism when adding a chapter; do not add icons to the `~~~` item
-subsections or to the title.
+Every chapter heading carries an icon (emoji); the mapping is `ICONS` in the
+script. When adding a chapter, add its icon there instead of typing it into the
+heading (the script also lengthens the underline for the double-width emoji).
+The title and the `~~~` item subsections have no icon.
 
 Module tables have the columns **Name** (link to the repo at the pinned
 tag/commit), **Version**, **Release notes** (link to the GitHub release of that
@@ -48,19 +46,18 @@ Never write module versions or links by hand.
 Image table: the image catalogue (`IMAGES` in the script) lists name,
 `images/<dir>`, description and how-to candidates. An image is listed only if
 `images/<dir>` exists at the release ref. Tarball is a release asset whose name
-contains the image directory name, else `---` (currently no image tarballs are
-published). How-to is the first candidate that exists at the ref, else `---`.
+contains the image directory name, else `---`. How-to is the first candidate that exists at the ref, else `---`.
 When an image is added or renamed in `images/`, update `IMAGES`.
 
 ## Generator
 
 ```bash
 # Skeleton (known_good.json is read from the release tag if it exists, else the working tree)
-python3 scripts/release_note/generate_release_note.py --release v0.10.0 --origin v0.9.0 \
-    --date 2026-11-02 --output docs/s_core_v_1/releases/release_note_score_v0_10.rst
+python3 scripts/release_note/generate_release_note.py --release vX.Y.0 --origin vX.W.0 \
+    --date YYYY-MM-DD --output docs/s_core_v_1/releases/release_note_score_vX_Y.rst
 
 # Module version changes origin -> release (input for the narrative)
-python3 scripts/release_note/generate_release_note.py --release v0.10.0 --origin v0.9.0 --changes
+python3 scripts/release_note/generate_release_note.py --release vX.Y.0 --origin vX.W.0 --changes
 ```
 
 Behaviour worth knowing:
@@ -73,38 +70,36 @@ Behaviour worth knowing:
   `known_good.json` pin or report it, never silence it.
 - Modules with `"enabled": false` are skipped.
 - Unknown `known_good.json` groups abort the run; extend `SECTIONS` then.
-- Narrative sections are emitted as `.. AI-FILL: <instruction>` comments
-  (only New Features and Breaking Changes; Overview has no AI text).
+- The two narrative sections (New Features, Breaking Changes) are emitted as
+  `.. AI-FILL: <instruction>` comments.
 
 ## Run from scratch (any release, also for not yet tagged ones)
 
 The procedure is identical for existing and new releases; only the inputs differ.
 
-1. **Inputs.** `release` and `origin` tag (for example `v0.10.0` / `v0.9.0`),
-   output file `docs/s_core_v_1/releases/release_note_score_v<major>_<minor>.rst`.
-   Planned release date if the release tag does not exist yet.
-2. **Prepare.** `git fetch origin main --tags`. The local `main` may be behind;
-   for an upcoming release read `known_good.json` from `origin/main` with
-   `--known-good-ref origin/main` (the working tree stays untouched). Export
-   `GITHUB_PAT` for the GitHub API calls of `collect_changes.py` (anonymous
-   access is rate limited); never print it.
+1. **Inputs.** `release` and `origin` tag, output file
+   `docs/s_core_v_1/releases/release_note_score_v<major>_<minor>.rst`, and the
+   planned release date if the release tag does not exist yet.
+2. **Prepare.** `git fetch origin main --tags`. For an upcoming release read
+   `known_good.json` from `origin/main` with `--known-good-ref origin/main`
+   (the working tree stays untouched). Set `GITHUB_TOKEN` for the GitHub API
+   calls (anonymous access is rate limited); never print it.
 3. **Skeleton.** Run the generator (see above). Check the stderr warnings.
 4. **Evidence.** Run `collect_changes.py` with the same `--release`, `--origin`
    and `--known-good-ref`, plus the `--changes` table. Runtime is a few minutes.
 5. **Narrative.** Replace the two `AI-FILL` markers (New Features, Breaking
    Changes) with the rules below. Nothing else in the file is written by hand.
 6. **Index.** `docs/s_core_v_1/releases/releases.rst` lists the notes in an
-   explicit order (a glob would sort `v0_10` before `v0_5`); append the new file
-   at the end of that `toctree`.
+   explicit order (oldest first); append the new file at the end of that
+   `toctree`.
 7. **Validate** (checklist below) and report.
 
 An existing note is never overwritten unless the user asks for it; to compare,
-write to another path (for example under `/tmp`).
+write to another path.
 
 Re-running with the same inputs gives the same tables and chapter structure.
-The narrative may be worded differently, but it has to name the same items if
-the evidence did not change; when in doubt, keep the items and cite the same
-PRs.
+The narrative may be worded differently, but it has to name the same items as
+long as the evidence did not change.
 
 ## Writing the narrative (AI-FILL)
 
@@ -118,12 +113,11 @@ What is platform-level:
 1. Module set: newly integrated, removed or renamed modules and major version
    jumps (from the `--changes` table of `generate_release_note.py`).
 2. Changes of this repository (reference_integration): new or changed images and
-   platforms, Bazel/toolchain updates, build and integration mechanisms (for
-   example the resolved-dependency override), new demos, documentation or
-   process deliverables.
-3. Cross-module changes: the same change in several modules (for example all of
-   them moving from `baselibs_rust` to `baselibs`). Identical PR titles in
-   several repos, or a module's release note, point to them.
+   platforms, Bazel/toolchain updates, build and integration mechanisms, new
+   demos, documentation or process deliverables.
+3. Cross-module changes: the same change in several modules (for example a
+   dependency that all modules replace). Identical PR titles in several repos,
+   or a module's release note, point to them.
 4. Breaking changes of a module **with impact on integrators or other modules**,
    for example a removed flag that `known_good.json` still sets. Breaking changes
    without such impact stay in the module's own release note.
@@ -131,7 +125,7 @@ What is platform-level:
 Evidence:
 
 ```bash
-python3 scripts/release_note/collect_changes.py --release v0.10.0 --origin v0.9.0 --output /tmp/changes.md
+python3 scripts/release_note/collect_changes.py --release vX.Y.0 --origin vX.W.0 --output changes.md
 ```
 
 The output has one section for the merged PRs and closed issues of this
@@ -156,10 +150,8 @@ Classification:
 - **New feature**: new module, platform, image, integration capability or
   deliverable; or a module feature that is visible across the platform.
 - Anything else is omitted. When unsure, omit it and name it in the final report.
-- Labels like `breaking` or `feature` are rare in the repositories and not
-  reliable; decide from title, description and the module's release note. If
-  `release-note:*` labels or a `release-note` block exist in a PR, they take
-  precedence.
+- PR labels like `breaking` or `feature` are not used consistently; decide from
+  title, description and the module's release note.
 
 Rules:
 

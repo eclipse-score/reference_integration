@@ -22,8 +22,8 @@ Read it first and follow it exactly.
   GitHub release notes (all via `collect_changes.py`).
 - List only platform-level new features and breaking changes (see the skill);
   module internals stay in the module release notes, which the note links.
-- DO NOT write a summary into the Overview chapter and DO NOT remove the
-  chapter icons from the headings; both are fixed by the generator.
+- DO NOT edit generated parts (Overview, headings and icons, tables); only
+  replace the `AI-FILL` markers.
 - DO NOT overwrite an existing `release_note_score_*.rst` without the user
   asking for it; for comparisons write to a different path.
 - DO NOT commit or push.
@@ -45,5 +45,4 @@ Read it first and follow it exactly.
 8. Report: output path, generator warnings, modules with unreleased pins,
    and anything you could not verify.
 
-The skill section "Run from scratch" has the exact commands; the run needs no
-earlier conversation or temporary files.
+The skill section "Run from scratch" has the exact commands.

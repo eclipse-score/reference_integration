@@ -284,7 +284,7 @@ def _howto(ref: str | None, release: str, candidates: list[tuple[str, str | None
 def release_assets(release: str) -> list[dict]:
     url = f"https://api.github.com/repos/eclipse-score/{RELEASE_REPO}/releases/tags/{release}"
     request = urllib.request.Request(url)
-    if token := os.environ.get("GITHUB_PAT"):
+    if token := os.environ.get("GITHUB_TOKEN") or os.environ.get("GITHUB_PAT"):
         request.add_header("Authorization", f"Bearer {token}")
     try:
         with urllib.request.urlopen(request, timeout=30) as response:

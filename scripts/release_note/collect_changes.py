@@ -19,7 +19,7 @@ where this repository uses an affected flag, label or target. Detailed per-modul
 PR lists are only produced on request (``--module-prs``).
 
 Examples:
-    python3 scripts/release_note/collect_changes.py --release v0.9.0 --origin v0.8.0 --output /tmp/changes.md
+    python3 scripts/release_note/collect_changes.py --release v0.9.0 --origin v0.8.0 --output changes.md
     python3 scripts/release_note/collect_changes.py --release v0.10.0 --origin v0.9.0 --module-prs --module score_logging
 """
 
@@ -52,7 +52,7 @@ CLOSES = re.compile(r"\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+#(\d+)", re.
 def api(path: str, params: dict[str, Any] | None = None) -> Any:
     url = f"{API}{path}" + (f"?{urllib.parse.urlencode(params)}" if params else "")
     request = urllib.request.Request(url, headers={"Accept": "application/vnd.github+json"})
-    if token := os.environ.get("GITHUB_PAT"):
+    if token := os.environ.get("GITHUB_TOKEN") or os.environ.get("GITHUB_PAT"):
         request.add_header("Authorization", f"Bearer {token}")
     with urllib.request.urlopen(request, timeout=60) as response:
         return json.load(response)
