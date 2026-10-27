@@ -97,6 +97,8 @@ Behaviour worth knowing:
 ## Run from scratch (any release, also for not yet tagged ones)
 
 The procedure is identical for existing and new releases; only the inputs differ.
+In chat, the prompt `/release-note` (`.github/prompts/release-note.prompt.md`)
+asks for release, origin and state (`draft` or `final`) and starts the agent.
 
 1. **Inputs.** `release` and `origin` tag and the output file
    `docs/s_core_v_1/releases/release_note_score_v<major>_<minor>.rst`. The
