@@ -29,11 +29,11 @@ use std::path::{Path, PathBuf};
 use std::thread::sleep;
 use std::time::Duration;
 
+use com_api_gen::VehicleInterface;
 use score_com::{
     Builder, FindServiceSpecifier, InstanceSpecifier, LolaRuntimeBuilderImpl, LolaRuntimeImpl, Runtime, RuntimeBuilder,
     SampleContainer, ServiceDiscovery, Subscriber, Subscription,
 };
-use com_api_gen::VehicleInterface;
 
 /// Default instance specifier, matching com-api-example's deployment manifest.
 /// Overridable via `-i` so tests can target a dedicated (e.g. ASIL-B) instance
@@ -176,12 +176,8 @@ fn main() {
             Ok(0) => sleep(Duration::from_millis(args.interval_ms)),
             Ok(_) => {
                 while let Some(sample) = buffer.pop_front() {
-                    // Sequence number was encoded in the payload by fit_sender;
-                    // the sample derefs to the generated Tire type. Printed via
-                    // Display with no numeric cast: `as i64` on a corrupted
-                    // (NaN/negative/infinite) f32 would saturate to a
-                    // plausible-looking integer instead of surfacing the
-                    // corruption, defeating the ITF's ability to detect it.
+                    // Print via Display, not cast to i64: a corrupted f32 saturates
+                    // to a plausible integer, hiding corruption from the ITF.
                     let pressure = sample.pressure;
                     println!("FIT_RECV seq={pressure}");
                     received += 1;

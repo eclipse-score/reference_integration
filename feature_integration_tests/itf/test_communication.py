@@ -282,12 +282,9 @@ def test_mixed_criticality_acl_isolation(target):
     which lets an unprivileged UID still bring up its LoLa endpoint and so
     reach the shared-memory ACL check the assertions below rely on.
 
-    Skipped on QNX: there, LoLa's MessagePassingService endpoint registration
-    itself requires privilege, so a consumer launched under a lower-privilege
-    UID (`on -u <uid>`) aborts at message-passing setup before reaching the
-    shared-memory ACL -- a limitation of the QNX IPC layer itself, not of
-    allowedConsumer enforcement, already documented for the removed
-    ipc_bridge example.
+    Skipped on QNX: LoLa's MessagePassingService endpoint registration requires
+    privilege, so a lower-privilege UID aborts at message-passing setup before
+    reaching the shared-memory ACL check.
     """
     if comm.is_qnx(target):
         pytest.skip(
