@@ -44,6 +44,7 @@ pkg_filegroup(
         "//showcases/standalone:kyron_pkg_files",
         "//showcases/standalone:logging_pkg_files",
         "//showcases/standalone:time_pkg_files",
+        "//showcases/standalone/comm_fit:comm_fit_pkg_files",
     ],
     prefix = "showcases",
     visibility = ["//visibility:public"],
