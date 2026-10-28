@@ -1,0 +1,290 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+"""s-core TCK runner - main entry point.
+
+A self-contained runner that executes all configured checks against a
+distribution's SBOM and produces a compatibility report.
+
+Usage:
+    score-tck run --config dist.toml --report ./report
+    score-tck validate-config dist.toml
+    score-tck version
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+# When bundled as zipapp, __file__ points to the archive root
+_TCK_ROOT = Path(__file__).parent.parent
+
+
+@dataclass
+class TCKConfig:
+    """Configuration for a distribution under test (tck.config.toml parsed)."""
+
+    dist_name: str
+    dist_version: str
+    dist_arch: str
+    sbom_path: Path
+    profile: str = "full"
+    checks_enabled: List[str] = field(default_factory=lambda: ["sbom"])
+
+    @classmethod
+    def from_toml(cls, path: Path) -> "TCKConfig":
+        """Parse a TOML config file (simple parser, no toml dependency for v1)."""
+        import re
+
+        content = path.read_text()
+
+        # Simple TOML parser for our flat schema
+        def get_value(key: str, default: str = "") -> str:
+            match = re.search(rf'^{key}\s*=\s*"([^"]*)"', content, re.MULTILINE)
+            if match:
+                return match.group(1)
+            match = re.search(rf'^{key}\s*=\s*\[([^\]]*)\]', content, re.MULTILINE)
+            if match:
+                return match.group(1).replace('"', "").replace("'", "")
+            match = re.search(rf"^{key}\s*=\s*(\S+)", content, re.MULTILINE)
+            return match.group(1) if match else default
+
+        sbom_path_str = get_value("sbom_file", "./sbom.spdx.json")
+
+        return cls(
+            dist_name=get_value("name", "unknown-distribution"),
+            dist_version=get_value("version", "unversioned"),
+            dist_arch=get_value("arch", "x86_64-linux"),
+            sbom_path=Path(sbom_path_str),
+            profile=get_value("profile", "full"),
+            checks_enabled=get_value("checks", "sbom").split(",") if get_value("checks") else ["sbom"],
+        )
+
+
+@dataclass
+class TCKReport:
+    """Full TCK compatibility report."""
+
+    tck_version: str
+    platform_version: str
+    dist_name: str
+    dist_version: str
+    dist_arch: str
+    profiles: List[str] = field(default_factory=list)
+    checks: List[Dict[str, Any]] = field(default_factory=list)
+
+    @property
+    def verdict(self) -> str:
+        """Overall verdict across all check families."""
+        for check in self.checks:
+            if check.get("verdict") == "NON-CONFORMANT":
+                return "NON-CONFORMANT"
+        for check in self.checks:
+            if check.get("verdict") == "CONFORMANT-WITH-WARNINGS":
+                return "CONFORMANT-WITH-WARNINGS"
+        return "CONFORMANT"
+
+    def to_json(self) -> Dict[str, Any]:
+        return {
+            "tck_version": self.tck_version,
+            "platform_version": self.platform_version,
+            "dist_name": self.dist_name,
+            "dist_version": self.dist_version,
+            "dist_arch": self.dist_arch,
+            "verdict": self.verdict,
+            "checks": self.checks,
+        }
+
+    def write_json(self, path: Path) -> None:
+        path.write_text(json.dumps(self.to_json(), indent=2))
+
+    def write_markdown(self, path: Path) -> None:
+        """Write a human-readable summary."""
+        lines = [
+            f"# s-core TCK Compatibility Report",
+            f"",
+            f"**Distribution**: {self.dist_name} v{self.dist_version} (`{self.dist_arch}`)",
+            f"**TCK Version**: {self.tck_version}",
+            f"**Platform Version**: {self.platform_version}",
+            f"",
+            f"## Verdict: **{self.verdict}**",
+            f"",
+        ]
+
+        for check in self.checks:
+            family = check.get("check_family", "unknown")
+            verdict = check.get("verdict", "UNKNOWN")
+            lines.append(f"### {family.upper()} Check — {verdict}")
+            lines.append("")
+
+            for c in check.get("checks", []):
+                status_icon = {"pass": "✅", "fail": "❌", "warn": "⚠️", "skip": "⏭️"}.get(
+                    c.get("status", "skip"), "❓"
+                )
+                lines.append(f"- {status_icon} **{c.get('check_id', 'unknown')}**: {c.get('message', '')}")
+                if c.get("details"):
+                    for detail in c.get("details", [])[:5]:
+                        lines.append(f"  - `{detail}`")
+
+            lines.append("")
+
+        path.write_text("\n".join(lines))
+
+
+def get_required_modules(tck_root: Path) -> List[str]:
+    """Load the required modules list from reference/requirements.json or known_good."""
+    req_path = tck_root / "reference" / "requirements.json"
+    if req_path.exists():
+        data = json.loads(req_path.read_text())
+        return data.get("sbom_tracked_modules", [])
+
+    # Fallback: hardcode from known_good.json structure
+    return [
+        "score_baselibs",
+        "score_communication",
+        "score_persistency",
+        "score_kyron",
+        "score_lifecycle",
+        "score_logging",
+        "score_time",
+    ]
+
+
+def run_sbom_check(config: TCKConfig, tck_root: Path) -> Dict[str, Any]:
+    """Run the SBOM comparison check."""
+    # Add tck directory to path for imports
+    import sys
+    if str(tck_root) not in sys.path:
+        sys.path.insert(0, str(tck_root))
+    from checks.sbom_check import SBOMChecker
+
+    golden_sbom = tck_root / "reference" / "sbom.spdx.json"
+    if not golden_sbom.exists():
+        raise FileNotFoundError(f"Golden SBOM not found at {golden_sbom}")
+
+    if not config.sbom_path.exists():
+        raise FileNotFoundError(f"Distribution SBOM not found at {config.sbom_path}")
+
+    required_modules = set(get_required_modules(tck_root))
+
+    checker = SBOMChecker(
+        golden_sbom_path=golden_sbom,
+        required_modules=required_modules,
+    )
+
+    report = checker.check(config.sbom_path)
+    return report.to_json()
+
+
+def cmd_run(args: argparse.Namespace) -> int:
+    """Execute the TCK checks and produce a report."""
+    config_path = Path(args.config)
+    if not config_path.exists():
+        print(f"Error: Config file not found: {config_path}", file=sys.stderr)
+        return 1
+
+    config = TCKConfig.from_toml(config_path)
+
+    report_dir = Path(args.report)
+    report_dir.mkdir(parents=True, exist_ok=True)
+
+    tck_version = "0.1.0"  # TODO: load from bundle
+    platform_version = "0.9.0"  # TODO: derive from golden data
+
+    print(f"s-core TCK v{tck_version}")
+    print(f"Distribution: {config.dist_name} v{config.dist_version}")
+    print(f"Profile: {config.profile}")
+    print(f"Checks: {config.checks_enabled}")
+    print()
+
+    report = TCKReport(
+        tck_version=tck_version,
+        platform_version=platform_version,
+        dist_name=config.dist_name,
+        dist_version=config.dist_version,
+        dist_arch=config.dist_arch,
+    )
+
+    # Run each enabled check family
+    if "sbom" in config.checks_enabled:
+        print("Running SBOM check...")
+        try:
+            sbom_result = run_sbom_check(config, _TCK_ROOT)
+            report.checks.append(sbom_result)
+            print(f"  SBOM verdict: {sbom_result.get('verdict', 'UNKNOWN')}")
+        except FileNotFoundError as e:
+            print(f"  Error: {e}", file=sys.stderr)
+            report.checks.append(
+                {
+                    "check_family": "sbom",
+                    "verdict": "NON-CONFORMANT",
+                    "checks": [
+                        {
+                            "check_id": "sbom.file_not_found",
+                            "status": "fail",
+                            "severity": "required",
+                            "message": str(e),
+                        }
+                    ],
+                }
+            )
+
+    # Write outputs
+    report.write_json(report_dir / "report.json")
+    report.write_markdown(report_dir / "summary.md")
+
+    print()
+    print(f"Report written to: {report_dir}/")
+    print(f"Overall verdict: {report.verdict}")
+
+    return 0 if report.verdict != "NON-CONFORMANT" else 1
+
+
+def cmd_version(args: argparse.Namespace) -> int:
+    """Print TCK version."""
+    print("s-core TCK v0.1.0")
+    return 0
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    """Main entry point."""
+    parser = argparse.ArgumentParser(
+        prog="score-tck",
+        description="s-core Test Compatibility Kit - verify SCORE distribution compatibility",
+    )
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    # run subcommand
+    run_parser = subparsers.add_parser("run", help="Run TCK checks against a distribution")
+    run_parser.add_argument(
+        "--config", "-c", required=True, help="Path to distribution config (tck.config.toml)"
+    )
+    run_parser.add_argument(
+        "--report", "-o", default="./tck-report", help="Output directory for report"
+    )
+    run_parser.set_defaults(func=cmd_run)
+
+    # version subcommand
+    version_parser = subparsers.add_parser("version", help="Print TCK version")
+    version_parser.set_defaults(func=cmd_version)
+
+    args = parser.parse_args(argv)
+    return args.func(args)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1,0 +1,62 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+# TCK Distribution Configuration Example
+#
+# Copy this file and customize for your distribution. The TCK runner will use
+# these settings to locate your distribution's artifacts and determine which
+# checks to run.
+#
+# Usage:
+#   cp tck.config.example.toml my-dist.toml
+#   # Edit paths to point to your distribution
+#   ./bin/score-tck run --config my-dist.toml --report ./report
+
+[dist]
+# Human-readable name of your distribution
+name = "acme-score-dist"
+
+# Version of your distribution  
+version = "1.0.0"
+
+# Target architecture: x86_64-linux | aarch64-linux | qnx-aarch64
+arch = "x86_64-linux"
+
+# Conformance profile: full | minimal
+# - full: all checks (SBOM + behavioral)
+# - minimal: SBOM-only (no toolchain required)
+profile = "full"
+
+[dist.paths]
+# Path to your distribution's SPDX SBOM (required for SBOM check)
+# Generate this from your build system or use the one produced by //:sbom
+sbom_file = "./dist/sbom.spdx.json"
+
+# Path to public headers for static API check (optional)
+headers_dir = "./dist/include"
+
+# Path to libraries for static API check (optional)  
+libs_dir = "./dist/lib"
+
+[checks]
+# Comma-separated list of checks to run
+# - sbom: Compare against golden SBOM (required components, license policy)
+# - behavioral: Run platform integration tests (requires [dist.build])
+enabled = ["sbom", "behavioral"]
+
+# [dist.build] - Only needed for behavioral checks
+# These settings tell the TCK how to build and run showcases against your distribution
+#
+# [dist.build]
+# build_cmd = "bazel build --config=x86_64-linux //showcases/bin/cli"
+# run_cli = "./bazel-bin/showcases/bin/cli"
+# examples = ["LoggingApp Demo", "ComApiExample"]
