@@ -33,7 +33,7 @@ something is wrong (see the known bug note below).
 Any change to a `bazel_dep` / `git_override` / `single_version_override` (new module,
 bumped hash/version) changes the resolved module graph, which requires updating
 `MODULE.bazel.lock` — see
-[module-bazel-lock.instructions.md](./module-bazel-lock.instructions.md) for that step.
+[module-bazel-lock.instructions.md](../../.apm/instructions/module-bazel-lock.instructions.md) for that step.
 Do this **after** regenerating the `known_good.json`-derived files above, since the
 lockfile update re-resolves against the newly generated `bazel_dep`/override entries.
 
