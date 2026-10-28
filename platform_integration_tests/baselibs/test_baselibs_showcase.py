@@ -15,7 +15,7 @@ from showcase_runner import run_showcases
 
 
 @add_test_properties(
-    partially_verifies=["<baselibs stakeholder req id>"],
+    partially_verifies=["feat_req__baselibs__utils_library"],
     test_type="interface-test",
     derivation_technique="requirements-analysis",
 )
@@ -25,7 +25,7 @@ def test_baselibs_builtin_logger_showcase(target):
 
 
 @add_test_properties(
-    partially_verifies=["<baselibs stakeholder req id>"],
+    partially_verifies=["feat_req__baselibs__utils_library"],
     test_type="interface-test",
     derivation_technique="requirements-analysis",
 )
@@ -35,7 +35,7 @@ def test_baselibs_custom_logger_showcase(target):
 
 
 @add_test_properties(
-    partially_verifies=["<baselibs stakeholder req id>"],
+    partially_verifies=["feat_req__baselibs__multi_language_apis"],
     test_type="interface-test",
     derivation_technique="requirements-analysis",
 )
