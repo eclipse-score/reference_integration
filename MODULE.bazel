@@ -44,14 +44,22 @@ include("//bazel_common:score_modules_target_sw.MODULE.bazel")
 # Score test images
 include("//bazel_common:score_images.MODULE.bazel")
 
-# The delivery contains the complete KAS/Isar workspace, not just a disk image.
-http_file = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
+# The release tag includes the KAS/Isar sources; no delivery images are needed.
+new_git_repository = use_repo_rule("@bazel_tools//tools/build_defs/repo:git.bzl", "new_git_repository")
 
-http_file(
+new_git_repository(
     name = "eb_corbos_toolkit",
-    downloaded_file_path = "eb_corbos_toolkit.tar.gz",
-    sha256 = "11061c7f3c96265c59b3b2d3275949859cc71e44f13699b7498b13f9b412f766",
-    url = "https://github.com/Elektrobit/eb_corbos_toolkit/releases/download/v2.0.0-beta2/eb_corbos_toolkit.tar.gz",
+    build_file_content = """
+exports_files(["BUILD.bazel"])
+
+filegroup(
+    name = "sources",
+    srcs = glob(["kas/**", "layers/**", ".devcontainer/**"]),
+    visibility = ["//visibility:public"],
+)
+""",
+    commit = "2b0a6c88dd12f892de830ffdabc5dabda275838c",  # v2.0.0-beta2
+    remote = "https://github.com/Elektrobit/eb_corbos_toolkit.git",
 )
 
 # Single-version locks for the deps Stage 2 collects test artifacts from (GTest, the Rust

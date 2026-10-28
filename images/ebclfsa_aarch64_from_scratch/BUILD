@@ -18,7 +18,8 @@ genrule(
     name = "image",
     srcs = [
         "kas.yml",
-        "@eb_corbos_toolkit//file",
+        "@eb_corbos_toolkit//:BUILD.bazel",
+        "@eb_corbos_toolkit//:sources",
         "//showcases:showcases_deb",
         "//images/ebclfsa_aarch64/build/config-overlay:etc/crinit/crinit.d/getty-console.crinit",
         "//images/ebclfsa_aarch64/build/config-overlay:usr/bin/delayed-start.sh",
@@ -28,7 +29,7 @@ genrule(
         "fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic",
     ],
     cmd = "bash $(location build_image.sh) " +
-          "$(location @eb_corbos_toolkit//file) " +
+          "$$(dirname $(location @eb_corbos_toolkit//:BUILD.bazel)) " +
           "$(location //showcases:showcases_deb) " +
           "$(location kas.yml) " +
           "$(location //images/ebclfsa_aarch64/build/config-overlay:etc/crinit/crinit.d/getty-console.crinit) " +

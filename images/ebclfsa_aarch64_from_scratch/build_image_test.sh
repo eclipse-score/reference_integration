@@ -18,9 +18,11 @@ sources="$TEST_SRCDIR/_main/images/ebclfsa_aarch64_from_scratch"
 overlay="$TEST_SRCDIR/_main/images/ebclfsa_aarch64/build/config-overlay"
 fixture="$TEST_TMPDIR/fixture"
 output="$TEST_TMPDIR/output"
-mkdir -p "$fixture/eb_corbos_toolkit/workspace/"{kas,prebuilt} "$output"
-echo "must not use a prebuilt image" > "$fixture/eb_corbos_toolkit/workspace/prebuilt/image.wic"
-tar -czf "$TEST_TMPDIR/toolkit.tar.gz" -C "$fixture" eb_corbos_toolkit
+mkdir -p "$fixture/"{kas,layers/isar,.devcontainer,prebuilt} "$output"
+echo "must not use a prebuilt image" > "$fixture/prebuilt/image.wic"
+echo "KAS configuration" > "$fixture/kas/public.yml"
+echo "bundled Isar" > "$fixture/layers/isar/isar-init-build-env"
+echo "container configuration" > "$fixture/.devcontainer/devcontainer.json"
 echo "Debian package fixture" > "$TEST_TMPDIR/showcases.deb"
 
 # Exercise staging, artifact export and error propagation without a privileged
@@ -40,6 +42,9 @@ docker() {
     work=${mount#type=bind,src=}
     work=${work%,dst=/workspace}
     [[ ! -e "$work/prebuilt" ]]
+    cmp "$TEST_TMPDIR/fixture/kas/public.yml" "$work/kas/public.yml"
+    cmp "$TEST_TMPDIR/fixture/layers/isar/isar-init-build-env" "$work/layers/isar/isar-init-build-env"
+    cmp "$TEST_TMPDIR/fixture/.devcontainer/devcontainer.json" "$work/.devcontainer/devcontainer.json"
     cmp "$TEST_TMPDIR/showcases.deb" \
         "$work/meta-score/recipes-score/score-showcases/files/score-showcases_1.0_arm64.deb"
     cmp "$TEST_SRCDIR/_main/images/ebclfsa_aarch64_from_scratch/kas.yml" "$work/kas/score.yml"
@@ -60,13 +65,15 @@ docker() {
 export -f docker
 
 build_image() {
-    bash "$sources/build_image.sh" "$TEST_TMPDIR/toolkit.tar.gz" \
+    bash "$sources/build_image.sh" "$fixture" \
         "$TEST_TMPDIR/showcases.deb" "$sources/kas.yml" \
         "$overlay/etc/crinit/crinit.d/getty-console.crinit" \
         "$overlay/usr/bin/delayed-start.sh" "$output"
 }
 
 build_image
+[[ ! -e "$fixture/kas/score.yml" ]]
+[[ ! -e "$fixture/meta-score" ]]
 [[ $(cat "$output/fastdev-trixie-ebclfsa-ebcl-qemuarm64-vmlinux") == kernel ]]
 [[ $(cat "$output/fastdev-trixie-ebclfsa-ebcl-qemuarm64.wic") == disk ]]
 

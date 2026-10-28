@@ -7,8 +7,12 @@ bazel run --config=eb-aarch64 //images/ebclfsa_aarch64_from_scratch:run
 This cross-compiles the showcases with the EB aarch64 toolchains, packages
 [`//showcases:showcases_pkg_tar`](../../showcases/BUILD) as the `score-showcases`
 arm64 Debian package, and builds a new `fastdev` disk image with KAS/Isar.
-The image is assembled from Debian packages using the complete
-[EB corbos Toolkit v2.0.0-beta2 delivery](https://github.com/Elektrobit/eb_corbos_toolkit/releases/tag/v2.0.0-beta2).
+The image is assembled from Debian packages using a Git checkout of the
+[EB corbos Toolkit v2.0.0-beta2 tag](https://github.com/Elektrobit/eb_corbos_toolkit/tree/v2.0.0-beta2),
+pinned to its commit in `MODULE.bazel`. Only the KAS configuration, bundled Isar
+layers and development-container setup are copied into the build workspace.
+The large delivery archive, including its prebuilt container and disk images,
+is not downloaded. The build container is pulled separately from GHCR.
 It does **not** boot or modify the toolkit's prebuilt disk image.
 The toolkit still supplies precompiled system packages, including the kernel;
 this is an image build from packages, not a source rebuild of the entire OS.

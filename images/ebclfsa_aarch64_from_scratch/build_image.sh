@@ -15,11 +15,11 @@
 set -euo pipefail
 
 if [[ $# != 6 ]]; then
-    echo "Usage: $0 TOOLKIT DEB KAS_CONFIG GETTY_CONFIG START_SCRIPT OUTPUT_DIR" >&2
+    echo "Usage: $0 TOOLKIT_SOURCE_DIR DEB KAS_CONFIG GETTY_CONFIG START_SCRIPT OUTPUT_DIR" >&2
     exit 1
 fi
 
-for tool in docker tar realpath; do
+for tool in docker realpath; do
     if ! command -v "$tool" >/dev/null; then
         echo "Error: required image build tool is missing: $tool" >&2
         exit 1
@@ -27,7 +27,7 @@ for tool in docker tar realpath; do
 done
 docker info >/dev/null
 
-archive=$(realpath "$1")
+toolkit=$(realpath "$1")
 deb=$(realpath "$2")
 config=$(realpath "$3")
 getty=$(realpath "$4")
@@ -38,9 +38,7 @@ sources=$(dirname "$config")
 work=$(mktemp -d "$output/kas-work.XXXXXXXX")
 trap 'rm -rf -- "$work"' EXIT
 
-tar -xzf "$archive" -C "$work" --strip-components=2 \
-    --exclude='eb_corbos_toolkit/workspace/prebuilt' \
-    eb_corbos_toolkit/workspace
+cp -R "$toolkit/kas" "$toolkit/layers" "$toolkit/.devcontainer" "$work/"
 cp -R "$sources/meta-score" "$work/meta-score"
 cp "$config" "$work/kas/score.yml"
 packages="$work/meta-score/recipes-score/score-showcases/files"
@@ -67,7 +65,9 @@ docker run --rm --init --privileged --user root \
             mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
             update-binfmts --import /workspace/.devcontainer/binfmt-config/qemu-aarch64
         fi
-        # The delivery already includes the patched Isar tree; its internal
+        # KAS resolves includes relative to the enclosing Git repository.
+        runuser -u developer -- git init --quiet /workspace
+        # The release checkout already includes the patched Isar tree; its internal
         # patch sources are not shipped.
         runuser -u developer -- kas build \
             --skip repos_checkout --skip repos_apply_patches \
