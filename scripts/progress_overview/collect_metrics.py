@@ -11,7 +11,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-"""Collect per-release, per-module metrics for the Overall Status charts.
+"""Collect per-release, per-module metrics for the release-wide progress overview charts.
 
 For every ``reference_integration`` release tag the module pins are read from
 that tag's ``known_good.json``; the working tree's ``known_good.json`` supplies
@@ -19,7 +19,7 @@ the forecast column. Metrics are then counted from bare clones using git
 plumbing, which keeps the whole run local and free of API rate limits.
 
 Requires ``GITHUB_PAT`` for the tag/pin lookups. Writes
-``overall_status_data.json``; run ``generate_progress_charts.py`` afterwards.
+``progress_overview_data.json``; run ``generate_progress_charts.py`` afterwards.
 """
 
 import argparse
@@ -35,7 +35,7 @@ from collections import Counter
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DATA_FILE = REPO_ROOT / "docs" / "s_core_v_1" / "roadmap" / "overall_status_data.json"
+DATA_FILE = REPO_ROOT / "docs" / "s_core_v_1" / "releases" / "progress_overview_data.json"
 API = "https://api.github.com"
 REF_INT = "eclipse-score/reference_integration"
 
@@ -159,7 +159,7 @@ def gh(path):
             headers={
                 "Authorization": f"Bearer {os.environ['GITHUB_PAT']}",
                 "Accept": "application/vnd.github+json",
-                "User-Agent": "overall-status",
+                "User-Agent": "progress-overview",
             },
         )
         with urllib.request.urlopen(req) as r:
@@ -322,6 +322,24 @@ def ri_integration_tests(repo, sha, cache):
     return per_module
 
 
+VERSION = re.compile(r"^v(\d+)\.(\d+)(?:\.(\d+))?(?:-(.+))?$")
+
+
+def version_key(tag):
+    """Sort key for v<major>.<minor>[.<patch>][-<pre>]; a pre-release sorts before its final release."""
+    major, minor, patch, pre = VERSION.match(tag).groups()
+    return int(major), int(minor), int(patch or 0), pre is None, pre or ""
+
+
+def next_release(last_tag):
+    """The lowest release milestone (v<major>.<minor>) in eclipse-score/score after the latest tag."""
+    titles = [m["title"] for m in gh(f"/repos/{SCORE_REPO}/milestones?state=all&per_page=100")]
+    later = [t for t in titles if re.fullmatch(r"v\d+\.\d+", t) and version_key(t) > version_key(last_tag)]
+    if not later:
+        raise SystemExit(f"error: no release milestone after {last_tag} in {SCORE_REPO}; create it first")
+    return min(later, key=version_key)
+
+
 def release_pins(cache):
     """Return [(label, {module: (repo, sha)})] oldest first, forecast last.
 
@@ -330,16 +348,17 @@ def release_pins(cache):
     """
     tags = [t["name"] for t in gh(f"/repos/{REF_INT}/tags?per_page=100")]
     columns = []
-    for tag in sorted(t for t in tags if t != "v0.5.0-alpha"):
+    for tag in sorted((t for t in tags if VERSION.match(t) and t != "v0.5.0-alpha"), key=version_key):
         ref = resolve_tag(REF_INT, tag)
         date = gh(f"/repos/{REF_INT}/commits/{ref}")["commit"]["committer"]["date"]
         blob = gh(f"/repos/{REF_INT}/contents/known_good.json?ref={ref}")
         flat = flatten(json.loads(base64.b64decode(blob["content"])))
         columns.append((tag, date, ref, flat))
 
+    forecast = f"{next_release(columns[-1][0])} (forecast)"
     local = flatten(json.loads((REPO_ROOT / "known_good.json").read_text(encoding="utf-8")))
     head = git(REF_INT, cache, "rev-parse", "HEAD").stdout.decode().strip()
-    columns.append(("forecast", None, head, local))
+    columns.append((forecast, None, head, local))
 
     out = []
     for tag, date, ri_sha, flat in columns:
@@ -360,8 +379,7 @@ def release_pins(cache):
                 )
             if sha:
                 resolved[name] = (repo, sha)
-        label = "v0.10 (forecast)" if tag == "forecast" else tag
-        out.append((label, resolved))
+        out.append((tag, resolved))
     return out
 
 
@@ -378,7 +396,7 @@ def nice_axis(peak):
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--cache", type=Path, default=Path("/tmp/overall_status_repos"))
+    parser.add_argument("--cache", type=Path, default=Path("/tmp/progress_overview_repos"))
     parser.add_argument("--out", type=Path, default=DATA_FILE)
     parser.add_argument("--collected", default=None, help="data collection date, default today")
     args = parser.parse_args()
@@ -436,7 +454,7 @@ def main() -> None:
 
     args.out.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
     print(f"\nwrote {args.out}")
-    print("now run scripts/overall_status/generate_progress_charts.py")
+    print("now run scripts/progress_overview/generate_progress_charts.py")
 
 
 if __name__ == "__main__":

@@ -34,7 +34,7 @@ Milestone: `score/v0.9 <https://github.com/eclipse-score/score/milestone/31>`__
 
 **Current State**
 
-See the progress charts in :doc:`overall_status`:
+See the progress charts in :doc:`/s_core_v_1/releases/progress_overview`:
 
-- :ref:`overall_status_pa4` — Implementation
-- :ref:`overall_status_pa5` — Verification / Coverage
+- :ref:`progress_overview_implementation` — Implementation
+- :ref:`progress_overview_verification` — Verification / Coverage

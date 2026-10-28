@@ -11,7 +11,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-"""Render the Overall Status progress charts from ``overall_status_data.json``.
+"""Render the release-wide progress overview charts from ``progress_overview_data.json``.
 
 Every release is a stacked bar whose colour slots map to the contributing
 modules, so the per-module split is comparable across releases. Colours come
@@ -26,7 +26,7 @@ from pathlib import Path
 from xml.sax.saxutils import escape
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DATA_FILE = REPO_ROOT / "docs" / "s_core_v_1" / "roadmap" / "overall_status_data.json"
+DATA_FILE = REPO_ROOT / "docs" / "s_core_v_1" / "releases" / "progress_overview_data.json"
 ASSET_DIR = REPO_ROOT / "docs" / "_assets"
 
 WIDTH = 880
@@ -164,7 +164,7 @@ def main() -> None:
 
     if stale:
         names = ", ".join(str(p.relative_to(REPO_ROOT)) for p in stale)
-        raise SystemExit(f"out of date: {names}\nrun scripts/overall_status/generate_progress_charts.py")
+        raise SystemExit(f"out of date: {names}\nrun scripts/progress_overview/generate_progress_charts.py")
 
 
 if __name__ == "__main__":

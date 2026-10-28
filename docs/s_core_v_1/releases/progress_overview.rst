@@ -14,8 +14,8 @@
 
 :hide-toc:
 
-Overall Status
-==============
+Release-wide Progress Overview
+==============================
 
 .. important::
 
@@ -25,9 +25,9 @@ This page shows how the S-CORE platform grew across releases. Each chart
 aggregates one metric over all tracked modules; every bar is split into colour
 slots, one slot per contributing module.
 
-The last column, **v0.10 (forecast)**, is not a released state — it is today's
-state of the modules pinned in ``known_good.json``, shown as the projection for
-the next release.
+The last column, marked **(forecast)** and named after the next release
+milestone, is not a released state — it is today's state of the modules pinned
+in ``known_good.json``, shown as the projection for the next release.
 
 For the **current** state — per-module and per-component requirements,
 architecture, traceability, coverage and work-product status — use the
@@ -48,7 +48,7 @@ documentation build:
    parameterised CI runs. Treat the numbers as indicative; the verification
    reports are the authoritative source.
 
-.. _overall_status_pa2:
+.. _progress_overview_requirements:
 
 Requirements
 ------------
@@ -59,7 +59,7 @@ Requirements
 
    Feature and component requirements across the tracked modules per release.
 
-.. _overall_status_pa3:
+.. _progress_overview_architecture:
 
 Architecture
 ------------
@@ -71,7 +71,7 @@ Architecture
    Feature and component architecture elements across the tracked modules per
    release.
 
-.. _overall_status_pa4:
+.. _progress_overview_implementation:
 
 Implementation
 --------------
@@ -83,7 +83,7 @@ Implementation
    Lines of code across the tracked modules per release, excluding
    documentation and third-party sources.
 
-.. _overall_status_pa5:
+.. _progress_overview_verification:
 
 Verification
 ------------

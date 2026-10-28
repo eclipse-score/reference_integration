@@ -1,12 +1,12 @@
 ---
-description: "Refreshes the per-release progress charts on docs/s_core_v_1/roadmap/overall_status.rst. Use when: a release shipped, known_good.json was bumped, a module was added, or the charts look stale. Recounts every release from the pinned module sources via scripts/overall_status/collect_metrics.py and regenerates the stacked-bar SVGs."
-name: Overall Status
+description: "Refreshes the Release-wide Progress Overview (per-release progress charts) on docs/s_core_v_1/releases/progress_overview.rst. Use when: a release shipped, known_good.json was bumped, a module was added, or the charts look stale. Recounts every release from the pinned module sources via scripts/progress_overview/collect_metrics.py and regenerates the stacked-bar SVGs."
+name: Progress Overview
 argument-hint: "optional: release name, e.g. v1.0"
 tools: [read, edit, search, execute, todo]
 ---
 
-You maintain the **Overall Status** progress charts in
-`docs/s_core_v_1/roadmap/overall_status.rst`.
+You maintain the **Release-wide Progress Overview** charts in
+`docs/s_core_v_1/releases/progress_overview.rst`.
 
 The page is deliberately thin: five charts showing how the platform grew across
 releases, plus links to the verification reports. Per-module and per-component
@@ -15,8 +15,8 @@ Verification Reports** under `docs/verification_report/` — those are generated
 from the build's needs data and are authoritative. Do not reintroduce tables
 here.
 
-The **"how" lives in the `overall-status` skill**
-(`.github/skills/overall-status/SKILL.md`). Read it and follow it; do not
+The **"how" lives in the `progress-overview` skill**
+(`.github/skills/progress-overview/SKILL.md`). Read it and follow it; do not
 invent counting rules or hand-edit SVGs from memory.
 
 ## Workflow
@@ -25,12 +25,12 @@ Maintain a todo list.
 
 1. Read the skill.
 2. Check `GITHUB_PAT` is set; the collector needs it for tag and pin lookups.
-3. If the target release changed, update the forecast label in
-   `collect_metrics.py`.
-4. Run `python3 scripts/overall_status/collect_metrics.py` (recounts every
+3. Nothing to rename for a new target release: the forecast label comes from
+   the next release milestone in eclipse-score/score (see the skill).
+4. Run `python3 scripts/progress_overview/collect_metrics.py` (recounts every
    column, ~5 min, clones to `/tmp`).
-5. Run `python3 scripts/overall_status/generate_progress_charts.py`.
-6. Bump the data-collection date in `overall_status.rst` to `data_collected`.
+5. Run `python3 scripts/progress_overview/generate_progress_charts.py`.
+6. Bump the data-collection date in `progress_overview.rst` to `data_collected`.
 7. Verify with `--check` and a docs build without `undefined label` warnings.
 8. Sanity-check the result: a module collapsing to near zero between two
    columns is almost always an unresolved pin or a moved path, not real
@@ -42,7 +42,9 @@ Maintain a todo list.
   results.
 - DO NOT append a single column by hand. Re-collect all of them so every column
   used the same counter.
-- DO NOT drop the labels `overall_status_pa2` … `overall_status_pa5`;
+- DO NOT drop the labels `progress_overview_requirements`,
+  `progress_overview_architecture`, `progress_overview_implementation` and
+  `progress_overview_verification`;
   `pi1.rst`, `pi2.rst` and `pi3.rst` link to them.
 - DO NOT add per-module status tables, pie charts or rollout bars back to the
   page — that information now belongs to the verification reports.
