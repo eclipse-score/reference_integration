@@ -186,7 +186,24 @@ impl SBOMChecker {
             .iter()
             .filter_map(|(name, pkg)| {
                 let license = pkg.licenseConcluded.as_deref().unwrap_or("NOASSERTION");
-                if !self.allowed_licenses.contains(license) && !license.contains("OR") {
+                // Check license expression - handle OR/AND properly
+                // For OR: at least one alternative must be allowed
+                // For AND: all terms must be allowed
+                // For simple license: must be in allowed list
+                let is_compliant = if license.contains(" OR ") {
+                    // At least one alternative must be allowed
+                    license.split(" OR ")
+                        .any(|alt| self.allowed_licenses.contains(alt.trim()))
+                } else if license.contains(" AND ") {
+                    // All terms must be allowed
+                    license.split(" AND ")
+                        .all(|term| self.allowed_licenses.contains(term.trim()))
+                } else {
+                    // Simple license - must be in allowed list
+                    self.allowed_licenses.contains(license)
+                };
+                
+                if !is_compliant {
                     Some(serde_json::json!({
                         "component": name,
                         "license": license,
@@ -209,7 +226,7 @@ impl SBOMChecker {
         } else {
             CheckResult {
                 id: "sbom.license_policy".to_string(),
-                status: "warn".to_string(),
+                status: "fail".to_string(),  // License violations must fail, not warn
                 severity: "required".to_string(),
                 message: format!("Found {} license policy violation(s)", violations.len()),
                 details: violations,

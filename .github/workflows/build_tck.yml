@@ -48,24 +48,26 @@ jobs:
       - name: Build TCK binary
         run: |
           bazel build --lockfile_mode=error //tck:score-tck
-          cp bazel-bin/tck/score-tck score-tck
-          chmod +x score-tck
+          # Copy to temp location to avoid conflict with bundle directory
+          cp bazel-bin/tck/score-tck /tmp/score-tck-bin
+          chmod +x /tmp/score-tck-bin
 
       - name: Test TCK binary
         run: |
-          ./score-tck version
+          /tmp/score-tck-bin version
           echo ""
           echo "Testing with golden SBOM..."
           cat > /tmp/test-dist.toml << 'EOF'
           [dist]
           name = "test-dist"
           version = "0.9.0"
+          platform_version = "0.9.0"
           arch = "x86_64-linux"
 
           [dist.paths]
-          sbom_file = "reference/sbom.spdx.json"
+          sbom_file = "bazel-bin/sbom.spdx.json"
           EOF
-          ./score-tck run --config /tmp/test-dist.toml --report /tmp/tck-test-report || true
+          /tmp/score-tck-bin run --config /tmp/test-dist.toml --report /tmp/tck-test-report
           echo ""
           echo "Report summary:"
           head -20 /tmp/tck-test-report/summary.md
@@ -74,53 +76,32 @@ jobs:
         run: |
           VERSION="${{ github.event.release.tag_name || '0.1.0' }}"
           # Create bundle directory structure
-          mkdir -p score-tck/bin
-          mkdir -p score-tck/reference
-          mkdir -p score-tck/docs
+          mkdir -p score-tck-bundle/bin
+          mkdir -p score-tck-bundle/reference/policy
+          mkdir -p score-tck-bundle/tests
+          mkdir -p score-tck-bundle/docs
           
           # Copy binary
-          cp score-tck score-tck/bin/
+          cp /tmp/score-tck-bin score-tck-bundle/bin/score-tck
           
           # Copy golden SBOM
-          cp bazel-bin/sbom.spdx.json score-tck/reference/
+          cp bazel-bin/sbom.spdx.json score-tck-bundle/reference/
+          
+          # Copy policy
+          cp tck/reference/policy/requirements.toml score-tck-bundle/reference/policy/
+          
+          # Copy test definitions
+          cp tck/tests/behavioral.toml score-tck-bundle/tests/
+          cp tck/tests/api_signatures.toml score-tck-bundle/tests/
           
           # Copy config example
-          cp tck/tck.config.example.toml score-tck/
+          cp tck/tck.config.example.toml score-tck-bundle/
           
-          # Create README
-          cat > score-tck/README.md << 'READMEEOF'
-          # s-core Test Compatibility Kit (TCK)
-          
-          This package verifies SCORE distribution compatibility with platform requirements.
-          
-          ## Quick Start
-          
-          1. Create a distribution config:
-             ```bash
-             cp tck.config.example.toml my-dist.toml
-             # Edit sbom_file path to point to your distribution's SBOM
-             ```
-          
-          2. Run the TCK:
-             ```bash
-             ./bin/score-tck run --config my-dist.toml --report ./report
-             ```
-          
-          3. Check the verdict in `report/summary.md` or `report/report.json`
-          
-          ## What's Checked
-          
-          - **SBOM conformance**: Required components present, license policy, drift from golden
-          - More checks coming in future versions
-          
-          ## Exit Codes
-          
-          - 0: CONFORMANT or CONFORMANT-WITH-WARNINGS
-          - 1: NON-CONFORMANT
-          READMEEOF
+          # Copy README
+          cp tck/README.md score-tck-bundle/
           
           # Create tarball
-          tar -czvf score-tck-${VERSION}-linux-x86_64.tar.gz score-tck/
+          tar -czvf score-tck-${VERSION}-linux-x86_64.tar.gz score-tck-bundle/
           echo "Created bundle: score-tck-${VERSION}-linux-x86_64.tar.gz"
           ls -la score-tck-*.tar.gz
 

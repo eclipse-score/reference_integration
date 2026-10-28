@@ -88,9 +88,9 @@ pub fn run(config: &Config, policy: &VersionPolicy) -> Result<CheckReport> {
         },
         _ => CheckResult {
             id: "version.compatibility".to_string(),
-            status: "warn".to_string(),
+            status: "fail".to_string(),  // Unknown policy must fail, not warn
             severity: "required".to_string(),
-            message: format!("Unknown version policy: {}", policy.version_policy),
+            message: format!("Unknown version policy: '{}'. Must be 'exact', 'compatible', or 'any'", policy.version_policy),
             details: vec![],
         },
     };
@@ -150,26 +150,37 @@ fn check_compatible(dist_version: &str, min_version: &str) -> CheckResult {
         },
         Err(e) => CheckResult {
             id: "version.compatibility".to_string(),
-            status: "warn".to_string(),
+            status: "fail".to_string(),  // Parse errors must fail, not warn
             severity: "required".to_string(),
-            message: format!("Could not compare versions: {}", e),
-            details: vec![],
+            message: format!("Invalid version format: {}", e),
+            details: vec![
+                serde_json::json!({"dist_version": dist_version, "min_version": min_version, "error": e})
+            ],
         },
     }
 }
 
 /// Compare two semver-like version strings
 /// Returns Ok(true) if v1 >= v2
+/// 
+/// Note: This is a simplified comparison. Proper semver comparison including
+/// prerelease/build metadata should use a proper semver library.
 fn compare_versions(v1: &str, v2: &str) -> Result<bool, String> {
-    let parts1: Vec<u32> = v1.split('.')
+    // Strip prerelease suffix for basic comparison (e.g., "0.9.0-rc.1" -> "0.9.0")
+    // This treats prereleases as equal to their release version, which is conservative.
+    // A proper semver library would compare prereleases correctly.
+    let v1_base = v1.split('-').next().unwrap_or(v1);
+    let v2_base = v2.split('-').next().unwrap_or(v2);
+    
+    let parts1: Vec<u32> = v1_base.split('.')
         .filter_map(|s| s.parse().ok())
         .collect();
-    let parts2: Vec<u32> = v2.split('.')
+    let parts2: Vec<u32> = v2_base.split('.')
         .filter_map(|s| s.parse().ok())
         .collect();
     
     if parts1.is_empty() || parts2.is_empty() {
-        return Err("Invalid version format".to_string());
+        return Err(format!("Invalid version format: '{}' or '{}'", v1, v2));
     }
     
     // Compare major.minor.patch
@@ -223,8 +234,16 @@ mod tests {
     }
     
     #[test]
+    fn test_compare_versions_prerelease() {
+        // Prerelease versions should be treated as their base version
+        assert_eq!(compare_versions("0.9.0-rc.1", "0.9.0").unwrap(), true);
+        assert_eq!(compare_versions("0.9.0", "0.9.0-rc.1").unwrap(), true);
+    }
+    
+    #[test]
     fn test_compare_versions_invalid() {
         assert!(compare_versions("invalid", "0.9.0").is_err());
+        assert!(compare_versions("0.9.0", "invalid").is_err());
     }
     
     #[test]
@@ -236,6 +255,12 @@ mod tests {
     #[test]
     fn test_check_compatible_fail() {
         let result = check_compatible("0.8.0", "0.9.0");
+        assert_eq!(result.status, "fail");
+    }
+    
+    #[test]
+    fn test_check_compatible_invalid_version_fails() {
+        let result = check_compatible("invalid", "0.9.0");
         assert_eq!(result.status, "fail");
     }
     
@@ -265,5 +290,39 @@ version_policy = "exact"
         assert_eq!(policy.min_platform_version, "1.0.0");
         assert_eq!(policy.tck_version, "0.5.0");
         assert_eq!(policy.version_policy, "exact");
+    }
+    
+    #[test]
+    fn test_unknown_policy_fails() {
+        let policy = VersionPolicy {
+            version_policy: "unknown".to_string(),
+            ..Default::default()
+        };
+        // Unknown policy should produce a fail status
+        let result = run(&create_test_config(), &policy).unwrap();
+        assert_eq!(result.verdict, "NON-CONFORMANT");
+        assert_eq!(result.checks[0].status, "fail");
+        assert!(result.checks[0].message.contains("Unknown version policy"));
+    }
+    
+    fn create_test_config() -> crate::config::Config {
+        use crate::config::{Config, DistConfig, PathsConfig, ChecksConfig};
+        use std::path::PathBuf;
+        
+        Config {
+            dist: DistConfig {
+                name: "test".to_string(),
+                version: "1.0".to_string(),
+                platform_version: "0.9.0".to_string(),
+                arch: "x86_64-linux".to_string(),
+                profile: "full".to_string(),
+                paths: PathsConfig {
+                    sbom_file: PathBuf::from("test.json"),
+                    headers_dir: None,
+                    libs_dir: None,
+                },
+            },
+            checks: ChecksConfig::default(),
+        }
     }
 }

@@ -94,6 +94,24 @@ fn cmd_run(config_path: PathBuf, report_dir: PathBuf, checks: String) -> Result<
 
     // Check which checks are enabled
     let enabled_checks: Vec<&str> = checks.split(',').map(|s| s.trim()).collect();
+    
+    // Validate check names - reject unknown checks
+    let known_checks = ["sbom", "version", "runtime"];
+    let unknown_checks: Vec<&&str> = enabled_checks.iter()
+        .filter(|c| !known_checks.contains(c))
+        .collect();
+    
+    if !unknown_checks.is_empty() {
+        anyhow::bail!(
+            "Unknown check(s): {}. Known checks are: {}",
+            unknown_checks.iter().map(|c| c.to_string()).collect::<Vec<_>>().join(", "),
+            known_checks.join(", ")
+        );
+    }
+    
+    if enabled_checks.is_empty() {
+        anyhow::bail!("No checks specified. Known checks are: {}", known_checks.join(", "));
+    }
 
     // Run SBOM check if enabled
     if enabled_checks.contains(&"sbom") {
