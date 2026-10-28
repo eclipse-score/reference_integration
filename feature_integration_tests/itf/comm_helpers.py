@@ -14,8 +14,11 @@
 
 from __future__ import annotations
 
+import logging
 import re
 from dataclasses import dataclass
+
+logger = logging.getLogger(__name__)
 
 # Deployment layout of the communication FIT binaries inside the reference
 # image (see showcases/standalone/comm_fit/BUILD and showcases/BUILD). The
@@ -72,21 +75,6 @@ class CommResult:
         return RECV_DONE_MARKER in self.recv_stdout
 
 
-def samples_are_sequential_and_intact(seq: list[int], send_cycles: int) -> bool:
-    """
-    Every received value is one the sender actually produced (0 <= value <
-    send_cycles), and each consecutive pair increases by *exactly* one --
-    checking the expected next value at each step, not just that values fall
-    somewhere in a valid range. A plain non-decreasing (`>=`) check would
-    tolerate a duplicate delivery of the same sample; fit_sender's sequence
-    never repeats or skips, so any repeat or gap here is corruption.
-    """
-    if not seq:
-        return False
-    if not all(0 <= s < send_cycles for s in seq):
-        return False
-    return all(b == a + 1 for a, b in zip(seq, seq[1:]))
-
 
 def _shell_exit_marker(out: str, marker: str = "RECV_EXIT") -> int:
     """Extract ``<marker>=<int>`` printed by the exchange command."""
@@ -138,6 +126,7 @@ def run_event_exchange(
         f"kill $SEND_PID 2>/dev/null ; wait $SEND_PID 2>/dev/null ; "
         f"echo RECV_EXIT=$RECV_RC"
     )
+    logger.info("running command:\n%s", command)
     _, out = target.execute(command)
     recv_exit_code = _shell_exit_marker(out.decode(errors="replace"))
 
@@ -209,6 +198,7 @@ def run_receiver_with_manifest(
         f"--max-polls {max_polls} -s {manifest_path} -i {instance_specifier} "
         f"> {recv_log} 2>&1 ; echo RECV_EXIT=$?"
     )
+    logger.info("running command:\n%s", command)
     _, out = target.execute(command)
     recv_exit_code = _shell_exit_marker(out.decode(errors="replace"))
     _, recv_bytes = target.execute(f"cat {recv_log}")
@@ -393,6 +383,7 @@ def run_acl_isolation_scenario(
         f"echo ALLOWED_EXIT=$ALLOWED_EXIT ; echo DENIED_EXIT=$DENIED_EXIT ) ; "
         f"kill $SEND_PID 2>/dev/null ; wait $SEND_PID 2>/dev/null"
     )
+    logger.info("running command:\n%s", command)
     _, out = target.execute(command)
     decoded = out.decode(errors="replace")
     allowed_exit = _shell_exit_marker(decoded, "ALLOWED_EXIT")
