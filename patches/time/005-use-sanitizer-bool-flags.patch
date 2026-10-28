@@ -1,0 +1,13 @@
+--- a/.bazelrc
++++ b/.bazelrc
+@@ -96,7 +96,9 @@
+ build:asan_ubsan_lsan --copt=-fsanitize=undefined,address,leak
+ build:asan_ubsan_lsan --linkopt=-fsanitize=undefined,address,leak
+ build:asan_ubsan_lsan --platform_suffix=asan_ubsan_lsan
+-build:asan_ubsan_lsan --@score_cpp_policies//sanitizers/flags:sanitizer=asan_ubsan_lsan
++build:asan_ubsan_lsan --@score_cpp_policies//sanitizers/flags:asan=True
++build:asan_ubsan_lsan --@score_cpp_policies//sanitizers/flags:ubsan=True
++build:asan_ubsan_lsan --@score_cpp_policies//sanitizers/flags:lsan=True
+ test:asan_ubsan_lsan --run_under=@score_cpp_policies//sanitizers:wrapper
+ test:asan_ubsan_lsan --test_tag_filters=-no-asan,-no-lsan,-no-ubsan
+ test:asan_ubsan_lsan --build_tests_only

@@ -22,6 +22,8 @@ git_override(
     patches = [
         "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
         "//patches/baselibs:002-restore-qnx8-poll-workaround.patch",
+        "//patches/baselibs:003-make-log-examples-visible.patch",
+        "//patches/baselibs:004-fix-log-cpp-init-qnx-linkopts.patch",
     ],
     remote = "https://github.com/eclipse-score/baselibs.git",
 )
@@ -88,6 +90,8 @@ git_override(
     patch_strip = 1,
     patches = [
         "//patches/time:003-disable-broken-qnx-ifs-target.patch",
+        "//patches/time:004-rename-ubuntu-image-pull.patch",
+        "//patches/time:005-use-sanitizer-bool-flags.patch",
     ],
     remote = "https://github.com/eclipse-score/time.git",
 )
