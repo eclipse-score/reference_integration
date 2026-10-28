@@ -23,7 +23,14 @@ import logging
 
 import comm_helpers as comm
 import pytest
-from test_properties import add_test_properties
+
+try:
+    from attribute_plugin import add_test_properties  # type: ignore[import-untyped]
+except ImportError:
+    def add_test_properties(*args, **kwargs):
+        def decorator(func):
+            return func
+        return decorator
 
 logger = logging.getLogger(__name__)
 
@@ -84,8 +91,12 @@ def test_received_samples_are_ordered_and_intact(target):
     logger.info("received sample sequence: %s", samples)
 
     assert result.recv_exit_code == 0, "consumer did not exit cleanly"
-    assert comm.samples_are_sequential_and_intact(samples, send_cycles), (
-        f"received samples were reordered, duplicated, or out of range: {samples}"
+    assert samples, "consumer received no samples"
+    assert all(0 <= s < send_cycles for s in samples), (
+        f"received samples contain out-of-range sequence values: {samples}"
+    )
+    assert all(b == a + 1 for a, b in zip(samples, samples[1:])), (
+        f"received samples were reordered or duplicated: {samples}"
     )
 
 
@@ -121,7 +132,7 @@ def test_deployment_config_is_read_from_runtime_path(target):
             instance["instanceSpecifier"] = modified_specifier
             break
     else:
-        raise AssertionError(f"default manifest did not contain {default_specifier!r} to modify")
+        pytest.fail(f"test setup error: default manifest did not contain {default_specifier!r} to modify")
 
     staged = "/tmp/comm_fit_runtime_manifest.json"
     comm.write_remote_file(target, staged, json.dumps(manifest))
