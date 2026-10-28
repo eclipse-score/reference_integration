@@ -14,15 +14,13 @@
 """
 Read a known_good.json file and generate a score_modules.MODULE.bazel file
 with `bazel_dep` and `git_override` calls for each module in the JSON.
-It generates also rust_coverage/BUILD file with `rust_coverage_report` for each module with rust impl,
-and bazel_common/docs_bundles.bzl with the documentation bundle mounts consumed by the
+It generates also bazel_common/docs_bundles.bzl with the documentation bundle mounts consumed by the
 `docs()` macro in the root BUILD file.
 
 Usage:
   python3 scripts/known_good/update_module_from_known_good.py \
       --known known_good.json \
       --output-dir-modules bazel_common \
-      --output-dir-coverage rust_coverage \
       --output-dir-docs-bundles bazel_common
 
 The generated score_modules_NAME_.MODULE.bazel file is included by MODULE.bazel.
@@ -40,8 +38,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 # Importable both as a package module (from the tests and the py_library) and runnable as a
-# plain script from the repo root, which is how CI invokes it. Same fallback as
-# resolved_dependencies.py.
+# plain script from the repo root, which is how CI invokes it.
 try:
     from known_good.models import Module
     from known_good.models.known_good import KnownGood, load_known_good
@@ -147,38 +144,6 @@ def generate_local_override_blocks(modules: List[Module]) -> List[str]:
 
         blocks.append(block)
 
-    return blocks
-
-
-def generate_coverage_blocks(modules: List[Module]) -> List[str]:
-    """Generate rust_coverage_report  blocks for each module with rust impl."""
-    blocks = ["""load("@score_tooling//:defs.bzl", "rust_coverage_report")"""]
-
-    for module in modules:
-        if "rust" not in module.metadata.langs:
-            continue
-
-        if module.metadata.exclude_test_targets:
-            excluded_tests = (
-                f" {' '.join([f'-@{module.name}{target}' for target in module.metadata.exclude_test_targets])}"
-            )
-        else:
-            excluded_tests = ""
-
-        ferrocene_config = module.metadata.rust_coverage_config or "ferrocene-coverage"
-        block = f"""
-rust_coverage_report(
-    name = "rust_coverage_{module.name}",
-    bazel_configs = [
-        "linux-x86_64",
-        "{ferrocene_config}",
-    ],
-    query = 'kind("rust_test", @{module.name}{module.metadata.code_root_path}){excluded_tests}',
-    visibility = ["//visibility:public"],
-)"""
-
-        blocks.append(block)
-    blocks.append("")  # Add final newline
     return blocks
 
 
@@ -311,8 +276,6 @@ def generate_file_content(
         else:
             header += "# Note: This file uses local_path overrides. Ensure that local paths are set up correctly.\n\n"
             blocks = generate_local_override_blocks(modules)
-    elif file_type == "build":
-        blocks = generate_coverage_blocks(modules)
     else:
         raise ValueError(f"Invalid file_type: {file_type}")
 
@@ -357,11 +320,6 @@ Note:
         "--output-dir-modules",
         default=Path(__file__).parents[2] / "bazel_common",
         help="Output directory for grouped structure files (default: bazel_common in repo root)",
-    )
-    parser.add_argument(
-        "--output-dir-coverage",
-        default=Path(__file__).parents[2] / "rust_coverage",
-        help="Output directory for BUILD coverage file (default: rust_coverage in repo root)",
     )
     parser.add_argument(
         "--output-dir-docs-bundles",
@@ -438,7 +396,6 @@ Note:
         output_filename = f"score_modules_{group_name}.MODULE.bazel"
 
         output_path_modules = os.path.join(output_dir_modules, output_filename)
-        output_path_coverage = args.output_dir_coverage / "BUILD"
 
         # Generate file content of MODULE files
         content_module = generate_file_content(
@@ -457,24 +414,6 @@ Note:
             generated_files.append(output_path_modules)
             total_module_count += len(modules)
             print(f"Generated {output_path_modules} with {len(modules)} {args.override_type}_override entries")
-
-        # Generate file content of BUILD coverage files
-        if "target_sw" not in group_name:
-            continue  # Only generate coverage for software modules
-
-        content_build = generate_file_content(args, modules, repo_commit_dict, known_good.timestamp, file_type="build")
-
-        if args.dry_run:
-            print(f"\nDry run: would write to {output_path_coverage}\n")
-            print("---- BEGIN GENERATED CONTENT FOR BUILD ----")
-            print(content_build)
-            print("---- END GENERATED CONTENT FOR BUILD ----")
-            print(f"\nGenerated {len(modules)} {args.override_type}_override entries for group '{group_name}'")
-        else:
-            with open(output_path_coverage, "w", encoding="utf-8") as f:
-                f.write(content_build)
-            generated_files.append(output_path_coverage)
-            print(f"Generated {output_path_coverage}")
 
     # Generate docs_bundles.bzl once, covering every group's documentation mounts.
     content_docs_bundles = generate_docs_bundles_content(known_good, known_good.timestamp)

@@ -33,8 +33,12 @@ concurrency:
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
+  module_tests:
+    uses: ./.github/workflows/module_tests.yml
   test_and_docs:
     runs-on: ubuntu-latest
+    needs: module_tests
+    if: ${{ !cancelled() }}
     permissions:
       contents: write # required to upload release assets
       pull-requests: write
@@ -80,33 +84,20 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install lcov
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y lcov
       - name: Install Graphviz
         uses: eclipse-score/apt-install@main
         with:
           packages: graphviz
           cache: false
-      - name: Execute Unit Tests with Coverage Analysis
-        # Only tag runs are authoritative and re-execute every test from scratch, because they
-        # attach the test-report ZIP and the SBOM as official release assets. The condition is
-        # deliberately the same one those upload steps use, so the two can never drift apart.
-        # Every other event (including push to main) trusts the cache: --nocache_test_results
-        # suppresses not only reading but also WRITING test results into the disk-cache, so a
-        # push run without --trust-cache would save a cache that contains zero test results,
-        # leaving every later PR run with nothing to hit.
-        run: |
-          python ./scripts/quality_runners.py \
-            ${{ github.ref_type != 'tag' && '--trust-cache' || '' }}
       - name: Execute Feature Integration Tests
         run: |
           bazel test --config=linux-x86_64 //feature_integration_tests/test_cases:fit
       - name: Execute Platform Integration Tests
         # Runs in this job - and before the documentation build below - on purpose:
-        # the source code linker of the documentation build scans `bazel-testlogs`
-        # of this very workspace. Only tests executed here contribute their
+        # the source code linker of the documentation build reads the test.xml files
+        # in `tests-report/` of this very workspace, which is filled from this job's
+        # `bazel-testlogs` and the module test reports (see "Collect test reports").
+        # Only tests whose results land there contribute their
         # PartiallyVerifies/FullyVerifies properties as `testlink` attributes to
         # the stakeholder requirement needs, and therefore to the test coverage
         # figures of the platform verification report.
@@ -130,12 +121,35 @@ jobs:
       - name: Build build tools SBOM
         run: |
           bazel build --lockfile_mode=error //:build_tools_sbom
+      - name: Download module test reports
+        uses: actions/download-artifact@v4.1.8
+        with:
+          pattern: module-tests-*
+          path: _module_reports
+          merge-multiple: true
+      - name: Write unit test and coverage summaries
+        # Module unit tests and their coverage come only from module_tests.yml, which runs each
+        # module's own tests against ref_int's resolved dependency versions.
+        run: python ./scripts/module_tests.py report _module_reports
+      - name: Collect test reports for the documentation
+        # The source code linker reads tests-report/ instead of bazel-testlogs/ when it exists, so
+        # ref_int's own results (feature, platform and module integration tests) go in too. Module
+        # unit test results land where ref_int's would (external/<module>+/...), which is how the
+        # linker maps them to known_good.json.
+        run: |
+          rsync -a --copy-links --include='*/' --include='test.xml' --exclude='*' --prune-empty-dirs bazel-testlogs/ tests-report/
+          for report in _module_reports/*; do
+            module="${report##*/}"
+            [ -d "$report/tests" ] || continue
+            mkdir -p "tests-report/external/$module+"
+            cp -r "$report/tests/." "tests-report/external/$module+/"
+          done
       - name: Create archive of test reports
         if: github.ref_type == 'tag'
         run: |
           mkdir -p artifacts
           find bazel-testlogs/external -name 'test.xml' -print0 | xargs -0 -I{} cp --parents {} artifacts/
-          cp -r "$(bazel info --lockfile_mode=error bazel-bin)/coverage/rust-tests" artifacts/rust
+          cp -r _module_reports artifacts/module-tests
           zip -r ${{ github.event.repository.name }}_test_reports.zip artifacts/
         shell: bash
       - name: Upload release asset (attach ZIP to GitHub Release)
