@@ -14,14 +14,13 @@
 
 Rendered by generate_release_note.py together with the skeleton; never edited by hand.
 Modules and images come from known_good.json and the repository, components from the
-Sphinx-Needs ``comp``/``mod`` needs of a needs.json.
+Sphinx-Needs ``comp``/``mod`` needs of the needs.json of the docs build.
 """
 
 from __future__ import annotations
 
 import json
 import re
-import urllib.request
 from pathlib import Path
 from xml.sax.saxutils import escape
 
@@ -100,26 +99,6 @@ def card_base(x, y, w, h, accent):
     ]
 
 
-def tile(x, y, w, h, entry: grn.Entry, is_new: bool, note: str):
-    accent = RELEASED if entry.tag else UNRELEASED
-    out = card_base(x, y, w, h, accent)
-    lines, size = wrap(entry.name, 16, 700, w - 34 - (52 if is_new else 0))
-    for i, line in enumerate(lines):
-        out.append(text(x + 20, y + 30 + i * (size + 5), line, size, 700, NAVY))
-    version = entry.tag or entry.pin[:7]
-    out.append(text(x + 20, y + h - 56, version, 18, 700, INK if entry.tag else accent, family=MONO))
-    if note:
-        out.append(text(x + 20, y + h - 38, note, 10, 400, FAINT, family=MONO))
-    out.append(
-        f'<line x1="{x + 20:.1f}" y1="{y + h - 28:.1f}" x2="{x + w - 14:.1f}" y2="{y + h - 28:.1f}" stroke="#e3e9f2"/>'
-    )
-    repo = entry.repo_url.rstrip("/").rsplit("/", 1)[-1]
-    out.append(text(x + 20, y + h - 11, fit(repo, 10, 400, w - 34)[0], 10, 400, FAINT, family=MONO))
-    if is_new:
-        out.append(pill(x + w - 10, y + 10, "NEW", NEW))
-    return "\n".join(out)
-
-
 def row_card(x, y, w, h, entry: grn.Entry, is_new: bool):
     accent = RELEASED if entry.tag else UNRELEASED
     out = card_base(x, y, w, h, accent)
@@ -148,13 +127,9 @@ def section(x, y, w, h, title_lines, subtitle="", stacked=False):
 CHIP_H, CHIP_GAP = 22, 6
 
 
-def load_components(source: str, entries: list[grn.Entry]) -> dict[str, list[str]]:
+def load_components(path: Path, entries: list[grn.Entry]) -> dict[str, list[str]]:
     """Module key -> component titles, from the Sphinx-Needs `comp` and `mod` needs of a needs.json."""
-    if source.startswith("http"):
-        with urllib.request.urlopen(source, timeout=60) as response:
-            data = json.load(response)
-    else:
-        data = json.loads(Path(source).read_text())
+    data = json.loads(path.read_text())
     versions = data["versions"]
     needs = versions.get(data.get("current_version", ""), next(iter(versions.values())))["needs"]
     found: dict[str, dict[str, str]] = {e.key: {} for e in entries}
@@ -266,7 +241,7 @@ def render(
     origin_groups: dict[str, list[grn.Entry]],
     ref: str | None,
     ref_label: str,
-    components: dict[str, list[str]] | None,
+    components: dict[str, list[str]],
 ) -> str:
     old = {grn.KEY_ALIASES.get(e.key, e.key): e for es in origin_groups.values() for e in es}
 
@@ -298,11 +273,10 @@ def render(
     parts.append(pill(M + text_width(title, 32, 800) + 20 + 12 + 7 * len(state), 30, state, color, 24))
     figures = [
         (str(len(sw)), "software modules"),
+        (str(sum(map(len, components.values()))), "components"),
         (str(len(infra)), "infrastructure modules"),
         (str(len(images)), "target images"),
     ]
-    if components is not None:
-        figures.insert(1, (str(sum(map(len, components.values()))), "components"))
     x = W - M
     for value, label in reversed(figures):
         w = max(text_width(label, 11) + 8, 70)
@@ -316,16 +290,12 @@ def render(
     right_x = side_x + side_w + 20
     right_w = W - M - right_x
 
-    # Body height: the taller of the infrastructure sidebar and the right column (with minimum tile height)
+    # Body height: the taller of the infrastructure sidebar and the right column
     row_h, row_gap, rows_top = 38, 8, 92
     side_h = rows_top + len(infra) * row_h + (len(infra) - 1) * row_gap + 24
-    cols, gap, min_tile_h = 4, 16, 120
-    rows = (len(sw) + cols - 1) // cols
-    images_h = 128
-    right_min = 56 + rows * min_tile_h + (rows - 1) * gap + 24 + 20 + images_h
-    if components is not None:
-        comp_rows = component_rows(sw, components, right_w - 48, gap, history, origin)
-        right_min = 56 + sum(h for _, h in comp_rows) + (len(comp_rows) - 1) * gap + 24 + 20 + images_h
+    gap, images_h = 16, 128
+    comp_rows = component_rows(sw, components, right_w - 48, gap, history, origin)
+    right_min = 56 + sum(h for _, h in comp_rows) + (len(comp_rows) - 1) * gap + 24 + 20 + images_h
     body_h = max(side_h, right_min)
 
     # Left sidebar along the full body: platform, infrastructure & tooling
@@ -336,27 +306,17 @@ def render(
         y = top + rows_top + i * (row_h + row_gap)
         parts.append(row_card(side_x + 20, y, side_w - 40, row_h, e, history(e)[0]))
 
-    # Integrated software modules, flat grid
+    # Integrated software modules: justified rows of tiles with their components
     modules_h = body_h - 20 - images_h
     parts.append(section(right_x, top, right_w, modules_h, ["Integrated software modules"], f"{len(sw)} modules"))
-    tile_w = (right_w - 48 - gap * (cols - 1)) / cols
-    tile_h = (modules_h - 56 - 24 - gap * (rows - 1)) / rows
-    if components is not None:
-        extra = (body_h - right_min) / len(comp_rows)
-        y = top + 56
-        for tiles, h in comp_rows:
-            x = right_x + 24
-            for e, w, is_new, note, comps in tiles:
-                parts.append(component_tile(x, y, w, h + extra, e, is_new, note, comps))
-                x += w + gap
-            y += h + extra + gap
-        sw = []
-    for i, e in enumerate(sw):
-        is_new, previous = history(e)
-        note = f"was {previous}" if previous else ("" if is_new else f"unchanged since {origin}")
-        x = right_x + 24 + (i % cols) * (tile_w + gap)
-        y = top + 56 + (i // cols) * (tile_h + gap)
-        parts.append(tile(x, y, tile_w, tile_h, e, is_new, note))
+    extra = (body_h - right_min) / len(comp_rows)
+    y = top + 56
+    for tiles, h in comp_rows:
+        x = right_x + 24
+        for e, w, is_new, note, comps in tiles:
+            parts.append(component_tile(x, y, w, h + extra, e, is_new, note, comps))
+            x += w + gap
+        y += h + extra + gap
 
     # Target images below the modules
     y = top + body_h - images_h

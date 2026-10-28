@@ -31,7 +31,7 @@ eclipse-score/score repository.
 
 The skeleton embeds an architecture diagram that is rendered from scratch on every
 run (``architecture_diagram.py``) to ``docs/s_core_v_1/releases/_assets/architecture_v<X>_<Y>.svg``.
-Its components come from ``--needs`` (default: needs.json of the published main docs).
+Its components come from the needs.json of the checkout, built with ``bazel build //:needs_json_file``.
 """
 
 from __future__ import annotations
@@ -62,9 +62,9 @@ SECTIONS = {
 # Module verification reports are linked from the current docs tree (same convention as the platform report).
 VERIFICATION_INDEX = "docs/verification_report/modules/index.rst"
 EMPTY_CELL = "---"
-# Architecture diagram of the note; components come from the Sphinx-Needs of the published docs.
+# Architecture diagram of the note; components come from the Sphinx-Needs of the checkout's docs.
 DIAGRAM_DIR = "docs/s_core_v_1/releases/_assets"
-NEEDS_URL = f"https://eclipse-score.github.io/{RELEASE_REPO}/main/needs.json"
+NEEDS_TARGET = "//:needs_json_file"
 # Old module names in earlier known_good.json versions -> current name used in the docs tree.
 KEY_ALIASES = {"score_lifecycle_health": "score_lifecycle", "score_process": "score_process_description"}
 
@@ -512,15 +512,18 @@ def render_changes(origin: dict[str, list[Entry]], current: dict[str, list[Entry
     return "\n".join(lines)
 
 
+def build_needs() -> Path:
+    """needs.json of the checked-out docs; Bazel rebuilds it only when the docs inputs changed."""
+    print(f"building {NEEDS_TARGET} ...", file=sys.stderr)
+    subprocess.run(["bazel", "build", NEEDS_TARGET], cwd=REPO_ROOT, check=True, stdout=sys.stderr)
+    return REPO_ROOT / "bazel-bin" / "needs.json"
+
+
 def write_diagram(args: argparse.Namespace, date: str, groups: dict[str, list[Entry]], ref: str | None) -> None:
     import architecture_diagram
 
     software = [e for e in groups["target_sw"] if e.key != PLATFORM_MODULE]
-    try:
-        components = architecture_diagram.load_components(args.needs, software)
-    except (OSError, ValueError, KeyError) as error:
-        print(f"warning: no components in the diagram, cannot read {args.needs}: {error}", file=sys.stderr)
-        components = None
+    components = architecture_diagram.load_components(args.needs or build_needs(), software)
     label = _git("rev-parse", "--short", f"{ref or 'HEAD'}^{{commit}}").strip()
     svg = architecture_diagram.render(
         args.release,
@@ -557,8 +560,8 @@ def main() -> None:
     parser.add_argument("--output", type=Path, help="Write to file instead of stdout")
     parser.add_argument(
         "--needs",
-        default=NEEDS_URL,
-        help="needs.json (path or URL) with the components for the architecture diagram (default: %(default)s)",
+        type=Path,
+        help=f"needs.json for the components of the architecture diagram (default: bazel build {NEEDS_TARGET})",
     )
     args = parser.parse_args()
 

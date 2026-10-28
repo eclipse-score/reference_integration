@@ -116,21 +116,27 @@ Content:
 - Colour bar: green = released tag, orange = commit pin; NEW = not in the origin
   release.
 
-Components come from the Sphinx-Needs of a `needs.json` (`--needs`, default:
-the published docs of `main`): every `comp` need whose source lies in
+Components come from the Sphinx-Needs of the `needs.json` of the **checked-out
+branch**: the generator runs `bazel build //:needs_json_file` (Bazel caches it
+and rebuilds only when the docs inputs changed; the first run takes a few
+minutes) and reads `bazel-bin/needs.json`. These are the module docs at the
+pins of the checkout, so components, versions and images describe the same
+state. It takes every `comp` need whose source lies in
 `modules/<module key>/`, plus the `includes` of the module's `mod` need (a `mod`
 need outside the module docs, for example in `score_platform`, is matched by its
 title). Modules without such needs show "no components documented"; report
-them, do not add components by hand. If the `needs.json` cannot be read the
-generator warns and draws the tiles without components.
+them, do not add components by hand. If the Bazel build fails, the generator
+stops; fix the build instead of falling back to another `needs.json`.
+`--needs <file>` skips the build and is only for reproducing a diagram from a
+kept `needs.json`.
 
 The diagram is a pure function of its inputs: `known_good.json` at the release
-ref and at the origin tag, `images/` at the release ref, the `needs.json`, the
-milestone date and the state (`--final`). There is no randomness, no timestamp
-and no layout state; the same inputs give a byte-identical SVG. To check, run
-the generator twice to a scratch output and `cmp` the SVG. The default
-`needs.json` is the published `main` docs, which change over time; pass
-`--needs <file>` to reproduce a diagram with a fixed component list.
+ref and at the origin tag, `images/` at the release ref, the `needs.json` of the
+checkout, the milestone date and the state (`--final`). There is no randomness,
+no timestamp and no layout state; the same inputs give a byte-identical SVG. To
+check, run the generator twice to a scratch output and `cmp` the SVG.
+Run it on the checked-out release branch without `--known-good-ref`; with
+another ref the components would still come from the checkout.
 Colours follow the S-CORE docs theme (header `#2D1942`); change them only in
 `architecture_diagram.py`.
 
@@ -151,8 +157,9 @@ asks for release, origin and state (`draft` or `final`) and starts the agent.
    default; the release branch must be pushed, because the collector compares
    commits through the GitHub API. Set `GITHUB_TOKEN` for the GitHub API calls
    (anonymous access is rate limited); never print it.
-3. **Skeleton.** Run the generator (see above); it also writes the
-   architecture diagram (see "Architecture diagram"). Check the stderr warnings.
+3. **Skeleton.** Run the generator (see above); it also builds the
+   `needs.json` of the checkout with Bazel and writes the architecture diagram
+   (see "Architecture diagram"). Check the stderr warnings.
 4. **Evidence.** Run `collect_changes.py` with the same `--release` and
    `--origin`, plus the `--changes` table. Runtime is a few minutes.
 5. **Narrative.** Replace the two `AI-FILL` markers (New Features, Breaking

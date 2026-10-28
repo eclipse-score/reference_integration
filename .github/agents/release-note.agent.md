@@ -41,8 +41,9 @@ Read it first and follow it exactly.
 2. Prepare: work on the release candidate branch of the release (ask for it if
    the current branch is `main`); `git pull` and `git fetch --tags`. Do not
    pass `--known-good-ref`; both scripts read the checked-out branch.
-3. Run the generator to create the skeleton (this also renders the
-   architecture diagram) and the `--changes` table.
+3. Run the generator to create the skeleton (this also builds the checkout's
+   `needs.json` with Bazel and renders the architecture diagram) and the
+   `--changes` table. Do not pass `--needs`.
 4. Run `collect_changes.py` and classify into platform-level new features and
    breaking changes as described in the skill (use the impact hints).
 5. Replace both `.. AI-FILL:` markers (New Features, Breaking Changes).
