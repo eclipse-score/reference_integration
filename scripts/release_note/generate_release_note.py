@@ -28,6 +28,10 @@ Examples:
 
 The release date is the due date of the milestone ``v<major>.<minor>`` in the
 eclipse-score/score repository.
+
+The skeleton embeds an architecture diagram that is rendered from scratch on every
+run (``architecture_diagram.py``) to ``docs/s_core_v_1/releases/_assets/architecture_v<X>_<Y>.svg``.
+Its components come from ``--needs`` (default: needs.json of the published main docs).
 """
 
 from __future__ import annotations
@@ -58,6 +62,9 @@ SECTIONS = {
 # Module verification reports are linked from the current docs tree (same convention as the platform report).
 VERIFICATION_INDEX = "docs/verification_report/modules/index.rst"
 EMPTY_CELL = "---"
+# Architecture diagram of the note; components come from the Sphinx-Needs of the published docs.
+DIAGRAM_DIR = "docs/s_core_v_1/releases/_assets"
+NEEDS_URL = f"https://eclipse-score.github.io/{RELEASE_REPO}/main/needs.json"
 # Old module names in earlier known_good.json versions -> current name used in the docs tree.
 KEY_ALIASES = {"score_lifecycle_health": "score_lifecycle", "score_process": "score_process_description"}
 
@@ -380,6 +387,10 @@ def status_banner(release: str, date: str, status: str) -> str:
 """
 
 
+def diagram_name(release: str) -> str:
+    return "architecture_v" + "_".join(release.removeprefix("v").split(".")[:2]) + ".svg"
+
+
 def render(release: str, origin: str, date: str, status: str, groups: dict[str, list[Entry]], ref: str | None) -> str:
     short = ".".join(release.removeprefix("v").split(".")[:2])
     doc_id = "v" + short.replace(".", "")
@@ -424,6 +435,12 @@ def render(release: str, origin: str, date: str, status: str, groups: dict[str, 
 This document provides an overview of the changes, improvements, and bug fixes
 included in the software platform release version {release} as compared to the
 previous platform release ({origin}).
+
+.. figure:: /{DIAGRAM_DIR.removeprefix("docs/")}/{diagram_name(release)}
+   :width: 100%
+   :alt: S-CORE v{short} reference integration architecture
+
+   Modules, components and images of the reference integration {release}.
 
 """,
         _heading("Disclaimer", "-"),
@@ -495,6 +512,33 @@ def render_changes(origin: dict[str, list[Entry]], current: dict[str, list[Entry
     return "\n".join(lines)
 
 
+def write_diagram(args: argparse.Namespace, date: str, groups: dict[str, list[Entry]], ref: str | None) -> None:
+    import architecture_diagram
+
+    software = [e for e in groups["target_sw"] if e.key != PLATFORM_MODULE]
+    try:
+        components = architecture_diagram.load_components(args.needs, software)
+    except (OSError, ValueError, KeyError) as error:
+        print(f"warning: no components in the diagram, cannot read {args.needs}: {error}", file=sys.stderr)
+        components = None
+    label = _git("rev-parse", "--short", f"{ref or 'HEAD'}^{{commit}}").strip()
+    svg = architecture_diagram.render(
+        args.release,
+        args.origin,
+        date,
+        args.final,
+        groups,
+        collect(load_known_good(args.origin)),
+        ref,
+        label,
+        components,
+    )
+    path = REPO_ROOT / DIAGRAM_DIR / diagram_name(args.release)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(svg + "\n")
+    print(f"wrote {path.relative_to(REPO_ROOT)}", file=sys.stderr)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--release", required=True, help="Release tag, e.g. v0.10.0")
@@ -511,6 +555,11 @@ def main() -> None:
     parser.add_argument("--final", action="store_true", help="Final release note (default: draft)")
     parser.add_argument("--changes", action="store_true", help="Print module version changes instead of the skeleton")
     parser.add_argument("--output", type=Path, help="Write to file instead of stdout")
+    parser.add_argument(
+        "--needs",
+        default=NEEDS_URL,
+        help="needs.json (path or URL) with the components for the architecture diagram (default: %(default)s)",
+    )
     args = parser.parse_args()
 
     ref = args.known_good_ref or (args.release if _tag_exists(args.release) else None)
@@ -522,6 +571,7 @@ def main() -> None:
         date = args.date or milestone_date(args.release)
         status = "valid" if args.final else "draft"
         text = render(args.release, args.origin, date, status, groups, ref)
+        write_diagram(args, date, groups, ref)
 
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)

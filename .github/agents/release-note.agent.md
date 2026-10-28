@@ -23,7 +23,8 @@ Read it first and follow it exactly.
 - List only platform-level new features and breaking changes (see the skill);
   module internals stay in the module release notes, which the note links.
 - DO NOT edit generated parts (status banner, Overview, headings and icons,
-  tables); only replace the `AI-FILL` markers.
+  tables, architecture diagram SVG); only replace the `AI-FILL` markers. The
+  diagram is regenerated from scratch with every skeleton run.
 - Pass `--final` only when the user explicitly asks for the final note;
   otherwise the note is a draft (see the skill, "Draft and final").
 - DO NOT overwrite an existing `release_note_score_*.rst` without the user
@@ -40,15 +41,17 @@ Read it first and follow it exactly.
 2. Prepare: work on the release candidate branch of the release (ask for it if
    the current branch is `main`); `git pull` and `git fetch --tags`. Do not
    pass `--known-good-ref`; both scripts read the checked-out branch.
-3. Run the generator to create the skeleton and the `--changes` table.
+3. Run the generator to create the skeleton (this also renders the
+   architecture diagram) and the `--changes` table.
 4. Run `collect_changes.py` and classify into platform-level new features and
    breaking changes as described in the skill (use the impact hints).
 5. Replace both `.. AI-FILL:` markers (New Features, Breaking Changes).
 6. Make sure the new note is part of the `toctree` in
    `docs/s_core_v_1/releases/releases.rst`.
 7. Run the validation checks from the skill.
-8. Report: output path, state (draft or final), generator warnings, modules
-   with unreleased pins,
+8. Report: output path and diagram path, state (draft or final), generator
+   warnings, modules with unreleased pins, modules shown with "no components
+   documented" in the diagram,
    items left out although they looked relevant, and anything you could not
    verify.
 

@@ -18,6 +18,7 @@ runs the procedure; this skill holds the rules.
 | Status banner directly below the title: **DRAFT** (`.. warning::`, title suffix "(DRAFT)", `:status: draft`) or **FINAL** (`.. note::` with link to the release tag, `:status: valid`) | `--final` | script |
 | Header (`document` directive, Platform Name, Release Tag, Origin Release Tag, Release Date) | CLI args; Release Date = due date of the milestone `v<major>.<minor>` in [eclipse-score/score](https://github.com/eclipse-score/score/milestones) | script |
 | Overview (fixed intro sentence) | release and origin tag | script |
+| Architecture diagram (figure in the Overview, SVG in `docs/s_core_v_1/releases/_assets/architecture_vX_Y.svg`) | `known_good.json` (release and origin), `images/`, components from `needs.json` | script (`architecture_diagram.py`) |
 | Disclaimer | fixed text | script |
 | Changes to the Platform: New Features / Breaking Changes (platform-level only) | `collect_changes.py` (this repo's PRs, modules' own release notes, impact hints), `--changes` table | AI |
 | Reference Integration scope: Version, Source / tag, Release notes, Platform Verification Report (bullets) | release tag | script |
@@ -94,6 +95,45 @@ Behaviour worth knowing:
 - The two narrative sections (New Features, Breaking Changes) are emitted as
   `.. AI-FILL: <instruction>` comments.
 
+## Architecture diagram
+
+Every skeleton run renders the diagram from scratch
+(`scripts/release_note/architecture_diagram.py`, called by the generator) to
+`docs/s_core_v_1/releases/_assets/architecture_v<major>_<minor>.svg` and embeds
+it with `.. figure::` in the Overview. The SVG is a generated file: never edit
+it by hand and never keep an old one; regenerate it with the skeleton.
+
+Content:
+
+- Header: release, DRAFT/FINAL badge (`--final`), release date, origin and key
+  figures (software modules, components, infrastructure modules, images).
+- Left column over the full height: platform, infrastructure and tooling
+  modules (`score_platform` + group `tooling`).
+- Right: the integrated software modules as tiles side by side (no layering),
+  each with version, the version in the origin release ("was ...") and its
+  components as chips; below them the target images (same catalogue as the
+  image table, dashed = experimental).
+- Colour bar: green = released tag, orange = commit pin; NEW = not in the origin
+  release.
+
+Components come from the Sphinx-Needs of a `needs.json` (`--needs`, default:
+the published docs of `main`): every `comp` need whose source lies in
+`modules/<module key>/`, plus the `includes` of the module's `mod` need (a `mod`
+need outside the module docs, for example in `score_platform`, is matched by its
+title). Modules without such needs show "no components documented"; report
+them, do not add components by hand. If the `needs.json` cannot be read the
+generator warns and draws the tiles without components.
+
+The diagram is a pure function of its inputs: `known_good.json` at the release
+ref and at the origin tag, `images/` at the release ref, the `needs.json`, the
+milestone date and the state (`--final`). There is no randomness, no timestamp
+and no layout state; the same inputs give a byte-identical SVG. To check, run
+the generator twice to a scratch output and `cmp` the SVG. The default
+`needs.json` is the published `main` docs, which change over time; pass
+`--needs <file>` to reproduce a diagram with a fixed component list.
+Colours follow the S-CORE docs theme (header `#2D1942`); change them only in
+`architecture_diagram.py`.
+
 ## Run from scratch (any release, also for not yet tagged ones)
 
 The procedure is identical for existing and new releases; only the inputs differ.
@@ -111,7 +151,8 @@ asks for release, origin and state (`draft` or `final`) and starts the agent.
    default; the release branch must be pushed, because the collector compares
    commits through the GitHub API. Set `GITHUB_TOKEN` for the GitHub API calls
    (anonymous access is rate limited); never print it.
-3. **Skeleton.** Run the generator (see above). Check the stderr warnings.
+3. **Skeleton.** Run the generator (see above); it also writes the
+   architecture diagram (see "Architecture diagram"). Check the stderr warnings.
 4. **Evidence.** Run `collect_changes.py` with the same `--release` and
    `--origin`, plus the `--changes` table. Runtime is a few minutes.
 5. **Narrative.** Replace the two `AI-FILL` markers (New Features, Breaking
@@ -124,7 +165,8 @@ An existing note is never overwritten unless the user asks for it; to compare,
 write to another path. To refresh the tables of an existing draft (for example
 after pin bumps, or to make it final with `--final`), generate to
 another path and replace everything outside "Changes to the Platform"; keep the
-reviewed narrative.
+reviewed narrative. The diagram SVG is always overwritten by the run, so it
+matches the refreshed tables.
 
 Re-running with the same inputs gives the same tables and chapter structure.
 The narrative may be worded differently, but it has to name the same items as
@@ -222,6 +264,9 @@ Known limits of the evidence:
 ## Validation
 
 - `grep -n "AI-FILL" <file>` is empty.
+- The Overview contains the `.. figure::` of the diagram and the SVG
+  `docs/s_core_v_1/releases/_assets/architecture_v<major>_<minor>.svg` was
+  written by this run (it is committed together with the note).
 - The new note is part of the `toctree` in `releases.rst`.
 - Every `~~~` item and every bullet names a PR, issue or release note link.
 - Every new module of the `--changes` table and every removed mechanism of this
