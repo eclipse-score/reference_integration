@@ -63,24 +63,78 @@ jobs:
           arch = "x86_64-linux"
 
           [dist.paths]
-          sbom_file = "bazel-bin/sbom.spdx.json"
+          sbom_file = "reference/sbom.spdx.json"
           EOF
           ./score-tck run --config /tmp/test-dist.toml --report /tmp/tck-test-report || true
           echo ""
           echo "Report summary:"
           head -20 /tmp/tck-test-report/summary.md
 
-      - name: Upload binary artifact
+      - name: Bundle TCK package
+        run: |
+          VERSION="${{ github.event.release.tag_name || '0.1.0' }}"
+          # Create bundle directory structure
+          mkdir -p score-tck/bin
+          mkdir -p score-tck/reference
+          mkdir -p score-tck/docs
+          
+          # Copy binary
+          cp score-tck score-tck/bin/
+          
+          # Copy golden SBOM
+          cp bazel-bin/sbom.spdx.json score-tck/reference/
+          
+          # Copy config example
+          cp tck/tck.config.example.toml score-tck/
+          
+          # Create README
+          cat > score-tck/README.md << 'READMEEOF'
+          # s-core Test Compatibility Kit (TCK)
+          
+          This package verifies SCORE distribution compatibility with platform requirements.
+          
+          ## Quick Start
+          
+          1. Create a distribution config:
+             ```bash
+             cp tck.config.example.toml my-dist.toml
+             # Edit sbom_file path to point to your distribution's SBOM
+             ```
+          
+          2. Run the TCK:
+             ```bash
+             ./bin/score-tck run --config my-dist.toml --report ./report
+             ```
+          
+          3. Check the verdict in `report/summary.md` or `report/report.json`
+          
+          ## What's Checked
+          
+          - **SBOM conformance**: Required components present, license policy, drift from golden
+          - More checks coming in future versions
+          
+          ## Exit Codes
+          
+          - 0: CONFORMANT or CONFORMANT-WITH-WARNINGS
+          - 1: NON-CONFORMANT
+          READMEEOF
+          
+          # Create tarball
+          tar -czvf score-tck-${VERSION}-linux-x86_64.tar.gz score-tck/
+          echo "Created bundle: score-tck-${VERSION}-linux-x86_64.tar.gz"
+          ls -la score-tck-*.tar.gz
+
+      - name: Upload TCK bundle artifact
         uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
         with:
-          name: score-tck-linux-x86_64
-          path: score-tck
+          name: score-tck-bundle-linux-x86_64
+          path: score-tck-*.tar.gz
           retention-days: 30
 
-      - name: Attach binary to release
+      - name: Attach bundle to release
         uses: softprops/action-gh-release@v2.5.0
         if: github.event_name == 'release'
         with:
-          files: score-tck
+          files: score-tck-*.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
