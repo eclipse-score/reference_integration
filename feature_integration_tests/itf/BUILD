@@ -55,11 +55,6 @@ py_itf_test(
     srcs = [
         ":all_tests",
     ],
-    # @add_test_properties(...) (imported directly from attribute_plugin in each
-    # test module) writes PartiallyVerifies/FullyVerifies properties into the
-    # JUnit XML report. The score_itf//score/itf/plugins:attribute_plugin entry
-    # below activates the plugin and injects the required "-p attribute_plugin"
-    # pytest arg automatically.
     args = select(
         {
             ":config_linux_x86_64": [
