@@ -208,51 +208,104 @@ fn check_architecture(config: &Config, expected_triple: &str) -> CheckResult {
 }
 
 fn check_toolchain(min_version: &str) -> CheckResult {
-    // Try to detect compiler
-    let gcc_version = Command::new("gcc").arg("--version").output().ok();
-    let clang_version = Command::new("clang").arg("--version").output().ok();
-    
-    let (compiler, version) = if let Some(output) = gcc_version {
-        if output.status.success() {
-            let v = String::from_utf8_lossy(&output.stdout).lines().next()
-                .unwrap_or("unknown")
-                .to_string();
-            ("GCC", v)
-        } else {
-            ("unknown", "not found".to_string())
+    let alternatives: Vec<_> = min_version.split(" or ").collect();
+    let mut attempted = Vec::new();
+    for alternative in alternatives {
+        let fields: Vec<_> = alternative.split_whitespace().collect();
+        if fields.len() != 2 {
+            return toolchain_failure(min_version, "Invalid minimum compiler version requirement");
         }
-    } else if let Some(output) = clang_version {
-        if output.status.success() {
-            let v = String::from_utf8_lossy(&output.stdout).lines().next()
-                .unwrap_or("unknown")
-                .to_string();
-            ("Clang", v)
-        } else {
-            ("unknown", "not found".to_string())
+        let (display_name, executable) = match fields[0].to_ascii_lowercase().as_str() {
+            "gcc" => ("GCC", "gcc"),
+            "clang" => ("Clang", "clang"),
+            _ => return toolchain_failure(min_version, "Unsupported compiler in minimum version requirement"),
+        };
+        let minimum = fields[1].trim_end_matches('+');
+        let output = Command::new(executable).arg("--version").output();
+        let Ok(output) = output else {
+            attempted.push(format!("{display_name} not found"));
+            continue;
+        };
+        if !output.status.success() {
+            attempted.push(format!("{display_name} command failed"));
+            continue;
         }
-    } else {
-        ("unknown", "not found".to_string())
+        let output = String::from_utf8_lossy(&output.stdout).to_string();
+        if compiler_meets_minimum(&output, minimum) {
+            let detected = extract_numeric_version(&output).unwrap_or_else(|| "unknown".to_string());
+            return CheckResult {
+                id: "runtime.toolchain".to_string(),
+                status: "pass".to_string(),
+                severity: "required".to_string(),
+                message: format!("Detected {display_name} {detected}"),
+                details: vec![serde_json::json!({
+                    "compiler": display_name,
+                    "version": detected,
+                    "min_required": min_version
+                })],
+            };
+        }
+        let detected = extract_numeric_version(&output).unwrap_or_else(|| "unknown".to_string());
+        attempted.push(format!("{display_name} {detected} is below {minimum}"));
+    }
+
+    toolchain_failure(min_version, &attempted.join("; "))
+}
+
+fn toolchain_failure(min_version: &str, reason: &str) -> CheckResult {
+    CheckResult {
+        id: "runtime.toolchain".to_string(),
+        status: "fail".to_string(),
+        severity: "required".to_string(),
+        message: format!("No supported compiler satisfies the minimum: {reason}"),
+        details: vec![serde_json::json!({"min_required": min_version})],
+    }
+}
+
+fn compiler_meets_minimum(output: &str, minimum: &str) -> bool {
+    let Some(detected) = extract_numeric_version(output) else {
+        return false;
     };
-    
-    if compiler != "unknown" {
-        CheckResult {
-            id: "runtime.toolchain".to_string(),
-            status: "pass".to_string(),
-            severity: "required".to_string(),
-            message: format!("Detected {}: {}", compiler, version.split_whitespace().take(3).collect::<Vec<_>>().join(" ")),
-            details: vec![
-                serde_json::json!({"compiler": compiler, "version": version, "min_required": min_version})
-            ],
+    let Some(detected) = numeric_components(&detected) else {
+        return false;
+    };
+    let Some(minimum) = numeric_components(minimum) else {
+        return false;
+    };
+    let mut detected = detected;
+    let mut minimum = minimum;
+    detected.resize(3, 0);
+    minimum.resize(3, 0);
+    detected >= minimum
+}
+
+fn extract_numeric_version(output: &str) -> Option<String> {
+    let bytes = output.as_bytes();
+    for start in 0..bytes.len() {
+        if !bytes[start].is_ascii_digit() || (start > 0 && bytes[start - 1].is_ascii_alphanumeric()) {
+            continue;
         }
-    } else {
-        CheckResult {
-            id: "runtime.toolchain".to_string(),
-            status: "warn".to_string(),
-            severity: "required".to_string(),
-            message: "Could not detect C/C++ toolchain".to_string(),
-            details: vec![serde_json::json!({"min_required": min_version})],
+        let mut end = start;
+        while end < bytes.len() && (bytes[end].is_ascii_digit() || bytes[end] == b'.') {
+            end += 1;
+        }
+        let candidate = &output[start..end];
+        if numeric_components(candidate).is_some() {
+            return Some(candidate.trim_end_matches('.').to_string());
         }
     }
+    None
+}
+
+fn numeric_components(value: &str) -> Option<Vec<u64>> {
+    let components: Vec<_> = value.split('.').collect();
+    if components.is_empty()
+        || components.len() > 3
+        || components.iter().any(|part| part.is_empty() || !part.bytes().all(|b| b.is_ascii_digit()))
+    {
+        return None;
+    }
+    components.into_iter().map(|part| part.parse().ok()).collect()
 }
 
 fn check_libraries(required: &[String]) -> CheckResult {
@@ -306,6 +359,7 @@ fn check_env_vars(required: &[String]) -> CheckResult {
                 serde_json::json!({"var": v, "value": std::env::var(v).unwrap_or_default()})
             }).collect(),
         }
+
     } else {
         CheckResult {
             id: "runtime.env_vars".to_string(),
@@ -314,5 +368,22 @@ fn check_env_vars(required: &[String]) -> CheckResult {
             message: format!("Missing environment variables: {}", missing.join(", ")),
             details: missing.iter().map(|v| serde_json::json!({"var": v, "set": false})).collect(),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn compiler_version_must_meet_its_minimum() {
+        assert!(!compiler_meets_minimum("gcc (GCC) 10.4.0", "11"));
+        assert!(compiler_meets_minimum("clang version 14.0.6", "14"));
+    }
+
+    #[test]
+    fn compiler_version_parser_rejects_malformed_values() {
+        assert!(!compiler_meets_minimum("gcc version unknown", "11"));
+        assert!(!compiler_meets_minimum("clang version 14.0.6", "14.1"));
     }
 }

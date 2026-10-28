@@ -1,6 +1,6 @@
 //! Distribution configuration parsing
 
-use anyhow::{Result, Context};
+use anyhow::{Context, Result};
 use std::path::PathBuf;
 
 /// Distribution configuration 
@@ -33,54 +33,46 @@ pub struct ChecksConfig {
 }
 
 /// Load a distribution configuration from a TOML file
-/// Uses simple string parsing to avoid external dependencies
 pub fn load(path: &PathBuf) -> Result<Config> {
     let content = std::fs::read_to_string(path)
         .with_context(|| format!("Failed to read config file: {}", path.display()))?;
-
-    // Parse using simple string matching
-    let name = extract_string_value(&content, "name").unwrap_or_else(|| "unknown-distribution".to_string());
-    let version = extract_string_value(&content, "version").unwrap_or_else(|| "unversioned".to_string());
-    let arch = extract_string_value(&content, "arch").unwrap_or_else(|| "x86_64-linux".to_string());
-    let profile = extract_string_value(&content, "profile").unwrap_or_else(|| "full".to_string());
-    let platform_version = extract_string_value(&content, "platform_version").unwrap_or_else(|| "0.9.0".to_string());
-    let sbom_file = extract_string_value(&content, "sbom_file").unwrap_or_else(|| "./sbom.spdx.json".to_string());
+    let tables = crate::toml::parse(&content)
+        .with_context(|| format!("Failed to parse config file: {}", path.display()))?;
+    let dist = tables.get("dist");
+    let paths = tables.get("dist.paths");
+    let checks = tables.get("checks");
 
     Ok(Config {
         dist: DistConfig {
-            name,
-            version,
-            arch,
-            profile,
-            platform_version,
+            name: get_string(dist, "name")?.unwrap_or_else(|| "unknown-distribution".to_string()),
+            version: get_string(dist, "version")?.unwrap_or_else(|| "unversioned".to_string()),
+            arch: get_string(dist, "arch")?.unwrap_or_else(|| "x86_64-linux".to_string()),
+            profile: get_string(dist, "profile")?.unwrap_or_else(|| "full".to_string()),
+            platform_version: get_string(dist, "platform_version")?
+                .unwrap_or_else(|| "0.9.0".to_string()),
             paths: PathsConfig {
-                sbom_file: PathBuf::from(sbom_file),
-                headers_dir: None,
-                libs_dir: None,
+                sbom_file: PathBuf::from(
+                    get_string(paths, "sbom_file")?.unwrap_or_else(|| "./sbom.spdx.json".to_string()),
+                ),
+                headers_dir: get_string(paths, "headers_dir")?.map(PathBuf::from),
+                libs_dir: get_string(paths, "libs_dir")?.map(PathBuf::from),
             },
         },
-        checks: ChecksConfig::default(),
+        checks: ChecksConfig {
+            enabled: checks
+                .and_then(|table| table.get("enabled"))
+                .map(|value| crate::toml::string_array(value))
+                .transpose()?
+                .unwrap_or_default(),
+        },
     })
 }
 
-/// Extract a string value from TOML content using simple pattern matching
-fn extract_string_value(content: &str, key: &str) -> Option<String> {
-    // Match: key = "value" or key = 'value'
-    for line in content.lines() {
-        let line = line.trim();
-        if line.starts_with('#') { continue; }
-        if line.starts_with(key) {
-            if let Some(eq_pos) = line.find('=') {
-                let value_part = line[eq_pos + 1..].trim();
-                // Handle "value" or 'value'
-                if (value_part.starts_with('"') && value_part.ends_with('"')) ||
-                   (value_part.starts_with("'") && value_part.ends_with("'")) {
-                    return Some(value_part[1..value_part.len()-1].to_string());
-                }
-            }
-        }
-    }
-    None
+fn get_string(table: Option<&std::collections::HashMap<String, String>>, key: &str) -> Result<Option<String>> {
+    table
+        .and_then(|table| table.get(key))
+        .map(|value| crate::toml::string(value))
+        .transpose()
 }
 
 #[cfg(test)]
@@ -88,24 +80,6 @@ mod tests {
     use super::*;
     use std::io::Write;
     use tempfile::NamedTempFile;
-    
-    #[test]
-    fn test_extract_string_value_double_quotes() {
-        let content = r#"name = "test-dist""#;
-        assert_eq!(extract_string_value(content, "name"), Some("test-dist".to_string()));
-    }
-    
-    #[test]
-    fn test_extract_string_value_single_quotes() {
-        let content = r#"name = 'test-dist'"#;
-        assert_eq!(extract_string_value(content, "name"), Some("test-dist".to_string()));
-    }
-    
-    #[test]
-    fn test_extract_string_value_missing() {
-        let content = r#"version = "1.0.0""#;
-        assert_eq!(extract_string_value(content, "name"), None);
-    }
     
     #[test]
     fn test_load_config_minimal() {
@@ -118,18 +92,41 @@ mod tests {
         assert_eq!(config.dist.name, "my-dist");
         assert_eq!(config.dist.version, "2.0.0");
     }
-    
+
     #[test]
     fn test_load_config_with_platform_version() {
         let mut file = NamedTempFile::new().unwrap();
         writeln!(file, r#"[dist]"#).unwrap();
         writeln!(file, r#"name = "test""#).unwrap();
-        writeln!(file, r#"platform_version = "1.5.0""#).unwrap();
-        
+        writeln!(file, r#"platform_version = "0.8.0" # older platform"#).unwrap();
+
         let config = load(&file.path().to_path_buf()).unwrap();
-        assert_eq!(config.dist.platform_version, "1.5.0");
+        assert_eq!(config.dist.platform_version, "0.8.0");
     }
-    
+
+    #[test]
+    fn test_load_checks_and_nested_paths() {
+        let mut file = NamedTempFile::new().unwrap();
+        writeln!(file, "[dist]").unwrap();
+        writeln!(file, r#"name = "test""#).unwrap();
+        writeln!(file, r#"profile = "minimal""#).unwrap();
+        writeln!(file, "[dist.paths]").unwrap();
+        writeln!(file, r#"sbom_file = "./sbom.json" # path"#).unwrap();
+        writeln!(file, "[checks]").unwrap();
+        writeln!(file, r#"enabled = ["sbom"]"#).unwrap();
+
+        let config = load(&file.path().to_path_buf()).unwrap();
+        assert_eq!(config.dist.paths.sbom_file, PathBuf::from("./sbom.json"));
+        assert_eq!(config.checks.enabled, vec!["sbom"]);
+    }
+
+    #[test]
+    fn test_invalid_toml_is_reported() {
+        let mut file = NamedTempFile::new().unwrap();
+        writeln!(file, "[dist").unwrap();
+        assert!(load(&file.path().to_path_buf()).is_err());
+    }
+
     #[test]
     fn test_load_config_file_not_found() {
         let result = load(&PathBuf::from("/nonexistent/config.toml"));

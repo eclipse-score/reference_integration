@@ -20,6 +20,7 @@ pub mod sbom;
 pub mod report;
 pub mod version;
 pub mod runtime;
+pub(crate) mod toml;
 
 pub use config::Config;
 pub use sbom::SBOMChecker;

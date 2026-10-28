@@ -4,7 +4,7 @@
 //! the main platform requirements: SBOM policy, API surface, and behavioral
 //! conformance.
 
-use anyhow::Result;
+use anyhow::{bail, Context, Result};
 use clap::{Parser, Subcommand};
 use std::path::PathBuf;
 
@@ -13,6 +13,7 @@ mod report;
 mod config;
 mod version;
 mod runtime;
+mod toml;
 
 /// s-core Test Compatibility Kit
 #[derive(Parser)]
@@ -35,9 +36,9 @@ enum Commands {
         #[arg(short, long, default_value = "./tck-report")]
         report: PathBuf,
 
-        /// Comma-separated list of checks to run (sbom,version,runtime,behavioral)
-        #[arg(long, default_value = "sbom,version,runtime")]
-        checks: String,
+        /// Comma-separated list of checks to run (sbom,version,runtime)
+        #[arg(long)]
+        checks: Option<String>,
     },
 
     /// Validate a distribution config file
@@ -70,7 +71,7 @@ fn main() -> Result<()> {
 }
 
 /// Execute TCK checks and produce a report
-fn cmd_run(config_path: PathBuf, report_dir: PathBuf, checks: String) -> Result<()> {
+fn cmd_run(config_path: PathBuf, report_dir: PathBuf, checks: Option<String>) -> Result<()> {
     println!("s-core TCK v{}", env!("CARGO_PKG_VERSION"));
     println!();
 
@@ -79,44 +80,38 @@ fn cmd_run(config_path: PathBuf, report_dir: PathBuf, checks: String) -> Result<
     println!("Distribution: {} v{}", config.dist.name, config.dist.version);
     println!("Platform version: {}", config.dist.platform_version);
     println!("Architecture: {}", config.dist.arch);
-    println!("Checks: {}", checks);
+    let enabled_checks = select_checks(checks.as_deref(), &config)?;
+    println!("Checks: {}", enabled_checks.join(","));
     println!();
 
-    // Create report directory
     std::fs::create_dir_all(&report_dir)?;
-
     let mut report = report::Report::new(&config);
-
-    // Load version policy
-    let policy_path = PathBuf::from("tck/reference/policy/requirements.toml");
-    let version_policy = version::load_policy(&policy_path).unwrap_or_default();
     let runtime_requirements = runtime::RuntimeRequirements::default();
-
-    // Check which checks are enabled
-    let enabled_checks: Vec<&str> = checks.split(',').map(|s| s.trim()).collect();
-    
-    // Validate check names - reject unknown checks
-    let known_checks = ["sbom", "version", "runtime"];
-    let unknown_checks: Vec<&&str> = enabled_checks.iter()
-        .filter(|c| !known_checks.contains(c))
-        .collect();
-    
-    if !unknown_checks.is_empty() {
-        anyhow::bail!(
-            "Unknown check(s): {}. Known checks are: {}",
-            unknown_checks.iter().map(|c| c.to_string()).collect::<Vec<_>>().join(", "),
-            known_checks.join(", ")
-        );
-    }
-    
-    if enabled_checks.is_empty() {
-        anyhow::bail!("No checks specified. Known checks are: {}", known_checks.join(", "));
-    }
+    let policy_path = if enabled_checks.iter().any(|check| check == "sbom" || check == "version") {
+        Some(resolve_reference_file("reference/policy/requirements.toml")?)
+    } else {
+        None
+    };
+    let version_policy = if enabled_checks.iter().any(|check| check == "version") {
+        Some(version::load_policy(policy_path.as_deref().unwrap())?)
+    } else {
+        None
+    };
+    let sbom_policy = if enabled_checks.iter().any(|check| check == "sbom") {
+        Some(sbom::SbomPolicy::load(policy_path.as_deref().unwrap())?)
+    } else {
+        None
+    };
+    let golden_sbom = if sbom_policy.is_some() {
+        Some(resolve_reference_file("reference/sbom.spdx.json")?)
+    } else {
+        None
+    };
 
     // Run SBOM check if enabled
-    if enabled_checks.contains(&"sbom") {
+    if sbom_policy.is_some() {
         println!("Running SBOM check...");
-        match sbom::run(&config, &report_dir) {
+        match sbom::run(&config, golden_sbom.as_deref().unwrap(), sbom_policy.unwrap()) {
             Ok(sbom_report) => {
                 println!("  SBOM verdict: {}", sbom_report.verdict);
                 report.add_check(sbom_report);
@@ -139,7 +134,7 @@ fn cmd_run(config_path: PathBuf, report_dir: PathBuf, checks: String) -> Result<
     }
 
     // Run version check if enabled
-    if enabled_checks.contains(&"version") {
+    if let Some(version_policy) = version_policy {
         println!("Running version check...");
         match version::run(&config, &version_policy) {
             Ok(version_report) => {
@@ -164,7 +159,7 @@ fn cmd_run(config_path: PathBuf, report_dir: PathBuf, checks: String) -> Result<
     }
 
     // Run runtime check if enabled
-    if enabled_checks.contains(&"runtime") {
+    if enabled_checks.iter().any(|check| check == "runtime") {
         println!("Running runtime check...");
         match runtime::run(&config, &runtime_requirements) {
             Ok(runtime_report) => {
@@ -205,6 +200,46 @@ fn cmd_run(config_path: PathBuf, report_dir: PathBuf, checks: String) -> Result<
     Ok(())
 }
 
+fn select_checks(explicit: Option<&str>, config: &config::Config) -> Result<Vec<String>> {
+    let checks = match explicit {
+        Some(checks) => checks.split(',').map(str::trim).map(str::to_string).collect(),
+        None if !config.checks.enabled.is_empty() => config.checks.enabled.clone(),
+        None if config.dist.profile == "minimal" => vec!["sbom".to_string()],
+        None => vec!["sbom".to_string(), "version".to_string(), "runtime".to_string()],
+    };
+    if checks.is_empty() || checks.iter().any(String::is_empty) {
+        bail!("No checks specified. Known checks are: sbom, version, runtime");
+    }
+    let unknown: Vec<_> = checks
+        .iter()
+        .filter(|check| !["sbom", "version", "runtime"].contains(&check.as_str()))
+        .collect();
+    if !unknown.is_empty() {
+        bail!(
+            "Unknown or unsupported check(s): {}. Known checks are: sbom, version, runtime",
+            unknown.iter().map(|check| check.as_str()).collect::<Vec<_>>().join(", ")
+        );
+    }
+    Ok(checks)
+}
+
+fn resolve_reference_file(relative_path: &str) -> Result<PathBuf> {
+    let executable = std::env::current_exe().context("Failed to locate the TCK executable")?;
+    let executable_directory = executable.parent().context("TCK executable has no parent directory")?;
+    let current_directory = std::env::current_dir().context("Failed to determine current directory")?;
+    let candidates = [
+        executable_directory.join("../").join(relative_path),
+        executable_directory.join(relative_path),
+        current_directory.join("tck").join(relative_path),
+        current_directory.join(relative_path),
+    ];
+    candidates
+        .into_iter()
+        .map(|path| path.canonicalize().unwrap_or(path))
+        .find(|path| path.is_file())
+        .with_context(|| format!("Could not find packaged reference file '{}'", relative_path))
+}
+
 /// Validate a distribution config file
 fn cmd_validate_config(config_path: PathBuf) -> Result<()> {
     let config = config::load(&config_path)?;
@@ -212,4 +247,54 @@ fn cmd_validate_config(config_path: PathBuf) -> Result<()> {
     println!("Platform version: {}", config.dist.platform_version);
     println!("SBOM path: {}", config.dist.paths.sbom_file.display());
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use config::{ChecksConfig, DistConfig, PathsConfig};
+
+    fn config(profile: &str, enabled: Vec<&str>) -> config::Config {
+        config::Config {
+            dist: DistConfig {
+                name: "test".to_string(),
+                version: "1".to_string(),
+                arch: "x86_64-linux".to_string(),
+                profile: profile.to_string(),
+                platform_version: "0.9.0".to_string(),
+                paths: PathsConfig {
+                    sbom_file: PathBuf::from("sbom.json"),
+                    headers_dir: None,
+                    libs_dir: None,
+                },
+            },
+            checks: ChecksConfig {
+                enabled: enabled.into_iter().map(str::to_string).collect(),
+            },
+        }
+    }
+
+    #[test]
+    fn configured_checks_and_minimal_profile_are_used() {
+        assert_eq!(
+            select_checks(None, &config("full", vec!["sbom"])).unwrap(),
+            vec!["sbom"]
+        );
+        assert_eq!(
+            select_checks(None, &config("minimal", vec![])).unwrap(),
+            vec!["sbom"]
+        );
+        assert_eq!(
+            select_checks(Some("runtime"), &config("minimal", vec!["sbom"])).unwrap(),
+            vec!["runtime"]
+        );
+    }
+
+    #[test]
+    fn empty_or_unsupported_checks_are_rejected() {
+        assert!(select_checks(Some(""), &config("full", vec![])).is_err());
+        assert!(select_checks(Some("sbom,,version"), &config("full", vec![])).is_err());
+        assert!(select_checks(Some("sbmo"), &config("full", vec![])).is_err());
+        assert!(select_checks(Some("behavioral"), &config("full", vec![])).is_err());
+    }
 }
