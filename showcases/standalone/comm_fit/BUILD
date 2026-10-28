@@ -23,7 +23,7 @@ load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
 
 _COM_API_DEPS = [
     "@score_communication//score/mw/com/example/com-api-example/com-api-gen",
-    "@score_communication//score/mw/com/impl/rust/com-api/com-api",
+    "@score_communication//score/mw/com/rust:score_com",
 ]
 
 rust_binary(
