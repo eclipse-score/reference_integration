@@ -29,7 +29,7 @@ use std::path::{Path, PathBuf};
 use std::thread::sleep;
 use std::time::Duration;
 
-use com_api::{
+use score_com::{
     Builder, FindServiceSpecifier, InstanceSpecifier, LolaRuntimeBuilderImpl, LolaRuntimeImpl, Runtime, RuntimeBuilder,
     SampleContainer, ServiceDiscovery, Subscriber, Subscription,
 };
@@ -126,7 +126,7 @@ fn discover_consumer(
     service_id: &InstanceSpecifier,
     retries: u32,
     interval_ms: u64,
-) -> Option<<VehicleInterface as com_api::Interface>::Consumer<LolaRuntimeImpl>> {
+) -> Option<<VehicleInterface as score_com::Interface>::Consumer<LolaRuntimeImpl>> {
     for _ in 0..retries {
         let discovery = runtime.find_service::<VehicleInterface>(FindServiceSpecifier::Specific(service_id.clone()));
         if let Ok(instances) = discovery.get_available_instances() {
