@@ -46,6 +46,7 @@ NOISE_TITLE = re.compile(r"^(chore|build|ci)\(deps\)|\bbump\b|update dependency|
 BREAKING_TITLE = re.compile(r"^\w+(\([^)]*\))?!:|\bbreaking\b", re.I)
 FEATURE_TITLE = re.compile(r"^(feat|feature)(\([^)]*\))?:|^add(ed)?\b|^introduce|^implement|^support", re.I)
 CLOSES = re.compile(r"\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+#(\d+)", re.I)
+RELEASE_NOTES_DIR = "docs/s_core_v_1/releases/"
 
 
 def api(path: str, params: dict[str, Any] | None = None) -> Any:
@@ -307,6 +308,23 @@ def render_release_notes(name: str, slug: str, old: grn.Entry, new: grn.Entry) -
     return "\n".join(out)
 
 
+def render_direct_commits(base: str, head: str) -> str:
+    """Commits of this repository without a PR, e.g. pushed directly to the release candidate branch."""
+    log = grn._git("log", "--no-merges", "--reverse", "--format=%H%x09%s", f"{base}..{head}")
+    out = []
+    for sha, subject in (line.split("\t", 1) for line in log.splitlines()):
+        if re.search(r"\(#\d+\)\s*$", subject):
+            continue  # squash-merged PR, listed above
+        files = grn._git("diff-tree", "--no-commit-id", "--name-only", "-r", sha).split()
+        if all(f.startswith(RELEASE_NOTES_DIR) for f in files):
+            continue  # the release note itself
+        shown = ", ".join(files[:10]) + (f" (+{len(files) - 10} more)" if len(files) > 10 else "")
+        url = f"https://github.com/eclipse-score/{grn.RELEASE_REPO}/commit/{sha}"
+        out.append(f"- {sha[:10]} {subject} ({url})\n    - files: {shown}")
+    heading = f"## Reference integration: commits without PR {base} -> {head[:10]} ({len(out)})"
+    return "\n".join([heading, "", *out] if out else [heading, "", "None."]) + "\n"
+
+
 def render_removed_files(base: str, head: str) -> str:
     """Files of this repository deleted or renamed between the two refs, per directory (breaking candidates)."""
     result = subprocess.run(
@@ -361,6 +379,7 @@ def main() -> None:
     # One commit for all evidence of this repository, the same one known_good.json is read from.
     head = grn._git("rev-parse", f"{ref}^{{commit}}").strip()
     sections.append(render_module("Reference integration", ref_slug, args.origin, head, own_repo=True))
+    sections.append(render_direct_commits(args.origin, head))
     sections.append(render_removed_files(args.origin, head))
 
     renamed_from = {new: old for old, new in grn.KEY_ALIASES.items()}

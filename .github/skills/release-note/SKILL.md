@@ -173,7 +173,9 @@ write to another path. To refresh the tables of an existing draft (for example
 after pin bumps, or to make it final with `--final`), generate to
 another path and replace everything outside "Changes to the Platform"; keep the
 reviewed narrative. The diagram SVG is always overwritten by the run, so it
-matches the refreshed tables.
+matches the refreshed tables. Then run `collect_changes.py` again and add items
+for evidence that is not covered yet (new PRs or direct commits on the release
+branch); keep the reviewed items unless their evidence changed.
 
 Re-running with the same inputs gives the same tables and chapter structure.
 The narrative may be worded differently, but it has to name the same items as
@@ -206,8 +208,13 @@ Evidence:
 python3 scripts/release_note/collect_changes.py --release vX.Y.0 --origin vX.W.0 --output changes.md
 ```
 
-The output has one section for the merged PRs and closed issues of this
-repository, one for the files of this repository that were removed or renamed
+The evidence of this repository covers the commit range from the origin tag to
+the checked-out release branch (not `main`). The output has one section for
+the merged PRs and closed issues of this repository, one for the **commits
+without PR** in that range (commits pushed directly to the release candidate
+branch, with their changed files; commits that only touch
+`docs/s_core_v_1/releases/` are skipped), one for the files of this repository
+that were removed or renamed
 (per directory, without `docs/` and `patches/`), and one section per changed
 module with the **breaking** and **new-feature** parts of the module's own
 GitHub release notes. For every
@@ -238,6 +245,9 @@ Classification:
 - Anything else is omitted. When unsure, omit it and name it in the final report.
 - PR labels like `breaking` or `feature` are not used consistently; decide from
   title, description and the module's release note.
+- Commits without PR are classified like PRs; read the commit (`git show`)
+  because the subject is often short. Pure pin bumps are already covered by the
+  `--changes` table and the module sections.
 
 Rules:
 
@@ -245,7 +255,8 @@ Rules:
   Read the PR description before describing a PR; the title alone is not enough
   (a PR may replace something instead of extending it).
 - One `~~~` subsection per item with a short noun-phrase title, written for
-  integrators; link to the PR, issue or the module's release note as RST links
+  integrators; link to the PR, issue, commit (for commits without PR) or the
+  module's release note as RST links
   (`` `text <url>`__ ``). Name new scripts, targets or settings that
   integrators use.
 - Order of the items: module set, integration and build, images and platforms,
@@ -275,7 +286,7 @@ Known limits of the evidence:
   `docs/s_core_v_1/releases/_assets/architecture_v<major>_<minor>.svg` was
   written by this run (it is committed together with the note).
 - The new note is part of the `toctree` in `releases.rst`.
-- Every `~~~` item and every bullet names a PR, issue or release note link.
+- Every `~~~` item and every bullet names a PR, issue, commit or release note link.
 - Every new module of the `--changes` table and every removed mechanism of this
   repository is either in the note or named in the report.
 - No stderr warnings of the generator; `(unreleased)` rows are named in the report.
