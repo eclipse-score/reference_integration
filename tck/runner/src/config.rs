@@ -16,6 +16,7 @@ pub struct DistConfig {
     pub version: String,
     pub arch: String,
     pub profile: String,
+    pub platform_version: String,
     pub paths: PathsConfig,
 }
 
@@ -42,6 +43,7 @@ pub fn load(path: &PathBuf) -> Result<Config> {
     let version = extract_string_value(&content, "version").unwrap_or_else(|| "unversioned".to_string());
     let arch = extract_string_value(&content, "arch").unwrap_or_else(|| "x86_64-linux".to_string());
     let profile = extract_string_value(&content, "profile").unwrap_or_else(|| "full".to_string());
+    let platform_version = extract_string_value(&content, "platform_version").unwrap_or_else(|| "0.9.0".to_string());
     let sbom_file = extract_string_value(&content, "sbom_file").unwrap_or_else(|| "./sbom.spdx.json".to_string());
 
     Ok(Config {
@@ -50,6 +52,7 @@ pub fn load(path: &PathBuf) -> Result<Config> {
             version,
             arch,
             profile,
+            platform_version,
             paths: PathsConfig {
                 sbom_file: PathBuf::from(sbom_file),
                 headers_dir: None,

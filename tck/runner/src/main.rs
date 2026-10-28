@@ -11,6 +11,8 @@ use std::path::PathBuf;
 mod sbom;
 mod report;
 mod config;
+mod version;
+mod runtime;
 
 /// s-core Test Compatibility Kit
 #[derive(Parser)]
@@ -33,8 +35,8 @@ enum Commands {
         #[arg(short, long, default_value = "./tck-report")]
         report: PathBuf,
 
-        /// Comma-separated list of checks to run (sbom,api,behavioral)
-        #[arg(long, default_value = "sbom")]
+        /// Comma-separated list of checks to run (sbom,version,runtime,behavioral)
+        #[arg(long, default_value = "sbom,version,runtime")]
         checks: String,
     },
 
@@ -75,6 +77,7 @@ fn cmd_run(config_path: PathBuf, report_dir: PathBuf, checks: String) -> Result<
     // Load distribution configuration
     let config = config::load(&config_path)?;
     println!("Distribution: {} v{}", config.dist.name, config.dist.version);
+    println!("Platform version: {}", config.dist.platform_version);
     println!("Architecture: {}", config.dist.arch);
     println!("Checks: {}", checks);
     println!();
@@ -84,8 +87,16 @@ fn cmd_run(config_path: PathBuf, report_dir: PathBuf, checks: String) -> Result<
 
     let mut report = report::Report::new(&config);
 
+    // Load version policy
+    let policy_path = PathBuf::from("tck/reference/policy/requirements.toml");
+    let version_policy = version::load_policy(&policy_path).unwrap_or_default();
+    let runtime_requirements = runtime::RuntimeRequirements::default();
+
+    // Check which checks are enabled
+    let enabled_checks: Vec<&str> = checks.split(',').map(|s| s.trim()).collect();
+
     // Run SBOM check if enabled
-    if checks.contains("sbom") {
+    if enabled_checks.contains(&"sbom") {
         println!("Running SBOM check...");
         match sbom::run(&config, &report_dir) {
             Ok(sbom_report) => {
@@ -99,6 +110,56 @@ fn cmd_run(config_path: PathBuf, report_dir: PathBuf, checks: String) -> Result<
                     verdict: "NON-CONFORMANT".to_string(),
                     checks: vec![report::CheckResult {
                         id: "sbom.error".to_string(),
+                        status: "fail".to_string(),
+                        severity: "required".to_string(),
+                        message: e.to_string(),
+                        details: vec![],
+                    }],
+                });
+            }
+        }
+    }
+
+    // Run version check if enabled
+    if enabled_checks.contains(&"version") {
+        println!("Running version check...");
+        match version::run(&config, &version_policy) {
+            Ok(version_report) => {
+                println!("  Version verdict: {}", version_report.verdict);
+                report.add_check(version_report);
+            }
+            Err(e) => {
+                println!("  Error: {}", e);
+                report.add_check(report::CheckReport {
+                    family: "version".to_string(),
+                    verdict: "NON-CONFORMANT".to_string(),
+                    checks: vec![report::CheckResult {
+                        id: "version.error".to_string(),
+                        status: "fail".to_string(),
+                        severity: "required".to_string(),
+                        message: e.to_string(),
+                        details: vec![],
+                    }],
+                });
+            }
+        }
+    }
+
+    // Run runtime check if enabled
+    if enabled_checks.contains(&"runtime") {
+        println!("Running runtime check...");
+        match runtime::run(&config, &runtime_requirements) {
+            Ok(runtime_report) => {
+                println!("  Runtime verdict: {}", runtime_report.verdict);
+                report.add_check(runtime_report);
+            }
+            Err(e) => {
+                println!("  Error: {}", e);
+                report.add_check(report::CheckReport {
+                    family: "runtime".to_string(),
+                    verdict: "NON-CONFORMANT".to_string(),
+                    checks: vec![report::CheckResult {
+                        id: "runtime.error".to_string(),
                         status: "fail".to_string(),
                         severity: "required".to_string(),
                         message: e.to_string(),
@@ -130,6 +191,7 @@ fn cmd_run(config_path: PathBuf, report_dir: PathBuf, checks: String) -> Result<
 fn cmd_validate_config(config_path: PathBuf) -> Result<()> {
     let config = config::load(&config_path)?;
     println!("Config valid for distribution: {} v{}", config.dist.name, config.dist.version);
+    println!("Platform version: {}", config.dist.platform_version);
     println!("SBOM path: {}", config.dist.paths.sbom_file.display());
     Ok(())
 }
