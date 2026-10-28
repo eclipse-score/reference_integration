@@ -1,0 +1,71 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+# Runs every target_sw module's own unit tests against the dependency versions ref_int resolves
+# (known_good.json pins + Bazel MVS for everything else), with ref_int's unified bazelrc config.
+# See scripts/module_tests.py. Called by test_and_docs.yml, which feeds the reports into the docs.
+name: Module Tests
+on:
+  workflow_call:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  modules:
+    name: List modules
+    runs-on: ubuntu-latest
+    outputs:
+      modules: ${{ steps.modules.outputs.modules }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+      - name: List modules
+        id: modules
+        run: echo "modules=$(jq -c '.modules.target_sw | keys' known_good.json)" >> "$GITHUB_OUTPUT"
+  test:
+    name: Test ${{ matrix.module }}
+    needs: modules
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        module: ${{ fromJSON(needs.modules.outputs.modules) }}
+    steps:
+      - name: Clean disk space
+        uses: eclipse-score/more-disk-space@v1.1
+        with:
+          level: 4
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.18.0
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}-${{ matrix.module }}
+          repository-cache: true
+          cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+      - name: Run module tests
+        run: python3 scripts/module_tests.py run ${{ matrix.module }}
+      - name: Upload test reports and coverage
+        if: always()
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+        with:
+          name: module-tests-${{ matrix.module }}
+          # The reports/ root keeps the <module>/ folder, so a merged download has one per module.
+          path: _module_tests/reports/
+          if-no-files-found: warn
