@@ -10,11 +10,18 @@ repository = "https://github.com/eclipse-score/reference_integration"
 name = "score-tck"
 path = "src/main.rs"
 
+[lib]
+name = "score_tck"
+path = "src/lib.rs"
+
 [dependencies]
 clap = { version = "4", features = ["derive"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 anyhow = "1"
+
+[dev-dependencies]
+tempfile = "3"
 
 [profile.release]
 opt-level = "s"      # Optimize for size
