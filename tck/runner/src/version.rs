@@ -192,11 +192,78 @@ mod tests {
     use super::*;
     
     #[test]
-    fn test_compare_versions() {
+    fn test_compare_versions_equal() {
         assert_eq!(compare_versions("0.9.0", "0.9.0").unwrap(), true);
+    }
+    
+    #[test]
+    fn test_compare_versions_greater_minor() {
         assert_eq!(compare_versions("0.10.0", "0.9.0").unwrap(), true);
+    }
+    
+    #[test]
+    fn test_compare_versions_less_minor() {
         assert_eq!(compare_versions("0.9.0", "0.10.0").unwrap(), false);
+    }
+    
+    #[test]
+    fn test_compare_versions_greater_major() {
         assert_eq!(compare_versions("1.0.0", "0.9.0").unwrap(), true);
+    }
+    
+    #[test]
+    fn test_compare_versions_patch_greater() {
         assert_eq!(compare_versions("0.9.1", "0.9.0").unwrap(), true);
+    }
+    
+    #[test]
+    fn test_compare_versions_missing_patch() {
+        assert_eq!(compare_versions("0.9", "0.9.0").unwrap(), true);
+        assert_eq!(compare_versions("0.9.0", "0.9").unwrap(), true);
+    }
+    
+    #[test]
+    fn test_compare_versions_invalid() {
+        assert!(compare_versions("invalid", "0.9.0").is_err());
+    }
+    
+    #[test]
+    fn test_check_compatible_pass() {
+        let result = check_compatible("0.9.0", "0.9.0");
+        assert_eq!(result.status, "pass");
+    }
+    
+    #[test]
+    fn test_check_compatible_fail() {
+        let result = check_compatible("0.8.0", "0.9.0");
+        assert_eq!(result.status, "fail");
+    }
+    
+    #[test]
+    fn test_check_exact_pass() {
+        let result = check_exact("0.9.0", "0.9.0");
+        assert_eq!(result.status, "pass");
+    }
+    
+    #[test]
+    fn test_check_exact_fail() {
+        let result = check_exact("0.10.0", "0.9.0");
+        assert_eq!(result.status, "fail");
+    }
+    
+    #[test]
+    fn test_parse_version_section() {
+        let toml = r#"
+[version]
+platform_version = "1.2.3"
+min_platform_version = "1.0.0"
+tck_version = "0.5.0"
+version_policy = "exact"
+"#;
+        let policy = parse_version_section(toml).unwrap();
+        assert_eq!(policy.platform_version, "1.2.3");
+        assert_eq!(policy.min_platform_version, "1.0.0");
+        assert_eq!(policy.tck_version, "0.5.0");
+        assert_eq!(policy.version_policy, "exact");
     }
 }

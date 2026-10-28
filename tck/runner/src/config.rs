@@ -82,3 +82,57 @@ fn extract_string_value(content: &str, key: &str) -> Option<String> {
     }
     None
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::io::Write;
+    use tempfile::NamedTempFile;
+    
+    #[test]
+    fn test_extract_string_value_double_quotes() {
+        let content = r#"name = "test-dist""#;
+        assert_eq!(extract_string_value(content, "name"), Some("test-dist".to_string()));
+    }
+    
+    #[test]
+    fn test_extract_string_value_single_quotes() {
+        let content = r#"name = 'test-dist'"#;
+        assert_eq!(extract_string_value(content, "name"), Some("test-dist".to_string()));
+    }
+    
+    #[test]
+    fn test_extract_string_value_missing() {
+        let content = r#"version = "1.0.0""#;
+        assert_eq!(extract_string_value(content, "name"), None);
+    }
+    
+    #[test]
+    fn test_load_config_minimal() {
+        let mut file = NamedTempFile::new().unwrap();
+        writeln!(file, r#"[dist]"#).unwrap();
+        writeln!(file, r#"name = "my-dist""#).unwrap();
+        writeln!(file, r#"version = "2.0.0""#).unwrap();
+        
+        let config = load(&file.path().to_path_buf()).unwrap();
+        assert_eq!(config.dist.name, "my-dist");
+        assert_eq!(config.dist.version, "2.0.0");
+    }
+    
+    #[test]
+    fn test_load_config_with_platform_version() {
+        let mut file = NamedTempFile::new().unwrap();
+        writeln!(file, r#"[dist]"#).unwrap();
+        writeln!(file, r#"name = "test""#).unwrap();
+        writeln!(file, r#"platform_version = "1.5.0""#).unwrap();
+        
+        let config = load(&file.path().to_path_buf()).unwrap();
+        assert_eq!(config.dist.platform_version, "1.5.0");
+    }
+    
+    #[test]
+    fn test_load_config_file_not_found() {
+        let result = load(&PathBuf::from("/nonexistent/config.toml"));
+        assert!(result.is_err());
+    }
+}

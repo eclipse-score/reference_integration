@@ -101,3 +101,123 @@ impl Report {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::config::{Config, DistConfig, PathsConfig, ChecksConfig};
+    use std::path::PathBuf;
+    use tempfile::tempdir;
+    
+    fn make_test_config() -> Config {
+        Config {
+            dist: DistConfig {
+                name: "test-dist".to_string(),
+                version: "1.0.0".to_string(),
+                arch: "x86_64-linux".to_string(),
+                profile: "full".to_string(),
+                platform_version: "0.9.0".to_string(),
+                paths: PathsConfig {
+                    sbom_file: PathBuf::from("./sbom.json"),
+                    headers_dir: None,
+                    libs_dir: None,
+                },
+            },
+            checks: ChecksConfig::default(),
+        }
+    }
+    
+    #[test]
+    fn test_report_new() {
+        let config = make_test_config();
+        let report = Report::new(&config);
+        assert_eq!(report.dist_name, "test-dist");
+        assert_eq!(report.verdict, "CONFORMANT");
+        assert!(report.checks.is_empty());
+    }
+    
+    #[test]
+    fn test_add_check_conformant() {
+        let config = make_test_config();
+        let mut report = Report::new(&config);
+        
+        report.add_check(CheckReport {
+            family: "sbom".to_string(),
+            verdict: "CONFORMANT".to_string(),
+            checks: vec![],
+        });
+        
+        assert_eq!(report.verdict, "CONFORMANT");
+        assert_eq!(report.checks.len(), 1);
+    }
+    
+    #[test]
+    fn test_add_check_non_conformant() {
+        let config = make_test_config();
+        let mut report = Report::new(&config);
+        
+        report.add_check(CheckReport {
+            family: "sbom".to_string(),
+            verdict: "NON-CONFORMANT".to_string(),
+            checks: vec![],
+        });
+        
+        assert_eq!(report.verdict, "NON-CONFORMANT");
+    }
+    
+    #[test]
+    fn test_add_check_warnings() {
+        let config = make_test_config();
+        let mut report = Report::new(&config);
+        
+        report.add_check(CheckReport {
+            family: "runtime".to_string(),
+            verdict: "CONFORMANT-WITH-WARNINGS".to_string(),
+            checks: vec![],
+        });
+        
+        assert_eq!(report.verdict, "CONFORMANT-WITH-WARNINGS");
+    }
+    
+    #[test]
+    fn test_write_json() {
+        let dir = tempdir().unwrap();
+        let config = make_test_config();
+        let report = Report::new(&config);
+        
+        let path = dir.path().join("report.json");
+        report.write_json(&path).unwrap();
+        
+        assert!(path.exists());
+        let content = std::fs::read_to_string(&path).unwrap();
+        assert!(content.contains("test-dist"));
+    }
+    
+    #[test]
+    fn test_write_markdown() {
+        let dir = tempdir().unwrap();
+        let config = make_test_config();
+        let mut report = Report::new(&config);
+        
+        report.add_check(CheckReport {
+            family: "version".to_string(),
+            verdict: "CONFORMANT".to_string(),
+            checks: vec![CheckResult {
+                id: "version.compatibility".to_string(),
+                status: "pass".to_string(),
+                severity: "required".to_string(),
+                message: "Version compatible".to_string(),
+                details: vec![],
+            }],
+        });
+        
+        let path = dir.path().join("summary.md");
+        report.write_markdown(&path).unwrap();
+        
+        assert!(path.exists());
+        let content = std::fs::read_to_string(&path).unwrap();
+        assert!(content.contains("test-dist"));
+        assert!(content.contains("VERSION"));
+        assert!(content.contains("✅"));
+    }
+}

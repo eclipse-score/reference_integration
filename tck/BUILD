@@ -19,7 +19,7 @@ Usage:
     ./bazel-bin/tck/score-tck --help
 """
 
-load("@rules_rust//rust:defs.bzl", "rust_binary")
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_test")
 
 # Golden SBOM - copy from root product SBOM (built separately)
 # The runner expects the SBOM at tck/reference/sbom.spdx.json
@@ -41,6 +41,23 @@ rust_binary(
         "@score_crates//:clap",
         "@score_crates//:serde",
         "@score_crates//:serde_json",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+# Rust TCK unit tests
+rust_test(
+    name = "score-tck-tests",
+    srcs = glob([
+        "runner/src/**/*.rs",
+    ]),
+    crate_root = "runner/src/lib.rs",
+    deps = [
+        "@score_crates//:anyhow",
+        "@score_crates//:clap",
+        "@score_crates//:serde",
+        "@score_crates//:serde_json",
+        "@score_crates//:tempfile",
     ],
     visibility = ["//visibility:public"],
 )
