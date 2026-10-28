@@ -1,0 +1,103 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+# Behavioral Conformance Test Definitions
+#
+# This file defines the behavioral tests that a SCORE distribution must pass
+# to be considered conformant. Tests reference the existing feature integration
+# tests in feature_integration_tests/ directory.
+
+# ==============================================================================
+# TEST SUITE CONFIGURATION
+# ==============================================================================
+[test_suite]
+# Path to feature integration tests (relative to workspace root)
+path = "feature_integration_tests"
+
+# Test runner: pytest
+runner = "pytest"
+
+# ==============================================================================
+# SHOWCASE TESTS (ITF - Integration Test Framework)
+# ==============================================================================
+# Tests from feature_integration_tests/itf/test_showcases.py
+
+[[tests]]
+id = "showcase.com_api_example.deployed"
+category = "showcase"
+description = "ComApiExample is deployed and executable"
+severity = "required"
+pytest_path = "itf/test_showcases.py::test_com_api_example_app_is_deployed"
+
+[[tests]]
+id = "showcase.com_api_example.running"
+category = "showcase"
+description = "ComApiExample runs successfully"
+severity = "required"
+pytest_path = "itf/test_showcases.py::test_com_api_example_app_is_running"
+
+# ==============================================================================
+# REMOTE LOGGING TESTS
+# ==============================================================================
+# Tests from feature_integration_tests/itf/test_remote_logging.py
+
+[[tests]]
+id = "logging.remote"
+category = "logging"
+description = "Remote logging functionality works"
+severity = "required"
+pytest_path = "itf/test_remote_logging.py"
+
+# ==============================================================================
+# PERSISTENCY TESTS
+# ==============================================================================
+# Tests from feature_integration_tests/test_cases/tests/persistency/
+
+[[tests]]
+id = "persistency.datatype_support"
+category = "persistency"
+description = "Key-value store supports all required datatypes"
+severity = "required"
+pytest_path = "test_cases/tests/persistency/test_datatype_support.py"
+partially_verifies = [
+    "feat_req__persistency__support_datatype_value",
+    "feat_req__persistency__support_datatype_keys",
+    "feat_req__persistency__store_data",
+]
+
+[[tests]]
+id = "persistency.reset_to_default"
+category = "persistency"
+description = "Reset to default values works correctly"
+severity = "required"
+pytest_path = "test_cases/tests/persistency/test_reset_to_default.py"
+
+[[tests]]
+id = "persistency.default_values"
+category = "persistency"
+description = "Default values are correctly initialized"
+severity = "required"
+pytest_path = "test_cases/tests/persistency/test_default_values.py"
+
+[[tests]]
+id = "persistency.multiple_kvs"
+category = "persistency"
+description = "Multiple key-value stores per application work"
+severity = "required"
+pytest_path = "test_cases/tests/persistency/test_multiple_kvs_per_app.py"
+
+[[tests]]
+id = "persistency.combined"
+category = "persistency"
+description = "Combined persistency requirements work"
+severity = "required"
+pytest_path = "test_cases/tests/persistency/test_combined_requirements.py"

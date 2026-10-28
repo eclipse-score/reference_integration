@@ -1,0 +1,57 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+# API Signature Test Definitions
+#
+# This file defines the API surface that a SCORE distribution must expose.
+# The TCK verifies that required headers exist with expected symbols.
+
+# ==============================================================================
+# REQUIRED HEADERS
+# ==============================================================================
+# These headers MUST be present in the distribution's include directory.
+
+[headers]
+# Core headers (score_baselibs)
+"score/language/safecpp.hpp" = { required = true, module = "score_baselibs" }
+"score/json/json.hpp" = { required = true, module = "score_baselibs" }
+"score/string/string.hpp" = { required = true, module = "score_baselibs" }
+
+# Logging headers (score_logging)
+"score/logging/logging.hpp" = { required = true, module = "score_logging" }
+"score/logging/console_logger.hpp" = { required = true, module = "score_logging" }
+"score/logging/dlt_logger.hpp" = { required = false, module = "score_logging", note = "DLT optional for non-automotive profiles" }
+
+# Communication headers (score_communication)
+"score/com/com.hpp" = { required = true, module = "score_communication" }
+"score/com/publisher.hpp" = { required = true, module = "score_communication" }
+"score/com/subscriber.hpp" = { required = true, module = "score_communication" }
+
+# Persistency headers (score_persistency)
+"score/persistency/kv_store.hpp" = { required = true, module = "score_persistency" }
+
+# Lifecycle headers (score_lifecycle)
+"score/lifecycle/lifecycle.hpp" = { required = true, module = "score_lifecycle" }
+
+# Time headers (score_time)
+"score/time/time.hpp" = { required = true, module = "score_time" }
+"score/time/steady_clock.hpp" = { required = true, module = "score_time" }
+
+# ==============================================================================
+# FORBIDDEN HEADERS
+# ==============================================================================
+# These headers MUST NOT appear in a SCORE distribution.
+# They indicate leaked internal implementation details.
+
+[forbidden_headers]
+"score/internal/" = { reason = "Internal headers must not be part of public API" }
+"score/mw/impl/" = { reason = "Implementation details must not be exposed" }
