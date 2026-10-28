@@ -93,7 +93,6 @@
                         "@score_logging//score/mw/log/flags:KRemote_Logging=False"
                     ],
                     "exclude_test_targets": [
-                        "//score/kvs/tests:bm_kvs_cpp",
                         "//score/kvs/tests/integration_test_scenarios/...",
                         "//score/kvs/tests/test_cases/..."
                     ],
@@ -106,11 +105,10 @@
                     ],
                     "test_args": [
                         "--config=per-x86_64-linux",
-                        "//:test_kvs_cpp",
-                        "//score/kvs/rust_kvs:tests"
+                        "//:unit_tests"
                     ]
                 },
-                "hash": "961c0a0989755a1e0fe8de55e83c0a44e2e20b56"
+                "hash": "a804b85f67381378b2250abaa91e0a3a6046e994"
             },
             "score_kyron": {
                 "repo": "https://github.com/eclipse-score/kyron.git",
@@ -126,7 +124,7 @@
                         "//src/..."
                     ]
                 },
-                "hash": "90fb90258f49f17a504d41262634d43608f28ccc"
+                "hash": "52d4bef3d1822f82199d72e58e815b9e43406fe6"
             },
             "score_lifecycle": {
                 "repo": "https://github.com/eclipse-score/lifecycle.git",
@@ -301,7 +299,8 @@
             "score_test_scenarios": {
                 "repo": "https://github.com/eclipse-score/testing_tools.git",
                 "docs": false,
-                "hash": "fec712d490ff5d46fae91332bafac4777b300026"
+                "version": "0.5.0",
+                "pin_version": true
             },
             "score_docs_as_code": {
                 "repo": "https://github.com/eclipse-score/docs-as-code.git",

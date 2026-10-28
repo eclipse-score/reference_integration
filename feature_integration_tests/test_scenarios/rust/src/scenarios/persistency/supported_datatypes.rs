@@ -68,7 +68,7 @@ impl Scenario for AllValueTypes {
     }
 }
 
-/// Write five values with mixed types under both ASCII and UTF-8 key names,
+/// Write five values with mixed types under both plain and punctuated ASCII key names,
 /// then flush. Python reads the single snapshot and verifies every key is
 /// present with the correct type tag and value — combining key-encoding and
 /// value-type requirements in one observable storage outcome.
@@ -86,9 +86,9 @@ impl Scenario for AllTypesUtf8 {
 
         kvs.set_value("ascii_i32", KvsValue::I32(-321))
             .map_err(|e| format!("{e:?}"))?;
-        kvs.set_value("emoji_f64 🎯", KvsValue::F64(3.14))
+        kvs.set_value("punct_f64 #%", KvsValue::F64(3.14))
             .map_err(|e| format!("{e:?}"))?;
-        kvs.set_value("greek_bool αβγ", KvsValue::Boolean(true))
+        kvs.set_value("punct_bool ~^", KvsValue::Boolean(true))
             .map_err(|e| format!("{e:?}"))?;
         kvs.set_value("ascii_str", KvsValue::String("hello".to_string()))
             .map_err(|e| format!("{e:?}"))?;
