@@ -1,0 +1,22 @@
+[package]
+name = "score-tck"
+version = "0.1.0"
+edition = "2021"
+description = "s-core Test Compatibility Kit - verify SCORE distribution compatibility"
+license = "Apache-2.0"
+repository = "https://github.com/eclipse-score/reference_integration"
+
+[[bin]]
+name = "score-tck"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+anyhow = "1"
+
+[profile.release]
+opt-level = "s"      # Optimize for size
+lto = true           # Link-time optimization
+strip = true         # Strip symbols

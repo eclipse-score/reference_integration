@@ -12,49 +12,42 @@
 # *******************************************************************************
 """TCK packaging rules.
 
-Builds the score-tck-<version>.tar.gz bundle containing:
-- bin/score-tck (self-contained runner)
-- reference/sbom.spdx.json (golden SBOM)
-- reference/requirements.json (requirement mappings)
-- docs/USER_GUIDE.md
+Builds the score-tck binary (Rust) and packages it with golden reference data.
+
+Usage:
+    bazel build //tck:score-tck
+    ./bazel-bin/tck/score-tck --help
 """
 
-load("@rules_pkg//pkg:pkg.bzl", "pkg_tar")
+load("@rules_rust//rust:defs.bzl", "rust_binary")
 
-# Golden SBOM - copy from root product SBOM
-alias(
+# Golden SBOM - copy from root product SBOM (built separately)
+# The runner expects the SBOM at tck/reference/sbom.spdx.json
+filegroup(
     name = "golden_sbom",
-    actual = "//:sbom",
+    srcs = ["reference/sbom.spdx.json"],
     visibility = ["//visibility:public"],
 )
 
-# Requirements mapping - extracted from platform_integration_tests
-genrule(
-    name = "requirements_map",
-    srcs = glob(["../platform_integration_tests/**/*.py"]),
-    outs = ["requirements.json"],
-    cmd = """
-        python3 $(location :extract_requirements.py) $(SRCS) > $@
-    """,
-    tools = [":extract_requirements.py"],
-)
-
-py_binary(
-    name = "extract_requirements.py",
-    srcs = ["extract_requirements.py"],
-    main = "extract_requirements.py",
-)
-
-# TCK package - assemble everything
-pkg_tar(
-    name = "score_tck_pkg",
-    srcs = [
-        ":golden_sbom",
-        ":requirements_map",
-        "//tck/bin:score-tck",
-        "//tck/checks:sbom_check.py",
+# Rust TCK runner binary
+rust_binary(
+    name = "score-tck",
+    srcs = glob([
+        "runner/src/**/*.rs",
+    ]),
+    crate_root = "runner/src/main.rs",
+    deps = [
+        "@score_crates//:anyhow",
+        "@score_crates//:clap",
+        "@score_crates//:serde",
+        "@score_crates//:serde_json",
     ],
-    package_dir = "score-tck-{version}",
-    strip_prefix = ".",
+    visibility = ["//visibility:public"],
+)
+
+# Distribution config example
+filegroup(
+    name = "config_example",
+    srcs = ["tck.config.example.toml"],
     visibility = ["//visibility:public"],
 )
