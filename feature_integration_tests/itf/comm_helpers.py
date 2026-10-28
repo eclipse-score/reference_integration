@@ -10,23 +10,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-"""
-Helpers for the communication (LoLa / mw::com) ITF tests.
-
-Upstream replaced the two-process ``ipc_bridge`` example with the
-single-process ``com-api-example`` demo, which cannot act as separate
-producer/consumer processes. Per the maintainer's guidance we therefore ship
-our own sender/receiver scenario (``showcases/standalone/comm_fit``): two
-distinct binaries that offer and subscribe to the same ``VehicleInterface``
-service instance over real shared memory.
-
-The checks here are derived from observable data the receiver produces, not
-from strings the app echoes about its own configuration. ``fit_sender``
-publishes ``left_tire`` samples whose payload carries a monotonically
-increasing sequence number; ``fit_receiver`` prints one ``FIT_RECV seq=<n>``
-line per consumed sample. That gives independent oracles for delivery,
-ordering and value-integrity that a middleware regression would break.
-"""
+"""Helpers for the communication (LoLa / mw::com) ITF tests."""
 
 from __future__ import annotations
 
@@ -171,25 +155,13 @@ def run_event_exchange(
 # Deployment-configuration integrity (negative scenarios)
 # --------------------------------------------------------------------------
 #
-# fit_receiver's own contract (fit_receiver.rs) is: a config that cannot be
-# loaded or resolves to no service instances must never let the process hang
-# or silently look like success -- it must exit non-zero, bounded in time,
-# and never reach FIT_FOUND_SERVICE. That is what these tests check. Unlike
-# the removed ipc_bridge example (whose C++ config parser used assert() and
-# so failed via SIGABRT), the exact underlying failure mode of the Rust
-# `com_api` runtime builder is intentionally NOT asserted on here -- only the
-# black-box contract is.
+# fit_receiver's contract: a config that cannot be loaded must exit non-zero,
+# bounded in time, and never reach FIT_FOUND_SERVICE. Only the black-box
+# contract is asserted; the underlying failure mode is not.
 #
-# These tests run against a dedicated instance specifier that no other test
-# ever offers (NEGATIVE_CONFIG_INSTANCE_SPECIFIER), rather than the shared
-# default. The QEMU target fixture is session-scoped (the same booted image
-# persists across every test in the file, unlike the Docker plugin's
-# per-test container), and run_event_exchange's producer cleanup is a plain
-# `kill`, not a graceful unoffer() -- so a killed producer's SHM registration
-# / cached samples for the *shared* default instance can still be
-# discoverable by a later test. A consumer whose own config genuinely
-# resolves to zero instances must never be able to observe that kind of
-# cross-test leftover, so it needs an instance nobody else touches.
+# These tests use NEGATIVE_CONFIG_INSTANCE_SPECIFIER — an instance no other
+# test ever offers — so a misconfigured receiver cannot latch onto leftover
+# SHM state from a killed producer in the session-scoped QEMU fixture.
 
 # Deliberately malformed: not valid JSON at all.
 TRUNCATED_CONFIG_JSON = '{ "serviceTypes": [ { "serviceTypeName"'
@@ -252,16 +224,12 @@ def run_receiver_with_manifest(
 # --------------------------------------------------------------------------
 #
 # LoLa's `allowedConsumer`/`allowedProvider` ACLs are enforced via POSIX ACLs
-# on the shared-memory objects the provider creates, gated by the real
-# process UID of the consumer/provider -- this is the same enforcement point
-# already exercised (and documented) for the now-removed ipc_bridge example:
+# on the shared-memory objects the provider creates, keyed on real process UID.
 #
-#   1. It is the PROVIDER's config that is authoritative (its allowedConsumer
-#      list decides who may open the SHM object) -- a consumer's own config
-#      does not self-restrict what it may read.
-#   2. Enforcement requires distinct real UIDs -- running "denied" and
-#      "allowed" consumers under the same UID proves nothing, because the
-#      excluded UID is never actually attempted.
+#   1. The PROVIDER's config is authoritative (its allowedConsumer list decides
+#      who may open the SHM object); a consumer's config does not self-restrict.
+#   2. Enforcement requires distinct real UIDs — "denied" and "allowed"
+#      consumers under the same UID would prove nothing.
 #
 # Empirically, a denied UID's `builder.build()` in fit_receiver's
 # discover_consumer() does *not* return an Err to retry on -- the denial
