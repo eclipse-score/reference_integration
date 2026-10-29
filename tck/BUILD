@@ -36,13 +36,13 @@ rust_binary(
         "runner/src/**/*.rs",
     ]),
     crate_root = "runner/src/main.rs",
+    visibility = ["//visibility:public"],
     deps = [
         "@score_crates//:anyhow",
         "@score_crates//:clap",
         "@score_crates//:serde",
         "@score_crates//:serde_json",
     ],
-    visibility = ["//visibility:public"],
 )
 
 # Rust TCK unit tests
@@ -52,6 +52,7 @@ rust_test(
         "runner/src/**/*.rs",
     ]),
     crate_root = "runner/src/lib.rs",
+    visibility = ["//visibility:public"],
     deps = [
         "@score_crates//:anyhow",
         "@score_crates//:clap",
@@ -59,7 +60,6 @@ rust_test(
         "@score_crates//:serde_json",
         "@score_crates//:tempfile",
     ],
-    visibility = ["//visibility:public"],
 )
 
 # Distribution config example

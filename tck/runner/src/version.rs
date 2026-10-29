@@ -1,3 +1,15 @@
+// *******************************************************************************
+// Copyright (c) 2026 Contributors to the Eclipse Foundation
+//
+// See the NOTICE file(s) distributed with this work for additional
+// information regarding copyright ownership.
+//
+// This program and the accompanying materials are made available under the
+// terms of the Apache License Version 2.0 which is available at
+// <https://www.apache.org/licenses/LICENSE-2.0>
+//
+// SPDX-License-Identifier: Apache-2.0
+// *******************************************************************************
 //! Version compatibility check
 
 use anyhow::{Context, Result};
@@ -57,7 +69,7 @@ fn parse_version_section(content: &str) -> Result<VersionPolicy> {
 /// Run version compatibility check
 pub fn run(config: &Config, policy: &VersionPolicy) -> Result<CheckReport> {
     let dist_version = &config.dist.platform_version;
-    
+
     let check = match policy.version_policy.as_str() {
         "exact" => check_exact(dist_version, &policy.platform_version),
         "compatible" => check_compatible(dist_version, &policy.min_platform_version),
@@ -70,15 +82,22 @@ pub fn run(config: &Config, policy: &VersionPolicy) -> Result<CheckReport> {
         },
         _ => CheckResult {
             id: "version.compatibility".to_string(),
-            status: "fail".to_string(),  // Unknown policy must fail, not warn
+            status: "fail".to_string(), // Unknown policy must fail, not warn
             severity: "required".to_string(),
-            message: format!("Unknown version policy: '{}'. Must be 'exact', 'compatible', or 'any'", policy.version_policy),
+            message: format!(
+                "Unknown version policy: '{}'. Must be 'exact', 'compatible', or 'any'",
+                policy.version_policy
+            ),
             details: vec![],
         },
     };
-    
-    let verdict = if check.status == "fail" { "NON-CONFORMANT" } else { "CONFORMANT" };
-    
+
+    let verdict = if check.status == "fail" {
+        "NON-CONFORMANT"
+    } else {
+        "CONFORMANT"
+    };
+
     Ok(CheckReport {
         family: "version".to_string(),
         verdict: verdict.to_string(),
@@ -87,7 +106,8 @@ pub fn run(config: &Config, policy: &VersionPolicy) -> Result<CheckReport> {
 }
 
 fn check_exact(dist_version: &str, required_version: &str) -> CheckResult {
-    let valid_versions = parse_semver(dist_version).is_ok() && parse_semver(required_version).is_ok();
+    let valid_versions =
+        parse_semver(dist_version).is_ok() && parse_semver(required_version).is_ok();
     if valid_versions && dist_version == required_version {
         CheckResult {
             id: "version.compatibility".to_string(),
@@ -95,7 +115,7 @@ fn check_exact(dist_version: &str, required_version: &str) -> CheckResult {
             severity: "required".to_string(),
             message: format!("Platform version {} matches required version", dist_version),
             details: vec![
-                serde_json::json!({"dist_version": dist_version, "required_version": required_version})
+                serde_json::json!({"dist_version": dist_version, "required_version": required_version}),
             ],
         }
     } else if !valid_versions {
@@ -108,7 +128,7 @@ fn check_exact(dist_version: &str, required_version: &str) -> CheckResult {
                 dist_version, required_version
             ),
             details: vec![
-                serde_json::json!({"dist_version": dist_version, "required_version": required_version})
+                serde_json::json!({"dist_version": dist_version, "required_version": required_version}),
             ],
         }
     } else {
@@ -116,9 +136,12 @@ fn check_exact(dist_version: &str, required_version: &str) -> CheckResult {
             id: "version.compatibility".to_string(),
             status: "fail".to_string(),
             severity: "required".to_string(),
-            message: format!("Platform version {} does not match required version {}", dist_version, required_version),
+            message: format!(
+                "Platform version {} does not match required version {}",
+                dist_version, required_version
+            ),
             details: vec![
-                serde_json::json!({"dist_version": dist_version, "required_version": required_version})
+                serde_json::json!({"dist_version": dist_version, "required_version": required_version}),
             ],
         }
     }
@@ -130,27 +153,33 @@ fn check_compatible(dist_version: &str, min_version: &str) -> CheckResult {
             id: "version.compatibility".to_string(),
             status: "pass".to_string(),
             severity: "required".to_string(),
-            message: format!("Platform version {} is compatible (>= {})", dist_version, min_version),
+            message: format!(
+                "Platform version {} is compatible (>= {})",
+                dist_version, min_version
+            ),
             details: vec![
-                serde_json::json!({"dist_version": dist_version, "min_version": min_version})
+                serde_json::json!({"dist_version": dist_version, "min_version": min_version}),
             ],
         },
         Ok(false) => CheckResult {
             id: "version.compatibility".to_string(),
             status: "fail".to_string(),
             severity: "required".to_string(),
-            message: format!("Platform version {} is below minimum required version {}", dist_version, min_version),
+            message: format!(
+                "Platform version {} is below minimum required version {}",
+                dist_version, min_version
+            ),
             details: vec![
-                serde_json::json!({"dist_version": dist_version, "min_version": min_version})
+                serde_json::json!({"dist_version": dist_version, "min_version": min_version}),
             ],
         },
         Err(e) => CheckResult {
             id: "version.compatibility".to_string(),
-            status: "fail".to_string(),  // Parse errors must fail, not warn
+            status: "fail".to_string(), // Parse errors must fail, not warn
             severity: "required".to_string(),
             message: format!("Invalid version format: {}", e),
             details: vec![
-                serde_json::json!({"dist_version": dist_version, "min_version": min_version, "error": e})
+                serde_json::json!({"dist_version": dist_version, "min_version": min_version, "error": e}),
             ],
         },
     }
@@ -175,11 +204,13 @@ enum Identifier {
 
 impl Ord for SemVer {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.core.cmp(&other.core).then_with(|| match (self.prerelease.is_empty(), other.prerelease.is_empty()) {
-            (true, true) => std::cmp::Ordering::Equal,
-            (true, false) => std::cmp::Ordering::Greater,
-            (false, true) => std::cmp::Ordering::Less,
-            (false, false) => self.prerelease.cmp(&other.prerelease),
+        self.core.cmp(&other.core).then_with(|| {
+            match (self.prerelease.is_empty(), other.prerelease.is_empty()) {
+                (true, true) => std::cmp::Ordering::Equal,
+                (true, false) => std::cmp::Ordering::Greater,
+                (false, true) => std::cmp::Ordering::Less,
+                (false, false) => self.prerelease.cmp(&other.prerelease),
+            }
         })
     }
 }
@@ -209,7 +240,9 @@ impl PartialOrd for Identifier {
 
 fn parse_semver(value: &str) -> Result<SemVer, String> {
     let invalid = || format!("Invalid semantic version '{}'", value);
-    let (version, build) = value.split_once('+').map_or((value, None), |(v, b)| (v, Some(b)));
+    let (version, build) = value
+        .split_once('+')
+        .map_or((value, None), |(v, b)| (v, Some(b)));
     if let Some(build) = build {
         if build.is_empty() || !valid_identifiers(build, false) {
             return Err(invalid());
@@ -246,14 +279,19 @@ fn parse_semver(value: &str) -> Result<SemVer, String> {
             })
             .collect::<Result<_, _>>()?,
     };
-    Ok(SemVer { core: numbers, prerelease })
+    Ok(SemVer {
+        core: numbers,
+        prerelease,
+    })
 }
 
 fn valid_identifiers(value: &str, prerelease: bool) -> bool {
     !value.is_empty()
         && value.split('.').all(|part| {
             !part.is_empty()
-                && part.bytes().all(|byte| byte.is_ascii_alphanumeric() || byte == b'-')
+                && part
+                    .bytes()
+                    .all(|byte| byte.is_ascii_alphanumeric() || byte == b'-')
                 && (!prerelease
                     || !part.bytes().all(|byte| byte.is_ascii_digit())
                     || part == "0"
@@ -264,83 +302,86 @@ fn valid_identifiers(value: &str, prerelease: bool) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_compare_versions_equal() {
         assert_eq!(compare_versions("0.9.0", "0.9.0").unwrap(), true);
     }
-    
+
     #[test]
     fn test_compare_versions_greater_minor() {
         assert_eq!(compare_versions("0.10.0", "0.9.0").unwrap(), true);
     }
-    
+
     #[test]
     fn test_compare_versions_less_minor() {
         assert_eq!(compare_versions("0.9.0", "0.10.0").unwrap(), false);
     }
-    
+
     #[test]
     fn test_compare_versions_greater_major() {
         assert_eq!(compare_versions("1.0.0", "0.9.0").unwrap(), true);
     }
-    
+
     #[test]
     fn test_compare_versions_patch_greater() {
         assert_eq!(compare_versions("0.9.1", "0.9.0").unwrap(), true);
     }
-    
+
     #[test]
     fn test_compare_versions_missing_patch() {
         assert!(compare_versions("0.9", "0.9.0").is_err());
         assert!(compare_versions("0.9.0", "0.9").is_err());
     }
-    
+
     #[test]
     fn test_compare_versions_prerelease() {
         assert_eq!(compare_versions("0.9.0-rc.1", "0.9.0").unwrap(), false);
         assert_eq!(compare_versions("0.9.0", "0.9.0-rc.1").unwrap(), true);
         assert_eq!(compare_versions("1.0.0-rc.2", "1.0.0-rc.1").unwrap(), true);
-        assert_eq!(compare_versions("1.0.0+build.2", "1.0.0+build.1").unwrap(), true);
+        assert_eq!(
+            compare_versions("1.0.0+build.2", "1.0.0+build.1").unwrap(),
+            true
+        );
     }
-    
+
     #[test]
     fn test_compare_versions_invalid() {
         assert!(compare_versions("invalid", "0.9.0").is_err());
         assert!(compare_versions("0.9.0", "invalid").is_err());
         assert!(compare_versions("0.9.0-01", "0.9.0").is_err());
     }
-    
+
     #[test]
     fn test_check_compatible_pass() {
         let result = check_compatible("0.9.0", "0.9.0");
         assert_eq!(result.status, "pass");
     }
-    
+
     #[test]
     fn test_check_compatible_fail() {
         let result = check_compatible("0.8.0", "0.9.0");
         assert_eq!(result.status, "fail");
     }
-    
+
     #[test]
     fn test_check_compatible_invalid_version_fails() {
         let result = check_compatible("invalid", "0.9.0");
         assert_eq!(result.status, "fail");
     }
-    
+
     #[test]
     fn test_check_exact_pass() {
         let result = check_exact("0.9.0", "0.9.0");
         assert_eq!(result.status, "pass");
     }
-    
+
     #[test]
     fn test_check_exact_fail() {
         let result = check_exact("0.10.0", "0.9.0");
         assert_eq!(result.status, "fail");
     }
-    
+
     #[test]
     fn test_parse_version_section() {
         let toml = r#"
@@ -356,7 +397,7 @@ version_policy = "exact"
         assert_eq!(policy.tck_version, "0.5.0");
         assert_eq!(policy.version_policy, "exact");
     }
-    
+
     #[test]
     fn test_unknown_policy_fails() {
         let policy = VersionPolicy {
@@ -369,11 +410,11 @@ version_policy = "exact"
         assert_eq!(result.checks[0].status, "fail");
         assert!(result.checks[0].message.contains("Unknown version policy"));
     }
-    
+
     fn create_test_config() -> crate::config::Config {
-        use crate::config::{Config, DistConfig, PathsConfig, ChecksConfig};
+        use crate::config::{ChecksConfig, Config, DistConfig, PathsConfig};
         use std::path::PathBuf;
-        
+
         Config {
             dist: DistConfig {
                 name: "test".to_string(),

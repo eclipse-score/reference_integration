@@ -1,9 +1,21 @@
+// *******************************************************************************
+// Copyright (c) 2026 Contributors to the Eclipse Foundation
+//
+// See the NOTICE file(s) distributed with this work for additional
+// information regarding copyright ownership.
+//
+// This program and the accompanying materials are made available under the
+// terms of the Apache License Version 2.0 which is available at
+// <https://www.apache.org/licenses/LICENSE-2.0>
+//
+// SPDX-License-Identifier: Apache-2.0
+// *******************************************************************************
 //! Distribution configuration parsing
 
 use anyhow::{Context, Result};
 use std::path::PathBuf;
 
-/// Distribution configuration 
+/// Distribution configuration
 #[derive(Debug)]
 pub struct Config {
     pub dist: DistConfig,
@@ -52,7 +64,8 @@ pub fn load(path: &PathBuf) -> Result<Config> {
                 .unwrap_or_else(|| "0.9.0".to_string()),
             paths: PathsConfig {
                 sbom_file: PathBuf::from(
-                    get_string(paths, "sbom_file")?.unwrap_or_else(|| "./sbom.spdx.json".to_string()),
+                    get_string(paths, "sbom_file")?
+                        .unwrap_or_else(|| "./sbom.spdx.json".to_string()),
                 ),
                 headers_dir: get_string(paths, "headers_dir")?.map(PathBuf::from),
                 libs_dir: get_string(paths, "libs_dir")?.map(PathBuf::from),
@@ -68,7 +81,10 @@ pub fn load(path: &PathBuf) -> Result<Config> {
     })
 }
 
-fn get_string(table: Option<&std::collections::HashMap<String, String>>, key: &str) -> Result<Option<String>> {
+fn get_string(
+    table: Option<&std::collections::HashMap<String, String>>,
+    key: &str,
+) -> Result<Option<String>> {
     table
         .and_then(|table| table.get(key))
         .map(|value| crate::toml::string(value))
@@ -80,14 +96,14 @@ mod tests {
     use super::*;
     use std::io::Write;
     use tempfile::NamedTempFile;
-    
+
     #[test]
     fn test_load_config_minimal() {
         let mut file = NamedTempFile::new().unwrap();
         writeln!(file, r#"[dist]"#).unwrap();
         writeln!(file, r#"name = "my-dist""#).unwrap();
         writeln!(file, r#"version = "2.0.0""#).unwrap();
-        
+
         let config = load(&file.path().to_path_buf()).unwrap();
         assert_eq!(config.dist.name, "my-dist");
         assert_eq!(config.dist.version, "2.0.0");

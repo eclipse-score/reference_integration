@@ -1,3 +1,15 @@
+// *******************************************************************************
+// Copyright (c) 2026 Contributors to the Eclipse Foundation
+//
+// See the NOTICE file(s) distributed with this work for additional
+// information regarding copyright ownership.
+//
+// This program and the accompanying materials are made available under the
+// terms of the Apache License Version 2.0 which is available at
+// <https://www.apache.org/licenses/LICENSE-2.0>
+//
+// SPDX-License-Identifier: Apache-2.0
+// *******************************************************************************
 //! SBOM comparison check
 
 use anyhow::{bail, Context, Result};
@@ -92,15 +104,17 @@ impl SbomPolicy {
             .collect();
         let allowed_licenses = entries("sbom.allowed_licenses")?
             .iter()
-            .filter_map(|(name, value)| match crate::toml::inline_bool(value, "approved") {
-                Ok(Some(true)) => Some(Ok(Some(name.clone()))),
-                Ok(Some(false)) => None,
-                Ok(None) => Some(Err(anyhow::anyhow!(
-                    "Missing 'approved' flag for license '{}'",
-                    name
-                ))),
-                Err(error) => Some(Err(error)),
-            })
+            .filter_map(
+                |(name, value)| match crate::toml::inline_bool(value, "approved") {
+                    Ok(Some(true)) => Some(Ok(Some(name.clone()))),
+                    Ok(Some(false)) => None,
+                    Ok(None) => Some(Err(anyhow::anyhow!(
+                        "Missing 'approved' flag for license '{}'",
+                        name
+                    ))),
+                    Err(error) => Some(Err(error)),
+                },
+            )
             .collect::<Result<Vec<_>>>()?
             .into_iter()
             .flatten()
@@ -127,8 +141,9 @@ pub struct SBOMChecker {
 
 impl SBOMChecker {
     pub fn new(golden_sbom_path: PathBuf, policy: SbomPolicy) -> Result<Self> {
-        let golden = load_spdx(&golden_sbom_path)
-            .with_context(|| format!("Failed to load golden SBOM: {}", golden_sbom_path.display()))?;
+        let golden = load_spdx(&golden_sbom_path).with_context(|| {
+            format!("Failed to load golden SBOM: {}", golden_sbom_path.display())
+        })?;
         Ok(Self {
             golden_packages: extract_packages(&golden),
             policy,
@@ -160,9 +175,10 @@ impl SBOMChecker {
             self.check_license_policy(packages),
             self.check_drift(packages),
         ];
-        let verdict = if checks.iter().any(|check| {
-            check.status == "fail" && check.severity == "required"
-        }) {
+        let verdict = if checks
+            .iter()
+            .any(|check| check.status == "fail" && check.severity == "required")
+        {
             "NON-CONFORMANT"
         } else if checks.iter().any(|check| check.status == "warn") {
             "CONFORMANT-WITH-WARNINGS"
@@ -181,7 +197,11 @@ impl SBOMChecker {
             .policy
             .required_modules
             .iter()
-            .filter(|required| !packages.iter().any(|package| package.name.eq_ignore_ascii_case(required)))
+            .filter(|required| {
+                !packages
+                    .iter()
+                    .any(|package| package.name.eq_ignore_ascii_case(required))
+            })
             .cloned()
             .collect();
         if missing.is_empty() {
@@ -252,7 +272,10 @@ impl SBOMChecker {
         let violations: Vec<_> = packages
             .iter()
             .filter_map(|package| {
-                let license = package.license_concluded.as_deref().unwrap_or("NOASSERTION");
+                let license = package
+                    .license_concluded
+                    .as_deref()
+                    .unwrap_or("NOASSERTION");
                 (!license_expression_is_allowed(license, &self.policy.allowed_licenses))
                     .then(|| serde_json::json!({"component": package.name, "license": license}))
             })
@@ -296,8 +319,8 @@ impl SBOMChecker {
             if let Some((index, golden)) = matching {
                 matched[index] = true;
                 let version_changed = golden.version_info != package.version_info;
-                let checksum_changed =
-                    normalized_checksums(&golden.checksums) != normalized_checksums(&package.checksums);
+                let checksum_changed = normalized_checksums(&golden.checksums)
+                    != normalized_checksums(&package.checksums);
                 if version_changed || checksum_changed {
                     drift.push(serde_json::json!({
                         "component": package.name,
@@ -462,7 +485,10 @@ fn validate_spdx(document: &SpdxDocument) -> Result<()> {
         || document.data_license.as_deref() != Some("CC0-1.0")
         || document.spdx_id.as_deref() != Some("SPDXRef-DOCUMENT")
         || document.name.as_deref().is_none_or(str::is_empty)
-        || document.document_namespace.as_deref().is_none_or(str::is_empty)
+        || document
+            .document_namespace
+            .as_deref()
+            .is_none_or(str::is_empty)
     {
         bail!("SPDX document is missing required document metadata");
     }
@@ -575,19 +601,31 @@ mod tests {
             .iter()
             .map(|license| license.to_string())
             .collect();
-        assert!(license_expression_is_allowed("GPL-3.0-only OR MIT", &allowed));
-        assert!(!license_expression_is_allowed("GPL-2.0-only OR GPL-3.0-only", &allowed));
-        assert!(!license_expression_is_allowed("(MIT OR GPL-3.0-only) AND GPL-2.0-only", &allowed));
-        assert!(license_expression_is_allowed("MIT AND BSD-3-Clause", &allowed));
-        assert!(!license_expression_is_allowed("MIT WITH LLVM-exception", &allowed));
+        assert!(license_expression_is_allowed(
+            "GPL-3.0-only OR MIT",
+            &allowed
+        ));
+        assert!(!license_expression_is_allowed(
+            "GPL-2.0-only OR GPL-3.0-only",
+            &allowed
+        ));
+        assert!(!license_expression_is_allowed(
+            "(MIT OR GPL-3.0-only) AND GPL-2.0-only",
+            &allowed
+        ));
+        assert!(license_expression_is_allowed(
+            "MIT AND BSD-3-Clause",
+            &allowed
+        ));
+        assert!(!license_expression_is_allowed(
+            "MIT WITH LLVM-exception",
+            &allowed
+        ));
     }
 
     #[test]
     fn packages_with_duplicate_names_are_all_checked_for_licenses() {
-        let checker = checker(
-            vec![],
-            &["MIT"],
-        );
+        let checker = checker(vec![], &["MIT"]);
         let report = checker.run_checks(&[
             package("duplicate", "1.0.0", "MIT", "one"),
             package("duplicate", "2.0.0", "GPL-3.0-only", "two"),
@@ -598,10 +636,7 @@ mod tests {
 
     #[test]
     fn drift_detects_versions_and_checksums() {
-        let checker = checker(
-            vec![package("component", "1.0.0", "MIT", "same")],
-            &["MIT"],
-        );
+        let checker = checker(vec![package("component", "1.0.0", "MIT", "same")], &["MIT"]);
         let report = checker.run_checks(&[package("component", "2.0.0", "MIT", "changed")]);
         assert_eq!(report.checks[3].status, "warn");
         assert_eq!(report.checks[3].details[0]["type"], "change");
@@ -645,8 +680,9 @@ blocked = { reason = "not allowed" }
 
     #[test]
     fn malformed_or_incomplete_spdx_documents_are_rejected() {
-        let malformed = serde_json::from_str::<SpdxDocument>(r#"{"packages":[{"name":"only-package"}]}"#)
-            .unwrap();
+        let malformed =
+            serde_json::from_str::<SpdxDocument>(r#"{"packages":[{"name":"only-package"}]}"#)
+                .unwrap();
         assert!(validate_spdx(&malformed).is_err());
         assert!(serde_json::from_str::<SpdxDocument>(r#"{"packages":[{}]}"#).is_err());
         assert!(!valid_spdx_version("SPDX-2.invalid"));

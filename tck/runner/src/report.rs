@@ -1,3 +1,15 @@
+// *******************************************************************************
+// Copyright (c) 2026 Contributors to the Eclipse Foundation
+//
+// See the NOTICE file(s) distributed with this work for additional
+// information regarding copyright ownership.
+//
+// This program and the accompanying materials are made available under the
+// terms of the Apache License Version 2.0 which is available at
+// <https://www.apache.org/licenses/LICENSE-2.0>
+//
+// SPDX-License-Identifier: Apache-2.0
+// *******************************************************************************
 //! Report generation
 
 use serde::{Deserialize, Serialize};
@@ -55,7 +67,7 @@ impl Report {
         } else if check.verdict == "CONFORMANT-WITH-WARNINGS" && self.verdict != "NON-CONFORMANT" {
             self.verdict = "CONFORMANT-WITH-WARNINGS".to_string();
         }
-        
+
         self.checks.push(check);
     }
 
@@ -69,7 +81,10 @@ impl Report {
         let mut lines = vec![
             format!("# s-core TCK Compatibility Report"),
             String::new(),
-            format!("**Distribution**: {} v{} (`{}`)", self.dist_name, self.dist_version, self.dist_arch),
+            format!(
+                "**Distribution**: {} v{} (`{}`)",
+                self.dist_name, self.dist_version, self.dist_arch
+            ),
             format!("**TCK Version**: {}", self.tck_version),
             format!("**Platform Version**: {}", self.platform_version),
             String::new(),
@@ -78,7 +93,11 @@ impl Report {
         ];
 
         for check in &self.checks {
-            lines.push(format!("### {} Check - {}", check.family.to_uppercase(), check.verdict));
+            lines.push(format!(
+                "### {} Check - {}",
+                check.family.to_uppercase(),
+                check.verdict
+            ));
             lines.push(String::new());
 
             for result in &check.checks {
@@ -89,9 +108,12 @@ impl Report {
                     _ => "⏭️",
                 };
                 lines.push(format!("- {} **{}**: {}", icon, result.id, result.message));
-                
+
                 for detail in &result.details {
-                    lines.push(format!("  - `{}`", serde_json::to_string(detail).unwrap_or_default()));
+                    lines.push(format!(
+                        "  - `{}`",
+                        serde_json::to_string(detail).unwrap_or_default()
+                    ));
                 }
             }
             lines.push(String::new());
@@ -105,10 +127,10 @@ impl Report {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::config::{Config, DistConfig, PathsConfig, ChecksConfig};
+    use crate::config::{ChecksConfig, Config, DistConfig, PathsConfig};
     use std::path::PathBuf;
     use tempfile::tempdir;
-    
+
     fn make_test_config() -> Config {
         Config {
             dist: DistConfig {
@@ -126,7 +148,7 @@ mod tests {
             checks: ChecksConfig::default(),
         }
     }
-    
+
     #[test]
     fn test_report_new() {
         let config = make_test_config();
@@ -135,70 +157,70 @@ mod tests {
         assert_eq!(report.verdict, "CONFORMANT");
         assert!(report.checks.is_empty());
     }
-    
+
     #[test]
     fn test_add_check_conformant() {
         let config = make_test_config();
         let mut report = Report::new(&config);
-        
+
         report.add_check(CheckReport {
             family: "sbom".to_string(),
             verdict: "CONFORMANT".to_string(),
             checks: vec![],
         });
-        
+
         assert_eq!(report.verdict, "CONFORMANT");
         assert_eq!(report.checks.len(), 1);
     }
-    
+
     #[test]
     fn test_add_check_non_conformant() {
         let config = make_test_config();
         let mut report = Report::new(&config);
-        
+
         report.add_check(CheckReport {
             family: "sbom".to_string(),
             verdict: "NON-CONFORMANT".to_string(),
             checks: vec![],
         });
-        
+
         assert_eq!(report.verdict, "NON-CONFORMANT");
     }
-    
+
     #[test]
     fn test_add_check_warnings() {
         let config = make_test_config();
         let mut report = Report::new(&config);
-        
+
         report.add_check(CheckReport {
             family: "runtime".to_string(),
             verdict: "CONFORMANT-WITH-WARNINGS".to_string(),
             checks: vec![],
         });
-        
+
         assert_eq!(report.verdict, "CONFORMANT-WITH-WARNINGS");
     }
-    
+
     #[test]
     fn test_write_json() {
         let dir = tempdir().unwrap();
         let config = make_test_config();
         let report = Report::new(&config);
-        
+
         let path = dir.path().join("report.json");
         report.write_json(&path).unwrap();
-        
+
         assert!(path.exists());
         let content = std::fs::read_to_string(&path).unwrap();
         assert!(content.contains("test-dist"));
     }
-    
+
     #[test]
     fn test_write_markdown() {
         let dir = tempdir().unwrap();
         let config = make_test_config();
         let mut report = Report::new(&config);
-        
+
         report.add_check(CheckReport {
             family: "version".to_string(),
             verdict: "CONFORMANT".to_string(),
@@ -210,10 +232,10 @@ mod tests {
                 details: vec![],
             }],
         });
-        
+
         let path = dir.path().join("summary.md");
         report.write_markdown(&path).unwrap();
-        
+
         assert!(path.exists());
         let content = std::fs::read_to_string(&path).unwrap();
         assert!(content.contains("test-dist"));

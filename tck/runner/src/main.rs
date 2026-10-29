@@ -1,3 +1,15 @@
+// *******************************************************************************
+// Copyright (c) 2026 Contributors to the Eclipse Foundation
+//
+// See the NOTICE file(s) distributed with this work for additional
+// information regarding copyright ownership.
+//
+// This program and the accompanying materials are made available under the
+// terms of the Apache License Version 2.0 which is available at
+// <https://www.apache.org/licenses/LICENSE-2.0>
+//
+// SPDX-License-Identifier: Apache-2.0
+// *******************************************************************************
 //! s-core TCK - Test Compatibility Kit for SCORE Platform Distributions
 //!
 //! This binary verifies whether a SCORE distribution is compatible with
@@ -8,12 +20,12 @@ use anyhow::{bail, Context, Result};
 use clap::{Parser, Subcommand};
 use std::path::PathBuf;
 
-mod sbom;
-mod report;
 mod config;
-mod version;
+mod report;
 mod runtime;
+mod sbom;
 mod toml;
+mod version;
 
 /// s-core Test Compatibility Kit
 #[derive(Parser)]
@@ -55,7 +67,11 @@ fn main() -> Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
-        Commands::Run { config, report, checks } => {
+        Commands::Run {
+            config,
+            report,
+            checks,
+        } => {
             cmd_run(config, report, checks)?;
         }
         Commands::ValidateConfig { config } => {
@@ -77,7 +93,10 @@ fn cmd_run(config_path: PathBuf, report_dir: PathBuf, checks: Option<String>) ->
 
     // Load distribution configuration
     let config = config::load(&config_path)?;
-    println!("Distribution: {} v{}", config.dist.name, config.dist.version);
+    println!(
+        "Distribution: {} v{}",
+        config.dist.name, config.dist.version
+    );
     println!("Platform version: {}", config.dist.platform_version);
     println!("Architecture: {}", config.dist.arch);
     let enabled_checks = select_checks(checks.as_deref(), &config)?;
@@ -87,8 +106,13 @@ fn cmd_run(config_path: PathBuf, report_dir: PathBuf, checks: Option<String>) ->
     std::fs::create_dir_all(&report_dir)?;
     let mut report = report::Report::new(&config);
     let runtime_requirements = runtime::RuntimeRequirements::default();
-    let policy_path = if enabled_checks.iter().any(|check| check == "sbom" || check == "version") {
-        Some(resolve_reference_file("reference/policy/requirements.toml")?)
+    let policy_path = if enabled_checks
+        .iter()
+        .any(|check| check == "sbom" || check == "version")
+    {
+        Some(resolve_reference_file(
+            "reference/policy/requirements.toml",
+        )?)
     } else {
         None
     };
@@ -111,7 +135,11 @@ fn cmd_run(config_path: PathBuf, report_dir: PathBuf, checks: Option<String>) ->
     // Run SBOM check if enabled
     if sbom_policy.is_some() {
         println!("Running SBOM check...");
-        match sbom::run(&config, golden_sbom.as_deref().unwrap(), sbom_policy.unwrap()) {
+        match sbom::run(
+            &config,
+            golden_sbom.as_deref().unwrap(),
+            sbom_policy.unwrap(),
+        ) {
             Ok(sbom_report) => {
                 println!("  SBOM verdict: {}", sbom_report.verdict);
                 report.add_check(sbom_report);
@@ -202,10 +230,18 @@ fn cmd_run(config_path: PathBuf, report_dir: PathBuf, checks: Option<String>) ->
 
 fn select_checks(explicit: Option<&str>, config: &config::Config) -> Result<Vec<String>> {
     let checks = match explicit {
-        Some(checks) => checks.split(',').map(str::trim).map(str::to_string).collect(),
+        Some(checks) => checks
+            .split(',')
+            .map(str::trim)
+            .map(str::to_string)
+            .collect(),
         None if !config.checks.enabled.is_empty() => config.checks.enabled.clone(),
         None if config.dist.profile == "minimal" => vec!["sbom".to_string()],
-        None => vec!["sbom".to_string(), "version".to_string(), "runtime".to_string()],
+        None => vec![
+            "sbom".to_string(),
+            "version".to_string(),
+            "runtime".to_string(),
+        ],
     };
     if checks.is_empty() || checks.iter().any(String::is_empty) {
         bail!("No checks specified. Known checks are: sbom, version, runtime");
@@ -217,7 +253,11 @@ fn select_checks(explicit: Option<&str>, config: &config::Config) -> Result<Vec<
     if !unknown.is_empty() {
         bail!(
             "Unknown or unsupported check(s): {}. Known checks are: sbom, version, runtime",
-            unknown.iter().map(|check| check.as_str()).collect::<Vec<_>>().join(", ")
+            unknown
+                .iter()
+                .map(|check| check.as_str())
+                .collect::<Vec<_>>()
+                .join(", ")
         );
     }
     Ok(checks)
@@ -225,8 +265,11 @@ fn select_checks(explicit: Option<&str>, config: &config::Config) -> Result<Vec<
 
 fn resolve_reference_file(relative_path: &str) -> Result<PathBuf> {
     let executable = std::env::current_exe().context("Failed to locate the TCK executable")?;
-    let executable_directory = executable.parent().context("TCK executable has no parent directory")?;
-    let current_directory = std::env::current_dir().context("Failed to determine current directory")?;
+    let executable_directory = executable
+        .parent()
+        .context("TCK executable has no parent directory")?;
+    let current_directory =
+        std::env::current_dir().context("Failed to determine current directory")?;
     let candidates = [
         executable_directory.join("../").join(relative_path),
         executable_directory.join(relative_path),
@@ -243,7 +286,10 @@ fn resolve_reference_file(relative_path: &str) -> Result<PathBuf> {
 /// Validate a distribution config file
 fn cmd_validate_config(config_path: PathBuf) -> Result<()> {
     let config = config::load(&config_path)?;
-    println!("Config valid for distribution: {} v{}", config.dist.name, config.dist.version);
+    println!(
+        "Config valid for distribution: {} v{}",
+        config.dist.name, config.dist.version
+    );
     println!("Platform version: {}", config.dist.platform_version);
     println!("SBOM path: {}", config.dist.paths.sbom_file.display());
     Ok(())
