@@ -122,9 +122,13 @@ Verification & status reports
 -----------------------------
 
 The consolidated reports live under
-`docs/verification_report <https://github.com/eclipse-score/reference_integration/tree/main/docs/verification_report>`_ and the roadmap /
-status trackers under
-`docs/s_core_v_1/roadmap <https://github.com/eclipse-score/reference_integration/tree/main/docs/s_core_v_1/roadmap>`_ (e.g.
-``overall_status.rst``). Add your module to the relevant tables/rows so it shows
-up in the platform verification report and the feature/process status overview.
+`docs/verification_report <https://github.com/eclipse-score/reference_integration/tree/main/docs/verification_report>`_, the roadmap under
+`docs/s_core_v_1/roadmap <https://github.com/eclipse-score/reference_integration/tree/main/docs/s_core_v_1/roadmap>`_
+and the release-wide progress overview next to the release notes under
+`docs/s_core_v_1/releases <https://github.com/eclipse-score/reference_integration/tree/main/docs/s_core_v_1/releases>`_.
+Your module appears in the platform and module
+verification reports as soon as its documentation is part of the build; add it
+to ``scripts/progress_overview/collect_metrics.py`` to give it a colour slot in
+the per-release progress charts of
+``docs/s_core_v_1/releases/progress_overview.rst``.
 The full catalogue of reports is under :ref:`reports`.

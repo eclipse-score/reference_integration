@@ -27,10 +27,11 @@ jobs:
       modules: ${{ steps.modules.outputs.modules }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          allow-unsafe-pr-checkout: true
       - name: List modules
         id: modules
         run: echo "modules=$(jq -c '.modules.target_sw | keys' known_good.json)" >> "$GITHUB_OUTPUT"
@@ -48,10 +49,11 @@ jobs:
         with:
           level: 4
       - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          allow-unsafe-pr-checkout: true
       - name: Setup Bazel
         uses: bazel-contrib/setup-bazel@0.18.0
         with:

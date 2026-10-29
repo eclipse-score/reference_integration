@@ -17,6 +17,11 @@ Releases
 
 .. toctree::
    :titlesonly:
+
+   Release-wide Progress Overview <progress_overview>
+
+.. toctree::
+   :titlesonly:
    :glob:
 
-   *
+   release_note_*
