@@ -35,5 +35,6 @@ score_pkg_bundle(
     custom_layout = {
         ":lifecycle_configs": "etc/",
         "//showcases/simple_lifecycle/configs:logging.json": "etc/logging.json",
+        "//showcases/simple_lifecycle/configs:mw_com_config.json": "etc/mw_com_config.json",
     },
 )
