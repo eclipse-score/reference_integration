@@ -28,6 +28,10 @@ name = "acme-score-dist"
 # Version of your distribution  
 version = "1.0.0"
 
+# Platform version this distribution targets (must be compatible with TCK platform version)
+# This should match the SCORE platform version you are building against
+platform_version = "0.9.0"
+
 # Target architecture: x86_64-linux | aarch64-linux | qnx-aarch64
 arch = "x86_64-linux"
 
@@ -50,8 +54,9 @@ libs_dir = "./dist/lib"
 [checks]
 # Comma-separated list of checks to run
 # - sbom: Compare against golden SBOM (required components, license policy)
+# - version: Validate platform version compatibility
 # - behavioral: Run platform integration tests (requires [dist.build])
-enabled = ["sbom", "behavioral"]
+enabled = ["sbom", "version"]
 
 # [dist.build] - Only needed for behavioral checks
 # These settings tell the TCK how to build and run showcases against your distribution

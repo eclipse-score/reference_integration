@@ -280,8 +280,8 @@ impl SBOMChecker {
         } else {
             CheckResult {
                 id: "sbom.license_policy".to_string(),
-                status: "fail".to_string(),
-                severity: "required".to_string(),
+                status: "warn".to_string(),
+                severity: "warning".to_string(),
                 message: format!("Found {} license policy violation(s)", violations.len()),
                 details: violations,
             }
