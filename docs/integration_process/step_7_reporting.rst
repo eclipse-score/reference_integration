@@ -118,6 +118,37 @@ measured. Build a single module's report with:
 
    bazel run //rust_coverage:rust_coverage_score_my_module
 
+Component coverage in the documentation
+---------------------------------------
+
+``scripts/module_tests.py`` uses ``--config=llvm_cov`` and exports reports through
+``@score_coverage//:generate_coverage_html`` for the integrated Baselibs,
+Persistency and Logging releases. Other modules run their unit tests
+without coverage until a release using ``coverage_tool`` is integrated; the
+activation points are commented in ``COVERAGE_MODULES`` in the script.
+
+The export uses ``COVERAGE_THRESHOLD=0`` to collect evidence without adding a
+percentage gate. It contains plain LCOV at ``coverage/coverage_report.dat`` and
+the detailed HTML report. Source paths are translated to the reference
+integration's repository identities before upload; for example,
+``score/foo.cpp`` in Baselibs becomes
+``external/score_baselibs+/score/foo.cpp``.
+
+The ``report`` command combines these files into
+``coverage-report/coverage_report.dat``, which docs-as-code reads when the
+published documentation is built. Component coverage uses only the
+``primary_need_id`` and ``code_targets`` already exported by the pinned modules.
+Missing ownership or measurements remain unavailable; the integration does not
+add component metadata through patches.
+
+To include coverage in a local documentation build:
+
+.. code-block:: bash
+
+   python3 scripts/module_tests.py run score_persistency
+   python3 scripts/module_tests.py report _module_tests/reports
+   bazel run //:docs_shim
+
 Verification & status reports
 -----------------------------
 
