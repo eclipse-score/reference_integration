@@ -189,6 +189,7 @@ def run_receiver_with_manifest(
     max_polls: int = 10,
     timeout_s: int = 10,
     instance_specifier: str = NEGATIVE_CONFIG_INSTANCE_SPECIFIER,
+    receiver_bin: str | None = None,
 ) -> CommResult:
     """
     Run only the receiver against ``manifest_path``, bounded by a shell
@@ -200,11 +201,15 @@ def run_receiver_with_manifest(
     ``instance_specifier`` defaults to one no producer in this suite ever
     offers, so a consumer that (incorrectly) reaches discovery cannot latch
     onto another test's leftover service state.
+
+    ``receiver_bin`` overrides the default Rust binary, allowing the same
+    negative-config contracts to be exercised against the C++ receiver.
     """
+    receiver = receiver_bin or FIT_RECEIVER_BIN
     recv_log = "/tmp/fit_recv_negative.log"
     command = (
         f"cd {COMM_CWD} && rm -f {recv_log} && "
-        f"timeout {timeout_s} {FIT_RECEIVER_BIN} -n {cycles} -t {interval_ms} "
+        f"timeout {timeout_s} {receiver} -n {cycles} -t {interval_ms} "
         f"--max-polls {max_polls} -s {manifest_path} -i {instance_specifier} "
         f"> {recv_log} 2>&1 ; echo RECV_EXIT=$?"
     )

@@ -91,7 +91,9 @@ def test_cpp_sender_rust_receiver(target):
         receiver_bin=comm.FIT_RECEIVER_BIN,
     )
     logger.info("C++→Rust consumer stdout:\n%s", result.recv_stdout)
+    logger.info("C++ sender stdout:\n%s", result.send_stdout)
 
+    assert "FIT_SEND_OFFERED" in result.send_stdout, "C++ sender did not report offering the service"
     assert result.recv_exit_code == 0, "Rust consumer did not exit cleanly"
     assert result.found_service, "Rust consumer did not discover the C++ service"
     assert result.received_samples, "Rust consumer received no samples from C++ sender"
@@ -122,7 +124,9 @@ def test_rust_sender_cpp_receiver(target):
         receiver_bin=comm.FIT_RECEIVER_CC_BIN,
     )
     logger.info("Rust→C++ consumer stdout:\n%s", result.recv_stdout)
+    logger.info("Rust sender stdout:\n%s", result.send_stdout)
 
+    assert "FIT_SEND_OFFERED" in result.send_stdout, "Rust sender did not report offering the service"
     assert result.recv_exit_code == 0, "C++ consumer did not exit cleanly"
     assert result.found_service, "C++ consumer did not discover the Rust service"
     assert result.received_samples, "C++ consumer received no samples from Rust sender"
@@ -323,6 +327,58 @@ def test_schema_invalid_config_fails_deterministically(target):
 
     result = comm.run_receiver_with_manifest(target, manifest_path)
     logger.info("schema-invalid-config consumer output:\n%s", result.recv_stdout)
+    _assert_malformed_config_aborts(result)
+
+
+@add_test_properties(
+    partially_verifies=[
+        "feat_req__com__depl_config_runtime",
+    ],
+    test_type="requirements-based",
+    derivation_technique="requirements-analysis",
+)
+def test_cc_missing_config_file_fails_deterministically(target):
+    """
+    Verify the C++ receiver exits non-zero on a missing manifest rather than
+    hanging or silently continuing.  The C++ receiver exits 1 immediately
+    after printing FIT_RECV_CONFIG_MISSING, unlike the Rust receiver which
+    also reaches FIT_RECV_NO_SERVICE; both contracts are non-zero + no data.
+    """
+    result = comm.run_receiver_with_manifest(
+        target, "/tmp/comm_fit_cc_missing_config.json", receiver_bin=comm.FIT_RECEIVER_CC_BIN
+    )
+    logger.info("C++ missing-config consumer output:\n%s", result.recv_stdout)
+
+    assert "FIT_RECV_CONFIG_MISSING" in result.recv_stdout, (
+        f"C++ consumer did not report the config file as missing:\n{result.recv_stdout}"
+    )
+    assert result.recv_exit_code == 1, (
+        f"expected controlled exit(1) from C++ consumer (got {result.recv_exit_code}):\n{result.recv_stdout}"
+    )
+    assert not result.found_service, "C++ consumer proceeded to service discovery despite missing config"
+    assert not result.received_samples, "C++ consumer received samples despite a missing config"
+
+
+@add_test_properties(
+    partially_verifies=[
+        "feat_req__com__depl_config_runtime",
+    ],
+    test_type="requirements-based",
+    derivation_technique="requirements-analysis",
+)
+def test_cc_truncated_config_fails_deterministically(target):
+    """
+    Verify the C++ receiver fails deterministically on syntactically invalid
+    JSON.  Both C++ and Rust receivers share the same upstream JSON parser, so
+    the expected signal is SIGABRT (shell exit 134), same as the Rust test.
+    """
+    manifest_path = "/tmp/comm_fit_cc_truncated_config.json"
+    comm.write_remote_file(target, manifest_path, comm.TRUNCATED_CONFIG_JSON)
+
+    result = comm.run_receiver_with_manifest(
+        target, manifest_path, receiver_bin=comm.FIT_RECEIVER_CC_BIN
+    )
+    logger.info("C++ truncated-config consumer output:\n%s", result.recv_stdout)
     _assert_malformed_config_aborts(result)
 
 
