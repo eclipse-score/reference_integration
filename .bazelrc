@@ -75,6 +75,8 @@ build:eb-aarch64 --platforms=@score_bazel_platforms//:aarch64-linux-sdk_2.0.0-be
 
 build:autosd-x86_64 --config=_common
 build:autosd-x86_64 --force_pic
+# AutoSD supplies its own link flags and has no static libstdc++.
+build:autosd-x86_64 --features=-default_link_flags
 build:autosd-x86_64 --platforms=@score_bazel_platforms//:x86_64-linux-autosd10
 build:autosd-x86_64 --extra_toolchains=@score_autosd10_x86_64_toolchain//:x86_64-linux-autosd10
 
