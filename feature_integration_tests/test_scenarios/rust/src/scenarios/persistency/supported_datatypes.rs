@@ -68,10 +68,12 @@ impl Scenario for AllValueTypes {
     }
 }
 
-/// Write five values with mixed types under both ASCII and UTF-8 key names,
-/// then flush. Python reads the single snapshot and verifies every key is
-/// present with the correct type tag and value — combining key-encoding and
-/// value-type requirements in one observable storage outcome.
+/// Write five values with mixed types under ASCII key names, check that keys
+/// with non-ASCII UTF-8 characters are rejected (KVS keys must be printable
+/// ASCII), then flush. Python reads the single snapshot and verifies the ASCII
+/// keys carry the correct type tag and value and the rejected keys are absent —
+/// combining key-encoding and value-type requirements in one observable
+/// storage outcome.
 struct AllTypesUtf8;
 
 impl Scenario for AllTypesUtf8 {
@@ -86,14 +88,20 @@ impl Scenario for AllTypesUtf8 {
 
         kvs.set_value("ascii_i32", KvsValue::I32(-321))
             .map_err(|e| format!("{e:?}"))?;
-        kvs.set_value("emoji_f64 🎯", KvsValue::F64(3.14))
+        kvs.set_value("ascii_f64", KvsValue::F64(3.14))
             .map_err(|e| format!("{e:?}"))?;
-        kvs.set_value("greek_bool αβγ", KvsValue::Boolean(true))
+        kvs.set_value("ascii_bool", KvsValue::Boolean(true))
             .map_err(|e| format!("{e:?}"))?;
         kvs.set_value("ascii_str", KvsValue::String("hello".to_string()))
             .map_err(|e| format!("{e:?}"))?;
         kvs.set_value("ascii_null", KvsValue::Null)
             .map_err(|e| format!("{e:?}"))?;
+
+        for key in ["emoji_f64 🎯", "greek_bool αβγ"] {
+            if kvs.set_value(key, KvsValue::F64(3.14)).is_ok() {
+                return Err(format!("Non-ASCII key was accepted: {key}"));
+            }
+        }
         kvs.flush().map_err(|e| format!("{e:?}"))?;
         Ok(())
     }

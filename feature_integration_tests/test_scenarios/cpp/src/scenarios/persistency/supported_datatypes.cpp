@@ -71,9 +71,11 @@ public:
     }
 };
 
-/// Write five values with mixed types under both ASCII and UTF-8 key names,
-/// then flush and normalize. Python reads the single snapshot and verifies
-/// every key is present with the correct type tag and value.
+/// Write five values with mixed types under ASCII key names, check that keys
+/// with non-ASCII UTF-8 characters are rejected (KVS keys must be printable
+/// ASCII), then flush and normalize. Python reads the single snapshot and
+/// verifies the ASCII keys carry the correct type tag and value and the
+/// rejected keys are absent.
 class AllTypesUtf8 : public Scenario {
 public:
     std::string name() const final {
@@ -91,10 +93,16 @@ public:
         };
 
         check(kvs.set_value("ascii_i32", KvsValue(static_cast<int32_t>(-321))), "ascii_i32");
-        check(kvs.set_value(u8"emoji_f64 🎯", KvsValue(3.14)), u8"emoji_f64 🎯");
-        check(kvs.set_value(u8"greek_bool αβγ", KvsValue(true)), u8"greek_bool αβγ");
+        check(kvs.set_value("ascii_f64", KvsValue(3.14)), "ascii_f64");
+        check(kvs.set_value("ascii_bool", KvsValue(true)), "ascii_bool");
         check(kvs.set_value("ascii_str", KvsValue("hello")), "ascii_str");
         check(kvs.set_value("ascii_null", KvsValue(nullptr)), "ascii_null");
+
+        for (const std::string key : {u8"emoji_f64 🎯", u8"greek_bool αβγ"}) {
+            if (kvs.set_value(key, KvsValue(3.14))) {
+                throw std::runtime_error("Non-ASCII key was accepted: " + key);
+            }
+        }
 
         if (!kvs.flush()) {
             throw std::runtime_error("Failed to flush");

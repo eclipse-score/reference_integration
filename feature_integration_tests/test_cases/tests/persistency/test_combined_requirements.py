@@ -36,7 +36,7 @@ pytestmark = pytest.mark.parametrize("version", ["rust", "cpp"], scope="class")
 
 
 # ---------------------------------------------------------------------------
-# Scenario 1: Mixed value types with UTF-8 keys in one snapshot
+# Scenario 1: Mixed value types in one snapshot, non-ASCII keys rejected
 # ---------------------------------------------------------------------------
 
 
@@ -51,12 +51,14 @@ pytestmark = pytest.mark.parametrize("version", ["rust", "cpp"], scope="class")
 )
 class TestAllTypesWithUtf8Keys(PersistencyScenario):
     """
-    Verify that KVS can store multiple value types simultaneously under both
-    ASCII and UTF-8 encoded key names, and that all of them are physically
-    present in the single persisted snapshot file.
+    Verify that KVS can store multiple value types simultaneously under ASCII
+    key names, that all of them are physically present in the single persisted
+    snapshot file, and that keys with non-ASCII UTF-8 characters are rejected.
 
-    This combines key-encoding support (UTF-8) with value-type coverage
-    (i32, f64, bool, str, null) in one observable storage outcome.
+    KVS keys must be printable ASCII (the ASCII subset of UTF-8). The scenario
+    fails if a non-ASCII key is accepted. This combines key-encoding with
+    value-type coverage (i32, f64, bool, str, null) in one observable storage
+    outcome.
     """
 
     @pytest.fixture(scope="class")
@@ -85,17 +87,25 @@ class TestAllTypesWithUtf8Keys(PersistencyScenario):
         assert snapshot["ascii_i32"]["t"] == "i32"
         assert snapshot["ascii_i32"]["v"] == -321
 
-        assert snapshot["emoji_f64 🎯"]["t"] == "f64"
-        assert isclose(snapshot["emoji_f64 🎯"]["v"], 3.14, abs_tol=1e-4)
+        assert snapshot["ascii_f64"]["t"] == "f64"
+        assert isclose(snapshot["ascii_f64"]["v"], 3.14, abs_tol=1e-4)
 
-        assert snapshot["greek_bool αβγ"]["t"] == "bool"
-        assert snapshot["greek_bool αβγ"]["v"] is True
+        assert snapshot["ascii_bool"]["t"] == "bool"
+        assert snapshot["ascii_bool"]["v"] is True
 
         assert snapshot["ascii_str"]["t"] == "str"
         assert snapshot["ascii_str"]["v"] == "hello"
 
         assert snapshot["ascii_null"]["t"] == "null"
         assert snapshot["ascii_null"]["v"] is None
+
+    def test_non_ascii_keys_absent(self, results: ScenarioResult, temp_dir: Path) -> None:
+        """Keys with non-ASCII UTF-8 characters are rejected and never reach the snapshot."""
+        assert results.return_code == ResultCode.SUCCESS
+        snapshot = read_kvs_snapshot(temp_dir, 1)
+
+        assert "emoji_f64 🎯" not in snapshot
+        assert "greek_bool αβγ" not in snapshot
 
     def test_snapshot_hash_matches_content(self, results: ScenarioResult, temp_dir: Path) -> None:
         """Verify the hash file matches the Adler-32 of the snapshot JSON after normalization."""
@@ -200,7 +210,7 @@ class TestPartialOverrideSnapshot(PersistencyScenario):
 
 
 # ---------------------------------------------------------------------------
-# Scenario 3: UTF-8 keys in defaults file + selective override
+# Scenario 3: Non-ASCII UTF-8 keys in defaults file are rejected
 # ---------------------------------------------------------------------------
 
 
@@ -215,23 +225,22 @@ class TestPartialOverrideSnapshot(PersistencyScenario):
 )
 class TestUtf8KeysWithDefaults(PersistencyScenario):
     """
-    Verify that UTF-8 encoded key names work correctly as keys in both the
-    defaults file and the KVS snapshot.
+    Verify that a defaults file with non-ASCII UTF-8 key names is rejected.
 
-    The defaults file contains three keys with UTF-8 names (ASCII, emoji,
-    Greek script).  The scenario overrides only the emoji key.  Python verifies:
-    - the emoji key appears in the snapshot with the override value
-    - the ASCII and Greek default-only keys are absent from the snapshot
+    KVS keys must be printable ASCII (the ASCII subset of UTF-8), and keys read
+    from the defaults file are validated like keys passed to set_value. The
+    defaults file contains one ASCII key and two non-ASCII keys (emoji, Greek
+    script); the scenario fails unless opening it fails with InvalidKey. Python
+    verifies the scenario succeeded and that nothing was persisted.
 
     This combines key-encoding (support_datatype_keys) with default value
-    provisioning (default_values + default_value_file) in one storage outcome.
+    provisioning (default_values + default_value_file).
     """
 
     _KEY_ASCII = "utf8_ascii_key"
     _KEY_EMOJI = "utf8_emoji 🔑"
     _KEY_GREEK = "utf8_greek κλμ"
     _DEFAULT_VALUE = 42.0
-    _OVERRIDE_VALUE = 777.0
 
     @pytest.fixture(scope="class")
     def scenario_name(self) -> str:
@@ -239,7 +248,7 @@ class TestUtf8KeysWithDefaults(PersistencyScenario):
 
     @pytest.fixture(scope="class")
     def defaults_file(self, temp_dir: Path) -> Path:
-        """Create defaults using UTF-8 key names."""
+        """Create defaults using non-ASCII UTF-8 key names."""
         return create_kvs_defaults_file(
             temp_dir,
             1,
@@ -262,58 +271,18 @@ class TestUtf8KeysWithDefaults(PersistencyScenario):
             },
         }
 
-    def test_emoji_override_persisted(self, results: ScenarioResult, temp_dir: Path) -> None:
-        """
-        The explicitly overridden UTF-8 emoji key must appear in the snapshot
-        with the override value, confirming that UTF-8 key names survive the
-        full round-trip through the defaults file and snapshot storage.
-        """
+    def test_non_ascii_defaults_rejected(self, results: ScenarioResult) -> None:
+        """The scenario only succeeds if KVS refused to open the defaults file."""
         assert results.return_code == ResultCode.SUCCESS
-        snapshot = read_kvs_snapshot(temp_dir, 1)
 
-        assert self._KEY_EMOJI in snapshot, (
-            f"Overridden UTF-8 emoji key '{self._KEY_EMOJI}' must be present in snapshot"
-        )
-        assert isclose(snapshot[self._KEY_EMOJI]["v"], self._OVERRIDE_VALUE, abs_tol=1e-4)
-
-    def test_default_only_utf8_keys_absent(self, results: ScenarioResult, temp_dir: Path) -> None:
-        """
-        UTF-8 keys that were not explicitly overridden must remain absent from
-        the snapshot, demonstrating that defaults do not pollute persisted storage.
-        """
+    def test_no_snapshot_written(self, results: ScenarioResult, temp_dir: Path) -> None:
+        """A rejected KVS must not persist anything."""
         assert results.return_code == ResultCode.SUCCESS
-        snapshot = read_kvs_snapshot(temp_dir, 1)
-
-        assert self._KEY_ASCII not in snapshot, (
-            f"Default-only ASCII key '{self._KEY_ASCII}' must be absent from snapshot"
-        )
-        assert self._KEY_GREEK not in snapshot, (
-            f"Default-only Greek key '{self._KEY_GREEK}' must be absent from snapshot"
-        )
-
-    def test_snapshot_hash_matches_content(self, results: ScenarioResult, temp_dir: Path) -> None:
-        """Verify the hash file matches the Adler-32 of the snapshot JSON after normalization."""
-        assert results.return_code == ResultCode.SUCCESS
-        verify_kvs_snapshot_hash(temp_dir, instance_id=1, snapshot_id=0)
-
-    def test_utf8_default_values_accessible(self, results: ScenarioResult, logs_info_level: Any) -> None:
-        """
-        Verify that default values behind UTF-8 ASCII and Greek keys are accessible
-        via get_value even though they were never explicitly written.
-
-        Checks structured log fields emitted by the scenario after flush.
-        """
-        assert results.return_code == ResultCode.SUCCESS
-        log_ascii = logs_info_level.find_log("key", value="utf8_ascii_key")
-        assert log_ascii is not None, "Expected log entry for default utf8_ascii_key"
-        assert isclose(float(log_ascii.value), self._DEFAULT_VALUE, abs_tol=1e-4)
-        log_greek = logs_info_level.find_log("key", value="utf8_greek κλμ")
-        assert log_greek is not None, "Expected log entry for default utf8_greek κλμ"
-        assert isclose(float(log_greek.value), self._DEFAULT_VALUE, abs_tol=1e-4)
+        assert not (temp_dir / "kvs_1_0.json").exists()
 
 
 # ---------------------------------------------------------------------------
-# Scenario 4: UTF-8 key in defaults file + get_value without set_value
+# Scenario 4: Punctuation key in defaults file + get_value without set_value
 # ---------------------------------------------------------------------------
 
 
@@ -325,16 +294,17 @@ class TestUtf8KeysWithDefaults(PersistencyScenario):
 )
 class TestUtf8DefaultValueGet(PersistencyScenario):
     """
-    Verify that get_value retrieves the correct default for a UTF-8 emoji key
-    that was provisioned in the defaults file but never explicitly set.
+    Verify that get_value retrieves the correct default for a key made of
+    printable ASCII punctuation and a space (the edges of the allowed key
+    characters) that was provisioned in the defaults file but never explicitly set.
 
-    The scenario reads the default via the UTF-8 key, writes the result to an
-    ASCII probe key, and flushes. Python checks the probe key equals the expected
+    The scenario reads the default via that key, writes the result to a plain
+    probe key, and flushes. Python checks the probe key equals the expected
     default — combining feat_req__persistency__default_value_get with
     feat_req__persistency__support_datatype_keys in one storage outcome.
     """
 
-    _GET_KEY = "probe 🔍"
+    _GET_KEY = "probe ~!#$%"
     _GET_DEFAULT_VALUE = 42.0
 
     @pytest.fixture(scope="class")
@@ -343,7 +313,7 @@ class TestUtf8DefaultValueGet(PersistencyScenario):
 
     @pytest.fixture(scope="class")
     def defaults_file(self, temp_dir: Path) -> Path:
-        """Provision a default value behind a UTF-8 emoji key."""
+        """Provision a default value behind a punctuation key."""
         return create_kvs_defaults_file(
             temp_dir,
             1,
@@ -364,8 +334,8 @@ class TestUtf8DefaultValueGet(PersistencyScenario):
 
     def test_utf8_default_value_readable(self, results: ScenarioResult, temp_dir: Path) -> None:
         """
-        The ASCII probe key written by the scenario must equal the UTF-8 key's
-        default, confirming that get_value works correctly with UTF-8 default keys.
+        The probe key written by the scenario must equal the punctuation key's
+        default, confirming that get_value works with such default keys.
         """
         assert results.return_code == ResultCode.SUCCESS
         snapshot = read_kvs_snapshot(temp_dir, 1)
