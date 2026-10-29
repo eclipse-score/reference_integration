@@ -31,7 +31,7 @@
 #include <chrono>
 #include <cstdio>
 #include <cstdlib>
-#include <cstring>
+#include <optional>
 #include <string>
 #include <sys/stat.h>
 #include <thread>
@@ -90,9 +90,7 @@ int main(int argc, char* argv[])
 
     if (!FileExists(args.manifest)) {
         std::fprintf(stderr, "FIT_RECV_CONFIG_MISSING path=%s\n", args.manifest.c_str());
-        // Initialise with default runtime (no services registered) so discovery
-        // fails deterministically, matching the Rust fit_receiver's behaviour.
-        rt::InitializeRuntime(rt::RuntimeConfiguration{});
+        return 1;
     } else {
         rt::InitializeRuntime(
             rt::RuntimeConfiguration{score::filesystem::Path{args.manifest}});
@@ -138,9 +136,9 @@ int main(int argc, char* argv[])
     for (int poll = 0; poll < args.max_polls && received < args.cycles; ++poll) {
         auto result = proxy->left_tire.GetNewSamples(
             [&received](com::SamplePtr<const com::Tire> sample) noexcept {
-                // Print via %g to expose corruption: a non-integer float (NaN,
-                // fractional, out-of-range) prints as something isdigit() rejects.
-                std::printf("FIT_RECV seq=%g\n", static_cast<double>(sample->pressure));
+                // %.9g round-trips any float and prints integers without a
+                // decimal point, matching Rust Display for the integer case.
+                std::printf("FIT_RECV seq=%.9g\n", static_cast<double>(sample->pressure));
                 std::fflush(stdout);
                 ++received;
             },

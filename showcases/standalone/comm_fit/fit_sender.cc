@@ -99,9 +99,14 @@ int main(int argc, char* argv[])
 
     for (int seq = 0; seq < args.cycles; ++seq) {
         auto alloc = skeleton.left_tire.Allocate();
-        if (alloc.has_value()) {
-            alloc.value()->pressure = static_cast<float>(seq);
-            static_cast<void>(skeleton.left_tire.Send(std::move(alloc.value())));
+        if (!alloc.has_value()) {
+            std::fprintf(stderr, "FIT_SEND_ERROR allocate failed at seq=%d\n", seq);
+            return 1;
+        }
+        alloc.value()->pressure = static_cast<float>(seq);
+        if (!skeleton.left_tire.Send(std::move(alloc.value())).has_value()) {
+            std::fprintf(stderr, "FIT_SEND_ERROR send failed at seq=%d\n", seq);
+            return 1;
         }
         std::printf("FIT_SEND seq=%d\n", seq);
         std::fflush(stdout);

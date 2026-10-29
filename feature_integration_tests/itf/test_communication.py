@@ -68,20 +68,20 @@ def test_event_exchange_delivers_data(target):
 
 @add_test_properties(
     partially_verifies=[
+        "feat_req__com__multi_lang",
         "feat_req__com__event_type",
         "feat_req__com__producer_consumer",
-        "feat_req__com__interfaces",
     ],
     test_type="requirements-based",
     derivation_technique="requirements-analysis",
 )
 def test_cpp_sender_rust_receiver(target):
     """
-    Verify interoperability between the C++ producer and the Rust consumer:
-    the C++ fit_sender_cc offers the same VehicleInterface over shared memory
-    that the Rust fit_receiver discovers and reads.  A successful exchange
-    proves the SHM layout, serviceId, and eventId produced by the C++
-    generated bindings are wire-compatible with the Rust generated bindings.
+    Verify that the C++ and Rust public APIs are interoperable: the C++
+    fit_sender_cc offers VehicleInterface over shared memory and the Rust
+    fit_receiver consumes it.  A successful exchange shows that the native
+    C++ API path and the Rust FFI API path operate on the same LoLa SHM
+    binding, partially evidencing feat_req__com__multi_lang.
     """
     result = comm.run_event_exchange(
         target,
@@ -100,20 +100,19 @@ def test_cpp_sender_rust_receiver(target):
 
 @add_test_properties(
     partially_verifies=[
+        "feat_req__com__multi_lang",
         "feat_req__com__event_type",
         "feat_req__com__producer_consumer",
-        "feat_req__com__interfaces",
     ],
     test_type="requirements-based",
     derivation_technique="requirements-analysis",
 )
 def test_rust_sender_cpp_receiver(target):
     """
-    Verify interoperability between the Rust producer and the C++ consumer:
-    the Rust fit_sender offers the VehicleInterface over shared memory that
-    the C++ fit_receiver_cc discovers and reads.  Together with
-    test_cpp_sender_rust_receiver this exercises both directions of the
-    Rust/C++ generated-binding wire compatibility.
+    Verify the reverse direction of C++/Rust API interoperability: the Rust
+    fit_sender offers VehicleInterface over shared memory and the C++
+    fit_receiver_cc consumes it.  Together with test_cpp_sender_rust_receiver
+    this exercises both API directions for feat_req__com__multi_lang.
     """
     result = comm.run_event_exchange(
         target,
