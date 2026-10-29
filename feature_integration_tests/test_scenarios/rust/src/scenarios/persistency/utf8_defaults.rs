@@ -14,20 +14,20 @@ use crate::internals::persistency::{
     kvs_instance::{get_default_value_f64, kvs_instance},
     kvs_parameters::KvsParameters,
 };
-use rust_kvs::prelude::KvsApi;
+use rust_kvs::prelude::{ErrorCode, KvsApi};
 use serde_json::Value;
 use test_scenarios_rust::scenario::Scenario;
-use tracing::info;
 
 fn parse_params(input: &str) -> Result<KvsParameters, String> {
     let v: Value = serde_json::from_str(input).map_err(|e| e.to_string())?;
     KvsParameters::from_value(&v["kvs_parameters_1"]).map_err(|e| e.to_string())
 }
 
-/// Open a KVS whose defaults file was created with UTF-8 encoded key names.
-/// Override only the emoji key and flush. Python verifies:
-/// - the emoji key appears in the snapshot with the override value
-/// - the ASCII and Greek keys are absent from the snapshot (never explicitly written)
+/// Open a KVS whose defaults file contains keys with non-ASCII UTF-8
+/// characters. KVS keys must be printable ASCII, so opening must fail with
+/// InvalidKey; the scenario fails if the KVS accepts the file or fails for
+/// another reason. Python verifies the scenario
+/// succeeded and that no snapshot was written.
 ///
 /// Combines feat_req__persistency__support_datatype_keys,
 /// feat_req__persistency__default_values, and
@@ -41,25 +41,17 @@ impl Scenario for Utf8Defaults {
 
     fn run(&self, input: &str) -> Result<(), String> {
         let params = parse_params(input)?;
-        let kvs = kvs_instance(params).map_err(|e| format!("{e:?}"))?;
-
-        // Override only the emoji key; ASCII and Greek keys are intentionally left as defaults.
-        kvs.set_value("utf8_emoji 🔑", 777.0_f64)
-            .map_err(|e| format!("{e:?}"))?;
-        kvs.flush().map_err(|e| format!("{e:?}"))?;
-        // Log default values for ASCII and Greek keys so Python can assert accessibility.
-        let val_ascii: f64 = get_default_value_f64(&kvs, "utf8_ascii_key")
-            .map_err(|e| format!("Failed to read default utf8_ascii_key: {e:?}"))?;
-        let val_greek: f64 = get_default_value_f64(&kvs, "utf8_greek κλμ")
-            .map_err(|e| format!("Failed to read default utf8_greek κλμ: {e:?}"))?;
-        info!(key = "utf8_ascii_key", value = val_ascii, source = "default");
-        info!(key = "utf8_greek κλμ", value = val_greek, source = "default");
-        Ok(())
+        match kvs_instance(params) {
+            Ok(_) => Err("KVS accepted a defaults file with non-ASCII keys".to_string()),
+            Err(ErrorCode::InvalidKey) => Ok(()),
+            Err(e) => Err(format!("Expected InvalidKey, got {e:?}")),
+        }
     }
 }
 
-/// Read a default value whose key is a UTF-8 emoji string without ever calling
-/// set_value on it. Write the retrieved value to an ASCII result key and flush.
+/// Read a default value whose key uses printable ASCII punctuation and a space
+/// (the edges of the allowed key characters) without ever calling set_value on
+/// it. Write the retrieved value to an ASCII result key and flush.
 /// Python verifies the result key equals the expected default, combining
 /// feat_req__persistency__default_value_get with
 /// feat_req__persistency__support_datatype_keys in one observable storage outcome.
@@ -73,10 +65,10 @@ impl Scenario for Utf8DefaultValueGet {
     fn run(&self, input: &str) -> Result<(), String> {
         let params = parse_params(input)?;
         let kvs = kvs_instance(params).map_err(|e| format!("{e:?}"))?;
-        // Read the default value via a UTF-8 emoji key — never explicitly set.
-        let default_val: f64 = get_default_value_f64(&kvs, "probe 🔍")
-            .map_err(|e| format!("Failed to read UTF-8 default value: {e:?}"))?;
-        // Persist to an ASCII result key so Python can verify without UTF-8 key lookup.
+        // Read the default value via a punctuation key — never explicitly set.
+        let default_val: f64 =
+            get_default_value_f64(&kvs, "probe ~!#$%").map_err(|e| format!("Failed to read default value: {e:?}"))?;
+        // Persist to a plain result key so Python can verify it independently.
         kvs.set_value("result_key", default_val).map_err(|e| format!("{e:?}"))?;
         kvs.flush().map_err(|e| format!("{e:?}"))?;
         Ok(())

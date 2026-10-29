@@ -16,15 +16,17 @@
 
 #include <scenario.hpp>
 
+#include <iostream>
 #include <stdexcept>
 #include <string>
 
 namespace {
 
-/// Open a KVS whose defaults file was created with UTF-8 encoded key names.
-/// Override only the emoji key and flush. Python verifies:
-/// - the emoji key appears in the snapshot with the override value
-/// - the ASCII and Greek keys are absent (never explicitly written)
+/// Open a KVS whose defaults file contains keys with non-ASCII UTF-8
+/// characters. KVS keys must be printable ASCII, so opening must fail with
+/// kInvalidKey; the scenario fails if the KVS accepts the file or fails for
+/// another reason. Python verifies the scenario
+/// succeeded and that no snapshot was written.
 ///
 /// Combines feat_req__persistency__support_datatype_keys,
 /// feat_req__persistency__default_values, and
@@ -38,45 +40,22 @@ public:
     void run(const std::string& input) const override {
         KvsParameters params = KvsParameters::from_json_section(input, "kvs_parameters_1");
 
-        auto kvs_opt = KvsInstance::create(params);
-        if (!kvs_opt) {
-            throw std::runtime_error("Failed to create KVS instance");
+        try {
+            kvs_build_helpers::create_kvs(params);
+        } catch (const std::runtime_error& e) {
+            // create_kvs throws with the KVS error message; kInvalidKey reads "Key is not valid".
+            if (std::string(e.what()) == "Key is not valid") {
+                return;
+            }
+            throw std::runtime_error(std::string("Expected kInvalidKey, got: ") + e.what());
         }
-        auto kvs = *kvs_opt;
-
-        // Override only the emoji key; ascii and greek keys remain as defaults.
-        if (!kvs->set_value(u8"utf8_emoji 🔑", 777.0)) {
-            throw std::runtime_error("Failed to set value");
-        }
-
-        if (!kvs->flush()) {
-            throw std::runtime_error("Failed to flush KVS");
-        }
-
-        // Log default values for ascii and greek keys so Python can assert they are accessible.
-        auto val_ascii = kvs->get_default_value_f64("utf8_ascii_key");
-        if (!val_ascii.has_value()) {
-            throw std::runtime_error("Failed to read default value for 'utf8_ascii_key'");
-        }
-        auto val_greek = kvs->get_default_value_f64(u8"utf8_greek κλμ");
-        if (!val_greek.has_value()) {
-            throw std::runtime_error(u8"Failed to read default value for 'utf8_greek κλμ'");
-        }
-        kvs_build_helpers::log_info(
-            "\"key\":\"utf8_ascii_key\",\"value\":" + kvs_build_helpers::format_double_python(val_ascii.value()),
-            "cpp_test_scenarios::scenarios::persistency::utf8_defaults");
-        kvs_build_helpers::log_info(
-            u8"\"key\":\"utf8_greek \u03ba\u03bb\u03bc\",\"value\":" + kvs_build_helpers::format_double_python(val_greek.value()),
-            "cpp_test_scenarios::scenarios::persistency::utf8_defaults");
-
-        if (!KvsInstance::normalize_snapshot_file_to_rust_envelope(params)) {
-            std::cerr << "Warning: Failed to normalize snapshot file" << std::endl;
-        }
+        throw std::runtime_error("KVS accepted a defaults file with non-ASCII keys");
     }
 };
 
-/// Read a default value whose key is a UTF-8 emoji string without ever calling
-/// set_value on it. Write the retrieved value to an ASCII result key and flush.
+/// Read a default value whose key uses printable ASCII punctuation and a space
+/// (the edges of the allowed key characters) without ever calling set_value on
+/// it. Write the retrieved value to an ASCII result key and flush.
 /// Python verifies the result key equals the expected default, combining
 /// feat_req__persistency__default_value_get with
 /// feat_req__persistency__support_datatype_keys in one observable storage outcome.
@@ -95,13 +74,13 @@ public:
         }
         auto kvs = *kvs_opt;
 
-        // Read the default via a UTF-8 emoji key — never explicitly set.
-        auto default_result = kvs->get_default_value_f64(u8"probe 🔍");
+        // Read the default via a punctuation key — never explicitly set.
+        auto default_result = kvs->get_default_value_f64("probe ~!#$%");
         if (!default_result.has_value()) {
-            throw std::runtime_error(u8"Failed to read default value for 'probe 🔍'");
+            throw std::runtime_error("Failed to read default value for 'probe ~!#$%'");
         }
 
-        // Persist to an ASCII result key so Python can verify without UTF-8 key lookup.
+        // Persist to a plain result key so Python can verify it independently.
         if (!kvs->set_value("result_key", default_result.value())) {
             throw std::runtime_error("Failed to set result_key");
         }

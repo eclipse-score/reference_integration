@@ -22,7 +22,7 @@ from showcase_runner import run_showcases
 
 
 @add_test_properties(
-    partially_verifies=["stkh_req__dependability__safety_features_1"],
+    partially_verifies=["stkh_req__dependability__health_management"],
     test_type="interface-test",
     derivation_technique="requirements-analysis",
 )
@@ -31,4 +31,13 @@ def test_lifecycle_showcase(target):
     a malfunction, demonstrating the platform's health and lifecycle
     management."""
 
-    run_showcases(target, "Simple Health and lifecycle management example")
+    output = run_showcases(target, "Simple Health and lifecycle management example")
+
+    # The CLI exits 0 even if LM keeps restarting a crashing app, so check LM's log too.
+    assert "unexpected termination" not in output, output
+    for marker in (
+        "Successfully activated Run Target Startup",
+        "Completed the request for Run Target fallback_run_target",
+        "Launch Manager completed with exit code value: 0",
+    ):
+        assert marker in output, f"Missing '{marker}' in lifecycle showcase output:\n{output}"

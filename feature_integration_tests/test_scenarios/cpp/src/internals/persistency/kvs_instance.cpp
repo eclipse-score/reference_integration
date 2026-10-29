@@ -186,9 +186,9 @@ std::optional<std::shared_ptr<KvsInstance>> KvsInstance::create(const KvsParamet
 
     try {
         if (params.snapshot_max_count.has_value() &&
-            params.snapshot_max_count.value() != static_cast<int>(KVS_MAX_SNAPSHOTS)) {
+            params.snapshot_max_count.value() != static_cast<int>(kDefaultMaxSnapshots)) {
             std::cerr << "Unsupported snapshot_max_count for C++ KVS API: requested "
-                      << params.snapshot_max_count.value() << ", supported " << KVS_MAX_SNAPSHOTS
+                      << params.snapshot_max_count.value() << ", supported " << kDefaultMaxSnapshots
                       << std::endl;
             return std::nullopt;
         }

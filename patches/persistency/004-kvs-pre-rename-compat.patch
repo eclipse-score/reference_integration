@@ -1,0 +1,39 @@
+diff --git a/score/kvs/BUILD b/score/kvs/BUILD
+index 33bfbc7..4acaed6 100644
+--- a/score/kvs/BUILD
++++ b/score/kvs/BUILD
+@@ -48,6 +48,9 @@ cc_library(
+         "kvsbuilder.hpp",
+         "kvsvalue.hpp",
+     ],
++    # Keep the pre-rename flat include path ("kvs.hpp", "kvsbuilder.hpp", ...)
++    # for consumers that have not migrated yet, e.g. score_config_management.
++    includes = ["."],
+     visibility = [
+         "//visibility:public",
+     ],
+diff --git a/score/kvs/kvs_builder.h b/score/kvs/kvs_builder.h
+index 4ceb714..5497adf 100644
+--- a/score/kvs/kvs_builder.h
++++ b/score/kvs/kvs_builder.h
+@@ -133,6 +133,20 @@ class KvsBuilder final
+         return KvsLoad(flag);
+     }
+ 
++    /// @deprecated Pre-rename bool form: true maps to kRequired, false to kOptional.
++    [[deprecated("Use Defaults() instead. This name is removed in a future release.")]]
++    KvsBuilder& need_defaults_flag(const bool flag) noexcept
++    {
++        return Defaults(flag ? KvsDefaults::kRequired : KvsDefaults::kOptional);
++    }
++
++    /// @deprecated Pre-rename bool form: true maps to kRequired, false to kOptional.
++    [[deprecated("Use KvsLoad() instead. This name is removed in a future release.")]]
++    KvsBuilder& need_kvs_flag(const bool flag) noexcept
++    {
++        return KvsLoad(flag ? score::kvs::KvsLoad::kRequired : score::kvs::KvsLoad::kOptional);
++    }
++
+     /// @deprecated Use `WorkingDir()` instead.
+     [[deprecated("Use WorkingDir() instead. This name is removed in a future release.")]]
+     KvsBuilder& dir(const std::string& dir_path) noexcept
