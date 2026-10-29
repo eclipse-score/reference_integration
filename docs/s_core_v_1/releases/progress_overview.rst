@@ -19,7 +19,7 @@ Release-wide Progress Overview
 
 .. important::
 
-   **Data collected on: 2026-10-08**
+   **Data collected on: 2026-10-29**
 
 This page shows how the S-CORE platform grew across releases. Each chart
 aggregates one metric over all tracked modules; every bar is split into colour
