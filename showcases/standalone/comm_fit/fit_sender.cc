@@ -21,9 +21,10 @@
 // Usage: fit_sender_cc [-s <manifest>] [-n <cycles>] [-t <interval_ms>]
 //                      [-i <instance_specifier>]
 
-#include "score/mw/com/example/com-api-example/com-api-gen/vehicle_gen.h"
+#include "showcases/standalone/comm_fit/vehicle_interface.h"
 #include "score/mw/com/runtime.h"
 #include "score/mw/com/runtime_configuration.h"
+#include "score/mw/com/types.h"
 
 #include <chrono>
 #include <cstdio>
@@ -32,8 +33,8 @@
 #include <sys/stat.h>
 #include <thread>
 
-namespace com = score::mw::com;
 namespace rt = score::mw::com::runtime;
+using VehicleSkeleton = score::mw::com::AsSkeleton<score::mw::com::comm_fit::VehicleInterface>;
 
 namespace
 {
@@ -101,13 +102,13 @@ int main(int argc, char* argv[])
     rt::InitializeRuntime(
         rt::RuntimeConfiguration{score::filesystem::Path{args.manifest}});
 
-    auto spec_result = com::InstanceSpecifier::Create(std::string{args.specifier});
+    auto spec_result = score::mw::com::InstanceSpecifier::Create(std::string{args.specifier});
     if (!spec_result.has_value()) {
         std::fprintf(stderr, "FIT_SEND_SPEC_ERROR\n");
         return 1;
     }
 
-    auto skel_result = com::VehicleSkeleton::Create(spec_result.value());
+    auto skel_result = VehicleSkeleton::Create(spec_result.value());
     if (!skel_result.has_value()) {
         std::fprintf(stderr, "FIT_SEND_CREATE_ERROR\n");
         return 1;
@@ -127,7 +128,7 @@ int main(int argc, char* argv[])
             std::fprintf(stderr, "FIT_SEND_ERROR allocate failed at seq=%d\n", seq);
             return 1;
         }
-        alloc.value()->pressure = static_cast<float>(seq);
+        alloc.value().Get()->pressure = static_cast<float>(seq);
         if (!skeleton.left_tire.Send(std::move(alloc.value())).has_value()) {
             std::fprintf(stderr, "FIT_SEND_ERROR send failed at seq=%d\n", seq);
             return 1;

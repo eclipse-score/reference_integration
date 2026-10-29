@@ -60,7 +60,6 @@ class CommResult:
         return RECV_DONE_MARKER in self.recv_stdout
 
 
-
 def _shell_exit_marker(out: str, marker: str = "RECV_EXIT") -> int:
     """Extract ``<marker>=<int>`` printed by the exchange command."""
     m = re.search(rf"{marker}=(-?\d+)", out)

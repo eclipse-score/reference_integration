@@ -375,9 +375,7 @@ def test_cc_truncated_config_fails_deterministically(target):
     manifest_path = "/tmp/comm_fit_cc_truncated_config.json"
     comm.write_remote_file(target, manifest_path, comm.TRUNCATED_CONFIG_JSON)
 
-    result = comm.run_receiver_with_manifest(
-        target, manifest_path, receiver_bin=comm.FIT_RECEIVER_CC_BIN
-    )
+    result = comm.run_receiver_with_manifest(target, manifest_path, receiver_bin=comm.FIT_RECEIVER_CC_BIN)
     logger.info("C++ truncated-config consumer output:\n%s", result.recv_stdout)
     _assert_malformed_config_aborts(result)
 
