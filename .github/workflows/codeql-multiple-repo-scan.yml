@@ -31,7 +31,7 @@ concurrency:
 jobs:
   analyze-repos:
     name: Analyze Multiple Repositories
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 120 # Prevent indefinite hanging
     permissions:
       security-events: write
@@ -40,7 +40,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout central repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Install sarif-tools for HTML report generation
         run: |
           python3 -m pip install --upgrade pip
@@ -78,7 +78,7 @@ jobs:
           echo "Cleaning up checked out repositories to free disk space"
           rm -rf repos/
       - name: Checkout CodeQL Coding Standards scripts
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: github/codeql-coding-standards
           path: codeql-coding-standards-repo

@@ -18,13 +18,13 @@ jobs:
   check-approvals:
     name: Verify Required Approvals
     if: startsWith(github.event.pull_request.base.ref, 'releases/')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       pull-requests: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup Bazel
         uses: bazel-contrib/setup-bazel@0.18.0
         with:
