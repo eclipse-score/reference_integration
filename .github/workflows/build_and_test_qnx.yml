@@ -26,7 +26,7 @@ concurrency:
 jobs:
   qnx-build-x86_64:
     name: x86_64
-    runs-on: ${{ vars.REPO_RUNNER_LABELS && fromJSON(vars.REPO_RUNNER_LABELS) || 'ubuntu-latest' }}
+    runs-on: ${{ vars.REPO_RUNNER_LABELS && fromJSON(vars.REPO_RUNNER_LABELS) || 'ubuntu-24.04' }}
     environment: ${{ inputs.environment-name }}
     permissions:
       contents: read
@@ -35,7 +35,7 @@ jobs:
       - name: Clean disk space
         uses: eclipse-score/more-disk-space@v1
       - name: Checkout repository (Handle all events)
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}

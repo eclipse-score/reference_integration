@@ -92,3 +92,14 @@ score_pkg_bundle(
     bins = ["//showcases/standalone:cpp_tests_persistency"],
     package_dir = "standalone",
 )
+
+score_pkg_bundle(
+    name = "baselibs",
+    bins = [
+        "@score_baselibs//examples/log_builtin:log_builtin",
+        "@score_baselibs//examples/log_custom:log_custom",
+        "@score_baselibs//examples/log_cpp_init:log_cpp_init",
+    ],
+    config_data = ["//showcases/standalone:baselibs.score.json"],
+    package_dir = "standalone",
+)
