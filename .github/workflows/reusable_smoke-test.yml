@@ -27,7 +27,7 @@
 #   - Publishes a summary to the GitHub Step Summary
 #
 # Inputs:
-#   - repo_runner_labels (string, required, default: ubuntu-latest): Runner label.
+#   - repo_runner_labels (string, required, default: ubuntu-24.04): Runner label.
 #   - module_name (string, required): Module to override (e.g., score_baselibs).
 #   - target_branch (string, required, default: main):
 #     The ref to checkout via actions/checkout — can be a branch name, tag, or
@@ -50,7 +50,7 @@
 #       smoke:
 #         uses: eclipse-score/reference_integration/.github/workflows/module-smoke-test.yml@main
 #         with:
-#           repo_runner_labels: ubuntu-latest
+#           repo_runner_labels: ubuntu-24.04
 #           module_name: score_baselibs
 #           target_branch: main
 #         secrets:
@@ -69,7 +69,7 @@ on:
         description: 'The runner tag to use for the job'
         required: true
         type: string
-        default: 'ubuntu-latest'
+        default: 'ubuntu-24.04'
       module_name:
         description: 'Name of the module to override (e.g., score_baselibs).'
         required: true
@@ -88,7 +88,7 @@ env:
 jobs:
   preparation:
     name: Preparation
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       known_good_updated: ${{ steps.set_known_good.outputs.known_good_updated }}
     steps:
@@ -132,7 +132,7 @@ jobs:
           path: known_good.updated.json
   docs:
     name: Generate Documentation
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: preparation
     steps:
       - name: not implemented
@@ -158,7 +158,7 @@ jobs:
       target_branch: ${{ inputs.target_branch }}
   summary:
     name: Publish Summary
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [integration-test, docs]
     if: always()
     steps:
