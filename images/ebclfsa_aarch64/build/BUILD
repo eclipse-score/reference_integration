@@ -47,7 +47,6 @@ genrule(
     name = "fastdev-image",
     srcs = [
         "//showcases:showcases_pkg_tar",
-        "//deploy/communication:etc_configs",
         ":extract-fastdev-image",
         ":crinit_config_tar",
         ":scripts_tar",

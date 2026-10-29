@@ -25,7 +25,6 @@ exports_files(["README.md"])
 pkg_filegroup(
     name = "platform_bundle",
     srcs = [
-        "//deploy/communication:etc_comm_configs",
         "//deploy/config_management:config_daemon_bin",
         "//deploy/config_management:config_daemon_configs",
         "//deploy/lifecycle:launch_manager_bin",

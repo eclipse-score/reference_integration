@@ -37,7 +37,14 @@ Layer 3 may rely on the following, and on nothing else:
 | `launch_manager` | `/usr/bin/launch_manager` |
 | `datarouter` | `/usr/bin/datarouter/datarouter`, config in `/usr/bin/datarouter/etc` |
 | `config_daemon` | `/usr/bin/config_management/config_daemon`, config in `/usr/bin/config_management/etc` |
-| mw::com system configuration | `/etc/mw_com_config.json` |
+
+There is no system-wide mw::com configuration: mw::com reads
+`./etc/mw_com_config.json` relative to the working directory, or the file
+passed with `-s`. mw::log only has an optional ECU-wide
+`/etc/ecu_logging_config.json`; the application configuration
+(`etc/logging.json` next to the executable or in the working directory, or
+`MW_LOG_CONFIG_FILE`) belongs to the application. Every application ships its
+own configuration.
 
 Layer 2 never references anything under `/showcases`. The one place where
 layer 2 reads layer 3 data is the launch manager, which is started by the
@@ -52,6 +59,8 @@ configuration with `pkg_files`, then list those targets in
 `//deploy:platform_bundle`. Configuration that is deployed onto the target
 is kept in `deploy/<module>/etc/`, not in a test directory. Keep examples,
 demo applications and test binaries out; those belong in `//showcases`.
+Modules that ship only libraries (for example communication or persistency)
+have nothing to deploy and get no package here.
 
 Long term each S-CORE module should export its own deployment package
 upstream, so that "deployed correctly" becomes checkable rather than agreed.
