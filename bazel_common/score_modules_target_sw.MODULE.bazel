@@ -15,16 +15,15 @@
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir-modules bazel_common
 
 bazel_dep(name = "score_baselibs")
-git_override(
+single_version_override(
     module_name = "score_baselibs",
-    commit = "ee40fece5abacb28ea641b448446a04175038b17",
     patch_strip = 1,
     patches = [
         "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
         "//patches/baselibs:002-restore-qnx8-poll-workaround.patch",
         "//patches/baselibs:003-export-aou-requirements.patch",
     ],
-    remote = "https://github.com/eclipse-score/baselibs.git",
+    version = "0.2.16",
 )
 
 bazel_dep(name = "score_communication")
