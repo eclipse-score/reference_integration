@@ -1,0 +1,142 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+# Platform Conformance Requirements for s-core TCK
+#
+# This file defines the mandatory requirements a SCORE distribution must satisfy
+# to be considered conformant with the platform specification.
+
+# ==============================================================================
+# VERSION REQUIREMENTS
+# ==============================================================================
+# The distribution must declare a platform version compatible with these requirements.
+
+[version]
+# Platform version this TCK validates against
+platform_version = "0.9.0"
+
+# Minimum compatible versions (distributions must declare >= these)
+min_platform_version = "0.9.0"
+
+# TCK version
+tck_version = "0.1.0"
+
+# Version check policy:
+# - "exact": Distribution platform_version must match exactly
+# - "compatible": Distribution platform_version must be >= min_platform_version
+# - "any": No version check performed
+version_policy = "compatible"
+
+# ==============================================================================
+# MANDATORY SBOM ENTRIES
+# ==============================================================================
+# All SCORE platform distributions MUST include these components in their SBOM.
+# These are the core modules tracked in known_good.json's sbom.tracked_modules.
+
+[sbom.required_components]
+# Core middleware modules
+score_baselibs = { description = "SCORE base libraries (core types, utilities)", critical = true }
+score_communication = { description = "Inter-process communication middleware", critical = true }
+score_persistency = { description = "Data persistency layer", critical = true }
+score_kyron = { description = "Async runtime and execution framework", critical = true }
+score_lifecycle = { description = "Lifecycle management", critical = true }
+score_logging = { description = "Logging infrastructure (console, DLT, file)", critical = true }
+score_time = { description = "Time services (system, steady, vehicle time)", critical = true }
+
+# ==============================================================================
+# LICENSE POLICY
+# ==============================================================================
+# Licenses allowed in SCORE platform distributions.
+# Any component with a license NOT in this list will be flagged.
+
+[sbom.allowed_licenses]
+# Permissive open-source licenses
+Apache-2.0 = { category = "permissive", approved = true }
+MIT = { category = "permissive", approved = true }
+BSD-2-Clause = { category = "permissive", approved = true }
+BSD-3-Clause = { category = "permissive", approved = true }
+0BSD = { category = "permissive", approved = true }
+ISC = { category = "permissive", approved = true }
+Zlib = { category = "permissive", approved = true }
+CC0-1.0 = { category = "permissive", approved = true }
+Unicode-3.0 = { category = "permissive", approved = true }
+
+# Boost Software License (permissive with source-offer requirement)
+BSL-1.0 = { category = "permissive", approved = true, note = "Requires source offer for compiled works" }
+
+# Special marker for unresolved licenses
+NOASSERTION = { category = "unknown", approved = false, note = "License could not be determined - requires manual review" }
+
+# ==============================================================================
+# FORBIDDEN COMPONENTS
+# ==============================================================================
+# Components that MUST NOT appear in a SCORE platform distribution.
+# This catches unintended third-party dependencies.
+
+[sbom.forbidden_components]
+# Example: dependency versions with known vulnerabilities
+# openssl@1.1.1 = { reason = "Known vulnerabilities, use 3.x instead" }
+
+# Placeholder - no forbidden components yet
+_placeholder = { reason = "No forbidden components defined yet" }
+
+# ==============================================================================
+# BEHAVIORAL CONFORMANCE REQUIREMENTS
+# ==============================================================================
+# These requirements map to platform integration tests that verify
+# the distribution behaves correctly.
+
+[behavioral.requirements]
+# Logging support
+stkh_req__dev_experience__logging_support = { 
+    module = "score_logging",
+    test = "platform_integration_tests/logging/test_logging_showcase.py",
+    description = "Logging infrastructure works with console, DLT, and file backends"
+}
+
+# Communication
+stkh_req__communication__inter_process = { 
+    module = "score_communication",
+    test = "platform_integration_tests/communication/test_communication_showcase.py",
+    description = "Inter-process communication works correctly"
+}
+
+# Lifecycle
+stkh_req__dependability__safety_features_1 = { 
+    module = "score_lifecycle",
+    test = "platform_integration_tests/lifecycle/test_lifecycle_showcase.py",
+    description = "Lifecycle management and safety features work correctly"
+}
+
+# Execution model
+stkh_req__execution_model__processes = { 
+    module = "score_kyron",
+    test = "platform_integration_tests/kyron/test_async_runtime_showcase.py",
+    description = "Async runtime and process execution work correctly"
+}
+
+# Time services
+stkh_req__time__vehicle_time_api = { 
+    module = "score_time",
+    test = "platform_integration_tests/time/test_vehicle_time_showcase.py",
+    description = "Vehicle time API works correctly"
+}
+
+# ==============================================================================
+# API CONFORMANCE (FUTURE)
+# ==============================================================================
+# Public API surface that must be preserved for compatibility.
+# This will be populated with exported symbols/headers in a future phase.
+
+[api.public_surface]
+# Placeholder for API baseline definitions
+# Each entry will specify: module, exported_symbols, headers

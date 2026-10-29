@@ -68,6 +68,12 @@ build:qnx-aarch64 --extra_toolchains=@score_qnx_aarch64_ifs_toolchain//:ifs-aarc
 build:linux-x86_64 --config=_common
 build:linux-x86_64 --config=unified
 
+build:linux-aarch64 --config=_common
+build:linux-aarch64 --extra_toolchains=@score_gcc_aarch64_toolchain//:aarch64-linux-gcc_12.2.0
+build:linux-aarch64 --extra_toolchains=@ferrocene_aarch64_ebclfsa//:rust_ferrocene_toolchain
+build:linux-aarch64 --platforms=@score_bazel_platforms//:aarch64-linux-gcc_12.2.0-posix
+build:linux-aarch64 --action_env=BINDGEN_EXTRA_CLANG_ARGS_aarch64_unknown_linux_gnu=--sysroot=external/score_bazel_cpp_toolchains++gcc+score_gcc_aarch64_toolchain_pkg/aarch64-unknown-linux-gnu/sysroot
+
 build:eb-aarch64 --config=_common
 build:eb-aarch64 --extra_toolchains=@score_ebclfsa_toolchain//:aarch64-linux-sdk_2.0.0-beta2-ebclfsa
 build:eb-aarch64 --extra_toolchains=@ferrocene_aarch64_ebclfsa//:rust_ferrocene_toolchain

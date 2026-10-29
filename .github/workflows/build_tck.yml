@@ -1,0 +1,126 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+name: Build TCK Binary
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'tck/**'
+  push:
+    branches:
+      - main
+    paths:
+      - 'tck/**'
+  release:
+    types: [created]
+permissions:
+  contents: read
+jobs:
+  build:
+    name: Build score-tck binary
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.18.0
+        with:
+          bazelisk-cache: true
+          disk-cache: tck-build
+          repository-cache: true
+          cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+      - name: Build product SBOM (golden reference)
+        run: |
+          bazel build --lockfile_mode=error //:sbom
+      - name: Build TCK binary
+        run: |
+          bazel build --lockfile_mode=error //tck:score-tck
+          # Copy to temp location to avoid conflict with bundle directory
+          cp bazel-bin/tck/score-tck /tmp/score-tck-bin
+          chmod +x /tmp/score-tck-bin
+      - name: Test TCK binary
+        run: |
+          /tmp/score-tck-bin version
+          echo ""
+          echo "Testing with golden SBOM..."
+          cat > /tmp/test-dist.toml << 'EOF'
+          [dist]
+          name = "test-dist"
+          version = "0.9.0"
+          platform_version = "0.9.0"
+          arch = "x86_64-linux"
+
+          [dist.paths]
+          sbom_file = "bazel-bin/sbom.spdx.json"
+          EOF
+          /tmp/score-tck-bin run --config /tmp/test-dist.toml --report /tmp/tck-test-report
+          echo ""
+          echo "Report summary:"
+          head -20 /tmp/tck-test-report/summary.md
+      - name: Bundle TCK package
+        run: |
+          VERSION="${{ github.event.release.tag_name || '0.1.0' }}"
+          # Create bundle directory structure
+          mkdir -p score-tck-bundle/bin
+          mkdir -p score-tck-bundle/reference/policy
+          mkdir -p score-tck-bundle/tests
+          mkdir -p score-tck-bundle/docs
+
+          # Copy binary
+          cp /tmp/score-tck-bin score-tck-bundle/bin/score-tck
+
+          # Copy golden SBOM
+          cp bazel-bin/sbom.spdx.json score-tck-bundle/reference/
+
+          # Copy policy
+          cp tck/reference/policy/requirements.toml score-tck-bundle/reference/policy/
+
+          # Copy test definitions
+          cp tck/tests/behavioral.toml score-tck-bundle/tests/
+          cp tck/tests/api_signatures.toml score-tck-bundle/tests/
+
+          # Copy config example
+          cp tck/tck.config.example.toml score-tck-bundle/
+
+          # Copy README
+          cp tck/README.md score-tck-bundle/
+
+          # Create tarball
+          tar -czvf score-tck-${VERSION}-linux-x86_64.tar.gz score-tck-bundle/
+          echo "Created bundle: score-tck-${VERSION}-linux-x86_64.tar.gz"
+          ls -la score-tck-*.tar.gz
+      - name: Upload TCK bundle artifact
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+        with:
+          name: score-tck-bundle-linux-x86_64
+          path: score-tck-*.tar.gz
+          retention-days: 30
+  release:
+    if: github.event_name == 'release'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download TCK bundle artifact
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: score-tck-bundle-linux-x86_64
+      - name: Attach bundle to release
+        uses: softprops/action-gh-release@v2.5.0
+        with:
+          files: score-tck-*.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -72,6 +72,7 @@ sbom(
         "@score_kyron//examples:main_macro",
         "@score_kyron//examples:safety_task",
         "@score_kyron//examples:select",
+        "@score_lifecycle//examples/cpp_lifecycle_app:cpp_lifecycle_app",
         "@score_logging//score/test/component/dlt_generator_app:dlt_generator",
         "@score_logging//score/test/component/logging_app:logging_app",
         "@score_time//examples/time/high_res_steady_time",
