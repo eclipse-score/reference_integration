@@ -20,10 +20,6 @@ from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
 
-# Deployment layout of the communication FIT binaries inside the reference
-# image (see showcases/standalone/comm_fit/BUILD and showcases/BUILD). The
-# deployment manifest is the one deployed by the com-api-example bundle
-# (showcases/standalone/BUILD), which fit_sender/fit_receiver reuse.
 FIT_SENDER_BIN = "/showcases/bin/fit_sender"
 FIT_RECEIVER_BIN = "/showcases/bin/fit_receiver"
 FIT_SENDER_CC_BIN = "/showcases/bin/fit_sender_cc"
@@ -31,12 +27,6 @@ FIT_RECEIVER_CC_BIN = "/showcases/bin/fit_receiver_cc"
 COMM_CWD = "/showcases/data/comm"
 DEFAULT_MANIFEST = "/showcases/data/comm/etc/mw_com_config.json"
 
-# Oracle strings emitted by fit_sender / fit_receiver. The sequence number is
-# captured as a raw token (not constrained to \d+): fit_receiver prints the
-# f32 payload via Display with no lossy cast, so a corrupted/NaN/negative/
-# infinite value renders as something that fails CommResult.received_samples'
-# strict digit check below instead of silently becoming a plausible-looking
-# (but wrong) integer.
 RECV_SAMPLE_RE = re.compile(r"FIT_RECV seq=(\S+)")
 FOUND_SERVICE_MARKER = "FIT_FOUND_SERVICE"
 RECV_DONE_MARKER = "FIT_RECV_DONE"
@@ -53,14 +43,7 @@ class CommResult:
     # --- oracles ---------------------------------------------------------
     @property
     def received_samples(self) -> list[int]:
-        """
-        Ordered list of the producer sequence numbers the consumer received.
-
-        Each token must be a clean non-negative integer string. A corrupted
-        payload (NaN, negative, fractional, infinite) fails this assertion
-        instead of being silently coerced into some other valid-looking
-        integer.
-        """
+        """Ordered sequence numbers received; non-integer tokens fail (corruption guard)."""
         tokens = RECV_SAMPLE_RE.findall(self.recv_stdout)
         for token in tokens:
             assert token.isdigit(), f"non-integer sequence token (corruption): {token!r} in {tokens}"
@@ -97,27 +80,7 @@ def run_event_exchange(
     sender_bin: str | None = None,
     receiver_bin: str | None = None,
 ) -> CommResult:
-    """
-    Run one producer/consumer exchange on ``target`` and return parsed output.
-
-    The producer (fit_sender) is started first in the background with enough
-    cycles to outlast the consumer (fit_receiver). The consumer retries service
-    discovery, so start order is not critical, but starting the producer first
-    keeps the run bounded by ``recv_cycles`` and the receiver's ``--max-polls``.
-    The producer's PID is captured and killed once the consumer finishes so it
-    never leaks onto the shared target and collides with the next test (two
-    providers offering the same instance would make the next consumer hang).
-
-    ``manifest`` points both roles at a deployment config via ``-s``; when
-    ``None`` the deployed default (``DEFAULT_MANIFEST``) is used.
-
-    ``instance_specifier`` points both roles at a service instance via ``-i``;
-    when ``None`` both binaries fall back to their compiled-in default
-    (``/Vehicle/Service1/Instance``).
-
-    ``sender_bin`` / ``receiver_bin`` override the default Rust binaries,
-    allowing cross-language tests (e.g. C++ sender + Rust receiver).
-    """
+    """Run one producer/consumer exchange on ``target`` and return parsed output."""
     manifest_path = manifest or DEFAULT_MANIFEST
     instance_arg = f" -i {instance_specifier}" if instance_specifier else ""
     sender = sender_bin or FIT_SENDER_BIN
@@ -149,26 +112,9 @@ def run_event_exchange(
     )
 
 
-# --------------------------------------------------------------------------
-# Deployment-configuration integrity (negative scenarios)
-# --------------------------------------------------------------------------
-#
-# fit_receiver's contract: a config that cannot be loaded must exit non-zero,
-# bounded in time, and never reach FIT_FOUND_SERVICE. Only the black-box
-# contract is asserted; the underlying failure mode is not.
-#
-# These tests use NEGATIVE_CONFIG_INSTANCE_SPECIFIER — an instance no other
-# test ever offers — so a misconfigured receiver cannot latch onto leftover
-# SHM state from a killed producer in the session-scoped QEMU fixture.
-
-# Deliberately malformed: not valid JSON at all.
 TRUNCATED_CONFIG_JSON = '{ "serviceTypes": [ { "serviceTypeName"'
-
-# Deliberately incomplete: valid JSON, but missing the required
-# "serviceTypes"/"serviceInstances" structure the schema demands.
 SCHEMA_INVALID_CONFIG_JSON = "{}"
-
-# Never offered by any producer in this suite -- see the note above.
+# Distinct instance specifier so a misconfigured receiver cannot latch onto leftover SHM state.
 NEGATIVE_CONFIG_INSTANCE_SPECIFIER = "/Vehicle/ServiceNegativeConfigTest/Instance"
 
 
@@ -191,20 +137,7 @@ def run_receiver_with_manifest(
     instance_specifier: str = NEGATIVE_CONFIG_INSTANCE_SPECIFIER,
     receiver_bin: str | None = None,
 ) -> CommResult:
-    """
-    Run only the receiver against ``manifest_path``, bounded by a shell
-    ``timeout`` so an unexpected hang while loading the config cannot block the
-    test suite. Used for negative config scenarios where no producer is
-    started -- the receiver is expected to fail before ever discovering a
-    service.
-
-    ``instance_specifier`` defaults to one no producer in this suite ever
-    offers, so a consumer that (incorrectly) reaches discovery cannot latch
-    onto another test's leftover service state.
-
-    ``receiver_bin`` overrides the default Rust binary, allowing the same
-    negative-config contracts to be exercised against the C++ receiver.
-    """
+    """Run only the receiver against ``manifest_path``; no producer started (negative-config scenarios)."""
     receiver = receiver_bin or FIT_RECEIVER_BIN
     recv_log = "/tmp/fit_recv_negative.log"
     command = (
@@ -224,66 +157,17 @@ def run_receiver_with_manifest(
     )
 
 
-# --------------------------------------------------------------------------
-# Mixed-criticality safety & isolation (ASIL-B ACL enforcement)
-# --------------------------------------------------------------------------
-#
-# LoLa's `allowedConsumer`/`allowedProvider` ACLs are enforced via POSIX ACLs
-# on the shared-memory objects the provider creates, keyed on real process UID.
-#
-#   1. The PROVIDER's config is authoritative (its allowedConsumer list decides
-#      who may open the SHM object); a consumer's config does not self-restrict.
-#   2. Enforcement requires distinct real UIDs — "denied" and "allowed"
-#      consumers under the same UID would prove nothing.
-#
-# Empirically, a denied UID's `builder.build()` in fit_receiver's
-# discover_consumer() does *not* return an Err to retry on -- the denial
-# surfaces one layer later, inside the generated com_api_gen bindings'
-# subscriber setup, as an *uncaught panic* ("Failed to create subscriber for
-# left_tire: ConsumerError(ProxyCreationFailed)"), preceded by LoLa's own
-# mw::log lines ("Could not open Shared Memory ...", "Could not create
-# Proxy: Opening shared memory failed"). fit_receiver.rs's Err-branch
-# eprintln (FIT_RECV_PROXY_BUILD_ERROR) is kept as defensive diagnostics for
-# the case where build() *does* return an Err some other way, but the
-# assertions here key off the markers actually observed for this panic path
-# (ACL_DENIAL_MARKERS below), not just a generic non-zero exit code.
-#
-# Getting a second real UID needs `on -u <uid>:<gid>` on QNX (no /etc/passwd
-# entry required) or `setpriv --reuid=<uid> --regid=<uid>` on Linux (needs
-# root or CAP_SETUID, i.e. it works if the ITF target container already runs
-# as root, mirroring how test_remote_logging.py starts datarouter without
-# invoking sudo).
-#
-# This SHM-open denial signature is only reachable on Linux. On QNX, a
-# consumer launched under a lower-privilege UID aborts earlier, at
-# MessagePassingService endpoint registration ("Failed to start listening ...
-# Operation not permitted"), because that registration itself requires
-# privilege -- so an excluded UID never reaches the SHM-open ACL. The
-# isolation test therefore skips on QNX (see is_qnx()), matching the
-# limitation already documented and observed for ipc_bridge.
-
 ASILB_INSTANCE_SPECIFIER = "/Vehicle/ServiceAcl/Instance"
 
-# Evidence that a denial was specifically attributable to the ACL/proxy
-# creation path -- observed empirically on Linux as an uncaught panic in the
-# generated bindings, preceded by LoLa's own shared-memory-open diagnostics.
+# ACL denial surfaces as a panic in the generated bindings (ProxyCreationFailed),
+# not as an Err from build() — so we match LoLa's own log strings, not just exit code.
 ACL_DENIAL_MARKERS = (
-    "FIT_RECV_PROXY_BUILD_ERROR",  # our own diagnostic, if build() itself ever returns Err
-    "Could not create Proxy",  # LoLa's own mw::log line when SHM-open is denied
-    "ProxyCreationFailed",  # substring of the resulting panic message
+    "FIT_RECV_PROXY_BUILD_ERROR",
+    "Could not create Proxy",
+    "ProxyCreationFailed",
 )
 DENIED_CONSUMER_UID = 64000
 
-# Reuses the VehicleInterface service type (serviceId / event ids) that
-# com-api-gen bakes in, so fit_sender/fit_receiver can still bind against it;
-# only the service *instance* below is new, with a dedicated ASIL-B binding
-# and a restrictive allowedConsumer/allowedProvider list.
-#
-# "global.asil-level" declares the *process's own* ASIL capability -- distinct
-# from the per-instance "asil-level" below, which declares the *instance's*
-# level. LoLa aborts ("Service instance has a higher ASIL than the process")
-# if a process without this declaration touches an ASIL-B instance, checked
-# before any allowedConsumer/allowedProvider UID enforcement is reached.
 ASILB_CONFIG_TEMPLATE = """{{
   "serviceTypes": [
     {{
@@ -381,8 +265,6 @@ def run_acl_isolation_scenario(
     denied_log = "/tmp/fit_acl_recv_denied.log"
     denied_prefix = as_uid_prefix(target, DENIED_CONSUMER_UID)
 
-    # As in run_event_exchange, capture the producer PID and kill it after both
-    # consumers finish so it does not leak onto the shared target.
     command = (
         f"cd {COMM_CWD} && rm -f {send_log} {allowed_log} {denied_log} && "
         f"chmod 666 {manifest_path} && "
