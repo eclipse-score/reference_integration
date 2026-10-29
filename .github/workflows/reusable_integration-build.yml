@@ -28,8 +28,8 @@
 #   - config (string, optional, default: bl-x86_64-linux): Bazel config passed to
 #     scripts/integration_test.py.
 #   - repo_runner_labels (string, optional): Runner label(s). Accepts either a
-#     single label string (e.g., ubuntu-latest) or a JSON string representing a
-#     label or an array of labels (e.g., "\"ubuntu-latest\"" or
+#     single label string (e.g., ubuntu-24.04) or a JSON string representing a
+#     label or an array of labels (e.g., "\"ubuntu-24.04\"" or
 #     "[\"self-hosted\",\"linux\",\"x64\"]").
 #   - target_branch (string, optional, default: main): Ref/branch to checkout.
 #
@@ -42,7 +42,7 @@
 #     back to github.token when not provided.
 #
 # Runner selection:
-#   - Priority: `inputs.repo_runner_labels` > 'ubuntu-latest'.
+#   - Priority: `inputs.repo_runner_labels` > 'ubuntu-24.04'.
 #   - `repo_runner_labels` can be provided as a single label string or as JSON
 #     (string or array). When JSON is used, it is parsed via fromJSON().
 #
@@ -56,7 +56,7 @@
 #           known_good: |
 #             { "modules": [] }
 #           config: bl-x86_64-linux
-#           repo_runner_labels: 'ubuntu-latest'
+#           repo_runner_labels: 'ubuntu-24.04'
 #         secrets:
 #           REPO_READ_TOKEN: ${{ secrets.REPO_READ_TOKEN }}
 #
@@ -91,7 +91,7 @@ env:
 jobs:
   integration-test:
     name: Integration Test
-    runs-on: ${{ inputs.repo_runner_labels != '' && (startsWith(inputs.repo_runner_labels, '[') && fromJSON(inputs.repo_runner_labels) || inputs.repo_runner_labels) || 'ubuntu-latest' }}
+    runs-on: ${{ inputs.repo_runner_labels != '' && (startsWith(inputs.repo_runner_labels, '[') && fromJSON(inputs.repo_runner_labels) || inputs.repo_runner_labels) || 'ubuntu-24.04' }}
     steps:
       - name: Clean disk space
         uses: eclipse-score/more-disk-space@v1
