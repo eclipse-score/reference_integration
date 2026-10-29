@@ -16,10 +16,10 @@ sh_binary(
     name = "run",
     srcs = ["//runners/docker_x86_64/scripts:run_docker"],
     args = [
-        "$(location :image_load)",
+        "$(location :bootc_qemu_load)",
     ],
     data = [
-        ":image_load",
+        ":bootc_qemu_load",
     ],
     env = {
         "OCI_IMAGE": "score_showcases_autosd:latest",
@@ -27,15 +27,25 @@ sh_binary(
 )
 
 alias(
-    name = "image",
+    name = "bootc_qemu",
     actual = select({
-        "@platforms//cpu:x86_64": ":image_amd64",
+        "@platforms//cpu:x86_64": ":bootc_qemu_amd64",
+        "@platforms//cpu:aarch64": ":bootc_qemu_arm64",
     }),
 )
 
 oci_image(
-    name = "image_amd64",
-    base = "@eclipse_autosd10_qemu_amd64",
+    name = "bootc_qemu_amd64",
+    base = "@eclipse_autosd10_qemu_linux_amd64",
+    tars = [
+        "//deploy:platform_tar",
+        "//showcases:showcases_pkg_tar",
+    ],
+)
+
+oci_image(
+    name = "bootc_qemu_arm64",
+    base = "@eclipse_autosd10_qemu_linux_arm64",
     tars = [
         "//deploy:platform_tar",
         "//showcases:showcases_pkg_tar",
@@ -43,8 +53,8 @@ oci_image(
 )
 
 oci_load(
-    name = "image_load",
-    image = ":image",
+    name = "bootc_qemu_load",
+    image = ":bootc_qemu",
     repo_tags = ["score_showcases_autosd:latest"],
     visibility = [
         "//feature_integration_tests/itf:__pkg__",
