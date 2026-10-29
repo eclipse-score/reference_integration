@@ -177,7 +177,7 @@ Reference integration
 
 - Added a dedicated `Integration Process Guide <https://eclipse-score.github.io/reference_integration/main/integration_process/integration_process.html>`_ with a step-by-step onboarding path (module onboarding, platform integration, testing, reporting, and code quality checks).
 - Introduced the v1.0 roadmap and release-gate documentation in `Roadmap <https://eclipse-score.github.io/reference_integration/main/s_core_v_1/roadmap/roadmap.html>`_, including clearer milestone alignment across process areas.
-- Established and continuously refreshed the `Overall Status <https://eclipse-score.github.io/reference_integration/main/s_core_v_1/roadmap/overall_status.html>`_ page to provide release-level visibility on cross-module progress and process-area metrics.
+- Established and continuously refreshed the `Overall Status (now Release-wide Progress Overview) <https://eclipse-score.github.io/reference_integration/main/s_core_v_1/releases/progress_overview.html>`_ page to provide release-level visibility on cross-module progress and process-area metrics.
 
 
 Reference QNX image
