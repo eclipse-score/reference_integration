@@ -115,7 +115,6 @@ int main(int argc, char* argv[])
     }
     const auto& spec = spec_result.value();
 
-    // Service discovery retry loop — mirrors discover_consumer() in fit_receiver.rs.
     std::optional<com::VehicleProxy> proxy;
     for (int poll = 0; poll < args.max_polls && !proxy.has_value(); ++poll) {
         auto handles = com::VehicleProxy::FindService(spec);
@@ -148,8 +147,6 @@ int main(int argc, char* argv[])
     for (int poll = 0; poll < args.max_polls && received < args.cycles; ++poll) {
         auto result = proxy->left_tire.GetNewSamples(
             [&received](com::SamplePtr<const com::Tire> sample) noexcept {
-                // %.9g round-trips any float and prints integers without a
-                // decimal point, matching Rust Display for the integer case.
                 std::printf("FIT_RECV seq=%.9g\n", static_cast<double>(sample->pressure));
                 std::fflush(stdout);
                 ++received;
