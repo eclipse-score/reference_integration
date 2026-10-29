@@ -57,6 +57,7 @@ def test_coverage_args_put_unified_config_before_target_separator():
         "--lockfile_mode=update",
         "--config=x86_64-linux",
         "--config=unified",
+        "--build_tests_only",
         "--config=llvm_cov",
         "--",
         "//score/...",
@@ -76,6 +77,36 @@ def test_coverage_args_exclude_targets_after_separator():
     # An existing separator is reused, the excludes go after the module's own targets.
     args = coverage_args(["--", "//score/...", "-//score/test/..."], ["cpp"], ["//score/a:b"])
     assert args[-5:] == ["--config=llvm_cov", "--", "//score/...", "-//score/test/...", "-//score/a:b"]
+
+
+def test_baselibs_coverage_preserves_targets_and_only_adds_llvm_exclusions():
+    """LLVM exceptions must not disable these tests in a regular GCC test run."""
+    test_args = ["--config=score-linux-x86_64", "--", "//..."]
+    normal = coverage_args(test_args, ["cpp"], enabled=False, module="score_baselibs")
+    assert normal == [
+        "test",
+        "--lockfile_mode=update",
+        "--config=score-linux-x86_64",
+        "--config=unified",
+        "--",
+        "//...",
+    ]
+
+    coverage = coverage_args(test_args, ["cpp"], module="score_baselibs")
+    assert "--config=score-linux-x86_64" not in coverage
+    assert "--build_tests_only" in coverage
+    assert coverage[coverage.index("--") + 1 :] == [
+        "//...",
+        "-//score/language/safecpp/aborts_upon_exception/...",
+        "-//score/language/safecpp/safe_math/details:floating_point_environment_test",
+        "-//score/os/linux/utils/test:network_interface_test",
+    ]
+    # ref_int selects nlohmann JSON, so the compatibility test's vajson-specific
+    # pretty-printing exclusion is unnecessary here.
+    assert not any("vajson" in target for target in coverage)
+    assert "-//score/os/linux/utils/test:network_interface_test" not in coverage_args(
+        ["--", "//score/..."], ["cpp"], module="score_logging"
+    )
 
 
 def test_status_line_reads_bazel_failures():

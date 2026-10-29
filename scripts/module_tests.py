@@ -120,7 +120,7 @@ def override_rc(paths: dict[str, Path], extra_test_config: list[str] = ()) -> st
 
 
 def coverage_args(
-    test_args: list[str], langs: list[str], excludes: list[str] = (), *, enabled: bool = True
+    test_args: list[str], langs: list[str], excludes: list[str] = (), *, enabled: bool = True, module: str = ""
 ) -> list[str]:
     """The module's own test args with ref_int's unified config added before any ``--``.
 
@@ -129,16 +129,32 @@ def coverage_args(
     """
     ours = ["--config=unified"]
     if enabled:
-        ours.append("--config=llvm_cov")
+        ours.extend(["--build_tests_only", "--config=llvm_cov"])
     if "rust" in langs:
         ours.append("--config=unified-rust")
     split = test_args.index("--") if "--" in test_args else len(test_args)
-    targets = [*test_args[split + 1 :], *(f"-{target}" for target in excludes)]
+    flags = test_args[:split]
+    targets = list(test_args[split + 1 :])
+    if enabled and module == "score_baselibs":
+        # Let llvm_cov select Clang without the module's GCC configuration.
+        flags = [arg for arg in flags if arg != "--config=score-linux-x86_64"]
+        targets.extend(
+            [
+                # This library interposes __cxa_allocate_exception; ld.lld rejects the
+                # duplicate definition from the statically linked C++ runtime.
+                "-//score/language/safecpp/aborts_upon_exception/...",
+                # These tests require GCC FP semantics or fail gMock's leak check
+                # with static linking. Keep the exclusions specific to coverage.
+                "-//score/language/safecpp/safe_math/details:floating_point_environment_test",
+                "-//score/os/linux/utils/test:network_interface_test",
+            ]
+        )
+    targets.extend(f"-{target}" for target in excludes)
     separator = ["--"] if targets else []
     return [
         "coverage" if enabled else "test",
         "--lockfile_mode=update",
-        *test_args[:split],
+        *flags,
         *ours,
         *separator,
         *targets,
@@ -319,7 +335,11 @@ def run(args: argparse.Namespace) -> int:
 
     coverage_enabled = module.name in COVERAGE_MODULES
     command = coverage_args(
-        module.metadata.test_args, module.metadata.langs, module.metadata.exclude_test_targets, enabled=coverage_enabled
+        module.metadata.test_args,
+        module.metadata.langs,
+        module.metadata.exclude_test_targets,
+        enabled=coverage_enabled,
+        module=module.name,
     )
     exit_code, log = streamed(["bazel", *command], workspace, env)
 
