@@ -78,7 +78,7 @@ example ``pa1_req_eng``, ``pa2_arch_design``, ``pa3_implementation``,
 ``pa4_verification``. This makes it possible to group and filter tickets not
 only **by time** (milestone / release gate) but also **by function**
 (process area), which is what feeds the per-process-area views on the
-:doc:`Overall Status <overall_status>` page.
+:doc:`Release-wide Progress Overview </s_core_v_1/releases/progress_overview>` page.
 
 Terminology
 -----------

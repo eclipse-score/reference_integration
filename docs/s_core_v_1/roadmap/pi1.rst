@@ -41,11 +41,14 @@ Focus: Requirements Engineering (PA2) + Architecture Design (PA3)
 Current State
 -------------
 
-See the relevant tables in :doc:`overall_status`:
+See the progress charts in :doc:`/s_core_v_1/releases/progress_overview`:
 
-- :ref:`overall_status_pa2` — Requirements Engineering
-- :ref:`overall_status_pa3` — Architecture Design
-- :ref:`overall_status_pa5` — Verification / Coverage
+- :ref:`progress_overview_requirements` — Requirements Engineering
+- :ref:`progress_overview_architecture` — Architecture Design
+- :ref:`progress_overview_verification` — Verification / Coverage
+
+For the current per-module detail see the
+:doc:`Module Verification Reports </verification_report/modules/index>`.
 
 Work Breakdown
 --------------
@@ -70,12 +73,12 @@ Work Breakdown
      in the TL circle** before it is merged.
 - All in-scope feature requirements and the elements linked to them
   (component requirements, AoUs, feature architecture, component architecture)
-  are in status ``valid``. The overall status can always be tracked on the
-  :doc:`overall_status` page.
+  are in status ``valid``. The progress can always be tracked on the
+  :doc:`/s_core_v_1/releases/progress_overview` page.
 - Implement all missing automation checks for requirement and architecture
   elements as part of the docs-as-code toolchain used for generation of the
-  documentation (``//:docs``), as depicted in the *Process Status* pies on
-  :doc:`overall_status` (PA2 / PA3 *Req. verification status*)
+  documentation (``//:docs``), as reported in the
+  :doc:`Platform Verification Report </verification_report/platform_verification_report>`
 - Provide a standardized CI/CD workflow for all implementation modules to
   validate requirements and architecture artifacts in compliance with the
   S-CORE process. The workflow shall be executed in the
