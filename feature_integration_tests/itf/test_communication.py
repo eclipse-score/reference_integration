@@ -23,21 +23,19 @@ import logging
 
 import comm_helpers as comm
 import pytest
-
-try:
-    from attribute_plugin import add_test_properties  # type: ignore[import-untyped]
-except ImportError:
-    def add_test_properties(*args, **kwargs):
-        def decorator(func):
-            return func
-        return decorator
+from attribute_plugin import add_test_properties  # type: ignore[import-untyped]
 
 logger = logging.getLogger(__name__)
 
 
 def test_fit_binaries_are_deployed(target):
     """The communication sender and receiver binaries are present in the image."""
-    for binary in (comm.FIT_SENDER_BIN, comm.FIT_RECEIVER_BIN):
+    for binary in (
+        comm.FIT_SENDER_BIN,
+        comm.FIT_RECEIVER_BIN,
+        comm.FIT_SENDER_CC_BIN,
+        comm.FIT_RECEIVER_CC_BIN,
+    ):
         exit_code, _ = target.execute(f"test -f {binary}")
         assert exit_code == 0, f"{binary} not found on target"
 
@@ -66,6 +64,70 @@ def test_event_exchange_delivers_data(target):
     assert result.found_service, "service discovery did not locate the provider"
     assert result.received_samples, "consumer received no samples"
     assert result.completed, "consumer did not report a clean completion"
+
+
+@add_test_properties(
+    partially_verifies=[
+        "feat_req__com__event_type",
+        "feat_req__com__producer_consumer",
+        "feat_req__com__interfaces",
+    ],
+    test_type="requirements-based",
+    derivation_technique="requirements-analysis",
+)
+def test_cpp_sender_rust_receiver(target):
+    """
+    Verify interoperability between the C++ producer and the Rust consumer:
+    the C++ fit_sender_cc offers the same VehicleInterface over shared memory
+    that the Rust fit_receiver discovers and reads.  A successful exchange
+    proves the SHM layout, serviceId, and eventId produced by the C++
+    generated bindings are wire-compatible with the Rust generated bindings.
+    """
+    result = comm.run_event_exchange(
+        target,
+        send_cycles=50,
+        recv_cycles=10,
+        sender_bin=comm.FIT_SENDER_CC_BIN,
+        receiver_bin=comm.FIT_RECEIVER_BIN,
+    )
+    logger.info("C++→Rust consumer stdout:\n%s", result.recv_stdout)
+
+    assert result.recv_exit_code == 0, "Rust consumer did not exit cleanly"
+    assert result.found_service, "Rust consumer did not discover the C++ service"
+    assert result.received_samples, "Rust consumer received no samples from C++ sender"
+    assert result.completed, "Rust consumer did not report a clean completion"
+
+
+@add_test_properties(
+    partially_verifies=[
+        "feat_req__com__event_type",
+        "feat_req__com__producer_consumer",
+        "feat_req__com__interfaces",
+    ],
+    test_type="requirements-based",
+    derivation_technique="requirements-analysis",
+)
+def test_rust_sender_cpp_receiver(target):
+    """
+    Verify interoperability between the Rust producer and the C++ consumer:
+    the Rust fit_sender offers the VehicleInterface over shared memory that
+    the C++ fit_receiver_cc discovers and reads.  Together with
+    test_cpp_sender_rust_receiver this exercises both directions of the
+    Rust/C++ generated-binding wire compatibility.
+    """
+    result = comm.run_event_exchange(
+        target,
+        send_cycles=50,
+        recv_cycles=10,
+        sender_bin=comm.FIT_SENDER_BIN,
+        receiver_bin=comm.FIT_RECEIVER_CC_BIN,
+    )
+    logger.info("Rust→C++ consumer stdout:\n%s", result.recv_stdout)
+
+    assert result.recv_exit_code == 0, "C++ consumer did not exit cleanly"
+    assert result.found_service, "C++ consumer did not discover the Rust service"
+    assert result.received_samples, "C++ consumer received no samples from Rust sender"
+    assert result.completed, "C++ consumer did not report a clean completion"
 
 
 @add_test_properties(
