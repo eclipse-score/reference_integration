@@ -44,12 +44,11 @@
             "score_communication": {
                 "repo": "https://github.com/eclipse-score/communication.git",
                 "docs": false,
-                "hash": "313f1178628189d267c8cd0d75971bdac04c20ee",
+                "hash": "a0b6e64f7089fa9df570890d58f16dc8fb4b371c",
                 "bazel_patches": [
                     "//patches/communication:001-expose-comm-examples.patch",
                     "//patches/communication:003-module-deps-visibility.patch",
-                    "//patches/communication:004-rules-build-error-not-dev-dependency.patch",
-                    "//patches/communication:005-migrate-baselibs-rust-targets.patch"
+                    "//patches/communication:004-rules-build-error-not-dev-dependency.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/mw/com/impl/...",
@@ -230,11 +229,8 @@
             "score_config_management": {
                 "repo": "https://github.com/eclipse-score/config_management.git",
                 "docs": false,
-                "hash": "d0dab01ae408ceb8ec65344e93d8a51d8173da81",
-                "bazel_patches": [
-                    "//patches/config_management:001-adapt-proxy-api-and-remove-internal-targets.patch",
-                    "//patches/config_management:002-migrate-baselibs-targets.patch"
-                ],
+                "version": "0.3.0",
+                "pin_version": true,
                 "metadata": {
                     "code_root_path": "//score/config_management/...",
                     "extra_test_config": [
