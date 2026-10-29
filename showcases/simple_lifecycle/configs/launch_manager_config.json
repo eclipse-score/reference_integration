@@ -6,7 +6,7 @@
             "ready_recovery_action": {
                 "restart": {
                     "number_of_attempts": 1,
-                    "delay_before_restart": 0.5
+                    "delay_before_restart_ms": 500
                 }
             },
             "sandbox": {
@@ -22,7 +22,7 @@
                 "application_type": "Reporting",
                 "is_self_terminating": false,
                 "alive_supervision": {
-                    "reporting_cycle": 0.1,
+                    "reporting_cycle_ms": 100,
                     "min_indications": 1,
                     "max_indications": 3,
                     "failed_cycles_tolerance": 1
@@ -35,7 +35,7 @@
             }
         },
         "run_target": {
-            "transition_timeout": 5,
+            "transition_timeout_ms": 5000,
             "recovery_action": {
                 "switch_run_target": {
                     "run_target": "fallback_run_target"
@@ -43,7 +43,7 @@
             }
         },
         "alive_supervision" : {
-            "evaluation_cycle": 0.5
+            "evaluation_cycle_ms": 500
         }
     },
     "components": {
@@ -112,9 +112,9 @@
     "fallback_run_target": {
         "description": "Switching off everything",
         "depends_on": ["state_manager"],
-        "transition_timeout": 1.5
+        "transition_timeout_ms": 1500
     },
     "alive_supervision" : {
-        "evaluation_cycle": 0.5
+        "evaluation_cycle_ms": 500
     }
 }
