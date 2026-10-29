@@ -26,6 +26,8 @@ logger = logging.getLogger(__name__)
 # (showcases/standalone/BUILD), which fit_sender/fit_receiver reuse.
 FIT_SENDER_BIN = "/showcases/bin/fit_sender"
 FIT_RECEIVER_BIN = "/showcases/bin/fit_receiver"
+FIT_SENDER_CC_BIN = "/showcases/bin/fit_sender_cc"
+FIT_RECEIVER_CC_BIN = "/showcases/bin/fit_receiver_cc"
 COMM_CWD = "/showcases/data/comm"
 DEFAULT_MANIFEST = "/showcases/data/comm/etc/mw_com_config.json"
 
@@ -92,6 +94,8 @@ def run_event_exchange(
     startup_delay_s: int = 1,
     manifest: str | None = None,
     instance_specifier: str | None = None,
+    sender_bin: str | None = None,
+    receiver_bin: str | None = None,
 ) -> CommResult:
     """
     Run one producer/consumer exchange on ``target`` and return parsed output.
@@ -110,18 +114,23 @@ def run_event_exchange(
     ``instance_specifier`` points both roles at a service instance via ``-i``;
     when ``None`` both binaries fall back to their compiled-in default
     (``/Vehicle/Service1/Instance``).
+
+    ``sender_bin`` / ``receiver_bin`` override the default Rust binaries,
+    allowing cross-language tests (e.g. C++ sender + Rust receiver).
     """
     manifest_path = manifest or DEFAULT_MANIFEST
     instance_arg = f" -i {instance_specifier}" if instance_specifier else ""
+    sender = sender_bin or FIT_SENDER_BIN
+    receiver = receiver_bin or FIT_RECEIVER_BIN
     send_log = "/tmp/fit_send.log"
     recv_log = "/tmp/fit_recv.log"
 
     command = (
         f"cd {COMM_CWD} && rm -f {send_log} {recv_log} && "
-        f"{{ {FIT_SENDER_BIN} -n {send_cycles} -t {interval_ms} -s {manifest_path}{instance_arg} "
+        f"{{ {sender} -n {send_cycles} -t {interval_ms} -s {manifest_path}{instance_arg} "
         f"> {send_log} 2>&1 & SEND_PID=$!; }} && "
         f"sleep {startup_delay_s} && "
-        f"{FIT_RECEIVER_BIN} -n {recv_cycles} -t {interval_ms} -s {manifest_path}{instance_arg} "
+        f"{receiver} -n {recv_cycles} -t {interval_ms} -s {manifest_path}{instance_arg} "
         f"> {recv_log} 2>&1 ; RECV_RC=$? ; "
         f"kill $SEND_PID 2>/dev/null ; wait $SEND_PID 2>/dev/null ; "
         f"echo RECV_EXIT=$RECV_RC"
@@ -166,6 +175,7 @@ NEGATIVE_CONFIG_INSTANCE_SPECIFIER = "/Vehicle/ServiceNegativeConfigTest/Instanc
 def write_remote_file(target, path: str, content: str) -> None:
     """Write ``content`` to ``path`` on the target via a quoted heredoc."""
     heredoc = f"cat > {path} <<'COMM_FIT_EOF'\n{content}\nCOMM_FIT_EOF\n"
+    logger.info("writing remote file: %s", path)
     exit_code, out = target.execute(heredoc)
     if exit_code != 0:
         raise AssertionError(f"Failed to write {path} on target: {out!r}")

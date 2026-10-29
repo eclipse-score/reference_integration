@@ -10,6 +10,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
 load("@rules_rust//rust:defs.bzl", "rust_binary")
 load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
 
@@ -24,6 +25,11 @@ load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
 _COM_API_DEPS = [
     "@score_communication//score/mw/com/example/com-api-example/com-api-gen",
     "@score_communication//score/mw/com/rust:score_com",
+]
+
+_CC_COM_API_DEPS = [
+    "@score_communication//score/mw/com/example/com-api-example/com-api-gen:vehicle_gen_cpp",
+    "@score_communication//score/mw/com:com",
 ]
 
 rust_binary(
@@ -42,10 +48,26 @@ rust_binary(
     deps = _COM_API_DEPS,
 )
 
+cc_binary(
+    name = "fit_sender_cc",
+    srcs = ["fit_sender.cc"],
+    visibility = ["//visibility:public"],
+    deps = _CC_COM_API_DEPS,
+)
+
+cc_binary(
+    name = "fit_receiver_cc",
+    srcs = ["fit_receiver.cc"],
+    visibility = ["//visibility:public"],
+    deps = _CC_COM_API_DEPS,
+)
+
 score_pkg_bundle(
     name = "comm_fit",
     bins = [
         ":fit_sender",
         ":fit_receiver",
+        ":fit_sender_cc",
+        ":fit_receiver_cc",
     ],
 )
