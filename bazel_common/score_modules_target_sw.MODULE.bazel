@@ -29,14 +29,10 @@ single_version_override(
 bazel_dep(name = "score_communication")
 git_override(
     module_name = "score_communication",
-    commit = "313f1178628189d267c8cd0d75971bdac04c20ee",
+    commit = "cea38c1f8404049b20645a63a740e5f57362eae4",
     patch_strip = 1,
     patches = [
         "//patches/communication:001-expose-comm-examples.patch",
-        "//patches/communication:003-module-deps-visibility.patch",
-        "//patches/communication:004-rules-build-error-not-dev-dependency.patch",
-        "//patches/communication:005-migrate-baselibs-rust-targets.patch",
-        "//patches/communication:006-add-safe-math-dep.patch",
     ],
     remote = "https://github.com/eclipse-score/communication.git",
 )
