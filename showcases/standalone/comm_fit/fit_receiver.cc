@@ -19,14 +19,13 @@
 // fit_receiver so the ITF oracles in comm_helpers.py work unchanged for
 // cross-language tests.
 //
-// Exit code: 0 when it received the requested number of samples, 1 otherwise.
-//
 // Usage: fit_receiver_cc [-s <manifest>] [-n <cycles>] [-t <interval_ms>]
 //                        [--max-polls <n>] [-i <instance_specifier>]
 
-#include "score/mw/com/example/com-api-example/com-api-gen/vehicle_gen.h"
+#include "showcases/standalone/comm_fit/vehicle_interface.h"
 #include "score/mw/com/runtime.h"
 #include "score/mw/com/runtime_configuration.h"
+#include "score/mw/com/types.h"
 
 #include <chrono>
 #include <cstdio>
@@ -36,8 +35,8 @@
 #include <sys/stat.h>
 #include <thread>
 
-namespace com = score::mw::com;
 namespace rt = score::mw::com::runtime;
+using VehicleProxy = score::mw::com::AsProxy<score::mw::com::comm_fit::VehicleInterface>;
 
 namespace
 {
@@ -103,23 +102,23 @@ int main(int argc, char* argv[])
     if (!FileExists(args.manifest)) {
         std::fprintf(stderr, "FIT_RECV_CONFIG_MISSING path=%s\n", args.manifest.c_str());
         return 1;
-    } else {
-        rt::InitializeRuntime(
-            rt::RuntimeConfiguration{score::filesystem::Path{args.manifest}});
     }
 
-    auto spec_result = com::InstanceSpecifier::Create(std::string{args.specifier});
+    rt::InitializeRuntime(
+        rt::RuntimeConfiguration{score::filesystem::Path{args.manifest}});
+
+    auto spec_result = score::mw::com::InstanceSpecifier::Create(std::string{args.specifier});
     if (!spec_result.has_value()) {
         std::fprintf(stderr, "FIT_RECV_SPEC_ERROR\n");
         return 1;
     }
     const auto& spec = spec_result.value();
 
-    std::optional<com::VehicleProxy> proxy;
+    std::optional<VehicleProxy> proxy;
     for (int poll = 0; poll < args.max_polls && !proxy.has_value(); ++poll) {
-        auto handles = com::VehicleProxy::FindService(spec);
+        auto handles = VehicleProxy::FindService(spec);
         if (handles.has_value() && !handles.value().empty()) {
-            auto proxy_result = com::VehicleProxy::Create(handles.value().front());
+            auto proxy_result = VehicleProxy::Create(handles.value().front());
             if (proxy_result.has_value()) {
                 proxy = std::move(proxy_result.value());
             } else {
@@ -146,8 +145,8 @@ int main(int argc, char* argv[])
     int received = 0;
     for (int poll = 0; poll < args.max_polls && received < args.cycles; ++poll) {
         auto result = proxy->left_tire.GetNewSamples(
-            [&received](com::SamplePtr<const com::Tire> sample) noexcept {
-                std::printf("FIT_RECV seq=%.9g\n", static_cast<double>(sample->pressure));
+            [&received](auto&& sample) noexcept {
+                std::printf("FIT_RECV seq=%.9g\n", static_cast<double>(sample.Get()->pressure));
                 std::fflush(stdout);
                 ++received;
             },

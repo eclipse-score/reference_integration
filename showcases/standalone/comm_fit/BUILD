@@ -14,22 +14,13 @@ load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
 load("@rules_rust//rust:defs.bzl", "rust_binary")
 load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
 
-# Separate producer/receiver binaries for the communication ITF. Upstream
-# replaced the two-process ipc_bridge example with the single-process
-# com-api-example, so these provide the distinct sender/receiver processes the
-# ITF needs to observe delivery, ordering and value-integrity over real shared
-# memory. They reuse com-api-example's VehicleInterface (exposed via
-# //patches/communication:002-expose-com-api-gen.patch) and its deployed
-# mw_com_config.json, so no separate deployment config is required.
-
 _COM_API_DEPS = [
     "@score_communication//score/mw/com/example/com-api-example/com-api-gen",
     "@score_communication//score/mw/com/rust:score_com",
 ]
 
 _CC_COM_API_DEPS = [
-    "@score_communication//score/mw/com/example/com-api-example/com-api-gen:vehicle_gen_cpp",
-    "@score_communication//score/mw/com:com",
+    "@score_communication//score/mw/com",
 ]
 
 rust_binary(
@@ -50,14 +41,20 @@ rust_binary(
 
 cc_binary(
     name = "fit_sender_cc",
-    srcs = ["fit_sender.cc"],
+    srcs = [
+        "fit_sender.cc",
+        "vehicle_interface.h",
+    ],
     visibility = ["//visibility:public"],
     deps = _CC_COM_API_DEPS,
 )
 
 cc_binary(
     name = "fit_receiver_cc",
-    srcs = ["fit_receiver.cc"],
+    srcs = [
+        "fit_receiver.cc",
+        "vehicle_interface.h",
+    ],
     visibility = ["//visibility:public"],
     deps = _CC_COM_API_DEPS,
 )
