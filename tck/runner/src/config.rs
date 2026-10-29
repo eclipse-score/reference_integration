@@ -46,10 +46,10 @@ pub struct ChecksConfig {
 
 /// Load a distribution configuration from a TOML file
 pub fn load(path: &PathBuf) -> Result<Config> {
-    let content = std::fs::read_to_string(path)
-        .with_context(|| format!("Failed to read config file: {}", path.display()))?;
-    let tables = crate::toml::parse(&content)
-        .with_context(|| format!("Failed to parse config file: {}", path.display()))?;
+    let content =
+        std::fs::read_to_string(path).with_context(|| format!("Failed to read config file: {}", path.display()))?;
+    let tables =
+        crate::toml::parse(&content).with_context(|| format!("Failed to parse config file: {}", path.display()))?;
     let dist = tables.get("dist");
     let paths = tables.get("dist.paths");
     let checks = tables.get("checks");
@@ -60,12 +60,10 @@ pub fn load(path: &PathBuf) -> Result<Config> {
             version: get_string(dist, "version")?.unwrap_or_else(|| "unversioned".to_string()),
             arch: get_string(dist, "arch")?.unwrap_or_else(|| "x86_64-linux".to_string()),
             profile: get_string(dist, "profile")?.unwrap_or_else(|| "full".to_string()),
-            platform_version: get_string(dist, "platform_version")?
-                .unwrap_or_else(|| "0.9.0".to_string()),
+            platform_version: get_string(dist, "platform_version")?.unwrap_or_else(|| "0.9.0".to_string()),
             paths: PathsConfig {
                 sbom_file: PathBuf::from(
-                    get_string(paths, "sbom_file")?
-                        .unwrap_or_else(|| "./sbom.spdx.json".to_string()),
+                    get_string(paths, "sbom_file")?.unwrap_or_else(|| "./sbom.spdx.json".to_string()),
                 ),
                 headers_dir: get_string(paths, "headers_dir")?.map(PathBuf::from),
                 libs_dir: get_string(paths, "libs_dir")?.map(PathBuf::from),
@@ -81,10 +79,7 @@ pub fn load(path: &PathBuf) -> Result<Config> {
     })
 }
 
-fn get_string(
-    table: Option<&std::collections::HashMap<String, String>>,
-    key: &str,
-) -> Result<Option<String>> {
+fn get_string(table: Option<&std::collections::HashMap<String, String>>, key: &str) -> Result<Option<String>> {
     table
         .and_then(|table| table.get(key))
         .map(|value| crate::toml::string(value))

@@ -88,10 +88,10 @@ pub struct SbomPolicy {
 
 impl SbomPolicy {
     pub fn load(path: &Path) -> Result<Self> {
-        let content = std::fs::read_to_string(path)
-            .with_context(|| format!("Failed to read SBOM policy: {}", path.display()))?;
-        let tables = crate::toml::parse(&content)
-            .with_context(|| format!("Failed to parse SBOM policy: {}", path.display()))?;
+        let content =
+            std::fs::read_to_string(path).with_context(|| format!("Failed to read SBOM policy: {}", path.display()))?;
+        let tables =
+            crate::toml::parse(&content).with_context(|| format!("Failed to parse SBOM policy: {}", path.display()))?;
 
         let entries = |name: &str| {
             tables
@@ -104,17 +104,12 @@ impl SbomPolicy {
             .collect();
         let allowed_licenses = entries("sbom.allowed_licenses")?
             .iter()
-            .filter_map(
-                |(name, value)| match crate::toml::inline_bool(value, "approved") {
-                    Ok(Some(true)) => Some(Ok(Some(name.clone()))),
-                    Ok(Some(false)) => None,
-                    Ok(None) => Some(Err(anyhow::anyhow!(
-                        "Missing 'approved' flag for license '{}'",
-                        name
-                    ))),
-                    Err(error) => Some(Err(error)),
-                },
-            )
+            .filter_map(|(name, value)| match crate::toml::inline_bool(value, "approved") {
+                Ok(Some(true)) => Some(Ok(Some(name.clone()))),
+                Ok(Some(false)) => None,
+                Ok(None) => Some(Err(anyhow::anyhow!("Missing 'approved' flag for license '{}'", name))),
+                Err(error) => Some(Err(error)),
+            })
             .collect::<Result<Vec<_>>>()?
             .into_iter()
             .flatten()
@@ -141,9 +136,8 @@ pub struct SBOMChecker {
 
 impl SBOMChecker {
     pub fn new(golden_sbom_path: PathBuf, policy: SbomPolicy) -> Result<Self> {
-        let golden = load_spdx(&golden_sbom_path).with_context(|| {
-            format!("Failed to load golden SBOM: {}", golden_sbom_path.display())
-        })?;
+        let golden = load_spdx(&golden_sbom_path)
+            .with_context(|| format!("Failed to load golden SBOM: {}", golden_sbom_path.display()))?;
         Ok(Self {
             golden_packages: extract_packages(&golden),
             policy,
@@ -209,10 +203,7 @@ impl SBOMChecker {
                 id: "sbom.required_components".to_string(),
                 status: "pass".to_string(),
                 severity: "required".to_string(),
-                message: format!(
-                    "All {} required components present",
-                    self.policy.required_modules.len()
-                ),
+                message: format!("All {} required components present", self.policy.required_modules.len()),
                 details: self
                     .policy
                     .required_modules
@@ -272,10 +263,7 @@ impl SBOMChecker {
         let violations: Vec<_> = packages
             .iter()
             .filter_map(|package| {
-                let license = package
-                    .license_concluded
-                    .as_deref()
-                    .unwrap_or("NOASSERTION");
+                let license = package.license_concluded.as_deref().unwrap_or("NOASSERTION");
                 (!license_expression_is_allowed(license, &self.policy.allowed_licenses))
                     .then(|| serde_json::json!({"component": package.name, "license": license}))
             })
@@ -308,19 +296,16 @@ impl SBOMChecker {
                 .golden_packages
                 .iter()
                 .enumerate()
-                .filter(|(index, golden)| {
-                    !matched[*index] && golden.name.eq_ignore_ascii_case(&package.name)
-                })
+                .filter(|(index, golden)| !matched[*index] && golden.name.eq_ignore_ascii_case(&package.name))
                 .min_by_key(|(_, golden)| {
                     golden.version_info != package.version_info
-                        || normalized_checksums(&golden.checksums)
-                            != normalized_checksums(&package.checksums)
+                        || normalized_checksums(&golden.checksums) != normalized_checksums(&package.checksums)
                 });
             if let Some((index, golden)) = matching {
                 matched[index] = true;
                 let version_changed = golden.version_info != package.version_info;
-                let checksum_changed = normalized_checksums(&golden.checksums)
-                    != normalized_checksums(&package.checksums);
+                let checksum_changed =
+                    normalized_checksums(&golden.checksums) != normalized_checksums(&package.checksums);
                 if version_changed || checksum_changed {
                     drift.push(serde_json::json!({
                         "component": package.name,
@@ -390,12 +375,12 @@ fn license_expression_is_allowed(expression: &str, allowed: &HashSet<String>) ->
                     tokens.push(std::mem::take(&mut token));
                 }
                 tokens.push(character.to_string());
-            }
+            },
             character if character.is_whitespace() => {
                 if !token.is_empty() {
                     tokens.push(std::mem::take(&mut token));
                 }
-            }
+            },
             _ => token.push(character),
         }
     }
@@ -469,26 +454,20 @@ impl LicenseExpressionParser<'_> {
 
 /// Load and validate an SPDX JSON document.
 pub fn load_spdx(path: &Path) -> Result<SpdxDocument> {
-    let content = std::fs::read_to_string(path)
-        .with_context(|| format!("Failed to read SPDX file: {}", path.display()))?;
-    let document: SpdxDocument = serde_json::from_str(&content)
-        .with_context(|| format!("Failed to parse SPDX JSON: {}", path.display()))?;
+    let content =
+        std::fs::read_to_string(path).with_context(|| format!("Failed to read SPDX file: {}", path.display()))?;
+    let document: SpdxDocument =
+        serde_json::from_str(&content).with_context(|| format!("Failed to parse SPDX JSON: {}", path.display()))?;
     validate_spdx(&document)?;
     Ok(document)
 }
 
 fn validate_spdx(document: &SpdxDocument) -> Result<()> {
-    if !document
-        .spdx_version
-        .as_deref()
-        .is_some_and(valid_spdx_version)
+    if !document.spdx_version.as_deref().is_some_and(valid_spdx_version)
         || document.data_license.as_deref() != Some("CC0-1.0")
         || document.spdx_id.as_deref() != Some("SPDXRef-DOCUMENT")
         || document.name.as_deref().is_none_or(str::is_empty)
-        || document
-            .document_namespace
-            .as_deref()
-            .is_none_or(str::is_empty)
+        || document.document_namespace.as_deref().is_none_or(str::is_empty)
     {
         bail!("SPDX document is missing required document metadata");
     }
@@ -497,10 +476,7 @@ fn validate_spdx(document: &SpdxDocument) -> Result<()> {
         .as_ref()
         .context("SPDX document is missing creationInfo")?;
     if creation.created.as_deref().is_none_or(str::is_empty)
-        || creation
-            .creators
-            .as_ref()
-            .is_none_or(|creators| creators.is_empty())
+        || creation.creators.as_ref().is_none_or(|creators| creators.is_empty())
     {
         bail!("SPDX document has incomplete creationInfo");
     }
@@ -601,26 +577,14 @@ mod tests {
             .iter()
             .map(|license| license.to_string())
             .collect();
-        assert!(license_expression_is_allowed(
-            "GPL-3.0-only OR MIT",
-            &allowed
-        ));
-        assert!(!license_expression_is_allowed(
-            "GPL-2.0-only OR GPL-3.0-only",
-            &allowed
-        ));
+        assert!(license_expression_is_allowed("GPL-3.0-only OR MIT", &allowed));
+        assert!(!license_expression_is_allowed("GPL-2.0-only OR GPL-3.0-only", &allowed));
         assert!(!license_expression_is_allowed(
             "(MIT OR GPL-3.0-only) AND GPL-2.0-only",
             &allowed
         ));
-        assert!(license_expression_is_allowed(
-            "MIT AND BSD-3-Clause",
-            &allowed
-        ));
-        assert!(!license_expression_is_allowed(
-            "MIT WITH LLVM-exception",
-            &allowed
-        ));
+        assert!(license_expression_is_allowed("MIT AND BSD-3-Clause", &allowed));
+        assert!(!license_expression_is_allowed("MIT WITH LLVM-exception", &allowed));
     }
 
     #[test]
@@ -680,9 +644,7 @@ blocked = { reason = "not allowed" }
 
     #[test]
     fn malformed_or_incomplete_spdx_documents_are_rejected() {
-        let malformed =
-            serde_json::from_str::<SpdxDocument>(r#"{"packages":[{"name":"only-package"}]}"#)
-                .unwrap();
+        let malformed = serde_json::from_str::<SpdxDocument>(r#"{"packages":[{"name":"only-package"}]}"#).unwrap();
         assert!(validate_spdx(&malformed).is_err());
         assert!(serde_json::from_str::<SpdxDocument>(r#"{"packages":[{}]}"#).is_err());
         assert!(!valid_spdx_version("SPDX-2.invalid"));

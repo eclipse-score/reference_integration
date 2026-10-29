@@ -56,10 +56,7 @@ pub fn parse(content: &str) -> Result<Tables> {
 
         if value_is_complete(&pending)? {
             let entries = tables.entry(table.clone()).or_default();
-            if entries
-                .insert(key.clone(), pending.trim().to_string())
-                .is_some()
-            {
+            if entries.insert(key.clone(), pending.trim().to_string()).is_some() {
                 bail!("Duplicate TOML key '{}' on line {}", key, line_number + 1);
             }
             pending.clear();
@@ -168,8 +165,8 @@ fn value_is_complete(value: &str) -> Result<bool> {
                 if depth < 0 {
                     bail!("Unbalanced TOML value");
                 }
-            }
-            _ => {}
+            },
+            _ => {},
         }
     }
     Ok(quote.is_none() && depth == 0)
@@ -200,8 +197,8 @@ fn split_values(value: &str) -> Result<Vec<&str>> {
             ',' if depth == 0 => {
                 parts.push(value[start..index].trim());
                 start = index + ch.len_utf8();
-            }
-            _ => {}
+            },
+            _ => {},
         }
     }
     if quote.is_some() || depth != 0 {

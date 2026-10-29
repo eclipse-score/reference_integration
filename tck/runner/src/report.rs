@@ -93,11 +93,7 @@ impl Report {
         ];
 
         for check in &self.checks {
-            lines.push(format!(
-                "### {} Check - {}",
-                check.family.to_uppercase(),
-                check.verdict
-            ));
+            lines.push(format!("### {} Check - {}", check.family.to_uppercase(), check.verdict));
             lines.push(String::new());
 
             for result in &check.checks {
@@ -110,10 +106,7 @@ impl Report {
                 lines.push(format!("- {} **{}**: {}", icon, result.id, result.message));
 
                 for detail in &result.details {
-                    lines.push(format!(
-                        "  - `{}`",
-                        serde_json::to_string(detail).unwrap_or_default()
-                    ));
+                    lines.push(format!("  - `{}`", serde_json::to_string(detail).unwrap_or_default()));
                 }
             }
             lines.push(String::new());

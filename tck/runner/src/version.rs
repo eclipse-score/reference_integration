@@ -106,17 +106,14 @@ pub fn run(config: &Config, policy: &VersionPolicy) -> Result<CheckReport> {
 }
 
 fn check_exact(dist_version: &str, required_version: &str) -> CheckResult {
-    let valid_versions =
-        parse_semver(dist_version).is_ok() && parse_semver(required_version).is_ok();
+    let valid_versions = parse_semver(dist_version).is_ok() && parse_semver(required_version).is_ok();
     if valid_versions && dist_version == required_version {
         CheckResult {
             id: "version.compatibility".to_string(),
             status: "pass".to_string(),
             severity: "required".to_string(),
             message: format!("Platform version {} matches required version", dist_version),
-            details: vec![
-                serde_json::json!({"dist_version": dist_version, "required_version": required_version}),
-            ],
+            details: vec![serde_json::json!({"dist_version": dist_version, "required_version": required_version})],
         }
     } else if !valid_versions {
         CheckResult {
@@ -127,9 +124,7 @@ fn check_exact(dist_version: &str, required_version: &str) -> CheckResult {
                 "Invalid version format: distribution '{}' or required '{}'",
                 dist_version, required_version
             ),
-            details: vec![
-                serde_json::json!({"dist_version": dist_version, "required_version": required_version}),
-            ],
+            details: vec![serde_json::json!({"dist_version": dist_version, "required_version": required_version})],
         }
     } else {
         CheckResult {
@@ -140,9 +135,7 @@ fn check_exact(dist_version: &str, required_version: &str) -> CheckResult {
                 "Platform version {} does not match required version {}",
                 dist_version, required_version
             ),
-            details: vec![
-                serde_json::json!({"dist_version": dist_version, "required_version": required_version}),
-            ],
+            details: vec![serde_json::json!({"dist_version": dist_version, "required_version": required_version})],
         }
     }
 }
@@ -153,13 +146,8 @@ fn check_compatible(dist_version: &str, min_version: &str) -> CheckResult {
             id: "version.compatibility".to_string(),
             status: "pass".to_string(),
             severity: "required".to_string(),
-            message: format!(
-                "Platform version {} is compatible (>= {})",
-                dist_version, min_version
-            ),
-            details: vec![
-                serde_json::json!({"dist_version": dist_version, "min_version": min_version}),
-            ],
+            message: format!("Platform version {} is compatible (>= {})", dist_version, min_version),
+            details: vec![serde_json::json!({"dist_version": dist_version, "min_version": min_version})],
         },
         Ok(false) => CheckResult {
             id: "version.compatibility".to_string(),
@@ -169,18 +157,14 @@ fn check_compatible(dist_version: &str, min_version: &str) -> CheckResult {
                 "Platform version {} is below minimum required version {}",
                 dist_version, min_version
             ),
-            details: vec![
-                serde_json::json!({"dist_version": dist_version, "min_version": min_version}),
-            ],
+            details: vec![serde_json::json!({"dist_version": dist_version, "min_version": min_version})],
         },
         Err(e) => CheckResult {
             id: "version.compatibility".to_string(),
             status: "fail".to_string(), // Parse errors must fail, not warn
             severity: "required".to_string(),
             message: format!("Invalid version format: {}", e),
-            details: vec![
-                serde_json::json!({"dist_version": dist_version, "min_version": min_version, "error": e}),
-            ],
+            details: vec![serde_json::json!({"dist_version": dist_version, "min_version": min_version, "error": e})],
         },
     }
 }
@@ -204,14 +188,14 @@ enum Identifier {
 
 impl Ord for SemVer {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.core.cmp(&other.core).then_with(|| {
-            match (self.prerelease.is_empty(), other.prerelease.is_empty()) {
+        self.core
+            .cmp(&other.core)
+            .then_with(|| match (self.prerelease.is_empty(), other.prerelease.is_empty()) {
                 (true, true) => std::cmp::Ordering::Equal,
                 (true, false) => std::cmp::Ordering::Greater,
                 (false, true) => std::cmp::Ordering::Less,
                 (false, false) => self.prerelease.cmp(&other.prerelease),
-            }
-        })
+            })
     }
 }
 
@@ -240,17 +224,13 @@ impl PartialOrd for Identifier {
 
 fn parse_semver(value: &str) -> Result<SemVer, String> {
     let invalid = || format!("Invalid semantic version '{}'", value);
-    let (version, build) = value
-        .split_once('+')
-        .map_or((value, None), |(v, b)| (v, Some(b)));
+    let (version, build) = value.split_once('+').map_or((value, None), |(v, b)| (v, Some(b)));
     if let Some(build) = build {
         if build.is_empty() || !valid_identifiers(build, false) {
             return Err(invalid());
         }
     }
-    let (core, prerelease) = version
-        .split_once('-')
-        .map_or((version, None), |(v, p)| (v, Some(p)));
+    let (core, prerelease) = version.split_once('-').map_or((version, None), |(v, p)| (v, Some(p)));
     let parts: Vec<_> = core.split('.').collect();
     if parts.len() != 3 {
         return Err(invalid());
@@ -289,9 +269,7 @@ fn valid_identifiers(value: &str, prerelease: bool) -> bool {
     !value.is_empty()
         && value.split('.').all(|part| {
             !part.is_empty()
-                && part
-                    .bytes()
-                    .all(|byte| byte.is_ascii_alphanumeric() || byte == b'-')
+                && part.bytes().all(|byte| byte.is_ascii_alphanumeric() || byte == b'-')
                 && (!prerelease
                     || !part.bytes().all(|byte| byte.is_ascii_digit())
                     || part == "0"
@@ -339,10 +317,7 @@ mod tests {
         assert_eq!(compare_versions("0.9.0-rc.1", "0.9.0").unwrap(), false);
         assert_eq!(compare_versions("0.9.0", "0.9.0-rc.1").unwrap(), true);
         assert_eq!(compare_versions("1.0.0-rc.2", "1.0.0-rc.1").unwrap(), true);
-        assert_eq!(
-            compare_versions("1.0.0+build.2", "1.0.0+build.1").unwrap(),
-            true
-        );
+        assert_eq!(compare_versions("1.0.0+build.2", "1.0.0+build.1").unwrap(), true);
     }
 
     #[test]

@@ -98,8 +98,7 @@ impl TestHarnessAdapter {
         let mut warnings = Vec::new();
 
         if self.build_command.is_none() {
-            warnings
-                .push("No build_command configured - behavioral tests will be skipped".to_string());
+            warnings.push("No build_command configured - behavioral tests will be skipped".to_string());
         }
 
         if self.showcase_cli_path.is_none() {
@@ -127,8 +126,8 @@ impl TestHarnessAdapter {
             .context("Failed to execute showcase CLI")?;
 
         let stdout = String::from_utf8_lossy(&output.stdout);
-        let success = output.status.success()
-            && stdout.contains(&format!("Example '{}' finished successfully", example));
+        let success =
+            output.status.success() && stdout.contains(&format!("Example '{}' finished successfully", example));
 
         Ok(ShowcaseResult {
             example: example.to_string(),
@@ -167,10 +166,7 @@ pub fn run(config: &Config, requirements: &RuntimeRequirements) -> Result<CheckR
     }
 
     // Compute verdict
-    let verdict = if checks
-        .iter()
-        .any(|c| c.status == "fail" && c.severity == "required")
-    {
+    let verdict = if checks.iter().any(|c| c.status == "fail" && c.severity == "required") {
         "NON-CONFORMANT"
     } else if checks.iter().any(|c| c.status == "warn") {
         "CONFORMANT-WITH-WARNINGS"
@@ -228,12 +224,7 @@ fn check_toolchain(min_version: &str) -> CheckResult {
         let (display_name, executable) = match fields[0].to_ascii_lowercase().as_str() {
             "gcc" => ("GCC", "gcc"),
             "clang" => ("Clang", "clang"),
-            _ => {
-                return toolchain_failure(
-                    min_version,
-                    "Unsupported compiler in minimum version requirement",
-                )
-            }
+            _ => return toolchain_failure(min_version, "Unsupported compiler in minimum version requirement"),
         };
         let minimum = fields[1].trim_end_matches('+');
         let output = Command::new(executable).arg("--version").output();
@@ -247,8 +238,7 @@ fn check_toolchain(min_version: &str) -> CheckResult {
         }
         let output = String::from_utf8_lossy(&output.stdout).to_string();
         if compiler_meets_minimum(&output, minimum) {
-            let detected =
-                extract_numeric_version(&output).unwrap_or_else(|| "unknown".to_string());
+            let detected = extract_numeric_version(&output).unwrap_or_else(|| "unknown".to_string());
             return CheckResult {
                 id: "runtime.toolchain".to_string(),
                 status: "pass".to_string(),
@@ -298,8 +288,7 @@ fn compiler_meets_minimum(output: &str, minimum: &str) -> bool {
 fn extract_numeric_version(output: &str) -> Option<String> {
     let bytes = output.as_bytes();
     for start in 0..bytes.len() {
-        if !bytes[start].is_ascii_digit() || (start > 0 && bytes[start - 1].is_ascii_alphanumeric())
-        {
+        if !bytes[start].is_ascii_digit() || (start > 0 && bytes[start - 1].is_ascii_alphanumeric()) {
             continue;
         }
         let mut end = start;
@@ -324,10 +313,7 @@ fn numeric_components(value: &str) -> Option<Vec<u64>> {
     {
         return None;
     }
-    components
-        .into_iter()
-        .map(|part| part.parse().ok())
-        .collect()
+    components.into_iter().map(|part| part.parse().ok()).collect()
 }
 
 fn check_libraries(required: &[String]) -> CheckResult {
@@ -362,11 +348,7 @@ fn check_libraries(required: &[String]) -> CheckResult {
             id: "runtime.libraries".to_string(),
             status: "warn".to_string(),
             severity: "required".to_string(),
-            message: format!(
-                "{} required libraries not found: {}",
-                missing.len(),
-                missing.join(", ")
-            ),
+            message: format!("{} required libraries not found: {}", missing.len(), missing.join(", ")),
             details: missing
                 .iter()
                 .map(|l| serde_json::json!({"library": l, "found": false}))
@@ -376,11 +358,7 @@ fn check_libraries(required: &[String]) -> CheckResult {
 }
 
 fn check_env_vars(required: &[String]) -> CheckResult {
-    let missing: Vec<String> = required
-        .iter()
-        .filter(|v| std::env::var(v).is_err())
-        .cloned()
-        .collect();
+    let missing: Vec<String> = required.iter().filter(|v| std::env::var(v).is_err()).cloned().collect();
 
     if missing.is_empty() {
         CheckResult {
@@ -388,9 +366,10 @@ fn check_env_vars(required: &[String]) -> CheckResult {
             status: "pass".to_string(),
             severity: "required".to_string(),
             message: "All required environment variables set".to_string(),
-            details: required.iter().map(|v| {
-                serde_json::json!({"var": v, "value": std::env::var(v).unwrap_or_default()})
-            }).collect(),
+            details: required
+                .iter()
+                .map(|v| serde_json::json!({"var": v, "value": std::env::var(v).unwrap_or_default()}))
+                .collect(),
         }
     } else {
         CheckResult {
