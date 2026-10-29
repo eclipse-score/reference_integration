@@ -54,20 +54,32 @@ struct Args
     std::string specifier{kDefaultSpecifier};
 };
 
+static int parse_int_arg(const char* flag, const char* val)
+{
+    char* end = nullptr;
+    const long n = std::strtol(val, &end, 10);
+    if (end == val || *end != '\0') {
+        std::fprintf(stderr, "FIT_RECV_ERROR invalid integer for %s: %s\n", flag, val);
+        std::exit(1);
+    }
+    return static_cast<int>(n);
+}
+
 Args ParseArgs(int argc, char* argv[])
 {
     Args a;
-    for (int i = 1; i < argc - 1; ++i) {
+    for (int i = 1; i < argc; ++i) {
         const std::string flag{argv[i]};
-        if (flag == "-s" || flag == "--service-instance-manifest") {
+        const bool has_next = (i + 1 < argc);
+        if ((flag == "-s" || flag == "--service-instance-manifest") && has_next) {
             a.manifest = argv[++i];
-        } else if (flag == "-n" || flag == "--cycles") {
-            a.cycles = std::atoi(argv[++i]);
-        } else if (flag == "-t" || flag == "--interval-ms") {
-            a.interval_ms = std::atoi(argv[++i]);
-        } else if (flag == "--max-polls") {
-            a.max_polls = std::atoi(argv[++i]);
-        } else if (flag == "-i" || flag == "--instance-specifier") {
+        } else if ((flag == "-n" || flag == "--cycles") && has_next) {
+            a.cycles = parse_int_arg(flag.c_str(), argv[++i]);
+        } else if ((flag == "-t" || flag == "--interval-ms") && has_next) {
+            a.interval_ms = parse_int_arg(flag.c_str(), argv[++i]);
+        } else if (flag == "--max-polls" && has_next) {
+            a.max_polls = parse_int_arg(flag.c_str(), argv[++i]);
+        } else if ((flag == "-i" || flag == "--instance-specifier") && has_next) {
             a.specifier = argv[++i];
         } else {
             std::fprintf(stderr, "FIT_RECV_IGNORED_ARG %s\n", argv[i]);
