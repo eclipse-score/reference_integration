@@ -43,6 +43,7 @@ extensions = [
     # is updated with new sphinx-needs version
     "sphinxcontrib.plantuml",
     "score_sphinx_bundle",
+    "mount_overrides",
 ]
 
 exclude_patterns = [
