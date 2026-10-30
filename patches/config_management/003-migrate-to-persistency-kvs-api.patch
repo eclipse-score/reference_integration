@@ -1,0 +1,555 @@
+diff --git a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/BUILD b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/BUILD
+--- a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/BUILD
++++ b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/BUILD
+@@ -48,7 +48,7 @@ COMMON_FEATURES = [
+             "details_score",
+             False,
+             [
+-                "@score_persistency//:kvs_cpp",
++                "@score_persistency//score/kvs",
+             ],
+         ),
+         (
+diff --git a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.cpp b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.cpp
+--- a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.cpp
++++ b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.cpp
+@@ -16,7 +16,7 @@
+ #include "score/config_management/config_daemon/code/data_model/parameter_set_storage/error/parameter_set_storage_error.h"
+ #include "score/config_management/config_daemon/code/data_model/parameterset_collection.h"
+ 
+-#include "kvsvalue.hpp"
++#include "score/kvs/kvs_value.h"
+ #include "score/json/json_writer.h"
+ #include "score/hash/code/common/algorithms.h"
+ #include "score/hash/code/core/factory/impl/safe_hash_calculator_factory.h"
+diff --git a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.h b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.h
+--- a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.h
++++ b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.h
+@@ -16,7 +16,7 @@
+ 
+ #include "score/config_management/config_daemon/code/data_model/parameter_set_storage/parameter_set_storage.h"
+ 
+-#include "kvs.hpp"
++#include "score/kvs/kvs.h"
+ 
+ #include <memory>
+ #include <string>
+diff --git a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/BUILD b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/BUILD
+--- a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/BUILD
++++ b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/BUILD
+@@ -13,23 +13,23 @@
+ 
+ load("@rules_cc//cc:defs.bzl", "cc_library")
+ 
+-# Stub replacements for score-persistency headers (kvs.hpp / kvsbuilder.hpp / kvsvalue.hpp).
++# Stub replacements for score-persistency headers (score/kvs/kvs.h / kvs_builder.h / kvs_value.h).
+ # Used when compiling score-variant source files (e.g. factory_mw_impl.cpp,
+ # parameter_set_storage_score_impl.cpp) under the SPP toolchain where the real
+ # score-baselibs / score-persistency headers would cause namespace clashes.
+ #
+ # The stubs expose exactly the same types and method signatures used by those files
+ # but have no real implementation — every operation is a no-op / returns failure.
+-# On the actual score build, the real @score-persistency//:kvs_cpp is used instead.
++# On the actual score build, the real @score_persistency//score/kvs is used instead.
+ cc_library(
+     name = "score_kvs_stub",
+     hdrs = [
+-        "kvs.hpp",
+-        "kvsbuilder.hpp",
+-        "kvsvalue.hpp",
++        "score/kvs/kvs.h",
++        "score/kvs/kvs_builder.h",
++        "score/kvs/kvs_value.h",
+     ],
+     # Expose the directory itself as a system include path so that
+-    # `#include "kvs.hpp"` resolves here, mirroring how score-persistency does it.
++    # `#include "score/kvs/kvs.h"` resolves here, mirroring score-persistency's header paths.
+     includes = ["."],
+     tags = ["FUSA"],
+     visibility = [
+diff --git a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvs.hpp b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvs.hpp
+deleted file mode 100644
+--- a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvs.hpp
++++ /dev/null
+@@ -1,69 +0,0 @@
+-// *******************************************************************************
+-// Copyright (c) 2025 Contributors to the Eclipse Foundation
+-//
+-// See the NOTICE file(s) distributed with this work for additional
+-// information regarding copyright ownership.
+-//
+-// This program and the accompanying materials are made available under the
+-// terms of the Apache License Version 2.0 which is available at
+-// https://www.apache.org/licenses/LICENSE-2.0
+-//
+-// SPDX-License-Identifier: Apache-2.0
+-// *******************************************************************************
+-
+-#ifndef SCORE_LIB_KVS_KVS_HPP
+-#define SCORE_LIB_KVS_KVS_HPP
+-
+-#include "kvsvalue.hpp"
+-
+-#include "score/config_management/config_daemon/code/data_model/parameter_set_storage/error/parameter_set_storage_error.h"
+-
+-#include <memory>
+-#include <string_view>
+-
+-namespace score::mw::per::kvs
+-{
+-
+-struct InstanceId
+-{
+-    explicit InstanceId(std::size_t id) : id{id} {}
+-    std::size_t id{0U};
+-};
+-
+-// Stub for score-persistency's Kvs. Concrete so make_unique<Kvs>(unique_ptr<Kvs>) in
+-// factory_mw_impl.cpp compiles. MockKvs subclasses and overrides the virtual methods for tests.
+-class Kvs
+-{
+-  public:
+-    Kvs() = default;
+-    // Accepts a unique_ptr<Kvs> to match the real score-persistency API used in factory_mw_impl.cpp.
+-    explicit Kvs(std::unique_ptr<Kvs> /*inner*/) noexcept {}
+-    virtual ~Kvs() = default;
+-    Kvs(const Kvs&) = delete;
+-    Kvs& operator=(const Kvs&) = delete;
+-    Kvs(Kvs&&) noexcept = delete;
+-    Kvs& operator=(Kvs&&) noexcept = delete;
+-
+-    // NOLINTBEGIN(readability-identifier-naming)
+-    virtual score::Result<KvsValue> get_value(std::string_view /*key*/) noexcept
+-    {
+-        return score::MakeUnexpected<KvsValue>(
+-            score::MakeUnexpected(::score::config_management::config_daemon::data_model::ParameterSetStorageError::kDataNotFound)
+-                .error());
+-    }
+-    virtual score::Result<void> set_value(std::string_view /*key*/, const KvsValue& /*value*/) noexcept
+-    {
+-        return score::MakeUnexpected(
+-            ::score::config_management::config_daemon::data_model::ParameterSetStorageError::kUnableToSaveToPersistency);
+-    }
+-    virtual score::Result<void> flush() noexcept
+-    {
+-        return score::MakeUnexpected(
+-            ::score::config_management::config_daemon::data_model::ParameterSetStorageError::kUnableToSaveToPersistency);
+-    }
+-    // NOLINTEND(readability-identifier-naming)
+-};
+-
+-}  // namespace score::mw::per::kvs
+-
+-#endif  // SCORE_LIB_KVS_KVS_HPP
+diff --git a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvs_mock.hpp b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvs_mock.hpp
+--- a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvs_mock.hpp
++++ b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvs_mock.hpp
+@@ -14,7 +14,7 @@
+ #ifndef SCORE_CONFIG_MANAGEMENT_CONFIG_DAEMON_CODE_PARAMETER_SET_STORAGE_DETAILS_SCORE_KVS_STUB_KVS_MOCK_HPP
+ #define SCORE_CONFIG_MANAGEMENT_CONFIG_DAEMON_CODE_PARAMETER_SET_STORAGE_DETAILS_SCORE_KVS_STUB_KVS_MOCK_HPP
+ 
+-#include "kvs.hpp"
++#include "score/kvs/kvs.h"
+ 
+ #include <gmock/gmock.h>
+ 
+diff --git a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvsbuilder.hpp b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvsbuilder.hpp
+deleted file mode 100644
+--- a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvsbuilder.hpp
++++ /dev/null
+@@ -1,55 +0,0 @@
+-// *******************************************************************************
+-// Copyright (c) 2025 Contributors to the Eclipse Foundation
+-//
+-// See the NOTICE file(s) distributed with this work for additional
+-// information regarding copyright ownership.
+-//
+-// This program and the accompanying materials are made available under the
+-// terms of the Apache License Version 2.0 which is available at
+-// https://www.apache.org/licenses/LICENSE-2.0
+-//
+-// SPDX-License-Identifier: Apache-2.0
+-// *******************************************************************************
+-
+-// Stub replacing score-persistency's kvsbuilder.hpp for SPP compilation.
+-// Only the subset of the API used by factory_mw_impl.cpp is provided.
+-
+-#ifndef SCORE_LIB_KVS_KVSBUILDER_HPP
+-#define SCORE_LIB_KVS_KVSBUILDER_HPP
+-
+-#include "kvs.hpp"
+-
+-#include <memory>
+-#include <string>
+-
+-namespace score::mw::per::kvs
+-{
+-
+-/// @brief Stub KvsBuilder — build() always returns an empty (failure) Result.
+-class KvsBuilder final
+-{
+-  public:
+-    explicit KvsBuilder(const InstanceId& /*instance_id*/) {}
+-
+-    KvsBuilder& need_defaults_flag(bool /*flag*/) noexcept
+-    {
+-        return *this;
+-    }
+-    KvsBuilder& need_kvs_flag(bool /*flag*/) noexcept
+-    {
+-        return *this;
+-    }
+-    KvsBuilder& dir(std::string&& /*dir_path*/) noexcept
+-    {
+-        return *this;
+-    }
+-
+-    score::Result<std::unique_ptr<Kvs>> build() noexcept
+-    {
+-        return score::Result<std::unique_ptr<Kvs>>{std::make_unique<Kvs>()};
+-    }
+-};
+-
+-}  // namespace score::mw::per::kvs
+-
+-#endif  // SCORE_LIB_KVS_KVSBUILDER_HPP
+diff --git a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvsvalue.hpp b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvsvalue.hpp
+deleted file mode 100644
+--- a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvsvalue.hpp
++++ /dev/null
+@@ -1,78 +0,0 @@
+-// *******************************************************************************
+-// Copyright (c) 2025 Contributors to the Eclipse Foundation
+-//
+-// See the NOTICE file(s) distributed with this work for additional
+-// information regarding copyright ownership.
+-//
+-// This program and the accompanying materials are made available under the
+-// terms of the Apache License Version 2.0 which is available at
+-// https://www.apache.org/licenses/LICENSE-2.0
+-//
+-// SPDX-License-Identifier: Apache-2.0
+-// *******************************************************************************
+-
+-#ifndef SCORE_LIB_KVS_KVSVALUE_HPP
+-#define SCORE_LIB_KVS_KVSVALUE_HPP
+-
+-#include "score/result/result.h"
+-
+-#include <memory>
+-#include <string>
+-#include <unordered_map>
+-#include <variant>
+-#include <vector>
+-
+-namespace score::mw::per::kvs
+-{
+-
+-class KvsValue final
+-{
+-  public:
+-    using Array = std::vector<std::shared_ptr<KvsValue>>;
+-    using Object = std::unordered_map<std::string, std::shared_ptr<KvsValue>>;
+-
+-    // NOLINTBEGIN(readability-identifier-naming) — enum constants mirror real score-persistency KvsValue::Type
+-    enum class Type
+-    {
+-        i32,
+-        u32,
+-        i64,
+-        u64,
+-        f64,
+-        Boolean,
+-        String,
+-        Null,
+-        Array,
+-        Object
+-    };
+-    // NOLINTEND(readability-identifier-naming)
+-
+-    explicit KvsValue(const std::string& str) : value_{str}, type_{Type::String} {}
+-    explicit KvsValue(std::string&& str) : value_{std::move(str)}, type_{Type::String} {}
+-    explicit KvsValue(Type type) : value_{std::string{}}, type_{type} {}
+-
+-    KvsValue(const KvsValue&) = default;
+-    KvsValue& operator=(const KvsValue&) = default;
+-    KvsValue(KvsValue&&) noexcept = default;
+-    KvsValue& operator=(KvsValue&&) noexcept = default;
+-
+-    // NOLINTBEGIN(readability-identifier-naming) — method names mirror real score-persistency KvsValue API
+-    Type getType() const noexcept
+-    {
+-        return type_;
+-    }
+-
+-    const std::variant<std::string>& getValue() const noexcept
+-    {
+-        return value_;
+-    }
+-    // NOLINTEND(readability-identifier-naming)
+-
+-  private:
+-    std::variant<std::string> value_;
+-    Type type_{Type::Null};
+-};
+-
+-}  // namespace score::mw::per::kvs
+-
+-#endif  // SCORE_LIB_KVS_KVSVALUE_HPP
+diff --git a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/score/kvs/kvs.h b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/score/kvs/kvs.h
+new file mode 100644
+--- /dev/null
++++ b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/score/kvs/kvs.h
+@@ -0,0 +1,69 @@
++// *******************************************************************************
++// Copyright (c) 2025 Contributors to the Eclipse Foundation
++//
++// See the NOTICE file(s) distributed with this work for additional
++// information regarding copyright ownership.
++//
++// This program and the accompanying materials are made available under the
++// terms of the Apache License Version 2.0 which is available at
++// https://www.apache.org/licenses/LICENSE-2.0
++//
++// SPDX-License-Identifier: Apache-2.0
++// *******************************************************************************
++
++#ifndef SCORE_LIB_KVS_KVS_HPP
++#define SCORE_LIB_KVS_KVS_HPP
++
++#include "score/kvs/kvs_value.h"
++
++#include "score/config_management/config_daemon/code/data_model/parameter_set_storage/error/parameter_set_storage_error.h"
++
++#include <memory>
++#include <string_view>
++
++namespace score::mw::per::kvs
++{
++
++struct InstanceId
++{
++    explicit InstanceId(std::size_t id) : id{id} {}
++    std::size_t id{0U};
++};
++
++// Stub for score-persistency's Kvs. Concrete so make_unique<Kvs>(unique_ptr<Kvs>) in
++// factory_mw_impl.cpp compiles. MockKvs subclasses and overrides the virtual methods for tests.
++class Kvs
++{
++  public:
++    Kvs() = default;
++    // Accepts a unique_ptr<Kvs> to match the real score-persistency API used in factory_mw_impl.cpp.
++    explicit Kvs(std::unique_ptr<Kvs> /*inner*/) noexcept {}
++    virtual ~Kvs() = default;
++    Kvs(const Kvs&) = delete;
++    Kvs& operator=(const Kvs&) = delete;
++    Kvs(Kvs&&) noexcept = delete;
++    Kvs& operator=(Kvs&&) noexcept = delete;
++
++    // NOLINTBEGIN(readability-identifier-naming)
++    virtual score::Result<KvsValue> get_value(std::string_view /*key*/) noexcept
++    {
++        return score::MakeUnexpected<KvsValue>(
++            score::MakeUnexpected(::score::config_management::config_daemon::data_model::ParameterSetStorageError::kDataNotFound)
++                .error());
++    }
++    virtual score::Result<void> set_value(std::string_view /*key*/, const KvsValue& /*value*/) noexcept
++    {
++        return score::MakeUnexpected(
++            ::score::config_management::config_daemon::data_model::ParameterSetStorageError::kUnableToSaveToPersistency);
++    }
++    virtual score::Result<void> flush() noexcept
++    {
++        return score::MakeUnexpected(
++            ::score::config_management::config_daemon::data_model::ParameterSetStorageError::kUnableToSaveToPersistency);
++    }
++    // NOLINTEND(readability-identifier-naming)
++};
++
++}  // namespace score::mw::per::kvs
++
++#endif  // SCORE_LIB_KVS_KVS_HPP
+diff --git a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/score/kvs/kvs_builder.h b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/score/kvs/kvs_builder.h
+new file mode 100644
+--- /dev/null
++++ b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/score/kvs/kvs_builder.h
+@@ -0,0 +1,70 @@
++// *******************************************************************************
++// Copyright (c) 2025 Contributors to the Eclipse Foundation
++//
++// See the NOTICE file(s) distributed with this work for additional
++// information regarding copyright ownership.
++//
++// This program and the accompanying materials are made available under the
++// terms of the Apache License Version 2.0 which is available at
++// https://www.apache.org/licenses/LICENSE-2.0
++//
++// SPDX-License-Identifier: Apache-2.0
++// *******************************************************************************
++
++// Stub replacing score-persistency's score/kvs/kvs_builder.h for SPP compilation.
++// Only the subset of the API used by factory_mw_impl.cpp is provided.
++
++#ifndef SCORE_LIB_KVS_KVSBUILDER_HPP
++#define SCORE_LIB_KVS_KVSBUILDER_HPP
++
++#include "score/kvs/kvs.h"
++
++#include <cstdint>
++#include <memory>
++#include <string>
++
++namespace score::mw::per::kvs
++{
++
++enum class KvsDefaults : std::uint8_t
++{
++    kRequired = 0,
++    kOptional = 1,
++    kIgnored = 2,
++};
++
++enum class KvsLoad : std::uint8_t
++{
++    kRequired = 0,
++    kOptional = 1,
++    kIgnored = 2,
++};
++
++/// @brief Stub KvsBuilder — build() always returns an empty (failure) Result.
++class KvsBuilder final
++{
++  public:
++    explicit KvsBuilder(const InstanceId& /*instance_id*/) {}
++
++    KvsBuilder& Defaults(const KvsDefaults& /*mode*/) noexcept
++    {
++        return *this;
++    }
++    KvsBuilder& KvsLoad(const score::mw::per::kvs::KvsLoad& /*mode*/) noexcept
++    {
++        return *this;
++    }
++    KvsBuilder& WorkingDir(const std::string& /*working_dir*/) noexcept
++    {
++        return *this;
++    }
++
++    score::Result<std::unique_ptr<Kvs>> build() noexcept
++    {
++        return score::Result<std::unique_ptr<Kvs>>{std::make_unique<Kvs>()};
++    }
++};
++
++}  // namespace score::mw::per::kvs
++
++#endif  // SCORE_LIB_KVS_KVSBUILDER_HPP
+diff --git a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/score/kvs/kvs_value.h b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/score/kvs/kvs_value.h
+new file mode 100644
+--- /dev/null
++++ b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/score/kvs/kvs_value.h
+@@ -0,0 +1,78 @@
++// *******************************************************************************
++// Copyright (c) 2025 Contributors to the Eclipse Foundation
++//
++// See the NOTICE file(s) distributed with this work for additional
++// information regarding copyright ownership.
++//
++// This program and the accompanying materials are made available under the
++// terms of the Apache License Version 2.0 which is available at
++// https://www.apache.org/licenses/LICENSE-2.0
++//
++// SPDX-License-Identifier: Apache-2.0
++// *******************************************************************************
++
++#ifndef SCORE_LIB_KVS_KVSVALUE_HPP
++#define SCORE_LIB_KVS_KVSVALUE_HPP
++
++#include "score/result/result.h"
++
++#include <memory>
++#include <string>
++#include <unordered_map>
++#include <variant>
++#include <vector>
++
++namespace score::mw::per::kvs
++{
++
++class KvsValue final
++{
++  public:
++    using Array = std::vector<std::shared_ptr<KvsValue>>;
++    using Object = std::unordered_map<std::string, std::shared_ptr<KvsValue>>;
++
++    // NOLINTBEGIN(readability-identifier-naming) — enum constants mirror real score-persistency KvsValue::Type
++    enum class Type
++    {
++        i32,
++        u32,
++        i64,
++        u64,
++        f64,
++        Boolean,
++        String,
++        Null,
++        Array,
++        Object
++    };
++    // NOLINTEND(readability-identifier-naming)
++
++    explicit KvsValue(const std::string& str) : value_{str}, type_{Type::String} {}
++    explicit KvsValue(std::string&& str) : value_{std::move(str)}, type_{Type::String} {}
++    explicit KvsValue(Type type) : value_{std::string{}}, type_{type} {}
++
++    KvsValue(const KvsValue&) = default;
++    KvsValue& operator=(const KvsValue&) = default;
++    KvsValue(KvsValue&&) noexcept = default;
++    KvsValue& operator=(KvsValue&&) noexcept = default;
++
++    // NOLINTBEGIN(readability-identifier-naming) — method names mirror real score-persistency KvsValue API
++    Type getType() const noexcept
++    {
++        return type_;
++    }
++
++    const std::variant<std::string>& getValue() const noexcept
++    {
++        return value_;
++    }
++    // NOLINTEND(readability-identifier-naming)
++
++  private:
++    std::variant<std::string> value_;
++    Type type_{Type::Null};
++};
++
++}  // namespace score::mw::per::kvs
++
++#endif  // SCORE_LIB_KVS_KVSVALUE_HPP
+diff --git a/score/config_management/config_daemon/code/factory/details/factory_mw_impl.cpp b/score/config_management/config_daemon/code/factory/details/factory_mw_impl.cpp
+--- a/score/config_management/config_daemon/code/factory/details/factory_mw_impl.cpp
++++ b/score/config_management/config_daemon/code/factory/details/factory_mw_impl.cpp
+@@ -18,7 +18,7 @@
+ #include "score/config_management/config_daemon/code/fault_event_reporter/details/fault_event_reporter_score_impl.h"
+ #include "score/config_management/config_daemon/code/json_helper/details/json_helper_impl.h"
+ 
+-#include "kvsbuilder.hpp"
++#include "score/kvs/kvs_builder.h"
+ #include "score/config_management/config_daemon/code/plugins/plugin_collector/details/plugin_collector_impl.h"
+ #include "score/config_management/config_daemon/code/services/details/internal_config_provider_service_reactor_impl.h"
+ #include "score/config_management/config_daemon/code/services/details/mw_com/internal_config_provider_service_impl.h"
+@@ -101,9 +101,9 @@ std::shared_ptr<data_model::IParameterSetCollectionManager> Factory::CreateParam
+     std::vector<std::shared_ptr<IPlugin>>& plugins) const
+ {
+     auto kvs_result = score::mw::per::kvs::KvsBuilder(score::mw::per::kvs::InstanceId{0U})
+-                          .need_defaults_flag(false)
+-                          .need_kvs_flag(false)
+-                          .dir("/persistent/trusted/ConfigDaemon")
++                          .Defaults(score::mw::per::kvs::KvsDefaults::kOptional)
++                          .KvsLoad(score::mw::per::kvs::KvsLoad::kOptional)
++                          .WorkingDir("/persistent/trusted/ConfigDaemon")
+                           .build();
+     if (!kvs_result.has_value())
+     {

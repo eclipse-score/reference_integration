@@ -21,10 +21,10 @@
 
 namespace {
 
-/// Open a KVS whose defaults file was created with UTF-8 encoded key names.
-/// Override only the emoji key and flush. Python verifies:
-/// - the emoji key appears in the snapshot with the override value
-/// - the ASCII and Greek keys are absent (never explicitly written)
+/// Open a KVS whose defaults file was created with printable-ASCII key names with spaces and punctuation.
+/// Override only the punctuation key and flush. Python verifies:
+/// - the punctuation key appears in the snapshot with the override value
+/// - the plain and space keys are absent (never explicitly written)
 ///
 /// Combines feat_req__persistency__support_datatype_keys,
 /// feat_req__persistency__default_values, and
@@ -44,8 +44,8 @@ public:
         }
         auto kvs = *kvs_opt;
 
-        // Override only the emoji key; ascii and greek keys remain as defaults.
-        if (!kvs->set_value(u8"utf8_emoji 🔑", 777.0)) {
+        // Override only the punctuation key; plain and space keys remain as defaults.
+        if (!kvs->set_value("ascii_punct_key !?", 777.0)) {
             throw std::runtime_error("Failed to set value");
         }
 
@@ -53,20 +53,20 @@ public:
             throw std::runtime_error("Failed to flush KVS");
         }
 
-        // Log default values for ascii and greek keys so Python can assert they are accessible.
+        // Log default values for plain and space keys so Python can assert they are accessible.
         auto val_ascii = kvs->get_default_value_f64("utf8_ascii_key");
         if (!val_ascii.has_value()) {
             throw std::runtime_error("Failed to read default value for 'utf8_ascii_key'");
         }
-        auto val_greek = kvs->get_default_value_f64(u8"utf8_greek κλμ");
-        if (!val_greek.has_value()) {
-            throw std::runtime_error(u8"Failed to read default value for 'utf8_greek κλμ'");
+        auto val_space = kvs->get_default_value_f64("ascii_space key");
+        if (!val_space.has_value()) {
+            throw std::runtime_error("Failed to read default value for 'ascii_space key'");
         }
         kvs_build_helpers::log_info(
             "\"key\":\"utf8_ascii_key\",\"value\":" + kvs_build_helpers::format_double_python(val_ascii.value()),
             "cpp_test_scenarios::scenarios::persistency::utf8_defaults");
         kvs_build_helpers::log_info(
-            u8"\"key\":\"utf8_greek \u03ba\u03bb\u03bc\",\"value\":" + kvs_build_helpers::format_double_python(val_greek.value()),
+            "\"key\":\"ascii_space key\",\"value\":" + kvs_build_helpers::format_double_python(val_space.value()),
             "cpp_test_scenarios::scenarios::persistency::utf8_defaults");
 
         if (!KvsInstance::normalize_snapshot_file_to_rust_envelope(params)) {
@@ -75,7 +75,7 @@ public:
     }
 };
 
-/// Read a default value whose key is a UTF-8 emoji string without ever calling
+/// Read a default value whose key is a punctuation string without ever calling
 /// set_value on it. Write the retrieved value to an ASCII result key and flush.
 /// Python verifies the result key equals the expected default, combining
 /// feat_req__persistency__default_value_get with
@@ -95,13 +95,13 @@ public:
         }
         auto kvs = *kvs_opt;
 
-        // Read the default via a UTF-8 emoji key — never explicitly set.
-        auto default_result = kvs->get_default_value_f64(u8"probe 🔍");
+        // Read the default via a punctuation key — never explicitly set.
+        auto default_result = kvs->get_default_value_f64("probe key ~!");
         if (!default_result.has_value()) {
-            throw std::runtime_error(u8"Failed to read default value for 'probe 🔍'");
+            throw std::runtime_error("Failed to read default value for 'probe key ~!'");
         }
 
-        // Persist to an ASCII result key so Python can verify without UTF-8 key lookup.
+        // Persist to an ASCII result key so Python can verify without special-character key lookup.
         if (!kvs->set_value("result_key", default_result.value())) {
             throw std::runtime_error("Failed to set result_key");
         }

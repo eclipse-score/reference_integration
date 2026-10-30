@@ -410,7 +410,8 @@ class TestSelectiveReset(PersistencyScenario):
 
     def test_selective_reset_state(self, results: ScenarioResult, temp_dir: Path) -> None:
         """
-        Even-indexed keys must be absent after reset_key; odd-indexed must retain
+        Even-indexed keys must be back at their default after reset (absent, or stored
+        with the default value since set_value_to_default); odd-indexed must retain
         their override values in the final flushed snapshot.
         """
         assert results.return_code == ResultCode.SUCCESS
@@ -418,7 +419,11 @@ class TestSelectiveReset(PersistencyScenario):
         for i in range(self._KEY_COUNT):
             key = f"sel_key_{i}"
             if i % 2 == 0:
-                assert key not in snapshot, f"Even key '{key}' must be absent after reset_key"
+                if key in snapshot:
+                    assert isclose(snapshot[key]["v"], self._DEFAULT_VALUE, abs_tol=1e-4), (
+                        f"Even key '{key}' must hold the default {self._DEFAULT_VALUE} after reset, "
+                        f"got {snapshot[key]['v']}"
+                    )
             else:
                 assert key in snapshot, f"Odd key '{key}' must be present with override"
                 assert isclose(snapshot[key]["v"], self._override_value(i), abs_tol=1e-4), (

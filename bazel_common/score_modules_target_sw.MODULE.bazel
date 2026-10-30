@@ -15,15 +15,15 @@
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir-modules bazel_common
 
 bazel_dep(name = "score_baselibs")
-git_override(
+single_version_override(
     module_name = "score_baselibs",
-    commit = "ee40fece5abacb28ea641b448446a04175038b17",
     patch_strip = 1,
     patches = [
         "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
         "//patches/baselibs:002-restore-qnx8-poll-workaround.patch",
+        "//patches/baselibs:003-export-aou-requirements.patch",
     ],
-    remote = "https://github.com/eclipse-score/baselibs.git",
+    version = "0.2.16",
 )
 
 bazel_dep(name = "score_communication")
@@ -36,6 +36,7 @@ git_override(
         "//patches/communication:003-module-deps-visibility.patch",
         "//patches/communication:004-rules-build-error-not-dev-dependency.patch",
         "//patches/communication:005-migrate-baselibs-rust-targets.patch",
+        "//patches/communication:006-add-safe-math-dep.patch",
     ],
     remote = "https://github.com/eclipse-score/communication.git",
 )
@@ -43,7 +44,7 @@ git_override(
 bazel_dep(name = "score_persistency")
 git_override(
     module_name = "score_persistency",
-    commit = "961c0a0989755a1e0fe8de55e83c0a44e2e20b56",
+    commit = "41d76090c7d0b05068cdc5bb22ef2e9f3571906a",
     patch_strip = 1,
     patches = [
         "//patches/persistency:003-undev-deps-for-root-module.patch",
@@ -54,18 +55,18 @@ git_override(
 bazel_dep(name = "score_kyron")
 git_override(
     module_name = "score_kyron",
-    commit = "90fb90258f49f17a504d41262634d43608f28ccc",
+    commit = "52d4bef3d1822f82199d72e58e815b9e43406fe6",
     remote = "https://github.com/eclipse-score/kyron.git",
 )
 
 bazel_dep(name = "score_lifecycle")
 git_override(
     module_name = "score_lifecycle",
-    commit = "85da2168328d17a3cf53791ebf93534e5ed921fc",
+    commit = "2c3a919452b0f81a016c6c8783254d7d0189d0a9",
     patch_strip = 1,
     patches = [
-        "//patches/lifecycle:001-migrate-baselibs-rust-targets.patch",
         "//patches/lifecycle:002-undev-integration-test-deps.patch",
+        "//patches/lifecycle:003-dev-only-codeql-pip-hub.patch",
     ],
     remote = "https://github.com/eclipse-score/lifecycle.git",
 )
@@ -73,10 +74,11 @@ git_override(
 bazel_dep(name = "score_logging")
 git_override(
     module_name = "score_logging",
-    commit = "3d9896611baf4e0d018032e5cb999941b2602dbd",
+    commit = "cda5a5ba57dffe3aa109e518e47f0ada692b3573",
     patch_strip = 1,
     patches = [
         "//patches/logging:002-undev-component-test-deps.patch",
+        "//patches/logging:003-relative-verification-report-links.patch",
     ],
     remote = "https://github.com/eclipse-score/logging.git",
 )
@@ -102,6 +104,7 @@ git_override(
     patches = [
         "//patches/config_management:001-adapt-proxy-api-and-remove-internal-targets.patch",
         "//patches/config_management:002-migrate-baselibs-targets.patch",
+        "//patches/config_management:003-migrate-to-persistency-kvs-api.patch",
     ],
     remote = "https://github.com/eclipse-score/config_management.git",
 )
