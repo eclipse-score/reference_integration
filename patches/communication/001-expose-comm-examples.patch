@@ -3,34 +3,36 @@ integration showcase bundle. Upstream dropped the public visibility on the
 rust_binary, and the config file was never exported. The visibility guard golden
 lists the now-public binary.
 
-diff --git a/score/mw/com/example/com-api-example/BUILD b/score/mw/com/example/com-api-example/BUILD
-index 10e02502..a4273bf8 100644
---- a/score/mw/com/example/com-api-example/BUILD
-+++ b/score/mw/com/example/com-api-example/BUILD
-@@ -40,6 +40,7 @@ rust_binary(
-         "MW_LOG_CONFIG_FILE": "score/mw/com/example/com-api-example/etc/logging.json",
-     },
-     features = ["link_std_cpp_lib"],
-+    visibility = ["//visibility:public"],
-     deps = [
-         ":com-api-example-lib",
-         "//score/mw/com/example/com-api-example/com-api-gen",
-@@ -65,3 +66,7 @@ rust_test(
-         "@score_communication_crate_index//:tokio",
-     ],
- )
-+
-+exports_files([
-+    "etc/mw_com_config.json",
-+])
 diff --git a/quality/visibility_guard/public_targets.golden b/quality/visibility_guard/public_targets.golden
+index a4c73472..c474a1b8 100644
 --- a/quality/visibility_guard/public_targets.golden
 +++ b/quality/visibility_guard/public_targets.golden
-@@ -54,6 +54,7 @@
+@@ -53,6 +53,7 @@
  //score/mw/com/dependability:mw_com_doc_needs
  //score/mw/com/dependability:mw_com_index
  //score/mw/com/dependability:mw_com_rst
 +//score/mw/com/example/com-api-example:com-api-example
+ //score/mw/com/impl/configuration/converter:json_to_flatbuffer_rule.bzl
  //score/mw/com/performance_benchmarks/macro_benchmark/config_generator:config_generator_rule.bzl
  //score/mw/com/performance_benchmarks/macro_benchmark:logging.json
- //score/mw/com/performance_benchmarks/macro_benchmark:lola_benchmarking_client
+diff --git a/score/mw/com/example/com-api-example/BUILD b/score/mw/com/example/com-api-example/BUILD
+index 83448e5e..99ed378f 100644
+--- a/score/mw/com/example/com-api-example/BUILD
++++ b/score/mw/com/example/com-api-example/BUILD
+@@ -13,6 +13,8 @@
+ 
+ load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_library", "rust_test")
+ 
++exports_files(["etc/mw_com_config.json"])
++
+ rust_library(
+     name = "com-api-example-lib",
+     srcs = glob(["src/**/*.rs"]),
+@@ -34,6 +36,7 @@ rust_binary(
+         "etc/logging.json",
+         "etc/mw_com_config.json",
+     ],
++    visibility = ["//visibility:public"],
+     env = {
+         "MW_LOG_CONFIG_FILE": "score/mw/com/example/com-api-example/etc/logging.json",
+     },
