@@ -596,6 +596,10 @@ high-integrity application demo under additional constraints. Read
 <a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/main/images/ebclfsa_aarch64/README.md">images/ebclfsa_aarch64/README.md</a>
 before targeting it.</p>
 </div>
+<p>The <code class="docutils literal notranslate"><span class="pre">autosd-x86_64</span></code> Bazel configuration uses the AutoSD SDK’s package-specific
+link flags instead of the toolchain’s generic Linux <code class="docutils literal notranslate"><span class="pre">default_link_flags</span></code>.
+The generic flags request static <code class="docutils literal notranslate"><span class="pre">libstdc++</span></code>, which the AutoSD SDK does not
+provide; AutoSD binaries must link against the SDK’s shared C++ runtime.</p>
 <section id="run-any-image-locally-in-qemu">
 <h2><span class="section-number">4.1. </span>Run any image locally in QEMU<a class="headerlink" href="#run-any-image-locally-in-qemu" title="Link to this heading">#</a></h2>
 <p>Every image exposes a <code class="docutils literal notranslate"><span class="pre">:run</span></code> target that boots it in an emulator, so you can
