@@ -3,12 +3,8 @@
     "defaults": {
         "deployment_config": {
             "bin_dir": "/showcases/bin/",
-            "ready_recovery_action": {
-                "restart": {
-                    "number_of_attempts": 1,
-                    "delay_before_restart_ms": 500
-                }
-            },
+            "activation_retry_attempts": 1,
+            "activation_retry_delay_ms": 500,
             "sandbox": {
                 "uid": 0,
                 "gid": 0,
