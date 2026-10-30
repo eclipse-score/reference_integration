@@ -1,0 +1,167 @@
+Drop the mw_log_backend dependable element POC and its AoU target: they use the
+fmea rule, the dependable_element assumptions_of_use attribute and .rst AoU
+sources, all unsupported by score_tooling 3.x.
+
+diff --git a/BUILD b/BUILD
+index f2c80fea..ff4a2539 100644
+--- a/BUILD
++++ b/BUILD
+@@ -47,27 +47,6 @@ exports_files([
+     ".clang-tidy",
+ ])
+ 
+-_DEPENDABLE_ELEMENT = "dependable_element_mw_log_backend_doc"
+-
+-# Public URL folder; docs/dependable_elements/index.rst links to it.
+-_PUBLISH_NAME = "mw_log_backend"
+-
+-_DEPENDABLE_ELEMENT_DOC = "//score/mw/log/dependability:" + _DEPENDABLE_ELEMENT
+-
+-# Must run after `:docs`, which owns and may wipe `_build`.
+-py_binary(
+-    name = "publish_dependable_element_reports",
+-    testonly = True,
+-    srcs = ["scripts/publish_dependable_element_reports.py"],
+-    data = [_DEPENDABLE_ELEMENT_DOC],
+-    env = {
+-        "DEPENDABLE_ELEMENT_HTML": "$(rlocationpath " + _DEPENDABLE_ELEMENT_DOC + ")",
+-        "DEPENDABLE_ELEMENT_NAME": _PUBLISH_NAME,
+-    },
+-    main = "scripts/publish_dependable_element_reports.py",
+-    deps = ["@rules_python//python/runfiles"],
+-)
+-
+ py_test(
+     name = "publish_dependable_element_reports_test",
+     srcs = [
+diff --git a/score/mw/log/dependability/BUILD b/score/mw/log/dependability/BUILD
+deleted file mode 100644
+index 76b540a6..00000000
+--- a/score/mw/log/dependability/BUILD
++++ /dev/null
+@@ -1,57 +0,0 @@
+-# *******************************************************************************
+-# Copyright (c) 2026 Contributors to the Eclipse Foundation
+-#
+-# See the NOTICE file(s) distributed with this work for additional
+-# information regarding copyright ownership.
+-#
+-# This program and the accompanying materials are made available under the
+-# terms of the Apache License Version 2.0 which is available at
+-# https://www.apache.org/licenses/LICENSE-2.0
+-#
+-# SPDX-License-Identifier: Apache-2.0
+-# *******************************************************************************
+-# POC (option 2, see trlc_migration_plan.md): mw::log backend as a full
+-# rules_score SEooC. maturity="development" and the placeholder FMEA mean this
+-# is not yet certification evidence -- see safety_analysis/*.trlc notes.
+-load(
+-    "@score_tooling//bazel/rules/rules_score:rules_score.bzl",
+-    "component",
+-    "dependable_element",
+-)
+-
+-component(
+-    name = "component_mw_log_backend",
+-    components = [
+-        "//score/mw/log/detail/data_router:data_router_backend_unit",
+-        "//score/mw/log/detail/data_router/shared_memory:shared_memory_unit",
+-        "//score/mw/log/detail/file_recorder:file_recorder_unit",
+-        "//score/mw/log/detail/utils/signal_handling:signal_handling_unit",
+-        "//score/mw/log/detail/wait_free_producer_queue:wait_free_producer_queue_unit",
+-    ],
+-    requirements = [
+-        "//score/mw/log/requirements/component_requirements",
+-        "//score/mw/log/requirements/feature_requirements",
+-    ],
+-    target_compatible_with = ["@platforms//os:linux"],
+-    test_case_coverage_lock = "test_case_coverage.lock.yaml",
+-    visibility = ["//visibility:public"],
+-)
+-
+-dependable_element(
+-    name = "dependable_element_mw_log_backend",
+-    architectural_design = ["//score/mw/log/design/backend:mw_log_backend_architectural_design"],
+-    assumptions_of_use = ["//score/mw/log/requirements/safety_analysis:assumptions_of_use"],
+-    components = [":component_mw_log_backend"],
+-    dependability_analysis = ["//score/mw/log/dependability/safety_analysis:mw_log_backend_dependability_analysis"],
+-    integrity_level = "B",
+-    maturity = "development",
+-    requirements = [
+-        "//score/mw/log/requirements/feature_requirements",
+-        "//score/mw/log/requirements/assumed_system_requirements",
+-    ],
+-    target_compatible_with = ["@platforms//os:linux"],
+-    tests = [
+-        "//score/test/component/mw_log:test_mw_log",
+-    ],
+-    visibility = ["//visibility:public"],
+-)
+diff --git a/score/mw/log/dependability/safety_analysis/BUILD b/score/mw/log/dependability/safety_analysis/BUILD
+deleted file mode 100644
+index 1bc24e93..00000000
+--- a/score/mw/log/dependability/safety_analysis/BUILD
++++ /dev/null
+@@ -1,34 +0,0 @@
+-# *******************************************************************************
+-# Copyright (c) 2026 Contributors to the Eclipse Foundation
+-#
+-# See the NOTICE file(s) distributed with this work for additional
+-# information regarding copyright ownership.
+-#
+-# This program and the accompanying materials are made available under the
+-# terms of the Apache License Version 2.0 which is available at
+-# https://www.apache.org/licenses/LICENSE-2.0
+-#
+-# SPDX-License-Identifier: Apache-2.0
+-# *******************************************************************************
+-
+-load(
+-    "@score_tooling//bazel/rules/rules_score:rules_score.bzl",
+-    "dependability_analysis",
+-    "fmea",
+-)
+-
+-fmea(
+-    name = "mw_log_backend_fmea",
+-    arch_design = "//score/mw/log/design/backend:mw_log_backend_architectural_design",
+-    controlmeasures = ["control_measures.trlc"],
+-    failuremodes = ["failure_modes.trlc"],
+-    visibility = ["//score/mw/log/dependability:__pkg__"],
+-)
+-
+-dependability_analysis(
+-    name = "mw_log_backend_dependability_analysis",
+-    arch_design = "//score/mw/log/design/backend:mw_log_backend_architectural_design",
+-    fmea = [":mw_log_backend_fmea"],
+-    tags = ["manual"],
+-    visibility = ["//score/mw/log/dependability:__pkg__"],
+-)
+diff --git a/score/mw/log/requirements/safety_analysis/BUILD b/score/mw/log/requirements/safety_analysis/BUILD
+index 4f8d30ee..3484805f 100644
+--- a/score/mw/log/requirements/safety_analysis/BUILD
++++ b/score/mw/log/requirements/safety_analysis/BUILD
+@@ -12,23 +12,9 @@
+ # *******************************************************************************
+ 
+ load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
+-load(
+-    "@score_tooling//bazel/rules/rules_score:rules_score.bzl",
+-    "assumptions_of_use",
+-)
+ 
+ copy_file(
+     name = "aou_requirements_rst",
+     src = "@score_baselibs//score/mw/log:docs/safety_analysis/aou_requirements.rst",
+     out = "aou_requirements.rst",
+ )
+-
+-assumptions_of_use(
+-    name = "assumptions_of_use",
+-    srcs = ["aou_requirements.rst"],
+-    target_compatible_with = ["@platforms//os:linux"],
+-    visibility = [
+-        "//score/mw/log/dependability:__subpackages__",
+-        "//score/mw/log/requirements:__subpackages__",
+-    ],
+-)

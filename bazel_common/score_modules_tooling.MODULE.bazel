@@ -37,19 +37,14 @@ git_override(
 bazel_dep(name = "score_tooling")
 git_override(
     module_name = "score_tooling",
-    commit = "026e0983a9d65454b449199557ab655f82f5e81a",
+    commit = "a3eed5852f8addbbbf276aaae262ba1313141ef5",
     remote = "https://github.com/eclipse-score/tooling.git",
 )
 
 bazel_dep(name = "score_platform")
-git_override(
+single_version_override(
     module_name = "score_platform",
-    commit = "6d65a262c2329328cb9cbdd276bb143b417c54a4",
-    patch_strip = 1,
-    patches = [
-        "//patches/platform:001-remove-duplicate-lifecycle-glossary.patch",
-    ],
-    remote = "https://github.com/eclipse-score/score.git",
+    version = "0.7.4",
 )
 
 bazel_dep(name = "score_bazel_platforms")
@@ -60,24 +55,21 @@ git_override(
 )
 
 bazel_dep(name = "score_test_scenarios")
-git_override(
+single_version_override(
     module_name = "score_test_scenarios",
-    commit = "fec712d490ff5d46fae91332bafac4777b300026",
-    remote = "https://github.com/eclipse-score/testing_tools.git",
+    version = "0.5.0",
 )
 
 bazel_dep(name = "score_docs_as_code")
-git_override(
+single_version_override(
     module_name = "score_docs_as_code",
-    commit = "f1b30375e49646d95ca52565c41f5b926b0aa884",
-    remote = "https://github.com/eclipse-score/docs-as-code.git",
+    version = "8.6.0",
 )
 
 bazel_dep(name = "score_process_description")
-git_override(
+single_version_override(
     module_name = "score_process_description",
-    commit = "98d1d5f42dad412a09a888ea25e59c62fa6371ce",
-    remote = "https://github.com/eclipse-score/process_description.git",
+    version = "2.2.2",
 )
 
 bazel_dep(name = "score_bazel_cpp_toolchains")

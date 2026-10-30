@@ -43,6 +43,7 @@ extensions = [
     # is updated with new sphinx-needs version
     "sphinxcontrib.plantuml",
     "score_sphinx_bundle",
+    "mount_overrides",
 ]
 
 exclude_patterns = [
@@ -74,7 +75,7 @@ html_theme_options = {
     "secondary_sidebar_items": {
         "**": ["page-toc"],
         "feature_and_process_status": [],
-        "s_core_v_1/roadmap/overall_status": [],
+        "s_core_v_1/releases/progress_overview": [],
     },
     "show_toc_level": 2,
     "navigation_with_keys": False,

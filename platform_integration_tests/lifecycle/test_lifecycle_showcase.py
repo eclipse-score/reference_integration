@@ -22,7 +22,7 @@ from showcase_runner import run_showcases
 
 
 @add_test_properties(
-    partially_verifies=["stkh_req__dependability__safety_features_1"],
+    partially_verifies=["stkh_req__dependability__health_management"],
     test_type="interface-test",
     derivation_technique="requirements-analysis",
 )

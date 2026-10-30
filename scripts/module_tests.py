@@ -55,7 +55,7 @@ def streamed(command: list[str], cwd: Path, env: dict) -> tuple[int, str]:
     print("+ " + " ".join(command), file=sys.stderr, flush=True)
     lines = []
     with subprocess.Popen(
-        command, cwd=cwd, env=env, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+        command, cwd=cwd, env=env, text=True, errors="replace", stdout=subprocess.PIPE, stderr=subprocess.STDOUT
     ) as proc:
         for line in proc.stdout:
             print(line, end="", flush=True)
@@ -199,6 +199,25 @@ def _write_summary(
     append_to_step_summary(text)
 
 
+def _collect_dependable_element_docs(workspace: Path, out: Path, targets: list[str], env: dict) -> None:
+    """Build the module's dependable element sphinx targets and keep their HTML for the main docs.
+
+    The main docs build cannot depend on them via Bazel (docs_as_code only takes docs()/docs_bundle
+    labels as external needs), so the HTML travels as part of the module report instead. A failure
+    here is reported but does not fail the module's tests.
+    """
+    if not targets:
+        return
+    code, _ = streamed(["bazel", "build", "--keep_going", *targets], workspace, env)
+    for target in targets:
+        package, name = target.removeprefix("//").split(":")
+        html = workspace / "bazel-bin" / package / name / "html"
+        if code != 0 or not html.is_dir():
+            print(f"WARNING: no HTML for {target}", file=sys.stderr)
+            continue
+        shutil.copytree(html, out / "dependable_element_docs" / name, symlinks=False, dirs_exist_ok=True)
+
+
 def run(args: argparse.Namespace) -> int:
     known = load_known_good(REF_INT / "known_good.json")
     module = known.modules["target_sw"].get(args.module)
@@ -253,6 +272,7 @@ def run(args: argparse.Namespace) -> int:
     no_tests = not results
     exit_code = exit_code or int(no_tests)
     _collect_coverage(workspace, out, env)
+    _collect_dependable_element_docs(workspace, out, module.metadata.dependable_element_docs, env)
     (out / "result.json").write_text(json.dumps({"exit_code": exit_code}) + "\n")
     _write_summary(module.name, out, exit_code, log, no_tests=no_tests, pinned=pinned, unpinned=unpinned)
     return exit_code
