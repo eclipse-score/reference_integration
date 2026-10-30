@@ -69,6 +69,11 @@ CI check.
    `images/ebclfsa_aarch64/README.md <https://github.com/eclipse-score/reference_integration/blob/main/images/ebclfsa_aarch64/README.md>`_
    before targeting it.
 
+The ``autosd-x86_64`` Bazel configuration uses the AutoSD SDK's package-specific
+link flags instead of the toolchain's generic Linux ``default_link_flags``.
+The generic flags request static ``libstdc++``, which the AutoSD SDK does not
+provide; AutoSD binaries must link against the SDK's shared C++ runtime.
+
 Run any image locally in QEMU
 -----------------------------
 

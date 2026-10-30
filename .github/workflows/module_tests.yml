@@ -16,6 +16,10 @@
 name: Module Tests
 on:
   workflow_call:
+    secrets:
+      UBUNTU_SNAPSHOT_MIRROR_URL:
+        description: Optional StableBuild mirror tag used before snapshot.ubuntu.com (see the Bazel downloader step).
+        required: false
   workflow_dispatch:
 permissions:
   contents: read
@@ -27,10 +31,11 @@ jobs:
       modules: ${{ steps.modules.outputs.modules }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v4.2.2
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          allow-unsafe-pr-checkout: true
       - name: List modules
         id: modules
         run: echo "modules=$(jq -c '.modules.target_sw | keys' known_good.json)" >> "$GITHUB_OUTPUT"
@@ -48,10 +53,11 @@ jobs:
         with:
           level: 4
       - name: Checkout repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v4.2.2
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           ref: ${{ github.head_ref || github.event.pull_request.head.ref || github.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          allow-unsafe-pr-checkout: true
       - name: Setup Bazel
         uses: bazel-contrib/setup-bazel@0.18.0
         with:
@@ -59,6 +65,24 @@ jobs:
           disk-cache: ${{ github.workflow }}-${{ matrix.module }}
           repository-cache: true
           cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+      - name: Configure optional Ubuntu snapshot mirror for Bazel downloader
+        env:
+          UBUNTU_SNAPSHOT_MIRROR_URL: ${{ secrets.UBUNTU_SNAPSHOT_MIRROR_URL }}
+        run: |
+          # snapshot.ubuntu.com is unreliable. If a mirror is configured, try it first and keep the
+          # public URL as fallback. ~/.bazelrc applies to every module workspace, unlike user.bazelrc.
+          if [[ -z "${UBUNTU_SNAPSHOT_MIRROR_URL}" ]]; then
+            echo "No Ubuntu snapshot mirror configured; using snapshot.ubuntu.com."
+            exit 0
+          fi
+          mirror="${UBUNTU_SNAPSHOT_MIRROR_URL}.debmirror.stablebuild.com/2026-04-01T10:40:01Z"
+          cfg="${RUNNER_TEMP}/ubuntu.downloader_config"
+          {
+            echo "rewrite snapshot.ubuntu.com/ubuntu/[^/]*/(.*) ${mirror}/archive.ubuntu.com/ubuntu/\$1"
+            echo "rewrite snapshot.ubuntu.com/ubuntu/[^/]*/(.*) ${mirror}/ports.ubuntu.com/\$1"
+            echo "rewrite snapshot.ubuntu.com/ubuntu/(.*) snapshot.ubuntu.com/ubuntu/\$1"
+          } > "${cfg}"
+          echo "common --downloader_config=${cfg}" >> "${HOME}/.bazelrc"
       - name: Run module tests
         run: python3 scripts/module_tests.py run ${{ matrix.module }}
       - name: Upload test reports and coverage
