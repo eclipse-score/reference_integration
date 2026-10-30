@@ -1,0 +1,143 @@
+// *******************************************************************************
+// Copyright (c) 2026 Contributors to the Eclipse Foundation
+//
+// See the NOTICE file(s) distributed with this work for additional
+// information regarding copyright ownership.
+//
+// This program and the accompanying materials are made available under the
+// terms of the Apache License Version 2.0 which is available at
+// https://www.apache.org/licenses/LICENSE-2.0
+//
+// SPDX-License-Identifier: Apache-2.0
+// *******************************************************************************
+
+// Standalone C++ producer for the communication feature integration tests.
+//
+// Offers the VehicleInterface service instance and publishes left_tire samples
+// whose pressure field carries a monotonically increasing sequence number
+// (0, 1, 2, ...). Emits the same FIT_SEND_* markers as the Rust fit_sender so
+// the ITF oracles in comm_helpers.py work unchanged for cross-language tests.
+//
+// Usage: fit_sender_cc [-s <manifest>] [-n <cycles>] [-t <interval_ms>]
+//                      [-i <instance_specifier>]
+
+#include "showcases/standalone/comm_fit/vehicle_interface.h"
+#include "score/mw/com/runtime.h"
+#include "score/mw/com/runtime_configuration.h"
+#include "score/mw/com/types.h"
+
+#include <chrono>
+#include <cstdio>
+#include <cstdlib>
+#include <string>
+#include <sys/stat.h>
+#include <thread>
+
+namespace rt = score::mw::com::runtime;
+using VehicleSkeleton = score::mw::com::AsSkeleton<score::mw::com::comm_fit::VehicleInterface>;
+
+namespace
+{
+
+constexpr const char* kDefaultManifest = "./etc/mw_com_config.json";
+constexpr const char* kDefaultSpecifier = "/Vehicle/Service1/Instance";
+
+struct Args
+{
+    std::string manifest{kDefaultManifest};
+    int cycles{50};
+    int interval_ms{100};
+    std::string specifier{kDefaultSpecifier};
+};
+
+static int parse_int_arg(const char* flag, const char* val)
+{
+    char* end = nullptr;
+    const long n = std::strtol(val, &end, 10);
+    if (end == val || *end != '\0') {
+        std::fprintf(stderr, "FIT_SEND_ERROR invalid integer for %s: %s\n", flag, val);
+        std::exit(1);
+    }
+    return static_cast<int>(n);
+}
+
+Args ParseArgs(int argc, char* argv[])
+{
+    Args a;
+    for (int i = 1; i < argc; ++i) {
+        const std::string flag{argv[i]};
+        const bool has_next = (i + 1 < argc);
+        if ((flag == "-s" || flag == "--service-instance-manifest") && has_next) {
+            a.manifest = argv[++i];
+        } else if ((flag == "-n" || flag == "--cycles") && has_next) {
+            a.cycles = parse_int_arg(flag.c_str(), argv[++i]);
+        } else if ((flag == "-t" || flag == "--interval-ms") && has_next) {
+            a.interval_ms = parse_int_arg(flag.c_str(), argv[++i]);
+        } else if ((flag == "-i" || flag == "--instance-specifier") && has_next) {
+            a.specifier = argv[++i];
+        } else {
+            std::fprintf(stderr, "FIT_SEND_IGNORED_ARG %s\n", argv[i]);
+        }
+    }
+    return a;
+}
+
+bool FileExists(const std::string& path)
+{
+    struct stat st {};
+    return stat(path.c_str(), &st) == 0;
+}
+
+}  // namespace
+
+int main(int argc, char* argv[])
+{
+    const auto args = ParseArgs(argc, argv);
+
+    if (!FileExists(args.manifest)) {
+        std::fprintf(stderr, "FIT_SEND_CONFIG_MISSING path=%s\n", args.manifest.c_str());
+        return 1;
+    }
+
+    rt::InitializeRuntime(
+        rt::RuntimeConfiguration{score::filesystem::Path{args.manifest}});
+
+    auto spec_result = score::mw::com::InstanceSpecifier::Create(std::string{args.specifier});
+    if (!spec_result.has_value()) {
+        std::fprintf(stderr, "FIT_SEND_SPEC_ERROR\n");
+        return 1;
+    }
+
+    auto skel_result = VehicleSkeleton::Create(spec_result.value());
+    if (!skel_result.has_value()) {
+        std::fprintf(stderr, "FIT_SEND_CREATE_ERROR\n");
+        return 1;
+    }
+    auto& skeleton = skel_result.value();
+
+    if (!skeleton.OfferService().has_value()) {
+        std::fprintf(stderr, "FIT_SEND_OFFER_ERROR\n");
+        return 1;
+    }
+    std::printf("FIT_SEND_OFFERED\n");
+    std::fflush(stdout);
+
+    for (int seq = 0; seq < args.cycles; ++seq) {
+        auto alloc = skeleton.left_tire.Allocate();
+        if (!alloc.has_value()) {
+            std::fprintf(stderr, "FIT_SEND_ERROR allocate failed at seq=%d\n", seq);
+            return 1;
+        }
+        alloc.value().Get()->pressure = static_cast<float>(seq);
+        if (!skeleton.left_tire.Send(std::move(alloc.value())).has_value()) {
+            std::fprintf(stderr, "FIT_SEND_ERROR send failed at seq=%d\n", seq);
+            return 1;
+        }
+        std::printf("FIT_SEND seq=%d\n", seq);
+        std::fflush(stdout);
+        std::this_thread::sleep_for(std::chrono::milliseconds(args.interval_ms));
+    }
+
+    std::printf("FIT_SEND_DONE count=%d\n", args.cycles);
+    return 0;
+}
