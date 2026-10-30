@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>AI-supported development process execution in a safety context &#8212; REF_INT  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/score.css?v=415257cb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/score_needs.css?v=82a1844f" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/score_design.css?v=8048e6ee" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-needs/modern.css?v=803738c0" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=51185784" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
+
+    <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../../_static/documentation_options.js?v=7f41d439"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../../_static/sphinx-data-viewer/jsonview.bundle.js?v=18cd53c5"></script>
+    <script src="../../../_static/sphinx-data-viewer/jsonview_loader.js?v=f7ff7e7d"></script>
+    <script src="../../../_static/sphinx-needs/libs/html/datatables.min.js?v=8a4aee21"></script>
+    <script src="../../../_static/sphinx-needs/libs/html/datatables_loader.js?v=a2cae175"></script>
+    <script src="../../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js?v=dca66431"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'process_methods_tools/score_process_description/process_extensions/ai_sup_dev_proc_exe_in_safe_context_concept';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.23.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-score.github.io/reference_integration/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Execute the Requirements Inspection Demonstrator" href="execution.html" />
+    <link rel="prev" title="AI-Supported Process Execution" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Eclipse S-CORE</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../modules/index.html">
+    Modules
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../verification_report/index.html">
+    Verification Reports
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../status_dashboard.html">
+    Integration Status
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../s_core_v_1/index.html">
+    S-Core v1.0
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../s_core_v_1/releases/releases.html">
+    Releases
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../integration_process/integration_process.html">
+    Integration Process
+  </a>
+</li>
+
+
+<li class=" current active">
+  <a class="nav-link dropdown-item nav-internal" href="../../index.html">
+    Process & Tools
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../modules/index.html">
+    Modules
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../verification_report/index.html">
+    Verification Reports
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../status_dashboard.html">
+    Integration Status
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../s_core_v_1/index.html">
+    S-Core v1.0
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../s_core_v_1/releases/releases.html">
+    Releases
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../integration_process/integration_process.html">
+    Integration Process
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../index.html">
+    Process & Tools
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../score_itf/index.html">Score ITF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../score_platform/index.html">S-CORE Platform Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../score_docs_as_code/index.html">Docs-As-Code</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Process description</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../introduction/index.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../general_concepts/index.html">General concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../process_areas/index.html">Process areas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../roles/index.html">Roles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../workproducts/index.html">Work products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../workflows/index.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../standards/index.html">Standards &amp; Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../trustable/index.html">Trustable Software Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../folder_templates/index.html">Folder Templates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../trainings/index.html">Trainings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../glossary/index.html">Glossary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../release_notes/index.html">Release notes</a></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">AI-Supported Process Execution</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 current active"><a aria-current="page" class="current reference internal" href="#">AI-supported development process execution in a safety context</a></li>
+<li class="toctree-l3"><a class="reference internal" href="execution.html">Execute the Requirements Inspection Demonstrator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ai_workflows.html">AI-Assisted Workflow Extensions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ai_tool_management.html">AI Tool Management</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Process, Methods, and Tools</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Process description</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">AI-Supported Process Execution</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">AI-supported development process execution in a safety context</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="ai-supported-development-process-execution-in-a-safety-context">
+<h1>AI-supported development process execution in a safety context<a class="headerlink" href="#ai-supported-development-process-execution-in-a-safety-context" title="Link to this heading">#</a></h1>
+<blockquote>
+<div><p><strong>Context:</strong> This document accompanies the discussion in
+<a class="reference external" href="https://github.com/eclipse-score/process_description/issues/805">eclipse-score/process_description #805</a>
+— <em>“Pilot for AI supported development process execution in safe context”</em>.
+It describes a proposed concept and a pilot implementation.</p>
+</div></blockquote>
+<hr class="docutils" />
+<section id="the-problem">
+<h2>1. The problem<a class="headerlink" href="#the-problem" title="Link to this heading">#</a></h2>
+<p>The <a class="reference external" href="https://eclipse-score.github.io/process_description/main/">S-CORE process description</a>
+defines structured workflows, templates, and checklists to produce verifiable
+safety evidence. Requirements inspection applies a level-appropriate checklist
+to stakeholder, feature, and component requirements before they are accepted as
+safety evidence. The checklist profile is not identical at every level.</p>
+<p>Filling that checklist is <strong>manual, time-consuming, and repetitive</strong> — the
+same quality questions apply to every requirement. Meanwhile, Large Language
+Models (LLMs) are now capable of performing exactly this kind of structured
+text assessment. The question is now
+<strong>under what conditions their output can legitimately enter a safety case</strong>.</p>
+<p><strong>The goal is development support</strong>: AI assists an engineer during development.</p>
+<p>So AI is only considered here as a <strong>development support tool</strong> —
+it shall never generate safety evidence autonomously.</p>
+<p>The safety premise is therefore:</p>
+<blockquote>
+<div><p><em>If every AI-generated output is treated as a draft that a qualified engineer
+must explicitly review and approve before it becomes part of the safety case,
+then errors introduced by the AI can be detected and corrected before they
+cause any harm.</em></p>
+</div></blockquote>
+<p>This is not a novel concept. <a class="reference external" href="https://www.iso.org/standard/68388.html">ISO 26262 Part 8, Clause 11</a>
+establishes the principle of <strong>tool confidence</strong>: when a development tool
+affects a safety-relevant work product, the confidence in that tool (and the
+controls around it) must be demonstrated.</p>
+</section>
+<hr class="docutils" />
+<section id="concept-ai-as-a-qualified-development-support-tool">
+<h2>2. Concept: AI as a qualified development support tool<a class="headerlink" href="#concept-ai-as-a-qualified-development-support-tool" title="Link to this heading">#</a></h2>
+<p>Based on ISO 26262 Part 8 tool confidence principles, the approach in this
+pilot rests on three pillars:</p>
+<section id="the-human-review-guardrail">
+<h3>2.1 The human review guardrail<a class="headerlink" href="#the-human-review-guardrail" title="Link to this heading">#</a></h3>
+<p>The chat-first demonstration follows this sequence:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1. Engineer starts the inspection in Copilot Chat
+      │
+      ▼
+2. Agent prepares permitted input and a structured draft assessment
+      │
+      ▼
+3. Validated editable checklist (inspection.md) is presented
+   Agent stops; engineer may edit or request corrections
+      │
+      ▼
+4. Engineer copies the checked checklist into the project's real
+   requirements inspection document and commits it
+      │
+      ▼
+5. The normal Git/GitHub review of that change is the approval
+</pre></div>
+</div>
+<p>This means the AI output is never in the safety case — only the
+<strong>human-reviewed and approved</strong> version is. There is no local “approve”
+command: this tool cannot fabricate, relay, or otherwise stand in for that
+review. Approval is whatever the project’s existing PR review already is —
+authenticated by the platform, structurally unable to be the same person as
+the content’s author, and retained in the project’s own version history.</p>
+<p>The diagram below illustrates the same guardrail as a data-flow: every
+human-readable/machine-readable conversion is performed by a deterministic
+transform tool, never by the LLM, and a human explicitly reviews and approves
+the templates, the skills/rules/prompts that shape the LLM’s reasoning, and
+every artifact the process produces.</p>
+<p><img alt="AI-supported requirements review concept: human-approved templates are transformed to machine-readable form, human-approved skills/rules/prompts directly inform the LLM's reasoning, the LLM drafts a checklist fill-out, and a human reviews/approves the re-transformed result before iteration or sign-off" src="../../../_images/ai_supported_sldc_review_example.drawio.svg" /></p>
+<p>The requirements document and checklist templates themselves are ordinary
+repository content (the <code class="docutils literal notranslate"><span class="pre">feat_req</span></code>/<code class="docutils literal notranslate"><span class="pre">comp_req</span></code> directive schema and
+<code class="docutils literal notranslate"><span class="pre">workflows/req_safety_inspection/prompts/inspection.md</span></code>), and so is the
+reusable prompt that shapes the LLM’s reasoning
+(<code class="docutils literal notranslate"><span class="pre">chat_workflow.prompt.md</span></code>), along with any skill or rule files added
+alongside it. All of these are reviewed and approved the same way as any
+other change, through normal repository pull-request review — this
+satisfies the diagram’s “Reviewed &amp; Approved” gates for templates and
+reasoning inputs alike, without a separate runtime step.</p>
+</section>
+<section id="fixed-output-schema-no-invented-structure">
+<h3>2.2 Fixed output schema (no invented structure)<a class="headerlink" href="#fixed-output-schema-no-invented-structure" title="Link to this heading">#</a></h3>
+<p>The AI fills the exact public checklist, parsed directly from the canonical
+<a class="reference external" href="https://eclipse-score.github.io/process_description/main/folder_templates/platform/features/feature_name/requirements/req_inspection.html">feature inspection checklist template</a>
+rather than a paraphrased or hand-copied summary — the same Review ID,
+Acceptance Criteria, and Guidance columns, so there is no separate copy that
+can silently drift from the template:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">passed</span></code> per checklist item: <code class="docutils literal notranslate"><span class="pre">yes</span></code> / <code class="docutils literal notranslate"><span class="pre">no</span></code> / <code class="docutils literal notranslate"><span class="pre">n/a</span></code> / <code class="docutils literal notranslate"><span class="pre">not_assessed</span></code>.
+<code class="docutils literal notranslate"><span class="pre">not_assessed</span></code> means the AI lacked sufficient context (for example, a
+requirement’s parent text was not supplied); it is never conflated with a
+genuine <code class="docutils literal notranslate"><span class="pre">n/a</span></code> or treated as a pass.</p></li>
+<li><p>Full remarks per item.</p></li>
+<li><p>A mandatory issue link whenever an item is <code class="docutils literal notranslate"><span class="pre">no</span></code>, matching the template’s own
+mandatory “Issue link” column; forbidden for every other verdict.</p></li>
+</ul>
+<p>The AI cannot add new sections, invent checklist IDs, or change the document
+structure. Schema validation rejects any response that does not conform.</p>
+</section>
+<section id="model-provenance-and-evaluation-trigger">
+<h3>2.3 Model provenance and evaluation trigger<a class="headerlink" href="#model-provenance-and-evaluation-trigger" title="Link to this heading">#</a></h3>
+<p>Available tool and model information is recorded with its source. Unavailable
+active model details remain unknown. A change to model, prompt, configuration,
+or intended use triggers evaluation of its impact on existing tool evidence.</p>
+<p>Every AI assessment is a draft. A competent human independently reviews all
+checklist entries, corrects errors, and explicitly approves the reviewed
+artifact. This control can support error detection; it does not prove that all
+errors are detected, that the reviewer is competent, or that the tool is qualified.</p>
+<p>Tool qualification may also be required, based on the S-CORE tool evaluation
+described in the <a class="reference external" href="https://eclipse-score.github.io/process_description/main/process_areas/tool_management/index.html">Tool Management process</a>,
+if independent human review is not sufficient to establish error detection.</p>
+<p>The pilot distinguishes two different kinds of tool confidence subjects. The
+deterministic transform tools — the RST requirement parser, JSON schema
+validator, and Markdown renderer in <code class="docutils literal notranslate"><span class="pre">workflows/</span></code> — perform a fixed,
+independently testable conversion and can be evaluated and, if applicable,
+qualified like any other development tool. The LLM reasoning step is treated
+as categorically <strong>not qualifiable</strong> in this pilot: its output is never
+evaluated for qualification credit and is always subject to the mandatory
+human review and approval guardrail described above.</p>
+<p>Skills, rules, and prompts that shape the LLM’s reasoning (for example
+<code class="docutils literal notranslate"><span class="pre">chat_workflow.prompt.md</span></code>) are not a third tool-confidence subject. They are
+reviewed repository content, governed the same way as the requirements
+document and checklist templates in §2.1 — reviewed and approved through
+normal pull-request review, not evaluated or qualified as a tool.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="the-executable-concept">
+<h2>3. The executable concept<a class="headerlink" href="#the-executable-concept" title="Link to this heading">#</a></h2>
+<section id="what-the-pilot-implements">
+<h3>3.1 What the pilot implements<a class="headerlink" href="#what-the-pilot-implements" title="Link to this heading">#</a></h3>
+<p>An automated workflow that pre-fills the feature/component S-CORE requirements
+inspection checklist for each supported requirement in scope. The
+<a class="reference external" href="https://eclipse-score.github.io/process_description/main/requirements_engineering/index.html">S-CORE process description</a>
+defines inspection for stakeholder, feature, and component requirement levels;
+each level has applicable, potentially different inspection guidance.</p>
+<p>The AI inspects each requirement against the quality criteria defined in the
+S-CORE checklist — the same criteria a human reviewer would apply — and
+provides a structured first-pass assessment with a verdict and rationale for
+each criterion.</p>
+<p>The pilot demonstrates an optional Copilot Chat Agent workflow for feature and
+component requirements only. Stakeholder requirements remain part of the
+existing S-CORE process and may be relevant as parent context, but are not
+directly assessed by this demonstrator. Their dedicated checklist profile is
+not implemented. Assumptions of use are also out of scope.</p>
+<p>The Chat Agent workflow is:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Engineer starts the inspection directly in Chat
+  -&gt; agent prepares input and automatically collects tool metadata
+    -&gt; Copilot Chat Agent produces a JSON assessment
+    -&gt; deterministic validation rejects wrong IDs, structure, or checklist drift
+    -&gt; editable inspection.md checklist is written and the agent stops
+    -&gt; engineer edits or requests corrections; re-validated on every check
+    -&gt; engineer copies the checklist into the project's real inspection
+       document, commits it, and opens it for the normal Git/GitHub review
+</pre></div>
+</div>
+</section>
+<section id="fixed-structure">
+<h3>3.2 Fixed structure<a class="headerlink" href="#fixed-structure" title="Link to this heading">#</a></h3>
+<p>Assessments contain one entry per input requirement, the exact public S-CORE
+checklist IDs parsed from the canonical template, <code class="docutils literal notranslate"><span class="pre">yes</span></code> / <code class="docutils literal notranslate"><span class="pre">no</span></code> / <code class="docutils literal notranslate"><span class="pre">n/a</span></code> /
+<code class="docutils literal notranslate"><span class="pre">not_assessed</span></code> verdicts, full remarks, and a mandatory issue link for every
+<code class="docutils literal notranslate"><span class="pre">no</span></code>. Unknown IDs, duplicate JSON keys, additional fields, invalid verdicts,
+missing requirements, or checklist text diverging from the canonical template
+are rejected.</p>
+<p>There is one editable checklist in
+<a class="reference external" href="https://github.com/eclipse-score/process_description/blob/main/process_extensions/example/inspection.md"><code class="docutils literal notranslate"><span class="pre">example/inspection.md</span></code></a>,
+not a duplicate schema invented on top of it. The original judgment remains
+preserved separately in a local manifest. Missing context must be resolved or
+dispositioned by the reviewer; <code class="docutils literal notranslate"><span class="pre">not_assessed</span></code> must not silently become a pass.</p>
+</section>
+<section id="hand-off-to-the-project-s-own-review">
+<h3>3.3 Hand-off to the project’s own review<a class="headerlink" href="#hand-off-to-the-project-s-own-review" title="Link to this heading">#</a></h3>
+<p>After judgment the agent presents the editable checklist and ends its turn.
+The engineer edits the table in <a class="reference external" href="https://github.com/eclipse-score/process_description/blob/main/process_extensions/example/inspection.md"><code class="docutils literal notranslate"><span class="pre">example/inspection.md</span></code></a>
+or requests corrections in Chat. Every edit is re-validated and reported back
+immediately; there is no local approval state to track, so no edit can be
+mistaken for one.</p>
+<p>There is no <code class="docutils literal notranslate"><span class="pre">Approve</span> <span class="pre">as</span> <span class="pre">&lt;name&gt;</span></code> command, no revision token, no audit.json, and
+no report.rst produced by this tool. Finalization is the engineer copying the
+checked checklist into the project’s actual inspection work product (for
+example <code class="docutils literal notranslate"><span class="pre">doc__&lt;feature&gt;_req_inspection</span></code>), committing it, and relying on the
+normal Git/GitHub review of that change — with its existing identity,
+independence, and retention guarantees — as the only approval.</p>
+</section>
+<section id="copilot-provenance">
+<h3>Copilot provenance<a class="headerlink" href="#copilot-provenance" title="Link to this heading">#</a></h3>
+<p>Helpers automatically collect tool versions, workflow version and
+code hashes, available editor metadata, and installed Copilot Chat versions.
+Every value has a source. The active Copilot model cannot be auto-detected;
+an engineer may optionally declare a model label explicitly, recorded with
+its source as “reviewer supplied” rather than inferred or defaulted.</p>
+</section>
+</section>
+<section id="requirements-inspection-demonstration">
+<h2>4. Requirements inspection demonstration<a class="headerlink" href="#requirements-inspection-demonstration" title="Link to this heading">#</a></h2>
+<p>The included example used is a snapshot of four publicly available S-CORE baselibs
+feature requirements. For example, the Utils Library requirement lists Base64,
+scoped operations, string views, safe arithmetic, atomic operations, and
+termination handling. This input demonstrates parsing and review flow; it is
+not a set of independently validated expected verdicts.</p>
+<p>The prompt summarizes the public S-CORE inspection checklist. It requests
+structured draft assessments. Reviewers must
+consider parent requirements, traceability, timing, interfaces, safety/security
+attributes, verifiability, completeness, and justified exceptions.</p>
+<p>Start in Chat using the reusable workflow prompt. The agent prepares input,
+validates its JSON judgment, presents the checklist file, and stops. Check
+permission to share input before starting. Local helpers collect metadata and
+validate the checklist; they never invoke Copilot, transmit data, or approve
+anything. Finalization happens outside this tool, through the project’s own
+requirements-inspection PR review.</p>
+<p>The execution guide gives the Chat requests. Offline tests use constructed
+responses, without invoking Copilot. No live Copilot result or timing measurement
+is claimed by those tests. The historical pilot’s assessments are not reported
+as results from this implementation.</p>
+</section>
+<section id="additive-s-core-integration">
+<h2>5. Additive S-CORE integration<a class="headerlink" href="#additive-s-core-integration" title="Link to this heading">#</a></h2>
+<p>All extension content is under <code class="docutils literal notranslate"><span class="pre">process_extensions/</span></code>. Existing process
+directories and workflows remain in place. An additive Bazel bundle mount
+publishes the concept, execution guide, and draft workflow definitions alongside
+the existing process using <code class="docutils literal notranslate"><span class="pre">bazel</span> <span class="pre">run</span> <span class="pre">//:docs</span></code>.</p>
+<p>The existing <code class="docutils literal notranslate"><span class="pre">wf__monitor_verify_requirements</span></code> accepts stakeholder, feature, and
+component requirements, including <code class="docutils literal notranslate"><span class="pre">wp__requirements_stkh</span></code>. The optional
+<code class="docutils literal notranslate"><span class="pre">wf__ai_req_safety_inspect</span></code> proposal augments it for feature/component
+assessments only, with the same responsible/approving roles (committer,
+supported by the safety manager as moderator) rather than a separate role set;
+it references <code class="docutils literal notranslate"><span class="pre">wp__requirements_feat</span></code>, <code class="docutils literal notranslate"><span class="pre">wp__requirements_comp</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">wp__requirements_inspect</span></code>. Stakeholder requirements remain upstream context in
+the existing workflow, not direct input to this AI profile. The S-CORE
+stakeholder checklist differs and is not implemented here. Tool evaluation runs
+through the existing <code class="docutils literal notranslate"><span class="pre">wf__tool_evaluate_tool</span></code>, <code class="docutils literal notranslate"><span class="pre">wf__tool_qualify_tool</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">wf__tool_approve_tool_verification_report</span></code> — this proposal supplements their
+evidence with AI-specific guidance rather than adding parallel workflows or
+roles for the same work product. Published nodes remain draft proposals, not
+approved process changes. Runtime templates, inputs, tests, and generated
+outputs are not published as process definitions.</p>
+</section>
+<section id="limitations">
+<h2>6. Limitations<a class="headerlink" href="#limitations" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>The RST reader accepts simple feature/component requirement directives only.
+It rejects stakeholder/AOU and mixed-level files rather than applying the
+wrong checklist, and does not implement general Sphinx-Needs parsing.</p></li>
+<li><p>Parent IDs may be supplied, and an engineer may optionally supply parent or
+related requirement text as explicit context; without it, the linkage and
+completeness items are forced to <code class="docutils literal notranslate"><span class="pre">not_assessed</span></code> rather than guessed. Nothing
+retrieves that text automatically from <code class="docutils literal notranslate"><span class="pre">needs.json</span></code> or another repository yet.</p></li>
+<li><p>Copilot outputs are non-deterministic and require strict validation and human
+review. No ASIL coverage or completed qualification is claimed.</p></li>
+<li><p>Installed versions are not active-session metadata; selected or Auto-resolved
+model information remains unavailable without a supported editor integration.
+An engineer may declare a model label explicitly; nothing infers it.</p></li>
+<li><p>There is no automated comparison against already-inspected reference
+requirements to measure AI verdict accuracy; this would need an agreed
+evaluation set and acceptance criteria before use beyond a pilot.</p></li>
+<li><p>The tool’s behavior (validation rules, the no-local-approval boundary,
+rejection of stakeholder/AoU input) is not yet expressed as tool requirements
+linked to the test suite that verifies it; the tests currently verify
+behavior that is not separately specified as a requirement.</p></li>
+<li><p>The guardrail no longer has a fabricate-able local approval step, but it
+still cannot prevent a privileged agent from bypassing the local scripts
+entirely or editing files outside the documented protocol.</p></li>
+<li><p>Published RST nodes express intended responsibilities; executable review
+controls do not replace project governance.</p></li>
+</ul>
+</section>
+<section id="public-references">
+<h2>7. Public references<a class="headerlink" href="#public-references" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Reference</p></th>
+<th class="head"><p>URL</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>S-CORE project</p></td>
+<td><p>https://eclipse-score.github.io/score/main/</p></td>
+</tr>
+<tr class="row-odd"><td><p>S-CORE process description</p></td>
+<td><p>https://eclipse-score.github.io/process_description/main/</p></td>
+</tr>
+<tr class="row-even"><td><p>Requirements Engineering</p></td>
+<td><p>https://eclipse-score.github.io/process_description/main/process_areas/requirements_engineering/index.html</p></td>
+</tr>
+<tr class="row-odd"><td><p>Feature inspection checklist</p></td>
+<td><p>https://eclipse-score.github.io/process_description/main/folder_templates/platform/features/feature_name/requirements/req_inspection.html</p></td>
+</tr>
+<tr class="row-even"><td><p>Public baselibs requirements</p></td>
+<td><p>https://eclipse-score.github.io/score/main/features/baselibs/requirements/index.html</p></td>
+</tr>
+<tr class="row-odd"><td><p>Tool Management process</p></td>
+<td><p>https://eclipse-score.github.io/process_description/main/process_areas/tool_management/index.html</p></td>
+</tr>
+<tr class="row-even"><td><p>Tool Management Plan</p></td>
+<td><p>https://eclipse-score.github.io/score/main/platform_management_plan/tool_management.html</p></td>
+</tr>
+<tr class="row-odd"><td><p>GitHub issue #805</p></td>
+<td><p>https://github.com/eclipse-score/process_description/issues/805</p></td>
+</tr>
+<tr class="row-even"><td><p>ISO 26262 public catalogue entry</p></td>
+<td><p>https://www.iso.org/standard/68388.html</p></td>
+</tr>
+<tr class="row-odd"><td><p>Copilot in VS Code documentation</p></td>
+<td><p>https://code.visualstudio.com/docs/copilot/overview</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">AI-Supported Process Execution</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="execution.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Execute the Requirements Inspection Demonstrator</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem">1. The problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#concept-ai-as-a-qualified-development-support-tool">2. Concept: AI as a qualified development support tool</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-human-review-guardrail">2.1 The human review guardrail</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fixed-output-schema-no-invented-structure">2.2 Fixed output schema (no invented structure)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-provenance-and-evaluation-trigger">2.3 Model provenance and evaluation trigger</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-executable-concept">3. The executable concept</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-pilot-implements">3.1 What the pilot implements</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fixed-structure">3.2 Fixed structure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hand-off-to-the-project-s-own-review">3.3 Hand-off to the project’s own review</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#copilot-provenance">Copilot provenance</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements-inspection-demonstration">4. Requirements inspection demonstration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additive-s-core-integration">5. Additive S-CORE integration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations">6. Limitations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#public-references">7. Public references</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.23.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
