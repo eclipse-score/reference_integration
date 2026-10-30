@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Security Manual &#8212; REF_INT  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/score.css?v=415257cb" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/score_needs.css?v=82a1844f" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/score_design.css?v=8048e6ee" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-data-viewer/jsonview.bundle.css?v=f6ef2277" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/libs/html/datatables.min.css?v=4b4fd840" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/needstable.css?v=5e1b6797" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/need_core.css?v=f5b60a78" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/need_style.css?v=92936fa5" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-needs/modern.css?v=803738c0" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css?v=51185784" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
+
+    <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../../../_static/documentation_options.js?v=7f41d439"></script>
+    <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../../../_static/sphinx-data-viewer/jsonview.bundle.js?v=18cd53c5"></script>
+    <script src="../../../../_static/sphinx-data-viewer/jsonview_loader.js?v=f7ff7e7d"></script>
+    <script src="../../../../_static/sphinx-needs/libs/html/datatables.min.js?v=8a4aee21"></script>
+    <script src="../../../../_static/sphinx-needs/libs/html/datatables_loader.js?v=a2cae175"></script>
+    <script src="../../../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js?v=dca66431"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'modules/score_persistency/module/manuals/security_manual';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.23.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-score.github.io/reference_integration/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Release Note" href="../release/release_note.html" />
+    <link rel="prev" title="Safety Manual" href="safety_manual.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1" />
+  
+    
+    <script src="../../../../_static/searchtools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script src="../../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Eclipse S-CORE</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../../index.html">
+    Modules
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../verification_report/index.html">
+    Verification Reports
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../status_dashboard.html">
+    Integration Status
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../s_core_v_1/index.html">
+    S-Core v1.0
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../s_core_v_1/releases/releases.html">
+    Releases
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../integration_process/integration_process.html">
+    Integration Process
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../process_methods_tools/index.html">
+    Process & Tools
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../../index.html">
+    Modules
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../verification_report/index.html">
+    Verification Reports
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../status_dashboard.html">
+    Integration Status
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../s_core_v_1/index.html">
+    S-Core v1.0
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../s_core_v_1/releases/releases.html">
+    Releases
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../integration_process/integration_process.html">
+    Integration Process
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../process_methods_tools/index.html">
+    Process & Tools
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eclipse-score" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../score_baselibs/index.html">Base Libraries</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">Persistency Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">Persistency Module</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="index.html">Manuals</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="user_manual.html">Persistency User Manual</a></li>
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l4"><a class="reference internal" href="safety_manual.html">Safety Manual</a></li>
+<li class="toctree-l4 current active"><a aria-current="page" class="current reference internal" href="#">Security Manual</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../release/release_note.html">Release Note</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../safety_mgt/index.html">Safety Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../security_mgt/index.html">Security Management</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../features/persistency/index.html">Persistency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../verification_report/module_verification_report.html">Verification Report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../components/index.html">Component documentation</a></li>
+</ul>
+</details></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../../score_kyron/index.html">Kyron</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../score_lifecycle/index.html">Lifecycle Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../score_logging/index.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../score_time/index.html">time_daemon Documentation</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Modules</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Persistency Documentation</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Persistency Module</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Manuals</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Security Manual</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="security-manual">
+<h1>Security Manual<a class="headerlink" href="#security-manual" title="Link to this heading">#</a></h1>
+<div class="need_container docutils container" id="SNCB-3a129e5e">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__persistency_security_manual">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Persistency Security Manual</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">YES</span></span></span></div>
+<div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">ASIL_B</span></span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">persistency</span></span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>2</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">realizes: <span class="realizes"><span><a class="reference internal" href="../../../../process_methods_tools/score_process_description/process_areas/security_management/security_management_workproducts.html#wp__module_security_manual" title="doc__persistency_security_manual">wp__module_security_manual</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#doc__persistency_security_manual" title="doc__persistency_security_manual">doc__persistency_security_manual</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Generic Document</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<section id="introduction-scope">
+<h2>Introduction/Scope<a class="headerlink" href="#introduction-scope" title="Link to this heading">#</a></h2>
+<div class="line-block">
+<div class="line">This manual covers the module Persistency with the feature Persistency, which is realized by the component KVS (<a class="reference internal" href="../../components/kvs/architecture/component_architecture.html#comp__persistency_kvs" title="comp__persistency_kvs"><em class="xref need">persistency::kvs (comp__persistency_kvs)</em></a>) in a C++ and a Rust implementation.</div>
+<div class="line">The module is developed as Out of Context (OoC). This manual defines the requirements for the secure integration and usage of the module.</div>
+</div>
+</section>
+<section id="assumed-platform-security-requirements">
+<h2>Assumed Platform Security Requirements<a class="headerlink" href="#assumed-platform-security-requirements" title="Link to this heading">#</a></h2>
+<div class="line-block">
+<div class="line">For the module Persistency, the following stakeholder requirements are assumed to define the top level functionality (purpose) of the Persistency module. I.e. from these all the feature and component requirements implemented are derived.</div>
+<div class="line">List of stakeholder requirements from which the security relevant feature requirements of Persistency are derived:</div>
+</div>
+<div class="needstable_wrapper docutils container" id="needtable-modules/score_persistency/module/manuals/security_manual-0">
+<div class="pst-scrollable-table-container"><table class="NEEDS_TABLE table" id="needtable-modules/score_persistency/module/manuals/security_manual-0-table_node">
+<colgroup>
+<col style="width: 38.5%" />
+<col style="width: 38.5%" />
+<col style="width: 23.1%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Title</p></th>
+<th class="head"><p>ID</p></th>
+<th class="head"><p>Status</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="need row-even"><td class="needs_title"><p>Data Persistency</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../process_methods_tools/score_platform/requirements/stakeholder/index.html#stkh_req__functional_req__data_persistency">stkh_req__functional_req__data_persistency</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>File Based Configuration</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../process_methods_tools/score_platform/requirements/stakeholder/index.html#stkh_req__functional_req__file_based">stkh_req__functional_req__file_based</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Security features</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../process_methods_tools/score_platform/requirements/stakeholder/index.html#stkh_req__dependability__security_features">stkh_req__dependability__security_features</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Support of safe Key/Value store</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../process_methods_tools/score_platform/requirements/stakeholder/index.html#stkh_req__functional_req__support_of_store">stkh_req__functional_req__support_of_store</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="line-block">
+<div class="line">Security relevant feature requirements of Persistency:</div>
+</div>
+<div class="needstable_wrapper docutils container" id="needtable-modules/score_persistency/module/manuals/security_manual-1">
+<div class="pst-scrollable-table-container"><table class="NEEDS_TABLE table" id="needtable-modules/score_persistency/module/manuals/security_manual-1-table_node">
+<colgroup>
+<col style="width: 38.5%" />
+<col style="width: 38.5%" />
+<col style="width: 23.1%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Title</p></th>
+<th class="head"><p>ID</p></th>
+<th class="head"><p>Status</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="need row-even"><td class="needs_title"><p>Confidential storage</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__confidential_storage">feat_req__persistency__confidential_storage</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Configuration</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__cfg">feat_req__persistency__cfg</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Configuration</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__cfg_priority">feat_req__persistency__cfg_priority</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Reset resistant storage</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__reset_resistant">feat_req__persistency__reset_resistant</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Separate data stores</p></td>
+<td class="needs_id"><p><a class="reference internal" href="../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__access_control">feat_req__persistency__access_control</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="assumptions-of-use">
+<h2>Assumptions of Use<a class="headerlink" href="#assumptions-of-use" title="Link to this heading">#</a></h2>
+<section id="aou-requirements">
+<h3>AoU Requirements<a class="headerlink" href="#aou-requirements" title="Link to this heading">#</a></h3>
+<div class="need_container docutils container" id="SNCB-9fc73c4c">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_aou_req table" id="aou_req__persistency__storage_access_rights">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Storage Access Rights</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">YES</span></span></span></div>
+<div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">QM</span></span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">persistency</span><span class="needs_spacer">, </span><span class="needs_data">environment</span></span></span></div>
+<div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Non-Functional</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The system integrator shall configure the OS users and groups of the applications and the access rights of the
+KVS working directories such that only the application owning a KVS instance (and, where required, the members of
+its group) can read or write the storage files, snapshot files and default-values files of this KVS instance.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#aou_req__persistency__storage_access_rights" title="aou_req__persistency__storage_access_rights">aou_req__persistency__storage_access_rights</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Assumption of Use Requirement</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-88c430b8">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_aou_req table" id="aou_req__persistency__defaults_read_only">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Read-only Default Values</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">YES</span></span></span></div>
+<div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">QM</span></span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">persistency</span><span class="needs_spacer">, </span><span class="needs_data">environment</span></span></span></div>
+<div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Non-Functional</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The system integrator shall deploy the default-values files read-only for the applications, so that the default
+values can not be modified at runtime.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#aou_req__persistency__defaults_read_only" title="aou_req__persistency__defaults_read_only">aou_req__persistency__defaults_read_only</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Assumption of Use Requirement</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-032124e8">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_aou_req table" id="aou_req__persistency__confidentiality">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Confidentiality of Persisted Data</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">YES</span></span></span></div>
+<div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">QM</span></span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">persistency</span><span class="needs_spacer">, </span><span class="needs_data">environment</span></span></span></div>
+<div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Non-Functional</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The system integrator shall provide confidentiality of persisted data which requires it by the storage
+environment (an encrypted file system or an encrypted storage medium), as the component stores the key-value
+pairs unencrypted.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#aou_req__persistency__confidentiality" title="aou_req__persistency__confidentiality">aou_req__persistency__confidentiality</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Assumption of Use Requirement</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-10dd4bc1">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_aou_req table" id="aou_req__persistency__manipulation_protection">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">No Protection against Intentional Manipulation</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">YES</span></span></span></div>
+<div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">QM</span></span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">persistency</span></span></span></div>
+<div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Non-Functional</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The application shall not rely on the integrity check of the component to detect intentional manipulation of
+persisted data. If protection against intentional manipulation is required, the application shall
+authenticate the data itself or require an integrity protected storage from the system integrator.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#aou_req__persistency__manipulation_protection" title="aou_req__persistency__manipulation_protection">aou_req__persistency__manipulation_protection</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Assumption of Use Requirement</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<section id="assumptions-on-the-environment">
+<h4>Assumptions on the Environment<a class="headerlink" href="#assumptions-on-the-environment" title="Link to this heading">#</a></h4>
+<div class="line-block">
+<div class="line">The platform and its components are developed as Out of Context (OoC) with assumptions on the environment.
+It is assumed that the platform/components are integrated in a secure system, i.e. qualified POSIX OS.
+Also the HW related failures are taken into account by the system integrator, if not otherwise stated in the module’s security concept.</div>
+<div class="line">The module expects the following OS services to be secure:</div>
+<div class="line">- file system access: open, read, write, flush and sync to the storage (<code class="docutils literal notranslate"><span class="pre">fdatasync</span></code>), rename and remove of files, creation of directories. The C++ implementation uses them via <code class="docutils literal notranslate"><span class="pre">score::filesystem</span></code> of the baselibs and the C standard library, the Rust implementation via the Rust standard library (<code class="docutils literal notranslate"><span class="pre">std::fs</span></code>);</div>
+<div class="line">- enforcement of the file system access rights (user, group and permission bits) for these calls;</div>
+<div class="line">- process isolation, i.e. the memory of the application using Persistency can not be read or modified by other processes;</div>
+<div class="line">- thread synchronization (mutex);</div>
+<div class="line">- heap memory allocation.</div>
+</div>
+<p>List of AoUs expected from the environment the module runs on:</p>
+<div class="needstable_wrapper docutils container" id="needtable-modules/score_persistency/module/manuals/security_manual-2">
+<div class="pst-scrollable-table-container"><table class="NEEDS_TABLE table" id="needtable-modules/score_persistency/module/manuals/security_manual-2-table_node">
+<colgroup>
+<col style="width: 33.3%" />
+<col style="width: 33.3%" />
+<col style="width: 33.3%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Title</p></th>
+<th class="head"><p>ID</p></th>
+<th class="head"><p>Status</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="need row-even"><td class="needs_title"><p>Confidentiality of Persisted Data</p></td>
+<td class="needs_id"><p><a class="reference internal" href="#aou_req__persistency__confidentiality">aou_req__persistency__confidentiality</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_title"><p>Read-only Default Values</p></td>
+<td class="needs_id"><p><a class="reference internal" href="#aou_req__persistency__defaults_read_only">aou_req__persistency__defaults_read_only</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Storage Access Rights</p></td>
+<td class="needs_id"><p><a class="reference internal" href="#aou_req__persistency__storage_access_rights">aou_req__persistency__storage_access_rights</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="assumptions-on-the-user">
+<h4>Assumptions on the User<a class="headerlink" href="#assumptions-on-the-user" title="Link to this heading">#</a></h4>
+<div class="line-block">
+<div class="line">As there is no assumption on which specific OS and HW is used, the integration testing of the stakeholder and feature requirements is expected to be performed by the user of the platform OoC. Tests covering all stakeholder and feature requirements performed on a reference platform (tbd link to reference platform specification), reviewed and passed are included in the platform OoC security package.</div>
+<div class="line">Additionally the components of the platform may have additional specific assumptions how they are used. These are part of every module documentation: <a class="reference internal" href="../../index.html#persistency-module-documentation"><span class="std std-ref">Persistency Documentation</span></a>. Assumptions from components to their users can be fulfilled in two ways:</div>
+<div class="line">1. There are assumption which need to be fulfilled by all SW components, e.g. “every user of an IPC mechanism needs to make sure that he provides correct data (e.g. including appropriate security (access) control)” - in this case the AoU is marked as “platform”.</div>
+<div class="line">2. There are assumption which can be fulfilled by a security control realized by some other S-CORE platform component and are therefore not relevant for an user who uses the whole platform. But those are relevant if you chose to use the module OoC stand-alone - in this case the AoU is marked as “module”.</div>
+</div>
+<p>List of AoUs on the user of the platform features or the module of this Security Manual:</p>
+<p>Note: The platform security manual collects all platform wide AoUs (to be fulfilled by the user for any feature).
+This module security manual collects all security AoUs specific to the feature Persistency and its realizing component.
+For the feature Persistency the platform security manual and this module security manual have to be considered.</p>
+<div class="needstable_wrapper docutils container" id="needtable-modules/score_persistency/module/manuals/security_manual-3">
+<div class="pst-scrollable-table-container"><table class="NEEDS_TABLE table" id="needtable-modules/score_persistency/module/manuals/security_manual-3-table_node">
+<colgroup>
+<col style="width: 33.3%" />
+<col style="width: 33.3%" />
+<col style="width: 33.3%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Title</p></th>
+<th class="head"><p>ID</p></th>
+<th class="head"><p>Status</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="need row-even"><td class="needs_title"><p>No Protection against Intentional Manipulation</p></td>
+<td class="needs_id"><p><a class="reference internal" href="#aou_req__persistency__manipulation_protection">aou_req__persistency__manipulation_protection</a></p></td>
+<td class="needs_status"><p>valid</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="security-concept-of-the-ooc">
+<h2>Security concept of the OoC<a class="headerlink" href="#security-concept-of-the-ooc" title="Link to this heading">#</a></h2>
+<div class="line-block">
+<div class="line">Persistency is a library which is executed in the process and with the OS user of the calling application. It has no own
+process, no inter-process communication and no network interface. Its attack surface consists of its API, used by
+the application, and of the files it stores in and loads from the file system (storage, snapshot and
+default-values files, see <a class="reference internal" href="../../features/persistency/architecture/index.html#doc__persistency_kvs_architecture" title="doc__persistency_kvs_architecture"><em class="xref need">Persistency KVS Feature Arc... (doc__persistency_kvs_architecture)</em></a>).</div>
+<div class="line">Access control: the component does not implement own access controls, but relies on the access rights of the file
+system (<a class="reference internal" href="../../components/kvs/requirements/requirements.html#comp_req__kvs__permission_control" title="comp_req__kvs__permission_control"><em class="xref need">Permission Control (comp_req__kvs__permission_control)</em></a>). Access and permission errors of the file system are reported to the
+application (<a class="reference internal" href="../../components/kvs/requirements/requirements.html#comp_req__kvs__permission_err_hndl" title="comp_req__kvs__permission_err_hndl"><em class="xref need">Permission Error Handling (comp_req__kvs__permission_err_hndl)</em></a>). The separation of the data stores of different applications
+(<a class="reference internal" href="../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__access_control" title="feat_req__persistency__access_control"><em class="xref need">Separate data stores (feat_req__persistency__access_control)</em></a>) is therefore achieved by the system integrator
+(<a class="reference internal" href="#aou_req__persistency__storage_access_rights" title="aou_req__persistency__storage_access_rights"><em class="xref need">Storage Access Rights (aou_req__persistency__storage_access_rights)</em></a>, <a class="reference internal" href="#aou_req__persistency__defaults_read_only" title="aou_req__persistency__defaults_read_only"><em class="xref need">Read-only Default Values (aou_req__persistency__defaults_read_only)</em></a>).</div>
+<div class="line">Integrity: when a storage file is loaded, its Adler-32 checksum is compared with the stored checksum. Corrupted
+or interrupted storage is detected, reported and not loaded (<a class="reference internal" href="../../components/kvs/requirements/requirements.html#comp_req__kvs__corruption_detect_open" title="comp_req__kvs__corruption_detect_open"><em class="xref need">Corruption Detection on Open (comp_req__kvs__corruption_detect_open)</em></a>,
+<a class="reference internal" href="../../components/kvs/requirements/requirements.html#comp_req__kvs__open_need_kvs_behavior" title="comp_req__kvs__open_need_kvs_behavior"><em class="xref need">Open Behavior on Missing or... (comp_req__kvs__open_need_kvs_behavior)</em></a>). Adler-32 is not a cryptographic checksum, i.e. it detects accidental
+corruption, but not intentional manipulation by an attacker with write access to the storage
+(<a class="reference internal" href="#aou_req__persistency__manipulation_protection" title="aou_req__persistency__manipulation_protection"><em class="xref need">No Protection against Inten... (aou_req__persistency__manipulation_protection)</em></a>).</div>
+<div class="line">Availability: flush operations keep the previously persisted consistent data until the new data is completely
+written (<a class="reference internal" href="../../components/kvs/requirements/requirements.html#comp_req__kvs__reset_resistant_write" title="comp_req__kvs__reset_resistant_write"><em class="xref need">Reset Resistant Write (comp_req__kvs__reset_resistant_write)</em></a>), previous states are kept as snapshots, whose number is limited
+(<a class="reference internal" href="../../components/kvs/requirements/requirements.html#comp_req__kvs__snapshot_max_num_cfg" title="comp_req__kvs__snapshot_max_num_cfg"><em class="xref need">Maximum Number of Snapshots (comp_req__kvs__snapshot_max_num_cfg)</em></a>). Keys are limited in length and character set
+(<a class="reference internal" href="../../components/kvs/requirements/requirements.html#comp_req__kvs__key_length" title="comp_req__kvs__key_length"><em class="xref need">Key Length (comp_req__kvs__key_length)</em></a>, <a class="reference internal" href="../../components/kvs/requirements/requirements.html#comp_req__kvs__key_naming" title="comp_req__kvs__key_naming"><em class="xref need">Key Naming (comp_req__kvs__key_naming)</em></a>). Input of malformed storage files is rejected
+by the JSON parser and reported as error.</div>
+<div class="line">Confidentiality: the component stores the key-value pairs unencrypted. The confidential storage
+(<a class="reference internal" href="../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__confidential_storage" title="feat_req__persistency__confidential_storage"><em class="xref need">Confidential storage (feat_req__persistency__confidential_storage)</em></a>) is not realized by the component, it has to be provided by the
+storage environment (<a class="reference internal" href="#aou_req__persistency__confidentiality" title="aou_req__persistency__confidentiality"><em class="xref need">Confidentiality of Persiste... (aou_req__persistency__confidentiality)</em></a>).</div>
+<div class="line">Tooling: the KVS tool (<code class="docutils literal notranslate"><span class="pre">//score/kvs/rust_kvs_tool:kvs_tool</span></code>) reads and modifies KVS storage for development and
+test purposes. It has no special rights and can only access the KVS storage accessible to the OS user running it,
+which is restricted by <a class="reference internal" href="#aou_req__persistency__storage_access_rights" title="aou_req__persistency__storage_access_rights"><em class="xref need">Storage Access Rights (aou_req__persistency__storage_access_rights)</em></a>. It is recommended not to deploy the KVS
+tool in production software images, to keep the attack surface small.</div>
+<div class="line">The security analysis of the feature is documented in <a class="reference internal" href="../../features/persistency/security_analysis/stride.html#doc__persistency_stride" title="doc__persistency_stride"><em class="xref need">STRIDE (doc__persistency_stride)</em></a>.</div>
+</div>
+</section>
+<section id="software-bill-of-material-sbom">
+<span id="persistency-sbom"></span><h2>Software Bill of Material (SBOM)<a class="headerlink" href="#software-bill-of-material-sbom" title="Link to this heading">#</a></h2>
+<div class="line-block">
+<div class="line">The SBOM of the module (<a class="reference internal" href="../../../../process_methods_tools/score_process_description/process_areas/security_management/security_management_workproducts.html#wp__sw_module_sbom" title="wp__sw_module_sbom"><em class="xref need">Module Software Bill of Mat... (wp__sw_module_sbom)</em></a>) is generated by the Bazel target <code class="docutils literal notranslate"><span class="pre">//:sbom_product</span></code> in the
+formats SPDX 2.3 (<code class="docutils literal notranslate"><span class="pre">sbom_product.spdx.json</span></code>) and CycloneDX 1.6 (<code class="docutils literal notranslate"><span class="pre">sbom_product.cdx.json</span></code>). It lists the dependencies
+of the product targets <code class="docutils literal notranslate"><span class="pre">//score/kvs:kvs</span></code> (C++) and <code class="docutils literal notranslate"><span class="pre">//score/kvs/rust_kvs:rust_kvs</span></code> (Rust) with version, license
+and supplier. The SBOM is generated on demand with <code class="docutils literal notranslate"><span class="pre">bazel</span> <span class="pre">build</span> <span class="pre">//:sbom_product</span></code> and is not yet part of the
+release workflow.</div>
+<div class="line">Build-time, test and documentation tooling is not part of the product and is listed separately by the Bazel target
+<code class="docutils literal notranslate"><span class="pre">//:sbom_docs_tests</span></code>.</div>
+</div>
+</section>
+<section id="security-weaknesses-vulnerabilities">
+<h2>Security Weaknesses, Vulnerabilities<a class="headerlink" href="#security-weaknesses-vulnerabilities" title="Link to this heading">#</a></h2>
+<div class="line-block">
+<div class="line">Weaknesses, vulnerabilities (bugs in security relevant SW, detected by testing or by users, which could not be fixed) known before release are documented in the module release notes <a class="reference internal" href="../release/release_note.html#doc__persistency_release_note" title="doc__persistency_release_note"><em class="xref need">Persistency Release Note (doc__persistency_release_note)</em></a>.</div>
+<div class="line">Open security topics at the time of this manual version:</div>
+<div class="line">- <a class="reference internal" href="../../components/kvs/requirements/requirements.html#comp_req__kvs__storage_file_permissions" title="comp_req__kvs__storage_file_permissions"><em class="xref need">Storage File Permissions (comp_req__kvs__storage_file_permissions)</em></a> (storage files created with permissions <code class="docutils literal notranslate"><span class="pre">640</span></code>) is not yet implemented, the storage files are created with the default permissions of the process (<code class="docutils literal notranslate"><span class="pre">umask</span></code>), see <a class="reference external" href="https://github.com/eclipse-score/persistency/issues/412">#412</a>. Until then <a class="reference internal" href="#aou_req__persistency__storage_access_rights" title="aou_req__persistency__storage_access_rights"><em class="xref need">Storage Access Rights (aou_req__persistency__storage_access_rights)</em></a> has to be fulfilled via the access rights of the KVS working directory.</div>
+<div class="line">- <a class="reference internal" href="../../components/kvs/requirements/requirements.html#comp_req__kvs__default_storage_permissions" title="comp_req__kvs__default_storage_permissions"><em class="xref need">Default Storage File Permis... (comp_req__kvs__default_storage_permissions)</em></a> (default-values file generated by the KVS tool with permissions <code class="docutils literal notranslate"><span class="pre">440</span></code>) is not yet implemented, the KVS tool does not yet handle default-values files, see <a class="reference external" href="https://github.com/eclipse-score/persistency/issues/505">#505</a>. Until then <a class="reference internal" href="#aou_req__persistency__defaults_read_only" title="aou_req__persistency__defaults_read_only"><em class="xref need">Read-only Default Values (aou_req__persistency__defaults_read_only)</em></a> has to be fulfilled during deployment.</div>
+</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<div class="line-block">
+<div class="line">Module user manual: <a class="reference internal" href="user_manual.html#doc__persistency_user_manual" title="doc__persistency_user_manual"><em class="xref need">Persistency User Manual (doc__persistency_user_manual)</em></a></div>
+<div class="line">Module security plan: <a class="reference internal" href="../security_mgt/module_security_plan.html#doc__persistency_security_plan" title="doc__persistency_security_plan"><em class="xref need">Persistency Security Plan (doc__persistency_security_plan)</em></a></div>
+<div class="line">Feature security analysis: <a class="reference internal" href="../../features/persistency/security_analysis/stride.html#doc__persistency_stride" title="doc__persistency_stride"><em class="xref need">STRIDE (doc__persistency_stride)</em></a></div>
+<div class="line">Feature architecture: <a class="reference internal" href="../../features/persistency/architecture/index.html#doc__persistency_kvs_architecture" title="doc__persistency_kvs_architecture"><em class="xref need">Persistency KVS Feature Arc... (doc__persistency_kvs_architecture)</em></a></div>
+<div class="line">Component architecture: <a class="reference internal" href="../../components/kvs/architecture/component_architecture.html#doc__kvs_component_architecture" title="doc__kvs_component_architecture"><em class="xref need">KVS Component Architecture (doc__kvs_component_architecture)</em></a></div>
+<div class="line">Component requirements: <a class="reference internal" href="../../components/kvs/requirements/requirements.html#doc__kvs_requirements" title="doc__kvs_requirements"><em class="xref need">KVS Requirements (doc__kvs_requirements)</em></a></div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="safety_manual.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Safety Manual</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../release/release_note.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Release Note</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-scope">Introduction/Scope</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assumed-platform-security-requirements">Assumed Platform Security Requirements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assumptions-of-use">Assumptions of Use</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#aou-requirements">AoU Requirements</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#assumptions-on-the-environment">Assumptions on the Environment</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#assumptions-on-the-user">Assumptions on the User</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security-concept-of-the-ooc">Security concept of the OoC</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#software-bill-of-material-sbom">Software Bill of Material (SBOM)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security-weaknesses-vulnerabilities">Security Weaknesses, Vulnerabilities</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.23.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
