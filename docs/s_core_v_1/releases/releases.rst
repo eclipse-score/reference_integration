@@ -22,6 +22,11 @@ Releases
 
 .. toctree::
    :titlesonly:
-   :glob:
 
-   release_note_*
+   release_note_score_v0_5_alpha
+   release_note_score_v0_5_beta
+   release_note_score_v0_6
+   release_note_score_v0_7
+   release_note_score_v0_8
+   release_note_score_v0_9
+   release_note_score_v0_10
