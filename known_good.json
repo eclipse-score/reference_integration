@@ -175,8 +175,12 @@
                         "@score_logging//score/datarouter/build_configuration_flags:use_local_vlan=True"
                     ],
                     "exclude_test_targets": [
-                        "//score/mw/log/legacy_non_verbose_api:unit_test"
+                        "//score/mw/log/legacy_non_verbose_api:unit_test",
+                        "//score/datarouter/doc/design:datarouter_architectural_design"
                     ],
+                    "test_notes": {
+                        "//score/datarouter/doc/design:datarouter_architectural_design": "TODO fix in score_logging: score_tooling's architectural-design validation rejects the datarouter diagrams ('datarouter' children split across context-sw-units.puml and detail-ipc.puml)"
+                    },
                     "integration_test_targets": [
                         "//score/test/component/..."
                     ],
