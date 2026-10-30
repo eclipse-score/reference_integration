@@ -10,13 +10,30 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+load("@rules_cc//cc:defs.bzl", "cc_binary")
 load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
+
+# Consumer of the heartbeat service deployed by //deploy/communication. It
+# brings no provider of its own, so it fails if the platform does not deploy one.
+cc_binary(
+    name = "heartbeat_consumer",
+    srcs = ["heartbeat_consumer.cpp"],
+    deps = [
+        "//deploy/communication:heartbeat_interface",
+        "@score_baselibs//score/string_manipulation/arguments",
+        "@score_communication//score/mw/com",
+    ],
+)
 
 score_pkg_bundle(
     name = "comm",
-    bins = ["@score_communication//score/mw/com/example/com-api-example:com-api-example"],
+    bins = [
+        "@score_communication//score/mw/com/example/com-api-example:com-api-example",
+        "//showcases/standalone:heartbeat_consumer",
+    ],
     config_data = [
         "//showcases/standalone:com.score.json",
+        "//showcases/standalone:com_heartbeat.score.json",
     ],
     custom_layout = {
         "@score_communication//score/mw/com/example/com-api-example:etc/mw_com_config.json": "etc/mw_com_config.json",

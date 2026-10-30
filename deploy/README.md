@@ -37,6 +37,7 @@ Layer 3 may rely on the following, and on nothing else:
 | `launch_manager` | `/usr/bin/launch_manager` |
 | `datarouter` | `/usr/bin/datarouter/datarouter`, config in `/usr/bin/datarouter/etc` |
 | `config_daemon` | `/usr/bin/config_management/config_daemon`, config in `/usr/bin/config_management/etc` |
+| `heartbeat_service` | `/usr/bin/communication/heartbeat_service`, config in `/usr/bin/communication/etc`; offers the mw::com service `score/platform/heartbeat` with the `heartbeat` event and the `platform_info` field, which reports the S-CORE module versions from `known_good.json` (interface in `deploy/communication/heartbeat.h`) |
 
 There is no system-wide mw::com configuration: mw::com reads
 `./etc/mw_com_config.json` relative to the working directory, or the file
@@ -59,8 +60,11 @@ configuration with `pkg_files`, then list those targets in
 `//deploy:platform_bundle`. Configuration that is deployed onto the target
 is kept in `deploy/<module>/etc/`, not in a test directory. Keep examples,
 demo applications and test binaries out; those belong in `//showcases`.
-Modules that ship only libraries (for example communication or persistency)
-have nothing to deploy and get no package here.
+Modules that ship only libraries (for example persistency) have nothing to
+deploy and get no package here. Communication is the exception: a library
+cannot be checked from outside the process that links it, so the platform
+deploys a heartbeat service built on it. The communication showcase consumes
+that service and fails unless the platform provides it.
 
 Long term each S-CORE module should export its own deployment package
 upstream, so that "deployed correctly" becomes checkable rather than agreed.
