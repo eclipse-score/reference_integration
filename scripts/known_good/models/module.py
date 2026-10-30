@@ -114,6 +114,8 @@ class Metadata:
                     patterns). scripts/module_tests.py runs them under ``bazel coverage``,
                     with ref_int's unified config added before any ``--`` and ref_int's
                     resolved dependency versions forced.
+            dependable_element_docs: Labels of the module's dependable element sphinx targets.
+                    scripts/module_tests.py builds them and keeps their HTML for the main docs.
     """
 
     code_root_path: str = "//score/..."
@@ -125,6 +127,7 @@ class Metadata:
     integration_test_targets: list[str] = field(default_factory=lambda: [])
     integration_test_config: list[str] = field(default_factory=lambda: [])
     test_args: list[str] = field(default_factory=lambda: [])
+    dependable_element_docs: list[str] = field(default_factory=lambda: [])
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> Metadata:
@@ -146,6 +149,7 @@ class Metadata:
             integration_test_targets=data.get("integration_test_targets", []),
             integration_test_config=data.get("integration_test_config", []),
             test_args=data.get("test_args", []),
+            dependable_element_docs=data.get("dependable_element_docs", []),
         )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -165,6 +169,8 @@ class Metadata:
             "integration_test_targets": self.integration_test_targets,
             "integration_test_config": self.integration_test_config,
             "test_args": self.test_args,
+            # Only where set, so modules without dependable element docs keep their JSON unchanged.
+            **({"dependable_element_docs": self.dependable_element_docs} if self.dependable_element_docs else {}),
         }
 
 
