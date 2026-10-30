@@ -350,7 +350,7 @@ bool KvsInstance::reset() {
 }
 
 bool KvsInstance::reset_key(const std::string& key) {
-    auto result = kvs_.reset_key(key);
+    auto result = kvs_.SetValueToDefault(key);
     return static_cast<bool>(result);
 }
 
