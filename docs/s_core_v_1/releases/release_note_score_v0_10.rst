@@ -405,6 +405,7 @@ from seconds to milliseconds.
 ----------------------------------------------
 
 - See the release notes of the individual modules.
+- Safety Package(s) not completed for modules and platform. To qualify the S-CORE platform these gaps must be filled.
 
 🚀 Upgrade Instructions
 ------------------------
