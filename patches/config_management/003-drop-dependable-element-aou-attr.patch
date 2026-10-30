@@ -1,0 +1,14 @@
+Drop the dependable_element assumptions_of_use attribute removed in score_tooling 3.x.
+
+diff --git a/score/config_management/dependability/BUILD b/score/config_management/dependability/BUILD
+index 3c4a4d9..a37a6e8 100644
+--- a/score/config_management/dependability/BUILD
++++ b/score/config_management/dependability/BUILD
+@@ -41,7 +41,6 @@ component(
+ dependable_element(
+     name = "config_management",
+     architectural_design = ["//score/config_management/dependability/software_architectural_design:software_architectural_design"],
+-    assumptions_of_use = ["//requirements/safety_analysis:assumptions_of_use"],
+     components = [
+         ":config_daemon_component",
+         ":config_provider_component",
