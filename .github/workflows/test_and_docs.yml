@@ -183,6 +183,14 @@ jobs:
 
           CURRENT=$(realpath .)
           bazel run //scripts/tooling -- misc html_report --output ${CURRENT}/_build/status_dashboard.html
+          # Dependable element docs built by module_tests.yml; they cannot be coupled via Bazel, so
+          # they are published next to the main docs (linked from docs/modules/index.rst).
+          for report in _module_reports/*; do
+            [ -d "$report/dependable_element_docs" ] || continue
+            module="${report##*/}"
+            mkdir -p "_build/modules/$module/dependable_element"
+            cp -r "$report/dependable_element_docs/." "_build/modules/$module/dependable_element/"
+          done
           tar -cf github-pages.tar _build
       - name: Upload documentation artifact
         uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1

@@ -19,3 +19,10 @@ Modules
    :titlesonly:
    :maxdepth: 1
 
+
+Dependable element documentation
+--------------------------------
+
+Built per module in CI and published next to these docs:
+
+* `Communication (mw_com) <score_communication/dependable_element/mw_com_doc/index.html>`_

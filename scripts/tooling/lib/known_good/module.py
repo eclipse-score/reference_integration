@@ -28,6 +28,7 @@ class Metadata:
     extra_test_config: list[str] = field(default_factory=list)
     exclude_test_targets: list[str] = field(default_factory=list)
     langs: list[str] = field(default_factory=lambda: ["cpp", "rust"])
+    dependable_element_docs: list[str] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> Metadata:
@@ -36,6 +37,7 @@ class Metadata:
             extra_test_config=data.get("extra_test_config", []),
             exclude_test_targets=data.get("exclude_test_targets", []),
             langs=data.get("langs", ["cpp", "rust"]),
+            dependable_element_docs=data.get("dependable_element_docs", []),
         )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -44,6 +46,7 @@ class Metadata:
             "extra_test_config": self.extra_test_config,
             "exclude_test_targets": self.exclude_test_targets,
             "langs": self.langs,
+            "dependable_element_docs": self.dependable_element_docs,
         }
 
 
