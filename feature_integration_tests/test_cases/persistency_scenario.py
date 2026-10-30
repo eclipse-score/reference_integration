@@ -35,7 +35,7 @@ def create_kvs_defaults_file(dir_path: Path, instance_id: int, values: dict) -> 
     KVS expects defaults at: {dir}/kvs_{instance_id}_default.json
     and the hash at:         {dir}/kvs_{instance_id}_default.hash
 
-    The JSON format is: {"key": {"t": "type_tag", "v": value}, ...}
+    The JSON format is: {"t": "obj", "v": {"key": {"t": "type_tag", "v": value}, ...}}
     The hash is adler32 of the JSON string, written as 4 big-endian bytes.
 
     Parameters
@@ -56,7 +56,8 @@ def create_kvs_defaults_file(dir_path: Path, instance_id: int, values: dict) -> 
     hash_path = dir_path / f"kvs_{instance_id}_default.hash"
 
     data = {key: {"t": type_tag, "v": val} for key, (type_tag, val) in values.items()}
-    json_str = json.dumps(data)
+    # KVS only accepts the type-tagged top-level object since persistency#490.
+    json_str = json.dumps({"t": "obj", "v": data})
 
     json_path.write_text(json_str)
     hash_path.write_bytes(adler32(json_str.encode()).to_bytes(length=4, byteorder="big"))
