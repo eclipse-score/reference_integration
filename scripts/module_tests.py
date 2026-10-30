@@ -55,7 +55,7 @@ def streamed(command: list[str], cwd: Path, env: dict) -> tuple[int, str]:
     print("+ " + " ".join(command), file=sys.stderr, flush=True)
     lines = []
     with subprocess.Popen(
-        command, cwd=cwd, env=env, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+        command, cwd=cwd, env=env, text=True, errors="replace", stdout=subprocess.PIPE, stderr=subprocess.STDOUT
     ) as proc:
         for line in proc.stdout:
             print(line, end="", flush=True)
