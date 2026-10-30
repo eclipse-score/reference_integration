@@ -1,0 +1,213 @@
+Migrate the config daemon to the score_persistency KVS API (score/kvs/*.h).
+
+diff --git a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/BUILD b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/BUILD
+index 4efbc9f..6d69f16 100644
+--- a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/BUILD
++++ b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/BUILD
+@@ -48,7 +48,7 @@ COMMON_FEATURES = [
+             "details_score",
+             False,
+             [
+-                "@score_persistency//:kvs_cpp",
++                "@score_persistency//score/kvs",
+             ],
+         ),
+         (
+diff --git a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.cpp b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.cpp
+index 7ba3e92..525c895 100644
+--- a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.cpp
++++ b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.cpp
+@@ -16,7 +16,7 @@
+ #include "score/config_management/config_daemon/code/data_model/parameter_set_storage/error/parameter_set_storage_error.h"
+ #include "score/config_management/config_daemon/code/data_model/parameterset_collection.h"
+ 
+-#include "kvsvalue.hpp"
++#include "score/kvs/kvs_value.h"
+ #include "score/hash/code/common/algorithms.h"
+ #include "score/hash/code/core/factory/impl/safe_hash_calculator_factory.h"
+ #include "score/json/json_writer.h"
+diff --git a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.h b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.h
+index 181b8aa..fe33253 100644
+--- a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.h
++++ b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/parameter_set_storage_score_impl.h
+@@ -16,7 +16,7 @@
+ 
+ #include "score/config_management/config_daemon/code/data_model/parameter_set_storage/parameter_set_storage.h"
+ 
+-#include "kvs.hpp"
++#include "score/kvs/kvs.h"
+ 
+ #include <memory>
+ #include <string>
+diff --git a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/BUILD b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/BUILD
+index b3afa1e..a8e076a 100644
+--- a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/BUILD
++++ b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/BUILD
+@@ -13,23 +13,23 @@
+ 
+ load("@rules_cc//cc:defs.bzl", "cc_library")
+ 
+-# Stub replacements for score-persistency headers (kvs.hpp / kvsbuilder.hpp / kvsvalue.hpp).
++# Stub replacements for score-persistency headers (score/kvs/kvs.h / kvs_builder.h / kvs_value.h).
+ # Used when compiling score-variant source files (e.g. factory_mw_com_impl.cpp,
+ # parameter_set_storage_score_impl.cpp) under the SPP toolchain where the real
+ # score-baselibs / score-persistency headers would cause namespace clashes.
+ #
+ # The stubs expose exactly the same types and method signatures used by those files
+ # but have no real implementation — every operation is a no-op / returns failure.
+-# On the actual score build, the real @score-persistency//:kvs_cpp is used instead.
++# On the actual score build, the real @score_persistency//score/kvs is used instead.
+ cc_library(
+     name = "score_kvs_stub",
+     hdrs = [
+-        "kvs.hpp",
+-        "kvsbuilder.hpp",
+-        "kvsvalue.hpp",
++        "score/kvs/kvs.h",
++        "score/kvs/kvs_builder.h",
++        "score/kvs/kvs_value.h",
+     ],
+     # Expose the directory itself as a system include path so that
+-    # `#include "kvs.hpp"` resolves here, mirroring how score-persistency does it.
++    # `#include "score/kvs/kvs.h"` resolves here, mirroring score-persistency's header paths.
+     includes = ["."],
+     tags = ["FUSA"],
+     visibility = [
+diff --git a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvs_mock.hpp b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvs_mock.hpp
+index 95eca96..a23fd42 100644
+--- a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvs_mock.hpp
++++ b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvs_mock.hpp
+@@ -14,7 +14,7 @@
+ #ifndef SCORE_CONFIG_MANAGEMENT_CONFIG_DAEMON_CODE_PARAMETER_SET_STORAGE_DETAILS_SCORE_KVS_STUB_KVS_MOCK_HPP
+ #define SCORE_CONFIG_MANAGEMENT_CONFIG_DAEMON_CODE_PARAMETER_SET_STORAGE_DETAILS_SCORE_KVS_STUB_KVS_MOCK_HPP
+ 
+-#include "kvs.hpp"
++#include "score/kvs/kvs.h"
+ 
+ #include <gmock/gmock.h>
+ 
+diff --git a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvs.hpp b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/score/kvs/kvs.h
+similarity index 93%
+rename from score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvs.hpp
+rename to score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/score/kvs/kvs.h
+index 445d1c5..c789f58 100644
+--- a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvs.hpp
++++ b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/score/kvs/kvs.h
+@@ -14,7 +14,7 @@
+ #ifndef SCORE_LIB_KVS_KVS_HPP
+ #define SCORE_LIB_KVS_KVS_HPP
+ 
+-#include "kvsvalue.hpp"
++#include "score/kvs/kvs_value.h"
+ 
+ #include "score/config_management/config_daemon/code/data_model/parameter_set_storage/error/parameter_set_storage_error.h"
+ 
+@@ -31,12 +31,12 @@ struct InstanceId
+ };
+ 
+ // Stub for score-persistency's Kvs. Concrete so make_unique<Kvs>(unique_ptr<Kvs>) in
+-// factory_mw_com_impl.cpp compiles. MockKvs subclasses and overrides the virtual methods for tests.
++// factory_mw_impl.cpp compiles. MockKvs subclasses and overrides the virtual methods for tests.
+ class Kvs
+ {
+   public:
+     Kvs() = default;
+-    // Accepts a unique_ptr<Kvs> to match the real score-persistency API used in factory_mw_com_impl.cpp.
++    // Accepts a unique_ptr<Kvs> to match the real score-persistency API used in factory_mw_impl.cpp.
+     explicit Kvs(std::unique_ptr<Kvs> /*inner*/) noexcept {}
+     virtual ~Kvs() = default;
+     Kvs(const Kvs&) = delete;
+diff --git a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvsbuilder.hpp b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/score/kvs/kvs_builder.h
+similarity index 66%
+rename from score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvsbuilder.hpp
+rename to score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/score/kvs/kvs_builder.h
+index db0314f..3b5dd99 100644
+--- a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvsbuilder.hpp
++++ b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/score/kvs/kvs_builder.h
+@@ -11,35 +11,50 @@
+ // SPDX-License-Identifier: Apache-2.0
+ // *******************************************************************************
+ 
+-// Stub replacing score-persistency's kvsbuilder.hpp for SPP compilation.
+-// Only the subset of the API used by factory_mw_com_impl.cpp is provided.
++// Stub replacing score-persistency's score/kvs/kvs_builder.h for SPP compilation.
++// Only the subset of the API used by factory_mw_impl.cpp is provided.
+ 
+ #ifndef SCORE_LIB_KVS_KVSBUILDER_HPP
+ #define SCORE_LIB_KVS_KVSBUILDER_HPP
+ 
+-#include "kvs.hpp"
++#include "score/kvs/kvs.h"
+ 
++#include <cstdint>
+ #include <memory>
+ #include <string>
+ 
+ namespace score::mw::per::kvs
+ {
+ 
++enum class KvsDefaults : std::uint8_t
++{
++    kRequired = 0,
++    kOptional = 1,
++    kIgnored = 2,
++};
++
++enum class KvsLoad : std::uint8_t
++{
++    kRequired = 0,
++    kOptional = 1,
++    kIgnored = 2,
++};
++
+ /// @brief Stub KvsBuilder — build() always returns an empty (failure) Result.
+ class KvsBuilder final
+ {
+   public:
+     explicit KvsBuilder(const InstanceId& /*instance_id*/) {}
+ 
+-    KvsBuilder& need_defaults_flag(bool /*flag*/) noexcept
++    KvsBuilder& Defaults(const KvsDefaults& /*mode*/) noexcept
+     {
+         return *this;
+     }
+-    KvsBuilder& need_kvs_flag(bool /*flag*/) noexcept
++    KvsBuilder& KvsLoad(const score::mw::per::kvs::KvsLoad& /*mode*/) noexcept
+     {
+         return *this;
+     }
+-    KvsBuilder& dir(std::string&& /*dir_path*/) noexcept
++    KvsBuilder& WorkingDir(const std::string& /*working_dir*/) noexcept
+     {
+         return *this;
+     }
+diff --git a/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvsvalue.hpp b/score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/score/kvs/kvs_value.h
+similarity index 100%
+rename from score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/kvsvalue.hpp
+rename to score/config_management/config_daemon/code/data_model/parameter_set_storage/details/score_kvs_stub/score/kvs/kvs_value.h
+diff --git a/score/config_management/config_daemon/code/factory/details/infrastructure_factory_score_impl.cpp b/score/config_management/config_daemon/code/factory/details/infrastructure_factory_score_impl.cpp
+index 3901bf7..0542a4d 100644
+--- a/score/config_management/config_daemon/code/factory/details/infrastructure_factory_score_impl.cpp
++++ b/score/config_management/config_daemon/code/factory/details/infrastructure_factory_score_impl.cpp
+@@ -18,7 +18,7 @@
+ #include "score/config_management/config_daemon/code/fault_event_reporter/details/fault_event_reporter_score_impl.h"
+ #include "score/config_management/config_daemon/code/json_helper/details/json_helper_impl.h"
+ 
+-#include "kvsbuilder.hpp"
++#include "score/kvs/kvs_builder.h"
+ #include "score/mw/log/logging.h"
+ 
+ #include <memory>
+@@ -39,9 +39,9 @@ std::shared_ptr<data_model::IParameterSetCollectionManager>
+ InfrastructureFactoryImpl::CreateParameterSetCollectionManager(std::vector<std::shared_ptr<IPlugin>>& plugins) const
+ {
+     auto kvs_result = score::mw::per::kvs::KvsBuilder(score::mw::per::kvs::InstanceId{0U})
+-                          .need_defaults_flag(false)
+-                          .need_kvs_flag(false)
+-                          .dir("/persistent/trusted/ConfigDaemon")
++                          .Defaults(score::mw::per::kvs::KvsDefaults::kOptional)
++                          .KvsLoad(score::mw::per::kvs::KvsLoad::kOptional)
++                          .WorkingDir("/persistent/trusted/ConfigDaemon")
+                           .build();
+     if (!kvs_result.has_value())
+     {
