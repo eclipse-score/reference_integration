@@ -241,8 +241,10 @@ bool KvsInstance::normalize_snapshot_file_to_rust_envelope(const KvsParameters& 
     const std::string bool_canonical = canonicalize_bool_literals(content);
     const std::string canonical_content = canonicalize_f64_literals(bool_canonical);
 
+    // Newer KVS versions already write the envelope (possibly with whitespace); never wrap twice.
+    static const std::regex envelope_prefix(R"(^\{\s*"t"\s*:\s*"obj"\s*,\s*"v"\s*:)");
     std::string final_content;
-    if (canonical_content.rfind("{\"t\":\"obj\",\"v\":", 0) == 0) {
+    if (std::regex_search(canonical_content, envelope_prefix)) {
         final_content = canonical_content;
     } else {
         final_content = "{\"t\":\"obj\",\"v\":" + canonical_content + "}";
