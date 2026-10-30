@@ -59,3 +59,15 @@ jobs:
         with:
           name: sbom-spdx
           path: bazel-bin/sbom.spdx.json
+      - name: Package platform and showcases
+        if: github.event_name == 'release'
+        run: |
+          bazel build --lockfile_mode=error --config=linux-x86_64 //deploy:platform_tar //showcases:showcases_pkg_tar
+          gzip -c bazel-bin/deploy/platform_tar.tar > score-platform-linux-x86_64.tar.gz
+          gzip -c bazel-bin/showcases/showcases_pkg_tar.tar > score-showcases-linux-x86_64.tar.gz
+      - name: Upload platform and showcases to release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload "$RELEASE_TAG" score-platform-linux-x86_64.tar.gz score-showcases-linux-x86_64.tar.gz --clobber

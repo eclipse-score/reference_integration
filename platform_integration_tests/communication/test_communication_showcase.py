@@ -44,3 +44,23 @@ def test_communication_showcase(target):
     platform."""
 
     run_showcases(target, "Communication Sender Receiver Example")
+
+
+@add_test_properties(
+    partially_verifies=["stkh_req__communication__inter_process"],
+    test_type="interface-test",
+    derivation_technique="requirements-analysis",
+)
+def test_communication_platform_heartbeat(target):
+    """A consumer process finds the heartbeat service deployed by the platform
+    through mw::com service discovery, reads the S-CORE version the platform
+    reports and receives heartbeats from it whose baselibs CRC32 is intact.
+    The consumer brings no provider of its own, so this fails if the platform
+    does not deploy a working service or runs a different S-CORE version."""
+
+    output = run_showcases(target, "Communication Platform Heartbeat")
+    assert "heartbeat_consumer: platform runs S-CORE" in output, (
+        f"Platform did not report its S-CORE version:\n{output}"
+    )
+    assert "heartbeat_consumer: received" in output, f"Consumer did not receive heartbeats from the platform:\n{output}"
+    assert "heartbeat_consumer: FAILED" not in output, output

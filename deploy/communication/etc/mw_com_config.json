@@ -1,0 +1,60 @@
+{
+  "serviceTypes": [
+    {
+      "serviceTypeName": "/score/platform/Heartbeat",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "bindings": [
+        {
+          "binding": "SHM",
+          "serviceId": 6700,
+          "events": [
+            {
+              "eventName": "heartbeat",
+              "eventId": 1
+            }
+          ],
+          "fields": [
+            {
+              "fieldName": "platform_info",
+              "fieldId": 2
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "serviceInstances": [
+    {
+      "instanceSpecifier": "score/platform/heartbeat",
+      "serviceTypeName": "/score/platform/Heartbeat",
+      "version": {
+        "major": 1,
+        "minor": 0
+      },
+      "instances": [
+        {
+          "instanceId": 1,
+          "asil-level": "QM",
+          "binding": "SHM",
+          "events": [
+            {
+              "eventName": "heartbeat",
+              "numberOfSampleSlots": 20,
+              "maxSubscribers": 5
+            }
+          ],
+          "fields": [
+            {
+              "fieldName": "platform_info",
+              "numberOfSampleSlots": 2,
+              "maxSubscribers": 5
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

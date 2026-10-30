@@ -1,0 +1,24 @@
+[
+    {
+        "name": "Communication Platform Heartbeat",
+        "description": "A consumer must find the heartbeat service deployed by the platform and receive CRC32-checked heartbeats from it",
+        "apps": [
+            {
+                "path": "/bin/sh",
+                "args": [
+                    "-c",
+                    "cd /usr/bin/communication && ./heartbeat_service >/dev/null 2>&1 &"
+                ],
+                "env": {}
+            },
+            {
+                "path": "/showcases/bin/heartbeat_consumer",
+                "args": [
+                    "--service_instance_manifest",
+                    "/usr/bin/communication/etc/mw_com_config.json"
+                ],
+                "env": {}
+            }
+        ]
+    }
+]
