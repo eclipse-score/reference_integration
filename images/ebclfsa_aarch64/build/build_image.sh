@@ -108,9 +108,9 @@ for src in "${DEPLOY_SRCS[@]}"; do
     sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost "rm -f /$(basename "$src")"
 done
 
-# Shutdown QEMU via SSH
-sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost sync
-sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost crinit-ctl poweroff || true
+# Enable root login and empty passwords for integration testing, not for production use.
+sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost "printf 'PermitRootLogin yes\nPermitEmptyPasswords yes\nPasswordAuthentication yes\n' > /etc/ssh/sshd_config.d/99-integration-test.conf"
+sshpass -p linux ssh -o StrictHostKeyChecking=no -p 2222 root@localhost "sed -i 's/^root:[^:]*:/root::/' /etc/shadow && sync && crinit-ctl poweroff" || true
 
 # Wait for QEMU process to finish
 if [[ -f "$WORKING_DIR/qemu.pid" ]]; then
