@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 
@@ -8,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Safety Analysis: FMEA &#8212; REF_INT  documentation</title>
+    <title>KVS FMEA (Failure Modes and Effects Analysis) &#8212; REF_INT  documentation</title>
   
   
   
@@ -27,8 +26,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../../../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
-<link href="../../../../../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+  <link href="../../../../../_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+<link href="../../../../../_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
@@ -44,13 +43,13 @@
     <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-needs/modern.css?v=803738c0" />
-    <link rel="stylesheet" type="text/css" href="../../../../../_static/custom.css?v=f420dc51" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/custom.css?v=51185784" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../../../../../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
+  <script defer src="../../../../../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
-<link rel="preload" as="script" href="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
+  <link rel="preload" as="script" href="../../../../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
+<link rel="preload" as="script" href="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
     <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
     <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
@@ -65,7 +64,7 @@
     <script src="../../../../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js?v=dca66431"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/score_persistency/components/kvs/safety_analysis/fmea';</script>
     <script>
-        DOCUMENTATION_OPTIONS.theme_version = '0.21.0';
+        DOCUMENTATION_OPTIONS.theme_version = '0.23.0';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-score.github.io/reference_integration/versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
@@ -74,9 +73,10 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
-    <link rel="next" title="Dependent Failure Analysis" href="dfa.html" />
-    <link rel="prev" title="AoU Component Requirements KVS" href="aou_requirements.html" />
+    <link rel="next" title="KVS DFA (Dependent Failure Analysis)" href="dfa.html" />
+    <link rel="prev" title="KVS Assumptions of Use" href="aou_requirements.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.1" />
   
@@ -126,7 +126,7 @@
   
     <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
-  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
     <span class="fa-solid fa-bars"></span>
   </button>
   
@@ -229,7 +229,7 @@
         <div class="navbar-item navbar-persistent--container">
           
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
  <i class="fa-solid fa-magnifying-glass"></i>
  <span class="search-button__default-text">Search</span>
  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
@@ -240,15 +240,15 @@
         <div class="navbar-item">
 
 <div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
     <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
     <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
     <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
   </button>
   <ul class="dropdown-menu dropdown-menu-end">
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
   </ul>
 </div></div>
       
@@ -294,7 +294,7 @@
   
     <div class="navbar-persistent--mobile">
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
  <i class="fa-solid fa-magnifying-glass"></i>
  <span class="search-button__default-text">Search</span>
  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
@@ -302,6 +302,10 @@
     </div>
   
 
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
   
 </div>
 
@@ -390,15 +394,15 @@
           <div class="navbar-item">
 
 <div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
     <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
     <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
     <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
   </button>
   <ul class="dropdown-menu dropdown-menu-end">
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
   </ul>
 </div></div>
         
@@ -442,7 +446,7 @@
   </div>
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
-        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
   <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
     <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
   </svg>
@@ -457,12 +461,8 @@
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_baselibs/index.html">Base Libraries</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">Persistency Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../../../features/persistency/index.html">Persistency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../module/index.html">Persistency Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../module/manuals/index.html">Manuals</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../module/release/release_note.html">Release Note</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../module/safety_mgt/index.html">Safety Management</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../module/security_mgt/index.html">Security Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../features/persistency/index.html">Persistency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../verification_report/module_verification_report.html">Verification Report</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../../index.html">Component documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="../index.html">KVS (Key Value Store)</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -471,19 +471,18 @@
 <li class="toctree-l4"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../detailed_design/index.html">Detailed Design</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../detailed_design/chklst_impl_inspection.html">Implementation Inspection Checklist</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../kvs.html">Key-Value-Storage (rust_kvs) Documentation</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../requirements/index.html">Requirements</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../requirements/chklst_req_inspection.html">Requirement Inspection Checklist</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../requirements/statistics.html">Component Requirements Statistics</a></li>
-<li class="toctree-l4"><a class="reference internal" href="aou_requirements.html">AoU Component Requirements KVS</a></li>
-<li class="toctree-l4 current active"><a class="current reference internal" href="#">Safety Analysis: FMEA</a></li>
-<li class="toctree-l4"><a class="reference internal" href="dfa.html">Dependent Failure Analysis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../kvs.html">KVS Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../requirements/index.html">KVS Requirements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="aou_requirements.html">KVS Assumptions of Use</a></li>
+<li class="toctree-l4 current active"><a aria-current="page" class="current reference internal" href="#">KVS FMEA (Failure Modes and Effects Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dfa.html">KVS DFA (Dependent Failure Analysis)</a></li>
 </ul>
 </details></li>
 </ul>
 </details></li>
 </ul>
 </details></li>
+
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_kyron/index.html">Kyron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_lifecycle/index.html">Lifecycle Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_logging/index.html">Logging</a></li>
@@ -540,7 +539,7 @@
     
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">KVS (Key Value Store)</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Safety Analysis: FMEA</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">KVS FMEA (Failure Modes and Effects Analysis)</span></li>
   </ul>
 </nav>
 </div>
@@ -557,9 +556,9 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="safety-analysis-fmea">
-<h1>Safety Analysis: FMEA<a class="headerlink" href="#safety-analysis-fmea" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-6c95e787">
+  <section id="kvs-fmea-failure-modes-and-effects-analysis">
+<h1>KVS FMEA (Failure Modes and Effects Analysis)<a class="headerlink" href="#kvs-fmea-failure-modes-and-effects-analysis" title="Link to this heading">#</a></h1>
+<div class="need_container docutils container" id="SNCB-3fd6f27f">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__kvs_fmea">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -603,7 +602,617 @@
 </table>
 </div>
 </div>
-<p>Because there is no sub-components in KVS, the results of the FMEA are the same as on feature level <a class="reference internal" href="../../../features/persistency/safety_analysis/fmea.html#doc__persistency_fmea" title="doc__persistency_fmea"><em class="xref need">Persistency FMEA (doc__persistency_fmea)</em></a>.</p>
+<p>Failure modes at the component interfaces are analysed in <a class="reference internal" href="../../../features/persistency/safety_analysis/fmea.html#doc__persistency_fmea" title="doc__persistency_fmea"><em class="xref need">Persistency FMEA (doc__persistency_fmea)</em></a>. This FMEA applies the
+fault models of <a class="reference internal" href="../../../../../process_methods_tools/score_process_description/process_areas/safety_analysis/guidance/fault_models_guideline.html#gd_guidl__fault_models" title="gd_guidl__fault_models"><em class="xref need">FMEA Fault Models (gd_guidl__fault_models)</em></a> to the mechanisms specified in <a class="reference internal" href="../requirements/requirements.html#doc__kvs_requirements" title="doc__kvs_requirements"><em class="xref need">KVS Requirements (doc__kvs_requirements)</em></a>.
+The scope is defined in <a class="reference internal" href="../../../module/safety_mgt/module_safety_plan.html#doc__persistency_safety_plan" title="doc__persistency_safety_plan"><em class="xref need">Persistency Safety Plan (doc__persistency_safety_plan)</em></a> (tailoring).</p>
+<section id="failure-mode-list">
+<h2>Failure Mode List<a class="headerlink" href="#failure-mode-list" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table" id="id1">
+<caption><span class="caption-number">Table 77 </span><span class="caption-text">Fault Models for the component mechanisms</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
+<colgroup>
+<col style="width: 16.7%" />
+<col style="width: 33.3%" />
+<col style="width: 16.7%" />
+<col style="width: 33.3%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>ID</p></th>
+<th class="head"><p>Failure Mode</p></th>
+<th class="head"><p>Applicability</p></th>
+<th class="head"><p>Rationale</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>MF_01_01</p></td>
+<td><p>message is not received (is a subset/more precise description of MF_01_05)</p></td>
+<td><p>no</p></td>
+<td><p>See <a class="reference internal" href="../../../features/persistency/safety_analysis/fmea.html#feat_saf_fmea__persistency__msg_not_received" title="feat_saf_fmea__persistency__msg_not_received"><em class="xref need">Message is not received (feat_saf_fmea__persistency__msg_not_received)</em></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>MF_01_02</p></td>
+<td><p>message received too late (only relevant if delay is a realistic fault)</p></td>
+<td><p>no</p></td>
+<td><p>See <a class="reference internal" href="../../../features/persistency/safety_analysis/fmea.html#feat_saf_fmea__persistency__late_message" title="feat_saf_fmea__persistency__late_message"><em class="xref need">Message received too late (feat_saf_fmea__persistency__late_message)</em></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p>MF_01_03</p></td>
+<td><p>message received too early (usually not a problem)</p></td>
+<td><p>no</p></td>
+<td><p>Synchronous calls; an early response is not possible.</p></td>
+</tr>
+<tr class="row-odd"><td><p>MF_01_04</p></td>
+<td><p>message not received correctly by all recipients (different messages or messages partly lost). Only relevant if the same message goes to multiple recipients.</p></td>
+<td><p>no</p></td>
+<td><p>Every message has exactly one recipient.</p></td>
+</tr>
+<tr class="row-even"><td><p>MF_01_05</p></td>
+<td><p>message is corrupted</p></td>
+<td><p>yes</p></td>
+<td><p><a class="reference internal" href="#comp_saf_fmea__kvs__flush_interrupted" title="comp_saf_fmea__kvs__flush_interrupted"><em class="xref need">Flush is interrupted (comp_saf_fmea__kvs__flush_interrupted)</em></a>, <a class="reference internal" href="#comp_saf_fmea__kvs__corrupt_on_open" title="comp_saf_fmea__kvs__corrupt_on_open"><em class="xref need">Corrupted storage at open, ... (comp_saf_fmea__kvs__corrupt_on_open)</em></a>, <a class="reference internal" href="#comp_saf_fmea__kvs__default_corrupt" title="comp_saf_fmea__kvs__default_corrupt"><em class="xref need">Default value file is corru... (comp_saf_fmea__kvs__default_corrupt)</em></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>MF_01_06</p></td>
+<td><p>message is not sent</p></td>
+<td><p>yes</p></td>
+<td><p><a class="reference internal" href="#comp_saf_fmea__kvs__flush_skipped" title="comp_saf_fmea__kvs__flush_skipped"><em class="xref need">Flush does not write change... (comp_saf_fmea__kvs__flush_skipped)</em></a></p></td>
+</tr>
+<tr class="row-even"><td><p>MF_01_07</p></td>
+<td><p>message is unintended sent</p></td>
+<td><p>no</p></td>
+<td><p>Storage is only written by flush, snapshots only changed on explicit call (<a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__explicit_flush" title="comp_req__kvs__explicit_flush"><em class="xref need">Explicit Flush (comp_req__kvs__explicit_flush)</em></a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__explicit_snapshot_operations" title="comp_req__kvs__explicit_snapshot_operations"><em class="xref need">Explicit Snapshot Operations (comp_req__kvs__explicit_snapshot_operations)</em></a>). Implementation: flush rotates the snapshots.</p></td>
+</tr>
+<tr class="row-odd"><td><p>CO_01_01</p></td>
+<td><p>minimum constraint boundary is violated</p></td>
+<td><p>yes</p></td>
+<td><p><a class="reference internal" href="#comp_saf_fmea__kvs__constraint_exceeded" title="comp_saf_fmea__kvs__constraint_exceeded"><em class="xref need">Constraint boundary is viol... (comp_saf_fmea__kvs__constraint_exceeded)</em></a></p></td>
+</tr>
+<tr class="row-even"><td><p>CO_01_02</p></td>
+<td><p>maximum constraint boundary is violated</p></td>
+<td><p>yes</p></td>
+<td><p><a class="reference internal" href="#comp_saf_fmea__kvs__constraint_exceeded" title="comp_saf_fmea__kvs__constraint_exceeded"><em class="xref need">Constraint boundary is viol... (comp_saf_fmea__kvs__constraint_exceeded)</em></a>, <a class="reference internal" href="#comp_saf_fmea__kvs__constraint_cfg_wrong" title="comp_saf_fmea__kvs__constraint_cfg_wrong"><em class="xref need">Wrong constraint configurat... (comp_saf_fmea__kvs__constraint_cfg_wrong)</em></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>EX_01_01</p></td>
+<td><p>Process calculates wrong result(s) (is a subset/more precise description of MF_01_05 or MF_01_04). This failure mode is related to the analysis if e.g. internal safety mechanisms are required (level 2 function, plausibility check of the output, …) because of the size / complexity of the feature.</p></td>
+<td><p>yes</p></td>
+<td><p><a class="reference internal" href="#comp_saf_fmea__kvs__empty_storage_used" title="comp_saf_fmea__kvs__empty_storage_used"><em class="xref need">Empty storage is used inste... (comp_saf_fmea__kvs__empty_storage_used)</em></a>, <a class="reference internal" href="#comp_saf_fmea__kvs__migration_wrong" title="comp_saf_fmea__kvs__migration_wrong"><em class="xref need">Data migration produces wro... (comp_saf_fmea__kvs__migration_wrong)</em></a>, <a class="reference internal" href="#comp_saf_fmea__kvs__tool_wrong_output" title="comp_saf_fmea__kvs__tool_wrong_output"><em class="xref need">Kvs tool generates wrong st... (comp_saf_fmea__kvs__tool_wrong_output)</em></a></p></td>
+</tr>
+<tr class="row-even"><td><p>EX_01_02</p></td>
+<td><p>processing too slow (only relevant if timing is considered)</p></td>
+<td><p>no</p></td>
+<td><p>See <a class="reference internal" href="../../../features/persistency/safety_analysis/fmea.html#feat_saf_fmea__persistency__late_message" title="feat_saf_fmea__persistency__late_message"><em class="xref need">Message received too late (feat_saf_fmea__persistency__late_message)</em></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>EX_01_03</p></td>
+<td><p>processing too fast (only relevant if timing is considered)</p></td>
+<td><p>no</p></td>
+<td><p>No minimum processing time required.</p></td>
+</tr>
+<tr class="row-even"><td><p>EX_01_04</p></td>
+<td><p>loss of execution</p></td>
+<td><p>yes</p></td>
+<td><p><a class="reference internal" href="#comp_saf_fmea__kvs__unflushed_lost" title="comp_saf_fmea__kvs__unflushed_lost"><em class="xref need">Changes are lost by loss of... (comp_saf_fmea__kvs__unflushed_lost)</em></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>EX_01_05</p></td>
+<td><p>processing changes to arbitrary process</p></td>
+<td><p>no</p></td>
+<td><p>Runs in the calling thread; control flow corruption: platform DFA.</p></td>
+</tr>
+<tr class="row-even"><td><p>EX_01_06</p></td>
+<td><p>processing is not complete (infinite loop)</p></td>
+<td><p>no</p></td>
+<td><p>All loops iterate over finite data.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="fmea">
+<h2>FMEA<a class="headerlink" href="#fmea" title="Link to this heading">#</a></h2>
+<div class="need_container docutils container" id="SNCB-b32530f5">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_saf_fmea table" id="comp_saf_fmea__kvs__flush_interrupted">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Flush is interrupted</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_failure_effect"><span class="needs_label">failure_effect: </span><span class="needs_data">Data and hash file are written incompletely.</span></span></div>
+<div class="line"><span class="needs_failure_root_cause"><span class="needs_label">failure_root_cause: </span><span class="needs_data">Reset or power loss during the flush, write error of the storage medium.</span></span></div>
+<div class="line"><span class="needs_fault_id"><span class="needs_label">fault_id: </span><span class="needs_data">MF_01_05</span></span></div>
+<div class="line"><span class="needs_safety_relevant"><span class="needs_label">safety_relevant: </span><span class="needs_data">yes</span></span></div>
+<div class="line"><span class="needs_sufficient"><span class="needs_label">sufficient: </span><span class="needs_data">yes</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">mitigated_by: <span class="mitigated_by"><span><a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__atomic_store" title="comp_saf_fmea__kvs__flush_interrupted">comp_req__kvs__atomic_store</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__corruption_detect_open" title="comp_saf_fmea__kvs__flush_interrupted">comp_req__kvs__corruption_detect_open</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__pers_data_csum" title="comp_saf_fmea__kvs__flush_interrupted">comp_req__kvs__pers_data_csum</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__recovery_snapshot_restore" title="comp_saf_fmea__kvs__flush_interrupted">comp_req__kvs__recovery_snapshot_restore</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__reset_resistant_write" title="comp_saf_fmea__kvs__flush_interrupted">comp_req__kvs__reset_resistant_write</a></span></span></div>
+<div class="line">violates: <span class="violates"><span><a class="reference internal" href="../architecture/component_architecture.html#comp_arc_sta__persistency_kvs__sv" title="comp_saf_fmea__kvs__flush_interrupted">comp_arc_sta__persistency_kvs__sv</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The previous state is kept until the flush is complete; an incomplete flush is detected at the next open.</p>
+<p>Implementation: the previous state is only kept by the snapshot rotation, so with a maximum snapshot count of
+<code class="docutils literal notranslate"><span class="pre">0</span></code> <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__reset_resistant_write" title="comp_req__kvs__reset_resistant_write"><em class="xref need">Reset Resistant Write (comp_req__kvs__reset_resistant_write)</em></a> is not met.</p>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#comp_saf_fmea__kvs__flush_interrupted" title="comp_saf_fmea__kvs__flush_interrupted">comp_saf_fmea__kvs__flush_interrupted</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Component FMEA (Failure Mode and Effects Analysis)</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-7f9b0ff5">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_saf_fmea table" id="comp_saf_fmea__kvs__corrupt_on_open">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Corrupted storage at open, reload or snapshot restore</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_failure_effect"><span class="needs_label">failure_effect: </span><span class="needs_data">Corrupted or inconsistent data is loaded into the in-memory cache.</span></span></div>
+<div class="line"><span class="needs_failure_root_cause"><span class="needs_label">failure_root_cause: </span><span class="needs_data">Interrupted flush, fault of the storage medium, data or hash file missing or modified by another software element.</span></span></div>
+<div class="line"><span class="needs_fault_id"><span class="needs_label">fault_id: </span><span class="needs_data">MF_01_05</span></span></div>
+<div class="line"><span class="needs_safety_relevant"><span class="needs_label">safety_relevant: </span><span class="needs_data">yes</span></span></div>
+<div class="line"><span class="needs_sufficient"><span class="needs_label">sufficient: </span><span class="needs_data">yes</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">mitigated_by: <span class="mitigated_by"><span><a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__corruption_detect_open" title="comp_saf_fmea__kvs__corrupt_on_open">comp_req__kvs__corruption_detect_open</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__key_uniqueness" title="comp_saf_fmea__kvs__corrupt_on_open">comp_req__kvs__key_uniqueness</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__open_need_kvs_behavior" title="comp_saf_fmea__kvs__corrupt_on_open">comp_req__kvs__open_need_kvs_behavior</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__permission_err_hndl" title="comp_saf_fmea__kvs__corrupt_on_open">comp_req__kvs__permission_err_hndl</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__pers_data_csum_vrfy" title="comp_saf_fmea__kvs__corrupt_on_open">comp_req__kvs__pers_data_csum_vrfy</a></span></span></div>
+<div class="line">violates: <span class="violates"><span><a class="reference internal" href="../architecture/component_architecture.html#comp_arc_sta__persistency_kvs__sv" title="comp_saf_fmea__kvs__corrupt_on_open">comp_arc_sta__persistency_kvs__sv</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Applies to every load: open, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__discard_pending_changes_api" title="comp_req__kvs__discard_pending_changes_api"><em class="xref need">Discard Pending Changes (comp_req__kvs__discard_pending_changes_api)</em></a> and snapshot restore.</p>
+<p>Implementation (Rust): a missing hash file is reported as <code class="docutils literal notranslate"><span class="pre">FileNotFound</span></code>, so with <code class="docutils literal notranslate"><span class="pre">Optional</span></code> the instance
+is opened with empty storage although the data file exists.</p>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#comp_saf_fmea__kvs__corrupt_on_open" title="comp_saf_fmea__kvs__corrupt_on_open">comp_saf_fmea__kvs__corrupt_on_open</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Component FMEA (Failure Mode and Effects Analysis)</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-5a3b46cc">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_saf_fmea table" id="comp_saf_fmea__kvs__empty_storage_used">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Empty storage is used instead of persisted data</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_failure_effect"><span class="needs_label">failure_effect: </span><span class="needs_data">The application reads default values instead of the persisted values without an error being reported.</span></span></div>
+<div class="line"><span class="needs_failure_root_cause"><span class="needs_label">failure_root_cause: </span><span class="needs_data">Open with ``Ignore``, or with ``Optional`` while no storage file exists (e.g. wrong storage path).</span></span></div>
+<div class="line"><span class="needs_fault_id"><span class="needs_label">fault_id: </span><span class="needs_data">EX_01_01</span></span></div>
+<div class="line"><span class="needs_safety_relevant"><span class="needs_label">safety_relevant: </span><span class="needs_data">yes</span></span></div>
+<div class="line"><span class="needs_sufficient"><span class="needs_label">sufficient: </span><span class="needs_data">yes</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">mitigated_by: <span class="mitigated_by"><span><a class="reference internal" href="../../../features/persistency/safety_analysis/aou_requirements.html#aou_req__persistency__start_without_data" title="comp_saf_fmea__kvs__empty_storage_used">aou_req__persistency__start_without_data</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__default_value_is_default_api" title="comp_saf_fmea__kvs__empty_storage_used">comp_req__kvs__default_value_is_default_api</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__key_exists_api" title="comp_saf_fmea__kvs__empty_storage_used">comp_req__kvs__key_exists_api</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__open_need_kvs_behavior" title="comp_saf_fmea__kvs__empty_storage_used">comp_req__kvs__open_need_kvs_behavior</a></span></span></div>
+<div class="line">violates: <span class="violates"><span><a class="reference internal" href="../architecture/component_architecture.html#comp_arc_sta__persistency_kvs__sv" title="comp_saf_fmea__kvs__empty_storage_used">comp_arc_sta__persistency_kvs__sv</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The application selects the open behavior and can detect values which are not persisted.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#comp_saf_fmea__kvs__empty_storage_used" title="comp_saf_fmea__kvs__empty_storage_used">comp_saf_fmea__kvs__empty_storage_used</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Component FMEA (Failure Mode and Effects Analysis)</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-7ae7dc05">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_saf_fmea table" id="comp_saf_fmea__kvs__default_corrupt">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Default value file is corrupted or modified</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_failure_effect"><span class="needs_label">failure_effect: </span><span class="needs_data">Wrong default values are provided to the application.</span></span></div>
+<div class="line"><span class="needs_failure_root_cause"><span class="needs_label">failure_root_cause: </span><span class="needs_data">Fault of the storage medium, modification of the default value file after deployment.</span></span></div>
+<div class="line"><span class="needs_fault_id"><span class="needs_label">fault_id: </span><span class="needs_data">MF_01_05</span></span></div>
+<div class="line"><span class="needs_safety_relevant"><span class="needs_label">safety_relevant: </span><span class="needs_data">yes</span></span></div>
+<div class="line"><span class="needs_sufficient"><span class="needs_label">sufficient: </span><span class="needs_data">yes</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">mitigated_by: <span class="mitigated_by"><span><a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__default_storage_permissions" title="comp_saf_fmea__kvs__default_corrupt">comp_req__kvs__default_storage_permissions</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__default_val_chksum" title="comp_saf_fmea__kvs__default_corrupt">comp_req__kvs__default_val_chksum</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__default_value_cfg_tool" title="comp_saf_fmea__kvs__default_corrupt">comp_req__kvs__default_value_cfg_tool</a></span></span></div>
+<div class="line">violates: <span class="violates"><span><a class="reference internal" href="../architecture/component_architecture.html#comp_arc_sta__persistency_kvs__sv" title="comp_saf_fmea__kvs__default_corrupt">comp_arc_sta__persistency_kvs__sv</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Implementation: the kvs tool does not set the file permissions.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#comp_saf_fmea__kvs__default_corrupt" title="comp_saf_fmea__kvs__default_corrupt">comp_saf_fmea__kvs__default_corrupt</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Component FMEA (Failure Mode and Effects Analysis)</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-3071ee42">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_saf_fmea table" id="comp_saf_fmea__kvs__flush_skipped">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Flush does not write changed data</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_failure_effect"><span class="needs_label">failure_effect: </span><span class="needs_data">Flush returns without error, but the changes are lost at the next reset.</span></span></div>
+<div class="line"><span class="needs_failure_root_cause"><span class="needs_label">failure_root_cause: </span><span class="needs_data">The change detection of :need:`comp_req__kvs__write_amplification` misses a change.</span></span></div>
+<div class="line"><span class="needs_fault_id"><span class="needs_label">fault_id: </span><span class="needs_data">MF_01_06</span></span></div>
+<div class="line"><span class="needs_safety_relevant"><span class="needs_label">safety_relevant: </span><span class="needs_data">yes</span></span></div>
+<div class="line"><span class="needs_sufficient"><span class="needs_label">sufficient: </span><span class="needs_data">no</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">mitigated_by: <span class="mitigated_by"><span><a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__explicit_flush" title="comp_saf_fmea__kvs__flush_skipped">comp_req__kvs__explicit_flush</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__write_amplification" title="comp_saf_fmea__kvs__flush_skipped">comp_req__kvs__write_amplification</a></span></span></div>
+<div class="line">violates: <span class="violates"><span><a class="reference internal" href="../architecture/component_architecture.html#comp_arc_sta__persistency_kvs__sv" title="comp_saf_fmea__kvs__flush_skipped">comp_arc_sta__persistency_kvs__sv</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>A missed change is not detected by the checksum, which covers the written data only. Not sufficient: it is not
+specified that every modifying operation marks the data as changed.</p>
+<p>Implementation: no change detection, flush always writes.</p>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#comp_saf_fmea__kvs__flush_skipped" title="comp_saf_fmea__kvs__flush_skipped">comp_saf_fmea__kvs__flush_skipped</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Component FMEA (Failure Mode and Effects Analysis)</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-c21c8a47">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_saf_fmea table" id="comp_saf_fmea__kvs__constraint_exceeded">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Constraint boundary is violated</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_failure_effect"><span class="needs_label">failure_effect: </span><span class="needs_data">A key, the snapshots or the persisted data exceed the configured limits, or an invalid snapshot slot is used.</span></span></div>
+<div class="line"><span class="needs_failure_root_cause"><span class="needs_label">failure_root_cause: </span><span class="needs_data">The application passes an invalid key or snapshot slot index, or stores more data than configured.</span></span></div>
+<div class="line"><span class="needs_fault_id"><span class="needs_label">fault_id: </span><span class="needs_data">CO_01_02</span></span></div>
+<div class="line"><span class="needs_safety_relevant"><span class="needs_label">safety_relevant: </span><span class="needs_data">yes</span></span></div>
+<div class="line"><span class="needs_sufficient"><span class="needs_label">sufficient: </span><span class="needs_data">no</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">mitigated_by: <span class="mitigated_by"><span><a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__constraints" title="comp_saf_fmea__kvs__constraint_exceeded">comp_req__kvs__constraints</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__key_length" title="comp_saf_fmea__kvs__constraint_exceeded">comp_req__kvs__key_length</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__key_naming" title="comp_saf_fmea__kvs__constraint_exceeded">comp_req__kvs__key_naming</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__no_dynamic_memory" title="comp_saf_fmea__kvs__constraint_exceeded">comp_req__kvs__no_dynamic_memory</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__snapshot_max_num_cfg" title="comp_saf_fmea__kvs__constraint_exceeded">comp_req__kvs__snapshot_max_num_cfg</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__snapshot_remove_api" title="comp_saf_fmea__kvs__constraint_exceeded">comp_req__kvs__snapshot_remove_api</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__snapshot_restore_api" title="comp_saf_fmea__kvs__constraint_exceeded">comp_req__kvs__snapshot_restore_api</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__snapshot_slot_index_vali" title="comp_saf_fmea__kvs__constraint_exceeded">comp_req__kvs__snapshot_slot_index_vali</a></span></span></div>
+<div class="line">violates: <span class="violates"><span><a class="reference internal" href="../architecture/component_architecture.html#comp_arc_sta__persistency_kvs__sv" title="comp_saf_fmea__kvs__constraint_exceeded">comp_arc_sta__persistency_kvs__sv</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Not sufficient: <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__snapshot_slot_index_vali" title="comp_req__kvs__snapshot_slot_index_vali"><em class="xref need">Snapshot Slot Index Validation (comp_req__kvs__snapshot_slot_index_vali)</em></a> checks the fixed range of
+<a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__snapshot_id_api" title="comp_req__kvs__snapshot_id_api"><em class="xref need">Snapshot Slot Indexing (comp_req__kvs__snapshot_id_api)</em></a>, not the configured maximum of <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__snapshot_max_num_cfg" title="comp_req__kvs__snapshot_max_num_cfg"><em class="xref need">Maximum Number of Snapshots (comp_req__kvs__snapshot_max_num_cfg)</em></a>.
+A snapshot above the configured maximum exceeds the configured storage.</p>
+<p>Implementation: Rust does not validate keys; the snapshot create, remove and slot query API is missing.</p>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#comp_saf_fmea__kvs__constraint_exceeded" title="comp_saf_fmea__kvs__constraint_exceeded">comp_saf_fmea__kvs__constraint_exceeded</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Component FMEA (Failure Mode and Effects Analysis)</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-300c4e8b">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_saf_fmea table" id="comp_saf_fmea__kvs__constraint_cfg_wrong">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Wrong constraint configuration file</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_failure_effect"><span class="needs_label">failure_effect: </span><span class="needs_data">The instance operates with wrong limits, e.g. snapshots disabled or limits above the dimensioned memory.</span></span></div>
+<div class="line"><span class="needs_failure_root_cause"><span class="needs_label">failure_root_cause: </span><span class="needs_data">Corrupted, modified or wrong configuration file.</span></span></div>
+<div class="line"><span class="needs_fault_id"><span class="needs_label">fault_id: </span><span class="needs_data">CO_01_02</span></span></div>
+<div class="line"><span class="needs_safety_relevant"><span class="needs_label">safety_relevant: </span><span class="needs_data">yes</span></span></div>
+<div class="line"><span class="needs_sufficient"><span class="needs_label">sufficient: </span><span class="needs_data">no</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">mitigated_by: <span class="mitigated_by"><span><a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__constraints" title="comp_saf_fmea__kvs__constraint_cfg_wrong">comp_req__kvs__constraints</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__constraints_priority" title="comp_saf_fmea__kvs__constraint_cfg_wrong">comp_req__kvs__constraints_priority</a></span></span></div>
+<div class="line">violates: <span class="violates"><span><a class="reference internal" href="../architecture/component_architecture.html#comp_arc_sta__persistency_kvs__sv" title="comp_saf_fmea__kvs__constraint_cfg_wrong">comp_arc_sta__persistency_kvs__sv</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The file overrides the compile-time values (<a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__constraints_priority" title="comp_req__kvs__constraints_priority"><em class="xref need">Constraint Configuration pr... (comp_req__kvs__constraints_priority)</em></a>). Not sufficient: no
+integrity or plausibility check of the file is specified.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#comp_saf_fmea__kvs__constraint_cfg_wrong" title="comp_saf_fmea__kvs__constraint_cfg_wrong">comp_saf_fmea__kvs__constraint_cfg_wrong</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Component FMEA (Failure Mode and Effects Analysis)</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-f3104a74">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_saf_fmea table" id="comp_saf_fmea__kvs__migration_wrong">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Data migration produces wrong data</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_failure_effect"><span class="needs_label">failure_effect: </span><span class="needs_data">Migrated values differ from the original values and are persisted at the next flush.</span></span></div>
+<div class="line"><span class="needs_failure_root_cause"><span class="needs_label">failure_root_cause: </span><span class="needs_data">Systematic fault in the migration, unsupported schema version.</span></span></div>
+<div class="line"><span class="needs_fault_id"><span class="needs_label">fault_id: </span><span class="needs_data">EX_01_01</span></span></div>
+<div class="line"><span class="needs_safety_relevant"><span class="needs_label">safety_relevant: </span><span class="needs_data">yes</span></span></div>
+<div class="line"><span class="needs_sufficient"><span class="needs_label">sufficient: </span><span class="needs_data">no</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">mitigated_by: <span class="mitigated_by"><span><a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__pers_data_migration" title="comp_saf_fmea__kvs__migration_wrong">comp_req__kvs__pers_data_migration</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__pers_data_schema" title="comp_saf_fmea__kvs__migration_wrong">comp_req__kvs__pers_data_schema</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__pers_data_version" title="comp_saf_fmea__kvs__migration_wrong">comp_req__kvs__pers_data_version</a></span></span></div>
+<div class="line">violates: <span class="violates"><span><a class="reference internal" href="../architecture/component_architecture.html#comp_arc_sta__persistency_kvs__sv" title="comp_saf_fmea__kvs__migration_wrong">comp_arc_sta__persistency_kvs__sv</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The checksum does not cover the correctness of the migration. Not sufficient: it is not specified that an
+unsupported schema version is reported and that the original data is kept until the migrated data is flushed.</p>
+<p>Implementation: schema version and migration are missing.</p>
+</td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#comp_saf_fmea__kvs__migration_wrong" title="comp_saf_fmea__kvs__migration_wrong">comp_saf_fmea__kvs__migration_wrong</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Component FMEA (Failure Mode and Effects Analysis)</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-d096f01b">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_saf_fmea table" id="comp_saf_fmea__kvs__unflushed_lost">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Changes are lost by loss of execution</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_failure_effect"><span class="needs_label">failure_effect: </span><span class="needs_data">Changes which are not flushed are lost; after restart the last flushed state is provided.</span></span></div>
+<div class="line"><span class="needs_failure_root_cause"><span class="needs_label">failure_root_cause: </span><span class="needs_data">Termination of the calling process or reset before the flush.</span></span></div>
+<div class="line"><span class="needs_fault_id"><span class="needs_label">fault_id: </span><span class="needs_data">EX_01_04</span></span></div>
+<div class="line"><span class="needs_safety_relevant"><span class="needs_label">safety_relevant: </span><span class="needs_data">yes</span></span></div>
+<div class="line"><span class="needs_sufficient"><span class="needs_label">sufficient: </span><span class="needs_data">yes</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">mitigated_by: <span class="mitigated_by"><span><a class="reference internal" href="aou_requirements.html#aou_req__kvs__filesystem" title="comp_saf_fmea__kvs__unflushed_lost">aou_req__kvs__filesystem</a>, <a class="reference internal" href="../../../features/persistency/safety_analysis/aou_requirements.html#aou_req__persistency__flush" title="comp_saf_fmea__kvs__unflushed_lost">aou_req__persistency__flush</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__cached_access" title="comp_saf_fmea__kvs__unflushed_lost">comp_req__kvs__cached_access</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__explicit_flush" title="comp_saf_fmea__kvs__unflushed_lost">comp_req__kvs__explicit_flush</a></span></span></div>
+<div class="line">violates: <span class="violates"><span><a class="reference internal" href="../architecture/component_architecture.html#comp_arc_sta__persistency_kvs__sv" title="comp_saf_fmea__kvs__unflushed_lost">comp_arc_sta__persistency_kvs__sv</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>Interrupted flush: <a class="reference internal" href="#comp_saf_fmea__kvs__flush_interrupted" title="comp_saf_fmea__kvs__flush_interrupted"><em class="xref need">Flush is interrupted (comp_saf_fmea__kvs__flush_interrupted)</em></a>.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#comp_saf_fmea__kvs__unflushed_lost" title="comp_saf_fmea__kvs__unflushed_lost">comp_saf_fmea__kvs__unflushed_lost</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Component FMEA (Failure Mode and Effects Analysis)</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-71455aed">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_saf_fmea table" id="comp_saf_fmea__kvs__tool_wrong_output">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">Kvs tool generates wrong storage or default value files</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_failure_effect"><span class="needs_label">failure_effect: </span><span class="needs_data">Wrong default or persisted values are provided without an error being reported.</span></span></div>
+<div class="line"><span class="needs_failure_root_cause"><span class="needs_label">failure_root_cause: </span><span class="needs_data">Systematic fault of the kvs tool.</span></span></div>
+<div class="line"><span class="needs_fault_id"><span class="needs_label">fault_id: </span><span class="needs_data">EX_01_01</span></span></div>
+<div class="line"><span class="needs_safety_relevant"><span class="needs_label">safety_relevant: </span><span class="needs_data">yes</span></span></div>
+<div class="line"><span class="needs_sufficient"><span class="needs_label">sufficient: </span><span class="needs_data">no</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">mitigated_by: <span class="mitigated_by"><span><a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__default_val_chksum" title="comp_saf_fmea__kvs__tool_wrong_output">comp_req__kvs__default_val_chksum</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__default_value_cfg_tool" title="comp_saf_fmea__kvs__tool_wrong_output">comp_req__kvs__default_value_cfg_tool</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__pers_data_csum" title="comp_saf_fmea__kvs__tool_wrong_output">comp_req__kvs__pers_data_csum</a>, <a class="reference internal" href="../requirements/requirements.html#comp_req__kvs__storage_tool" title="comp_saf_fmea__kvs__tool_wrong_output">comp_req__kvs__storage_tool</a></span></span></div>
+<div class="line">violates: <span class="violates"><span><a class="reference internal" href="../architecture/component_architecture.html#comp_arc_sta__persistency_kvs__sv" title="comp_saf_fmea__kvs__tool_wrong_output">comp_arc_sta__persistency_kvs__sv</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The tool computes the checksum over its own output, so wrong content is not detected at loading. Not
+sufficient: neither a tool qualification nor a verification of the generated files is specified.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#comp_saf_fmea__kvs__tool_wrong_output" title="comp_saf_fmea__kvs__tool_wrong_output">comp_saf_fmea__kvs__tool_wrong_output</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Component FMEA (Failure Mode and Effects Analysis)</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
 </section>
 
 
@@ -622,7 +1231,7 @@
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">AoU Component Requirements KVS</p>
+        <p class="prev-next-title">KVS Assumptions of Use</p>
       </div>
     </a>
     <a class="right-next"
@@ -630,7 +1239,7 @@
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Dependent Failure Analysis</p>
+        <p class="prev-next-title">KVS DFA (Dependent Failure Analysis)</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -640,6 +1249,25 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#failure-mode-list">Failure Mode List</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fmea">FMEA</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
@@ -652,8 +1280,8 @@
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
-<script defer src="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
+  <script defer src="../../../../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
+<script defer src="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -663,8 +1291,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
-    <br/>
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
   </p>
 </div>
       
@@ -677,7 +1304,7 @@
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.23.0.
 </p></div>
       
     </div>

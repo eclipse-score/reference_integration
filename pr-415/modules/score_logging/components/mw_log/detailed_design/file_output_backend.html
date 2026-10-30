@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 
@@ -27,8 +26,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../../../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
-<link href="../../../../../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+  <link href="../../../../../_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+<link href="../../../../../_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
@@ -44,13 +43,13 @@
     <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-needs/modern.css?v=803738c0" />
-    <link rel="stylesheet" type="text/css" href="../../../../../_static/custom.css?v=f420dc51" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/custom.css?v=51185784" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../../../../../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
+  <script defer src="../../../../../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
-<link rel="preload" as="script" href="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
+  <link rel="preload" as="script" href="../../../../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
+<link rel="preload" as="script" href="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
     <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
     <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
@@ -65,7 +64,7 @@
     <script src="../../../../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js?v=dca66431"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules/score_logging/components/mw_log/detailed_design/file_output_backend';</script>
     <script>
-        DOCUMENTATION_OPTIONS.theme_version = '0.21.0';
+        DOCUMENTATION_OPTIONS.theme_version = '0.23.0';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://eclipse-score.github.io/reference_integration/versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
@@ -74,9 +73,10 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
-    <link rel="next" title="SyslogBackend" href="syslog_backend.html" />
-    <link rel="prev" title="Detailed Design" href="index.html" />
+    <link rel="next" title="Safe Datarouter Backend" href="datarouter_backend/index.html" />
+    <link rel="prev" title="mw::log Backend Detailed Design" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.1" />
   
@@ -126,7 +126,7 @@
   
     <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
-  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
     <span class="fa-solid fa-bars"></span>
   </button>
   
@@ -229,7 +229,7 @@
         <div class="navbar-item navbar-persistent--container">
           
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
  <i class="fa-solid fa-magnifying-glass"></i>
  <span class="search-button__default-text">Search</span>
  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
@@ -240,15 +240,15 @@
         <div class="navbar-item">
 
 <div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
     <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
     <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
     <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
   </button>
   <ul class="dropdown-menu dropdown-menu-end">
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
   </ul>
 </div></div>
       
@@ -294,7 +294,7 @@
   
     <div class="navbar-persistent--mobile">
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
  <i class="fa-solid fa-magnifying-glass"></i>
  <span class="search-button__default-text">Search</span>
  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
@@ -390,15 +390,15 @@
           <div class="navbar-item">
 
 <div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
     <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
     <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
     <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
   </button>
   <ul class="dropdown-menu dropdown-menu-end">
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
   </ul>
 </div></div>
         
@@ -442,7 +442,7 @@
   </div>
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
-        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
   <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
     <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
   </svg>
@@ -457,6 +457,7 @@
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_baselibs/index.html">Base Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_persistency/index.html">Persistency Documentation</a></li>
+
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_kyron/index.html">Kyron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_lifecycle/index.html">Lifecycle Documentation</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">Logging</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -466,9 +467,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../../datarouter/index.html">Datarouter</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">mw::log Backend</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../architecture/index.html">Component Architecture</a></li>
-<li class="toctree-l3 current active has-children"><a class="reference internal" href="index.html">Detailed Design</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l4 current active"><a class="current reference internal" href="#">FileOutputBackend</a></li>
-<li class="toctree-l4"><a class="reference internal" href="syslog_backend.html">SyslogBackend</a></li>
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="index.html">mw::log Backend Detailed Design</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l4 current active"><a aria-current="page" class="current reference internal" href="#">FileOutputBackend</a></li>
 <li class="toctree-l4"><a class="reference internal" href="datarouter_backend/index.html">Safe Datarouter Backend</a></li>
 <li class="toctree-l4"><a class="reference internal" href="chklst_impl_inspection.html">Implementation Inspection Checklist</a></li>
 </ul>
@@ -479,6 +479,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../safety_analysis/aou_requirements.html">AoU Component Requirements Template</a></li>
 </ul>
 </details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dependable_elements/index.html">Safety Report</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_time/index.html">time_daemon Documentation</a></li>
@@ -532,7 +533,7 @@
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">mw::log Backend</a></li>
     
     
-    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Detailed Design</a></li>
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">mw::log Backend Detailed Design</a></li>
     
     <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">FileOutputBackend</span></li>
   </ul>
@@ -565,17 +566,61 @@
 ----------------------------------------------------------------------------- -->
 <section id="fileoutputbackend">
 <h1>FileOutputBackend<a class="headerlink" href="#fileoutputbackend" title="Link to this heading">#</a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">LogFlushBackend</span></code> implements <code class="docutils literal notranslate"><span class="pre">mw::log::Backend</span></code>. It is responsible for providing
-buffers by means of <code class="docutils literal notranslate"><span class="pre">ReserveSlot()</span></code> call and writing data using provided
-callable object when the buffer is returned by the user by means of calling
-<code class="docutils literal notranslate"><span class="pre">FlushSlot()</span></code>. It assumes non-blocking calls and implements measures to store
-and manage buffers till all the data is pushed out in subsequent calls. Logs
-are stored in a circular buffer in the case when the current <code class="docutils literal notranslate"><span class="pre">LogRecord</span></code> is not
-completely flushed due to provided sink method not consuming all the data. The
-rest of the data is to be pushed in subsequent calls to <code class="docutils literal notranslate"><span class="pre">FlushSlot</span></code> looping over
-a circular buffer to reduce the queue of unprocessed logs in the order provided
-by the caller. Whenever each <code class="docutils literal notranslate"><span class="pre">LogRecord</span></code> is flushed completely, the buffer is
-released to the allocator by Release Slot.
+<div class="need_container docutils container" id="SNCB-70a10b94">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__mw_log_file_output_backend_design">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">mw::log File Output Backend Detailed Design</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">draft</span></span></span></div>
+<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">YES</span></span></span></div>
+<div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">QM</span></span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">realizes: <span class="realizes"><span><a class="reference internal" href="../../../../../process_methods_tools/score_process_description/process_areas/implementation/implementation_workproducts.html#wp__sw_implementation" title="doc__mw_log_file_output_backend_design">wp__sw_implementation</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#doc__mw_log_file_output_backend_design" title="doc__mw_log_file_output_backend_design">doc__mw_log_file_output_backend_design</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Generic Document</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">FileOutputBackend</span></code> implements <code class="docutils literal notranslate"><span class="pre">mw::log::detail::Backend</span></code>. It is responsible for
+providing buffers by means of <code class="docutils literal notranslate"><span class="pre">ReserveSlot()</span></code> call and writing data to the file
+descriptor passed to its constructor when the buffer is returned by the user by
+means of calling <code class="docutils literal notranslate"><span class="pre">FlushSlot()</span></code>. It assumes non-blocking calls and implements
+measures to store and manage buffers till all the data is pushed out in
+subsequent calls. Logs are stored in a circular buffer in the case when the
+current <code class="docutils literal notranslate"><span class="pre">LogRecord</span></code> is not completely flushed due to the file descriptor not
+accepting all the data. The rest of the data is to be pushed in subsequent calls
+to <code class="docutils literal notranslate"><span class="pre">ReserveSlot()</span></code> and <code class="docutils literal notranslate"><span class="pre">FlushSlot()</span></code>, which both start by trying to flush the
+pending data, looping over a circular buffer to reduce the queue of unprocessed
+logs in the order provided by the caller. Whenever each <code class="docutils literal notranslate"><span class="pre">LogRecord</span></code> is flushed
+completely, the buffer is released to the allocator by <code class="docutils literal notranslate"><span class="pre">ReleaseSlot()</span></code>.
 In case of depletion of a fixed number of buffers, none is returned to the
 caller rather than overwriting old ones.
 The zero-copy approach was used inside the backend design. Circular buffers
@@ -585,25 +630,31 @@ buffers.
 The zero-copy principle does not hold for the data provided at a level of and
 above Recorder.
 Configuration of the backend is done through resources passed down in
-constructor arguments consisting of slot allocator and circular buffer.</p>
+constructor arguments consisting of the message builder, the file descriptor,
+the slot allocator and the OSAL <code class="docutils literal notranslate"><span class="pre">Fcntl</span></code> and <code class="docutils literal notranslate"><span class="pre">Unistd</span></code> objects. The constructor
+sets the file descriptor to non-blocking and close-on-exec. The file is opened by
+<code class="docutils literal notranslate"><span class="pre">FileRecorderFactory</span></code>, which also creates the <code class="docutils literal notranslate"><span class="pre">DltMessageBuilder</span></code>.</p>
 <p>Design decision has been made to make backend independent of loosely coupled
 to details of data it processes which is presented by <code class="docutils literal notranslate"><span class="pre">LogRecord</span></code> type. To do
-so object providing <code class="docutils literal notranslate"><span class="pre">IMessageBuilder</span></code> interface is passed down by Recorder to
-allow access data in polymorphic way. This interface makes it possible to access
-set of sequential data buffers in order they should be serialized into a file
-or onto the console.
-<code class="docutils literal notranslate"><span class="pre">MessageBuilder</span></code> is responsible for serving data in correct order of flushing
-into file or console and stores some of common parts of the header.</p>
-<img alt="MW_LOG_FILE_BACKEND" src="https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/eclipse-score/logging/refs/heads/main/score/mw/log/design/backend/mw_log_file_backend.puml">
+so object providing <code class="docutils literal notranslate"><span class="pre">IMessageBuilder</span></code> interface is passed down by the recorder
+factory to allow access data in polymorphic way. This interface makes it possible
+to access set of sequential data buffers in order they should be serialized into
+a file or onto the console.
+<code class="docutils literal notranslate"><span class="pre">DltMessageBuilder</span></code> (file) and <code class="docutils literal notranslate"><span class="pre">TextMessageBuilder</span></code> (console) implement
+<code class="docutils literal notranslate"><span class="pre">IMessageBuilder</span></code>. They are responsible for serving data in correct order of
+flushing and store some of common parts of the header.</p>
+<p class="plantuml">
+<object data="../../../../../_images/plantuml-386073bacd2c023bc685fc2df675f9b63ac10576.svg" type="image/svg+xml" style="width:3263px;height:1911px;background:#FFFFFF;"></object></p>
 <p><code class="docutils literal notranslate"><span class="pre">SlotDrainer</span></code> is responsible for storing and disposal of already serialized
 data. First data gets inserted into circular buffer. After that step program
 flow enters a loop that iterates over available slots in ring buffer and then
-by means of <code class="docutils literal notranslate"><span class="pre">NonBlockingWriter</span></code> iterates over all spans of each message.</p>
-<img alt="SlotDrainerSequenceDesign" src="https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/eclipse-score/baselibs/refs/heads/main/score/mw/log/design/slot_drainer_sequence_design.puml">
-<p>Flush procedure exits whenever all available data is written to the file or
+by means of <code class="docutils literal notranslate"><span class="pre">NonBlockingWriter</span></code> iterates over all spans of each message.
+A flush first continues to write the pending data of the current message, then
+releases its slot and loads the next message.</p>
+<p>Flush procedure exits whenever all available data is written to the file, the
 writing procedure would block i.e. write operation reports that number of bytes
-written is less then requested.</p>
-<img alt="SlotDrainerActionDiagram" src="https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/eclipse-score/baselibs/refs/heads/main/score/mw/log/design/slot_drainer_action_diagram_design.puml">
+written is less then requested, or the number of slots processed in one cycle
+(<code class="docutils literal notranslate"><span class="pre">limit_slots_in_one_cycle</span></code>, default 32) is exceeded.</p>
 </section>
 
 
@@ -622,15 +673,15 @@ written is less then requested.</p>
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Detailed Design</p>
+        <p class="prev-next-title">mw::log Backend Detailed Design</p>
       </div>
     </a>
     <a class="right-next"
-       href="syslog_backend.html"
+       href="datarouter_backend/index.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">SyslogBackend</p>
+        <p class="prev-next-title">Safe Datarouter Backend</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -652,8 +703,8 @@ written is less then requested.</p>
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
-<script defer src="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
+  <script defer src="../../../../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
+<script defer src="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -663,8 +714,7 @@ written is less then requested.</p>
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
-    <br/>
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
   </p>
 </div>
       
@@ -677,7 +727,7 @@ written is less then requested.</p>
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.23.0.
 </p></div>
       
     </div>
