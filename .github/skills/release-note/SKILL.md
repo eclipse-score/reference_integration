@@ -24,8 +24,8 @@ runs the procedure; this skill holds the rules.
 | Reference Integration scope: Version, Source / tag, Release notes, Platform Verification Report (bullets) | release tag | script |
 | Integrated Software Modules (table incl. `score_platform` first; extra column Module verification report) | `known_good.json` group `target_sw` + `score_platform` | script |
 | Associated Infrastructure Modules (table) | `known_good.json` group `tooling` (without `score_platform`) | script |
-| Images (subchapter after the two module tables; table: Name, Tarball, How-to, Description) | release assets, README/runner docs at the tag | script |
-| Known Issues, Upgrade Instructions (registry hint, hint for commit pins, link to `known_good.json` at the tag), Contact | fixed text | script |
+| Images (subchapter after the two module tables; table: Name, Download, How-to, Description) | `IMAGES` and `IMAGE_DOWNLOADS` in the script, release workflows and README/runner docs at the release ref | script |
+| Known Issues (module release notes, incomplete safety packages), Upgrade Instructions (registry hint, hint for commit pins, link to `known_good.json` at the tag), Contact | fixed text | script |
 
 The scope section describes this repository (reference_integration) and holds
 links only; no change narrative. Changes of this repository and of the images
@@ -47,9 +47,24 @@ Never write module versions or links by hand.
 
 Image table: the image catalogue (`IMAGES` in the script) lists name,
 `images/<dir>`, description and how-to candidates. An image is listed only if
-`images/<dir>` exists at the release ref. Tarball is a release asset whose name
-contains the image directory name, else `---`. How-to is the first candidate that exists at the ref, else `---`.
-When an image is added or renamed in `images/`, update `IMAGES`.
+`images/<dir>` exists at the release ref. How-to is the first candidate that
+exists at the ref, else `---`.
+
+Download: images that a workflow uploads to the GitHub release of this
+repository are listed in `IMAGE_DOWNLOADS` (`images/<dir>` -> workflow, asset
+file name), today only AutoSD (`build_and_test_autosd.yml` uploads
+`eclipse-autosd-bootc-qemu-x86_64.qcow2.xz`, the AutoSD QEMU image with the
+S-CORE showcases). The link is built from the release tag
+(`.../releases/download/<release>/<asset>`), because the assets are uploaded
+only when the release is published, after the note is final. The generator
+checks that the workflow at the release ref still uploads the asset; if not, it
+warns and writes `---`. All other images have `---`.
+
+When an image is added or renamed in `images/`, update `IMAGES`; when a
+workflow starts or stops uploading an image to the release, or renames the
+asset, update `IMAGE_DOWNLOADS`. Images published by upstream projects (for
+example the AutoSD Raspberry Pi 4 image of eclipse-autosd) are not S-CORE
+images and are not listed.
 
 ## Draft and final
 
@@ -164,8 +179,10 @@ asks for release, origin and state (`draft` or `final`) and starts the agent.
    `--origin`, plus the `--changes` table. Runtime is a few minutes.
 5. **Narrative.** Replace the two `AI-FILL` markers (New Features, Breaking
    Changes) with the rules below. Nothing else in the file is written by hand.
-6. **Index.** Make sure the new note is part of the `toctree` in
-   `docs/s_core_v_1/releases/releases.rst` on the release branch.
+6. **Index.** Add the new note as the **last** entry of the release-note
+   `toctree` in `docs/s_core_v_1/releases/releases.rst` on the release branch.
+   The toctree lists the notes explicitly in release order; a glob would sort
+   `v0_10` before `v0_5`.
 7. **Validate** (checklist below) and report.
 
 An existing note is never overwritten unless the user asks for it; to compare,
@@ -176,6 +193,11 @@ reviewed narrative. The diagram SVG is always overwritten by the run, so it
 matches the refreshed tables. Then run `collect_changes.py` again and add items
 for evidence that is not covered yet (new PRs or direct commits on the release
 branch); keep the reviewed items unless their evidence changed.
+
+Everything outside "Changes to the Platform" is generated, including Images,
+Known Issues and Upgrade Instructions. Lines added there by hand are lost on
+the next refresh: carry them into the generator (`IMAGES`, `IMAGE_DOWNLOADS` or
+the fixed text in `render`) in a separate commit and regenerate.
 
 Re-running with the same inputs gives the same tables and chapter structure.
 The narrative may be worded differently, but it has to name the same items as
@@ -285,7 +307,9 @@ Known limits of the evidence:
 - The Overview contains the `.. figure::` of the diagram and the SVG
   `docs/s_core_v_1/releases/_assets/architecture_v<major>_<minor>.svg` was
   written by this run (it is committed together with the note).
-- The new note is part of the `toctree` in `releases.rst`.
+- The new note is the last entry of the release-note `toctree` in `releases.rst`.
+- The Download column links every image of `IMAGE_DOWNLOADS` (no generator
+  warning about a missing asset upload).
 - Every `~~~` item and every bullet names a PR, issue, commit or release note link.
 - Every new module of the `--changes` table and every removed mechanism of this
   repository is either in the note or named in the report.

@@ -91,7 +91,7 @@ IMAGES = [
     (
         "Reference Red Hat AutoSD Linux image (Experimental)",
         "autosd",
-        "Red Hat AutoSD x86_64 image.",
+        "Red Hat AutoSD x86_64 QEMU image (qcow2) with the S-CORE showcases.",
         [("README.md", "Operating system integrations")],
     ),
     (
@@ -101,6 +101,12 @@ IMAGES = [
         [("images/ebclfsa_aarch64/README.md", None)],
     ),
 ]
+
+# images/<dir> -> (workflow that uploads the image to the GitHub release, asset file name).
+# The link is built from the release tag, so it is valid as soon as the release is published.
+IMAGE_DOWNLOADS = {
+    "autosd": (".github/workflows/build_and_test_autosd.yml", "eclipse-autosd-bootc-qemu-x86_64.qcow2.xz"),
+}
 
 DISPLAY_NAMES = {
     "score_baselibs": "Baselibs",
@@ -270,8 +276,12 @@ def _exists(ref: str | None, path: str) -> bool:
     )
 
 
+def _read(ref: str | None, path: str) -> str:
+    return _git("show", f"{ref}:{path}") if ref else (REPO_ROOT / path).read_text()
+
+
 def _anchors(ref: str | None, path: str) -> set[str]:
-    text = _git("show", f"{ref}:{path}") if ref else (REPO_ROOT / path).read_text()
+    text = _read(ref, path)
     anchors = set()
     for line in text.splitlines():
         if line.startswith("#"):
@@ -312,15 +322,18 @@ def milestone_date(release: str) -> str:
     return due[:10]
 
 
-def release_assets(release: str) -> list[dict]:
-    try:
-        return _github_get(f"/repos/eclipse-score/{RELEASE_REPO}/releases/tags/{release}").get("assets", [])
-    except OSError:
-        return []  # release not published yet
+def _download(ref: str | None, release: str, directory: str) -> str | None:
+    """Release asset link of an image, if the workflow at the ref still uploads that asset."""
+    if directory not in IMAGE_DOWNLOADS:
+        return None
+    workflow, asset = IMAGE_DOWNLOADS[directory]
+    if not _exists(ref, workflow) or asset not in _read(ref, workflow):
+        print(f"warning: {workflow} does not upload {asset}; update IMAGE_DOWNLOADS", file=sys.stderr)
+        return None
+    return f"`{asset} <{ORG_URL}/{RELEASE_REPO}/releases/download/{release}/{asset}>`__"
 
 
 def render_images(release: str, ref: str | None) -> str:
-    assets = release_assets(release)
     rows = [
         "",
         ".. list-table::",
@@ -328,18 +341,18 @@ def render_images(release: str, ref: str | None) -> str:
         "   :widths: 30 15 15 40",
         "",
         "   * - Name",
-        "     - Tarball",
+        "     - Download",
         "     - How-to",
         "     - Description",
     ]
     for name, directory, description, candidates in IMAGES:
         if not _exists(ref, f"images/{directory}"):
             continue
-        asset = next((a for a in assets if directory in a["name"]), None)
+        download = _download(ref, release, directory)
         howto = _howto(ref, release, candidates)
         rows += [
             f"   * - {name}",
-            f"     - `{asset['name']} <{asset['browser_download_url']}>`__" if asset else f"     - {EMPTY_CELL}",
+            f"     - {download or EMPTY_CELL}",
             f"     - `How-to <{howto}>`__" if howto else f"     - {EMPTY_CELL}",
             f"     - {description}",
         ]
@@ -481,7 +494,11 @@ source organization, can not take over any liability for its content.
 
     parts += [
         _heading("Known Issues/Vulnerabilities and Bug Fixes", "-"),
-        "\n- See the release notes of the individual modules.\n",
+        (
+            "\n- See the release notes of the individual modules."
+            "\n- Safety Package(s) not completed for modules and platform. "
+            "To qualify the S-CORE platform these gaps must be filled.\n"
+        ),
         _heading("Upgrade Instructions", "-"),
         f"""
 - Increase to the newest Bazel registry versions: https://eclipse-score.github.io/bazel_registry_ui{unreleased_hint}

@@ -23,15 +23,18 @@ Read it first and follow it exactly.
 - List only platform-level new features and breaking changes (see the skill);
   module internals stay in the module release notes, which the note links.
 - DO NOT edit generated parts (status banner, Overview, headings and icons,
-  tables, architecture diagram SVG); only replace the `AI-FILL` markers. The
-  diagram is regenerated from scratch with every skeleton run.
+  tables, Images, Known Issues, Upgrade Instructions, architecture diagram
+  SVG); only replace the `AI-FILL` markers. The diagram is regenerated from
+  scratch with every skeleton run. If a generated part needs other content
+  (a new image download, a known issue, a line someone added by hand), change
+  the generator (`IMAGES`, `IMAGE_DOWNLOADS`, fixed text) and regenerate.
 - Pass `--final` only when the user explicitly asks for the final note;
   otherwise the note is a draft (see the skill, "Draft and final").
 - DO NOT overwrite an existing `release_note_score_*.rst` without the user
   asking for it; for comparisons write to a different path.
 - DO NOT commit or push.
 - ALWAYS surface generator warnings (missing tags, unreleased pins, missing
-  milestone) to the user.
+  milestone, image asset no longer uploaded) to the user.
 
 ## Workflow
 
@@ -47,8 +50,9 @@ Read it first and follow it exactly.
 4. Run `collect_changes.py` and classify into platform-level new features and
    breaking changes as described in the skill (use the impact hints).
 5. Replace both `.. AI-FILL:` markers (New Features, Breaking Changes).
-6. Make sure the new note is part of the `toctree` in
-   `docs/s_core_v_1/releases/releases.rst`.
+6. Make sure the new note is the last entry of the release-note `toctree` in
+   `docs/s_core_v_1/releases/releases.rst` (explicit list in release order,
+   no glob).
 7. Run the validation checks from the skill.
 8. Report: output path and diagram path, state (draft or final), generator
    warnings, modules with unreleased pins, modules shown with "no components
