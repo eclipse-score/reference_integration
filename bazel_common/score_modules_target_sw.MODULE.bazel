@@ -27,14 +27,13 @@ single_version_override(
 )
 
 bazel_dep(name = "score_communication")
-git_override(
+single_version_override(
     module_name = "score_communication",
-    commit = "c5efd74f64c42ea3c60e19a1a3d5456a47ed1115",
     patch_strip = 1,
     patches = [
         "//patches/communication:001-expose-comm-examples.patch",
     ],
-    remote = "https://github.com/eclipse-score/communication.git",
+    version = "0.6.0",
 )
 
 bazel_dep(name = "score_persistency")
