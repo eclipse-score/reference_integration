@@ -18,9 +18,9 @@
 Every module in the module's dependency graph that ref_int also resolves is pinned with
 ``--override_module``, pointing at ref_int's own fetched copy (so ref_int's patches come along);
 ones ref_int cannot fetch are reported as not pinned. ``bazel_common/unified.bazelrc`` and the
-module's ``extra_test_config`` are layered over the module's .bazelrc. The only edit to the module
-is one ``include()`` of ref_int's ``unified_toolchains.MODULE.bazel``, as toolchains can only be
-defined in MODULE files.
+module's ``extra_test_config`` are layered over the module's .bazelrc. The only edits to the module
+are one ``include()`` of ref_int's ``unified_toolchains.MODULE.bazel``, as toolchains can only be
+defined in MODULE files, and a ``bazel_dep`` raising score_devcontainer to its known_good version.
 """
 
 import argparse
@@ -173,6 +173,17 @@ def _append_unified_toolchain(workspace: Path) -> None:
         f.write(f'\ninclude("//:{UNIFIED_TOOLCHAINS.name}")\n')
 
 
+def _apply_extra_dependency_overrides(workspace: Path, devcontainer_version: str) -> None:
+    """Raise dependencies the module's own graph cannot resolve as is.
+
+    The module's own graph is resolved before any ref_int pin applies. score_devcontainer 1.11.1
+    (from score_docs_as_code 8.3.0) had its tag re-pushed, so its archive fails the registry
+    checksum. A bazel_dep lets MVS raise it; an override would error where it is not in the graph.
+    """
+    with (workspace / "MODULE.bazel").open("a") as f:
+        f.write(f'bazel_dep(name = "score_devcontainer", version = "{devcontainer_version}", dev_dependency = True)\n')
+
+
 def _collect_coverage(workspace: Path, out: Path, env: dict) -> None:
     (out / "coverage").mkdir()
     lcov = Path(bazel(["info", "output_path"], workspace, env).stdout.strip()) / "_coverage" / "_coverage_report.dat"
@@ -230,6 +241,7 @@ def run(args: argparse.Namespace) -> int:
     workspace, out = _setup_working_dir(work, module.name)
     _copy_fetch_module(module.name, workspace)
     _append_unified_toolchain(workspace)
+    _apply_extra_dependency_overrides(workspace, known.modules["tooling"]["score_devcontainer"].version)
 
     # Every bazel call in the module goes through this wrapper, so they all see the overrides and
     # the unified config. Its own output base keeps
