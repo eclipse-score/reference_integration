@@ -48,6 +48,7 @@ test_suite(
         "manual",
     ],
     tests = [
+        "//platform_integration_tests/baselibs",
         "//platform_integration_tests/communication",
         "//platform_integration_tests/kyron",
         "//platform_integration_tests/lifecycle",

@@ -10,7 +10,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 // *******************************************************************************
-use crate::internals::persistency::{kvs_instance::kvs_instance, kvs_parameters::KvsParameters};
+use crate::internals::persistency::{
+    kvs_instance::{get_default_value_f64, kvs_instance},
+    kvs_parameters::KvsParameters,
+};
 use rust_kvs::prelude::*;
 use serde_json::Value;
 use test_scenarios_rust::scenario::{Scenario, ScenarioGroup, ScenarioGroupImpl};
@@ -61,11 +64,9 @@ impl Scenario for PartialOverride {
             .map_err(|e| format!("{e:?}"))?;
         kvs.flush().map_err(|e| format!("{e:?}"))?;
         // Log default values for key_0 and key_2 so Python can assert they are accessible.
-        let val0: f64 = kvs
-            .get_value_as("partial_key_0")
+        let val0: f64 = get_default_value_f64(&kvs, "partial_key_0")
             .map_err(|e| format!("Failed to read default partial_key_0: {e:?}"))?;
-        let val2: f64 = kvs
-            .get_value_as("partial_key_2")
+        let val2: f64 = get_default_value_f64(&kvs, "partial_key_2")
             .map_err(|e| format!("Failed to read default partial_key_2: {e:?}"))?;
         info!(key = "partial_key_0", value = val0, source = "default");
         info!(key = "partial_key_2", value = val2, source = "default");
@@ -88,8 +89,7 @@ impl Scenario for GetDefaultValue {
         let params = parse_params(input)?;
         let kvs = kvs_instance(params).map_err(|e| format!("{e:?}"))?;
         // Read the default — this key has a default value but was never explicitly set.
-        let default_val: f64 = kvs
-            .get_value_as("default_probe_key")
+        let default_val: f64 = get_default_value_f64(&kvs, "default_probe_key")
             .map_err(|e| format!("Failed to read default value: {e:?}"))?;
         // Persist the retrieved value to a probe key so Python can verify it.
         kvs.set_value("result_key", default_val).map_err(|e| format!("{e:?}"))?;
@@ -132,8 +132,7 @@ impl Scenario for SelectiveReset {
         kvs.flush().map_err(|e| format!("{e:?}"))?;
 
         // Log default for sel_key_0 after reset_key — confirms key returns to its default value.
-        let default_val: f64 = kvs
-            .get_value_as(&keys[0])
+        let default_val: f64 = get_default_value_f64(&kvs, &keys[0])
             .map_err(|e| format!("Failed to read default after reset for sel_key_0: {e:?}"))?;
         info!(key = "sel_key_0", value = default_val, source = "default_after_reset");
         Ok(())
@@ -170,8 +169,7 @@ impl Scenario for FullReset {
         kvs.reset().map_err(|e| format!("{e:?}"))?;
 
         // Log default for fr_key_0 after reset — confirms key returns to its default value.
-        let default_val: f64 = kvs
-            .get_value_as("fr_key_0")
+        let default_val: f64 = get_default_value_f64(&kvs, "fr_key_0")
             .map_err(|e| format!("Failed to read default after reset for fr_key_0: {e:?}"))?;
         info!(key = "fr_key_0", value = default_val, source = "default_after_reset");
 

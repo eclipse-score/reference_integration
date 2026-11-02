@@ -10,7 +10,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 // *******************************************************************************
-use crate::internals::persistency::{kvs_instance::kvs_instance, kvs_parameters::KvsParameters};
+use crate::internals::persistency::{
+    kvs_instance::{get_default_value_f64, kvs_instance},
+    kvs_parameters::KvsParameters,
+};
 use rust_kvs::prelude::KvsApi;
 use serde_json::Value;
 use test_scenarios_rust::scenario::Scenario;
@@ -45,11 +48,9 @@ impl Scenario for Utf8Defaults {
             .map_err(|e| format!("{e:?}"))?;
         kvs.flush().map_err(|e| format!("{e:?}"))?;
         // Log default values for ASCII and Greek keys so Python can assert accessibility.
-        let val_ascii: f64 = kvs
-            .get_value_as("utf8_ascii_key")
+        let val_ascii: f64 = get_default_value_f64(&kvs, "utf8_ascii_key")
             .map_err(|e| format!("Failed to read default utf8_ascii_key: {e:?}"))?;
-        let val_greek: f64 = kvs
-            .get_value_as("utf8_greek κλμ")
+        let val_greek: f64 = get_default_value_f64(&kvs, "utf8_greek κλμ")
             .map_err(|e| format!("Failed to read default utf8_greek κλμ: {e:?}"))?;
         info!(key = "utf8_ascii_key", value = val_ascii, source = "default");
         info!(key = "utf8_greek κλμ", value = val_greek, source = "default");
@@ -73,8 +74,7 @@ impl Scenario for Utf8DefaultValueGet {
         let params = parse_params(input)?;
         let kvs = kvs_instance(params).map_err(|e| format!("{e:?}"))?;
         // Read the default value via a UTF-8 emoji key — never explicitly set.
-        let default_val: f64 = kvs
-            .get_value_as("probe 🔍")
+        let default_val: f64 = get_default_value_f64(&kvs, "probe 🔍")
             .map_err(|e| format!("Failed to read UTF-8 default value: {e:?}"))?;
         // Persist to an ASCII result key so Python can verify without UTF-8 key lookup.
         kvs.set_value("result_key", default_val).map_err(|e| format!("{e:?}"))?;

@@ -11,64 +11,66 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
+load("@rules_pkg//pkg:mappings.bzl", "pkg_attributes", "pkg_files", "strip_prefix")
 load("@score_rules_imagefs//rules/qnx:ifs.bzl", "qnx_ifs")
 
-filegroup(
-    name = "scripts",
-    srcs = [
-        "//images/qnx_x86_64/configs:startup.sh",
-    ],
-    visibility = ["//visibility:private"],
+# x86_64-specific early hardware init fragment, sourced by the common
+# /etc/startup.sh, placed as /etc/startup-hw.sh (0700).
+pkg_files(
+    name = "etc_startup_hw",
+    srcs = ["//images/qnx_x86_64/configs:startup-hw.sh"],
+    attributes = pkg_attributes(mode = "0700"),
+    prefix = "etc",
+    strip_prefix = strip_prefix.files_only(),
 )
 
-filegroup(
-    name = "configs",
+# x86_64 PCI configuration files in /proc/boot (0444).
+#
+# These must live in /proc/boot (the boot IFS) because pci-server and the
+# pci_hw module read them during early boot, before the on-disk root
+# filesystem is available. On the pre-migration image they were bare-name
+# mkifs entries, which mkifs places under its default /proc/boot prefix;
+# the "proc/boot" pkg_files prefix reproduces that exact layout.
+pkg_files(
+    name = "pci_configs",
     srcs = [
-        "//images/qnx_x86_64/configs:dhcpcd.conf",
-        "//images/qnx_x86_64/configs:group",
-        "//images/qnx_x86_64/configs:hostname",
-        "//images/qnx_x86_64/configs:network_capture.sh",
-        "//images/qnx_x86_64/configs:network_setup.sh",
-        "//images/qnx_x86_64/configs:network_setup_dhcp.sh",
-        "//images/qnx_x86_64/configs:passwd",
         "//images/qnx_x86_64/configs:pci_hw.cfg",
         "//images/qnx_x86_64/configs:pci_server.cfg",
-        "//images/qnx_x86_64/configs:profile",
-        "//images/qnx_x86_64/configs:qcrypto.conf",
-        "//images/qnx_x86_64/configs:ssh_host_rsa_key",
-        "//images/qnx_x86_64/configs:ssh_host_rsa_key.pub",
-        "//images/qnx_x86_64/configs:sshd_config",
     ],
-    visibility = ["//visibility:private"],
+    attributes = pkg_attributes(mode = "0444"),
+    prefix = "proc/boot",
+    strip_prefix = strip_prefix.files_only(),
 )
+
+# The architecture-independent configuration files are shared via
+# //images/qnx_common/configs; the application packaging (datarouter
+# binary/configs, communication configs, persistency test binary) via
+# //images/common/apps.
 
 qnx_ifs(
     name = "init",
     srcs = [
-        ":configs",
-        ":scripts",
-        ":system.build",
-        ":system_dir",
-        "//feature_integration_tests/configs:etc_configs",
-        "//feature_integration_tests/configs/datarouter:etc_configs",
-        "//showcases",
-        "@score_logging//score/datarouter",
-        "@score_persistency//score/kvs/tests/test_scenarios/cpp:test_scenarios",
+        ":etc_startup_hw",
+        ":pci_configs",
+        "//images/common/apps:cpp_tests_persistency_bin",
+        "//images/common/apps:datarouter_bin",
+        "//images/common/apps:datarouter_configs",
+        "//images/common/apps:etc_comm_configs",
+        "//images/qnx_common/configs:etc_configs",
+        "//images/qnx_common/configs:etc_network_capture",
+        "//images/qnx_common/configs:etc_scripts",
+        "//images/qnx_common/configs:qcrypto_config",
+        "//images/qnx_common/configs:var_ssh_config",
+        "//images/qnx_common/configs:var_ssh_keys",
+        "//showcases:showcases_bundle",
     ],
     build_file = "init.build",
-    ext_repo_maping = {
-        "BUNDLE_PATH": "$(location //showcases:showcases)",
-        "DATAROUTER_PATH": "$(location @score_logging//score/datarouter:datarouter)",
-    },
+    extra_build_files = [
+        "//images/qnx_common/build:common_init.build",
+        "//images/qnx_common/build:common_system.build",
+        "system.build",
+    ],
     visibility = [
         "//visibility:public",
-    ],
-)
-
-filegroup(
-    name = "system_dir",
-    srcs = [
-        "init.build",
-        "system.build",
     ],
 )

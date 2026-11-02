@@ -22,6 +22,8 @@ git_override(
     patches = [
         "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
         "//patches/baselibs:002-restore-qnx8-poll-workaround.patch",
+        "//patches/baselibs:003-make-log-examples-visible.patch",
+        "//patches/baselibs:004-fix-log-cpp-init-qnx-linkopts.patch",
     ],
     remote = "https://github.com/eclipse-score/baselibs.git",
 )
@@ -43,16 +45,10 @@ git_override(
 bazel_dep(name = "score_persistency")
 git_override(
     module_name = "score_persistency",
-    commit = "9ae529ba9f413976ff5c9948c6490afa51bbfdc3",
+    commit = "961c0a0989755a1e0fe8de55e83c0a44e2e20b56",
     patch_strip = 1,
     patches = [
-        "//patches/persistency:001-add-mod-need.patch",
-        "//patches/persistency:002-rename-manual-verification-report-id.patch",
-        "//patches/persistency:003-pip-not-dev-dependency.patch",
-        "//patches/persistency:004-imagefs-not-dev-dependency.patch",
-        "//patches/persistency:005-googletest-not-dev-dependency.patch",
-        "//patches/persistency:006-add-module-index-title.patch",
-        "//patches/persistency:007-migrate-baselibs-rust-targets.patch",
+        "//patches/persistency:003-undev-deps-for-root-module.patch",
     ],
     remote = "https://github.com/eclipse-score/persistency.git",
 )
@@ -71,6 +67,7 @@ git_override(
     patch_strip = 1,
     patches = [
         "//patches/lifecycle:001-migrate-baselibs-rust-targets.patch",
+        "//patches/lifecycle:002-undev-integration-test-deps.patch",
     ],
     remote = "https://github.com/eclipse-score/lifecycle.git",
 )
@@ -78,10 +75,10 @@ git_override(
 bazel_dep(name = "score_logging")
 git_override(
     module_name = "score_logging",
-    commit = "b4f272b0a036d46fc7ff2e9a051fdec95fd23b4f",
+    commit = "3d9896611baf4e0d018032e5cb999941b2602dbd",
     patch_strip = 1,
     patches = [
-        "//patches/logging:001-migrate-baselibs-targets.patch",
+        "//patches/logging:002-undev-component-test-deps.patch",
     ],
     remote = "https://github.com/eclipse-score/logging.git",
 )
@@ -93,6 +90,8 @@ git_override(
     patch_strip = 1,
     patches = [
         "//patches/time:003-disable-broken-qnx-ifs-target.patch",
+        "//patches/time:004-rename-ubuntu-image-pull.patch",
+        "//patches/time:005-use-sanitizer-bool-flags.patch",
     ],
     remote = "https://github.com/eclipse-score/time.git",
 )
@@ -100,7 +99,7 @@ git_override(
 bazel_dep(name = "score_config_management")
 git_override(
     module_name = "score_config_management",
-    commit = "e0489b190ed6d2fa183b9a8063e2dba4f6378505",
+    commit = "d0dab01ae408ceb8ec65344e93d8a51d8173da81",
     patch_strip = 1,
     patches = [
         "//patches/config_management:001-adapt-proxy-api-and-remove-internal-targets.patch",

@@ -10,7 +10,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 // *******************************************************************************
-use crate::internals::persistency::{kvs_instance::kvs_instance, kvs_parameters::KvsParameters};
+use crate::internals::persistency::{
+    kvs_instance::{get_default_value_f64, kvs_instance},
+    kvs_parameters::KvsParameters,
+};
 use rust_kvs::prelude::KvsApi;
 use serde::Deserialize;
 use serde_json::Value;
@@ -57,9 +60,8 @@ impl Scenario for ResetToDefault {
         kvs.remove_key(&test_input.keys[1]).expect("Failed to remove key");
 
         // Log the default value reported by KVS after reset so Python can assert it.
-        let default_val: f64 = kvs
-            .get_value_as(&test_input.keys[1])
-            .expect("Failed to read default value after reset");
+        let default_val: f64 =
+            get_default_value_f64(&kvs, &test_input.keys[1]).expect("Failed to read default value after reset");
         info!(key = "key2", value = default_val, source = "default_after_reset");
 
         // Flush to persist the state: key1 and key3 with overrides, key2 absent

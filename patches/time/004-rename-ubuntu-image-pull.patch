@@ -1,0 +1,22 @@
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -227,14 +227,17 @@
+ bazel_dep(name = "rules_oci", version = "2.2.7", dev_dependency = True)
+ 
+ oci = use_extension("@rules_oci//oci:extensions.bzl", "oci", dev_dependency = True)
++
++# ref_int: score_logging, patched in ref_int to pull this very image as a normal dependency, also
++# generates ubuntu_24_04 in this extension, so it gets a name of its own here.
+ oci.pull(
+-    name = "ubuntu_24_04",
++    name = "time_ubuntu_24_04",
+     digest = "sha256:2e863c44b718727c860746568e1d54afd13b2fa71b160f5cd9058fc436217b30",
+     image = "ubuntu",
+     platforms = ["linux/amd64"],
+     tag = "24.04",
+ )
+-use_repo(oci, "ubuntu_24_04", "ubuntu_24_04_linux_amd64")
++use_repo(oci, ubuntu_24_04 = "time_ubuntu_24_04", ubuntu_24_04_linux_amd64 = "time_ubuntu_24_04_linux_amd64")
+ 
+ bazel_dep(name = "score_rules_imagefs", version = "0.0.3")
+ 
