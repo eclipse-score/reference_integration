@@ -38,14 +38,13 @@ git_override(
 )
 
 bazel_dep(name = "score_persistency")
-git_override(
+single_version_override(
     module_name = "score_persistency",
-    commit = "41d76090c7d0b05068cdc5bb22ef2e9f3571906a",
     patch_strip = 1,
     patches = [
         "//patches/persistency:003-undev-deps-for-root-module.patch",
     ],
-    remote = "https://github.com/eclipse-score/persistency.git",
+    version = "0.4.0",
 )
 
 bazel_dep(name = "score_kyron")
