@@ -62,9 +62,8 @@ public:
         }
 
         time_log::log_info(
-            "\"clock\":\"high_res_steady\",\"first_ns\":" + std::to_string(first_ns) +
-                ",\"second_ns\":" + std::to_string(second_ns),
-            "cpp_test_scenarios::scenarios::time::high_res_steady_clock_now");
+            "clock=high_res_steady first_ns=" + std::to_string(first_ns) +
+            " second_ns=" + std::to_string(second_ns));
     }
 };
 

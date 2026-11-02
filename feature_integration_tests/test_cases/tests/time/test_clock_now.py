@@ -37,7 +37,7 @@ class ClockScenario(FitScenario):
 
 
 @add_test_properties(
-    partially_verifies=["FR-9"],
+    partially_verifies=["feat_req__time__abs_base_api"],
     test_type="requirements-based",
     derivation_technique="requirements-analysis",
 )
@@ -47,8 +47,8 @@ class TestSystemClockNow(ClockScenario):
 
     The C++ scenario compares the reading against the host system clock within
     tolerance and fails the process otherwise. Python confirms the process
-    succeeded and that the reading was emitted. Partially verifies FR-9
-    (Absolute Time Base API): a live, non-zero reading through the public API.
+    succeeded and that the reading was emitted. Partially verifies
+    ``feat_req__time__abs_base_api``: a live, non-zero reading through the public API.
     """
 
     @pytest.fixture(scope="class")
@@ -65,7 +65,7 @@ class TestSystemClockNow(ClockScenario):
 
 
 @add_test_properties(
-    partially_verifies=["FR-14"],
+    partially_verifies=["feat_req__time__monotonic_clock_api"],
     test_type="requirements-based",
     derivation_technique="requirements-analysis",
 )
@@ -75,7 +75,7 @@ class TestSteadyClockNow(ClockScenario):
 
     The C++ scenario fails the process if the second reading precedes the first.
     Python confirms success and that the logged readings are non-decreasing.
-    Partially verifies FR-14 (Monotonic Clock API): non-decreasing readings.
+    Partially verifies ``feat_req__time__monotonic_clock_api``: non-decreasing readings.
     """
 
     @pytest.fixture(scope="class")
@@ -92,7 +92,7 @@ class TestSteadyClockNow(ClockScenario):
 
 
 @add_test_properties(
-    partially_verifies=["FR-13"],
+    partially_verifies=["feat_req__time__high_res_clock_api"],
     test_type="requirements-based",
     derivation_technique="requirements-analysis",
 )
@@ -102,8 +102,8 @@ class TestHighResSteadyClockNow(ClockScenario):
 
     The C++ scenario fails the process on a zero or non-monotonic reading.
     Python confirms success and that the logged readings are non-zero and
-    non-decreasing. Partially verifies FR-13 (High Precision Clock API): a
-    non-zero, non-decreasing high-resolution reading.
+    non-decreasing. Partially verifies ``feat_req__time__high_res_clock_api``:
+    a non-zero, non-decreasing high-resolution reading.
     """
 
     @pytest.fixture(scope="class")
@@ -121,7 +121,7 @@ class TestHighResSteadyClockNow(ClockScenario):
 
 
 @add_test_properties(
-    partially_verifies=["FR-14"],
+    partially_verifies=["feat_req__time__monotonic_clock_api"],
     test_type="requirements-based",
     derivation_technique="requirements-analysis",
 )
@@ -134,8 +134,9 @@ class TestSteadyClockProgression(ClockScenario):
     non-decreasing, sleeps for a known duration, takes a final reading and
     asserts it does not precede the last pre-sleep reading. Python confirms
     success and that the post-sleep reading advanced by roughly the sleep
-    duration. Partially verifies FR-14 (Monotonic Clock API) / TC-FR14-001:
-    repeated Now() calls are non-decreasing and the clock progresses over time.
+    duration. Partially verifies ``feat_req__time__monotonic_clock_api`` and
+    covers TC-FR14-001: repeated Now() calls are non-decreasing and the clock
+    progresses over time.
     """
 
     @pytest.fixture(scope="class")

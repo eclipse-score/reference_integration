@@ -114,12 +114,11 @@ public:
         }
 
         time_log::log_info(
-            "\"clock\":\"steady\",\"tick_count\":" + std::to_string(tick_count) +
-                ",\"first_ns\":" + std::to_string(first_ns) +
-                ",\"last_ns\":" + std::to_string(last_ns) +
-                ",\"final_ns\":" + std::to_string(final_ns) +
-                ",\"sleep_ms\":" + std::to_string(sleep_ms),
-            "cpp_test_scenarios::scenarios::time::steady_clock_progression");
+            "clock=steady tick_count=" + std::to_string(tick_count) +
+            " first_ns=" + std::to_string(first_ns) +
+            " last_ns=" + std::to_string(last_ns) +
+            " final_ns=" + std::to_string(final_ns) +
+            " sleep_ms=" + std::to_string(sleep_ms));
     }
 };
 
