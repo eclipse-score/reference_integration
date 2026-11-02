@@ -322,9 +322,9 @@ from seconds to milliseconds.
      - ``v0.2.5``
      - `Release notes <https://github.com/eclipse-score/logging/releases/tag/v0.2.5>`__
      - :doc:`Verification report </modules/score_logging/verification_report/module_verification_report>`
-   * - `Time <https://github.com/eclipse-score/time/tree/3723ce687e4abc7d6cb4c0efdbbd30455ed7c303>`__
-     - ``3723ce6 (unreleased)``
-     - ---
+   * - `Time <https://github.com/eclipse-score/time/tree/v0.3.0>`__
+     - ``v0.3.0``
+     - `Release notes <https://github.com/eclipse-score/time/releases/tag/v0.3.0>`__
      - ---
    * - `Configuration Management <https://github.com/eclipse-score/config_management/tree/d0dab01ae408ceb8ec65344e93d8a51d8173da81>`__
      - ``d0dab01 (unreleased)``
