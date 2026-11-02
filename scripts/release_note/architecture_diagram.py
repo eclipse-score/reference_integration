@@ -272,7 +272,9 @@ def render(
     state, color = ("FINAL", RELEASED) if final else ("DRAFT", UNRELEASED)
     parts.append(pill(M + text_width(title, 26, 800) + 20 + 12 + 7 * len(state), 25, state, color, 20))
     when = f"released {date}" if final else f"planned {date}"
-    parts.append(text(W - M, 26, f"{release}  \u00b7  {when}  \u00b7  compared to {origin}", 12, 400, HEADER_FAINT, "end"))
+    parts.append(
+        text(W - M, 26, f"{release}  \u00b7  {when}  \u00b7  compared to {origin}", 12, 400, HEADER_FAINT, "end")
+    )
     figures = [
         (str(len(sw)), "software modules"),
         (str(sum(map(len, components.values()))), "components"),
