@@ -377,7 +377,7 @@ from seconds to milliseconds.
    :widths: 30 15 15 40
 
    * - Name
-     - Tarball
+     - Download
      - How-to
      - Description
    * - Reference Linux x86_64 image
@@ -393,9 +393,9 @@ from seconds to milliseconds.
      - `How-to <https://github.com/eclipse-score/reference_integration/blob/v0.10.0/README.md#build-and-deploy-showcases-on-raspberry-pi-qnx-aarch64>`__
      - QNX 8.0 aarch64 image, run in QEMU or on Raspberry Pi 4/5.
    * - Reference Red Hat AutoSD Linux image (Experimental)
-     - ---
+     - `eclipse-autosd-bootc-qemu-x86_64.qcow2.xz <https://github.com/eclipse-score/reference_integration/releases/download/v0.10.0/eclipse-autosd-bootc-qemu-x86_64.qcow2.xz>`__
      - `How-to <https://github.com/eclipse-score/reference_integration/blob/v0.10.0/README.md#operating-system-integrations>`__
-     - Red Hat AutoSD x86_64 image.
+     - Red Hat AutoSD x86_64 QEMU image (qcow2) with the S-CORE showcases.
    * - Reference Elektrobit corbos Linux for Safety Applications image (Experimental)
      - ---
      - `How-to <https://github.com/eclipse-score/reference_integration/blob/v0.10.0/images/ebclfsa_aarch64/README.md>`__
