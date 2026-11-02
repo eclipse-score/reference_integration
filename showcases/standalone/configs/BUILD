@@ -14,4 +14,5 @@
 exports_files([
     "logging_app.json",
     "dlt_generator.json",
+    "lifecycle_extras_lm_config.json",
 ])
