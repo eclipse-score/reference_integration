@@ -15,10 +15,9 @@
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir-modules bazel_common
 
 bazel_dep(name = "score_crates")
-git_override(
+single_version_override(
     module_name = "score_crates",
-    commit = "4656dda8f04a3d88c8089f63111195840cfbd9e3",
-    remote = "https://github.com/eclipse-score/score-crates.git",
+    version = "0.0.11",
 )
 
 bazel_dep(name = "score_itf")
@@ -34,17 +33,15 @@ single_version_override(
 )
 
 bazel_dep(name = "score_tools")
-git_override(
+single_version_override(
     module_name = "score_tools",
-    commit = "4b48cec400c67be75cfc3fa4658ac6a0489bf7a8",
-    remote = "https://github.com/eclipse-score/tools.git",
+    version = "0.0.4",
 )
 
 bazel_dep(name = "score_tooling")
-git_override(
+single_version_override(
     module_name = "score_tooling",
-    commit = "a3eed5852f8addbbbf276aaae262ba1313141ef5",
-    remote = "https://github.com/eclipse-score/tooling.git",
+    version = "3.0.1",
 )
 
 bazel_dep(name = "score_platform")
@@ -54,10 +51,9 @@ single_version_override(
 )
 
 bazel_dep(name = "score_bazel_platforms")
-git_override(
+single_version_override(
     module_name = "score_bazel_platforms",
-    commit = "607672cdf2f05f21af7113dab0849726dd59bf86",
-    remote = "https://github.com/eclipse-score/bazel_platforms.git",
+    version = "1.1.0",
 )
 
 bazel_dep(name = "score_test_scenarios")
@@ -79,8 +75,7 @@ single_version_override(
 )
 
 bazel_dep(name = "score_bazel_cpp_toolchains")
-git_override(
+single_version_override(
     module_name = "score_bazel_cpp_toolchains",
-    commit = "bd12c5344053f842fae4623dada5716dfb43e61d",
-    remote = "https://github.com/eclipse-score/bazel_cpp_toolchains.git",
+    version = "1.0.3",
 )
