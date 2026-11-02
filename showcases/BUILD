@@ -23,6 +23,7 @@ score_pkg_bundle(
         "//showcases/standalone:logging_pkg_files",
         "//showcases/standalone:config_management_pkg_files",
         "//showcases/simple_lifecycle:simple_lifecycle_pkg_files",
+        "//showcases/standalone:baselibs_pkg_files",
     ],
     package_dir = "showcases",
 )
@@ -36,6 +37,7 @@ pkg_filegroup(
     srcs = [
         ":showcases_pkg_files",
         "//showcases/simple_lifecycle:simple_lifecycle_pkg_files",
+        "//showcases/standalone:baselibs_pkg_files",
         "//showcases/standalone:comm_pkg_files",
         "//showcases/standalone:config_management_pkg_files",
         "//showcases/standalone:kyron_pkg_files",

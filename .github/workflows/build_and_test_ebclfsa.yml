@@ -26,14 +26,14 @@ concurrency:
 jobs:
   build:
     name: aarch64
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container:
       image: ghcr.io/eclipse-score/devcontainer:v1.11.0
     steps:
       - name: Clean disk space
         uses: eclipse-score/more-disk-space@v1
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup Bazel
         uses: bazel-contrib/setup-bazel@0.18.0
         with:
