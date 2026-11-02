@@ -14,11 +14,12 @@
 #ifndef INTERNALS_TIME_CLOCK_LOG_H_
 #define INTERNALS_TIME_CLOCK_LOG_H_
 
-#include "score/mw/log/logger.h"
+#include "tracing.hpp"
 
 #include <chrono>
 #include <cstdint>
 #include <string>
+#include <utility>
 
 namespace time_log {
 
@@ -37,16 +38,15 @@ inline std::int64_t unix_micros() {
 }
 
 /**
- * @brief Emit the clock reading through the SCORE logging API.
+ * @brief Emit the clock reading through the C++ scenario tracing API.
  *
- * The FIT runner captures C++ scenario output, including the console logger's
- * formatted records. Keep the values in a concise message for inspection.
+ * Structured fields are written as JSON to stdout for the FIT LogContainer.
  *
- * @param message Clock reading details to log.
+ * @param fields Values to include as structured trace fields.
  */
-inline void log_info(const std::string& message) {
-    static auto& logger = score::mw::log::CreateLogger("cpp_test_scenarios.time");
-    logger.LogInfo() << message;
+template <typename... Fields>
+inline void log_info(Fields... fields) {
+    TRACING_INFO("cpp_test_scenarios::scenarios::time", fields...);
 }
 
 }  // namespace time_log
