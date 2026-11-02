@@ -542,7 +542,7 @@
 2026-11-02). This note shows the current state of the integration and changes
 until the release is published.</p>
 </div>
-<div class="need_container docutils container" id="SNCB-6c49b3b0">
+<div class="need_container docutils container" id="SNCB-c889d3c4">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__score_v010_release_note">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -783,8 +783,9 @@ build configurations and do not compare JSON output against the old format.</p>
 </section>
 <section id="persistency-kvs-api-and-file-format">
 <h4>Persistency: KVS API and file format<a class="headerlink" href="#persistency-kvs-api-and-file-format" title="Link to this heading">#</a></h4>
-<p>The integrated Persistency commit changes the public KVS API that applications
-use directly:</p>
+<p>Persistency <code class="docutils literal notranslate"><span class="pre">v0.4.0</span></code> changes the public KVS API that applications use
+directly
+(<a class="reference external" href="https://github.com/eclipse-score/persistency/releases/tag/v0.4.0">Persistency v0.4.0 release notes</a>):</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">Kvs::reset_key</span></code> was renamed to <code class="docutils literal notranslate"><span class="pre">SetValueToDefault</span></code> (C++) and
 <code class="docutils literal notranslate"><span class="pre">set_value_to_default</span></code> (Rust), without a deprecated alias
@@ -815,6 +816,20 @@ Configurations with the old keys fail the schema validation
 <a class="reference external" href="https://github.com/eclipse-score/lifecycle/releases/tag/v0.9.0">Lifecycle v0.9.0 release notes</a>).</p>
 <p>Action required: rename the duration fields to <code class="docutils literal notranslate"><span class="pre">*_ms</span></code> and convert the values
 from seconds to milliseconds.</p>
+</section>
+<section id="lifecycle-launch-manager-configuration-schema-version-2">
+<h4>Lifecycle: Launch Manager configuration schema version 2<a class="headerlink" href="#lifecycle-launch-manager-configuration-schema-version-2" title="Link to this heading">#</a></h4>
+<p>The integrated Lifecycle commit makes POSIX RLIMITs configurable for the
+processes started by the Launch Manager and raises the configuration
+<code class="docutils literal notranslate"><span class="pre">schema_version</span></code> to <code class="docutils literal notranslate"><span class="pre">2</span></code>; the options <code class="docutils literal notranslate"><span class="pre">max_memory_usage</span></code> and
+<code class="docutils literal notranslate"><span class="pre">max_cpu_usage</span></code> were removed. The Lifecycle showcase configuration of this
+repository was updated accordingly
+(<a class="reference external" href="https://github.com/eclipse-score/lifecycle/pull/868">lifecycle#868</a>,
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/9c0136e094cfd76219077877a760c0e6fb8236d6">9c0136e</a>).</p>
+<p>Action required: set <code class="docutils literal notranslate"><span class="pre">schema_version</span></code> to <code class="docutils literal notranslate"><span class="pre">2</span></code> in Launch Manager
+configurations and replace <code class="docutils literal notranslate"><span class="pre">max_memory_usage</span></code> with the RLIMIT options
+(<code class="docutils literal notranslate"><span class="pre">RLIMIT_AS</span></code>, <code class="docutils literal notranslate"><span class="pre">RLIMIT_STACK</span></code>, <code class="docutils literal notranslate"><span class="pre">RLIMIT_DATA</span></code>) and <code class="docutils literal notranslate"><span class="pre">max_cpu_usage</span></code> with
+<code class="docutils literal notranslate"><span class="pre">RLIMIT_CPU</span></code>.</p>
 </section>
 </section>
 </section>
@@ -848,29 +863,29 @@ from seconds to milliseconds.</p>
 <td><p><a class="reference external" href="https://github.com/eclipse-score/score/releases/tag/v0.7.4">Release notes</a></p></td>
 <td><p>—</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/baselibs/tree/v0.2.16">Baselibs</a></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">v0.2.16</span></code></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/baselibs/releases/tag/v0.2.16">Release notes</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/baselibs/tree/v0.2.17">Baselibs</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">v0.2.17</span></code></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/baselibs/releases/tag/v0.2.17">Release notes</a></p></td>
 <td><p><a class="reference internal" href="../../modules/score_baselibs/verification_report/module_verification_report.html"><span class="doc">Verification report</span></a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/communication/tree/cea38c1f8404049b20645a63a740e5f57362eae4">Communication</a></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">cea38c1</span> <span class="pre">(unreleased)</span></code></p></td>
-<td><p>—</p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/communication/tree/v0.6.0">Communication</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">v0.6.0</span></code></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/communication/releases/tag/v0.6.0">Release notes</a></p></td>
 <td><p>—</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/persistency/tree/41d76090c7d0b05068cdc5bb22ef2e9f3571906a">Persistency</a></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">41d7609</span> <span class="pre">(unreleased)</span></code></p></td>
-<td><p>—</p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/persistency/tree/v0.4.0">Persistency</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">v0.4.0</span></code></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/persistency/releases/tag/v0.4.0">Release notes</a></p></td>
 <td><p><a class="reference internal" href="../../modules/score_persistency/verification_report/module_verification_report.html"><span class="doc">Verification report</span></a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/kyron/tree/v0.1.5">Kyron</a></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">v0.1.5</span></code></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/kyron/releases/tag/v0.1.5">Release notes</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/kyron/tree/v0.1.6">Kyron</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">v0.1.6</span></code></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/kyron/releases/tag/v0.1.6">Release notes</a></p></td>
 <td><p>—</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/lifecycle/tree/v0.9.0">Lifecycle</a></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">v0.9.0</span></code></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/lifecycle/releases/tag/v0.9.0">Release notes</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/lifecycle/tree/e4f9773336e7e483d973cc261b69ae3bc198f368">Lifecycle</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">e4f9773</span> <span class="pre">(unreleased)</span></code></p></td>
+<td><p>—</p></td>
 <td><p><a class="reference internal" href="../../modules/score_lifecycle/verification_report/module_verification_report.html"><span class="doc">Verification report</span></a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/logging/tree/v0.2.5">Logging</a></p></td>
@@ -878,9 +893,9 @@ from seconds to milliseconds.</p>
 <td><p><a class="reference external" href="https://github.com/eclipse-score/logging/releases/tag/v0.2.5">Release notes</a></p></td>
 <td><p><a class="reference internal" href="../../modules/score_logging/verification_report/module_verification_report.html"><span class="doc">Verification report</span></a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/time/tree/3723ce687e4abc7d6cb4c0efdbbd30455ed7c303">Time</a></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">3723ce6</span> <span class="pre">(unreleased)</span></code></p></td>
-<td><p>—</p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/time/tree/v0.3.1">Time</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">v0.3.1</span></code></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/time/releases/tag/v0.3.1">Release notes</a></p></td>
 <td><p>—</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/config_management/tree/v0.3.1">Configuration Management</a></p></td>
@@ -1087,6 +1102,7 @@ from seconds to milliseconds.</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#baselibs-vajson-is-the-only-json-backend">Baselibs: vaJson is the only JSON backend</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#persistency-kvs-api-and-file-format">Persistency: KVS API and file format</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lifecycle-launch-manager-configuration-in-milliseconds">Lifecycle: Launch Manager configuration in milliseconds</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lifecycle-launch-manager-configuration-schema-version-2">Lifecycle: Launch Manager configuration schema version 2</a></li>
 </ul>
 </li>
 </ul>
