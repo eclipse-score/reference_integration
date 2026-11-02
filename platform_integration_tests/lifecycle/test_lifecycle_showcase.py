@@ -32,3 +32,27 @@ def test_lifecycle_showcase(target):
     management."""
 
     run_showcases(target, "Simple Health and lifecycle management example")
+
+
+@add_test_properties(
+    partially_verifies=["stkh_req__dependability__safety_features_1"],
+    test_type="interface-test",
+    derivation_technique="requirements-analysis",
+)
+def test_lifecycle_run_target_switching_showcase(target):
+    """lmcontrol drives the launch manager between the Startup and Running
+    run targets, starting and stopping the C, C++ and Rust example apps."""
+
+    run_showcases(target, "Lifecycle run target switching example")
+
+
+@add_test_properties(
+    partially_verifies=["stkh_req__dependability__safety_features_1"],
+    test_type="interface-test",
+    derivation_technique="requirements-analysis",
+)
+def test_lifecycle_crash_recovery_showcase(target):
+    """A killed supervised app makes the launch manager recover to the
+    fallback run target, after which lmcontrol restores Running."""
+
+    run_showcases(target, "Lifecycle crash recovery example")
