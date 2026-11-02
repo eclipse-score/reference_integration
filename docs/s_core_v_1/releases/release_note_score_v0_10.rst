@@ -244,8 +244,9 @@ build configurations and do not compare JSON output against the old format.
 Persistency: KVS API and file format
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The integrated Persistency commit changes the public KVS API that applications
-use directly:
+Persistency ``v0.4.0`` changes the public KVS API that applications use
+directly
+(`Persistency v0.4.0 release notes <https://github.com/eclipse-score/persistency/releases/tag/v0.4.0>`__):
 
 - ``Kvs::reset_key`` was renamed to ``SetValueToDefault`` (C++) and
   ``set_value_to_default`` (Rust), without a deprecated alias
@@ -279,6 +280,22 @@ Configurations with the old keys fail the schema validation
 Action required: rename the duration fields to ``*_ms`` and convert the values
 from seconds to milliseconds.
 
+Lifecycle: Launch Manager configuration schema version 2
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The integrated Lifecycle commit makes POSIX RLIMITs configurable for the
+processes started by the Launch Manager and raises the configuration
+``schema_version`` to ``2``; the options ``max_memory_usage`` and
+``max_cpu_usage`` were removed. The Lifecycle showcase configuration of this
+repository was updated accordingly
+(`lifecycle#868 <https://github.com/eclipse-score/lifecycle/pull/868>`__,
+`9c0136e <https://github.com/eclipse-score/reference_integration/commit/9c0136e094cfd76219077877a760c0e6fb8236d6>`__).
+
+Action required: set ``schema_version`` to ``2`` in Launch Manager
+configurations and replace ``max_memory_usage`` with the RLIMIT options
+(``RLIMIT_AS``, ``RLIMIT_STACK``, ``RLIMIT_DATA``) and ``max_cpu_usage`` with
+``RLIMIT_CPU``.
+
 🎯 Reference Integration scope
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -303,33 +320,33 @@ from seconds to milliseconds.
      - ``v0.7.4``
      - `Release notes <https://github.com/eclipse-score/score/releases/tag/v0.7.4>`__
      - ---
-   * - `Baselibs <https://github.com/eclipse-score/baselibs/tree/v0.2.16>`__
-     - ``v0.2.16``
-     - `Release notes <https://github.com/eclipse-score/baselibs/releases/tag/v0.2.16>`__
+   * - `Baselibs <https://github.com/eclipse-score/baselibs/tree/v0.2.17>`__
+     - ``v0.2.17``
+     - `Release notes <https://github.com/eclipse-score/baselibs/releases/tag/v0.2.17>`__
      - :doc:`Verification report </modules/score_baselibs/verification_report/module_verification_report>`
-   * - `Communication <https://github.com/eclipse-score/communication/tree/cea38c1f8404049b20645a63a740e5f57362eae4>`__
-     - ``cea38c1 (unreleased)``
+   * - `Communication <https://github.com/eclipse-score/communication/tree/v0.6.0>`__
+     - ``v0.6.0``
+     - `Release notes <https://github.com/eclipse-score/communication/releases/tag/v0.6.0>`__
      - ---
-     - ---
-   * - `Persistency <https://github.com/eclipse-score/persistency/tree/41d76090c7d0b05068cdc5bb22ef2e9f3571906a>`__
-     - ``41d7609 (unreleased)``
-     - ---
+   * - `Persistency <https://github.com/eclipse-score/persistency/tree/v0.4.0>`__
+     - ``v0.4.0``
+     - `Release notes <https://github.com/eclipse-score/persistency/releases/tag/v0.4.0>`__
      - :doc:`Verification report </modules/score_persistency/verification_report/module_verification_report>`
-   * - `Kyron <https://github.com/eclipse-score/kyron/tree/v0.1.5>`__
-     - ``v0.1.5``
-     - `Release notes <https://github.com/eclipse-score/kyron/releases/tag/v0.1.5>`__
+   * - `Kyron <https://github.com/eclipse-score/kyron/tree/v0.1.6>`__
+     - ``v0.1.6``
+     - `Release notes <https://github.com/eclipse-score/kyron/releases/tag/v0.1.6>`__
      - ---
-   * - `Lifecycle <https://github.com/eclipse-score/lifecycle/tree/v0.9.0>`__
-     - ``v0.9.0``
-     - `Release notes <https://github.com/eclipse-score/lifecycle/releases/tag/v0.9.0>`__
+   * - `Lifecycle <https://github.com/eclipse-score/lifecycle/tree/e4f9773336e7e483d973cc261b69ae3bc198f368>`__
+     - ``e4f9773 (unreleased)``
+     - ---
      - :doc:`Verification report </modules/score_lifecycle/verification_report/module_verification_report>`
    * - `Logging <https://github.com/eclipse-score/logging/tree/v0.2.5>`__
      - ``v0.2.5``
      - `Release notes <https://github.com/eclipse-score/logging/releases/tag/v0.2.5>`__
      - :doc:`Verification report </modules/score_logging/verification_report/module_verification_report>`
-   * - `Time <https://github.com/eclipse-score/time/tree/3723ce687e4abc7d6cb4c0efdbbd30455ed7c303>`__
-     - ``3723ce6 (unreleased)``
-     - ---
+   * - `Time <https://github.com/eclipse-score/time/tree/v0.3.1>`__
+     - ``v0.3.1``
+     - `Release notes <https://github.com/eclipse-score/time/releases/tag/v0.3.1>`__
      - ---
    * - `Configuration Management <https://github.com/eclipse-score/config_management/tree/v0.3.1>`__
      - ``v0.3.1``
