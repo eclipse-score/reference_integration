@@ -178,10 +178,17 @@ def _apply_extra_dependency_overrides(workspace: Path, devcontainer_version: str
 
     The module's own graph is resolved before any ref_int pin applies. score_devcontainer 1.11.1
     (from score_docs_as_code 8.3.0) had its tag re-pushed, so its archive fails the registry
-    checksum. A bazel_dep lets MVS raise it; an override would error where it is not in the graph.
+    checksum. A module that depends on it itself gets a single_version_override (a second bazel_dep
+    is an error); otherwise a bazel_dep lets MVS raise it, as an override errors when the module is
+    not in the graph.
     """
-    with (workspace / "MODULE.bazel").open("a") as f:
-        f.write(f'bazel_dep(name = "score_devcontainer", version = "{devcontainer_version}", dev_dependency = True)\n')
+    module_file = workspace / "MODULE.bazel"
+    if re.search(r'bazel_dep\(\s*name\s*=\s*"score_devcontainer"', module_file.read_text()):
+        line = f'single_version_override(module_name = "score_devcontainer", version = "{devcontainer_version}")\n'
+    else:
+        line = f'bazel_dep(name = "score_devcontainer", version = "{devcontainer_version}", dev_dependency = True)\n'
+    with module_file.open("a") as f:
+        f.write(line)
 
 
 def _collect_coverage(workspace: Path, out: Path, env: dict) -> None:
