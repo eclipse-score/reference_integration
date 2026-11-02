@@ -2,7 +2,7 @@
   {
     "repo": {
       "name": "score_lifecycle",
-      "hash": "2c3a919452b0f81a016c6c8783254d7d0189d0a9",
+      "hash": "e4f9773336e7e483d973cc261b69ae3bc198f368",
       "url": "https://github.com/eclipse-score/lifecycle"
     },
     "needs": [
@@ -27,13 +27,23 @@
           "CodeLinks": [
             {
               "file": "score/launch_manager/src/daemon/src/process_group_manager/details/process_launcher.cpp",
-              "line": 137,
+              "line": 138,
               "tag": "// req-Id:",
               "need": "comp_req__launch_man__process_rlimit_support",
               "full_line": "// req-Id: comp_req__launch_man__process_rlimit_support"
             }
           ],
-          "TestLinks": []
+          "TestLinks": [
+            {
+              "name": "test_sandbox_options",
+              "file": "../score_lifecycle+/tests/integration/sandbox_options/sandbox_options.py",
+              "line": 119,
+              "need": "comp_req__launch_man__process_rlimit_support",
+              "verify_type": "fully",
+              "result": "passed",
+              "result_text": ""
+            }
+          ]
         }
       },
       {
