@@ -22,6 +22,22 @@ import re
 from attribute_plugin import add_test_properties
 from showcase_runner import run_showcases
 
+# Printed by control_daemon's run target activation callback for every
+# completed transition, whether requested via lmcontrol or by a recovery action.
+ACTIVATED_RUN_TARGET = re.compile(r"Successfully activated Run Target (\S+)")
+
+
+def activated_run_targets(output: str) -> list[str]:
+    """Return the run targets the launch manager activated, in order.
+
+    The initial ``Startup`` activation may complete before control_daemon
+    registers its callback, so a leading ``Startup`` is dropped.
+    """
+    activated = ACTIVATED_RUN_TARGET.findall(output)
+    if activated[:1] == ["Startup"]:
+        activated = activated[1:]
+    return activated
+
 
 def _unexpected_termination(component: str) -> re.Pattern:
     # The launch manager prefixes process logs with "Name: <component>, PID: <pid>".
@@ -71,3 +87,35 @@ def test_lifecycle_showcase(target):
         < output.index("Completed the request for Run Target fallback_run_target")
         < output.index("Completed the request for Run Target Off")
     ), f"Lifecycle state transitions are out of order:\n{output}"
+
+
+@add_test_properties(
+    partially_verifies=["stkh_req__execution_model__processes"],
+    test_type="interface-test",
+    derivation_technique="requirements-analysis",
+)
+def test_lifecycle_run_target_switching_showcase(target):
+    """lmcontrol drives the launch manager between the Startup and Running
+    run targets, starting and stopping the C, C++ and Rust example apps."""
+
+    output = run_showcases(target, "Lifecycle run target switching example")
+    assert activated_run_targets(output) == ["Running", "Startup"], output
+
+
+@add_test_properties(
+    partially_verifies=[
+        "stkh_req__execution_model__processes",
+        "stkh_req__dependability__availability",
+    ],
+    test_type="interface-test",
+    derivation_technique="requirements-analysis",
+)
+def test_lifecycle_crash_recovery_showcase(target):
+    """A killed supervised app makes the launch manager recover to the
+    fallback run target, after which lmcontrol restores Running."""
+
+    output = run_showcases(target, "Lifecycle crash recovery example")
+    # fallback_run_target only activates if the SIGKILL hit cpp_supervised_app;
+    # the second Running activation requires the launch manager to restart it,
+    # since Running depends on the app reaching its Running process state.
+    assert activated_run_targets(output) == ["Running", "fallback_run_target", "Running"], output

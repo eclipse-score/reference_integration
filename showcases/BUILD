@@ -59,6 +59,7 @@ pkg_filegroup(
         "//showcases/standalone:config_management_pkg_files",
         "//showcases/standalone:crypto_pkg_files",
         "//showcases/standalone:kyron_pkg_files",
+        "//showcases/standalone:lifecycle_run_target_recovery_pkg_files",
         "//showcases/standalone:logging_pkg_files",
         "//showcases/standalone:persistency_pkg_files",
         "//showcases/standalone:platform_info_pkg_files",
