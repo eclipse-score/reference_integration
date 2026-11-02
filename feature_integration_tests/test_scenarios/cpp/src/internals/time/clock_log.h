@@ -14,9 +14,10 @@
 #ifndef INTERNALS_TIME_CLOCK_LOG_H_
 #define INTERNALS_TIME_CLOCK_LOG_H_
 
+#include "score/mw/log/logger.h"
+
 #include <chrono>
 #include <cstdint>
-#include <iostream>
 #include <string>
 
 namespace time_log {
@@ -36,26 +37,16 @@ inline std::int64_t unix_micros() {
 }
 
 /**
- * @brief Emit a structured JSON INFO log line to stdout.
+ * @brief Emit the clock reading through the SCORE logging API.
  *
- * Matches the Rust tracing JSON format expected by the FIT LogContainer so
- * that Python test assertions can use find_log() uniformly for both Rust and
- * C++ scenarios.
+ * The FIT runner captures C++ scenario output, including the console logger's
+ * formatted records. Keep the values in a concise message for inspection.
  *
- * Example output:
- * @code
- * {"timestamp":"1700000000000000","level":"INFO","fields":{"clock":"system","value_ns":1700000000000000000},
- *  "target":"cpp_test_scenarios::scenarios::time::system_clock_now","threadId":"ThreadId(1)"}
- * @endcode
- *
- * @param fields  JSON fragment for the "fields" object, e.g. @c "\"clock\":\"system\",\"value_ns\":1"
- * @param target  Module target string embedded in the log line.
+ * @param message Clock reading details to log.
  */
-inline void log_info(const std::string& fields, const std::string& target) {
-    std::cout << "{\"timestamp\":\"" << unix_micros()
-              << "\",\"level\":\"INFO\",\"fields\":{" << fields
-              << "},\"target\":\"" << target
-              << "\",\"threadId\":\"ThreadId(1)\"}\n";
+inline void log_info(const std::string& message) {
+    static auto& logger = score::mw::log::CreateLogger("cpp_test_scenarios.time");
+    logger.LogInfo() << message;
 }
 
 }  // namespace time_log
