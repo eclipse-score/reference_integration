@@ -167,6 +167,11 @@ Documentation and reports
 - The Overall Status page was replaced by the Release-wide Progress Overview
   next to the release notes, with release-over-release charts per module
   (`#392 <https://github.com/eclipse-score/reference_integration/pull/392>`__).
+- The documentation of the Communication dependable element is published via
+  the module test artifacts and linked from the module documentation index; the
+  ``metadata.dependable_element_docs`` field of ``known_good.json`` enables it
+  (`bbf95e3 <https://github.com/eclipse-score/reference_integration/commit/bbf95e3d9fce50d8135e90bb89f7c0f2e096cac3>`__,
+  `d612b38 <https://github.com/eclipse-score/reference_integration/commit/d612b38c4a4fed4863f08ac33ee9c7c4b7249952>`__).
 - The release note is generated from ``known_good.json`` with
   ``scripts/release_note/generate_release_note.py``
   (`#414 <https://github.com/eclipse-score/reference_integration/pull/414>`__).
@@ -302,17 +307,17 @@ from seconds to milliseconds.
      - ``v0.2.16``
      - `Release notes <https://github.com/eclipse-score/baselibs/releases/tag/v0.2.16>`__
      - :doc:`Verification report </modules/score_baselibs/verification_report/module_verification_report>`
-   * - `Communication <https://github.com/eclipse-score/communication/tree/313f1178628189d267c8cd0d75971bdac04c20ee>`__
-     - ``313f117 (unreleased)``
+   * - `Communication <https://github.com/eclipse-score/communication/tree/cea38c1f8404049b20645a63a740e5f57362eae4>`__
+     - ``cea38c1 (unreleased)``
      - ---
      - ---
    * - `Persistency <https://github.com/eclipse-score/persistency/tree/41d76090c7d0b05068cdc5bb22ef2e9f3571906a>`__
      - ``41d7609 (unreleased)``
      - ---
      - :doc:`Verification report </modules/score_persistency/verification_report/module_verification_report>`
-   * - `Kyron <https://github.com/eclipse-score/kyron/tree/52d4bef3d1822f82199d72e58e815b9e43406fe6>`__
-     - ``52d4bef (unreleased)``
-     - ---
+   * - `Kyron <https://github.com/eclipse-score/kyron/tree/v0.1.5>`__
+     - ``v0.1.5``
+     - `Release notes <https://github.com/eclipse-score/kyron/releases/tag/v0.1.5>`__
      - ---
    * - `Lifecycle <https://github.com/eclipse-score/lifecycle/tree/v0.9.0>`__
      - ``v0.9.0``
@@ -326,9 +331,9 @@ from seconds to milliseconds.
      - ``3723ce6 (unreleased)``
      - ---
      - ---
-   * - `Configuration Management <https://github.com/eclipse-score/config_management/tree/d0dab01ae408ceb8ec65344e93d8a51d8173da81>`__
-     - ``d0dab01 (unreleased)``
-     - ---
+   * - `Configuration Management <https://github.com/eclipse-score/config_management/tree/v0.3.1>`__
+     - ``v0.3.1``
+     - `Release notes <https://github.com/eclipse-score/config_management/releases/tag/v0.3.1>`__
      - ---
 
 🔧 Associated Infrastructure Modules
@@ -350,9 +355,9 @@ from seconds to milliseconds.
    * - `Tools <https://github.com/eclipse-score/tools/tree/4b48cec400c67be75cfc3fa4658ac6a0489bf7a8>`__
      - ``4b48cec (unreleased)``
      - ---
-   * - `Tooling <https://github.com/eclipse-score/tooling/tree/v2.2.3>`__
-     - ``v2.2.3``
-     - `Release notes <https://github.com/eclipse-score/tooling/releases/tag/v2.2.3>`__
+   * - `Tooling <https://github.com/eclipse-score/tooling/tree/v3.0.1>`__
+     - ``v3.0.1``
+     - `Release notes <https://github.com/eclipse-score/tooling/releases/tag/v3.0.1>`__
    * - `Bazel Platforms <https://github.com/eclipse-score/bazel_platforms/tree/v1.1.0>`__
      - ``v1.1.0``
      - `Release notes <https://github.com/eclipse-score/bazel_platforms/releases/tag/v1.1.0>`__
