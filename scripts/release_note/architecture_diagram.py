@@ -265,12 +265,14 @@ def render(
 
     # Header with key figures
     short = ".".join(release.removeprefix("v").split(".")[:2])
-    parts.append(f'<rect x="0" y="0" width="{W}" height="132" fill="{HEADER}"/>')
+    parts.append(f'<rect x="0" y="0" width="{W}" height="88" fill="{HEADER}"/>')
     title = f"S-CORE Platform v{short}"
-    parts.append(text(M, 54, title, 32, 800, "#ffffff"))
-    parts.append(text(M, 86, "Reference integration architecture", 16, 400, HEADER_TEXT))
+    parts.append(text(M, 44, title, 26, 800, "#ffffff"))
+    parts.append(text(M, 68, "Reference integration architecture", 15, 400, HEADER_TEXT))
     state, color = ("FINAL", RELEASED) if final else ("DRAFT", UNRELEASED)
-    parts.append(pill(M + text_width(title, 32, 800) + 20 + 12 + 7 * len(state), 30, state, color, 24))
+    parts.append(pill(M + text_width(title, 26, 800) + 20 + 12 + 7 * len(state), 25, state, color, 20))
+    when = f"released {date}" if final else f"planned {date}"
+    parts.append(text(W - M, 26, f"{release}  \u00b7  {when}  \u00b7  compared to {origin}", 12, 400, HEADER_FAINT, "end"))
     figures = [
         (str(len(sw)), "software modules"),
         (str(sum(map(len, components.values()))), "components"),
@@ -280,12 +282,10 @@ def render(
     x = W - M
     for value, label in reversed(figures):
         w = max(text_width(label, 11) + 8, 70)
-        parts.append(text(x, 62, value, 28, 800, "#ffffff", "end"))
-        parts.append(text(x, 82, label, 11, 400, HEADER_TEXT, "end"))
+        parts.append(text(x, 56, value, 22, 800, "#ffffff", "end"))
+        parts.append(text(x, 72, label, 11, 400, HEADER_TEXT, "end"))
         x -= w + 26
-    when = f"released {date}" if final else f"planned {date}"
-    parts.append(text(M, 114, f"{release}  \u00b7  {when}  \u00b7  compared to {origin}", 12, 400, HEADER_FAINT))
-    top = 156.0
+    top = 112.0
     side_x, side_w = float(M), 300.0
     right_x = side_x + side_w + 20
     right_w = W - M - right_x
