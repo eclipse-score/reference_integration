@@ -113,12 +113,12 @@ public:
                 "SteadyClock::Now() did not progress after sleep: final reading precedes the last");
         }
 
-        time_log::log_info(
-            "clock=steady tick_count=" + std::to_string(tick_count) +
-            " first_ns=" + std::to_string(first_ns) +
-            " last_ns=" + std::to_string(last_ns) +
-            " final_ns=" + std::to_string(final_ns) +
-            " sleep_ms=" + std::to_string(sleep_ms));
+        time_log::log_info(std::make_pair(std::string{"clock"}, std::string{"steady"}),
+                           std::make_pair(std::string{"tick_count"}, tick_count),
+                           std::make_pair(std::string{"first_ns"}, first_ns),
+                           std::make_pair(std::string{"last_ns"}, last_ns),
+                           std::make_pair(std::string{"final_ns"}, final_ns),
+                           std::make_pair(std::string{"sleep_ms"}, sleep_ms));
     }
 };
 
