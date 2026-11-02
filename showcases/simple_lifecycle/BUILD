@@ -41,5 +41,7 @@ score_pkg_bundle(
     custom_layout = {
         ":lifecycle_configs": "etc/",
         "//showcases/simple_lifecycle/configs:logging.json": "etc/logging.json",
+        # Required by the launch manager's mw::com based lm_control service.
+        "@score_lifecycle//score/launch_manager:example_com_config": "etc/mw_com_config.json",
     },
 )
