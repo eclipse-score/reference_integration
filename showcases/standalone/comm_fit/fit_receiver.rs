@@ -111,12 +111,12 @@ fn parse_args() -> Arguments {
 }
 
 fn init_lola_runtime(config_path: &Path) -> LolaRuntimeImpl {
-    let mut builder = LolaRuntimeBuilderImpl::new();
-    if config_path.exists() {
-        builder.load_config(config_path);
-    } else {
+    if !config_path.exists() {
         eprintln!("FIT_RECV_CONFIG_MISSING path={}", config_path.display());
+        std::process::exit(1);
     }
+    let mut builder = LolaRuntimeBuilderImpl::new();
+    builder.load_config(config_path);
     builder.build().expect("Failed to build Lola runtime")
 }
 

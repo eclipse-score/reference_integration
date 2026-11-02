@@ -237,21 +237,18 @@ def test_late_joining_consumer_receives_data(target):
 def _assert_missing_config_fails_deterministically(result: comm.CommResult) -> None:
     """
     A missing manifest takes a distinct code path from malformed JSON (see
-    fit_receiver.rs's init_lola_runtime): no parse is attempted, so it must
-    be caught by our own controlled exit(1)/FIT_RECV_NO_SERVICE path, not a
-    parser abort. Pinned to that exact exit code and both markers -- rather
-    than just "exit != 0" -- so an unrelated crash (segfault, wrong binary,
-    panic elsewhere) cannot be mistaken for this specific contract.
+    fit_receiver.rs's init_lola_runtime): no parse is attempted, and the
+    process exits immediately with exit(1) after printing FIT_RECV_CONFIG_MISSING.
+    Pinned to that exact exit code and marker -- rather than just "exit != 0" --
+    so an unrelated crash (segfault, wrong binary, panic elsewhere) cannot be
+    mistaken for this specific contract.
     """
     assert "FIT_RECV_CONFIG_MISSING" in result.recv_stdout, (
         f"consumer did not report the config file as missing:\n{result.recv_stdout}"
     )
     assert result.recv_exit_code == 1, (
-        f"expected the controlled exit(1)/FIT_RECV_NO_SERVICE path (got exit "
+        f"expected the controlled exit(1) after FIT_RECV_CONFIG_MISSING (got exit "
         f"{result.recv_exit_code}):\n{result.recv_stdout}"
-    )
-    assert "FIT_RECV_NO_SERVICE" in result.recv_stdout, (
-        f"consumer did not report giving up on service discovery:\n{result.recv_stdout}"
     )
     assert not result.found_service, "consumer proceeded past config load to service discovery"
     assert not result.received_samples, "consumer proceeded to receive samples despite a missing config"
@@ -421,7 +418,8 @@ def test_mixed_criticality_acl_isolation(target):
             "ACL check."
         )
 
-    allowed_result, denied_result, allowed_uid = comm.run_acl_isolation_scenario(target)
+    send_cycles = 40
+    allowed_result, denied_result, allowed_uid = comm.run_acl_isolation_scenario(target, send_cycles=send_cycles)
     logger.info("ACL scenario allowed_uid=%s", allowed_uid)
     logger.info("allowed consumer stdout:\n%s", allowed_result.recv_stdout)
     logger.info("denied consumer stdout:\n%s", denied_result.recv_stdout)
@@ -429,6 +427,13 @@ def test_mixed_criticality_acl_isolation(target):
     # Allowed consumer: unaffected by the concurrently-running denied one.
     assert allowed_result.recv_exit_code == 0, "allowed consumer did not exit cleanly"
     assert allowed_result.received_samples, "allowed consumer received no samples"
+    samples = allowed_result.received_samples
+    assert all(0 <= s < send_cycles for s in samples), (
+        f"allowed consumer received out-of-range sequence values: {samples}"
+    )
+    assert all(b == a + 1 for a, b in zip(samples, samples[1:])), (
+        f"allowed consumer received reordered or duplicated samples: {samples}"
+    )
 
     # Denied consumer: fails deterministically, never receives data, and the
     # failure is specifically attributable to the ACL/proxy-creation path
