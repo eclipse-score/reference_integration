@@ -48,6 +48,18 @@ bazel run //showcases/cli:cli -- --help
 
 See [showcases/cli/README.md](showcases/cli/README.md) for CLI configuration and examples.
 
+## Run showcases on Raspberry Pi (Linux aarch64)
+
+Every release carries `score-platform-linux-aarch64.tar.gz` and
+`score-showcases-linux-aarch64.tar.gz`. Install them on a Raspberry Pi running
+Raspberry Pi OS Lite (64-bit) and run `sudo /showcases/bin/cli --examples all`;
+see [deploy/README.md](deploy/README.md#linux-aarch64-eg-raspberry-pi-4). To
+build them yourself:
+
+```bash
+bazel build --config=linux-aarch64 //deploy:platform_tar //showcases:showcases_pkg_tar
+```
+
 ## Build and deploy showcases on Raspberry Pi (QNX aarch64)
 
 The `images/qnx_aarch64` image packages all S-CORE showcases into a bootable QNX 8.0 IFS (Image File System) for AArch64 targets. It can be run in QEMU for local development and testing, or deployed to a Raspberry Pi 4/5 for real hardware validation.
@@ -300,6 +312,7 @@ Integration and deployment platforms for S-CORE:
 - **[Elektrobit corbos Linux for Safety Applications (aarch64)](images/ebclfsa_aarch64/README.md)** — Safety-critical automotive Linux
 - **Red Hat AutoSD (x86_64)** — Automotive system development
 - **Linux x86_64** — Standard Linux development and testing (Docker-based)
+- **Linux aarch64** — Vanilla Linux with glibc 2.31 and libstdc++ from GCC 12 or newer, e.g. Raspberry Pi OS Lite (64-bit, Bookworm) on a Raspberry Pi 4; see [Run showcases on Raspberry Pi (Linux aarch64)](#run-showcases-on-raspberry-pi-linux-aarch64)
 
 ## Multi-Module Development Workspace
 
