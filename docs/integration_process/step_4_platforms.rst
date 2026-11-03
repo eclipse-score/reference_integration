@@ -181,39 +181,64 @@ job** automatically.
 
 .. _add_directly:
 
-Add a binary directly to an image
----------------------------------
+Deploy a component as part of the platform
+------------------------------------------
 
-If your component is not a CLI showcase — for example a background daemon that
-must always be present — you wire it straight into each image's build
-description instead. Unlike the showcase route, **this is per-image work: you
-repeat it for every image you target** (Linux, QNX, AutoSD, EBcLfSA).
+If your component is not a showcase — for example a background daemon that must
+always be present — it belongs to the *deployed platform* rather than to the
+demonstration layer. The image content is split into three layers:
 
-The reference example is the ``datarouter``. Its destination path, permissions
-and owner are declared once as a ``pkg_files`` target; because the binary is
-resolved per platform (not per architecture) the definition is shared from
-``images/common/apps`` and each image lists it in its ``srcs``.
-``score_rules_imagefs`` then generates the matching ``mkifs`` directives, so
-nothing has to be added to ``system.build``:
+* **Image** (``images/<variant>``) — boot, kernel, drivers, rootfs skeleton.
+* **Platform** (``deploy/``) — the S-CORE modules as deployed. This is what a
+  conformance check treats as the system under test.
+* **Showcases** (``showcases/``) — applications that demonstrate and verify the
+  platform, removable without touching the two layers below.
+
+Keep the two apart: a showcase must never ship the component it exercises,
+otherwise it verifies the binary it brought along instead of the one the
+distribution deployed. The lifecycle module is the illustrative case — the
+``launch_manager`` daemon is deployed from ``deploy/lifecycle``, while the
+applications it supervises stay in ``showcases/simple_lifecycle``.
+
+**1. Package the component.** Declare destination path and permissions as a
+``pkg_files`` target in ``deploy/<module>/BUILD``. Because the binary is
+resolved per platform (not per architecture), one definition serves every
+image, and ``score_rules_imagefs`` generates the matching ``mkifs`` directives
+so nothing has to be added to ``system.build``:
 
 .. code-block:: python
 
-   # images/common/apps/BUILD  (defined once, shared by every image)
+   # deploy/logging/BUILD
    pkg_files(
        name = "datarouter_bin",
        srcs = ["@score_logging//score/datarouter"],
        attributes = pkg_attributes(mode = "0777"),
        prefix = "usr/bin/datarouter",
        strip_prefix = strip_prefix.files_only(),
+   )
+
+**2. Register it in the platform bundle.** Unlike the showcase route this is
+*not* per-image work: every image already consumes the aggregate, so adding
+your target to it is enough.
+
+.. code-block:: python
+
+   # deploy/BUILD
+   pkg_filegroup(
+       name = "platform_bundle",
+       srcs = [
+           # ...
+           "//deploy/logging:datarouter_bin",
+       ],
        visibility = ["//visibility:public"],
    )
 
-   # images/qnx_x86_64/build/BUILD  (referenced per image)
+   # images/qnx_x86_64/build/BUILD  (already present, shown for context)
    qnx_ifs(
        name = "init",
        srcs = [
            # ...
-           "//images/common/apps:datarouter_bin",
+           "//deploy:platform_bundle",
        ],
        build_file = "init.build",
        extra_build_files = ["system.build"],
@@ -223,12 +248,10 @@ Note that ``qnx_ifs`` rejects anything in ``srcs`` that does not provide a
 ``rules_pkg`` provider, so a plain ``filegroup`` or a bare label will not work -
 wrap it in ``pkg_files``.
 
-See `images/common/apps/BUILD <https://github.com/eclipse-score/reference_integration/blob/main/images/common/apps/BUILD>`_
-and `images/qnx_x86_64/build/BUILD <https://github.com/eclipse-score/reference_integration/blob/main/images/qnx_x86_64/build/BUILD>`_
-for the full picture, and repeat the equivalent wiring in the other images you
-need (`images/linux_x86_64 <https://github.com/eclipse-score/reference_integration/tree/main/images/linux_x86_64>`_,
-`images/autosd <https://github.com/eclipse-score/reference_integration/tree/main/images/autosd>`_,
-`images/ebclfsa_aarch64 <https://github.com/eclipse-score/reference_integration/tree/main/images/ebclfsa_aarch64>`_).
+See `deploy/README.md <https://github.com/eclipse-score/reference_integration/blob/main/deploy/README.md>`_
+for the contract between the platform and the showcase layer, and
+`images/qnx_x86_64/build/BUILD <https://github.com/eclipse-score/reference_integration/blob/main/images/qnx_x86_64/build/BUILD>`_
+for how an image consumes it.
 
 If your module simply cannot run on a given platform, exclude its targets via
 ``metadata.exclude_test_targets`` / ``metadata.extra_test_config`` in

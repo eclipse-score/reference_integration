@@ -11,7 +11,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 load("@rules_oci//oci:defs.bzl", "oci_image", "oci_load")
-load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 
 sh_binary(
@@ -30,21 +29,12 @@ sh_binary(
     },
 )
 
-# Datarouter binary and configs, shared via //images/common/apps.
-pkg_tar(
-    name = "datarouter_tar",
-    srcs = [
-        "//images/common/apps:datarouter_bin",
-        "//images/common/apps:datarouter_configs",
-    ],
-)
-
 oci_image(
     name = "image",
     base = "@ubuntu_22_04_linux_amd64",
     tars = [
+        "//deploy:platform_tar",
         "//showcases:showcases_pkg_tar",
-        ":datarouter_tar",
     ],
 )
 
