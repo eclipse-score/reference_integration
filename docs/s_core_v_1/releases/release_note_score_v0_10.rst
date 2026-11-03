@@ -237,6 +237,12 @@ Documentation and reports
 - The Platform Verification Report uses the ``platform_verification_report``
   template of Docs-as-code
   (`Docs-as-code v8.2.0 release notes <https://github.com/eclipse-score/docs-as-code/releases/tag/v8.2.0>`__).
+- The module tests export the coverage reports of Baselibs, Persistency,
+  Logging, Kyron, Lifecycle and Time and combine them into one LCOV file
+  (``coverage-report/coverage_report.dat``) that the documentation build reads,
+  so the measured module coverage appears in the documentation; Communication
+  and Configuration Management run their tests without coverage
+  (`#425 <https://github.com/eclipse-score/reference_integration/pull/425>`__).
 - The Overall Status page was replaced by the Release-wide Progress Overview
   next to the release notes, with release-over-release charts per module
   (`#392 <https://github.com/eclipse-score/reference_integration/pull/392>`__).
