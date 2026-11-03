@@ -71,3 +71,65 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ github.event.release.tag_name }}
         run: gh release upload "$RELEASE_TAG" score-platform-linux-x86_64.tar.gz score-showcases-linux-x86_64.tar.gz --clobber
+  aarch64-build:
+    name: aarch64 (cross-build)
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Clean disk space
+        uses: eclipse-score/more-disk-space@v1
+      - name: Checkout repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.18.0
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}-aarch64
+          repository-cache: true
+          cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+      - name: Install aarch64 libc headers
+        # iceoryx2's bindgen build scripts (via kyron) read the target's system headers from the host;
+        # clang only finds them once it detects a cross GCC installation.
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu libc6-dev-arm64-cross
+      - name: Build and package platform and showcases
+        run: |
+          bazel build --lockfile_mode=error --config=linux-aarch64 //deploy:platform_tar //showcases:showcases_pkg_tar
+          gzip -c bazel-bin/deploy/platform_tar.tar > score-platform-linux-aarch64.tar.gz
+          gzip -c bazel-bin/showcases/showcases_pkg_tar.tar > score-showcases-linux-aarch64.tar.gz
+      - name: Store platform and showcases packages
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1
+        with:
+          name: score-release-linux-aarch64
+          path: |
+            score-platform-linux-aarch64.tar.gz
+            score-showcases-linux-aarch64.tar.gz
+  aarch64-run:
+    name: aarch64 (run on stock Ubuntu arm64)
+    needs: aarch64-build
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
+    permissions:
+      contents: write # required to upload release assets
+    steps:
+      - name: Download platform and showcases packages
+        uses: actions/download-artifact@v4
+        with:
+          name: score-release-linux-aarch64
+          path: ./release-assets
+      - name: Install packages on the runner
+        run: |
+          sudo tar -xzf release-assets/score-platform-linux-aarch64.tar.gz -C /
+          sudo tar -xzf release-assets/score-showcases-linux-aarch64.tar.gz -C /
+      - name: Run showcases
+        run: |
+          # Output to a file: daemons left running by the showcases must not hold a pipe open.
+          sudo timeout 600 /showcases/bin/cli --examples all > cli.log 2>&1 || { cat cli.log; exit 1; }
+          cat cli.log
+      - name: Upload platform and showcases to release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload "$RELEASE_TAG" ./release-assets/*.tar.gz --clobber
