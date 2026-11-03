@@ -49,6 +49,9 @@ previous platform release (v0.9.0).
 
    Modules, components and images of the reference integration v0.10.0.
 
+The maturity classification of the software modules (Release, Experimental,
+Preview) is explained in `DR-003-Strat: Module Maturity Classification <https://github.com/eclipse-score/score/blob/main/docs/design_decisions/strategy/DR-003-strat.md>`__.
+
 
 📜 Disclaimer
 --------------
