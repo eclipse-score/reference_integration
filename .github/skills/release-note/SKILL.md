@@ -138,6 +138,8 @@ Content:
   image table, dashed = experimental).
 - Colour bar: green = released tag, orange = commit pin; NEW = not in the origin
   release.
+- Maturity badge (outlined, bottom right of each software module tile) and a
+  legend line with the count per level, see "Module maturity (DR-003)".
 
 Components come from the Sphinx-Needs of the `needs.json` of the **checked-out
 branch**: the generator runs `bazel build //:needs_json_file` (Bazel caches it
@@ -162,6 +164,30 @@ Run it on the checked-out release branch without `--known-good-ref`; with
 another ref the components would still come from the checkout.
 Colours follow the S-CORE docs theme (header `#2D1942`); change them only in
 `architecture_diagram.py`.
+
+### Module maturity (DR-003)
+
+Every software module gets exactly one maturity classification of
+[DR-003-Strat](https://github.com/eclipse-score/score/blob/main/docs/design_decisions/strategy/DR-003-strat.md)
+(Release, Experimental, Preview). `assess_maturity()` in
+`architecture_diagram.py` derives it on every run from the same `needs.json`
+and the module docs, so a run from scratch always fills it in; never set it by
+hand. DR-003 leaves the line between minor and major deviations open, so the
+script applies this rule:
+
+| Level | Rule |
+|---|---|
+| Preview | No verification report: neither a `mod_ver_report` need in `modules/<key>/` (S-CORE module verification report) nor dependable elements in the module's own docs (`MODULE_DOCS`, L.O.B.S.T.E.R. traceability reports). No quality statement possible. |
+| Experimental | A verification report exists and makes the gaps transparent (untested or uninspected requirements, missing safety analyses or checklists). |
+| Release | Report exists and every component requirement of the module is fully verified (`fully_verifies_back`) and inspected (`valid_inspected`; QM: `valid`). |
+
+The locally built `needs.json` carries no test results, so the script cannot
+assign Release. Before a final note, check the module verification reports of
+the release branch CI docs build (`github-pages-<sha>` artifact of "Code Quality
+& Documentation"): report modules that would meet Release, and the borderline
+Experimental modules (report present but no FMEA/DFA, for example). Change the
+rule in `assess_maturity()` only after agreement, never the result. The note
+links DR-003 below the figure (fixed text of the generator).
 
 ## Run from scratch (any release, also for not yet tagged ones)
 
@@ -315,6 +341,8 @@ Known limits of the evidence:
 - The Overview contains the `.. figure::` of the diagram and the SVG
   `docs/s_core_v_1/releases/_assets/architecture_v<major>_<minor>.svg` was
   written by this run (it is committed together with the note).
+- The diagram shows a maturity badge on every software module and the Overview
+  links DR-003; the generator prints the `maturity (DR-003): ...` line.
 - The new note is the last entry of the release-note `toctree` in `releases.rst`.
 - The Download column links every image of `IMAGE_DOWNLOADS` (no generator
   warning about a missing asset upload).

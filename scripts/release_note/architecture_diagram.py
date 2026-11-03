@@ -51,6 +51,9 @@ IMAGE_LABELS = {
     "ebclfsa_aarch64": ("EB corbos Linux", "aarch64"),
 }
 
+# Module maturity (DR-003-Strat, eclipse-score/score), assessed by assess_maturity().
+MATURITY_COLORS = {"Release": "#1e7b34", "Experimental": "#b25e00", "Preview": "#6b7a90"}
+
 
 def text_width(s: str, size: float, weight: int = 400) -> float:
     return len(s) * size * (0.64 if weight >= 600 else 0.56)
@@ -87,6 +90,20 @@ def pill(x_right, y, label, color, h=18):
     w = 12 + 7 * len(label)
     return f'<rect x="{x_right - w:.1f}" y="{y:.1f}" width="{w}" height="{h}" rx="{h / 2}" fill="{color}"/>' + text(
         x_right - w / 2, y + h / 2 + 4, label, 10, 700, "#fff", "middle", extra='letter-spacing="0.8"'
+    )
+
+
+def badge_width(label: str) -> float:
+    return 14 + 7.4 * len(label)
+
+
+def badge(x_right, y, label, color, h=16):
+    """Outlined pill, so the maturity does not compete with the filled release/NEW markers."""
+    w = badge_width(label)
+    return (
+        f'<rect x="{x_right - w:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h}" rx="{h / 2}" fill="#ffffff" '
+        f'stroke="{color}" stroke-width="1.4"/>'
+        + text(x_right - w / 2, y + h / 2 + 3.5, label, 9, 700, color, "middle", extra='letter-spacing="0.8"')
     )
 
 
@@ -127,11 +144,14 @@ def section(x, y, w, h, title_lines, subtitle="", stacked=False):
 CHIP_H, CHIP_GAP = 22, 6
 
 
-def load_components(path: Path, entries: list[grn.Entry]) -> dict[str, list[str]]:
-    """Module key -> component titles, from the Sphinx-Needs `comp` and `mod` needs of a needs.json."""
+def read_needs(path: Path) -> dict[str, dict]:
     data = json.loads(path.read_text())
     versions = data["versions"]
-    needs = versions.get(data.get("current_version", ""), next(iter(versions.values())))["needs"]
+    return versions.get(data.get("current_version", ""), next(iter(versions.values())))["needs"]
+
+
+def load_components(needs: dict[str, dict], entries: list[grn.Entry]) -> dict[str, list[str]]:
+    """Module key -> component titles, from the Sphinx-Needs `comp` and `mod` needs of a needs.json."""
     found: dict[str, dict[str, str]] = {e.key: {} for e in entries}
 
     def owner(need: dict) -> grn.Entry | None:
@@ -148,6 +168,23 @@ def load_components(path: Path, entries: list[grn.Entry]) -> dict[str, list[str]
                 if comp := needs.get(ref.split("[")[0]):
                     found[e.key][comp["id"]] = comp["title"]
     return {key: sorted(comps.values(), key=lambda t: (t.lower(), t)) for key, comps in found.items()}
+
+
+def _inspected(req: dict) -> bool:
+    # QM needs are not formally inspected, so valid is their final state
+    return req.get("status") == "valid_inspected" or (req.get("safety") == "QM" and req.get("status") == "valid")
+
+
+def assess_maturity(needs: dict[str, dict], entries: list[grn.Entry]) -> dict[str, str]:
+    """DR-003 maturity per module, see the release-note skill for the criteria."""
+    result = {}
+    for e in entries:
+        own = [n for n in needs.values() if (n.get("docname") or "").startswith(f"modules/{e.key}/")]
+        has_report = any(n["type"] == "mod_ver_report" for n in own) or bool(grn.dependable_elements(e))
+        reqs = [n for n in own if n["type"] == "comp_req"]
+        complete = bool(reqs) and all(n.get("fully_verifies_back") and _inspected(n) for n in reqs)
+        result[e.key] = "Preview" if not has_report else "Release" if complete else "Experimental"
+    return result
 
 
 def chip_lines(labels: list[str], available: float) -> list[list[tuple[str, float]]]:
@@ -174,7 +211,7 @@ def component_layout(entry: grn.Entry, w: float, is_new: bool, note: str, comps:
     return lines, size, chips_y, chips_y + block + 16 + 28
 
 
-def component_tile(x, y, w, h, entry: grn.Entry, is_new: bool, note: str, comps: list[str]):
+def component_tile(x, y, w, h, entry: grn.Entry, is_new: bool, note: str, comps: list[str], maturity: str | None):
     accent = RELEASED if entry.tag else UNRELEASED
     out = card_base(x, y, w, h, accent)
     lines, size, chips_y, _ = component_layout(entry, w, is_new, note, comps)
@@ -201,7 +238,10 @@ def component_tile(x, y, w, h, entry: grn.Entry, is_new: bool, note: str, comps:
         f'<line x1="{x + 20:.1f}" y1="{y + h - 28:.1f}" x2="{x + w - 14:.1f}" y2="{y + h - 28:.1f}" stroke="#e3e9f2"/>'
     )
     repo = entry.repo_url.rstrip("/").rsplit("/", 1)[-1]
-    out.append(text(x + 20, y + h - 11, fit(repo, 10, 400, w - 34)[0], 10, 400, FAINT, family=MONO))
+    reserved = badge_width(maturity.upper()) + 8 if maturity else 0
+    out.append(text(x + 20, y + h - 11, fit(repo, 10, 400, w - 34 - reserved)[0], 10, 400, FAINT, family=MONO))
+    if maturity:
+        out.append(badge(x + w - 12, y + h - 23, maturity.upper(), MATURITY_COLORS[maturity]))
     if is_new:
         out.append(pill(x + w - 10, y + 10, "NEW", NEW))
     return "\n".join(out)
@@ -242,6 +282,7 @@ def render(
     ref: str | None,
     ref_label: str,
     components: dict[str, list[str]],
+    maturity: dict[str, str],
 ) -> str:
     old = {grn.KEY_ALIASES.get(e.key, e.key): e for es in origin_groups.values() for e in es}
 
@@ -316,7 +357,7 @@ def render(
     for tiles, h in comp_rows:
         x = right_x + 24
         for e, w, is_new, note, comps in tiles:
-            parts.append(component_tile(x, y, w, h + extra, e, is_new, note, comps))
+            parts.append(component_tile(x, y, w, h + extra, e, is_new, note, comps, maturity.get(e.key)))
             x += w + gap
         y += h + extra + gap
 
@@ -349,7 +390,19 @@ def render(
     parts.append(
         text(W - M, y + 14, f"generated from known_good.json @ {ref_label}", 11, 400, FAINT, "end", family=MONO)
     )
-    y += 36
+    y += 26
+    if any(e.key in maturity for e in sw):
+        label = "Module maturity (DR-003):"
+        parts.append(text(M, y + 12, label, 12, 400, MUTED))
+        x = M + text_width(label, 12) + 14
+        for level, color in MATURITY_COLORS.items():
+            count = sum(maturity.get(e.key) == level for e in sw)
+            x += badge_width(level.upper())
+            parts.append(badge(x, y, level.upper(), color))
+            parts.append(text(x + 8, y + 12, f"({count})", 12, 400, MUTED))
+            x += 8 + text_width(f"({count})", 12) + 18
+        y += 26
+    y += 10
 
     return (
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {y:.0f}" width="{W}" height="{y:.0f}" '

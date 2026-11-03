@@ -28,6 +28,8 @@ Read it first and follow it exactly.
   scratch with every skeleton run. If a generated part needs other content
   (a new image download, a known issue, a line someone added by hand), change
   the generator (`IMAGES`, `IMAGE_DOWNLOADS`, fixed text) and regenerate.
+- DO NOT set a module's DR-003 maturity by hand; `assess_maturity()` derives it
+  on every run (see the skill). Propose rule changes to the user instead.
 - Pass `--final` only when the user explicitly asks for the final note;
   otherwise the note is a draft (see the skill, "Draft and final").
 - DO NOT overwrite an existing `release_note_score_*.rst` without the user
@@ -56,7 +58,9 @@ Read it first and follow it exactly.
 7. Run the validation checks from the skill.
 8. Report: output path and diagram path, state (draft or final), generator
    warnings, modules with unreleased pins, modules shown with "no components
-   documented" in the diagram,
+   documented" in the diagram, the DR-003 maturity per module (generator line
+   `maturity (DR-003): ...`) with the borderline cases (see the skill, "Module
+   maturity (DR-003)"),
    items left out although they looked relevant, and anything you could not
    verify.
 

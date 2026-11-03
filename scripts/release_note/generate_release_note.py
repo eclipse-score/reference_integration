@@ -37,6 +37,7 @@ Its components come from the needs.json of the checkout, built with ``bazel buil
 from __future__ import annotations
 
 import argparse
+import functools
 import json
 import os
 import re
@@ -73,6 +74,8 @@ DEPENDABLE_ELEMENT_LABELS = {
     "dependable_element_memory_shared": "Shared Memory",
 }
 DEPENDABLE_ELEMENT_TITLE = "Dependable element: "
+# Module maturity classification shown in the architecture diagram.
+DR_003_URL = "https://github.com/eclipse-score/score/blob/main/docs/design_decisions/strategy/DR-003-strat.md"
 EMPTY_CELL = "---"
 # Architecture diagram of the note; components come from the Sphinx-Needs of the checkout's docs.
 DIAGRAM_DIR = "docs/s_core_v_1/releases/_assets"
@@ -250,20 +253,20 @@ def collect(known_good: dict) -> dict[str, list[Entry]]:
     return result
 
 
-def dependable_elements(e: Entry) -> list[tuple[str, str]]:
-    """(label, URL) of the dependable elements in the module's own docs of the pinned release tag."""
-    if e.key not in MODULE_DOCS:
-        return []
-    if not e.tag:
-        print(f"warning: {e.key}: unreleased pin, no versioned docs for its dependable elements", file=sys.stderr)
-        return []
-    base = MODULE_DOCS[e.key].format(tag=e.tag)
+@functools.cache
+def _dependable_elements(key: str, tag: str | None) -> tuple[tuple[str, str], ...]:
+    if key not in MODULE_DOCS:
+        return ()
+    if not tag:
+        print(f"warning: {key}: unreleased pin, no versioned docs for its dependable elements", file=sys.stderr)
+        return ()
+    base = MODULE_DOCS[key].format(tag=tag)
     try:
         with urllib.request.urlopen(f"{base}searchindex.js", timeout=60) as response:
             text = response.read().decode()
     except OSError as err:
-        print(f"warning: {e.key}: no docs at {base} ({err})", file=sys.stderr)
-        return []
+        print(f"warning: {key}: no docs at {base} ({err})", file=sys.stderr)
+        return ()
     index = json.loads(text[text.index("(") + 1 : text.rindex(")")])
     found = {
         title.removeprefix(DEPENDABLE_ELEMENT_TITLE): f"{base}{doc}.html"
@@ -271,10 +274,15 @@ def dependable_elements(e: Entry) -> list[tuple[str, str]]:
         if title.startswith(DEPENDABLE_ELEMENT_TITLE) and doc.endswith("/index")
     }
     if not found:
-        print(f"warning: {e.key}: no dependable elements in {base}", file=sys.stderr)
+        print(f"warning: {key}: no dependable elements in {base}", file=sys.stderr)
     order = list(DEPENDABLE_ELEMENT_LABELS)
     names = sorted(found, key=lambda n: (order.index(n) if n in order else len(order), n))
-    return [(DEPENDABLE_ELEMENT_LABELS.get(n, n), found[n]) for n in names]
+    return tuple((DEPENDABLE_ELEMENT_LABELS.get(n, n), found[n]) for n in names)
+
+
+def dependable_elements(e: Entry) -> list[tuple[str, str]]:
+    """(label, URL) of the dependable elements in the module's own docs of the pinned release tag."""
+    return list(_dependable_elements(e.key, e.tag))
 
 
 def verification_cell(e: Entry) -> list[str]:
@@ -499,6 +507,9 @@ previous platform release ({origin}).
 
    Modules, components and images of the reference integration {release}.
 
+The maturity classification of the software modules (Release, Experimental,
+Preview) is explained in `DR-003-Strat: Module Maturity Classification <{DR_003_URL}>`__.
+
 """,
         _heading("Disclaimer", "-"),
         """
@@ -584,7 +595,10 @@ def write_diagram(args: argparse.Namespace, date: str, groups: dict[str, list[En
     import architecture_diagram
 
     software = [e for e in groups["target_sw"] if e.key != PLATFORM_MODULE]
-    components = architecture_diagram.load_components(args.needs or build_needs(), software)
+    needs = architecture_diagram.read_needs(args.needs or build_needs())
+    components = architecture_diagram.load_components(needs, software)
+    maturity = architecture_diagram.assess_maturity(needs, software)
+    print("maturity (DR-003): " + ", ".join(f"{k}={v}" for k, v in maturity.items()), file=sys.stderr)
     label = _git("rev-parse", "--short", f"{ref or 'HEAD'}^{{commit}}").strip()
     svg = architecture_diagram.render(
         args.release,
@@ -596,6 +610,7 @@ def write_diagram(args: argparse.Namespace, date: str, groups: dict[str, list[En
         ref,
         label,
         components,
+        maturity,
     )
     path = REPO_ROOT / DIAGRAM_DIR / diagram_name(args.release)
     path.parent.mkdir(parents=True, exist_ok=True)
