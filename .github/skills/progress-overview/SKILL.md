@@ -1,6 +1,6 @@
 ---
 name: progress-overview
-description: "How-to reference for the Release-wide Progress Overview (docs/s_core_v_1/releases/progress_overview.rst): per-release progress charts next to the release notes. Explains the two scripts (collect_metrics.py, generate_progress_charts.py), the counting model, the forecast column and the module/colour mapping. Use when refreshing the progress overview after a release, a known_good.json ref bump, or when adding a module. The progress-overview agent orchestrates the run; this skill holds the 'how'."
+description: "How-to reference for the Release-wide Progress Overview (docs/s_core_v_1/releases/progress_overview.rst): per-release progress charts next to the release notes. Explains the two scripts (collect_metrics.py, generate_progress_charts.py), the counting model, the release-in-progress column and the module/colour mapping. Use when refreshing the progress overview after a release, a known_good.json ref bump, or when adding a module. The progress-overview agent orchestrates the run; this skill holds the 'how'."
 argument-hint: "optional: release name, e.g. v1.0"
 ---
 
@@ -46,19 +46,21 @@ The first run clones the module repositories as bare repositories into
 
 One column per `reference_integration` release tag, ordered by version (a
 pre-release such as `v0.5.0-beta` before its final release, `v0.10.0` after
-`v0.9.0`), plus a trailing forecast column:
+`v0.9.0`), plus a trailing column for the release in progress:
 
 - **Release columns** — the tag's `known_good.json` gives each module's pin.
   Entries carrying only a `version` are resolved to `v<version>` in the module's
   own repository. Modules without `known_good` keys in `MODULES` (never pinned)
   fall back to the commit on `main` as of the release date.
-- **Forecast column** (`<next release> (forecast)`) — the **working tree's**
-  `known_good.json`, i.e. today's state, labelled as the projection for the next
-  release. The next release is read from the milestones of
+- **Release in progress** (`v<major>.<minor>`, no suffix) — the **working
+  tree's** `known_good.json`, i.e. the state of the release branch. Its name is
+  read from the milestones of
   [eclipse-score/score](https://github.com/eclipse-score/score/milestones): the
   lowest `v<major>.<minor>` milestone after the latest release tag. Never
-  hard-code it; if
-  the milestone is missing the collector stops, create the milestone instead.
+  hard-code it; if the milestone is missing the collector stops, create the
+  milestone instead. The column is left out when the working tree's
+  `known_good.json` equals the one of the latest release tag (the release is
+  published and has its own column); there is no forecast for later releases.
 
 Every bar is stacked by module. `MODULE_COLORS` is the single source of truth
 for the colour of a module and is shared by every chart, so a module keeps its
