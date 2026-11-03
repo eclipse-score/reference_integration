@@ -37,8 +37,9 @@ heading (the script also lengthens the underline for the double-width emoji).
 The title and the `~~~` item subsections have no icon.
 
 Module tables have the columns **Name** (link to the repo at the pinned
-tag/commit), **Version**, **Release notes** (link to the GitHub release of that
-tag). The Integrated Software Modules table has a fourth column **Module
+tag/commit), **Version**, **Release notes** (one link per module release since
+the origin release, oldest first, see "Release range"; a module unchanged since
+the origin shows its current release). The Integrated Software Modules table has a fourth column **Module
 verification report**: a `:doc:` link taken from
 `docs/verification_report/modules/index.rst` (always the latest report in the
 current docs tree), `---` where the module has none (e.g. the platform). Every
@@ -103,9 +104,13 @@ python3 scripts/release_note/generate_release_note.py --release vX.Y.0 --origin 
 Behaviour worth knowing:
 
 - Tags are resolved with `git ls-remote --tags` on every module repo. A
-  `version` pin maps to `v<ver>` or `<ver>`; a `hash` pin maps to a tag only if
-  one points exactly at that commit, otherwise the row shows `<sha7> (unreleased)`,
-  links the commit and has no release-notes link.
+  `version` pin maps to `v<ver>` or `<ver>` and is shown as that release. A
+  `hash` pin is never shown as a release, even if a tag points at the same
+  commit (the integration does not use the registry version): the row shows
+  `<sha7> (unreleased)` and links the commit, and the diagram marks it as a
+  commit pin. A tag on that commit only bounds the release range, so the
+  *Release notes* column still lists the releases the commit contains. Report
+  such modules and propose to pin them by `version`.
 - The Release Date is always the due date of the milestone `v<major>.<minor>`
   (for `vX.Y.0`: milestone `vX.Y`) in eclipse-score/score. Do not pass `--date`;
   it only exists as an override when the user asks for a different date. If
@@ -273,11 +278,55 @@ branch, with their changed files; commits that only touch
 that were removed or renamed
 (per directory, without `docs/` and `patches/`), and one section per changed
 module with the **breaking** and **new-feature** parts of the module's own
-GitHub release notes. For every
+GitHub release notes, for **every** module release since the origin release
+("Release range" below), not only the pinned one. For every
 breaking part the script lists "impact hints": places in this repository that
 mention a flag, label or symbol named there. `--module <key>` restricts the run,
 `--module-prs` adds the merged PRs of a module (slow, only for a deep dive),
 `--include-infra` adds the infrastructure modules.
+
+Release range: `releases_between()` in `generate_release_note.py` is shared by
+the tables and the collector, so both always name the same releases. Candidates
+are the published GitHub releases between the origin tag and the pinned tag; a
+release counts if the pinned commit contains its tag and the origin commit does
+not (GitHub compare), so releases on maintenance branches are skipped and a
+release is still found when the origin was tagged on a side commit. Tags
+without GitHub release have no release notes and are not listed.
+
+Per release the collector prints the sections whose heading names breaking
+changes, deprecations, removals, public API changes, migrations or features,
+then "Candidate lines" (list items elsewhere in a hand-written text that mention
+a removal, rename, deprecation, breaking change or feature), and then the
+**release scope**: every PR of the release's generated "What's Changed" list,
+marked `review` or `skip? (<reason>)`. Read all releases of the range; a
+breaking change of an intermediate release is still breaking for an integrator
+coming from the origin release.
+
+Module releases are classified like the Baselibs release-notes skill
+(eclipse-score/baselibs `.agents/skills/release-notes-skill/SKILL.md`) does it:
+
+1. **Scope.** The "What's Changed" list is the scope of a module release. If a
+   release has no such list ("scope cannot be determined"), use its curated
+   sections and candidate lines only, and say so in the report; do not
+   reconstruct the scope from `git log` or a comparison view.
+2. **Read every PR to review.** Fetch title, body and author
+   (`GET /repos/<owner>/<repo>/pulls/<n>` with `GITHUB_TOKEN`; `gh` is not
+   required). When title and body do not support a precise statement, read the
+   diff (`GET .../pulls/<n>` with `Accept: application/vnd.github.diff`, or
+   `git show` in a local clone) before writing about it.
+3. **Skip**: CI/workflow-only PRs, dependency bumps (bots such as
+   `eclipse-score-bot`, `renovate`, `dependabot`), Bazel visibility-only
+   changes, requirements/doc-only PRs, internal repo-sync or agent-tooling PRs,
+   and anything that nets to zero across the range (a change reverted again).
+   The `skip?` marks of the collector are title-based hints; confirm them.
+4. **Notable**: breaking API or behaviour changes and deprecations, new public
+   features or libraries, and anything that continues or completes a change an
+   earlier release note announced (for example a deprecation in one release
+   and the removal in a later one; the earlier platform release note's
+   announcements count too). User-visible bug fixes are notable for the module,
+   but this note has no bug-fix chapter; they stay in the module release notes.
+5. **Platform filter.** Of the notable items, only those that pass the
+   platform-level rules below go into the note.
 
 Classification:
 
@@ -322,14 +371,22 @@ Rules:
 - Remove **Breaking Changes** only if there is none; never leave an `AI-FILL`
   marker behind (`grep -n AI-FILL <file>` must be empty).
 - Report items you left out although they looked relevant, and modules without
-  GitHub releases in the range.
+  releases in the range.
 
 Known limits of the evidence:
 
 - Only some modules (for example Baselibs) structure their GitHub release notes
-  with "Breaking changes" and "New features" sections. For the others the
-  collector prints "No breaking/new-feature sections found"; there is then no
-  module-level evidence, and you must say so in the report instead of guessing.
+  with "Breaking changes" and "New features" sections; others only have
+  GitHub's generated PR list, which is then the only module-level evidence. If
+  the collector prints "No breaking/new-feature items and no PR list", there is
+  no module-level evidence, and you must say so in the report instead of
+  guessing.
+- A release scope can be long (Persistency v0.4.0: 176 PRs). Reading every
+  `review` PR is required; report how many PRs per module you read.
+- GitHub generates "What's Changed" against the previous tag it finds; when the
+  origin was tagged on a side commit (Persistency v0.3.5), the list can contain
+  PRs that were already in the origin release. Drop a PR if the origin release
+  note already lists it.
 - Hash-pinned modules (`<sha7> (unreleased)`) have releases only up to their
   latest tag; changes after it are not covered by release notes.
 - Impact hints search `known_good.json`, `.bazelrc`, `bazel_common`, `patches`,

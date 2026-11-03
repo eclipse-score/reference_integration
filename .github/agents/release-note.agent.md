@@ -57,7 +57,9 @@ Read it first and follow it exactly.
    no glob).
 7. Run the validation checks from the skill.
 8. Report: output path and diagram path, state (draft or final), generator
-   warnings, modules with unreleased pins, modules shown with "no components
+   warnings, modules with unreleased pins (every `hash` pin counts as
+   unreleased, even if a tag points at the commit; propose a `version` pin),
+   modules shown with "no components
    documented" in the diagram, the DR-003 maturity per module (generator line
    `maturity (DR-003): ...`) with the borderline cases (see the skill, "Module
    maturity (DR-003)"),

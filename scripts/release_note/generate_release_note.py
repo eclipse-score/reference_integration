@@ -158,6 +158,7 @@ class Entry:
     ref: str  # tag or commit used for the source link
     pin: str  # version or hash as written in known_good.json
     verification_doc: str | None = None  # absolute Sphinx doc path of the module verification report
+    at_tag: str | None = None  # tag on the pinned commit of a hash pin; only bounds the release range
 
     @property
     def source_url(self) -> str:
@@ -208,6 +209,52 @@ def _version_key(tag: str) -> tuple[int, ...]:
     return tuple(int(p) for p in re.findall(r"\d+", tag))
 
 
+@functools.cache
+def _contains(slug: str, ref: str, tag: str) -> bool:
+    """True if the commit ref contains the tag commit (GitHub compare: ref is ahead of or identical to tag)."""
+    return _github_get(f"/repos/{slug}/compare/{tag}...{ref}")["status"] in ("ahead", "identical")
+
+
+@functools.cache
+def _github_releases(slug: str) -> tuple[str, ...]:
+    """Tag names of the published (non-draft) GitHub releases of a repository."""
+    tags: list[str] = []
+    for page in range(1, 20):
+        batch = _github_get(f"/repos/{slug}/releases?per_page=100&page={page}")
+        tags += [r["tag_name"] for r in batch if not r["draft"]]
+        if len(batch) < 100:
+            break
+    return tuple(tags)
+
+
+def releases_between(old: Entry | None, new: Entry) -> list[str]:
+    """Tags of the GitHub releases after the origin pin up to the new pin, oldest first.
+
+    Decided by commit containment, not by date, so releases on maintenance branches are skipped and a release
+    whose origin was tagged on a side commit is still found.
+    """
+    if old is None or old.pin == new.pin:
+        return [new.tag] if new.tag else []
+    low = _version_key(old.tag or old.at_tag) if old.tag or old.at_tag else None
+    high = _version_key(new.tag or new.at_tag) if new.tag or new.at_tag else None
+    slug = new.repo_url.removeprefix("https://github.com/")
+    try:
+        return sorted(
+            (
+                tag
+                for tag in _github_releases(slug)
+                if (low is None or _version_key(tag) > low)
+                and (high is None or _version_key(tag) <= high)
+                and _contains(slug, new.ref, tag)
+                and not _contains(slug, old.ref, tag)
+            ),
+            key=_version_key,
+        )
+    except OSError as err:
+        print(f"warning: {new.key}: cannot compare releases ({err}), listing the current one only", file=sys.stderr)
+        return [new.tag] if new.tag else []
+
+
 def resolve(key: str, module: dict, cache: dict[str, dict[str, str]]) -> Entry:
     repo = module["repo"]
     repo_url = repo.removesuffix(".git")
@@ -224,8 +271,8 @@ def resolve(key: str, module: dict, cache: dict[str, dict[str, str]]) -> Entry:
 
     commit = module["hash"]
     matches = sorted((t for t, c in tags.items() if c == commit), key=_version_key)
-    tag = matches[-1] if matches else None
-    return Entry(key, name, repo_url, tag, tag or commit, commit)
+    # A hash pin is not a registry release, even if a tag points at the commit.
+    return Entry(key, name, repo_url, None, commit, commit, at_tag=matches[-1] if matches else None)
 
 
 def verification_docs() -> dict[str, str]:
@@ -294,7 +341,7 @@ def verification_cell(e: Entry) -> list[str]:
     return ["     - Dependable elements:", ""] + [f"       * `{label} <{url}>`__" for label, url in elements]
 
 
-def render_table(entries: list[Entry], with_verification: bool = False) -> str:
+def render_table(entries: list[Entry], origin: dict[str, Entry], with_verification: bool = False) -> str:
     widths = "25 15 25 35" if with_verification else "30 25 45"
     rows = [
         "",
@@ -309,7 +356,8 @@ def render_table(entries: list[Entry], with_verification: bool = False) -> str:
     if with_verification:
         rows.append("     - Module verification report")
     for e in entries:
-        notes = f"`Release notes <{e.release_notes_url}>`__" if e.release_notes_url else EMPTY_CELL
+        tags = releases_between(origin.get(KEY_ALIASES.get(e.key, e.key)), e)
+        notes = " · ".join(f"`{t} <{e.repo_url}/releases/tag/{t}>`__" for t in tags) or EMPTY_CELL
         rows += [
             f"   * - `{e.name} <{e.source_url}>`__",
             f"     - ``{e.version_label}``",
@@ -456,7 +504,15 @@ def diagram_name(release: str) -> str:
     return "architecture_v" + "_".join(release.removeprefix("v").split(".")[:2]) + ".svg"
 
 
-def render(release: str, origin: str, date: str, status: str, groups: dict[str, list[Entry]], ref: str | None) -> str:
+def render(
+    release: str,
+    origin: str,
+    date: str,
+    status: str,
+    groups: dict[str, list[Entry]],
+    ref: str | None,
+    origin_groups: dict[str, list[Entry]],
+) -> str:
     short = ".".join(release.removeprefix("v").split(".")[:2])
     doc_id = "v" + short.replace(".", "")
     title = f"S-CORE Platform v{short} release note" + (" (DRAFT)" if status == "draft" else "")
@@ -532,11 +588,17 @@ source organization, can not take over any liability for its content.
 - **Release notes:** `Reference integration release notes <{release_url}/releases/tag/{release}>`__
 - **Platform Verification Report:** :need:`doc__platform_verification_report_latest`
 
+The *Release notes* column of the module tables links every release of a module
+since {origin}, oldest first; modules unchanged since {origin} show their current
+release.
+
 """,
     ]
 
+    old = {KEY_ALIASES.get(e.key, e.key): e for entries in origin_groups.values() for e in entries}
     for group, title_text in SECTIONS.items():
-        parts += [_heading(title_text, "-"), render_table(groups[group], with_verification=group == "target_sw") + "\n"]
+        table = render_table(groups[group], old, with_verification=group == "target_sw")
+        parts += [_heading(title_text, "-"), table + "\n"]
     parts += [_heading("Images", "-"), render_images(release, ref) + "\n"]
 
     unreleased = any(e.tag is None for entries in groups.values() for e in entries)
@@ -649,7 +711,7 @@ def main() -> None:
     else:
         date = args.date or milestone_date(args.release)
         status = "valid" if args.final else "draft"
-        text = render(args.release, args.origin, date, status, groups, ref)
+        text = render(args.release, args.origin, date, status, groups, ref, collect(load_known_good(args.origin)))
         write_diagram(args, date, groups, ref)
 
     if args.output:
