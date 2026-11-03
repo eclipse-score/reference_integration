@@ -18,9 +18,9 @@
 Every module in the module's dependency graph that ref_int also resolves is pinned with
 ``--override_module``, pointing at ref_int's own fetched copy (so ref_int's patches come along);
 ones ref_int cannot fetch are reported as not pinned. ``bazel_common/unified.bazelrc`` and the
-module's ``extra_test_config`` are layered over the module's .bazelrc. The only edit to the module
-is one ``include()`` of ref_int's ``unified_toolchains.MODULE.bazel``, as toolchains can only be
-defined in MODULE files.
+module's ``extra_test_config`` are layered over the module's .bazelrc. The only edits to the module
+are one ``include()`` of ref_int's ``unified_toolchains.MODULE.bazel``, as toolchains can only be
+defined in MODULE files, and a ``bazel_dep`` raising score_devcontainer to its known_good version.
 """
 
 import argparse
@@ -173,6 +173,24 @@ def _append_unified_toolchain(workspace: Path) -> None:
         f.write(f'\ninclude("//:{UNIFIED_TOOLCHAINS.name}")\n')
 
 
+def _apply_extra_dependency_overrides(workspace: Path, devcontainer_version: str) -> None:
+    """Raise dependencies the module's own graph cannot resolve as is.
+
+    The module's own graph is resolved before any ref_int pin applies. score_devcontainer 1.11.1
+    (from score_docs_as_code 8.3.0) had its tag re-pushed, so its archive fails the registry
+    checksum. A module that depends on it itself gets a single_version_override (a second bazel_dep
+    is an error); otherwise a bazel_dep lets MVS raise it, as an override errors when the module is
+    not in the graph.
+    """
+    module_file = workspace / "MODULE.bazel"
+    if re.search(r'bazel_dep\(\s*name\s*=\s*"score_devcontainer"', module_file.read_text()):
+        line = f'single_version_override(module_name = "score_devcontainer", version = "{devcontainer_version}")\n'
+    else:
+        line = f'bazel_dep(name = "score_devcontainer", version = "{devcontainer_version}", dev_dependency = True)\n'
+    with module_file.open("a") as f:
+        f.write(line)
+
+
 def _collect_coverage(workspace: Path, out: Path, env: dict) -> None:
     (out / "coverage").mkdir()
     lcov = Path(bazel(["info", "output_path"], workspace, env).stdout.strip()) / "_coverage" / "_coverage_report.dat"
@@ -199,6 +217,25 @@ def _write_summary(
     append_to_step_summary(text)
 
 
+def _collect_dependable_element_docs(workspace: Path, out: Path, targets: list[str], env: dict) -> None:
+    """Build the module's dependable element sphinx targets and keep their HTML for the main docs.
+
+    The main docs build cannot depend on them via Bazel (docs_as_code only takes docs()/docs_bundle
+    labels as external needs), so the HTML travels as part of the module report instead. A failure
+    here is reported but does not fail the module's tests.
+    """
+    if not targets:
+        return
+    code, _ = streamed(["bazel", "build", "--keep_going", *targets], workspace, env)
+    for target in targets:
+        package, name = target.removeprefix("//").split(":")
+        html = workspace / "bazel-bin" / package / name / "html"
+        if code != 0 or not html.is_dir():
+            print(f"WARNING: no HTML for {target}", file=sys.stderr)
+            continue
+        shutil.copytree(html, out / "dependable_element_docs" / name, symlinks=False, dirs_exist_ok=True)
+
+
 def run(args: argparse.Namespace) -> int:
     known = load_known_good(REF_INT / "known_good.json")
     module = known.modules["target_sw"].get(args.module)
@@ -211,6 +248,7 @@ def run(args: argparse.Namespace) -> int:
     workspace, out = _setup_working_dir(work, module.name)
     _copy_fetch_module(module.name, workspace)
     _append_unified_toolchain(workspace)
+    _apply_extra_dependency_overrides(workspace, known.modules["tooling"]["score_devcontainer"].version)
 
     # Every bazel call in the module goes through this wrapper, so they all see the overrides and
     # the unified config. Its own output base keeps
@@ -253,6 +291,7 @@ def run(args: argparse.Namespace) -> int:
     no_tests = not results
     exit_code = exit_code or int(no_tests)
     _collect_coverage(workspace, out, env)
+    _collect_dependable_element_docs(workspace, out, module.metadata.dependable_element_docs, env)
     (out / "result.json").write_text(json.dumps({"exit_code": exit_code}) + "\n")
     _write_summary(module.name, out, exit_code, log, no_tests=no_tests, pinned=pinned, unpinned=unpinned)
     return exit_code
