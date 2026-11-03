@@ -10,8 +10,27 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+load("@rules_pkg//pkg:mappings.bzl", "pkg_attributes", "pkg_files")
 load("@score_lifecycle//:defs.bzl", "launch_manager_config")
 load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
+
+pkg_files(
+    name = "lifecycle_time_data_pkg_files",
+    srcs = [
+        ":lifecycle_time_configs",
+        "//showcases/lifecycle_time:lifecycle_time.score.json",
+        "//showcases/lifecycle_time/configs:logging.json",
+        "@score_time//examples/time/vehicle_time",
+    ],
+    attributes = pkg_attributes(mode = "0755"),
+    renames = {
+        "@score_time//examples/time/vehicle_time": "bin/vehicle_time",
+        "//showcases/lifecycle_time:lifecycle_time.score.json": "configs/lifecycle_time.score.json",
+        ":lifecycle_time_configs": "data/lifecycle_time/etc/",
+        "//showcases/lifecycle_time/configs:logging.json": "data/lifecycle_time/etc/logging.json",
+    },
+    visibility = ["//showcases:__pkg__"],
+)
 
 launch_manager_config(
     name = "lifecycle_time_configs",

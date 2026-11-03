@@ -10,8 +10,29 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+load("@rules_pkg//pkg:mappings.bzl", "pkg_attributes", "pkg_files")
 load("@score_lifecycle//:defs.bzl", "launch_manager_config")
 load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
+
+# No unique bins: safety_task and com-api-example are provided by lifecycle_kyron_data_pkg_files
+# and lifecycle_comm_data_pkg_files respectively when composing showcases_bundle.
+pkg_files(
+    name = "lifecycle_kyron_comm_data_pkg_files",
+    srcs = [
+        ":lifecycle_kyron_comm_configs",
+        "//showcases/lifecycle_kyron_comm:lifecycle_kyron_comm.score.json",
+        "//showcases/lifecycle_kyron_comm/configs:logging.json",
+        "@score_communication//score/mw/com/example/com-api-example:etc/mw_com_config.json",
+    ],
+    attributes = pkg_attributes(mode = "0755"),
+    renames = {
+        "@score_communication//score/mw/com/example/com-api-example:etc/mw_com_config.json": "data/lifecycle_kyron_comm/etc/mw_com_config.json",
+        "//showcases/lifecycle_kyron_comm:lifecycle_kyron_comm.score.json": "configs/lifecycle_kyron_comm.score.json",
+        ":lifecycle_kyron_comm_configs": "data/lifecycle_kyron_comm/etc/",
+        "//showcases/lifecycle_kyron_comm/configs:logging.json": "data/lifecycle_kyron_comm/etc/logging.json",
+    },
+    visibility = ["//showcases:__pkg__"],
+)
 
 launch_manager_config(
     name = "lifecycle_kyron_comm_configs",
