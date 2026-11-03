@@ -542,7 +542,7 @@
 2026-11-02). This note shows the current state of the integration and changes
 until the release is published.</p>
 </div>
-<div class="need_container docutils container" id="SNCB-a85f65be">
+<div class="need_container docutils container" id="SNCB-04acf670">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__score_v010_release_note">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -663,6 +663,8 @@ field of <code class="docutils literal notranslate"><span class="pre">known_good
 download Ubuntu snapshot packages from a mirror first
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/429">#429</a>).</p></li>
 </ul>
+<p>This implements the parts of DR-008 that the v0.9 release note left for a
+follow-up release.</p>
 </section>
 <section id="software-bill-of-materials-sbom">
 <h4>Software Bill of Materials (SBOM)<a class="headerlink" href="#software-bill-of-materials-sbom" title="Link to this heading">#</a></h4>
@@ -707,11 +709,55 @@ The Logging tests run after fixing the packaging of the datarouter
 configuration
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/387">#387</a>).</p>
 </section>
+<section id="qualified-coverage-tool-in-the-modules">
+<h4>Qualified coverage tool in the modules<a class="headerlink" href="#qualified-coverage-tool-in-the-modules" title="Link to this heading">#</a></h4>
+<p>Baselibs, Kyron, Persistency and Time measure their coverage with the qualified
+<code class="docutils literal notranslate"><span class="pre">score_coverage</span></code> module
+(<a class="reference external" href="https://github.com/eclipse-score/coverage_tool">eclipse-score/coverage_tool</a>),
+which replaces the coverage pipeline of <code class="docutils literal notranslate"><span class="pre">score_tooling</span></code>. One
+<code class="docutils literal notranslate"><span class="pre">bazel</span> <span class="pre">coverage</span> <span class="pre">--config=llvm_cov</span></code> run reports line and branch coverage for
+C++ and Rust, lists untested files with 0 % and supports coverage
+justifications
+(<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/584">baselibs#584</a>,
+<a class="reference external" href="https://github.com/eclipse-score/kyron/pull/175">kyron#175</a>,
+<a class="reference external" href="https://github.com/eclipse-score/persistency/pull/450">persistency#450</a>,
+<a class="reference external" href="https://github.com/eclipse-score/time/pull/235">time#235</a>).</p>
+</section>
 <section id="lifecycle-control-interface-for-state-managers">
 <h4>Lifecycle control interface for State Managers<a class="headerlink" href="#lifecycle-control-interface-for-state-managers" title="Link to this heading">#</a></h4>
 <p>Lifecycle provides the new <code class="docutils literal notranslate"><span class="pre">ILmControl</span></code> API, with which State Managers
 communicate with the Launch Manager over <code class="docutils literal notranslate"><span class="pre">mw::com</span></code>
 (<a class="reference external" href="https://github.com/eclipse-score/lifecycle/releases/tag/v0.8.0">Lifecycle v0.8.0 release notes</a>).</p>
+</section>
+<section id="logging-linux-syslog-backend">
+<h4>Logging: Linux syslog backend<a class="headerlink" href="#logging-linux-syslog-backend" title="Link to this heading">#</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">mw::log</span></code> has a Linux <code class="docutils literal notranslate"><span class="pre">syslog(3)</span></code> backend for <code class="docutils literal notranslate"><span class="pre">LogMode::kSystem</span></code>. It uses
+the new <code class="docutils literal notranslate"><span class="pre">score::os::Syslog</span></code> wrapper of Baselibs
+(<a class="reference external" href="https://github.com/eclipse-score/logging/pull/271">logging#271</a>,
+<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/502">baselibs#502</a>).</p>
+</section>
+<section id="itf-qemu-plugin-for-linux-images">
+<h4>ITF: QEMU plugin for Linux images<a class="headerlink" href="#itf-qemu-plugin-for-linux-images" title="Link to this heading">#</a></h4>
+<p>The QEMU plugin of ITF <code class="docutils literal notranslate"><span class="pre">v0.6.0</span></code> boots Linux images in addition to QNX images
+(EB corbos Linux for aarch64 and Ubuntu, with image definitions from
+<code class="docutils literal notranslate"><span class="pre">os_images</span></code>). It accepts an additional disk image with the test binaries and
+their data and has a hook for extra QEMU arguments
+(<a class="reference external" href="https://github.com/eclipse-score/itf/pull/123">itf#123</a>,
+<a class="reference external" href="https://github.com/eclipse-score/itf/pull/135">itf#135</a>,
+<a class="reference external" href="https://github.com/eclipse-score/itf/pull/139">itf#139</a>,
+<a class="reference external" href="https://github.com/eclipse-score/itf/pull/122">itf#122</a>).</p>
+</section>
+<section id="module-maturity-classification-dr-003">
+<h4>Module maturity classification (DR-003)<a class="headerlink" href="#module-maturity-classification-dr-003" title="Link to this heading">#</a></h4>
+<p>The architecture diagram of this release note shows the maturity of each
+software module (Release, Experimental, Preview) as defined in
+<a class="reference external" href="https://github.com/eclipse-score/score/blob/main/docs/design_decisions/strategy/DR-003-strat.md">DR-003-Strat</a>.
+The level is derived from the documentation of the module: without a module
+verification report and without dependable element documentation a module is
+Preview; if all its component requirements are fully verified and inspected it
+is Release; otherwise it is Experimental. This follows up on the maturity levels
+announced in the v0.8 release note
+(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/842d366755c765cc91e8cadcaa5f37799c7e6d06">842d366</a>).</p>
 </section>
 <section id="documentation-and-reports">
 <h4>Documentation and reports<a class="headerlink" href="#documentation-and-reports" title="Link to this heading">#</a></h4>
@@ -726,6 +772,9 @@ the Platform Verification Report; the status dashboard uses branch-aware links
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/342">#342</a>,
 <a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/358">#358</a>,
 <a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/373">#373</a>).</p></li>
+<li><p>The Platform Verification Report uses the <code class="docutils literal notranslate"><span class="pre">platform_verification_report</span></code>
+template of Docs-as-code
+(<a class="reference external" href="https://github.com/eclipse-score/docs-as-code/releases/tag/v8.2.0">Docs-as-code v8.2.0 release notes</a>).</p></li>
 <li><p>The Overall Status page was replaced by the Release-wide Progress Overview
 next to the release notes, with release-over-release charts per module
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/392">#392</a>).</p></li>
@@ -775,11 +824,12 @@ configuration in <code class="docutils literal notranslate"><span class="pre">ba
 </section>
 <section id="platform-stakeholder-requirement-ids-renamed">
 <h4>Platform: stakeholder requirement IDs renamed<a class="headerlink" href="#platform-stakeholder-requirement-ids-renamed" title="Link to this heading">#</a></h4>
-<p>Platform <code class="docutils literal notranslate"><span class="pre">v0.7.4</span></code> renamed <code class="docutils literal notranslate"><span class="pre">stkh_req__dependability__safety_features_1</span></code> to
+<p>Platform <code class="docutils literal notranslate"><span class="pre">v0.7.3</span></code> gave the safety stakeholder requirements named IDs instead
+of numbers, for example <code class="docutils literal notranslate"><span class="pre">stkh_req__dependability__safety_features_1</span></code> became
 <code class="docutils literal notranslate"><span class="pre">stkh_req__dependability__health_management</span></code>. Tests that still link the old
 ID make the documentation build fail with an unknown-link warning
-(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/5d09c1bf631767564295ee403d200d2f201eb76a">5d09c1b</a>,
-<a class="reference external" href="https://github.com/eclipse-score/score/releases/tag/v0.7.4">Platform v0.7.4 release notes</a>).</p>
+(<a class="reference external" href="https://github.com/eclipse-score/score/pull/3286">score#3286</a>,
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/5d09c1bf631767564295ee403d200d2f201eb76a">5d09c1b</a>).</p>
 <p>Action required: link tests to the new stakeholder requirement IDs.</p>
 </section>
 <section id="baselibs-vajson-is-the-only-json-backend">
@@ -790,12 +840,78 @@ The <code class="docutils literal notranslate"><span class="pre">--&#64;score_ba
 repository still sets in <code class="docutils literal notranslate"><span class="pre">.bazelrc</span></code> and <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>. The written JSON
 differs (for example <code class="docutils literal notranslate"><span class="pre">true</span></code>/<code class="docutils literal notranslate"><span class="pre">false</span></code> instead of <code class="docutils literal notranslate"><span class="pre">1</span></code>/<code class="docutils literal notranslate"><span class="pre">0</span></code> and different
 float formatting), which is why two Configuration Management unit tests are
-excluded in <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>
-(<a class="reference external" href="https://github.com/eclipse-score/baselibs/releases/tag/v0.2.15">Baselibs v0.2.15</a>,
-<a class="reference external" href="https://github.com/eclipse-score/baselibs/releases/tag/v0.2.16">Baselibs v0.2.16</a>,
+excluded in <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>. In v0.2.17 the <code class="docutils literal notranslate"><span class="pre">VajsonParser</span></code> class and the
+<code class="docutils literal notranslate"><span class="pre">vajson_parser</span></code> target were removed; <code class="docutils literal notranslate"><span class="pre">JsonParser</span></code> and <code class="docutils literal notranslate"><span class="pre">JsonWriter</span></code> keep
+their interfaces
+(<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/660">baselibs#660</a>,
+<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/675">baselibs#675</a>,
+<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/677">baselibs#677</a>,
 <a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/312fde355d1270ab713603ce3233d39c81407c7d">312fde3</a>).</p>
 <p>Action required: remove the <code class="docutils literal notranslate"><span class="pre">base_library</span></code> and <code class="docutils literal notranslate"><span class="pre">writer_library</span></code> flags from
-build configurations and do not compare JSON output against the old format.</p>
+build configurations, use <code class="docutils literal notranslate"><span class="pre">JsonParser</span></code> instead of <code class="docutils literal notranslate"><span class="pre">VajsonParser</span></code> and do not
+compare JSON output against the old format.</p>
+</section>
+<section id="baselibs-deprecated-apis-and-targets-removed">
+<h4>Baselibs: deprecated APIs and targets removed<a class="headerlink" href="#baselibs-deprecated-apis-and-targets-removed" title="Link to this heading">#</a></h4>
+<p>Baselibs removed deprecated or unused APIs that other modules had to migrate
+away from, for example Persistency from <code class="docutils literal notranslate"><span class="pre">score::ResultBlank</span></code> and Logging from
+<code class="docutils literal notranslate"><span class="pre">STRUCT_VISITABLE</span></code>
+(<a class="reference external" href="https://github.com/eclipse-score/persistency/pull/455">persistency#455</a>,
+<a class="reference external" href="https://github.com/eclipse-score/logging/pull/343">logging#343</a>):</p>
+<ul class="simple">
+<li><p>The type aliases <code class="docutils literal notranslate"><span class="pre">score::Blank</span></code> and <code class="docutils literal notranslate"><span class="pre">score::ResultBlank</span></code> and the macros
+<code class="docutils literal notranslate"><span class="pre">STRUCT_VISITABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">STRUCT_TRACEABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">MEMCPY_SERIALIZABLE</span></code> and
+<code class="docutils literal notranslate"><span class="pre">MEMCPY_SERIALIZABLE_IF</span></code> (v0.2.16)
+(<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/623">baselibs#623</a>).</p></li>
+<li><p>The deprecated <code class="docutils literal notranslate"><span class="pre">//src</span></code> aliases and the string and atomic shims in
+<code class="docutils literal notranslate"><span class="pre">//score/memory</span></code> (v0.2.14)
+(<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/598">baselibs#598</a>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">//score/datetime_converter</span></code>, the <code class="docutils literal notranslate"><span class="pre">score/os</span></code> cpuid, file stream, make-dev
+and <code class="docutils literal notranslate"><span class="pre">select</span></code> wrappers (v0.2.13), the Linux <code class="docutils literal notranslate"><span class="pre">pthread_setaffinity_np</span></code>
+wrapper and deprecated QNX <code class="docutils literal notranslate"><span class="pre">ChannelCreate</span></code> and <code class="docutils literal notranslate"><span class="pre">TimerTimeout</span></code> overloads
+(v0.2.16)
+(<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/471">baselibs#471</a>,
+<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/535">baselibs#535</a>,
+<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/536">baselibs#536</a>,
+<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/703">baselibs#703</a>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Synchronized::WithLock</span></code> is deprecated in favour of the monadic functions of
+<code class="docutils literal notranslate"><span class="pre">LockedPtr</span></code> (v0.2.17)
+(<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/761">baselibs#761</a>).</p></li>
+</ul>
+<p>With Baselibs v0.2.16 this repository adds a <code class="docutils literal notranslate"><span class="pre">safe_math</span></code> dependency to
+Communication by patch
+(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/7b91874e2b301b428528b2a85d865ec9f86af902">7b91874</a>).</p>
+<p>Action required: use <code class="docutils literal notranslate"><span class="pre">void</span></code>/<code class="docutils literal notranslate"><span class="pre">score::Result&lt;void&gt;</span></code> and the <code class="docutils literal notranslate"><span class="pre">SCORE_*</span></code>
+macros, depend on the <code class="docutils literal notranslate"><span class="pre">//score</span></code> targets and replace the removed OS wrappers
+and <code class="docutils literal notranslate"><span class="pre">WithLock</span></code>.</p>
+</section>
+<section id="communication-removed-deprecated-api-and-exception-specifications">
+<h4>Communication: removed deprecated API and exception specifications<a class="headerlink" href="#communication-removed-deprecated-api-and-exception-specifications" title="Link to this heading">#</a></h4>
+<p>Communication <code class="docutils literal notranslate"><span class="pre">v0.5.0</span></code> and <code class="docutils literal notranslate"><span class="pre">v0.6.0</span></code> change public <code class="docutils literal notranslate"><span class="pre">mw::com</span></code> APIs that
+applications use directly
+(<a class="reference external" href="https://github.com/eclipse-score/communication/releases/tag/v0.5.0">Communication v0.5.0 release notes</a>,
+<a class="reference external" href="https://github.com/eclipse-score/communication/releases/tag/v0.6.0">Communication v0.6.0 release notes</a>):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">GenericProxyEvent::GetSampleSize()</span></code>, deprecated in <code class="docutils literal notranslate"><span class="pre">v0.5.0</span></code>, was removed
+in <code class="docutils literal notranslate"><span class="pre">v0.6.0</span></code>; use <code class="docutils literal notranslate"><span class="pre">GetDataTypeSizeInfo().Size()</span></code>
+(<a class="reference external" href="https://github.com/eclipse-score/communication/pull/997">communication#997</a>).</p></li>
+<li><p>Functions that can propagate exceptions are no longer <code class="docutils literal notranslate"><span class="pre">noexcept</span></code>:
+<code class="docutils literal notranslate"><span class="pre">GenericProxyEvent::SetReceiveHandler</span></code>, <code class="docutils literal notranslate"><span class="pre">UnsetReceiveHandler</span></code> and
+<code class="docutils literal notranslate"><span class="pre">Unsubscribe</span></code> (<code class="docutils literal notranslate"><span class="pre">v0.5.0</span></code>), <code class="docutils literal notranslate"><span class="pre">GenericSkeleton::StopOfferService()</span></code>,
+<code class="docutils literal notranslate"><span class="pre">GenericSkeletonEvent::Send()</span></code> and <code class="docutils literal notranslate"><span class="pre">GenericSkeletonEvent::Notify()</span></code>
+(<code class="docutils literal notranslate"><span class="pre">v0.6.0</span></code>)
+(<a class="reference external" href="https://github.com/eclipse-score/communication/pull/1202">communication#1202</a>,
+<a class="reference external" href="https://github.com/eclipse-score/communication/pull/1232">communication#1232</a>).</p></li>
+<li><p>The aggregate Bazel target <code class="docutils literal notranslate"><span class="pre">//score/memory/shared:types</span></code> was removed
+(<a class="reference external" href="https://github.com/eclipse-score/communication/pull/1487">communication#1487</a>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tracing::TypeErasedSamplePtr</span></code> was replaced by <code class="docutils literal notranslate"><span class="pre">impl::SamplePtr&lt;void&gt;</span></code>
+(<code class="docutils literal notranslate"><span class="pre">v0.5.0</span></code>)
+(<a class="reference external" href="https://github.com/eclipse-score/communication/pull/1229">communication#1229</a>).</p></li>
+</ul>
+<p>Action required: replace <code class="docutils literal notranslate"><span class="pre">GetSampleSize()</span></code> and <code class="docutils literal notranslate"><span class="pre">TypeErasedSamplePtr</span></code>, do not
+rely on <code class="docutils literal notranslate"><span class="pre">noexcept</span></code> of the listed functions and depend on the specific
+<code class="docutils literal notranslate"><span class="pre">//score/memory/shared</span></code> sub-targets (for example <code class="docutils literal notranslate"><span class="pre">:offset_ptr</span></code>,
+<code class="docutils literal notranslate"><span class="pre">:vector</span></code>, <code class="docutils literal notranslate"><span class="pre">:string</span></code>).</p>
 </section>
 <section id="persistency-kvs-api-and-file-format">
 <h4>Persistency: KVS API and file format<a class="headerlink" href="#persistency-kvs-api-and-file-format" title="Link to this heading">#</a></h4>
@@ -817,36 +933,98 @@ top-level envelope <code class="docutils literal notranslate"><span class="pre">
 <code class="docutils literal notranslate"><span class="pre">KvsBuilder</span></code> flags became enums (<code class="docutils literal notranslate"><span class="pre">Defaults</span></code>, <code class="docutils literal notranslate"><span class="pre">KvsLoad</span></code>,
 <code class="docutils literal notranslate"><span class="pre">WorkingDir</span></code>). Configuration Management is adapted by a patch in this
 repository
-(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/346704410622c0863cbb5cf04a1578f426cf797e">3467044</a>).</p></li>
+(<a class="reference external" href="https://github.com/eclipse-score/persistency/pull/461">persistency#461</a>,
+<a class="reference external" href="https://github.com/eclipse-score/persistency/pull/562">persistency#562</a>,
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/346704410622c0863cbb5cf04a1578f426cf797e">3467044</a>).</p></li>
+<li><p>Deprecated, still available: the namespace <code class="docutils literal notranslate"><span class="pre">score::mw::per::kvs</span></code> (now
+<code class="docutils literal notranslate"><span class="pre">score::kvs</span></code>), the old <code class="docutils literal notranslate"><span class="pre">*.hpp</span></code> headers, the snake_case method names (now
+PascalCase) and the constants and enumerators without <code class="docutils literal notranslate"><span class="pre">k</span></code> prefix
+(<a class="reference external" href="https://github.com/eclipse-score/persistency/pull/562">persistency#562</a>,
+<a class="reference external" href="https://github.com/eclipse-score/persistency/pull/564">persistency#564</a>,
+<a class="reference external" href="https://github.com/eclipse-score/persistency/pull/614">persistency#614</a>).</p></li>
+<li><p>Keys must be non-empty, consist of printable ASCII characters and be at most
+32 bytes long. The C++ and Rust KVS return <code class="docutils literal notranslate"><span class="pre">InvalidKey</span></code> for other keys,
+and loading a file with such a key fails
+(<a class="reference external" href="https://github.com/eclipse-score/persistency/pull/308">persistency#308</a>,
+<a class="reference external" href="https://github.com/eclipse-score/persistency/pull/508">persistency#508</a>,
+<a class="reference external" href="https://github.com/eclipse-score/persistency/pull/509">persistency#509</a>).</p></li>
+<li><p>The KVS stores its files atomically with the permissions <code class="docutils literal notranslate"><span class="pre">640</span></code>
+(<a class="reference external" href="https://github.com/eclipse-score/persistency/pull/503">persistency#503</a>).</p></li>
 </ul>
 <p>Action required: rename <code class="docutils literal notranslate"><span class="pre">reset_key</span></code> calls, convert defaults files to the
-tagged envelope and update the KVS includes and builder calls.</p>
+tagged envelope, update the KVS includes, builder calls and names, keep keys
+within the allowed characters and length and check that processes reading KVS
+files of another user still have access.</p>
 </section>
-<section id="lifecycle-launch-manager-configuration-in-milliseconds">
-<h4>Lifecycle: Launch Manager configuration in milliseconds<a class="headerlink" href="#lifecycle-launch-manager-configuration-in-milliseconds" title="Link to this heading">#</a></h4>
-<p>Lifecycle <code class="docutils literal notranslate"><span class="pre">v0.9.0</span></code> renamed all duration fields of the Launch Manager
-configuration to integer milliseconds, for example <code class="docutils literal notranslate"><span class="pre">transition_timeout</span></code> to
-<code class="docutils literal notranslate"><span class="pre">transition_timeout_ms</span></code> and <code class="docutils literal notranslate"><span class="pre">reporting_cycle</span></code> to <code class="docutils literal notranslate"><span class="pre">reporting_cycle_ms</span></code>.
-Configurations with the old keys fail the schema validation
+<section id="lifecycle-launch-manager-configuration-and-control-api">
+<h4>Lifecycle: Launch Manager configuration and control API<a class="headerlink" href="#lifecycle-launch-manager-configuration-and-control-api" title="Link to this heading">#</a></h4>
+<p>Lifecycle <code class="docutils literal notranslate"><span class="pre">v0.7.0</span></code> to <code class="docutils literal notranslate"><span class="pre">v0.10.0</span></code> change the Launch Manager configuration
+and its control interface. Configurations with old keys fail the schema
+validation; the Lifecycle showcase configuration of this repository was
+updated accordingly
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/a575ce6982f0d73ed759462f25f29d2d39ab7627">a575ce6</a>,
-<a class="reference external" href="https://github.com/eclipse-score/lifecycle/releases/tag/v0.9.0">Lifecycle v0.9.0 release notes</a>).</p>
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/9c0136e094cfd76219077877a760c0e6fb8236d6">9c0136e</a>):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">v0.7.0</span></code>: all durations are configured in milliseconds, and the keys get
+the suffix <code class="docutils literal notranslate"><span class="pre">_ms</span></code>, for example <code class="docutils literal notranslate"><span class="pre">transition_timeout_ms</span></code> and
+<code class="docutils literal notranslate"><span class="pre">reporting_cycle_ms</span></code>
+(<a class="reference external" href="https://github.com/eclipse-score/lifecycle/pull/637">lifecycle#637</a>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">v0.8.0</span></code>: <code class="docutils literal notranslate"><span class="pre">ILmControl</span></code> replaces <code class="docutils literal notranslate"><span class="pre">ControlClient</span></code>. The top-level
+<code class="docutils literal notranslate"><span class="pre">fallback_run_target</span></code> is mandatory, <code class="docutils literal notranslate"><span class="pre">number_of_attempts</span></code> is limited to
+<code class="docutils literal notranslate"><span class="pre">255</span></code>, and <code class="docutils literal notranslate"><span class="pre">application_type:</span> <span class="pre">Reporting</span></code> only allows the ready condition
+<code class="docutils literal notranslate"><span class="pre">Running</span></code>
+(<a class="reference external" href="https://github.com/eclipse-score/lifecycle/releases/tag/v0.8.0">Lifecycle v0.8.0 release notes</a>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">v0.9.0</span></code>: <code class="docutils literal notranslate"><span class="pre">deployment_config.ready_recovery_action</span></code> is deprecated and
+will be removed with the next release
+(<a class="reference external" href="https://github.com/eclipse-score/lifecycle/releases/tag/v0.9.0">Lifecycle v0.9.0 release notes</a>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">v0.10.0</span></code>: the configuration <code class="docutils literal notranslate"><span class="pre">schema_version</span></code> is <code class="docutils literal notranslate"><span class="pre">2</span></code>; POSIX RLIMITs
+replace the options <code class="docutils literal notranslate"><span class="pre">max_memory_usage</span></code> and <code class="docutils literal notranslate"><span class="pre">max_cpu_usage</span></code>
+(<a class="reference external" href="https://github.com/eclipse-score/lifecycle/pull/868">lifecycle#868</a>,
+<a class="reference external" href="https://github.com/eclipse-score/lifecycle/releases/tag/v0.10.0">Lifecycle v0.10.0 release notes</a>).</p></li>
+</ul>
 <p>Action required: rename the duration fields to <code class="docutils literal notranslate"><span class="pre">*_ms</span></code> and convert the values
-from seconds to milliseconds.</p>
-</section>
-<section id="lifecycle-launch-manager-configuration-schema-version-2">
-<h4>Lifecycle: Launch Manager configuration schema version 2<a class="headerlink" href="#lifecycle-launch-manager-configuration-schema-version-2" title="Link to this heading">#</a></h4>
-<p>Lifecycle <code class="docutils literal notranslate"><span class="pre">v0.10.0</span></code> makes POSIX RLIMITs configurable for the processes
-started by the Launch Manager and raises the configuration <code class="docutils literal notranslate"><span class="pre">schema_version</span></code>
-to <code class="docutils literal notranslate"><span class="pre">2</span></code>; the options <code class="docutils literal notranslate"><span class="pre">max_memory_usage</span></code> and <code class="docutils literal notranslate"><span class="pre">max_cpu_usage</span></code> were removed.
-The Lifecycle showcase configuration of this repository was updated
-accordingly
-(<a class="reference external" href="https://github.com/eclipse-score/lifecycle/releases/tag/v0.10.0">Lifecycle v0.10.0 release notes</a>,
-<a class="reference external" href="https://github.com/eclipse-score/lifecycle/pull/868">lifecycle#868</a>,
-<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/9c0136e094cfd76219077877a760c0e6fb8236d6">9c0136e</a>).</p>
-<p>Action required: set <code class="docutils literal notranslate"><span class="pre">schema_version</span></code> to <code class="docutils literal notranslate"><span class="pre">2</span></code> in Launch Manager
-configurations and replace <code class="docutils literal notranslate"><span class="pre">max_memory_usage</span></code> with the RLIMIT options
-(<code class="docutils literal notranslate"><span class="pre">RLIMIT_AS</span></code>, <code class="docutils literal notranslate"><span class="pre">RLIMIT_STACK</span></code>, <code class="docutils literal notranslate"><span class="pre">RLIMIT_DATA</span></code>) and <code class="docutils literal notranslate"><span class="pre">max_cpu_usage</span></code> with
+to milliseconds, migrate State Managers from <code class="docutils literal notranslate"><span class="pre">ControlClient</span></code> to
+<code class="docutils literal notranslate"><span class="pre">ILmControl</span></code>, set <code class="docutils literal notranslate"><span class="pre">schema_version</span></code> to <code class="docutils literal notranslate"><span class="pre">2</span></code>, replace
+<code class="docutils literal notranslate"><span class="pre">ready_recovery_action.restart</span></code> with <code class="docutils literal notranslate"><span class="pre">activation_retry_attempts</span></code> and
+<code class="docutils literal notranslate"><span class="pre">delay_before_restart_ms</span></code>, and replace <code class="docutils literal notranslate"><span class="pre">max_memory_usage</span></code> with
+<code class="docutils literal notranslate"><span class="pre">RLIMIT_AS</span></code>, <code class="docutils literal notranslate"><span class="pre">RLIMIT_STACK</span></code> or <code class="docutils literal notranslate"><span class="pre">RLIMIT_DATA</span></code> and <code class="docutils literal notranslate"><span class="pre">max_cpu_usage</span></code> with
 <code class="docutils literal notranslate"><span class="pre">RLIMIT_CPU</span></code>.</p>
+</section>
+<section id="tooling-safety-analysis-and-dependable-element-rules">
+<h4>Tooling: safety analysis and dependable element rules<a class="headerlink" href="#tooling-safety-analysis-and-dependable-element-rules" title="Link to this heading">#</a></h4>
+<p>Tooling <code class="docutils literal notranslate"><span class="pre">v2.3.1</span></code> and <code class="docutils literal notranslate"><span class="pre">v3.0.0</span></code> change the Bazel rules that modules use for
+their safety documentation: <code class="docutils literal notranslate"><span class="pre">fmea</span></code> became <code class="docutils literal notranslate"><span class="pre">safety_analysis</span></code>, which
+<code class="docutils literal notranslate"><span class="pre">v3.0.0</span></code> splits into <code class="docutils literal notranslate"><span class="pre">failure_modes</span></code>, <code class="docutils literal notranslate"><span class="pre">fault_trees</span></code> and
+<code class="docutils literal notranslate"><span class="pre">safety_analysis</span></code>; <code class="docutils literal notranslate"><span class="pre">dependable_element</span></code> no longer has the attribute
+<code class="docutils literal notranslate"><span class="pre">assumptions_of_use</span></code>; PlantUML elements are identified by their written name
+instead of the alias; and the crate repository is renamed from <code class="docutils literal notranslate"><span class="pre">&#64;crates</span></code> to
+<code class="docutils literal notranslate"><span class="pre">&#64;crates_score_tooling</span></code>. This repository drops the <code class="docutils literal notranslate"><span class="pre">assumptions_of_use</span></code>
+attribute from Logging and Configuration Management by patch
+(<a class="reference external" href="https://github.com/eclipse-score/tooling/releases/tag/v2.3.1">Tooling v2.3.1 release notes</a>,
+<a class="reference external" href="https://github.com/eclipse-score/tooling/releases/tag/v3.0.0">Tooling v3.0.0 release notes</a>,
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/dc41763ef74338f1b394adcbcd798f76b85cde35">dc41763</a>).</p>
+<p>Action required: migrate <code class="docutils literal notranslate"><span class="pre">dependable_element</span></code> and safety analysis targets
+with the migration checklist of the Tooling <code class="docutils literal notranslate"><span class="pre">v3.0.0</span></code> release notes.</p>
+</section>
+<section id="test-scenarios-libraries-moved-under-score">
+<h4>Test Scenarios: libraries moved under <code class="docutils literal notranslate"><span class="pre">score/</span></code><a class="headerlink" href="#test-scenarios-libraries-moved-under-score" title="Link to this heading">#</a></h4>
+<p>Test Scenarios <code class="docutils literal notranslate"><span class="pre">v0.5.0</span></code> moved the libraries to
+<code class="docutils literal notranslate"><span class="pre">&#64;score_test_scenarios//score/test_scenarios_cpp</span></code> and
+<code class="docutils literal notranslate"><span class="pre">&#64;score_test_scenarios//score/test_scenarios_rust</span></code>; the feature integration
+tests of this repository use the new labels
+(<a class="reference external" href="https://github.com/eclipse-score/testing_tools/pull/31">testing_tools#31</a>,
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/cb89c10a49e1058ca6e4f01495530be30db5441b">cb89c10</a>).</p>
+<p>Action required: update the <code class="docutils literal notranslate"><span class="pre">&#64;score_test_scenarios</span></code> labels.</p>
+</section>
+<section id="docs-as-code-score-pytest-moved-fmea-attribute-renamed">
+<h4>Docs-as-code: <code class="docutils literal notranslate"><span class="pre">score_pytest</span></code> moved, FMEA attribute renamed<a class="headerlink" href="#docs-as-code-score-pytest-moved-fmea-attribute-renamed" title="Link to this heading">#</a></h4>
+<p>Docs-as-code <code class="docutils literal notranslate"><span class="pre">v8.4.0</span></code> removed the <code class="docutils literal notranslate"><span class="pre">score_pytest</span></code> macro and the test
+attributes plugin; they are provided by <code class="docutils literal notranslate"><span class="pre">score_tools</span></code>. The attribute
+<code class="docutils literal notranslate"><span class="pre">root_cause</span></code> of <code class="docutils literal notranslate"><span class="pre">feat_fmea</span></code> and <code class="docutils literal notranslate"><span class="pre">comp_fmea</span></code> was renamed to
+<code class="docutils literal notranslate"><span class="pre">failure_root_cause</span></code>
+(<a class="reference external" href="https://github.com/eclipse-score/docs-as-code/releases/tag/v8.4.0">Docs-as-code v8.4.0 release notes</a>).</p>
+<p>Action required: load <code class="docutils literal notranslate"><span class="pre">score_pytest</span></code> from <code class="docutils literal notranslate"><span class="pre">&#64;score_tools</span></code> and rename
+<code class="docutils literal notranslate"><span class="pre">root_cause</span></code> in FMEA needs.</p>
 </section>
 </section>
 </section>
@@ -858,6 +1036,9 @@ configurations and replace <code class="docutils literal notranslate"><span clas
 <li><p><strong>Release notes:</strong> <a class="reference external" href="https://github.com/eclipse-score/reference_integration/releases/tag/v0.10.0">Reference integration release notes</a></p></li>
 <li><p><strong>Platform Verification Report:</strong> <a class="reference internal" href="../../verification_report/platform_verification_report.html#doc__platform_verification_report_latest" title="doc__platform_verification_report_latest"><em class="xref need">Platform Verification Report (doc__platform_verification_report_latest)</em></a></p></li>
 </ul>
+<p>The <em>Release notes</em> column of the module tables links every release of a module
+since v0.9.0, oldest first; modules unchanged since v0.9.0 show their current
+release.</p>
 <section id="integrated-software-modules">
 <h3>🧩 Integrated Software Modules<a class="headerlink" href="#integrated-software-modules" title="Link to this heading">#</a></h3>
 <div class="pst-scrollable-table-container"><table class="table">
@@ -877,17 +1058,17 @@ configurations and replace <code class="docutils literal notranslate"><span clas
 <tbody>
 <tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/score/tree/v0.7.4">Platform</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v0.7.4</span></code></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/score/releases/tag/v0.7.4">Release notes</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/score/releases/tag/v0.7.3">v0.7.3</a> · <a class="reference external" href="https://github.com/eclipse-score/score/releases/tag/v0.7.4">v0.7.4</a></p></td>
 <td><p>—</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/baselibs/tree/v0.2.17">Baselibs</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v0.2.17</span></code></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/baselibs/releases/tag/v0.2.17">Release notes</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/baselibs/releases/tag/v0.2.13">v0.2.13</a> · <a class="reference external" href="https://github.com/eclipse-score/baselibs/releases/tag/v0.2.14">v0.2.14</a> · <a class="reference external" href="https://github.com/eclipse-score/baselibs/releases/tag/v0.2.15">v0.2.15</a> · <a class="reference external" href="https://github.com/eclipse-score/baselibs/releases/tag/v0.2.16">v0.2.16</a> · <a class="reference external" href="https://github.com/eclipse-score/baselibs/releases/tag/v0.2.17">v0.2.17</a></p></td>
 <td><p><a class="reference internal" href="../../modules/score_baselibs/verification_report/module_verification_report.html"><span class="doc">Verification report</span></a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/communication/tree/v0.6.0">Communication</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v0.6.0</span></code></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/communication/releases/tag/v0.6.0">Release notes</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/communication/releases/tag/v0.5.0">v0.5.0</a> · <a class="reference external" href="https://github.com/eclipse-score/communication/releases/tag/v0.6.0">v0.6.0</a></p></td>
 <td><p>Dependable elements:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://eclipse-score.github.io/communication/v0.6.0/docs/sphinx/mw_com_index/index.html">LoLa (mw::com)</a></p></li>
@@ -898,32 +1079,32 @@ configurations and replace <code class="docutils literal notranslate"><span clas
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/persistency/tree/v0.4.0">Persistency</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v0.4.0</span></code></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/persistency/releases/tag/v0.4.0">Release notes</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/persistency/releases/tag/v0.4.0">v0.4.0</a></p></td>
 <td><p><a class="reference internal" href="../../modules/score_persistency/verification_report/module_verification_report.html"><span class="doc">Verification report</span></a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/kyron/tree/v0.1.6">Kyron</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v0.1.6</span></code></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/kyron/releases/tag/v0.1.6">Release notes</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/kyron/releases/tag/v0.1.5">v0.1.5</a> · <a class="reference external" href="https://github.com/eclipse-score/kyron/releases/tag/v0.1.6">v0.1.6</a></p></td>
 <td><p>—</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/lifecycle/tree/v0.10.0">Lifecycle</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v0.10.0</span></code></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/lifecycle/releases/tag/v0.10.0">Release notes</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/lifecycle/releases/tag/v0.7.0">v0.7.0</a> · <a class="reference external" href="https://github.com/eclipse-score/lifecycle/releases/tag/v0.8.0">v0.8.0</a> · <a class="reference external" href="https://github.com/eclipse-score/lifecycle/releases/tag/v0.9.0">v0.9.0</a> · <a class="reference external" href="https://github.com/eclipse-score/lifecycle/releases/tag/v0.10.0">v0.10.0</a></p></td>
 <td><p><a class="reference internal" href="../../modules/score_lifecycle/verification_report/module_verification_report.html"><span class="doc">Verification report</span></a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/logging/tree/v0.2.5">Logging</a></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">v0.2.5</span></code></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/logging/releases/tag/v0.2.5">Release notes</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/logging/tree/cda5a5ba57dffe3aa109e518e47f0ada692b3573">Logging</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">cda5a5b</span> <span class="pre">(unreleased)</span></code></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/logging/releases/tag/v0.2.5">v0.2.5</a></p></td>
 <td><p><a class="reference internal" href="../../modules/score_logging/verification_report/module_verification_report.html"><span class="doc">Verification report</span></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/time/tree/v0.3.1">Time</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v0.3.1</span></code></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/time/releases/tag/v0.3.1">Release notes</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/time/releases/tag/v0.3.0">v0.3.0</a> · <a class="reference external" href="https://github.com/eclipse-score/time/releases/tag/v0.3.1">v0.3.1</a></p></td>
 <td><p>—</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/config_management/tree/v0.3.1">Configuration Management</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v0.3.1</span></code></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/config_management/releases/tag/v0.3.1">Release notes</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/config_management/releases/tag/v0.3.1">v0.3.1</a></p></td>
 <td><p>—</p></td>
 </tr>
 </tbody>
@@ -947,43 +1128,43 @@ configurations and replace <code class="docutils literal notranslate"><span clas
 <tbody>
 <tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/score-crates/tree/v0.0.11">Crates</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v0.0.11</span></code></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/score-crates/releases/tag/v0.0.11">Release notes</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/score-crates/releases/tag/v0.0.11">v0.0.11</a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/itf/tree/v0.6.0">ITF (Integration Testing Framework)</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v0.6.0</span></code></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/itf/releases/tag/v0.6.0">Release notes</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/itf/releases/tag/v0.6.0">v0.6.0</a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/devcontainer/tree/v1.11.4">Devcontainer</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v1.11.4</span></code></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/devcontainer/releases/tag/v1.11.4">Release notes</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/devcontainer/releases/tag/v1.11.4">v1.11.4</a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/tools/tree/v0.0.4">Tools</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v0.0.4</span></code></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/tools/releases/tag/v0.0.4">Release notes</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/tools/releases/tag/v0.0.4">v0.0.4</a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/tooling/tree/v3.0.1">Tooling</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v3.0.1</span></code></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/tooling/releases/tag/v3.0.1">Release notes</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/tooling/releases/tag/v2.1.0">v2.1.0</a> · <a class="reference external" href="https://github.com/eclipse-score/tooling/releases/tag/v2.1.1">v2.1.1</a> · <a class="reference external" href="https://github.com/eclipse-score/tooling/releases/tag/v2.2.0">v2.2.0</a> · <a class="reference external" href="https://github.com/eclipse-score/tooling/releases/tag/v2.2.1">v2.2.1</a> · <a class="reference external" href="https://github.com/eclipse-score/tooling/releases/tag/v2.2.2">v2.2.2</a> · <a class="reference external" href="https://github.com/eclipse-score/tooling/releases/tag/v2.2.3">v2.2.3</a> · <a class="reference external" href="https://github.com/eclipse-score/tooling/releases/tag/v2.3.0">v2.3.0</a> · <a class="reference external" href="https://github.com/eclipse-score/tooling/releases/tag/v2.3.1">v2.3.1</a> · <a class="reference external" href="https://github.com/eclipse-score/tooling/releases/tag/v3.0.0">v3.0.0</a> · <a class="reference external" href="https://github.com/eclipse-score/tooling/releases/tag/v3.0.1">v3.0.1</a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/bazel_platforms/tree/v1.1.0">Bazel Platforms</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v1.1.0</span></code></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/bazel_platforms/releases/tag/v1.1.0">Release notes</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/bazel_platforms/releases/tag/v1.1.0">v1.1.0</a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/testing_tools/tree/v0.5.0">Test Scenarios</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v0.5.0</span></code></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/testing_tools/releases/tag/v0.5.0">Release notes</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/testing_tools/releases/tag/v0.5.0">v0.5.0</a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/docs-as-code/tree/v8.6.0">Docs-as-code</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v8.6.0</span></code></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/docs-as-code/releases/tag/v8.6.0">Release notes</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/docs-as-code/releases/tag/v8.1.2">v8.1.2</a> · <a class="reference external" href="https://github.com/eclipse-score/docs-as-code/releases/tag/v8.2.0">v8.2.0</a> · <a class="reference external" href="https://github.com/eclipse-score/docs-as-code/releases/tag/v8.3.0">v8.3.0</a> · <a class="reference external" href="https://github.com/eclipse-score/docs-as-code/releases/tag/v8.4.0">v8.4.0</a> · <a class="reference external" href="https://github.com/eclipse-score/docs-as-code/releases/tag/v8.5.0">v8.5.0</a> · <a class="reference external" href="https://github.com/eclipse-score/docs-as-code/releases/tag/v8.5.1">v8.5.1</a> · <a class="reference external" href="https://github.com/eclipse-score/docs-as-code/releases/tag/v8.6.0">v8.6.0</a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/process_description/tree/v2.2.2">Process description</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v2.2.2</span></code></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/process_description/releases/tag/v2.2.2">Release notes</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/process_description/releases/tag/v2.2.0">v2.2.0</a> · <a class="reference external" href="https://github.com/eclipse-score/process_description/releases/tag/v2.2.1">v2.2.1</a> · <a class="reference external" href="https://github.com/eclipse-score/process_description/releases/tag/v2.2.2">v2.2.2</a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/bazel_cpp_toolchains/tree/v1.0.3">Bazel CPP Toolchain</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v1.0.3</span></code></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/bazel_cpp_toolchains/releases/tag/v1.0.3">Release notes</a></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/bazel_cpp_toolchains/releases/tag/v1.0.3">v1.0.3</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1046,6 +1227,7 @@ configurations and replace <code class="docutils literal notranslate"><span clas
 <h3>🚀 Upgrade Instructions<a class="headerlink" href="#upgrade-instructions" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Increase to the newest Bazel registry versions: <a class="reference external" href="https://eclipse-score.github.io/bazel_registry_ui">https://eclipse-score.github.io/bazel_registry_ui</a></p></li>
+<li><p>Modules shown as <em>(unreleased)</em> are pinned to a commit and have no registry version; use the commit from <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>.</p></li>
 <li><p>The module versions of this release are listed in <a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/v0.10.0/known_good.json">known_good.json</a>.</p></li>
 </ul>
 </section>
@@ -1118,7 +1300,11 @@ configurations and replace <code class="docutils literal notranslate"><span clas
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reference-images">Reference images</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#platform-integration-tests">Platform integration tests</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-coverage-from-module-tests">Requirement coverage from module tests</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#qualified-coverage-tool-in-the-modules">Qualified coverage tool in the modules</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lifecycle-control-interface-for-state-managers">Lifecycle control interface for State Managers</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#logging-linux-syslog-backend">Logging: Linux syslog backend</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#itf-qemu-plugin-for-linux-images">ITF: QEMU plugin for Linux images</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#module-maturity-classification-dr-003">Module maturity classification (DR-003)</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation-and-reports">Documentation and reports</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ci">CI</a></li>
 </ul>
@@ -1128,9 +1314,13 @@ configurations and replace <code class="docutils literal notranslate"><span clas
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reference-integration-qnx-image-packages-moved">Reference integration: QNX image packages moved</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#platform-stakeholder-requirement-ids-renamed">Platform: stakeholder requirement IDs renamed</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#baselibs-vajson-is-the-only-json-backend">Baselibs: vaJson is the only JSON backend</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#baselibs-deprecated-apis-and-targets-removed">Baselibs: deprecated APIs and targets removed</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#communication-removed-deprecated-api-and-exception-specifications">Communication: removed deprecated API and exception specifications</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#persistency-kvs-api-and-file-format">Persistency: KVS API and file format</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lifecycle-launch-manager-configuration-in-milliseconds">Lifecycle: Launch Manager configuration in milliseconds</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lifecycle-launch-manager-configuration-schema-version-2">Lifecycle: Launch Manager configuration schema version 2</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lifecycle-launch-manager-configuration-and-control-api">Lifecycle: Launch Manager configuration and control API</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tooling-safety-analysis-and-dependable-element-rules">Tooling: safety analysis and dependable element rules</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#test-scenarios-libraries-moved-under-score">Test Scenarios: libraries moved under <code class="docutils literal notranslate"><span class="pre">score/</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#docs-as-code-score-pytest-moved-fmea-attribute-renamed">Docs-as-code: <code class="docutils literal notranslate"><span class="pre">score_pytest</span></code> moved, FMEA attribute renamed</a></li>
 </ul>
 </li>
 </ul>
