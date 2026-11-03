@@ -64,16 +64,15 @@ single_version_override(
 )
 
 bazel_dep(name = "score_logging")
-git_override(
+single_version_override(
     module_name = "score_logging",
-    commit = "cda5a5ba57dffe3aa109e518e47f0ada692b3573",
     patch_strip = 1,
     patches = [
         "//patches/logging:002-undev-component-test-deps.patch",
         "//patches/logging:003-relative-verification-report-links.patch",
         "//patches/logging:004-drop-dependable-element-aou-attr.patch",
     ],
-    remote = "https://github.com/eclipse-score/logging.git",
+    version = "0.2.6",
 )
 
 bazel_dep(name = "score_time")
