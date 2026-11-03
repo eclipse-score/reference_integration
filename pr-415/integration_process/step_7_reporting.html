@@ -628,8 +628,35 @@ measured. Build a single module’s report with:</p>
 </pre></div>
 </div>
 </section>
+<section id="component-coverage-in-the-documentation">
+<h2><span class="section-number">7.5. </span>Component coverage in the documentation<a class="headerlink" href="#component-coverage-in-the-documentation" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">scripts/module_tests.py</span></code> uses <code class="docutils literal notranslate"><span class="pre">--config=llvm_cov</span></code> and exports reports through
+<code class="docutils literal notranslate"><span class="pre">&#64;score_coverage//:generate_coverage_html</span></code> for the integrated Baselibs,
+Persistency, Logging, Kyron, Lifecycle and Time versions. Communication and Config
+Management run their unit tests without coverage until a version using
+<code class="docutils literal notranslate"><span class="pre">coverage_tool</span></code> is integrated; the
+activation points are commented in <code class="docutils literal notranslate"><span class="pre">COVERAGE_MODULES</span></code> in the script.</p>
+<p>The export uses <code class="docutils literal notranslate"><span class="pre">COVERAGE_THRESHOLD=0</span></code> to collect evidence without adding a
+percentage gate. It contains plain LCOV at <code class="docutils literal notranslate"><span class="pre">coverage/coverage_report.dat</span></code> and
+the detailed HTML report. Source paths are translated to the reference
+integration’s repository identities before upload; for example,
+<code class="docutils literal notranslate"><span class="pre">score/foo.cpp</span></code> in Baselibs becomes
+<code class="docutils literal notranslate"><span class="pre">external/score_baselibs+/score/foo.cpp</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">report</span></code> command combines these files into
+<code class="docutils literal notranslate"><span class="pre">coverage-report/coverage_report.dat</span></code>, which docs-as-code reads when the
+published documentation is built. Component coverage uses only the
+<code class="docutils literal notranslate"><span class="pre">primary_need_id</span></code> and <code class="docutils literal notranslate"><span class="pre">code_targets</span></code> already exported by the pinned modules.
+Missing ownership or measurements remain unavailable; the integration does not
+add component metadata through patches.</p>
+<p>To include coverage in a local documentation build:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>scripts/module_tests.py<span class="w"> </span>run<span class="w"> </span>score_persistency
+python3<span class="w"> </span>scripts/module_tests.py<span class="w"> </span>report<span class="w"> </span>_module_tests/reports
+bazel<span class="w"> </span>run<span class="w"> </span>//:docs_shim
+</pre></div>
+</div>
+</section>
 <section id="verification-status-reports">
-<h2><span class="section-number">7.5. </span>Verification &amp; status reports<a class="headerlink" href="#verification-status-reports" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">7.6. </span>Verification &amp; status reports<a class="headerlink" href="#verification-status-reports" title="Link to this heading">#</a></h2>
 <p>The consolidated reports live under
 <a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/docs/verification_report">docs/verification_report</a>, the roadmap under
 <a class="reference external" href="https://github.com/eclipse-score/reference_integration/tree/main/docs/s_core_v_1/roadmap">docs/s_core_v_1/roadmap</a>
@@ -695,7 +722,8 @@ The full catalogue of reports is under <a class="reference internal" href="refer
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-the-results-are-exported">7.2. Where the results are exported</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c-coverage">7.3. C++ coverage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rust-coverage">7.4. Rust coverage</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#verification-status-reports">7.5. Verification &amp; status reports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#component-coverage-in-the-documentation">7.5. Component coverage in the documentation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#verification-status-reports">7.6. Verification &amp; status reports</a></li>
 </ul>
   </nav></div>
 

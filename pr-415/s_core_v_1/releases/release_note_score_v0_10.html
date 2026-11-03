@@ -542,7 +542,7 @@
 2026-11-02). This note shows the current state of the integration and changes
 until the release is published.</p>
 </div>
-<div class="need_container docutils container" id="SNCB-207884d6">
+<div class="need_container docutils container" id="SNCB-ecd4082a">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__score_v010_release_note">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -775,6 +775,12 @@ the Platform Verification Report; the status dashboard uses branch-aware links
 <li><p>The Platform Verification Report uses the <code class="docutils literal notranslate"><span class="pre">platform_verification_report</span></code>
 template of Docs-as-code
 (<a class="reference external" href="https://github.com/eclipse-score/docs-as-code/releases/tag/v8.2.0">Docs-as-code v8.2.0 release notes</a>).</p></li>
+<li><p>The module tests export the coverage reports of Baselibs, Persistency,
+Logging, Kyron, Lifecycle and Time and combine them into one LCOV file
+(<code class="docutils literal notranslate"><span class="pre">coverage-report/coverage_report.dat</span></code>) that the documentation build reads,
+so the measured module coverage appears in the documentation; Communication
+and Configuration Management run their tests without coverage
+(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/425">#425</a>).</p></li>
 <li><p>The Overall Status page was replaced by the Release-wide Progress Overview
 next to the release notes, with release-over-release charts per module
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/392">#392</a>).</p></li>
@@ -1092,9 +1098,9 @@ release.</p>
 <td><p><a class="reference external" href="https://github.com/eclipse-score/lifecycle/releases/tag/v0.7.0">v0.7.0</a> · <a class="reference external" href="https://github.com/eclipse-score/lifecycle/releases/tag/v0.8.0">v0.8.0</a> · <a class="reference external" href="https://github.com/eclipse-score/lifecycle/releases/tag/v0.9.0">v0.9.0</a> · <a class="reference external" href="https://github.com/eclipse-score/lifecycle/releases/tag/v0.10.0">v0.10.0</a></p></td>
 <td><p><a class="reference internal" href="../../modules/score_lifecycle/verification_report/module_verification_report.html"><span class="doc">Verification report</span></a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/logging/tree/cda5a5ba57dffe3aa109e518e47f0ada692b3573">Logging</a></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">cda5a5b</span> <span class="pre">(unreleased)</span></code></p></td>
-<td><p><a class="reference external" href="https://github.com/eclipse-score/logging/releases/tag/v0.2.5">v0.2.5</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/logging/tree/v0.2.6">Logging</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">v0.2.6</span></code></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/logging/releases/tag/v0.2.5">v0.2.5</a> · <a class="reference external" href="https://github.com/eclipse-score/logging/releases/tag/v0.2.6">v0.2.6</a></p></td>
 <td><p><a class="reference internal" href="../../modules/score_logging/verification_report/module_verification_report.html"><span class="doc">Verification report</span></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/time/tree/v0.3.1">Time</a></p></td>
@@ -1227,7 +1233,6 @@ release.</p>
 <h3>🚀 Upgrade Instructions<a class="headerlink" href="#upgrade-instructions" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Increase to the newest Bazel registry versions: <a class="reference external" href="https://eclipse-score.github.io/bazel_registry_ui">https://eclipse-score.github.io/bazel_registry_ui</a></p></li>
-<li><p>Modules shown as <em>(unreleased)</em> are pinned to a commit and have no registry version; use the commit from <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>.</p></li>
 <li><p>The module versions of this release are listed in <a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/v0.10.0/known_good.json">known_good.json</a>.</p></li>
 </ul>
 </section>
