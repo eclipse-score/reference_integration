@@ -72,58 +72,53 @@ New infrastructure module: Tools
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ``score_tools`` (`eclipse-score/tools <https://github.com/eclipse-score/tools>`__)
-is now part of ``known_good.json``. Persistency's test BUILD files load
-``@score_tools//score_pytest``, so the reference integration needs it as a
-regular dependency
+is part of ``known_good.json``. Persistency's test BUILD files load
+``@score_tools//score_pytest``, which moved there from Docs-as-code, so
+``reference_integration`` needs it as a regular dependency
 (`#388 <https://github.com/eclipse-score/reference_integration/pull/388>`__).
 
 New infrastructure module: Devcontainer
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ``score_devcontainer`` (`eclipse-score/devcontainer <https://github.com/eclipse-score/devcontainer>`__)
-is now pinned in ``known_good.json``; the reference integration uses devcontainer
-``1.11.4``, and ``scripts/module_tests.py`` raises the modules' own
-``score_devcontainer`` dependency to this version
+is pinned in ``known_good.json`` at ``1.11.4``; ``scripts/module_tests.py``
+raises the modules' own ``score_devcontainer`` dependency to this version
 (`#438 <https://github.com/eclipse-score/reference_integration/pull/438>`__).
 
 Bazel 8.8.2
 ~~~~~~~~~~~
 
-The reference integration builds with Bazel ``8.8.2`` instead of ``8.6.0``
+``reference_integration`` builds with Bazel ``8.8.2`` instead of ``8.6.0``
 (``.bazelversion``)
 (`#436 <https://github.com/eclipse-score/reference_integration/pull/436>`__).
 
 Integration Strategy (DR-008) test workflow
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The reference integration no longer runs the unit tests of all modules inside
-its own workspace. Each target software module now runs its own test suite in
-its own workspace, against the dependency versions resolved by the reference
-integration
+Each target software module runs its own test suite in its own workspace,
+against the dependency versions of ``reference_integration``, instead of
+inside the workspace of ``reference_integration``. This implements the parts
+of DR-008 that the v0.9 release note left for a follow-up release
 (`#398 <https://github.com/eclipse-score/reference_integration/pull/398>`__):
 
 - ``scripts/module_tests.py run <module>`` fetches the module at its
-  ``known_good.json`` pin with the integration patches applied, pins its direct
-  dependencies to the versions of the reference integration
-  (``--override_module``) and runs ``bazel coverage`` with the shared
-  configuration from ``bazel_common/unified.bazelrc`` and
-  ``bazel_common/unified_toolchains.MODULE.bazel``. Coverage builds C++ with
-  clang (LLVM); regular builds stay on GCC.
+  ``known_good.json`` pin with the integration patches, pins its direct
+  dependencies to the versions of ``reference_integration``
+  (``--override_module``) and runs ``bazel coverage`` with
+  ``bazel_common/unified.bazelrc`` and
+  ``bazel_common/unified_toolchains.MODULE.bazel``.
 - The ``module_tests.yml`` workflow runs one job per module and feeds the
   results into the unit test summary and the documentation.
-- Module-specific test exclusions are documented in the ``metadata.test_notes``
-  field of ``known_good.json``.
-- If the ``UBUNTU_SNAPSHOT_MIRROR_URL`` secret is set, the module test jobs
-  download Ubuntu snapshot packages from a mirror first
+- Module-specific test exclusions are documented in ``metadata.test_notes`` of
+  ``known_good.json``.
+- With the secret ``UBUNTU_SNAPSHOT_MIRROR_URL`` the module test jobs download
+  Ubuntu snapshot packages from a mirror first
   (`#429 <https://github.com/eclipse-score/reference_integration/pull/429>`__).
-
-This implements the parts of DR-008 that the v0.9 release note left for a
-follow-up release.
 
 Software Bill of Materials (SBOM)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The reference integration generates an SBOM with
+``reference_integration`` generates an SBOM with
 `score_sbom <https://github.com/eclipse-score/sbom>`__ ``0.1.1`` and uploads it
 as a CI build artifact
 (`#304 <https://github.com/eclipse-score/reference_integration/pull/304>`__,
@@ -136,7 +131,7 @@ Reference images
 - The QNX images use ``score_rules_imagefs`` ``0.1.0``; host files are placed
   with ``rules_pkg`` ``pkg_files`` targets
   (`#349 <https://github.com/eclipse-score/reference_integration/pull/349>`__).
-- The QNX and Linux image definitions were deduplicated into shared packages:
+- The QNX and Linux image definitions share the packages
   ``//images/common/apps``, ``//images/qnx_common/build`` and
   ``//images/qnx_common/configs``
   (`#389 <https://github.com/eclipse-score/reference_integration/pull/389>`__).
@@ -149,29 +144,27 @@ Platform integration tests
 
 The new ``//platform_integration_tests:pit`` suite runs the ``//showcases``
 applications for Communication, Kyron, Lifecycle, Logging and Time on the target
-image (Docker on Linux x86_64, QEMU on QNX x86_64). Each test is linked to the
-platform stakeholder requirement it demonstrates; the platform verification
-report shows them in a new "Stakeholder Requirements" chapter
+image (Docker on Linux x86_64, QEMU on QNX x86_64). Each test links the platform
+stakeholder requirement it demonstrates; the platform verification report shows
+them in the chapter "Stakeholder Requirements"
 (`#377 <https://github.com/eclipse-score/reference_integration/pull/377>`__).
 
 Requirement coverage from module tests
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The Lifecycle integration tests, the Logging component tests and the Persistency
-component integration tests are executed by the reference integration, so their
+``reference_integration`` executes the Lifecycle integration tests, the Logging
+component tests and the Persistency component integration tests, so their
 ``PartiallyVerifies``/``FullyVerifies`` links appear in the verification reports
-(`#385 <https://github.com/eclipse-score/reference_integration/pull/385>`__).
-The Logging tests run after fixing the packaging of the datarouter
-configuration
-(`#387 <https://github.com/eclipse-score/reference_integration/pull/387>`__).
+(`#385 <https://github.com/eclipse-score/reference_integration/pull/385>`__,
+`#387 <https://github.com/eclipse-score/reference_integration/pull/387>`__).
 
 Qualified coverage tool in the modules
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Baselibs, Kyron, Persistency and Time measure their coverage with the qualified
+Baselibs, Kyron, Persistency and Time measure coverage with the qualified
 ``score_coverage`` module
-(`eclipse-score/coverage_tool <https://github.com/eclipse-score/coverage_tool>`__),
-which replaces the coverage pipeline of ``score_tooling``. One
+(`eclipse-score/coverage_tool <https://github.com/eclipse-score/coverage_tool>`__)
+instead of the coverage pipeline of ``score_tooling``. One
 ``bazel coverage --config=llvm_cov`` run reports line and branch coverage for
 C++ and Rust, lists untested files with 0 % and supports coverage
 justifications
@@ -180,17 +173,17 @@ justifications
 `persistency#450 <https://github.com/eclipse-score/persistency/pull/450>`__,
 `time#235 <https://github.com/eclipse-score/time/pull/235>`__).
 
-Lifecycle control interface for State Managers
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Lifecycle: control interface for State Managers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Lifecycle provides the new ``ILmControl`` API, with which State Managers
+Lifecycle provides the ``ILmControl`` API, with which State Managers
 communicate with the Launch Manager over ``mw::com``
 (`Lifecycle v0.8.0 release notes <https://github.com/eclipse-score/lifecycle/releases/tag/v0.8.0>`__).
 
 Logging: Linux syslog backend
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``mw::log`` has a Linux ``syslog(3)`` backend for ``LogMode::kSystem``. It uses
+``mw::log`` has a Linux ``syslog(3)`` backend for ``LogMode::kSystem``, based on
 the new ``score::os::Syslog`` wrapper of Baselibs
 (`logging#271 <https://github.com/eclipse-score/logging/pull/271>`__,
 `baselibs#502 <https://github.com/eclipse-score/baselibs/pull/502>`__).
@@ -200,24 +193,23 @@ ITF: QEMU plugin for Linux images
 
 The QEMU plugin of ITF ``v0.6.0`` boots Linux images in addition to QNX images
 (EB corbos Linux for aarch64 and Ubuntu, with image definitions from
-``os_images``). It accepts an additional disk image with the test binaries and
-their data and has a hook for extra QEMU arguments
-(`itf#123 <https://github.com/eclipse-score/itf/pull/123>`__,
+``os_images``), accepts an additional disk image with the test binaries and
+their data, and has a hook for extra QEMU arguments
+(`itf#122 <https://github.com/eclipse-score/itf/pull/122>`__,
+`itf#123 <https://github.com/eclipse-score/itf/pull/123>`__,
 `itf#135 <https://github.com/eclipse-score/itf/pull/135>`__,
-`itf#139 <https://github.com/eclipse-score/itf/pull/139>`__,
-`itf#122 <https://github.com/eclipse-score/itf/pull/122>`__).
+`itf#139 <https://github.com/eclipse-score/itf/pull/139>`__).
 
 Module maturity classification (DR-003)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The architecture diagram of this release note shows the maturity of each
-software module (Release, Experimental, Preview) as defined in
+The architecture diagram shows the maturity of each software module (Release,
+Experimental, Preview) as defined in
 `DR-003-Strat <https://github.com/eclipse-score/score/blob/main/docs/design_decisions/strategy/DR-003-strat.md>`__.
-The level is derived from the documentation of the module: without a module
-verification report and without dependable element documentation a module is
-Preview; if all its component requirements are fully verified and inspected it
-is Release; otherwise it is Experimental. This follows up on the maturity levels
-announced in the v0.8 release note
+A module without module verification report and without dependable element
+documentation is Preview; a module whose component requirements are all fully
+verified and inspected is Release; all other modules are Experimental. This
+follows up on the maturity levels announced in the v0.8 release note
 (`842d366 <https://github.com/eclipse-score/reference_integration/commit/842d366755c765cc91e8cadcaa5f37799c7e6d06>`__).
 
 Documentation and reports
@@ -227,9 +219,10 @@ Documentation and reports
   (``bazel_common/docs_bundles.bzl``); the Time documentation is included
   (`#337 <https://github.com/eclipse-score/reference_integration/pull/337>`__,
   `#348 <https://github.com/eclipse-score/reference_integration/pull/348>`__).
-- Module verification reports (Baselibs, Lifecycle, Logging, Persistency) are
-  linked from a common index; the unit test and coverage summaries are part of
-  the Platform Verification Report; the status dashboard uses branch-aware links
+- The module verification reports (Baselibs, Lifecycle, Logging, Persistency)
+  are linked from a common index; the unit test and coverage summaries are part
+  of the Platform Verification Report; the status dashboard uses branch-aware
+  links
   (`#342 <https://github.com/eclipse-score/reference_integration/pull/342>`__,
   `#358 <https://github.com/eclipse-score/reference_integration/pull/358>`__,
   `#373 <https://github.com/eclipse-score/reference_integration/pull/373>`__).
@@ -238,28 +231,29 @@ Documentation and reports
   (`Docs-as-code v8.2.0 release notes <https://github.com/eclipse-score/docs-as-code/releases/tag/v8.2.0>`__).
 - The module tests export the coverage reports of Baselibs, Persistency,
   Logging, Kyron, Lifecycle and Time and combine them into one LCOV file
-  (``coverage-report/coverage_report.dat``) that the documentation build reads,
-  so the measured module coverage appears in the documentation; Communication
-  and Configuration Management run their tests without coverage
+  (``coverage-report/coverage_report.dat``) that the documentation build reads;
+  Communication and Configuration Management run their tests without coverage
   (`#425 <https://github.com/eclipse-score/reference_integration/pull/425>`__).
+- The documentation of the Communication dependable elements is published via
+  the module test artifacts and linked from the module documentation index
+  (``metadata.dependable_element_docs`` in ``known_good.json``)
+  (`bbf95e3 <https://github.com/eclipse-score/reference_integration/commit/bbf95e3d9fce50d8135e90bb89f7c0f2e096cac3>`__,
+  `d612b38 <https://github.com/eclipse-score/reference_integration/commit/d612b38c4a4fed4863f08ac33ee9c7c4b7249952>`__).
 - The Overall Status page was replaced by the Release-wide Progress Overview
   next to the release notes, with release-over-release charts per module
   (`#392 <https://github.com/eclipse-score/reference_integration/pull/392>`__).
-- The documentation of the Communication dependable element is published via
-  the module test artifacts and linked from the module documentation index; the
-  ``metadata.dependable_element_docs`` field of ``known_good.json`` enables it
-  (`bbf95e3 <https://github.com/eclipse-score/reference_integration/commit/bbf95e3d9fce50d8135e90bb89f7c0f2e096cac3>`__,
-  `d612b38 <https://github.com/eclipse-score/reference_integration/commit/d612b38c4a4fed4863f08ac33ee9c7c4b7249952>`__).
-- The release note is generated from ``known_good.json`` with
-  ``scripts/release_note/generate_release_note.py``
-  (`#414 <https://github.com/eclipse-score/reference_integration/pull/414>`__).
+- The release note is generated with
+  ``scripts/release_note/generate_release_note.py``; its module tables link
+  every module release since the origin release
+  (`#414 <https://github.com/eclipse-score/reference_integration/pull/414>`__,
+  `cf0f846 <https://github.com/eclipse-score/reference_integration/commit/cf0f846361955740dbf8e84029be35dad6afbc9f>`__).
 
 CI
 ~~
 
 - The documentation build runs as a separate, fail-fast workflow
   (`#375 <https://github.com/eclipse-score/reference_integration/pull/375>`__).
-- Bazel cache keys rotate on module bumps and the test cache is trusted on push
+- Bazel cache keys rotate on module bumps, and the test cache is trusted on push
   (`#356 <https://github.com/eclipse-score/reference_integration/pull/356>`__,
   `#362 <https://github.com/eclipse-score/reference_integration/pull/362>`__,
   `#366 <https://github.com/eclipse-score/reference_integration/pull/366>`__).
@@ -269,24 +263,24 @@ CI
 💥 Breaking Changes
 --------------------
 
-Reference integration: resolved-dependency overrides removed
+reference_integration: resolved-dependency overrides removed
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The module test mechanism of v0.9 was removed together with its generated files:
+The module test mechanism of v0.9 was removed with its files
 ``scripts/known_good/resolved_dependencies.py``,
 ``scripts/known_good/module_patches.py`` and the ``rust_coverage`` package
 (`#398 <https://github.com/eclipse-score/reference_integration/pull/398>`__).
 
 Action required: run module tests with ``scripts/module_tests.py`` and the
-configuration in ``bazel_common/unified.bazelrc`` instead.
+configuration in ``bazel_common/unified.bazelrc``.
 
-Reference integration: QNX image packages moved
+reference_integration: QNX image packages moved
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The common QNX build fragments and configuration files moved to
-``//images/qnx_common/build`` and ``//images/qnx_common/configs``; the
-``images/qnx_aarch64/configs`` package was removed and
-``images/qnx_x86_64/configs`` keeps only the x86-specific files
+``//images/qnx_common/build`` and ``//images/qnx_common/configs``; the package
+``images/qnx_aarch64/configs`` was removed and ``images/qnx_x86_64/configs``
+keeps only the x86-specific files
 (`#389 <https://github.com/eclipse-score/reference_integration/pull/389>`__).
 
 Action required: update references to the old image paths in derived images.
@@ -294,67 +288,80 @@ Action required: update references to the old image paths in derived images.
 Platform: stakeholder requirement IDs renamed
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Platform ``v0.7.3`` gave the safety stakeholder requirements named IDs instead
-of numbers, for example ``stkh_req__dependability__safety_features_1`` became
-``stkh_req__dependability__health_management``. Tests that still link the old
-ID make the documentation build fail with an unknown-link warning
-(`score#3286 <https://github.com/eclipse-score/score/pull/3286>`__,
-`5d09c1b <https://github.com/eclipse-score/reference_integration/commit/5d09c1bf631767564295ee403d200d2f201eb76a>`__).
+Platform ``v0.7.3`` gives the safety stakeholder requirements named IDs
+instead of numbers, for example ``stkh_req__dependability__safety_features_1``
+became ``stkh_req__dependability__health_management``. Tests that still link an
+old ID make the documentation build fail with an unknown-link warning
+(`score#3286 <https://github.com/eclipse-score/score/pull/3286>`__).
+
+.. note::
+
+   Important for integrators: the Lifecycle platform integration test of
+   ``reference_integration`` links the renamed requirement
+   (`5d09c1b <https://github.com/eclipse-score/reference_integration/commit/5d09c1bf631767564295ee403d200d2f201eb76a>`__).
 
 Action required: link tests to the new stakeholder requirement IDs.
 
 Baselibs: vaJson is the only JSON backend
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``score/json`` uses vaJson as its only parser (v0.2.15) and writer (v0.2.16).
-The ``--@score_baselibs//score/json:writer_library`` flag was removed;
-``--@score_baselibs//score/json:base_library`` is a deprecated no-op that this
-repository still sets in ``.bazelrc`` and ``known_good.json``. The written JSON
-differs (for example ``true``/``false`` instead of ``1``/``0`` and different
-float formatting), which is why two Configuration Management unit tests are
-excluded in ``known_good.json``. In v0.2.17 the ``VajsonParser`` class and the
-``vajson_parser`` target were removed; ``JsonParser`` and ``JsonWriter`` keep
-their interfaces
-(`baselibs#660 <https://github.com/eclipse-score/baselibs/pull/660>`__,
-`baselibs#675 <https://github.com/eclipse-score/baselibs/pull/675>`__,
-`baselibs#677 <https://github.com/eclipse-score/baselibs/pull/677>`__,
-`312fde3 <https://github.com/eclipse-score/reference_integration/commit/312fde355d1270ab713603ce3233d39c81407c7d>`__).
+``score/json`` uses vaJson as its only parser and writer; ``JsonParser``,
+``IJsonParser`` and ``JsonWriter`` keep their interfaces:
 
-Action required: remove the ``base_library`` and ``writer_library`` flags from
-build configurations, use ``JsonParser`` instead of ``VajsonParser`` and do not
-compare JSON output against the old format.
+- v0.2.15: the nlohmann parser was removed together with the
+  ``nlohmann_json`` dependency of Baselibs; the flag
+  ``--@score_baselibs//score/json:base_library`` is a deprecated no-op, also
+  with the value ``nlohmann``
+  (`baselibs#660 <https://github.com/eclipse-score/baselibs/pull/660>`__).
+- v0.2.16: the flag ``--@score_baselibs//score/json:writer_library`` and the
+  ``json_serialize`` writer were removed. The written JSON differs, for example
+  ``true``/``false`` instead of ``1``/``0`` and a different float format; the
+  enum ``Formatting`` moved to ``score/json/formatting.h``
+  (`baselibs#675 <https://github.com/eclipse-score/baselibs/pull/675>`__,
+  `baselibs#685 <https://github.com/eclipse-score/baselibs/pull/685>`__).
+- v0.2.17: the class ``VajsonParser`` and the target ``vajson_parser`` were
+  removed
+  (`baselibs#677 <https://github.com/eclipse-score/baselibs/pull/677>`__).
+
+.. note::
+
+   Important for integrators: ``reference_integration`` still sets
+   ``base_library=nlohmann`` in ``.bazelrc`` and ``known_good.json``; the flag
+   has no effect. Two Configuration Management unit tests are excluded in
+   ``known_good.json`` because their expected strings assume the nlohmann float
+   format (``3.222`` instead of ``3.22199988``)
+   (`312fde3 <https://github.com/eclipse-score/reference_integration/commit/312fde355d1270ab713603ce3233d39c81407c7d>`__).
+
+Action required: remove the ``base_library`` and ``writer_library`` flags, use
+``JsonParser`` instead of ``VajsonParser``, include ``score/json/formatting.h``
+for ``Formatting`` and do not compare JSON output with the old format.
 
 Baselibs: deprecated APIs and targets removed
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Baselibs removed deprecated or unused APIs that other modules had to migrate
-away from, for example Persistency from ``score::ResultBlank`` and Logging from
-``STRUCT_VISITABLE``
+Baselibs removed deprecated or unused APIs; Persistency and Logging migrated
+away from them
 (`persistency#455 <https://github.com/eclipse-score/persistency/pull/455>`__,
 `logging#343 <https://github.com/eclipse-score/logging/pull/343>`__):
 
-- The type aliases ``score::Blank`` and ``score::ResultBlank`` and the macros
-  ``STRUCT_VISITABLE``, ``STRUCT_TRACEABLE``, ``MEMCPY_SERIALIZABLE`` and
-  ``MEMCPY_SERIALIZABLE_IF`` (v0.2.16)
-  (`baselibs#623 <https://github.com/eclipse-score/baselibs/pull/623>`__).
-- The deprecated ``//src`` aliases and the string and atomic shims in
-  ``//score/memory`` (v0.2.14)
-  (`baselibs#598 <https://github.com/eclipse-score/baselibs/pull/598>`__).
-- ``//score/datetime_converter``, the ``score/os`` cpuid, file stream, make-dev
-  and ``select`` wrappers (v0.2.13), the Linux ``pthread_setaffinity_np``
-  wrapper and deprecated QNX ``ChannelCreate`` and ``TimerTimeout`` overloads
+- ``score::Blank``, ``score::ResultBlank`` and the macros ``STRUCT_VISITABLE``,
+  ``STRUCT_TRACEABLE``, ``MEMCPY_SERIALIZABLE`` and ``MEMCPY_SERIALIZABLE_IF``
   (v0.2.16)
+  (`baselibs#623 <https://github.com/eclipse-score/baselibs/pull/623>`__).
+- The ``//src`` aliases and the string and atomic shims in ``//score/memory``
+  (v0.2.14)
+  (`baselibs#598 <https://github.com/eclipse-score/baselibs/pull/598>`__).
+- ``//score/datetime_converter`` and the ``score/os`` cpuid, file stream,
+  make-dev and ``select`` wrappers (v0.2.13), the Linux
+  ``pthread_setaffinity_np`` wrapper and the deprecated QNX ``ChannelCreate``
+  and ``TimerTimeout`` overloads (v0.2.16)
   (`baselibs#471 <https://github.com/eclipse-score/baselibs/pull/471>`__,
   `baselibs#535 <https://github.com/eclipse-score/baselibs/pull/535>`__,
   `baselibs#536 <https://github.com/eclipse-score/baselibs/pull/536>`__,
   `baselibs#703 <https://github.com/eclipse-score/baselibs/pull/703>`__).
-- ``Synchronized::WithLock`` is deprecated in favour of the monadic functions of
+- Deprecated: ``Synchronized::WithLock``, replaced by the monadic functions of
   ``LockedPtr`` (v0.2.17)
   (`baselibs#761 <https://github.com/eclipse-score/baselibs/pull/761>`__).
-
-With Baselibs v0.2.16 this repository adds a ``safe_math`` dependency to
-Communication by patch
-(`7b91874 <https://github.com/eclipse-score/reference_integration/commit/7b91874e2b301b428528b2a85d865ec9f86af902>`__).
 
 Action required: use ``void``/``score::Result<void>`` and the ``SCORE_*``
 macros, depend on the ``//score`` targets and replace the removed OS wrappers
@@ -378,14 +385,15 @@ applications use directly
   (``v0.6.0``)
   (`communication#1202 <https://github.com/eclipse-score/communication/pull/1202>`__,
   `communication#1232 <https://github.com/eclipse-score/communication/pull/1232>`__).
-- The aggregate Bazel target ``//score/memory/shared:types`` was removed
-  (`communication#1487 <https://github.com/eclipse-score/communication/pull/1487>`__).
 - ``tracing::TypeErasedSamplePtr`` was replaced by ``impl::SamplePtr<void>``
   (``v0.5.0``)
   (`communication#1229 <https://github.com/eclipse-score/communication/pull/1229>`__).
+- The aggregate Bazel target ``//score/memory/shared:types`` was removed
+  (``v0.6.0``)
+  (`communication#1487 <https://github.com/eclipse-score/communication/pull/1487>`__).
 
-Action required: replace ``GetSampleSize()`` and ``TypeErasedSamplePtr``, do not
-rely on ``noexcept`` of the listed functions and depend on the specific
+Action required: replace ``GetSampleSize()`` and ``TypeErasedSamplePtr``, do
+not rely on ``noexcept`` of the listed functions and depend on the specific
 ``//score/memory/shared`` sub-targets (for example ``:offset_ptr``,
 ``:vector``, ``:string``).
 
@@ -398,39 +406,47 @@ directly
 
 - ``Kvs::reset_key`` was renamed to ``SetValueToDefault`` (C++) and
   ``set_value_to_default`` (Rust), without a deprecated alias
-  (`persistency#585 <https://github.com/eclipse-score/persistency/pull/585>`__,
-  `873238a <https://github.com/eclipse-score/reference_integration/commit/873238a8474c470eb571a47abdf25cab382a6a9e>`__,
-  `0e4c5be <https://github.com/eclipse-score/reference_integration/commit/0e4c5be3ebb3441d5f25e72772745ea553b01d67>`__).
+  (`persistency#585 <https://github.com/eclipse-score/persistency/pull/585>`__).
 - The KVS rejects untagged JSON; a defaults file must use the type-tagged
   top-level envelope ``{"t":"obj","v":{...}}``
-  (`persistency#490 <https://github.com/eclipse-score/persistency/pull/490>`__,
-  `c37c448 <https://github.com/eclipse-score/reference_integration/commit/c37c448bf429d1eb519a5dcff39d61205d73b37c>`__).
-- The C++ headers are included as ``score/kvs/kvs.h``, ``kvs_builder.h`` and
-  ``kvs_value.h`` from ``@score_persistency//score/kvs``, and the
-  ``KvsBuilder`` flags became enums (``Defaults``, ``KvsLoad``,
-  ``WorkingDir``). Configuration Management is adapted by a patch in this
-  repository
+  (`persistency#490 <https://github.com/eclipse-score/persistency/pull/490>`__).
+- The C++ headers are ``score/kvs/kvs.h``, ``kvs_builder.h`` and
+  ``kvs_value.h`` in ``@score_persistency//score/kvs`` and are included with the
+  full path; the ``KvsBuilder`` flags became enums (``Defaults``, ``KvsLoad``,
+  ``WorkingDir``)
   (`persistency#461 <https://github.com/eclipse-score/persistency/pull/461>`__,
-  `persistency#562 <https://github.com/eclipse-score/persistency/pull/562>`__,
-  `3467044 <https://github.com/eclipse-score/reference_integration/commit/346704410622c0863cbb5cf04a1578f426cf797e>`__).
+  `persistency#562 <https://github.com/eclipse-score/persistency/pull/562>`__).
 - Deprecated, still available: the namespace ``score::mw::per::kvs`` (now
   ``score::kvs``), the old ``*.hpp`` headers, the snake_case method names (now
-  PascalCase) and the constants and enumerators without ``k`` prefix
+  PascalCase) and constants and enumerators without ``k`` prefix
   (`persistency#562 <https://github.com/eclipse-score/persistency/pull/562>`__,
   `persistency#564 <https://github.com/eclipse-score/persistency/pull/564>`__,
   `persistency#614 <https://github.com/eclipse-score/persistency/pull/614>`__).
 - Keys must be non-empty, consist of printable ASCII characters and be at most
-  32 bytes long. The C++ and Rust KVS return ``InvalidKey`` for other keys,
-  and loading a file with such a key fails
+  32 bytes long; the C++ and Rust KVS return ``InvalidKey`` for other keys, and
+  loading a file with such a key fails
   (`persistency#308 <https://github.com/eclipse-score/persistency/pull/308>`__,
   `persistency#508 <https://github.com/eclipse-score/persistency/pull/508>`__,
   `persistency#509 <https://github.com/eclipse-score/persistency/pull/509>`__).
 - The KVS stores its files atomically with the permissions ``640``
   (`persistency#503 <https://github.com/eclipse-score/persistency/pull/503>`__).
 
+.. note::
+
+   Important for integrators: ``reference_integration`` adapts Configuration
+   Management ``v0.3.1`` to the new headers and builder API by the patch
+   ``patches/config_management/002-migrate-to-persistency-kvs-api.patch``
+   (`3467044 <https://github.com/eclipse-score/reference_integration/commit/346704410622c0863cbb5cf04a1578f426cf797e>`__).
+   The feature integration tests use ``SetValueToDefault`` and
+   ``set_value_to_default`` and write the defaults files with the tagged
+   envelope
+   (`873238a <https://github.com/eclipse-score/reference_integration/commit/873238a8474c470eb571a47abdf25cab382a6a9e>`__,
+   `0e4c5be <https://github.com/eclipse-score/reference_integration/commit/0e4c5be3ebb3441d5f25e72772745ea553b01d67>`__,
+   `c37c448 <https://github.com/eclipse-score/reference_integration/commit/c37c448bf429d1eb519a5dcff39d61205d73b37c>`__).
+
 Action required: rename ``reset_key`` calls, convert defaults files to the
 tagged envelope, update the KVS includes, builder calls and names, keep keys
-within the allowed characters and length and check that processes reading KVS
+within the allowed characters and length, and check that processes reading KVS
 files of another user still have access.
 
 Lifecycle: Launch Manager configuration and control API
@@ -438,10 +454,7 @@ Lifecycle: Launch Manager configuration and control API
 
 Lifecycle ``v0.7.0`` to ``v0.10.0`` change the Launch Manager configuration
 and its control interface. Configurations with old keys fail the schema
-validation; the Lifecycle showcase configuration of this repository was
-updated accordingly
-(`a575ce6 <https://github.com/eclipse-score/reference_integration/commit/a575ce6982f0d73ed759462f25f29d2d39ab7627>`__,
-`9c0136e <https://github.com/eclipse-score/reference_integration/commit/9c0136e094cfd76219077877a760c0e6fb8236d6>`__):
+validation:
 
 - ``v0.7.0``: all durations are configured in milliseconds, and the keys get
   the suffix ``_ms``, for example ``transition_timeout_ms`` and
@@ -460,6 +473,14 @@ updated accordingly
   (`lifecycle#868 <https://github.com/eclipse-score/lifecycle/pull/868>`__,
   `Lifecycle v0.10.0 release notes <https://github.com/eclipse-score/lifecycle/releases/tag/v0.10.0>`__).
 
+.. note::
+
+   Important for integrators: the Launch Manager configuration of the
+   ``simple_lifecycle`` showcase in ``reference_integration`` uses the new
+   schema and can serve as an example
+   (`a575ce6 <https://github.com/eclipse-score/reference_integration/commit/a575ce6982f0d73ed759462f25f29d2d39ab7627>`__,
+   `9c0136e <https://github.com/eclipse-score/reference_integration/commit/9c0136e094cfd76219077877a760c0e6fb8236d6>`__).
+
 Action required: rename the duration fields to ``*_ms`` and convert the values
 to milliseconds, migrate State Managers from ``ControlClient`` to
 ``ILmControl``, set ``schema_version`` to ``2``, replace
@@ -476,12 +497,19 @@ their safety documentation: ``fmea`` became ``safety_analysis``, which
 ``v3.0.0`` splits into ``failure_modes``, ``fault_trees`` and
 ``safety_analysis``; ``dependable_element`` no longer has the attribute
 ``assumptions_of_use``; PlantUML elements are identified by their written name
-instead of the alias; and the crate repository is renamed from ``@crates`` to
-``@crates_score_tooling``. This repository drops the ``assumptions_of_use``
-attribute from Logging and Configuration Management by patch
+instead of the alias; the crate repository is renamed from ``@crates`` to
+``@crates_score_tooling``
 (`Tooling v2.3.1 release notes <https://github.com/eclipse-score/tooling/releases/tag/v2.3.1>`__,
-`Tooling v3.0.0 release notes <https://github.com/eclipse-score/tooling/releases/tag/v3.0.0>`__,
-`dc41763 <https://github.com/eclipse-score/reference_integration/commit/dc41763ef74338f1b394adcbcd798f76b85cde35>`__).
+`Tooling v3.0.0 release notes <https://github.com/eclipse-score/tooling/releases/tag/v3.0.0>`__).
+
+.. note::
+
+   Important for integrators: Logging ``v0.2.6`` and Configuration Management
+   ``v0.3.1`` still set ``assumptions_of_use``; ``reference_integration``
+   removes the attribute by patch
+   (``004-drop-dependable-element-aou-attr.patch`` and
+   ``003-drop-dependable-element-aou-attr.patch``)
+   (`dc41763 <https://github.com/eclipse-score/reference_integration/commit/dc41763ef74338f1b394adcbcd798f76b85cde35>`__).
 
 Action required: migrate ``dependable_element`` and safety analysis targets
 with the migration checklist of the Tooling ``v3.0.0`` release notes.
@@ -491,10 +519,14 @@ Test Scenarios: libraries moved under ``score/``
 
 Test Scenarios ``v0.5.0`` moved the libraries to
 ``@score_test_scenarios//score/test_scenarios_cpp`` and
-``@score_test_scenarios//score/test_scenarios_rust``; the feature integration
-tests of this repository use the new labels
-(`testing_tools#31 <https://github.com/eclipse-score/testing_tools/pull/31>`__,
-`cb89c10 <https://github.com/eclipse-score/reference_integration/commit/cb89c10a49e1058ca6e4f01495530be30db5441b>`__).
+``@score_test_scenarios//score/test_scenarios_rust``
+(`testing_tools#31 <https://github.com/eclipse-score/testing_tools/pull/31>`__).
+
+.. note::
+
+   Important for integrators: the feature integration tests of
+   ``reference_integration`` use the new labels
+   (`cb89c10 <https://github.com/eclipse-score/reference_integration/commit/cb89c10a49e1058ca6e4f01495530be30db5441b>`__).
 
 Action required: update the ``@score_test_scenarios`` labels.
 
