@@ -92,7 +92,7 @@ class TestSteadyClockNow(ClockScenario):
 
 
 @add_test_properties(
-    partially_verifies=["feat_req__time__high_res_clock_api"],
+    partially_verifies=["feat_req__time__high_prec_clock_api"],
     test_type="requirements-based",
     derivation_technique="requirements-analysis",
 )
@@ -102,7 +102,7 @@ class TestHighResSteadyClockNow(ClockScenario):
 
     The C++ scenario fails the process on a zero or non-monotonic reading.
     Python confirms success and that the logged readings are non-zero and
-    non-decreasing. Partially verifies ``feat_req__time__high_res_clock_api``:
+    non-decreasing. Partially verifies ``feat_req__time__high_prec_clock_api``:
     a non-zero, non-decreasing high-resolution reading.
     """
 
