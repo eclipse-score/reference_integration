@@ -61,6 +61,18 @@ SECTIONS = {
 
 # Module verification reports are linked from the current docs tree (same convention as the platform report).
 VERIFICATION_INDEX = "docs/verification_report/modules/index.rst"
+# Modules that publish their verification evidence as dependable elements (with L.O.B.S.T.E.R. traceability
+# reports) in their own versioned docs instead of an S-CORE module verification report: key -> docs URL of a tag.
+MODULE_DOCS = {
+    "score_communication": "https://eclipse-score.github.io/communication/{tag}/",
+}
+# Dependable element name -> label in the table, also the display order; other elements keep their name.
+DEPENDABLE_ELEMENT_LABELS = {
+    "mw_com": "LoLa (mw::com)",
+    "dependable_element_message_passing": "Message Passing",
+    "dependable_element_memory_shared": "Shared Memory",
+}
+DEPENDABLE_ELEMENT_TITLE = "Dependable element: "
 EMPTY_CELL = "---"
 # Architecture diagram of the note; components come from the Sphinx-Needs of the checkout's docs.
 DIAGRAM_DIR = "docs/s_core_v_1/releases/_assets"
@@ -238,6 +250,42 @@ def collect(known_good: dict) -> dict[str, list[Entry]]:
     return result
 
 
+def dependable_elements(e: Entry) -> list[tuple[str, str]]:
+    """(label, URL) of the dependable elements in the module's own docs of the pinned release tag."""
+    if e.key not in MODULE_DOCS:
+        return []
+    if not e.tag:
+        print(f"warning: {e.key}: unreleased pin, no versioned docs for its dependable elements", file=sys.stderr)
+        return []
+    base = MODULE_DOCS[e.key].format(tag=e.tag)
+    try:
+        with urllib.request.urlopen(f"{base}searchindex.js", timeout=60) as response:
+            text = response.read().decode()
+    except OSError as err:
+        print(f"warning: {e.key}: no docs at {base} ({err})", file=sys.stderr)
+        return []
+    index = json.loads(text[text.index("(") + 1 : text.rindex(")")])
+    found = {
+        title.removeprefix(DEPENDABLE_ELEMENT_TITLE): f"{base}{doc}.html"
+        for doc, title in zip(index["docnames"], index["titles"], strict=True)
+        if title.startswith(DEPENDABLE_ELEMENT_TITLE) and doc.endswith("/index")
+    }
+    if not found:
+        print(f"warning: {e.key}: no dependable elements in {base}", file=sys.stderr)
+    order = list(DEPENDABLE_ELEMENT_LABELS)
+    names = sorted(found, key=lambda n: (order.index(n) if n in order else len(order), n))
+    return [(DEPENDABLE_ELEMENT_LABELS.get(n, n), found[n]) for n in names]
+
+
+def verification_cell(e: Entry) -> list[str]:
+    if e.verification_doc:
+        return [f"     - :doc:`Verification report <{e.verification_doc}>`"]
+    elements = dependable_elements(e)
+    if not elements:
+        return [f"     - {EMPTY_CELL}"]
+    return ["     - Dependable elements:", ""] + [f"       * `{label} <{url}>`__" for label, url in elements]
+
+
 def render_table(entries: list[Entry], with_verification: bool = False) -> str:
     widths = "25 15 25 35" if with_verification else "30 25 45"
     rows = [
@@ -260,11 +308,7 @@ def render_table(entries: list[Entry], with_verification: bool = False) -> str:
             f"     - {notes}",
         ]
         if with_verification:
-            rows.append(
-                f"     - :doc:`Verification report <{e.verification_doc}>`"
-                if e.verification_doc
-                else f"     - {EMPTY_CELL}"
-            )
+            rows += verification_cell(e)
     return "\n".join(rows)
 
 

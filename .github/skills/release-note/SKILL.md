@@ -43,6 +43,14 @@ verification report**: a `:doc:` link taken from
 `docs/verification_report/modules/index.rst` (always the latest report in the
 current docs tree), `---` where the module has none (e.g. the platform). Every
 empty table cell is written as `---`.
+Modules that publish their verification evidence as dependable elements (with
+L.O.B.S.T.E.R. traceability reports) in their own versioned docs instead of an
+S-CORE module verification report are listed in `MODULE_DOCS` (today
+Communication). For them the cell lists one link per dependable element, found
+in the `searchindex.js` of the module docs at the pinned tag (pages titled
+"Dependable element: <name>"); `DEPENDABLE_ELEMENT_LABELS` sets the label and
+order (e.g. `mw_com` -> LoLa (mw::com)). An unreleased pin or missing docs give
+a warning and `---`.
 Never write module versions or links by hand.
 
 Image table: the image catalogue (`IMAGES` in the script) lists name,
