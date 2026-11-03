@@ -44,7 +44,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-needs/common_css/need_toggle.css?v=5c6620df" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-needs/common_css/need_links.css?v=2150a916" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-needs/modern.css?v=803738c0" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=f420dc51" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=51185784" />
   
   <!-- So that users can add custom icons -->
   <script defer src="../../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
@@ -461,7 +461,6 @@
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../releases/releases.html">Releases</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="roadmap.html">Roadmap</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="overall_status.html">Overall Status</a></li>
 <li class="toctree-l2"><a class="reference internal" href="planning_approach.html">Planning Approach</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Release Gate v0.8 — Requirements Engineering + Architecture Design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pi2.html">Release Gate v0.9 — Implementation</a></li>
@@ -559,12 +558,14 @@ that unit-test coverage (C0/C1) reaches at least <strong>90%</strong> and dynami
 </section>
 <section id="current-state">
 <h2>Current State<a class="headerlink" href="#current-state" title="Link to this heading">#</a></h2>
-<p>See the relevant tables in <a class="reference internal" href="overall_status.html"><span class="doc">Overall Status</span></a>:</p>
+<p>See the progress charts in <a class="reference internal" href="../releases/progress_overview.html"><span class="doc">Release-wide Progress Overview</span></a>:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="overall_status.html#overall-status-pa2"><span class="std std-ref">Process Area 2 — Requirements Engineering</span></a> — Requirements Engineering</p></li>
-<li><p><a class="reference internal" href="overall_status.html#overall-status-pa3"><span class="std std-ref">Process Area 3 — Architecture Design</span></a> — Architecture Design</p></li>
-<li><p><a class="reference internal" href="overall_status.html#overall-status-pa5"><span class="std std-ref">Process Area 5 — Verification</span></a> — Verification / Coverage</p></li>
+<li><p><a class="reference internal" href="../releases/progress_overview.html#progress-overview-requirements"><span class="std std-ref">Requirements</span></a> — Requirements Engineering</p></li>
+<li><p><a class="reference internal" href="../releases/progress_overview.html#progress-overview-architecture"><span class="std std-ref">Architecture</span></a> — Architecture Design</p></li>
+<li><p><a class="reference internal" href="../releases/progress_overview.html#progress-overview-verification"><span class="std std-ref">Verification</span></a> — Verification / Coverage</p></li>
 </ul>
+<p>For the current per-module detail see the
+<a class="reference internal" href="../../verification_report/modules/index.html"><span class="doc">Module Verification Reports</span></a>.</p>
 </section>
 <section id="work-breakdown">
 <h2>Work Breakdown<a class="headerlink" href="#work-breakdown" title="Link to this heading">#</a></h2>
@@ -589,12 +590,12 @@ in the TL circle</strong> before it is merged.</p>
 </li>
 <li><p>All in-scope feature requirements and the elements linked to them
 (component requirements, AoUs, feature architecture, component architecture)
-are in status <code class="docutils literal notranslate"><span class="pre">valid</span></code>. The overall status can always be tracked on the
-<a class="reference internal" href="overall_status.html"><span class="doc">Overall Status</span></a> page.</p></li>
+are in status <code class="docutils literal notranslate"><span class="pre">valid</span></code>. The progress can always be tracked on the
+<a class="reference internal" href="../releases/progress_overview.html"><span class="doc">Release-wide Progress Overview</span></a> page.</p></li>
 <li><p>Implement all missing automation checks for requirement and architecture
 elements as part of the docs-as-code toolchain used for generation of the
-documentation (<code class="docutils literal notranslate"><span class="pre">//:docs</span></code>), as depicted in the <em>Process Status</em> pies on
-<a class="reference internal" href="overall_status.html"><span class="doc">Overall Status</span></a> (PA2 / PA3 <em>Req. verification status</em>)</p></li>
+documentation (<code class="docutils literal notranslate"><span class="pre">//:docs</span></code>), as reported in the
+<a class="reference internal" href="../../verification_report/platform_verification_report.html"><span class="doc">Platform Verification Report</span></a></p></li>
 <li><p>Provide a standardized CI/CD workflow for all implementation modules to
 validate requirements and architecture artifacts in compliance with the
 S-CORE process. The workflow shall be executed in the
