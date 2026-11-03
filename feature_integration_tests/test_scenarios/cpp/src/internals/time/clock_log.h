@@ -19,6 +19,7 @@
 #include <chrono>
 #include <cstdint>
 #include <string>
+#include <string_view>
 #include <utility>
 
 namespace time_log {
@@ -42,11 +43,12 @@ inline std::int64_t unix_micros() {
  *
  * Structured fields are written as JSON to stdout for the FIT LogContainer.
  *
- * @param fields Values to include as structured trace fields.
+ * @param clock Clock domain label.
+ * @param fields Remaining field-name/value pairs.
  */
 template <typename... Fields>
-inline void log_info(Fields... fields) {
-    TRACING_INFO("cpp_test_scenarios::scenarios::time", fields...);
+inline void log_info(const std::string_view clock, Fields... fields) {
+    TRACING_INFO("cpp_test_scenarios::scenarios::time", std::make_pair(std::string{"clock"}, clock), fields...);
 }
 
 }  // namespace time_log

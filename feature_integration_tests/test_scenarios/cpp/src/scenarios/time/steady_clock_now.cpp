@@ -57,8 +57,7 @@ public:
                 "SteadyClock::Now() is not monotonic: second reading precedes the first");
         }
 
-        time_log::log_info(std::make_pair(std::string{"clock"}, std::string{"steady"}),
-                           std::make_pair(std::string{"first_ns"}, first_ns),
+        time_log::log_info("steady", std::make_pair(std::string{"first_ns"}, first_ns),
                            std::make_pair(std::string{"second_ns"}, second_ns));
     }
 };

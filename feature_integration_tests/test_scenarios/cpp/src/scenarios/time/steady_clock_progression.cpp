@@ -113,8 +113,7 @@ public:
                 "SteadyClock::Now() did not progress after sleep: final reading precedes the last");
         }
 
-        time_log::log_info(std::make_pair(std::string{"clock"}, std::string{"steady"}),
-                           std::make_pair(std::string{"tick_count"}, tick_count),
+        time_log::log_info("steady", std::make_pair(std::string{"tick_count"}, tick_count),
                            std::make_pair(std::string{"first_ns"}, first_ns),
                            std::make_pair(std::string{"last_ns"}, last_ns),
                            std::make_pair(std::string{"final_ns"}, final_ns),
