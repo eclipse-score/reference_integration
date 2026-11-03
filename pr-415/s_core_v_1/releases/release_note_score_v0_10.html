@@ -542,7 +542,7 @@
 2026-11-02). This note shows the current state of the integration and changes
 until the release is published.</p>
 </div>
-<div class="need_container docutils container" id="SNCB-ec54e7c6">
+<div class="need_container docutils container" id="SNCB-630a3aa4">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__score_v010_release_note">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -623,6 +623,20 @@ is now part of <code class="docutils literal notranslate"><span class="pre">know
 <code class="docutils literal notranslate"><span class="pre">&#64;score_tools//score_pytest</span></code>, so the reference integration needs it as a
 regular dependency
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/388">#388</a>).</p>
+</section>
+<section id="new-infrastructure-module-devcontainer">
+<h4>New infrastructure module: Devcontainer<a class="headerlink" href="#new-infrastructure-module-devcontainer" title="Link to this heading">#</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">score_devcontainer</span></code> (<a class="reference external" href="https://github.com/eclipse-score/devcontainer">eclipse-score/devcontainer</a>)
+is now pinned in <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>; the reference integration uses devcontainer
+<code class="docutils literal notranslate"><span class="pre">1.11.4</span></code>, and <code class="docutils literal notranslate"><span class="pre">scripts/module_tests.py</span></code> raises the modules’ own
+<code class="docutils literal notranslate"><span class="pre">score_devcontainer</span></code> dependency to this version
+(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/438">#438</a>).</p>
+</section>
+<section id="bazel-8-8-2">
+<h4>Bazel 8.8.2<a class="headerlink" href="#bazel-8-8-2" title="Link to this heading">#</a></h4>
+<p>The reference integration builds with Bazel <code class="docutils literal notranslate"><span class="pre">8.8.2</span></code> instead of <code class="docutils literal notranslate"><span class="pre">8.6.0</span></code>
+(<code class="docutils literal notranslate"><span class="pre">.bazelversion</span></code>)
+(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/436">#436</a>).</p>
 </section>
 <section id="integration-strategy-dr-008-test-workflow">
 <h4>Integration Strategy (DR-008) test workflow<a class="headerlink" href="#integration-strategy-dr-008-test-workflow" title="Link to this heading">#</a></h4>
@@ -819,12 +833,13 @@ from seconds to milliseconds.</p>
 </section>
 <section id="lifecycle-launch-manager-configuration-schema-version-2">
 <h4>Lifecycle: Launch Manager configuration schema version 2<a class="headerlink" href="#lifecycle-launch-manager-configuration-schema-version-2" title="Link to this heading">#</a></h4>
-<p>The integrated Lifecycle commit makes POSIX RLIMITs configurable for the
-processes started by the Launch Manager and raises the configuration
-<code class="docutils literal notranslate"><span class="pre">schema_version</span></code> to <code class="docutils literal notranslate"><span class="pre">2</span></code>; the options <code class="docutils literal notranslate"><span class="pre">max_memory_usage</span></code> and
-<code class="docutils literal notranslate"><span class="pre">max_cpu_usage</span></code> were removed. The Lifecycle showcase configuration of this
-repository was updated accordingly
-(<a class="reference external" href="https://github.com/eclipse-score/lifecycle/pull/868">lifecycle#868</a>,
+<p>Lifecycle <code class="docutils literal notranslate"><span class="pre">v0.10.0</span></code> makes POSIX RLIMITs configurable for the processes
+started by the Launch Manager and raises the configuration <code class="docutils literal notranslate"><span class="pre">schema_version</span></code>
+to <code class="docutils literal notranslate"><span class="pre">2</span></code>; the options <code class="docutils literal notranslate"><span class="pre">max_memory_usage</span></code> and <code class="docutils literal notranslate"><span class="pre">max_cpu_usage</span></code> were removed.
+The Lifecycle showcase configuration of this repository was updated
+accordingly
+(<a class="reference external" href="https://github.com/eclipse-score/lifecycle/releases/tag/v0.10.0">Lifecycle v0.10.0 release notes</a>,
+<a class="reference external" href="https://github.com/eclipse-score/lifecycle/pull/868">lifecycle#868</a>,
 <a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/9c0136e094cfd76219077877a760c0e6fb8236d6">9c0136e</a>).</p>
 <p>Action required: set <code class="docutils literal notranslate"><span class="pre">schema_version</span></code> to <code class="docutils literal notranslate"><span class="pre">2</span></code> in Launch Manager
 configurations and replace <code class="docutils literal notranslate"><span class="pre">max_memory_usage</span></code> with the RLIMIT options
@@ -871,7 +886,13 @@ configurations and replace <code class="docutils literal notranslate"><span clas
 <tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/communication/tree/v0.6.0">Communication</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v0.6.0</span></code></p></td>
 <td><p><a class="reference external" href="https://github.com/eclipse-score/communication/releases/tag/v0.6.0">Release notes</a></p></td>
-<td><p>—</p></td>
+<td><p>Dependable elements:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://eclipse-score.github.io/communication/v0.6.0/docs/sphinx/mw_com_index/index.html">LoLa (mw::com)</a></p></li>
+<li><p><a class="reference external" href="https://eclipse-score.github.io/communication/v0.6.0/docs/sphinx/dependable_element_message_passing_index/index.html">Message Passing</a></p></li>
+<li><p><a class="reference external" href="https://eclipse-score.github.io/communication/v0.6.0/docs/sphinx/dependable_element_memory_shared_index/index.html">Shared Memory</a></p></li>
+</ul>
+</td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/persistency/tree/v0.4.0">Persistency</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v0.4.0</span></code></p></td>
@@ -883,9 +904,9 @@ configurations and replace <code class="docutils literal notranslate"><span clas
 <td><p><a class="reference external" href="https://github.com/eclipse-score/kyron/releases/tag/v0.1.6">Release notes</a></p></td>
 <td><p>—</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/lifecycle/tree/e4f9773336e7e483d973cc261b69ae3bc198f368">Lifecycle</a></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">e4f9773</span> <span class="pre">(unreleased)</span></code></p></td>
-<td><p>—</p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/lifecycle/tree/v0.10.0">Lifecycle</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">v0.10.0</span></code></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/lifecycle/releases/tag/v0.10.0">Release notes</a></p></td>
 <td><p><a class="reference internal" href="../../modules/score_lifecycle/verification_report/module_verification_report.html"><span class="doc">Verification report</span></a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/logging/tree/v0.2.5">Logging</a></p></td>
@@ -930,31 +951,35 @@ configurations and replace <code class="docutils literal notranslate"><span clas
 <td><p><code class="docutils literal notranslate"><span class="pre">v0.6.0</span></code></p></td>
 <td><p><a class="reference external" href="https://github.com/eclipse-score/itf/releases/tag/v0.6.0">Release notes</a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/tools/tree/4b48cec400c67be75cfc3fa4658ac6a0489bf7a8">Tools</a></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">4b48cec</span> <span class="pre">(unreleased)</span></code></p></td>
-<td><p>—</p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/devcontainer/tree/v1.11.4">Devcontainer</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">v1.11.4</span></code></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/devcontainer/releases/tag/v1.11.4">Release notes</a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/tooling/tree/v3.0.1">Tooling</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/tools/tree/v0.0.4">Tools</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">v0.0.4</span></code></p></td>
+<td><p><a class="reference external" href="https://github.com/eclipse-score/tools/releases/tag/v0.0.4">Release notes</a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/tooling/tree/v3.0.1">Tooling</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v3.0.1</span></code></p></td>
 <td><p><a class="reference external" href="https://github.com/eclipse-score/tooling/releases/tag/v3.0.1">Release notes</a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/bazel_platforms/tree/v1.1.0">Bazel Platforms</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/bazel_platforms/tree/v1.1.0">Bazel Platforms</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v1.1.0</span></code></p></td>
 <td><p><a class="reference external" href="https://github.com/eclipse-score/bazel_platforms/releases/tag/v1.1.0">Release notes</a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/testing_tools/tree/v0.5.0">Test Scenarios</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/testing_tools/tree/v0.5.0">Test Scenarios</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v0.5.0</span></code></p></td>
 <td><p><a class="reference external" href="https://github.com/eclipse-score/testing_tools/releases/tag/v0.5.0">Release notes</a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/docs-as-code/tree/v8.6.0">Docs-as-code</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/docs-as-code/tree/v8.6.0">Docs-as-code</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v8.6.0</span></code></p></td>
 <td><p><a class="reference external" href="https://github.com/eclipse-score/docs-as-code/releases/tag/v8.6.0">Release notes</a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/process_description/tree/v2.2.2">Process description</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/process_description/tree/v2.2.2">Process description</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v2.2.2</span></code></p></td>
 <td><p><a class="reference external" href="https://github.com/eclipse-score/process_description/releases/tag/v2.2.2">Release notes</a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://github.com/eclipse-score/bazel_cpp_toolchains/tree/v1.0.3">Bazel CPP Toolchain</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/eclipse-score/bazel_cpp_toolchains/tree/v1.0.3">Bazel CPP Toolchain</a></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">v1.0.3</span></code></p></td>
 <td><p><a class="reference external" href="https://github.com/eclipse-score/bazel_cpp_toolchains/releases/tag/v1.0.3">Release notes</a></p></td>
 </tr>
@@ -1019,7 +1044,6 @@ configurations and replace <code class="docutils literal notranslate"><span clas
 <h3>🚀 Upgrade Instructions<a class="headerlink" href="#upgrade-instructions" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Increase to the newest Bazel registry versions: <a class="reference external" href="https://eclipse-score.github.io/bazel_registry_ui">https://eclipse-score.github.io/bazel_registry_ui</a></p></li>
-<li><p>Modules shown as <em>(unreleased)</em> are pinned to a commit and have no registry version; use the commit from <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>.</p></li>
 <li><p>The module versions of this release are listed in <a class="reference external" href="https://github.com/eclipse-score/reference_integration/blob/v0.10.0/known_good.json">known_good.json</a>.</p></li>
 </ul>
 </section>
@@ -1085,6 +1109,8 @@ configurations and replace <code class="docutils literal notranslate"><span clas
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#changes-to-the-platform">🔄 Changes to the Platform</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#new-features">✨ New Features</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#new-infrastructure-module-tools">New infrastructure module: Tools</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#new-infrastructure-module-devcontainer">New infrastructure module: Devcontainer</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#bazel-8-8-2">Bazel 8.8.2</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-strategy-dr-008-test-workflow">Integration Strategy (DR-008) test workflow</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#software-bill-of-materials-sbom">Software Bill of Materials (SBOM)</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reference-images">Reference images</a></li>
