@@ -118,6 +118,9 @@ integration
   download Ubuntu snapshot packages from a mirror first
   (`#429 <https://github.com/eclipse-score/reference_integration/pull/429>`__).
 
+This implements the parts of DR-008 that the v0.9 release note left for a
+follow-up release.
+
 Software Bill of Materials (SBOM)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -163,12 +166,60 @@ The Logging tests run after fixing the packaging of the datarouter
 configuration
 (`#387 <https://github.com/eclipse-score/reference_integration/pull/387>`__).
 
+Qualified coverage tool in the modules
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Baselibs, Kyron, Persistency and Time measure their coverage with the qualified
+``score_coverage`` module
+(`eclipse-score/coverage_tool <https://github.com/eclipse-score/coverage_tool>`__),
+which replaces the coverage pipeline of ``score_tooling``. One
+``bazel coverage --config=llvm_cov`` run reports line and branch coverage for
+C++ and Rust, lists untested files with 0 % and supports coverage
+justifications
+(`baselibs#584 <https://github.com/eclipse-score/baselibs/pull/584>`__,
+`kyron#175 <https://github.com/eclipse-score/kyron/pull/175>`__,
+`persistency#450 <https://github.com/eclipse-score/persistency/pull/450>`__,
+`time#235 <https://github.com/eclipse-score/time/pull/235>`__).
+
 Lifecycle control interface for State Managers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Lifecycle provides the new ``ILmControl`` API, with which State Managers
 communicate with the Launch Manager over ``mw::com``
 (`Lifecycle v0.8.0 release notes <https://github.com/eclipse-score/lifecycle/releases/tag/v0.8.0>`__).
+
+Logging: Linux syslog backend
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``mw::log`` has a Linux ``syslog(3)`` backend for ``LogMode::kSystem``. It uses
+the new ``score::os::Syslog`` wrapper of Baselibs
+(`logging#271 <https://github.com/eclipse-score/logging/pull/271>`__,
+`baselibs#502 <https://github.com/eclipse-score/baselibs/pull/502>`__).
+
+ITF: QEMU plugin for Linux images
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The QEMU plugin of ITF ``v0.6.0`` boots Linux images in addition to QNX images
+(EB corbos Linux for aarch64 and Ubuntu, with image definitions from
+``os_images``). It accepts an additional disk image with the test binaries and
+their data and has a hook for extra QEMU arguments
+(`itf#123 <https://github.com/eclipse-score/itf/pull/123>`__,
+`itf#135 <https://github.com/eclipse-score/itf/pull/135>`__,
+`itf#139 <https://github.com/eclipse-score/itf/pull/139>`__,
+`itf#122 <https://github.com/eclipse-score/itf/pull/122>`__).
+
+Module maturity classification (DR-003)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The architecture diagram of this release note shows the maturity of each
+software module (Release, Experimental, Preview) as defined in
+`DR-003-Strat <https://github.com/eclipse-score/score/blob/main/docs/design_decisions/strategy/DR-003-strat.md>`__.
+The level is derived from the documentation of the module: without a module
+verification report and without dependable element documentation a module is
+Preview; if all its component requirements are fully verified and inspected it
+is Release; otherwise it is Experimental. This follows up on the maturity levels
+announced in the v0.8 release note
+(`842d366 <https://github.com/eclipse-score/reference_integration/commit/842d366755c765cc91e8cadcaa5f37799c7e6d06>`__).
 
 Documentation and reports
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -183,6 +234,9 @@ Documentation and reports
   (`#342 <https://github.com/eclipse-score/reference_integration/pull/342>`__,
   `#358 <https://github.com/eclipse-score/reference_integration/pull/358>`__,
   `#373 <https://github.com/eclipse-score/reference_integration/pull/373>`__).
+- The Platform Verification Report uses the ``platform_verification_report``
+  template of Docs-as-code
+  (`Docs-as-code v8.2.0 release notes <https://github.com/eclipse-score/docs-as-code/releases/tag/v8.2.0>`__).
 - The Overall Status page was replaced by the Release-wide Progress Overview
   next to the release notes, with release-over-release charts per module
   (`#392 <https://github.com/eclipse-score/reference_integration/pull/392>`__).
@@ -235,11 +289,12 @@ Action required: update references to the old image paths in derived images.
 Platform: stakeholder requirement IDs renamed
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Platform ``v0.7.4`` renamed ``stkh_req__dependability__safety_features_1`` to
+Platform ``v0.7.3`` gave the safety stakeholder requirements named IDs instead
+of numbers, for example ``stkh_req__dependability__safety_features_1`` became
 ``stkh_req__dependability__health_management``. Tests that still link the old
 ID make the documentation build fail with an unknown-link warning
-(`5d09c1b <https://github.com/eclipse-score/reference_integration/commit/5d09c1bf631767564295ee403d200d2f201eb76a>`__,
-`Platform v0.7.4 release notes <https://github.com/eclipse-score/score/releases/tag/v0.7.4>`__).
+(`score#3286 <https://github.com/eclipse-score/score/pull/3286>`__,
+`5d09c1b <https://github.com/eclipse-score/reference_integration/commit/5d09c1bf631767564295ee403d200d2f201eb76a>`__).
 
 Action required: link tests to the new stakeholder requirement IDs.
 
@@ -252,13 +307,82 @@ The ``--@score_baselibs//score/json:writer_library`` flag was removed;
 repository still sets in ``.bazelrc`` and ``known_good.json``. The written JSON
 differs (for example ``true``/``false`` instead of ``1``/``0`` and different
 float formatting), which is why two Configuration Management unit tests are
-excluded in ``known_good.json``
-(`Baselibs v0.2.15 <https://github.com/eclipse-score/baselibs/releases/tag/v0.2.15>`__,
-`Baselibs v0.2.16 <https://github.com/eclipse-score/baselibs/releases/tag/v0.2.16>`__,
+excluded in ``known_good.json``. In v0.2.17 the ``VajsonParser`` class and the
+``vajson_parser`` target were removed; ``JsonParser`` and ``JsonWriter`` keep
+their interfaces
+(`baselibs#660 <https://github.com/eclipse-score/baselibs/pull/660>`__,
+`baselibs#675 <https://github.com/eclipse-score/baselibs/pull/675>`__,
+`baselibs#677 <https://github.com/eclipse-score/baselibs/pull/677>`__,
 `312fde3 <https://github.com/eclipse-score/reference_integration/commit/312fde355d1270ab713603ce3233d39c81407c7d>`__).
 
 Action required: remove the ``base_library`` and ``writer_library`` flags from
-build configurations and do not compare JSON output against the old format.
+build configurations, use ``JsonParser`` instead of ``VajsonParser`` and do not
+compare JSON output against the old format.
+
+Baselibs: deprecated APIs and targets removed
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Baselibs removed deprecated or unused APIs that other modules had to migrate
+away from, for example Persistency from ``score::ResultBlank`` and Logging from
+``STRUCT_VISITABLE``
+(`persistency#455 <https://github.com/eclipse-score/persistency/pull/455>`__,
+`logging#343 <https://github.com/eclipse-score/logging/pull/343>`__):
+
+- The type aliases ``score::Blank`` and ``score::ResultBlank`` and the macros
+  ``STRUCT_VISITABLE``, ``STRUCT_TRACEABLE``, ``MEMCPY_SERIALIZABLE`` and
+  ``MEMCPY_SERIALIZABLE_IF`` (v0.2.16)
+  (`baselibs#623 <https://github.com/eclipse-score/baselibs/pull/623>`__).
+- The deprecated ``//src`` aliases and the string and atomic shims in
+  ``//score/memory`` (v0.2.14)
+  (`baselibs#598 <https://github.com/eclipse-score/baselibs/pull/598>`__).
+- ``//score/datetime_converter``, the ``score/os`` cpuid, file stream, make-dev
+  and ``select`` wrappers (v0.2.13), the Linux ``pthread_setaffinity_np``
+  wrapper and deprecated QNX ``ChannelCreate`` and ``TimerTimeout`` overloads
+  (v0.2.16)
+  (`baselibs#471 <https://github.com/eclipse-score/baselibs/pull/471>`__,
+  `baselibs#535 <https://github.com/eclipse-score/baselibs/pull/535>`__,
+  `baselibs#536 <https://github.com/eclipse-score/baselibs/pull/536>`__,
+  `baselibs#703 <https://github.com/eclipse-score/baselibs/pull/703>`__).
+- ``Synchronized::WithLock`` is deprecated in favour of the monadic functions of
+  ``LockedPtr`` (v0.2.17)
+  (`baselibs#761 <https://github.com/eclipse-score/baselibs/pull/761>`__).
+
+With Baselibs v0.2.16 this repository adds a ``safe_math`` dependency to
+Communication by patch
+(`7b91874 <https://github.com/eclipse-score/reference_integration/commit/7b91874e2b301b428528b2a85d865ec9f86af902>`__).
+
+Action required: use ``void``/``score::Result<void>`` and the ``SCORE_*``
+macros, depend on the ``//score`` targets and replace the removed OS wrappers
+and ``WithLock``.
+
+Communication: removed deprecated API and exception specifications
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Communication ``v0.5.0`` and ``v0.6.0`` change public ``mw::com`` APIs that
+applications use directly
+(`Communication v0.5.0 release notes <https://github.com/eclipse-score/communication/releases/tag/v0.5.0>`__,
+`Communication v0.6.0 release notes <https://github.com/eclipse-score/communication/releases/tag/v0.6.0>`__):
+
+- ``GenericProxyEvent::GetSampleSize()``, deprecated in ``v0.5.0``, was removed
+  in ``v0.6.0``; use ``GetDataTypeSizeInfo().Size()``
+  (`communication#997 <https://github.com/eclipse-score/communication/pull/997>`__).
+- Functions that can propagate exceptions are no longer ``noexcept``:
+  ``GenericProxyEvent::SetReceiveHandler``, ``UnsetReceiveHandler`` and
+  ``Unsubscribe`` (``v0.5.0``), ``GenericSkeleton::StopOfferService()``,
+  ``GenericSkeletonEvent::Send()`` and ``GenericSkeletonEvent::Notify()``
+  (``v0.6.0``)
+  (`communication#1202 <https://github.com/eclipse-score/communication/pull/1202>`__,
+  `communication#1232 <https://github.com/eclipse-score/communication/pull/1232>`__).
+- The aggregate Bazel target ``//score/memory/shared:types`` was removed
+  (`communication#1487 <https://github.com/eclipse-score/communication/pull/1487>`__).
+- ``tracing::TypeErasedSamplePtr`` was replaced by ``impl::SamplePtr<void>``
+  (``v0.5.0``)
+  (`communication#1229 <https://github.com/eclipse-score/communication/pull/1229>`__).
+
+Action required: replace ``GetSampleSize()`` and ``TypeErasedSamplePtr``, do not
+rely on ``noexcept`` of the listed functions and depend on the specific
+``//score/memory/shared`` sub-targets (for example ``:offset_ptr``,
+``:vector``, ``:string``).
 
 Persistency: KVS API and file format
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -281,40 +405,105 @@ directly
   ``KvsBuilder`` flags became enums (``Defaults``, ``KvsLoad``,
   ``WorkingDir``). Configuration Management is adapted by a patch in this
   repository
-  (`3467044 <https://github.com/eclipse-score/reference_integration/commit/346704410622c0863cbb5cf04a1578f426cf797e>`__).
+  (`persistency#461 <https://github.com/eclipse-score/persistency/pull/461>`__,
+  `persistency#562 <https://github.com/eclipse-score/persistency/pull/562>`__,
+  `3467044 <https://github.com/eclipse-score/reference_integration/commit/346704410622c0863cbb5cf04a1578f426cf797e>`__).
+- Deprecated, still available: the namespace ``score::mw::per::kvs`` (now
+  ``score::kvs``), the old ``*.hpp`` headers, the snake_case method names (now
+  PascalCase) and the constants and enumerators without ``k`` prefix
+  (`persistency#562 <https://github.com/eclipse-score/persistency/pull/562>`__,
+  `persistency#564 <https://github.com/eclipse-score/persistency/pull/564>`__,
+  `persistency#614 <https://github.com/eclipse-score/persistency/pull/614>`__).
+- Keys must be non-empty, consist of printable ASCII characters and be at most
+  32 bytes long. The C++ and Rust KVS return ``InvalidKey`` for other keys,
+  and loading a file with such a key fails
+  (`persistency#308 <https://github.com/eclipse-score/persistency/pull/308>`__,
+  `persistency#508 <https://github.com/eclipse-score/persistency/pull/508>`__,
+  `persistency#509 <https://github.com/eclipse-score/persistency/pull/509>`__).
+- The KVS stores its files atomically with the permissions ``640``
+  (`persistency#503 <https://github.com/eclipse-score/persistency/pull/503>`__).
 
 Action required: rename ``reset_key`` calls, convert defaults files to the
-tagged envelope and update the KVS includes and builder calls.
+tagged envelope, update the KVS includes, builder calls and names, keep keys
+within the allowed characters and length and check that processes reading KVS
+files of another user still have access.
 
-Lifecycle: Launch Manager configuration in milliseconds
+Lifecycle: Launch Manager configuration and control API
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Lifecycle ``v0.9.0`` renamed all duration fields of the Launch Manager
-configuration to integer milliseconds, for example ``transition_timeout`` to
-``transition_timeout_ms`` and ``reporting_cycle`` to ``reporting_cycle_ms``.
-Configurations with the old keys fail the schema validation
+Lifecycle ``v0.7.0`` to ``v0.10.0`` change the Launch Manager configuration
+and its control interface. Configurations with old keys fail the schema
+validation; the Lifecycle showcase configuration of this repository was
+updated accordingly
 (`a575ce6 <https://github.com/eclipse-score/reference_integration/commit/a575ce6982f0d73ed759462f25f29d2d39ab7627>`__,
-`Lifecycle v0.9.0 release notes <https://github.com/eclipse-score/lifecycle/releases/tag/v0.9.0>`__).
+`9c0136e <https://github.com/eclipse-score/reference_integration/commit/9c0136e094cfd76219077877a760c0e6fb8236d6>`__):
+
+- ``v0.7.0``: all durations are configured in milliseconds, and the keys get
+  the suffix ``_ms``, for example ``transition_timeout_ms`` and
+  ``reporting_cycle_ms``
+  (`lifecycle#637 <https://github.com/eclipse-score/lifecycle/pull/637>`__).
+- ``v0.8.0``: ``ILmControl`` replaces ``ControlClient``. The top-level
+  ``fallback_run_target`` is mandatory, ``number_of_attempts`` is limited to
+  ``255``, and ``application_type: Reporting`` only allows the ready condition
+  ``Running``
+  (`Lifecycle v0.8.0 release notes <https://github.com/eclipse-score/lifecycle/releases/tag/v0.8.0>`__).
+- ``v0.9.0``: ``deployment_config.ready_recovery_action`` is deprecated and
+  will be removed with the next release
+  (`Lifecycle v0.9.0 release notes <https://github.com/eclipse-score/lifecycle/releases/tag/v0.9.0>`__).
+- ``v0.10.0``: the configuration ``schema_version`` is ``2``; POSIX RLIMITs
+  replace the options ``max_memory_usage`` and ``max_cpu_usage``
+  (`lifecycle#868 <https://github.com/eclipse-score/lifecycle/pull/868>`__,
+  `Lifecycle v0.10.0 release notes <https://github.com/eclipse-score/lifecycle/releases/tag/v0.10.0>`__).
 
 Action required: rename the duration fields to ``*_ms`` and convert the values
-from seconds to milliseconds.
-
-Lifecycle: Launch Manager configuration schema version 2
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Lifecycle ``v0.10.0`` makes POSIX RLIMITs configurable for the processes
-started by the Launch Manager and raises the configuration ``schema_version``
-to ``2``; the options ``max_memory_usage`` and ``max_cpu_usage`` were removed.
-The Lifecycle showcase configuration of this repository was updated
-accordingly
-(`Lifecycle v0.10.0 release notes <https://github.com/eclipse-score/lifecycle/releases/tag/v0.10.0>`__,
-`lifecycle#868 <https://github.com/eclipse-score/lifecycle/pull/868>`__,
-`9c0136e <https://github.com/eclipse-score/reference_integration/commit/9c0136e094cfd76219077877a760c0e6fb8236d6>`__).
-
-Action required: set ``schema_version`` to ``2`` in Launch Manager
-configurations and replace ``max_memory_usage`` with the RLIMIT options
-(``RLIMIT_AS``, ``RLIMIT_STACK``, ``RLIMIT_DATA``) and ``max_cpu_usage`` with
+to milliseconds, migrate State Managers from ``ControlClient`` to
+``ILmControl``, set ``schema_version`` to ``2``, replace
+``ready_recovery_action.restart`` with ``activation_retry_attempts`` and
+``delay_before_restart_ms``, and replace ``max_memory_usage`` with
+``RLIMIT_AS``, ``RLIMIT_STACK`` or ``RLIMIT_DATA`` and ``max_cpu_usage`` with
 ``RLIMIT_CPU``.
+
+Tooling: safety analysis and dependable element rules
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Tooling ``v2.3.1`` and ``v3.0.0`` change the Bazel rules that modules use for
+their safety documentation: ``fmea`` became ``safety_analysis``, which
+``v3.0.0`` splits into ``failure_modes``, ``fault_trees`` and
+``safety_analysis``; ``dependable_element`` no longer has the attribute
+``assumptions_of_use``; PlantUML elements are identified by their written name
+instead of the alias; and the crate repository is renamed from ``@crates`` to
+``@crates_score_tooling``. This repository drops the ``assumptions_of_use``
+attribute from Logging and Configuration Management by patch
+(`Tooling v2.3.1 release notes <https://github.com/eclipse-score/tooling/releases/tag/v2.3.1>`__,
+`Tooling v3.0.0 release notes <https://github.com/eclipse-score/tooling/releases/tag/v3.0.0>`__,
+`dc41763 <https://github.com/eclipse-score/reference_integration/commit/dc41763ef74338f1b394adcbcd798f76b85cde35>`__).
+
+Action required: migrate ``dependable_element`` and safety analysis targets
+with the migration checklist of the Tooling ``v3.0.0`` release notes.
+
+Test Scenarios: libraries moved under ``score/``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Test Scenarios ``v0.5.0`` moved the libraries to
+``@score_test_scenarios//score/test_scenarios_cpp`` and
+``@score_test_scenarios//score/test_scenarios_rust``; the feature integration
+tests of this repository use the new labels
+(`testing_tools#31 <https://github.com/eclipse-score/testing_tools/pull/31>`__,
+`cb89c10 <https://github.com/eclipse-score/reference_integration/commit/cb89c10a49e1058ca6e4f01495530be30db5441b>`__).
+
+Action required: update the ``@score_test_scenarios`` labels.
+
+Docs-as-code: ``score_pytest`` moved, FMEA attribute renamed
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Docs-as-code ``v8.4.0`` removed the ``score_pytest`` macro and the test
+attributes plugin; they are provided by ``score_tools``. The attribute
+``root_cause`` of ``feat_fmea`` and ``comp_fmea`` was renamed to
+``failure_root_cause``
+(`Docs-as-code v8.4.0 release notes <https://github.com/eclipse-score/docs-as-code/releases/tag/v8.4.0>`__).
+
+Action required: load ``score_pytest`` from ``@score_tools`` and rename
+``root_cause`` in FMEA needs.
 
 🎯 Reference Integration scope
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -323,6 +512,10 @@ configurations and replace ``max_memory_usage`` with the RLIMIT options
 - **Source / tag:** `Reference integration <https://github.com/eclipse-score/reference_integration/tree/v0.10.0>`__
 - **Release notes:** `Reference integration release notes <https://github.com/eclipse-score/reference_integration/releases/tag/v0.10.0>`__
 - **Platform Verification Report:** :need:`doc__platform_verification_report_latest`
+
+The *Release notes* column of the module tables links every release of a module
+since v0.9.0, oldest first; modules unchanged since v0.9.0 show their current
+release.
 
 
 🧩 Integrated Software Modules
@@ -338,15 +531,15 @@ configurations and replace ``max_memory_usage`` with the RLIMIT options
      - Module verification report
    * - `Platform <https://github.com/eclipse-score/score/tree/v0.7.4>`__
      - ``v0.7.4``
-     - `Release notes <https://github.com/eclipse-score/score/releases/tag/v0.7.4>`__
+     - `v0.7.3 <https://github.com/eclipse-score/score/releases/tag/v0.7.3>`__ · `v0.7.4 <https://github.com/eclipse-score/score/releases/tag/v0.7.4>`__
      - ---
    * - `Baselibs <https://github.com/eclipse-score/baselibs/tree/v0.2.17>`__
      - ``v0.2.17``
-     - `Release notes <https://github.com/eclipse-score/baselibs/releases/tag/v0.2.17>`__
+     - `v0.2.13 <https://github.com/eclipse-score/baselibs/releases/tag/v0.2.13>`__ · `v0.2.14 <https://github.com/eclipse-score/baselibs/releases/tag/v0.2.14>`__ · `v0.2.15 <https://github.com/eclipse-score/baselibs/releases/tag/v0.2.15>`__ · `v0.2.16 <https://github.com/eclipse-score/baselibs/releases/tag/v0.2.16>`__ · `v0.2.17 <https://github.com/eclipse-score/baselibs/releases/tag/v0.2.17>`__
      - :doc:`Verification report </modules/score_baselibs/verification_report/module_verification_report>`
    * - `Communication <https://github.com/eclipse-score/communication/tree/v0.6.0>`__
      - ``v0.6.0``
-     - `Release notes <https://github.com/eclipse-score/communication/releases/tag/v0.6.0>`__
+     - `v0.5.0 <https://github.com/eclipse-score/communication/releases/tag/v0.5.0>`__ · `v0.6.0 <https://github.com/eclipse-score/communication/releases/tag/v0.6.0>`__
      - Dependable elements:
 
        * `LoLa (mw::com) <https://eclipse-score.github.io/communication/v0.6.0/docs/sphinx/mw_com_index/index.html>`__
@@ -354,27 +547,27 @@ configurations and replace ``max_memory_usage`` with the RLIMIT options
        * `Shared Memory <https://eclipse-score.github.io/communication/v0.6.0/docs/sphinx/dependable_element_memory_shared_index/index.html>`__
    * - `Persistency <https://github.com/eclipse-score/persistency/tree/v0.4.0>`__
      - ``v0.4.0``
-     - `Release notes <https://github.com/eclipse-score/persistency/releases/tag/v0.4.0>`__
+     - `v0.4.0 <https://github.com/eclipse-score/persistency/releases/tag/v0.4.0>`__
      - :doc:`Verification report </modules/score_persistency/verification_report/module_verification_report>`
    * - `Kyron <https://github.com/eclipse-score/kyron/tree/v0.1.6>`__
      - ``v0.1.6``
-     - `Release notes <https://github.com/eclipse-score/kyron/releases/tag/v0.1.6>`__
+     - `v0.1.5 <https://github.com/eclipse-score/kyron/releases/tag/v0.1.5>`__ · `v0.1.6 <https://github.com/eclipse-score/kyron/releases/tag/v0.1.6>`__
      - ---
    * - `Lifecycle <https://github.com/eclipse-score/lifecycle/tree/v0.10.0>`__
      - ``v0.10.0``
-     - `Release notes <https://github.com/eclipse-score/lifecycle/releases/tag/v0.10.0>`__
+     - `v0.7.0 <https://github.com/eclipse-score/lifecycle/releases/tag/v0.7.0>`__ · `v0.8.0 <https://github.com/eclipse-score/lifecycle/releases/tag/v0.8.0>`__ · `v0.9.0 <https://github.com/eclipse-score/lifecycle/releases/tag/v0.9.0>`__ · `v0.10.0 <https://github.com/eclipse-score/lifecycle/releases/tag/v0.10.0>`__
      - :doc:`Verification report </modules/score_lifecycle/verification_report/module_verification_report>`
-   * - `Logging <https://github.com/eclipse-score/logging/tree/v0.2.5>`__
-     - ``v0.2.5``
-     - `Release notes <https://github.com/eclipse-score/logging/releases/tag/v0.2.5>`__
+   * - `Logging <https://github.com/eclipse-score/logging/tree/cda5a5ba57dffe3aa109e518e47f0ada692b3573>`__
+     - ``cda5a5b (unreleased)``
+     - `v0.2.5 <https://github.com/eclipse-score/logging/releases/tag/v0.2.5>`__
      - :doc:`Verification report </modules/score_logging/verification_report/module_verification_report>`
    * - `Time <https://github.com/eclipse-score/time/tree/v0.3.1>`__
      - ``v0.3.1``
-     - `Release notes <https://github.com/eclipse-score/time/releases/tag/v0.3.1>`__
+     - `v0.3.0 <https://github.com/eclipse-score/time/releases/tag/v0.3.0>`__ · `v0.3.1 <https://github.com/eclipse-score/time/releases/tag/v0.3.1>`__
      - ---
    * - `Configuration Management <https://github.com/eclipse-score/config_management/tree/v0.3.1>`__
      - ``v0.3.1``
-     - `Release notes <https://github.com/eclipse-score/config_management/releases/tag/v0.3.1>`__
+     - `v0.3.1 <https://github.com/eclipse-score/config_management/releases/tag/v0.3.1>`__
      - ---
 
 🔧 Associated Infrastructure Modules
@@ -389,34 +582,34 @@ configurations and replace ``max_memory_usage`` with the RLIMIT options
      - Release notes
    * - `Crates <https://github.com/eclipse-score/score-crates/tree/v0.0.11>`__
      - ``v0.0.11``
-     - `Release notes <https://github.com/eclipse-score/score-crates/releases/tag/v0.0.11>`__
+     - `v0.0.11 <https://github.com/eclipse-score/score-crates/releases/tag/v0.0.11>`__
    * - `ITF (Integration Testing Framework) <https://github.com/eclipse-score/itf/tree/v0.6.0>`__
      - ``v0.6.0``
-     - `Release notes <https://github.com/eclipse-score/itf/releases/tag/v0.6.0>`__
+     - `v0.6.0 <https://github.com/eclipse-score/itf/releases/tag/v0.6.0>`__
    * - `Devcontainer <https://github.com/eclipse-score/devcontainer/tree/v1.11.4>`__
      - ``v1.11.4``
-     - `Release notes <https://github.com/eclipse-score/devcontainer/releases/tag/v1.11.4>`__
+     - `v1.11.4 <https://github.com/eclipse-score/devcontainer/releases/tag/v1.11.4>`__
    * - `Tools <https://github.com/eclipse-score/tools/tree/v0.0.4>`__
      - ``v0.0.4``
-     - `Release notes <https://github.com/eclipse-score/tools/releases/tag/v0.0.4>`__
+     - `v0.0.4 <https://github.com/eclipse-score/tools/releases/tag/v0.0.4>`__
    * - `Tooling <https://github.com/eclipse-score/tooling/tree/v3.0.1>`__
      - ``v3.0.1``
-     - `Release notes <https://github.com/eclipse-score/tooling/releases/tag/v3.0.1>`__
+     - `v2.1.0 <https://github.com/eclipse-score/tooling/releases/tag/v2.1.0>`__ · `v2.1.1 <https://github.com/eclipse-score/tooling/releases/tag/v2.1.1>`__ · `v2.2.0 <https://github.com/eclipse-score/tooling/releases/tag/v2.2.0>`__ · `v2.2.1 <https://github.com/eclipse-score/tooling/releases/tag/v2.2.1>`__ · `v2.2.2 <https://github.com/eclipse-score/tooling/releases/tag/v2.2.2>`__ · `v2.2.3 <https://github.com/eclipse-score/tooling/releases/tag/v2.2.3>`__ · `v2.3.0 <https://github.com/eclipse-score/tooling/releases/tag/v2.3.0>`__ · `v2.3.1 <https://github.com/eclipse-score/tooling/releases/tag/v2.3.1>`__ · `v3.0.0 <https://github.com/eclipse-score/tooling/releases/tag/v3.0.0>`__ · `v3.0.1 <https://github.com/eclipse-score/tooling/releases/tag/v3.0.1>`__
    * - `Bazel Platforms <https://github.com/eclipse-score/bazel_platforms/tree/v1.1.0>`__
      - ``v1.1.0``
-     - `Release notes <https://github.com/eclipse-score/bazel_platforms/releases/tag/v1.1.0>`__
+     - `v1.1.0 <https://github.com/eclipse-score/bazel_platforms/releases/tag/v1.1.0>`__
    * - `Test Scenarios <https://github.com/eclipse-score/testing_tools/tree/v0.5.0>`__
      - ``v0.5.0``
-     - `Release notes <https://github.com/eclipse-score/testing_tools/releases/tag/v0.5.0>`__
+     - `v0.5.0 <https://github.com/eclipse-score/testing_tools/releases/tag/v0.5.0>`__
    * - `Docs-as-code <https://github.com/eclipse-score/docs-as-code/tree/v8.6.0>`__
      - ``v8.6.0``
-     - `Release notes <https://github.com/eclipse-score/docs-as-code/releases/tag/v8.6.0>`__
+     - `v8.1.2 <https://github.com/eclipse-score/docs-as-code/releases/tag/v8.1.2>`__ · `v8.2.0 <https://github.com/eclipse-score/docs-as-code/releases/tag/v8.2.0>`__ · `v8.3.0 <https://github.com/eclipse-score/docs-as-code/releases/tag/v8.3.0>`__ · `v8.4.0 <https://github.com/eclipse-score/docs-as-code/releases/tag/v8.4.0>`__ · `v8.5.0 <https://github.com/eclipse-score/docs-as-code/releases/tag/v8.5.0>`__ · `v8.5.1 <https://github.com/eclipse-score/docs-as-code/releases/tag/v8.5.1>`__ · `v8.6.0 <https://github.com/eclipse-score/docs-as-code/releases/tag/v8.6.0>`__
    * - `Process description <https://github.com/eclipse-score/process_description/tree/v2.2.2>`__
      - ``v2.2.2``
-     - `Release notes <https://github.com/eclipse-score/process_description/releases/tag/v2.2.2>`__
+     - `v2.2.0 <https://github.com/eclipse-score/process_description/releases/tag/v2.2.0>`__ · `v2.2.1 <https://github.com/eclipse-score/process_description/releases/tag/v2.2.1>`__ · `v2.2.2 <https://github.com/eclipse-score/process_description/releases/tag/v2.2.2>`__
    * - `Bazel CPP Toolchain <https://github.com/eclipse-score/bazel_cpp_toolchains/tree/v1.0.3>`__
      - ``v1.0.3``
-     - `Release notes <https://github.com/eclipse-score/bazel_cpp_toolchains/releases/tag/v1.0.3>`__
+     - `v1.0.3 <https://github.com/eclipse-score/bazel_cpp_toolchains/releases/tag/v1.0.3>`__
 
 💿 Images
 ----------
@@ -460,6 +653,7 @@ configurations and replace ``max_memory_usage`` with the RLIMIT options
 ------------------------
 
 - Increase to the newest Bazel registry versions: https://eclipse-score.github.io/bazel_registry_ui
+- Modules shown as *(unreleased)* are pinned to a commit and have no registry version; use the commit from ``known_good.json``.
 - The module versions of this release are listed in `known_good.json <https://github.com/eclipse-score/reference_integration/blob/v0.10.0/known_good.json>`__.
 
 
