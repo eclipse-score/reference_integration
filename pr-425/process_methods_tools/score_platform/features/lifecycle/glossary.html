@@ -497,7 +497,6 @@
 <li class="toctree-l2"><a class="reference external" href="https://projects.eclipse.org/projects/automotive.score">Eclipse</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../design_decisions/index.html">Decision Records</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../introduction/index.html">Eclipse S-CORE (Eclipse Safe Open Vehicle Core)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../users_guide/index.html">User’s Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../modules/index.html">Modules</a></li>
 </ul>
 </details></li>
@@ -574,12 +573,77 @@
                   
   <section id="lifecycle-glossary">
 <h1>Lifecycle Glossary<a class="headerlink" href="#lifecycle-glossary" title="Link to this heading">#</a></h1>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This glossary previously duplicated content now maintained in the
-<code class="docutils literal notranslate"><span class="pre">score_lifecycle</span></code> repository (<a class="reference external" href="https://github.com/eclipse-score/lifecycle">eclipse-score/lifecycle</a>). See its own
-<code class="docutils literal notranslate"><span class="pre">docs/features/lifecycle/glossary.rst</span></code> for the current definitions.</p>
-</div>
+<dl class="glossary">
+<dt id="term-Lifecycle-Feature">Lifecycle Feature<a class="headerlink" href="#term-Lifecycle-Feature" title="Link to this term">#</a></dt><dd><p>Feature providing support for starting and stopping processes.</p>
+</dd>
+<dt id="term-Launch-Manager">Launch Manager<a class="headerlink" href="#term-Launch-Manager" title="Link to this term">#</a></dt><dd><p>Component to start and stop processes on a POSIX like operating system.</p>
+</dd>
+<dt id="term-Health-Monitor">Health Monitor<a class="headerlink" href="#term-Health-Monitor" title="Link to this term">#</a></dt><dd><p>Provides process local monitoring functionalities such as deadline monitoring
+and logical program flow monitoring.</p>
+</dd>
+<dt id="term-Control-Interface">Control Interface<a class="headerlink" href="#term-Control-Interface" title="Link to this term">#</a></dt><dd><p>Interface to control the lifecycle of the system, e.g. to start and stop processes.</p>
+</dd>
+<dt id="term-Alive-Interface">Alive Interface<a class="headerlink" href="#term-Alive-Interface" title="Link to this term">#</a></dt><dd><p>Interface to monitor the aliveness of a process.</p>
+</dd>
+<dt id="term-Sandbox">Sandbox<a class="headerlink" href="#term-Sandbox" title="Link to this term">#</a></dt><dd><p>A sandbox is a set of configurations, which are applied to a process when it
+is started. It can include environment variables, secpol policies, cgroup
+configurations, user and group IDs etc.</p>
+</dd>
+<dt id="term-Health-Monitor-Interface">Health Monitor Interface<a class="headerlink" href="#term-Health-Monitor-Interface" title="Link to this term">#</a></dt><dd><p>Interface to monitor the health of a process, e.g. to check if a process is
+alive or if it is running as expected.</p>
+</dd>
+<dt id="term-Alive-Monitoring">Alive Monitoring<a class="headerlink" href="#term-Alive-Monitoring" title="Link to this term">#</a></dt><dd><p>Checks if an application reports an alive state in a certain period.</p>
+</dd>
+<dt id="term-Deadline-Monitoring">Deadline Monitoring<a class="headerlink" href="#term-Deadline-Monitoring" title="Link to this term">#</a></dt><dd><p>Monitor to detect if a state was reached within a specified time related to
+another event.</p>
+</dd>
+<dt id="term-Logical-Programflow-Monitoring">Logical Programflow Monitoring<a class="headerlink" href="#term-Logical-Programflow-Monitoring" title="Link to this term">#</a></dt><dd><p>Monitor to detect if certain states were reached in a defined sequence and
+time interval.</p>
+</dd>
+<dt id="term-Run-State">Run State<a class="headerlink" href="#term-Run-State" title="Link to this term">#</a></dt><dd><p>An Run State defines a set of components, which are in status running
+and are supervised by the software platform. If the health management system
+detects abnormal situation it can change the <a class="reference internal" href="#term-Run-State"><span class="xref std std-term">Run State</span></a>.</p>
+</dd>
+<dt id="term-Component">Component<a class="headerlink" href="#term-Component" title="Link to this term">#</a></dt><dd><p>A configurable unit in the Launch Manager that describes an executable and its runtime environment (sandbox). Components can be grouped together in Run Targets to define system operational states.</p>
+</dd>
+<dt id="term-Ready-State">Ready State<a class="headerlink" href="#term-Ready-State" title="Link to this term">#</a></dt><dd><p>A state when the component has fulfilled its <a class="reference internal" href="#term-Ready-Condition"><span class="xref std std-term">Ready Condition</span></a>, i.e. is ready to provide services to other components.</p>
+</dd>
+<dt id="term-Dependency-between-components">Dependency (between components)<a class="headerlink" href="#term-Dependency-between-components" title="Link to this term">#</a></dt><dd><p>A configuration parameter indicating that <strong>Component A</strong> can only start
+after <strong>Component B</strong> has reached its <a class="reference internal" href="#term-Ready-State"><span class="xref std std-term">Ready State</span></a>. In this case,
+<strong>Component A</strong> depends on <strong>Component B</strong>.</p>
+</dd>
+<dt id="term-Dependency-between-run-targets">Dependency (between run targets)<a class="headerlink" href="#term-Dependency-between-run-targets" title="Link to this term">#</a></dt><dd><p>A configuration parameter indicating that <strong>Run Target A</strong> includes all
+components from <strong>Run Target B</strong>. In this case, <strong>Run Target A</strong> depends
+on <strong>Run Target B</strong>.</p>
+</dd>
+<dt id="term-Lifecycle-Component">Lifecycle Component<a class="headerlink" href="#term-Lifecycle-Component" title="Link to this term">#</a></dt><dd><p>Node of the dependency tree.</p>
+</dd>
+<dt id="term-Process">Process<a class="headerlink" href="#term-Process" title="Link to this term">#</a></dt><dd><p>Instantiation of an Executable programs running on the system that are managed by the Launch Manager.</p>
+</dd>
+<dt id="term-Polling-Interval">Polling Interval<a class="headerlink" href="#term-Polling-Interval" title="Link to this term">#</a></dt><dd><p>The time interval between successive checks of a condition or status.</p>
+</dd>
+<dt id="term-Recovery-Action">Recovery Action<a class="headerlink" href="#term-Recovery-Action" title="Link to this term">#</a></dt><dd><p>Actions taken by the Launch Manager when a process fails or terminates abnormally.</p>
+</dd>
+<dt id="term-Ready-Condition">Ready Condition<a class="headerlink" href="#term-Ready-Condition" title="Link to this term">#</a></dt><dd><p>A configurable condition that must be satisfied before a component is considered ready and operational. Ready conditions can include file system checks, network availability, or custom application-specific signals.</p>
+<p>Ready conditions can either be reported by the component itself through the Lifecycle Interface or determined via external state monitoring. External state examples include: process started, file is available, socket was opened, or that the process finished successfully.</p>
+</dd>
+<dt id="term-Liveliness">Liveliness<a class="headerlink" href="#term-Liveliness" title="Link to this term">#</a></dt><dd><p>Term indicating that a <a class="reference internal" href="#term-Component"><span class="xref std std-term">Component</span></a> is periodically sending an alive notification (using the
+<a class="reference internal" href="architecture/index.html#logic_arc_int_op__lifecycle__report_alive" title="logic_arc_int_op__lifecycle__report_alive"><em class="xref need">ReportAlive (logic_arc_int_op__lifecycle__report_alive)</em></a> interface) as per configuration.
+The Liveliness is lost if no alive notification is received within the expected interval.</p>
+<p>To speed up the detection of lost Liveliness, the <a class="reference internal" href="#term-Component"><span class="xref std std-term">Component</span></a> can explicitly report
+the state that Liveliness is gone using the <a class="reference internal" href="architecture/index.html#logic_arc_int_op__lifecycle__report_failure" title="logic_arc_int_op__lifecycle__report_failure"><em class="xref need">ReportFailure (logic_arc_int_op__lifecycle__report_failure)</em></a> interface.</p>
+</dd>
+<dt id="term-Monitoring-of-Processes">Monitoring of Processes<a class="headerlink" href="#term-Monitoring-of-Processes" title="Link to this term">#</a></dt><dd><p>The activity of observing and checking if a process is running or has been exited with an abnormal status.</p>
+</dd>
+<dt id="term-Watchdog">Watchdog<a class="headerlink" href="#term-Watchdog" title="Link to this term">#</a></dt><dd><p>A monitoring mechanism that detects system failures and can trigger recovery actions.</p>
+</dd>
+<dt id="term-Interval">Interval<a class="headerlink" href="#term-Interval" title="Link to this term">#</a></dt><dd><p>A period of time between events or measurements.</p>
+</dd>
+<dt id="term-SWC">SWC<a class="headerlink" href="#term-SWC" title="Link to this term">#</a></dt><dd><p>Software Components - modular software units that can be independently managed.</p>
+</dd>
+<dt id="term-Run-Target">Run Target<a class="headerlink" href="#term-Run-Target" title="Link to this term">#</a></dt><dd><p>A named collection of components and their dependencies that can be activated, stopped, or switched as a group to achieve a specific operational mode or configuration.</p>
+</dd>
+</dl>
 </section>
 
 

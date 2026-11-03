@@ -73,7 +73,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
-    <link rel="next" title="Launch manager" href="launch_manager.html" />
+    <link rel="next" title="Components &amp; Run Targets" href="components_run_targets.html" />
     <link rel="prev" title="Lifecycle" href="../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
@@ -461,30 +461,29 @@
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_baselibs/index.html">Base Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_persistency/index.html">Persistency Documentation</a></li>
+
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_kyron/index.html">Kyron</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">Lifecycle Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../../index.html">Features</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="../index.html">Lifecycle</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l4 current active"><a aria-current="page" class="current reference internal" href="#">Feature Architecture</a></li>
-<li class="toctree-l4"><a class="reference internal" href="chklst_arc_inspection.html">Architecture Inspection Checklist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chklst_arc_inspection.html">Lifecycle Architecture Inspection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../safety_analysis/fmea.html">FMEA (Failure Modes and Effects Analysis)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../safety_analysis/dfa.html">DFA (Dependent Failure Analysis)</a></li>
 
 <li class="toctree-l4"><a class="reference internal" href="../safety_analysis/aou_requirements.html">AoU Feature Requirements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../safety_planning/index.html">Feature Safety Work Products List</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../security_planning/index.html">Feature Security Work Products List</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../security_analysis/aou_requirements.html">Lifecycle Security Assumptions of Use</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../glossary_detailed.html">Glossary</a></li>
 </ul>
 </details></li>
 </ul>
 </details></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../manuals/index.html">Manuals</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../module/index.html">Lifecycle Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../safety_mgt/index.html">Safety Management</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../security_mgt/index.html">Security Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../verification_report/module_verification_report.html">Verification Report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/index.html">Components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../release/index.html">Release notes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../verification_report/index.html">Verification Report</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../components/index.html">Component documentation</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_logging/index.html">Logging</a></li>
@@ -560,7 +559,7 @@
                   
   <section id="feature-architecture">
 <h1>Feature Architecture<a class="headerlink" href="#feature-architecture" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-24c5f64d">
+<div class="need_container docutils container" id="SNCB-b0076dbd">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__lifecycle_module_architecture">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -582,6 +581,7 @@
 <div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">realizes: <span class="realizes"><span><a class="reference internal" href="../../../../../process_methods_tools/score_process_description/process_areas/architecture_design/architecture_workproducts.html#wp__feature_arch" title="doc__lifecycle_module_architecture">wp__feature_arch</a></span></span></div>
+<div class="line">affected by: <span class="affects"><span><a class="reference internal" href="design_decisions.html#dec_rec__lifecycle__in_process_health_monitor" title="doc__lifecycle_module_architecture">dec_rec__lifecycle__in_process_health_monitor</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -616,24 +616,18 @@ the defined Run States and alive supervision of the started components</p></li>
 <li><p><strong>Health Monitor</strong>: Provides process local monitoring functionalities such as
 deadline monitoring and logical program flow monitoring</p></li>
 </ul>
-<p>&lt;Design Decisions - For the documentation of the decision the <a class="reference internal" href="../../../../../process_methods_tools/score_process_description/process_areas/change_management/guidance/change_management_decision_record_template.html#gd_temp__change_decision_record" title="gd_temp__change_decision_record"><em class="xref need">Decision Record Template (gd_temp__change_decision_record)</em></a> can be used.&gt;</p>
-<p>&lt;Design Constraints&gt;</p>
-</section>
-<section id="requirements">
-<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h2>
-<p>The requirements for the feature architecture are defined in the <cite>requirements</cite> section of the feature documentation in the project repository: <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/requirements/index.html#doc__lifecycle_requirements" title="doc__lifecycle_requirements"><em class="xref need">Lifecycle Requirements (doc__lifecycle_requirements)</em></a></p>
 <section id="rationale-behind-architecture-decomposition">
 <h3>Rationale Behind Architecture Decomposition<a class="headerlink" href="#rationale-behind-architecture-decomposition" title="Link to this heading">#</a></h3>
-<p>Mandatory: A motivation for the decomposition</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Common decisions across features / cross cutting concepts is at the high level.</p>
-</div>
+<p>The decomposition of the monitoring functionality between the <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/glossary.html#term-Launch-Manager"><span class="xref std std-term">Launch
+Manager</span></a> and the <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/glossary.html#term-Health-Monitor"><span class="xref std std-term">Health Monitor</span></a> is documented in
+<a class="reference internal" href="design_decisions.html#dec_rec__lifecycle__in_process_health_monitor" title="dec_rec__lifecycle__in_process_health_monitor"><em class="xref need">In-Process Health Monitor (dec_rec__lifecycle__in_process_health_monitor)</em></a>.</p>
 </section>
 </section>
 <section id="static-architecture">
 <h2>Static Architecture<a class="headerlink" href="#static-architecture" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-25521ab2">
+<section id="feature-decomposition">
+<h3>Feature Decomposition<a class="headerlink" href="#feature-decomposition" title="Link to this heading">#</a></h3>
+<div class="need_container docutils container" id="SNCB-4acc1ff6">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_sta table" id="feat_arc_sta__lifecycle__static_view_arch">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -655,7 +649,7 @@ deadline monitoring and logical program flow monitoring</p></li>
 <div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/architecture/index.html#feat__lifecycle" title="feat_arc_sta__lifecycle__static_view_arch">feat__lifecycle</a></span></span></div>
-<div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/requirements/index.html#feat_req__lifecycle__launch_support" title="feat_arc_sta__lifecycle__static_view_arch">feat_req__lifecycle__launch_support</a></span></span></div>
+<div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/requirements/index.html#feat_req__lifecycle__launch_support" title="feat_arc_sta__lifecycle__static_view_arch">feat_req__lifecycle__launch_support</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/requirements/index.html#feat_req__lifecycle__logging_support" title="feat_arc_sta__lifecycle__static_view_arch">feat_req__lifecycle__logging_support</a></span></span></div>
 <div class="line">includes: <span class="includes"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/architecture/index.html#logic_arc_int__lifecycle__alive_if" title="feat_arc_sta__lifecycle__static_view_arch">logic_arc_int__lifecycle__alive_if</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/architecture/index.html#logic_arc_int__lifecycle__controlif" title="feat_arc_sta__lifecycle__static_view_arch">logic_arc_int__lifecycle__controlif</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/architecture/index.html#logic_arc_int__lifecycle__deadline_monitor_if" title="feat_arc_sta__lifecycle__static_view_arch">logic_arc_int__lifecycle__deadline_monitor_if</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/architecture/index.html#logic_arc_int__lifecycle__lifecycle_if" title="feat_arc_sta__lifecycle__static_view_arch">logic_arc_int__lifecycle__lifecycle_if</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/architecture/index.html#logic_arc_int__lifecycle__logical_monitor_if" title="feat_arc_sta__lifecycle__static_view_arch">logic_arc_int__lifecycle__logical_monitor_if</a></span></span></div>
 </span></div>
 </div>
@@ -663,7 +657,7 @@ deadline monitoring and logical program flow monitoring</p></li>
 <td class="meta" colspan="3"></td>
 </tr>
 <tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml" id="needarch-modules/score_lifecycle/features/lifecycle/architecture/index-0">
-<object data="../../../../../_images/plantuml-c149892af4c08ac6e5e8bd24e8d465fa9102cff1.svg" type="image/svg+xml" style="width:912px;height:808px;background:#FFFFFF;"></object></p>
+<object data="../../../../../_images/plantuml-83c1909c675e2fc606ba236070c364ebec6c6405.svg" type="image/svg+xml" style="width:2323px;height:1150px;background:#FFFFFF;"></object></p>
 </td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
@@ -681,37 +675,19 @@ deadline monitoring and logical program flow monitoring</p></li>
 </div>
 </div>
 </section>
-<section id="dynamic-architecture">
-<h2>Dynamic Architecture<a class="headerlink" href="#dynamic-architecture" title="Link to this heading">#</a></h2>
-<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">feat_arc_dyn</span><span class="p">::</span> Dynamic View
-   <span class="nc">:id:</span> feat_arc_dyn__feature_name__dynamic_view
-   <span class="nc">:security:</span> YES
-   <span class="nc">:safety:</span> ASIL_B
-   <span class="nc">:status:</span> invalid
-   <span class="nc">:fulfils:</span> feat_req__feature_name__some_title
-   <span class="nc">:belongs_to:</span> feat__feature_name
-
-   Put here a sequence diagram
-</pre></div>
-</div>
-</section>
-<section id="logical-interfaces">
-<h2>Logical Interfaces<a class="headerlink" href="#logical-interfaces" title="Link to this heading">#</a></h2>
-<p>The logical interfaces of the feature are defined in the <cite>interfaces</cite> section of the feature documentation in the project repository: <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/architecture/index.html#doc__lifecycle_architecture" title="doc__lifecycle_architecture"><em class="xref need">Lifecycle Architecture (doc__lifecycle_architecture)</em></a></p>
-</section>
-<section id="module-viewpoint">
-<h2>Module Viewpoint<a class="headerlink" href="#module-viewpoint" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-7236fca6">
-<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_mod_view_sta table" id="mod_view_sta__lifecycle__all">
+<section id="configuration-structure">
+<span id="lifecycle-configuration-structure"></span><h3>Configuration Structure<a class="headerlink" href="#configuration-structure" title="Link to this heading">#</a></h3>
+<div class="need_container docutils container" id="SNCB-5d5f0a49">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_feat_arc_sta table" id="feat_arc_sta__lifecycle__cfg_params_static">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
-<div class="line"><span><span class="needs_title"><span class="needs_data">Module architecture</span></span></span></div>
+<div class="line"><span><span class="needs_title"><span class="needs_data">Configuration parameters static architecture</span></span></span></div>
 </div>
 </td>
 <td class="head_center" colspan="2"><div class="needs_head line-block">
-<div class="line"><span></span></div>
-<div class="line"><span></span></div>
-<div class="line"><span></span></div>
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">YES</span></span></span></div>
+<div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">ASIL_B</span></span></span></div>
 </div>
 </td>
 <td class="head_right" colspan="2"><div class="needs_head_right line-block">
@@ -722,23 +698,33 @@ deadline monitoring and logical program flow monitoring</p></li>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
-<div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="../../../module/index.html#mod__lifecycle" title="mod_view_sta__lifecycle__all">mod__lifecycle</a></span></span></div>
-<div class="line">includes: <span class="includes"><span><a class="reference internal" href="../../../components/health_monitor/architecture/index.html#comp__health_monitor" title="mod_view_sta__lifecycle__all">comp__health_monitor</a>, <a class="reference internal" href="../../../components/launch_manager/architecture/component_architecture.html#comp__lifecycle_launch_manager" title="mod_view_sta__lifecycle__all">comp__lifecycle_launch_manager</a></span></span></div>
+<div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/architecture/index.html#feat__lifecycle" title="feat_arc_sta__lifecycle__cfg_params_static">feat__lifecycle</a></span></span></div>
+<div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/requirements/index.html#feat_req__lifecycle__component_group_config" title="feat_arc_sta__lifecycle__cfg_params_static">feat_req__lifecycle__component_group_config</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/requirements/index.html#feat_req__lifecycle__run_target_support" title="feat_arc_sta__lifecycle__cfg_params_static">feat_req__lifecycle__run_target_support</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/requirements/index.html#feat_req__lifecycle__sandbox_options" title="feat_arc_sta__lifecycle__cfg_params_static">feat_req__lifecycle__sandbox_options</a></span></span></div>
+<div class="line">includes: <span class="includes"><span><a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/architecture/index.html#logic_arc_int__lifecycle__alive_if" title="feat_arc_sta__lifecycle__cfg_params_static">logic_arc_int__lifecycle__alive_if</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/architecture/index.html#logic_arc_int__lifecycle__controlif" title="feat_arc_sta__lifecycle__cfg_params_static">logic_arc_int__lifecycle__controlif</a>, <a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/architecture/index.html#logic_arc_int__lifecycle__lifecycle_if" title="feat_arc_sta__lifecycle__cfg_params_static">logic_arc_int__lifecycle__lifecycle_if</a></span></span></div>
 </span></div>
 </div>
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml" id="needarch-modules/score_lifecycle/features/lifecycle/architecture/index-1">
-<object data="../../../../../_images/plantuml-c6b666d35cbb9e21044dc8381a75754147a5646d.svg" type="image/svg+xml" style="width:1163px;height:774px;background:#FFFFFF;"></object></p>
+<tr class="content row-odd"><td class="content" colspan="6"><figure class="align-center">
+<p class="plantuml">
+<object data="../../../../../_images/plantuml-7a1b25b8e0ca50f67b80c3e4fcaa127a8dbad21b.svg" type="image/svg+xml" style="width:1346px;height:1025px;background:#FFFFFF;"></object></p>
+</figure>
+<p>The Launch Manager configuration is structured around Run Target and Component configurations.
+Each Component configuration specifies how the Component is started, monitored, and recovered during system operation.
+Components can have dependencies on other Components, collectively forming a dependency graph.</p>
+<p>Run Targets are configured through Run Target configurations, which define dependencies on Components and other Run Targets.
+These dependencies determine which Components are activated when a Run Target is activated.</p>
+<p>The Launch Manager is configured with an <em>Initial Run Target</em> and <em>Fallback Run Target</em>. The <em>Initial Run Target</em> is activated when the Launch Manager is first started.
+The <em>Fallback Run Target</em> specifies the Run Target that is activated if a failure occurs that cannot be recovered.</p>
 </td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
-<div class="line"><span><span class="needs-id"><a class="reference internal" href="#mod_view_sta__lifecycle__all" title="mod_view_sta__lifecycle__all">mod_view_sta__lifecycle__all</a></span></span></div>
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#feat_arc_sta__lifecycle__cfg_params_static" title="feat_arc_sta__lifecycle__cfg_params_static">feat_arc_sta__lifecycle__cfg_params_static</a></span></span></div>
 </div>
 </td>
 <td class="footer" colspan="2"><div class="needs_footer line-block">
-<div class="line"><span><span class="needs_type_name"><span class="needs_data">Module Architecture Static View</span></span></span></div>
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Feature &amp; Feature Package Diagram</span></span></span></div>
 </div>
 </td>
 <td class="footer_right" colspan="2"></td>
@@ -748,14 +734,31 @@ deadline monitoring and logical program flow monitoring</p></li>
 </div>
 </div>
 </section>
-<section id="components-details">
-<h2>Components Details<a class="headerlink" href="#components-details" title="Link to this heading">#</a></h2>
+</section>
+<section id="dynamic-architecture">
+<h2>Dynamic Architecture<a class="headerlink" href="#dynamic-architecture" title="Link to this heading">#</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="launch_manager.html">Launch manager</a></li>
-<li class="toctree-l1"><a class="reference internal" href="launch_manager_configuration.html">Launch Manager Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="health_monitor.html">Health Monitor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="external_monitoring.html">External Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components_run_targets.html">Components &amp; Run Targets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="run_target_activation.html">Run Target activation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="startup_shutdown.html">Startup &amp; Shutdown</a></li>
+<li class="toctree-l1"><a class="reference internal" href="health_monitoring.html">Health Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recovery_actions.html">Recovery Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="external_monitor.html">External Monitor</a></li>
+</ul>
+</div>
+</section>
+<section id="logical-interfaces">
+<h2>Logical Interfaces<a class="headerlink" href="#logical-interfaces" title="Link to this heading">#</a></h2>
+<p>The logical interfaces of the feature are defined in the <cite>interfaces</cite> section
+of the feature documentation in the project repository:
+<a class="reference internal" href="../../../../../process_methods_tools/score_platform/features/lifecycle/architecture/index.html#doc__lifecycle_architecture" title="doc__lifecycle_architecture"><em class="xref need">Lifecycle Architecture (doc__lifecycle_architecture)</em></a></p>
+</section>
+<section id="design-decisions">
+<h2>Design Decisions<a class="headerlink" href="#design-decisions" title="Link to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="design_decisions.html">Design Decisions</a></li>
 </ul>
 </div>
 </section>
@@ -781,11 +784,11 @@ deadline monitoring and logical program flow monitoring</p></li>
       </div>
     </a>
     <a class="right-next"
-       href="launch_manager.html"
+       href="components_run_targets.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Launch manager</p>
+        <p class="prev-next-title">Components &amp; Run Targets</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -809,16 +812,18 @@ deadline monitoring and logical program flow monitoring</p></li>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#description">Description</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#description">Description</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rationale-behind-architecture-decomposition">Rationale Behind Architecture Decomposition</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#static-architecture">Static Architecture</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#static-architecture">Static Architecture</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-decomposition">Feature Decomposition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-structure">Configuration Structure</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dynamic-architecture">Dynamic Architecture</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logical-interfaces">Logical Interfaces</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-viewpoint">Module Viewpoint</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#components-details">Components Details</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#design-decisions">Design Decisions</a></li>
 </ul>
   </nav></div>
 

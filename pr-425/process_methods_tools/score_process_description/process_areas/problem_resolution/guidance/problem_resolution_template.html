@@ -502,6 +502,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../trainings/index.html">Trainings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../glossary/index.html">Glossary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../release_notes/index.html">Release notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../process_extensions/index.html">AI-Supported Process Execution</a></li>
 </ul>
 </details></li>
 </ul>
@@ -578,7 +579,7 @@
                   
   <section id="problem-report-template">
 <span id="prm-templates"></span><h1>Problem Report Template<a class="headerlink" href="#problem-report-template" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-5ba7264c">
+<div class="need_container docutils container" id="SNCB-6ec24f5a">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_temp table" id="gd_temp__problem_template">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -598,7 +599,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">problem_resolution</span></span></span></div>
-<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>2</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">contained by: <span class="contains"><span><a class="reference internal" href="../problem_resolution_workflow.html#wf__problem_analyze_pr" title="gd_temp__problem_template">wf__problem_analyze_pr</a>, <a class="reference internal" href="../problem_resolution_workflow.html#wf__problem_close_pr" title="gd_temp__problem_template">wf__problem_close_pr</a>, <a class="reference internal" href="../problem_resolution_workflow.html#wf__problem_create_pr" title="gd_temp__problem_template">wf__problem_create_pr</a>, <a class="reference internal" href="../problem_resolution_workflow.html#wf__problem_initiate_monitor_pr" title="gd_temp__problem_template">wf__problem_initiate_monitor_pr</a></span></span></div>
 <div class="line">complies: <span class="complies"><span><a class="reference internal" href="../../../standards/aspice_40/iic/iic-15.html#std_req__aspice_40__iic-15-12" title="gd_temp__problem_template">std_req__aspice_40__iic-15-12</a>, <a class="reference internal" href="../../../standards/aspice_40/iic/iic-15.html#std_req__aspice_40__iic-15-55" title="gd_temp__problem_template">std_req__aspice_40__iic-15-55</a>, <a class="reference internal" href="../../../standards/aspice_40/sup/sup.9.html#std_req__aspice_40__SUP-9-BP1" title="gd_temp__problem_template">std_req__aspice_40__SUP-9-BP1</a>, <a class="reference internal" href="../../../standards/aspice_40/sup/sup.9.html#std_req__aspice_40__SUP-9-BP2" title="gd_temp__problem_template">std_req__aspice_40__SUP-9-BP2</a>, <a class="reference internal" href="../../../standards/aspice_40/sup/sup.9.html#std_req__aspice_40__SUP-9-BP3" title="gd_temp__problem_template">std_req__aspice_40__SUP-9-BP3</a>, <a class="reference internal" href="../../../standards/aspice_40/sup/sup.9.html#std_req__aspice_40__SUP-9-BP4" title="gd_temp__problem_template">std_req__aspice_40__SUP-9-BP4</a></span></span></div>
@@ -644,12 +645,23 @@ of the project.</p>
 <h2>Problem description<a class="headerlink" href="#problem-description" title="Link to this heading">#</a></h2>
 <p>[What is the problem?]</p>
 <div class="line-block">
-<div class="line">Determine the cause of the problem, if possible.</div>
-<div class="line">Determine the impact of the problem, if possible.</div>
-<div class="line">Is notification required due to determined impact on affected parties?</div>
+<div class="line">Describe the observed deviation and its known or potential impact.</div>
+<div class="line">Document the cause, if known; otherwise record that it is under investigation.</div>
 </div>
 <div class="line-block">
 <div class="line">(to be filled out during <a class="reference internal" href="../problem_resolution_workflow.html#wf__problem_create_pr" title="wf__problem_create_pr"><em class="xref need">Create Problem Report (wf__problem_create_pr)</em></a>)</div>
+<div class="line">(to be updated during <a class="reference internal" href="../problem_resolution_workflow.html#wf__problem_analyze_pr" title="wf__problem_analyze_pr"><em class="xref need">Analyze Problem Report (wf__problem_analyze_pr)</em></a>)</div>
+</div>
+</section>
+<section id="problem-notifications">
+<h2>Problem notifications<a class="headerlink" href="#problem-notifications" title="Link to this heading">#</a></h2>
+<p>[Is notification needed, and who was notified?]</p>
+<p>Record whether notification is needed and why. If needed, record who was notified,
+when and how, for example a link to an issue comment with an explicit mention or an
+email reference. Listing a recipient alone does not record a performed notification.
+See <a class="reference internal" href="problem_resolution_guideline.html#prm-notifications"><span class="std std-ref">Notification of Affected Parties</span></a>.</p>
+<div class="line-block">
+<div class="line">(to be filled out during <a class="reference internal" href="../problem_resolution_workflow.html#wf__problem_create_pr" title="wf__problem_create_pr"><em class="xref need">Create Problem Report (wf__problem_create_pr)</em></a>, as far as known)</div>
 <div class="line">(to be updated during <a class="reference internal" href="../problem_resolution_workflow.html#wf__problem_analyze_pr" title="wf__problem_analyze_pr"><em class="xref need">Analyze Problem Report (wf__problem_analyze_pr)</em></a>)</div>
 </div>
 </section>
@@ -674,8 +686,8 @@ of the project.</p>
 <h2>Problem category<a class="headerlink" href="#problem-category" title="Link to this heading">#</a></h2>
 <p>[Safety affected, Security affected]</p>
 <p>Safety, Security: Additional qualifiers to highlight, if safety or security is affected</p>
-<p>They qualifiers have to be filled. If not filled out, a quality problem is assumed as
-default category.</p>
+<p>Record whether safety or security is affected. If uncertain, state this for analysis.
+If neither is affected, the problem is quality relevant.</p>
 <p>In addition to the category Safety affected, the ASIL classification may be added in the
 documentation, if applicable.</p>
 <div class="line-block">
@@ -734,25 +746,25 @@ documentation, if applicable.</p>
 <div class="line">(to be updated during <a class="reference internal" href="../problem_resolution_workflow.html#wf__problem_analyze_pr" title="wf__problem_analyze_pr"><em class="xref need">Analyze Problem Report (wf__problem_analyze_pr)</em></a>)</div>
 </div>
 </section>
-<section id="problem-affected-version">
-<h2>Problem affected version<a class="headerlink" href="#problem-affected-version" title="Link to this heading">#</a></h2>
-<p>[What version of the release is affected?]</p>
-<p>Document the version of the release where the problem was detected.</p>
+<section id="problem-affected-versions">
+<h2>Problem affected versions<a class="headerlink" href="#problem-affected-versions" title="Link to this heading">#</a></h2>
+<p>[Where was the problem detected, and which versions are affected?]</p>
+<p>Document the detection version and the first and last affected versions, including versions
+derived from the faulty version. Add affected branches or dependent integrations where
+applicable. Record unknowns as “under investigation” and update them during analysis.</p>
 <div class="line-block">
-<div class="line">(to be filled out during <a class="reference internal" href="../problem_resolution_workflow.html#wf__problem_create_pr" title="wf__problem_create_pr"><em class="xref need">Create Problem Report (wf__problem_create_pr)</em></a>)</div>
+<div class="line">(to be filled out during <a class="reference internal" href="../problem_resolution_workflow.html#wf__problem_create_pr" title="wf__problem_create_pr"><em class="xref need">Create Problem Report (wf__problem_create_pr)</em></a>, as far as known)</div>
+<div class="line">(to be updated during <a class="reference internal" href="../problem_resolution_workflow.html#wf__problem_analyze_pr" title="wf__problem_analyze_pr"><em class="xref need">Analyze Problem Report (wf__problem_analyze_pr)</em></a>)</div>
 </div>
 </section>
 <section id="problem-analysis-results">
 <h2>Problem analysis results<a class="headerlink" href="#problem-analysis-results" title="Link to this heading">#</a></h2>
 <p>[What is the problem analysis result? Accepted or Rejected?]</p>
-<div class="line-block">
-<div class="line">Especially document rejection reason, if applicable</div>
-</div>
-<p>In addition the safety/security relevance is confirmed or disconfirmed by safety/Security
-Experts.</p>
-<div class="line-block">
-<div class="line">Especially document disconfirming reason, if applicable</div>
-</div>
+<p>Record the analysis result and the reason for rejection, if applicable.</p>
+<p>The responsible <a class="reference internal" href="../../safety_management/safety_management_roles.html#rl__safety_manager" title="rl__safety_manager"><em class="xref need">Safety Manager (rl__safety_manager)</em></a> confirms or disconfirms safety
+relevance where safety may be affected; the responsible
+<a class="reference internal" href="../../security_management/security_management_roles.html#rl__security_manager" title="rl__security_manager"><em class="xref need">Security Manager (rl__security_manager)</em></a> does so where security may be affected.
+Record the reason, especially when disconfirming relevance.</p>
 <p>(to be filled out during <a class="reference internal" href="../problem_resolution_workflow.html#wf__problem_analyze_pr" title="wf__problem_analyze_pr"><em class="xref need">Analyze Problem Report (wf__problem_analyze_pr)</em></a>)</p>
 </section>
 <section id="problem-stakeholder">
@@ -779,6 +791,18 @@ Experts.</p>
 <div class="line">(to be filled out during <a class="reference internal" href="../problem_resolution_workflow.html#wf__problem_initiate_monitor_pr" title="wf__problem_initiate_monitor_pr"><em class="xref need">Initiate and Monitor Proble... (wf__problem_initiate_monitor_pr)</em></a>)</div>
 <div class="line">(to be updated during <a class="reference internal" href="../problem_resolution_workflow.html#wf__problem_close_pr" title="wf__problem_close_pr"><em class="xref need">Close Problem Resolution (wf__problem_close_pr)</em></a>)</div>
 </div>
+</section>
+<section id="problem-closure-where-safety-is-affected">
+<h2>Problem closure where safety is affected<a class="headerlink" href="#problem-closure-where-safety-is-affected" title="Link to this heading">#</a></h2>
+<p>[Which safety-specific closure condition is met, and what supports it?]</p>
+<p>Select and justify one condition according to <a class="reference internal" href="problem_resolution_guideline.html#prm-safety-affected-closure"><span class="std std-ref">Closure of Problems Where Safety Is Affected</span></a>:</p>
+<ul class="simple">
+<li><p>An adequate safety measure is implemented and its effectiveness is verified.</p></li>
+<li><p>A risk evaluation concludes that the problem does not constitute an unreasonable risk.</p></li>
+</ul>
+<p>Document the rationale, supporting verification results or risk evaluation, and the
+rationale review result.</p>
+<p>(to be filled out during <a class="reference internal" href="../problem_resolution_workflow.html#wf__problem_close_pr" title="wf__problem_close_pr"><em class="xref need">Close Problem Resolution (wf__problem_close_pr)</em></a>)</p>
 </section>
 <section id="problem-escalations">
 <h2>Problem escalations<a class="headerlink" href="#problem-escalations" title="Link to this heading">#</a></h2>
@@ -840,14 +864,16 @@ Experts.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-status">Problem status</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-submitter">Problem submitter</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-description">Problem description</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-notifications">Problem notifications</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-supporting-information">Problem supporting information</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-category">Problem category</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-classification">Problem classification</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-affected-version">Problem affected version</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-affected-versions">Problem affected versions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-analysis-results">Problem analysis results</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-stakeholder">Problem stakeholder</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-expected-closure-version">Problem expected closure version</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-solutions">Problem solutions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-closure-where-safety-is-affected">Problem closure where safety is affected</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-escalations">Problem escalations</a></li>
 </ul>
   </nav></div>

@@ -74,7 +74,7 @@
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
     <link rel="next" title="Requirements" href="../requirements/index.html" />
-    <link rel="prev" title="Implementation" href="../user_guide/implementation.html" />
+    <link rel="prev" title="Configuration examples" href="examples.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
@@ -461,34 +461,29 @@
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_baselibs/index.html">Base Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_persistency/index.html">Persistency Documentation</a></li>
+
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_kyron/index.html">Kyron</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">Lifecycle Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../../../features/index.html">Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../manuals/index.html">Manuals</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../module/index.html">Lifecycle Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../safety_mgt/index.html">Safety Management</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../security_mgt/index.html">Security Management</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../release/index.html">Release notes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../verification_report/index.html">Verification Report</a></li>
-<li class="toctree-l2 current active has-children"><a class="reference internal" href="../../index.html">Component documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../verification_report/module_verification_report.html">Verification Report</a></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../../index.html">Components</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="../index.html">Launch Manager</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="../user_guide/index.html">User Guide</a></li>
-<li class="toctree-l4 current active"><a aria-current="page" class="current reference internal" href="#">Known Limitations</a></li>
+<li class="toctree-l4 current active"><a class="reference internal" href="index.html">Lifecycle Product Documentation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../requirements/index.html">Requirements</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../requirements/chklst_req_inspection.html">Requirement Inspection Checklist</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../architecture/index.html">Component Architecture</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../architecture/chklst_arc_inspection.html">Architecture Inspection Checklist</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../detailed_design/index.html">Detailed Design</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../detailed_design/chklst_impl_inspection.html">Implementation Inspection Checklist</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../safety_analysis/fmea.html">FMEA (Failure Modes and Effects Analysis)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../safety_analysis/dfa.html">DFA (Dependent Failure Analysis)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../safety_analysis/aou_requirements.html">AoU Component Requirements Template</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../subcomponents/index.html">Sub-Component documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../security_analysis/aou_requirements.html">Launch Manager Security Assumptions of Use</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../interfaces/index.html">Interfaces documentation</a></li>
 </ul>
 </details></li>
 <li class="toctree-l3"><a class="reference internal" href="../../health_monitor/index.html">HealthMonitor</a></li>
 </ul>
 </details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../release/index.html">Release notes</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_logging/index.html">Logging</a></li>
@@ -540,10 +535,13 @@
     <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Lifecycle Documentation</a></li>
     
     
-    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Component documentation</a></li>
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Components</a></li>
     
     
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Launch Manager</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Lifecycle Product Documentation</a></li>
     
     <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Known Limitations</span></li>
   </ul>
@@ -569,24 +567,23 @@
 <section id="component">
 <h3>Component<a class="headerlink" href="#component" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p>The sandbox parameters <code class="docutils literal notranslate"><span class="pre">max_memory_usage</span></code> and <code class="docutils literal notranslate"><span class="pre">max_cpu_usage</span></code> are
-currently not supported and are ignored.</p></li>
 <li><p>For ReadyCondition <code class="docutils literal notranslate"><span class="pre">process_state:Terminated</span></code>, the mapping is only
 supported for Components that have at least one Component depending on it.</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">ready_recovery_action</span></code> only supports the RecoveryAction of type
-<code class="docutils literal notranslate"><span class="pre">restart</span></code>. The parameter <code class="docutils literal notranslate"><span class="pre">delay_before_restart</span></code> is currently not
-supported and is ignored. Setting it to a non-zero value will have no effect
-and the component will be restarted immediately.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">ready_recovery_action</span></code> is deprecated in favour of
+<code class="docutils literal notranslate"><span class="pre">activation_retry_attempts</span></code> and <code class="docutils literal notranslate"><span class="pre">activation_retry_delay_ms</span></code>.
+Its <code class="docutils literal notranslate"><span class="pre">restart.number_of_attempts</span></code> is converted to <code class="docutils literal notranslate"><span class="pre">activation_retry_attempts</span></code>
+and <code class="docutils literal notranslate"><span class="pre">restart.delay_before_restart_ms</span></code> to <code class="docutils literal notranslate"><span class="pre">activation_retry_delay_ms</span></code>.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">activation_retry_delay_ms</span></code> is currently not evaluated by the Launch Manager.</p></li>
 <li><p>The <code class="docutils literal notranslate"><span class="pre">recovery_action</span></code> only supports <code class="docutils literal notranslate"><span class="pre">switch_run_target</span></code> with the
 <code class="docutils literal notranslate"><span class="pre">run_target</span></code> set to <code class="docutils literal notranslate"><span class="pre">fallback_run_target</span></code>.</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">ready_timeout</span></code> is used as the timeout until process state Running is
+<li><p>The <code class="docutils literal notranslate"><span class="pre">ready_timeout_ms</span></code> is used as the timeout until process state Running is
 reached, even in case the ReadyCondition is <code class="docutils literal notranslate"><span class="pre">process_state:Terminated</span></code>.</p></li>
 </ul>
 </section>
 <section id="run-target">
-<h3>Run target<a class="headerlink" href="#run-target" title="Link to this heading">#</a></h3>
+<h3>Run Target<a class="headerlink" href="#run-target" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p>The parameter <code class="docutils literal notranslate"><span class="pre">run_targets/&lt;RunTarget&gt;/transition_timeout</span></code> is currently not
+<li><p>The parameter <code class="docutils literal notranslate"><span class="pre">run_targets/&lt;RunTarget&gt;/transition_timeout_ms</span></code> is currently not
 supported and is ignored.</p></li>
 <li><p>The <code class="docutils literal notranslate"><span class="pre">recovery_action</span></code> only supports <code class="docutils literal notranslate"><span class="pre">switch_run_target</span></code> with the
 <code class="docutils literal notranslate"><span class="pre">run_target</span></code> set to <code class="docutils literal notranslate"><span class="pre">fallback_run_target</span></code>.</p></li>
@@ -606,12 +603,12 @@ supported and is ignored.</p></li>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../user_guide/implementation.html"
+       href="examples.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Implementation</p>
+        <p class="prev-next-title">Configuration examples</p>
       </div>
     </a>
     <a class="right-next"
@@ -644,7 +641,7 @@ supported and is ignored.</p></li>
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration">Configuration</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#component">Component</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-target">Run target</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-target">Run Target</a></li>
 </ul>
 </li>
 </ul>

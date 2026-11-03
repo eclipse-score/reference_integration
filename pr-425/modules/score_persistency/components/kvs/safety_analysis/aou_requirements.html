@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>AoU Component Requirements KVS &#8212; REF_INT  documentation</title>
+    <title>KVS Assumptions of Use &#8212; REF_INT  documentation</title>
   
   
   
@@ -73,7 +73,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
-    <link rel="next" title="Safety Analysis: FMEA" href="fmea.html" />
+    <link rel="next" title="KVS FMEA (Failure Modes and Effects Analysis)" href="fmea.html" />
     <link rel="prev" title="Component Requirements Statistics" href="../requirements/statistics.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
@@ -461,12 +461,8 @@
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_baselibs/index.html">Base Libraries</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">Persistency Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../../../features/persistency/index.html">Persistency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../module/index.html">Persistency Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../module/manuals/index.html">Manuals</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../module/release/release_note.html">Release Note</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../module/safety_mgt/index.html">Safety Management</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../module/security_mgt/index.html">Security Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../features/persistency/index.html">Persistency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../verification_report/module_verification_report.html">Verification Report</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../../index.html">Component documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="../index.html">KVS (Key Value Store)</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -475,19 +471,18 @@
 <li class="toctree-l4"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../detailed_design/index.html">Detailed Design</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../detailed_design/chklst_impl_inspection.html">Implementation Inspection Checklist</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../kvs.html">Key-Value-Storage (rust_kvs) Documentation</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../requirements/index.html">Requirements</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../requirements/chklst_req_inspection.html">Requirement Inspection Checklist</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../requirements/statistics.html">Component Requirements Statistics</a></li>
-<li class="toctree-l4 current active"><a aria-current="page" class="current reference internal" href="#">AoU Component Requirements KVS</a></li>
-<li class="toctree-l4"><a class="reference internal" href="fmea.html">Safety Analysis: FMEA</a></li>
-<li class="toctree-l4"><a class="reference internal" href="dfa.html">Dependent Failure Analysis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../kvs.html">KVS Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../requirements/index.html">KVS Requirements</a></li>
+<li class="toctree-l4 current active"><a aria-current="page" class="current reference internal" href="#">KVS Assumptions of Use</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fmea.html">KVS FMEA (Failure Modes and Effects Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dfa.html">KVS DFA (Dependent Failure Analysis)</a></li>
 </ul>
 </details></li>
 </ul>
 </details></li>
 </ul>
 </details></li>
+
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_kyron/index.html">Kyron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_lifecycle/index.html">Lifecycle Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_logging/index.html">Logging</a></li>
@@ -544,7 +539,7 @@
     
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">KVS (Key Value Store)</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">AoU Component Requirements KVS</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">KVS Assumptions of Use</span></li>
   </ul>
 </nav>
 </div>
@@ -561,31 +556,148 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="aou-component-requirements-kvs">
-<h1>AoU Component Requirements KVS<a class="headerlink" href="#aou-component-requirements-kvs" title="Link to this heading">#</a></h1>
-<p>This page contains Assumption of Use requirement snippets that belong to the
-template repository.</p>
+  <section id="kvs-assumptions-of-use">
+<h1>KVS Assumptions of Use<a class="headerlink" href="#kvs-assumptions-of-use" title="Link to this heading">#</a></h1>
+<div class="need_container docutils container" id="SNCB-86b6e6f6">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__kvs_aou">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">KVS AoU</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">NO</span></span></span></div>
+<div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">ASIL_B</span></span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">Persistency KVS</span></span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">realizes: <span class="realizes"><span><a class="reference internal" href="../../../../../process_methods_tools/score_process_description/process_areas/requirements_engineering/requirements_workproducts.html#wp__requirements_comp_aou" title="doc__kvs_aou">wp__requirements_comp_aou</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#doc__kvs_aou" title="doc__kvs_aou">doc__kvs_aou</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Generic Document</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Assumptions of use resulting from <a class="reference internal" href="fmea.html#doc__kvs_fmea" title="doc__kvs_fmea"><em class="xref need">KVS FMEA (doc__kvs_fmea)</em></a> and <a class="reference internal" href="dfa.html#doc__kvs_dfa" title="doc__kvs_dfa"><em class="xref need">KVS DFA (doc__kvs_dfa)</em></a>.</p>
 <section id="component-aou">
 <h2>Component AoU<a class="headerlink" href="#component-aou" title="Link to this heading">#</a></h2>
-<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">aou_req</span><span class="p">::</span> Next Title
-   <span class="nc">:id:</span> aou_req__mod_temp_component_name__next_title
-   <span class="nc">:reqtype:</span> Process
-   <span class="nc">:security:</span> YES
-   <span class="nc">:safety:</span> ASIL_B
-   <span class="nc">:status:</span> invalid
-
-   The Component User shall do xyz to use the component safely/securely
-
-<span class="p">..</span> <span class="ow">aou_req</span><span class="p">::</span> Another Title
-   <span class="nc">:id:</span> aou_req__mod_temp_component_name__another
-   <span class="nc">:reqtype:</span> Process
-   <span class="nc">:security:</span> YES
-   <span class="nc">:safety:</span> ASIL_B
-   <span class="nc">:status:</span> invalid
-   <span class="nc">:tags:</span> environment
-
-   The Component shall only be used in a xyz environment to ensure its proper functioning.
-</pre></div>
+<div class="need_container docutils container" id="SNCB-84f705f1">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_aou_req table" id="aou_req__kvs__filesystem">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">File System</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">NO</span></span></span></div>
+<div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">ASIL_B</span></span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">Persistency KVS</span><span class="needs_spacer">, </span><span class="needs_data">environment</span></span></span></div>
+<div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Process</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">mitigates: <span class="mitigated_by"><span><a class="reference internal" href="fmea.html#comp_saf_fmea__kvs__unflushed_lost" title="aou_req__kvs__filesystem">comp_saf_fmea__kvs__unflushed_lost</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The user shall ensure that the file system and storage used for the KVS directory provide deterministic
+operations with a bounded execution time (open, read, write, <code class="docutils literal notranslate"><span class="pre">fdatasync</span></code>, <code class="docutils literal notranslate"><span class="pre">rename</span></code>, directory creation and
+file queries) for the maximum storage size and the maximum number of snapshots configured for the KVS instance,
+that they persist written data once <code class="docutils literal notranslate"><span class="pre">fsync</span></code>/<code class="docutils literal notranslate"><span class="pre">fdatasync</span></code> has returned, and keep renamed files consistent
+across a reset, so that data reported as flushed survives a reset.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#aou_req__kvs__filesystem" title="aou_req__kvs__filesystem">aou_req__kvs__filesystem</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Assumption of Use Requirement</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="need_container docutils container" id="SNCB-ff6f5c58">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_aou_req table" id="aou_req__kvs__limits">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">KVS Limits Configuration</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
+<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">NO</span></span></span></div>
+<div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">ASIL_B</span></span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">Persistency KVS</span><span class="needs_spacer">, </span><span class="needs_data">environment</span></span></span></div>
+<div class="line"><span class="needs_reqtype"><span class="needs_label">reqtype: </span><span class="needs_data">Process</span></span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span></span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"><p>The user shall configure the maximum storage size and the maximum number of snapshots of each KVS instance, so
+that the execution time of the KVS operations is bounded.</p></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#aou_req__kvs__limits" title="aou_req__kvs__limits">aou_req__kvs__limits</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Assumption of Use Requirement</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </section>
 </section>
@@ -614,7 +726,7 @@ template repository.</p>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Safety Analysis: FMEA</p>
+        <p class="prev-next-title">KVS FMEA (Failure Modes and Effects Analysis)</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

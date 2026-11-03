@@ -464,7 +464,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../module/index.html">Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../verification_report/module_verification_report.html">Verification Report</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../../index.html">Components</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="../../abi_compatible_data_types/docs/index.html">ABI Compatible Data Types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../bitmanipulation/index.html">bitmanipulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../concurrency/index.html">concurrency</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../containers/index.html">containers</a></li>
@@ -484,10 +483,14 @@
 <li class="toctree-l4"><a class="reference internal" href="chklst_arc_inspection.html">Architecture Inspection Checklist</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../safety_analysis/fmea.html">FMEA (Failure Modes and Effects Analysis)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../safety_analysis/dfa.html">DFA (Dependent Failure Analysis)</a></li>
+
 <li class="toctree-l4"><a class="reference internal" href="../detailed_design/chklst_impl_inspection.html">Implementation Inspection Checklist</a></li>
 </ul>
 </details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../scope_exit/index.html">Scope Exit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../shared_layout/index.html">Cross-Language Shared-Layout Data Types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../static_reflection_with_serialization/index.html">static_reflection_with_serialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../string_manipulation/index.html">String Manipulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../utils/index.html">utils</a></li>
 </ul>
 </details></li>
@@ -495,6 +498,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../score_persistency/index.html">Persistency Documentation</a></li>
+
 <li class="toctree-l1"><a class="reference internal" href="../../../../../score_kyron/index.html">Kyron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../score_lifecycle/index.html">Lifecycle Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../score_logging/index.html">Logging</a></li>
@@ -570,7 +574,7 @@
                   
   <section id="result-component-architecture">
 <h1>Result Component Architecture<a class="headerlink" href="#result-component-architecture" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-c3848914">
+<div class="need_container docutils container" id="SNCB-2d1c9df2">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__result_architecture">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -589,7 +593,7 @@
 </td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
-<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>2</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">realizes: <span class="realizes"><span><a class="reference internal" href="../../../../../../process_methods_tools/score_process_description/process_areas/architecture_design/architecture_workproducts.html#wp__component_arch" title="doc__result_architecture">wp__component_arch</a></span></span></div>
 </span></div>
@@ -619,7 +623,7 @@
 </section>
 <section id="static-architecture">
 <h2>Static Architecture<a class="headerlink" href="#static-architecture" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-9a5262c7">
+<div class="need_container docutils container" id="SNCB-412527a7">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp table" id="comp__baselibs_result">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -639,21 +643,22 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">baselibs_result</span></span></span></div>
+<div class="line"><span class="needs_bazel_target"><span class="needs_label">bazel_target: </span><span class="needs_data">[&quot;&#64;&#64;score_baselibs+//score/result:result&quot;,&quot;&#64;&#64;score_baselibs+//score/result:result_for_rust&quot;,&quot;&#64;&#64;score_baselibs+//score/result:error_msg_mapping&quot;,&quot;&#64;&#64;score_baselibs+//score/result/rust:result_cxx&quot;,&quot;&#64;&#64;score_baselibs+//score/result/rust:result_rs&quot;,&quot;&#64;&#64;score_baselibs+//score/result/rust:result_rs&quot;]</span></span></div>
+<div class="line"><span class="needs_bazel_type"><span class="needs_label">bazel_type: </span><span class="needs_data">[&quot;cc_library&quot;,&quot;cc_library&quot;,&quot;cc_library&quot;,&quot;cc_library&quot;,&quot;rust_library&quot;,&quot;rust_library&quot;]</span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="../../../../../../process_methods_tools/score_platform/features/baselibs/architecture/index.html#feat__baselibs" title="comp__baselibs_result">feat__baselibs</a></span></span></div>
-<div class="line">has: <span class="belongs_to"><span><a class="reference internal" href="#comp_arc_dyn__baselibs__result" title="comp__baselibs_result">comp_arc_dyn__baselibs__result</a>, <a class="reference internal" href="#comp_arc_sta__baselibs__result" title="comp__baselibs_result">comp_arc_sta__baselibs__result</a></span></span></div>
+<div class="line">has: <span class="belongs_to"><span><a class="reference internal" href="#comp_arc_sta__baselibs__result" title="comp__baselibs_result">comp_arc_sta__baselibs__result</a></span></span></div>
 <div class="line">satisfies: <span class="satisfied_by"><span><a class="reference internal" href="../requirements/index.html#comp_req__result__deterministic_behavior" title="comp__baselibs_result">comp_req__result__deterministic_behavior</a>, <a class="reference internal" href="../requirements/index.html#comp_req__result__domain_error_information" title="comp__baselibs_result">comp_req__result__domain_error_information</a>, <a class="reference internal" href="../requirements/index.html#comp_req__result__error_handling" title="comp__baselibs_result">comp_req__result__error_handling</a>, <a class="reference internal" href="../requirements/index.html#comp_req__result__exception_free_operation" title="comp__baselibs_result">comp_req__result__exception_free_operation</a>, <a class="reference internal" href="../requirements/index.html#comp_req__result__futurecpp_integration" title="comp__baselibs_result">comp_req__result__futurecpp_integration</a>, <a class="reference internal" href="../requirements/index.html#comp_req__result__set_result" title="comp__baselibs_result">comp_req__result__set_result</a>, <a class="reference internal" href="../requirements/index.html#comp_req__result__std_integration" title="comp__baselibs_result">comp_req__result__std_integration</a>, <a class="reference internal" href="../requirements/index.html#comp_req__result__type_safety" title="comp__baselibs_result">comp_req__result__type_safety</a></span></span></div>
 <div class="line">implements: <span class="implements"><span><a class="reference internal" href="../../../../../../process_methods_tools/score_platform/features/baselibs/architecture/index.html#logic_arc_int__baselibs__result" title="comp__baselibs_result">logic_arc_int__baselibs__result</a></span></span></div>
 <div class="line">included by: <span class="includes"><span><a class="reference internal" href="../../../../module/index.html#mod__baselibs" title="comp__baselibs_result">mod__baselibs</a>, <a class="reference internal" href="../../../../module/index.html#mod_view_sta__baselibs__baselibs" title="comp__baselibs_result">mod_view_sta__baselibs__baselibs</a></span></span></div>
 </span></div>
+<div class="score-coverage line"><span class="needs_label">coverage: </span><span class="needs_data">lines 72% · branches 83% · files 8/15</span></div>
 </div>
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml" id="needarch-modules/score_baselibs/baselibs/components/result/architecture/index-0">
-<object data="../../../../../../_images/plantuml-4f5cc529d0ecf730361d1d5a86980ef384a37d34.svg" type="image/svg+xml" style="width:149px;height:225px;background:#FFFFFF;"></object></p>
-</td>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
 <div class="line"><span><span class="needs-id"><a class="reference internal" href="#comp__baselibs_result" title="comp__baselibs_result">comp__baselibs_result</a></span></span></div>
@@ -669,7 +674,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-fdedab94">
+<div class="need_container docutils container" id="SNCB-5c4ddb9f">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_arc_sta table" id="comp_arc_sta__baselibs__result">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -692,12 +697,13 @@
 </span></span></div>
 <div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="#comp__baselibs_result" title="comp_arc_sta__baselibs__result">comp__baselibs_result</a></span></span></div>
 <div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#comp_req__result__deterministic_behavior" title="comp_arc_sta__baselibs__result">comp_req__result__deterministic_behavior</a>, <a class="reference internal" href="../requirements/index.html#comp_req__result__domain_error_information" title="comp_arc_sta__baselibs__result">comp_req__result__domain_error_information</a>, <a class="reference internal" href="../requirements/index.html#comp_req__result__error_handling" title="comp_arc_sta__baselibs__result">comp_req__result__error_handling</a>, <a class="reference internal" href="../requirements/index.html#comp_req__result__exception_free_operation" title="comp_arc_sta__baselibs__result">comp_req__result__exception_free_operation</a>, <a class="reference internal" href="../requirements/index.html#comp_req__result__set_result" title="comp_arc_sta__baselibs__result">comp_req__result__set_result</a>, <a class="reference internal" href="../requirements/index.html#comp_req__result__std_integration" title="comp_arc_sta__baselibs__result">comp_req__result__std_integration</a>, <a class="reference internal" href="../requirements/index.html#comp_req__result__type_safety" title="comp_arc_sta__baselibs__result">comp_req__result__type_safety</a></span></span></div>
+<div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/dfa.html#comp_saf_dfa__result__ffi" title="comp_arc_sta__baselibs__result">comp_saf_dfa__result__ffi</a>, <a class="reference internal" href="../safety_analysis/fmea.html#comp_saf_fmea__result__error_code" title="comp_arc_sta__baselibs__result">comp_saf_fmea__result__error_code</a>, <a class="reference internal" href="../safety_analysis/fmea.html#comp_saf_fmea__result__error_message_life" title="comp_arc_sta__baselibs__result">comp_saf_fmea__result__error_message_life</a>, <a class="reference internal" href="../safety_analysis/fmea.html#comp_saf_fmea__result__stop_user" title="comp_arc_sta__baselibs__result">comp_saf_fmea__result__stop_user</a>, <a class="reference internal" href="../safety_analysis/fmea.html#comp_saf_fmea__result__unchecked" title="comp_arc_sta__baselibs__result">comp_saf_fmea__result__unchecked</a></span></span></div>
 </span></div>
 </div>
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml" id="needarch-modules/score_baselibs/baselibs/components/result/architecture/index-1">
+<tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml" id="needarch-modules/score_baselibs/baselibs/components/result/architecture/index-0">
 <object data="../../../../../../_images/plantuml-4f5cc529d0ecf730361d1d5a86980ef384a37d34.svg" type="image/svg+xml" style="width:149px;height:225px;background:#FFFFFF;"></object></p>
 </td>
 </tr>
@@ -718,55 +724,11 @@
 </section>
 <section id="dynamic-architecture">
 <h2>Dynamic Architecture<a class="headerlink" href="#dynamic-architecture" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-048b5f4b">
-<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_arc_dyn table" id="comp_arc_dyn__baselibs__result">
-<tbody>
-<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
-<div class="line"><span><span class="needs_title"><span class="needs_data">Result Dynamic view</span></span></span></div>
-</div>
-</td>
-<td class="head_center" colspan="2"><div class="needs_head line-block">
-<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">valid</span></span></span></div>
-<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">YES</span></span></span></div>
-<div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">ASIL_B</span></span></span></div>
-</div>
-</td>
-<td class="head_right" colspan="2"><div class="needs_head_right line-block">
-<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
-</div>
-</td>
-</tr>
-<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
-<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
-</span></span></div>
-<div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="#comp__baselibs_result" title="comp_arc_dyn__baselibs__result">comp__baselibs_result</a></span></span></div>
-<div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#comp_req__result__deterministic_behavior" title="comp_arc_dyn__baselibs__result">comp_req__result__deterministic_behavior</a>, <a class="reference internal" href="../requirements/index.html#comp_req__result__domain_error_information" title="comp_arc_dyn__baselibs__result">comp_req__result__domain_error_information</a>, <a class="reference internal" href="../requirements/index.html#comp_req__result__error_handling" title="comp_arc_dyn__baselibs__result">comp_req__result__error_handling</a>, <a class="reference internal" href="../requirements/index.html#comp_req__result__exception_free_operation" title="comp_arc_dyn__baselibs__result">comp_req__result__exception_free_operation</a>, <a class="reference internal" href="../requirements/index.html#comp_req__result__set_result" title="comp_arc_dyn__baselibs__result">comp_req__result__set_result</a>, <a class="reference internal" href="../requirements/index.html#comp_req__result__std_integration" title="comp_arc_dyn__baselibs__result">comp_req__result__std_integration</a>, <a class="reference internal" href="../requirements/index.html#comp_req__result__type_safety" title="comp_arc_dyn__baselibs__result">comp_req__result__type_safety</a></span></span></div>
-<div class="line">violated_by: <span class="violates"><span><a class="reference internal" href="../safety_analysis/fmea.html#comp_saf_fmea__result__error_code" title="comp_arc_dyn__baselibs__result">comp_saf_fmea__result__error_code</a>, <a class="reference internal" href="../safety_analysis/fmea.html#comp_saf_fmea__result__error_message_life" title="comp_arc_dyn__baselibs__result">comp_saf_fmea__result__error_message_life</a>, <a class="reference internal" href="../safety_analysis/fmea.html#comp_saf_fmea__result__stop_user" title="comp_arc_dyn__baselibs__result">comp_saf_fmea__result__stop_user</a>, <a class="reference internal" href="../safety_analysis/fmea.html#comp_saf_fmea__result__unchecked" title="comp_arc_dyn__baselibs__result">comp_saf_fmea__result__unchecked</a></span></span></div>
-</span></div>
-</div>
-</td>
-<td class="meta" colspan="3"></td>
-</tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p>No need for sequence diagram. Simple caller callee flow.</p></td>
-</tr>
-<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
-<div class="line"><span><span class="needs-id"><a class="reference internal" href="#comp_arc_dyn__baselibs__result" title="comp_arc_dyn__baselibs__result">comp_arc_dyn__baselibs__result</a></span></span></div>
-</div>
-</td>
-<td class="footer" colspan="2"><div class="needs_footer line-block">
-<div class="line"><span><span class="needs_type_name"><span class="needs_data">Component Sequence Diagram</span></span></span></div>
-</div>
-</td>
-<td class="footer_right" colspan="2"></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p>No need for sequence diagram. Simple caller callee flow.</p>
 </section>
 <section id="interfaces">
 <h2>Interfaces<a class="headerlink" href="#interfaces" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-138dd99e">
+<div class="need_container docutils container" id="SNCB-683fe1fe">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__baselibs__set_result">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -809,7 +771,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-d867b721">
+<div class="need_container docutils container" id="SNCB-510981f0">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__baselibs__get_value">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -852,7 +814,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-8555bc64">
+<div class="need_container docutils container" id="SNCB-fd04c30f">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__baselibs__get_error">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">

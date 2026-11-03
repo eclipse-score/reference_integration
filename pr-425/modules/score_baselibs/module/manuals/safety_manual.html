@@ -476,6 +476,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../score_persistency/index.html">Persistency Documentation</a></li>
+
 <li class="toctree-l1"><a class="reference internal" href="../../../score_kyron/index.html">Kyron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../score_lifecycle/index.html">Lifecycle Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../score_logging/index.html">Logging</a></li>
@@ -551,7 +552,7 @@
                   
   <section id="safety-manual">
 <h1>Safety Manual<a class="headerlink" href="#safety-manual" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-1109d7d0">
+<div class="need_container docutils container" id="SNCB-00342a6d">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__baselibs_safety_manual">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -618,7 +619,7 @@ So for Baselibs the definition of the assumed safety requirement(s) of each of t
 <li><p>flatbuffers library: <a class="reference internal" href="../../../../process_methods_tools/score_platform/features/baselibs/requirements/index.html#feat_req__baselibs__flatbuffers_library" title="feat_req__baselibs__flatbuffers_library"><em class="xref need">FlatBuffers Library (feat_req__baselibs__flatbuffers_library)</em></a></p></li>
 <li><p>json library: <a class="reference internal" href="../../../../process_methods_tools/score_platform/features/baselibs/requirements/index.html#feat_req__baselibs__json_library" title="feat_req__baselibs__json_library"><em class="xref need">JSON Library (feat_req__baselibs__json_library)</em></a></p></li>
 <li><p>memory library: <a class="reference internal" href="../../../../process_methods_tools/score_platform/features/baselibs/requirements/index.html#feat_req__baselibs__memory_library" title="feat_req__baselibs__memory_library"><em class="xref need">Memory Library (feat_req__baselibs__memory_library)</em></a></p></li>
-<li><p>os library:</p></li>
+<li><p>os library: feat_req__baselibs__osal</p></li>
 <li><p>result library: <a class="reference internal" href="../../../../process_methods_tools/score_platform/features/baselibs/requirements/index.html#feat_req__baselibs__result_library" title="feat_req__baselibs__result_library"><em class="xref need">Result Library (feat_req__baselibs__result_library)</em></a></p></li>
 <li><p>safecpp, utils: <a class="reference internal" href="../../../../process_methods_tools/score_platform/features/baselibs/requirements/index.html#feat_req__baselibs__utils_library" title="feat_req__baselibs__utils_library"><em class="xref need">Utils Library (feat_req__baselibs__utils_library)</em></a></p></li>
 <li><p>static_reflection_with_serialization: <a class="reference internal" href="../../../../process_methods_tools/score_platform/features/baselibs/requirements/index.html#feat_req__baselibs__static_reflection_library" title="feat_req__baselibs__static_reflection_library"><em class="xref need">Static Reflection Library (feat_req__baselibs__static_reflection_library)</em></a></p></li>
@@ -628,13 +629,12 @@ So for Baselibs the definition of the assumed safety requirement(s) of each of t
 <h2>Assumptions of Use<a class="headerlink" href="#assumptions-of-use" title="Link to this heading">#</a></h2>
 <section id="assumptions-on-the-environment">
 <h3>Assumptions on the Environment<a class="headerlink" href="#assumptions-on-the-environment" title="Link to this heading">#</a></h3>
-<div class="line-block">
-<div class="line">Generally the assumption of the project platform SEooC is that it is integrated in a safe system, i.e. the POSIX OS it runs on is qualified and also the HW related failures are taken into account by the system integrator, if not otherwise stated in the module’s safety concept.</div>
-<div class="line">The platform-wide AoUs are collected in <a class="reference internal" href="../../../../process_methods_tools/score_platform/requirements/platform_assumptions/index.html#doc__platform_assumptions" title="doc__platform_assumptions"><em class="xref need">SW-platform Assumptions (doc__platform_assumptions)</em></a></div>
-<div class="line"><br /></div>
-<div class="line">To support <a class="reference internal" href="../../../../process_methods_tools/score_platform/requirements/platform_assumptions/index.html#aou_req__platform__safety_matching" title="aou_req__platform__safety_matching"><em class="xref need">Safety matching (aou_req__platform__safety_matching)</em></a>:</div>
-<div class="line">&lt;List here all the OS/libcxx calls the module expects to be safe.&gt;</div>
-</div>
+<p>Generally the assumption of the project platform SEooC is that it is integrated in a safe system, i.e. the POSIX OS it runs on is qualified and also the HW related failures are taken into account by the system integrator, if not otherwise stated in the module’s safety concept.</p>
+<p>The platform-wide AoUs are collected in <a class="reference internal" href="../../../../process_methods_tools/score_platform/requirements/platform_assumptions/index.html#doc__platform_assumptions" title="doc__platform_assumptions"><em class="xref need">SW-platform Assumptions (doc__platform_assumptions)</em></a></p>
+<p>To support <a class="reference internal" href="../../../../process_methods_tools/score_platform/requirements/platform_assumptions/index.html#aou_req__platform__safety_matching" title="aou_req__platform__safety_matching"><em class="xref need">Safety matching (aou_req__platform__safety_matching)</em></a>, here are all the OS/libcxx calls the module expects to be safe:</p>
+<ul class="simple">
+<li><p>climits, cstdint, functional, optional, ostream, string_view, type_traits, utility, variant (this list is not complete, it is based on currently performed component DFA)</p></li>
+</ul>
 <p>List of additional AoUs expected from the environment the module runs on:</p>
 <p class="needs_filter_warning" id="needtable-modules/score_baselibs/module/manuals/safety_manual-0">No needs passed the filters</p>
 </section>
@@ -667,7 +667,7 @@ So for Baselibs the definition of the assumed safety requirement(s) of each of t
 </tr>
 <tr class="need row-odd"><td class="needs_title"><p>Bitmask Enum Value Constraints</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../../baselibs/components/bitmanipulation/requirements/index.html#aou_req__bitmanipulation__enum_constraints">aou_req__bitmanipulation__enum_constraints</a></p></td>
-<td class="needs_status"><p>valid</p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
 </tr>
 <tr class="need row-even"><td class="needs_title"><p>Check Capacity</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../../baselibs/components/containers/requirements/index.html#aou_req__containers__capacity_management">aou_req__containers__capacity_management</a></p></td>
@@ -691,7 +691,7 @@ So for Baselibs the definition of the assumed safety requirement(s) of each of t
 </tr>
 <tr class="need row-odd"><td class="needs_title"><p>Error Domain Implementation</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../../baselibs/components/result/requirements/index.html#aou_req__result__error_domain_implementation">aou_req__result__error_domain_implementation</a></p></td>
-<td class="needs_status"><p>valid</p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
 </tr>
 <tr class="need row-even"><td class="needs_title"><p>Error Handling</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../../baselibs/components/filesystem/requirements/index.html#aou_req__filesystem__error_handling">aou_req__filesystem__error_handling</a></p></td>
@@ -699,11 +699,11 @@ So for Baselibs the definition of the assumed safety requirement(s) of each of t
 </tr>
 <tr class="need row-odd"><td class="needs_title"><p>Error Reaction and Safe State</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../../baselibs/components/result/requirements/index.html#aou_req__result__error_reaction">aou_req__result__error_reaction</a></p></td>
-<td class="needs_status"><p>valid</p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
 </tr>
 <tr class="need row-even"><td class="needs_title"><p>External Synchronization Required for Concurrent Access</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../../baselibs/components/bitmanipulation/requirements/index.html#aou_req__bitmanipulation__concurrent_access">aou_req__bitmanipulation__concurrent_access</a></p></td>
-<td class="needs_status"><p>valid</p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_title"><p>FlatBuffers access control</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../../baselibs/components/flatbuffers/requirements/index.html#aou_req__flatbuffers__access_control">aou_req__flatbuffers__access_control</a></p></td>
@@ -727,7 +727,7 @@ So for Baselibs the definition of the assumed safety requirement(s) of each of t
 </tr>
 <tr class="need row-even"><td class="needs_title"><p>Integral Type Constraints</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../../baselibs/components/bitmanipulation/requirements/index.html#aou_req__bitmanipulation__type_constraints">aou_req__bitmanipulation__type_constraints</a></p></td>
-<td class="needs_status"><p>valid</p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_title"><p>Iterator Validity</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../../baselibs/components/containers/requirements/index.html#aou_req__containers__iterator_validity">aou_req__containers__iterator_validity</a></p></td>
@@ -759,11 +759,11 @@ So for Baselibs the definition of the assumed safety requirement(s) of each of t
 </tr>
 <tr class="need row-even"><td class="needs_title"><p>Resource Lifetime</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../../baselibs/components/result/requirements/index.html#aou_req__result__resource_lifetime">aou_req__result__resource_lifetime</a></p></td>
-<td class="needs_status"><p>valid</p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_title"><p>Result Value Handling</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../../baselibs/components/result/requirements/index.html#aou_req__result__value_handling">aou_req__result__value_handling</a></p></td>
-<td class="needs_status"><p>valid</p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
 </tr>
 <tr class="need row-even"><td class="needs_title"><p>Supported Path Formats</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../../baselibs/components/filesystem/requirements/index.html#aou_req__filesystem__supported_path_formats">aou_req__filesystem__supported_path_formats</a></p></td>
@@ -775,7 +775,7 @@ So for Baselibs the definition of the assumed safety requirement(s) of each of t
 </tr>
 <tr class="need row-even"><td class="needs_title"><p>Thread Safety</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../../baselibs/components/result/requirements/index.html#aou_req__result__thread_safety">aou_req__result__thread_safety</a></p></td>
-<td class="needs_status"><p>valid</p></td>
+<td class="needs_status"><p>valid_inspected</p></td>
 </tr>
 <tr class="need row-odd"><td class="needs_title"><p>Thread Safety</p></td>
 <td class="needs_id"><p><a class="reference internal" href="../../baselibs/components/concurrency/requirements/index.html#aou_req__concurrency__thread_safety">aou_req__concurrency__thread_safety</a></p></td>

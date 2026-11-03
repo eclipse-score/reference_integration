@@ -461,12 +461,8 @@
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../score_baselibs/index.html">Base Libraries</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">Persistency Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../../features/persistency/index.html">Persistency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../module/index.html">Persistency Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../module/manuals/index.html">Manuals</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../module/release/release_note.html">Release Note</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../module/safety_mgt/index.html">Safety Management</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../module/security_mgt/index.html">Security Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../features/persistency/index.html">Persistency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../verification_report/module_verification_report.html">Verification Report</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">Component documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3 current active has-children"><a aria-current="page" class="current reference internal" href="#">KVS (Key Value Store)</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -475,19 +471,18 @@
 <li class="toctree-l4"><a class="reference internal" href="architecture/index.html">Architecture</a></li>
 <li class="toctree-l4"><a class="reference internal" href="detailed_design/index.html">Detailed Design</a></li>
 <li class="toctree-l4"><a class="reference internal" href="detailed_design/chklst_impl_inspection.html">Implementation Inspection Checklist</a></li>
-<li class="toctree-l4"><a class="reference internal" href="kvs.html">Key-Value-Storage (rust_kvs) Documentation</a></li>
-<li class="toctree-l4"><a class="reference internal" href="requirements/index.html">Requirements</a></li>
-<li class="toctree-l4"><a class="reference internal" href="requirements/chklst_req_inspection.html">Requirement Inspection Checklist</a></li>
-<li class="toctree-l4"><a class="reference internal" href="requirements/statistics.html">Component Requirements Statistics</a></li>
-<li class="toctree-l4"><a class="reference internal" href="safety_analysis/aou_requirements.html">AoU Component Requirements KVS</a></li>
-<li class="toctree-l4"><a class="reference internal" href="safety_analysis/fmea.html">Safety Analysis: FMEA</a></li>
-<li class="toctree-l4"><a class="reference internal" href="safety_analysis/dfa.html">Dependent Failure Analysis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="kvs.html">KVS Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="requirements/index.html">KVS Requirements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="safety_analysis/aou_requirements.html">KVS Assumptions of Use</a></li>
+<li class="toctree-l4"><a class="reference internal" href="safety_analysis/fmea.html">KVS FMEA (Failure Modes and Effects Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="safety_analysis/dfa.html">KVS DFA (Dependent Failure Analysis)</a></li>
 </ul>
 </details></li>
 </ul>
 </details></li>
 </ul>
 </details></li>
+
 <li class="toctree-l1"><a class="reference internal" href="../../../score_kyron/index.html">Kyron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../score_lifecycle/index.html">Lifecycle Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../score_logging/index.html">Logging</a></li>
@@ -560,7 +555,7 @@
                   
   <section id="kvs-key-value-store">
 <span id="component-persistencykvs"></span><h1>KVS (Key Value Store)<a class="headerlink" href="#kvs-key-value-store" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-91cb3958">
+<div class="need_container docutils container" id="SNCB-784bb9f4">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__kvs">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -777,37 +772,49 @@ This helps make sure all issues required for the CR to be ready for consideratio
 <li class="toctree-l2"><a class="reference internal" href="detailed_design/chklst_impl_inspection.html#checklist">Checklist</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="kvs.html">Key-Value-Storage (rust_kvs) Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="kvs.html#summary">Summary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kvs.html#introduction">Introduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kvs.html#example">Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kvs.html">KVS Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="requirements/index.html">KVS Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="requirements/requirements.html">Requirements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="requirements/requirements.html#component-requirements">Component Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="requirements/requirements.html#environmental-requirements">Environmental Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="requirements/requirements.html#assumption-of-use-requirements">Assumption of Use Requirements</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="requirements/index.html">Requirements</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="requirements/index.html#component-requirements">Component Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="requirements/index.html#assumption-of-use-requirements">Assumption of Use Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="requirements/index.html#environmental-requirements">Environmental Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requirements/chklst_req_inspection.html">Requirement Inspection Checklist</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="requirements/chklst_req_inspection.html#purpose">Purpose</a></li>
+<li class="toctree-l3"><a class="reference internal" href="requirements/chklst_req_inspection.html#conduct">Conduct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="requirements/chklst_req_inspection.html#checklist">Checklist</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="requirements/chklst_req_inspection.html">Requirement Inspection Checklist</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="requirements/chklst_req_inspection.html#purpose">Purpose</a></li>
-<li class="toctree-l2"><a class="reference internal" href="requirements/chklst_req_inspection.html#conduct">Conduct</a></li>
-<li class="toctree-l2"><a class="reference internal" href="requirements/chklst_req_inspection.html#checklist">Checklist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requirements/statistics.html">Component Requirements Statistics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="requirements/statistics.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="requirements/statistics.html#in-detail">In Detail</a></li>
+<li class="toctree-l3"><a class="reference internal" href="requirements/statistics.html#all-passed-tests">All passed Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="requirements/statistics.html#details-about-testcases">Details About Testcases</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="requirements/statistics.html">Component Requirements Statistics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="requirements/statistics.html#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="requirements/statistics.html#in-detail">In Detail</a></li>
-<li class="toctree-l2"><a class="reference internal" href="requirements/statistics.html#all-passed-tests">All passed Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="requirements/statistics.html#details-about-testcases">Details About Testcases</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="safety_analysis/aou_requirements.html">AoU Component Requirements KVS</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="safety_analysis/aou_requirements.html">KVS Assumptions of Use</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="safety_analysis/aou_requirements.html#component-aou">Component AoU</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="safety_analysis/fmea.html">Safety Analysis: FMEA</a></li>
-<li class="toctree-l1"><a class="reference internal" href="safety_analysis/dfa.html">Dependent Failure Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="safety_analysis/fmea.html">KVS FMEA (Failure Modes and Effects Analysis)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="safety_analysis/fmea.html#failure-mode-list">Failure Mode List</a></li>
+<li class="toctree-l2"><a class="reference internal" href="safety_analysis/fmea.html#fmea">FMEA</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="safety_analysis/dfa.html">KVS DFA (Dependent Failure Analysis)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="safety_analysis/dfa.html#dependent-failure-initiators">Dependent Failure Initiators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="safety_analysis/dfa.html#shared-resources">Shared resources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="safety_analysis/dfa.html#communication-between-the-two-elements">Communication between the two elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="safety_analysis/dfa.html#shared-information-inputs">Shared information inputs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="safety_analysis/dfa.html#unintended-impact">Unintended impact</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="safety_analysis/dfa.html#dfa">DFA</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </section>

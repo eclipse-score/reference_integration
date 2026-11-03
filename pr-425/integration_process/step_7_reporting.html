@@ -632,8 +632,9 @@ measured. Build a single module’s report with:</p>
 <h2><span class="section-number">7.5. </span>Component coverage in the documentation<a class="headerlink" href="#component-coverage-in-the-documentation" title="Link to this heading">#</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">scripts/module_tests.py</span></code> uses <code class="docutils literal notranslate"><span class="pre">--config=llvm_cov</span></code> and exports reports through
 <code class="docutils literal notranslate"><span class="pre">&#64;score_coverage//:generate_coverage_html</span></code> for the integrated Baselibs,
-Persistency and Logging releases. Other modules run their unit tests
-without coverage until a release using <code class="docutils literal notranslate"><span class="pre">coverage_tool</span></code> is integrated; the
+Persistency, Logging, Kyron, Lifecycle and Time versions. Communication and Config
+Management run their unit tests without coverage until a version using
+<code class="docutils literal notranslate"><span class="pre">coverage_tool</span></code> is integrated; the
 activation points are commented in <code class="docutils literal notranslate"><span class="pre">COVERAGE_MODULES</span></code> in the script.</p>
 <p>The export uses <code class="docutils literal notranslate"><span class="pre">COVERAGE_THRESHOLD=0</span></code> to collect evidence without adding a
 percentage gate. It contains plain LCOV at <code class="docutils literal notranslate"><span class="pre">coverage/coverage_report.dat</span></code> and

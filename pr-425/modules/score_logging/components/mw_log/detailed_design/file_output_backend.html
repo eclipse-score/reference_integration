@@ -73,8 +73,8 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
-    <link rel="next" title="SyslogBackend" href="syslog_backend.html" />
-    <link rel="prev" title="Detailed Design" href="index.html" />
+    <link rel="next" title="Safe Datarouter Backend" href="datarouter_backend/index.html" />
+    <link rel="prev" title="mw::log Backend Detailed Design" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
@@ -457,6 +457,7 @@
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_baselibs/index.html">Base Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_persistency/index.html">Persistency Documentation</a></li>
+
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_kyron/index.html">Kyron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_lifecycle/index.html">Lifecycle Documentation</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">Logging</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -466,9 +467,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../../datarouter/index.html">Datarouter</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">mw::log Backend</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../architecture/index.html">Component Architecture</a></li>
-<li class="toctree-l3 current active has-children"><a class="reference internal" href="index.html">Detailed Design</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="index.html">mw::log Backend Detailed Design</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l4 current active"><a aria-current="page" class="current reference internal" href="#">FileOutputBackend</a></li>
-<li class="toctree-l4"><a class="reference internal" href="syslog_backend.html">SyslogBackend</a></li>
 <li class="toctree-l4"><a class="reference internal" href="datarouter_backend/index.html">Safe Datarouter Backend</a></li>
 <li class="toctree-l4"><a class="reference internal" href="chklst_impl_inspection.html">Implementation Inspection Checklist</a></li>
 </ul>
@@ -479,6 +479,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../safety_analysis/aou_requirements.html">AoU Component Requirements Template</a></li>
 </ul>
 </details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dependable_elements/index.html">Safety Report</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_time/index.html">time_daemon Documentation</a></li>
@@ -532,7 +533,7 @@
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">mw::log Backend</a></li>
     
     
-    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Detailed Design</a></li>
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">mw::log Backend Detailed Design</a></li>
     
     <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">FileOutputBackend</span></li>
   </ul>
@@ -565,17 +566,61 @@
 ----------------------------------------------------------------------------- -->
 <section id="fileoutputbackend">
 <h1>FileOutputBackend<a class="headerlink" href="#fileoutputbackend" title="Link to this heading">#</a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">LogFlushBackend</span></code> implements <code class="docutils literal notranslate"><span class="pre">mw::log::Backend</span></code>. It is responsible for providing
-buffers by means of <code class="docutils literal notranslate"><span class="pre">ReserveSlot()</span></code> call and writing data using provided
-callable object when the buffer is returned by the user by means of calling
-<code class="docutils literal notranslate"><span class="pre">FlushSlot()</span></code>. It assumes non-blocking calls and implements measures to store
-and manage buffers till all the data is pushed out in subsequent calls. Logs
-are stored in a circular buffer in the case when the current <code class="docutils literal notranslate"><span class="pre">LogRecord</span></code> is not
-completely flushed due to provided sink method not consuming all the data. The
-rest of the data is to be pushed in subsequent calls to <code class="docutils literal notranslate"><span class="pre">FlushSlot</span></code> looping over
-a circular buffer to reduce the queue of unprocessed logs in the order provided
-by the caller. Whenever each <code class="docutils literal notranslate"><span class="pre">LogRecord</span></code> is flushed completely, the buffer is
-released to the allocator by Release Slot.
+<div class="need_container docutils container" id="SNCB-0cc280a1">
+<div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__mw_log_file_output_backend_design">
+<tbody>
+<tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
+<div class="line"><span><span class="needs_title"><span class="needs_data">mw::log File Output Backend Detailed Design</span></span></span></div>
+</div>
+</td>
+<td class="head_center" colspan="2"><div class="needs_head line-block">
+<div class="line"><span><span class="needs_status"><span class="needs_label">status: </span><span class="needs_data">draft</span></span></span></div>
+<div class="line"><span><span class="needs_security"><span class="needs_label">security: </span><span class="needs_data">YES</span></span></span></div>
+<div class="line"><span><span class="needs_safety"><span class="needs_label">safety: </span><span class="needs_data">QM</span></span></span></div>
+</div>
+</td>
+<td class="head_right" colspan="2"><div class="needs_head_right line-block">
+<div class="line"><span><span class="needs needs_collapse" id="target__show__meta"><span class="needs collapsed"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg></span><span class="needs visible collapse_is_hidden"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span></span></span></div>
+</div>
+</td>
+</tr>
+<tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
+<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+</span></span></div>
+<div class="line"><span><div class="line">realizes: <span class="realizes"><span><a class="reference internal" href="../../../../../process_methods_tools/score_process_description/process_areas/implementation/implementation_workproducts.html#wp__sw_implementation" title="doc__mw_log_file_output_backend_design">wp__sw_implementation</a></span></span></div>
+</span></div>
+</div>
+</td>
+<td class="meta" colspan="3"></td>
+</tr>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
+</tr>
+<tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
+<div class="line"><span><span class="needs-id"><a class="reference internal" href="#doc__mw_log_file_output_backend_design" title="doc__mw_log_file_output_backend_design">doc__mw_log_file_output_backend_design</a></span></span></div>
+</div>
+</td>
+<td class="footer" colspan="2"><div class="needs_footer line-block">
+<div class="line"><span><span class="needs_type_name"><span class="needs_data">Generic Document</span></span></span></div>
+</div>
+</td>
+<td class="footer_right" colspan="2"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">FileOutputBackend</span></code> implements <code class="docutils literal notranslate"><span class="pre">mw::log::detail::Backend</span></code>. It is responsible for
+providing buffers by means of <code class="docutils literal notranslate"><span class="pre">ReserveSlot()</span></code> call and writing data to the file
+descriptor passed to its constructor when the buffer is returned by the user by
+means of calling <code class="docutils literal notranslate"><span class="pre">FlushSlot()</span></code>. It assumes non-blocking calls and implements
+measures to store and manage buffers till all the data is pushed out in
+subsequent calls. Logs are stored in a circular buffer in the case when the
+current <code class="docutils literal notranslate"><span class="pre">LogRecord</span></code> is not completely flushed due to the file descriptor not
+accepting all the data. The rest of the data is to be pushed in subsequent calls
+to <code class="docutils literal notranslate"><span class="pre">ReserveSlot()</span></code> and <code class="docutils literal notranslate"><span class="pre">FlushSlot()</span></code>, which both start by trying to flush the
+pending data, looping over a circular buffer to reduce the queue of unprocessed
+logs in the order provided by the caller. Whenever each <code class="docutils literal notranslate"><span class="pre">LogRecord</span></code> is flushed
+completely, the buffer is released to the allocator by <code class="docutils literal notranslate"><span class="pre">ReleaseSlot()</span></code>.
 In case of depletion of a fixed number of buffers, none is returned to the
 caller rather than overwriting old ones.
 The zero-copy approach was used inside the backend design. Circular buffers
@@ -585,25 +630,31 @@ buffers.
 The zero-copy principle does not hold for the data provided at a level of and
 above Recorder.
 Configuration of the backend is done through resources passed down in
-constructor arguments consisting of slot allocator and circular buffer.</p>
+constructor arguments consisting of the message builder, the file descriptor,
+the slot allocator and the OSAL <code class="docutils literal notranslate"><span class="pre">Fcntl</span></code> and <code class="docutils literal notranslate"><span class="pre">Unistd</span></code> objects. The constructor
+sets the file descriptor to non-blocking and close-on-exec. The file is opened by
+<code class="docutils literal notranslate"><span class="pre">FileRecorderFactory</span></code>, which also creates the <code class="docutils literal notranslate"><span class="pre">DltMessageBuilder</span></code>.</p>
 <p>Design decision has been made to make backend independent of loosely coupled
 to details of data it processes which is presented by <code class="docutils literal notranslate"><span class="pre">LogRecord</span></code> type. To do
-so object providing <code class="docutils literal notranslate"><span class="pre">IMessageBuilder</span></code> interface is passed down by Recorder to
-allow access data in polymorphic way. This interface makes it possible to access
-set of sequential data buffers in order they should be serialized into a file
-or onto the console.
-<code class="docutils literal notranslate"><span class="pre">MessageBuilder</span></code> is responsible for serving data in correct order of flushing
-into file or console and stores some of common parts of the header.</p>
-<img alt="MW_LOG_FILE_BACKEND" src="https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/eclipse-score/logging/refs/heads/main/score/mw/log/design/backend/mw_log_file_backend.puml">
+so object providing <code class="docutils literal notranslate"><span class="pre">IMessageBuilder</span></code> interface is passed down by the recorder
+factory to allow access data in polymorphic way. This interface makes it possible
+to access set of sequential data buffers in order they should be serialized into
+a file or onto the console.
+<code class="docutils literal notranslate"><span class="pre">DltMessageBuilder</span></code> (file) and <code class="docutils literal notranslate"><span class="pre">TextMessageBuilder</span></code> (console) implement
+<code class="docutils literal notranslate"><span class="pre">IMessageBuilder</span></code>. They are responsible for serving data in correct order of
+flushing and store some of common parts of the header.</p>
+<p class="plantuml">
+<object data="../../../../../_images/plantuml-386073bacd2c023bc685fc2df675f9b63ac10576.svg" type="image/svg+xml" style="width:3263px;height:1911px;background:#FFFFFF;"></object></p>
 <p><code class="docutils literal notranslate"><span class="pre">SlotDrainer</span></code> is responsible for storing and disposal of already serialized
 data. First data gets inserted into circular buffer. After that step program
 flow enters a loop that iterates over available slots in ring buffer and then
-by means of <code class="docutils literal notranslate"><span class="pre">NonBlockingWriter</span></code> iterates over all spans of each message.</p>
-<img alt="SlotDrainerSequenceDesign" src="https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/eclipse-score/baselibs/refs/heads/main/score/mw/log/design/slot_drainer_sequence_design.puml">
-<p>Flush procedure exits whenever all available data is written to the file or
+by means of <code class="docutils literal notranslate"><span class="pre">NonBlockingWriter</span></code> iterates over all spans of each message.
+A flush first continues to write the pending data of the current message, then
+releases its slot and loads the next message.</p>
+<p>Flush procedure exits whenever all available data is written to the file, the
 writing procedure would block i.e. write operation reports that number of bytes
-written is less then requested.</p>
-<img alt="SlotDrainerActionDiagram" src="https://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/eclipse-score/baselibs/refs/heads/main/score/mw/log/design/slot_drainer_action_diagram_design.puml">
+written is less then requested, or the number of slots processed in one cycle
+(<code class="docutils literal notranslate"><span class="pre">limit_slots_in_one_cycle</span></code>, default 32) is exceeded.</p>
 </section>
 
 
@@ -622,15 +673,15 @@ written is less then requested.</p>
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Detailed Design</p>
+        <p class="prev-next-title">mw::log Backend Detailed Design</p>
       </div>
     </a>
     <a class="right-next"
-       href="syslog_backend.html"
+       href="datarouter_backend/index.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">SyslogBackend</p>
+        <p class="prev-next-title">Safe Datarouter Backend</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

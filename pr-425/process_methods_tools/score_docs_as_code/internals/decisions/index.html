@@ -566,115 +566,163 @@
 </tr>
 </thead>
 <tbody>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/DR-002-arch.html#dec_rec__arch__library_delivery_model">dec_rec__arch__library_delivery_model</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/ai/DR-001-ai.html#dec_rec__ai__ai_packaging_tooling">dec_rec__ai__ai_packaging_tooling</a></p></td>
+<td class="needs_context"><p>AI</p></td>
+<td class="needs_decision"><p>APM is the primary AI agent context packaging tool; Lola is the fallback; OKIT is not recommended</p></td>
+<td class="needs_consequences"><p></p></td>
+<td class="needs_status"><p>accepted</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/architecture/DR-009-arch.html#dec_rec__arch__introduce_dds_communication">dec_rec__arch__introduce_dds_communication</a></p></td>
+<td class="needs_context"><p>S-CORE lacks a common way for mw::com applications and services to use DDS data-centric communication or interoperate with native DDS systems.</p></td>
+<td class="needs_decision"><p>Add DDS communication through a DDS binding beneath the mw::com front end and a deployable DDS Gateway for bridging existing mw::com services to DDS domains.</p></td>
+<td class="needs_consequences"><p></p></td>
+<td class="needs_status"><p>accepted</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/architecture/DR-002-arch.html#dec_rec__arch__library_delivery_model">dec_rec__arch__library_delivery_model</a></p></td>
 <td class="needs_context"><p>Architecture</p></td>
 <td class="needs_decision"><p>Opt-in per module — static by default, dynamic where justified</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/DR-001-arch.html#dec_rec__arch__rust_safety_critical">dec_rec__arch__rust_safety_critical</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/architecture/DR-003-arch.html#dec_rec__arch__public_header_layout">dec_rec__arch__public_header_layout</a></p></td>
+<td class="needs_context"><p>Architecture</p></td>
+<td class="needs_decision"><p>Bazel-native flat layout — headers next to sources with full project-prefixed include paths; non-public headers isolated in an impl/ subpackage with restricted Bazel visibility</p></td>
+<td class="needs_consequences"><p></p></td>
+<td class="needs_status"><p>proposed</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/architecture/DR-001-arch.html#dec_rec__arch__rust_safety_critical">dec_rec__arch__rust_safety_critical</a></p></td>
 <td class="needs_context"><p>Architecture</p></td>
 <td class="needs_decision"><p>Rust is ready for use in ASIL-B safety-critical components</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="001-test-results-in-workflow.html#dec_rec__dac__001_test_results_in_workflows">dec_rec__dac__001_test_results_in_workflows</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="001-test-results-in-workflow.html#dec_rec__dac__001_test_results_in_workflows">dec_rec__dac__001_test_results_in_workflows</a></p></td>
 <td class="needs_context"><p>Need to embed test results into docs, but tests are slow.</p></td>
 <td class="needs_decision"><p>Run quick docs checks and tests in parallel, then full docs generation sequentially.</p></td>
 <td class="needs_consequences"><p>implementation effort</p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/DR-006-infra.html#dec_rec__infra__clippy_rules_lint">dec_rec__infra__clippy_rules_lint</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/infrastructure/DR-006-infra.html#dec_rec__infra__clippy_rules_lint">dec_rec__infra__clippy_rules_lint</a></p></td>
 <td class="needs_context"><p>Infrastructure</p></td>
 <td class="needs_decision"><p>Use rules_lint for Clippy in S-CORE modules</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/DR-007-infra.html#dec_rec__infra__dependency_docs_as_code">dec_rec__infra__dependency_docs_as_code</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/infrastructure/DR-007-infra.html#dec_rec__infra__dependency_docs_as_code">dec_rec__infra__dependency_docs_as_code</a></p></td>
 <td class="needs_context"><p>Infrastructure</p></td>
 <td class="needs_decision"><p>Option 3</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/DR-001-infra.html#dec_rec__infra__dev_tools">dec_rec__infra__dev_tools</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/infrastructure/DR-001-infra.html#dec_rec__infra__dev_tools">dec_rec__infra__dev_tools</a></p></td>
 <td class="needs_context"><p>Infrastructure</p></td>
 <td class="needs_decision"><p>Devcontainer is the primary distribution for all tools</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/DR-003-infra.html#dec_rec__infra__devcontainer">dec_rec__infra__devcontainer</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/infrastructure/DR-003-infra.html#dec_rec__infra__devcontainer">dec_rec__infra__devcontainer</a></p></td>
 <td class="needs_context"><p>Infrastructure</p></td>
 <td class="needs_decision"><p>Hybrid Approach with Devcontainer Features</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/DR-008-infra.html#dec_rec__infra__docs_src_dir">dec_rec__infra__docs_src_dir</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/infrastructure/DR-008-infra.html#dec_rec__infra__docs_src_dir">dec_rec__infra__docs_src_dir</a></p></td>
 <td class="needs_context"><p>Infrastructure</p></td>
 <td class="needs_decision"><p>Option M because of slight IDE usability edge over Option B</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/DR-001-infra-extension.html#dec_rec__infra__execution_contract">dec_rec__infra__execution_contract</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/infrastructure/DR-001-infra-extension.html#dec_rec__infra__execution_contract">dec_rec__infra__execution_contract</a></p></td>
 <td class="needs_context"><p>Infrastructure</p></td>
 <td class="needs_decision"><p>Adopt a layered execution contract</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/DR-002-infra.html#dec_rec__infra__int_testing">dec_rec__infra__int_testing</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/infrastructure/DR-002-infra.html#dec_rec__infra__int_testing">dec_rec__infra__int_testing</a></p></td>
 <td class="needs_context"><p>Infrastructure</p></td>
 <td class="needs_decision"><p>two testing layers</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/DR-004-infra.html#dec_rec__infra__traceable_docs">dec_rec__infra__traceable_docs</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/infrastructure/DR-004-infra.html#dec_rec__infra__traceable_docs">dec_rec__infra__traceable_docs</a></p></td>
 <td class="needs_context"><p>Infrastructure</p></td>
 <td class="needs_decision"><p>Single documentation build</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/DR-008-int.html#dec_rec__int__scope_reference_integration">dec_rec__int__scope_reference_integration</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/integration/DR-008-int.html#dec_rec__int__scope_reference_integration">dec_rec__int__scope_reference_integration</a></p></td>
 <td class="needs_context"><p>Integration</p></td>
 <td class="needs_decision"><p>Option 4</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_logging/features/logging/architecture/DR-002-dlt-network-transport.html#dec_rec__logging__dlt_transport_evolution">dec_rec__logging__dlt_transport_evolution</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_lifecycle/features/lifecycle/architecture/design_decisions.html#dec_rec__lifecycle__flatbuffer_config">dec_rec__lifecycle__flatbuffer_config</a></p></td>
+<td class="needs_context"><p>Architecture</p></td>
+<td class="needs_decision"><p>The Launch Manager uses binary configuration format to reduce startup time</p></td>
+<td class="needs_consequences"><p>Fast configuration loading</p></td>
+<td class="needs_status"><p>accepted</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_lifecycle/features/lifecycle/architecture/design_decisions.html#dec_rec__lifecycle__in_process_health_monitor">dec_rec__lifecycle__in_process_health_monitor</a></p></td>
+<td class="needs_context"><p>Architecture</p></td>
+<td class="needs_decision"><p>The Health Monitor is realized as a library linked into the monitored application.</p></td>
+<td class="needs_consequences"><p>Inter process communication is only required for the alive monitoring towards the Launch Manager and the configuration becomes simpler, at the cost of a harder safety argumentation.</p></td>
+<td class="needs_status"><p>accepted</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_lifecycle/features/lifecycle/architecture/design_decisions.html#dec_rec__lifecycle__lm_alive_polling">dec_rec__lifecycle__lm_alive_polling</a></p></td>
+<td class="needs_context"><p>Architecture</p></td>
+<td class="needs_decision"><p>The Launch Manager evaluates alive notifications periodically rather than as they arrive</p></td>
+<td class="needs_consequences"><p>Reduced CPU load, with failure detection delayed by up to one polling cycle</p></td>
+<td class="needs_status"><p>accepted</p></td>
+</tr>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_lifecycle/features/lifecycle/architecture/design_decisions.html#dec_rec__lifecycle__thread_pool_process">dec_rec__lifecycle__thread_pool_process</a></p></td>
+<td class="needs_context"><p>Architecture</p></td>
+<td class="needs_decision"><p>The Launch Manager uses a configurable thread pool to start and stop processes concurrently</p></td>
+<td class="needs_consequences"><p>Process lifecycle operations are organized around a configurable thread pool</p></td>
+<td class="needs_status"><p>accepted</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_logging/features/logging/architecture/DR-002-dlt-network-transport.html#dec_rec__logging__dlt_transport_evolution">dec_rec__logging__dlt_transport_evolution</a></p></td>
 <td class="needs_context"><p>See below.</p></td>
 <td class="needs_decision"><p>TBA</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>proposed</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_logging/features/logging/architecture/DR-001-logging.html#dec_rec__logging__explicit_init">dec_rec__logging__explicit_init</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../../modules/score_logging/features/logging/architecture/DR-001-logging.html#dec_rec__logging__explicit_init">dec_rec__logging__explicit_init</a></p></td>
 <td class="needs_context"><p>See below.</p></td>
 <td class="needs_decision"><p>TBA</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>proposed</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/DR-001-proc.html#dec_rec__platform__feature_delivery">dec_rec__platform__feature_delivery</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/process/DR-001-proc.html#dec_rec__platform__feature_delivery">dec_rec__platform__feature_delivery</a></p></td>
 <td class="needs_context"><p>Feature artifacts are bound to the S-CORE platform repository and cannot be delivered independently of the platform release. The previous idea of moving all artifacts into the SW-Module repository leads to cyclic dependencies.</p></td>
 <td class="needs_decision"><p>Feature artifacts are split: feature requirements and platform architecture remain in the S-CORE repository. Feature architecture and component artifacts are moved to the SW-Module repository (feature repository). The dependency direction is unambiguous: SW-Module repositories depend on the S-CORE repository, not the other way around.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/DR-002-proc.html#dec_rec__proc__fep_process">dec_rec__proc__fep_process</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/process/DR-003-proc.html#dec_rec__platform__module_folder_structure">dec_rec__platform__module_folder_structure</a></p></td>
+<td class="needs_context"><p>Processes</p></td>
+<td class="needs_decision"><p>Alternative C</p></td>
+<td class="needs_consequences"><p></p></td>
+<td class="needs_status"><p>accepted</p></td>
+</tr>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/process/DR-002-proc.html#dec_rec__proc__fep_process">dec_rec__proc__fep_process</a></p></td>
 <td class="needs_context"><p>Informal feature request handling no longer scales: proposals are not differentiated by importance, the Architecture Community has an unbounded review obligation, and cross-Feature-Team alignment has no defined governance path.</p></td>
 <td class="needs_decision"><p>Adopt a FEP process requiring a mandatory Shepherd and a binding 10-day Final Comment Period for platform-level and cross-Feature-Team decisions, while Feature Teams retain full authority within their own domain.</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/DR-001-strat.html#dec_rec__strat__consistent_stack_vs_reference">dec_rec__strat__consistent_stack_vs_reference</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/strategy/DR-001-strat.html#dec_rec__strat__consistent_stack_vs_reference">dec_rec__strat__consistent_stack_vs_reference</a></p></td>
 <td class="needs_context"><p>Strategy</p></td>
 <td class="needs_decision"><p>S-CORE as consistent stack</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/DR-002-strat.html#dec_rec__strat__eclipse_project_structure">dec_rec__strat__eclipse_project_structure</a></p></td>
+<tr class="need row-odd"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/strategy/DR-002-strat.html#dec_rec__strat__eclipse_project_structure">dec_rec__strat__eclipse_project_structure</a></p></td>
 <td class="needs_context"><p>Strategy</p></td>
 <td class="needs_decision"><p>Option 1</p></td>
 <td class="needs_consequences"><p></p></td>
 <td class="needs_status"><p>accepted</p></td>
 </tr>
-<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/DR-003-strat.html#dec_rec__strat__module_maturity_levels">dec_rec__strat__module_maturity_levels</a></p></td>
+<tr class="need row-even"><td class="needs_id"><p><a class="reference internal" href="../../../score_platform/design_decisions/strategy/DR-003-strat.html#dec_rec__strat__module_maturity_levels">dec_rec__strat__module_maturity_levels</a></p></td>
 <td class="needs_context"><p>Strategy</p></td>
 <td class="needs_decision"><p>Classify every module into one of three maturity levels — Release, Experimental, or Preview — based on requirement coverage and S-CORE process artifact completeness.</p></td>
 <td class="needs_consequences"><p></p></td>

@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>os Component Architecture &#8212; REF_INT  documentation</title>
+    <title>OS Component Architecture &#8212; REF_INT  documentation</title>
   
   
   
@@ -464,7 +464,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../module/index.html">Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../verification_report/module_verification_report.html">Verification Report</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../../index.html">Components</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="../../abi_compatible_data_types/docs/index.html">ABI Compatible Data Types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../bitmanipulation/index.html">bitmanipulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../concurrency/index.html">concurrency</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../containers/index.html">containers</a></li>
@@ -479,7 +478,7 @@
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="../index.html">os</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="../requirements/index.html">Requirements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../requirements/chklst_req_inspection.html">Requirement Inspection Checklist</a></li>
-<li class="toctree-l4 current active"><a aria-current="page" class="current reference internal" href="#">os Component Architecture</a></li>
+<li class="toctree-l4 current active"><a aria-current="page" class="current reference internal" href="#">OS Component Architecture</a></li>
 <li class="toctree-l4"><a class="reference internal" href="chklst_arc_inspection.html">Architecture Inspection Checklist</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../safety_analysis/fmea.html">FMEA (Failure Modes and Effects Analysis)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../safety_analysis/dfa.html">DFA (Dependent Failure Analysis)</a></li>
@@ -487,7 +486,10 @@
 </ul>
 </details></li>
 <li class="toctree-l3"><a class="reference internal" href="../../result/index.html">result</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../scope_exit/index.html">Scope Exit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../shared_layout/index.html">Cross-Language Shared-Layout Data Types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../static_reflection_with_serialization/index.html">static_reflection_with_serialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../string_manipulation/index.html">String Manipulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../utils/index.html">utils</a></li>
 </ul>
 </details></li>
@@ -495,6 +497,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../score_persistency/index.html">Persistency Documentation</a></li>
+
 <li class="toctree-l1"><a class="reference internal" href="../../../../../score_kyron/index.html">Kyron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../score_lifecycle/index.html">Lifecycle Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../score_logging/index.html">Logging</a></li>
@@ -551,7 +554,7 @@
     
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">os</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">os Component Architecture</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">OS Component Architecture</span></li>
   </ul>
 </nav>
 </div>
@@ -569,8 +572,8 @@
                 <article class="bd-article">
                   
   <section id="os-component-architecture">
-<h1>os Component Architecture<a class="headerlink" href="#os-component-architecture" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-3b610cdd">
+<h1>OS Component Architecture<a class="headerlink" href="#os-component-architecture" title="Link to this heading">#</a></h1>
+<div class="need_container docutils container" id="SNCB-0f3ff2e1">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__os_architecture">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -589,7 +592,7 @@
 </td>
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
-<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+<div class="line"><span><span><div class="line"><span class="needs_version"><span class="needs_label">version: </span>2</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">realizes: <span class="realizes"><span><a class="reference internal" href="../../../../../../process_methods_tools/score_process_description/process_areas/architecture_design/architecture_workproducts.html#wp__component_arch" title="doc__os_architecture">wp__component_arch</a></span></span></div>
 </span></div>
@@ -619,7 +622,7 @@
 </section>
 <section id="static-architecture">
 <h2>Static Architecture<a class="headerlink" href="#static-architecture" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-cf70d864">
+<div class="need_container docutils container" id="SNCB-12e0b2ab">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp table" id="comp__baselibs_os">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -646,13 +649,12 @@
 <div class="line">satisfies: <span class="satisfied_by"><span><a class="reference internal" href="../requirements/index.html#comp_req__os__env_get" title="comp__baselibs_os">comp_req__os__env_get</a>, <a class="reference internal" href="../requirements/index.html#comp_req__os__env_set" title="comp__baselibs_os">comp_req__os__env_set</a>, <a class="reference internal" href="../requirements/index.html#comp_req__os__env_unset" title="comp__baselibs_os">comp_req__os__env_unset</a></span></span></div>
 <div class="line">included by: <span class="includes"><span><a class="reference internal" href="../../../../module/index.html#mod__baselibs" title="comp__baselibs_os">mod__baselibs</a>, <a class="reference internal" href="../../../../module/index.html#mod_view_sta__baselibs__baselibs" title="comp__baselibs_os">mod_view_sta__baselibs__baselibs</a></span></span></div>
 </span></div>
+<div class="score-coverage line"><span class="needs_label">coverage: </span><span class="needs_data">lines no data · branches no data · files 0/0</span></div>
 </div>
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml" id="needarch-modules/score_baselibs/baselibs/components/os/architecture/index-0">
-<object data="../../../../../../_images/plantuml-e0addc96f3710b960ea811d2d1fa27439da8c99d.svg" type="image/svg+xml" style="width:72px;height:59px;background:#FFFFFF;"></object></p>
-</td>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
 <div class="line"><span><span class="needs-id"><a class="reference internal" href="#comp__baselibs_os" title="comp__baselibs_os">comp__baselibs_os</a></span></span></div>
@@ -668,7 +670,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-34fdc5d3">
+<div class="need_container docutils container" id="SNCB-54b079f0">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_arc_sta table" id="comp_arc_sta__baselibs__os">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -696,7 +698,7 @@
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml" id="needarch-modules/score_baselibs/baselibs/components/os/architecture/index-1">
+<tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml" id="needarch-modules/score_baselibs/baselibs/components/os/architecture/index-0">
 <object data="../../../../../../_images/plantuml-e0addc96f3710b960ea811d2d1fa27439da8c99d.svg" type="image/svg+xml" style="width:72px;height:59px;background:#FFFFFF;"></object></p>
 </td>
 </tr>
@@ -714,6 +716,10 @@
 </table>
 </div>
 </div>
+</section>
+<section id="dynamic-architecture">
+<h2>Dynamic Architecture<a class="headerlink" href="#dynamic-architecture" title="Link to this heading">#</a></h2>
+<p>No need for sequence diagram. Simple caller callee flow.</p>
 </section>
 <section id="interfaces">
 <h2>Interfaces<a class="headerlink" href="#interfaces" title="Link to this heading">#</a></h2>
@@ -769,6 +775,7 @@
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-description">Overview/Description</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#static-architecture">Static Architecture</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dynamic-architecture">Dynamic Architecture</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interfaces">Interfaces</a></li>
 </ul>
   </nav></div>

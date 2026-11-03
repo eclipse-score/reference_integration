@@ -502,6 +502,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../trainings/index.html">Trainings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../glossary/index.html">Glossary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../release_notes/index.html">Release notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../process_extensions/index.html">AI-Supported Process Execution</a></li>
 </ul>
 </details></li>
 </ul>
@@ -575,7 +576,7 @@
                   
   <section id="concept-description">
 <h1>Concept Description<a class="headerlink" href="#concept-description" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-e84edea3">
+<div class="need_container docutils container" id="SNCB-7eb1a6b5">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_doc_concept table" id="doc_concept__req_process">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -760,7 +761,7 @@ i.e. the assumption on what content is needed, which shall be matched by the use
 <p>The required attributes for the requirements are defined in this subchapter. On the top level we can distinguish between attributes which need to be filled manually and attributes which are generated during the <em>docs build</em>.</p>
 <p>Following attributes need to be filled manually for each requirement:</p>
 <div class="pst-scrollable-table-container"><table class="table" id="id5">
-<caption><span class="caption-number">Table 278 </span><span class="caption-text">Manual Attributes</span><a class="headerlink" href="#id5" title="Link to this table">#</a></caption>
+<caption><span class="caption-number">Table 303 </span><span class="caption-text">Manual Attributes</span><a class="headerlink" href="#id5" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 15.0%" />
 <col style="width: 85.0%" />
@@ -784,7 +785,7 @@ i.e. the assumption on what content is needed, which shall be matched by the use
 <td><p>In this attribute the content for the requirement will be specified. Please be aware that a note in a requirement is not part of the requirement itself. This means that notes should only be used to give additional explanation or context to the requirement.</p></td>
 </tr>
 <tr class="row-even"><td><p>Version</p></td>
-<td><p>Version of the requirement adapted with each significat change, see <a class="reference internal" href="#significant-requirement-changes"><span class="std std-ref">Versioning on Significant Changes</span></a>.</p></td>
+<td><p>Version of the requirement adapted with each significant change, see <a class="reference internal" href="#significant-requirement-changes"><span class="std std-ref">Versioning on Significant Changes</span></a>.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Rationale / Linkage</p></td>
 <td><p>In either of those attributes the reasoning for the requirement is included.
@@ -813,7 +814,7 @@ For any other requirement the reasoning can be deduced from the top level requir
 </div>
 <p>Following attributes are automatically generated:</p>
 <div class="pst-scrollable-table-container"><table class="table" id="id6">
-<caption><span class="caption-number">Table 279 </span><span class="caption-text">Automated Attributes</span><a class="headerlink" href="#id6" title="Link to this table">#</a></caption>
+<caption><span class="caption-number">Table 304 </span><span class="caption-text">Automated Attributes</span><a class="headerlink" href="#id6" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 15.0%" />
 <col style="width: 70.0%" />
@@ -850,10 +851,10 @@ For any other requirement the reasoning can be deduced from the top level requir
 <p>For the requirements the version management is basically provided by version management tooling (e.g. git history). However it needs to be identified if the content of a requirement changed. So this concept aims only at identifying a significant change in the attributes of a requirement.</p>
 <section id="versioning-on-significant-changes">
 <span id="significant-requirement-changes"></span><h4>Versioning on Significant Changes<a class="headerlink" href="#versioning-on-significant-changes" title="Link to this heading">#</a></h4>
-<p>Only significant changes to the attributes of a requirement shall result in a version change,
-generally this is everything which may affect the content of the child requirements:</p>
+<p>Only significant changes to the attributes of a requirement (or AoU) shall result in a version change,
+generally this is everything which may affect the content of the child requirements or other linked work products like the architecture:</p>
 <div class="pst-scrollable-table-container"><table class="table" id="id7">
-<caption><span class="caption-number">Table 280 </span><span class="caption-text">Significant Attributes</span><a class="headerlink" href="#id7" title="Link to this table">#</a></caption>
+<caption><span class="caption-number">Table 305 </span><span class="caption-text">Significant Attributes</span><a class="headerlink" href="#id7" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 30.0%" />
 <col style="width: 35.0%" />
@@ -888,7 +889,7 @@ generally this is everything which may affect the content of the child requireme
 </section>
 <section id="linking-child-requirements-including-versions">
 <h4>Linking child requirements including versions<a class="headerlink" href="#linking-child-requirements-including-versions" title="Link to this heading">#</a></h4>
-<p>If a requirement is linked to a top level requirement also the version of the target requirement shall be part of the link. Upon docs build it shall be checked if the version contained in the link matches the <em>version</em> attribute of the requirement which is linked via <em>derived_from</em>.</p>
+<p>If a requirement is linked to a top level requirement also the version of the target requirement shall be part of the link. Upon docs build it is checked if the version contained in the link matches the <em>version</em> attribute of the requirement which is linked via <em>derived_from</em>.</p>
 <p>As this check is included in the docs build as a warning it can be guaranteed that a change of a parent requirement can only be merged if the derived child requirements are also updated accordingly.</p>
 </section>
 </section>

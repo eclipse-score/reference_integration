@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Key-Value-Storage (rust_kvs) Documentation &#8212; REF_INT  documentation</title>
+    <title>KVS Usage &#8212; REF_INT  documentation</title>
   
   
   
@@ -73,7 +73,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="Requirements" href="requirements/index.html" />
+    <link rel="next" title="KVS Requirements" href="requirements/index.html" />
     <link rel="prev" title="Implementation Inspection Checklist" href="detailed_design/chklst_impl_inspection.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
@@ -303,10 +303,6 @@
   
 
   
-    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
-      <span class="fa-solid fa-outdent"></span>
-    </button>
-  
 </div>
 
     </header>
@@ -461,12 +457,8 @@
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../score_baselibs/index.html">Base Libraries</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">Persistency Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../../features/persistency/index.html">Persistency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../module/index.html">Persistency Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../module/manuals/index.html">Manuals</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../module/release/release_note.html">Release Note</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../module/safety_mgt/index.html">Safety Management</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../module/security_mgt/index.html">Security Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../features/persistency/index.html">Persistency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../verification_report/module_verification_report.html">Verification Report</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">Component documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="index.html">KVS (Key Value Store)</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -475,19 +467,18 @@
 <li class="toctree-l4"><a class="reference internal" href="architecture/index.html">Architecture</a></li>
 <li class="toctree-l4"><a class="reference internal" href="detailed_design/index.html">Detailed Design</a></li>
 <li class="toctree-l4"><a class="reference internal" href="detailed_design/chklst_impl_inspection.html">Implementation Inspection Checklist</a></li>
-<li class="toctree-l4 current active"><a aria-current="page" class="current reference internal" href="#">Key-Value-Storage (rust_kvs) Documentation</a></li>
-<li class="toctree-l4"><a class="reference internal" href="requirements/index.html">Requirements</a></li>
-<li class="toctree-l4"><a class="reference internal" href="requirements/chklst_req_inspection.html">Requirement Inspection Checklist</a></li>
-<li class="toctree-l4"><a class="reference internal" href="requirements/statistics.html">Component Requirements Statistics</a></li>
-<li class="toctree-l4"><a class="reference internal" href="safety_analysis/aou_requirements.html">AoU Component Requirements KVS</a></li>
-<li class="toctree-l4"><a class="reference internal" href="safety_analysis/fmea.html">Safety Analysis: FMEA</a></li>
-<li class="toctree-l4"><a class="reference internal" href="safety_analysis/dfa.html">Dependent Failure Analysis</a></li>
+<li class="toctree-l4 current active"><a aria-current="page" class="current reference internal" href="#">KVS Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="requirements/index.html">KVS Requirements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="safety_analysis/aou_requirements.html">KVS Assumptions of Use</a></li>
+<li class="toctree-l4"><a class="reference internal" href="safety_analysis/fmea.html">KVS FMEA (Failure Modes and Effects Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="safety_analysis/dfa.html">KVS DFA (Dependent Failure Analysis)</a></li>
 </ul>
 </details></li>
 </ul>
 </details></li>
 </ul>
 </details></li>
+
 <li class="toctree-l1"><a class="reference internal" href="../../../score_kyron/index.html">Kyron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../score_lifecycle/index.html">Lifecycle Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../score_logging/index.html">Logging</a></li>
@@ -544,7 +535,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">KVS (Key Value Store)</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Key-Value-Storage (rust_kvs) Documentation</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">KVS Usage</span></li>
   </ul>
 </nav>
 </div>
@@ -561,93 +552,10 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="key-value-storage-rust-kvs-documentation">
-<h1>Key-Value-Storage (rust_kvs) Documentation<a class="headerlink" href="#key-value-storage-rust-kvs-documentation" title="Link to this heading">#</a></h1>
-<p>This documentation describes the <cite>rust_kvs</cite> crate, which provides a key-value storage implementation with JSON-like persistence using Rust.</p>
-<section id="summary">
-<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
-<p><strong>Crate:</strong> <cite>rust_kvs</cite></p>
-<p><strong>Purpose:</strong> Key-Value-Storage API and Implementation</p>
-<p><strong>Description:</strong>
-This crate provides a Key-Value-Store using TinyJSON to persist the data. It uses the Adler32 crate to validate stored data and depends only on the Rust standard library.</p>
-</section>
-<section id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
-<p>The key-value store is initialized with <cite>Kvs::open</cite> and can be flushed with <cite>Kvs::flush</cite>.</p>
-<p>All TinyJSON-supported datatypes are available:</p>
-<ul class="simple">
-<li><p><cite>Number</cite>: <cite>f64</cite></p></li>
-<li><p><cite>Boolean</cite>: <cite>bool</cite></p></li>
-<li><p><cite>String</cite>: <cite>String</cite></p></li>
-<li><p><cite>Null</cite>: <cite>()</cite></p></li>
-<li><p><cite>Array</cite>: <cite>Vec&lt;KvsValue&gt;</cite></p></li>
-<li><p><cite>Object</cite>: <cite>HashMap&lt;String, KvsValue&gt;</cite></p></li>
-</ul>
-<p>JSON arrays can hold mixed types.</p>
-<p>Usage Notes:</p>
-<ul class="simple">
-<li><p>Use <cite>Kvs::set_value(key, value)</cite> to write.</p></li>
-<li><p>Use <cite>Kvs::get_value::&lt;T&gt;(key)</cite> to read.</p></li>
-<li><p>If a key is missing, the store checks for a default and returns it.</p></li>
-<li><p>Defaults are not flushed unless explicitly written.</p></li>
-</ul>
-<p>To check for defaults:</p>
-<ul class="simple">
-<li><p><cite>Kvs::get_default_value</cite></p></li>
-<li><p><cite>Kvs::is_value_default</cite></p></li>
-</ul>
-</section>
-<section id="example">
-<h2>Example<a class="headerlink" href="#example" title="Link to this heading">#</a></h2>
-<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="k">use</span><span class="w"> </span><span class="n">rust_kvs</span><span class="p">::{</span><span class="n">ErrorCode</span><span class="p">,</span><span class="w"> </span><span class="n">InstanceId</span><span class="p">,</span><span class="w"> </span><span class="n">Kvs</span><span class="p">,</span><span class="w"> </span><span class="n">OpenNeedDefaults</span><span class="p">,</span><span class="w"> </span><span class="n">OpenNeedKvs</span><span class="p">,</span><span class="w"> </span><span class="n">KvsValue</span><span class="p">};</span>
-<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">collections</span><span class="p">::</span><span class="n">HashMap</span><span class="p">;</span>
-
-<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="p">(),</span><span class="w"> </span><span class="n">ErrorCode</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">kvs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Kvs</span><span class="p">::</span><span class="n">open</span><span class="p">(</span>
-<span class="w">        </span><span class="n">InstanceId</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
-<span class="w">        </span><span class="n">OpenNeedDefaults</span><span class="p">::</span><span class="n">Optional</span><span class="p">,</span>
-<span class="w">        </span><span class="n">OpenNeedKvs</span><span class="p">::</span><span class="n">Optional</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
-
-<span class="w">    </span><span class="n">kvs</span><span class="p">.</span><span class="n">set_value</span><span class="p">(</span><span class="s">"number"</span><span class="p">,</span><span class="w"> </span><span class="mf">123.0</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
-<span class="w">    </span><span class="n">kvs</span><span class="p">.</span><span class="n">set_value</span><span class="p">(</span><span class="s">"bool"</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
-<span class="w">    </span><span class="n">kvs</span><span class="p">.</span><span class="n">set_value</span><span class="p">(</span><span class="s">"string"</span><span class="p">,</span><span class="w"> </span><span class="s">"First"</span><span class="p">.</span><span class="n">to_string</span><span class="p">())</span><span class="o">?</span><span class="p">;</span>
-<span class="w">    </span><span class="n">kvs</span><span class="p">.</span><span class="n">set_value</span><span class="p">(</span><span class="s">"null"</span><span class="p">,</span><span class="w"> </span><span class="p">())</span><span class="o">?</span><span class="p">;</span>
-<span class="w">    </span><span class="n">kvs</span><span class="p">.</span><span class="n">set_value</span><span class="p">(</span>
-<span class="w">        </span><span class="s">"array"</span><span class="p">,</span>
-<span class="w">        </span><span class="fm">vec!</span><span class="p">[</span>
-<span class="w">            </span><span class="n">KvsValue</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="mf">456.0</span><span class="p">),</span>
-<span class="w">            </span><span class="kc">false</span><span class="p">.</span><span class="n">into</span><span class="p">(),</span>
-<span class="w">            </span><span class="s">"Second"</span><span class="p">.</span><span class="n">to_string</span><span class="p">().</span><span class="n">into</span><span class="p">(),</span>
-<span class="w">        </span><span class="p">],</span>
-<span class="w">    </span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
-<span class="w">    </span><span class="n">kvs</span><span class="p">.</span><span class="n">set_value</span><span class="p">(</span>
-<span class="w">        </span><span class="s">"object"</span><span class="p">,</span>
-<span class="w">        </span><span class="n">HashMap</span><span class="p">::</span><span class="n">from</span><span class="p">([</span>
-<span class="w">            </span><span class="p">(</span><span class="s">"sub-number"</span><span class="p">.</span><span class="n">into</span><span class="p">(),</span><span class="w"> </span><span class="n">KvsValue</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="mf">789.0</span><span class="p">)),</span>
-<span class="w">            </span><span class="p">(</span><span class="s">"sub-bool"</span><span class="p">.</span><span class="n">into</span><span class="p">(),</span><span class="w"> </span><span class="kc">true</span><span class="p">.</span><span class="n">into</span><span class="p">()),</span>
-<span class="w">            </span><span class="p">(</span><span class="s">"sub-string"</span><span class="p">.</span><span class="n">into</span><span class="p">(),</span><span class="w"> </span><span class="s">"Third"</span><span class="p">.</span><span class="n">to_string</span><span class="p">().</span><span class="n">into</span><span class="p">()),</span>
-<span class="w">            </span><span class="p">(</span><span class="s">"sub-null"</span><span class="p">.</span><span class="n">into</span><span class="p">(),</span><span class="w"> </span><span class="p">().</span><span class="n">into</span><span class="p">()),</span>
-<span class="w">            </span><span class="p">(</span>
-<span class="w">                </span><span class="s">"sub-array"</span><span class="p">.</span><span class="n">into</span><span class="p">(),</span>
-<span class="w">                </span><span class="n">KvsValue</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="fm">vec!</span><span class="p">[</span>
-<span class="w">                    </span><span class="n">KvsValue</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="mf">1246.0</span><span class="p">),</span>
-<span class="w">                    </span><span class="kc">false</span><span class="p">.</span><span class="n">into</span><span class="p">(),</span>
-<span class="w">                    </span><span class="s">"Fourth"</span><span class="p">.</span><span class="n">to_string</span><span class="p">().</span><span class="n">into</span><span class="p">(),</span>
-<span class="w">                </span><span class="p">]),</span>
-<span class="w">            </span><span class="p">),</span>
-<span class="w">        </span><span class="p">]),</span>
-<span class="w">    </span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
-
-<span class="w">    </span><span class="nb">Ok</span><span class="p">(())</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<ul class="simple">
-<li><p><a class="reference internal" href="../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__tooling" title="feat_req__persistency__tooling"><em class="xref need">Tooling (feat_req__persistency__tooling)</em></a></p></li>
-<li><p><a class="reference internal" href="../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__variant_management" title="feat_req__persistency__variant_management"><em class="xref need">Variant management support (feat_req__persistency__variant_management)</em></a></p></li>
-<li><p><a class="reference internal" href="../../../../process_methods_tools/score_platform/features/persistency/requirements/index.html#feat_req__persistency__fast_access" title="feat_req__persistency__fast_access"><em class="xref need">Random access time (feat_req__persistency__fast_access)</em></a></p></li>
-</ul>
-</section>
+  <section id="kvs-usage">
+<h1>KVS Usage<a class="headerlink" href="#kvs-usage" title="Link to this heading">#</a></h1>
+<p>The usage of the KVS component (C++ and Rust) is described in the module user manual, see
+<a class="reference internal" href="../../module/manuals/user_manual.html#persistency-user-manual"><span class="std std-ref">Persistency User Manual</span></a>.</p>
 </section>
 
 
@@ -674,7 +582,7 @@ This crate provides a Key-Value-Store using TinyJSON to persist the data. It use
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Requirements</p>
+        <p class="prev-next-title">KVS Requirements</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -684,26 +592,6 @@ This crate provides a Key-Value-Store using TinyJSON to persist the data. It use
             </div>
             
             
-              
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
-                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
-</ul>
-  </nav></div>
-
-</div></div>
               
             
           </div>

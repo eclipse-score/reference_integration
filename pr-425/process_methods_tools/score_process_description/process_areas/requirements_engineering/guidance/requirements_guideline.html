@@ -502,6 +502,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../trainings/index.html">Trainings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../glossary/index.html">Glossary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../release_notes/index.html">Release notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../process_extensions/index.html">AI-Supported Process Execution</a></li>
 </ul>
 </details></li>
 </ul>
@@ -578,7 +579,7 @@
                   
   <section id="guideline">
 <h1>Guideline<a class="headerlink" href="#guideline" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-eedaa44f">
+<div class="need_container docutils container" id="SNCB-f81473c8">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_guidl table" id="gd_guidl__req_engineering">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -629,7 +630,7 @@
 <h3>Templates<a class="headerlink" href="#templates" title="Link to this heading">#</a></h3>
 <p><em>Need</em> templates displaying the correct syntax and attribute definition are provided for each requirement type. For VScode, code snippets are included in the workspace settings which will provide in-place the definition of requirements including all mandatory attributes:</p>
 <div class="pst-scrollable-table-container"><table class="table" id="id4">
-<caption><span class="caption-number">Table 281 </span><span class="caption-text">Overview</span><a class="headerlink" href="#id4" title="Link to this table">#</a></caption>
+<caption><span class="caption-number">Table 306 </span><span class="caption-text">Overview</span><a class="headerlink" href="#id4" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 37.4%" />
 <col style="width: 37.4%" />
@@ -749,10 +750,13 @@
 <tr class="need row-even"><td class="needs_title"><p>Requirements linkage safety</p></td>
 <td class="needs_id"><p><a class="reference internal" href="requirements_process_reqs.html#gd_req__req_linkage_safety">gd_req__req_linkage_safety</a></p></td>
 </tr>
-<tr class="need row-odd"><td class="needs_title"><p>Requirement check: suspicious</p></td>
+<tr class="need row-odd"><td class="needs_title"><p>Requirements linkage security</p></td>
+<td class="needs_id"><p><a class="reference internal" href="requirements_process_reqs.html#gd_req__req_linkage_security">gd_req__req_linkage_security</a></p></td>
+</tr>
+<tr class="need row-even"><td class="needs_title"><p>Requirement check: suspicious</p></td>
 <td class="needs_id"><p><a class="reference internal" href="requirements_process_reqs.html#gd_req__req_suspicious">gd_req__req_suspicious</a></p></td>
 </tr>
-<tr class="need row-even"><td class="needs_title"><p>Requirements validity</p></td>
+<tr class="need row-odd"><td class="needs_title"><p>Requirements validity</p></td>
 <td class="needs_id"><p><a class="reference internal" href="requirements_process_reqs.html#gd_req__req_validity">gd_req__req_validity</a></p></td>
 </tr>
 </tbody>
@@ -765,7 +769,7 @@
 <span id="workflow-requirements"></span><h2>Workflow for Creating a Requirement<a class="headerlink" href="#workflow-for-creating-a-requirement" title="Link to this heading">#</a></h2>
 <p>This section describes in detail which steps need to be performed to create a requirement based on <a class="reference internal" href="../requirements_getstrt.html#requirements-workflow-fig"><span class="std std-ref">Requirements Workflow</span></a></p>
 <div class="pst-scrollable-table-container"><table class="table" id="id5">
-<caption><span class="caption-number">Table 282 </span><span class="caption-text">Workflow for creating a requirement</span><a class="headerlink" href="#id5" title="Link to this table">#</a></caption>
+<caption><span class="caption-number">Table 307 </span><span class="caption-text">Workflow for creating a requirement</span><a class="headerlink" href="#id5" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 10.0%" />
 <col style="width: 60.0%" />
@@ -884,7 +888,7 @@ or are defining general assumptions every user and/or every module in the platfo
 <a class="reference internal image-reference" href="../../../../../_images/aou_traceability.drawio.svg"><img alt="../../../../../_images/aou_traceability.drawio.svg" src="../../../../../_images/aou_traceability.drawio.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 64 </span><span class="caption-text">AoU Traceability</span><a class="headerlink" href="#aou-traceability" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 68 </span><span class="caption-text">AoU Traceability</span><a class="headerlink" href="#aou-traceability" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p><a class="reference internal" href="#aou-traceability"><span class="std std-ref">AoU Traceability</span></a> is an extension of the workproduct traceability to show the handling of AoU.
@@ -912,11 +916,15 @@ This could be the case when a function is already specified but it is decided to
 <p>A use case where the specification AND implementation of a new/modified feature is done
 already during the development time of an earlier milestone than the feature is planned
 can be realized by the feature flags (for new features) or by branching off.</p>
-<p>For the “only specification” use case, the following attributes can be used:
+<p>For the “only specification” use case, the following attributes are defined:
 - <a class="reference internal" href="requirements_process_reqs.html#gd_req__req_attr_valid_from" title="gd_req__req_attr_valid_from"><em class="xref need">Requirement attribute: vali... (gd_req__req_attr_valid_from)</em></a>
 - <a class="reference internal" href="requirements_process_reqs.html#gd_req__req_attr_valid_until" title="gd_req__req_attr_valid_until"><em class="xref need">Requirement attribute: vali... (gd_req__req_attr_valid_until)</em></a></p>
-<p>These attributes can be used for stakeholder and feature requirements, but not for
-the component requirements, as these are expected to be developed during small implementation cycles.</p>
+<p>These attributes are defined for stakeholder, feature and component requirements.
+Release version numbers are not synced between platform and modules, therefore for the validity
+attribute only the planned (future) and done platform release numbers are allowed.
+It is not recommended to use validity attribute for the component requirements,
+as these are expected to be developed based on feature requirements in sync and during
+small implementation cycles.</p>
 <p>If an existing requirement needs to be reworked for the new function it will be split in two.
 The requirement with the old specification will be valid_until the milestone before the
 new function is planned and the requirement with the new specification is valid_from the planned milestone.</p>
@@ -924,7 +932,7 @@ new function is planned and the requirement with the new specification is valid_
 </section>
 <section id="tailoring">
 <h2>Tailoring<a class="headerlink" href="#tailoring" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-d4f229a8">
+<div class="need_container docutils container" id="SNCB-08d8d0f7">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_guidl table" id="gd_guidl__req_tailored">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">

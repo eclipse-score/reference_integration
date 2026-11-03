@@ -73,7 +73,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
-    <link rel="next" title="Key-Value-Storage (rust_kvs) Documentation" href="../kvs.html" />
+    <link rel="next" title="KVS Usage" href="../kvs.html" />
     <link rel="prev" title="Detailed Design" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
@@ -461,12 +461,8 @@
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_baselibs/index.html">Base Libraries</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">Persistency Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../../../features/persistency/index.html">Persistency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../module/index.html">Persistency Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../module/manuals/index.html">Manuals</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../module/release/release_note.html">Release Note</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../module/safety_mgt/index.html">Safety Management</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../module/security_mgt/index.html">Security Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../features/persistency/index.html">Persistency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../verification_report/module_verification_report.html">Verification Report</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../../index.html">Component documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="../index.html">KVS (Key Value Store)</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -475,19 +471,18 @@
 <li class="toctree-l4"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
 <li class="toctree-l4"><a class="reference internal" href="index.html">Detailed Design</a></li>
 <li class="toctree-l4 current active"><a aria-current="page" class="current reference internal" href="#">Implementation Inspection Checklist</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../kvs.html">Key-Value-Storage (rust_kvs) Documentation</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../requirements/index.html">Requirements</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../requirements/chklst_req_inspection.html">Requirement Inspection Checklist</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../requirements/statistics.html">Component Requirements Statistics</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../safety_analysis/aou_requirements.html">AoU Component Requirements KVS</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../safety_analysis/fmea.html">Safety Analysis: FMEA</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../safety_analysis/dfa.html">Dependent Failure Analysis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../kvs.html">KVS Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../requirements/index.html">KVS Requirements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../safety_analysis/aou_requirements.html">KVS Assumptions of Use</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../safety_analysis/fmea.html">KVS FMEA (Failure Modes and Effects Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../safety_analysis/dfa.html">KVS DFA (Dependent Failure Analysis)</a></li>
 </ul>
 </details></li>
 </ul>
 </details></li>
 </ul>
 </details></li>
+
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_kyron/index.html">Kyron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_lifecycle/index.html">Lifecycle Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_logging/index.html">Logging</a></li>
@@ -561,7 +556,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <div class="need_container docutils container" id="SNCB-202be2f4">
+  <div class="need_container docutils container" id="SNCB-78f03c92">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__kvs_impl_inspection">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -629,7 +624,7 @@ by linking to C++ or Rust specific documentation.</p>
 In case of “no” an issue link to the issue tracking system has to be added in the last column (if not solved in the same issue).
 See also <a class="reference internal" href="../../../../../process_methods_tools/score_process_description/general_concepts/score_review_concept.html#doc_concept__wp_inspections" title="doc_concept__wp_inspections"><em class="xref need">Work product Inspections Co... (doc_concept__wp_inspections)</em></a> for further information about reviews in general and inspection in particular.</p>
 <div class="pst-scrollable-table-container"><table class="table" id="id1">
-<caption><span class="caption-number">Table 71 </span><span class="caption-text">Implementation Checklist</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
+<caption><span class="caption-number">Table 81 </span><span class="caption-text">Implementation Checklist</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
 <colgroup>
 <col style="width: 9.1%" />
 <col style="width: 27.3%" />
@@ -731,7 +726,7 @@ and that the respective traceability is established</p></td>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Key-Value-Storage (rust_kvs) Documentation</p>
+        <p class="prev-next-title">KVS Usage</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

@@ -461,6 +461,7 @@
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_baselibs/index.html">Base Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_persistency/index.html">Persistency Documentation</a></li>
+
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_kyron/index.html">Kyron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_lifecycle/index.html">Lifecycle Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../score_logging/index.html">Logging</a></li>
@@ -478,6 +479,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../time/index.html">Time</a></li>
 </ul>
 </details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../quality_pack.html">Quality Pack Targets</a></li>
 </ul>
 </details></li>
 </ul>
@@ -778,13 +780,9 @@ completes; carries the measured peer delay and associated timestamps.</p></li>
 </ul>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
 <object data="../../../../../_images/plantuml-3747f5424c0bd88603398b4dea50a4f02aa0aac3.svg" type="image/svg+xml" style="width:1642px;height:1491px;background:#FFFFFF;"></object></p>
-</div><div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Both PTP data callbacks (<code class="docutils literal notranslate"><span class="pre">TimeSlaveSyncData</span></code> and <code class="docutils literal notranslate"><span class="pre">PDelayMeasurementData</span></code>) are
-<strong>not yet delivered</strong>.  Calling <code class="docutils literal notranslate"><span class="pre">Subscribe&lt;...&gt;()</span></code> compiles and runs without error,
-but the registered callbacks will never be invoked.  Delivery will be wired from a
-dedicated background thread in a future change.</p>
-</div>
+</div><p>Callbacks are invoked asynchronously, not on the thread that registered them.  The callback
+implementation must be thread-safe and should return quickly.  A newly registered callback
+receives the next available data once; afterwards it is invoked only when that data changes.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"score/time/vehicle_time/src/vehicle_clock.h"</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">"score/time/ptp/src/time_slave_sync_data.h"</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">"score/time/ptp/src/pdelay_measurement_data.h"</span>
@@ -828,14 +826,7 @@ registration, and subsequently only when the flag set changes.  Rate deviation i
 excluded from the comparison.</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
 <object data="../../../../../_images/plantuml-1269b8f4883a191c3bd6d7b37111f7838df37dbf.svg" type="image/svg+xml" style="width:887px;height:964px;background:#FFFFFF;"></object></p>
-</div><div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">VehicleTimeStatus</span></code> callback is <strong>not yet delivered</strong>.  Calling
-<code class="docutils literal notranslate"><span class="pre">Subscribe&lt;VehicleTimeStatus&gt;()</span></code> compiles and runs without error, but the registered
-callback will never be invoked.  Delivery will be wired from a dedicated background
-thread in a future change.</p>
-</div>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"score/time/vehicle_time/src/vehicle_clock.h"</span>
+</div><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"score/time/vehicle_time/src/vehicle_clock.h"</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">MyService::WatchClockReadiness</span><span class="p">()</span>
 <span class="p">{</span>

@@ -464,7 +464,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../../module/index.html">Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../verification_report/module_verification_report.html">Verification Report</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../../../index.html">Components</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="../../../abi_compatible_data_types/docs/index.html">ABI Compatible Data Types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../bitmanipulation/index.html">bitmanipulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../concurrency/index.html">concurrency</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../containers/index.html">containers</a></li>
@@ -482,7 +481,10 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../mw_log/index.html">log_frontend</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../os/index.html">os</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../result/index.html">result</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../scope_exit/index.html">Scope Exit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../shared_layout/index.html">Cross-Language Shared-Layout Data Types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../static_reflection_with_serialization/index.html">static_reflection_with_serialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../string_manipulation/index.html">String Manipulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../utils/index.html">utils</a></li>
 </ul>
 </details></li>
@@ -490,6 +492,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../score_persistency/index.html">Persistency Documentation</a></li>
+
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../score_kyron/index.html">Kyron</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../score_lifecycle/index.html">Lifecycle Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../score_logging/index.html">Logging</a></li>
@@ -568,7 +571,7 @@
                   
   <section id="safecpp-component-architecture">
 <h1>Safecpp Component Architecture<a class="headerlink" href="#safecpp-component-architecture" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-1915dbc6">
+<div class="need_container docutils container" id="SNCB-941a974c">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__safecpp_architecture">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -588,7 +591,7 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">safecpp</span></span></span></div>
-<div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
+<div class="line"><span class="needs_version"><span class="needs_label">version: </span>2</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">realizes: <span class="realizes"><span><a class="reference internal" href="../../../../../../../process_methods_tools/score_process_description/process_areas/architecture_design/architecture_workproducts.html#wp__component_arch" title="doc__safecpp_architecture">wp__component_arch</a></span></span></div>
 </span></div>
@@ -614,11 +617,11 @@
 </div>
 <section id="overview-description">
 <h2>Overview/Description<a class="headerlink" href="#overview-description" title="Link to this heading">#</a></h2>
-<p>see <a class="reference internal" href="#doc__safecpp_architecture" title="doc__safecpp_architecture"><em class="xref need">Safecpp Architecture (doc__safecpp_architecture)</em></a></p>
+<p>see <a class="reference internal" href="../index.html#doc__safecpp" title="doc__safecpp"><em class="xref need">Safecpp Library (doc__safecpp)</em></a></p>
 </section>
 <section id="static-architecture">
 <h2>Static Architecture<a class="headerlink" href="#static-architecture" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-fabbdefc">
+<div class="need_container docutils container" id="SNCB-930c544a">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp table" id="comp__baselibs_safecpp">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -638,21 +641,22 @@
 </tr>
 <tr class="meta row-even"><td class="meta" colspan="3"><div class="needs_meta_left line-block">
 <div class="line"><span><span><div class="line"><span class="needs_tags"><span class="needs_label">tags: </span><span class="needs_data_container"><span class="needs_data">baselibs_safecpp</span><span class="needs_spacer">, </span><span class="needs_data">safecpp</span></span></span></div>
+<div class="line"><span class="needs_bazel_target"><span class="needs_label">bazel_target: </span><span class="needs_data">[&quot;&#64;&#64;score_baselibs+//score/language/safecpp/aborts_upon_exception:abortsuponexception&quot;,&quot;&#64;&#64;score_baselibs+//score/language/safecpp/safe_math:safe_math&quot;,&quot;&#64;&#64;score_baselibs+//score/language/safecpp/safe_atomics:try_atomic_add&quot;,&quot;&#64;&#64;score_baselibs+//score/language/safecpp/scoped_function:scope&quot;,&quot;&#64;&#64;score_baselibs+//score/language/safecpp/scoped_function:copyable_scoped_function&quot;,&quot;&#64;&#64;score_baselibs+//score/language/safecpp/scoped_function:move_only_scoped_function&quot;,&quot;&#64;&#64;score_baselibs+//score/language/safecpp/string_view:null_termination_check&quot;,&quot;&#64;&#64;score_baselibs+//score/language/safecpp/string_view:zstring_view&quot;]</span></span></div>
+<div class="line"><span class="needs_bazel_type"><span class="needs_label">bazel_type: </span><span class="needs_data">[&quot;cc_library&quot;,&quot;cc_library&quot;,&quot;cc_library&quot;,&quot;cc_library&quot;,&quot;cc_library&quot;,&quot;cc_library&quot;,&quot;cc_library&quot;,&quot;cc_library&quot;]</span></span></div>
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="../../../../../../../process_methods_tools/score_platform/features/baselibs/architecture/index.html#feat__baselibs" title="comp__baselibs_safecpp">feat__baselibs</a></span></span></div>
 <div class="line">has: <span class="belongs_to"><span><a class="reference internal" href="#comp_arc_sta__baselibs__safecpp" title="comp__baselibs_safecpp">comp_arc_sta__baselibs__safecpp</a></span></span></div>
-<div class="line">satisfies: <span class="satisfied_by"><span><a class="reference internal" href="../requirements/index.html#comp_req__safecpp__aborts_upon_exception" title="comp__baselibs_safecpp">comp_req__safecpp__aborts_upon_exception</a>, <a class="reference internal" href="../requirements/index.html#comp_req__safecpp__coverage_termination" title="comp__baselibs_safecpp">comp_req__safecpp__coverage_termination</a>, <a class="reference internal" href="../requirements/index.html#comp_req__safecpp__nullstring" title="comp__baselibs_safecpp">comp_req__safecpp__nullstring</a>, <a class="reference internal" href="../requirements/index.html#comp_req__safecpp__safe_atomic" title="comp__baselibs_safecpp">comp_req__safecpp__safe_atomic</a>, <a class="reference internal" href="../requirements/index.html#comp_req__safecpp__safe_math" title="comp__baselibs_safecpp">comp_req__safecpp__safe_math</a>, <a class="reference internal" href="../requirements/index.html#comp_req__safecpp__scoped_guards" title="comp__baselibs_safecpp">comp_req__safecpp__scoped_guards</a></span></span></div>
+<div class="line">satisfies: <span class="satisfied_by"><span><a class="reference internal" href="../requirements/index.html#comp_req__safecpp__aborts_upon_exception" title="comp__baselibs_safecpp">comp_req__safecpp__aborts_upon_exception</a>, <a class="reference internal" href="../requirements/index.html#comp_req__safecpp__coverage_termination" title="comp__baselibs_safecpp">comp_req__safecpp__coverage_termination</a>, <a class="reference internal" href="../requirements/index.html#comp_req__safecpp__nullstring" title="comp__baselibs_safecpp">comp_req__safecpp__nullstring</a>, <a class="reference internal" href="../requirements/index.html#comp_req__safecpp__safe_atomic" title="comp__baselibs_safecpp">comp_req__safecpp__safe_atomic</a>, <a class="reference internal" href="../requirements/index.html#comp_req__safecpp__safe_math" title="comp__baselibs_safecpp">comp_req__safecpp__safe_math</a></span></span></div>
 <div class="line">implements: <span class="implements"><span><a class="reference internal" href="../../../../../../../process_methods_tools/score_platform/features/baselibs/architecture/index.html#logic_arc_int__baselibs__aborts_upon_ex" title="comp__baselibs_safecpp">logic_arc_int__baselibs__aborts_upon_ex</a>, <a class="reference internal" href="../../../../../../../process_methods_tools/score_platform/features/baselibs/architecture/index.html#logic_arc_int__baselibs__coverage_termination" title="comp__baselibs_safecpp">logic_arc_int__baselibs__coverage_termination</a>, <a class="reference internal" href="../../../../../../../process_methods_tools/score_platform/features/baselibs/architecture/index.html#logic_arc_int__baselibs__safeatomics" title="comp__baselibs_safecpp">logic_arc_int__baselibs__safeatomics</a>, <a class="reference internal" href="../../../../../../../process_methods_tools/score_platform/features/baselibs/architecture/index.html#logic_arc_int__baselibs__safemath" title="comp__baselibs_safecpp">logic_arc_int__baselibs__safemath</a>, <a class="reference internal" href="../../../../../../../process_methods_tools/score_platform/features/baselibs/architecture/index.html#logic_arc_int__baselibs__scoped_function" title="comp__baselibs_safecpp">logic_arc_int__baselibs__scoped_function</a>, <a class="reference internal" href="../../../../../../../process_methods_tools/score_platform/features/baselibs/architecture/index.html#logic_arc_int__baselibs__string_view" title="comp__baselibs_safecpp">logic_arc_int__baselibs__string_view</a></span></span></div>
 <div class="line">included by: <span class="includes"><span><a class="reference internal" href="../../../../../module/index.html#mod__baselibs" title="comp__baselibs_safecpp">mod__baselibs</a>, <a class="reference internal" href="../../../../../module/index.html#mod_view_sta__baselibs__baselibs" title="comp__baselibs_safecpp">mod_view_sta__baselibs__baselibs</a></span></span></div>
 </span></div>
+<div class="score-coverage line"><span class="needs_label">coverage: </span><span class="needs_data">lines 99% · branches 91% · files 32/69</span></div>
 </div>
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml" id="needarch-modules/score_baselibs/baselibs/components/language/safecpp/architecture/index-0">
-<object data="../../../../../../../_images/plantuml-c876d9da722525030fe237b62c847bac1c075788.svg" type="image/svg+xml" style="width:1328px;height:388px;background:#FFFFFF;"></object></p>
-</td>
+<tr class="content row-odd"><td class="content" colspan="6"></td>
 </tr>
 <tr class="footer row-even"><td class="footer_left" colspan="2"><div class="needs_footer_left line-block">
 <div class="line"><span><span class="needs-id"><a class="reference internal" href="#comp__baselibs_safecpp" title="comp__baselibs_safecpp">comp__baselibs_safecpp</a></span></span></div>
@@ -668,7 +672,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-67c13634">
+<div class="need_container docutils container" id="SNCB-4ba65021">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_comp_arc_sta table" id="comp_arc_sta__baselibs__safecpp">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -691,13 +695,13 @@
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="#comp__baselibs_safecpp" title="comp_arc_sta__baselibs__safecpp">comp__baselibs_safecpp</a></span></span></div>
-<div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#comp_req__safecpp__aborts_upon_exception" title="comp_arc_sta__baselibs__safecpp">comp_req__safecpp__aborts_upon_exception</a>, <a class="reference internal" href="../requirements/index.html#comp_req__safecpp__coverage_termination" title="comp_arc_sta__baselibs__safecpp">comp_req__safecpp__coverage_termination</a>, <a class="reference internal" href="../requirements/index.html#comp_req__safecpp__nullstring" title="comp_arc_sta__baselibs__safecpp">comp_req__safecpp__nullstring</a>, <a class="reference internal" href="../requirements/index.html#comp_req__safecpp__safe_atomic" title="comp_arc_sta__baselibs__safecpp">comp_req__safecpp__safe_atomic</a>, <a class="reference internal" href="../requirements/index.html#comp_req__safecpp__safe_math" title="comp_arc_sta__baselibs__safecpp">comp_req__safecpp__safe_math</a>, <a class="reference internal" href="../requirements/index.html#comp_req__safecpp__scoped_guards" title="comp_arc_sta__baselibs__safecpp">comp_req__safecpp__scoped_guards</a></span></span></div>
+<div class="line">fulfils: <span class="fulfils"><span><a class="reference internal" href="../requirements/index.html#comp_req__safecpp__aborts_upon_exception" title="comp_arc_sta__baselibs__safecpp">comp_req__safecpp__aborts_upon_exception</a>, <a class="reference internal" href="../requirements/index.html#comp_req__safecpp__coverage_termination" title="comp_arc_sta__baselibs__safecpp">comp_req__safecpp__coverage_termination</a>, <a class="reference internal" href="../requirements/index.html#comp_req__safecpp__nullstring" title="comp_arc_sta__baselibs__safecpp">comp_req__safecpp__nullstring</a>, <a class="reference internal" href="../requirements/index.html#comp_req__safecpp__safe_atomic" title="comp_arc_sta__baselibs__safecpp">comp_req__safecpp__safe_atomic</a>, <a class="reference internal" href="../requirements/index.html#comp_req__safecpp__safe_math" title="comp_arc_sta__baselibs__safecpp">comp_req__safecpp__safe_math</a></span></span></div>
 </span></div>
 </div>
 </td>
 <td class="meta" colspan="3"></td>
 </tr>
-<tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml" id="needarch-modules/score_baselibs/baselibs/components/language/safecpp/architecture/index-1">
+<tr class="content row-odd"><td class="content" colspan="6"><p class="plantuml" id="needarch-modules/score_baselibs/baselibs/components/language/safecpp/architecture/index-0">
 <object data="../../../../../../../_images/plantuml-c876d9da722525030fe237b62c847bac1c075788.svg" type="image/svg+xml" style="width:1328px;height:388px;background:#FFFFFF;"></object></p>
 </td>
 </tr>
@@ -716,9 +720,13 @@
 </div>
 </div>
 </section>
+<section id="dynamic-architecture">
+<h2>Dynamic Architecture<a class="headerlink" href="#dynamic-architecture" title="Link to this heading">#</a></h2>
+<p>No need for sequence diagram. Simple caller callee flow.</p>
+</section>
 <section id="interfaces">
 <h2>Interfaces<a class="headerlink" href="#interfaces" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-1e9c125c">
+<div class="need_container docutils container" id="SNCB-20026e1e">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__safecpp__allocate_exception">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -762,7 +770,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-f6bd8294">
+<div class="need_container docutils container" id="SNCB-0a226091">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__safecpp__terminate_handler">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -806,7 +814,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-c56b325f">
+<div class="need_container docutils container" id="SNCB-bc5fdcda">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__safecpp__signal_handler">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -850,7 +858,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-a0af244d">
+<div class="need_container docutils container" id="SNCB-4f985b92">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__safecpp__safemath_add">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -894,7 +902,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-349094b9">
+<div class="need_container docutils container" id="SNCB-aa7623fa">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__safecpp__safemath_subtract">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -938,7 +946,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-cc684665">
+<div class="need_container docutils container" id="SNCB-52b1f6c4">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__safecpp__safemath_multiply">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -982,7 +990,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-42f757cc">
+<div class="need_container docutils container" id="SNCB-6b120f59">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__safecpp__safemath_divide">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1026,7 +1034,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-5b204589">
+<div class="need_container docutils container" id="SNCB-3c2f9a1c">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__safecpp__safemath_negate">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1070,7 +1078,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-5335f104">
+<div class="need_container docutils container" id="SNCB-fc319ce9">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__safecpp__safemath_abs">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1114,7 +1122,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-31651489">
+<div class="need_container docutils container" id="SNCB-7544d2f4">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__safecpp__safemath_cast">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1158,7 +1166,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-8fa9472f">
+<div class="need_container docutils container" id="SNCB-5b50c675">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__safecpp__safemath_less">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1202,7 +1210,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-eb511027">
+<div class="need_container docutils container" id="SNCB-06354449">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__safecpp__safemath_greater">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1246,7 +1254,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-679b92d3">
+<div class="need_container docutils container" id="SNCB-dea61c21">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__safecpp__safemath_equal">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1290,7 +1298,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-74dc9eb3">
+<div class="need_container docutils container" id="SNCB-a272eb3e">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__safecpp__safemath_notequal">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1334,7 +1342,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-dac51cac">
+<div class="need_container docutils container" id="SNCB-8ce431d3">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__safecpp__safemath_lessequal">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1378,7 +1386,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-4f3430a0">
+<div class="need_container docutils container" id="SNCB-f4342c93">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__safecpp__safemath_greatereq">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1422,7 +1430,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-282029eb">
+<div class="need_container docutils container" id="SNCB-c3bcaad6">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__safecpp__safeatomics_atomic">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1466,7 +1474,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-b4df8ad9">
+<div class="need_container docutils container" id="SNCB-d4097000">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__safecpp__scoped_function_mo">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1510,7 +1518,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-13052e0a">
+<div class="need_container docutils container" id="SNCB-9c11e03c">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__safecpp__scoped_function_co">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1554,7 +1562,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-92dfacc7">
+<div class="need_container docutils container" id="SNCB-171397b3">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__safecpp__scoped_function_ex">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1598,7 +1606,7 @@
 </table>
 </div>
 </div>
-<div class="need_container docutils container" id="SNCB-5761d3ae">
+<div class="need_container docutils container" id="SNCB-aacda5e1">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_logic_arc_int_op table" id="logic_arc_int_op__safecpp__string_view_null">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -1694,6 +1702,7 @@
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-description">Overview/Description</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#static-architecture">Static Architecture</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dynamic-architecture">Dynamic Architecture</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interfaces">Interfaces</a></li>
 </ul>
   </nav></div>
