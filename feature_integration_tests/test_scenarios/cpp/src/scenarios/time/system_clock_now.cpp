@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-#include "../../internals/time/clock_log.h"
+#include "tracing.hpp"
 
 #include "score/time/system_time/src/system_clock.h"
 
@@ -68,7 +68,9 @@ public:
                 "SystemClock::Now() reading is not within tolerance of the host system clock");
         }
 
-        time_log::log_info("system", std::make_pair(std::string{"value_ns"}, reading_ns));
+        TRACING_INFO("cpp_test_scenarios::scenarios::time",
+                     std::make_pair(std::string{"clock"}, std::string{"system"}),
+                     std::make_pair(std::string{"value_ns"}, reading_ns));
     }
 };
 

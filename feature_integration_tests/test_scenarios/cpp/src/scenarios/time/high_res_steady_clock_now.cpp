@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-#include "../../internals/time/clock_log.h"
+#include "tracing.hpp"
 
 #include "score/time/high_res_steady_time/src/high_res_steady_clock.h"
 
@@ -61,8 +61,10 @@ public:
                 "HighResSteadyClock::Now() is not monotonic: second reading precedes the first");
         }
 
-        time_log::log_info("high_res_steady", std::make_pair(std::string{"first_ns"}, first_ns),
-                           std::make_pair(std::string{"second_ns"}, second_ns));
+        TRACING_INFO("cpp_test_scenarios::scenarios::time",
+                     std::make_pair(std::string{"clock"}, std::string{"high_res_steady"}),
+                     std::make_pair(std::string{"first_ns"}, first_ns),
+                     std::make_pair(std::string{"second_ns"}, second_ns));
     }
 };
 
