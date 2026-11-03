@@ -1,5 +1,5 @@
 ---
-description: "Create or refresh the S-CORE platform release note as draft or final."
+description: "Create the S-CORE platform release note from scratch as draft or final."
 name: "release-note"
 argument-hint: "release=v0.10.0 origin=v0.9.0 state=draft|final"
 agent: "Release Note"
@@ -14,6 +14,5 @@ State: `${input:state:draft or final}`
 - Any other value: stop and ask for `draft` or `final`.
 
 Follow the workflow of the agent and the [release-note skill](../skills/release-note/SKILL.md).
-If the note file already exists, refresh it as described in the skill: regenerate
-everything outside "Changes to the Platform" and keep the reviewed narrative,
-unless I ask for a full rewrite.
+Always generate the whole note from scratch, also if the note file already
+exists (skill, 6).
