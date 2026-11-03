@@ -68,8 +68,7 @@ public:
                 "SystemClock::Now() reading is not within tolerance of the host system clock");
         }
 
-        time_log::log_info(std::make_pair(std::string{"clock"}, std::string{"system"}),
-                           std::make_pair(std::string{"value_ns"}, reading_ns));
+        time_log::log_info("system", std::make_pair(std::string{"value_ns"}, reading_ns));
     }
 };
 

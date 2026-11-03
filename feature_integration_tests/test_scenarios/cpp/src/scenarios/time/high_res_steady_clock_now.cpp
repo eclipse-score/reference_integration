@@ -61,8 +61,7 @@ public:
                 "HighResSteadyClock::Now() is not monotonic: second reading precedes the first");
         }
 
-        time_log::log_info(std::make_pair(std::string{"clock"}, std::string{"high_res_steady"}),
-                           std::make_pair(std::string{"first_ns"}, first_ns),
+        time_log::log_info("high_res_steady", std::make_pair(std::string{"first_ns"}, first_ns),
                            std::make_pair(std::string{"second_ns"}, second_ns));
     }
 };
