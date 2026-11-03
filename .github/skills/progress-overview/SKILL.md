@@ -39,7 +39,7 @@ Then bump the date in the `.. important::` admonition of `progress_overview.rst`
 to the `data_collected` value, and verify with
 `python3 scripts/progress_overview/generate_progress_charts.py --check`.
 
-The first run clones ~11 bare repositories (~1.8 GB) into
+The first run clones the module repositories as bare repositories into
 `/tmp/progress_overview_repos`; later runs only fetch. Use `--cache` to relocate.
 
 ## How the columns are built
@@ -50,14 +50,14 @@ pre-release such as `v0.5.0-beta` before its final release, `v0.10.0` after
 
 - **Release columns** — the tag's `known_good.json` gives each module's pin.
   Entries carrying only a `version` are resolved to `v<version>` in the module's
-  own repository. Modules that were never pinned (Security/Crypto, Some/IP) fall
-  back to the commit on `main` as of the release date.
+  own repository. Modules without `known_good` keys in `MODULES` (never pinned)
+  fall back to the commit on `main` as of the release date.
 - **Forecast column** (`<next release> (forecast)`) — the **working tree's**
   `known_good.json`, i.e. today's state, labelled as the projection for the next
   release. The next release is read from the milestones of
   [eclipse-score/score](https://github.com/eclipse-score/score/milestones): the
-  lowest `v<major>.<minor>` milestone after the latest release tag (after
-  `v0.9.0` it is `v0.10`, after `v0.10.0` it is `v1.0`). Never hard-code it; if
+  lowest `v<major>.<minor>` milestone after the latest release tag. Never
+  hard-code it; if
   the milestone is missing the collector stops, create the milestone instead.
 
 Every bar is stacked by module. `MODULE_COLORS` is the single source of truth
@@ -96,7 +96,7 @@ growth, not validation maturity. `chklst_*.rst` files are excluded.
   `progress_overview_architecture`, `progress_overview_implementation` and
   `progress_overview_verification` — `pi1.rst`, `pi2.rst` and `pi3.rst` link to them.
 - The page is listed first in the toctree of `releases.rst`, before the release
-  notes (`release_note_*` glob).
+  notes (explicit list in release order, no glob).
 - Never hand-edit an SVG; regenerate it.
 - Re-collect **all** columns rather than appending one by hand. The value of the
   series is that every column used the same counter.

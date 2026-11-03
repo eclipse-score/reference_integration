@@ -46,12 +46,11 @@ current docs tree), `---` where the module has none (e.g. the platform). Every
 empty table cell is written as `---`.
 Modules that publish their verification evidence as dependable elements (with
 L.O.B.S.T.E.R. traceability reports) in their own versioned docs instead of an
-S-CORE module verification report are listed in `MODULE_DOCS` (today
-Communication). For them the cell lists one link per dependable element, found
-in the `searchindex.js` of the module docs at the pinned tag (pages titled
-"Dependable element: <name>"); `DEPENDABLE_ELEMENT_LABELS` sets the label and
-order (e.g. `mw_com` -> LoLa (mw::com)). An unreleased pin or missing docs give
-a warning and `---`.
+S-CORE module verification report are listed in `MODULE_DOCS`. For them the
+cell lists one link per dependable element, found in the `searchindex.js` of
+the module docs at the pinned tag (pages titled "Dependable element: <name>");
+`DEPENDABLE_ELEMENT_LABELS` sets the label and order. An unreleased pin or
+missing docs give a warning and `---`.
 Never write module versions or links by hand.
 
 Image table: the image catalogue (`IMAGES` in the script) lists name,
@@ -61,9 +60,7 @@ exists at the ref, else `---`.
 
 Download: images that a workflow uploads to the GitHub release of this
 repository are listed in `IMAGE_DOWNLOADS` (`images/<dir>` -> workflow, asset
-file name), today only AutoSD (`build_and_test_autosd.yml` uploads
-`eclipse-autosd-bootc-qemu-x86_64.qcow2.xz`, the AutoSD QEMU image with the
-S-CORE showcases). The link is built from the release tag
+file name). The link is built from the release tag
 (`.../releases/download/<release>/<asset>`), because the assets are uploaded
 only when the release is published, after the note is final. The generator
 checks that the workflow at the release ref still uploads the asset; if not, it
@@ -71,9 +68,8 @@ warns and writes `---`. All other images have `---`.
 
 When an image is added or renamed in `images/`, update `IMAGES`; when a
 workflow starts or stops uploading an image to the release, or renames the
-asset, update `IMAGE_DOWNLOADS`. Images published by upstream projects (for
-example the AutoSD Raspberry Pi 4 image of eclipse-autosd) are not S-CORE
-images and are not listed.
+asset, update `IMAGE_DOWNLOADS`. Images published by upstream projects are not
+S-CORE images and are not listed.
 
 ## Draft and final
 
@@ -375,18 +371,18 @@ Rules:
 
 Known limits of the evidence:
 
-- Only some modules (for example Baselibs) structure their GitHub release notes
-  with "Breaking changes" and "New features" sections; others only have
+- Only some modules structure their GitHub release notes with "Breaking
+  changes" and "New features" sections; others only have
   GitHub's generated PR list, which is then the only module-level evidence. If
   the collector prints "No breaking/new-feature items and no PR list", there is
   no module-level evidence, and you must say so in the report instead of
   guessing.
-- A release scope can be long (Persistency v0.4.0: 176 PRs). Reading every
-  `review` PR is required; report how many PRs per module you read.
+- A release scope can be long. Reading every `review` PR is required; report
+  how many PRs per module you read.
 - GitHub generates "What's Changed" against the previous tag it finds; when the
-  origin was tagged on a side commit (Persistency v0.3.5), the list can contain
-  PRs that were already in the origin release. Drop a PR if the origin release
-  note already lists it.
+  origin was tagged on a side commit, the list can contain PRs that were
+  already in the origin release. Drop a PR if the origin release note already
+  lists it.
 - Hash-pinned modules (`<sha7> (unreleased)`) have releases only up to their
   latest tag; changes after it are not covered by release notes.
 - Impact hints search `known_good.json`, `.bazelrc`, `bazel_common`, `patches`,
