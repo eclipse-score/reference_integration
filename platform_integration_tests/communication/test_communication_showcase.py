@@ -44,3 +44,22 @@ def test_communication_showcase(target):
     platform."""
 
     run_showcases(target, "Communication Sender Receiver Example")
+
+
+@add_test_properties(
+    partially_verifies=["stkh_req__communication__inter_process"],
+    test_type="interface-test",
+    derivation_technique="requirements-analysis",
+)
+def test_communication_platform_version(target):
+    """A consumer process finds the platform info service deployed by the
+    platform through mw::com service discovery and reads the S-CORE version
+    the platform reports, sealed with a baselibs CRC32. The consumer brings no
+    provider of its own, so this fails if the platform does not deploy a
+    working service or runs a different S-CORE version."""
+
+    output = run_showcases(target, "Communication Platform Version Check")
+    assert "platform_info_consumer: S-CORE version check passed" in output, (
+        f"Platform did not pass the S-CORE version check:\n{output}"
+    )
+    assert "platform_info_consumer: FAILED" not in output, output
