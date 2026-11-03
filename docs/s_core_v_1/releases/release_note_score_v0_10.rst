@@ -557,9 +557,9 @@ release.
      - ``v0.10.0``
      - `v0.7.0 <https://github.com/eclipse-score/lifecycle/releases/tag/v0.7.0>`__ · `v0.8.0 <https://github.com/eclipse-score/lifecycle/releases/tag/v0.8.0>`__ · `v0.9.0 <https://github.com/eclipse-score/lifecycle/releases/tag/v0.9.0>`__ · `v0.10.0 <https://github.com/eclipse-score/lifecycle/releases/tag/v0.10.0>`__
      - :doc:`Verification report </modules/score_lifecycle/verification_report/module_verification_report>`
-   * - `Logging <https://github.com/eclipse-score/logging/tree/cda5a5ba57dffe3aa109e518e47f0ada692b3573>`__
-     - ``cda5a5b (unreleased)``
-     - `v0.2.5 <https://github.com/eclipse-score/logging/releases/tag/v0.2.5>`__
+   * - `Logging <https://github.com/eclipse-score/logging/tree/v0.2.6>`__
+     - ``v0.2.6``
+     - `v0.2.5 <https://github.com/eclipse-score/logging/releases/tag/v0.2.5>`__ · `v0.2.6 <https://github.com/eclipse-score/logging/releases/tag/v0.2.6>`__
      - :doc:`Verification report </modules/score_logging/verification_report/module_verification_report>`
    * - `Time <https://github.com/eclipse-score/time/tree/v0.3.1>`__
      - ``v0.3.1``
@@ -653,7 +653,6 @@ release.
 ------------------------
 
 - Increase to the newest Bazel registry versions: https://eclipse-score.github.io/bazel_registry_ui
-- Modules shown as *(unreleased)* are pinned to a commit and have no registry version; use the commit from ``known_good.json``.
 - The module versions of this release are listed in `known_good.json <https://github.com/eclipse-score/reference_integration/blob/v0.10.0/known_good.json>`__.
 
 
