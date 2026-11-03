@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-#include "../../internals/time/clock_log.h"
+#include "tracing.hpp"
 
 #include "score/json/json_parser.h"
 #include "score/time/steady_time/src/steady_clock.h"
@@ -113,11 +113,13 @@ public:
                 "SteadyClock::Now() did not progress after sleep: final reading precedes the last");
         }
 
-        time_log::log_info("steady", std::make_pair(std::string{"tick_count"}, tick_count),
-                           std::make_pair(std::string{"first_ns"}, first_ns),
-                           std::make_pair(std::string{"last_ns"}, last_ns),
-                           std::make_pair(std::string{"final_ns"}, final_ns),
-                           std::make_pair(std::string{"sleep_ms"}, sleep_ms));
+        TRACING_INFO("cpp_test_scenarios::scenarios::time",
+                     std::make_pair(std::string{"clock"}, std::string{"steady"}),
+                     std::make_pair(std::string{"tick_count"}, tick_count),
+                     std::make_pair(std::string{"first_ns"}, first_ns),
+                     std::make_pair(std::string{"last_ns"}, last_ns),
+                     std::make_pair(std::string{"final_ns"}, final_ns),
+                     std::make_pair(std::string{"sleep_ms"}, sleep_ms));
     }
 };
 
