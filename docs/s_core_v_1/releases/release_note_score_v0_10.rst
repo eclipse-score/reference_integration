@@ -75,6 +75,22 @@ is now part of ``known_good.json``. Persistency's test BUILD files load
 regular dependency
 (`#388 <https://github.com/eclipse-score/reference_integration/pull/388>`__).
 
+New infrastructure module: Devcontainer
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``score_devcontainer`` (`eclipse-score/devcontainer <https://github.com/eclipse-score/devcontainer>`__)
+is now pinned in ``known_good.json``; the reference integration uses devcontainer
+``1.11.4``, and ``scripts/module_tests.py`` raises the modules' own
+``score_devcontainer`` dependency to this version
+(`#438 <https://github.com/eclipse-score/reference_integration/pull/438>`__).
+
+Bazel 8.8.2
+~~~~~~~~~~~
+
+The reference integration builds with Bazel ``8.8.2`` instead of ``8.6.0``
+(``.bazelversion``)
+(`#436 <https://github.com/eclipse-score/reference_integration/pull/436>`__).
+
 Integration Strategy (DR-008) test workflow
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -283,12 +299,13 @@ from seconds to milliseconds.
 Lifecycle: Launch Manager configuration schema version 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The integrated Lifecycle commit makes POSIX RLIMITs configurable for the
-processes started by the Launch Manager and raises the configuration
-``schema_version`` to ``2``; the options ``max_memory_usage`` and
-``max_cpu_usage`` were removed. The Lifecycle showcase configuration of this
-repository was updated accordingly
-(`lifecycle#868 <https://github.com/eclipse-score/lifecycle/pull/868>`__,
+Lifecycle ``v0.10.0`` makes POSIX RLIMITs configurable for the processes
+started by the Launch Manager and raises the configuration ``schema_version``
+to ``2``; the options ``max_memory_usage`` and ``max_cpu_usage`` were removed.
+The Lifecycle showcase configuration of this repository was updated
+accordingly
+(`Lifecycle v0.10.0 release notes <https://github.com/eclipse-score/lifecycle/releases/tag/v0.10.0>`__,
+`lifecycle#868 <https://github.com/eclipse-score/lifecycle/pull/868>`__,
 `9c0136e <https://github.com/eclipse-score/reference_integration/commit/9c0136e094cfd76219077877a760c0e6fb8236d6>`__).
 
 Action required: set ``schema_version`` to ``2`` in Launch Manager
@@ -327,7 +344,11 @@ configurations and replace ``max_memory_usage`` with the RLIMIT options
    * - `Communication <https://github.com/eclipse-score/communication/tree/v0.6.0>`__
      - ``v0.6.0``
      - `Release notes <https://github.com/eclipse-score/communication/releases/tag/v0.6.0>`__
-     - ---
+     - Dependable elements:
+
+       * `LoLa (mw::com) <https://eclipse-score.github.io/communication/v0.6.0/docs/sphinx/mw_com_index/index.html>`__
+       * `Message Passing <https://eclipse-score.github.io/communication/v0.6.0/docs/sphinx/dependable_element_message_passing_index/index.html>`__
+       * `Shared Memory <https://eclipse-score.github.io/communication/v0.6.0/docs/sphinx/dependable_element_memory_shared_index/index.html>`__
    * - `Persistency <https://github.com/eclipse-score/persistency/tree/v0.4.0>`__
      - ``v0.4.0``
      - `Release notes <https://github.com/eclipse-score/persistency/releases/tag/v0.4.0>`__
@@ -336,9 +357,9 @@ configurations and replace ``max_memory_usage`` with the RLIMIT options
      - ``v0.1.6``
      - `Release notes <https://github.com/eclipse-score/kyron/releases/tag/v0.1.6>`__
      - ---
-   * - `Lifecycle <https://github.com/eclipse-score/lifecycle/tree/e4f9773336e7e483d973cc261b69ae3bc198f368>`__
-     - ``e4f9773 (unreleased)``
-     - ---
+   * - `Lifecycle <https://github.com/eclipse-score/lifecycle/tree/v0.10.0>`__
+     - ``v0.10.0``
+     - `Release notes <https://github.com/eclipse-score/lifecycle/releases/tag/v0.10.0>`__
      - :doc:`Verification report </modules/score_lifecycle/verification_report/module_verification_report>`
    * - `Logging <https://github.com/eclipse-score/logging/tree/v0.2.5>`__
      - ``v0.2.5``
@@ -369,9 +390,12 @@ configurations and replace ``max_memory_usage`` with the RLIMIT options
    * - `ITF (Integration Testing Framework) <https://github.com/eclipse-score/itf/tree/v0.6.0>`__
      - ``v0.6.0``
      - `Release notes <https://github.com/eclipse-score/itf/releases/tag/v0.6.0>`__
-   * - `Tools <https://github.com/eclipse-score/tools/tree/4b48cec400c67be75cfc3fa4658ac6a0489bf7a8>`__
-     - ``4b48cec (unreleased)``
-     - ---
+   * - `Devcontainer <https://github.com/eclipse-score/devcontainer/tree/v1.11.4>`__
+     - ``v1.11.4``
+     - `Release notes <https://github.com/eclipse-score/devcontainer/releases/tag/v1.11.4>`__
+   * - `Tools <https://github.com/eclipse-score/tools/tree/v0.0.4>`__
+     - ``v0.0.4``
+     - `Release notes <https://github.com/eclipse-score/tools/releases/tag/v0.0.4>`__
    * - `Tooling <https://github.com/eclipse-score/tooling/tree/v3.0.1>`__
      - ``v3.0.1``
      - `Release notes <https://github.com/eclipse-score/tooling/releases/tag/v3.0.1>`__
@@ -433,7 +457,6 @@ configurations and replace ``max_memory_usage`` with the RLIMIT options
 ------------------------
 
 - Increase to the newest Bazel registry versions: https://eclipse-score.github.io/bazel_registry_ui
-- Modules shown as *(unreleased)* are pinned to a commit and have no registry version; use the commit from ``known_good.json``.
 - The module versions of this release are listed in `known_good.json <https://github.com/eclipse-score/reference_integration/blob/v0.10.0/known_good.json>`__.
 
 
