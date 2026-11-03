@@ -541,7 +541,7 @@
 <p><strong>FINAL.</strong> This is the release note of release
 <a class="reference external" href="https://github.com/eclipse-score/reference_integration/releases/tag/v0.10.0">v0.10.0</a> (2026-11-02).</p>
 </div>
-<div class="need_container docutils container" id="SNCB-300f5db4">
+<div class="need_container docutils container" id="SNCB-27a7ca41">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__score_v010_release_note">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -620,54 +620,50 @@ source organization, can not take over any liability for its content.</p>
 <section id="new-infrastructure-module-tools">
 <h4>New infrastructure module: Tools<a class="headerlink" href="#new-infrastructure-module-tools" title="Link to this heading">#</a></h4>
 <p><code class="docutils literal notranslate"><span class="pre">score_tools</span></code> (<a class="reference external" href="https://github.com/eclipse-score/tools">eclipse-score/tools</a>)
-is now part of <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>. Persistency’s test BUILD files load
-<code class="docutils literal notranslate"><span class="pre">&#64;score_tools//score_pytest</span></code>, so the reference integration needs it as a
-regular dependency
+is part of <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>. Persistency’s test BUILD files load
+<code class="docutils literal notranslate"><span class="pre">&#64;score_tools//score_pytest</span></code>, which moved there from Docs-as-code, so
+<code class="docutils literal notranslate"><span class="pre">reference_integration</span></code> needs it as a regular dependency
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/388">#388</a>).</p>
 </section>
 <section id="new-infrastructure-module-devcontainer">
 <h4>New infrastructure module: Devcontainer<a class="headerlink" href="#new-infrastructure-module-devcontainer" title="Link to this heading">#</a></h4>
 <p><code class="docutils literal notranslate"><span class="pre">score_devcontainer</span></code> (<a class="reference external" href="https://github.com/eclipse-score/devcontainer">eclipse-score/devcontainer</a>)
-is now pinned in <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>; the reference integration uses devcontainer
-<code class="docutils literal notranslate"><span class="pre">1.11.4</span></code>, and <code class="docutils literal notranslate"><span class="pre">scripts/module_tests.py</span></code> raises the modules’ own
-<code class="docutils literal notranslate"><span class="pre">score_devcontainer</span></code> dependency to this version
+is pinned in <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> at <code class="docutils literal notranslate"><span class="pre">1.11.4</span></code>; <code class="docutils literal notranslate"><span class="pre">scripts/module_tests.py</span></code>
+raises the modules’ own <code class="docutils literal notranslate"><span class="pre">score_devcontainer</span></code> dependency to this version
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/438">#438</a>).</p>
 </section>
 <section id="bazel-8-8-2">
 <h4>Bazel 8.8.2<a class="headerlink" href="#bazel-8-8-2" title="Link to this heading">#</a></h4>
-<p>The reference integration builds with Bazel <code class="docutils literal notranslate"><span class="pre">8.8.2</span></code> instead of <code class="docutils literal notranslate"><span class="pre">8.6.0</span></code>
+<p><code class="docutils literal notranslate"><span class="pre">reference_integration</span></code> builds with Bazel <code class="docutils literal notranslate"><span class="pre">8.8.2</span></code> instead of <code class="docutils literal notranslate"><span class="pre">8.6.0</span></code>
 (<code class="docutils literal notranslate"><span class="pre">.bazelversion</span></code>)
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/436">#436</a>).</p>
 </section>
 <section id="integration-strategy-dr-008-test-workflow">
 <h4>Integration Strategy (DR-008) test workflow<a class="headerlink" href="#integration-strategy-dr-008-test-workflow" title="Link to this heading">#</a></h4>
-<p>The reference integration no longer runs the unit tests of all modules inside
-its own workspace. Each target software module now runs its own test suite in
-its own workspace, against the dependency versions resolved by the reference
-integration
+<p>Each target software module runs its own test suite in its own workspace,
+against the dependency versions of <code class="docutils literal notranslate"><span class="pre">reference_integration</span></code>, instead of
+inside the workspace of <code class="docutils literal notranslate"><span class="pre">reference_integration</span></code>. This implements the parts
+of DR-008 that the v0.9 release note left for a follow-up release
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/398">#398</a>):</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">scripts/module_tests.py</span> <span class="pre">run</span> <span class="pre">&lt;module&gt;</span></code> fetches the module at its
-<code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> pin with the integration patches applied, pins its direct
-dependencies to the versions of the reference integration
-(<code class="docutils literal notranslate"><span class="pre">--override_module</span></code>) and runs <code class="docutils literal notranslate"><span class="pre">bazel</span> <span class="pre">coverage</span></code> with the shared
-configuration from <code class="docutils literal notranslate"><span class="pre">bazel_common/unified.bazelrc</span></code> and
-<code class="docutils literal notranslate"><span class="pre">bazel_common/unified_toolchains.MODULE.bazel</span></code>. Coverage builds C++ with
-clang (LLVM); regular builds stay on GCC.</p></li>
+<code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> pin with the integration patches, pins its direct
+dependencies to the versions of <code class="docutils literal notranslate"><span class="pre">reference_integration</span></code>
+(<code class="docutils literal notranslate"><span class="pre">--override_module</span></code>) and runs <code class="docutils literal notranslate"><span class="pre">bazel</span> <span class="pre">coverage</span></code> with
+<code class="docutils literal notranslate"><span class="pre">bazel_common/unified.bazelrc</span></code> and
+<code class="docutils literal notranslate"><span class="pre">bazel_common/unified_toolchains.MODULE.bazel</span></code>.</p></li>
 <li><p>The <code class="docutils literal notranslate"><span class="pre">module_tests.yml</span></code> workflow runs one job per module and feeds the
 results into the unit test summary and the documentation.</p></li>
-<li><p>Module-specific test exclusions are documented in the <code class="docutils literal notranslate"><span class="pre">metadata.test_notes</span></code>
-field of <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>.</p></li>
-<li><p>If the <code class="docutils literal notranslate"><span class="pre">UBUNTU_SNAPSHOT_MIRROR_URL</span></code> secret is set, the module test jobs
-download Ubuntu snapshot packages from a mirror first
+<li><p>Module-specific test exclusions are documented in <code class="docutils literal notranslate"><span class="pre">metadata.test_notes</span></code> of
+<code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>.</p></li>
+<li><p>With the secret <code class="docutils literal notranslate"><span class="pre">UBUNTU_SNAPSHOT_MIRROR_URL</span></code> the module test jobs download
+Ubuntu snapshot packages from a mirror first
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/429">#429</a>).</p></li>
 </ul>
-<p>This implements the parts of DR-008 that the v0.9 release note left for a
-follow-up release.</p>
 </section>
 <section id="software-bill-of-materials-sbom">
 <h4>Software Bill of Materials (SBOM)<a class="headerlink" href="#software-bill-of-materials-sbom" title="Link to this heading">#</a></h4>
-<p>The reference integration generates an SBOM with
+<p><code class="docutils literal notranslate"><span class="pre">reference_integration</span></code> generates an SBOM with
 <a class="reference external" href="https://github.com/eclipse-score/sbom">score_sbom</a> <code class="docutils literal notranslate"><span class="pre">0.1.1</span></code> and uploads it
 as a CI build artifact
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/304">#304</a>,
@@ -680,7 +676,7 @@ as a CI build artifact
 <li><p>The QNX images use <code class="docutils literal notranslate"><span class="pre">score_rules_imagefs</span></code> <code class="docutils literal notranslate"><span class="pre">0.1.0</span></code>; host files are placed
 with <code class="docutils literal notranslate"><span class="pre">rules_pkg</span></code> <code class="docutils literal notranslate"><span class="pre">pkg_files</span></code> targets
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/349">#349</a>).</p></li>
-<li><p>The QNX and Linux image definitions were deduplicated into shared packages:
+<li><p>The QNX and Linux image definitions share the packages
 <code class="docutils literal notranslate"><span class="pre">//images/common/apps</span></code>, <code class="docutils literal notranslate"><span class="pre">//images/qnx_common/build</span></code> and
 <code class="docutils literal notranslate"><span class="pre">//images/qnx_common/configs</span></code>
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/389">#389</a>).</p></li>
@@ -693,27 +689,25 @@ with <code class="docutils literal notranslate"><span class="pre">rules_pkg</spa
 <h4>Platform integration tests<a class="headerlink" href="#platform-integration-tests" title="Link to this heading">#</a></h4>
 <p>The new <code class="docutils literal notranslate"><span class="pre">//platform_integration_tests:pit</span></code> suite runs the <code class="docutils literal notranslate"><span class="pre">//showcases</span></code>
 applications for Communication, Kyron, Lifecycle, Logging and Time on the target
-image (Docker on Linux x86_64, QEMU on QNX x86_64). Each test is linked to the
-platform stakeholder requirement it demonstrates; the platform verification
-report shows them in a new “Stakeholder Requirements” chapter
+image (Docker on Linux x86_64, QEMU on QNX x86_64). Each test links the platform
+stakeholder requirement it demonstrates; the platform verification report shows
+them in the chapter “Stakeholder Requirements”
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/377">#377</a>).</p>
 </section>
 <section id="requirement-coverage-from-module-tests">
 <h4>Requirement coverage from module tests<a class="headerlink" href="#requirement-coverage-from-module-tests" title="Link to this heading">#</a></h4>
-<p>The Lifecycle integration tests, the Logging component tests and the Persistency
-component integration tests are executed by the reference integration, so their
+<p><code class="docutils literal notranslate"><span class="pre">reference_integration</span></code> executes the Lifecycle integration tests, the Logging
+component tests and the Persistency component integration tests, so their
 <code class="docutils literal notranslate"><span class="pre">PartiallyVerifies</span></code>/<code class="docutils literal notranslate"><span class="pre">FullyVerifies</span></code> links appear in the verification reports
-(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/385">#385</a>).
-The Logging tests run after fixing the packaging of the datarouter
-configuration
-(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/387">#387</a>).</p>
+(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/385">#385</a>,
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/387">#387</a>).</p>
 </section>
 <section id="qualified-coverage-tool-in-the-modules">
 <h4>Qualified coverage tool in the modules<a class="headerlink" href="#qualified-coverage-tool-in-the-modules" title="Link to this heading">#</a></h4>
-<p>Baselibs, Kyron, Persistency and Time measure their coverage with the qualified
+<p>Baselibs, Kyron, Persistency and Time measure coverage with the qualified
 <code class="docutils literal notranslate"><span class="pre">score_coverage</span></code> module
-(<a class="reference external" href="https://github.com/eclipse-score/coverage_tool">eclipse-score/coverage_tool</a>),
-which replaces the coverage pipeline of <code class="docutils literal notranslate"><span class="pre">score_tooling</span></code>. One
+(<a class="reference external" href="https://github.com/eclipse-score/coverage_tool">eclipse-score/coverage_tool</a>)
+instead of the coverage pipeline of <code class="docutils literal notranslate"><span class="pre">score_tooling</span></code>. One
 <code class="docutils literal notranslate"><span class="pre">bazel</span> <span class="pre">coverage</span> <span class="pre">--config=llvm_cov</span></code> run reports line and branch coverage for
 C++ and Rust, lists untested files with 0 % and supports coverage
 justifications
@@ -723,14 +717,14 @@ justifications
 <a class="reference external" href="https://github.com/eclipse-score/time/pull/235">time#235</a>).</p>
 </section>
 <section id="lifecycle-control-interface-for-state-managers">
-<h4>Lifecycle control interface for State Managers<a class="headerlink" href="#lifecycle-control-interface-for-state-managers" title="Link to this heading">#</a></h4>
-<p>Lifecycle provides the new <code class="docutils literal notranslate"><span class="pre">ILmControl</span></code> API, with which State Managers
+<h4>Lifecycle: control interface for State Managers<a class="headerlink" href="#lifecycle-control-interface-for-state-managers" title="Link to this heading">#</a></h4>
+<p>Lifecycle provides the <code class="docutils literal notranslate"><span class="pre">ILmControl</span></code> API, with which State Managers
 communicate with the Launch Manager over <code class="docutils literal notranslate"><span class="pre">mw::com</span></code>
 (<a class="reference external" href="https://github.com/eclipse-score/lifecycle/releases/tag/v0.8.0">Lifecycle v0.8.0 release notes</a>).</p>
 </section>
 <section id="logging-linux-syslog-backend">
 <h4>Logging: Linux syslog backend<a class="headerlink" href="#logging-linux-syslog-backend" title="Link to this heading">#</a></h4>
-<p><code class="docutils literal notranslate"><span class="pre">mw::log</span></code> has a Linux <code class="docutils literal notranslate"><span class="pre">syslog(3)</span></code> backend for <code class="docutils literal notranslate"><span class="pre">LogMode::kSystem</span></code>. It uses
+<p><code class="docutils literal notranslate"><span class="pre">mw::log</span></code> has a Linux <code class="docutils literal notranslate"><span class="pre">syslog(3)</span></code> backend for <code class="docutils literal notranslate"><span class="pre">LogMode::kSystem</span></code>, based on
 the new <code class="docutils literal notranslate"><span class="pre">score::os::Syslog</span></code> wrapper of Baselibs
 (<a class="reference external" href="https://github.com/eclipse-score/logging/pull/271">logging#271</a>,
 <a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/502">baselibs#502</a>).</p>
@@ -739,23 +733,22 @@ the new <code class="docutils literal notranslate"><span class="pre">score::os::
 <h4>ITF: QEMU plugin for Linux images<a class="headerlink" href="#itf-qemu-plugin-for-linux-images" title="Link to this heading">#</a></h4>
 <p>The QEMU plugin of ITF <code class="docutils literal notranslate"><span class="pre">v0.6.0</span></code> boots Linux images in addition to QNX images
 (EB corbos Linux for aarch64 and Ubuntu, with image definitions from
-<code class="docutils literal notranslate"><span class="pre">os_images</span></code>). It accepts an additional disk image with the test binaries and
-their data and has a hook for extra QEMU arguments
-(<a class="reference external" href="https://github.com/eclipse-score/itf/pull/123">itf#123</a>,
+<code class="docutils literal notranslate"><span class="pre">os_images</span></code>), accepts an additional disk image with the test binaries and
+their data, and has a hook for extra QEMU arguments
+(<a class="reference external" href="https://github.com/eclipse-score/itf/pull/122">itf#122</a>,
+<a class="reference external" href="https://github.com/eclipse-score/itf/pull/123">itf#123</a>,
 <a class="reference external" href="https://github.com/eclipse-score/itf/pull/135">itf#135</a>,
-<a class="reference external" href="https://github.com/eclipse-score/itf/pull/139">itf#139</a>,
-<a class="reference external" href="https://github.com/eclipse-score/itf/pull/122">itf#122</a>).</p>
+<a class="reference external" href="https://github.com/eclipse-score/itf/pull/139">itf#139</a>).</p>
 </section>
 <section id="module-maturity-classification-dr-003">
 <h4>Module maturity classification (DR-003)<a class="headerlink" href="#module-maturity-classification-dr-003" title="Link to this heading">#</a></h4>
-<p>The architecture diagram of this release note shows the maturity of each
-software module (Release, Experimental, Preview) as defined in
+<p>The architecture diagram shows the maturity of each software module (Release,
+Experimental, Preview) as defined in
 <a class="reference external" href="https://github.com/eclipse-score/score/blob/main/docs/design_decisions/strategy/DR-003-strat.md">DR-003-Strat</a>.
-The level is derived from the documentation of the module: without a module
-verification report and without dependable element documentation a module is
-Preview; if all its component requirements are fully verified and inspected it
-is Release; otherwise it is Experimental. This follows up on the maturity levels
-announced in the v0.8 release note
+A module without module verification report and without dependable element
+documentation is Preview; a module whose component requirements are all fully
+verified and inspected is Release; all other modules are Experimental. This
+follows up on the maturity levels announced in the v0.8 release note
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/842d366755c765cc91e8cadcaa5f37799c7e6d06">842d366</a>).</p>
 </section>
 <section id="documentation-and-reports">
@@ -765,9 +758,10 @@ announced in the v0.8 release note
 (<code class="docutils literal notranslate"><span class="pre">bazel_common/docs_bundles.bzl</span></code>); the Time documentation is included
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/337">#337</a>,
 <a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/348">#348</a>).</p></li>
-<li><p>Module verification reports (Baselibs, Lifecycle, Logging, Persistency) are
-linked from a common index; the unit test and coverage summaries are part of
-the Platform Verification Report; the status dashboard uses branch-aware links
+<li><p>The module verification reports (Baselibs, Lifecycle, Logging, Persistency)
+are linked from a common index; the unit test and coverage summaries are part
+of the Platform Verification Report; the status dashboard uses branch-aware
+links
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/342">#342</a>,
 <a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/358">#358</a>,
 <a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/373">#373</a>).</p></li>
@@ -776,21 +770,22 @@ template of Docs-as-code
 (<a class="reference external" href="https://github.com/eclipse-score/docs-as-code/releases/tag/v8.2.0">Docs-as-code v8.2.0 release notes</a>).</p></li>
 <li><p>The module tests export the coverage reports of Baselibs, Persistency,
 Logging, Kyron, Lifecycle and Time and combine them into one LCOV file
-(<code class="docutils literal notranslate"><span class="pre">coverage-report/coverage_report.dat</span></code>) that the documentation build reads,
-so the measured module coverage appears in the documentation; Communication
-and Configuration Management run their tests without coverage
+(<code class="docutils literal notranslate"><span class="pre">coverage-report/coverage_report.dat</span></code>) that the documentation build reads;
+Communication and Configuration Management run their tests without coverage
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/425">#425</a>).</p></li>
+<li><p>The documentation of the Communication dependable elements is published via
+the module test artifacts and linked from the module documentation index
+(<code class="docutils literal notranslate"><span class="pre">metadata.dependable_element_docs</span></code> in <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>)
+(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/bbf95e3d9fce50d8135e90bb89f7c0f2e096cac3">bbf95e3</a>,
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/d612b38c4a4fed4863f08ac33ee9c7c4b7249952">d612b38</a>).</p></li>
 <li><p>The Overall Status page was replaced by the Release-wide Progress Overview
 next to the release notes, with release-over-release charts per module
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/392">#392</a>).</p></li>
-<li><p>The documentation of the Communication dependable element is published via
-the module test artifacts and linked from the module documentation index; the
-<code class="docutils literal notranslate"><span class="pre">metadata.dependable_element_docs</span></code> field of <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> enables it
-(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/bbf95e3d9fce50d8135e90bb89f7c0f2e096cac3">bbf95e3</a>,
-<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/d612b38c4a4fed4863f08ac33ee9c7c4b7249952">d612b38</a>).</p></li>
-<li><p>The release note is generated from <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> with
-<code class="docutils literal notranslate"><span class="pre">scripts/release_note/generate_release_note.py</span></code>
-(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/414">#414</a>).</p></li>
+<li><p>The release note is generated with
+<code class="docutils literal notranslate"><span class="pre">scripts/release_note/generate_release_note.py</span></code>; its module tables link
+every module release since the origin release
+(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/414">#414</a>,
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/cf0f846361955740dbf8e84029be35dad6afbc9f">cf0f846</a>).</p></li>
 </ul>
 </section>
 <section id="ci">
@@ -798,7 +793,7 @@ the module test artifacts and linked from the module documentation index; the
 <ul class="simple">
 <li><p>The documentation build runs as a separate, fail-fast workflow
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/375">#375</a>).</p></li>
-<li><p>Bazel cache keys rotate on module bumps and the test cache is trusted on push
+<li><p>Bazel cache keys rotate on module bumps, and the test cache is trusted on push
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/356">#356</a>,
 <a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/362">#362</a>,
 <a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/366">#366</a>).</p></li>
@@ -810,82 +805,97 @@ the module test artifacts and linked from the module documentation index; the
 <section id="breaking-changes">
 <h3>💥 Breaking Changes<a class="headerlink" href="#breaking-changes" title="Link to this heading">#</a></h3>
 <section id="reference-integration-resolved-dependency-overrides-removed">
-<h4>Reference integration: resolved-dependency overrides removed<a class="headerlink" href="#reference-integration-resolved-dependency-overrides-removed" title="Link to this heading">#</a></h4>
-<p>The module test mechanism of v0.9 was removed together with its generated files:
+<h4>reference_integration: resolved-dependency overrides removed<a class="headerlink" href="#reference-integration-resolved-dependency-overrides-removed" title="Link to this heading">#</a></h4>
+<p>The module test mechanism of v0.9 was removed with its files
 <code class="docutils literal notranslate"><span class="pre">scripts/known_good/resolved_dependencies.py</span></code>,
 <code class="docutils literal notranslate"><span class="pre">scripts/known_good/module_patches.py</span></code> and the <code class="docutils literal notranslate"><span class="pre">rust_coverage</span></code> package
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/398">#398</a>).</p>
 <p>Action required: run module tests with <code class="docutils literal notranslate"><span class="pre">scripts/module_tests.py</span></code> and the
-configuration in <code class="docutils literal notranslate"><span class="pre">bazel_common/unified.bazelrc</span></code> instead.</p>
+configuration in <code class="docutils literal notranslate"><span class="pre">bazel_common/unified.bazelrc</span></code>.</p>
 </section>
 <section id="reference-integration-qnx-image-packages-moved">
-<h4>Reference integration: QNX image packages moved<a class="headerlink" href="#reference-integration-qnx-image-packages-moved" title="Link to this heading">#</a></h4>
+<h4>reference_integration: QNX image packages moved<a class="headerlink" href="#reference-integration-qnx-image-packages-moved" title="Link to this heading">#</a></h4>
 <p>The common QNX build fragments and configuration files moved to
-<code class="docutils literal notranslate"><span class="pre">//images/qnx_common/build</span></code> and <code class="docutils literal notranslate"><span class="pre">//images/qnx_common/configs</span></code>; the
-<code class="docutils literal notranslate"><span class="pre">images/qnx_aarch64/configs</span></code> package was removed and
-<code class="docutils literal notranslate"><span class="pre">images/qnx_x86_64/configs</span></code> keeps only the x86-specific files
+<code class="docutils literal notranslate"><span class="pre">//images/qnx_common/build</span></code> and <code class="docutils literal notranslate"><span class="pre">//images/qnx_common/configs</span></code>; the package
+<code class="docutils literal notranslate"><span class="pre">images/qnx_aarch64/configs</span></code> was removed and <code class="docutils literal notranslate"><span class="pre">images/qnx_x86_64/configs</span></code>
+keeps only the x86-specific files
 (<a class="reference external" href="https://github.com/eclipse-score/reference_integration/pull/389">#389</a>).</p>
 <p>Action required: update references to the old image paths in derived images.</p>
 </section>
 <section id="platform-stakeholder-requirement-ids-renamed">
 <h4>Platform: stakeholder requirement IDs renamed<a class="headerlink" href="#platform-stakeholder-requirement-ids-renamed" title="Link to this heading">#</a></h4>
-<p>Platform <code class="docutils literal notranslate"><span class="pre">v0.7.3</span></code> gave the safety stakeholder requirements named IDs instead
-of numbers, for example <code class="docutils literal notranslate"><span class="pre">stkh_req__dependability__safety_features_1</span></code> became
-<code class="docutils literal notranslate"><span class="pre">stkh_req__dependability__health_management</span></code>. Tests that still link the old
-ID make the documentation build fail with an unknown-link warning
-(<a class="reference external" href="https://github.com/eclipse-score/score/pull/3286">score#3286</a>,
-<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/5d09c1bf631767564295ee403d200d2f201eb76a">5d09c1b</a>).</p>
+<p>Platform <code class="docutils literal notranslate"><span class="pre">v0.7.3</span></code> gives the safety stakeholder requirements named IDs
+instead of numbers, for example <code class="docutils literal notranslate"><span class="pre">stkh_req__dependability__safety_features_1</span></code>
+became <code class="docutils literal notranslate"><span class="pre">stkh_req__dependability__health_management</span></code>. Tests that still link an
+old ID make the documentation build fail with an unknown-link warning
+(<a class="reference external" href="https://github.com/eclipse-score/score/pull/3286">score#3286</a>).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Important for integrators: the Lifecycle platform integration test of
+<code class="docutils literal notranslate"><span class="pre">reference_integration</span></code> links the renamed requirement
+(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/5d09c1bf631767564295ee403d200d2f201eb76a">5d09c1b</a>).</p>
+</div>
 <p>Action required: link tests to the new stakeholder requirement IDs.</p>
 </section>
 <section id="baselibs-vajson-is-the-only-json-backend">
 <h4>Baselibs: vaJson is the only JSON backend<a class="headerlink" href="#baselibs-vajson-is-the-only-json-backend" title="Link to this heading">#</a></h4>
-<p><code class="docutils literal notranslate"><span class="pre">score/json</span></code> uses vaJson as its only parser (v0.2.15) and writer (v0.2.16).
-The <code class="docutils literal notranslate"><span class="pre">--&#64;score_baselibs//score/json:writer_library</span></code> flag was removed;
-<code class="docutils literal notranslate"><span class="pre">--&#64;score_baselibs//score/json:base_library</span></code> is a deprecated no-op that this
-repository still sets in <code class="docutils literal notranslate"><span class="pre">.bazelrc</span></code> and <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>. The written JSON
-differs (for example <code class="docutils literal notranslate"><span class="pre">true</span></code>/<code class="docutils literal notranslate"><span class="pre">false</span></code> instead of <code class="docutils literal notranslate"><span class="pre">1</span></code>/<code class="docutils literal notranslate"><span class="pre">0</span></code> and different
-float formatting), which is why two Configuration Management unit tests are
-excluded in <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>. In v0.2.17 the <code class="docutils literal notranslate"><span class="pre">VajsonParser</span></code> class and the
-<code class="docutils literal notranslate"><span class="pre">vajson_parser</span></code> target were removed; <code class="docutils literal notranslate"><span class="pre">JsonParser</span></code> and <code class="docutils literal notranslate"><span class="pre">JsonWriter</span></code> keep
-their interfaces
-(<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/660">baselibs#660</a>,
-<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/675">baselibs#675</a>,
-<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/677">baselibs#677</a>,
-<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/312fde355d1270ab713603ce3233d39c81407c7d">312fde3</a>).</p>
-<p>Action required: remove the <code class="docutils literal notranslate"><span class="pre">base_library</span></code> and <code class="docutils literal notranslate"><span class="pre">writer_library</span></code> flags from
-build configurations, use <code class="docutils literal notranslate"><span class="pre">JsonParser</span></code> instead of <code class="docutils literal notranslate"><span class="pre">VajsonParser</span></code> and do not
-compare JSON output against the old format.</p>
+<p><code class="docutils literal notranslate"><span class="pre">score/json</span></code> uses vaJson as its only parser and writer; <code class="docutils literal notranslate"><span class="pre">JsonParser</span></code>,
+<code class="docutils literal notranslate"><span class="pre">IJsonParser</span></code> and <code class="docutils literal notranslate"><span class="pre">JsonWriter</span></code> keep their interfaces:</p>
+<ul class="simple">
+<li><p>v0.2.15: the nlohmann parser was removed together with the
+<code class="docutils literal notranslate"><span class="pre">nlohmann_json</span></code> dependency of Baselibs; the flag
+<code class="docutils literal notranslate"><span class="pre">--&#64;score_baselibs//score/json:base_library</span></code> is a deprecated no-op, also
+with the value <code class="docutils literal notranslate"><span class="pre">nlohmann</span></code>
+(<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/660">baselibs#660</a>).</p></li>
+<li><p>v0.2.16: the flag <code class="docutils literal notranslate"><span class="pre">--&#64;score_baselibs//score/json:writer_library</span></code> and the
+<code class="docutils literal notranslate"><span class="pre">json_serialize</span></code> writer were removed. The written JSON differs, for example
+<code class="docutils literal notranslate"><span class="pre">true</span></code>/<code class="docutils literal notranslate"><span class="pre">false</span></code> instead of <code class="docutils literal notranslate"><span class="pre">1</span></code>/<code class="docutils literal notranslate"><span class="pre">0</span></code> and a different float format; the
+enum <code class="docutils literal notranslate"><span class="pre">Formatting</span></code> moved to <code class="docutils literal notranslate"><span class="pre">score/json/formatting.h</span></code>
+(<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/675">baselibs#675</a>,
+<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/685">baselibs#685</a>).</p></li>
+<li><p>v0.2.17: the class <code class="docutils literal notranslate"><span class="pre">VajsonParser</span></code> and the target <code class="docutils literal notranslate"><span class="pre">vajson_parser</span></code> were
+removed
+(<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/677">baselibs#677</a>).</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Important for integrators: <code class="docutils literal notranslate"><span class="pre">reference_integration</span></code> still sets
+<code class="docutils literal notranslate"><span class="pre">base_library=nlohmann</span></code> in <code class="docutils literal notranslate"><span class="pre">.bazelrc</span></code> and <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>; the flag
+has no effect. Two Configuration Management unit tests are excluded in
+<code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> because their expected strings assume the nlohmann float
+format (<code class="docutils literal notranslate"><span class="pre">3.222</span></code> instead of <code class="docutils literal notranslate"><span class="pre">3.22199988</span></code>)
+(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/312fde355d1270ab713603ce3233d39c81407c7d">312fde3</a>).</p>
+</div>
+<p>Action required: remove the <code class="docutils literal notranslate"><span class="pre">base_library</span></code> and <code class="docutils literal notranslate"><span class="pre">writer_library</span></code> flags, use
+<code class="docutils literal notranslate"><span class="pre">JsonParser</span></code> instead of <code class="docutils literal notranslate"><span class="pre">VajsonParser</span></code>, include <code class="docutils literal notranslate"><span class="pre">score/json/formatting.h</span></code>
+for <code class="docutils literal notranslate"><span class="pre">Formatting</span></code> and do not compare JSON output with the old format.</p>
 </section>
 <section id="baselibs-deprecated-apis-and-targets-removed">
 <h4>Baselibs: deprecated APIs and targets removed<a class="headerlink" href="#baselibs-deprecated-apis-and-targets-removed" title="Link to this heading">#</a></h4>
-<p>Baselibs removed deprecated or unused APIs that other modules had to migrate
-away from, for example Persistency from <code class="docutils literal notranslate"><span class="pre">score::ResultBlank</span></code> and Logging from
-<code class="docutils literal notranslate"><span class="pre">STRUCT_VISITABLE</span></code>
+<p>Baselibs removed deprecated or unused APIs; Persistency and Logging migrated
+away from them
 (<a class="reference external" href="https://github.com/eclipse-score/persistency/pull/455">persistency#455</a>,
 <a class="reference external" href="https://github.com/eclipse-score/logging/pull/343">logging#343</a>):</p>
 <ul class="simple">
-<li><p>The type aliases <code class="docutils literal notranslate"><span class="pre">score::Blank</span></code> and <code class="docutils literal notranslate"><span class="pre">score::ResultBlank</span></code> and the macros
-<code class="docutils literal notranslate"><span class="pre">STRUCT_VISITABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">STRUCT_TRACEABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">MEMCPY_SERIALIZABLE</span></code> and
-<code class="docutils literal notranslate"><span class="pre">MEMCPY_SERIALIZABLE_IF</span></code> (v0.2.16)
-(<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/623">baselibs#623</a>).</p></li>
-<li><p>The deprecated <code class="docutils literal notranslate"><span class="pre">//src</span></code> aliases and the string and atomic shims in
-<code class="docutils literal notranslate"><span class="pre">//score/memory</span></code> (v0.2.14)
-(<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/598">baselibs#598</a>).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">//score/datetime_converter</span></code>, the <code class="docutils literal notranslate"><span class="pre">score/os</span></code> cpuid, file stream, make-dev
-and <code class="docutils literal notranslate"><span class="pre">select</span></code> wrappers (v0.2.13), the Linux <code class="docutils literal notranslate"><span class="pre">pthread_setaffinity_np</span></code>
-wrapper and deprecated QNX <code class="docutils literal notranslate"><span class="pre">ChannelCreate</span></code> and <code class="docutils literal notranslate"><span class="pre">TimerTimeout</span></code> overloads
+<li><p><code class="docutils literal notranslate"><span class="pre">score::Blank</span></code>, <code class="docutils literal notranslate"><span class="pre">score::ResultBlank</span></code> and the macros <code class="docutils literal notranslate"><span class="pre">STRUCT_VISITABLE</span></code>,
+<code class="docutils literal notranslate"><span class="pre">STRUCT_TRACEABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">MEMCPY_SERIALIZABLE</span></code> and <code class="docutils literal notranslate"><span class="pre">MEMCPY_SERIALIZABLE_IF</span></code>
 (v0.2.16)
+(<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/623">baselibs#623</a>).</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">//src</span></code> aliases and the string and atomic shims in <code class="docutils literal notranslate"><span class="pre">//score/memory</span></code>
+(v0.2.14)
+(<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/598">baselibs#598</a>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">//score/datetime_converter</span></code> and the <code class="docutils literal notranslate"><span class="pre">score/os</span></code> cpuid, file stream,
+make-dev and <code class="docutils literal notranslate"><span class="pre">select</span></code> wrappers (v0.2.13), the Linux
+<code class="docutils literal notranslate"><span class="pre">pthread_setaffinity_np</span></code> wrapper and the deprecated QNX <code class="docutils literal notranslate"><span class="pre">ChannelCreate</span></code>
+and <code class="docutils literal notranslate"><span class="pre">TimerTimeout</span></code> overloads (v0.2.16)
 (<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/471">baselibs#471</a>,
 <a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/535">baselibs#535</a>,
 <a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/536">baselibs#536</a>,
 <a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/703">baselibs#703</a>).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Synchronized::WithLock</span></code> is deprecated in favour of the monadic functions of
+<li><p>Deprecated: <code class="docutils literal notranslate"><span class="pre">Synchronized::WithLock</span></code>, replaced by the monadic functions of
 <code class="docutils literal notranslate"><span class="pre">LockedPtr</span></code> (v0.2.17)
 (<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/761">baselibs#761</a>).</p></li>
 </ul>
-<p>With Baselibs v0.2.16 this repository adds a <code class="docutils literal notranslate"><span class="pre">safe_math</span></code> dependency to
-Communication by patch
-(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/7b91874e2b301b428528b2a85d865ec9f86af902">7b91874</a>).</p>
 <p>Action required: use <code class="docutils literal notranslate"><span class="pre">void</span></code>/<code class="docutils literal notranslate"><span class="pre">score::Result&lt;void&gt;</span></code> and the <code class="docutils literal notranslate"><span class="pre">SCORE_*</span></code>
 macros, depend on the <code class="docutils literal notranslate"><span class="pre">//score</span></code> targets and replace the removed OS wrappers
 and <code class="docutils literal notranslate"><span class="pre">WithLock</span></code>.</p>
@@ -907,14 +917,15 @@ in <code class="docutils literal notranslate"><span class="pre">v0.6.0</span></c
 (<code class="docutils literal notranslate"><span class="pre">v0.6.0</span></code>)
 (<a class="reference external" href="https://github.com/eclipse-score/communication/pull/1202">communication#1202</a>,
 <a class="reference external" href="https://github.com/eclipse-score/communication/pull/1232">communication#1232</a>).</p></li>
-<li><p>The aggregate Bazel target <code class="docutils literal notranslate"><span class="pre">//score/memory/shared:types</span></code> was removed
-(<a class="reference external" href="https://github.com/eclipse-score/communication/pull/1487">communication#1487</a>).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">tracing::TypeErasedSamplePtr</span></code> was replaced by <code class="docutils literal notranslate"><span class="pre">impl::SamplePtr&lt;void&gt;</span></code>
 (<code class="docutils literal notranslate"><span class="pre">v0.5.0</span></code>)
 (<a class="reference external" href="https://github.com/eclipse-score/communication/pull/1229">communication#1229</a>).</p></li>
+<li><p>The aggregate Bazel target <code class="docutils literal notranslate"><span class="pre">//score/memory/shared:types</span></code> was removed
+(<code class="docutils literal notranslate"><span class="pre">v0.6.0</span></code>)
+(<a class="reference external" href="https://github.com/eclipse-score/communication/pull/1487">communication#1487</a>).</p></li>
 </ul>
-<p>Action required: replace <code class="docutils literal notranslate"><span class="pre">GetSampleSize()</span></code> and <code class="docutils literal notranslate"><span class="pre">TypeErasedSamplePtr</span></code>, do not
-rely on <code class="docutils literal notranslate"><span class="pre">noexcept</span></code> of the listed functions and depend on the specific
+<p>Action required: replace <code class="docutils literal notranslate"><span class="pre">GetSampleSize()</span></code> and <code class="docutils literal notranslate"><span class="pre">TypeErasedSamplePtr</span></code>, do
+not rely on <code class="docutils literal notranslate"><span class="pre">noexcept</span></code> of the listed functions and depend on the specific
 <code class="docutils literal notranslate"><span class="pre">//score/memory/shared</span></code> sub-targets (for example <code class="docutils literal notranslate"><span class="pre">:offset_ptr</span></code>,
 <code class="docutils literal notranslate"><span class="pre">:vector</span></code>, <code class="docutils literal notranslate"><span class="pre">:string</span></code>).</p>
 </section>
@@ -926,49 +937,54 @@ directly
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">Kvs::reset_key</span></code> was renamed to <code class="docutils literal notranslate"><span class="pre">SetValueToDefault</span></code> (C++) and
 <code class="docutils literal notranslate"><span class="pre">set_value_to_default</span></code> (Rust), without a deprecated alias
-(<a class="reference external" href="https://github.com/eclipse-score/persistency/pull/585">persistency#585</a>,
-<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/873238a8474c470eb571a47abdf25cab382a6a9e">873238a</a>,
-<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/0e4c5be3ebb3441d5f25e72772745ea553b01d67">0e4c5be</a>).</p></li>
+(<a class="reference external" href="https://github.com/eclipse-score/persistency/pull/585">persistency#585</a>).</p></li>
 <li><p>The KVS rejects untagged JSON; a defaults file must use the type-tagged
 top-level envelope <code class="docutils literal notranslate"><span class="pre">{&quot;t&quot;:&quot;obj&quot;,&quot;v&quot;:{...}}</span></code>
-(<a class="reference external" href="https://github.com/eclipse-score/persistency/pull/490">persistency#490</a>,
-<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/c37c448bf429d1eb519a5dcff39d61205d73b37c">c37c448</a>).</p></li>
-<li><p>The C++ headers are included as <code class="docutils literal notranslate"><span class="pre">score/kvs/kvs.h</span></code>, <code class="docutils literal notranslate"><span class="pre">kvs_builder.h</span></code> and
-<code class="docutils literal notranslate"><span class="pre">kvs_value.h</span></code> from <code class="docutils literal notranslate"><span class="pre">&#64;score_persistency//score/kvs</span></code>, and the
-<code class="docutils literal notranslate"><span class="pre">KvsBuilder</span></code> flags became enums (<code class="docutils literal notranslate"><span class="pre">Defaults</span></code>, <code class="docutils literal notranslate"><span class="pre">KvsLoad</span></code>,
-<code class="docutils literal notranslate"><span class="pre">WorkingDir</span></code>). Configuration Management is adapted by a patch in this
-repository
+(<a class="reference external" href="https://github.com/eclipse-score/persistency/pull/490">persistency#490</a>).</p></li>
+<li><p>The C++ headers are <code class="docutils literal notranslate"><span class="pre">score/kvs/kvs.h</span></code>, <code class="docutils literal notranslate"><span class="pre">kvs_builder.h</span></code> and
+<code class="docutils literal notranslate"><span class="pre">kvs_value.h</span></code> in <code class="docutils literal notranslate"><span class="pre">&#64;score_persistency//score/kvs</span></code> and are included with the
+full path; the <code class="docutils literal notranslate"><span class="pre">KvsBuilder</span></code> flags became enums (<code class="docutils literal notranslate"><span class="pre">Defaults</span></code>, <code class="docutils literal notranslate"><span class="pre">KvsLoad</span></code>,
+<code class="docutils literal notranslate"><span class="pre">WorkingDir</span></code>)
 (<a class="reference external" href="https://github.com/eclipse-score/persistency/pull/461">persistency#461</a>,
-<a class="reference external" href="https://github.com/eclipse-score/persistency/pull/562">persistency#562</a>,
-<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/346704410622c0863cbb5cf04a1578f426cf797e">3467044</a>).</p></li>
+<a class="reference external" href="https://github.com/eclipse-score/persistency/pull/562">persistency#562</a>).</p></li>
 <li><p>Deprecated, still available: the namespace <code class="docutils literal notranslate"><span class="pre">score::mw::per::kvs</span></code> (now
 <code class="docutils literal notranslate"><span class="pre">score::kvs</span></code>), the old <code class="docutils literal notranslate"><span class="pre">*.hpp</span></code> headers, the snake_case method names (now
-PascalCase) and the constants and enumerators without <code class="docutils literal notranslate"><span class="pre">k</span></code> prefix
+PascalCase) and constants and enumerators without <code class="docutils literal notranslate"><span class="pre">k</span></code> prefix
 (<a class="reference external" href="https://github.com/eclipse-score/persistency/pull/562">persistency#562</a>,
 <a class="reference external" href="https://github.com/eclipse-score/persistency/pull/564">persistency#564</a>,
 <a class="reference external" href="https://github.com/eclipse-score/persistency/pull/614">persistency#614</a>).</p></li>
 <li><p>Keys must be non-empty, consist of printable ASCII characters and be at most
-32 bytes long. The C++ and Rust KVS return <code class="docutils literal notranslate"><span class="pre">InvalidKey</span></code> for other keys,
-and loading a file with such a key fails
+32 bytes long; the C++ and Rust KVS return <code class="docutils literal notranslate"><span class="pre">InvalidKey</span></code> for other keys, and
+loading a file with such a key fails
 (<a class="reference external" href="https://github.com/eclipse-score/persistency/pull/308">persistency#308</a>,
 <a class="reference external" href="https://github.com/eclipse-score/persistency/pull/508">persistency#508</a>,
 <a class="reference external" href="https://github.com/eclipse-score/persistency/pull/509">persistency#509</a>).</p></li>
 <li><p>The KVS stores its files atomically with the permissions <code class="docutils literal notranslate"><span class="pre">640</span></code>
 (<a class="reference external" href="https://github.com/eclipse-score/persistency/pull/503">persistency#503</a>).</p></li>
 </ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Important for integrators: <code class="docutils literal notranslate"><span class="pre">reference_integration</span></code> adapts Configuration
+Management <code class="docutils literal notranslate"><span class="pre">v0.3.1</span></code> to the new headers and builder API by the patch
+<code class="docutils literal notranslate"><span class="pre">patches/config_management/002-migrate-to-persistency-kvs-api.patch</span></code>
+(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/346704410622c0863cbb5cf04a1578f426cf797e">3467044</a>).
+The feature integration tests use <code class="docutils literal notranslate"><span class="pre">SetValueToDefault</span></code> and
+<code class="docutils literal notranslate"><span class="pre">set_value_to_default</span></code> and write the defaults files with the tagged
+envelope
+(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/873238a8474c470eb571a47abdf25cab382a6a9e">873238a</a>,
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/0e4c5be3ebb3441d5f25e72772745ea553b01d67">0e4c5be</a>,
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/c37c448bf429d1eb519a5dcff39d61205d73b37c">c37c448</a>).</p>
+</div>
 <p>Action required: rename <code class="docutils literal notranslate"><span class="pre">reset_key</span></code> calls, convert defaults files to the
 tagged envelope, update the KVS includes, builder calls and names, keep keys
-within the allowed characters and length and check that processes reading KVS
+within the allowed characters and length, and check that processes reading KVS
 files of another user still have access.</p>
 </section>
 <section id="lifecycle-launch-manager-configuration-and-control-api">
 <h4>Lifecycle: Launch Manager configuration and control API<a class="headerlink" href="#lifecycle-launch-manager-configuration-and-control-api" title="Link to this heading">#</a></h4>
 <p>Lifecycle <code class="docutils literal notranslate"><span class="pre">v0.7.0</span></code> to <code class="docutils literal notranslate"><span class="pre">v0.10.0</span></code> change the Launch Manager configuration
 and its control interface. Configurations with old keys fail the schema
-validation; the Lifecycle showcase configuration of this repository was
-updated accordingly
-(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/a575ce6982f0d73ed759462f25f29d2d39ab7627">a575ce6</a>,
-<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/9c0136e094cfd76219077877a760c0e6fb8236d6">9c0136e</a>):</p>
+validation:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">v0.7.0</span></code>: all durations are configured in milliseconds, and the keys get
 the suffix <code class="docutils literal notranslate"><span class="pre">_ms</span></code>, for example <code class="docutils literal notranslate"><span class="pre">transition_timeout_ms</span></code> and
@@ -987,6 +1003,14 @@ replace the options <code class="docutils literal notranslate"><span class="pre"
 (<a class="reference external" href="https://github.com/eclipse-score/lifecycle/pull/868">lifecycle#868</a>,
 <a class="reference external" href="https://github.com/eclipse-score/lifecycle/releases/tag/v0.10.0">Lifecycle v0.10.0 release notes</a>).</p></li>
 </ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Important for integrators: the Launch Manager configuration of the
+<code class="docutils literal notranslate"><span class="pre">simple_lifecycle</span></code> showcase in <code class="docutils literal notranslate"><span class="pre">reference_integration</span></code> uses the new
+schema and can serve as an example
+(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/a575ce6982f0d73ed759462f25f29d2d39ab7627">a575ce6</a>,
+<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/9c0136e094cfd76219077877a760c0e6fb8236d6">9c0136e</a>).</p>
+</div>
 <p>Action required: rename the duration fields to <code class="docutils literal notranslate"><span class="pre">*_ms</span></code> and convert the values
 to milliseconds, migrate State Managers from <code class="docutils literal notranslate"><span class="pre">ControlClient</span></code> to
 <code class="docutils literal notranslate"><span class="pre">ILmControl</span></code>, set <code class="docutils literal notranslate"><span class="pre">schema_version</span></code> to <code class="docutils literal notranslate"><span class="pre">2</span></code>, replace
@@ -1002,12 +1026,19 @@ their safety documentation: <code class="docutils literal notranslate"><span cla
 <code class="docutils literal notranslate"><span class="pre">v3.0.0</span></code> splits into <code class="docutils literal notranslate"><span class="pre">failure_modes</span></code>, <code class="docutils literal notranslate"><span class="pre">fault_trees</span></code> and
 <code class="docutils literal notranslate"><span class="pre">safety_analysis</span></code>; <code class="docutils literal notranslate"><span class="pre">dependable_element</span></code> no longer has the attribute
 <code class="docutils literal notranslate"><span class="pre">assumptions_of_use</span></code>; PlantUML elements are identified by their written name
-instead of the alias; and the crate repository is renamed from <code class="docutils literal notranslate"><span class="pre">&#64;crates</span></code> to
-<code class="docutils literal notranslate"><span class="pre">&#64;crates_score_tooling</span></code>. This repository drops the <code class="docutils literal notranslate"><span class="pre">assumptions_of_use</span></code>
-attribute from Logging and Configuration Management by patch
+instead of the alias; the crate repository is renamed from <code class="docutils literal notranslate"><span class="pre">&#64;crates</span></code> to
+<code class="docutils literal notranslate"><span class="pre">&#64;crates_score_tooling</span></code>
 (<a class="reference external" href="https://github.com/eclipse-score/tooling/releases/tag/v2.3.1">Tooling v2.3.1 release notes</a>,
-<a class="reference external" href="https://github.com/eclipse-score/tooling/releases/tag/v3.0.0">Tooling v3.0.0 release notes</a>,
-<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/dc41763ef74338f1b394adcbcd798f76b85cde35">dc41763</a>).</p>
+<a class="reference external" href="https://github.com/eclipse-score/tooling/releases/tag/v3.0.0">Tooling v3.0.0 release notes</a>).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Important for integrators: Logging <code class="docutils literal notranslate"><span class="pre">v0.2.6</span></code> and Configuration Management
+<code class="docutils literal notranslate"><span class="pre">v0.3.1</span></code> still set <code class="docutils literal notranslate"><span class="pre">assumptions_of_use</span></code>; <code class="docutils literal notranslate"><span class="pre">reference_integration</span></code>
+removes the attribute by patch
+(<code class="docutils literal notranslate"><span class="pre">004-drop-dependable-element-aou-attr.patch</span></code> and
+<code class="docutils literal notranslate"><span class="pre">003-drop-dependable-element-aou-attr.patch</span></code>)
+(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/dc41763ef74338f1b394adcbcd798f76b85cde35">dc41763</a>).</p>
+</div>
 <p>Action required: migrate <code class="docutils literal notranslate"><span class="pre">dependable_element</span></code> and safety analysis targets
 with the migration checklist of the Tooling <code class="docutils literal notranslate"><span class="pre">v3.0.0</span></code> release notes.</p>
 </section>
@@ -1015,10 +1046,14 @@ with the migration checklist of the Tooling <code class="docutils literal notran
 <h4>Test Scenarios: libraries moved under <code class="docutils literal notranslate"><span class="pre">score/</span></code><a class="headerlink" href="#test-scenarios-libraries-moved-under-score" title="Link to this heading">#</a></h4>
 <p>Test Scenarios <code class="docutils literal notranslate"><span class="pre">v0.5.0</span></code> moved the libraries to
 <code class="docutils literal notranslate"><span class="pre">&#64;score_test_scenarios//score/test_scenarios_cpp</span></code> and
-<code class="docutils literal notranslate"><span class="pre">&#64;score_test_scenarios//score/test_scenarios_rust</span></code>; the feature integration
-tests of this repository use the new labels
-(<a class="reference external" href="https://github.com/eclipse-score/testing_tools/pull/31">testing_tools#31</a>,
-<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/cb89c10a49e1058ca6e4f01495530be30db5441b">cb89c10</a>).</p>
+<code class="docutils literal notranslate"><span class="pre">&#64;score_test_scenarios//score/test_scenarios_rust</span></code>
+(<a class="reference external" href="https://github.com/eclipse-score/testing_tools/pull/31">testing_tools#31</a>).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Important for integrators: the feature integration tests of
+<code class="docutils literal notranslate"><span class="pre">reference_integration</span></code> use the new labels
+(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/cb89c10a49e1058ca6e4f01495530be30db5441b">cb89c10</a>).</p>
+</div>
 <p>Action required: update the <code class="docutils literal notranslate"><span class="pre">&#64;score_test_scenarios</span></code> labels.</p>
 </section>
 <section id="docs-as-code-score-pytest-moved-fmea-attribute-renamed">
@@ -1305,7 +1340,7 @@ release.</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#platform-integration-tests">Platform integration tests</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-coverage-from-module-tests">Requirement coverage from module tests</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#qualified-coverage-tool-in-the-modules">Qualified coverage tool in the modules</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lifecycle-control-interface-for-state-managers">Lifecycle control interface for State Managers</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lifecycle-control-interface-for-state-managers">Lifecycle: control interface for State Managers</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#logging-linux-syslog-backend">Logging: Linux syslog backend</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#itf-qemu-plugin-for-linux-images">ITF: QEMU plugin for Linux images</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#module-maturity-classification-dr-003">Module maturity classification (DR-003)</a></li>
@@ -1314,8 +1349,8 @@ release.</p>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#breaking-changes">💥 Breaking Changes</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reference-integration-resolved-dependency-overrides-removed">Reference integration: resolved-dependency overrides removed</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reference-integration-qnx-image-packages-moved">Reference integration: QNX image packages moved</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reference-integration-resolved-dependency-overrides-removed">reference_integration: resolved-dependency overrides removed</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reference-integration-qnx-image-packages-moved">reference_integration: QNX image packages moved</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#platform-stakeholder-requirement-ids-renamed">Platform: stakeholder requirement IDs renamed</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#baselibs-vajson-is-the-only-json-backend">Baselibs: vaJson is the only JSON backend</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#baselibs-deprecated-apis-and-targets-removed">Baselibs: deprecated APIs and targets removed</a></li>
