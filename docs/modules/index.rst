@@ -19,6 +19,7 @@ Modules
    :titlesonly:
    :maxdepth: 1
 
+   components
 
 Dependable element documentation
 --------------------------------
