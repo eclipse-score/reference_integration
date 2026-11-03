@@ -12,19 +12,18 @@
    # SPDX-License-Identifier: Apache-2.0
    # *******************************************************************************
 
-S-CORE Platform v0.10 release note (DRAFT)
-============================================
+S-CORE Platform v0.10 release note
+====================================
 
-.. warning::
+.. note::
 
-   **DRAFT - release in progress.** v0.10.0 is not released yet (planned for
-   2026-11-02). This note shows the current state of the integration and changes
-   until the release is published.
+   **FINAL.** This is the release note of release
+   `v0.10.0 <https://github.com/eclipse-score/reference_integration/releases/tag/v0.10.0>`__ (2026-11-02).
 
 
 .. document:: S-CORE v0.10 release note
    :id: doc__score_v010_release_note
-   :status: draft
+   :status: valid
    :safety: QM
    :security: YES
    :realizes: wp__platform_sw_release_note
