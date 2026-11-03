@@ -16,15 +16,15 @@ load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
 rust_binary(
     name = "kyron_logging",
     srcs = ["src/main.rs"],
-    visibility = ["//visibility:public"],
-    deps = [
-        "@score_kyron//src/kyron:libkyron",
-        "@score_kyron//src/kyron-foundation:libkyron_foundation",
-        "@score_baselibs//score/log_rust/score_log:score_log",
-        "@score_baselibs//score/log_rust/stdout_logger:stdout_logger",
-    ],
     proc_macro_deps = [
         "@score_kyron//src/kyron-macros:runtime_macros",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "@score_baselibs//score/log_rust/score_log",
+        "@score_baselibs//score/log_rust/stdout_logger",
+        "@score_kyron//src/kyron:libkyron",
+        "@score_kyron//src/kyron-foundation:libkyron_foundation",
     ],
 )
 
