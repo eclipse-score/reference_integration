@@ -25,13 +25,13 @@ exports_files(["README.md"])
 pkg_filegroup(
     name = "platform_bundle",
     srcs = [
-        "//deploy/communication:platform_info_service_bin",
-        "//deploy/communication:platform_info_service_configs",
         "//deploy/config_management:config_daemon_bin",
         "//deploy/config_management:config_daemon_configs",
         "//deploy/lifecycle:launch_manager_bin",
         "//deploy/logging:datarouter_bin",
         "//deploy/logging:datarouter_configs",
+        "//deploy/platform_info:platform_info_service_bin",
+        "//deploy/platform_info:platform_info_service_configs",
     ],
     visibility = ["//visibility:public"],
 )

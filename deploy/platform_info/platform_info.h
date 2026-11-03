@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-#ifndef DEPLOY_COMMUNICATION_PLATFORM_INFO_H
-#define DEPLOY_COMMUNICATION_PLATFORM_INFO_H
+#ifndef DEPLOY_PLATFORM_INFO_PLATFORM_INFO_H
+#define DEPLOY_PLATFORM_INFO_PLATFORM_INFO_H
 
 #include "score/mw/com/types.h"
 
@@ -74,4 +74,4 @@ std::string Compare(const PlatformInfo& expected, const PlatformInfo& actual);
 
 }  // namespace score::platform::info
 
-#endif  // DEPLOY_COMMUNICATION_PLATFORM_INFO_H
+#endif  // DEPLOY_PLATFORM_INFO_PLATFORM_INFO_H

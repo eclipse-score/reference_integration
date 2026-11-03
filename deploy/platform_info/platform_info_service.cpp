@@ -15,7 +15,7 @@
 // platform_info field reports the S-CORE version the platform was built from,
 // until SIGTERM or SIGINT.
 
-#include "deploy/communication/platform_info.h"
+#include "deploy/platform_info/platform_info.h"
 
 #include "score/mw/com/runtime.h"
 #include "score/string_manipulation/arguments/arguments.h"

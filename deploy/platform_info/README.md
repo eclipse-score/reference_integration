@@ -1,11 +1,11 @@
-# Platform info service (communication)
+# Platform info service
 
-Communication and baselibs ship as libraries. A library cannot be checked from
-outside the process that links it, so the platform deploys a small mw::com
-service built on both that reports the S-CORE version the platform was built
-from. A consumer in layer 3 has to find that service and read the version; if
-the platform does not deploy it, deploys something that does not speak S-CORE
-communication, or runs a different S-CORE version, the consumer fails.
+A platform service of its own, not part of any S-CORE module: it reports the
+S-CORE version the platform was built from. It is built on S-CORE
+communication (mw::com) and baselibs (CRC32). A consumer in layer 3 has to
+find the service and read the version; if the platform does not deploy it,
+deploys something that does not speak mw::com, or runs a different S-CORE
+version, the consumer fails.
 
 See [`deploy/README.md`](../README.md) for the layering and the layer 2 /
 layer 3 contract this service is part of.
@@ -14,8 +14,8 @@ layer 3 contract this service is part of.
 
 | Path on target | Content |
 | --- | --- |
-| `/usr/bin/communication/platform_info_service` | Provider of the service |
-| `/usr/bin/communication/etc/mw_com_config.json` | mw::com configuration of the service; consumers use this deployed file |
+| `/usr/bin/platform_info/platform_info_service` | Provider of the service |
+| `/usr/bin/platform_info/etc/mw_com_config.json` | mw::com configuration of the service; consumers use this deployed file |
 
 ## Service `score/platform/info`
 
@@ -53,18 +53,18 @@ brings no provider of its own. It exits 0 only if it
    generated header) — otherwise it lists the differing modules.
 
 On success it logs `platform_info_consumer: S-CORE version check passed`.
-It runs as the showcase `Communication Platform Version Check`
+It runs as the showcase `Platform Version Check`
 ([`com_platform_info.score.json`](../../showcases/standalone/com_platform_info.score.json)),
 which the platform integration test
-`test_communication_platform_version` executes.
+`test_platform_version` executes.
 
 ## Running it locally
 
 ```sh
-bazel build --config=linux-x86_64 //deploy/communication:platform_info_service //showcases/standalone:platform_info_consumer
+bazel build --config=linux-x86_64 //deploy/platform_info:platform_info_service //showcases/standalone:platform_info_consumer
 mkdir -p /tmp/mw_com_lola/service_discovery
-cd deploy/communication
-../../bazel-bin/deploy/communication/platform_info_service &
+cd deploy/platform_info
+../../bazel-bin/deploy/platform_info/platform_info_service &
 ../../bazel-bin/showcases/standalone/platform_info_consumer --service_instance_manifest etc/mw_com_config.json
 kill %1
 ```

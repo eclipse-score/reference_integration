@@ -32,9 +32,9 @@ def main(known_good_path: str, header_path: str) -> None:
         modules.append((name, version))
 
     entries = "\n".join(f"    ModuleEntry{{{_cpp_string(n)}, {_cpp_string(v)}}}," for n, v in modules)
-    header = f"""// Generated from known_good.json by //deploy/communication:gen_platform_info. Do not edit.
-#ifndef DEPLOY_COMMUNICATION_PLATFORM_INFO_DATA_H
-#define DEPLOY_COMMUNICATION_PLATFORM_INFO_DATA_H
+    header = f"""// Generated from known_good.json by //deploy/platform_info:gen_platform_info. Do not edit.
+#ifndef DEPLOY_PLATFORM_INFO_PLATFORM_INFO_DATA_H
+#define DEPLOY_PLATFORM_INFO_PLATFORM_INFO_DATA_H
 
 #include <array>
 #include <string_view>
@@ -56,7 +56,7 @@ inline constexpr std::array<ModuleEntry, {len(modules)}U> kModules{{{{
 
 }}  // namespace score::platform::info::generated
 
-#endif  // DEPLOY_COMMUNICATION_PLATFORM_INFO_DATA_H
+#endif  // DEPLOY_PLATFORM_INFO_PLATFORM_INFO_DATA_H
 """
     with open(header_path, "w", encoding="utf-8") as f:
         f.write(header)

@@ -11,12 +11,10 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Deployment of the S-CORE communication module (layer 2, see //deploy:README.md).
-#
-# Communication itself ships as a library. To make "the platform provides
-# working inter-process communication" checkable, the platform deploys a
-# platform info service on top of it; consumers in layer 3 must find it via
-# mw::com service discovery and read the S-CORE version it reports.
+# Platform info service (layer 2, see //deploy:README.md): a platform service of
+# its own, not part of any S-CORE module. It reports the S-CORE version the
+# platform was built from over mw::com; consumers in layer 3 find it via service
+# discovery and compare the version with the one they were built for.
 
 load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_attributes", "pkg_files", "strip_prefix")
@@ -63,22 +61,22 @@ cc_binary(
     ],
 )
 
-# Platform info service binary (0777), placed as /usr/bin/communication/platform_info_service.
+# Platform info service binary (0777), placed as /usr/bin/platform_info/platform_info_service.
 pkg_files(
     name = "platform_info_service_bin",
     srcs = [":platform_info_service"],
     attributes = pkg_attributes(mode = "0777"),
-    prefix = "usr/bin/communication",
+    prefix = "usr/bin/platform_info",
     strip_prefix = strip_prefix.files_only(),
 )
 
 # mw::com configuration of the platform info service (0644), placed under
-# /usr/bin/communication/etc. Consumers use this deployed file, so a platform
+# /usr/bin/platform_info/etc. Consumers use this deployed file, so a platform
 # that deploys a different service definition fails the check.
 pkg_files(
     name = "platform_info_service_configs",
     srcs = ["etc/mw_com_config.json"],
     attributes = pkg_attributes(mode = "0644"),
-    prefix = "usr/bin/communication/etc",
+    prefix = "usr/bin/platform_info/etc",
     strip_prefix = strip_prefix.files_only(),
 )

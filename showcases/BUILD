@@ -25,6 +25,7 @@ score_pkg_bundle(
         "//showcases/standalone:persistency_pkg_files",
         "//showcases/simple_lifecycle:simple_lifecycle_pkg_files",
         "//showcases/standalone:baselibs_pkg_files",
+        "//showcases/standalone:platform_info_pkg_files",
     ],
     package_dir = "showcases",
 )
@@ -44,6 +45,7 @@ pkg_filegroup(
         "//showcases/standalone:kyron_pkg_files",
         "//showcases/standalone:logging_pkg_files",
         "//showcases/standalone:persistency_pkg_files",
+        "//showcases/standalone:platform_info_pkg_files",
         "//showcases/standalone:time_pkg_files",
     ],
     prefix = "showcases",

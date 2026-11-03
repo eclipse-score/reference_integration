@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-#include "deploy/communication/platform_info.h"
+#include "deploy/platform_info/platform_info.h"
 
-#include "deploy/communication/platform_info_data.h"
+#include "deploy/platform_info/platform_info_data.h"
 #include "score/hash/code/crc/crc32_ieee.h"
 
 #include <algorithm>

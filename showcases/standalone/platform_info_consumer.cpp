@@ -11,13 +11,13 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-// Consumer of the platform info service (//deploy/communication).
+// Consumer of the platform info service (//deploy/platform_info).
 //
 // Exits 0 only if it finds the deployed service via mw::com service discovery,
 // receives platform_info with an intact baselibs CRC32, and the platform reports
 // the S-CORE version this consumer was built for.
 
-#include "deploy/communication/platform_info.h"
+#include "deploy/platform_info/platform_info.h"
 
 #include "score/mw/com/runtime.h"
 #include "score/string_manipulation/arguments/arguments.h"
@@ -100,7 +100,7 @@ int main(int argc, const char* argv[])
     }
     if (handles.empty())
     {
-        return Fail("the platform offers no platform info service (is //deploy/communication deployed and running?)");
+        return Fail("the platform offers no platform info service (is //deploy/platform_info deployed and running?)");
     }
     std::cout << "platform_info_consumer: found the platform info service" << std::endl;
 
