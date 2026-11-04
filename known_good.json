@@ -86,7 +86,6 @@
                     "code_root_path": "//score/kvs/...",
                     "extra_test_config": [
                         "@score_baselibs//score/log_rust:safety_level=qm",
-                        "@score_baselibs//score/json:base_library=nlohmann",
                         "@score_logging//score/mw/log/flags:KRemote_Logging=False"
                     ],
                     "exclude_test_targets": [
@@ -252,8 +251,8 @@
                         "//score/config_management/dependability/..."
                     ],
                     "test_notes": {
-                        "//score/config_management/config_daemon/code/data_model/details:unit_test": "TODO fix: baselibs 0.2.16 serializes JSON with vaJson only (base_library flag has no effect); expected strings assume nlohmann (e.g. 3.222 vs 3.22199988)",
-                        "//score/config_management/config_provider/code/parameter_set:unit_test": "TODO fix: baselibs 0.2.16 serializes JSON with vaJson only (base_library flag has no effect); expected strings assume nlohmann (e.g. 3.222 vs 3.22199988)"
+                        "//score/config_management/config_daemon/code/data_model/details:unit_test": "TODO fix: config_management has to bump baselibs to a version that includes the following bugfix: https://github.com/eclipse-score/baselibs/pull/657",
+                        "//score/config_management/config_provider/code/parameter_set:unit_test": "TODO fix: config_management has to bump baselibs to a version that includes the following bugfix: https://github.com/eclipse-score/baselibs/pull/657"
                     },
                     "langs": [
                         "cpp"
