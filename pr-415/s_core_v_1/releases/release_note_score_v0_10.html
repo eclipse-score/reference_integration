@@ -541,7 +541,7 @@
 <p><strong>FINAL.</strong> This is the release note of release
 <a class="reference external" href="https://github.com/eclipse-score/reference_integration/releases/tag/v0.10.0">v0.10.0</a> (2026-11-02).</p>
 </div>
-<div class="need_container docutils container" id="SNCB-27a7ca41">
+<div class="need_container docutils container" id="SNCB-9f0a6b29">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__score_v010_release_note">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -595,11 +595,11 @@
 <p>This document provides an overview of the changes, improvements, and bug fixes
 included in the software platform release version v0.10.0 as compared to the
 previous platform release (v0.9.0).</p>
-<figure class="align-default" id="id1">
+<figure class="align-default" id="id2">
 <a class="reference internal image-reference" href="../../_images/architecture_v0_10.svg"><img alt="S-CORE v0.10 reference integration architecture" src="../../_images/architecture_v0_10.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 8 </span><span class="caption-text">Modules, components and images of the reference integration v0.10.0.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 8 </span><span class="caption-text">Modules, components and images of the reference integration v0.10.0.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>The maturity classification of the software modules (Release, Experimental,
@@ -715,6 +715,26 @@ justifications
 <a class="reference external" href="https://github.com/eclipse-score/kyron/pull/175">kyron#175</a>,
 <a class="reference external" href="https://github.com/eclipse-score/persistency/pull/450">persistency#450</a>,
 <a class="reference external" href="https://github.com/eclipse-score/time/pull/235">time#235</a>).</p>
+</section>
+<section id="baselibs">
+<h4>Baselibs<a class="headerlink" href="#baselibs" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p><strong>Serialization:</strong> Added a public serialization library with a strategy-based
+API for serialization and deserialization.</p></li>
+<li><p><strong>Concurrency:</strong> Added composable operations on locked values through
+<code class="docutils literal notranslate"><span class="pre">LockedPtr::transform()</span></code>, <code class="docutils literal notranslate"><span class="pre">and_then()</span></code>, and <code class="docutils literal notranslate"><span class="pre">or_else()</span></code>, plus a Rust
+wrapper for C++ stop tokens.</p></li>
+<li><p><strong>Containers:</strong> Extended <code class="docutils literal notranslate"><span class="pre">NonRelocatableVector</span></code> with element removal,
+clearing, and emptiness checks.</p></li>
+<li><p><strong>FutureCPP</strong> Improved FutureCPP support for input iterators
+and interoperability with <code class="docutils literal notranslate"><span class="pre">std::optional</span></code>.</p></li>
+<li><p><strong>OS abstraction layer:</strong> Added a mockable Linux syslog wrapper,
+environment-variable operations, and public access to the network
+name-resolution Bazel target.</p></li>
+<li><p><strong>JSON:</strong> Added explicit control over compact and pretty-printed output.</p></li>
+<li><p><strong>FlatBuffers:</strong> JSON-schema generation now preserves rich attributes from
+schema comments and produces deterministic attribute ordering.</p></li>
+</ul>
 </section>
 <section id="lifecycle-control-interface-for-state-managers">
 <h4>Lifecycle: control interface for State Managers<a class="headerlink" href="#lifecycle-control-interface-for-state-managers" title="Link to this heading">#</a></h4>
@@ -837,68 +857,33 @@ old ID make the documentation build fail with an unknown-link warning
 </div>
 <p>Action required: link tests to the new stakeholder requirement IDs.</p>
 </section>
-<section id="baselibs-vajson-is-the-only-json-backend">
-<h4>Baselibs: vaJson is the only JSON backend<a class="headerlink" href="#baselibs-vajson-is-the-only-json-backend" title="Link to this heading">#</a></h4>
-<p><code class="docutils literal notranslate"><span class="pre">score/json</span></code> uses vaJson as its only parser and writer; <code class="docutils literal notranslate"><span class="pre">JsonParser</span></code>,
-<code class="docutils literal notranslate"><span class="pre">IJsonParser</span></code> and <code class="docutils literal notranslate"><span class="pre">JsonWriter</span></code> keep their interfaces:</p>
+<section id="id1">
+<h4>Baselibs<a class="headerlink" href="#id1" title="Link to this heading">#</a></h4>
 <ul class="simple">
-<li><p>v0.2.15: the nlohmann parser was removed together with the
-<code class="docutils literal notranslate"><span class="pre">nlohmann_json</span></code> dependency of Baselibs; the flag
-<code class="docutils literal notranslate"><span class="pre">--&#64;score_baselibs//score/json:base_library</span></code> is a deprecated no-op, also
-with the value <code class="docutils literal notranslate"><span class="pre">nlohmann</span></code>
-(<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/660">baselibs#660</a>).</p></li>
-<li><p>v0.2.16: the flag <code class="docutils literal notranslate"><span class="pre">--&#64;score_baselibs//score/json:writer_library</span></code> and the
-<code class="docutils literal notranslate"><span class="pre">json_serialize</span></code> writer were removed. The written JSON differs, for example
-<code class="docutils literal notranslate"><span class="pre">true</span></code>/<code class="docutils literal notranslate"><span class="pre">false</span></code> instead of <code class="docutils literal notranslate"><span class="pre">1</span></code>/<code class="docutils literal notranslate"><span class="pre">0</span></code> and a different float format; the
-enum <code class="docutils literal notranslate"><span class="pre">Formatting</span></code> moved to <code class="docutils literal notranslate"><span class="pre">score/json/formatting.h</span></code>
-(<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/675">baselibs#675</a>,
-<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/685">baselibs#685</a>).</p></li>
-<li><p>v0.2.17: the class <code class="docutils literal notranslate"><span class="pre">VajsonParser</span></code> and the target <code class="docutils literal notranslate"><span class="pre">vajson_parser</span></code> were
-removed
-(<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/677">baselibs#677</a>).</p></li>
+<li><p><strong>Removed compatibility targets and headers:</strong> Replace deprecated <code class="docutils literal notranslate"><span class="pre">//src</span></code>
+Bazel aliases and the string and atomic shims under <code class="docutils literal notranslate"><span class="pre">//score/memory</span></code> with
+their replacement targets, headers, and namespaces.</p></li>
+<li><p><strong>Removed deprecated libraries:</strong> <code class="docutils literal notranslate"><span class="pre">score/datetime_converter</span></code> and the
+<code class="docutils literal notranslate"><span class="pre">score/os</span></code> wrappers <code class="docutils literal notranslate"><span class="pre">cpuid</span></code>, <code class="docutils literal notranslate"><span class="pre">file_stream</span></code>, and <code class="docutils literal notranslate"><span class="pre">make_dev</span></code> are no
+longer available.</p></li>
+<li><p><strong>JSON backend consolidation:</strong> vaJson is now the sole parser and writer
+backend. Remove the deleted <code class="docutils literal notranslate"><span class="pre">writer_library</span></code> flag and the deprecated, now
+ineffective <code class="docutils literal notranslate"><span class="pre">base_library</span></code> flag. Serialized output may change: booleans use
+<code class="docutils literal notranslate"><span class="pre">true</span></code>/<code class="docutils literal notranslate"><span class="pre">false</span></code> instead of <code class="docutils literal notranslate"><span class="pre">1</span></code>/<code class="docutils literal notranslate"><span class="pre">0</span></code>, escaping is corrected, and empty
+objects and arrays are emitted as <code class="docutils literal notranslate"><span class="pre">{}</span></code> and <code class="docutils literal notranslate"><span class="pre">[]</span></code>. Default output remains
+pretty-printed.</p></li>
+<li><p><strong>Removed deprecated aliases and macros:</strong> Replace <code class="docutils literal notranslate"><span class="pre">Blank</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ResultBlank</span></code> with <code class="docutils literal notranslate"><span class="pre">void</span></code> and <code class="docutils literal notranslate"><span class="pre">Result&lt;void&gt;</span></code>. Use the <code class="docutils literal notranslate"><span class="pre">SCORE_</span></code>-prefixed
+versions of the removed reflection and serialization macros.</p></li>
+<li><p><strong>OS abstraction layer API cleanup:</strong> Replace the deprecated Linux thread-affinity wrapper and
+QNX channel-creation and timer-timeout overloads with their supported
+alternatives.</p></li>
+<li><p><strong>FlatBuffers allocator compatibility:</strong> The affected <code class="docutils literal notranslate"><span class="pre">LoadBuffer</span></code>
+overload now requires <code class="docutils literal notranslate"><span class="pre">score::cpp::pmr::vector&lt;uint8_t&gt;</span></code> rather than
+<code class="docutils literal notranslate"><span class="pre">std::pmr::vector&lt;uint8_t&gt;</span></code>.</p></li>
+<li><p><strong>Deprecation:</strong> <code class="docutils literal notranslate"><span class="pre">Synchronized::WithLock</span></code> remains available but is
+deprecated in favor of <code class="docutils literal notranslate"><span class="pre">lock()</span></code> and composable <code class="docutils literal notranslate"><span class="pre">LockedPtr</span></code> operations.</p></li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Important for integrators: <code class="docutils literal notranslate"><span class="pre">reference_integration</span></code> still sets
-<code class="docutils literal notranslate"><span class="pre">base_library=nlohmann</span></code> in <code class="docutils literal notranslate"><span class="pre">.bazelrc</span></code> and <code class="docutils literal notranslate"><span class="pre">known_good.json</span></code>; the flag
-has no effect. Two Configuration Management unit tests are excluded in
-<code class="docutils literal notranslate"><span class="pre">known_good.json</span></code> because their expected strings assume the nlohmann float
-format (<code class="docutils literal notranslate"><span class="pre">3.222</span></code> instead of <code class="docutils literal notranslate"><span class="pre">3.22199988</span></code>)
-(<a class="reference external" href="https://github.com/eclipse-score/reference_integration/commit/312fde355d1270ab713603ce3233d39c81407c7d">312fde3</a>).</p>
-</div>
-<p>Action required: remove the <code class="docutils literal notranslate"><span class="pre">base_library</span></code> and <code class="docutils literal notranslate"><span class="pre">writer_library</span></code> flags, use
-<code class="docutils literal notranslate"><span class="pre">JsonParser</span></code> instead of <code class="docutils literal notranslate"><span class="pre">VajsonParser</span></code>, include <code class="docutils literal notranslate"><span class="pre">score/json/formatting.h</span></code>
-for <code class="docutils literal notranslate"><span class="pre">Formatting</span></code> and do not compare JSON output with the old format.</p>
-</section>
-<section id="baselibs-deprecated-apis-and-targets-removed">
-<h4>Baselibs: deprecated APIs and targets removed<a class="headerlink" href="#baselibs-deprecated-apis-and-targets-removed" title="Link to this heading">#</a></h4>
-<p>Baselibs removed deprecated or unused APIs; Persistency and Logging migrated
-away from them
-(<a class="reference external" href="https://github.com/eclipse-score/persistency/pull/455">persistency#455</a>,
-<a class="reference external" href="https://github.com/eclipse-score/logging/pull/343">logging#343</a>):</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">score::Blank</span></code>, <code class="docutils literal notranslate"><span class="pre">score::ResultBlank</span></code> and the macros <code class="docutils literal notranslate"><span class="pre">STRUCT_VISITABLE</span></code>,
-<code class="docutils literal notranslate"><span class="pre">STRUCT_TRACEABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">MEMCPY_SERIALIZABLE</span></code> and <code class="docutils literal notranslate"><span class="pre">MEMCPY_SERIALIZABLE_IF</span></code>
-(v0.2.16)
-(<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/623">baselibs#623</a>).</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">//src</span></code> aliases and the string and atomic shims in <code class="docutils literal notranslate"><span class="pre">//score/memory</span></code>
-(v0.2.14)
-(<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/598">baselibs#598</a>).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">//score/datetime_converter</span></code> and the <code class="docutils literal notranslate"><span class="pre">score/os</span></code> cpuid, file stream,
-make-dev and <code class="docutils literal notranslate"><span class="pre">select</span></code> wrappers (v0.2.13), the Linux
-<code class="docutils literal notranslate"><span class="pre">pthread_setaffinity_np</span></code> wrapper and the deprecated QNX <code class="docutils literal notranslate"><span class="pre">ChannelCreate</span></code>
-and <code class="docutils literal notranslate"><span class="pre">TimerTimeout</span></code> overloads (v0.2.16)
-(<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/471">baselibs#471</a>,
-<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/535">baselibs#535</a>,
-<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/536">baselibs#536</a>,
-<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/703">baselibs#703</a>).</p></li>
-<li><p>Deprecated: <code class="docutils literal notranslate"><span class="pre">Synchronized::WithLock</span></code>, replaced by the monadic functions of
-<code class="docutils literal notranslate"><span class="pre">LockedPtr</span></code> (v0.2.17)
-(<a class="reference external" href="https://github.com/eclipse-score/baselibs/pull/761">baselibs#761</a>).</p></li>
-</ul>
-<p>Action required: use <code class="docutils literal notranslate"><span class="pre">void</span></code>/<code class="docutils literal notranslate"><span class="pre">score::Result&lt;void&gt;</span></code> and the <code class="docutils literal notranslate"><span class="pre">SCORE_*</span></code>
-macros, depend on the <code class="docutils literal notranslate"><span class="pre">//score</span></code> targets and replace the removed OS wrappers
-and <code class="docutils literal notranslate"><span class="pre">WithLock</span></code>.</p>
 </section>
 <section id="communication-removed-deprecated-api-and-exception-specifications">
 <h4>Communication: removed deprecated API and exception specifications<a class="headerlink" href="#communication-removed-deprecated-api-and-exception-specifications" title="Link to this heading">#</a></h4>
@@ -1340,6 +1325,7 @@ release.</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#platform-integration-tests">Platform integration tests</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-coverage-from-module-tests">Requirement coverage from module tests</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#qualified-coverage-tool-in-the-modules">Qualified coverage tool in the modules</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#baselibs">Baselibs</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lifecycle-control-interface-for-state-managers">Lifecycle: control interface for State Managers</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#logging-linux-syslog-backend">Logging: Linux syslog backend</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#itf-qemu-plugin-for-linux-images">ITF: QEMU plugin for Linux images</a></li>
@@ -1352,8 +1338,7 @@ release.</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reference-integration-resolved-dependency-overrides-removed">reference_integration: resolved-dependency overrides removed</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reference-integration-qnx-image-packages-moved">reference_integration: QNX image packages moved</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#platform-stakeholder-requirement-ids-renamed">Platform: stakeholder requirement IDs renamed</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#baselibs-vajson-is-the-only-json-backend">Baselibs: vaJson is the only JSON backend</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#baselibs-deprecated-apis-and-targets-removed">Baselibs: deprecated APIs and targets removed</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Baselibs</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#communication-removed-deprecated-api-and-exception-specifications">Communication: removed deprecated API and exception specifications</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#persistency-kvs-api-and-file-format">Persistency: KVS API and file format</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lifecycle-launch-manager-configuration-and-control-api">Lifecycle: Launch Manager configuration and control API</a></li>
