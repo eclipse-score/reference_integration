@@ -173,6 +173,25 @@ justifications
 `persistency#450 <https://github.com/eclipse-score/persistency/pull/450>`__,
 `time#235 <https://github.com/eclipse-score/time/pull/235>`__).
 
+Baselibs
+~~~~~~~~
+
+- **Serialization:** Added a public serialization library with a strategy-based
+  API for serialization and deserialization.
+- **Concurrency:** Added composable operations on locked values through
+  ``LockedPtr::transform()``, ``and_then()``, and ``or_else()``, plus a Rust
+  wrapper for C++ stop tokens.
+- **Containers:** Extended ``NonRelocatableVector`` with element removal,
+  clearing, and emptiness checks.
+- **FutureCPP** Improved FutureCPP support for input iterators
+  and interoperability with ``std::optional``.
+- **OS abstraction layer:** Added a mockable Linux syslog wrapper,
+  environment-variable operations, and public access to the network
+  name-resolution Bazel target.
+- **JSON:** Added explicit control over compact and pretty-printed output.
+- **FlatBuffers:** JSON-schema generation now preserves rich attributes from
+  schema comments and produces deterministic attribute ordering.
+
 Lifecycle: control interface for State Managers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -302,70 +321,32 @@ old ID make the documentation build fail with an unknown-link warning
 
 Action required: link tests to the new stakeholder requirement IDs.
 
-Baselibs: vaJson is the only JSON backend
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Baselibs
+~~~~~~~~
 
-``score/json`` uses vaJson as its only parser and writer; ``JsonParser``,
-``IJsonParser`` and ``JsonWriter`` keep their interfaces:
-
-- v0.2.15: the nlohmann parser was removed together with the
-  ``nlohmann_json`` dependency of Baselibs; the flag
-  ``--@score_baselibs//score/json:base_library`` is a deprecated no-op, also
-  with the value ``nlohmann``
-  (`baselibs#660 <https://github.com/eclipse-score/baselibs/pull/660>`__).
-- v0.2.16: the flag ``--@score_baselibs//score/json:writer_library`` and the
-  ``json_serialize`` writer were removed. The written JSON differs, for example
-  ``true``/``false`` instead of ``1``/``0`` and a different float format; the
-  enum ``Formatting`` moved to ``score/json/formatting.h``
-  (`baselibs#675 <https://github.com/eclipse-score/baselibs/pull/675>`__,
-  `baselibs#685 <https://github.com/eclipse-score/baselibs/pull/685>`__).
-- v0.2.17: the class ``VajsonParser`` and the target ``vajson_parser`` were
-  removed
-  (`baselibs#677 <https://github.com/eclipse-score/baselibs/pull/677>`__).
-
-.. note::
-
-   Important for integrators: ``reference_integration`` still sets
-   ``base_library=nlohmann`` in ``.bazelrc`` and ``known_good.json``; the flag
-   has no effect. Two Configuration Management unit tests are excluded in
-   ``known_good.json`` because their expected strings assume the nlohmann float
-   format (``3.222`` instead of ``3.22199988``)
-   (`312fde3 <https://github.com/eclipse-score/reference_integration/commit/312fde355d1270ab713603ce3233d39c81407c7d>`__).
-
-Action required: remove the ``base_library`` and ``writer_library`` flags, use
-``JsonParser`` instead of ``VajsonParser``, include ``score/json/formatting.h``
-for ``Formatting`` and do not compare JSON output with the old format.
-
-Baselibs: deprecated APIs and targets removed
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Baselibs removed deprecated or unused APIs; Persistency and Logging migrated
-away from them
-(`persistency#455 <https://github.com/eclipse-score/persistency/pull/455>`__,
-`logging#343 <https://github.com/eclipse-score/logging/pull/343>`__):
-
-- ``score::Blank``, ``score::ResultBlank`` and the macros ``STRUCT_VISITABLE``,
-  ``STRUCT_TRACEABLE``, ``MEMCPY_SERIALIZABLE`` and ``MEMCPY_SERIALIZABLE_IF``
-  (v0.2.16)
-  (`baselibs#623 <https://github.com/eclipse-score/baselibs/pull/623>`__).
-- The ``//src`` aliases and the string and atomic shims in ``//score/memory``
-  (v0.2.14)
-  (`baselibs#598 <https://github.com/eclipse-score/baselibs/pull/598>`__).
-- ``//score/datetime_converter`` and the ``score/os`` cpuid, file stream,
-  make-dev and ``select`` wrappers (v0.2.13), the Linux
-  ``pthread_setaffinity_np`` wrapper and the deprecated QNX ``ChannelCreate``
-  and ``TimerTimeout`` overloads (v0.2.16)
-  (`baselibs#471 <https://github.com/eclipse-score/baselibs/pull/471>`__,
-  `baselibs#535 <https://github.com/eclipse-score/baselibs/pull/535>`__,
-  `baselibs#536 <https://github.com/eclipse-score/baselibs/pull/536>`__,
-  `baselibs#703 <https://github.com/eclipse-score/baselibs/pull/703>`__).
-- Deprecated: ``Synchronized::WithLock``, replaced by the monadic functions of
-  ``LockedPtr`` (v0.2.17)
-  (`baselibs#761 <https://github.com/eclipse-score/baselibs/pull/761>`__).
-
-Action required: use ``void``/``score::Result<void>`` and the ``SCORE_*``
-macros, depend on the ``//score`` targets and replace the removed OS wrappers
-and ``WithLock``.
+- **Removed compatibility targets and headers:** Replace deprecated ``//src``
+  Bazel aliases and the string and atomic shims under ``//score/memory`` with
+  their replacement targets, headers, and namespaces.
+- **Removed deprecated libraries:** ``score/datetime_converter`` and the
+  ``score/os`` wrappers ``cpuid``, ``file_stream``, and ``make_dev`` are no
+  longer available.
+- **JSON backend consolidation:** vaJson is now the sole parser and writer
+  backend. Remove the deleted ``writer_library`` flag and the deprecated, now
+  ineffective ``base_library`` flag. Serialized output may change: booleans use
+  ``true``/``false`` instead of ``1``/``0``, escaping is corrected, and empty
+  objects and arrays are emitted as ``{}`` and ``[]``. Default output remains
+  pretty-printed.
+- **Removed deprecated aliases and macros:** Replace ``Blank`` and
+  ``ResultBlank`` with ``void`` and ``Result<void>``. Use the ``SCORE_``-prefixed
+  versions of the removed reflection and serialization macros.
+- **OS abstraction layer API cleanup:** Replace the deprecated Linux thread-affinity wrapper and
+  QNX channel-creation and timer-timeout overloads with their supported
+  alternatives.
+- **FlatBuffers allocator compatibility:** The affected ``LoadBuffer``
+  overload now requires ``score::cpp::pmr::vector<uint8_t>`` rather than
+  ``std::pmr::vector<uint8_t>``.
+- **Deprecation:** ``Synchronized::WithLock`` remains available but is
+  deprecated in favor of ``lock()`` and composable ``LockedPtr`` operations.
 
 Communication: removed deprecated API and exception specifications
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -698,4 +679,3 @@ release.
 
 For any questions or support, please contact the *Project leads* or raise an issue/discussion.
 https://projects.eclipse.org/projects/automotive.score
-
