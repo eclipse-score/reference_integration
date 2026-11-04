@@ -155,7 +155,7 @@ jobs:
           zip -r ${{ github.event.repository.name }}_test_reports.zip artifacts/
         shell: bash
       - name: Upload release asset (attach ZIP to GitHub Release)
-        uses: softprops/action-gh-release@v2.5.0
+        uses: softprops/action-gh-release@v3.0.3
         if: github.ref_type == 'tag'
         with:
           files: ${{ github.event.repository.name }}_test_reports.zip
@@ -169,7 +169,7 @@ jobs:
           retention-days: 3
           if-no-files-found: error
       - name: Upload build tools SBOM (attach to GitHub Release)
-        uses: softprops/action-gh-release@v2.5.0
+        uses: softprops/action-gh-release@v3.0.3
         if: github.ref_type == 'tag'
         with:
           files: bazel-bin/build_tools_sbom.spdx.json
