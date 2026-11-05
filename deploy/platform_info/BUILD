@@ -61,11 +61,11 @@ cc_binary(
     ],
 )
 
-# Platform info service binary (0777), placed as /usr/bin/platform_info/platform_info_service.
+# Platform info service binary (0755), placed as /usr/bin/platform_info/platform_info_service.
 pkg_files(
     name = "platform_info_service_bin",
     srcs = [":platform_info_service"],
-    attributes = pkg_attributes(mode = "0777"),
+    attributes = pkg_attributes(mode = "0755"),
     prefix = "usr/bin/platform_info",
     strip_prefix = strip_prefix.files_only(),
 )
