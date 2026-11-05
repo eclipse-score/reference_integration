@@ -22,7 +22,6 @@ build --tool_java_language_version=17
 build --java_runtime_version=remotejdk_17
 build --tool_java_runtime_version=remotejdk_17
 
-build:_common --@score_baselibs//score/json:base_library=nlohmann
 build:_common --@score_communication//score/memory/shared/flags:use_typedshmd=False
 build:_common --@score_baselibs//score/log_rust:safety_level=qm
 build:_common --@score_config_management//score/config_management/config_daemon/code:score_variant=true
@@ -83,7 +82,6 @@ build:autosd-x86_64 --extra_toolchains=@score_autosd10_x86_64_toolchain//:x86_64
 # Persistency specific flags
 build:ferrocene-coverage-per --config=ferrocene-coverage
 build:ferrocene-coverage-per --@score_baselibs//score/log_rust:safety_level=qm
-build:ferrocene-coverage-per --@score_baselibs//score/json:base_library=nlohmann
 build:ferrocene-coverage-per --@score_logging//score/mw/log/flags:KRemote_Logging=False
 
 # Output only failed test logs
