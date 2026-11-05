@@ -31,13 +31,12 @@ git_override(
 bazel_dep(name = "score_communication")
 git_override(
     module_name = "score_communication",
-    commit = "313f1178628189d267c8cd0d75971bdac04c20ee",
+    commit = "522cf18c557beabd3c8b6ce7fd805418fb37c045",
     patch_strip = 1,
     patches = [
         "//patches/communication:001-expose-comm-examples.patch",
         "//patches/communication:003-module-deps-visibility.patch",
         "//patches/communication:004-rules-build-error-not-dev-dependency.patch",
-        "//patches/communication:005-migrate-baselibs-rust-targets.patch",
     ],
     remote = "https://github.com/eclipse-score/communication.git",
 )
@@ -97,13 +96,12 @@ git_override(
 )
 
 bazel_dep(name = "score_config_management")
-git_override(
+single_version_override(
     module_name = "score_config_management",
-    commit = "d0dab01ae408ceb8ec65344e93d8a51d8173da81",
     patch_strip = 1,
     patches = [
-        "//patches/config_management:001-adapt-proxy-api-and-remove-internal-targets.patch",
-        "//patches/config_management:002-migrate-baselibs-targets.patch",
+        "//patches/config_management:001-resolve-mw-com-test-config-without-cwd-paths.patch",
+        "//patches/config_management:002-expose-showcase-configs.patch",
     ],
-    remote = "https://github.com/eclipse-score/config_management.git",
+    version = "0.3.1",
 )

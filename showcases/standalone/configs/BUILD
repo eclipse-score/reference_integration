@@ -14,4 +14,5 @@
 exports_files([
     "logging_app.json",
     "dlt_generator.json",
+    "config_daemon_logging.json",
 ])
