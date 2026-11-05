@@ -69,13 +69,13 @@ Until then this directory is the distribution's local stand-in for it.
 ## Release downloads: layer 2 and layer 3 separately
 
 Every GitHub release carries both upper layers as separate downloads, one
-pair of archives per target the CI builds:
+pair of archives per target the CI builds. QNX archives are not published:
+they contain binaries built with the licensed QNX SDP.
 
 | Target | Layer 2 (platform) | Layer 3 (showcases) | Built with |
 | --- | --- | --- | --- |
 | Linux x86_64 | `score-platform-linux-x86_64.tar.gz` | `score-showcases-linux-x86_64.tar.gz` | `--config=linux-x86_64` |
 | AutoSD x86_64 | `score-platform-autosd-x86_64.tar.gz` | `score-showcases-autosd-x86_64.tar.gz` | `--config=autosd-x86_64` |
-| QNX x86_64 | `score-platform-qnx-x86_64.tar.gz` | `score-showcases-qnx-x86_64.tar.gz` | `--config=qnx-x86_64` |
 | EB corbos aarch64 | `score-platform-eb-aarch64.tar.gz` | `score-showcases-eb-aarch64.tar.gz` | `--config=eb-aarch64` |
 
 The platform archive is `//deploy:platform_tar` (unpacks to `/usr/bin/...`),
