@@ -50,6 +50,7 @@ test_suite(
     tests = [
         "//platform_integration_tests/baselibs",
         "//platform_integration_tests/communication",
+        "//platform_integration_tests/config_management",
         "//platform_integration_tests/kyron",
         "//platform_integration_tests/lifecycle",
         "//platform_integration_tests/logging",

@@ -1,6 +1,6 @@
 {
     "name": "Config Management Daemon Example",
-    "description": "Example for running the config management daemon with demo parameters",
+    "description": "Example for running the config management daemon with demo parameters. Example takes ~10s",
     "apps": [
         {
             "path": "/showcases/bin/config_daemon",
@@ -9,6 +9,12 @@
             ],
             "env": {},
             "dir": "/showcases/data/config_management"
+        },
+        {
+            "path": "/showcases/bin/lifecycle_signal.sh",
+            "args": ["config_daemon", "SIGTERM"],
+            "env": {},
+            "delay": 10
         }
     ]
 }
