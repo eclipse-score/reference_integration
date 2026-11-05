@@ -72,6 +72,11 @@ jobs:
           repository-cache-save: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && 'auto' || 'false' }}
           external-cache-save: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
           repository-cache-growth-threshold: 0
+          # The module runner prepends its own Bazel wrapper to PATH. The action's
+          # reporting launcher would resolve that wrapper again and recurse.
+          report-cache-hits: false
+          report-test-cache-hits: false
+          enable-profiling: false
       - name: Configure optional Ubuntu snapshot mirror for Bazel downloader
         env:
           UBUNTU_SNAPSHOT_MIRROR_URL: ${{ secrets.UBUNTU_SNAPSHOT_MIRROR_URL }}
