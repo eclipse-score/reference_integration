@@ -75,6 +75,8 @@ jobs:
           disk-cache-save: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
           repository-cache-save: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && 'auto' || 'false' }}
           external-cache-save: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+          # Keep downloaded archives reusable when dependency lockfiles change.
+          repository-cache-restore: true
           repository-cache-growth-threshold: 0
       - name: Set up Python 3
         uses: actions/setup-python@v5
