@@ -26,7 +26,7 @@ concurrency:
 jobs:
   qnx-build-x86_64:
     name: x86_64
-    runs-on: ${{ vars.REPO_RUNNER_LABELS && fromJSON(vars.REPO_RUNNER_LABELS) || 'ubuntu-latest' }}
+    runs-on: ${{ vars.REPO_RUNNER_LABELS && fromJSON(vars.REPO_RUNNER_LABELS) || 'ubuntu-24.04' }}
     environment: ${{ inputs.environment-name }}
     permissions:
       contents: read

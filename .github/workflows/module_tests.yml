@@ -26,7 +26,7 @@ permissions:
 jobs:
   modules:
     name: List modules
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       modules: ${{ steps.modules.outputs.modules }}
     steps:
@@ -41,7 +41,7 @@ jobs:
   test:
     name: Test ${{ matrix.module }}
     needs: modules
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:

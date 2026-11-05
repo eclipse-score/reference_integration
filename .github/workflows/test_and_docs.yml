@@ -37,7 +37,7 @@ jobs:
     uses: ./.github/workflows/module_tests.yml
     secrets: inherit
   test_and_docs:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: module_tests
     if: ${{ !cancelled() }}
     permissions:
@@ -204,7 +204,7 @@ jobs:
           if-no-files-found: error
   docs-deploy:
     name: Deploy Documentation to GitHub Pages
-    runs-on: ${{ vars.REPO_RUNNER_LABELS && fromJSON(vars.REPO_RUNNER_LABELS) || 'ubuntu-latest' }}
+    runs-on: ${{ vars.REPO_RUNNER_LABELS && fromJSON(vars.REPO_RUNNER_LABELS) || 'ubuntu-24.04' }}
     needs: test_and_docs
     permissions:
       pages: write
