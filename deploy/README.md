@@ -93,6 +93,11 @@ To check an image that claims to ship S-CORE, copy only the showcases
 archive onto it. The showcases then run against whatever platform the image
 deploys, without rebuilding it — as long as it fulfils the contract above.
 
+For Linux x86_64 and aarch64, CI runs exactly these steps on every change:
+`build_and_test_linux_target.yml` unpacks the release archives into
+unmodified `ubuntu:22.04`, `ubuntu:24.04` and `debian:12` containers and runs
+all showcases there.
+
 ### Linux aarch64, e.g. Raspberry Pi 4
 
 The Linux aarch64 archives are built with the S-CORE GCC 12.2 toolchain
@@ -114,5 +119,4 @@ to the owner of the device.
 3. Run the showcases: `sudo /showcases/bin/cli --examples all`.
 
 The showcases start the platform daemons they need themselves; nothing has to
-be started beforehand. CI runs exactly these steps on a stock Ubuntu 24.04
-arm64 runner (`build_and_test_linux.yml`, job `aarch64-run`).
+be started beforehand.
