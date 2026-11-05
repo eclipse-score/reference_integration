@@ -26,12 +26,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
       - name: Setup Bazel
-        uses: bazel-contrib/setup-bazel@0.18.0
+        uses: eclipse-score/cicd-actions/setup-bazel-cache@28233566af2525acf84b3c66cfa66ae2583e4236
         with:
-          bazelisk-cache: true
-          disk-cache: ${{ github.workflow }}
-          repository-cache: true
-          cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+          disk-cache-key: ${{ github.workflow }}-${{ github.job }}
+          cache-save-branch-patterns: |
+            main
+            release/**
+            releases/**
+          # pull_request_target uses the base branch ref even when testing PR code.
+          # Only trusted branch runs may publish cache generations.
+          bazelisk-cache-save: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+          disk-cache-save: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+          repository-cache-save: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && 'auto' || 'false' }}
+          external-cache-save: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+          # Preserve even small additions, such as a newly downloaded toolchain.
+          repository-cache-growth-threshold: 0
       - name: Check Release Approvals
         id: check-approvals
         env:

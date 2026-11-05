@@ -21,10 +21,12 @@ on:
   push:
     branches:
       - main
+      - 'release/**'
+      - 'releases/**'
 # Do not flood CI with unneeded previous runs in PR
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
-  cancel-in-progress: ${{ github.ref_name != 'main' && !startsWith(github.ref_name, 'release/') }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref_name != 'main' && !startsWith(github.ref_name, 'release/') && !startsWith(github.ref_name, 'releases/') }}
 jobs:
   build:
     strategy:
@@ -39,18 +41,30 @@ jobs:
     env:
       AIB_SCRIPT_URL: https://gitlab.com/CentOS/automotive/src/automotive-image-builder/-/raw/1.3.0/auto-image-builder.sh?ref_type=tags
       AIB_CONTAINER_IMAGE: quay.io/centos-sig-automotive/automotive-image-builder:1.3.0
+    permissions:
+      contents: read
+      actions: write # Remove obsolete cache generations after a successful upload.
     steps:
       - name: Clean disk space
         uses: eclipse-score/more-disk-space@v1
       - name: Checkout repository
         uses: actions/checkout@v6
       - name: Setup Bazel
-        uses: bazel-contrib/setup-bazel@0.18.0
+        uses: eclipse-score/cicd-actions/setup-bazel-cache@28233566af2525acf84b3c66cfa66ae2583e4236
         with:
-          bazelisk-cache: true
-          disk-cache: ${{ github.workflow }}
-          repository-cache: true
-          cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+          disk-cache-key: ${{ github.workflow }}-${{ github.job }}-${{ matrix.platform }}
+          cache-save-branch-patterns: |
+            main
+            release/**
+            releases/**
+          # pull_request_target uses the base branch ref even when testing PR code.
+          # Only trusted branch runs may publish cache generations.
+          bazelisk-cache-save: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+          disk-cache-save: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+          repository-cache-save: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && 'auto' || 'false' }}
+          external-cache-save: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+          # Preserve even small additions, such as a newly downloaded toolchain.
+          repository-cache-growth-threshold: 0
       - name: Shows kernel version
         run: |
           uname -a

@@ -19,16 +19,19 @@ on:
   push:
     branches:
       - main
+      - 'release/**'
+      - 'releases/**'
 # Do not flood CI with unneeded previous runs in PR
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
-  cancel-in-progress: ${{ github.ref_name != 'main' && !startsWith(github.ref_name, 'release/') }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref_name != 'main' && !startsWith(github.ref_name, 'release/') && !startsWith(github.ref_name, 'releases/') }}
 jobs:
   qnx-build-x86_64:
     name: x86_64
     runs-on: ${{ vars.REPO_RUNNER_LABELS && fromJSON(vars.REPO_RUNNER_LABELS) || 'ubuntu-24.04' }}
     environment: ${{ inputs.environment-name }}
     permissions:
+      actions: write # Remove obsolete cache generations after a successful upload.
       contents: read
       pull-requests: read
     steps:
@@ -41,12 +44,21 @@ jobs:
           repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
           allow-unsafe-pr-checkout: true
       - name: Setup Bazel with shared caching
-        uses: bazel-contrib/setup-bazel@0.18.0
+        uses: eclipse-score/cicd-actions/setup-bazel-cache@28233566af2525acf84b3c66cfa66ae2583e4236
         with:
-          disk-cache: ${{ github.workflow }}
-          repository-cache: true
-          bazelisk-cache: true
-          cache-save: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+          disk-cache-key: ${{ github.workflow }}-${{ github.job }}
+          cache-save-branch-patterns: |
+            main
+            release/**
+            releases/**
+          # pull_request_target uses the base branch ref even when testing PR code.
+          # Only trusted branch runs may publish cache generations.
+          bazelisk-cache-save: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+          disk-cache-save: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+          repository-cache-save: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && 'auto' || 'false' }}
+          external-cache-save: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+          # Preserve even small additions, such as a newly downloaded toolchain.
+          repository-cache-growth-threshold: 0
       - name: Prepare QNX license
         env:
           SCORE_QNX_LICENSE: ${{ secrets.SCORE_QNX_LICENSE }}
