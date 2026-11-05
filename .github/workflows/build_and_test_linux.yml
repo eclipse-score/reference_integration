@@ -50,7 +50,6 @@ jobs:
           external-cache-save: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
           # Keep downloaded archives reusable when dependency lockfiles change.
           repository-cache-restore: true
-          repository-cache-growth-threshold: 0
       - name: Install uv (required for SBOM license scanning)
         uses: astral-sh/setup-uv@v5
         with:

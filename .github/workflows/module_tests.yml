@@ -73,7 +73,6 @@ jobs:
           external-cache-save: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
           # Keep downloaded archives reusable when dependency lockfiles change.
           repository-cache-restore: true
-          repository-cache-growth-threshold: 0
           # The module runner prepends its own Bazel wrapper to PATH. The action's
           # reporting launcher would resolve that wrapper again and recurse.
           report-cache-hits: false
