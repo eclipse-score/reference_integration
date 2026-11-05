@@ -1,0 +1,290 @@
+diff --git a/score/config_management/config_daemon/code/factory/details/BUILD b/score/config_management/config_daemon/code/factory/details/BUILD
+index 75f1197..c3d2d01 100644
+--- a/score/config_management/config_daemon/code/factory/details/BUILD
++++ b/score/config_management/config_daemon/code/factory/details/BUILD
+@@ -170,7 +170,6 @@ cc_gtest_unit_test(
+         name = name,
+         testonly = True,
+         srcs = [src],
+-        data = data,
+         features = COMPILER_WARNING_FEATURES,
+         tags = tag,
+         visibility = [
+@@ -183,19 +182,19 @@ cc_gtest_unit_test(
+             "@score_baselibs//score/language/futurecpp",
+         ] + deps,
+     )
+-    for name, src, deps, tag, data in [
++    for name, src, deps, tag in [
+         (
+             "unit_test_mw_com",
+             "factory_mw_com_impl_test.cpp",
+             [
+                 ":factory_mw_com_for_unit_test",
+                 "//score/config_management/config_daemon/code/data_model/details:parameterset_collection_impl",
++                "//score/config_management/config_daemon/code/services/details/mw_com:mw_com_config_json",
+             ],
+             [
+                 "mw_com",
+                 "exclusive",  # Sandboxing is not properly working with LoLa message passing 2.0 (Ticket-217341)
+             ],
+-            ["//score/config_management/config_daemon/config:mw_com_config"],
+         ),
+     ]
+ ]
+diff --git a/score/config_management/config_daemon/code/factory/details/factory_mw_com_impl_test.cpp b/score/config_management/config_daemon/code/factory/details/factory_mw_com_impl_test.cpp
+index cc993d1..6169309 100644
+--- a/score/config_management/config_daemon/code/factory/details/factory_mw_com_impl_test.cpp
++++ b/score/config_management/config_daemon/code/factory/details/factory_mw_com_impl_test.cpp
+@@ -16,6 +16,7 @@
+ #include "score/config_management/config_daemon/code/data_model/parameterset_collection_mock.h"
+ #include "score/config_management/config_daemon/code/factory/details/service_factory_impl.h"
+ #include "score/config_management/config_daemon/code/services/details/mw_com/internal_config_provider_service_impl.h"
++#include "score/config_management/config_daemon/code/services/details/mw_com/mw_com_config_json.h"
+ #include "score/config_management/config_daemon/code/services/internal_config_provider_service_mock.h"
+ 
+ #include "score/mw/service/provided_services_container.h"
+@@ -28,6 +29,7 @@
+ #include <gtest/gtest.h>
+ 
+ #include <score/utility.hpp>
++#include <fstream>
+ #include <memory>
+ 
+ namespace score
+@@ -48,8 +50,14 @@ class TestServiceFactoryMwImpl : public ::testing::Test
+   protected:
+     static void SetUpTestSuite()
+     {
+-        score::mw::com::runtime::RuntimeConfiguration runtime_configuration{
+-            "./score/config_management/config_daemon/config/mw_com_config.json"};
++        // Written to a temp file so no runfiles or working-directory-relative path is needed.
++        const std::string config_path = testing::TempDir() + "mw_com_config.json";
++        {
++            std::ofstream config_file{config_path};
++            config_file << kMwComConfigJson;
++            ASSERT_TRUE(config_file.good()) << "Cannot write " << config_path;
++        }
++        score::mw::com::runtime::RuntimeConfiguration runtime_configuration{config_path};
+         score::mw::com::runtime::InitializeRuntime(runtime_configuration);
+     }
+     void SetUp() override
+diff --git a/score/config_management/config_daemon/code/services/details/mw_com/BUILD b/score/config_management/config_daemon/code/services/details/mw_com/BUILD
+index 126d392..38585ad 100644
+--- a/score/config_management/config_daemon/code/services/details/mw_com/BUILD
++++ b/score/config_management/config_daemon/code/services/details/mw_com/BUILD
+@@ -43,12 +43,34 @@ load("@score_baselibs//score/language/safecpp:toolchain_features.bzl", "COMPILER
+     ]
+ ]
+ 
++genrule(
++    name = "mw_com_config_json_header",
++    testonly = True,
++    srcs = ["//score/config_management/config_daemon/config:mw_com_config"],
++    outs = ["mw_com_config_json.h"],
++    cmd = """G=$$(printf %s "$@" | sed 's#^.*/bin/##' | tr -c 'A-Za-z0-9' '_' | tr 'a-z' 'A-Z')
++{
++    echo "#ifndef $$G"
++    echo "#define $$G"
++    echo 'constexpr char kMwComConfigJson[] = R"JSON('
++    cat $(SRCS)
++    echo ')JSON";'
++    echo "#endif  // $$G"
++} > $@""",
++)
++
++cc_library(
++    name = "mw_com_config_json",
++    testonly = True,
++    hdrs = [":mw_com_config_json_header"],
++    visibility = ["//score/config_management/config_daemon/code/factory/details:__pkg__"],
++)
++
+ cc_test(
+     name = "unit_test",
+     srcs = [
+         "internal_config_provider_service_impl_test.cpp",
+     ],
+-    data = ["//score/config_management/config_daemon/config:mw_com_config"],
+     features = COMPILER_WARNING_FEATURES + [
+         "aborts_upon_exception",
+     ],
+@@ -60,6 +82,7 @@ cc_test(
+     visibility = ["//score/config_management/config_daemon/code/services/details/mw_com:__pkg__"],
+     deps = [
+         ":details_mw_com_test",
++        ":mw_com_config_json",
+         "@googletest//:gtest_main",
+     ],
+ )
+diff --git a/score/config_management/config_daemon/code/services/details/mw_com/internal_config_provider_service_impl_test.cpp b/score/config_management/config_daemon/code/services/details/mw_com/internal_config_provider_service_impl_test.cpp
+index e0ea817..e856f31 100644
+--- a/score/config_management/config_daemon/code/services/details/mw_com/internal_config_provider_service_impl_test.cpp
++++ b/score/config_management/config_daemon/code/services/details/mw_com/internal_config_provider_service_impl_test.cpp
+@@ -12,11 +12,13 @@
+ // *******************************************************************************
+ 
+ #include "score/config_management/config_daemon/code/services/details/mw_com/internal_config_provider_service_impl.h"
++#include "score/config_management/config_daemon/code/services/details/mw_com/mw_com_config_json.h"
+ #include "score/config_management/config_daemon/code/services/internal_config_provider_service_reactor_mock.h"
+ #include "score/mw/com/runtime.h"
+ #include "score/mw/com/runtime_configuration.h"
+ #include <gmock/gmock.h>
+ #include <gtest/gtest.h>
++#include <fstream>
+ #include <memory>
+ 
+ namespace score
+@@ -38,8 +40,14 @@ class InternalConfigProviderServiceMwComTest : public ::testing::Test
+   protected:
+     static void SetUpTestSuite()
+     {
+-        score::mw::com::runtime::RuntimeConfiguration runtime_configuration{
+-            "./score/config_management/config_daemon/config/mw_com_config.json"};
++        // Written to a temp file so no runfiles or working-directory-relative path is needed.
++        const std::string config_path = testing::TempDir() + "mw_com_config.json";
++        {
++            std::ofstream config_file{config_path};
++            config_file << kMwComConfigJson;
++            ASSERT_TRUE(config_file.good()) << "Cannot write " << config_path;
++        }
++        score::mw::com::runtime::RuntimeConfiguration runtime_configuration{config_path};
+         score::mw::com::runtime::InitializeRuntime(runtime_configuration);
+     }
+     void SetUp() override
+diff --git a/score/config_management/config_provider/code/config_provider/factory/BUILD b/score/config_management/config_provider/code/config_provider/factory/BUILD
+index 37f8f77..0033292 100644
+--- a/score/config_management/config_provider/code/config_provider/factory/BUILD
++++ b/score/config_management/config_provider/code/config_provider/factory/BUILD
+@@ -80,7 +80,6 @@ cc_library(
+ cc_test(
+     name = "unit_tests_mw_com",
+     srcs = ["factory_mw_com_test.cpp"],
+-    data = ["//score/config_management/config_provider/code/proxies/details:test_mw_com_config"],
+     features = COMPILER_WARNING_FEATURES,
+     tags = [
+         "exclusive",  # Sandboxing is not properly working with LoLa message passing 2.0 (Ticket-217341)
+@@ -92,6 +91,7 @@ cc_test(
+     deps = [
+         ":factory_mw_com",
+         "//score/config_management/config_provider/code/persistency:mock",
++        "//score/config_management/config_provider/code/proxies/details:test_mw_com_config_json",
+         "@googletest//:gtest_main",
+         "@score_baselibs//score/json:json_parser",
+     ],
+diff --git a/score/config_management/config_provider/code/config_provider/factory/factory_mw_com_test.cpp b/score/config_management/config_provider/code/config_provider/factory/factory_mw_com_test.cpp
+index a7b2ce1..441629c 100644
+--- a/score/config_management/config_provider/code/config_provider/factory/factory_mw_com_test.cpp
++++ b/score/config_management/config_provider/code/config_provider/factory/factory_mw_com_test.cpp
+@@ -12,6 +12,7 @@
+ // *******************************************************************************
+ #include "score/config_management/config_provider/code/config_provider/factory/factory_mw_com.h"
+ #include "score/config_management/config_provider/code/persistency/persistency_mock.h"
++#include "score/config_management/config_provider/code/proxies/details/test_mw_com_config_json.h"
+ #include "score/config_management/lib/mw_com_types/internal_config_provider_type.h"
+ 
+ #include "score/json/json_parser.h"
+@@ -62,9 +63,15 @@ class ConfigProviderFactoryTest : public ::testing::Test
+         buffer_size_report_file << R"({"buffer_size_mapping": {"DummyParameterSet": 16425}})";
+         buffer_size_report_file.close();
+ 
+-        score::mw::com::runtime::RuntimeConfiguration runtime_configuration{
+-            "./score/config_management/config_provider/code/proxies/details/mw_com/"
+-            "test_mw_com_config.json"};
++        // Written to a temp file so no runfiles or working-directory-relative path is needed.
++        const std::string config_path =
++            std::string{test_tmpdir != nullptr ? test_tmpdir : "/tmp"} + "/test_mw_com_config.json";
++        {
++            std::ofstream config_file{config_path};
++            config_file << kTestMwComConfigJson;
++            ASSERT_TRUE(config_file.good()) << "Cannot write " << config_path;
++        }
++        score::mw::com::runtime::RuntimeConfiguration runtime_configuration{config_path};
+         score::mw::com::runtime::InitializeRuntime(runtime_configuration);
+ 
+         skeleton = CreateService();
+diff --git a/score/config_management/config_provider/code/proxies/details/BUILD b/score/config_management/config_provider/code/proxies/details/BUILD
+index 640741b..ef2e696 100644
+--- a/score/config_management/config_provider/code/proxies/details/BUILD
++++ b/score/config_management/config_provider/code/proxies/details/BUILD
+@@ -31,11 +31,33 @@ filegroup(
+     visibility = ["//score/config_management/config_provider:__subpackages__"],
+ )
+ 
++genrule(
++    name = "test_mw_com_config_json_header",
++    testonly = True,
++    srcs = [":test_mw_com_config"],
++    outs = ["test_mw_com_config_json.h"],
++    cmd = """G=$$(printf %s "$@" | sed 's#^.*/bin/##' | tr -c 'A-Za-z0-9' '_' | tr 'a-z' 'A-Z')
++{
++    echo "#ifndef $$G"
++    echo "#define $$G"
++    echo 'constexpr char kTestMwComConfigJson[] = R"JSON('
++    cat $(SRCS)
++    echo ')JSON";'
++    echo "#endif  // $$G"
++} > $@""",
++)
++
++cc_library(
++    name = "test_mw_com_config_json",
++    testonly = True,
++    hdrs = [":test_mw_com_config_json_header"],
++    visibility = ["//score/config_management/config_provider:__subpackages__"],
++)
++
+ # MW COM unit test
+ cc_test(
+     name = "unit_test_mw",
+     srcs = ["mw_com/internal_config_provider_impl_test.cpp"],
+-    data = [":test_mw_com_config"],
+     features = COMPILER_WARNING_FEATURES,
+     tags = [
+         "exclusive",  # Sandboxing is not properly working with LoLa message passing 2.0 (Ticket-217341)
+@@ -44,6 +66,7 @@ cc_test(
+     visibility = ["//score/config_management/config_provider/code/proxies:__pkg__"],
+     deps = [
+         ":details_mw_com",
++        ":test_mw_com_config_json",
+         "@googletest//:gtest",
+         "@googletest//:gtest_main",
+         "@score_baselibs//score/concurrency:notification",
+diff --git a/score/config_management/config_provider/code/proxies/details/mw_com/internal_config_provider_impl_test.cpp b/score/config_management/config_provider/code/proxies/details/mw_com/internal_config_provider_impl_test.cpp
+index 44f498e..af7c020 100644
+--- a/score/config_management/config_provider/code/proxies/details/mw_com/internal_config_provider_impl_test.cpp
++++ b/score/config_management/config_provider/code/proxies/details/mw_com/internal_config_provider_impl_test.cpp
+@@ -11,6 +11,7 @@
+ // SPDX-License-Identifier: Apache-2.0
+ // *******************************************************************************
+ #include "score/config_management/config_provider/code/proxies/details/mw_com/internal_config_provider_impl.h"
++#include "score/config_management/config_provider/code/proxies/details/test_mw_com_config_json.h"
+ #include "score/config_management/lib/mw_com_types/internal_config_provider_type.h"
+ 
+ #include "score/config_management/config_provider/code/config_provider/error/error.h"
+@@ -22,6 +23,7 @@
+ 
+ #include <gtest/gtest.h>
+ 
++#include <fstream>
+ #include <future>
+ 
+ #include <iostream>
+@@ -50,9 +52,14 @@ class InternalConfigProviderTest : public ::testing::Test
+ 
+     void SetUp() override
+     {
+-        score::mw::com::runtime::RuntimeConfiguration runtime_configuration{
+-            "./score/config_management/config_provider/code/proxies/details/mw_com/"
+-            "test_mw_com_config.json"};
++        // Written to a temp file so no runfiles or working-directory-relative path is needed.
++        const std::string config_path = testing::TempDir() + "test_mw_com_config.json";
++        {
++            std::ofstream config_file{config_path};
++            config_file << kTestMwComConfigJson;
++            ASSERT_TRUE(config_file.good()) << "Cannot write " << config_path;
++        }
++        score::mw::com::runtime::RuntimeConfiguration runtime_configuration{config_path};
+         score::mw::com::runtime::InitializeRuntime(runtime_configuration);
+ 
+         skeleton_ = CreateService();

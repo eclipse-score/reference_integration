@@ -76,7 +76,7 @@ score_pkg_bundle(
         "//showcases/standalone:config_management.score.json",
     ],
     custom_layout = {
-        "@score_config_management//score/config_management/config_daemon/code/services/details/mw_com:mw_com_config": "etc/mw_com_config.json",
+        "@score_config_management//score/config_management/config_daemon/config:mw_com_config": "etc/mw_com_config.json",
         "@score_config_management//score/config_management/config_daemon/code/plugins/demo_json:demo_parameters": "etc/demo_parameters.json",
     },
     package_dir = "standalone",
