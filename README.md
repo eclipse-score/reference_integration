@@ -54,9 +54,11 @@ Every release carries `score-platform-linux-aarch64.tar.gz` and
 `score-showcases-linux-aarch64.tar.gz`. Install them on a Raspberry Pi running
 Raspberry Pi OS Lite (64-bit) and run `sudo /showcases/bin/cli --examples all`;
 see [deploy/README.md](deploy/README.md#linux-aarch64-eg-raspberry-pi-4). To
-build them yourself:
+build them yourself on an x86_64 Ubuntu host (iceoryx2's bindgen step reads
+the aarch64 glibc headers from the host):
 
 ```bash
+sudo apt-get install -y gcc-aarch64-linux-gnu libc6-dev-arm64-cross
 bazel build --config=linux-aarch64 //deploy:platform_tar //showcases:showcases_pkg_tar
 ```
 
