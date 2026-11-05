@@ -21,7 +21,7 @@ package(default_visibility = ["//deploy:__pkg__"])
 pkg_files(
     name = "config_daemon_bin",
     srcs = ["@score_config_management//score/config_management/config_daemon/code:config_daemon"],
-    attributes = pkg_attributes(mode = "0777"),
+    attributes = pkg_attributes(mode = "0755"),
     prefix = "usr/bin/config_management",
     strip_prefix = strip_prefix.files_only(),
 )

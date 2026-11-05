@@ -26,7 +26,7 @@ package(default_visibility = ["//deploy:__pkg__"])
 pkg_files(
     name = "launch_manager_bin",
     srcs = ["@score_lifecycle//score/launch_manager"],
-    attributes = pkg_attributes(mode = "0777"),
+    attributes = pkg_attributes(mode = "0755"),
     prefix = "usr/bin",
     strip_prefix = strip_prefix.files_only(),
 )

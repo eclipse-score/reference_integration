@@ -21,7 +21,7 @@ package(default_visibility = ["//deploy:__pkg__"])
 pkg_files(
     name = "datarouter_bin",
     srcs = ["@score_logging//score/datarouter"],
-    attributes = pkg_attributes(mode = "0777"),
+    attributes = pkg_attributes(mode = "0755"),
     prefix = "usr/bin/datarouter",
     strip_prefix = strip_prefix.files_only(),
 )
