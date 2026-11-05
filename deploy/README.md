@@ -95,8 +95,8 @@ deploys, without rebuilding it — as long as it fulfils the contract above.
 
 For Linux x86_64 and aarch64, CI runs exactly these steps on every change:
 `build_and_test_linux_target.yml` unpacks the release archives into
-unmodified `ubuntu:22.04`, `ubuntu:24.04` and `debian:12` containers and runs
-all showcases there.
+unmodified `ubuntu:24.04` and `debian:12` containers and runs all showcases
+there.
 
 ### Linux aarch64, e.g. Raspberry Pi 4
 
