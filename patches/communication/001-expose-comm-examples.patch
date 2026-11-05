@@ -1,13 +1,14 @@
 Expose the com-api-example binary and its mw_com config to the reference
 integration showcase bundle. Upstream dropped the public visibility on the
 rust_binary, and the config file was never exported. The visibility guard golden
-lists the now-public binary.
+lists the now-public binary and is resynced with the public targets of the
+pinned commit, which upstream had left stale.
 
 diff --git a/quality/visibility_guard/public_targets.golden b/quality/visibility_guard/public_targets.golden
-index a4c73472..c474a1b8 100644
+index fd36f76b..be3c51dd 100644
 --- a/quality/visibility_guard/public_targets.golden
 +++ b/quality/visibility_guard/public_targets.golden
-@@ -53,6 +53,7 @@
+@@ -47,6 +47,7 @@
  //score/mw/com/dependability:mw_com_doc_needs
  //score/mw/com/dependability:mw_com_index
  //score/mw/com/dependability:mw_com_rst
@@ -15,8 +16,32 @@ index a4c73472..c474a1b8 100644
  //score/mw/com/impl/configuration/converter:json_to_flatbuffer_rule.bzl
  //score/mw/com/performance_benchmarks/macro_benchmark/config_generator:config_generator_rule.bzl
  //score/mw/com/performance_benchmarks/macro_benchmark:logging.json
+@@ -60,12 +61,19 @@
+ //score/mw/com:config_fbs_schema
+ //score/mw/com:config_schema
+ //score/mw/com:test_types
+-//score/mw/service/backend/mw_com:provided_service_builder
+-//score/mw/service/backend/mw_com:provided_service_decorator
++//score/mw/service/backend/common/test:multiple_immediate_instantiation_strategy
++//score/mw/service/backend/common/test:single_immediate_instantiation_strategy
++//score/mw/service/backend/mw_com:multiple_instantiation_strategy
+ //score/mw/service/backend/mw_com:single_instantiation_strategy
++//score/mw/service/utils/shared_optional_proxy_holder:shared_optional_proxy_holder
+ //score/mw/service:factory
+-//score/mw/service:provided_service
+-//score/mw/service:provided_service_container
++//score/mw/service:find_service_strategy
++//score/mw/service:find_service_strategy_mock
++//score/mw/service:managed_service
++//score/mw/service:multi_instance_holder
++//score/mw/service:provided_services_container
++//score/mw/service:proxy_builder_base
+ //score/mw/service:proxy_data
+ //score/mw/service:proxy_future
+ //score/mw/service:service
++//score/mw/service:single_instance_holder
 diff --git a/score/mw/com/example/com-api-example/BUILD b/score/mw/com/example/com-api-example/BUILD
-index 83448e5e..99ed378f 100644
+index 41c340eb..160377d8 100644
 --- a/score/mw/com/example/com-api-example/BUILD
 +++ b/score/mw/com/example/com-api-example/BUILD
 @@ -13,6 +13,8 @@
