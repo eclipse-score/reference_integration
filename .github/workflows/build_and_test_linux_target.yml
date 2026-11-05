@@ -77,8 +77,8 @@ jobs:
       fail-fast: false
       matrix:
         arch: [x86_64, aarch64]
-        # Oldest supported releases: the Rust showcases need libstdc++ from GCC 12 (GLIBCXX_3.4.30).
-        distro: ['ubuntu:22.04', 'ubuntu:24.04', 'debian:12']
+        # debian:12 ships libstdc++ from GCC 12 (GLIBCXX_3.4.30), the oldest the Rust showcases accept.
+        distro: ['ubuntu:24.04', 'debian:12']
     steps:
       - name: Download platform and showcases packages
         uses: actions/download-artifact@v4
