@@ -142,11 +142,13 @@
                     ],
                     "exclude_test_targets": [
                         "//score/health_monitor/src/rust:miri_tests",
+                        "//score/health_monitor/src/rust:loom_tests",
                         "//tests/integration/...",
                         "//examples/demo_verification:examples"
                     ],
                     "test_notes": {
                         "copt=-Wno-error=pessimizing-move": "TODO fix: fails under clang (unified llvm coverage toolchain): -Wpessimizing-move in alive_monitor/details/ifexm/supervision_handle.hpp:42 breaks the build of 28 test targets",
+                        "//score/health_monitor/src/rust:loom_tests": "TODO fix: crate generator 0.8.12 (crates.io, 2026-11-05, needs Rust 1.95) does not compile with the unified toolchain's rustc (E0658 cfg_select); drop once the toolchain or the crate versions are updated",
                         "//tests/integration/...": "TODO fix: fails under clang (unified llvm coverage toolchain): clang links the host glibc (GLIBC_2.38 not found in the test container); integration tests still run via integration_test_targets",
                         "//examples/demo_verification:examples": "TODO fix: fails under clang (unified llvm coverage toolchain): clang links the host glibc (GLIBC_2.38 not found in the test container); integration tests still run via integration_test_targets"
                     },
