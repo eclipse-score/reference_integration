@@ -35,6 +35,7 @@ env:
 jobs:
   module_tests:
     uses: ./.github/workflows/module_tests.yml
+    secrets: inherit
   test_and_docs:
     runs-on: ubuntu-latest
     needs: module_tests
@@ -129,7 +130,9 @@ jobs:
           merge-multiple: true
       - name: Write unit test and coverage summaries
         # Module unit tests and their coverage come only from module_tests.yml, which runs each
-        # module's own tests against ref_int's resolved dependency versions.
+        # module's own tests against ref_int's resolved dependency versions. The report command
+        # also combines their rebased LCOV into coverage-report/coverage_report.dat, the input
+        # read by docs-as-code when //:docs_shim runs in this workspace below.
         run: python ./scripts/module_tests.py report _module_reports
       - name: Collect test reports for the documentation
         # The source code linker reads tests-report/ instead of bazel-testlogs/ when it exists, so
@@ -183,6 +186,14 @@ jobs:
 
           CURRENT=$(realpath .)
           bazel run //scripts/tooling -- misc html_report --output ${CURRENT}/_build/status_dashboard.html
+          # Dependable element docs built by module_tests.yml; they cannot be coupled via Bazel, so
+          # they are published next to the main docs (linked from docs/modules/index.rst).
+          for report in _module_reports/*; do
+            [ -d "$report/dependable_element_docs" ] || continue
+            module="${report##*/}"
+            mkdir -p "_build/modules/$module/dependable_element"
+            cp -r "$report/dependable_element_docs/." "_build/modules/$module/dependable_element/"
+          done
           tar -cf github-pages.tar _build
       - name: Upload documentation artifact
         uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # v4.4.1

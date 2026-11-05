@@ -13,7 +13,7 @@
 
 #include "kvs_instance.h"
 
-#include <kvsbuilder.hpp>
+#include "score/kvs/kvs_builder.h"
 
 #include <array>
 #include <cctype>
@@ -154,26 +154,34 @@ std::optional<std::string> snapshot_path(const KvsParameters& params) {
     return dir + "/kvs_" + std::to_string(params.instance_id.value) + "_0.json";
 }
 
-std::optional<bool> to_need_flag(const std::optional<KvsDefaults>& mode) {
+std::optional<score::mw::per::kvs::OpenNeedDefaults> to_need_flag(const std::optional<KvsDefaults>& mode) {
     if (!mode.has_value()) {
         return std::nullopt;
     }
-    if (*mode == KvsDefaults::Required) {
-        return true;
+    switch (*mode) {
+        case KvsDefaults::Required:
+            return score::mw::per::kvs::OpenNeedDefaults::Required;
+        case KvsDefaults::Optional:
+            return score::mw::per::kvs::OpenNeedDefaults::Optional;
+        case KvsDefaults::Ignored:
+        default:
+            return score::mw::per::kvs::OpenNeedDefaults::Ignored;
     }
-    // Optional and Ignored are mapped to not-required for C++ KvsBuilder API.
-    return false;
 }
 
-std::optional<bool> to_need_flag(const std::optional<KvsLoad>& mode) {
+std::optional<score::mw::per::kvs::OpenNeedKvs> to_need_flag(const std::optional<KvsLoad>& mode) {
     if (!mode.has_value()) {
         return std::nullopt;
     }
-    if (*mode == KvsLoad::Required) {
-        return true;
+    switch (*mode) {
+        case KvsLoad::Required:
+            return score::mw::per::kvs::OpenNeedKvs::Required;
+        case KvsLoad::Optional:
+            return score::mw::per::kvs::OpenNeedKvs::Optional;
+        case KvsLoad::Ignored:
+        default:
+            return score::mw::per::kvs::OpenNeedKvs::Ignored;
     }
-    // Optional and Ignored are mapped to not-required for C++ KvsBuilder API.
-    return false;
 }
 
 }  // namespace
@@ -185,15 +193,11 @@ std::optional<std::shared_ptr<KvsInstance>> KvsInstance::create(const KvsParamet
     using namespace score::mw::per::kvs;
 
     try {
-        if (params.snapshot_max_count.has_value() &&
-            params.snapshot_max_count.value() != static_cast<int>(KVS_MAX_SNAPSHOTS)) {
-            std::cerr << "Unsupported snapshot_max_count for C++ KVS API: requested "
-                      << params.snapshot_max_count.value() << ", supported " << KVS_MAX_SNAPSHOTS
-                      << std::endl;
-            return std::nullopt;
-        }
-
         KvsBuilder builder{score::mw::per::kvs::InstanceId{params.instance_id.value}};
+
+        if (params.snapshot_max_count.has_value()) {
+            builder = builder.snapshot_max_count(static_cast<std::size_t>(*params.snapshot_max_count));
+        }
 
         if (const auto defaults = to_need_flag(params.defaults)) {
             builder = builder.need_defaults_flag(*defaults);
@@ -237,8 +241,10 @@ bool KvsInstance::normalize_snapshot_file_to_rust_envelope(const KvsParameters& 
     const std::string bool_canonical = canonicalize_bool_literals(content);
     const std::string canonical_content = canonicalize_f64_literals(bool_canonical);
 
+    // Newer KVS versions already write the envelope (possibly with whitespace); never wrap twice.
+    static const std::regex envelope_prefix(R"(^\{\s*"t"\s*:\s*"obj"\s*,\s*"v"\s*:)");
     std::string final_content;
-    if (canonical_content.rfind("{\"t\":\"obj\",\"v\":", 0) == 0) {
+    if (std::regex_search(canonical_content, envelope_prefix)) {
         final_content = canonical_content;
     } else {
         final_content = "{\"t\":\"obj\",\"v\":" + canonical_content + "}";
@@ -346,7 +352,7 @@ bool KvsInstance::reset() {
 }
 
 bool KvsInstance::reset_key(const std::string& key) {
-    auto result = kvs_.reset_key(key);
+    auto result = kvs_.SetValueToDefault(key);
     return static_cast<bool>(result);
 }
 

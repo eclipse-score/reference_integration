@@ -18,9 +18,9 @@
 Every module in the module's dependency graph that ref_int also resolves is pinned with
 ``--override_module``, pointing at ref_int's own fetched copy (so ref_int's patches come along);
 ones ref_int cannot fetch are reported as not pinned. ``bazel_common/unified.bazelrc`` and the
-module's ``extra_test_config`` are layered over the module's .bazelrc. The only edit to the module
-is one ``include()`` of ref_int's ``unified_toolchains.MODULE.bazel``, as toolchains can only be
-defined in MODULE files.
+module's ``extra_test_config`` are layered over the module's .bazelrc. The only edits to the module
+are one ``include()`` of ref_int's ``unified_toolchains.MODULE.bazel``, as toolchains can only be
+defined in MODULE files, and a ``bazel_dep`` raising score_devcontainer to its known_good version.
 """
 
 import argparse
@@ -41,6 +41,17 @@ from quality_runners import append_to_step_summary, generate_markdown_report, wi
 REF_INT = Path(__file__).resolve().parents[1]
 UNIFIED_RC = REF_INT / "bazel_common" / "unified.bazelrc"
 UNIFIED_TOOLCHAINS = REF_INT / "bazel_common" / "unified_toolchains.MODULE.bazel"
+# Only enable the coverage_tool flow for releases already integrated in known_good.json.
+COVERAGE_MODULES = {
+    "score_baselibs",
+    "score_persistency",
+    "score_logging",
+    "score_kyron",
+    # "score_communication",  # Enable once ref_int integrates a release using coverage_tool.
+    "score_lifecycle",
+    "score_time",
+    # "score_config_management",  # Enable once ref_int integrates a release using coverage_tool.
+}
 # Bazel's per-target result lines, e.g. "//score/foo:bar_test   FAILED in 2.1s".
 STATUS_LINE = re.compile(r"^(//\S+|@\S+)\s+(FAILED TO BUILD|FAILED|TIMEOUT|NO STATUS|INCOMPLETE|FLAKY)\b", re.M)
 
@@ -55,7 +66,7 @@ def streamed(command: list[str], cwd: Path, env: dict) -> tuple[int, str]:
     print("+ " + " ".join(command), file=sys.stderr, flush=True)
     lines = []
     with subprocess.Popen(
-        command, cwd=cwd, env=env, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+        command, cwd=cwd, env=env, text=True, errors="replace", stdout=subprocess.PIPE, stderr=subprocess.STDOUT
     ) as proc:
         for line in proc.stdout:
             print(line, end="", flush=True)
@@ -108,18 +119,53 @@ def override_rc(paths: dict[str, Path], extra_test_config: list[str] = ()) -> st
     return rc + "".join(f"build --{flag}\n" for flag in extra_test_config)
 
 
-def coverage_args(test_args: list[str], langs: list[str], excludes: list[str] = ()) -> list[str]:
+def coverage_args(
+    test_args: list[str], langs: list[str], excludes: list[str] = (), *, enabled: bool = True, module: str = ""
+) -> list[str]:
     """The module's own test args with ref_int's unified config added before any ``--``.
 
+    Modules awaiting coverage_tool integration run their unit tests without coverage.
     ``excludes`` (the module's ``exclude_test_targets``) become negative patterns after ``--``.
     """
-    ours = ["--config=unified", "--combined_report=lcov"]
+    # Coverage modules provide their own instrumented toolchain (Kyron keeps GCC for C++).
+    # Share the integration platform and fallback toolchain without forcing unified Clang.
+    ours = ["--config=unified-base" if enabled else "--config=unified"]
+    if enabled:
+        ours.extend(["--build_tests_only", "--config=llvm_cov"])
     if "rust" in langs:
         ours.append("--config=unified-rust")
     split = test_args.index("--") if "--" in test_args else len(test_args)
-    targets = [*test_args[split + 1 :], *(f"-{target}" for target in excludes)]
+    flags = test_args[:split]
+    if enabled:
+        # The module's llvm_cov config chooses the coverage toolchain and instrumentation.
+        # Regular test presets select GCC or sanitizers and can override or conflict with it.
+        flags = [
+            arg
+            for arg in flags
+            if arg not in ("--config=score-linux-x86_64", "--config=x86_64-linux", "--config=asan_ubsan_lsan")
+        ]
+    targets = list(test_args[split + 1 :])
+    if enabled and module == "score_baselibs":
+        targets.extend(
+            [
+                # This library interposes __cxa_allocate_exception; ld.lld rejects the
+                # duplicate definition from the statically linked C++ runtime.
+                "-//score/language/safecpp/aborts_upon_exception/...",
+                # The static mock fails gMock's leak check with static linking; the module
+                # release's own Coverage CI excludes this test too.
+                "-//score/os/linux/utils/test:network_interface_test",
+            ]
+        )
+    targets.extend(f"-{target}" for target in excludes)
     separator = ["--"] if targets else []
-    return ["coverage", "--lockfile_mode=update", *test_args[:split], *ours, *separator, *targets]
+    return [
+        "coverage" if enabled else "test",
+        "--lockfile_mode=update",
+        *flags,
+        *ours,
+        *separator,
+        *targets,
+    ]
 
 
 def _status(case: ET.Element) -> str:
@@ -173,11 +219,82 @@ def _append_unified_toolchain(workspace: Path) -> None:
         f.write(f'\ninclude("//:{UNIFIED_TOOLCHAINS.name}")\n')
 
 
-def _collect_coverage(workspace: Path, out: Path, env: dict) -> None:
-    (out / "coverage").mkdir()
-    lcov = Path(bazel(["info", "output_path"], workspace, env).stdout.strip()) / "_coverage" / "_coverage_report.dat"
-    if lcov.is_file():
-        shutil.copy(lcov, out / "coverage" / "lcov.dat")
+def _apply_extra_dependency_overrides(workspace: Path, devcontainer_version: str) -> None:
+    """Raise dependencies the module's own graph cannot resolve as is.
+
+    The module's own graph is resolved before any ref_int pin applies. score_devcontainer 1.11.1
+    (from score_docs_as_code 8.3.0) had its tag re-pushed, so its archive fails the registry
+    checksum. A module that depends on it itself gets a single_version_override (a second bazel_dep
+    is an error); otherwise a bazel_dep lets MVS raise it, as an override errors when the module is
+    not in the graph.
+    """
+    module_file = workspace / "MODULE.bazel"
+    if re.search(r'bazel_dep\(\s*name\s*=\s*"score_devcontainer"', module_file.read_text()):
+        line = f'single_version_override(module_name = "score_devcontainer", version = "{devcontainer_version}")\n'
+    else:
+        line = f'bazel_dep(name = "score_devcontainer", version = "{devcontainer_version}", dev_dependency = True)\n'
+    with module_file.open("a") as f:
+        f.write(line)
+
+
+def normalize_lcov(text: str, module: str) -> str:
+    """Rebase coverage_tool's canonical paths into ref_int's external module namespace."""
+    lines = []
+    for line in text.splitlines():
+        if line.startswith("SF:"):
+            path = line[3:]
+            if path.startswith("/"):
+                raise ValueError(f"{module}: coverage source must be repository-relative: {path}")
+            if path.startswith("../"):
+                path = "external/" + path[3:]
+            if not path.startswith("external/"):
+                path = f"external/{module}+/{path}"
+            parts = path.split("/")
+            if len(parts) < 3 or any(part in ("", ".", "..", "_virtual_includes") for part in parts):
+                raise ValueError(f"{module}: coverage source is not canonical: {path}")
+            if parts[1] == "_main":
+                parts[1] = f"{module}+"
+            line = "SF:" + "/".join(parts)
+        lines.append(line)
+    return "\n".join(lines) + "\n" if lines else ""
+
+
+def combine_reports(reports: Path, modules: list[str], output: Path) -> None:
+    """Combine available module reports, leaving absent measurements unavailable."""
+    chunks = []
+    for module in sorted(modules):
+        report = reports / module / "coverage" / "coverage_report.dat"
+        if report.is_file():
+            chunks.append(report.read_text(encoding="utf-8"))
+        else:
+            print(f"::warning::{module}: no documentation coverage report available")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text("".join(chunk.rstrip("\n") + "\n" for chunk in chunks), encoding="utf-8")
+
+
+def _collect_coverage(workspace: Path, out: Path, env: dict) -> int:
+    # Export through coverage_tool's public CLI. It owns the backend's report packaging;
+    # ref_int only translates the exported source identities into its workspace context.
+    # Threshold zero collects evidence without adding a new percentage gate to module tests.
+    result = bazel(
+        [
+            "run",
+            "--lockfile_mode=update",
+            "@score_coverage//:generate_coverage_html",
+            "--",
+            "--testlogs-subdir=",
+            "--archive-dir",
+            str(out / "coverage"),
+        ],
+        workspace,
+        {**env, "COVERAGE_THRESHOLD": "0"},
+    )
+    print(result.stdout)
+    if result.returncode:
+        return result.returncode
+    lcov = out / "coverage" / "coverage_report.dat"
+    lcov.write_text(normalize_lcov(lcov.read_text(encoding="utf-8"), out.name), encoding="utf-8")
+    return 0
 
 
 def _write_summary(
@@ -199,6 +316,25 @@ def _write_summary(
     append_to_step_summary(text)
 
 
+def _collect_dependable_element_docs(workspace: Path, out: Path, targets: list[str], env: dict) -> None:
+    """Build the module's dependable element sphinx targets and keep their HTML for the main docs.
+
+    The main docs build cannot depend on them via Bazel (docs_as_code only takes docs()/docs_bundle
+    labels as external needs), so the HTML travels as part of the module report instead. A failure
+    here is reported but does not fail the module's tests.
+    """
+    if not targets:
+        return
+    code, _ = streamed(["bazel", "build", "--keep_going", *targets], workspace, env)
+    for target in targets:
+        package, name = target.removeprefix("//").split(":")
+        html = workspace / "bazel-bin" / package / name / "html"
+        if code != 0 or not html.is_dir():
+            print(f"WARNING: no HTML for {target}", file=sys.stderr)
+            continue
+        shutil.copytree(html, out / "dependable_element_docs" / name, symlinks=False, dirs_exist_ok=True)
+
+
 def run(args: argparse.Namespace) -> int:
     known = load_known_good(REF_INT / "known_good.json")
     module = known.modules["target_sw"].get(args.module)
@@ -211,6 +347,7 @@ def run(args: argparse.Namespace) -> int:
     workspace, out = _setup_working_dir(work, module.name)
     _copy_fetch_module(module.name, workspace)
     _append_unified_toolchain(workspace)
+    _apply_extra_dependency_overrides(workspace, known.modules["tooling"]["score_devcontainer"].version)
 
     # Every bazel call in the module goes through this wrapper, so they all see the overrides and
     # the unified config. Its own output base keeps
@@ -241,7 +378,14 @@ def run(args: argparse.Namespace) -> int:
     unpinned = sorted(shared - set(pinned))
     shutil.copy(rc, out / "overrides.bazelrc")
 
-    command = coverage_args(module.metadata.test_args, module.metadata.langs, module.metadata.exclude_test_targets)
+    coverage_enabled = module.name in COVERAGE_MODULES
+    command = coverage_args(
+        module.metadata.test_args,
+        module.metadata.langs,
+        module.metadata.exclude_test_targets,
+        enabled=coverage_enabled,
+        module=module.name,
+    )
     exit_code, log = streamed(["bazel", *command], workspace, env)
 
     results = list((workspace / "bazel-testlogs").glob("**/test.xml"))
@@ -252,7 +396,10 @@ def run(args: argparse.Namespace) -> int:
     # Bazel exits 0 when every test is skipped (e.g. all incompatible with the platform).
     no_tests = not results
     exit_code = exit_code or int(no_tests)
-    _collect_coverage(workspace, out, env)
+    if coverage_enabled:
+        coverage_exit = _collect_coverage(workspace, out, env)
+        exit_code = exit_code or coverage_exit
+    _collect_dependable_element_docs(workspace, out, module.metadata.dependable_element_docs, env)
     (out / "result.json").write_text(json.dumps({"exit_code": exit_code}) + "\n")
     _write_summary(module.name, out, exit_code, log, no_tests=no_tests, pinned=pinned, unpinned=unpinned)
     return exit_code
@@ -270,10 +417,10 @@ def report(args: argparse.Namespace) -> int:
         result_file = reports / "result.json"
         result = json.loads(result_file.read_text()) if result_file.is_file() else {"exit_code": 1}
         unit_tests[module.name] = {**count_testcases(reports / "tests"), "exit_code": result["exit_code"]}
-        lcov = reports / "coverage" / "lcov.dat"
-        if "cpp" in module.metadata.langs:
+        lcov = reports / "coverage" / "coverage_report.dat"
+        if module.name in COVERAGE_MODULES:
             numbers = lcov_percentages(lcov) if lcov.is_file() else {}
-            coverage[f"{module.name}_cpp"] = {**numbers, "exit_code": 0 if numbers.get("lines") else 1}
+            coverage[module.name] = {**numbers, "exit_code": 0 if numbers.get("lines") else 1}
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
     unit_tests_md = generate_markdown_report(
@@ -289,6 +436,11 @@ def report(args: argparse.Namespace) -> int:
         output_path=args.out_dir / "coverage_summary.md",
     )
     append_to_step_summary(unit_tests_md, coverage_md)
+    combine_reports(
+        args.reports_dir,
+        sorted(COVERAGE_MODULES & known.modules["target_sw"].keys()),
+        REF_INT / "coverage-report" / "coverage_report.dat",
+    )
     return 0
 
 

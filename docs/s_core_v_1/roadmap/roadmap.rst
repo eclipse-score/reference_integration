@@ -198,7 +198,6 @@ Status & Next Steps
    :titlesonly:
    :maxdepth: 1
 
-   Overall Status <overall_status>
    Planning Approach <planning_approach>
    Release Gate v0.8 — Requirements Engineering + Architecture Design <pi1>
    Release Gate v0.9 — Implementation <pi2>

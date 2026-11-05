@@ -12,6 +12,8 @@
 # *******************************************************************************
 name: AutoSD - Build & Integration Test
 on:
+  release:
+    types: [created]
   pull_request:
     types: [opened, reopened, synchronize]
   merge_group:
@@ -112,6 +114,39 @@ jobs:
           sleep 5
           sshcmd 'bootc status'
           sshcmd '/showcases/bin/cli --examples all'
+          sshcmd 'rm -f /tmp/score_showcases_autosd_latest.oci'
         working-directory: ./images/autosd
         env:
           SSH_PASSWORD: password
+      - name: Archive Modified Image
+        run: |
+          xz disk.qcow2
+          mv disk.qcow2.xz eclipse-autosd-bootc-qemu-${{ matrix.platform }}.qcow2.xz
+        working-directory: ./images/autosd
+      - name: Store Image
+        uses: actions/upload-artifact@v4
+        with:
+          name: eclipse-autosd-bootc-qemu-${{ matrix.platform }}.qcow2.xz
+          path: images/autosd/eclipse-autosd-bootc-qemu-${{ matrix.platform }}.qcow2.xz
+  release:
+    name: Publish image to release
+    needs: build
+    if: github.event_name == 'release'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    env:
+      RELEASE_NAME: ${{ github.event.release.tag_name }}
+    steps:
+      - name: Download archived image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: eclipse-autosd-bootc-qemu-x86_64.qcow2.xz
+          path: ./release-assets
+      - name: Upload image to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "$RELEASE_NAME" \
+            ./release-assets/eclipse-autosd-bootc-qemu-x86_64.qcow2.xz \
+            --clobber

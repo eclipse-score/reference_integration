@@ -74,8 +74,24 @@ html_theme_options = {
     "secondary_sidebar_items": {
         "**": ["page-toc"],
         "feature_and_process_status": [],
-        "s_core_v_1/roadmap/overall_status": [],
+        "s_core_v_1/releases/progress_overview": [],
     },
     "show_toc_level": 2,
     "navigation_with_keys": False,
 }
+
+# score_logging v0.2.5 symlinks design docs/PlantUML files from score/ into docs/,
+# which sphinx-mounts reports as path_escape. Remove once its bundle is self-contained.
+_PATH_CHECK_OFF = {"modules/score_logging"}
+
+
+def _relax_path_check(_app, config) -> None:
+    for mount in getattr(config, "mounts", None) or []:
+        if isinstance(mount, dict) and mount.get("mount_at") in _PATH_CHECK_OFF:
+            mount["path_check"] = "off"
+
+
+# Defined here, not as a docs/*.py extension: the sandboxed needs_json build only ships conf.py.
+def setup(app):
+    # After score_mounts (300) has filled config.mounts, before sphinx_mounts (400) reads it.
+    app.connect("config-inited", _relax_path_check, priority=350)
