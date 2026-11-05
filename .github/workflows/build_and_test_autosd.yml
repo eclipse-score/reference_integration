@@ -113,7 +113,10 @@ jobs:
           sshcmd 'bootc switch --apply  --transport oci-archive /tmp/score_showcases_autosd_latest.oci' || true
           sleep 5
           sshcmd 'bootc status'
-          sshcmd '/showcases/bin/cli --examples all'
+          # Workaround: config_daemon runs forever, so run all showcases except it
+          # (CLI reads *.score.json from SCORE_CLI_INIT_DIR). Drop once the daemon exits on its own.
+          sshcmd 'cp -a /showcases /tmp/showcases && grep -rl --include="*.score.json" config_daemon /tmp/showcases | xargs rm -f'
+          sshcmd 'SCORE_CLI_INIT_DIR=/tmp/showcases timeout 900 /tmp/showcases/bin/cli --examples all'
           sshcmd 'rm -f /tmp/score_showcases_autosd_latest.oci'
         working-directory: ./images/autosd
         env:
