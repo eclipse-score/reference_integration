@@ -17,9 +17,11 @@ deployed launch manager ([platform_run/launch_manager_config.json](platform_run/
 2. Once `platform_ready` is reached, it starts the test applications, which
    depend only on `platform_ready`: logging, baselibs, Kyron and
    communication examples and the platform version check. Each must exit with
-   code 0.
+   code 0. The Kyron select example is left out: its assertion depends on
+   which of three concurrent jobs finishes first and fails intermittently.
 3. Only then it reaches the `PlatformRun` run target and the run prints
-   `S-CORE platform run: PASSED`. Otherwise it prints `FAILED` after 60 s.
+   `S-CORE platform run: PASSED`. Otherwise it prints `FAILED`, at the latest
+   after 60 s.
 
 The applications log via mw::log to the console and, through the datarouter, as
 DLT (UDP multicast `239.255.42.99:3490`). Run `dlt-receive` or DLT Viewer next to
