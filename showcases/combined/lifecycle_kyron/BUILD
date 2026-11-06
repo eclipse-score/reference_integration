@@ -20,23 +20,23 @@ pkg_files(
     name = "lifecycle_kyron_data_pkg_files",
     srcs = [
         ":lifecycle_kyron_configs",
-        "//showcases/lifecycle_kyron:lifecycle_kyron.score.json",
-        "//showcases/lifecycle_kyron/configs:logging.json",
+        "//showcases/combined/lifecycle_kyron:lifecycle_kyron.score.json",
+        "//showcases/combined/lifecycle_kyron/configs:logging.json",
         "@score_kyron//examples:safety_task",
     ],
     attributes = pkg_attributes(mode = "0755"),
     renames = {
         "@score_kyron//examples:safety_task": "bin/safety_task",
-        "//showcases/lifecycle_kyron:lifecycle_kyron.score.json": "configs/lifecycle_kyron.score.json",
+        "//showcases/combined/lifecycle_kyron:lifecycle_kyron.score.json": "configs/lifecycle_kyron.score.json",
         ":lifecycle_kyron_configs": "data/lifecycle_kyron/etc/",
-        "//showcases/lifecycle_kyron/configs:logging.json": "data/lifecycle_kyron/etc/logging.json",
+        "//showcases/combined/lifecycle_kyron/configs:logging.json": "data/lifecycle_kyron/etc/logging.json",
     },
     visibility = ["//showcases:__pkg__"],
 )
 
 launch_manager_config(
     name = "lifecycle_kyron_configs",
-    config = "//showcases/lifecycle_kyron/configs:launch_manager_config.json",
+    config = "//showcases/combined/lifecycle_kyron/configs:launch_manager_config.json",
     flatbuffer_out_dir = "etc",
 )
 
@@ -49,11 +49,11 @@ score_pkg_bundle(
         "//showcases/simple_lifecycle:lifecycle_signal.sh",
     ],
     config_data = [
-        "//showcases/lifecycle_kyron:lifecycle_kyron.score.json",
+        "//showcases/combined/lifecycle_kyron:lifecycle_kyron.score.json",
     ],
     custom_layout = {
         ":lifecycle_kyron_configs": "etc/",
-        "//showcases/lifecycle_kyron/configs:logging.json": "etc/logging.json",
+        "//showcases/combined/lifecycle_kyron/configs:logging.json": "etc/logging.json",
     },
     package_dir = "lifecycle_kyron",
 )
