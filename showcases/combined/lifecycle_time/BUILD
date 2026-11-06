@@ -18,23 +18,23 @@ pkg_files(
     name = "lifecycle_time_data_pkg_files",
     srcs = [
         ":lifecycle_time_configs",
-        "//showcases/lifecycle_time:lifecycle_time.score.json",
-        "//showcases/lifecycle_time/configs:logging.json",
+        "//showcases/combined/lifecycle_time:lifecycle_time.score.json",
+        "//showcases/combined/lifecycle_time/configs:logging.json",
         "@score_time//examples/time/vehicle_time",
     ],
     attributes = pkg_attributes(mode = "0755"),
     renames = {
         "@score_time//examples/time/vehicle_time": "bin/vehicle_time",
-        "//showcases/lifecycle_time:lifecycle_time.score.json": "configs/lifecycle_time.score.json",
+        "//showcases/combined/lifecycle_time:lifecycle_time.score.json": "configs/lifecycle_time.score.json",
         ":lifecycle_time_configs": "data/lifecycle_time/etc/",
-        "//showcases/lifecycle_time/configs:logging.json": "data/lifecycle_time/etc/logging.json",
+        "//showcases/combined/lifecycle_time/configs:logging.json": "data/lifecycle_time/etc/logging.json",
     },
     visibility = ["//showcases:__pkg__"],
 )
 
 launch_manager_config(
     name = "lifecycle_time_configs",
-    config = "//showcases/lifecycle_time/configs:launch_manager_config.json",
+    config = "//showcases/combined/lifecycle_time/configs:launch_manager_config.json",
     flatbuffer_out_dir = "etc",
 )
 
@@ -47,11 +47,11 @@ score_pkg_bundle(
         "//showcases/simple_lifecycle:lifecycle_signal.sh",
     ],
     config_data = [
-        "//showcases/lifecycle_time:lifecycle_time.score.json",
+        "//showcases/combined/lifecycle_time:lifecycle_time.score.json",
     ],
     custom_layout = {
         ":lifecycle_time_configs": "etc/",
-        "//showcases/lifecycle_time/configs:logging.json": "etc/logging.json",
+        "//showcases/combined/lifecycle_time/configs:logging.json": "etc/logging.json",
     },
     package_dir = "lifecycle_time",
 )

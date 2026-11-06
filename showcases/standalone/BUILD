@@ -92,3 +92,12 @@ score_pkg_bundle(
     config_data = ["//showcases/standalone:baselibs.score.json"],
     package_dir = "standalone",
 )
+
+score_pkg_bundle(
+    name = "persistency",
+    bins = [
+        "@score_persistency//score/kvs/rust_kvs_tool:kvs_tool",
+    ],
+    config_data = ["//showcases/standalone:persistency.score.json"],
+    package_dir = "standalone",
+)
