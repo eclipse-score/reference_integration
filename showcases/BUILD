@@ -37,10 +37,6 @@ score_pkg_bundle(
     package_dir = "showcases",
 )
 
-# rules_pkg provider view of the showcases bundle for consumers that need a
-# pkg_filegroup (e.g. qnx_ifs in score_rules_imagefs >= 0.1.0) instead of the
-# untarred tree. Mirrors the "showcases" pkg_tar content 1:1 (same members, same
-# "showcases/" package_dir applied as prefix).
 pkg_filegroup(
     name = "showcases_bundle",
     srcs = [
@@ -56,7 +52,6 @@ pkg_filegroup(
         "//showcases/standalone:baselibs_pkg_files",
         "//showcases/standalone:comm_pkg_files",
         "//showcases/standalone:config_management_pkg_files",
-        "//showcases/standalone:persistency_pkg_files",
         "//showcases/standalone:kyron_pkg_files",
         "//showcases/standalone:logging_pkg_files",
         "//showcases/standalone:persistency_pkg_files",

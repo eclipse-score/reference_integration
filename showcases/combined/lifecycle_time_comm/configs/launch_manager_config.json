@@ -1,14 +1,10 @@
 {
-    "schema_version": 1,
+    "schema_version": 2,
     "defaults": {
         "deployment_config": {
             "bin_dir": "/showcases/bin/",
-            "ready_recovery_action": {
-                "restart": {
-                    "number_of_attempts": 1,
-                    "delay_before_restart": 0.5
-                }
-            },
+            "activation_retry_attempts": 1,
+            "activation_retry_delay_ms": 500,
             "sandbox": {
                 "uid": 0,
                 "gid": 0,
@@ -32,7 +28,7 @@
             }
         },
         "run_target": {
-            "transition_timeout": 5,
+            "transition_timeout_ms": 5000,
             "recovery_action": {
                 "switch_run_target": {
                     "run_target": "fallback_run_target"
@@ -40,7 +36,7 @@
             }
         },
         "alive_supervision": {
-            "evaluation_cycle": 0.5
+            "evaluation_cycle_ms": 500
         }
     },
     "components": {
@@ -65,7 +61,7 @@
                 "depends_on": ["state_manager"]
             },
             "deployment_config": {
-                "shutdown_timeout": 2.0
+                "shutdown_timeout_ms": 2000
             }
         },
         "com_api_example": {
@@ -105,9 +101,9 @@
     "fallback_run_target": {
         "description": "Switching off everything",
         "depends_on": ["state_manager"],
-        "transition_timeout": 1.5
+        "transition_timeout_ms": 1500
     },
     "alive_supervision": {
-        "evaluation_cycle": 0.5
+        "evaluation_cycle_ms": 500
     }
 }

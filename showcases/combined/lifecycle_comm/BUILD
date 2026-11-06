@@ -20,12 +20,10 @@ pkg_files(
         ":lifecycle_comm_configs",
         "//showcases/combined/lifecycle_comm:lifecycle_comm.score.json",
         "//showcases/combined/lifecycle_comm/configs:logging.json",
-        "@score_communication//score/mw/com/example/com-api-example",
         "@score_communication//score/mw/com/example/com-api-example:etc/mw_com_config.json",
     ],
     attributes = pkg_attributes(mode = "0755"),
     renames = {
-        "@score_communication//score/mw/com/example/com-api-example": "bin/com-api-example",
         "@score_communication//score/mw/com/example/com-api-example:etc/mw_com_config.json": "data/lifecycle_comm/etc/mw_com_config.json",
         "//showcases/combined/lifecycle_comm:lifecycle_comm.score.json": "configs/lifecycle_comm.score.json",
         ":lifecycle_comm_configs": "data/lifecycle_comm/etc/",
@@ -46,7 +44,7 @@ score_pkg_bundle(
         "@score_lifecycle//score/launch_manager:launch_manager",
         "@score_lifecycle//examples/control_application:control_daemon",
         "@score_communication//score/mw/com/example/com-api-example:com-api-example",
-        "//showcases/combined/lifecycle_comm:lifecycle_signal.sh",
+        "//showcases/simple_lifecycle:lifecycle_signal.sh",
     ],
     config_data = [
         "//showcases/combined/lifecycle_comm:lifecycle_comm.score.json",

@@ -14,8 +14,6 @@ load("@rules_pkg//pkg:mappings.bzl", "pkg_attributes", "pkg_files")
 load("@score_lifecycle//:defs.bzl", "launch_manager_config")
 load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
 
-# No unique bins: safety_task and com-api-example are provided by lifecycle_kyron_data_pkg_files
-# and lifecycle_comm_data_pkg_files respectively when composing showcases_bundle.
 pkg_files(
     name = "lifecycle_kyron_comm_data_pkg_files",
     srcs = [
