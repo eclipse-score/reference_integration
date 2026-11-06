@@ -20,10 +20,10 @@
 #include "deploy/platform_info/platform_info.h"
 
 #include "score/mw/com/runtime.h"
+#include "score/mw/log/logger.h"
 #include "score/string_manipulation/arguments/arguments.h"
 
 #include <chrono>
-#include <iostream>
 #include <optional>
 #include <string>
 #include <thread>
@@ -41,9 +41,15 @@ constexpr auto kDiscoveryTimeout{10s};
 constexpr auto kReceiveTimeout{10s};
 constexpr auto kPollInterval{50ms};
 
+score::mw::log::Logger& Logger()
+{
+    static auto& logger = score::mw::log::CreateLogger("PINF", "platform info");
+    return logger;
+}
+
 int Fail(const std::string& reason)
 {
-    std::cerr << "platform_info_consumer: FAILED - " << reason << std::endl;
+    Logger().LogError() << "platform_info_consumer: FAILED - " + reason;
     return 1;
 }
 
@@ -102,7 +108,7 @@ int main(int argc, const char* argv[])
     {
         return Fail("the platform offers no platform info service (is //deploy/platform_info deployed and running?)");
     }
-    std::cout << "platform_info_consumer: found the platform info service" << std::endl;
+    Logger().LogInfo() << "platform_info_consumer: found the platform info service";
 
     auto proxy = PlatformInfoProxy::Create(handles.front());
     if (!proxy.has_value())
@@ -119,8 +125,8 @@ int main(int argc, const char* argv[])
     {
         return Fail("the S-CORE version reported by the platform fails the CRC32 check");
     }
-    std::cout << "platform_info_consumer: platform runs S-CORE "
-              << score::platform::info::ToString(platform_info.value()) << std::endl;
+    Logger().LogInfo() << "platform_info_consumer: platform runs S-CORE " +
+                              score::platform::info::ToString(platform_info.value());
 
     const auto differences =
         score::platform::info::Compare(score::platform::info::MakePlatformInfo(), platform_info.value());
@@ -129,7 +135,7 @@ int main(int argc, const char* argv[])
         return Fail("the platform runs a different S-CORE version than this check was built for:\n" + differences);
     }
 
-    std::cout << "platform_info_consumer: S-CORE version check passed (" << platform_info->module_count
-              << " modules match)" << std::endl;
+    Logger().LogInfo() << "platform_info_consumer: S-CORE version check passed (" +
+                              std::to_string(platform_info->module_count) + " modules match)";
     return 0;
 }

@@ -16,6 +16,7 @@ layer 3 contract this service is part of.
 | --- | --- |
 | `/usr/bin/platform_info/platform_info_service` | Provider of the service |
 | `/usr/bin/platform_info/etc/mw_com_config.json` | mw::com configuration of the service; consumers use this deployed file |
+| `/usr/bin/platform_info/etc/logging.json` | mw::log configuration of the service (app id `PINS`, console and DLT) |
 
 ## Service `score/platform/info`
 
@@ -42,6 +43,19 @@ platform_info_service: offering score/platform/info for S-CORE known_good 2026-0
   ...
 ```
 
+## Logging
+
+Provider and consumer log via mw::log (context `PINF`), both to the console
+(`kConsole`) and as DLT stream via the datarouter (`kRemote`):
+
+| Process | DLT app id | Configuration |
+| --- | --- | --- |
+| `platform_info_service` | `PINS` | `etc/logging.json`, found relative to its working directory `/usr/bin/platform_info` |
+| `platform_info_consumer` | `PINC` | `/showcases/data/platform_info/etc/logging.json`, passed via `MW_LOG_CONFIG_FILE` |
+
+Without a running datarouter the DLT output is dropped; the console output
+remains.
+
 ## Consumer
 
 [`//showcases/standalone:platform_info_consumer`](../../showcases/standalone/platform_info_consumer.cpp)
@@ -54,7 +68,7 @@ brings no provider of its own. It exits 0 only if it
 
 On success it logs `platform_info_consumer: S-CORE version check passed`.
 It runs as the showcase `Platform Version Check`
-([`com_platform_info.score.json`](../../showcases/standalone/com_platform_info.score.json)),
+([`platform_info.score.json`](../../showcases/standalone/platform_info.score.json)),
 which the platform integration test
 `test_platform_version` executes.
 

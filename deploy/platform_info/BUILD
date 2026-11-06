@@ -58,6 +58,7 @@ cc_binary(
         ":platform_info_interface",
         "@score_baselibs//score/string_manipulation/arguments",
         "@score_communication//score/mw/com",
+        "@score_logging//score/mw/log",
     ],
 )
 
@@ -75,7 +76,10 @@ pkg_files(
 # that deploys a different service definition fails the check.
 pkg_files(
     name = "platform_info_service_configs",
-    srcs = ["etc/mw_com_config.json"],
+    srcs = [
+        "etc/logging.json",
+        "etc/mw_com_config.json",
+    ],
     attributes = pkg_attributes(mode = "0644"),
     prefix = "usr/bin/platform_info/etc",
     strip_prefix = strip_prefix.files_only(),
