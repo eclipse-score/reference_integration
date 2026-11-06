@@ -11,8 +11,10 @@ For remote (DLT) logging, please refer to the following documentation:
 `/showcases/bin/cli --examples 'S-CORE Platform Run'` hands control to the
 deployed launch manager ([platform_run/launch_manager_config.json](platform_run/launch_manager_config.json)):
 
-1. It starts the platform daemons first (today the datarouter).
-2. Once they run, it starts the test applications: logging, baselibs, Kyron and
+1. It starts the platform daemons first (today the datarouter). The component
+   `platform_ready` depends on all of them and marks the boundary.
+2. Once `platform_ready` is reached, it starts the test applications, which
+   depend only on `platform_ready`: logging, baselibs, Kyron and
    communication examples. Each must exit with code 0.
 3. Only then it reaches the `PlatformRun` run target and the run prints
    `S-CORE platform run: PASSED`. Otherwise it prints `FAILED` after 60 s.

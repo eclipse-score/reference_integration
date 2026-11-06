@@ -21,7 +21,7 @@
                 "application_type": "Native",
                 "is_self_terminating": true
             },
-            "depends_on": ["datarouter"],
+            "depends_on": ["platform_ready"],
             "ready_condition": {
                 "process_state": "Terminated"
             }
@@ -47,6 +47,16 @@
             "deployment_config": {
                 "bin_dir": "/usr/bin/datarouter",
                 "ready_timeout": 5
+            }
+        },
+        "platform_ready": {
+            "description": "Barrier: every platform daemon is up; the tests depend only on this",
+            "component_properties": {
+                "binary_name": "true",
+                "depends_on": ["datarouter"]
+            },
+            "deployment_config": {
+                "bin_dir": "/bin"
             }
         },
         "logging_app": {
@@ -141,6 +151,7 @@
             "description": "Reports failure in the fallback run target, then stops the launch manager",
             "component_properties": {
                 "binary_name": "sh",
+                "depends_on": ["datarouter"],
                 "process_arguments": ["-c", "echo 'S-CORE platform run: FAILED'; sleep 2; kill -s TERM $PPID"],
                 "ready_condition": {
                     "process_state": "Running"
@@ -156,6 +167,7 @@
             "description": "Platform daemons first, then every test application; each test must exit successfully",
             "depends_on": [
                 "datarouter",
+                "platform_ready",
                 "logging_app",
                 "dlt_generator",
                 "log_builtin",
