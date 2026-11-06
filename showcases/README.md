@@ -27,3 +27,8 @@ The applications log via mw::log to the console and, through the datarouter, as
 DLT (UDP multicast `239.255.42.99:3490`). Run `dlt-receive` or DLT Viewer next to
 it to see them. `//platform_integration_tests/platform_run` records that DLT
 traffic with ITF and checks it after the run.
+
+DLT application ids: `DR` datarouter, `EXA` logging_app, `LGGG` dlt_generator,
+`COMA` com-api-example (mw::com internals), `PINS` / `PINC` platform info
+service / consumer (mw::com internals). The Rust examples and Kyron log to
+stdout only; the launch manager logs to the console only.
