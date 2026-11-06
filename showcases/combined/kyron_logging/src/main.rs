@@ -23,10 +23,6 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-// Demonstrates score_kyron and score_logging integration: async tasks run on
-// the kyron runtime and emit structured log messages via score's logging
-// framework throughout their lifecycle.
-
 use kyron::futures::sleep::sleep;
 use score_log as log;
 use stdout_logger::StdoutLoggerBuilder;

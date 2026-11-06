@@ -20,13 +20,11 @@ _CLI = "/showcases/bin/cli"
 
 
 def run_showcases(target, *names: str) -> str:
-    """Run the named showcases via the showcase entrypoint and assert success.
+    """Run the named showcases and return combined output.
 
-    ``run_score`` in the showcase CLI prints a per-example completion banner
-    and exits 0 once every app of an example has been spawned and joined, so
-    both the exit code and the banner are checked to confirm the showcase ran
-    end-to-end on the platform. Returns the combined output so callers can add
-    further module-specific assertions.
+    The CLI does not propagate individual app exit codes (``bail!`` is
+    commented out in ``cli/main.rs``), so callers must add module-specific
+    assertions on the returned output.
     """
     selection = ",".join(names)
     exit_code, out = target.execute(f"{_CLI} --examples='{selection}'")

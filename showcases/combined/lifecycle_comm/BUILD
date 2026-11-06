@@ -46,7 +46,7 @@ score_pkg_bundle(
         "@score_lifecycle//score/launch_manager:launch_manager",
         "@score_lifecycle//examples/control_application:control_daemon",
         "@score_communication//score/mw/com/example/com-api-example:com-api-example",
-        "//showcases/combined/lifecycle_comm:lifecycle_signal.sh",
+        "//showcases/simple_lifecycle:lifecycle_signal.sh",
     ],
     config_data = [
         "//showcases/combined/lifecycle_comm:lifecycle_comm.score.json",

@@ -10,18 +10,15 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-"""Platform integration test for the persistency (KVS) standalone showcase.
+"""Platform integration test for the persistency (KVS) standalone showcase."""
 
-Verifies that the KVS showcase not only exits successfully but actually
-writes key-value data to disk — the file at a known path is checked for
-existence and content after the showcase completes.
-"""
+import json
 
 from attribute_plugin import add_test_properties
 from showcase_runner import run_showcases
 
 _KVS_FILE = "/tmp/kvs_0_0.json"
-_KVS_HASH = "/tmp/kvs_0_0.hash"
+_EXPECTED_KEYS = {"number", "bool", "string", "null", "array", "object"}
 
 
 @add_test_properties(
@@ -30,26 +27,19 @@ _KVS_HASH = "/tmp/kvs_0_0.hash"
     derivation_technique="requirements-analysis",
 )
 def test_persistency_kvs_showcase(target):
-    """The KVS showcase writes typed key-value pairs to disk using the KVS
-    API (flush → JSON file), then reopens the same instance and asserts the
-    data survived. This test goes beyond log inspection: it verifies that the
-    KVS file and its hash file actually exist on the target filesystem after
-    the showcase exits."""
-    run_showcases(target, "Persistency KVS Example")
+    """Verifies that the KVS showcase writes six typed key-value pairs to disk
+    and that a second KVS process can reload them — exercising hash validation."""
+    output = run_showcases(target, "Persistency KVS Example")
+    assert "Done!" in output, f"createtestdata did not complete:\n{output}"
 
-    # Verify the KVS data file was written to disk.
-    exit_code, _ = target.execute(f"test -f {_KVS_FILE}")
-    assert exit_code == 0, f"KVS data file not written to disk at {_KVS_FILE}"
-
-    # Verify the companion hash file was written (proves flush completed fully).
-    exit_code, _ = target.execute(f"test -f {_KVS_HASH}")
-    assert exit_code == 0, f"KVS hash file not written to disk at {_KVS_HASH}"
-
-    # Verify the data file contains the keys written by createtestdata.
     exit_code, out = target.execute(f"cat {_KVS_FILE}")
-    assert exit_code == 0, f"Failed to read {_KVS_FILE}"
-    content = out.decode(errors="replace")
-    for key in ("number", "bool", "string", "array", "object"):
-        assert f'"{key}"' in content, (
-            f"Expected key '{key}' not found in KVS data file:\n{content}"
-        )
+    assert exit_code == 0, f"KVS data file not found at {_KVS_FILE}"
+    data = json.loads(out.decode(errors="replace"))
+    assert set(data) == _EXPECTED_KEYS, f"Unexpected keys in KVS data file: {set(data)}"
+    assert data.get("number", {}).get("t") == "f64", f"'number' has wrong type tag: {data.get('number')}"
+
+    # Second process load exercises the hash check that KvsLoad::Optional runs on open.
+    exit_code, out = target.execute("/showcases/bin/kvs_tool -d /tmp -o getkey -k number")
+    out = out.decode(errors="replace")
+    assert exit_code == 0, f"kvs_tool getkey failed:\n{out}"
+    assert "Key 'number' exists!" in out, f"getkey did not confirm key presence:\n{out}"
