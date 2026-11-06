@@ -1,0 +1,178 @@
+{
+    "schema_version": 1,
+    "defaults": {
+        "deployment_config": {
+            "bin_dir": "/showcases/bin",
+            "ready_timeout": 30,
+            "shutdown_timeout": 2,
+            "environmental_variables": {
+                "PATH": "/usr/local/bin:/usr/bin:/bin"
+            },
+            "sandbox": {
+                "uid": 0,
+                "gid": 0,
+                "supplementary_group_ids": [],
+                "scheduling_policy": "SCHED_OTHER",
+                "scheduling_priority": 0
+            }
+        },
+        "component_properties": {
+            "application_profile": {
+                "application_type": "Native",
+                "is_self_terminating": true
+            },
+            "depends_on": ["datarouter"],
+            "ready_condition": {
+                "process_state": "Terminated"
+            }
+        },
+        "run_target": {
+            "transition_timeout": 120
+        }
+    },
+    "components": {
+        "datarouter": {
+            "description": "Platform: logging daemon, forwards mw::log remote logs as DLT",
+            "component_properties": {
+                "binary_name": "datarouter",
+                "application_profile": {
+                    "is_self_terminating": false
+                },
+                "depends_on": [],
+                "process_arguments": ["--no_adaptive_runtime"],
+                "ready_condition": {
+                    "process_state": "Running"
+                }
+            },
+            "deployment_config": {
+                "bin_dir": "/usr/bin/datarouter",
+                "ready_timeout": 5
+            }
+        },
+        "logging_app": {
+            "description": "Test: logs via mw::log to console and DLT",
+            "component_properties": {
+                "binary_name": "logging_app"
+            },
+            "deployment_config": {
+                "working_dir": "/showcases/data/logging/logging_app/etc"
+            }
+        },
+        "dlt_generator": {
+            "description": "Test: emits a fixed set of DLT messages via mw::log",
+            "component_properties": {
+                "binary_name": "dlt_generator"
+            },
+            "deployment_config": {
+                "working_dir": "/showcases/data/logging/dlt_generator/etc"
+            }
+        },
+        "log_builtin": {
+            "description": "Test: baselibs built-in logger",
+            "component_properties": {
+                "binary_name": "log_builtin"
+            }
+        },
+        "log_custom": {
+            "description": "Test: baselibs custom logger",
+            "component_properties": {
+                "binary_name": "log_custom"
+            }
+        },
+        "log_cpp_init": {
+            "description": "Test: baselibs logger initialized from C++, used from Rust",
+            "component_properties": {
+                "binary_name": "log_cpp_init"
+            }
+        },
+        "kyron_select": {
+            "description": "Test: Kyron select example",
+            "component_properties": {
+                "binary_name": "select"
+            }
+        },
+        "kyron_safety_task": {
+            "description": "Test: Kyron safety task example",
+            "component_properties": {
+                "binary_name": "safety_task"
+            }
+        },
+        "kyron_main_macro": {
+            "description": "Test: Kyron basic example",
+            "component_properties": {
+                "binary_name": "main_macro"
+            }
+        },
+        "com_api_example": {
+            "description": "Test: mw::com sender and receiver",
+            "component_properties": {
+                "binary_name": "com-api-example",
+                "process_arguments": ["-s", "/showcases/data/comm/etc/mw_com_config.json"]
+            },
+            "deployment_config": {
+                "working_dir": "/showcases/data/comm"
+            }
+        },
+        "platform_run_passed": {
+            "description": "Reports success once every test finished successfully, then stops the launch manager",
+            "component_properties": {
+                "binary_name": "sh",
+                "depends_on": [
+                    "logging_app",
+                    "dlt_generator",
+                    "log_builtin",
+                    "log_custom",
+                    "log_cpp_init",
+                    "kyron_select",
+                    "kyron_safety_task",
+                    "kyron_main_macro",
+                    "com_api_example"
+                ],
+                "process_arguments": ["-c", "echo 'S-CORE platform run: PASSED'; sleep 2; kill -s TERM $PPID"],
+                "ready_condition": {
+                    "process_state": "Running"
+                }
+            },
+            "deployment_config": {
+                "bin_dir": "/bin"
+            }
+        },
+        "platform_run_failed": {
+            "description": "Reports failure in the fallback run target, then stops the launch manager",
+            "component_properties": {
+                "binary_name": "sh",
+                "process_arguments": ["-c", "echo 'S-CORE platform run: FAILED'; sleep 2; kill -s TERM $PPID"],
+                "ready_condition": {
+                    "process_state": "Running"
+                }
+            },
+            "deployment_config": {
+                "bin_dir": "/bin"
+            }
+        }
+    },
+    "run_targets": {
+        "PlatformRun": {
+            "description": "Platform daemons first, then every test application; each test must exit successfully",
+            "depends_on": [
+                "datarouter",
+                "logging_app",
+                "dlt_generator",
+                "log_builtin",
+                "log_custom",
+                "log_cpp_init",
+                "kyron_select",
+                "kyron_safety_task",
+                "kyron_main_macro",
+                "com_api_example",
+                "platform_run_passed"
+            ]
+        }
+    },
+    "initial_run_target": "PlatformRun",
+    "fallback_run_target": {
+        "description": "Keeps the logging daemon to report the failure, then stops",
+        "depends_on": ["datarouter", "platform_run_failed"],
+        "transition_timeout": 10
+    }
+}

@@ -25,6 +25,7 @@ score_pkg_bundle(
         "//showcases/standalone:persistency_pkg_files",
         "//showcases/simple_lifecycle:simple_lifecycle_pkg_files",
         "//showcases/standalone:baselibs_pkg_files",
+        "//showcases/platform_run:platform_run_pkg_files",
     ],
     package_dir = "showcases",
 )
@@ -37,6 +38,7 @@ pkg_filegroup(
     name = "showcases_bundle",
     srcs = [
         ":showcases_pkg_files",
+        "//showcases/platform_run:platform_run_pkg_files",
         "//showcases/simple_lifecycle:simple_lifecycle_pkg_files",
         "//showcases/standalone:baselibs_pkg_files",
         "//showcases/standalone:comm_pkg_files",
