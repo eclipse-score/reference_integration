@@ -88,7 +88,8 @@
         "dlt_generator": {
             "description": "Test: emits a fixed set of DLT messages via mw::log",
             "component_properties": {
-                "binary_name": "dlt_generator"
+                "binary_name": "dlt_generator",
+                "depends_on": ["logging_app"]
             },
             "deployment_config": {
                 "working_dir": "/showcases/data/logging/dlt_generator/etc"
@@ -97,37 +98,43 @@
         "log_builtin": {
             "description": "Test: baselibs built-in logger",
             "component_properties": {
-                "binary_name": "log_builtin"
+                "binary_name": "log_builtin",
+                "depends_on": ["dlt_generator"]
             }
         },
         "log_custom": {
             "description": "Test: baselibs custom logger",
             "component_properties": {
-                "binary_name": "log_custom"
+                "binary_name": "log_custom",
+                "depends_on": ["log_builtin"]
             }
         },
         "log_cpp_init": {
             "description": "Test: baselibs logger initialized from C++, used from Rust",
             "component_properties": {
-                "binary_name": "log_cpp_init"
+                "binary_name": "log_cpp_init",
+                "depends_on": ["log_custom"]
             }
         },
         "kyron_safety_task": {
             "description": "Test: Kyron safety task example",
             "component_properties": {
-                "binary_name": "safety_task"
+                "binary_name": "safety_task",
+                "depends_on": ["log_cpp_init"]
             }
         },
         "kyron_main_macro": {
             "description": "Test: Kyron basic example",
             "component_properties": {
-                "binary_name": "main_macro"
+                "binary_name": "main_macro",
+                "depends_on": ["kyron_safety_task"]
             }
         },
         "com_api_example": {
             "description": "Test: mw::com sender and receiver",
             "component_properties": {
                 "binary_name": "com-api-example",
+                "depends_on": ["kyron_main_macro"],
                 "process_arguments": ["-s", "/showcases/data/comm/etc/mw_com_config.json"]
             },
             "deployment_config": {
@@ -138,24 +145,15 @@
             "description": "Test: the platform reports the S-CORE version these tests were built for",
             "component_properties": {
                 "binary_name": "platform_info_consumer",
+                "depends_on": ["com_api_example"],
                 "process_arguments": ["--service_instance_manifest", "/usr/bin/platform_info/etc/mw_com_config.json"]
             }
         },
         "platform_run_passed": {
-            "description": "Reports success once every test finished successfully, then stops the launch manager",
+            "description": "Reports success once the last test finished successfully, then stops the launch manager",
             "component_properties": {
                 "binary_name": "sh",
-                "depends_on": [
-                    "logging_app",
-                    "dlt_generator",
-                    "log_builtin",
-                    "log_custom",
-                    "log_cpp_init",
-                    "kyron_safety_task",
-                    "kyron_main_macro",
-                    "com_api_example",
-                    "platform_info_consumer"
-                ],
+                "depends_on": ["platform_info_consumer"],
                 "process_arguments": ["-c", "echo 'S-CORE platform run: PASSED'; sleep 2; kill -s TERM $PPID"],
                 "ready_condition": {
                     "process_state": "Running"
