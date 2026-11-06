@@ -14,11 +14,11 @@ deployed launch manager ([platform_run/launch_manager_config.json](platform_run/
 1. It starts the platform daemons first: the datarouter, then the platform info
    service. The component `platform_ready` depends on all of them and marks the
    boundary.
-2. Once `platform_ready` is reached, it starts the test applications, which
-   depend only on `platform_ready`: logging, baselibs, Kyron and
-   communication examples and the platform version check. Each must exit with
-   code 0. The Kyron select example is left out: its assertion depends on
-   which of three concurrent jobs finishes first and fails intermittently.
+2. Once `platform_ready` is reached, it starts the test applications one after
+   another, each only once the previous one exited with code 0: logging,
+   baselibs, Kyron and communication examples, then the platform version check.
+   The Kyron select example is left out: its assertion depends on which of three
+   concurrent jobs finishes first and fails intermittently.
 3. Only then it reaches the `PlatformRun` run target and the run prints
    `S-CORE platform run: PASSED`. Otherwise it prints `FAILED`, at the latest
    after 60 s.
