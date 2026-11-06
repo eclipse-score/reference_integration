@@ -53,6 +53,7 @@ test_suite(
         "//platform_integration_tests/kyron",
         "//platform_integration_tests/lifecycle",
         "//platform_integration_tests/logging",
+        "//platform_integration_tests/platform_info",
         "//platform_integration_tests/platform_run",
         "//platform_integration_tests/time",
     ],

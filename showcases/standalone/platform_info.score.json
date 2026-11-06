@@ -1,0 +1,16 @@
+[
+    {
+        "name": "Platform Version Check",
+        "description": "A consumer must find the platform info service deployed by the platform and receive the S-CORE version it was built for",
+        "apps": [
+            {
+                "path": "/bin/sh",
+                "args": [
+                    "-c",
+                    "cd /usr/bin/platform_info || exit 1; ./platform_info_service >/dev/null 2>&1 & provider=$!; /showcases/bin/platform_info_consumer --service_instance_manifest /usr/bin/platform_info/etc/mw_com_config.json; rc=$?; kill $provider; wait $provider; exit $rc"
+                ],
+                "env": {}
+            }
+        ]
+    }
+]
