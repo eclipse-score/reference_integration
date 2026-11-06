@@ -24,24 +24,36 @@ score_pkg_bundle(
         "//showcases/standalone:config_management_pkg_files",
         "//showcases/simple_lifecycle:simple_lifecycle_pkg_files",
         "//showcases/standalone:baselibs_pkg_files",
+        "//showcases/standalone:persistency_pkg_files",
+        "//showcases/combined/lifecycle_comm:lifecycle_comm_pkg_files",
+        "//showcases/combined/lifecycle_kyron:lifecycle_kyron_pkg_files",
+        "//showcases/combined/lifecycle_time:lifecycle_time_pkg_files",
+        "//showcases/combined/kyron_logging:kyron_logging_showcase_pkg_files",
+        "//showcases/combined/lifecycle_time_comm:lifecycle_time_comm_pkg_files",
+        "//showcases/combined/lifecycle_kyron_comm:lifecycle_kyron_comm_pkg_files",
     ],
     package_dir = "showcases",
 )
 
-# rules_pkg provider view of the showcases bundle for consumers that need a
-# pkg_filegroup (e.g. qnx_ifs in score_rules_imagefs >= 0.1.0) instead of the
-# untarred tree. Mirrors the "showcases" pkg_tar content 1:1 (same members, same
-# "showcases/" package_dir applied as prefix).
+# pkg_filegroup for QNX IFS consumers. Combined showcases use *_data_pkg_files
+# (not *_pkg_files) to avoid duplicate IFS paths from shared binaries.
 pkg_filegroup(
     name = "showcases_bundle",
     srcs = [
         ":showcases_pkg_files",
+        "//showcases/combined/kyron_logging:kyron_logging_showcase_pkg_files",
+        "//showcases/combined/lifecycle_comm:lifecycle_comm_data_pkg_files",
+        "//showcases/combined/lifecycle_kyron:lifecycle_kyron_data_pkg_files",
+        "//showcases/combined/lifecycle_kyron_comm:lifecycle_kyron_comm_data_pkg_files",
+        "//showcases/combined/lifecycle_time:lifecycle_time_data_pkg_files",
+        "//showcases/combined/lifecycle_time_comm:lifecycle_time_comm_data_pkg_files",
         "//showcases/simple_lifecycle:simple_lifecycle_pkg_files",
         "//showcases/standalone:baselibs_pkg_files",
         "//showcases/standalone:comm_pkg_files",
         "//showcases/standalone:config_management_pkg_files",
         "//showcases/standalone:kyron_pkg_files",
         "//showcases/standalone:logging_pkg_files",
+        "//showcases/standalone:persistency_pkg_files",
         "//showcases/standalone:time_pkg_files",
     ],
     prefix = "showcases",
