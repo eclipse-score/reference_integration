@@ -30,5 +30,8 @@ score_pkg_bundle(
     custom_layout = {
         ":platform_run_lm_config": "etc/",
         "//showcases/platform_run:logging.json": "etc/logging.json",
+        "//showcases/platform_run:logging_com_api_example.json": "etc/logging_com_api_example.json",
+        "//showcases/platform_run:logging_platform_info_consumer.json": "etc/logging_platform_info_consumer.json",
+        "//showcases/platform_run:logging_platform_info_service.json": "etc/logging_platform_info_service.json",
     },
 )

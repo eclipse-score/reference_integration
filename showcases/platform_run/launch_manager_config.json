@@ -63,7 +63,10 @@
             },
             "deployment_config": {
                 "bin_dir": "/usr/bin/platform_info",
-                "ready_timeout": 5
+                "ready_timeout": 5,
+                "environmental_variables": {
+                    "MW_LOG_CONFIG_FILE": "/showcases/data/platform_run/etc/logging_platform_info_service.json"
+                }
             }
         },
         "platform_ready": {
@@ -138,7 +141,10 @@
                 "process_arguments": ["-s", "/showcases/data/comm/etc/mw_com_config.json"]
             },
             "deployment_config": {
-                "working_dir": "/showcases/data/comm"
+                "working_dir": "/showcases/data/comm",
+                "environmental_variables": {
+                    "MW_LOG_CONFIG_FILE": "/showcases/data/platform_run/etc/logging_com_api_example.json"
+                }
             }
         },
         "platform_info_consumer": {
@@ -147,6 +153,11 @@
                 "binary_name": "platform_info_consumer",
                 "depends_on": ["com_api_example"],
                 "process_arguments": ["--service_instance_manifest", "/usr/bin/platform_info/etc/mw_com_config.json"]
+            },
+            "deployment_config": {
+                "environmental_variables": {
+                    "MW_LOG_CONFIG_FILE": "/showcases/data/platform_run/etc/logging_platform_info_consumer.json"
+                }
             }
         },
         "platform_run_passed": {
