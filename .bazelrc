@@ -68,6 +68,12 @@ build:qnx-aarch64 --extra_toolchains=@score_qnx_aarch64_ifs_toolchain//:ifs-aarc
 build:linux-x86_64 --config=_common
 build:linux-x86_64 --config=unified
 
+# Vanilla Linux aarch64 (glibc >= 2.31, libstdc++ from GCC >= 12), e.g. Raspberry Pi OS 64-bit or Ubuntu arm64
+build:linux-aarch64 --config=_common
+build:linux-aarch64 --platforms=@score_bazel_platforms//:aarch64-linux-gcc_12.2.0-posix
+build:linux-aarch64 --extra_toolchains=@score_gcc_aarch64_toolchain//:aarch64-linux-gcc_12.2.0
+build:linux-aarch64 --extra_toolchains=@score_toolchains_rust//toolchains/ferrocene:ferrocene_aarch64_unknown_linux_gnu
+
 build:eb-aarch64 --config=_common
 build:eb-aarch64 --extra_toolchains=@score_ebclfsa_toolchain//:aarch64-linux-sdk_2.0.0-beta3-ebclfsa
 build:eb-aarch64 --extra_toolchains=@ferrocene_aarch64_ebclfsa//:rust_ferrocene_toolchain

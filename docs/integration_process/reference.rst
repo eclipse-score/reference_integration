@@ -86,6 +86,11 @@ declared in the workflows.
      - Builds the Linux x86_64 image and runs feature integration tests on Docker.
      - no
      - none (graph-wide)
+   * - `build_and_test_linux_target.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/build_and_test_linux_target.yml>`_
+     - Builds the Linux x86_64 and aarch64 release archives, runs the showcases from them on
+       stock Ubuntu and Debian containers and attaches them to releases.
+     - no
+     - none (graph-wide)
    * - `internal_tests.yml <https://github.com/eclipse-score/reference_integration/blob/main/.github/workflows/internal_tests.yml>`_
      - Runs the integration tooling tests (``//scripts/tooling:tooling_tests``).
      - no
