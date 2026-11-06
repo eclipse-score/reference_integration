@@ -102,6 +102,8 @@ jobs:
           fi
           # The CLI does not yet fail on a showcase's exit code; require at least that it completed.
           grep -q "All done!" cli.log || { echo "::error::Showcase CLI did not complete on $DISTRO ($ARCH)"; exit 1; }
+          # The launch manager checks the exit code of every application in the platform run.
+          grep -q "S-CORE platform run: PASSED" cli.log || { echo "::error::S-CORE Platform Run did not pass on $DISTRO ($ARCH)"; exit 1; }
   release:
     name: Publish platform and showcases to release
     needs: run
