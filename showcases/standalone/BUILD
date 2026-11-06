@@ -114,6 +114,7 @@ cc_binary(
         "//deploy/platform_info:platform_info_interface",
         "@score_baselibs//score/string_manipulation/arguments",
         "@score_communication//score/mw/com",
+        "@score_logging//score/mw/log",
     ],
 )
 
@@ -121,5 +122,8 @@ score_pkg_bundle(
     name = "platform_info",
     bins = ["//showcases/standalone:platform_info_consumer"],
     config_data = ["//showcases/standalone:platform_info.score.json"],
+    custom_layout = {
+        "//showcases/standalone/configs:platform_info_consumer.json": "etc/logging.json",
+    },
     package_dir = "standalone",
 )
