@@ -40,6 +40,11 @@ EXPECTED_DLT = [
     ("LGGG", "LOGG", r"DLT generator finished"),
 ]
 
+# Verdicts of test applications that only print to the console.
+EXPECTED_CONSOLE = [
+    "platform_info_consumer: S-CORE version check passed",
+]
+
 
 def analyze_console(output: str) -> list[str]:
     """Findings in the console output, up to the verdict of the run.
@@ -56,6 +61,9 @@ def analyze_console(output: str) -> list[str]:
     for problem in ("unexpected termination of process", "Problem discovered", "timeout for process"):
         if problem in run:
             findings.append(f"the launch manager reported '{problem}'")
+    for expected in EXPECTED_CONSOLE:
+        if expected not in run:
+            findings.append(f"missing on the console: '{expected}'")
     return findings
 
 
