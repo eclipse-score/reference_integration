@@ -10,6 +10,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+load("@score_lifecycle//:defs.bzl", "launch_manager_config")
 load("//bazel_common:bundlers.bzl", "score_pkg_bundle")
 
 score_pkg_bundle(
@@ -90,5 +91,28 @@ score_pkg_bundle(
         "@score_baselibs//examples/log_cpp_init:log_cpp_init",
     ],
     config_data = ["//showcases/standalone:baselibs.score.json"],
+    package_dir = "standalone",
+)
+
+launch_manager_config(
+    name = "lifecycle_run_target_recovery_configs",
+    config = "//showcases/standalone/configs:lifecycle_run_target_recovery_lm_config.json",
+    flatbuffer_out_dir = "etc",
+)
+
+# launch_manager, control_daemon, cpp/rust_supervised_app and lifecycle_signal.sh
+# are shipped by //showcases/simple_lifecycle into the shared /showcases/bin.
+score_pkg_bundle(
+    name = "lifecycle_run_target_recovery",
+    bins = [
+        "@score_lifecycle//examples/c_supervised_app",
+        "@score_lifecycle//examples/cpp_lifecycle_app",
+        "@score_lifecycle//examples/control_application:lmcontrol",
+    ],
+    config_data = ["//showcases/standalone:lifecycle_run_target_recovery.score.json"],
+    custom_layout = {
+        ":lifecycle_run_target_recovery_configs": "etc/",
+        "//showcases/simple_lifecycle/configs:logging.json": "etc/logging.json",
+    },
     package_dir = "standalone",
 )

@@ -1,0 +1,68 @@
+[
+    {
+        "name": "Lifecycle run target switching example",
+        "description": "Launch manager starts in Startup, lmcontrol switches to Running (C++, Rust, C supervised apps and C++ lifecycle app) and back to Startup. Example takes ~10s",
+        "apps": [
+            {
+                "path": "/showcases/bin/launch_manager",
+                "dir": "/showcases/data/lifecycle_run_target_recovery",
+                "args": ["-c", "etc/lifecycle_run_target_recovery_lm_config.bin"],
+                "env": {}
+            },
+            {
+                "path": "/showcases/bin/lmcontrol",
+                "args": ["Running"],
+                "env": {},
+                "delay": 2
+            },
+            {
+                "path": "/showcases/bin/lmcontrol",
+                "args": ["Startup"],
+                "env": {},
+                "delay": 3
+            },
+            {
+                "path": "/showcases/bin/lifecycle_signal.sh",
+                "args": ["launch_manager", "SIGTERM"],
+                "env": {},
+                "delay": 3
+            }
+        ]
+    },
+    {
+        "name": "Lifecycle crash recovery example",
+        "description": "lmcontrol switches to Running, cpp_supervised_app is killed (SIGKILL) and launch manager recovers to fallback_run_target, then lmcontrol brings Running back. Example takes ~13s",
+        "apps": [
+            {
+                "path": "/showcases/bin/launch_manager",
+                "dir": "/showcases/data/lifecycle_run_target_recovery",
+                "args": ["-c", "etc/lifecycle_run_target_recovery_lm_config.bin"],
+                "env": {}
+            },
+            {
+                "path": "/showcases/bin/lmcontrol",
+                "args": ["Running"],
+                "env": {},
+                "delay": 2
+            },
+            {
+                "path": "/showcases/bin/lifecycle_signal.sh",
+                "args": ["cpp_supervised_app", "SIGKILL"],
+                "env": {},
+                "delay": 3
+            },
+            {
+                "path": "/showcases/bin/lmcontrol",
+                "args": ["Running"],
+                "env": {},
+                "delay": 3
+            },
+            {
+                "path": "/showcases/bin/lifecycle_signal.sh",
+                "args": ["launch_manager", "SIGTERM"],
+                "env": {},
+                "delay": 3
+            }
+        ]
+    }
+]
