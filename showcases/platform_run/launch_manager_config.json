@@ -49,11 +49,28 @@
                 "ready_timeout": 5
             }
         },
+        "platform_info_service": {
+            "description": "Platform: reports the S-CORE version the platform was built from over mw::com",
+            "component_properties": {
+                "binary_name": "platform_info_service",
+                "application_profile": {
+                    "is_self_terminating": false
+                },
+                "depends_on": ["datarouter"],
+                "ready_condition": {
+                    "process_state": "Running"
+                }
+            },
+            "deployment_config": {
+                "bin_dir": "/usr/bin/platform_info",
+                "ready_timeout": 5
+            }
+        },
         "platform_ready": {
             "description": "Barrier: every platform daemon is up; the tests depend only on this",
             "component_properties": {
                 "binary_name": "true",
-                "depends_on": ["datarouter"]
+                "depends_on": ["datarouter", "platform_info_service"]
             },
             "deployment_config": {
                 "bin_dir": "/bin"
@@ -123,6 +140,13 @@
                 "working_dir": "/showcases/data/comm"
             }
         },
+        "platform_info_consumer": {
+            "description": "Test: the platform reports the S-CORE version these tests were built for",
+            "component_properties": {
+                "binary_name": "platform_info_consumer",
+                "process_arguments": ["--service_instance_manifest", "/usr/bin/platform_info/etc/mw_com_config.json"]
+            }
+        },
         "platform_run_passed": {
             "description": "Reports success once every test finished successfully, then stops the launch manager",
             "component_properties": {
@@ -136,7 +160,8 @@
                     "kyron_select",
                     "kyron_safety_task",
                     "kyron_main_macro",
-                    "com_api_example"
+                    "com_api_example",
+                    "platform_info_consumer"
                 ],
                 "process_arguments": ["-c", "echo 'S-CORE platform run: PASSED'; sleep 2; kill -s TERM $PPID"],
                 "ready_condition": {
@@ -167,6 +192,7 @@
             "description": "Platform daemons first, then every test application; each test must exit successfully",
             "depends_on": [
                 "datarouter",
+                "platform_info_service",
                 "platform_ready",
                 "logging_app",
                 "dlt_generator",
@@ -177,6 +203,7 @@
                 "kyron_safety_task",
                 "kyron_main_macro",
                 "com_api_example",
+                "platform_info_consumer",
                 "platform_run_passed"
             ]
         }
