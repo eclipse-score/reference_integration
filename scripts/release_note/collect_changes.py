@@ -225,7 +225,22 @@ def render_module(name: str, slug: str, base: str, head: str, own_repo: bool = F
 
 
 SECTION_HEADING = re.compile(r"^(#{2,4})\s+(.*?)\s*$", re.M)
-WANTED_SECTION = re.compile(r"breaking|deprecat|incompatible|new feature|features", re.I)
+WANTED_SECTION = re.compile(
+    r"breaking|deprecat|incompatible|new feature|features|public api|api changes|removed|migration|upgrade", re.I
+)
+# Release texts without such sections (e.g. GitHub's generated "What's Changed" list) still name these items.
+CANDIDATE_LINE = re.compile(
+    r"breaking|deprecat|\bremov|\brenam|incompatib|no longer|\bfeat\b|feat\(|new feature|adds? support|introduc", re.I
+)
+# One entry of GitHub's generated "What's Changed" list; that list is the scope of a release.
+SCOPE_PR = re.compile(r"^[*-]\s+(.+?) by @(\S+) in (https://github\.com/\S+?/pull/\d+)\s*$", re.M)
+# Skip criteria of the Baselibs release-notes skill, applied to the PR title only; they are hints, not verdicts.
+SKIP_HINTS = [
+    (re.compile(r"^(ci|build\(ci\)|chore\(ci\))\b|\bworkflows?\b|github actions?|\bci:", re.I), "CI/workflow"),
+    (re.compile(r"^docs?\b|^docs?\(|documentation|requirements?\b|readme|traceability", re.I), "docs/requirements"),
+    (re.compile(r"visibility", re.I), "Bazel visibility"),
+    (re.compile(r"^revert", re.I), "revert, check the net effect"),
+]
 IMPACT_PATHS = [
     "known_good.json",
     ".bazelrc",
@@ -248,6 +263,34 @@ def release_sections(body: str) -> list[tuple[str, str]]:
             end = marks[i + 1].start() if i + 1 < len(marks) else len(body)
             sections.append((mark.group(2), body[mark.end() : end].strip()))
     return sections
+
+
+def candidate_lines(body: str, sections: list[tuple[str, str]]) -> list[str]:
+    """List items outside the wanted sections and the PR list that look like a feature or a breaking change."""
+    covered = "\n".join(text for _, text in sections)
+    lines = (line.strip() for line in body.splitlines())
+    return [
+        l
+        for l in lines
+        if l.startswith(("-", "*")) and CANDIDATE_LINE.search(l) and l not in covered and not SCOPE_PR.match(l)
+    ][:30]
+
+
+def skip_hint(title: str, author: str) -> str | None:
+    if any(b in author.lower() for b in BOT_AUTHORS) or NOISE_TITLE.search(title):
+        return "dependency bump"
+    return next((reason for pattern, reason in SKIP_HINTS if pattern.search(title)), None)
+
+
+def release_scope(body: str) -> list[str]:
+    """Every PR of the release's "What's Changed" list, PRs to review first, then those with a skip hint."""
+    review, skip = [], []
+    for title, author, url in dict.fromkeys(SCOPE_PR.findall(body)):
+        reason = skip_hint(title, author)
+        (skip if reason else review).append(
+            f"- skip? ({reason}) {title} ({url})" if reason else f"- review: {title} (@{author}, {url})"
+        )
+    return review + skip
 
 
 def impact_hints(text: str, module_key: str) -> list[str]:
@@ -276,35 +319,33 @@ def impact_hints(text: str, module_key: str) -> list[str]:
     return hints[:8]
 
 
-def in_range(slug: str, old_ref: str, tag: str, new_ref: str) -> bool:
-    """True if the tag commit is after old_ref and contained in new_ref (excludes other maintenance branches)."""
-    after_old = api(f"/repos/{slug}/compare/{old_ref}...{tag}")["status"] == "ahead"
-    return after_old and api(f"/repos/{slug}/compare/{tag}...{new_ref}")["status"] in ("ahead", "identical")
-
-
 def render_release_notes(name: str, slug: str, old: grn.Entry, new: grn.Entry) -> str:
-    start = ref_date(slug, old.ref)
-    # A release published before the old pin cannot contain later commits; the range itself is decided by the tag commit.
-    releases = [
-        r
-        for r in paged(f"/repos/{slug}/releases")
-        if r.get("published_at")
-        and r["published_at"] > start
-        and not r["draft"]
-        and in_range(slug, old.ref, r["tag_name"], new.ref)
-    ]
+    """Release notes of every module release since the origin pin (same range as the module tables)."""
+    tags = grn.releases_between(old, new)
     out = [f"## {name}: {old.version_label} -> {new.version_label} ({slug}), module release notes", ""]
-    if not releases:
-        out += ["No GitHub releases in this range.", ""]
-    for release in sorted(releases, key=lambda r: r["published_at"]):
-        out += [f"### {release['tag_name']} ({release['published_at'][:10]}, {release['html_url']})", ""]
-        sections = release_sections(release.get("body") or "")
-        if not sections:
-            out += ["No breaking/new-feature sections found in the release text.", ""]
+    if not tags:
+        out += ["No releases in this range.", ""]
+    for tag in tags:
+        release = api(f"/repos/{slug}/releases/tags/{tag}")
+        out += [f"### {tag} ({(release.get('published_at') or '')[:10]}, {release['html_url']})", ""]
+        body = release.get("body") or ""
+        sections = release_sections(body)
+        candidates = candidate_lines(body, sections)
+        scope = release_scope(body)
+        if not sections and not candidates and not scope:
+            out += ["No breaking/new-feature items and no PR list found in the release text.", ""]
         for heading, text in sections:
             out += [f"#### {heading}", text, ""]
-            if re.search(r"breaking|deprecat|incompatible", heading, re.I):
+            if re.search(r"breaking|deprecat|incompatible|removed|api", heading, re.I):
                 out += [f"- impact hint: {hint}" for hint in impact_hints(text, new.key)] + [""]
+        if candidates:
+            out += ["#### Candidate lines (outside the sections above)", *candidates, ""]
+            out += [f"- impact hint: {hint}" for hint in impact_hints("\n".join(candidates), new.key)] + [""]
+        if scope:
+            reviewed = sum(line.startswith("- review") for line in scope)
+            out += [f'#### Release scope: {len(scope)} PRs of "What\'s Changed", {reviewed} to review', *scope, ""]
+        else:
+            out += ["#### Release scope: no PR list in the release text, scope cannot be determined", ""]
     return "\n".join(out)
 
 

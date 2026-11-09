@@ -15,7 +15,7 @@
 
 For every ``reference_integration`` release tag the module pins are read from
 that tag's ``known_good.json``; the working tree's ``known_good.json`` supplies
-the forecast column. Metrics are then counted from bare clones using git
+the column of the release in progress. Metrics are then counted from bare clones using git
 plumbing, which keeps the whole run local and free of API rate limits.
 
 Requires ``GITHUB_PAT`` for the tag/pin lookups. Writes
@@ -341,7 +341,7 @@ def next_release(last_tag):
 
 
 def release_pins(cache):
-    """Return [(label, {module: (repo, sha)})] oldest first, forecast last.
+    """Return [(label, {module: (repo, sha)})] oldest first, release in progress last.
 
     The pseudo-entries ``__score__`` and ``__ri__`` carry the platform and
     reference_integration commits for the same release.
@@ -355,10 +355,11 @@ def release_pins(cache):
         flat = flatten(json.loads(base64.b64decode(blob["content"])))
         columns.append((tag, date, ref, flat))
 
-    forecast = f"{next_release(columns[-1][0])} (forecast)"
     local = flatten(json.loads((REPO_ROOT / "known_good.json").read_text(encoding="utf-8")))
-    head = git(REF_INT, cache, "rev-parse", "HEAD").stdout.decode().strip()
-    columns.append((forecast, None, head, local))
+    # Once the release is tagged, the working tree equals the tag and needs no column of its own.
+    if local != columns[-1][3]:
+        head = git(REF_INT, cache, "rev-parse", "HEAD").stdout.decode().strip()
+        columns.append((next_release(columns[-1][0]), None, head, local))
 
     out = []
     for tag, date, ri_sha, flat in columns:

@@ -34,12 +34,12 @@ pkg_files(
     name = "config_daemon_configs",
     srcs = [
         "@score_config_management//score/config_management/config_daemon/code/plugins/demo_json:demo_parameters",
-        "@score_config_management//score/config_management/config_daemon/code/services/details/mw_com:mw_com_config",
+        "@score_config_management//score/config_management/config_daemon/config:mw_com_config",
     ],
     attributes = pkg_attributes(mode = "0644"),
     prefix = "usr/bin/config_management/etc",
     renames = {
-        "@score_config_management//score/config_management/config_daemon/code/services/details/mw_com:mw_com_config": "mw_com_config.json",
+        "@score_config_management//score/config_management/config_daemon/config:mw_com_config": "mw_com_config.json",
         "@score_config_management//score/config_management/config_daemon/code/plugins/demo_json:demo_parameters": "demo_parameters.json",
     },
 )

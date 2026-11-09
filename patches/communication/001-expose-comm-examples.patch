@@ -3,11 +3,23 @@ integration showcase bundle. Upstream dropped the public visibility on the
 rust_binary, and the config file was never exported. The visibility guard golden
 lists the now-public binary.
 
+diff --git a/quality/visibility_guard/public_targets.golden b/quality/visibility_guard/public_targets.golden
+index be9bc4be..008ccd37 100644
+--- a/quality/visibility_guard/public_targets.golden
++++ b/quality/visibility_guard/public_targets.golden
+@@ -53,6 +53,7 @@
+ //score/mw/com/dependability:mw_com_doc_needs
+ //score/mw/com/dependability:mw_com_index
+ //score/mw/com/dependability:mw_com_rst
++//score/mw/com/example/com-api-example:com-api-example
+ //score/mw/com/impl/configuration/converter:json_to_flatbuffer_rule.bzl
+ //score/mw/com/performance_benchmarks/macro_benchmark/config_generator:config_generator_rule.bzl
+ //score/mw/com/performance_benchmarks/macro_benchmark:logging.json
 diff --git a/score/mw/com/example/com-api-example/BUILD b/score/mw/com/example/com-api-example/BUILD
-index 10e02502..a4273bf8 100644
+index 83448e5e..93c0abf5 100644
 --- a/score/mw/com/example/com-api-example/BUILD
 +++ b/score/mw/com/example/com-api-example/BUILD
-@@ -40,6 +40,7 @@ rust_binary(
+@@ -38,6 +38,7 @@ rust_binary(
          "MW_LOG_CONFIG_FILE": "score/mw/com/example/com-api-example/etc/logging.json",
      },
      features = ["link_std_cpp_lib"],
@@ -15,7 +27,7 @@ index 10e02502..a4273bf8 100644
      deps = [
          ":com-api-example-lib",
          "//score/mw/com/example/com-api-example/com-api-gen",
-@@ -65,3 +66,7 @@ rust_test(
+@@ -72,3 +73,7 @@ rust_test(
          "@score_communication_crate_index//:tokio",
      ],
  )
@@ -23,14 +35,3 @@ index 10e02502..a4273bf8 100644
 +exports_files([
 +    "etc/mw_com_config.json",
 +])
-diff --git a/quality/visibility_guard/public_targets.golden b/quality/visibility_guard/public_targets.golden
---- a/quality/visibility_guard/public_targets.golden
-+++ b/quality/visibility_guard/public_targets.golden
-@@ -54,6 +54,7 @@
- //score/mw/com/dependability:mw_com_doc_needs
- //score/mw/com/dependability:mw_com_index
- //score/mw/com/dependability:mw_com_rst
-+//score/mw/com/example/com-api-example:com-api-example
- //score/mw/com/performance_benchmarks/macro_benchmark/config_generator:config_generator_rule.bzl
- //score/mw/com/performance_benchmarks/macro_benchmark:logging.json
- //score/mw/com/performance_benchmarks/macro_benchmark:lola_benchmarking_client
