@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Generated from known_good.json at 2026-11-09T13:28:19+00:00Z
+# Generated from known_good.json at 2026-11-09T14:54:50Z
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir-modules bazel_common
 
 # Documentation bundle mounts for the docs() macro in the root BUILD file.
