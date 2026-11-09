@@ -6,7 +6,7 @@
         "path": "/bin/sh",
         "args": [
           "-c",
-          "cd /usr/bin/datarouter && ./datarouter --no_adaptive_runtime >/dev/null 2>&1 &"
+          "(cd /usr/bin/datarouter && exec ./datarouter --no_adaptive_runtime) </dev/null >/dev/null 2>&1 &"
         ],
         "env": {}
       },

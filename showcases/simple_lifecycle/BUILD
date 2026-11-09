@@ -20,10 +20,12 @@ launch_manager_config(
     flatbuffer_out_dir = "etc",
 )
 
+# The launch manager itself is part of the deployed platform
+# (//deploy/lifecycle), not of this showcase. What ships here are the
+# applications it supervises and the configuration that declares them.
 score_pkg_bundle(
     name = "simple_lifecycle",
     bins = [
-        "@score_lifecycle//score/launch_manager:launch_manager",
         "@score_lifecycle//examples/cpp_supervised_app",
         "@score_lifecycle//examples/rust_supervised_app",
         "@score_lifecycle//examples/control_application:control_daemon",

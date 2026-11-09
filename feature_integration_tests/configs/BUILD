@@ -10,24 +10,12 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+# Test harness configuration. Configuration that is deployed onto the target
+# belongs to //deploy, not here.
 exports_files(
     [
         "dlt_config_qnx_x86_64.json",
         "dlt_config_x86_64.json",
         "qemu_bridge_config.json",
     ],
-)
-
-exports_files([
-    "etc/logging.json",
-    "etc/mw_com_config.json",
-])
-
-filegroup(
-    name = "etc_configs",
-    srcs = [
-        "etc/logging.json",
-        "etc/mw_com_config.json",
-    ],
-    visibility = ["//visibility:public"],
 )
