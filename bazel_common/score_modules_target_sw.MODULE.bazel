@@ -11,13 +11,12 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Generated from known_good.json at 2026-08-28T09:19:12Z
+# Generated from known_good.json at 2026-11-09T13:28:19+00:00Z
 # Do not edit manually - use scripts/known_good/update_module_from_known_good.py --known known_good.json --output-dir-modules bazel_common
 
 bazel_dep(name = "score_baselibs")
-git_override(
+single_version_override(
     module_name = "score_baselibs",
-    commit = "41f5a4c92163dc1f597116094ed34881ddee7fa3",
     patch_strip = 1,
     patches = [
         "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
@@ -26,85 +25,78 @@ git_override(
         "//patches/baselibs:004-make-log-examples-visible.patch",
         "//patches/baselibs:005-fix-log-cpp-init-qnx-linkopts.patch",
     ],
-    remote = "https://github.com/eclipse-score/baselibs.git",
+    version = "0.2.17",
 )
 
 bazel_dep(name = "score_communication")
-git_override(
+single_version_override(
     module_name = "score_communication",
-    commit = "c5efd74f64c42ea3c60e19a1a3d5456a47ed1115",
     patch_strip = 1,
     patches = [
         "//patches/communication:001-expose-comm-examples.patch",
     ],
-    remote = "https://github.com/eclipse-score/communication.git",
+    version = "0.6.0",
 )
 
 bazel_dep(name = "score_persistency")
-git_override(
+single_version_override(
     module_name = "score_persistency",
-    commit = "0fe1dc7c8dff24dd78b7368f247f7ba3421c5944",
     patch_strip = 1,
     patches = [
         "//patches/persistency:003-undev-deps-for-root-module.patch",
     ],
-    remote = "https://github.com/eclipse-score/persistency.git",
+    version = "0.4.0",
 )
 
 bazel_dep(name = "score_kyron")
-git_override(
+single_version_override(
     module_name = "score_kyron",
-    commit = "40a1f5e0428117054c9ee055829b918e8f96e10f",
-    remote = "https://github.com/eclipse-score/kyron.git",
+    version = "0.1.6",
 )
 
 bazel_dep(name = "score_lifecycle")
-git_override(
+single_version_override(
     module_name = "score_lifecycle",
-    commit = "2afae116992d11dd15d8eac5a271790ee1234e37",
     patch_strip = 1,
     patches = [
         "//patches/lifecycle:002-undev-integration-test-deps.patch",
         "//patches/lifecycle:003-dev-only-codeql-pip-hub.patch",
     ],
-    remote = "https://github.com/eclipse-score/lifecycle.git",
+    version = "0.10.0",
 )
 
 bazel_dep(name = "score_logging")
-git_override(
+single_version_override(
     module_name = "score_logging",
-    commit = "72ef907bb48e4b007b34f145f1383ea1469bcd6d",
     patch_strip = 1,
     patches = [
         "//patches/logging:002-undev-component-test-deps.patch",
         "//patches/logging:003-relative-verification-report-links.patch",
         "//patches/logging:004-drop-dependable-element-aou-attr.patch",
     ],
-    remote = "https://github.com/eclipse-score/logging.git",
+    version = "0.2.6",
 )
 
 bazel_dep(name = "score_time")
-git_override(
+single_version_override(
     module_name = "score_time",
-    commit = "94efbf738ed6529f2cd859f827c26fd6723951c0",
     patch_strip = 1,
     patches = [
         "//patches/time:003-disable-broken-qnx-ifs-target.patch",
         "//patches/time:004-rename-ubuntu-image-pull.patch",
         "//patches/time:005-use-sanitizer-bool-flags.patch",
     ],
-    remote = "https://github.com/eclipse-score/time.git",
+    version = "0.3.1",
 )
 
 bazel_dep(name = "score_config_management")
-git_override(
+single_version_override(
     module_name = "score_config_management",
-    commit = "2e213d5fd030f3f2cd6b7504841b5c7aa6f4a660",
     patch_strip = 1,
     patches = [
         "//patches/config_management:001-expose-mw-com-config.patch",
         "//patches/config_management:002-migrate-to-persistency-kvs-api.patch",
         "//patches/config_management:003-drop-dependable-element-aou-attr.patch",
     ],
-    remote = "https://github.com/eclipse-score/config_management.git",
+    version = "0.3.3",
 )

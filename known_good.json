@@ -3,15 +3,10 @@
         "target_sw": {
             "score_baselibs": {
                 "repo": "https://github.com/eclipse-score/baselibs.git",
-                "bazel_patches": [
-                    "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
-                    "//patches/baselibs:002-restore-qnx8-poll-workaround.patch",
-                    "//patches/baselibs:003-export-aou-requirements.patch",
-                    "//patches/baselibs:004-make-log-examples-visible.patch",
-                    "//patches/baselibs:005-fix-log-cpp-init-qnx-linkopts.patch"
-                ],
+                "version": "0.2.17",
                 "metadata": {
                     "code_root_path": "//score/...",
+                    "extra_test_config": [],
                     "exclude_test_targets": [
                         "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test",
                         "//score/containers:dynamic_array_test",
@@ -31,26 +26,28 @@
                     "langs": [
                         "cpp"
                     ],
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "integration_test_targets": [],
+                    "integration_test_config": [],
                     "test_args": [
                         "--config=score-linux-x86_64",
                         "--",
                         "//..."
                     ]
                 },
-                "hash": "41f5a4c92163dc1f597116094ed34881ddee7fa3"
+                "bazel_patches": [
+                    "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
+                    "//patches/baselibs:002-restore-qnx8-poll-workaround.patch",
+                    "//patches/baselibs:003-export-aou-requirements.patch",
+                    "//patches/baselibs:004-make-log-examples-visible.patch",
+                    "//patches/baselibs:005-fix-log-cpp-init-qnx-linkopts.patch"
+                ]
             },
             "score_communication": {
                 "repo": "https://github.com/eclipse-score/communication.git",
-                "docs": false,
-                "hash": "c5efd74f64c42ea3c60e19a1a3d5456a47ed1115",
-                "bazel_patches": [
-                    "//patches/communication:001-expose-comm-examples.patch"
-                ],
+                "version": "0.6.0",
                 "metadata": {
                     "code_root_path": "//score/mw/com/impl/...",
-                    "dependable_element_docs": [
-                        "//score/mw/com/dependability:mw_com_doc"
-                    ],
                     "extra_test_config": [
                         "@score_communication//score/memory/shared/flags:use_typedshmd=False"
                     ],
@@ -72,18 +69,25 @@
                         "rust"
                     ],
                     "rust_coverage_config": "ferrocene-coverage",
+                    "integration_test_targets": [],
+                    "integration_test_config": [],
                     "test_args": [
                         "--config=ci",
                         "--build_tests_only",
                         "//..."
+                    ],
+                    "dependable_element_docs": [
+                        "//score/mw/com/dependability:mw_com_doc"
                     ]
-                }
+                },
+                "bazel_patches": [
+                    "//patches/communication:001-expose-comm-examples.patch"
+                ],
+                "docs": false
             },
             "score_persistency": {
                 "repo": "https://github.com/eclipse-score/persistency.git",
-                "bazel_patches": [
-                    "//patches/persistency:003-undev-deps-for-root-module.patch"
-                ],
+                "version": "0.4.0",
                 "metadata": {
                     "code_root_path": "//score/kvs/...",
                     "extra_test_config": [
@@ -93,6 +97,10 @@
                     "exclude_test_targets": [
                         "//score/kvs/tests/integration_test_scenarios/...",
                         "//score/kvs/tests/test_cases/..."
+                    ],
+                    "langs": [
+                        "cpp",
+                        "rust"
                     ],
                     "rust_coverage_config": "ferrocene-coverage-per",
                     "integration_test_targets": [
@@ -106,10 +114,13 @@
                         "//:unit_tests"
                     ]
                 },
-                "hash": "0fe1dc7c8dff24dd78b7368f247f7ba3421c5944"
+                "bazel_patches": [
+                    "//patches/persistency:003-undev-deps-for-root-module.patch"
+                ]
             },
             "score_kyron": {
                 "repo": "https://github.com/eclipse-score/kyron.git",
+                "version": "0.1.6",
                 "metadata": {
                     "code_root_path": "//src/...",
                     "extra_test_config": [],
@@ -117,19 +128,18 @@
                     "langs": [
                         "rust"
                     ],
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "integration_test_targets": [],
+                    "integration_test_config": [],
                     "test_args": [
                         "--config=x86_64-linux",
                         "//src/..."
                     ]
-                },
-                "hash": "40a1f5e0428117054c9ee055829b918e8f96e10f"
+                }
             },
             "score_lifecycle": {
                 "repo": "https://github.com/eclipse-score/lifecycle.git",
-                "bazel_patches": [
-                    "//patches/lifecycle:002-undev-integration-test-deps.patch",
-                    "//patches/lifecycle:003-dev-only-codeql-pip-hub.patch"
-                ],
+                "version": "0.10.0",
                 "metadata": {
                     "code_root_path": "//score/...",
                     "extra_test_config": [],
@@ -144,6 +154,11 @@
                         "//tests/integration/...": "TODO fix: fails under clang (unified llvm coverage toolchain): clang links the host glibc (GLIBC_2.38 not found in the test container); integration tests still run via integration_test_targets",
                         "//examples/demo_verification:examples": "TODO fix: fails under clang (unified llvm coverage toolchain): clang links the host glibc (GLIBC_2.38 not found in the test container); integration tests still run via integration_test_targets"
                     },
+                    "langs": [
+                        "cpp",
+                        "rust"
+                    ],
+                    "rust_coverage_config": "ferrocene-coverage",
                     "integration_test_targets": [
                         "//tests/integration/..."
                     ],
@@ -156,15 +171,14 @@
                         "//..."
                     ]
                 },
-                "hash": "2afae116992d11dd15d8eac5a271790ee1234e37"
+                "bazel_patches": [
+                    "//patches/lifecycle:002-undev-integration-test-deps.patch",
+                    "//patches/lifecycle:003-dev-only-codeql-pip-hub.patch"
+                ]
             },
             "score_logging": {
                 "repo": "https://github.com/eclipse-score/logging.git",
-                "bazel_patches": [
-                    "//patches/logging:002-undev-component-test-deps.patch",
-                    "//patches/logging:003-relative-verification-report-links.patch",
-                    "//patches/logging:004-drop-dependable-element-aou-attr.patch"
-                ],
+                "version": "0.2.6",
                 "metadata": {
                     "code_root_path": "//score/mw/log/...",
                     "extra_test_config": [
@@ -182,6 +196,11 @@
                         "//score/mw/log/design/backend:mw_log_backend_architectural_design": "TODO fix in score_logging: score_tooling's architectural-design validation rejects datarouter_class_diagram.puml ('expected a Component diagram, found a Class diagram')",
                         "//score/datarouter/doc/design:datarouter_architectural_design": "TODO fix in score_logging: score_tooling's architectural-design validation rejects the datarouter diagrams ('datarouter' children split across context-sw-units.puml and detail-ipc.puml)"
                     },
+                    "langs": [
+                        "cpp",
+                        "rust"
+                    ],
+                    "rust_coverage_config": "ferrocene-coverage",
                     "integration_test_targets": [
                         "//score/test/component/..."
                     ],
@@ -197,16 +216,15 @@
                         "-//score/test/component/..."
                     ]
                 },
-                "hash": "72ef907bb48e4b007b34f145f1383ea1469bcd6d"
+                "bazel_patches": [
+                    "//patches/logging:002-undev-component-test-deps.patch",
+                    "//patches/logging:003-relative-verification-report-links.patch",
+                    "//patches/logging:004-drop-dependable-element-aou-attr.patch"
+                ]
             },
             "score_time": {
                 "repo": "https://github.com/eclipse-score/time.git",
-                "hash": "94efbf738ed6529f2cd859f827c26fd6723951c0",
-                "bazel_patches": [
-                    "//patches/time:003-disable-broken-qnx-ifs-target.patch",
-                    "//patches/time:004-rename-ubuntu-image-pull.patch",
-                    "//patches/time:005-use-sanitizer-bool-flags.patch"
-                ],
+                "version": "0.3.1",
                 "metadata": {
                     "code_root_path": "//score/...",
                     "extra_test_config": [],
@@ -220,23 +238,24 @@
                         "cpp"
                     ],
                     "rust_coverage_config": "ferrocene-coverage",
+                    "integration_test_targets": [],
+                    "integration_test_config": [],
                     "test_args": [
                         "--config=asan_ubsan_lsan",
                         "--config=x86_64-linux",
                         "--keep_going",
                         "//score/..."
                     ]
-                }
+                },
+                "bazel_patches": [
+                    "//patches/time:003-disable-broken-qnx-ifs-target.patch",
+                    "//patches/time:004-rename-ubuntu-image-pull.patch",
+                    "//patches/time:005-use-sanitizer-bool-flags.patch"
+                ]
             },
             "score_config_management": {
                 "repo": "https://github.com/eclipse-score/config_management.git",
-                "docs": false,
-                "hash": "2e213d5fd030f3f2cd6b7504841b5c7aa6f4a660",
-                "bazel_patches": [
-                    "//patches/config_management:001-expose-mw-com-config.patch",
-                    "//patches/config_management:002-migrate-to-persistency-kvs-api.patch",
-                    "//patches/config_management:003-drop-dependable-element-aou-attr.patch"
-                ],
+                "version": "0.3.3",
                 "metadata": {
                     "code_root_path": "//score/config_management/...",
                     "extra_test_config": [
@@ -260,6 +279,8 @@
                         "cpp"
                     ],
                     "rust_coverage_config": "ferrocene-coverage",
+                    "integration_test_targets": [],
+                    "integration_test_config": [],
                     "test_args": [
                         "//score/config_management/config_daemon/code/data_model:unit_tests_host",
                         "//score/config_management/config_daemon/code/data_model/parameter_set_storage:unit_tests_host",
@@ -272,62 +293,19 @@
                         "//score/config_management/config_provider/code/persistency:unit_tests_host",
                         "//tests/cpp:cpp_test_main"
                     ]
-                }
+                },
+                "bazel_patches": [
+                    "//patches/config_management:001-expose-mw-com-config.patch",
+                    "//patches/config_management:002-migrate-to-persistency-kvs-api.patch",
+                    "//patches/config_management:003-drop-dependable-element-aou-attr.patch"
+                ],
+                "docs": false
             }
         },
         "tooling": {
             "score_crates": {
                 "repo": "https://github.com/eclipse-score/score-crates.git",
-                "docs": false,
-                "hash": "ee5f1a4f02dcfaa01d7a5e23ec68fd51590a66f8"
-            },
-            "score_itf": {
-                "repo": "https://github.com/eclipse-score/itf.git",
-                "version": "0.6.0",
-                "pin_version": true
-            },
-            "score_devcontainer": {
-                "repo": "https://github.com/eclipse-score/devcontainer.git",
-                "version": "1.11.4",
-                "docs": false,
-                "pin_version": true
-            },
-            "score_tools": {
-                "repo": "https://github.com/eclipse-score/tools.git",
-                "docs": false,
-                "hash": "3b99e9da6fe98e7df2c2b3616ad4d1aad318b72c"
-            },
-            "score_tooling": {
-                "repo": "https://github.com/eclipse-score/tooling.git",
-                "docs": false,
-                "hash": "a3eed5852f8addbbbf276aaae262ba1313141ef5"
-            },
-            "score_platform": {
-                "repo": "https://github.com/eclipse-score/score.git",
-                "hash": "32759e0a51e02ed87311e12d0f8125e5f8cb4de0"
-            },
-            "score_bazel_platforms": {
-                "repo": "https://github.com/eclipse-score/bazel_platforms.git",
-                "docs": false,
-                "hash": "081dcf7bdbc94d05bbe354291e13a775dbf8f3e6"
-            },
-            "score_test_scenarios": {
-                "repo": "https://github.com/eclipse-score/testing_tools.git",
-                "docs": false,
-                "hash": "d0aab76ac6e64fc78f867a196531fbafd8924948"
-            },
-            "score_docs_as_code": {
-                "repo": "https://github.com/eclipse-score/docs-as-code.git",
-                "hash": "d9a43b1a48277bf8e9caa467aad07779ce575dec"
-            },
-            "score_process_description": {
-                "repo": "https://github.com/eclipse-score/process_description.git",
-                "hash": "0e01b2ccd172fa530553dd78fc727f51c03b1337"
-            },
-            "score_bazel_cpp_toolchains": {
-                "repo": "https://github.com/eclipse-score/bazel_cpp_toolchains.git",
-                "docs": false,
-                "hash": "3dd3caa94354e44310172607d5e9223cf914ea76",
+                "version": "0.0.13",
                 "metadata": {
                     "code_root_path": "//score/...",
                     "extra_test_config": [],
@@ -336,9 +314,191 @@
                         "cpp",
                         "rust"
                     ],
-                    "rust_coverage_config": "ferrocene-coverage"
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "integration_test_targets": [],
+                    "integration_test_config": [],
+                    "test_args": []
+                },
+                "docs": false
+            },
+            "score_itf": {
+                "repo": "https://github.com/eclipse-score/itf.git",
+                "version": "0.7.0",
+                "metadata": {
+                    "code_root_path": "//score/...",
+                    "extra_test_config": [],
+                    "exclude_test_targets": [],
+                    "langs": [
+                        "cpp",
+                        "rust"
+                    ],
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "integration_test_targets": [],
+                    "integration_test_config": [],
+                    "test_args": []
                 },
                 "pin_version": true
+            },
+            "score_devcontainer": {
+                "repo": "https://github.com/eclipse-score/devcontainer.git",
+                "version": "1.12.0",
+                "metadata": {
+                    "code_root_path": "//score/...",
+                    "extra_test_config": [],
+                    "exclude_test_targets": [],
+                    "langs": [
+                        "cpp",
+                        "rust"
+                    ],
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "integration_test_targets": [],
+                    "integration_test_config": [],
+                    "test_args": []
+                },
+                "pin_version": true,
+                "docs": false
+            },
+            "score_tools": {
+                "repo": "https://github.com/eclipse-score/tools.git",
+                "version": "0.0.4",
+                "metadata": {
+                    "code_root_path": "//score/...",
+                    "extra_test_config": [],
+                    "exclude_test_targets": [],
+                    "langs": [
+                        "cpp",
+                        "rust"
+                    ],
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "integration_test_targets": [],
+                    "integration_test_config": [],
+                    "test_args": []
+                },
+                "docs": false
+            },
+            "score_tooling": {
+                "repo": "https://github.com/eclipse-score/tooling.git",
+                "version": "3.0.2",
+                "metadata": {
+                    "code_root_path": "//score/...",
+                    "extra_test_config": [],
+                    "exclude_test_targets": [],
+                    "langs": [
+                        "cpp",
+                        "rust"
+                    ],
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "integration_test_targets": [],
+                    "integration_test_config": [],
+                    "test_args": []
+                },
+                "docs": false
+            },
+            "score_platform": {
+                "repo": "https://github.com/eclipse-score/score.git",
+                "version": "0.7.4",
+                "metadata": {
+                    "code_root_path": "//score/...",
+                    "extra_test_config": [],
+                    "exclude_test_targets": [],
+                    "langs": [
+                        "cpp",
+                        "rust"
+                    ],
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "integration_test_targets": [],
+                    "integration_test_config": [],
+                    "test_args": []
+                }
+            },
+            "score_bazel_platforms": {
+                "repo": "https://github.com/eclipse-score/bazel_platforms.git",
+                "version": "1.1.0",
+                "metadata": {
+                    "code_root_path": "//score/...",
+                    "extra_test_config": [],
+                    "exclude_test_targets": [],
+                    "langs": [
+                        "cpp",
+                        "rust"
+                    ],
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "integration_test_targets": [],
+                    "integration_test_config": [],
+                    "test_args": []
+                },
+                "docs": false
+            },
+            "score_test_scenarios": {
+                "repo": "https://github.com/eclipse-score/testing_tools.git",
+                "version": "0.5.0",
+                "metadata": {
+                    "code_root_path": "//score/...",
+                    "extra_test_config": [],
+                    "exclude_test_targets": [],
+                    "langs": [
+                        "cpp",
+                        "rust"
+                    ],
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "integration_test_targets": [],
+                    "integration_test_config": [],
+                    "test_args": []
+                },
+                "docs": false
+            },
+            "score_docs_as_code": {
+                "repo": "https://github.com/eclipse-score/docs-as-code.git",
+                "version": "8.7.0",
+                "metadata": {
+                    "code_root_path": "//score/...",
+                    "extra_test_config": [],
+                    "exclude_test_targets": [],
+                    "langs": [
+                        "cpp",
+                        "rust"
+                    ],
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "integration_test_targets": [],
+                    "integration_test_config": [],
+                    "test_args": []
+                }
+            },
+            "score_process_description": {
+                "repo": "https://github.com/eclipse-score/process_description.git",
+                "version": "2.2.3",
+                "metadata": {
+                    "code_root_path": "//score/...",
+                    "extra_test_config": [],
+                    "exclude_test_targets": [],
+                    "langs": [
+                        "cpp",
+                        "rust"
+                    ],
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "integration_test_targets": [],
+                    "integration_test_config": [],
+                    "test_args": []
+                }
+            },
+            "score_bazel_cpp_toolchains": {
+                "repo": "https://github.com/eclipse-score/bazel_cpp_toolchains.git",
+                "version": "1.0.6-rc1",
+                "metadata": {
+                    "code_root_path": "//score/...",
+                    "extra_test_config": [],
+                    "exclude_test_targets": [],
+                    "langs": [
+                        "cpp",
+                        "rust"
+                    ],
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "integration_test_targets": [],
+                    "integration_test_config": [],
+                    "test_args": []
+                },
+                "pin_version": true,
+                "docs": false
             }
         }
     },
@@ -353,5 +513,5 @@
             "score_time"
         ]
     },
-    "timestamp": "2026-08-28T09:19:12Z"
+    "timestamp": "2026-11-09T13:28:19+00:00Z"
 }
