@@ -12,6 +12,8 @@
 # *******************************************************************************
 name: EB corbos Linux for Safety Applications - Build & Integration Test
 on:
+  release:
+    types: [created]
   pull_request:
     types: [opened, reopened, synchronize]
   merge_group:
@@ -50,3 +52,36 @@ jobs:
           name: test-logs
           path: |
             bazel-bin/images/ebclfsa_aarch64/build/*.log
+      - name: Package platform and showcases
+        if: github.event_name == 'release'
+        run: |
+          bazel build --lockfile_mode=error --config=eb-aarch64 //deploy:platform_tar //showcases:showcases_pkg_tar
+          gzip -c bazel-bin/deploy/platform_tar.tar > score-platform-eb-aarch64.tar.gz
+          gzip -c bazel-bin/showcases/showcases_pkg_tar.tar > score-showcases-eb-aarch64.tar.gz
+      - name: Store platform and showcases packages
+        if: github.event_name == 'release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: score-release-eb-aarch64
+          path: |
+            score-platform-eb-aarch64.tar.gz
+            score-showcases-eb-aarch64.tar.gz
+  release:
+    name: Publish platform and showcases to release
+    needs: build
+    if: github.event_name == 'release'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Download platform and showcases packages
+        uses: actions/download-artifact@v4
+        with:
+          name: score-release-eb-aarch64
+          path: ./release-assets
+      - name: Upload platform and showcases to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload "$RELEASE_TAG" ./release-assets/*.tar.gz --clobber

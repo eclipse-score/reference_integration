@@ -18,7 +18,7 @@ Module Verification Reports
 This page lists the per-module verification reports.
 
 * :doc:`Baselibs </modules/score_baselibs/verification_report/module_verification_report>`
-* :doc:`Lifecycle </modules/score_lifecycle/verification_report/index>`
+* :doc:`Lifecycle </modules/score_lifecycle/verification_report/module_verification_report>`
 * :doc:`Logging </modules/score_logging/verification_report/module_verification_report>`
 * :doc:`Persistency </modules/score_persistency/verification_report/module_verification_report>`
 
@@ -27,6 +27,6 @@ This page lists the per-module verification reports.
    :hidden:
 
    Baselibs </modules/score_baselibs/verification_report/module_verification_report>
-   Lifecycle </modules/score_lifecycle/verification_report/index>
+   Lifecycle </modules/score_lifecycle/verification_report/module_verification_report>
    Logging </modules/score_logging/verification_report/module_verification_report>
    Persistency </modules/score_persistency/verification_report/module_verification_report>

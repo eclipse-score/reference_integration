@@ -16,7 +16,7 @@
 
 #include "kvs_parameters.h"
 
-#include <kvs.hpp>
+#include "score/kvs/kvs.h"
 #include <memory>
 #include <optional>
 #include <string>

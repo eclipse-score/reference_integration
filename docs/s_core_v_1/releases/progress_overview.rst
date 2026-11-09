@@ -19,15 +19,16 @@ Release-wide Progress Overview
 
 .. important::
 
-   **Data collected on: 2026-10-29**
+   **Data collected on: 2026-11-03**
 
 This page shows how the S-CORE platform grew across releases. Each chart
 aggregates one metric over all tracked modules; every bar is split into colour
 slots, one slot per contributing module.
 
-The last column, marked **(forecast)** and named after the next release
-milestone, is not a released state — it is today's state of the modules pinned
-in ``known_good.json``, shown as the projection for the next release.
+The last column, named after the release in progress (the next release
+milestone), shows the state of the modules pinned in ``known_good.json`` on
+the release branch; it is replaced by the release tag once the release is
+published.
 
 For the **current** state — per-module and per-component requirements,
 architecture, traceability, coverage and work-product status — use the

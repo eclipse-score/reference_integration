@@ -37,6 +37,7 @@ Its components come from the needs.json of the checkout, built with ``bazel buil
 from __future__ import annotations
 
 import argparse
+import functools
 import json
 import os
 import re
@@ -61,6 +62,20 @@ SECTIONS = {
 
 # Module verification reports are linked from the current docs tree (same convention as the platform report).
 VERIFICATION_INDEX = "docs/verification_report/modules/index.rst"
+# Modules that publish their verification evidence as dependable elements (with L.O.B.S.T.E.R. traceability
+# reports) in their own versioned docs instead of an S-CORE module verification report: key -> docs URL of a tag.
+MODULE_DOCS = {
+    "score_communication": "https://eclipse-score.github.io/communication/{tag}/",
+}
+# Dependable element name -> label in the table, also the display order; other elements keep their name.
+DEPENDABLE_ELEMENT_LABELS = {
+    "mw_com": "LoLa (mw::com)",
+    "dependable_element_message_passing": "Message Passing",
+    "dependable_element_memory_shared": "Shared Memory",
+}
+DEPENDABLE_ELEMENT_TITLE = "Dependable element: "
+# Module maturity classification shown in the architecture diagram.
+DR_003_URL = "https://github.com/eclipse-score/score/blob/main/docs/design_decisions/strategy/DR-003-strat.md"
 EMPTY_CELL = "---"
 # Architecture diagram of the note; components come from the Sphinx-Needs of the checkout's docs.
 DIAGRAM_DIR = "docs/s_core_v_1/releases/_assets"
@@ -91,7 +106,7 @@ IMAGES = [
     (
         "Reference Red Hat AutoSD Linux image (Experimental)",
         "autosd",
-        "Red Hat AutoSD x86_64 image.",
+        "Red Hat AutoSD x86_64 QEMU image (qcow2) with the S-CORE showcases.",
         [("README.md", "Operating system integrations")],
     ),
     (
@@ -101,6 +116,12 @@ IMAGES = [
         [("images/ebclfsa_aarch64/README.md", None)],
     ),
 ]
+
+# images/<dir> -> (workflow that uploads the image to the GitHub release, asset file name).
+# The link is built from the release tag, so it is valid as soon as the release is published.
+IMAGE_DOWNLOADS = {
+    "autosd": (".github/workflows/build_and_test_autosd.yml", "eclipse-autosd-bootc-qemu-x86_64.qcow2.xz"),
+}
 
 DISPLAY_NAMES = {
     "score_baselibs": "Baselibs",
@@ -137,6 +158,7 @@ class Entry:
     ref: str  # tag or commit used for the source link
     pin: str  # version or hash as written in known_good.json
     verification_doc: str | None = None  # absolute Sphinx doc path of the module verification report
+    at_tag: str | None = None  # tag on the pinned commit of a hash pin; only bounds the release range
 
     @property
     def source_url(self) -> str:
@@ -187,6 +209,52 @@ def _version_key(tag: str) -> tuple[int, ...]:
     return tuple(int(p) for p in re.findall(r"\d+", tag))
 
 
+@functools.cache
+def _contains(slug: str, ref: str, tag: str) -> bool:
+    """True if the commit ref contains the tag commit (GitHub compare: ref is ahead of or identical to tag)."""
+    return _github_get(f"/repos/{slug}/compare/{tag}...{ref}")["status"] in ("ahead", "identical")
+
+
+@functools.cache
+def _github_releases(slug: str) -> tuple[str, ...]:
+    """Tag names of the published (non-draft) GitHub releases of a repository."""
+    tags: list[str] = []
+    for page in range(1, 20):
+        batch = _github_get(f"/repos/{slug}/releases?per_page=100&page={page}")
+        tags += [r["tag_name"] for r in batch if not r["draft"]]
+        if len(batch) < 100:
+            break
+    return tuple(tags)
+
+
+def releases_between(old: Entry | None, new: Entry) -> list[str]:
+    """Tags of the GitHub releases after the origin pin up to the new pin, oldest first.
+
+    Decided by commit containment, not by date, so releases on maintenance branches are skipped and a release
+    whose origin was tagged on a side commit is still found.
+    """
+    if old is None or old.pin == new.pin:
+        return [new.tag] if new.tag else []
+    low = _version_key(old.tag or old.at_tag) if old.tag or old.at_tag else None
+    high = _version_key(new.tag or new.at_tag) if new.tag or new.at_tag else None
+    slug = new.repo_url.removeprefix("https://github.com/")
+    try:
+        return sorted(
+            (
+                tag
+                for tag in _github_releases(slug)
+                if (low is None or _version_key(tag) > low)
+                and (high is None or _version_key(tag) <= high)
+                and _contains(slug, new.ref, tag)
+                and not _contains(slug, old.ref, tag)
+            ),
+            key=_version_key,
+        )
+    except OSError as err:
+        print(f"warning: {new.key}: cannot compare releases ({err}), listing the current one only", file=sys.stderr)
+        return [new.tag] if new.tag else []
+
+
 def resolve(key: str, module: dict, cache: dict[str, dict[str, str]]) -> Entry:
     repo = module["repo"]
     repo_url = repo.removesuffix(".git")
@@ -203,8 +271,8 @@ def resolve(key: str, module: dict, cache: dict[str, dict[str, str]]) -> Entry:
 
     commit = module["hash"]
     matches = sorted((t for t, c in tags.items() if c == commit), key=_version_key)
-    tag = matches[-1] if matches else None
-    return Entry(key, name, repo_url, tag, tag or commit, commit)
+    # A hash pin is not a registry release, even if a tag points at the commit.
+    return Entry(key, name, repo_url, None, commit, commit, at_tag=matches[-1] if matches else None)
 
 
 def verification_docs() -> dict[str, str]:
@@ -232,7 +300,48 @@ def collect(known_good: dict) -> dict[str, list[Entry]]:
     return result
 
 
-def render_table(entries: list[Entry], with_verification: bool = False) -> str:
+@functools.cache
+def _dependable_elements(key: str, tag: str | None) -> tuple[tuple[str, str], ...]:
+    if key not in MODULE_DOCS:
+        return ()
+    if not tag:
+        print(f"warning: {key}: unreleased pin, no versioned docs for its dependable elements", file=sys.stderr)
+        return ()
+    base = MODULE_DOCS[key].format(tag=tag)
+    try:
+        with urllib.request.urlopen(f"{base}searchindex.js", timeout=60) as response:
+            text = response.read().decode()
+    except OSError as err:
+        print(f"warning: {key}: no docs at {base} ({err})", file=sys.stderr)
+        return ()
+    index = json.loads(text[text.index("(") + 1 : text.rindex(")")])
+    found = {
+        title.removeprefix(DEPENDABLE_ELEMENT_TITLE): f"{base}{doc}.html"
+        for doc, title in zip(index["docnames"], index["titles"], strict=True)
+        if title.startswith(DEPENDABLE_ELEMENT_TITLE) and doc.endswith("/index")
+    }
+    if not found:
+        print(f"warning: {key}: no dependable elements in {base}", file=sys.stderr)
+    order = list(DEPENDABLE_ELEMENT_LABELS)
+    names = sorted(found, key=lambda n: (order.index(n) if n in order else len(order), n))
+    return tuple((DEPENDABLE_ELEMENT_LABELS.get(n, n), found[n]) for n in names)
+
+
+def dependable_elements(e: Entry) -> list[tuple[str, str]]:
+    """(label, URL) of the dependable elements in the module's own docs of the pinned release tag."""
+    return list(_dependable_elements(e.key, e.tag))
+
+
+def verification_cell(e: Entry) -> list[str]:
+    if e.verification_doc:
+        return [f"     - :doc:`Verification report <{e.verification_doc}>`"]
+    elements = dependable_elements(e)
+    if not elements:
+        return [f"     - {EMPTY_CELL}"]
+    return ["     - Dependable elements:", ""] + [f"       * `{label} <{url}>`__" for label, url in elements]
+
+
+def render_table(entries: list[Entry], origin: dict[str, Entry], with_verification: bool = False) -> str:
     widths = "25 15 25 35" if with_verification else "30 25 45"
     rows = [
         "",
@@ -247,18 +356,15 @@ def render_table(entries: list[Entry], with_verification: bool = False) -> str:
     if with_verification:
         rows.append("     - Module verification report")
     for e in entries:
-        notes = f"`Release notes <{e.release_notes_url}>`__" if e.release_notes_url else EMPTY_CELL
+        tags = releases_between(origin.get(KEY_ALIASES.get(e.key, e.key)), e)
+        notes = " · ".join(f"`{t} <{e.repo_url}/releases/tag/{t}>`__" for t in tags) or EMPTY_CELL
         rows += [
             f"   * - `{e.name} <{e.source_url}>`__",
             f"     - ``{e.version_label}``",
             f"     - {notes}",
         ]
         if with_verification:
-            rows.append(
-                f"     - :doc:`Verification report <{e.verification_doc}>`"
-                if e.verification_doc
-                else f"     - {EMPTY_CELL}"
-            )
+            rows += verification_cell(e)
     return "\n".join(rows)
 
 
@@ -270,8 +376,12 @@ def _exists(ref: str | None, path: str) -> bool:
     )
 
 
+def _read(ref: str | None, path: str) -> str:
+    return _git("show", f"{ref}:{path}") if ref else (REPO_ROOT / path).read_text()
+
+
 def _anchors(ref: str | None, path: str) -> set[str]:
-    text = _git("show", f"{ref}:{path}") if ref else (REPO_ROOT / path).read_text()
+    text = _read(ref, path)
     anchors = set()
     for line in text.splitlines():
         if line.startswith("#"):
@@ -312,15 +422,18 @@ def milestone_date(release: str) -> str:
     return due[:10]
 
 
-def release_assets(release: str) -> list[dict]:
-    try:
-        return _github_get(f"/repos/eclipse-score/{RELEASE_REPO}/releases/tags/{release}").get("assets", [])
-    except OSError:
-        return []  # release not published yet
+def _download(ref: str | None, release: str, directory: str) -> str | None:
+    """Release asset link of an image, if the workflow at the ref still uploads that asset."""
+    if directory not in IMAGE_DOWNLOADS:
+        return None
+    workflow, asset = IMAGE_DOWNLOADS[directory]
+    if not _exists(ref, workflow) or asset not in _read(ref, workflow):
+        print(f"warning: {workflow} does not upload {asset}; update IMAGE_DOWNLOADS", file=sys.stderr)
+        return None
+    return f"`{asset} <{ORG_URL}/{RELEASE_REPO}/releases/download/{release}/{asset}>`__"
 
 
 def render_images(release: str, ref: str | None) -> str:
-    assets = release_assets(release)
     rows = [
         "",
         ".. list-table::",
@@ -328,18 +441,18 @@ def render_images(release: str, ref: str | None) -> str:
         "   :widths: 30 15 15 40",
         "",
         "   * - Name",
-        "     - Tarball",
+        "     - Download",
         "     - How-to",
         "     - Description",
     ]
     for name, directory, description, candidates in IMAGES:
         if not _exists(ref, f"images/{directory}"):
             continue
-        asset = next((a for a in assets if directory in a["name"]), None)
+        download = _download(ref, release, directory)
         howto = _howto(ref, release, candidates)
         rows += [
             f"   * - {name}",
-            f"     - `{asset['name']} <{asset['browser_download_url']}>`__" if asset else f"     - {EMPTY_CELL}",
+            f"     - {download or EMPTY_CELL}",
             f"     - `How-to <{howto}>`__" if howto else f"     - {EMPTY_CELL}",
             f"     - {description}",
         ]
@@ -391,7 +504,15 @@ def diagram_name(release: str) -> str:
     return "architecture_v" + "_".join(release.removeprefix("v").split(".")[:2]) + ".svg"
 
 
-def render(release: str, origin: str, date: str, status: str, groups: dict[str, list[Entry]], ref: str | None) -> str:
+def render(
+    release: str,
+    origin: str,
+    date: str,
+    status: str,
+    groups: dict[str, list[Entry]],
+    ref: str | None,
+    origin_groups: dict[str, list[Entry]],
+) -> str:
     short = ".".join(release.removeprefix("v").split(".")[:2])
     doc_id = "v" + short.replace(".", "")
     title = f"S-CORE Platform v{short} release note" + (" (DRAFT)" if status == "draft" else "")
@@ -442,6 +563,9 @@ previous platform release ({origin}).
 
    Modules, components and images of the reference integration {release}.
 
+The maturity classification of the software modules (Release, Experimental,
+Preview) is explained in `DR-003-Strat: Module Maturity Classification <{DR_003_URL}>`__.
+
 """,
         _heading("Disclaimer", "-"),
         """
@@ -464,11 +588,17 @@ source organization, can not take over any liability for its content.
 - **Release notes:** `Reference integration release notes <{release_url}/releases/tag/{release}>`__
 - **Platform Verification Report:** :need:`doc__platform_verification_report_latest`
 
+The *Release notes* column of the module tables links every release of a module
+since {origin}, oldest first; modules unchanged since {origin} show their current
+release.
+
 """,
     ]
 
+    old = {KEY_ALIASES.get(e.key, e.key): e for entries in origin_groups.values() for e in entries}
     for group, title_text in SECTIONS.items():
-        parts += [_heading(title_text, "-"), render_table(groups[group], with_verification=group == "target_sw") + "\n"]
+        table = render_table(groups[group], old, with_verification=group == "target_sw")
+        parts += [_heading(title_text, "-"), table + "\n"]
     parts += [_heading("Images", "-"), render_images(release, ref) + "\n"]
 
     unreleased = any(e.tag is None for entries in groups.values() for e in entries)
@@ -481,7 +611,11 @@ source organization, can not take over any liability for its content.
 
     parts += [
         _heading("Known Issues/Vulnerabilities and Bug Fixes", "-"),
-        "\n- See the release notes of the individual modules.\n",
+        (
+            "\n- See the release notes of the individual modules."
+            "\n- Safety Package(s) not completed for modules and platform. "
+            "To qualify the S-CORE platform these gaps must be filled.\n"
+        ),
         _heading("Upgrade Instructions", "-"),
         f"""
 - Increase to the newest Bazel registry versions: https://eclipse-score.github.io/bazel_registry_ui{unreleased_hint}
@@ -523,7 +657,10 @@ def write_diagram(args: argparse.Namespace, date: str, groups: dict[str, list[En
     import architecture_diagram
 
     software = [e for e in groups["target_sw"] if e.key != PLATFORM_MODULE]
-    components = architecture_diagram.load_components(args.needs or build_needs(), software)
+    needs = architecture_diagram.read_needs(args.needs or build_needs())
+    components = architecture_diagram.load_components(needs, software)
+    maturity = architecture_diagram.assess_maturity(needs, software)
+    print("maturity (DR-003): " + ", ".join(f"{k}={v}" for k, v in maturity.items()), file=sys.stderr)
     label = _git("rev-parse", "--short", f"{ref or 'HEAD'}^{{commit}}").strip()
     svg = architecture_diagram.render(
         args.release,
@@ -535,6 +672,7 @@ def write_diagram(args: argparse.Namespace, date: str, groups: dict[str, list[En
         ref,
         label,
         components,
+        maturity,
     )
     path = REPO_ROOT / DIAGRAM_DIR / diagram_name(args.release)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -573,7 +711,7 @@ def main() -> None:
     else:
         date = args.date or milestone_date(args.release)
         status = "valid" if args.final else "draft"
-        text = render(args.release, args.origin, date, status, groups, ref)
+        text = render(args.release, args.origin, date, status, groups, ref, collect(load_known_good(args.origin)))
         write_diagram(args, date, groups, ref)
 
     if args.output:

@@ -127,7 +127,7 @@ impl Scenario for SelectiveReset {
 
         // Reset even-indexed keys (0, 2, 4); odd-indexed keep their overrides.
         for i in (0..num_keys).step_by(2) {
-            kvs.reset_key(&keys[i]).map_err(|e| format!("{e:?}"))?;
+            kvs.set_value_to_default(&keys[i]).map_err(|e| format!("{e:?}"))?;
         }
         kvs.flush().map_err(|e| format!("{e:?}"))?;
 
