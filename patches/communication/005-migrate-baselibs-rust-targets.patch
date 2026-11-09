@@ -1,0 +1,77 @@
+diff --git a/score/mw/com/example/com-api-example/BUILD b/score/mw/com/example/com-api-example/BUILD
+index 4c834d489a..41c340eb68 100644
+--- a/score/mw/com/example/com-api-example/BUILD
++++ b/score/mw/com/example/com-api-example/BUILD
+@@ -21,7 +21,7 @@ rust_library(
+     deps = [
+         "//score/mw/com/example/com-api-example/com-api-gen",
+         "//score/mw/com/rust:score_com",
+-        "@score_baselibs//src/log/score_log",
++        "@score_baselibs//score/log_rust/score_log",
+         "@score_communication_crate_index//:clap",
+         "@score_communication_crate_index//:futures",
+     ],
+@@ -42,8 +42,8 @@ rust_binary(
+         ":com-api-example-lib",
+         "//score/mw/com/example/com-api-example/com-api-gen",
+         "//score/mw/com/rust:score_com",
+-        "@score_baselibs//src/log/score_log",
+-        "@score_baselibs//src/log/stdout_logger",
++        "@score_baselibs//score/log_rust/score_log",
++        "@score_baselibs//score/log_rust/stdout_logger",
+         "@score_communication_crate_index//:clap",
+         "@score_communication_crate_index//:futures",
+     ],
+diff --git a/score/mw/com/example/com-api-example/com-api-gen/BUILD b/score/mw/com/example/com-api-example/com-api-gen/BUILD
+index 94f6c8f96e..cd8ea32df7 100644
+--- a/score/mw/com/example/com-api-example/com-api-gen/BUILD
++++ b/score/mw/com/example/com-api-example/com-api-gen/BUILD
+@@ -26,7 +26,7 @@ rust_library(
+     deps = [
+         ":vehicle_gen_cpp",
+         "//score/mw/com/rust:score_com",
+-        "@score_baselibs//src/log/score_log",
++        "@score_baselibs//score/log_rust/score_log",
+     ],
+ )
+ 
+diff --git a/score/mw/com/impl/rust/com-api/com-api-ffi-lola/BUILD b/score/mw/com/impl/rust/com-api/com-api-ffi-lola/BUILD
+index a988186a96..81cd80485a 100644
+--- a/score/mw/com/impl/rust/com-api/com-api-ffi-lola/BUILD
++++ b/score/mw/com/impl/rust/com-api/com-api-ffi-lola/BUILD
+@@ -68,6 +68,6 @@ rust_library(
+     deps = [
+         ":bridge_ffi_rs",
+         "//score/mw/com/impl/plumbing/rust:sample_ptr_rs",
+-        "@score_baselibs//src/log/score_log",
++        "@score_baselibs//score/log_rust/score_log",
+     ],
+ )
+diff --git a/score/mw/com/impl/rust/com-api/com-api-runtime-lola/BUILD b/score/mw/com/impl/rust/com-api/com-api-runtime-lola/BUILD
+index aa5d094e23..3e7a59418e 100644
+--- a/score/mw/com/impl/rust/com-api/com-api-runtime-lola/BUILD
++++ b/score/mw/com/impl/rust/com-api/com-api-runtime-lola/BUILD
+@@ -28,7 +28,7 @@ rust_library(
+         "//score/mw/com/impl/rust/com-api/com-api-ffi-lola:bridge_ffi_lola",
+         "//score/mw/com/impl/rust/com-api/com-api-ffi-lola:bridge_ffi_rs",
+         "//score/mw/com/rust/score_com_concept",
+-        "@score_baselibs//src/log/score_log",
++        "@score_baselibs//score/log_rust/score_log",
+         "@score_communication_crate_index//:futures",
+     ],
+ )
+diff --git a/score/mw/com/rust/score_com_concept/BUILD b/score/mw/com/rust/score_com_concept/BUILD
+index 5386e8b2ef..8f51c7e6db 100644
+--- a/score/mw/com/rust/score_com_concept/BUILD
++++ b/score/mw/com/rust/score_com_concept/BUILD
+@@ -25,8 +25,8 @@ rust_library(
+         "//score/mw/com:__subpackages__",
+     ],
+     deps = [
+-        "@score_baselibs//src/containers",
+-        "@score_baselibs//src/log/score_log",
++        "@score_baselibs//score/containers_rust:containers",
++        "@score_baselibs//score/log_rust/score_log",
+         "@score_communication_crate_index//:futures",
+         "@score_communication_crate_index//:thiserror",
+     ],

@@ -17,7 +17,7 @@
 bazel_dep(name = "score_crates")
 git_override(
     module_name = "score_crates",
-    commit = "ee5f1a4f02dcfaa01d7a5e23ec68fd51590a66f8",
+    commit = "4656dda8f04a3d88c8089f63111195840cfbd9e3",
     remote = "https://github.com/eclipse-score/score-crates.git",
 )
 
@@ -36,21 +36,25 @@ single_version_override(
 bazel_dep(name = "score_tools")
 git_override(
     module_name = "score_tools",
-    commit = "3b99e9da6fe98e7df2c2b3616ad4d1aad318b72c",
+    commit = "4b48cec400c67be75cfc3fa4658ac6a0489bf7a8",
     remote = "https://github.com/eclipse-score/tools.git",
 )
 
 bazel_dep(name = "score_tooling")
 git_override(
     module_name = "score_tooling",
-    commit = "a3eed5852f8addbbbf276aaae262ba1313141ef5",
+    commit = "026e0983a9d65454b449199557ab655f82f5e81a",
     remote = "https://github.com/eclipse-score/tooling.git",
 )
 
 bazel_dep(name = "score_platform")
 git_override(
     module_name = "score_platform",
-    commit = "32759e0a51e02ed87311e12d0f8125e5f8cb4de0",
+    commit = "6d65a262c2329328cb9cbdd276bb143b417c54a4",
+    patch_strip = 1,
+    patches = [
+        "//patches/platform:001-remove-duplicate-lifecycle-glossary.patch",
+    ],
     remote = "https://github.com/eclipse-score/score.git",
 )
 
@@ -64,21 +68,21 @@ git_override(
 bazel_dep(name = "score_test_scenarios")
 git_override(
     module_name = "score_test_scenarios",
-    commit = "d0aab76ac6e64fc78f867a196531fbafd8924948",
+    commit = "fec712d490ff5d46fae91332bafac4777b300026",
     remote = "https://github.com/eclipse-score/testing_tools.git",
 )
 
 bazel_dep(name = "score_docs_as_code")
 git_override(
     module_name = "score_docs_as_code",
-    commit = "d9a43b1a48277bf8e9caa467aad07779ce575dec",
+    commit = "f1b30375e49646d95ca52565c41f5b926b0aa884",
     remote = "https://github.com/eclipse-score/docs-as-code.git",
 )
 
 bazel_dep(name = "score_process_description")
 git_override(
     module_name = "score_process_description",
-    commit = "0e01b2ccd172fa530553dd78fc727f51c03b1337",
+    commit = "98d1d5f42dad412a09a888ea25e59c62fa6371ce",
     remote = "https://github.com/eclipse-score/process_description.git",
 )
 

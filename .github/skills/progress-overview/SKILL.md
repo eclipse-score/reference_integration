@@ -1,6 +1,6 @@
 ---
 name: progress-overview
-description: "How-to reference for the Release-wide Progress Overview (docs/s_core_v_1/releases/progress_overview.rst): per-release progress charts next to the release notes. Explains the two scripts (collect_metrics.py, generate_progress_charts.py), the counting model, the release-in-progress column and the module/colour mapping. Use when refreshing the progress overview after a release, a known_good.json ref bump, or when adding a module. The progress-overview agent orchestrates the run; this skill holds the 'how'."
+description: "How-to reference for the Release-wide Progress Overview (docs/s_core_v_1/releases/progress_overview.rst): per-release progress charts next to the release notes. Explains the two scripts (collect_metrics.py, generate_progress_charts.py), the counting model, the forecast column and the module/colour mapping. Use when refreshing the progress overview after a release, a known_good.json ref bump, or when adding a module. The progress-overview agent orchestrates the run; this skill holds the 'how'."
 argument-hint: "optional: release name, e.g. v1.0"
 ---
 
@@ -39,28 +39,26 @@ Then bump the date in the `.. important::` admonition of `progress_overview.rst`
 to the `data_collected` value, and verify with
 `python3 scripts/progress_overview/generate_progress_charts.py --check`.
 
-The first run clones the module repositories as bare repositories into
+The first run clones ~11 bare repositories (~1.8 GB) into
 `/tmp/progress_overview_repos`; later runs only fetch. Use `--cache` to relocate.
 
 ## How the columns are built
 
 One column per `reference_integration` release tag, ordered by version (a
 pre-release such as `v0.5.0-beta` before its final release, `v0.10.0` after
-`v0.9.0`), plus a trailing column for the release in progress:
+`v0.9.0`), plus a trailing forecast column:
 
 - **Release columns** — the tag's `known_good.json` gives each module's pin.
   Entries carrying only a `version` are resolved to `v<version>` in the module's
-  own repository. Modules without `known_good` keys in `MODULES` (never pinned)
-  fall back to the commit on `main` as of the release date.
-- **Release in progress** (`v<major>.<minor>`, no suffix) — the **working
-  tree's** `known_good.json`, i.e. the state of the release branch. Its name is
-  read from the milestones of
+  own repository. Modules that were never pinned (Security/Crypto, Some/IP) fall
+  back to the commit on `main` as of the release date.
+- **Forecast column** (`<next release> (forecast)`) — the **working tree's**
+  `known_good.json`, i.e. today's state, labelled as the projection for the next
+  release. The next release is read from the milestones of
   [eclipse-score/score](https://github.com/eclipse-score/score/milestones): the
-  lowest `v<major>.<minor>` milestone after the latest release tag. Never
-  hard-code it; if the milestone is missing the collector stops, create the
-  milestone instead. The column is left out when the working tree's
-  `known_good.json` equals the one of the latest release tag (the release is
-  published and has its own column); there is no forecast for later releases.
+  lowest `v<major>.<minor>` milestone after the latest release tag (after
+  `v0.9.0` it is `v0.10`, after `v0.10.0` it is `v1.0`). Never hard-code it; if
+  the milestone is missing the collector stops, create the milestone instead.
 
 Every bar is stacked by module. `MODULE_COLORS` is the single source of truth
 for the colour of a module and is shared by every chart, so a module keeps its
@@ -98,7 +96,7 @@ growth, not validation maturity. `chklst_*.rst` files are excluded.
   `progress_overview_architecture`, `progress_overview_implementation` and
   `progress_overview_verification` — `pi1.rst`, `pi2.rst` and `pi3.rst` link to them.
 - The page is listed first in the toctree of `releases.rst`, before the release
-  notes (explicit list in release order, no glob).
+  notes (`release_note_*` glob).
 - Never hand-edit an SVG; regenerate it.
 - Re-collect **all** columns rather than appending one by hand. The value of the
   series is that every column used the same counter.

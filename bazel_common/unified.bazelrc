@@ -20,12 +20,9 @@
 # code uses Android, so forcing it empty makes the rule emit an empty stub repo.
 common --repo_env=ANDROID_HOME=
 
-build:unified-base --host_platform=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
-build:unified-base --platforms=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
-build:unified-base --extra_toolchains=@unified_gcc_x86_64_toolchain//:x86_64-linux-gcc_12.2.0
-# Module coverage_tool configurations select their own instrumented toolchain on top of
-# unified-base. Keep the generic Clang fallback in unified for other coverage callers.
-build:unified --config=unified-base
+build:unified --host_platform=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
+build:unified --platforms=@score_bazel_platforms//:x86_64-linux-gcc_12.2.0-posix
+build:unified --extra_toolchains=@unified_gcc_x86_64_toolchain//:x86_64-linux-gcc_12.2.0
 # Coverage builds C++ with clang, so LLVM_PROFDATA/LLVM_COV reach the coverage collectors.
 coverage:unified --extra_toolchains=@unified_llvm_toolchain//:cc-toolchain-x86_64-linux
 coverage:unified --experimental_generate_llvm_lcov

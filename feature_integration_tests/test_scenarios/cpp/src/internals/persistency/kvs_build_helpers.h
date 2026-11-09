@@ -16,8 +16,8 @@
 
 #include "kvs_parameters.h"
 
-#include "score/kvs/kvs.h"
-#include "score/kvs/kvs_builder.h"
+#include <kvs.hpp>
+#include <kvsbuilder.hpp>
 
 #include <chrono>
 #include <iostream>
@@ -91,49 +91,35 @@ inline std::string format_double_python(double v) {
 }
 
 /**
- * @brief Convert an optional KvsDefaults mode to the flag expected by KvsBuilder.
+ * @brief Convert an optional KvsDefaults mode to the boolean flag expected by KvsBuilder.
  *
- * Returns std::nullopt if no mode was provided (omit the flag from the builder call).
+ * Returns true if the mode is Required, false if Optional or Ignored, or
+ * std::nullopt if no mode was provided (omit the flag from the builder call).
  *
  * @param mode Optional KvsDefaults value to convert.
- * @return Converted flag or nullopt.
+ * @return Converted boolean flag or nullopt.
  */
-inline std::optional<score::mw::per::kvs::OpenNeedDefaults> to_need_flag(const std::optional<KvsDefaults>& mode) {
+inline std::optional<bool> to_need_flag(const std::optional<KvsDefaults>& mode) {
     if (!mode.has_value()) {
         return std::nullopt;
     }
-    switch (*mode) {
-        case KvsDefaults::Required:
-            return score::mw::per::kvs::OpenNeedDefaults::Required;
-        case KvsDefaults::Optional:
-            return score::mw::per::kvs::OpenNeedDefaults::Optional;
-        case KvsDefaults::Ignored:
-        default:
-            return score::mw::per::kvs::OpenNeedDefaults::Ignored;
-    }
+    return *mode == KvsDefaults::Required;
 }
 
 /**
- * @brief Convert an optional KvsLoad mode to the flag expected by KvsBuilder.
+ * @brief Convert an optional KvsLoad mode to the boolean flag expected by KvsBuilder.
  *
- * Returns std::nullopt if no mode was provided (omit the flag from the builder call).
+ * Returns true if the mode is Required, false if Optional or Ignored, or
+ * std::nullopt if no mode was provided (omit the flag from the builder call).
  *
  * @param mode Optional KvsLoad value to convert.
- * @return Converted flag or nullopt.
+ * @return Converted boolean flag or nullopt.
  */
-inline std::optional<score::mw::per::kvs::OpenNeedKvs> to_need_flag(const std::optional<KvsLoad>& mode) {
+inline std::optional<bool> to_need_flag(const std::optional<KvsLoad>& mode) {
     if (!mode.has_value()) {
         return std::nullopt;
     }
-    switch (*mode) {
-        case KvsLoad::Required:
-            return score::mw::per::kvs::OpenNeedKvs::Required;
-        case KvsLoad::Optional:
-            return score::mw::per::kvs::OpenNeedKvs::Optional;
-        case KvsLoad::Ignored:
-        default:
-            return score::mw::per::kvs::OpenNeedKvs::Ignored;
-    }
+    return *mode == KvsLoad::Required;
 }
 
 /**

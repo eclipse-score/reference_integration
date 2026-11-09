@@ -25,9 +25,8 @@ Maintain a todo list.
 
 1. Read the skill.
 2. Check `GITHUB_PAT` is set; the collector needs it for tag and pin lookups.
-3. Nothing to rename for a new target release: the label of the release in
-   progress comes from the next release milestone in eclipse-score/score (see
-   the skill).
+3. Nothing to rename for a new target release: the forecast label comes from
+   the next release milestone in eclipse-score/score (see the skill).
 4. Run `python3 scripts/progress_overview/collect_metrics.py` (recounts every
    column, ~5 min, clones to `/tmp`).
 5. Run `python3 scripts/progress_overview/generate_progress_charts.py`.
