@@ -579,7 +579,7 @@
                   
   <section id="test-specification-guideline">
 <h1>Test Specification Guideline<a class="headerlink" href="#test-specification-guideline" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-73403922">
+<div class="need_container docutils container" id="SNCB-71e6fc06">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_guidl table" id="gd_guidl__verification_specification">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -626,6 +626,17 @@
 </div>
 <section id="test-specification">
 <h2>Test specification<a class="headerlink" href="#test-specification" title="Link to this heading">#</a></h2>
+<p>A test specification defines a unique test case in a structured format.
+Its properties identify the applicable test type, verification level, implementation conditions, and the requirements or architectural elements to which the test case is traced.</p>
+<p>A test case may be executed multiple times for different platform variants, platform versions, programming languages, environments, or configurations.
+These execution-specific conditions are defined by the applicable test scenario, while the unique test case ID remains unchanged.
+This allows the same test case to be reused across different executions while maintaining consistent traceability to the elements it verifies.</p>
+<p>Each test execution produces a specific result for the selected test scenario and version of the software under test.
+Module and platform verification reports therefore summarize the results of specific execution runs,
+whereas the unique test case ID provides traceability between the test specification and its results across different runs, variants, and versions.</p>
+<p>The test specification shall contain sufficient information to understand and reproduce the intended test.
+This includes the test objective, required inputs and their relevant ranges, expected results, test environment
+(e.g. target hardware or simulation and operating system), and, where applicable, expected timing, sequencing, and performance behavior.</p>
 <p>A test specification contains the following attributes.</p>
 <div class="pst-scrollable-table-container"><table class="table" id="id1">
 <caption><span class="caption-number">Table 322 </span><span class="caption-text">Test specification properties</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
@@ -667,7 +678,6 @@ requirement, as per test property.</p></td>
 <ul class="simple">
 <li><p>requirements-based</p></li>
 <li><p>interface-test</p></li>
-<li><p>coverage (various types apply, shall be tool supported)</p></li>
 </ul>
 </td>
 <td><p>These are example values and an incomplete list.
@@ -702,6 +712,10 @@ proper traceability and reproducibility.</p>
 </section>
 <section id="test-description">
 <h2>Test description<a class="headerlink" href="#test-description" title="Link to this heading">#</a></h2>
+<p>The test description shall contain sufficient information to understand and reproduce the intended test.
+It also requires sufficient detail to understand how the linked upstream requirement or architectural element is verified.
+Examples of this are the test objective, required inputs and their relevant ranges, expected results, test environment
+(e.g. target hardware or simulation and operating system), and, where applicable, expected timing, sequencing, and performance behavior.</p>
 <p>Following Given-When-Then is a preferred way to write test specifications.</p>
 <ul>
 <li><div class="line-block">

@@ -581,9 +581,102 @@
 <span id="verification-methods"></span><h1>Verification methods and derivation techniques<a class="headerlink" href="#verification-methods-and-derivation-techniques" title="Link to this heading">#</a></h1>
 <p>This guide helps to get an understanding what the different methods and derivation techniques mean
 and how to create test cases using the same.</p>
+<section id="quick-guide-what-to-use-when">
+<span id="verification-quick-guide"></span><h2>Quick Guide: What to use when<a class="headerlink" href="#quick-guide-what-to-use-when" title="Link to this heading">#</a></h2>
+<p>Each test case needs at least one <code class="docutils literal notranslate"><span class="pre">TestType</span></code> and one <code class="docutils literal notranslate"><span class="pre">DerivationTechnique</span></code>
+(see <a class="reference internal" href="verification_process_reqs.html#gd_req__verification_link_tests" title="gd_req__verification_link_tests"><em class="xref need">Linking Requirements to Tests (gd_req__verification_link_tests)</em></a>).
+Multiple values are always possible for both and should be combined where it makes sense.</p>
+<p>The test types <code class="docutils literal notranslate"><span class="pre">requirements-based</span></code>, <code class="docutils literal notranslate"><span class="pre">interface-test</span></code>, <code class="docutils literal notranslate"><span class="pre">fault-injection</span></code> and <code class="docutils literal notranslate"><span class="pre">resource-usage</span></code> and the
+derivation techniques <code class="docutils literal notranslate"><span class="pre">requirements-analysis</span></code>, <code class="docutils literal notranslate"><span class="pre">equivalence-classes</span></code>, <code class="docutils literal notranslate"><span class="pre">boundary-values</span></code> and <code class="docutils literal notranslate"><span class="pre">error-guessing</span></code>
+correspond to the methods of ISO 26262-6 (software unit and software integration verification).
+<code class="docutils literal notranslate"><span class="pre">design-analysis</span></code>, <code class="docutils literal notranslate"><span class="pre">fuzz-testing</span></code> and <code class="docutils literal notranslate"><span class="pre">explorative-testing</span></code> are further techniques.</p>
+<div class="pst-scrollable-table-container"><table class="table" id="id1">
+<caption><span class="caption-number">Table 323 </span><span class="caption-text">Test Type</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 20.0%" />
+<col style="width: 55.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>TestType</p></th>
+<th class="head"><p>Recommended levels</p></th>
+<th class="head"><p>Use when</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">requirements-based</span></code></p></td>
+<td><p>all</p></td>
+<td><p>A functional, process, tool or other non-functional requirement (not resource-related) is tested.
+Units have no requirements of their own, but unit tests can verify component or feature requirements.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">interface-test</span></code></p></td>
+<td><p>unit, component, feature</p></td>
+<td><p>An interface or interface requirement is tested.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">resource-usage</span></code></p></td>
+<td><p>feature</p></td>
+<td><p>A non-functional requirement on resources (e.g. execution time, memory, CPU load,
+communication bandwidth) is tested.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fault-injection</span></code></p></td>
+<td><p>unit, component, feature</p></td>
+<td><p>The behavior of the software in case of faults or failures of external parts influencing it is tested.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="pst-scrollable-table-container"><table class="table" id="id2">
+<caption><span class="caption-number">Table 324 </span><span class="caption-text">Derivation Technique</span><a class="headerlink" href="#id2" title="Link to this table">#</a></caption>
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 20.0%" />
+<col style="width: 55.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>DerivationTechnique</p></th>
+<th class="head"><p>Recommended levels</p></th>
+<th class="head"><p>Use when</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">requirements-analysis</span></code></p></td>
+<td><p>all</p></td>
+<td><p>Testing requirements (positive and negative cases).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">design-analysis</span></code></p></td>
+<td><p>unit, component, feature</p></td>
+<td><p>Testing architectural and design aspects.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">boundary-values</span></code></p></td>
+<td><p>all</p></td>
+<td><p>Interfaces, interface requirements or functional requirements contain values.
+Can be combined with <code class="docutils literal notranslate"><span class="pre">equivalence-classes</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">equivalence-classes</span></code></p></td>
+<td><p>all</p></td>
+<td><p>Interfaces, interface requirements or functional requirements contain values.
+Can be combined with <code class="docutils literal notranslate"><span class="pre">boundary-values</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fuzz-testing</span></code></p></td>
+<td><p>unit, component, feature</p></td>
+<td><p>Interfaces, interface requirements or functional requirements contain values
+which are tested with random values.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">error-guessing</span></code></p></td>
+<td><p>all</p></td>
+<td><p>Known error-prone areas shall be tested, based on knowledge or experience. Fits all test types.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">explorative-testing</span></code></p></td>
+<td><p>feature, platform</p></td>
+<td><p>The system and its boundaries are explored without predefined test cases.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
 <section id="methods">
 <h2>Methods<a class="headerlink" href="#methods" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-e6737b47">
+<div class="need_container docutils container" id="SNCB-f34d4f08">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_method table" id="gd_meth__verification_methods">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -734,7 +827,7 @@ Systematic resolution or justified handling of findings contributes to the overa
 </section>
 <section id="derivation-techniques">
 <h2>Derivation Techniques<a class="headerlink" href="#derivation-techniques" title="Link to this heading">#</a></h2>
-<div class="need_container docutils container" id="SNCB-3e6e65e4">
+<div class="need_container docutils container" id="SNCB-9b13bd2b">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_gd_method table" id="gd_meth__verification_derivation">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -767,7 +860,7 @@ Systematic resolution or justified handling of findings contributes to the overa
 <li><p><a class="reference internal" href="#ver-req-anal"><span class="std std-ref">Requirements analysis</span></a></p></li>
 <li><p><a class="reference internal" href="#ver-boundary"><span class="std std-ref">Boundary Values</span></a></p></li>
 <li><p><a class="reference internal" href="#ver-equivalence"><span class="std std-ref">Equivalence Classes</span></a></p></li>
-<li><p><a class="reference internal" href="#ver-fuzzy"><span class="std std-ref">Fuzzy Testing</span></a></p></li>
+<li><p><a class="reference internal" href="#ver-fuzzy"><span class="std std-ref">Fuzz Testing</span></a></p></li>
 </ul>
 <p>Note: More than one derivation technique can be used in a single test case.</p>
 </td>
@@ -798,7 +891,7 @@ injection value x = A and verifying that output y = B. “Negative” testing te
 be also considered: i.e. testing what happens when input x = C (if not already specified
 in other requirements).</p>
 <p>Note that requirement-based derived test case may also include other techniques and derivation methods
-mentioned here, such as Boundary Values, Equivalence Classes, Fuzzy Testing, Interface
+mentioned here, such as Boundary Values, Equivalence Classes, Fuzz Testing, Interface
 Testing and Fault Injection.</p>
 </section>
 <section id="boundary-values">
@@ -951,31 +1044,31 @@ Aim to cover all classes in your test suite.</p>
 process followed can be given in order to facilitate maintenance and test regression,
 as well as during audits and assessments.</p>
 </section>
-<section id="fuzzy-testing">
-<span id="ver-fuzzy"></span><h3>Fuzzy Testing<a class="headerlink" href="#fuzzy-testing" title="Link to this heading">#</a></h3>
-<p>Fuzzy Testing, often called Fuzz Testing, is a software testing technique that involves providing
+<section id="fuzz-testing">
+<span id="ver-fuzzy"></span><h3>Fuzz Testing<a class="headerlink" href="#fuzz-testing" title="Link to this heading">#</a></h3>
+<p>Fuzz Testing is a software testing technique that involves providing
 invalid, unexpected, or random data as inputs to a component or system to detect defects. The goal
-of fuzzy testing is to expose unhandled exceptions, memory leaks, assertion failures, and other
+of fuzz testing is to expose unhandled exceptions, memory leaks, assertion failures, and other
 critical issues by generating semi-random inputs and observing the system’s behaviour.</p>
 <p>The following perspectives are included in <code class="docutils literal notranslate"><span class="pre">fuzz-testing</span></code>:</p>
 <blockquote>
 <div><p><strong>Detect Security Vulnerabilities</strong></p>
-<p>By feeding malformed or unexpected inputs, fuzzy testing can reveal security vulnerabilities
+<p>By feeding malformed or unexpected inputs, fuzz testing can reveal security vulnerabilities
 like buffer overflows, SQL injections, and other input validation issues.</p>
 <p><strong>Uncover Edge Cases</strong></p>
-<p>Fuzzy testing can discover edge cases that might not be covered by traditional testing methods,
+<p>Fuzz testing can discover edge cases that might not be covered by traditional testing methods,
 as it generates inputs that developers might not have anticipated.</p>
 <p><strong>Automate Input Generation</strong></p>
-<p>Instead of manually creating test inputs, fuzzy testing automates the process, allowing for a
+<p>Instead of manually creating test inputs, fuzz testing automates the process, allowing for a
 much larger number of test cases to be executed.</p>
 <p><strong>Improve Robustness</strong></p>
-<p>By exposing the system to a wide variety of inputs, fuzzy testing helps ensure that the
+<p>By exposing the system to a wide variety of inputs, fuzz testing helps ensure that the
 software can handle unexpected situations gracefully.</p>
 </div></blockquote>
-<p>How to perform fuzzy testing:</p>
+<p>How to perform fuzz testing:</p>
 <blockquote>
 <div><p><strong>1. Identify Target Functions</strong> Determine which functions or interfaces are suitable for
-fuzzy testing, focusing on those that process external inputs.</p>
+fuzz testing, focusing on those that process external inputs.</p>
 <p><strong>2. Define Input Structure</strong> Understand the basic structure or format of valid inputs to
 create effective fuzzers that can produce semi-valid inputs.</p>
 <p><strong>3. Generate Fuzzy Inputs</strong> Create inputs that are slightly malformed or unexpected, either
@@ -1036,6 +1129,7 @@ and fix the underlying issue in the code.</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-guide-what-to-use-when">Quick Guide: What to use when</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#methods">Methods</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fault-injection">Fault Injection</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interface-test">Interface Test</a></li>
@@ -1047,7 +1141,7 @@ and fix the underlying issue in the code.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements-analysis">Requirements analysis</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boundary-values">Boundary Values</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#equivalence-classes">Equivalence Classes</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fuzzy-testing">Fuzzy Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fuzz-testing">Fuzz Testing</a></li>
 </ul>
 </li>
 </ul>
