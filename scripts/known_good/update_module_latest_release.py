@@ -1,0 +1,271 @@
+#!/usr/bin/env python3
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+"""Pin every known_good.json module to its latest Bazel registry release and report the versions.
+
+For each module (target_sw and tooling, pinned ones included) the script looks up the
+latest version in the Bazel registries of .bazelrc (pre-releases count, yanked versions
+do not), resolves its release tag and date, and counts the commits on the module's
+branch since that tag. The report is one markdown table with all modules; commit counts
+from BOLD_COMMITS on are bold.
+
+Usage:
+  python3 scripts/known_good/update_module_latest_release.py \
+      [--known-good known_good.json] [--apply] [--report pre_release_report.md]
+
+Without --apply only the report is produced. With --apply every module gets
+``"version": "<latest>"`` instead of its hash; regenerate the Bazel files and the
+lockfile afterwards (see .github/skills/pre-release/SKILL.md).
+
+Environment:
+  GITHUB_TOKEN or GITHUB_PAT for the GitHub API (release dates, commit counts).
+"""
+
+from __future__ import annotations
+
+import argparse
+import datetime as dt
+import json
+import os
+import re
+import sys
+import urllib.error
+import urllib.request
+from dataclasses import dataclass
+from pathlib import Path
+
+try:
+    from known_good.models.known_good import load_known_good
+except ImportError:
+    _HERE = str(Path(__file__).resolve().parent)
+    if _HERE not in sys.path:
+        sys.path.insert(0, _HERE)
+    from models.known_good import load_known_good  # noqa: E402
+
+# Same order as the --registry flags in .bazelrc: the first registry that knows a module wins.
+REGISTRIES = (
+    "https://raw.githubusercontent.com/eclipse-score/bazel_registry/main",
+    "https://bcr.bazel.build",
+)
+API = "https://api.github.com"
+BOLD_COMMITS = 10
+TAG_URL = re.compile(r"/refs/tags/(.+?)\.(?:tar\.gz|zip|tgz)$")
+
+
+@dataclass
+class Release:
+    module: str
+    group: str
+    slug: str
+    branch: str
+    current: str
+    version: str | None = None
+    tag: str | None = None
+    date: dt.date | None = None
+    commits: int | None = None
+    error: str | None = None
+    current_date: dt.date | None = None
+
+
+def http_json(url: str, *, github: bool = False) -> dict | None:
+    """GET a JSON document; None on 404."""
+    request = urllib.request.Request(url, headers={"Accept": "application/vnd.github+json"} if github else {})
+    if github and (token := os.environ.get("GITHUB_TOKEN") or os.environ.get("GITHUB_PAT")):
+        request.add_header("Authorization", f"Bearer {token}")
+    try:
+        with urllib.request.urlopen(request, timeout=60) as response:
+            return json.load(response)
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            return None
+        raise
+
+
+def version_key(version: str) -> tuple:
+    """Semver ordering: numeric parts numerically, a pre-release before its release."""
+    version = version.split("+", 1)[0]
+    core, _, pre = version.partition("-")
+
+    def ident(part: str) -> tuple:
+        return (0, int(part), "") if part.isdigit() else (1, 0, part)
+
+    core_key = tuple(ident(p) for p in core.split("."))
+    pre_key = (1,) if not pre else (0, *(ident(p) for p in pre.split(".")))
+    return core_key, pre_key
+
+
+def latest_version(metadata: dict) -> str | None:
+    yanked = set(metadata.get("yanked_versions") or {})
+    versions = [v for v in metadata.get("versions", []) if v not in yanked]
+    return max(versions, key=version_key) if versions else None
+
+
+def source_tag(registry: str, module: str, version: str) -> str | None:
+    """Release tag of a registry version; None if the registry does not have it."""
+    source = http_json(f"{registry}/modules/{module}/{version}/source.json")
+    if source is None:
+        return None
+    match = TAG_URL.search(source.get("url", ""))
+    return match.group(1) if match else f"v{version}"
+
+
+def registry_release(module: str) -> tuple[str, str] | None:
+    """(version, tag) of the latest release in the first registry that has the module."""
+    for registry in REGISTRIES:
+        metadata = http_json(f"{registry}/modules/{module}/metadata.json")
+        if not metadata or not (version := latest_version(metadata)):
+            continue
+        return version, source_tag(registry, module, version) or f"v{version}"
+    return None
+
+
+def parse_date(stamp: str) -> dt.date:
+    return dt.datetime.fromisoformat(stamp.replace("Z", "+00:00")).date()
+
+
+def commit_date(slug: str, ref: str) -> dt.date:
+    commit = http_json(f"{API}/repos/{slug}/commits/{ref}", github=True)
+    if not commit:
+        raise RuntimeError(f"{ref} not found in {slug}")
+    return parse_date(commit["commit"]["committer"]["date"])
+
+
+def release_date(slug: str, tag: str) -> dt.date:
+    release = http_json(f"{API}/repos/{slug}/releases/tags/{tag}", github=True)
+    if release and release.get("published_at"):
+        return parse_date(release["published_at"])
+    return commit_date(slug, tag)
+
+
+def pinned_date(module) -> dt.date | None:
+    """Release date of the pinned version, or commit date of the pinned hash."""
+    if module.version:
+        tag = next(
+            (t for registry in REGISTRIES if (t := source_tag(registry, module.name, module.version))),
+            f"v{module.version}",
+        )
+        return release_date(module.owner_repo, tag)
+    if module.hash:
+        return commit_date(module.owner_repo, module.hash)
+    return None
+
+
+def commits_since(slug: str, tag: str, branch: str) -> int:
+    compare = http_json(f"{API}/repos/{slug}/compare/{tag}...{branch}", github=True)
+    if not compare:
+        raise RuntimeError(f"cannot compare {tag}...{branch} in {slug}")
+    return compare["ahead_by"]
+
+
+def collect(known_good_path: Path) -> list[Release]:
+    known_good = load_known_good(known_good_path)
+    releases = []
+    for group, modules in known_good.modules.items():
+        for module in modules.values():
+            current = module.version or (module.hash[:8] if module.hash else "?")
+            entry = Release(module.name, group, module.owner_repo, module.branch, current)
+            releases.append(entry)
+            try:
+                found = registry_release(module.name)
+                if not found:
+                    entry.error = "not found in any Bazel registry"
+                    continue
+                entry.version, entry.tag = found
+                entry.date = release_date(entry.slug, entry.tag)
+                entry.commits = commits_since(entry.slug, entry.tag, entry.branch)
+                entry.current_date = pinned_date(module)
+            except Exception as e:  # noqa: BLE001
+                entry.error = str(e)
+            print(
+                f"{entry.module}: {entry.current} -> {entry.version or '-'}"
+                f" ({entry.tag or '-'}, {entry.date or '-'}, {entry.commits if entry.commits is not None else '-'}"
+                f" commits since){' ERROR: ' + entry.error if entry.error else ''}",
+                file=sys.stderr,
+            )
+    return releases
+
+
+def apply_versions(path: Path, releases: list[Release]) -> None:
+    """Swap hash/version for the new version in place; leave every other key untouched."""
+    text = path.read_text(encoding="utf-8")
+    data = json.loads(text)
+    for r in releases:
+        if not r.version:
+            continue
+        modules = data["modules"][r.group]
+        modules[r.module] = {
+            ("version" if key == "hash" else key): (r.version if key in ("hash", "version") else value)
+            for key, value in modules[r.module].items()
+        }
+    data["timestamp"] = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    path.write_text(json.dumps(data, indent=4) + ("\n" if text.endswith("\n") else ""), encoding="utf-8")
+
+
+def render(releases: list[Release], today: dt.date) -> str:
+    def now_cell(r: Release) -> str:
+        if not r.version:
+            return "-"
+        if not r.tag:
+            return f"{r.version} ({r.date or '?'})"
+        return f"[{r.version}](https://github.com/{r.slug}/releases/tag/{r.tag}) ({r.date or '?'})"
+
+    def head_cell(r: Release) -> str:
+        if r.error:
+            return f"Error: {r.error}"
+        if r.commits is None:
+            return "-"
+        count = f"**{r.commits}**" if r.commits >= BOLD_COMMITS else str(r.commits)
+        return f"[{count}](https://github.com/{r.slug}/compare/{r.tag}...{r.branch})"
+
+    lines = [
+        f"<!-- generated by scripts/known_good/update_module_latest_release.py on {today} -->",
+        "### Module versions",
+        "",
+        (
+            "Before: commit or version pinned in `known_good.json` so far (commit or release date)."
+            " Now: latest registry release this PR switches to (release date)."
+            f" Head: commits on the module's branch after that release, bold from {BOLD_COMMITS} on,"
+            " linked to the diff. Set OK/NOK by hand."
+        ),
+        "",
+        "| Module | Group | Before | Now | Head | OK/NOK |",
+        "|---|---|---|---|---|---|",
+    ]
+    for r in releases:
+        before = f"`{r.current}` ({r.current_date or '?'})"
+        lines.append(f"| {r.module} | {r.group} | {before} | {now_cell(r)} | {head_cell(r)} | |")
+    return "\n".join(lines) + "\n"
+
+
+def main(argv: list[str]) -> int:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--known-good", default="known_good.json", type=Path)
+    parser.add_argument("--apply", action="store_true", help="Write the latest versions into --known-good")
+    parser.add_argument("--report", type=Path, help="Write the markdown report (PR body section) here")
+    parser.add_argument("--today", type=dt.date.fromisoformat, default=dt.date.today(), help=argparse.SUPPRESS)
+    args = parser.parse_args(argv)
+
+    releases = collect(args.known_good)
+    report = render(releases, args.today)
+    if args.report:
+        args.report.write_text(report, encoding="utf-8")
+    else:
+        print(report)
+    if args.apply:
+        apply_versions(args.known_good, releases)
+    errors = [r for r in releases if r.error]
+    return 2 if errors else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
