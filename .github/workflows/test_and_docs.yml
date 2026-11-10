@@ -63,7 +63,7 @@ jobs:
         # showcases against a Docker target built from //images/linux_x86_64:image.
         uses: docker/setup-buildx-action@6524bf65af31da8d45b59e8c27de4bd072b392f5 # v3.8.0
       - name: Setup Bazel
-        uses: bazel-contrib/setup-bazel@0.18.0
+        uses: bazel-contrib/setup-bazel@0.19.1
         with:
           bazelisk-cache: true
           disk-cache: ${{ github.workflow }}
@@ -157,7 +157,7 @@ jobs:
           zip -r ${{ github.event.repository.name }}_test_reports.zip artifacts/
         shell: bash
       - name: Upload release asset (attach ZIP to GitHub Release)
-        uses: softprops/action-gh-release@v3.0.3
+        uses: softprops/action-gh-release@v3.0.4
         if: github.ref_type == 'tag'
         with:
           files: ${{ github.event.repository.name }}_test_reports.zip
@@ -171,7 +171,7 @@ jobs:
           retention-days: 3
           if-no-files-found: error
       - name: Upload build tools SBOM (attach to GitHub Release)
-        uses: softprops/action-gh-release@v3.0.3
+        uses: softprops/action-gh-release@v3.0.4
         if: github.ref_type == 'tag'
         with:
           files: bazel-bin/build_tools_sbom.spdx.json
