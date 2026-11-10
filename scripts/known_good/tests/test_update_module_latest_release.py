@@ -1,0 +1,126 @@
+# *******************************************************************************
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+"""Unit tests for the pre-release version selection, report and known_good.json update."""
+
+import datetime as dt
+import sys
+from pathlib import Path
+
+_SCRIPTS_DIR = Path(__file__).resolve().parents[2]
+if str(_SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPTS_DIR))
+
+from known_good import update_module_latest_release  # noqa: E402
+from known_good.update_module_latest_release import (  # noqa: E402
+    Release,
+    apply_versions,
+    latest_version,
+    render,
+    tag_at,
+)
+
+TODAY = dt.date(2026, 11, 9)
+
+
+def test_latest_version_semver_with_prerelease():
+    assert latest_version({"versions": ["1.0.5", "1.0.6-rc1", "1.0.10", "1.0.9"]}) == "1.0.10"
+    assert latest_version({"versions": ["1.0.5", "1.0.6-rc1"]}) == "1.0.6-rc1"
+    assert latest_version({"versions": ["1.0.6-rc1", "1.0.6"]}) == "1.0.6"
+
+
+def test_latest_version_skips_yanked():
+    assert latest_version({"versions": ["0.2.0", "0.3.0"], "yanked_versions": {"0.3.0": "broken"}}) == "0.2.0"
+    assert latest_version({"versions": []}) is None
+
+
+def test_render_head_column_shows_head_and_bold_count_from_threshold():
+    ok = Release("score_a", "target_sw", "o/a", "main", "abc", "1.0.0", "v1.0.0", TODAY, 9)
+    ok.head_sha, ok.head_date = "1234567890abcdef", dt.date(2026, 11, 8)
+    bad = Release("score_b", "tooling", "o/b", "main", "def", "2.0.0", "v2.0.0", TODAY, 10)
+    bad.head_sha, bad.head_tag, bad.head_date = "fedcba0987654321", "v2.1.0", dt.date(2026, 11, 7)
+    report = render([ok, bad], TODAY)
+    assert report.count("| Module |") == 1
+    assert "| Now | Head | OK/NOK |" in report
+    assert "| `12345678` (2026-11-08) [9](https://github.com/o/a/compare/v1.0.0...1234567890abcdef) | |" in report
+    assert (
+        "| [2.1.0](https://github.com/o/b/releases/tag/v2.1.0) (2026-11-07)"
+        " [**10**](https://github.com/o/b/compare/v2.0.0...fedcba0987654321) | |"
+    ) in report
+
+
+def test_render_versions_table_shows_dates_before_and_now():
+    ok = Release("score_a", "target_sw", "o/a", "main", "abc", "1.0.0", "v1.0.0", TODAY, 0)
+    ok.current_date = dt.date(2026, 10, 1)
+    report = render([ok], TODAY)
+    assert "| Before | Now |" in report
+    assert "| `abc` (2026-10-01) | [1.0.0](https://github.com/o/a/releases/tag/v1.0.0) (2026-11-09) |" in report
+
+
+def test_render_now_links_commits_compared_to_before_minus_bold():
+    rows = []
+    for delta in [(12, 0), (0, 3), (2, 1), (0, 0)]:
+        entry = Release("score_a", "target_sw", "o/a", "main", "abc", "1.0.0", "v1.0.0", TODAY, 0)
+        entry.delta, entry.current_ref = delta, "abc"
+        rows.append(render([entry], TODAY))
+    link = "(https://github.com/o/a/compare/abc...v1.0.0)"
+    assert f"(2026-11-09) [+12]{link} |" in rows[0]
+    assert f"(2026-11-09) [**-3**]{link} |" in rows[1]
+    assert f"(2026-11-09) [**+2/-1**]{link} |" in rows[2]
+    assert f"(2026-11-09) [+0]{link} |" in rows[3]
+
+
+def test_render_before_shows_release_of_tagged_commit():
+    entry = Release("score_a", "target_sw", "o/a", "main", "0.9.0", "1.0.0", "v1.0.0", TODAY, 0)
+    entry.current_tag, entry.current_date = "v0.9.0", dt.date(2026, 10, 1)
+    assert "| [0.9.0](https://github.com/o/a/releases/tag/v0.9.0) (2026-10-01) |" in render([entry], TODAY)
+
+
+def test_tag_at_picks_highest_tag_on_commit_across_pages():
+    pages = {
+        1: [{"name": "v1.0.0", "commit": {"sha": "aaa111"}}, {"name": "v0.9.0", "commit": {"sha": "bbb222"}}],
+        2: [{"name": "v0.10.0-rc1", "commit": {"sha": "bbb222"}}],
+    }
+    original = update_module_latest_release.http_json
+    update_module_latest_release.http_json = lambda url, **_: pages.get(int(url.rsplit("page=", 1)[1]), [])
+    update_module_latest_release.repo_tags.cache_clear()
+    try:
+        assert tag_at("o/a", "bbb222") == "v0.10.0-rc1"
+        assert tag_at("o/a", "ccc333") is None
+    finally:
+        update_module_latest_release.http_json = original
+        update_module_latest_release.repo_tags.cache_clear()
+
+
+def test_apply_versions_touches_only_version_and_timestamp(tmp_path):
+    path = tmp_path / "known_good.json"
+    path.write_text(
+        '{\n    "modules": {\n        "target_sw": {\n'
+        '            "score_a": {\n                "repo": "r",\n                "hash": "abc",\n'
+        '                "metadata": {\n                    "langs": [\n                        "cpp"\n'
+        "                    ]\n                }\n            },\n"
+        '            "score_b": {\n                "version": "0.1.0"\n            },\n'
+        '            "score_c": {\n                "hash": "def"\n            }\n'
+        '        }\n    },\n    "timestamp": "2026-01-01T00:00:00Z"\n}'
+    )
+    releases = [
+        Release("score_a", "target_sw", "o/a", "main", "abc", "1.0.0"),
+        Release("score_b", "target_sw", "o/b", "main", "0.1.0", "0.2.0"),
+        Release("score_c", "target_sw", "o/c", "main", "def"),
+    ]
+    apply_versions(path, releases)
+    text = path.read_text()
+    assert '"repo": "r",\n                "version": "1.0.0",\n                "metadata"' in text
+    assert '"version": "0.2.0"' in text
+    assert '"hash": "def"' in text
+    assert "rust_coverage_config" not in text
+    assert not text.endswith("\n")
