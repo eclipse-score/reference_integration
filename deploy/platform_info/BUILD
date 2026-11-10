@@ -16,9 +16,10 @@
 # platform was built from over mw::com; consumers in layer 3 find it via service
 # discovery and compare the version with the one they were built for.
 
-load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_test")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_attributes", "pkg_files", "strip_prefix")
 load("@rules_python//python:defs.bzl", "py_binary")
+load("@score_tooling//python_basics:defs.bzl", "score_py_pytest")
 
 package(default_visibility = ["//deploy:__pkg__"])
 
@@ -36,6 +37,13 @@ genrule(
     tools = [":gen_platform_info"],
 )
 
+score_py_pytest(
+    name = "gen_platform_info_test",
+    srcs = ["gen_platform_info_test.py"],
+    pytest_config = "//:pyproject.toml",
+    deps = [":gen_platform_info"],
+)
+
 # Service interface and version check: the layer 2/3 contract of the platform info service.
 cc_library(
     name = "platform_info_interface",
@@ -48,6 +56,15 @@ cc_library(
     deps = [
         "@score_baselibs//score/hash/code/crc:crc_ieee",
         "@score_communication//score/mw/com",
+    ],
+)
+
+cc_test(
+    name = "platform_info_test",
+    srcs = ["platform_info_test.cpp"],
+    deps = [
+        ":platform_info_interface",
+        "@googletest//:gtest_main",
     ],
 )
 
