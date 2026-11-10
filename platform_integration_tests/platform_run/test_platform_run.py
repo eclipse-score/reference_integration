@@ -59,7 +59,7 @@ def analyze_console(output: str) -> list[str]:
     run, verdict, _ = output.partition("S-CORE platform run: PASSED")
     if not verdict:
         findings.append("the run did not report PASSED")
-    if not re.search(r"Completed the request for PG.*to State\s*PlatformRun", run):
+    if not re.search(r"Completed the request for Run Target PlatformRun", run):
         findings.append("the launch manager did not reach the PlatformRun run target")
     for problem in ("unexpected termination of process", "Problem discovered", "timeout for process"):
         if problem in run:
