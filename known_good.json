@@ -5,39 +5,52 @@
                 "repo": "https://github.com/eclipse-score/baselibs.git",
                 "bazel_patches": [
                     "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
-                    "//patches/baselibs:002-restore-qnx8-poll-workaround.patch"
+                    "//patches/baselibs:002-restore-qnx8-poll-workaround.patch",
+                    "//patches/baselibs:003-export-aou-requirements.patch",
+                    "//patches/baselibs:004-make-log-examples-visible.patch",
+                    "//patches/baselibs:005-fix-log-cpp-init-qnx-linkopts.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/...",
-                    "extra_test_config": [
-                        "@score_baselibs//score/json:base_library=nlohmann"
-                    ],
                     "exclude_test_targets": [
                         "//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test",
                         "//score/containers:dynamic_array_test",
                         "//score/mw/log/configuration:*",
                         "//score/json/examples:*",
                         "//score/flatbuffers:version_reader_test",
-                        "//score/flatbuffers/bazel:schema_generator_test"
+                        "//score/flatbuffers/bazel:schema_generator_test",
+                        "//score/mw/log:log_stream_test",
+                        "//score/mw/log:log_types_test",
+                        "//score/language/safecpp/safe_math/details:floating_point_environment_test"
                     ],
+                    "test_notes": {
+                        "//score/mw/log:log_stream_test": "TODO fix: fails under clang (unified llvm coverage toolchain): -Werror,-Wdeprecated-declarations",
+                        "//score/mw/log:log_types_test": "TODO fix: fails under clang (unified llvm coverage toolchain): -Werror,-Wdeprecated-declarations",
+                        "//score/language/safecpp/safe_math/details:floating_point_environment_test": "TODO fix: fails under clang (unified llvm coverage toolchain): floating point exceptions not raised (WillCatchError, WillNotLeakError)"
+                    },
                     "langs": [
                         "cpp"
+                    ],
+                    "test_args": [
+                        "--config=score-linux-x86_64",
+                        "--",
+                        "//..."
                     ]
                 },
-                "hash": "ee40fece5abacb28ea641b448446a04175038b17"
+                "hash": "41f5a4c92163dc1f597116094ed34881ddee7fa3"
             },
             "score_communication": {
                 "repo": "https://github.com/eclipse-score/communication.git",
                 "docs": false,
-                "hash": "313f1178628189d267c8cd0d75971bdac04c20ee",
+                "hash": "c5efd74f64c42ea3c60e19a1a3d5456a47ed1115",
                 "bazel_patches": [
-                    "//patches/communication:001-expose-comm-examples.patch",
-                    "//patches/communication:003-module-deps-visibility.patch",
-                    "//patches/communication:004-rules-build-error-not-dev-dependency.patch",
-                    "//patches/communication:005-migrate-baselibs-rust-targets.patch"
+                    "//patches/communication:001-expose-comm-examples.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/mw/com/impl/...",
+                    "dependable_element_docs": [
+                        "//score/mw/com/dependability:mw_com_doc"
+                    ],
                     "extra_test_config": [
                         "@score_communication//score/memory/shared/flags:use_typedshmd=False"
                     ],
@@ -46,16 +59,24 @@
                         "//score/mw/com/impl:runtime_test",
                         "//score/mw/com/impl/configuration:config_parser_test",
                         "//score/mw/com/impl/configuration:configuration_test",
-                        "//score/mw/com/impl/configuration:configuration_json_parsing_strategy_test",
                         "//score/mw/com/impl/tracing/configuration:tracing_filter_config_parser_test",
                         "//score/mw/com/impl/tracing:tracing_runtime_test",
-                        "//score/mw/com/impl/bindings/lola/tracing:tracing_runtime_test"
+                        "//score/mw/com/impl/bindings/lola/tracing:tracing_runtime_test",
+                        "//:sync_skills.check"
                     ],
+                    "test_notes": {
+                        "//:sync_skills.check": "score_tooling skills sync check, tooling only, not relevant for integration"
+                    },
                     "langs": [
                         "cpp",
                         "rust"
                     ],
-                    "rust_coverage_config": "ferrocene-coverage"
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "test_args": [
+                        "--config=ci",
+                        "--build_tests_only",
+                        "//..."
+                    ]
                 }
             },
             "score_persistency": {
@@ -67,11 +88,9 @@
                     "code_root_path": "//score/kvs/...",
                     "extra_test_config": [
                         "@score_baselibs//score/log_rust:safety_level=qm",
-                        "@score_baselibs//score/json:base_library=nlohmann",
                         "@score_logging//score/mw/log/flags:KRemote_Logging=False"
                     ],
                     "exclude_test_targets": [
-                        "//score/kvs/tests:bm_kvs_cpp",
                         "//score/kvs/tests/integration_test_scenarios/...",
                         "//score/kvs/tests/test_cases/..."
                     ],
@@ -81,9 +100,13 @@
                     ],
                     "integration_test_config": [
                         "flaky_test_attempts=3"
+                    ],
+                    "test_args": [
+                        "--config=score-linux-x86_64",
+                        "//:unit_tests"
                     ]
                 },
-                "hash": "961c0a0989755a1e0fe8de55e83c0a44e2e20b56"
+                "hash": "0fe1dc7c8dff24dd78b7368f247f7ba3421c5944"
             },
             "score_kyron": {
                 "repo": "https://github.com/eclipse-score/kyron.git",
@@ -93,36 +116,54 @@
                     "exclude_test_targets": [],
                     "langs": [
                         "rust"
+                    ],
+                    "test_args": [
+                        "--config=x86_64-linux",
+                        "//src/..."
                     ]
                 },
-                "hash": "90fb90258f49f17a504d41262634d43608f28ccc"
+                "hash": "40a1f5e0428117054c9ee055829b918e8f96e10f"
             },
             "score_lifecycle": {
                 "repo": "https://github.com/eclipse-score/lifecycle.git",
                 "bazel_patches": [
-                    "//patches/lifecycle:001-migrate-baselibs-rust-targets.patch",
-                    "//patches/lifecycle:002-undev-integration-test-deps.patch"
+                    "//patches/lifecycle:002-undev-integration-test-deps.patch",
+                    "//patches/lifecycle:003-dev-only-codeql-pip-hub.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/...",
                     "extra_test_config": [],
                     "exclude_test_targets": [
-                        "//score/health_monitor/src/rust:miri_tests"
+                        "//score/health_monitor/src/rust:miri_tests",
+                        "//score/health_monitor/src/rust:loom_tests",
+                        "//tests/integration/...",
+                        "//examples/demo_verification:examples"
                     ],
+                    "test_notes": {
+                        "//score/health_monitor/src/rust:loom_tests": "TODO fix: fails under the unified toolchain: heartbeat_monitor_heartbeat_evaluate_in_range misses its 30-70ms wall-clock window inside loom::model (Heartbeat(TooLate), 9 of 10 runs)",
+                        "//tests/integration/...": "TODO fix: fails under clang (unified llvm coverage toolchain): clang links the host glibc (GLIBC_2.38 not found in the test container); integration tests still run via integration_test_targets",
+                        "//examples/demo_verification:examples": "TODO fix: fails under clang (unified llvm coverage toolchain): clang links the host glibc (GLIBC_2.38 not found in the test container); integration tests still run via integration_test_targets"
+                    },
                     "integration_test_targets": [
                         "//tests/integration/..."
                     ],
                     "integration_test_config": [
                         "flaky_test_attempts=3",
                         "@score_lifecycle//config:integration_mode=docker"
+                    ],
+                    "test_args": [
+                        "--config=x86_64-linux",
+                        "//..."
                     ]
                 },
-                "hash": "85da2168328d17a3cf53791ebf93534e5ed921fc"
+                "hash": "2afae116992d11dd15d8eac5a271790ee1234e37"
             },
             "score_logging": {
                 "repo": "https://github.com/eclipse-score/logging.git",
                 "bazel_patches": [
-                    "//patches/logging:002-undev-component-test-deps.patch"
+                    "//patches/logging:002-undev-component-test-deps.patch",
+                    "//patches/logging:003-relative-verification-report-links.patch",
+                    "//patches/logging:004-drop-dependable-element-aou-attr.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/mw/log/...",
@@ -133,41 +174,68 @@
                         "@score_logging//score/datarouter/build_configuration_flags:use_local_vlan=True"
                     ],
                     "exclude_test_targets": [
-                        "//score/mw/log/legacy_non_verbose_api:unit_test"
+                        "//score/mw/log/legacy_non_verbose_api:unit_test",
+                        "//score/datarouter/doc/design:datarouter_architectural_design",
+                        "//score/mw/log/design/backend:mw_log_backend_architectural_design"
                     ],
+                    "test_notes": {
+                        "//score/mw/log/design/backend:mw_log_backend_architectural_design": "TODO fix in score_logging: score_tooling's architectural-design validation rejects datarouter_class_diagram.puml ('expected a Component diagram, found a Class diagram')",
+                        "//score/datarouter/doc/design:datarouter_architectural_design": "TODO fix in score_logging: score_tooling's architectural-design validation rejects the datarouter diagrams ('datarouter' children split across context-sw-units.puml and detail-ipc.puml)"
+                    },
                     "integration_test_targets": [
                         "//score/test/component/..."
                     ],
                     "integration_test_config": [
                         "flaky_test_attempts=3",
                         "@score_logging//score/datarouter/build_configuration_flags:enable_nonverbose_dlt=True"
+                    ],
+                    "test_args": [
+                        "--config=x86_64-linux",
+                        "--test_tag_filters=-no_ci",
+                        "--",
+                        "//score/...",
+                        "-//score/test/component/..."
                     ]
                 },
-                "hash": "3d9896611baf4e0d018032e5cb999941b2602dbd"
+                "hash": "72ef907bb48e4b007b34f145f1383ea1469bcd6d"
             },
             "score_time": {
                 "repo": "https://github.com/eclipse-score/time.git",
-                "hash": "3723ce687e4abc7d6cb4c0efdbbd30455ed7c303",
+                "hash": "94efbf738ed6529f2cd859f827c26fd6723951c0",
                 "bazel_patches": [
-                    "//patches/time:003-disable-broken-qnx-ifs-target.patch"
+                    "//patches/time:003-disable-broken-qnx-ifs-target.patch",
+                    "//patches/time:004-rename-ubuntu-image-pull.patch",
+                    "//patches/time:005-use-sanitizer-bool-flags.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/...",
                     "extra_test_config": [],
-                    "exclude_test_targets": [],
+                    "exclude_test_targets": [
+                        "//score/time_slave/src/gptp/details:message_parser_test"
+                    ],
+                    "test_notes": {
+                        "//score/time_slave/src/gptp/details:message_parser_test": "TODO fix: fails under clang (unified llvm coverage toolchain): UBSan reference binding to misaligned address (message_parser_test.cpp:237)"
+                    },
                     "langs": [
                         "cpp"
                     ],
-                    "rust_coverage_config": "ferrocene-coverage"
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "test_args": [
+                        "--config=asan_ubsan_lsan",
+                        "--config=x86_64-linux",
+                        "--keep_going",
+                        "//score/..."
+                    ]
                 }
             },
             "score_config_management": {
                 "repo": "https://github.com/eclipse-score/config_management.git",
                 "docs": false,
-                "hash": "e0489b190ed6d2fa183b9a8063e2dba4f6378505",
+                "hash": "2e213d5fd030f3f2cd6b7504841b5c7aa6f4a660",
                 "bazel_patches": [
-                    "//patches/config_management:001-adapt-proxy-api-and-remove-internal-targets.patch",
-                    "//patches/config_management:002-migrate-baselibs-targets.patch"
+                    "//patches/config_management:001-expose-mw-com-config.patch",
+                    "//patches/config_management:002-migrate-to-persistency-kvs-api.patch",
+                    "//patches/config_management:003-drop-dependable-element-aou-attr.patch"
                 ],
                 "metadata": {
                     "code_root_path": "//score/config_management/...",
@@ -180,12 +248,30 @@
                         "//score/config_management/config_provider/code/config_provider/factory:unit_tests_mw_com",
                         "//score/config_management/config_provider/code/proxies/details:unit_test_mw",
                         "//score/config_management/config_daemon/code:main_function_test",
+                        "//score/config_management/config_daemon/code/data_model/details:unit_test",
+                        "//score/config_management/config_provider/code/parameter_set:unit_test",
                         "//score/config_management/dependability/..."
                     ],
+                    "test_notes": {
+                        "//score/config_management/config_daemon/code/data_model/details:unit_test": "TODO fix: config_management has to bump baselibs to a version that includes the following bugfix: https://github.com/eclipse-score/baselibs/pull/657",
+                        "//score/config_management/config_provider/code/parameter_set:unit_test": "TODO fix: config_management has to bump baselibs to a version that includes the following bugfix: https://github.com/eclipse-score/baselibs/pull/657"
+                    },
                     "langs": [
                         "cpp"
                     ],
-                    "rust_coverage_config": "ferrocene-coverage"
+                    "rust_coverage_config": "ferrocene-coverage",
+                    "test_args": [
+                        "//score/config_management/config_daemon/code/data_model:unit_tests_host",
+                        "//score/config_management/config_daemon/code/data_model/parameter_set_storage:unit_tests_host",
+                        "//score/config_management/config_daemon/code/fault_event_reporter:unit_tests_host",
+                        "//score/config_management/config_daemon/code/plugins/demo_json:unit_tests_host",
+                        "//score/config_management/config_daemon/code/plugins/plugin_collector:unit_tests_host",
+                        "//score/config_management/config_daemon/code/services:unit_tests_host",
+                        "//score/config_management/config_provider/code/config_provider/error:unit_test",
+                        "//score/config_management/config_provider/code/parameter_set:unit_test",
+                        "//score/config_management/config_provider/code/persistency:unit_tests_host",
+                        "//tests/cpp:cpp_test_main"
+                    ]
                 }
             }
         },
@@ -193,54 +279,55 @@
             "score_crates": {
                 "repo": "https://github.com/eclipse-score/score-crates.git",
                 "docs": false,
-                "hash": "4656dda8f04a3d88c8089f63111195840cfbd9e3"
+                "hash": "ee5f1a4f02dcfaa01d7a5e23ec68fd51590a66f8"
             },
             "score_itf": {
                 "repo": "https://github.com/eclipse-score/itf.git",
-                "hash": "802e0186d373e0d9d67c1c9ccb1ea08952c7ad06"
+                "version": "0.6.0",
+                "pin_version": true
+            },
+            "score_devcontainer": {
+                "repo": "https://github.com/eclipse-score/devcontainer.git",
+                "version": "1.11.4",
+                "docs": false,
+                "pin_version": true
             },
             "score_tools": {
                 "repo": "https://github.com/eclipse-score/tools.git",
                 "docs": false,
-                "hash": "4b48cec400c67be75cfc3fa4658ac6a0489bf7a8"
+                "hash": "3b99e9da6fe98e7df2c2b3616ad4d1aad318b72c"
             },
             "score_tooling": {
                 "repo": "https://github.com/eclipse-score/tooling.git",
                 "docs": false,
-                "bazel_patches": [
-                    "//patches/tooling:001-expose-aspect-rules-lint-non-dev.patch"
-                ],
-                "hash": "4736b5655f3a73dd353da1bdbeced5febd669664"
+                "hash": "a3eed5852f8addbbbf276aaae262ba1313141ef5"
             },
             "score_platform": {
                 "repo": "https://github.com/eclipse-score/score.git",
-                "hash": "6d65a262c2329328cb9cbdd276bb143b417c54a4",
-                "bazel_patches": [
-                    "//patches/platform:001-remove-duplicate-lifecycle-glossary.patch"
-                ]
+                "hash": "32759e0a51e02ed87311e12d0f8125e5f8cb4de0"
             },
             "score_bazel_platforms": {
                 "repo": "https://github.com/eclipse-score/bazel_platforms.git",
                 "docs": false,
-                "hash": "607672cdf2f05f21af7113dab0849726dd59bf86"
+                "hash": "081dcf7bdbc94d05bbe354291e13a775dbf8f3e6"
             },
             "score_test_scenarios": {
                 "repo": "https://github.com/eclipse-score/testing_tools.git",
                 "docs": false,
-                "hash": "fec712d490ff5d46fae91332bafac4777b300026"
+                "hash": "d0aab76ac6e64fc78f867a196531fbafd8924948"
             },
             "score_docs_as_code": {
                 "repo": "https://github.com/eclipse-score/docs-as-code.git",
-                "hash": "36cdc3f7a56e9651ee51ce91fd183bf3d947dd16"
+                "hash": "52d4a556de2f468483eb76471fa4522218754cd9"
             },
             "score_process_description": {
                 "repo": "https://github.com/eclipse-score/process_description.git",
-                "hash": "98d1d5f42dad412a09a888ea25e59c62fa6371ce"
+                "hash": "1861e884b10c921e1427787c3ab1d99ed0bed7c0"
             },
             "score_bazel_cpp_toolchains": {
                 "repo": "https://github.com/eclipse-score/bazel_cpp_toolchains.git",
                 "docs": false,
-                "hash": "bd12c5344053f842fae4623dada5716dfb43e61d",
+                "hash": "3dd3caa94354e44310172607d5e9223cf914ea76",
                 "metadata": {
                     "code_root_path": "//score/...",
                     "extra_test_config": [],

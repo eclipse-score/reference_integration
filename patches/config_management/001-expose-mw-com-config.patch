@@ -1,0 +1,29 @@
+Expose the config daemon mw_com_config and demo_parameters to the reference
+integration showcase bundle.
+
+diff --git a/score/config_management/config_daemon/code/plugins/demo_json/BUILD b/score/config_management/config_daemon/code/plugins/demo_json/BUILD
+index 3634813..784c9d7 100644
+--- a/score/config_management/config_daemon/code/plugins/demo_json/BUILD
++++ b/score/config_management/config_daemon/code/plugins/demo_json/BUILD
+@@ -13,5 +13,8 @@ cc_unit_test_suites_for_host_and_qnx(
+ filegroup(
+     name = "demo_parameters",
+     srcs = ["etc/demo_parameters.json"],
+-    visibility = ["//score/config_management/config_daemon/test:__subpackages__"],
++    visibility = [
++        "//score/config_management/config_daemon/test:__subpackages__",
++        "//visibility:public",
++    ],
+ )
+diff --git a/score/config_management/config_daemon/config/BUILD b/score/config_management/config_daemon/config/BUILD
+index f9dc364..31940f4 100644
+--- a/score/config_management/config_daemon/config/BUILD
++++ b/score/config_management/config_daemon/config/BUILD
+@@ -2,6 +2,7 @@ filegroup(
+     name = "mw_com_config",
+     srcs = ["mw_com_config.json"],
+     visibility = [
++        "//visibility:public",
+         "//score/config_management/config_daemon/code/factory/details:__pkg__",
+         "//score/config_management/config_daemon/code/services/details/mw_com:__pkg__",
+     ],

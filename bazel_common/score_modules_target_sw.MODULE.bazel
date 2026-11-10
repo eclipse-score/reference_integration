@@ -17,11 +17,14 @@
 bazel_dep(name = "score_baselibs")
 git_override(
     module_name = "score_baselibs",
-    commit = "ee40fece5abacb28ea641b448446a04175038b17",
+    commit = "41f5a4c92163dc1f597116094ed34881ddee7fa3",
     patch_strip = 1,
     patches = [
         "//patches/baselibs:001-restore-trace-library-mock-visibility.patch",
         "//patches/baselibs:002-restore-qnx8-poll-workaround.patch",
+        "//patches/baselibs:003-export-aou-requirements.patch",
+        "//patches/baselibs:004-make-log-examples-visible.patch",
+        "//patches/baselibs:005-fix-log-cpp-init-qnx-linkopts.patch",
     ],
     remote = "https://github.com/eclipse-score/baselibs.git",
 )
@@ -29,13 +32,10 @@ git_override(
 bazel_dep(name = "score_communication")
 git_override(
     module_name = "score_communication",
-    commit = "313f1178628189d267c8cd0d75971bdac04c20ee",
+    commit = "c5efd74f64c42ea3c60e19a1a3d5456a47ed1115",
     patch_strip = 1,
     patches = [
         "//patches/communication:001-expose-comm-examples.patch",
-        "//patches/communication:003-module-deps-visibility.patch",
-        "//patches/communication:004-rules-build-error-not-dev-dependency.patch",
-        "//patches/communication:005-migrate-baselibs-rust-targets.patch",
     ],
     remote = "https://github.com/eclipse-score/communication.git",
 )
@@ -43,7 +43,7 @@ git_override(
 bazel_dep(name = "score_persistency")
 git_override(
     module_name = "score_persistency",
-    commit = "961c0a0989755a1e0fe8de55e83c0a44e2e20b56",
+    commit = "0fe1dc7c8dff24dd78b7368f247f7ba3421c5944",
     patch_strip = 1,
     patches = [
         "//patches/persistency:003-undev-deps-for-root-module.patch",
@@ -54,18 +54,18 @@ git_override(
 bazel_dep(name = "score_kyron")
 git_override(
     module_name = "score_kyron",
-    commit = "90fb90258f49f17a504d41262634d43608f28ccc",
+    commit = "40a1f5e0428117054c9ee055829b918e8f96e10f",
     remote = "https://github.com/eclipse-score/kyron.git",
 )
 
 bazel_dep(name = "score_lifecycle")
 git_override(
     module_name = "score_lifecycle",
-    commit = "85da2168328d17a3cf53791ebf93534e5ed921fc",
+    commit = "2afae116992d11dd15d8eac5a271790ee1234e37",
     patch_strip = 1,
     patches = [
-        "//patches/lifecycle:001-migrate-baselibs-rust-targets.patch",
         "//patches/lifecycle:002-undev-integration-test-deps.patch",
+        "//patches/lifecycle:003-dev-only-codeql-pip-hub.patch",
     ],
     remote = "https://github.com/eclipse-score/lifecycle.git",
 )
@@ -73,10 +73,12 @@ git_override(
 bazel_dep(name = "score_logging")
 git_override(
     module_name = "score_logging",
-    commit = "3d9896611baf4e0d018032e5cb999941b2602dbd",
+    commit = "72ef907bb48e4b007b34f145f1383ea1469bcd6d",
     patch_strip = 1,
     patches = [
         "//patches/logging:002-undev-component-test-deps.patch",
+        "//patches/logging:003-relative-verification-report-links.patch",
+        "//patches/logging:004-drop-dependable-element-aou-attr.patch",
     ],
     remote = "https://github.com/eclipse-score/logging.git",
 )
@@ -84,10 +86,12 @@ git_override(
 bazel_dep(name = "score_time")
 git_override(
     module_name = "score_time",
-    commit = "3723ce687e4abc7d6cb4c0efdbbd30455ed7c303",
+    commit = "94efbf738ed6529f2cd859f827c26fd6723951c0",
     patch_strip = 1,
     patches = [
         "//patches/time:003-disable-broken-qnx-ifs-target.patch",
+        "//patches/time:004-rename-ubuntu-image-pull.patch",
+        "//patches/time:005-use-sanitizer-bool-flags.patch",
     ],
     remote = "https://github.com/eclipse-score/time.git",
 )
@@ -95,11 +99,12 @@ git_override(
 bazel_dep(name = "score_config_management")
 git_override(
     module_name = "score_config_management",
-    commit = "e0489b190ed6d2fa183b9a8063e2dba4f6378505",
+    commit = "2e213d5fd030f3f2cd6b7504841b5c7aa6f4a660",
     patch_strip = 1,
     patches = [
-        "//patches/config_management:001-adapt-proxy-api-and-remove-internal-targets.patch",
-        "//patches/config_management:002-migrate-baselibs-targets.patch",
+        "//patches/config_management:001-expose-mw-com-config.patch",
+        "//patches/config_management:002-migrate-to-persistency-kvs-api.patch",
+        "//patches/config_management:003-drop-dependable-element-aou-attr.patch",
     ],
     remote = "https://github.com/eclipse-score/config_management.git",
 )

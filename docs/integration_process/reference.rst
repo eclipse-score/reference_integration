@@ -140,9 +140,9 @@ The consolidated outputs published by the integration. They are built by
      - Per-module Rust line coverage (C0/C1) for modules declaring ``rust``.
      - `rust_coverage/BUILD <https://github.com/eclipse-score/reference_integration/blob/main/rust_coverage/BUILD>`_ →
        ``bazel run //rust_coverage:rust_coverage_<module>``
-   * - Overall feature & process status
-     - Feature/process completion dashboard derived from the pinned module repos.
-     - `docs/s_core_v_1/roadmap/overall_status.rst <https://github.com/eclipse-score/reference_integration/blob/main/docs/s_core_v_1/roadmap/overall_status.rst>`_
+   * - Release-wide progress overview
+     - Per-release progress charts, current release split by module.
+     - `docs/s_core_v_1/releases/progress_overview.rst <https://github.com/eclipse-score/reference_integration/blob/main/docs/s_core_v_1/releases/progress_overview.rst>`_
    * - Integration status dashboard
      - Live build/health overview of the integration.
      - `status_dashboard.html <../status_dashboard.html>`_
