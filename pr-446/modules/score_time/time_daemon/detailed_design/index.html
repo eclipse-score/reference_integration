@@ -480,6 +480,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../time/index.html">Time</a></li>
 </ul>
 </details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../verification_report/module_verification_report.html">Verification Report</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../quality_pack.html">Quality Pack Targets</a></li>
 </ul>
 </details></li>
@@ -554,7 +555,7 @@
                   
   <section id="time-daemon-detailed-design">
 <span id="id1"></span><h1>Time Daemon Detailed Design<a class="headerlink" href="#time-daemon-detailed-design" title="Link to this heading">#</a></h1>
-<div class="need_container docutils container" id="SNCB-c1793320">
+<div class="need_container docutils container" id="SNCB-59a03253">
 <div class="pst-scrollable-table-container"><table class="need needs_grid_complex needs_layout_score needs_style_none needs_type_document table" id="doc__time_daemon_detailed_design">
 <tbody>
 <tr class="head row-odd"><td class="head_left" colspan="2"><div class="needs_head_left line-block">
@@ -577,6 +578,7 @@
 <div class="line"><span class="needs_version"><span class="needs_label">version: </span>1</span></div>
 </span></span></div>
 <div class="line"><span><div class="line">realizes: <span class="realizes"><span><a class="reference internal" href="../../../../process_methods_tools/score_process_description/process_areas/implementation/implementation_workproducts.html#wp__sw_implementation" title="doc__time_daemon_detailed_design">wp__sw_implementation</a></span></span></div>
+<div class="line">belongs to: <span class="belongs_to"><span><a class="reference internal" href="../index.html#comp__time_daemon" title="doc__time_daemon_detailed_design">comp__time_daemon</a></span></span></div>
 </span></div>
 </div>
 </td>
@@ -696,24 +698,122 @@ and clear responsibility boundaries critical for ASIL_B safety qualification.</p
 <section id="application">
 <h4>Application<a class="headerlink" href="#application" title="Link to this heading">#</a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">Application</span></code> component is the main entry point for TimeDaemon, orchestrating lifecycle and initialization of all daemon components.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">TimebaseHandler</span></code> component implements timebase-specific logic. Multiple handlers may exist per supported timebase count, allowing different timebase implementations while maintaining consistent application structure.</p>
-<p>During initialization, the <code class="docutils literal notranslate"><span class="pre">Application</span></code> uses a factory pattern to create components in specific order:</p>
+<p><code class="docutils literal notranslate"><span class="pre">GenericTimebaseHandler&lt;T&gt;</span></code> is the standard implementation base for custom timebase handlers. It manages
+machine initialization, startup, shutdown, and message routing. Concrete handlers override <code class="docutils literal notranslate"><span class="pre">CreateComponents()</span></code>
+to select and connect machines for a particular timebase, following <code class="docutils literal notranslate"><span class="pre">ScoreVehicleTimebaseHandler</span></code> as the reference.
+<code class="docutils literal notranslate"><span class="pre">TimebaseHandler</span></code> remains the polymorphic lifecycle contract used by the daemon and handler factory.
+Multiple handlers may exist, allowing different timebase implementations while maintaining consistent application structure.</p>
+<p>These objects are grouped under <code class="docutils literal notranslate"><span class="pre">src/application/timebase_handlers/</span></code>. The interface and factory declaration
+live at that package’s root, and <code class="docutils literal notranslate"><span class="pre">generic/</span></code> contains the reusable implementation. The <code class="docutils literal notranslate"><span class="pre">score/</span></code> subtree is
+project-specific: <code class="docutils literal notranslate"><span class="pre">score_timebase_handler_factory.cpp</span></code> defines the default S-CORE composition, and
+<code class="docutils literal notranslate"><span class="pre">ScoreVehicleTimebaseHandler</span></code> in <code class="docutils literal notranslate"><span class="pre">score/vehicle_time/</span></code> selects the supplied Vehicle Time pipeline’s machines, timings, topics, and wiring.
+The generic contracts and daemon core do not depend on this S-CORE composition.</p>
+<section id="factory-selection-and-ownership">
+<span id="time-daemon-factory-composition"></span><h5>Factory Selection and Ownership<a class="headerlink" href="#factory-selection-and-ownership" title="Link to this heading">#</a></h5>
+<p>The factory header declares <code class="docutils literal notranslate"><span class="pre">score::td::CreateTimebaseHandlers()</span></code>; it does not select or implement a provider.
+The default constructor of <code class="docutils literal notranslate"><span class="pre">TimeDaemon</span></code> calls this function and takes ownership of the returned
+<code class="docutils literal notranslate"><span class="pre">std::vector&lt;std::unique_ptr&lt;TimebaseHandler&gt;&gt;</span></code>. Composition is selected at link time, not at runtime.
+The alternative constructor accepts that vector directly, allowing tests or other callers to inject handlers.</p>
+<p>A program linking <code class="docutils literal notranslate"><span class="pre">time_daemon_core</span></code> must link exactly one strong definition of <code class="docutils literal notranslate"><span class="pre">CreateTimebaseHandlers()</span></code>,
+including when it uses only the injected-handler constructor. Tests may supply a test-only factory implementation.
+The default binary links the <code class="docutils literal notranslate"><span class="pre">score_timebase_handler_factory</span></code> library; its
+<code class="docutils literal notranslate"><span class="pre">score_timebase_handler_factory.cpp</span></code> provider returns one <code class="docutils literal notranslate"><span class="pre">ScoreVehicleTimebaseHandler</span></code> through
+<code class="docutils literal notranslate"><span class="pre">CreateVehicleTimebase()</span></code>. The reusable <code class="docutils literal notranslate"><span class="pre">time_daemon_core</span></code> and
+<code class="docutils literal notranslate"><span class="pre">time_daemon_main</span></code> targets do not supply a provider. Custom binaries link their own provider with
+<code class="docutils literal notranslate"><span class="pre">time_daemon_main</span></code> instead of the default executable.</p>
+<p>A missing definition causes an undefined-reference link error. Multiple definitions in directly linked objects
+or force-included provider libraries cause a multiple-definition link error. Ordinary static archives can hide
+duplicates because the linker need not extract both provider objects. Provider libraries must therefore use
+<code class="docutils literal notranslate"><span class="pre">alwayslink</span> <span class="pre">=</span> <span class="pre">True</span></code> to make duplicate definitions visible. Weak symbols and archive order are not factory
+selection mechanisms. For integration and build examples, see <a class="reference internal" href="../manuals/user_manual.html#time-daemon-user-manual"><span class="std std-ref">Time Daemon User Manual</span></a>.</p>
+<p>At runtime, <code class="docutils literal notranslate"><span class="pre">TimeDaemon::Initialize()</span></code> rejects an empty handler list or any null entry before calling any
+handler. These are configuration errors, distinct from missing or duplicate factory definitions at link time.
+For a valid list, it calls each handler’s <code class="docutils literal notranslate"><span class="pre">Initialize()</span></code> in list order.</p>
+<p>Each generic handler retains shared ownership of its machines and <code class="docutils literal notranslate"><span class="pre">MessageBroker</span></code>. Initialization jobs also
+retain their machines while needed. The broker holds weak producer and consumer references, so routing does
+not keep machines alive. The generic base creates the broker; in <code class="docutils literal notranslate"><span class="pre">CreateComponents()</span></code>, each concrete handler:</p>
 <ul class="simple">
-<li><p>Create <code class="docutils literal notranslate"><span class="pre">MessageBroker</span></code> first (other components depend on it)</p></li>
-<li><p>Create ProactiveMachines (<code class="docutils literal notranslate"><span class="pre">PtpMachine</span></code>, <code class="docutils literal notranslate"><span class="pre">ControlFlowDivider</span></code>) that drive system behavior, then initialize and wire subscriptions</p></li>
-<li><p>Create ReactiveMachines (<code class="docutils literal notranslate"><span class="pre">VerificationMachine</span></code>, <code class="docutils literal notranslate"><span class="pre">IPCMachine</span></code>) that respond to events, then initialize and wire subscriptions</p></li>
+<li><p>Creates and registers machines with <code class="docutils literal notranslate"><span class="pre">Add()</span></code>, passing an explicit initialization timeout for each machine</p></li>
+<li><p>Adds proactive machines in their required startup order, before their data sources</p></li>
+<li><p>Connects producers and consumers through <code class="docutils literal notranslate"><span class="pre">Publish()</span></code> and <code class="docutils literal notranslate"><span class="pre">Subscribe()</span></code></p></li>
 </ul>
-<p>During execution, ProactiveMachines start in correct order. On termination, they stop in reverse order.</p>
+</section>
+<section id="generic-handler-lifecycle">
+<span id="time-daemon-handler-lifecycle"></span><h5>Generic Handler Lifecycle<a class="headerlink" href="#generic-handler-lifecycle" title="Link to this heading">#</a></h5>
+<p>The following lifecycle describes <code class="docutils literal notranslate"><span class="pre">GenericTimebaseHandler&lt;T&gt;</span></code>. Its owner serializes <code class="docutils literal notranslate"><span class="pre">Initialize()</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Start()</span></code>, <code class="docutils literal notranslate"><span class="pre">RunOnce()</span></code>, and <code class="docutils literal notranslate"><span class="pre">Stop()</span></code> calls. <code class="docutils literal notranslate"><span class="pre">Initialize()</span></code> is called once, before <code class="docutils literal notranslate"><span class="pre">Start(token)</span></code>:
+it invokes <code class="docutils literal notranslate"><span class="pre">CreateComponents()</span></code>, constructs the initialization <code class="docutils literal notranslate"><span class="pre">JobRunner</span></code>, and sets <code class="docutils literal notranslate"><span class="pre">is_configured_</span></code>.
+The status remains <code class="docutils literal notranslate"><span class="pre">kIdle</span></code>. Successful daemon initialization therefore means that setup is complete, not that
+machine initialization or startup is complete.</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-4736766b272d01fb2f9b86c345416178bad0769c.svg" type="image/svg+xml" style="width:702px;height:605px;background:#FFFFFF;"></object></p>
+</div><p>The four status values have the following actions:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">kIdle</span></code></dt><dd><p>The handler has not been started. <code class="docutils literal notranslate"><span class="pre">RunOnce()</span></code> does nothing in this state. After setup, <code class="docutils literal notranslate"><span class="pre">Start()</span></code>
+starts the initialization worker with the parent’s stop token and enters <code class="docutils literal notranslate"><span class="pre">kStarting</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">kStarting</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">RunOnce()</span></code> calls poll the worker started by <code class="docutils literal notranslate"><span class="pre">Start()</span></code>. Idle or in-progress worker results leave the
+handler in this state. On success, proactive machines start in <code class="docutils literal notranslate"><span class="pre">Add()</span></code> order; only after all machine
+<code class="docutils literal notranslate"><span class="pre">Start()</span></code> calls return does the handler enter <code class="docutils literal notranslate"><span class="pre">kWorking</span></code>. A failed worker result calls <code class="docutils literal notranslate"><span class="pre">Stop()</span></code>, stopping
+all registered proactive machines in reverse <code class="docutils literal notranslate"><span class="pre">Add()</span></code> order and entering <code class="docutils literal notranslate"><span class="pre">kStopped</span></code> without starting them.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">kWorking</span></code></dt><dd><p>Subsequent polls leave the machines running. This state means initialization and startup completed, not that
+the supplied time is synchronized or qualified.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">kStopped</span></code></dt><dd><p>Subsequent polls do nothing: they do not poll the worker, retry initialization, or start machines. This is a
+terminal handler state, reached through an explicit <code class="docutils literal notranslate"><span class="pre">Stop()</span></code> call or a failed initialization result. It does
+not itself terminate the daemon.</p>
+</dd>
+</dl>
+<p>Each handler has one initialization worker. It calls unfinished machines’ <code class="docutils literal notranslate"><span class="pre">Init()</span></code> methods sequentially,
+retrying false results and removing successful jobs. Each machine’s timeout counts from the common worker
+start time. A timeout marks the overall result as failed; the worker continues processing the remaining jobs
+before publishing its result. Timeouts and cancellation are cooperative: neither interrupts an in-flight
+<code class="docutils literal notranslate"><span class="pre">Init()</span></code> call.</p>
+<p>The initialization worker observes the parent’s stop token and reports cancellation as a failed worker result,
+not a separate handler status.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Stop()</span></code> always calls <code class="docutils literal notranslate"><span class="pre">Stop()</span></code> on every registered proactive machine in reverse <code class="docutils literal notranslate"><span class="pre">Add()</span></code> order, then enters
+<code class="docutils literal notranslate"><span class="pre">kStopped</span></code>. This applies in every handler state, including before startup and after an earlier stop. Each
+invocation forwards the stop calls again, so machines must tolerate stopping before startup and repeated stops.
+The configuration flag and runner are retained. Polling a stopped handler is inert; reinitialization and restart
+are not supported.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Stop()</span></code> does not cancel or join the initialization worker. Before stopping or destroying a handler with
+pending initialization, the owner must request cancellation through the parent stop source. The generic
+handler’s destructor calls <code class="docutils literal notranslate"><span class="pre">Stop()</span></code> again and destroys the runner, joining its worker before releasing the
+handler’s machine and broker members. Entering <code class="docutils literal notranslate"><span class="pre">kStopped</span></code> therefore does not imply that pending initialization
+has finished. Reverse machine stopping does not specify object destruction order.</p>
+<p><code class="docutils literal notranslate"><span class="pre">TimeDaemon::Run()</span></code> first calls <code class="docutils literal notranslate"><span class="pre">Start()</span></code> on every handler in list order. Until a stop is requested,
+each polling pass calls <code class="docutils literal notranslate"><span class="pre">RunOnce()</span></code> on each handler in list order, then waits interruptibly for up to 100 ms.
+A stop request does not skip the remaining handler calls during startup or the current polling pass.
+After these calls complete, <code class="docutils literal notranslate"><span class="pre">Run()</span></code> calls <code class="docutils literal notranslate"><span class="pre">Stop()</span></code> in reverse handler-list order before returning.
+If a stop is requested before or during startup, all handlers still receive <code class="docutils literal notranslate"><span class="pre">Start()</span></code> before any handler
+receives <code class="docutils literal notranslate"><span class="pre">Stop()</span></code>, and no polling pass runs.</p>
+</section>
+<section id="application-interaction-views">
+<h5>Application Interaction Views<a class="headerlink" href="#application-interaction-views" title="Link to this heading">#</a></h5>
 <p>Class diagram:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-bf8004b56ada3245be627bfc56c4b8002cc0bf81.svg" type="image/svg+xml" style="width:872px;height:584px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-4150303638f1e8780e2bfdc6f5903745c1ec4849.svg" type="image/svg+xml" style="width:1582px;height:898px;background:#FFFFFF;"></object></p>
 </div><p>Initialization sequence showing component creation order and MessageBroker subscription wiring:</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-deb3f6f1556f575ddf8ce816feda77e847c4f790.svg" type="image/svg+xml" style="width:1133px;height:831px;background:#FFFFFF;"></object></p>
-</div><p>Runtime workflow showing ProactiveMachine startup and shutdown coordination:</p>
+<object data="../../../../_images/plantuml-6ce222cfc20ac35a5cf88b3ea7123514ef6b371e.svg" type="image/svg+xml" style="width:1867px;height:1053px;background:#FFFFFF;"></object></p>
+</div><p>Application orchestration is split into four views. Startup, handler starting, and shutdown belong to the same
+<code class="docutils literal notranslate"><span class="pre">TimeDaemon::Run()</span></code> call, which returns only after shutdown. Handler state transitions and initialization-result
+handling are covered by <a class="reference internal" href="#time-daemon-handler-lifecycle"><span class="std std-ref">Generic Handler Lifecycle</span></a>.</p>
+<p>Setup: creation and topic wiring of each handler’s machines.</p>
 <div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
-<object data="../../../../_images/plantuml-270f64ae25719d5eda2adc7b4c2d878d03b56df8.svg" type="image/svg+xml" style="width:1103px;height:950px;background:#FFFFFF;"></object></p>
+<object data="../../../../_images/plantuml-50e474ba18c1d10a526b3c0774547675f484be1d.svg" type="image/svg+xml" style="width:845px;height:591px;background:#FFFFFF;"></object></p>
+</div><p>Startup: launch of each handler’s initialization worker.</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-f88f3175b79f17604c184af2269c70b828a0f337.svg" type="image/svg+xml" style="width:719px;height:400px;background:#FFFFFF;"></object></p>
+</div><p>Handler starting: asynchronous machine initialization, non-blocking result handling, and machine startup.</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-7978161972a116dadfba1249bb52dac9b919c3de.svg" type="image/svg+xml" style="width:1178px;height:731px;background:#FFFFFF;"></object></p>
+</div><p>Shutdown: reverse-order stopping of handlers and proactive machines.</p>
+<div style="overflow-x: auto; max-width: 100%;"><p class="plantuml">
+<object data="../../../../_images/plantuml-467c878416d870ece4a95ce7031fafaedf1511fd.svg" type="image/svg+xml" style="width:857px;height:412px;background:#FFFFFF;"></object></p>
 </div></section>
+</section>
 <section id="messagebroker">
 <h4>MessageBroker<a class="headerlink" href="#messagebroker" title="Link to this heading">#</a></h4>
 <p>Class diagram:</p>
@@ -1110,7 +1210,12 @@ This component shall:</p>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#units-within-the-component">Units within the Component</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#per-unit-diagrams">Per-Unit Diagrams</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#application">Application</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#application">Application</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#factory-selection-and-ownership">Factory Selection and Ownership</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#generic-handler-lifecycle">Generic Handler Lifecycle</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#application-interaction-views">Application Interaction Views</a></li>
+</ul>
+</li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#messagebroker">MessageBroker</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#controlflowdivider">ControlFlowDivider</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ptpmachine">PTPMachine</a></li>
