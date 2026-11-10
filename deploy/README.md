@@ -75,6 +75,7 @@ they contain binaries built with the licensed QNX SDP.
 | Target | Layer 2 (platform) | Layer 3 (showcases) | Built with |
 | --- | --- | --- | --- |
 | Linux x86_64 | `score-platform-linux-x86_64.tar.gz` | `score-showcases-linux-x86_64.tar.gz` | `--config=linux-x86_64` |
+| Linux aarch64 | `score-platform-linux-aarch64.tar.gz` | `score-showcases-linux-aarch64.tar.gz` | `--config=linux-aarch64` |
 | AutoSD x86_64 | `score-platform-autosd-x86_64.tar.gz` | `score-showcases-autosd-x86_64.tar.gz` | `--config=autosd-x86_64` |
 | EB corbos aarch64 | `score-platform-eb-aarch64.tar.gz` | `score-showcases-eb-aarch64.tar.gz` | `--config=eb-aarch64` |
 
@@ -91,3 +92,32 @@ tar -xzf score-showcases-<target>.tar.gz -C /
 To check an image that claims to ship S-CORE, copy only the showcases
 archive onto it. The showcases then run against whatever platform the image
 deploys, without rebuilding it — as long as it fulfils the contract above.
+
+For Linux x86_64 and aarch64, CI runs exactly these steps on every change:
+`build_and_test_linux_target.yml` unpacks the release archives into
+unmodified `ubuntu:24.04` and `debian:12` containers and runs all showcases
+there, except the config management daemon showcase: its daemon does not
+exit on its own yet.
+
+### Linux aarch64, e.g. Raspberry Pi 4
+
+The Linux aarch64 archives are built with the S-CORE GCC 12.2 toolchain
+(glibc 2.31 sysroot). They need glibc 2.31 or newer and, for the Rust
+showcases, the system's `libstdc++` from GCC 12 or newer — for example
+Raspberry Pi OS Lite (64-bit, Bookworm or newer), Debian 12 or Ubuntu 22.04
+arm64 and newer. They contain
+no part of the operating system or the board firmware; installing those is up
+to the owner of the device.
+
+1. Flash Raspberry Pi OS Lite (64-bit) with the Raspberry Pi Imager and enable SSH.
+2. Copy both archives of a release to the Pi and install them:
+
+   ```sh
+   sudo tar -xzf score-platform-linux-aarch64.tar.gz -C /
+   sudo tar -xzf score-showcases-linux-aarch64.tar.gz -C /
+   ```
+
+3. Run the showcases: `sudo /showcases/bin/cli --examples all`.
+
+The showcases start the platform daemons they need themselves; nothing has to
+be started beforehand.
